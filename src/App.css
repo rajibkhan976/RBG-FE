@@ -59,9 +59,16 @@ input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-s
   display: none;
 }
 
-.btn {
+.btn, .inlinle-btn {
   background-color: transparent;
   border: none;
+}
+
+.btn-link {
+  color: #55BBC9;
+  display: inline-flex;
+  text-decoration: underline;
+  padding: 0;
 }
 
 .btn img {
@@ -525,27 +532,31 @@ input:focus+.searchIco #search-ico .a {
   padding: 0 0 0 294px;
   height: 100%;
 }
+
 .dashInnerStructure {
   overflow: hidden;
   height: calc(100% - 70px);
   padding: 30px 0 32px 40px;
 }
+
 .dashInnerUI {
   padding-right: 46px;
   overflow: auto;
   height: 100%;
 }
+
 .dashInnerUI::-webkit-scrollbar {
   width: 4px;
 }
- 
+
 .dashInnerUI::-webkit-scrollbar-track {
   background-color: #DCE4EB;
 }
- 
+
 .dashInnerUI::-webkit-scrollbar-thumb {
   background-color: #F1A668;
 }
+
 .menuDetails {
   position: absolute;
   top: 0;
@@ -554,5 +565,128 @@ input:focus+.searchIco #search-ico .a {
   z-index: 2;
 }
 
+/* Side Menu Tray */
+
+.sideMenuOuter {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 3;
+  background: rgb(48 86 113 / 20%);
+}
+
+.sideMenuInner {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background: #fff;
+}
+
+.notificationsMenu .sideMenuInner {
+  width: 560px;
+}
+
+.sideMenuHeader {
+  padding: 25px 34px;
+  padding-right: 44px;
+  position: relative;
+}
+
+.sideMenuHeader h3 {
+  font-size: 20px;
+  color: #305671;
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  line-height: 30px;
+  position: relative;
+  padding-right: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sideMenuHeader h3 .btn-link {
+  position: absolute;
+  right: 40px;
+  top: 7px;
+}
+
+.sideMenuHeader p {
+  line-height: 20px;
+  font-size: 13px;
+  color: #9BAEBC;
+}
+
+.btn-closeSideMenu {
+  position: absolute;
+  top: 32px;
+  right: 30px;
+  padding: 0;
+  width: 14px;
+  height: 14px;
+}
+
+.btn-closeSideMenu span {
+  position: absolute;
+  width: 14px;
+  height: 1px;
+  background: #305671;
+  display: block;
+  padding: 0;
+  transform: 50% 50%;
+  -webkit-transform: 50% 50%;
+  -moz-transform: 50% 50%;
+  -ms-transform: 50% 50%;
+  -o-transform: 50% 50%;
+}
+
+.btn-closeSideMenu span:first-child {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+}
+
+.btn-closeSideMenu span:last-child {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+}
+
+#notif-ico .a, #notif-ico .d {
+  fill: #ed707a;
+}
+
+#notif-ico .a {
+  opacity: 0.104;
+}
+
+#notif-ico .b {
+  fill: #2fa9ff;
+}
+
+#notif-ico .c {
+  fill: #6488ff;
+}
+
+#notif-ico .e {
+  fill: #969696;
+}
+
+.notifIco {
+  margin: 38px 0;
+}
+
+.notifIco svg {
+  max-width: 127px;
+}
+
+/* Side Menu Tray */
 
 /* Dashboard Body */
