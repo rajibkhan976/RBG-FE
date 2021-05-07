@@ -69,45 +69,78 @@ const Notifications = () => {
   ];
 
   const showNOtifDetails = (e) => {
-    console.log(e.target.parentNode)
-  }
+    console.log(e.target.parentNode);
+  };
 
-  useEffect(() => {
-      
-  })
+  useEffect(() => {});
 
   return (
     <div className="notificationsListing">
-    <ul>
+      <ul>
         <li>
-            Rank Qualification
-            <button className="inlinle-btn btn-link" onClick={(e) => showNOtifDetails(e)}>View All</button>
+          Rank Qualification
+          <button
+            className="inlinle-btn btn-link"
+            onClick={(e) => showNOtifDetails(e)}
+          >
+            View All
+          </button>
         </li>
         <li>
-            SMS
-            <button className="inlinle-btn btn-link" onClick={(e) => showNOtifDetails(e)}>View All</button>
+          SMS
+          <button
+            className="inlinle-btn btn-link"
+            onClick={(e) => showNOtifDetails(e)}
+          >
+            View All
+          </button>
         </li>
         <li>
-            Email
-            <button className="inlinle-btn btn-link" onClick={(e) => showNOtifDetails(e)}>View All</button>
+          Email
+          <button
+            className="inlinle-btn btn-link"
+            onClick={(e) => showNOtifDetails(e)}
+          >
+            View All
+          </button>
         </li>
         <li>
-            Lead
-            <button className="inlinle-btn btn-link" onClick={(e) => showNOtifDetails(e)}>View All</button>
+          Lead
+          <button
+            className="inlinle-btn btn-link"
+            onClick={(e) => showNOtifDetails(e)}
+          >
+            View All
+          </button>
         </li>
         <li>
-            Payment
-            <button className="inlinle-btn btn-link" onClick={(e) => showNOtifDetails(e)}>View All</button>
+          Payment
+          <button
+            className="inlinle-btn btn-link"
+            onClick={(e) => showNOtifDetails(e)}
+          >
+            View All
+          </button>
         </li>
         <li>
-            Deliquent Membership
-            <button className="inlinle-btn btn-link" onClick={(e) => showNOtifDetails(e)}>View All</button>
+          Deliquent Membership
+          <button
+            className="inlinle-btn btn-link"
+            onClick={(e) => showNOtifDetails(e)}
+          >
+            View All
+          </button>
         </li>
         <li>
-            MIA
-            <button className="inlinle-btn btn-link" onClick={(e) => showNOtifDetails(e)}>View All</button>
+          MIA
+          <button
+            className="inlinle-btn btn-link"
+            onClick={(e) => showNOtifDetails(e)}
+          >
+            View All
+          </button>
         </li>
-    </ul>
+      </ul>
       {/* <ul>
         {dummyListing.map((data, index) => {
           return (
