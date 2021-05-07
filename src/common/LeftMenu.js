@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink} from "react-router-dom";
 
 function LeftMenu(props) {
   const hoverOverLink = (e) => {
-    console.log(e.target);
+    props.getHovered(e);
   };
 
   useEffect(() => {});

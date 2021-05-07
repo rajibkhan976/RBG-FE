@@ -526,7 +526,7 @@ input:focus+.searchIco #search-ico .a {
   margin-right: 0;
   height: 100%;
   overflow: auto;
-  padding: 30px 50px 32px 294px;
+  padding: 30px 50px 32px 335px;
   position: relative;
 }
 .dashboardElComponent::-webkit-scrollbar {
