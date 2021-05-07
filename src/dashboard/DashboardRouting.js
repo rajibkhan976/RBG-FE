@@ -8,9 +8,9 @@ const DashboardRouting = () => {
     <div className="dashboardView">
       <Switch>
         <Redirect exact from="/" to="/user-controls" />
-        <Route exact path="/user-controls" component={UserControls} />
-        <Route exact path="/automation" component={Automation} />
-        <Route exact path="/contacts" component={ContactsComponent} />
+        <Route path="/user-controls" component={UserControls} />
+        <Route path="/automation" component={Automation} />
+        <Route path="/contacts" component={ContactsComponent} />
       </Switch>
     </div>
   );

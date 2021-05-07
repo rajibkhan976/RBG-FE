@@ -1,13 +1,12 @@
 import DashboardRouting from "./DashboardRouting";
 import LeftMenu from "../common/LeftMenu";
 import HeaderDashboard from "../common/HeaderDashboard";
-import SidebarLogo from '../assets/images/sidebar-logo.png'
 
 function Dashboard(props) {
   return (
     <div className="mainComponent">
       <div className="dashboardBody d-flex f-align-center">
-        <LeftMenu SidebarLogo={SidebarLogo} />
+        <LeftMenu />
         <div className="dashMain">
           <HeaderDashboard />
           <DashboardRouting />

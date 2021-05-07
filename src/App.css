@@ -520,13 +520,14 @@ input:focus+.searchIco #search-ico .a {
 
 .dashboardView {
   height: calc(100% - 70px);
-  padding: 30px 0 32px 42px;
 }
 
 .dashboardElComponent {
-  margin-right: 46px;
+  margin-right: 0;
   height: 100%;
   overflow: auto;
+  padding: 30px 50px 32px 294px;
+  position: relative;
 }
 .dashboardElComponent::-webkit-scrollbar {
   width: 4px;
@@ -539,4 +540,12 @@ input:focus+.searchIco #search-ico .a {
 .dashboardElComponent::-webkit-scrollbar-thumb {
   background-color: #DCE4EB;
 }
+.menuDetails {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+}
+
+
 /* Dashboard Body */

@@ -9,7 +9,7 @@ function App() {
   const [logState, setLogState] = useState(true);
 
   useEffect(() => {
-    console.log("LOGGED STATE", logState);
+    
   });
 
   return (

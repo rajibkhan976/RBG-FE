@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { NavLink, Route, Switch } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function LeftMenu(props) {
   const hoverOverLink = (e) => {
@@ -13,10 +13,9 @@ function LeftMenu(props) {
       <ul>
         <li>
           <NavLink
-            className="leftMenuLink"
-            exact
+            className="leftMenuLink"            
             activeClassName="selected"
-            to="/"
+            to="/page-one"
             onMouseOver={(e) => hoverOverLink(e)}
           >
             <svg
@@ -46,9 +45,8 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            exact
             activeClassName="selected"
-            to="/"
+            to="/page-two"
             onMouseOver={(e) => hoverOverLink(e)}
           >
             <svg
@@ -84,7 +82,6 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            exact
             activeClassName="selected"
             to="/user-controls"
             onMouseOver={(e) => hoverOverLink(e)}
@@ -105,9 +102,9 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            exact
+            
             activeClassName="selected"
-            to="/"
+            to="/page-four"
             onMouseOver={(e) => hoverOverLink(e)}
           >
             <svg
@@ -155,9 +152,9 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            exact
+            
             activeClassName="selected"
-            to="/"
+            to="/page-five"
             onMouseOver={(e) => hoverOverLink(e)}
           >
             <svg
@@ -211,7 +208,7 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            exact
+            
             activeClassName="selected"
             to="/automation"
             onMouseOver={(e) => hoverOverLink(e)}
@@ -235,7 +232,7 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            exact
+            
             activeClassName="selected"
             to="/contacts"
             onMouseOver={(e) => hoverOverLink(e)}
@@ -292,9 +289,9 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            exact
+            
             activeClassName="selected"
-            to="/"
+            to="/page-eight"
             onMouseOver={(e) => hoverOverLink(e)}
           >
             <svg
@@ -360,9 +357,9 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            exact
+            
             activeClassName="selected"
-            to="/"
+            to="/page-nine"
             onMouseOver={(e) => hoverOverLink(e)}
           >
             <svg
@@ -419,50 +416,6 @@ function LeftMenu(props) {
           </NavLink>
         </li>
       </ul>
-      <div className="menuDetails">
-        <figure className="logoSidebar">
-          <img src={props.SidebarLogo} alt="" />
-        </figure>
-        <Switch>
-          <Route strict path="/user-controls">
-            <ul>
-              <li>
-                <NavLink
-                  className="leftMenuInnerLink ucLinks"
-                  activeClassName="selectedUC"
-                  to="/user-controls/roles"
-                >
-                  Roles
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  className="leftMenuInnerLink ucLinks"
-                  activeClassName="selectedUC"
-                  to="/user-controls/groups"
-                >
-                  Groups
-                </NavLink>
-              </li>
-              <li>
-                <NavLink
-                  className="leftMenuInnerLink ucLinks"
-                  activeClassName="selectedUC"
-                  to="/user-controls/users"
-                >
-                  Users
-                </NavLink>
-              </li>
-            </ul>
-          </Route>
-          <Route strict path="/automation">
-            <h2>automation details</h2>
-          </Route>
-          <Route strict path="/contacts">
-            <h2>contacts details</h2>
-          </Route>
-        </Switch>
-      </div>
     </div>
   );
 }
