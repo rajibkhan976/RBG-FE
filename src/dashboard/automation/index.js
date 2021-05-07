@@ -9,7 +9,7 @@ function Automation(props) {
   useEffect(() => {});
 
   return (
-    <Switch>
+    <>
       <div className="menuDetails">
         <figure className="logoSidebar">
           <img src={SidebarLogo} alt="" />
@@ -25,18 +25,24 @@ function Automation(props) {
           </li>
         </ul>
       </div>
-      <div className="dashboardElComponent">
-        <HeaderDashboard />
-        <div className="dashInnerStructure">
-          <Redirect exact from="/automation" to="/automation/automation-list" />
-          <Route
-            strict
-            path="/automation/automation-list"
-            component={AutomationLists}
-          />
+      <Switch>
+        <div className="dashboardElComponent">
+          <HeaderDashboard />
+          <div className="dashInnerStructure">
+            <Redirect
+              exact
+              from="/automation"
+              to="/automation/automation-list"
+            />
+            <Route
+              strict
+              path="/automation/automation-list"
+              component={AutomationLists}
+            />
+          </div>
         </div>
-      </div>
-    </Switch>
+      </Switch>
+    </>
   );
 }
 
