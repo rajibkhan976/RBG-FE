@@ -24,19 +24,19 @@ function ContactsComponent(props) {
           </li>
         </ul>
       </div>
-      <Switch>
-        <div className="dashboardElComponent">
-          <HeaderDashboard />
-          <div className="dashInnerStructure">
+      <div className="dashboardElComponent">
+        <HeaderDashboard />
+        <div className="dashInnerStructure">
+          <Switch>
             <Redirect exact from="/contacts" to="/contacts/contact-details" />
             <Route
               strict
               path="/contacts/contact-details"
               component={ContactDetails}
             />
-          </div>
+          </Switch>
         </div>
-      </Switch>
+      </div>
     </>
   );
 }

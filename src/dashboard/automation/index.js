@@ -25,10 +25,10 @@ function Automation(props) {
           </li>
         </ul>
       </div>
-      <Switch>
-        <div className="dashboardElComponent">
-          <HeaderDashboard />
-          <div className="dashInnerStructure">
+      <div className="dashboardElComponent">
+        <HeaderDashboard />
+        <div className="dashInnerStructure">
+          <Switch>
             <Redirect
               exact
               from="/automation"
@@ -39,9 +39,9 @@ function Automation(props) {
               path="/automation/automation-list"
               component={AutomationLists}
             />
-          </div>
+          </Switch>
         </div>
-      </Switch>
+      </div>
     </>
   );
 }

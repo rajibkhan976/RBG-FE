@@ -33,11 +33,11 @@ function UserControls(props) {
           </li>
         </ul>
       </div>
-      <Switch>
-        <div className="dashboardElComponent">
-          <HeaderDashboard />
+      <div className="dashboardElComponent">
+        <HeaderDashboard />
 
-          <div className="dashInnerStructure">
+        <div className="dashInnerStructure">
+          <Switch>
             <Redirect exact from="/user-controls/" to="/user-controls/roles" />
             <Route
               strict
@@ -54,9 +54,9 @@ function UserControls(props) {
               path="/user-controls/users"
               component={UserControlsUsers}
             />
-          </div>
+          </Switch>
         </div>
-      </Switch>
+      </div>
     </>
   );
 }
