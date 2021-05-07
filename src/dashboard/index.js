@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import DashboardRouting from "./DashboardRouting";
 import LeftMenu from "../common/LeftMenu";
-import HeaderDashboard from "../common/HeaderDashboard";
 
 function Dashboard(props) {
   let [hoveredLink, setHoveredLink] = useState(null);
@@ -17,7 +16,6 @@ function Dashboard(props) {
       <div className="dashboardBody d-flex f-align-center">
         <LeftMenu getHovered={getHovered} />
         <div className="dashMain">
-          <HeaderDashboard />
           <DashboardRouting hoveredLink={hoveredLink} />
         </div>
       </div>

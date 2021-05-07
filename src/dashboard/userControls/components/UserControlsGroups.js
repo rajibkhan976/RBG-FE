@@ -1,9 +1,5 @@
 const UserControlsGroups = () => {
-    return (
-        <>
-            User Control Groups
-        </>
-    );
-  };
-  
-  export default UserControlsGroups;
+  return <div className="dashInnerUI">User Control Groups</div>;
+};
+
+export default UserControlsGroups;

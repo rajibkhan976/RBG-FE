@@ -1,9 +1,81 @@
 const UserControlsRoles = () => {
-    return (
-        <>
-            User Control Roles
-        </>
-    );
-  };
-  
-  export default UserControlsRoles;
+  return (
+    <div className="dashInnerUI">
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+      <p>User Control Roles</p>
+    </div>
+  );
+};
+
+export default UserControlsRoles;

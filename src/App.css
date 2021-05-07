@@ -260,6 +260,7 @@ audio, video {
 .dashMain {
   flex: 1 1 auto;
   height: 100%;
+  position: relative;
 }
 
 .routeMenu a>svg {
@@ -397,7 +398,7 @@ audio, video {
 
 .logoSidebar {
   display: flex;
-  height: 70.5px;
+  height: 70px;
   align-items: center;
   border-bottom: 1px solid #DCE4EB;
   padding: 0 20px;
@@ -518,33 +519,39 @@ input:focus+.searchIco #search-ico .a {
 
 /* Dashboard Body */
 
-.dashboardView {
-  height: calc(100% - 70px);
-}
-
 .dashboardElComponent {
   margin-right: 0;
-  height: 100%;
-  overflow: auto;
-  padding: 30px 50px 32px 335px;
   position: relative;
+  padding: 0 0 0 294px;
+  height: 100%;
 }
-.dashboardElComponent::-webkit-scrollbar {
+.dashInnerStructure {
+  overflow: hidden;
+  height: calc(100% - 70px);
+  padding: 30px 0 32px 40px;
+}
+.dashInnerUI {
+  padding-right: 46px;
+  overflow: auto;
+  height: 100%;
+}
+.dashInnerUI::-webkit-scrollbar {
   width: 4px;
 }
  
-.dashboardElComponent::-webkit-scrollbar-track {
-  background-color: #F1A668;
+.dashInnerUI::-webkit-scrollbar-track {
+  background-color: #DCE4EB;
 }
  
-.dashboardElComponent::-webkit-scrollbar-thumb {
-  background-color: #DCE4EB;
+.dashInnerUI::-webkit-scrollbar-thumb {
+  background-color: #F1A668;
 }
 .menuDetails {
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
+  z-index: 2;
 }
 
 

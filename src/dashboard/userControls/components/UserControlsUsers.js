@@ -1,9 +1,5 @@
 const UserControlsUsers = () => {
-    return (
-      <>
-            User Control Users
-        </>
-    );
-  };
-  
-  export default UserControlsUsers;
+  return <div className="dashInnerUI">User Control Users</div>;
+};
+
+export default UserControlsUsers;
