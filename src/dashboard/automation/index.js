@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Route, Switch, NavLink, Redirect } from "react-router-dom";
 
+import DashboardFooter from '../../common/FooterDashboard'
 import HeaderDashboard from "../../common/HeaderDashboard";
 import SidebarLogo from "../../assets/images/sidebar-logo.png";
 import AutomationLists from "./components/AutomationLists";
@@ -40,6 +41,8 @@ function Automation(props) {
               component={AutomationLists}
             />
           </Switch>
+
+          <DashboardFooter/>
         </div>
       </div>
     </>

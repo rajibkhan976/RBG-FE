@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Route, Switch, NavLink, Redirect } from "react-router-dom";
 
+import DashboardFooter from '../../common/FooterDashboard'
 import HeaderDashboard from "../../common/HeaderDashboard";
 import SidebarLogo from "../../assets/images/sidebar-logo.png";
 import UserControlsRoles from "./components/UserControlsRoles";
@@ -55,6 +56,7 @@ function UserControls(props) {
               component={UserControlsUsers}
             />
           </Switch>
+          <DashboardFooter/>
         </div>
       </div>
     </>

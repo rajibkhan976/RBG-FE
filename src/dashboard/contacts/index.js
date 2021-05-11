@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Route, Switch, NavLink, Redirect } from "react-router-dom";
 
+import DashboardFooter from '../../common/FooterDashboard'
 import HeaderDashboard from "../../common/HeaderDashboard";
 import SidebarLogo from "../../assets/images/sidebar-logo.png";
 import ContactDetails from "./components/ContactDetails";
@@ -35,6 +36,8 @@ function ContactsComponent(props) {
               component={ContactDetails}
             />
           </Switch>
+
+          <DashboardFooter/>
         </div>
       </div>
     </>

@@ -1,0 +1,52 @@
+const DashboardPagination = () => {
+    return(
+        <>
+            <div class="paginationOuter">
+                <ul>
+                    <li>
+                        <a>
+                            &#60;
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            1
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            2
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            3
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            4
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            5
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            ...
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            &#62;
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </>
+    )
+}
+
+export default DashboardPagination;

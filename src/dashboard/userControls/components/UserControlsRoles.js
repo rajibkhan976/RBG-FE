@@ -1,7 +1,10 @@
+import DashboardPagination from "../../../common/Pagination";
+
 const UserControlsRoles = () => {
   return (
     <div className="dashInnerUI">
       User Control Roles
+      <DashboardPagination />
     </div>
   );
 };
