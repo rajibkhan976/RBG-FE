@@ -7,6 +7,12 @@ import SidebarLogo from "../../assets/images/sidebar-logo.png";
 import AutomationLists from "./components/AutomationLists";
 
 function Automation(props) {
+  const [createButton, setCreateButton] = useState("");
+
+  const toggleCreate = (e) => {
+    console.log(e);
+  };
+
   useEffect(() => {});
 
   return (
@@ -27,7 +33,7 @@ function Automation(props) {
         </ul>
       </div>
       <div className="dashboardElComponent">
-        <HeaderDashboard />
+        <HeaderDashboard toggleCreate={toggleCreate} />
         <div className="dashInnerStructure">
           <div className="dashInnerUI">
             <Switch>

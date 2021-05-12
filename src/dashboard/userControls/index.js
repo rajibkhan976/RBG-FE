@@ -3,15 +3,33 @@ import { Route, Switch, NavLink, Redirect } from "react-router-dom";
 
 import DashboardFooter from "../../common/FooterDashboard";
 import HeaderDashboard from "../../common/HeaderDashboard";
-import SidebarLogo from "../../assets/images/sidebar-logo.png";
+import FilterAuth from "../../common/FilterAuth";
 import UserControlsRoles from "./components/UserControlsRoles";
 import UserControlsGroups from "./components/UserControlsGroups";
 import UserControlsUsers from "./components/UserControlsUsers";
+import SideModal from "../../common/SideModal";
 
-import white_arrow_right from '../../assets/images/white_arrow_right.svg';
-import undraw_personal_settings_kihd from '../../assets/images/undraw_personal_settings_kihd.svg';
+import white_arrow_right from "../../assets/images/white_arrow_right.svg";
+import undraw_personal_settings_kihd from "../../assets/images/undraw_personal_settings_kihd.svg";
+import SidebarLogo from "../../assets/images/sidebar-logo.png";
 
 function UserControls(props) {
+  const [createButton, setCreateButton] = useState(null);
+  const [stateFilter, setStateFilter] = useState(null);
+
+  const toggleCreate = (e) => {
+    setCreateButton(e);
+  };
+
+  const toggleFilter = (e) => {
+    setStateFilter(e);
+    console.log(e);
+  };
+
+  const closeFilter = (e) => {
+    setStateFilter(null);
+  };
+
   useEffect(() => {});
   return (
     <>
@@ -22,7 +40,7 @@ function UserControls(props) {
         <ul>
           <li>
             <NavLink className="leftMenuInnerLink" to="/user-controls/roles">
-              <div className="Indicator"></div>
+              <div className="indicator"></div>
               <div className="linkDetails">
                 <p className="linkHeading">Roles</p>
                 <span className="notificationNumber">10</span>
@@ -34,7 +52,7 @@ function UserControls(props) {
           </li>
           <li>
             <NavLink className="leftMenuInnerLink" to="/user-controls/groups">
-              <div className="Indicator"></div>
+              <div className="indicator"></div>
               <div className="linkDetails">
                 <p className="linkHeading">Groups</p>
                 <span className="notificationNumber">5</span>
@@ -46,7 +64,7 @@ function UserControls(props) {
           </li>
           <li>
             <NavLink className="leftMenuInnerLink" to="/user-controls/users">
-              <div className="active Indicator"></div>
+              <div className="indicator"></div>
               <div className="linkDetails">
                 <p className="linkHeading">Users</p>
                 <span className="notificationNumber">48</span>
@@ -62,30 +80,46 @@ function UserControls(props) {
         </div>
       </div>
       <div className="dashboardElComponent">
-        <HeaderDashboard />
+        <HeaderDashboard toggleCreate={(e) => toggleCreate(e)} />
 
         <div className="dashInnerStructure">
           <Switch>
             <Redirect exact from="/user-controls/" to="/user-controls/roles" />
-            <Route
-              strict
-              path="/user-controls/roles"
-              component={UserControlsRoles}
-            />
-            <Route
-              strict
-              path="/user-controls/groups"
-              component={UserControlsGroups}
-            />
-            <Route
-              strict
-              path="/user-controls/users"
-              component={UserControlsUsers}
-            />
+            <Route strict path="/user-controls/roles">
+              <UserControlsRoles
+                toggleCreate={(e) => toggleCreate(e)}
+                toggleFilter={(e) => toggleFilter(e)}
+              />
+            </Route>
+            <Route strict path="/user-controls/groups">
+              <UserControlsGroups
+                toggleCreate={(e) => toggleCreate(e)}
+                toggleFilter={(e) => toggleFilter(e)}
+              />
+            </Route>
+            <Route strict path="/user-controls/users">
+              <UserControlsUsers
+                toggleCreate={(e) => toggleCreate(e)}
+                toggleFilter={(e) => toggleFilter(e)}
+              />
+            </Route>
           </Switch>
           <DashboardFooter />
         </div>
       </div>
+
+      {createButton !== null && (
+        <SideModal
+          createButton={createButton}
+          setCreateButton={setCreateButton}
+        />
+      )}
+
+      {/* FILTER SIDE MENU */}
+      {stateFilter && (
+        <FilterAuth stateFilter={stateFilter} closeFilter={closeFilter} />
+      )}
+      {/* FILTER SIDE MENU */}
     </>
   );
 }

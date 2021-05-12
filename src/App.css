@@ -59,6 +59,10 @@ input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-s
   display: none;
 }
 
+label {
+  user-select: none;
+}
+
 .btn, .inlinle-btn {
   background-color: transparent;
   border: none;
@@ -71,6 +75,10 @@ input[type="search"]::-webkit-search-decoration, input[type="search"]::-webkit-s
   -moz-border-radius: 3px;
   -ms-border-radius: 3px;
   -o-border-radius: 3px;
+}
+
+.btn * {
+  pointer-events: none;
 }
 
 .btn-link {
@@ -562,13 +570,23 @@ input:focus+.searchIco #search-ico .a {
 .dashInnerStructure {
   overflow: hidden;
   height: calc(100% - 70px);
-  padding: 30px 0 32px 40px;
+  padding: 30px 0 27px 40px;
+  display: flex;
+  flex-direction: column;
 }
 
 .dashInnerUI {
+  /* padding-right: 46px; */
+  /* overflow: auto; */
+  overflow: hidden;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashInnerUI>* {
+  margin-right: 0px;
   padding-right: 46px;
-  overflow: auto;
-  height: 100%;
 }
 
 .dashInnerUI::-webkit-scrollbar {
@@ -603,12 +621,24 @@ input:focus+.searchIco #search-ico .a {
   background: rgb(48 86 113 / 20%);
 }
 
+.createSideModal .sideMenuInner {
+  width: 100%;
+  max-width: 674px;
+}
+
+.filterUserMenu .sideMenuInner, .sideRoles .sideMenuInner {
+  width: 100%;
+  max-width: 457px;
+}
+
 .sideMenuInner {
   position: absolute;
   right: 0;
   bottom: 0;
   top: 0;
   background: #fff;
+  display: flex;
+  flex-direction: column;
 }
 
 .notificationsMenu .sideMenuInner {
@@ -653,6 +683,7 @@ input:focus+.searchIco #search-ico .a {
   padding: 0;
   width: 14px;
   height: 14px;
+  z-index: 3;
 }
 
 .btn-closeSideMenu span {
@@ -734,7 +765,7 @@ input:focus+.searchIco #search-ico .a {
   border-bottom: 1px solid #DCE4EB;
 }
 
-.Indicator {
+.indicator {
   width: 6px;
   height: 6px;
   background: #ED707A;
@@ -745,7 +776,7 @@ input:focus+.searchIco #search-ico .a {
   display: none;
 }
 
-.Indicator.active {
+.active .indicator {
   display: block;
 }
 
@@ -770,7 +801,6 @@ input:focus+.searchIco #search-ico .a {
 .notificationNumber {
   font-size: 10px;
   color: #fff;
-  padding: 3px 10px;
   background: #55BBC9;
   border-radius: 40px;
   border: 1px solid #3EA6B4;
@@ -801,11 +831,13 @@ input:focus+.searchIco #search-ico .a {
   justify-content: space-between;
   flex-direction: row;
   align-items: center;
+  margin-bottom: 50px;
 }
 
 .listPath {
   color: #305671;
   font-size: 11px;
+  margin-bottom: 10px;
 }
 
 .listPath span:nth-child(1) {
@@ -818,10 +850,11 @@ input:focus+.searchIco #search-ico .a {
   margin-left: 5px;
 }
 
-.userListNumber {
+.inDashboardHeader {
   color: #305671;
   font-size: 16px;
   font-weight: 700;
+  margin-bottom: 8px;
 }
 
 .userListAbout {
@@ -869,7 +902,7 @@ input:focus+.searchIco #search-ico .a {
   transform: translateY(-50%);
 }
 
-.filter {
+.btn-filter {
   width: 83px;
   height: 40px;
   background: #fff;
@@ -884,7 +917,7 @@ input:focus+.searchIco #search-ico .a {
   margin-right: 25px;
 }
 
-.filter p {
+.btn-filter p {
   color: #9BAEBC;
   font-size: 13px;
   margin-left: 15px;
@@ -899,25 +932,27 @@ input:focus+.searchIco #search-ico .a {
   border: none;
   outline: none;
   border-radius: 5px;
-  width: 163px;
   display: flex;
   height: 40px;
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
+  font-size: 0;
+  padding: 0 20px;
 }
 
 .plusIcon {
-  margin-left: 20px;
+  margin-right: 14px;
 }
 
 .creatUserBtn span {
-  margin-right: 20px;
   color: #fff;
+  font-size: 13px;
 }
 
 .userListBody {
-  margin-top: 50px;
+  flex: 1 1 auto;
+  overflow: auto;
 }
 
 li.listHeading {
@@ -929,10 +964,26 @@ li.listHeading {
   height: 60px;
 }
 
-li.listHeading div {
+li.listHeading>div {
   font-size: 13px;
   color: #305671;
   position: relative;
+  padding: 13px 0px;
+  cursor: pointer;
+}
+
+li.listHeading>div:after {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 9px;
+  height: 13px;
+  background-image: url('./assets/images/sortTable.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 9px auto;
+  pointer-events: none;
+  margin-left: 13px;
 }
 
 li.owerInfo {
@@ -949,17 +1000,26 @@ li.owerInfo {
   position: relative;
 }
 
+.arrowUp, .arrowDown {
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+}
+
 .arrowUp {
   position: absolute;
   left: 75px;
-  top: -5px;
+  margin-top: -8px;
   width: 17px;
   height: 17px;
 }
 
 .arrowDown {
   position: absolute;
-  bottom: -5px;
+  margin-top: 8px;
   left: 75px;
   width: 17px;
   height: 17px;
@@ -1009,7 +1069,7 @@ li.owerInfo {
   width: 15%;
 }
 
-.userName a {
+.userName .btn {
   display: flex;
   flex-direction: row;
   align-content: center;
@@ -1017,19 +1077,19 @@ li.owerInfo {
   text-decoration: none;
 }
 
-.userName a p {
+.userName .btn p {
   color: #305671;
   font-size: 13px;
   margin-left: 15px;
 }
 
-.phoneNum a, .emailID a, .role a, .assignedGroup a, .status a, .createDate a {
+.phoneNum .btn, .emailID .btn, .role .btn, .assignedGroup .btn, .status .btn, .createDate .btn {
   color: #305671;
   font-size: 13px;
   text-decoration: none;
 }
 
-.emailID a {
+.emailID .btn {
   color: #55BBC9;
 }
 
@@ -1040,7 +1100,7 @@ li.owerInfo {
   transform: translateY(-50%);
 }
 
-.info_3dot_icon a {
+.info_3dot_icon .btn {
   text-decoration: none;
   padding: 2px;
 }
@@ -1108,14 +1168,13 @@ li.owerInfo {
 }
 
 .setProfilePic {
-  margin-top: 50px;
   position: relative;
 }
 
 .profilePicHeading {
   color: #305671;
   font-size: 16px;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .uploadCamerIcon {
@@ -1130,41 +1189,57 @@ li.owerInfo {
 .setProfilePic span {
   color: #9BAEBC;
   font-size: 13px;
-  margin-left: 20px;
+  display: flex;
+  align-items: center;
 }
 
 .uploadLink {
   color: #55BBC9;
   font-size: 13px;
   position: absolute;
-  bottom: 15px;
+  top: 50%;
   right: 0px;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
 }
 
 .formInputs {
-  margin-top: 50px;
+  margin-top: 46px;
 }
 
-.InfoFieldHead {
+.infoFieldHead {
   color: #305671;
   font-size: 16px;
 }
 
-.InfoInputs {
+.infoInputs {
   margin-top: 25px;
 }
 
-.InfoInputs ul li {
+.infoInputs ul li {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   align-content: center;
+  margin: 0 -10px;
 }
 
 .formField {
   margin-bottom: 25px;
   position: relative;
+}
+
+.inputLabel {
+  display: block;
+  cursor: pointer;
+}
+
+.infoInputs ul li .formField {
+  padding: 0 10px;
 }
 
 .formField p {
@@ -1173,8 +1248,12 @@ li.owerInfo {
   margin-bottom: 10px;
 }
 
-.formField input {
-  width: 297px;
+.inFormField {
+  width: 100%;
+}
+
+.inFormField input, .inFormField select {
+  width: 100%;
   height: 40px;
   background: #F6F8FA;
   border: 1px solid #D3D9DE;
@@ -1184,7 +1263,17 @@ li.owerInfo {
   font-size: 13px;
 }
 
-.InfoField.assignRoleGroup {
+.inFormField select {
+  background-repeat: no-repeat;
+  background-position: right 11px center;
+  padding-right: 40px;
+}
+
+.formField.w-50 {
+  width: 50%;
+}
+
+.infoField.assignRoleGroup {
   margin-top: 50px;
 }
 
@@ -1313,7 +1402,7 @@ img.dropDownIcon {
   margin-top: 30px;
 }
 
-.enableNotification p {
+.enableNotification span {
   color: #305671;
   font-size: 13px;
   margin-left: 10px;
@@ -1398,7 +1487,7 @@ img.dropDownIcon {
   margin-right: 15px;
 }
 
-.createdDateFields .formField:nth-child(1) p {
+.createdDateFields .formField:nth-child(2n+2) {
   margin-left: 20px;
 }
 
@@ -1446,7 +1535,6 @@ img.dropDownIcon {
 }
 
 .createNew .creatUserBtn {
-  width: 182px;
   margin-left: 10px;
 }
 
@@ -1583,6 +1671,8 @@ img.dropDownIcon {
 .dashboardFooter {
   text-align: right;
   padding-right: 46px;
+  padding-top: 15px;
+  margin-top: auto;
 }
 
 .dashboardFooter p {

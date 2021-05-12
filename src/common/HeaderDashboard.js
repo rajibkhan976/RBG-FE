@@ -8,7 +8,7 @@ import UserIcon from "../assets/images/user.png";
 function HeaderDashboard(props) {
   const [stateNotifMenu, setStateNotifMenu] = useState(false);
   const [stateUserMenu, setStateUserMenu] = useState(false);
-  const [createButton, setCreateButton] = useState(false);
+  const [locationLoaded, setLocationLoaded] = useState('user');
 
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
@@ -18,16 +18,33 @@ function HeaderDashboard(props) {
     setStateUserMenu(!stateUserMenu);
   };
 
-  const toggleCreate = (e) => {
-    setCreateButton(!createButton);
+  const toggleCreateHeader = () => {
+    window.location.pathname === "/user-controls/roles"
+      ? props.toggleCreate("roles")
+      : window.location.pathname === "/user-controls/groups"
+      ? props.toggleCreate("groups")
+      : window.location.pathname === "/user-controls/users"
+      ? props.toggleCreate("user")
+      : props.toggleCreate(null);
   };
 
   const closeSideMenu = (e) => {
     e.preventDefault();
     setStateNotifMenu(false);
-    setCreateButton(false);
   };
-  
+
+  useEffect(() => {
+    window.location.pathname === "/user-controls/roles"
+      ? setLocationLoaded("roles")
+      : window.location.pathname === "/user-controls/groups"
+      ? setLocationLoaded("groups")
+      : window.location.pathname === "/user-controls/users"
+      ? setLocationLoaded("user")
+      : window.location.pathname === "/automation/automation-list"
+      ? setLocationLoaded("automation")
+      : setLocationLoaded(null);
+  })
+
   return (
     <>
       <div className="dashboardHeader">
@@ -61,22 +78,42 @@ function HeaderDashboard(props) {
         >
           <img src={NotificationIcon} alt="" />
         </button>
-        {(window.location.pathname === "/user-controls/users" || window.location.pathname === "/user-controls/roles" || window.location.pathname === "/user-controls/groups") && 
+        {locationLoaded === "user" && (
           <button
             className="btn buttonCreate"
             id="createUser"
             data-create="create-user"
-            onClick={(e) => toggleCreate(e)}
+            onClick={toggleCreateHeader}
           >
             <img src={CreateIcon} alt="" />
           </button>
-        }
-        {window.location.pathname === "/automation/automation-list" && (
+        )}
+        {locationLoaded === "roles" && (
+          <button
+            className="btn buttonCreate"
+            id="createUser"
+            data-create="create-user"
+            onClick={toggleCreateHeader}
+          >
+            <img src={CreateIcon} alt="" />
+          </button>
+        )}
+        {locationLoaded === "groups" && (
+          <button
+            className="btn buttonCreate"
+            id="createUser"
+            data-create="create-user"
+            onClick={toggleCreateHeader}
+          >
+            <img src={CreateIcon} alt="" />
+          </button>
+        )}
+        {locationLoaded === "automation" && (
           <button
             className="btn buttonCreate"
             id="createAutomation"
             data-create="create-automation"
-            onClick={(e) => toggleCreate(e)}
+            onClick={toggleCreateHeader}
           >
             <img src={CreateIcon} alt="" />
           </button>
@@ -92,6 +129,8 @@ function HeaderDashboard(props) {
           <div className="menuUser"></div>
         </div>
       </div>
+
+      {/* NOTIFICATIONS SIDE MENU */}
       {stateNotifMenu && (
         <div className="sideMenuOuter notificationsMenu">
           <div className="sideMenuInner">
@@ -118,34 +157,7 @@ function HeaderDashboard(props) {
           </div>
         </div>
       )}
-
-      {(window.location.pathname === "/user-controls/users" ||
-        window.location.pathname === "/user-controls/roles" ||
-        window.location.pathname === "/user-controls/groups") &&
-      createButton ? (
-        <div className="sideMenuOuter createUserMenu">
-          <div className="sideMenuInner">
-            <div className="sideMenuHeader">
-              <h3>Create an User</h3>
-              <p>
-                Create multiple sub-users with different access permissions of
-                your business.
-              </p>
-              <button
-                className="btn btn-closeSideMenu"
-                onClick={(e) => closeSideMenu(e)}
-              >
-                <span></span>
-                <span></span>
-              </button>
-            </div>
-
-            <div className="sideMenuBody"></div>
-          </div>
-        </div>
-      ) : (
-        ""
-      )}
+      {/* NOTIFICATIONS SIDE MENU */}
     </>
   );
 }

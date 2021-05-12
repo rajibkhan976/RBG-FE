@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Route, Switch, NavLink, Redirect } from "react-router-dom";
 
 import DashboardFooter from "../../common/FooterDashboard";
@@ -7,6 +7,11 @@ import SidebarLogo from "../../assets/images/sidebar-logo.png";
 import ContactDetails from "./components/ContactDetails";
 
 function ContactsComponent(props) {
+  const [createButton, setCreateButton] = useState("");
+
+  const toggleCreate = (e) => {
+    console.log(e);
+  };
   useEffect(() => {});
   return (
     <>
@@ -26,7 +31,7 @@ function ContactsComponent(props) {
         </ul>
       </div>
       <div className="dashboardElComponent">
-        <HeaderDashboard />
+        <HeaderDashboard toggleCreate={toggleCreate} />
         <div className="dashInnerStructure">
           <div className="dashInnerUI">
             <Switch>

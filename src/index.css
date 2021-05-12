@@ -1,0 +1,98 @@
+.sideMenuBody {
+  padding: 30px 27px 32px;
+  overflow: auto;
+  flex: 1 1 auto;
+}
+
+.sideMenuBody::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sideMenuBody::-webkit-scrollbar-track {
+  background-color: #DCE4EB;
+}
+
+.sideMenuBody::-webkit-scrollbar-thumb {
+  background-color: #F1A668;
+}
+
+.listPath li {
+  display: inline-flex;
+  position: relative;
+}
+
+.listPath li+li {
+  margin-left: 30px;
+}
+
+.listPath li+li:before {
+  content: '>';
+  position: absolute;
+  right: calc(100% + 11px);
+  top: 50%;
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+}
+
+.paginationOuter {
+  margin-top: 30px;
+}
+
+.userListBody::-webkit-scrollbar {
+  width: 4px;
+}
+
+.userListBody::-webkit-scrollbar-track {
+  background-color: #DCE4EB;
+}
+
+.userListBody::-webkit-scrollbar-thumb {
+  background-color: #F1A668;
+}
+
+.listBody {
+  position: relative;
+}
+
+.listBody ul {
+  display: table;
+  width: 100%;
+  border-spacing: 0 4px;
+}
+
+.listBody ul li {
+  display: table-row;
+  width: 100%;
+}
+
+.listBody ul li.listHeading {
+  position: sticky;
+}
+
+.listBody ul li>div {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 0 16px;
+  min-height: 60px;
+  position: relative;
+}
+
+.paginationOuter .btn svg {
+  max-width: 9px;
+}
+
+.inputLabel figure {
+  width: 64px;
+  height: 64px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  border: 1px solid #9BAEBC;
+  border-radius: 50%;
+  margin-right: 20px;
+}
+.inputLabel input[type="file"] {
+  display: none;
+}
