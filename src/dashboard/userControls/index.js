@@ -8,10 +8,11 @@ import UserControlsRoles from "./components/UserControlsRoles";
 import UserControlsGroups from "./components/UserControlsGroups";
 import UserControlsUsers from "./components/UserControlsUsers";
 
+import white_arrow_right from '../../assets/images/white_arrow_right.svg';
+import undraw_personal_settings_kihd from '../../assets/images/undraw_personal_settings_kihd.svg';
+
 function UserControls(props) {
-  useEffect(() => {
-    
-  });
+  useEffect(() => {});
   return (
     <>
       <div className="menuDetails">
@@ -21,20 +22,44 @@ function UserControls(props) {
         <ul>
           <li>
             <NavLink className="leftMenuInnerLink" to="/user-controls/roles">
-              Roles
+              <div className="Indicator"></div>
+              <div className="linkDetails">
+                <p className="linkHeading">Roles</p>
+                <span className="notificationNumber">10</span>
+                <br />
+                <p className="linkAbout">Manage user roles</p>
+              </div>
+              <img className="arrowIcon" src={white_arrow_right} alt="" />
             </NavLink>
           </li>
           <li>
             <NavLink className="leftMenuInnerLink" to="/user-controls/groups">
-              Groups
+              <div className="Indicator"></div>
+              <div className="linkDetails">
+                <p className="linkHeading">Groups</p>
+                <span className="notificationNumber">5</span>
+                <br />
+                <p className="linkAbout">Manage user groups</p>
+              </div>
+              <img className="arrowIcon" src={white_arrow_right} alt="" />
             </NavLink>
           </li>
           <li>
             <NavLink className="leftMenuInnerLink" to="/user-controls/users">
-              Users
+              <div className="active Indicator"></div>
+              <div className="linkDetails">
+                <p className="linkHeading">Users</p>
+                <span className="notificationNumber">48</span>
+                <br />
+                <p className="linkAbout">Manage users & sub-users</p>
+              </div>
+              <img className="arrowIcon" src={white_arrow_right} alt="" />
             </NavLink>
           </li>
         </ul>
+        <div className="linkImg">
+          <img src={undraw_personal_settings_kihd} alt="" />
+        </div>
       </div>
       <div className="dashboardElComponent">
         <HeaderDashboard />
