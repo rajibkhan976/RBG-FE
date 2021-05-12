@@ -6,10 +6,8 @@ import Automation from "./automation";
 import ContactsComponent from "./contacts";
 
 const DashboardRouting = (props) => {
-  let [linkHovered, setLinkHovered] = useState("/user-controls");
-
   useEffect(() => {
-    setLinkHovered(props.hoveredLink);
+    
   });
 
   return (
@@ -17,13 +15,13 @@ const DashboardRouting = (props) => {
       <Switch>
         <Redirect exact from="/" to="/user-controls" />
         <Route path="/user-controls">
-          <UserControls linkHovered={linkHovered} />
+          <UserControls  />
         </Route>
         <Route path="/automation">
-          <Automation linkHovered={linkHovered} />
+          <Automation />
         </Route>
         <Route path="/contacts">
-          <ContactsComponent linkHovered={linkHovered} />
+          <ContactsComponent />
         </Route>
       </Switch>
     </>

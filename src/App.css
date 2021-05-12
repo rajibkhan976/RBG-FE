@@ -689,4 +689,78 @@ input:focus+.searchIco #search-ico .a {
 
 /* Side Menu Tray */
 
+.menuHeading {
+  margin: 35px 0 30px 20px;
+}
+
+.menuHeading p {
+  font-weight: 700;
+  font-size: 16px;
+  color: #305671;
+}
+
+.leftMenuInnerLink {
+  padding: 15px 0 15px 10px;
+  margin: 0px 25px 0px 25px;
+  display: block;
+  position: relative;
+  border-top: 1px solid #DCE4EB;
+  border-bottom: 1px solid #DCE4EB;
+}
+
+.Indicator {
+  width: 6px;
+  height: 6px;
+  background: #ED707A;
+  border-radius: 50%;
+  position: absolute;
+  left: 0;
+  top: 23px;
+  display: none;
+}
+
+.Indicator.active {
+  display: block;
+}
+
+.linkDetails {
+  margin: 0 0 0 10px;
+  color: #305671;
+}
+
+.linkHeading {
+  display: inline-block;
+  margin: 0 10px 10px 0;
+  color: #305671;
+  font-size: 16px;
+}
+
+.linkAbout {
+  color: #9BAEBC;
+  font-size: 12px;
+}
+
+.notificationNumber {
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  padding: 3px 10px;
+  background: #55BBC9;
+  border-radius: 40px;
+  border: 1px solid #3EA6B4;
+}
+
+.arrowIcon {
+  padding: 7px;
+  background: linear-gradient( 270deg, #F1A768 0%, #ED707A 100%) 0% 0% no-repeat padding-box;
+  border-radius: 50%;
+  position: absolute;
+  right: 10px;
+  top: 30px;
+}
+
+.linkImg {
+  margin: 70px 0px 0px 55px;
+}
+
 /* Dashboard Body */

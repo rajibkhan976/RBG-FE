@@ -1,11 +1,7 @@
 import { useEffect } from "react";
-import { NavLink} from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function LeftMenu(props) {
-  const hoverOverLink = (e) => {
-    props.getHovered(e);
-  };
-
   useEffect(() => {});
 
   return (
@@ -13,10 +9,9 @@ function LeftMenu(props) {
       <ul>
         <li>
           <NavLink
-            className="leftMenuLink"            
+            className="leftMenuLink"
             activeClassName="selected"
             to="/page-one"
-            onMouseOver={(e) => hoverOverLink(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -47,7 +42,6 @@ function LeftMenu(props) {
             className="leftMenuLink"
             activeClassName="selected"
             to="/page-two"
-            onMouseOver={(e) => hoverOverLink(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -84,7 +78,6 @@ function LeftMenu(props) {
             className="leftMenuLink"
             activeClassName="selected"
             to="/user-controls"
-            onMouseOver={(e) => hoverOverLink(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -102,10 +95,8 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            
             activeClassName="selected"
             to="/page-four"
-            onMouseOver={(e) => hoverOverLink(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -152,10 +143,8 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            
             activeClassName="selected"
             to="/page-five"
-            onMouseOver={(e) => hoverOverLink(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -208,10 +197,8 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            
             activeClassName="selected"
             to="/automation"
-            onMouseOver={(e) => hoverOverLink(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -232,10 +219,8 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            
             activeClassName="selected"
             to="/contacts"
-            onMouseOver={(e) => hoverOverLink(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -289,10 +274,8 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            
             activeClassName="selected"
             to="/page-eight"
-            onMouseOver={(e) => hoverOverLink(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -357,10 +340,8 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            
             activeClassName="selected"
             to="/page-nine"
-            onMouseOver={(e) => hoverOverLink(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
