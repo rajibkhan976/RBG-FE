@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Route, Switch, NavLink, Redirect } from "react-router-dom";
 
-import DashboardFooter from '../../common/FooterDashboard'
+import DashboardFooter from "../../common/FooterDashboard";
 import HeaderDashboard from "../../common/HeaderDashboard";
 import SidebarLogo from "../../assets/images/sidebar-logo.png";
 import UserControlsRoles from "./components/UserControlsRoles";
@@ -9,7 +9,9 @@ import UserControlsGroups from "./components/UserControlsGroups";
 import UserControlsUsers from "./components/UserControlsUsers";
 
 function UserControls(props) {
-  useEffect(() => {});
+  useEffect(() => {
+    
+  });
   return (
     <>
       <div className="menuDetails">
@@ -56,7 +58,7 @@ function UserControls(props) {
               component={UserControlsUsers}
             />
           </Switch>
-          <DashboardFooter/>
+          <DashboardFooter />
         </div>
       </div>
     </>

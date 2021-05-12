@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import Notifications from "./Notifications";
 import CreateIcon from "../assets/images/create.png";
@@ -8,8 +8,9 @@ import UserIcon from "../assets/images/user.png";
 function HeaderDashboard(props) {
   const [stateNotifMenu, setStateNotifMenu] = useState(false);
   const [stateUserMenu, setStateUserMenu] = useState(false);
+  const [createButton, setCreateButton] = useState(false);
 
-  const toggleNotifications = () => {
+  const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
   };
 
@@ -17,11 +18,16 @@ function HeaderDashboard(props) {
     setStateUserMenu(!stateUserMenu);
   };
 
+  const toggleCreate = (e) => {
+    setCreateButton(!createButton);
+  };
+
   const closeSideMenu = (e) => {
     e.preventDefault();
     setStateNotifMenu(false);
+    setCreateButton(false);
   };
-
+  
   return (
     <>
       <div className="dashboardHeader">
@@ -51,13 +57,30 @@ function HeaderDashboard(props) {
         </div>
         <button
           className="btn buttonNotifications newNotifications"
-          onClick={toggleNotifications}
+          onClick={(e) => toggleNotifications(e)}
         >
           <img src={NotificationIcon} alt="" />
         </button>
-        <button className="btn buttonCreate">
-          <img src={CreateIcon} alt="" />
-        </button>
+        {(window.location.pathname === "/user-controls/users" || window.location.pathname === "/user-controls/roles" || window.location.pathname === "/user-controls/groups") && 
+          <button
+            className="btn buttonCreate"
+            id="createUser"
+            data-create="create-user"
+            onClick={(e) => toggleCreate(e)}
+          >
+            <img src={CreateIcon} alt="" />
+          </button>
+        }
+        {window.location.pathname === "/automation/automation-list" && (
+          <button
+            className="btn buttonCreate"
+            id="createAutomation"
+            data-create="create-automation"
+            onClick={(e) => toggleCreate(e)}
+          >
+            <img src={CreateIcon} alt="" />
+          </button>
+        )}
         <div className="menuUser">
           <button className="btn btnUserMenu" onClick={toggleUserMenu}>
             <figure
@@ -89,11 +112,39 @@ function HeaderDashboard(props) {
               </button>
             </div>
 
-            <div className="sideMenuBody">            
-              <Notifications/>
+            <div className="sideMenuBody">
+              <Notifications />
             </div>
           </div>
         </div>
+      )}
+
+      {(window.location.pathname === "/user-controls/users" ||
+        window.location.pathname === "/user-controls/roles" ||
+        window.location.pathname === "/user-controls/groups") &&
+      createButton ? (
+        <div className="sideMenuOuter createUserMenu">
+          <div className="sideMenuInner">
+            <div className="sideMenuHeader">
+              <h3>Create an User</h3>
+              <p>
+                Create multiple sub-users with different access permissions of
+                your business.
+              </p>
+              <button
+                className="btn btn-closeSideMenu"
+                onClick={(e) => closeSideMenu(e)}
+              >
+                <span></span>
+                <span></span>
+              </button>
+            </div>
+
+            <div className="sideMenuBody"></div>
+          </div>
+        </div>
+      ) : (
+        ""
       )}
     </>
   );

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Route, Switch, NavLink, Redirect } from "react-router-dom";
 
-import DashboardFooter from '../../common/FooterDashboard'
+import DashboardFooter from "../../common/FooterDashboard";
 import HeaderDashboard from "../../common/HeaderDashboard";
 import SidebarLogo from "../../assets/images/sidebar-logo.png";
 import ContactDetails from "./components/ContactDetails";
@@ -28,16 +28,17 @@ function ContactsComponent(props) {
       <div className="dashboardElComponent">
         <HeaderDashboard />
         <div className="dashInnerStructure">
-          <Switch>
-            <Redirect exact from="/contacts" to="/contacts/contact-details" />
-            <Route
-              strict
-              path="/contacts/contact-details"
-              component={ContactDetails}
-            />
-          </Switch>
-
-          <DashboardFooter/>
+          <div className="dashInnerUI">
+            <Switch>
+              <Redirect exact from="/contacts" to="/contacts/contact-details" />
+              <Route
+                strict
+                path="/contacts/contact-details"
+                component={ContactDetails}
+              />
+            </Switch>
+          </div>
+          <DashboardFooter />
         </div>
       </div>
     </>

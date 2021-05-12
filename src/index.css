@@ -1,3 +1,7 @@
+.btn-closeSideMenu span {
+  pointer-events: none;
+}
+
 .btn {
   padding: 0;
 }
@@ -91,7 +95,7 @@
   justify-content: center;
 }
 
-.paginationOuter li a {
+.paginationOuter .btn {
   width: 27px;
   height: 27px;
   display: flex;
@@ -106,7 +110,7 @@
   font-size: 15px;
 }
 
-.paginationOuter li a.active {
+.paginationOuter li:not(:first-child):not(:last-child) .btn.active {
   background-color: #305671;
   color: #fff;
 }

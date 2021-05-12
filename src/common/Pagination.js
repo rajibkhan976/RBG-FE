@@ -1,47 +1,47 @@
 const DashboardPagination = () => {
     return(
         <>
-            <div class="paginationOuter">
+            <div className="paginationOuter">
                 <ul>
                     <li>
-                        <a>
+                        <button className="btn paginationBtn">
                             &#60;
-                        </a>
+                        </button>
                     </li>
                     <li>
-                        <a>
+                        <button className="btn paginationBtn active">
                             1
-                        </a>
+                        </button>
                     </li>
                     <li>
-                        <a>
+                        <button className="btn paginationBtn">
                             2
-                        </a>
+                        </button>
                     </li>
                     <li>
-                        <a>
+                        <button className="btn paginationBtn">
                             3
-                        </a>
+                        </button>
                     </li>
                     <li>
-                        <a>
+                        <button className="btn paginationBtn">
                             4
-                        </a>
+                        </button>
                     </li>
                     <li>
-                        <a>
+                        <button className="btn paginationBtn">
                             5
-                        </a>
+                        </button>
                     </li>
                     <li>
-                        <a>
+                        <button className="btn paginationBtn">
                             ...
-                        </a>
+                        </button>
                     </li>
                     <li>
-                        <a>
+                        <button className="btn paginationBtn">
                             &#62;
-                        </a>
+                        </button>
                     </li>
                 </ul>
             </div>

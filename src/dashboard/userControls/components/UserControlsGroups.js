@@ -1,6 +1,6 @@
 import DashboardPagination from "../../../common/Pagination";
 
-const UserControlsGroups = () => {
+const UserControlsGroups = (props) => {
   return (
     <div className="dashInnerUI">
       User Control Groups
