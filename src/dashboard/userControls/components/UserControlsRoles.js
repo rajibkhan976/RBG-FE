@@ -24,7 +24,7 @@ const UserControlsRoles = (props) => {
   };
 
   const editThisRole = (e) => {
-    
+
   };
 
   useEffect(() => {
@@ -92,7 +92,7 @@ const UserControlsRoles = (props) => {
       </div> */}
       <div className="userListBody">
         <div className="listBody">
-          <ul>
+          <ul className="tableListing">
             <li className="listHeading userRole">
               <div className="userName">Role Name</div>
               <div className="phoneNum assignedPeople">

@@ -57,27 +57,14 @@
   position: relative;
 }
 
-.listBody ul {
+.tableListing {
   display: table;
   width: 100%;
   border-spacing: 0 4px;
 }
 
-.listBody ul li {
-  display: table-row;
-  width: 100%;
-}
-
-.listBody ul li.listHeading {
+.tableListing li.listHeading {
   position: sticky;
-}
-
-.listBody ul li>div {
-  display: table-cell;
-  vertical-align: middle;
-  padding: 0 16px;
-  min-height: 60px;
-  position: relative;
 }
 
 .paginationOuter .btn svg {

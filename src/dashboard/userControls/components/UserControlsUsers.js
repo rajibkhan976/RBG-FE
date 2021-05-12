@@ -1,4 +1,3 @@
-import { useState } from "react";
 import DashboardPagination from "../../../common/Pagination";
 
 import search_icon from "../../../assets/images/search_icon.svg";
@@ -6,8 +5,6 @@ import filter_icon from "../../../assets/images/filter_icon.svg";
 import plus_icon from "../../../assets/images/plus_icon.svg";
 import owner_img_1 from "../../../assets/images/owner_img_1.png";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
-import arrowUp from "../../../assets/images/arrowUp.svg";
-import arrowDown from "../../../assets/images/arrowDown.svg";
 
 const UserControlsUsers = (props) => {
   const toggleCreateHeader = () => {
@@ -50,7 +47,7 @@ const UserControlsUsers = (props) => {
       </div>
       <div className="userListBody">
         <div className="listBody">
-          <ul>
+          <ul className="tableListing">
             <li className="listHeading">
               <div className="userName">User Name</div>
               <div className="phoneNum">Phone No</div>

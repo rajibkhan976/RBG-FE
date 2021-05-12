@@ -955,21 +955,34 @@ input:focus+.searchIco #search-ico .a {
   overflow: auto;
 }
 
-li.listHeading {
-  display: flex;
-  flex-direction: row;
-  align-content: center;
-  justify-content: space-around;
-  align-items: center;
+.tableListing li {
+  display: table-row;
+}
+
+.tableListing li:not(:first-child) {
+  background-color: #fff;
+}
+
+.tableListing li:first-child > div:first-child {
+  padding-left: 0;
+}
+
+.tableListing li>div {
+  display: table-cell;
+  vertical-align: middle;
   height: 60px;
+  padding: 0 16px;
+  position: relative;
 }
 
 li.listHeading>div {
   font-size: 13px;
   color: #305671;
-  position: relative;
-  padding: 13px 0px;
+  padding: 13px 16px;
   cursor: pointer;
+  display: table-cell;
+  vertical-align: middle;
+  position: relative;
 }
 
 li.listHeading>div:after {
@@ -987,17 +1000,15 @@ li.listHeading>div:after {
 }
 
 li.owerInfo {
-  display: flex;
+  /* display: flex;
   flex-direction: row;
   align-content: center;
   justify-content: space-between;
   align-items: center;
-  height: 60px;
   background-color: #fff;
   border-radius: 5px;
   margin-bottom: 5px;
-  padding: 15px;
-  position: relative;
+  position: relative; */
 }
 
 .arrowUp, .arrowDown {
