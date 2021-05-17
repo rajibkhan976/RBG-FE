@@ -1,5 +1,5 @@
-import arrow_forward from "../assets/images/arrow_forward.svg";
-import arrowDown from "../assets/images/arrowDown.svg";
+import arrow_forward from "../../assets/images/arrow_forward.svg";
+import arrowDown from "../../assets/images/arrowDown.svg";
 
 const Filter = (props) => {
   const closeSideMenu = (e) => {
@@ -60,7 +60,7 @@ const Filter = (props) => {
                 <span>Apply Filter</span>
                 <img className="" src={arrow_forward} alt="" />
               </button>
-              <a href="">Clear</a>
+              <button className="btn-link">Clear</button>
             </div>
           </form>
         </div>

@@ -1,14 +1,12 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Route, Switch, NavLink, Redirect } from "react-router-dom";
 
-import DashboardFooter from "../../shared/FooterDashboard";
-import HeaderDashboard from "../../shared/HeaderDashboard";
+import DashboardFooter from "../shared/FooterDashboard";
+import HeaderDashboard from "../shared/HeaderDashboard";
 import SidebarLogo from "../../assets/images/sidebar-logo.png";
 import AutomationLists from "./automationLists/AutomationLists";
 
 function Automation(props) {
-  const [createButton, setCreateButton] = useState("");
-
   const toggleCreate = (e) => {
     console.log(e);
   };

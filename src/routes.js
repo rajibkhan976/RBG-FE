@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import { Switch } from "react-router-dom";
 
 import Login from "./components/authentication/login/Login";
 import Dashboard from './components/ComponentsRouting'

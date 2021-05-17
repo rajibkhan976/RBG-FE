@@ -992,24 +992,12 @@ li.listHeading>div:after {
   vertical-align: middle;
   width: 9px;
   height: 13px;
-  background-image: url('./assets/images/sortTable.png');
+  background-image: url('../images/sortTable.png');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 9px auto;
   pointer-events: none;
   margin-left: 13px;
-}
-
-li.owerInfo {
-  /* display: flex;
-  flex-direction: row;
-  align-content: center;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 5px;
-  margin-bottom: 5px;
-  position: relative; */
 }
 
 .arrowUp, .arrowDown {
@@ -1328,7 +1316,7 @@ img.dropDownIcon {
   z-index: 10;
 }
 
-.InputsContainer li.InputsContainerHead {
+.InputsContainer li.inputsContainerHead {
   display: flex;
   flex-wrap: nowrap;
   flex-direction: row;
@@ -1338,7 +1326,7 @@ img.dropDownIcon {
   margin-bottom: 25px;
 }
 
-.InputsContainerHead p {
+.inputsContainerHead p {
   font-size: 13px;
   color: #305671;
   margin-top: 0;
@@ -1346,16 +1334,23 @@ img.dropDownIcon {
   text-align: center;
 }
 
-.InputsContainerHead p:nth-child(1) {
+.inputsContainerHead p:nth-child(1) {
   text-align: left;
   width: 30%;
 }
 
-.InputsContainerHead p a {
+.inputsContainerHead p .btn-link {
   color: #55BBC9;
   text-decoration: underline;
   font-size: 9px;
   margin-left: 10px;
+  background-color: transparent;
+  border: none;
+  border-radius: 0%;
+  -webkit-border-radius: 0%;
+  -moz-border-radius: 0%;
+  -ms-border-radius: 0%;
+  -o-border-radius: 0%;
 }
 
 .inputCheckBox span {
@@ -1446,6 +1441,11 @@ img.dropDownIcon {
   justify-content: space-evenly;
   align-items: center;
   align-content: center;
+}
+
+.applyFilterBtn .btn-link {
+  background-color: transparent;
+  border: none;
 }
 
 /* CREATE USER FORM 2*/

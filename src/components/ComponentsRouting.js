@@ -1,7 +1,5 @@
-import { useState } from "react";
-
 import DashboardRouting from "./DashboardRoutes";
-import LeftMenu from "../shared/LeftMenu";
+import LeftMenu from "./shared/LeftMenu";
 
 function Dashboard(props) {
   return (

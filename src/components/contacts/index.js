@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { Route, Switch, NavLink, Redirect } from "react-router-dom";
 
-import DashboardFooter from "../../shared/FooterDashboard";
-import HeaderDashboard from "../../shared/HeaderDashboard";
+import DashboardFooter from "../shared/FooterDashboard";
+import HeaderDashboard from "../shared/HeaderDashboard";
 import SidebarLogo from "../../assets/images/sidebar-logo.png";
 import ContactDetails from "./components/ContactDetails";
 
 function ContactsComponent(props) {
-  const [createButton, setCreateButton] = useState("");
-
   const toggleCreate = (e) => {
     console.log(e);
   };

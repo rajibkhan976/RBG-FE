@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 
 import Notifications from "./Notifications";
-import CreateIcon from "../assets/images/create.png";
-import NotificationIcon from "../assets/images/notif.png";
-import UserIcon from "../assets/images/user.png";
+import CreateIcon from "../../assets/images/create.png";
+import NotificationIcon from "../../assets/images/notif.png";
+import UserIcon from "../../assets/images/user.png";
 
 function HeaderDashboard(props) {
   const [stateNotifMenu, setStateNotifMenu] = useState(false);
@@ -43,7 +43,7 @@ function HeaderDashboard(props) {
       : window.location.pathname === "/automation/automation-list"
       ? setLocationLoaded("automation")
       : setLocationLoaded(null);
-  })
+  },[])
 
   return (
     <>

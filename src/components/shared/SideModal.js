@@ -1,8 +1,7 @@
-import { useState } from "react";
-import camera_icon from "../assets/images/camera_icon.svg";
-import arrow_forward from "../assets/images/arrow_forward.svg";
-import plus_icon from "../assets/images/plus_icon.svg";
-import arrowDown from "../assets/images/arrowDown.svg";
+import camera_icon from "../../assets/images/camera_icon.svg";
+import arrow_forward from "../../assets/images/arrow_forward.svg";
+import plus_icon from "../../assets/images/plus_icon.svg";
+import arrowDown from "../../assets/images/arrowDown.svg";
 
 const SideModal = (props) => {
   const closeSideMenu = (e) => {
@@ -155,9 +154,9 @@ const SideModal = (props) => {
                     <p className="permissionHead">Manage permissions</p>
                     <div className="InputsContainer">
                       <ul>
-                        <li className="InputsContainerHead">
+                        <li className="inputsContainerHead">
                           <p>
-                            Entity <a href="">Select All</a>
+                            Entity <button className="btn-link">Select All</button>
                           </p>
                           <p>Read</p>
                           <p>Add</p>
@@ -512,9 +511,9 @@ const SideModal = (props) => {
                     <p className="permissionHead">Manage permissions</p>
                     <div className="InputsContainer">
                       <ul>
-                        <li className="InputsContainerHead">
+                        <li className="inputsContainerHead">
                           <p>
-                            Entity <a href="">Select All</a>
+                            Entity <button className="btn-link">Select All</button>
                           </p>
                           <p>Read</p>
                           <p>Add</p>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import BackArrow from "../assets/images/back-arrow.png";
+import BackArrow from "../../assets/images/back-arrow.png";
 
 const Notifications = () => {
   let [detailNotification, setDetailNotification] = useState(null);

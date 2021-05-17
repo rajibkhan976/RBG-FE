@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 
 import UserControls from "./authentication/AuthRoutes";
