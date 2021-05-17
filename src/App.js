@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { BrowserRouter as Router } from "react-router-dom";
-import Login from "./auth/Login";
-import Dashboard from "./dashboard";
+import Login from "./components/authentication/login/Login";
+import Dashboard from "./components/";
 
 import "./App.css";
 

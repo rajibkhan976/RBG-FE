@@ -1,4 +1,4 @@
-import DashboardPagination from "../../../common/Pagination";
+import DashboardPagination from "../../../shared/Pagination";
 
 import search_icon from "../../../assets/images/search_icon.svg";
 import filter_icon from "../../../assets/images/filter_icon.svg";

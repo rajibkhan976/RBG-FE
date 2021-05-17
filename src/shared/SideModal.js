@@ -474,7 +474,7 @@ const SideModal = (props) => {
                 <div className="permissionButtons enterRoleNameBtn">
                   <button className="creatUserBtn createBtn">
                     <img className="plusIcon" src={plus_icon} alt="" />
-                    <span>Create an user</span>
+                    <span>Create role</span>
                   </button>
                   <button className="saveNnewBtn">
                     <span>Save & New</span>

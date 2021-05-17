@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 
-import DashboardPagination from "../../../common/Pagination";
+import DashboardPagination from "../../../shared/Pagination";
+import TableOptionsDropdown from '../../../shared/TableOptionsDropdown'
 
 import search_icon from "../../../assets/images/search_icon.svg";
 import filter_icon from "../../../assets/images/filter_icon.svg";
@@ -24,7 +25,6 @@ const UserControlsRoles = (props) => {
   };
 
   const editThisRole = (e) => {
-
   };
 
   useEffect(() => {

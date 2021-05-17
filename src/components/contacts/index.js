@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Route, Switch, NavLink, Redirect } from "react-router-dom";
 
-import DashboardFooter from "../../common/FooterDashboard";
-import HeaderDashboard from "../../common/HeaderDashboard";
+import DashboardFooter from "../../shared/FooterDashboard";
+import HeaderDashboard from "../../shared/HeaderDashboard";
 import SidebarLogo from "../../assets/images/sidebar-logo.png";
 import ContactDetails from "./components/ContactDetails";
 

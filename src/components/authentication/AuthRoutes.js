@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Route, Switch, NavLink, Redirect } from "react-router-dom";
 
-import DashboardFooter from "../../common/FooterDashboard";
-import HeaderDashboard from "../../common/HeaderDashboard";
-import FilterAuth from "../../common/FilterAuth";
-import UserControlsRoles from "./components/UserControlsRoles";
-import UserControlsGroups from "./components/UserControlsGroups";
-import UserControlsUsers from "./components/UserControlsUsers";
-import SideModal from "../../common/SideModal";
+import DashboardFooter from "../../shared/FooterDashboard";
+import HeaderDashboard from "../../shared/HeaderDashboard";
+import FilterAuth from "../../shared/FilterAuth";
+import UserControlsRoles from "./roles/roles";
+import UserControlsGroups from "./groups/groups";
+import UserControlsUsers from "./users/users";
+import SideModal from "../../shared/SideModal";
 
 import white_arrow_right from "../../assets/images/white_arrow_right.svg";
 import undraw_personal_settings_kihd from "../../assets/images/undraw_personal_settings_kihd.svg";
