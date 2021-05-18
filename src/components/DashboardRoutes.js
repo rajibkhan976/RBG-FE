@@ -14,7 +14,7 @@ const DashboardRouting = (props) => {
     <>
       <Switch>
         <Redirect exact from="/" to="/user-controls" />
-        <Route path="/user-controls">
+        <Route path={["/roles", "/groups", "/users"]}>{ /*path="/user-controls"*/}
           <UserControls  />
         </Route>
         <Route path="/automation">

@@ -1,8 +1,12 @@
 import { useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 function LeftMenu(props) {
-  useEffect(() => {});
+  const pathURL = useLocation().pathname
+
+  useEffect(() => {
+    console.log(pathURL)
+  });
 
   return (
     <div className="routeMenu">
@@ -76,8 +80,9 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            activeClassName="selected"
-            to="/user-controls"
+            isActive={() => ['/roles', '/groups', '/users']}
+            activeClassName={(pathURL == "/roles" || pathURL == "/groups" || pathURL == "/users") && "selected"}
+            to="/roles"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

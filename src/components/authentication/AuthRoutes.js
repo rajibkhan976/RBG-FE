@@ -39,7 +39,7 @@ function UserControls(props) {
         </figure>
         <ul>
           <li>
-            <NavLink className="leftMenuInnerLink" to="/user-controls/roles">
+            <NavLink className="leftMenuInnerLink" to="/roles">
               <div className="indicator"></div>
               <div className="linkDetails">
                 <p className="linkHeading">Roles</p>
@@ -51,7 +51,7 @@ function UserControls(props) {
             </NavLink>
           </li>
           <li>
-            <NavLink className="leftMenuInnerLink" to="/user-controls/groups">
+            <NavLink className="leftMenuInnerLink" to="/groups">
               <div className="indicator"></div>
               <div className="linkDetails">
                 <p className="linkHeading">Groups</p>
@@ -63,7 +63,7 @@ function UserControls(props) {
             </NavLink>
           </li>
           <li>
-            <NavLink className="leftMenuInnerLink" to="/user-controls/users">
+            <NavLink className="leftMenuInnerLink" to="/users">
               <div className="indicator"></div>
               <div className="linkDetails">
                 <p className="linkHeading">Users</p>
@@ -84,20 +84,20 @@ function UserControls(props) {
 
         <div className="dashInnerStructure">
           <Switch>
-            <Redirect exact from="/user-controls/" to="/user-controls/roles" />
-            <Route strict path="/user-controls/roles">
+            <Redirect exact from="/user-controls/" to="/roles" />
+            <Route strict path="/roles">
               <UserControlsRoles
                 toggleCreate={(e) => toggleCreate(e)}
                 toggleFilter={(e) => toggleFilter(e)}
               />
             </Route>
-            <Route strict path="/user-controls/groups">
+            <Route strict path="/groups">
               <UserControlsGroups
                 toggleCreate={(e) => toggleCreate(e)}
                 toggleFilter={(e) => toggleFilter(e)}
               />
             </Route>
-            <Route strict path="/user-controls/users">
+            <Route strict path="/users">
               <UserControlsUsers
                 toggleCreate={(e) => toggleCreate(e)}
                 toggleFilter={(e) => toggleFilter(e)}
