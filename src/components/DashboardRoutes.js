@@ -17,7 +17,7 @@ const DashboardRouting = (props) => {
         <Route path={["/roles", "/groups", "/users"]}>{ /*path="/user-controls"*/}
           <UserControls  />
         </Route>
-        <Route path="/automation">
+        <Route path={["/automation-list"]}>
           <Automation />
         </Route>
         <Route path="/contacts">

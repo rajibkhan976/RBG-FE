@@ -23,7 +23,7 @@ function Automation(props) {
           <li>
             <NavLink
               className="leftMenuInnerLink"
-              to="/automation/automation-list"
+              to="/automation-list"
             >
               Automation Lists
             </NavLink>
@@ -33,20 +33,18 @@ function Automation(props) {
       <div className="dashboardElComponent">
         <HeaderDashboard toggleCreate={toggleCreate} />
         <div className="dashInnerStructure">
-          <div className="dashInnerUI">
             <Switch>
               <Redirect
                 exact
                 from="/automation"
-                to="/automation/automation-list"
+                to="/automation-list"
               />
               <Route
                 strict
-                path="/automation/automation-list"
+                path="/automation-list"
                 component={AutomationLists}
               />
             </Switch>
-          </div>
           <DashboardFooter />
         </div>
       </div>
