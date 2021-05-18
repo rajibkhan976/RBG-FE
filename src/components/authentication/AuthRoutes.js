@@ -1,127 +1,17 @@
-import { useEffect, useState } from "react";
-import { Route, Switch, NavLink, Redirect } from "react-router-dom";
+import { Switch } from "react-router-dom";
+import { ProtectedRoute } from "../../middleware/ProtectedRoute";
+import Roles from "./roles/Roles";
+import Groups from "./groups/Groups";
+import Users from "./users/Users";
 
-import DashboardFooter from "../shared/FooterDashboard";
-import HeaderDashboard from "../shared/HeaderDashboard";
-import FilterAuth from "../shared/FilterAuth";
-import UserControlsRoles from "./roles/roles";
-import UserControlsGroups from "./groups/groups";
-import UserControlsUsers from "./users/users";
-import SideModal from "../shared/SideModal";
-
-import white_arrow_right from "../../assets/images/white_arrow_right.svg";
-import undraw_personal_settings_kihd from "../../assets/images/undraw_personal_settings_kihd.svg";
-import SidebarLogo from "../../assets/images/sidebar-logo.png";
-
-function UserControls(props) {
-  const [createButton, setCreateButton] = useState(null);
-  const [stateFilter, setStateFilter] = useState(null);
-
-  const toggleCreate = (e) => {
-    setCreateButton(e);
-  };
-
-  const toggleFilter = (e) => {
-    setStateFilter(e);
-    console.log(e);
-  };
-
-  const closeFilter = (e) => {
-    setStateFilter(null);
-  };
-
-  useEffect(() => {});
+const AuthRoutes = (props) => {
   return (
-    <>
-      <div className="menuDetails">
-        <figure className="logoSidebar">
-          <img src={SidebarLogo} alt="" />
-        </figure>
-        <ul>
-          <li>
-            <NavLink className="leftMenuInnerLink" to="/roles">
-              <div className="indicator"></div>
-              <div className="linkDetails">
-                <p className="linkHeading">Roles</p>
-                <span className="notificationNumber">10</span>
-                <br />
-                <p className="linkAbout">Manage user roles</p>
-              </div>
-              <img className="arrowIcon" src={white_arrow_right} alt="" />
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className="leftMenuInnerLink" to="/groups">
-              <div className="indicator"></div>
-              <div className="linkDetails">
-                <p className="linkHeading">Groups</p>
-                <span className="notificationNumber">5</span>
-                <br />
-                <p className="linkAbout">Manage user groups</p>
-              </div>
-              <img className="arrowIcon" src={white_arrow_right} alt="" />
-            </NavLink>
-          </li>
-          <li>
-            <NavLink className="leftMenuInnerLink" to="/users">
-              <div className="indicator"></div>
-              <div className="linkDetails">
-                <p className="linkHeading">Users</p>
-                <span className="notificationNumber">48</span>
-                <br />
-                <p className="linkAbout">Manage users & sub-users</p>
-              </div>
-              <img className="arrowIcon" src={white_arrow_right} alt="" />
-            </NavLink>
-          </li>
-        </ul>
-        <div className="linkImg">
-          <img src={undraw_personal_settings_kihd} alt="" />
-        </div>
-      </div>
-      <div className="dashboardElComponent">
-        <HeaderDashboard toggleCreate={(e) => toggleCreate(e)} />
-
-        <div className="dashInnerStructure">
-          <Switch>
-            <Redirect exact from="/user-controls/" to="/roles" />
-            <Route strict path="/roles">
-              <UserControlsRoles
-                toggleCreate={(e) => toggleCreate(e)}
-                toggleFilter={(e) => toggleFilter(e)}
-              />
-            </Route>
-            <Route strict path="/groups">
-              <UserControlsGroups
-                toggleCreate={(e) => toggleCreate(e)}
-                toggleFilter={(e) => toggleFilter(e)}
-              />
-            </Route>
-            <Route strict path="/users">
-              <UserControlsUsers
-                toggleCreate={(e) => toggleCreate(e)}
-                toggleFilter={(e) => toggleFilter(e)}
-              />
-            </Route>
-          </Switch>
-          <DashboardFooter />
-        </div>
-      </div>
-
-      {createButton !== null && (
-        <SideModal
-          createButton={createButton}
-          setCreateButton={setCreateButton}
-        />
-      )}
-
-      {/* FILTER SIDE MENU */}
-      {stateFilter && (
-        <FilterAuth stateFilter={stateFilter} closeFilter={closeFilter} />
-      )}
-      {/* FILTER SIDE MENU */}
-    </>
+    <Switch>
+      <ProtectedRoute exact path="/roles" component={Roles} />
+      <ProtectedRoute exact path="/groups" component={Groups} />
+      <ProtectedRoute exact path="/users" component={Users} />
+    </Switch>
   );
 }
 
-export default UserControls;
+export default AuthRoutes;
