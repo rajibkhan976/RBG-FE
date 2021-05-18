@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import {useState} from 'react';
 
 import DashboardPagination from "../../shared/Pagination";
 import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
@@ -6,66 +7,55 @@ import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
 import search_icon from "../../../assets/images/search_icon.svg";
 import filter_icon from "../../../assets/images/filter_icon.svg";
 import plus_icon from "../../../assets/images/plus_icon.svg";
+import owner_img_1 from "../../../assets/images/owner_img_1.png";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 
-// import owner_img_1 from "../../../assets/images/owner_img_1.png";
-// import more_pages_Icon from "../../../assets/images/more_pages_Icon.svg";
-// import arrow from "../../../assets/images/arrow.svg";
-// import cross_icon from "../../../assets/images/cross_icon.svg";
-// import camera_icon from "../../../assets/images/camera_icon.svg";
-// import arrow_forward from "../../../assets/images/arrow_forward.svg";
-// import list_board_icon from "../../../assets/images/list_board_icon.svg";
-
-const RolesListing = (props) => {
-
+const UsersListing = (props) => {
     const [dropdownPos, setDropdownPos] = useState('bottom');
-    const [rolesData, setRolesData] = useState([
+    const [usersData, setUsersData] = useState([
         {
-            keyId: "role-1",
-            roleName: "Gym Manager",
-            numberOfAssigned: 2,
+            keyId: "user-1",
+            userName: "Richard Nile",
+            phoneNumber: "(555) 555-1234",
+            emailId: "richard.nile99@gmail.com",
+            role: "Gym Owner",
+            assignedGroup: "Gym Staff",
+            activeStatus: "Active",
             createdOn: "2nd Feb 2021",
             isEditing: false,
         },
         {
-            keyId: "role-2",
-            roleName: "Gym Staff",
-            numberOfAssigned: 23,
+            keyId: "user-2",
+            userName: "John Nile",
+            phoneNumber: "(555) 555-1234",
+            emailId: "nile.nile99@gmail.com",
+            role: "Gym Owner",
+            assignedGroup: "Gym Staff",
+            activeStatus: "Active",
             createdOn: "2nd Feb 2021",
             isEditing: false,
         },
         {
-            keyId: "role-3",
-            roleName: "Senior Gym Staff",
-            numberOfAssigned: 2,
-            createdOn: "2nd Feb 2021",
-            isEditing: false,
-        },
-        {
-            keyId: "role-4",
-            roleName: "Marketing Head",
-            numberOfAssigned: 2,
-            createdOn: "2nd Feb 2021",
-            isEditing: false,
-        },
-        {
-            keyId: "role-5",
-            roleName: "Sales Staff - in bound",
-            numberOfAssigned: 2,
+            keyId: "user-3",
+            userName: "Susc Nile",
+            phoneNumber: "(555) 555-1234",
+            emailId: "sucs.nile99@gmail.com",
+            role: "Gym Owner",
+            assignedGroup: "Gym Staff",
+            activeStatus: "Active",
             createdOn: "2nd Feb 2021",
             isEditing: false,
         },
     ]);
-
     const toggleCreateHeader = () => {
-        props.toggleCreate("roles");
+        props.toggleCreate("user");
     };
 
-    const filterRoles = () => {
-        props.toggleFilter("roles");
+    const filterUsers = () => {
+        props.toggleFilter("user");
     };
 
-    const editThisRole = (e, el) => {
+    const editThisUser = (e, el) => {
         let yPosition = el.clientY;
         let avHeight = window.innerHeight - (70 + 70 + 54 + 57)
         if ((yPosition + 70) > avHeight) {
@@ -75,33 +65,30 @@ const RolesListing = (props) => {
             setDropdownPos("bottom")
         }
 
-        const data = rolesData.filter((i) => i.keyId === e);
-        console.log("E? : ", data);
+        const data = usersData.filter((i) => i.keyId === e);
+        console.log("E? : ", data, "EL:::");
         data[0].isEditing = !data[0].isEditing;
         console.log("data  :: ", data[0].isEditing);
-        const newData = rolesData.map((el, i) => {
-            if (el.keyId === e) {
+        const newData = usersData.map((el, i) => {
+            if (el.keyId == e) {
                 return data[0];
             } else return el;
         });
         console.log("newData : ", newData);
-        setRolesData(newData);
+        setUsersData(newData);
     };
-
-    useEffect(() => {
-        console.log('roles component mounted');
-    });
-
     return (
         <div className="dashInnerUI">
             <div className="userListHead">
                 <div className="listInfo">
                     <ul className="listPath">
                         <li>Users & Controls</li>
-                        <li>Roles</li>
+                        <li>Users</li>
                     </ul>
-                    <h2 className="inDashboardHeader">User Roles (12)</h2>
-                    <p className="userListAbout">Create & manage roles for your users</p>
+                    <h2 className="inDashboardHeader">User List (48)</h2>
+                    <p className="userListAbout">
+                        Create & manage multiple sub-users with different access
+          </p>
                 </div>
                 <div className="listFeatures">
                     <div className="searchBar">
@@ -110,78 +97,60 @@ const RolesListing = (props) => {
                             <img src={search_icon} alt="" />
                         </button>
                     </div>
-                    <button className="btn btn-filter" onClick={filterRoles}>
+                    <button className="btn btn-filter" onClick={filterUsers}>
                         <p>Filter</p>
                         <img className="filterIcon" src={filter_icon} alt="" />
                     </button>
                     <button className="creatUserBtn" onClick={toggleCreateHeader}>
                         <img className="plusIcon" src={plus_icon} alt="" />
-                        <span>Create a new role</span>
+                        <span>Create an user</span>
                     </button>
                 </div>
             </div>
-            {/* <div className="userListBody">
-        <div className="listBody">
-          <ul>
-            <li className="listHeading userRole">
-              <div className="userName">
-                Role Name
-                
-              </div>
-              <div className="phoneNum assignedPeople">
-                No. of people assigned
-                
-              </div>
-              <div className="emailID">
-                Created on
-                
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <div className="createNew">
-          <span>
-            <img src={list_board_icon} alt="" />
-            <p>You haven’t created any roles yet.</p>
-          </span>
-          <button className="creatUserBtn" onClick={toggleCreateHeader}>
-            <img className="plusIcon" src={plus_icon} alt="" />
-            <span>Create a new role</span>
-          </button>
-        </div>
-      </div> */}
             <div className="userListBody">
                 <div className="listBody">
                     <ul className="tableListing">
-                        <li className="listHeading userRole">
-                            <div className="userName">Role Name</div>
-                            <div className="phoneNum assignedPeople">
-                                No. of people assigned
-              </div>
+                        <li className="listHeading">
+                            <div className="userName">User Name</div>
+                            <div className="phoneNum">Phone No</div>
+                            <div className="emailID">Email Id</div>
+                            <div className="role">Role</div>
+                            <div className="assignedGroup">Assigned Group</div>
+                            <div className="status">Status</div>
                             <div className="createDate">Created on</div>
                         </li>
-                        {rolesData.length &&
-                            rolesData.map((elem, i) => {
+                        {usersData.length &&
+                            usersData.map((elem, i) => {
                                 return (
                                     <>
-                                        <li className="owerInfo userRole" key={elem.keyId}>
+                                        <li className="owerInfo">
                                             <div className="userName">
                                                 <button className="btn">
-                                                    <p>{elem.roleName}</p>
+                                                    <img src={owner_img_1} alt="" />
+                                                    <p>{elem.userName}</p>
                                                 </button>
                                             </div>
                                             <div className="phoneNum">
-                                                <button className="btn">
-                                                    {elem.numberOfAssigned}
-                                                </button>
+                                                <button className="btn">{elem.phoneNumber}</button>
+                                            </div>
+                                            <div className="emailID">
+                                                <button className="btn">{elem.emailId}</button>
+                                            </div>
+                                            <div className="role">
+                                                <button className="btn">{elem.role}</button>
+                                            </div>
+                                            <div className="assignedGroup">
+                                                <button className="btn">{elem.assignedGroup}</button>
+                                            </div>
+                                            <div className="status">
+                                                <button className="btn">{elem.activeStatus}</button>
                                             </div>
                                             <div className="createDate">
                                                 <button className="btn">{elem.createdOn}</button>
                                                 <div className="info_3dot_icon">
                                                     <button
                                                         className="btn"
-                                                        onClick={(el) => editThisRole(elem.keyId, el)}
+                                                        onClick={(el) => editThisUser(elem.keyId, el)}
                                                     >
                                                         <img src={info_3dot_icon} alt="" />
                                                     </button>
@@ -200,4 +169,4 @@ const RolesListing = (props) => {
     )
 }
 
-export default RolesListing
+export default UsersListing;
