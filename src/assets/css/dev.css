@@ -1,0 +1,56 @@
+.info_3dot_icon .btn {
+    width: 22px;
+}
+.dropdownOptions {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    border-radius: 3px;
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 0px 30px #00000012;
+    width: 100px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    z-index: 9;
+    overflow: hidden;
+}
+
+.dropdownOptions .btn {
+    width: 100%;
+    color: #9BAEBC;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-size: 13px;
+    height: 35px;
+    padding: 0 16px;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+}
+
+.dropdownOptions .btn:hover {
+    color: #305671;
+    background-color: #E2E7EB;
+}
+
+.dropdownOptions .btn span {
+    max-width: 12px;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    margin-right: 9px;
+}
+
+.dropdownOptions .btn svg {
+    width: 100%;
+    max-width: 11.5px;
+}
+.dropdownOptions .btn:hover svg .a {
+    stroke: #305671;
+}

@@ -1,7 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import DashboardPagination from "../../shared/Pagination";
-// import TableOptionsDropdown from '../../../shared/TableOptionsDropdown'
+import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
 
 import search_icon from "../../../assets/images/search_icon.svg";
 import filter_icon from "../../../assets/images/filter_icon.svg";
@@ -16,6 +16,45 @@ import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 // import list_board_icon from "../../../assets/images/list_board_icon.svg";
 
 const UserControlsRoles = (props) => {
+  const [dropdownPos, setDropdownPos] = useState('bottom');
+  const [rolesData, setRolesData] = useState([
+    {
+      keyId: "role-1",
+      roleName: "Gym Manager",
+      numberOfAssigned: 2,
+      createdOn: "2nd Feb 2021",
+      isEditing: false,
+    },
+    {
+      keyId: "role-2",
+      roleName: "Gym Staff",
+      numberOfAssigned: 23,
+      createdOn: "2nd Feb 2021",
+      isEditing: false,
+    },
+    {
+      keyId: "role-3",
+      roleName: "Senior Gym Staff",
+      numberOfAssigned: 2,
+      createdOn: "2nd Feb 2021",
+      isEditing: false,
+    },
+    {
+      keyId: "role-4",
+      roleName: "Marketing Head",
+      numberOfAssigned: 2,
+      createdOn: "2nd Feb 2021",
+      isEditing: false,
+    },
+    {
+      keyId: "role-5",
+      roleName: "Sales Staff - in bound",
+      numberOfAssigned: 2,
+      createdOn: "2nd Feb 2021",
+      isEditing: false,
+    },
+  ]);
+
   const toggleCreateHeader = () => {
     props.toggleCreate("roles");
   };
@@ -24,7 +63,27 @@ const UserControlsRoles = (props) => {
     props.toggleFilter("roles");
   };
 
-  const editThisRole = (e) => {
+  const editThisRole = (e, el) => {
+    let yPosition = el.clientY;
+    let avHeight = window.innerHeight - (70 + 70 + 54 + 57)
+    if((yPosition + 70) > avHeight) {
+      setDropdownPos("top")
+    }
+    else {
+      setDropdownPos("bottom")
+    }
+
+    const data = rolesData.filter((i) => i.keyId === e);
+    console.log("E? : ", data);
+    data[0].isEditing = !data[0].isEditing;
+    console.log("data  :: ", data[0].isEditing);
+    const newData = rolesData.map((el, i) => {
+      if (el.keyId == e) {
+        return data[0];
+      } else return el;
+    });
+    console.log("newData : ", newData);
+    setRolesData(newData);
   };
 
   useEffect(() => {
@@ -100,114 +159,37 @@ const UserControlsRoles = (props) => {
               </div>
               <div className="createDate">Created on</div>
             </li>
-            <li className="owerInfo userRole">
-              <div className="userName">
-                <button className="btn">
-                  <p>Gym Manager</p>
-                </button>
-              </div>
-              <div className="phoneNum">
-                <button className="btn"> 2</button>
-              </div>
-              <div className="createDate">
-                <button className="btn">2nd Feb 2021</button>
-                <div className="info_3dot_icon">
-                  <button className="btn" onClick={(e) => editThisRole(e)}>
-                    <img src={info_3dot_icon} alt="" />
-                  </button>
-                </div>
-              </div>
-            </li>
-            <li className="owerInfo userRole">
-              <div className="userName">
-                <button className="btn">
-                  <p>Gym Manager</p>
-                </button>
-              </div>
-              <div className="phoneNum">
-                <button className="btn"> 2</button>
-              </div>
-              <div className="createDate">
-                <button className="btn">2nd Feb 2021</button>
-                <div className="info_3dot_icon">
-                  <button className="btn" onClick={(e) => editThisRole(e)}>
-                    <img src={info_3dot_icon} alt="" />
-                  </button>
-                </div>
-              </div>
-            </li>
-            <li className="owerInfo userRole">
-              <div className="userName">
-                <button className="btn">
-                  <p>Gym Manager</p>
-                </button>
-              </div>
-              <div className="phoneNum">
-                <button className="btn"> 2</button>
-              </div>
-              <div className="createDate">
-                <button className="btn">2nd Feb 2021</button>
-                <div className="info_3dot_icon">
-                  <button className="btn" onClick={(e) => editThisRole(e)}>
-                    <img src={info_3dot_icon} alt="" />
-                  </button>
-                </div>
-              </div>
-            </li>
-            <li className="owerInfo userRole">
-              <div className="userName">
-                <button className="btn">
-                  <p>Gym Manager</p>
-                </button>
-              </div>
-              <div className="phoneNum">
-                <button className="btn"> 2</button>
-              </div>
-              <div className="createDate">
-                <button className="btn">2nd Feb 2021</button>
-                <div className="info_3dot_icon">
-                  <button className="btn" onClick={(e) => editThisRole(e)}>
-                    <img src={info_3dot_icon} alt="" />
-                  </button>
-                </div>
-              </div>
-            </li>
-            <li className="owerInfo userRole">
-              <div className="userName">
-                <button className="btn">
-                  <p>Gym Manager</p>
-                </button>
-              </div>
-              <div className="phoneNum">
-                <button className="btn"> 2</button>
-              </div>
-              <div className="createDate">
-                <button className="btn">2nd Feb 2021</button>
-                <div className="info_3dot_icon">
-                  <button className="btn" onClick={(e) => editThisRole(e)}>
-                    <img src={info_3dot_icon} alt="" />
-                  </button>
-                </div>
-              </div>
-            </li>
-            <li className="owerInfo userRole">
-              <div className="userName">
-                <button className="btn">
-                  <p>Gym Manager</p>
-                </button>
-              </div>
-              <div className="phoneNum">
-                <button className="btn"> 2</button>
-              </div>
-              <div className="createDate">
-                <button className="btn">2nd Feb 2021</button>
-                <div className="info_3dot_icon">
-                  <button className="btn" onClick={(e) => editThisRole(e)}>
-                    <img src={info_3dot_icon} alt="" />
-                  </button>
-                </div>
-              </div>
-            </li>
+            {rolesData.length &&
+              rolesData.map((elem, i) => {
+                return (
+                  <>
+                    <li className="owerInfo userRole" key={elem.keyId}>
+                      <div className="userName">
+                        <button className="btn">
+                          <p>{elem.roleName}</p>
+                        </button>
+                      </div>
+                      <div className="phoneNum">
+                        <button className="btn">
+                          {elem.numberOfAssigned}
+                        </button>
+                      </div>
+                      <div className="createDate">
+                        <button className="btn">{elem.createdOn}</button>
+                        <div className="info_3dot_icon">
+                          <button
+                            className="btn"
+                            onClick={(el) => editThisRole(elem.keyId, el)}
+                          >
+                            <img src={info_3dot_icon} alt="" />
+                          </button>
+                        </div>
+                      {elem.isEditing && <TableOptionsDropdown dropdownPos={dropdownPos} />}
+                      </div>
+                    </li>
+                  </>
+                );
+              })}
           </ul>
         </div>
       </div>

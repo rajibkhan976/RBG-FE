@@ -8,6 +8,7 @@ import plus_icon from "../../../assets/images/plus_icon.svg";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 
 const UserControlsGroups = (props) => {
+  const [dropdownPos, setDropdownPos] = useState('bottom');
   const [groupsData, setGroupsData] = useState([
     {
       keyId: "grp-1",
@@ -54,13 +55,32 @@ const UserControlsGroups = (props) => {
     props.toggleFilter("groups");
   };
 
-  const editThisGroup = (e, element, i) => {
-    console.log(groupsData[i], groupsData[i].isEditing);
+  const editThisGroup = (e, el) => {
+    let yPosition = el.clientY;
+    let avHeight = window.innerHeight - (70 + 70 + 54 + 57)
+    if((yPosition + 70) > avHeight) {
+      setDropdownPos("top")
+    }
+    else {
+      setDropdownPos("bottom")
+    }
 
-    setGroupsData(groupsData[i].isEditing = true);
+    const data = groupsData.filter((i) => i.keyId === e);
+    console.log("E? : ", data);
+    data[0].isEditing = !data[0].isEditing;
+    console.log("data  :: ", data[0].isEditing);
+    const newData = groupsData.map((el, i) => {
+      if (el.keyId == e) {
+        return data[0];
+      } else return el;
+    });
+    console.log("newData : ", newData);
+    setGroupsData(newData);
   };
 
-  useEffect(() => {}, [groupsData]);
+  useEffect(() => {
+    console.log("groupsData after setGroupsData :", groupsData);
+  }, [groupsData]);
 
   return (
     <div className="dashInnerUI">
@@ -102,34 +122,38 @@ const UserControlsGroups = (props) => {
               </div>
               <div className="createDate">Created on</div>
             </li>
-            {groupsData.length && groupsData.map((e, i) => {
-              return (
-                <>
-                  <li className="owerInfo userRole" key={e.keyId}>
-                    <div className="userName">
-                      <button className="btn">
-                        <p>{e.groupName}</p>
-                      </button>
-                    </div>
-                    <div className="phoneNum">
-                      <button className="btn"> {e.numberOfAssigned}</button>
-                    </div>
-                    <div className="createDate">
-                      <button className="btn">{e.createdOn}</button>
-                      <div className="info_3dot_icon">
-                        <button
-                          className="btn"
-                          onClick={(el) => editThisGroup(el, e, i)}
-                        >
-                          <img src={info_3dot_icon} alt="" />
+            {groupsData.length &&
+              groupsData.map((elem, i) => {
+                return (
+                  <>
+                    <li className="owerInfo userRole" key={elem.keyId}>
+                      <div className="userName">
+                        <button className="btn">
+                          <p>{elem.groupName}</p>
                         </button>
                       </div>
-                    </div>
-                    {e.isEditing && <TableOptionsDropdown />}
-                  </li>
-                </>
-              );
-            })}
+                      <div className="phoneNum">
+                        <button className="btn">
+                          {elem.numberOfAssigned}
+                        </button>
+                      </div>
+                      <div className="createDate">
+                        <button className="btn">{elem.createdOn}</button>
+                        <div className="info_3dot_icon">
+                          <button
+                            className="btn"
+                            onClick={(el) => editThisGroup(elem.keyId, el)}
+                            // onClick={(e) => editThisGroup(e, i)}
+                          >
+                            <img src={info_3dot_icon} alt="" />
+                          </button>
+                        </div>
+                      {elem.isEditing && <TableOptionsDropdown dropdownPos={dropdownPos} />}
+                      </div>
+                    </li>
+                  </>
+                );
+              })}
           </ul>
         </div>
       </div>
