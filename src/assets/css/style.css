@@ -739,7 +739,7 @@ input:focus+.searchIco #search-ico .a {
 }
 
 .notifIco {
-  margin: 38px 0;
+  margin: 0;
 }
 
 .notifIco svg {
@@ -1638,6 +1638,7 @@ img.dropDownIcon {
 
 .inlineHeader .btn {
   margin-left: auto;
+  margin-right: 25px;
 }
 
 .newNotifications:after {
@@ -1695,7 +1696,7 @@ img.dropDownIcon {
 }
 
 .sideMenuBody {
-  padding: 30px 27px 32px;
+  padding: 0;
   overflow: auto;
   flex: 1 1 auto;
 }
@@ -1996,4 +1997,152 @@ img.dropDownIcon {
   width: 10px;
   height: 14px;
   margin: 2px 0 0 7px;
+}
+
+
+
+.notificationHeadingPara {
+  text-align: center;
+  color: #9BAEBC;
+  font-size: 14px;
+  margin: 30px 0;
+}
+
+.notifLabels {
+  margin-top: 15px;
+  display: inline-block;
+  width: 100%;
+}
+.notifLabels li {
+  background: #E2EBF2;
+  padding: 20px 25px;
+}
+.notifLabels li:nth-child(even) {
+  background: #F2F7FC;
+}
+.notifLabels li p {
+  font-size: 16px;
+  color: #305671;
+  display: inline-block;
+}
+.notifLabels li span {
+  font-size: 11px;
+  color: #fff;
+  font-weight: bold;
+  line-height: 20px;
+  height: 24px;
+  border-radius: 20px;
+  padding: 0 10px;
+  background: #55BBC9;
+  border: 1px solid #3EA6B4;
+  margin-left: 18px;
+}
+.notifLabels li .btn-link {
+  float: right;
+}
+
+h4.inlineHeader {
+  margin-left: 30px;
+  margin-bottom: 25px;
+}
+
+.detailNotif {
+  display: inline-block;
+  width: 100%;
+  padding: 15px 0;
+  position: relative;
+}
+.detailNotif::before, 
+.detailNotif::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 96px;
+  width: 1px;
+  height: calc(50% - 16px);
+  background: #B2BFC9;
+}
+.detailNotif::after {
+  top: unset;
+  bottom: 0;
+}
+.detailNotifList {
+  padding: 0 30px;
+}
+.detailNotif:first-child::before, 
+.detailNotif:last-child::after {
+  display: none;
+}
+.detailNotifList .notiTime_n_Icon {
+  position: absolute;
+  z-index: 10;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.detailNotifList .timeStamp {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  font-size: 12px;
+  color: #B2BFC9;
+  width: 50px;
+  margin-left: 22px;
+  margin-right: 10px;
+  text-align: right;
+}
+.detailNotifList figure {
+  position: relative;
+  margin-left: 82px;
+}
+.detailNotifList p {
+  box-sizing: border-box;
+  padding-left: 126px;
+  font-size: 14px;
+  color: #305671;
+  line-height: 20px;
+  opacity: 0.7;
+}
+.detailNotifList p .client {
+  color: #55BBC9;
+}
+.unreadNotifications p {
+  opacity: 1;
+}
+.unreadNotifications p .ammount, 
+.unreadNotifications p .product {
+  font-weight: bold;
+}
+.unreadNotifications .timeStamp::before {
+  content: "";
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  background: #ED707A;
+  border-radius: 4px;
+}
+
+.loadMorebutton {
+  margin-top: 18px;
+}
+.loadMorebutton button {
+  display: block;
+  margin: 0 auto;
+  border: 1px solid #C7DAEB;
+  width: 157px;
+  height: 32px;
+  box-sizing: border-box;
+  border-radius: 45px;
+  background: #fff;
+  color: #96ACBF;
+  font-size: 12px;
+  transition: all 0.3s ease 0s;
+}
+.loadMorebutton button:hover {
+  border-color: #305671;
+  color: #305671;
 }
