@@ -1,24 +1,24 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Routes from "./routes";
-// import { Provider } from "react-redux";
-// import { createStore } from 'redux';
+import rootReducer from "./reducers/index";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
 import "./assets/css/style.css";
 import "./assets/css/dev.css";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
 
 
-// const store = createStore(reducer);
+const store = createStore(rootReducer, applyMiddleware(thunk));
+
 ReactDOM.render(
-  // <Provider store={store}>
-  // <Router>
-  //     <Routes />
-  //   </Router>
-  //</Provider>, */},
+  <Provider store={store}>
     <Router>
       <Routes />
-    </Router>,
+    </Router>
+  </Provider>,
   document.getElementById("root")
 );
 

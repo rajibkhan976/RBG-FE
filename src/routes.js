@@ -8,7 +8,7 @@ import Login from "./components/authentication/login/Login";
 import Dashboard from "./components/dashboard/Dashboard";
 
 const Routes = () => {
-  const [logState, setLogState] = useState(true);
+  const [logState, setLogState] = useState(false);
 
   return (
     <React.Suspense fallback={<div />}>

@@ -10,5 +10,5 @@ module.exports = {
     baseUrl: baseUrl,
 
     //Auth
-    loginUrl: apiUrl + "/login",
+    loginUrl: "https://cljnebnu2g.execute-api.us-east-1.amazonaws.com/dev/login"
 }

@@ -3,7 +3,8 @@ import config from "../../configuration/config";
 
 let headers = {
   "Accept": "application/json",
-  "Content-Type": "application/json"
+  "Content-Type": "application/json",
+  'Access-Control-Allow-Origin': '*'
 };
 
 export const userLogin = (email, password, rememberMe = false) => {
@@ -11,11 +12,11 @@ export const userLogin = (email, password, rememberMe = false) => {
     axios
       .post(
         config.loginUrl,
-        { email, password, remember_me: rememberMe },
+        { email, password, rememberMe: rememberMe },
         { headers: headers }
       )
       .then((result) => {
-        
+        console.log('use login: ', result);
         resolve(result.data);
       })
       .catch((error) => {
@@ -29,5 +30,5 @@ export const userLogin = (email, password, rememberMe = false) => {
 };
 
 export const isLoggedIn = () => {
-    return true;
+    return false;
 };
