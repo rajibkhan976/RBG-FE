@@ -1,12 +1,15 @@
+import React from "react";
 import { Route, Switch } from "react-router-dom";
 import AuthRoutes from "../authentication/AuthRoutes";
+import AutomationRoutes from "../automation/AutomationRoutes";
 
 
 const DashboardRouting = (props) => {
   return (
-    <Switch>
+    <React.Fragment>
       <Route component={AuthRoutes} />
-    </Switch>
+      <Route component={AutomationRoutes} />
+    </React.Fragment>
   );
 };
 

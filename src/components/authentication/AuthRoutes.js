@@ -1,3 +1,4 @@
+import React from "react";
 import { Switch } from "react-router-dom";
 import { ProtectedRoute } from "../../middleware/ProtectedRoute";
 import Roles from "./roles/Roles";
@@ -6,11 +7,11 @@ import Users from "./users/Users";
 
 const AuthRoutes = (props) => {
   return (
-    <Switch>
+    <React.Fragment>
       <ProtectedRoute exact path="/roles" component={Roles} />
       <ProtectedRoute exact path="/groups" component={Groups} />
       <ProtectedRoute exact path="/users" component={Users} />
-    </Switch>
+    </React.Fragment>
   );
 }
 
