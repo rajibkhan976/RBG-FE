@@ -1,13 +1,12 @@
 import React from "react";
-import { Route, Redirect, Switch } from "react-router-dom";
 import { ProtectedRoute } from "../../middleware/ProtectedRoute";
-import AutomationLists from "./automationLists/AutomationLists";
+import Automation from "./automationLists/Automation";
 
 
 const AutomationRoutes = (props) => {
   return (
     <React.Fragment>
-      <ProtectedRoute exact path="/automation-list" component={AutomationLists} />
+      <ProtectedRoute exact path="/automation-list" component={Automation} />
     </React.Fragment>
   );
 }

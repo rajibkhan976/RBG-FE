@@ -8,7 +8,7 @@ import UserIcon from "../../assets/images/user.png";
 function HeaderDashboard(props) {
   const [stateNotifMenu, setStateNotifMenu] = useState(false);
   const [stateUserMenu, setStateUserMenu] = useState(false);
-  const [locationLoaded, setLocationLoaded] = useState('user');
+  const [locationLoaded, setLocationLoaded] = useState("user");
 
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
@@ -25,6 +25,8 @@ function HeaderDashboard(props) {
       ? props.toggleCreate("groups")
       : window.location.pathname === "/users"
       ? props.toggleCreate("user")
+      : window.location.pathname === "/automation-list"
+      ? props.toggleCreate("automation")
       : props.toggleCreate(null);
   };
 
@@ -40,10 +42,10 @@ function HeaderDashboard(props) {
       ? setLocationLoaded("groups")
       : window.location.pathname === "/users"
       ? setLocationLoaded("user")
-      : window.location.pathname === "/automation/automation-list"
+      : window.location.pathname === "/automation-list"
       ? setLocationLoaded("automation")
       : setLocationLoaded(null);
-  },[])
+  }, []);
 
   return (
     <>

@@ -1,5 +1,4 @@
 import React from "react";
-import { Switch } from "react-router-dom";
 import { ProtectedRoute } from "../../middleware/ProtectedRoute";
 import Roles from "./roles/Roles";
 import Groups from "./groups/Groups";

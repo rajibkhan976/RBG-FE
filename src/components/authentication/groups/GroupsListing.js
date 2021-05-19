@@ -143,12 +143,11 @@ const GroupListing = (props) => {
                                                     <button
                                                         className="btn"
                                                         onClick={(el) => editThisGroup(elem.keyId, el)}
-                                                    // onClick={(e) => editThisGroup(e, i)}
                                                     >
                                                         <img src={info_3dot_icon} alt="" />
                                                     </button>
                                                 </div>
-                                                {elem.isEditing && <TableOptionsDropdown dropdownPos={dropdownPos} />}
+                                                {elem.isEditing && <TableOptionsDropdown dropdownPos={dropdownPos} dropdownType="groupsDropdown" />}
                                             </div>
                                         </li>
                                     </>

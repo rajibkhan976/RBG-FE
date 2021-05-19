@@ -1,6 +1,7 @@
 .info_3dot_icon .btn {
     width: 22px;
 }
+
 .dropdownOptions {
     position: absolute;
     top: 100%;
@@ -51,6 +52,76 @@
     width: 100%;
     max-width: 11.5px;
 }
+
 .dropdownOptions .btn:hover svg .a {
     stroke: #305671;
+}
+
+.sidebarHeader {
+    padding: 26px 25px;
+    position: relative;
+}
+
+.sidebarHeader h4 {
+    font-size: 16px;
+    line-height: 23px;
+    color: #305671;
+}
+
+.sidebarHeader .arrowIcon {
+    top: 50%;
+    right: 35px;
+    transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+}
+
+.listArea {
+    margin: 0;
+}
+
+.listArea .listHead, .listArea .listRow, .listCell {
+    float: none;
+    color: #305671;
+    font-size: 14px;
+}
+
+.listCell {
+    position: relative;
+}
+
+.listArea .listHead, .listArea .listRow {
+    display: flex;
+    align-items: stretch;
+}
+
+.listCell .info_3dot_icon {
+    position: relative;
+    transform: none;
+    top: auto;
+    right: auto;
+    text-align: center;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.listCell .red {
+    color: #ED707A;
+}
+
+.toggleBtn {
+    display: block;
+    cursor: pointer;
+}
+
+.cloneIcon .a {
+    fill: #305671;
+}
+.toggleBtn input[type="checkbox"] {
+    margin: 0;
+    cursor: pointer;
 }

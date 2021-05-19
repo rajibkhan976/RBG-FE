@@ -24,7 +24,7 @@ const RolesListing = (props) => {
             roleName: "Gym Manager",
             numberOfAssigned: 2,
             createdOn: "2nd Feb 2021",
-            isEditing: false,
+            isEditing: true,
         },
         {
             keyId: "role-2",
@@ -75,15 +75,15 @@ const RolesListing = (props) => {
         }
 
         const data = rolesData.filter((i) => i.keyId === e);
-        console.log("E? : ", data);
+        console.log("ROLES E? : ", data);
         data[0].isEditing = !data[0].isEditing;
-        console.log("data  :: ", data[0].isEditing);
+        console.log("ROLES data  :: ", data[0].isEditing);
         const newData = rolesData.map((el, i) => {
             if (el.keyId === e) {
                 return data[0];
             } else return el;
         });
-        console.log("newData : ", newData);
+        console.log("ROLES newData : ", newData);
         setRolesData(newData);
     };
 
@@ -185,7 +185,7 @@ const RolesListing = (props) => {
                                                         <img src={info_3dot_icon} alt="" />
                                                     </button>
                                                 </div>
-                                                {elem.isEditing && <TableOptionsDropdown dropdownPos={dropdownPos} />}
+                                                {elem.isEditing && <TableOptionsDropdown dropdownPos={dropdownPos} dropdownType="rolesDropdown" />}
                                             </div>
                                         </li>
                                     </>

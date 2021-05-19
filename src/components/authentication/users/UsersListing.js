@@ -155,7 +155,7 @@ const UsersListing = (props) => {
                                                         <img src={info_3dot_icon} alt="" />
                                                     </button>
                                                 </div>
-                                                {elem.isEditing && <TableOptionsDropdown dropdownPos={dropdownPos} />}
+                                                {elem.isEditing && <TableOptionsDropdown dropdownPos={dropdownPos} dropdownType="usersDropdown" />}
                                             </div>
                                         </li>
                                     </>
