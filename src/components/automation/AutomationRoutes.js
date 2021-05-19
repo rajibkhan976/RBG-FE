@@ -5,6 +5,7 @@ import DashboardFooter from "../shared/FooterDashboard";
 import HeaderDashboard from "../shared/HeaderDashboard";
 import SidebarLogo from "../../assets/images/sidebar-logo.png";
 import AutomationLists from "./automationLists/AutomationLists";
+import white_arrow_right from "../../assets/images/white_arrow_right.svg";
 
 function Automation(props) {
   const toggleCreate = (e) => {
@@ -25,7 +26,14 @@ function Automation(props) {
               className="leftMenuInnerLink"
               to="/automation-list"
             >
-              Automation Lists
+              <div className="indicator"></div>
+              <div className="linkDetails">
+                <p className="linkHeading">Roles</p>
+                <span className="notificationNumber">10</span>
+                <br />
+                <p className="linkAbout">Manage user roles</p>
+              </div>
+              <img className="arrowIcon" src={white_arrow_right} alt="" />
             </NavLink>
           </li>
         </ul>

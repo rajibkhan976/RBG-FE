@@ -4,7 +4,7 @@ import arrowDown from "../../assets/images/arrowDown.svg";
 const Filter = (props) => {
   const closeSideMenu = (e) => {
     e.preventDefault();
-    props.closeFilter(null);
+    props.setStateFilter(null);
   };
 
   return props.stateFilter === "user" ? (

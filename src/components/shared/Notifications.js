@@ -437,6 +437,7 @@ const Notifications = () => {
               </g>
             </svg>
           </div>
+          <p className="notificationHeadingPara">Catch all the notifications easily from a single place</p>
           <ul className="notifLabels">
             {Object.keys(dummyListing).map((keyname, i) => {
               let lengthData = null;
@@ -450,7 +451,7 @@ const Notifications = () => {
               }
               return (
                 <li key={i} data-listing={keyname}>
-                  {keyname}
+                  <p>{keyname}</p>
 
                   <span>{lengthData}</span>
                   <button
@@ -481,33 +482,43 @@ const Notifications = () => {
             {dummyListing[detailNotification].map((e, i) => {
               return (
                 <li key={i} className={e.Read ? "detailNotif": "detailNotif unreadNotifications"}>
-                  <span className="timeStamp">2 min ago</span>
-                  <figure>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 12.536 10.029"
-                      id="payment-ico"
-                    >
-                      <g transform="translate(-1355.732 -269.986)">
-                        <path
-                          className="a"
-                          d="M12.655,4H3.88A1.88,1.88,0,0,0,2,5.88v6.268a1.88,1.88,0,0,0,1.88,1.88h8.775a1.88,1.88,0,0,0,1.88-1.88V5.88A1.88,1.88,0,0,0,12.655,4Zm.627,6.456H11.4a1.442,1.442,0,0,1,0-2.883h1.88Zm0-3.949H11.4a2.507,2.507,0,0,0,0,5.014h1.88v.627a.627.627,0,0,1-.627.627H3.88a.627.627,0,0,1-.627-.627V5.88a.627.627,0,0,1,.627-.627h8.775a.627.627,0,0,1,.627.627ZM10.775,9.014a.627.627,0,1,0,.627-.627A.627.627,0,0,0,10.775,9.014Z"
-                          transform="translate(1353.732 265.986)"
-                        />
-                        <path
-                          className="b"
-                          d="M20,19.4l1.049,1.049L23.5,18"
-                          transform="translate(1338.274 255.777)"
-                        />
-                      </g>
-                    </svg>
-                  </figure>
-                  {e.Client} {e.paid && " paid " + e.Amount + " successfully"}{" "}
-                  for the product “{e.Product}”
+                  <div className="notiTime_n_Icon">
+                    <span className="timeStamp">2 min ago</span>
+                    <figure>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 12.536 10.029"
+                        id="payment-ico"
+                      >
+                        <g transform="translate(-1355.732 -269.986)">
+                          <path
+                            className="a"
+                            d="M12.655,4H3.88A1.88,1.88,0,0,0,2,5.88v6.268a1.88,1.88,0,0,0,1.88,1.88h8.775a1.88,1.88,0,0,0,1.88-1.88V5.88A1.88,1.88,0,0,0,12.655,4Zm.627,6.456H11.4a1.442,1.442,0,0,1,0-2.883h1.88Zm0-3.949H11.4a2.507,2.507,0,0,0,0,5.014h1.88v.627a.627.627,0,0,1-.627.627H3.88a.627.627,0,0,1-.627-.627V5.88a.627.627,0,0,1,.627-.627h8.775a.627.627,0,0,1,.627.627ZM10.775,9.014a.627.627,0,1,0,.627-.627A.627.627,0,0,0,10.775,9.014Z"
+                            transform="translate(1353.732 265.986)"
+                          />
+                          <path
+                            className="b"
+                            d="M20,19.4l1.049,1.049L23.5,18"
+                            transform="translate(1338.274 255.777)"
+                          />
+                        </g>
+                      </svg>
+                    </figure>
+                  </div>
+                  
+                  <p>
+                   
+                    <span className="client">{e.Client}</span> {e.paid}  paid <span className="ammount">{e.Amount}</span> successfully
+                  for the product <span className="product">“{e.Product}”</span>
+                  </p>
+                  
                 </li>
               );
             })}
           </ul>
+          <div className="loadMorebutton">
+            <button>Load More …</button>
+          </div>
         </>
       ) : (
         ""

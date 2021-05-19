@@ -19,11 +19,11 @@ function HeaderDashboard(props) {
   };
 
   const toggleCreateHeader = () => {
-    window.location.pathname === "/user-controls/roles"
+    window.location.pathname === "/roles"
       ? props.toggleCreate("roles")
-      : window.location.pathname === "/user-controls/groups"
+      : window.location.pathname === "/groups"
       ? props.toggleCreate("groups")
-      : window.location.pathname === "/user-controls/users"
+      : window.location.pathname === "/users"
       ? props.toggleCreate("user")
       : props.toggleCreate(null);
   };
@@ -34,11 +34,11 @@ function HeaderDashboard(props) {
   };
 
   useEffect(() => {
-    window.location.pathname === "/user-controls/roles"
+    window.location.pathname === "/roles"
       ? setLocationLoaded("roles")
-      : window.location.pathname === "/user-controls/groups"
+      : window.location.pathname === "/groups"
       ? setLocationLoaded("groups")
-      : window.location.pathname === "/user-controls/users"
+      : window.location.pathname === "/users"
       ? setLocationLoaded("user")
       : window.location.pathname === "/automation/automation-list"
       ? setLocationLoaded("automation")
