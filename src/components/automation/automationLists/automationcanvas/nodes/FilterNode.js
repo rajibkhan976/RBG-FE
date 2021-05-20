@@ -3,16 +3,7 @@ import { Handle } from 'react-flow-renderer';
 
 export default memo(({ data }) => {
   const style = {
-    height: 110,
-    width: 110,
-    border: '3px solid #df42c5',
-    background: "#1a1c21",
-    color: "#df42c5",
-    borderRadius: '30px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '14px'
+    
   };
   return (
     <React.Fragment>
@@ -21,8 +12,9 @@ export default memo(({ data }) => {
         position="left"
         style={{ background: '#555', border: '4px solid #FFF' }}
       />
-      <div style={style}>
-        {data.label}
+      <div style={style} className="filterNode">
+        {/* {data.label} */}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.144 22.317" class="filterBuilder"><path class="a" d="M3.228,7.558,12.462,18.3v8.516l5.677-3.785V18.3L27.374,7.558A.945.945,0,0,0,26.643,6H3.959A.945.945,0,0,0,3.228,7.558Z" transform="translate(-2.229 -5.25)"></path></svg>
       </div>
       <Handle
         type="source"

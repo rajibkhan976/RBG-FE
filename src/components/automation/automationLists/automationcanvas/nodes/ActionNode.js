@@ -1,20 +1,12 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 
 import { Handle } from 'react-flow-renderer';
 
 export default memo(({ data }) => {
     const style = {
-        height: 110,
-        width: 110,
-        border: "3px solid #e08229",
-        borderRadius: '2px',
-        background: "#1a1c21",
-        color: "#e08229",
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontSize: '14px'
+       
     }
+
     return (
         <React.Fragment>
             <Handle
@@ -22,8 +14,9 @@ export default memo(({ data }) => {
                 position="left"
                 style={{ background: '#555', border: '4px solid #FFF' }}
             />
-            <div style={style}>
-                {data.label}
+            <div style={style} className="actionNode">
+                {/* {data.label} */}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24.663 18.539" class="triggerAction"><g transform="translate(-0.15 -4.15)"><path class="a" d="M11.716,21.839H1V5H23.963v7.654"></path><path class="a" d="M1,5l11.481,8.42L23.963,5"></path><path class="a" d="M25,18l3.062,3.062L25,24.123" transform="translate(-5.63 -3.049)"></path><line class="a" x1="7" transform="translate(15 18)"></line></g></svg>
             </div>
             <Handle
                 type="source"

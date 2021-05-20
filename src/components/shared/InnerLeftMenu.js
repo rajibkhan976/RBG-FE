@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
 import { useSelector } from 'react-redux';
-import { NavLink, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useLocation, Redirect } from "react-router-dom";
 import BuilderSidebar from "../automation/automationLists/automationcanvas/BuilderSidebar";
 
 import white_arrow_right from "../../assets/images/white_arrow_right.svg";
@@ -9,8 +9,13 @@ import SidebarLogo from "../../assets/images/sidebar-logo.png";
 
 const InnerLeftMenu = (props) => {
   const pathURL = useLocation().pathname;
-
+  const [automationObject, setAutomationObject] = useState({});
   const rolesCount = useSelector((state) => state.role.count);
+  useEffect(() => {
+    if (props.automationListItem) {
+      setAutomationObject(props.automationListItem)
+    }
+  });
 
   return (
     <div className="menuDetails">
@@ -24,7 +29,10 @@ const InnerLeftMenu = (props) => {
           pathURL === "/users") && (
           <>
             <div className="sidebarHeader">
-              <h4>User & Controls</h4>
+              <h4>
+                User & Controls
+                <img className="arrowIcon" src={white_arrow_right} alt="" />
+              </h4>
             </div>
             <ul>
               <li>
@@ -36,7 +44,6 @@ const InnerLeftMenu = (props) => {
                     <br />
                     <p className="linkAbout">Manage user roles</p>
                   </div>
-                  <img className="arrowIcon" src={white_arrow_right} alt="" />
                 </NavLink>
               </li>
               <li>
@@ -48,7 +55,6 @@ const InnerLeftMenu = (props) => {
                     <br />
                     <p className="linkAbout">Manage user groups</p>
                   </div>
-                  <img className="arrowIcon" src={white_arrow_right} alt="" />
                 </NavLink>
               </li>
               <li>
@@ -60,7 +66,6 @@ const InnerLeftMenu = (props) => {
                     <br />
                     <p className="linkAbout">Manage users & sub-users</p>
                   </div>
-                  <img className="arrowIcon" src={white_arrow_right} alt="" />
                 </NavLink>
               </li>
             </ul>
@@ -69,7 +74,7 @@ const InnerLeftMenu = (props) => {
             </div>
           </>
         )}
-        {pathURL === "/automation-list" &&
+        {pathURL === "/automation-list" ?
           (props.createButton === null || props.createButton === undefined) && (
             <>
               <div className="sidebarHeader">
@@ -92,11 +97,35 @@ const InnerLeftMenu = (props) => {
                 </li>
               </ul>
             </>
-          )}
-        {pathURL === "/automation-list" && props.createButton === "automation" && (
+          ) : pathURL === "/automation-builder" ? (
           <>
             <BuilderSidebar />
           </>
+        ) : (pathURL === "/automation-details" && automationObject.keyId) ? (
+          <>
+            <div className="sidebarHeader">
+              <h4>
+                Automation Details
+                <img className="arrowIcon" src={white_arrow_right} alt="" />
+              </h4>
+            </div>
+            <ul className="automationInDetails">
+              <li>
+                <span className="leftMenuInnerLink">
+                  <div className="indicator"></div>
+                  <div className="linkDetails">
+                    <p className="linkHeading">
+                      {automationObject.autoName}
+                    </p>
+                    <br />
+                    <p className="linkAbout">Manage your automation details</p>
+                  </div>
+                </span>
+              </li>
+            </ul>
+          </>
+        ) : (
+          ''
         )}
       </div>
     </div>

@@ -42,7 +42,7 @@ function HeaderDashboard(props) {
       ? setLocationLoaded("groups")
       : window.location.pathname === "/users"
       ? setLocationLoaded("user")
-      : window.location.pathname === "/automation-list"
+      : window.location.pathname === ("/automation-list" || "/automation-builder")
       ? setLocationLoaded("automation")
       : setLocationLoaded(null);
   }, []);

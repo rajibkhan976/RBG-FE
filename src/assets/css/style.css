@@ -2159,6 +2159,477 @@ img.dropDownIcon {
   color: #305671;
 }
 
+
+
+/* ----------------------- Node setting modal css Start ------------------- */
+
+.automationModal {
+  position: fixed;
+  z-index: 99;
+  width: 100%;
+  height: 100%;
+}
+
+.nodeSettingModal {
+  width: 606px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.nodeSettingModal .formHead {
+  background: #55BBC9;
+  display: flex;
+  padding: 15px 13px 15px 25px;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content: space-between
+}
+
+.nodeSettingModal .heading p {
+  margin: 0;
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.nodeSettingModal .closeButton button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.nodeSettingModal .formBody {
+  background: #fff;
+
+}
+
+.nodeSettingModal .formBodyContainer{
+  padding: 20px 30px;
+  width: 100%;
+  overflow-y: auto;
+  box-sizing: border-box;
+  max-height: calc(100vh - 90px);
+}
+
+.nodeSettingModal .formBodyContainer::-webkit-scrollbar {
+  width: 5px;
+}
+
+.nodeSettingModal .formBodyContainer::-webkit-scrollbar-track {
+  background-color: #ebebeb;
+}
+
+.nodeSettingModal .formBodyContainer::-webkit-scrollbar-thumb {
+  background-color: #9BAEBC;
+}
+
+.nodeSettingModal .formFieldsArea {
+  width: 100%;
+}
+
+.nodeSettingModal .inputField {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.nodeSettingModal .inputField select {
+  width: 100%;
+  height: 40px;
+  appearance: none;
+  margin-top: 0;
+  padding: 0px 15px;
+  color: #305671;
+  border: 1px solid #D3D9DE;
+  border-radius: 5px;
+  font-size: 13px;
+  outline: none;
+  background: url("../images/arrow_drop_down_white_24dp.svg") no-repeat right 5px top 10px, 
+  url("../images/arrow_drop_up_white_24dp.svg") no-repeat right 5px top 4px,
+  #F6F8FA;
+  cursor: pointer;
+}
+
+.triggerSetting .nodeSettingModal .inputField select {
+  margin-top: 10px;
+}
+
+.nodeSettingModal .inputField select option {
+  font-size: 13px;
+  font-family:  'Poppins', sans-serif;
+}
+.nodeSettingModal .saveButton {
+  margin-top: 10px;
+  display: inline-block;
+  width: 100%;
+}
+
+
+.nodeSettingModal .saveButton button {
+  width: 88px;
+  height: 40px;
+  background: #305671;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-family:  'Poppins', sans-serif; 
+  border: none;
+  outline: none;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  justify-content: space-between;
+  align-items: center;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  float: right;
+}
+
+.nodeSettingModal .inputField label {
+  color: #305671;
+  font-size: 13px;
+  
+}
+.nodeSettingModal .emailDetails {
+  margin-top: 10px;
+  width: 100%;
+ 
+}
+.nodeSettingModal .inputSubject {
+  width: 100%;
+  height: 40px;
+  appearance: none;
+  padding: 0px 15px;
+  margin-top: 10px;
+  color: #9BAEBC;
+  border: 1px solid #D3D9DE;
+  border-radius: 5px;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+  background:  #F6F8FA;
+}
+.nodeSettingModal .inputSubject p {
+  padding: 10px 0px;
+  color: #305671;
+}
+.nodeSettingModal .inputSubject p span {
+  font-weight: 700;
+}
+
+.nodeSettingModal .inputSubject.icon {
+  background: url("../images/icon_browse_keywords.svg") no-repeat right 15px top 10px,
+  #F6F8FA;
+}
+.nodeSettingModal .inputField input {
+  width: 100%;
+  height: 40px;
+  appearance: none;
+  padding: 0px 42px 0 15px;
+  margin-top: 10px;
+  color: #305671;
+  border: 1px solid #D3D9DE;
+  border-radius: 5px;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+  background:  #F6F8FA;
+}
+.nodeSettingModal .inputField input::placeholder {
+  color: #9BAEBC;
+  font-family:  'Poppins', sans-serif;
+  
+}
+
+.nodeSettingModal .inputField input.icon {
+  background: url("../images/icon_browse_contacts.svg") no-repeat right 15px top 10px,
+  #F6F8FA;
+}
+
+.nodeSettingModal .inputField textarea {
+  width: 100%;
+  height: 150px;
+  appearance: none;
+  padding: 20px;
+  margin-top: 10px;
+  color: #305671;
+  border: 1px solid #D3D9DE;
+  border-radius: 5px;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+  background: #F6F8FA;
+  resize: none;
+  line-height: 25px;
+  font-family:  'Poppins', sans-serif;
+  cursor: pointer;
+
+}
+.nodeSettingModal .nodeSettingModal.saveTemplateModal {
+  width: 450px;
+}
+
+.nodeSettingModal .formBodyContainer.saveTemplate {
+  padding: 45px 0px;
+  width: 325px;
+  margin: 0px auto;
+}
+.nodeSettingModal .formBodyContainer.saveTemplate .saveButton button {
+float: left;
+
+}
+.nodeSettingModal .formBodyContainer.saveTemplate .saveButton .notNowButton { 
+  color: #55BBC9;
+  font-size: 13px;
+  margin-top: 10px;
+  margin-left: 25px;
+  width: auto;
+  background: transparent;
+  padding: 0px;
+  text-decoration: underline;
+  height: auto;
+}
+.nodeSettingModal .nameArea {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #DCE4EB;
+}
+.nodeSettingModal .changeFilterName {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  margin-bottom: 25px;
+}
+.nodeSettingModal .filterNmaeLabel {
+  color: #305671;
+  font-size: 13px;
+}
+.nodeSettingModal .filterName {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  margin-left: 10px;
+}
+.nodeSettingModal .filterName p {
+  color: #305671;
+  font-size: 16px;
+  font-weight: 700;
+}
+.nodeSettingModal .filterName button {
+  background: #E2E7EB;
+  border-radius: 45px;
+  height: 20px;
+  width: 20px;
+  border: none;
+  outline: none;
+  position: relative;
+  margin-left: 10px;
+}
+
+.nodeSettingModal .filterName img {
+  width: 12px;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50% , -50%);
+}
+
+.nodeSettingModal .editRules {
+  color: #305671;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+}
+.nodeSettingModal .editRules span {
+  color: #fff;
+  border: 1px solid #3EA6B4;
+  border-radius: 40px;
+  background: #55BBC9;
+  padding: 2px 8px;
+  font-size: 10px;
+  margin-left: 10px;
+}
+
+.nodeSettingModal .formFieldsArea label {
+  color: #305671;
+  font-size: 13px;
+
+}
+.nodeSettingModal .formFields {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.formFields1 {
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nodeSettingModal.filterSetting {
+  width: 630px;
+}
+
+.formFields1 .inputField  {
+margin: 0;
+width: auto;
+}
+
+.formFields1 .inputField.field_1 select {
+  width: 150px;
+}
+.formFields1 .inputField.field_2 select{
+  width: 175px;
+}
+.formFields1 .inputField.field_3 select{
+  width: 200px;
+}
+.nodeSettingModal .addFieldsButton {
+  position: relative;
+  width: 100%;
+  padding: 5px 0;
+}
+.nodeSettingModal .addFieldsButton::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 1px;
+  background: #DCE4EB;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+.nodeSettingModal .addFields {
+  background: transparent linear-gradient(270deg, #F1A768 0%, #ED707A 100%) 0% 0% no-repeat padding-box;
+  border-radius: 45px;
+  height: 20px;
+  width: 20px;
+  border: none;
+  outline: none;
+  position: relative;
+  display: block;
+  margin: 0px auto;
+  z-index: 7;
+}
+.nodeSettingModal .addFields img {
+  width: 17px;
+  height: auto;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50% , -50%);
+}
+.nodeSettingModal .addFormFieldsButton {
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+.nodeSettingModal .addFormFieldsButton button {
+  color: #FFFFFF;
+  font-size: 14px;
+  background: #305671;
+  width: 70px;
+height: 30px;
+border-radius: 45px;
+outline: none;
+border: none;
+display: flex;
+flex-direction: row;
+align-content: center;
+align-items: center;
+
+}
+
+.nodeSettingModal .addFormFieldsButton button .addFields {
+  margin: 0;
+  margin-right: 6px;
+}
+
+.nodeSettingModal .addFormFieldsButton.orButton button {
+  background: #ED707A;
+  width: 56px;
+height: 30px;
+margin: 0px auto;
+position: relative;
+z-index: 6;
+}
+.nodeSettingModal .addFormFieldsButton.orButton {
+  position: relative;
+}
+
+.nodeSettingModal .addFormFieldsButton.orButton::before {
+  content: "";
+  height: 1px;
+  width: 100%;
+  background: #DCE4EB;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  position: absolute;
+  z-index: 2;
+}
+.nodeSettingModal .addFormFieldsButton.orButton button span {
+  background: #305671;
+  position: relative;
+ 
+}
+
+.nodeSettingModal .addFormFieldsButton.orButton button span img {
+  transform: translate(-50% , -50%) rotate(-45deg);
+
+}
+.nodeSettingModal .addOrButton {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+.nodeSettingModal .addOrButton .addFormFieldsButton.orButton button {
+  margin: 0px;
+  margin-left: 10px;
+}
+
+.nodeSettingModal .addOrButton .addFormFieldsButton.orButton::before {
+  content: "";
+  background-color: transparent;
+}
+
+.nodeSettingModal .saveButton.updateButton button{
+  width: 105px;
+}
+
+.nodeSettingModal .deleteButton button {
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  margin-top: 10px;
+  height: 20px;
+}
+
+.nodeSettingModal .deleteButton button img {
+  width: 15px;
+}
+
+.refreshFieldsBtn {
+  background: #D3D9DE url("../images/refresh.svg") no-repeat right 15px center / 18px auto;
+  border: none;
+  border-radius: 5px;
+  width: 145px;
+  height: 34px;
+  font-size: 14px;
+  color: #26475f;
+  padding-right: 26px;
+}
 .listHide {
   display: none; 
 }

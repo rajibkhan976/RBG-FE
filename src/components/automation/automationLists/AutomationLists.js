@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { NavLink } from "react-router-dom";
 import DashboardPagination from "../../shared/Pagination";
 import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
 
@@ -61,8 +62,12 @@ const AutomationLists = (props) => {
     },
   ]);
 
+  const passAutomationItem = (e) => {
+    props.automationListObject(e);
+  };
+
   const toggleCreateHeader = () => {
-      props.toggleCreate("automation");
+    props.toggleCreate("automation");
   };
 
   const automationDropdown = (e, el) => {
@@ -89,7 +94,7 @@ const AutomationLists = (props) => {
 
   const modifyStatus = (e, el) => {
     const data = automationData.filter((i) => i.keyId === e);
-    data[0].status = (data[0].status === "Draft" ? "Published" : "Draft");
+    data[0].status = data[0].status === "Draft" ? "Published" : "Draft";
     const newStatus = automationData.map((el, i) => {
       if (el.keyId === e) {
         return data[0];
@@ -99,9 +104,11 @@ const AutomationLists = (props) => {
     setAutomationData(newStatus);
   };
 
-  useEffect(() => {
-    
-  });
+  const checkChange = (thisId, element) => {
+    console.log(thisId, element);
+  }
+
+  useEffect(() => {});
 
   return (
     <>
@@ -112,7 +119,7 @@ const AutomationLists = (props) => {
               <li>Automations</li>
               <li>Listing</li>
             </ul>
-            <h2 className="inDashboardHeader">List of automations(5)</h2>
+            <h2 className="inDashboardHeader">List of automations <span>(5)</span></h2>
             <p className="userListAbout">
               Create & manage your multiple automations to automate your task
             </p>
@@ -143,6 +150,12 @@ const AutomationLists = (props) => {
               <div className="listCell cellWidth_15">
                 Created on <button className="shortTable"></button>
               </div>
+              <div className="listCell cellWidth_10">
+                
+              </div>
+              <div className="listCell cellWidth_5">
+                
+              </div>
             </div>
             {automationData.length &&
               automationData.map((elem, i) => {
@@ -153,7 +166,14 @@ const AutomationLists = (props) => {
                         <div className="rowImage">
                           <img src={flash_red} alt="" />
                         </div>
-                        <p>{elem.autoName}</p>
+                        <p>
+                          <NavLink
+                            to="/automation-details"
+                            onClick={() => passAutomationItem(elem)}
+                          >
+                            {elem.autoName}
+                          </NavLink>
+                        </p>
                       </div>
                       <div className="listCell cellWidth_10">
                         <p
@@ -168,9 +188,10 @@ const AutomationLists = (props) => {
                             <div
                               className="fill"
                               style={{
-                                width: (elem.completedPeople /
-                                  elem.totalforCompletion) *
-                                100
+                                width:
+                                  (elem.completedPeople /
+                                    elem.totalforCompletion) *
+                                  100+'%',
                               }}
                             ></div>
                           </div>
@@ -187,8 +208,17 @@ const AutomationLists = (props) => {
                         <p>{elem.createdOn}</p>
                       </div>
                       <div className="listCell cellWidth_10">
-                        <label className={elem.status === "Draft" ? "toggleBtn" : "toggleBtn active"}>
-                          <input type="checkbox" onChange={(el) => modifyStatus(elem.keyId, el)} />
+                        <label
+                          className={
+                            elem.status === "Draft"
+                              ? "toggleBtn"
+                              : "toggleBtn active"
+                          }
+                        >
+                          <input
+                            type="checkbox"
+                            onChange={(el) => modifyStatus(elem.keyId, el)}
+                          />
                           <span className="toggler"></span>
                         </label>
                       </div>
@@ -201,7 +231,12 @@ const AutomationLists = (props) => {
                             <img src={info_3dot_icon} alt="" />
                           </button>
                         </div>
-                        {elem.isEditing && <TableOptionsDropdown dropdownPos={dropdownPos} dropdownType="automationDropdown" />}
+                        {elem.isEditing && (
+                          <TableOptionsDropdown
+                            dropdownPos={dropdownPos}
+                            dropdownType="automationDropdown"
+                          />
+                        )}
                       </div>
                     </div>
                   </>

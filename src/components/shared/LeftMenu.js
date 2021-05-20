@@ -201,8 +201,8 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            isActive={() => ['/automation-list']}
-            activeClassName={(pathURL === "/automation-list") && "selected"}
+            isActive={() => ['/automation-list', '/automation-builder']}
+            activeClassName={(pathURL === "/automation-list" || pathURL === '/automation-builder' || pathURL === '/automation-details') && "selected"}
             to="/automation-list"
           >
             <svg

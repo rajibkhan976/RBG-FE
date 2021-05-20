@@ -84,7 +84,7 @@ const RolesListing = (props) => {
 
     /**
      * Function to fetch roles
-     * @returns 
+     * @returns
      */
     const fetchRoles = async (pageId, keyword) => {
         try {
@@ -97,7 +97,7 @@ const RolesListing = (props) => {
                         /**
                          * Update store
                          */
-                         dispatch({
+                        dispatch({
                             type: actionTypes.ROLE_COUNT,
                             count : result.pagination.count
                         })
@@ -119,7 +119,7 @@ const RolesListing = (props) => {
 
     /**
      * Get roles from pagination component
-     * @param {*} dataFromChild 
+     * @param {*} dataFromChild
      */
     const getDataFn = (dataFromChild) => {
         console.log('Data from child', dataFromChild);
@@ -179,9 +179,9 @@ const RolesListing = (props) => {
         if (optionsToggleRef.current.contains(event.target)) {
             console.log('// inside click');
             return;
-          }
-          console.log('// outside click');
-          // outside click
+        }
+        console.log('// outside click');
+        // outside click
     }
 
     /**
@@ -323,9 +323,9 @@ const RolesListing = (props) => {
                                                         }
                                                     >
                                                         <button className="btn btnEdit"
-                                                            onClick={() => {
-                                                                editRole(elem);
-                                                            }}>
+                                                                onClick={() => {
+                                                                    editRole(elem);
+                                                                }}>
                                                             <span>
                                                                 <svg
                                                                     xmlns="http://www.w3.org/2000/svg"
@@ -346,12 +346,12 @@ const RolesListing = (props) => {
                                                                     </g>
                                                                 </svg>
                                                             </span>
-                                                        Edit
-                                                    </button>
+                                                            Edit
+                                                        </button>
                                                         <button className="btn btnDelete"
-                                                            onClick={() => {
-                                                                deleteRole(elem._id);
-                                                            }}>
+                                                                onClick={() => {
+                                                                    deleteRole(elem._id);
+                                                                }}>
                                                             <span>
                                                                 <svg
                                                                     xmlns="http://www.w3.org/2000/svg"
@@ -380,8 +380,8 @@ const RolesListing = (props) => {
                                                                     </g>
                                                                 </svg>
                                                             </span>
-                                                        Delete
-                                                    </button>
+                                                            Delete
+                                                        </button>
                                                     </div>
                                                 </React.Fragment>
                                             </div>

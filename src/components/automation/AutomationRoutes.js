@@ -6,7 +6,7 @@ import Automation from "./automationLists/Automation";
 const AutomationRoutes = (props) => {
   return (
     <React.Fragment>
-      <ProtectedRoute exact path="/automation-list" component={Automation} />
+      <ProtectedRoute path={["/automation-list", "/automation-builder", "/automation-details"]} component={Automation} />
     </React.Fragment>
   );
 }

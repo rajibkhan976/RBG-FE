@@ -47,4 +47,6 @@ export const isLoggedIn = () => {
 
 export const userLogout = () => {
   localStorage.removeItem("_token");
-}
+  return true;
+};
+

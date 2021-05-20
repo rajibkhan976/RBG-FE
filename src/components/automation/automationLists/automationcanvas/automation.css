@@ -1,10 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Podkova:wght@400&display=swap');
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Podkova', serif;
-    background: #282c34;
-}
 
 .navbar-brand img {
     width: auto;
@@ -67,6 +60,9 @@ body {
     align-items: center;
     cursor: grab;
 }
+.dndnode {
+    margin-left: 10px;
+}
 
 .automationDnD .dndnode.input {
     color: #12ace0;
@@ -111,15 +107,14 @@ footer.page-footer {
 }
 .buttonArea {
     top: 90px;
-    right: 230px;
+    right: 10px;
     position: absolute;
-    z-index: 9999999999;
+    z-index: 4;
 }
 .button {
     background: #1a1c21;
     width: 100px;
     height: 40px;
-    font-family: 'Podkova', serif;
     font-size: 18px;
     color: #96d853;
     border: 2px solid #96d853;
@@ -133,6 +128,81 @@ footer.page-footer {
 .automationDnD .react-flow {
     background-color: transparent !important;
 }
+
+.actionNode {
+    height: 100px;
+    width: 100px;
+    border-radius: 10px;
+    background: rgb(0, 157, 255);
+    color: rgb(224, 130, 41);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.filterNode {
+    width: 100PX;
+    height: 100px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.triggerNode {
+    height: 100px;
+    width: 100px;
+    border-radius: 100px;
+    background: #5570C9;
+    color: #12ace0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+}
+
+.filterNode::after {
+    background: #305671;
+    content: " ";
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    transform: rotate(45deg);
+    z-index: -1;
+}
+
+.react-flow__handle {
+    z-index: 10;
+}
+
+.reactflow-wrapper .triggerAction, 
+.reactflow-wrapper .triggerTask,
+.reactflow-wrapper .filterBuilder {
+    width: 44px;
+}
+
+.connectable {
+    width: 18px;
+    height: 18px;
+    background: #90a7bb !important;
+    border: 5px solid #fff !important;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+}
+.react-flow__handle-left.connectable {
+    left: -9px;
+}
+.react-flow__handle-right.connectable {
+    right: -9px;
+}
+
+.connectable::after {
+    content: "";
+    position: absolute;
+    
+}
+
 @media screen and (min-width: 768px) {
     .automationDnD {
         flex-direction: row;

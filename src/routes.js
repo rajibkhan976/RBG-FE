@@ -13,7 +13,6 @@ import Dashboard from "./components/dashboard/Dashboard";
 const Routes = () => {
   const logState = useSelector((state) => state.auth.isLoggedIn);
   console.log('Redux store login status : '+ logState, 'Is logged in : '+isLoggedIn());
-
   return (
     <React.Suspense fallback={<div />}>
       <Switch>
