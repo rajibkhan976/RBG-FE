@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import LeftMenu from "../shared/LeftMenu";
 import HeaderDashboard from "../shared/HeaderDashboard";
 import DashboardFooter from "../shared/FooterDashboard";
-import Automation from '../automation/AutomationRoutes'
 import InnerLeftMenu from "../shared/InnerLeftMenu";
 
 const Dashboard = () => {
@@ -23,7 +22,7 @@ const Dashboard = () => {
           <div className="dashboardElComponent">
             <HeaderDashboard toggleCreate={(e) => toggleCreate(e)} />
             <div className="dashInnerStructure">
-              <Automation />
+              <h1>Dashboard</h1>
               <DashboardFooter />
             </div>
           </div>
