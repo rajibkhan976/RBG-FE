@@ -1,3 +1,20 @@
+.innerMenuScroll {
+    overflow: auto;
+    flex: 1 1 auto;
+}
+
+.innerMenuScroll::-webkit-scrollbar {
+    width: 4px;
+}
+
+.innerMenuScroll::-webkit-scrollbar-track {
+    background-color: #DCE4EB;
+}
+
+.innerMenuScroll::-webkit-scrollbar-thumb {
+    background-color: #F1A668;
+}
+
 .info_3dot_icon .btn {
     width: 22px;
 }
@@ -58,8 +75,18 @@
 }
 
 .sidebarHeader {
-    padding: 26px 25px;
+    padding: 26px 0;
+    margin: 0 25px;
     position: relative;
+    border-bottom: 1px solid #DCE4EB;
+}
+
+.menuDetails .sidebarHeader:not(:nth-child(2)) {
+    border-top: 1px solid #DCE4EB;
+}
+
+.menuDetails ul li:first-child .leftMenuInnerLink {
+    border-top: none;
 }
 
 .sidebarHeader h4 {
@@ -70,7 +97,7 @@
 
 .sidebarHeader .arrowIcon {
     top: 50%;
-    right: 35px;
+    right: 10px;
     transform: translateY(-50%);
     -webkit-transform: translateY(-50%);
     -moz-transform: translateY(-50%);
@@ -121,7 +148,102 @@
 .cloneIcon .a {
     fill: #305671;
 }
+
 .toggleBtn input[type="checkbox"] {
     margin: 0;
     cursor: pointer;
+}
+
+/* Builder */
+
+.dndNodes {
+    padding: 0 25px;
+    margin: 28px 0;
+}
+
+.dndNodes:after {
+    clear: both;
+    content: '';
+    display: table;
+}
+
+.triggerTask .a {
+    fill: #e5ebff;
+}
+
+.dndnode {
+    width: 63px;
+    height: 63px;
+    display: inline-flex;
+    float: left;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    cursor: pointer;
+}
+
+.dndnode * {
+    pointer-events: none;
+    user-select: none;
+}
+
+.triggerNodes .dndnode {
+    background: #5570C9;
+    /*DEFAULT BG COLOR*/
+    border-radius: 50%;
+}
+
+.filterNodes .dndnode {
+    position: relative;
+    overflow: hidden;
+    border-radius: 25px;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    -ms-border-radius: 25px;
+    -o-border-radius: 25px;
+}
+
+.filterNodes .dndnode:after {
+    background: #305671;
+    /*DEFAULT BG COLOR*/
+    content: " ";
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    -o-transform: rotate(45deg);
+    transform: rotate(45deg);
+    z-index: -1;
+}
+
+.actionNodes .dndnode {
+    background: #009DFF;
+    /*DEFAULT BG COLOR*/
+}
+
+.dndnode svg {
+    max-width: 29px;
+    max-height: 29px;
+}
+
+.filterBuilder .a {
+    fill: none;
+    stroke: #93afc3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-miterlimit: 10;
+    stroke-width: 1.5px;
+}
+
+.actionNodes .dndnode {
+    border-radius: 10px;
+}
+
+.triggerAction .a {
+    fill: none;
+    stroke: #9ad8ff;
+    stroke-linejoin: round;
+    stroke-width: 1.7px;
 }

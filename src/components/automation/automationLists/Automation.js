@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import AutomationLists from "./AutomationLists";
+import AutomationBuilder from "./automationcanvas/AutomationBuilder";
 
 import LeftMenu from "../../shared/LeftMenu";
 import HeaderDashboard from "../../shared/HeaderDashboard";
@@ -11,6 +12,7 @@ const Automation = (props) => {
   const [stateFilter, setStateFilter] = useState(null);
 
   const toggleCreate = (e) => {
+    console.log("AUTOMATION DASHBOARD:::", e);
     setCreateButton(e);
   };
   const toggleFilter = (e) => {
@@ -19,7 +21,7 @@ const Automation = (props) => {
 
   return (
     <div className="mainComponent">
-      <div className="dashboardBody d-flex f-align-center">
+      <div className={createButton === "automation" ? "dashboardBody automationBuilderBody d-flex f-align-center" : "dashboardBody d-flex f-align-center"}>
         <LeftMenu />
         <div className="dashMain">
           {createButton === null ? (
@@ -41,14 +43,16 @@ const Automation = (props) => {
             </>
           ) : createButton === "automation" ? (
             <>
-              <InnerLeftMenu />
+              <InnerLeftMenu
+                createButton={createButton}
+              />
               <div className="dashboardElComponent">
                 <HeaderDashboard
                   toggleCreate={toggleCreate}
                   stateFilter={stateFilter}
                 />
                 <div className="dashInnerStructure">
-                  <AutomationLists
+                  <AutomationBuilder
                     toggleFilter={toggleFilter}
                     toggleCreate={toggleCreate}
                   />
@@ -56,7 +60,9 @@ const Automation = (props) => {
                 </div>
               </div>
             </>
-          ) : ""}
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>

@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Podkova:wght@400&display=swap');
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Podkova', serif;
+    background: #282c34;
+}
+
+.navbar-brand img {
+    width: auto;
+    height: 40px;
+    margin: 10px 20px;
+}
+
+.flex-column.nav {
+    float: right;
+    margin: 10px 0 0 0;
+}
+
+.flex-column.nav a {
+    color: #fff;
+    font-size: 18px;
+    display: inline-block;
+    padding: 7px 14px;
+    border-radius: 5px;
+    margin-right: 10px;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0);
+    transition: all 0.5s ease 0s;
+}
+
+.flex-column.nav a:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.automationDnD {
+    flex-direction: column;
+    display: flex;
+    height: 100%;
+}
+
+.automationDnD aside {
+    border-right: 1px solid #eee;
+    padding: 15px 10px;
+    font-size: 12px;
+    background: #1a1c21;
+}
+
+.automationDnD aside .description {
+    margin-bottom: 10px;
+    color: #9c9c9c;
+    font-size: 16px;
+}
+
+.automationDnD .dndnode {
+    height: 100px;
+    width: 100px;
+    padding: 4px;
+    color: #e08229;
+    font-size: 14px;
+    border: 3px solid #e08229;
+    border-radius: 2px;
+    margin-bottom: 30px;
+    margin-left: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+}
+
+.automationDnD .dndnode.input {
+    color: #12ace0;
+    border-color: #12ace0;
+    border-width: 3px;
+    width: 110px;
+    height: 110px;
+    border-radius: 100px;
+    margin-left: 25px;
+}
+
+.automationDnD .dndnode.output {
+    color: #df42c5;
+    border-color: #df42c5;
+    border-width: 3px;
+    width: 105px;
+    height: 105px;
+    /* width: 85px;
+    height: 85px;
+    transform: rotate(45deg);
+    margin-top: 50px;
+    margin-left: 35px; */
+    border-radius: 30px;
+    display: flex;
+    align-items: 'center';
+    justify-content: 'center';
+}
+
+.automationDnD .reactflow-wrapper {
+    flex-grow: 1;
+    height: 100%;
+}
+
+footer.page-footer {
+    background: #393f4b;
+    font-size: 16px;
+    color: #a7b5cf;
+    height: 73px;
+    text-align: center;
+    box-sizing: border-box;
+    padding-top: 20px;
+}
+.buttonArea {
+    top: 90px;
+    right: 230px;
+    position: absolute;
+    z-index: 9999999999;
+}
+.button {
+    background: #1a1c21;
+    width: 100px;
+    height: 40px;
+    font-family: 'Podkova', serif;
+    font-size: 18px;
+    color: #96d853;
+    border: 2px solid #96d853;
+    outline: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 400;
+    margin-left: 5px;
+
+}
+.automationDnD .react-flow {
+    background-color: transparent !important;
+}
+@media screen and (min-width: 768px) {
+    .automationDnD {
+        flex-direction: row;
+    }
+    .automationDnD aside {
+        width: 20%;
+        max-width: 180px;
+    }
+}

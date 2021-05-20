@@ -432,14 +432,9 @@ audio, video {
   fill: #305671;
 }
 
-.menuDetails {
-  width: 294px;
-  height: 100%;
-  background: #E9EFF5;
-}
-
 .logoSidebar {
   display: flex;
+  flex: 0 0 70px;
   height: 70px;
   align-items: center;
   border-bottom: 1px solid #DCE4EB;
@@ -609,6 +604,11 @@ input:focus+.searchIco #search-ico .a {
   left: 0;
   bottom: 0;
   z-index: 2;
+  width: 294px;
+  height: 100%;
+  background: #E9EFF5; 
+  display: flex;
+  flex-direction: column;
 }
 
 /* Side Menu Tray */
@@ -763,7 +763,6 @@ input:focus+.searchIco #search-ico .a {
   margin: 0px 25px 0px 25px;
   display: block;
   position: relative;
-  border-top: 1px solid #DCE4EB;
   border-bottom: 1px solid #DCE4EB;
 }
 

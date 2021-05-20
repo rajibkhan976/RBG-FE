@@ -5,7 +5,6 @@ function LeftMenu(props) {
   const pathURL = useLocation().pathname
 
   useEffect(() => {
-    console.log(pathURL)
   });
 
   return (

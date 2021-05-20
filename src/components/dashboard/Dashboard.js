@@ -10,6 +10,7 @@ const Dashboard = () => {
   const [createButton, setCreateButton] = useState(null);
 
   const toggleCreate = (e) => {
+    console.log('DASHBOARD STRUCTURE:::', createButton)
     setCreateButton(e);
   };
 
