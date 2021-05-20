@@ -5,7 +5,6 @@ let headers = {
   "Accept": "application/json",
   "Content-Type": "application/json",
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'OPTIONS,POST',
   'Access-Control-Allow-Credentials': true,
 };
 
@@ -32,5 +31,5 @@ export const userLogin = (email, password, rememberMe = false) => {
 };
 
 export const isLoggedIn = () => {
-    return false;
+  return false;
 };

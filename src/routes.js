@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
+import { useSelector } from 'react-redux';
 import { UnProtectedRoute } from "./middleware/UnProtectedRoute";
 import { ProtectedRoute } from "./middleware/ProtectedRoute";
 import DashboardRoutes from "./components/dashboard/DashboardRoutes";
@@ -8,8 +9,9 @@ import Login from "./components/authentication/login/Login";
 import Dashboard from "./components/dashboard/Dashboard";
 
 const Routes = () => {
-  const [logState, setLogState] = useState(false);
-
+  const logState = useSelector((state) => state.auth.isLoggedIn);
+  console.log('Log state', logState);
+  
   return (
     <React.Suspense fallback={<div />}>
       <Switch>

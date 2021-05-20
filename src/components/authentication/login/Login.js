@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import  AuthActions from "../../../actions/AuthActions";
 import { userLogin } from "../../../services/authentication/AuthServices";
 
 const Login = (props) => {
@@ -11,6 +13,8 @@ const Login = (props) => {
     password: "",
   });
   const [loader, setLoader] = useState(false);
+
+  const dispatch = useDispatch();
 
   const handleEmailChange = (event) => {
     event.preventDefault();
@@ -25,15 +29,8 @@ const Login = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log('Event handle', email, password);
-    userLogin(email, password)
-      .then((response) => {
-        if (response) {
-          console.log('User login response', response);
-        }
-      })
-      .catch((error) => {
-        console.log('User login error', error);
-      });
+    dispatch(AuthActions.login(email, password));
+    
   }
 
   return (
