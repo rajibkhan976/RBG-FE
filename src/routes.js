@@ -10,22 +10,35 @@ import Dashboard from "./components/dashboard/Dashboard";
 
 const Routes = () => {
   const logState = useSelector((state) => state.auth.isLoggedIn);
-  console.log('Log state', logState);
-  
+
   return (
     <React.Suspense fallback={<div />}>
       <Switch>
         {logState ? (
-          <Route
+          <UnProtectedRoute
             exact
-            path="/"
+            path={["/", "/login"]}
             component={() => <Redirect to="/dashboard" />}
           />
         ) : (
-          <Route exact path="/" component={() => <Redirect to="/login" />} />
+          <UnProtectedRoute exact path="/" component={Login} />
         )}
-        <UnProtectedRoute exact path="/login" component={Login} />
-        <ProtectedRoute exact path="/dashboard" component={Dashboard} />
+        <UnProtectedRoute
+          exact
+          path="/login"
+          component={() => {
+            console.log("Login CALLLL ");
+            return <Login />;
+          }}
+        />
+        <ProtectedRoute
+          exact
+          path="/dashboard"
+          component={() => {
+            console.log("Dashboard CALLLL ");
+            return <Dashboard />;
+          }}
+        />
         <Route component={DashboardRoutes} />
       </Switch>
     </React.Suspense>

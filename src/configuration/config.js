@@ -1,7 +1,8 @@
 let {
     apiUrl,
     hostUrl,
-    baseUrl
+    baseUrl,
+    jwtSecrete
 } = require("./env");
 
 module.exports = {
@@ -10,5 +11,7 @@ module.exports = {
     baseUrl: baseUrl,
 
     //Auth
-    loginUrl: "https://cljnebnu2g.execute-api.us-east-1.amazonaws.com/dev/login"
+    //loginUrl: "https://cljnebnu2g.execute-api.us-east-1.amazonaws.com/dev/login",
+    loginUrl: "https://jsonplaceholder.typicode.com/users",
+    jwtSecrete : jwtSecrete
 }

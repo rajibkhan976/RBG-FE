@@ -14,7 +14,7 @@ function LeftMenu(props) {
           <NavLink
             className="leftMenuLink"
             activeClassName="selected"
-            to="/page-one"
+            to="/dashboard"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

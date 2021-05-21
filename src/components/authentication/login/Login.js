@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import  AuthActions from "../../../actions/AuthActions";
-import { userLogin } from "../../../services/authentication/AuthServices";
+import { useDispatch, useSelector } from "react-redux";
+import AuthActions from "../../../actions/AuthActions";
 
 const Login = (props) => {
   document.title = "Login";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginStatus, setLoginStatus] = useState(false);
   const [formErrors, setFormErrors] = useState({
     email: "",
     password: "",
@@ -29,8 +27,7 @@ const Login = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log('Event handle', email, password);
-    dispatch(AuthActions.login(email, password));
-    
+    dispatch(AuthActions.login(email, password))
   }
 
   return (

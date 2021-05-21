@@ -9,7 +9,7 @@ export const ProtectedRoute = ({ component: Component, ...rest }) => (
         render={(props) =>
             isLoggedIn() ? (
                 <React.Fragment>
-                    <Component {...props} />
+                    <Component {...props} params={props.match}/>
                 </React.Fragment>
             ) : (
                 <Redirect to="/login" component={Login} />

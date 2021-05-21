@@ -1,5 +1,6 @@
-import { userLogin } from "../services/authentication/AuthServices";
+import { userLogin, userLogout } from "../services/authentication/AuthServices";
 import * as actionTypes from "./types";
+import { history } from '../helpers';
 
 
 const login = (email, password) => {
@@ -11,9 +12,12 @@ const login = (email, password) => {
                 if (response) {
                     dispatch({
                         type: actionTypes.USER_LOGIN,
-                        value: response
+                        user: response
                     });
                 }
+            })
+            .then(() => {
+                history.push('/dashboard')
             })
             .catch(error => {
                 console.log('Auth actions error', error);
@@ -21,6 +25,17 @@ const login = (email, password) => {
     };
 };
 
+const logout = () => {
+    return dispatch => {
+        userLogout();
+        dispatch({
+            type: actionTypes.LOGOUT,
+        })
+        history.push('/login');
+    };
+}
+
 export default {
-    login
+    login,
+    logout
 }
