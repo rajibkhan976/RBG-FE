@@ -8,7 +8,7 @@ const login = (email, password) => {
     return dispatch => {
         userLogin(email, password)
             .then(response => {
-                console.log('Auth actions response', response);
+                //console.log('Auth actions response', response);
                 if (response) {
                     dispatch({
                         type: actionTypes.USER_LOGIN,
@@ -20,7 +20,13 @@ const login = (email, password) => {
                 history.push('/dashboard')
             })
             .catch(error => {
-                console.log('Auth actions error', error);
+                if (error) {
+                    //console.log('Auth actions error', error.response.data);
+                    dispatch({
+                        type: actionTypes.LOGIN_FAILURE,
+                        message: error.response.data
+                    });
+                }
             });
     };
 };

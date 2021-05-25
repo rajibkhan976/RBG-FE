@@ -1,3 +1,4 @@
+import { JsonWebTokenError } from "jsonwebtoken";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AuthActions from "../../../actions/AuthActions";
@@ -13,6 +14,7 @@ const Login = (props) => {
   const [loader, setLoader] = useState(false);
 
   const dispatch = useDispatch();
+  const errorMessage = useSelector((state) => state.auth.message.error);
 
   const handleEmailChange = (event) => {
     event.preventDefault();
@@ -24,24 +26,89 @@ const Login = (props) => {
     setPassword(event.target.value);
   }
 
+  const validateField = (type = null) => {
+    let emailValid = props.emailValid;
+    let passwordValid = props.passwordValid;
+    emailValid = email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+    passwordValid = password.length >= 6;
+    if (type === "email" && email.length) {
+      setFormErrors({
+        ...formErrors,
+        email: !emailValid ? "Invalid email address" : "",
+      });
+    } else if (type === "password" && password.length) {
+      setFormErrors({
+        ...formErrors,
+        password: !passwordValid ? "Please enter a valid password." : "",
+      });
+    } else {
+      setFormErrors({
+        ...formErrors,
+        email: "",
+        password: "",
+      });
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log('Event handle', email, password);
-    dispatch(AuthActions.login(email, password))
-  }
+    let formErrorsCopy = formErrors;
+    let isError = false;
+
+    /**
+     * Check email field
+     */
+    if (!email) {
+      isError = true;
+      formErrorsCopy.email = "Please fillup the email";
+    }
+    /**
+     * Check password field
+     */
+    if (!password) {
+      isError = true;
+      formErrorsCopy.password = "Please fillup the password";
+    }
+
+    /**
+     * Check the erros flag
+     */
+    if (isError) {
+      /**
+       * Set form errors
+       */
+      setFormErrors({
+        ...formErrors,
+        email: formErrorsCopy.email,
+        password: formErrorsCopy.password,
+      });
+    } else {
+      /**
+       * Submit the registration form
+       */
+      setLoader(true);
+      setFormErrors({
+        ...formErrors,
+        email: "",
+        password: "",
+      });
+      dispatch(AuthActions.login(email, password));
+    }
+  };
 
   return (
     <div className="mainComponent">
       <div className="authBody d-flex f-align-center f-justify-center">
+        <h2>{errorMessage ? errorMessage : null}</h2>
         <form className="formBody" onSubmit={handleSubmit}>
           <h1>Login</h1>
           <div>
             <label>Email</label>
-            <input type="text" name="email" onChange={handleEmailChange} />
+            <input type="text" name="email" onChange={handleEmailChange} onBlur={() => validateField("email")} />
           </div>
           <div>
             <label>Password</label>
-            <input type="password" name="password" onChange={handlePasswordChange} />
+            <input type="password" name="password" onChange={handlePasswordChange} onBlur={() => validateField("password")} />
           </div>
           <button className="btn btn-primary btn-lg">Login</button>
         </form>

@@ -3,14 +3,15 @@ import jwt from "jsonwebtoken";
 import config from "../configuration/config";
 
 let token = localStorage.getItem('_token');
-let decode = token ? jwt.verify(token, config.jwtSecrete) : {}; 
+let decode = token ? jwt.verify(token, config.jwtSecrete) : {};
 
 const initialState = token ? {
   isLoggedIn: true,
-  user: {'email' : decode.email, 'username' : decode.username}
+  user: { 'email': decode.email, 'username': decode.username }
 } : {
   isLoggedIn: false,
-  user: {}
+  user: {},
+  message : {}
 };
 
 const authReducer = (state = initialState, action) => {
@@ -19,6 +20,10 @@ const authReducer = (state = initialState, action) => {
     case actionTypes.USER_LOGIN:
       newState.isLoggedIn = true;
       newState.user = action.user;
+      break;
+    case actionTypes.LOGIN_FAILURE:
+      newState.isLoggedIn = false;
+      newState.message = action.message;
       break;
     case actionTypes.LOGOUT:
       newState.isLoggedIn = false;
