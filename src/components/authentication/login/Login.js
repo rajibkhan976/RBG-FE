@@ -19,12 +19,12 @@ const Login = (props) => {
   const handleEmailChange = (event) => {
     event.preventDefault();
     setEmail(event.target.value);
-  }
+  };
 
   const handlePasswordChange = (event) => {
     event.preventDefault();
     setPassword(event.target.value);
-  }
+  };
 
   const validateField = (type = null) => {
     let emailValid = props.emailValid;
@@ -99,22 +99,64 @@ const Login = (props) => {
   return (
     <div className="mainComponent">
       <div className="authBody d-flex f-align-center f-justify-center">
-        <h2>{errorMessage ? errorMessage : null}</h2>
+        <figure className="loginLogo">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="128"
+            height="28"
+            viewBox="0 0 128 28"
+            className="logoRBG"
+          >
+            <text className="a" transform="translate(0 21)">
+              <tspan x="0" y="0">
+                RedBelt
+              </tspan>
+              <tspan className="b" y="0">
+                Gym
+              </tspan>
+            </text>
+          </svg>
+        </figure>
         <form className="formBody" onSubmit={handleSubmit}>
+        <div className="errorLogin text-center">errorMessage</div>
+          {/* {errorMessage ? (
+            <div className="errorLogin text-center">errorMessage</div>
+          ) : null} */}
+
           <h1>Login</h1>
-          <div>
+          <div className="formInputs">
             <label>Email</label>
-            <input type="text" name="email" onChange={handleEmailChange} onBlur={() => validateField("email")} />
+
+            <div className="inFormField">
+              <input
+                type="text"
+                name="email"
+                onChange={handleEmailChange}
+                onBlur={() => validateField("email")}
+                placeholder="Email"
+              />
+            </div>
           </div>
-          <div>
+          <div className="formInputs">
             <label>Password</label>
-            <input type="password" name="password" onChange={handlePasswordChange} onBlur={() => validateField("password")} />
+
+            <div className="inFormField">
+              <input
+                type="password"
+                name="password"
+                onChange={handlePasswordChange}
+                onBlur={() => validateField("password")}
+                placeholder="Password"
+              />
+            </div>
           </div>
-          <button className="btn btn-primary btn-lg">Login</button>
+          <div className="formInputs">
+            <button className="btn btn-dBlue">Login</button>
+          </div>
         </form>
       </div>
     </div>
   );
-}
+};
 
 export default Login;

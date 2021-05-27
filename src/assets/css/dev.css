@@ -247,3 +247,105 @@
     stroke-linejoin: round;
     stroke-width: 1.7px;
 }
+
+/* LOGIN */
+
+.authBody {
+    background-color: #f7f7f7;
+}
+
+.loginLogo {
+    font-size: 0;
+    width: 250px;
+    border-radius: 8px;
+    font-size: 0;
+    width: 250px;
+}
+
+.logoRBG .a {
+    fill: #ed707a;
+    font-size: 20px;
+    font-family: Poppins-Bold, Poppins;
+    font-weight: 700;
+}
+
+.logoRBG .b {
+    fill: #305671;
+}
+
+
+.loginLogo svg {
+    width: 100%;
+    height: 100%;
+}
+
+.authBody .formBody {
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgb(0 0 0 / 4%);
+    width: 100%;
+    max-width: 420px;
+    margin-top: 25px;
+    border: 2px solid rgba(0, 0, 0, 0.03);
+    position: relative;
+    z-index: 1;
+    background: inherit;
+    overflow: hidden;
+}
+
+.authBody .formBody:before {
+    content: "";
+    position: absolute;
+    background: inherit;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: inset 0 0 300px rgba(255, 255, 255, .5);
+    filter: blur(10px);
+    -webkit-filter: blur(10px);
+    margin: -20px;
+}
+
+.errorLogin {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #fd7d7d;
+}
+
+.authBody h1 {
+    font-size: 28px;
+    margin: 0;
+    color: #1b2c38;
+}
+
+.errorLogin+h1 {
+    margin-top: 25px;
+}
+
+.authBody .formInputs {
+    margin-top: 0;
+}
+
+.authBody .formInputs {
+    margin-top: 30px;
+}
+
+.authBody .inFormField input {
+    -webkit-box-shadow: none !important;
+    color: #1b2c38;
+}
+
+.authBody .formInputs label {
+    margin-bottom: 8px;
+    display: block;
+    font-size: 14px;
+}
+
+.authBody .formInputs .btn {
+    width: 100%;
+    height: 42px;
+}
+
+/* LOGIN */
