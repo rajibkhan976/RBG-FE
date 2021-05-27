@@ -14,7 +14,7 @@ const Login = (props) => {
   const [loader, setLoader] = useState(false);
 
   const dispatch = useDispatch();
-  const errorMessage = useSelector((state) => state.auth.message.error);
+  const errorMessage = useSelector((state) => state.auth.message ? state.auth.message.error : null);
 
   const handleEmailChange = (event) => {
     event.preventDefault();

@@ -7,6 +7,7 @@ import search_icon from "../../../assets/images/search_icon.svg";
 import filter_icon from "../../../assets/images/filter_icon.svg";
 import plus_icon from "../../../assets/images/plus_icon.svg";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
+import { RoleServices } from "../../../services/authentication/RoleServices";
 
 // import owner_img_1 from "../../../assets/images/owner_img_1.png";
 // import more_pages_Icon from "../../../assets/images/more_pages_Icon.svg";
@@ -18,43 +19,14 @@ import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 
 const RolesListing = (props) => {
     const [dropdownPos, setDropdownPos] = useState('bottom');
-    const [rolesData, setRolesData] = useState([
+    const [rolesData, setRolesData] = useState(null);
+    const [pagination, setPaginationData] = useState(
         {
-            keyId: "role-1",
-            roleName: "Gym Manager",
-            numberOfAssigned: 2,
-            createdOn: "2nd Feb 2021",
-            isEditing: true,
-        },
-        {
-            keyId: "role-2",
-            roleName: "Gym Staff",
-            numberOfAssigned: 23,
-            createdOn: "2nd Feb 2021",
-            isEditing: false,
-        },
-        {
-            keyId: "role-3",
-            roleName: "Senior Gym Staff",
-            numberOfAssigned: 2,
-            createdOn: "2nd Feb 2021",
-            isEditing: false,
-        },
-        {
-            keyId: "role-4",
-            roleName: "Marketing Head",
-            numberOfAssigned: 2,
-            createdOn: "2nd Feb 2021",
-            isEditing: false,
-        },
-        {
-            keyId: "role-5",
-            roleName: "Sales Staff - in bound",
-            numberOfAssigned: 2,
-            createdOn: "2nd Feb 2021",
-            isEditing: false,
-        },
-    ]);
+            count: null,
+            currentPage: null,
+            totalPages: null,
+        }
+    );
 
     const toggleCreateHeader = () => {
         props.toggleCreate("roles");
@@ -74,12 +46,12 @@ const RolesListing = (props) => {
             setDropdownPos("bottom")
         }
 
-        const data = rolesData.filter((i) => i.keyId === e);
+        const data = rolesData.filter((i) => i._id === e);
         console.log("ROLES E? : ", data);
         data[0].isEditing = !data[0].isEditing;
         console.log("ROLES data  :: ", data[0].isEditing);
         const newData = rolesData.map((el, i) => {
-            if (el.keyId === e) {
+            if (el._id === e) {
                 return data[0];
             } else return el;
         });
@@ -88,8 +60,33 @@ const RolesListing = (props) => {
     };
 
     useEffect(() => {
-        console.log('roles component mounted');
-    });
+        /**
+         * Call to fetch roles
+         */
+        fetchRoles();
+    }, []);
+
+    /**
+     * Function to fetch roles
+     * @returns 
+     */
+    const fetchRoles = async () => {
+        try {
+            // const getPlanDetails = await PlanServices.fetchAllPlansDetails()
+            await RoleServices.fetchRoles()
+                .then((roles) => {
+                    console.log('Role listing result', roles);
+                    if (roles) {
+                        setRolesData(roles);
+                    }
+                })
+                .catch((error) => {
+                    console.log("Role listing error", error);
+                });
+        } catch (e) {
+            console.log("Error in Role listing", e);
+        }
+    }
 
     return (
         <div className="dashInnerUI">
@@ -160,27 +157,27 @@ const RolesListing = (props) => {
               </div>
                             <div className="createDate">Created on</div>
                         </li>
-                        {rolesData.length &&
+                        {rolesData && rolesData.length &&
                             rolesData.map((elem, i) => {
                                 return (
                                     <>
-                                        <li className="owerInfo userRole" key={elem.keyId}>
+                                        <li className="owerInfo userRole" key={i}>
                                             <div className="userName">
                                                 <button className="btn">
-                                                    <p>{elem.roleName}</p>
+                                                    <p>{elem.name}</p>
                                                 </button>
                                             </div>
                                             <div className="phoneNum">
-                                                <button className="btn">
-                                                    {elem.numberOfAssigned}
+                                                <button className="btn">0
+                                                    {/* {elem.numberOfAssigned} */}
                                                 </button>
                                             </div>
                                             <div className="createDate">
-                                                <button className="btn">{elem.createdOn}</button>
+                                                <button className="btn">{elem.createdAt}</button>
                                                 <div className="info_3dot_icon">
                                                     <button
                                                         className="btn"
-                                                        onClick={(el) => editThisRole(elem.keyId, el)}
+                                                        onClick={(el) => editThisRole(elem._id, el)}
                                                     >
                                                         <img src={info_3dot_icon} alt="" />
                                                     </button>

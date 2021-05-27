@@ -7,7 +7,7 @@ let decode = token ? jwt.verify(token, config.jwtSecrete) : {};
 
 const initialState = token ? {
   isLoggedIn: true,
-  user: { 'email': decode.email, 'username': decode.username }
+  user: { 'token': token }
 } : {
   isLoggedIn: false,
   user: {},
