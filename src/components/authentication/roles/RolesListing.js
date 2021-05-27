@@ -72,7 +72,6 @@ const RolesListing = (props) => {
      */
     const fetchRoles = async () => {
         try {
-            // const getPlanDetails = await PlanServices.fetchAllPlansDetails()
             await RoleServices.fetchRoles()
                 .then((roles) => {
                     console.log('Role listing result', roles);
