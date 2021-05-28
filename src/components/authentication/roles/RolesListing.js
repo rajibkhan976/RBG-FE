@@ -20,13 +20,17 @@ import { RoleServices } from "../../../services/authentication/RoleServices";
 const RolesListing = (props) => {
     const [dropdownPos, setDropdownPos] = useState('bottom');
     const [rolesData, setRolesData] = useState(null);
-    const [pagination, setPaginationData] = useState(
+    const [rolesCount, setRolesCount] = useState(0);
+    const [paginationData, setPaginationData] = useState(
         {
             count: null,
-            currentPage: null,
             totalPages: null,
+            currentPage: 1,
+            limit: 10
         }
     );
+    const [keyword, setKeyword] = useState(null);
+
 
     const toggleCreateHeader = () => {
         props.toggleCreate("roles");
@@ -73,10 +77,15 @@ const RolesListing = (props) => {
     const fetchRoles = async () => {
         try {
             await RoleServices.fetchRoles()
-                .then((roles) => {
-                    console.log('Role listing result', roles);
-                    if (roles) {
-                        setRolesData(roles);
+                .then((result) => {
+                    console.log('Role listing result', result.roles);
+                    if (result) {
+                        setRolesData(result.roles);
+                        setRolesCount(result.pagination.count);
+                        setPaginationData({
+                            ...paginationData,
+                            totalPages: result.pagination.totalPages
+                        });
                     }
                 })
                 .catch((error) => {
@@ -87,6 +96,67 @@ const RolesListing = (props) => {
         }
     }
 
+    /**
+     * Search roles
+     */
+    const searchRoles = async (keyword) => {
+        try {
+            await RoleServices.searchRoles(keyword)
+                .then((result) => {
+                    console.log('Role listing search', result.roles);
+                    if (result && result.roles) {
+                        setRolesData(result.roles);
+                        setRolesCount(result.pagination.count);
+                        setPaginationData({
+                            ...paginationData,
+                            totalPages: result.pagination.totalPages
+                        });
+                    } else {
+                        setRolesData(null);
+                    }
+                })
+                .catch((error) => {
+                    console.log("Role search error", error);
+                });
+        } catch (e) {
+            console.log("Error in role search", e);
+        }
+    }
+
+    /**
+     * Get roles from pagination component
+     * @param {*} dataFromChild 
+     */
+    const getRolesFn = (dataFromChild) => {
+        console.log('Data from child', dataFromChild);
+        if (dataFromChild) {
+            setRolesData(dataFromChild.roles);
+            //Set current page
+            setPaginationData({
+                ...paginationData,
+                currentPage: dataFromChild.pagination.currentPage,
+                totalPages: dataFromChild.pagination.totalPages
+            });
+        }
+    }
+
+    /**
+     * Update keyword
+     */
+    const handleKeywordChange = (event) => {
+        console.log(event.target.value);
+        setKeyword(event.target.value);
+    }
+
+    /**
+     * Handle search functionality
+     */
+    const handleSearch = (event) => {
+        event.preventDefault();
+        console.log('Handle search: ' + keyword);
+        searchRoles(keyword);
+    }
+
     return (
         <div className="dashInnerUI">
             <div className="userListHead">
@@ -95,15 +165,17 @@ const RolesListing = (props) => {
                         <li>Users & Controls</li>
                         <li>Roles</li>
                     </ul>
-                    <h2 className="inDashboardHeader">User Roles (12)</h2>
+                    <h2 className="inDashboardHeader">User Roles ({rolesCount})</h2>
                     <p className="userListAbout">Create & manage roles for your users</p>
                 </div>
                 <div className="listFeatures">
                     <div className="searchBar">
-                        <input type="search" name="" id="" placeholder="Search users" />
-                        <button className="searchIcon">
-                            <img src={search_icon} alt="" />
-                        </button>
+                        <form onSubmit={handleSearch}>
+                            <input type="search" name="search" placeholder="Search roles" onChange={handleKeywordChange} autoComplete="off" />
+                            <button className="searchIcon">
+                                <img src={search_icon} alt="" />
+                            </button>
+                        </form>
                     </div>
                     <button className="btn btn-filter" onClick={filterRoles}>
                         <p>Filter</p>
@@ -153,14 +225,14 @@ const RolesListing = (props) => {
                             <div className="userName">Role Name</div>
                             <div className="phoneNum assignedPeople">
                                 No. of people assigned
-              </div>
+                            </div>
                             <div className="createDate">Created on</div>
                         </li>
-                        {rolesData && rolesData.length &&
+                        {rolesData ?
                             rolesData.map((elem, i) => {
                                 return (
                                     <>
-                                        <li className="owerInfo userRole" key={i}>
+                                        <li className="owerInfo userRole" key={elem._id} >
                                             <div className="userName">
                                                 <button className="btn">
                                                     <p>{elem.name}</p>
@@ -186,11 +258,15 @@ const RolesListing = (props) => {
                                         </li>
                                     </>
                                 );
-                            })}
+                            }) : ''
+                        }
                     </ul>
                 </div>
             </div>
-            <DashboardPagination />
+            {rolesCount ? <DashboardPagination
+                paginationData={paginationData}
+                rolesCount={rolesCount}
+                getRoles={getRolesFn} /> : ''}
         </div>
     )
 }

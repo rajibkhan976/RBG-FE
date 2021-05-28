@@ -16,12 +16,12 @@ let headers = {
 //   });
 
 export const RoleServices = {
-    fetchRoles: async () => {
+    fetchRoles: async (page = null) => {
         headers.Authorization = localStorage.getItem("_token");
         return new Promise((resolve, reject) => {
             axios
                 .get(
-                    config.fetchRolesUrl,
+                    config.fetchRolesUrl + (page ? "/"+page : ''),
                     { headers: headers }
                 )
                 .then((result) => {
@@ -30,6 +30,26 @@ export const RoleServices = {
                 })
                 .catch((error) => {
                     console.log('Fetch roles service error: ', error);
+                    if (error != null) {
+                        reject(error);
+                    }
+                });
+        });
+    },
+    searchRoles: async (keyword = null) => {
+        headers.Authorization = localStorage.getItem("_token");
+        return new Promise((resolve, reject) => {
+            axios
+                .get(
+                    config.fetchRolesUrl + (keyword ? "?search="+keyword : ''),
+                    { headers: headers }
+                )
+                .then((result) => {
+                    console.log('Search roles services result: ', result);
+                    resolve(result.data);
+                })
+                .catch((error) => {
+                    console.log('Search roles service error: ', error);
                     if (error != null) {
                         reject(error);
                     }
