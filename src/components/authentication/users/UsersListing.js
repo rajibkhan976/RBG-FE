@@ -164,7 +164,7 @@ const UsersListing = (props) => {
                     </ul>
                 </div>
             </div>
-            <DashboardPagination />
+            {/* <DashboardPagination /> */}
         </div>
     )
 }

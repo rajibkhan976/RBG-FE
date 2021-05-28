@@ -156,7 +156,7 @@ const GroupListing = (props) => {
                     </ul>
                 </div>
             </div>
-            <DashboardPagination />
+            {/* <DashboardPagination /> */}
         </div>
     )
 }
