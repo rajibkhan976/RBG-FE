@@ -118,11 +118,9 @@ const Login = (props) => {
           </svg>
         </figure>
         <form className="formBody" onSubmit={handleSubmit}>
-        <div className="errorLogin text-center">errorMessage</div>
-          {/* {errorMessage ? (
-            <div className="errorLogin text-center">errorMessage</div>
-          ) : null} */}
-
+          {errorMessage ? (
+            <div className="errorLogin text-center">{errorMessage}</div>
+          ) : null}
           <h1>Login</h1>
           <div className="formInputs">
             <label>Email</label>
