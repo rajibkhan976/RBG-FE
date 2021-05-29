@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import DashboardPagination from "../../shared/Pagination";
+import Pagination from "../../shared/Pagination";
 import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
 
 import search_icon from "../../../assets/images/search_icon.svg";
@@ -8,6 +8,7 @@ import filter_icon from "../../../assets/images/filter_icon.svg";
 import plus_icon from "../../../assets/images/plus_icon.svg";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 import { RoleServices } from "../../../services/authentication/RoleServices";
+import { utils } from "../../../helpers";
 
 // import owner_img_1 from "../../../assets/images/owner_img_1.png";
 // import more_pages_Icon from "../../../assets/images/more_pages_Icon.svg";
@@ -65,18 +66,23 @@ const RolesListing = (props) => {
 
     useEffect(() => {
         /**
+         * Get page id and keyword from URL
+         */
+        let pageId = utils.getQueryVariable('page');
+        let keyword = utils.getQueryVariable('search');
+        /**
          * Call to fetch roles
          */
-        fetchRoles();
+        fetchRoles(pageId, keyword);
     }, []);
 
     /**
      * Function to fetch roles
      * @returns 
      */
-    const fetchRoles = async () => {
+    const fetchRoles = async (pageId, keyword) => {
         try {
-            await RoleServices.fetchRoles()
+            await RoleServices.fetchRoles(pageId, keyword)
                 .then((result) => {
                     console.log('Role listing result', result.roles);
                     if (result) {
@@ -84,6 +90,7 @@ const RolesListing = (props) => {
                         setRolesCount(result.pagination.count);
                         setPaginationData({
                             ...paginationData,
+                            currentPage : result.pagination.currentPage,
                             totalPages: result.pagination.totalPages
                         });
                     }
@@ -96,32 +103,6 @@ const RolesListing = (props) => {
         }
     }
 
-    /**
-     * Search roles
-     */
-    const searchRoles = async (keyword) => {
-        try {
-            await RoleServices.searchRoles(keyword)
-                .then((result) => {
-                    console.log('Role listing search', result.roles);
-                    if (result && result.roles) {
-                        setRolesData(result.roles);
-                        setRolesCount(result.pagination.count);
-                        setPaginationData({
-                            ...paginationData,
-                            totalPages: result.pagination.totalPages
-                        });
-                    } else {
-                        setRolesData(null);
-                    }
-                })
-                .catch((error) => {
-                    console.log("Role search error", error);
-                });
-        } catch (e) {
-            console.log("Error in role search", e);
-        }
-    }
 
     /**
      * Get roles from pagination component
@@ -153,8 +134,11 @@ const RolesListing = (props) => {
      */
     const handleSearch = (event) => {
         event.preventDefault();
-        console.log('Handle search: ' + keyword);
-        searchRoles(keyword);
+        if(keyword) {
+            utils.addQueryParameter('search', keyword);
+            let pageId = utils.getQueryVariable('page');
+            fetchRoles(pageId, keyword);
+        }
     }
 
     return (
@@ -263,7 +247,7 @@ const RolesListing = (props) => {
                     </ul>
                 </div>
             </div>
-            {rolesCount ? <DashboardPagination
+            {rolesCount ? <Pagination
                 paginationData={paginationData}
                 rolesCount={rolesCount}
                 getRoles={getRolesFn} /> : ''}

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { RoleServices } from "../../services/authentication/RoleServices";
-import { history } from "../../helpers/";
+import { history, utils } from "../../helpers";
 
 
-const DashboardPagination = (props) => {
+const Pagination = (props) => {
+
 
   const paginationHandleClick = (event) => {
     let currentPage = Number(event.target.value);
@@ -11,16 +12,17 @@ const DashboardPagination = (props) => {
     /**
      * Add query parameter
      */
-    let currentUrlParams = new URLSearchParams(window.location.search);
-    currentUrlParams.set("page", currentPage);
-    history.push(
-      window.location.pathname + "?" + currentUrlParams.toString()
-    );
+    utils.addQueryParameter('page', currentPage);
+
+    /**
+     * Get page id from URL
+     */
+    let pageId = utils.getQueryVariable('page');
     
     /**
      * Make axios call
      */
-    fetchPaginatedRoles(currentPage);
+    fetchPaginatedRoles(pageId);
   }
 
   const fetchPaginatedRoles = async (page) => {
@@ -74,9 +76,13 @@ const DashboardPagination = (props) => {
    * Previous button click
    */
   const preClickHandle = () => {
-    let newPage = props.paginationData.currentPage - 1;
-    //console.log('previous click handle', newPage);
+    let currentPageId = props.paginationData.currentPage;
+    let newPage = Number(currentPageId) - 1;
     if (newPage > 0) {
+      /**
+       * Add new page id to URL
+       */
+      utils.addQueryParameter('page', newPage);
       fetchPaginatedRoles(newPage);
     }
   }
@@ -85,9 +91,13 @@ const DashboardPagination = (props) => {
    * Next button click
    */
   const nextClickHandle = () => {
-    let newPage = props.paginationData.currentPage + 1;
-    //console.log('next click handle', newPage, props.paginationData.totalPages);
+    let currentPageId = props.paginationData.currentPage;
+    let newPage = Number(currentPageId) + 1;
     if (newPage <= props.paginationData.totalPages) {
+      /**
+       * Add new page id to URL
+       */
+      utils.addQueryParameter('page', newPage);
       fetchPaginatedRoles(newPage);
     }
   }
@@ -128,4 +138,4 @@ const DashboardPagination = (props) => {
   );
 };
 
-export default DashboardPagination;
+export default Pagination;
