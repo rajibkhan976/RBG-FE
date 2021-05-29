@@ -10,8 +10,8 @@ const initialState = token ? {
   user: { 'token': token }
 } : {
   isLoggedIn: false,
-  user: {},
-  message : {}
+  user: null,
+  message : null
 };
 
 const authReducer = (state = initialState, action) => {
@@ -20,6 +20,7 @@ const authReducer = (state = initialState, action) => {
     case actionTypes.USER_LOGIN:
       newState.isLoggedIn = true;
       newState.user = action.user;
+      newState.message = null;
       break;
     case actionTypes.LOGIN_FAILURE:
       newState.isLoggedIn = false;
@@ -28,6 +29,7 @@ const authReducer = (state = initialState, action) => {
     case actionTypes.LOGOUT:
       newState.isLoggedIn = false;
       newState.user = null;
+      newState.message = null;
   }
   return newState;
 };
