@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { RoleServices } from "../../services/authentication/RoleServices";
+import { history } from "../../helpers/";
 
 
 const DashboardPagination = (props) => {
@@ -7,6 +8,15 @@ const DashboardPagination = (props) => {
   const paginationHandleClick = (event) => {
     let currentPage = Number(event.target.value);
 
+    /**
+     * Add query parameter
+     */
+    let currentUrlParams = new URLSearchParams(window.location.search);
+    currentUrlParams.set("page", currentPage);
+    history.push(
+      window.location.pathname + "?" + currentUrlParams.toString()
+    );
+    
     /**
      * Make axios call
      */
