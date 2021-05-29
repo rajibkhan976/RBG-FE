@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, createRef } from 'react';
 
 import Pagination from "../../shared/Pagination";
 import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
@@ -31,6 +31,8 @@ const RolesListing = (props) => {
         }
     );
     const [keyword, setKeyword] = useState(null);
+    const [option, setOption] = useState(null);
+    const optionsToggleRef = useRef();
 
 
     const toggleCreateHeader = () => {
@@ -41,8 +43,8 @@ const RolesListing = (props) => {
         props.toggleFilter("roles");
     };
 
-    const editThisRole = (e, el) => {
-        let yPosition = el.clientY;
+    const editThisRole = (elementId, event) => {
+        let yPosition = event.clientY;
         let avHeight = window.innerHeight - (70 + 70 + 54 + 57)
         if ((yPosition + 70) > avHeight) {
             setDropdownPos("top")
@@ -51,14 +53,14 @@ const RolesListing = (props) => {
             setDropdownPos("bottom")
         }
 
-        const data = rolesData.filter((i) => i._id === e);
+        const data = rolesData.filter((i) => i._id === elementId);
         console.log("ROLES E? : ", data);
         data[0].isEditing = !data[0].isEditing;
         console.log("ROLES data  :: ", data[0].isEditing);
         const newData = rolesData.map((el, i) => {
-            if (el._id === e) {
+            if (el._id === elementId) {
                 return data[0];
-            } else return el;
+            } else return event;
         });
         console.log("ROLES newData : ", newData);
         setRolesData(newData);
@@ -90,7 +92,7 @@ const RolesListing = (props) => {
                         setRolesCount(result.pagination.count);
                         setPaginationData({
                             ...paginationData,
-                            currentPage : result.pagination.currentPage,
+                            currentPage: result.pagination.currentPage,
                             totalPages: result.pagination.totalPages
                         });
                     }
@@ -134,11 +136,47 @@ const RolesListing = (props) => {
      */
     const handleSearch = (event) => {
         event.preventDefault();
-        if(keyword) {
+        if (keyword) {
             utils.addQueryParameter('search', keyword);
             let pageId = utils.getQueryVariable('page');
             fetchRoles(pageId, keyword);
         }
+    }
+
+    /**
+     * Handle options toggle
+     */
+    const toggleOptions = (index) => {
+        setOption(index !== null ? (option !== null ? null : index) : null);
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+    }, [option])
+
+    /**
+     * Handle outside click
+     */
+    const handleClickOutside = (event) => {
+        console.log('Handle outside click');
+        setOption(null);
+    }
+
+    /**
+     * Function to edit role
+     */
+    const editRole = (roleId) => {
+        console.log('Edit role id', roleId);
+    }
+
+    /**
+     * Function to delete role
+     */
+    const deleteRole = (roleId) => {
+        console.log('Delete role id', roleId);
     }
 
     return (
@@ -213,9 +251,9 @@ const RolesListing = (props) => {
                             <div className="createDate">Created on</div>
                         </li>
                         {rolesData ?
-                            rolesData.map((elem, i) => {
+                            rolesData.map((elem, key) => {
                                 return (
-                                    <>
+                                    <React.Fragment key={key + "_role"}>
                                         <li className="owerInfo userRole" key={elem._id} >
                                             <div className="userName">
                                                 <button className="btn">
@@ -232,15 +270,86 @@ const RolesListing = (props) => {
                                                 <div className="info_3dot_icon">
                                                     <button
                                                         className="btn"
-                                                        onClick={(el) => editThisRole(elem._id, el)}
+                                                        //onClick={(el) => editThisRole(elem._id, el)}
+                                                        ref={optionsToggleRef}
+                                                        onClick={() => {
+                                                            toggleOptions(key);
+                                                        }}
                                                     >
                                                         <img src={info_3dot_icon} alt="" />
                                                     </button>
                                                 </div>
-                                                {elem.isEditing && <TableOptionsDropdown dropdownPos={dropdownPos} dropdownType="rolesDropdown" />}
+                                                <React.Fragment key={key + "_fragment"}>
+                                                    <div
+                                                        className={
+                                                            option === key ? "dropdownOptions listOpen" : "listHide"
+                                                        }
+                                                    >
+                                                        <button className="btn btnEdit"
+                                                            onClick={() => {
+                                                                editRole(elem._id);
+                                                            }}>
+                                                            <span>
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    viewBox="0 0 13.553 13.553"
+                                                                    className="editIcon"
+                                                                >
+                                                                    <g transform="translate(0.75 0.75)">
+                                                                        <path
+                                                                            className="a"
+                                                                            d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423"
+                                                                            transform="translate(-2 -2.795)"
+                                                                        />
+                                                                        <path
+                                                                            className="a"
+                                                                            d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z"
+                                                                            transform="translate(-4.384 -2)"
+                                                                        />
+                                                                    </g>
+                                                                </svg>
+                                                            </span>
+                                                        Edit
+                                                    </button>
+                                                        <button className="btn btnDelete"
+                                                            onClick={() => {
+                                                                deleteRole(elem._id);
+                                                            }}>
+                                                            <span>
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    width="12.347"
+                                                                    height="13.553"
+                                                                    viewBox="0 0 12.347 13.553"
+                                                                    className="deleteIcon"
+                                                                >
+                                                                    <g transform="translate(0.75 0.75)">
+                                                                        <path className="a" transform="translate(-3 -3.589)" />
+                                                                        <path
+                                                                            className="a"
+                                                                            d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
+                                                                            transform="translate(-3.795 -2)"
+                                                                        />
+                                                                        <line
+                                                                            className="a"
+                                                                            y2="3"
+                                                                            transform="translate(4.397 6.113)"
+                                                                        />
+                                                                        <line
+                                                                            className="a"
+                                                                            y2="3"
+                                                                            transform="translate(6.397 6.113)"
+                                                                        />
+                                                                    </g>
+                                                                </svg>
+                                                            </span>
+                                                        Delete
+                                                    </button>
+                                                    </div>
+                                                </React.Fragment>
                                             </div>
                                         </li>
-                                    </>
+                                    </React.Fragment>
                                 );
                             }) : ''
                         }
