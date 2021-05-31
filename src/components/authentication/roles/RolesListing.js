@@ -32,7 +32,7 @@ const RolesListing = (props) => {
     );
     const [keyword, setKeyword] = useState(null);
     const [option, setOption] = useState(null);
-    const optionsToggleRef = useRef();
+    const optionsToggleRef = useRef(rolesData);
 
 
     const toggleCreateHeader = () => {
@@ -161,8 +161,13 @@ const RolesListing = (props) => {
      * Handle outside click
      */
     const handleClickOutside = (event) => {
-        console.log('Handle outside click');
-        setOption(null);
+        console.log('Handle outside click',optionsToggleRef.current, event.target, option);
+        if (optionsToggleRef.current.contains(event.target)) {
+            console.log('// inside click');
+            return;
+          }
+          console.log('// outside click');
+          // outside click
     }
 
     /**
@@ -175,8 +180,25 @@ const RolesListing = (props) => {
     /**
      * Function to delete role
      */
-    const deleteRole = (roleId) => {
-        console.log('Delete role id', roleId);
+    const deleteRole = async (roleId) => {
+        if (roleId) {
+            try {
+                await RoleServices.deleteRole(roleId)
+                    .then((result) => {
+                        if(result) {
+                            console.log('Role delete result', result);
+                            const newList = rolesData.filter((role) => role._id !== roleId);
+                            setRolesData(newList);
+                            setOption(null);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log("Role delete error", error);
+                    });
+            } catch (e) {
+                console.log("Error in Role delete", e);
+            }
+        }
     }
 
     return (
@@ -267,11 +289,9 @@ const RolesListing = (props) => {
                                             </div>
                                             <div className="createDate">
                                                 <button className="btn">{elem.createdAt}</button>
-                                                <div className="info_3dot_icon">
+                                                <div className="info_3dot_icon" ref={optionsToggleRef}>
                                                     <button
                                                         className="btn"
-                                                        //onClick={(el) => editThisRole(elem._id, el)}
-                                                        ref={optionsToggleRef}
                                                         onClick={() => {
                                                             toggleOptions(key);
                                                         }}
@@ -280,6 +300,7 @@ const RolesListing = (props) => {
                                                     </button>
                                                 </div>
                                                 <React.Fragment key={key + "_fragment"}>
+                                                    {/* {console.log('Here', option, key)} */}
                                                     <div
                                                         className={
                                                             option === key ? "dropdownOptions listOpen" : "listHide"
@@ -313,7 +334,7 @@ const RolesListing = (props) => {
                                                     </button>
                                                         <button className="btn btnDelete"
                                                             onClick={() => {
-                                                                deleteRole(elem._id);
+                                                                //deleteRole(elem._id);
                                                             }}>
                                                             <span>
                                                                 <svg

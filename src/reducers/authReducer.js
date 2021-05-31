@@ -1,9 +1,6 @@
 import * as actionTypes from "../actions/types";
-import jwt from "jsonwebtoken";
-import config from "../configuration/config";
 
 let token = localStorage.getItem('_token');
-let decode = token ? jwt.verify(token, config.jwtSecrete) : {};
 
 const initialState = token ? {
   isLoggedIn: true,

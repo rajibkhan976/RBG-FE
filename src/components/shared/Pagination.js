@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { RoleServices } from "../../services/authentication/RoleServices";
-import { history, utils } from "../../helpers";
+import { utils } from "../../helpers";
 
 
 const Pagination = (props) => {
@@ -59,7 +59,7 @@ const Pagination = (props) => {
         key={number}
         id={number}
       >
-        <button className={props.paginationData.currentPage == number ? "btn paginationBtn active" : "btn paginationBtn"} value={number} onClick={paginationHandleClick}>{number}</button>
+        <button className={props.paginationData.currentPage === number ? "btn paginationBtn active" : "btn paginationBtn"} value={number} onClick={paginationHandleClick}>{number}</button>
       </li>
     );
   });

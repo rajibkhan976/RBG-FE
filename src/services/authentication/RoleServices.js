@@ -1,6 +1,5 @@
 import axios from "axios";
 import config from "../../configuration/config";
-import { useDispatch, useSelector } from "react-redux";
 
 let headers = {
     "Content-Type": "application/json"
@@ -27,4 +26,24 @@ export const RoleServices = {
                 });
         });
     },
+    deleteRole: async (roleId) => {
+        headers.Authorization = localStorage.getItem("_token");
+        return new Promise((resolve, reject) => {
+            axios
+                .delete(
+                    config.deleteRoleUrl + roleId,
+                    { headers: headers }
+                )
+                .then((result) => {
+                    console.log('Delete roles services result: ', result);
+                    resolve(result.data);
+                })
+                .catch((error) => {
+                    console.log('Delete roles service error: ', error);
+                    if (error != null) {
+                        reject(error);
+                    }
+                });
+        });
+    }
 };
