@@ -13,7 +13,7 @@ module.exports = {
     //Auth
     loginUrl: "https://cljnebnu2g.execute-api.us-east-1.amazonaws.com/dev/login",
     //loginUrl: "https://jsonplaceholder.typicode.com/users",
-    jwtSecrete : jwtSecrete,
-    fetchRolesUrl: "https://cpl2p29j5c.execute-api.us-east-1.amazonaws.com/dev/role/list",
-    deleteRoleUrl: "https://cpl2p29j5c.execute-api.us-east-1.amazonaws.com/dev/role/"
+    jwtSecrete: jwtSecrete,
+    roleUrl: "https://cpl2p29j5c.execute-api.us-east-1.amazonaws.com/dev/role",
+    fetchRolesUrl: "https://cpl2p29j5c.execute-api.us-east-1.amazonaws.com/dev/role/list"
 }

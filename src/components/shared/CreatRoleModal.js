@@ -1,0 +1,227 @@
+import camera_icon from "../../assets/images/camera_icon.svg";
+import arrow_forward from "../../assets/images/arrow_forward.svg";
+import plus_icon from "../../assets/images/plus_icon.svg";
+import arrowDown from "../../assets/images/arrowDown.svg";
+import { useState, useEffect } from "react";
+import { RoleServices } from "../../services/authentication/RoleServices";
+
+const CreateRoleModal = (props) => {
+  const closeSideMenu = (e) => {
+    e.preventDefault();
+    props.setCreateButton(null);
+  };
+  const [name, setName] = useState("");
+  const [slug, setSlug] = useState("");
+  const [description, setDescription] = useState("");
+  const [status] = useState("active");
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [formErrors, setFormErrors] = useState({
+    name: "",
+    description: "",
+  });
+  const [saveAndNew, setSaveAndNew] = useState(false)
+
+  const handleNameChange = (event) => {
+    event.preventDefault();
+    setName(event.target.value);
+
+    let roleSlug = event.target.value ? ((event.target.value).toLowerCase()).replace(" ", "-") : "";
+    setSlug(roleSlug);
+  }
+  
+  const handleDescriptionChange = (event) => {
+    event.preventDefault();
+    setDescription(event.target.value);
+  }
+
+  const handleSaveAndNew = () => {
+    setSaveAndNew(true);
+  }
+
+  const resetRoleForm = () => {
+    setName(null);
+    setDescription(null);
+    setSuccessMsg(null);
+    setErrorMsg(null);
+  }
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    let isError = false;
+
+    console.log('name>', name);
+    console.log('desc>', description);
+
+    /**
+     * Check name field
+     */
+    if (!name) {
+      isError = true;
+      formErrors.name = "Please fillup the name";
+    } else {
+      formErrors.name = null;
+    }
+
+    /**
+     * Check description field
+     */
+    if (!description) {
+      isError = true;
+      formErrors.description = "Please fillup the description";
+    } else {
+      formErrors.description = null
+    }
+
+    /**
+     * Check the erros flag
+     */
+    if (isError) {
+      /**
+       * Set form errors
+       */
+      setFormErrors({
+        name: formErrors.name,
+        description: formErrors.description
+      });
+      console.log('formErrors', formErrors)
+    } else {
+      /**
+       * Submit role create form
+       */
+      try {
+        await RoleServices.createRole({
+          name: name,
+          slug: slug,
+          description: description,
+          status: status
+        })
+          .then(result => {
+            console.log("Create role result", result)
+                        
+            setSuccessMsg(result);
+            
+            /**
+             * Reset modal
+             */
+            setTimeout(() => {
+              if (saveAndNew) {
+                setSaveAndNew(false);
+                props.setCreateButton(null);
+                props.setCreateButton('role');
+              } else {
+                props.setCreateButton(null);
+              }
+              resetRoleForm();
+            }, 2000)
+            
+          })
+      } catch (e) {
+        
+        /**
+         * Segregate error by http status
+         */
+        console.log("Error in role create", e)
+        if (e.response && e.response.status == 403) {
+          setErrorMsg("You dont have permission to perform this action");
+        }
+        else if (e.response && e.response.data.message) {
+          setErrorMsg(e.response.data.message);
+        }
+        
+      }
+    }
+  }
+
+
+  return (
+    <>  
+      {props.createButton !== null && (
+        <div className="sideMenuOuter createSideModal sideRoles">
+          <div className="sideMenuInner">
+            <button
+              className="btn btn-closeSideMenu"
+              onClick={(e) => closeSideMenu(e)}
+            >
+              <span></span>
+              <span></span>
+            </button>
+            
+            <>
+              <div className="sideMenuHeader">
+                <h3>Create an user role</h3>
+                <p>
+                  We got you covered! Limit your Gym Staffs to access your
+                  business information.
+                  </p>
+              </div>
+
+              <div className="sideMenuBody">
+                
+                {successMsg && 
+                  <div className="success successMsg">
+                    <p>{successMsg}</p>
+                  </div>
+                }
+                {errorMsg &&
+                  <div className="error errorMsg">
+                    <p>{errorMsg}</p>
+                  </div>
+                }
+                {formErrors && 
+                  <div className="error errorMsg">
+                    {formErrors.name &&
+                    <p>{formErrors.name}</p>}
+                  
+                    {formErrors.description &&
+                    <p>{formErrors.description}</p>}
+                  </div>
+                }
+                <form onSubmit={handleSubmit}>
+                  <div className="formField">
+                    <p>Enter role name</p>
+                    <div className="inFormField">
+                      <input
+                        type="text"
+                        name="name"
+                        onChange={handleNameChange}
+                        placeholder="Ex. Manager"
+                      />
+                    </div>
+                  </div>
+                  <div className="formField">
+                    <p>Enter role description</p>
+                    <div className="inFormField">
+                      <textarea
+                        name="description"
+                        onChange={handleDescriptionChange}
+                        id=""
+                        placeholder="Ex. Managers of production"
+                      >
+                      </textarea>
+                    </div>
+                  </div>
+
+                  <div className="permissionButtons enterRoleNameBtn">
+                    <button className="creatUserBtn createBtn">
+                      <img className="plusIcon" src={plus_icon} alt="" />
+                      <span>Create role</span>
+                    </button>
+                    <button className="saveNnewBtn"
+                      onClick={handleSaveAndNew}
+                    >
+                      <span>Save & New</span>
+                      <img className="" src={arrow_forward} alt="" />
+                    </button>
+                    </div>
+                </form>
+              </div>
+            </>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default CreateRoleModal;

@@ -6,13 +6,13 @@ import HeaderDashboard from "../../shared/HeaderDashboard";
 import DashboardFooter from "../../shared/FooterDashboard";
 import InnerLeftMenu from "../../shared/InnerLeftMenu";
 import Filter from '../../shared/FilterAuth.js'
-import SideModal from '../../shared/SideModal'
+import  RoleCreateModal from '../../shared/CreatRoleModal'
 
 const Roles = () => {
   const [createButton, setCreateButton] = useState(null);
   const [stateFilter, setStateFilter] = useState(null);
 
-  const toggleCreate = (e) => {
+  const toggleCreate = (e) => {                                                                       
     setCreateButton(e);
   };
   const toggleFilter = (e) => {
@@ -44,7 +44,7 @@ const Roles = () => {
         stateFilter={stateFilter}
         setStateFilter={setStateFilter}
       />
-      <SideModal
+      <RoleCreateModal
         createButton={createButton}
         setCreateButton={setCreateButton}
       />

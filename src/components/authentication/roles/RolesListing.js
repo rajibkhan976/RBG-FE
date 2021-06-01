@@ -101,7 +101,7 @@ const RolesListing = (props) => {
                     console.log("Role listing error", error);
                 });
         } catch (e) {
-            console.log("Error in Role listing", e);
+            console.log("Error in Role listing", JSON.stringify(e));
         }
     }
 

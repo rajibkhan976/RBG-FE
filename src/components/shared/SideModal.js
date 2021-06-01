@@ -11,7 +11,7 @@ const SideModal = (props) => {
 
   return (
     <>
-      {props.createButton !== null && (
+      {props.createButton !== null && (   
         <div
           className={
             props.createButton === "user"
