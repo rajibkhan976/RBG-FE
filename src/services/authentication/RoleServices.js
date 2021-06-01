@@ -47,6 +47,27 @@ export const RoleServices = {
                 });
         });
     },
+    editRole: async (payload) => {
+        headers.Authorization = localStorage.getItem("_token");
+        return new Promise((resolve, reject) => {
+            axios
+                .put(
+                    config.roleUrl + "/" + payload.id,
+                    payload,
+                    { headers: headers }
+                )
+                .then((result) => {
+                    console.log('Create role service result: ', result);
+                    resolve(result.data);
+                })
+                .catch((error) => {
+                    console.log('Create role service error: ', error);
+                    if (error != null) {
+                        reject(error);
+                    }
+                });
+        });
+    },
     deleteRole: async (roleId) => {
         headers.Authorization = localStorage.getItem("_token");
         return new Promise((resolve, reject) => {
