@@ -1,5 +1,6 @@
 import React from 'react';
 import { RoleServices } from "../../services/authentication/RoleServices";
+import { UserServices } from "../../services/authentication/UserServices";
 import { utils } from "../../helpers";
 
 
@@ -22,7 +23,26 @@ const Pagination = (props) => {
     /**
      * Make axios call
      */
-    fetchPaginatedRoles(pageId);
+    if(currentPage !== props.paginationData.totalPages){
+      getPaginatedData(props.type, pageId);
+    }
+  }
+
+  /**
+   * Get paginated data
+   * @param {*} type 
+   */
+  const getPaginatedData = (type, pageId) => {
+    switch(type) {
+      case "role":
+        fetchPaginatedRoles(pageId);
+        break;
+      case "user":
+        fetchPaginatedUsers(pageId);
+        break;
+      default:
+        // code block
+    }
   }
 
   const fetchPaginatedRoles = async (page) => {
@@ -42,11 +62,28 @@ const Pagination = (props) => {
     }
   }
 
+  const fetchPaginatedUsers = async (page) => {
+    try {
+      await UserServices.fetchUsers(page)
+        .then((result) => {
+          console.log('User listing result paginated', result.users);
+          if (result) {
+            broadcastToParent(result);
+          }
+        })
+        .catch((error) => {
+          console.log("User listing error", error);
+        });
+    } catch (e) {
+      console.log("Error in User listing", e);
+    }
+  }
+
   /**
    * Display page numbers
    */
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(props.rolesCount / props.paginationData.limit); i++) {
+  for (let i = 1; i <= Math.ceil(props.dataCount / props.paginationData.limit); i++) {
     pageNumbers.push(i);
   }
 
@@ -69,7 +106,7 @@ const Pagination = (props) => {
    * @param {*} data
    */
   const broadcastToParent = (data) => {
-    props.getRoles(data);
+    props.getData(data);
   };
 
   /**
@@ -83,7 +120,7 @@ const Pagination = (props) => {
        * Add new page id to URL
        */
       utils.addQueryParameter('page', newPage);
-      fetchPaginatedRoles(newPage);
+      getPaginatedData(props.type, newPage);
     }
   }
 
@@ -98,7 +135,7 @@ const Pagination = (props) => {
        * Add new page id to URL
        */
       utils.addQueryParameter('page', newPage);
-      fetchPaginatedRoles(newPage);
+      getPaginatedData(props.type, newPage);
     }
   }
 

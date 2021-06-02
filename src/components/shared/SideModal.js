@@ -9,6 +9,21 @@ const SideModal = (props) => {
     props.setCreateButton(null);
   };
 
+  const handleImageUpload = (event) => {
+    let files = event.target.files;
+    console.log('File', files);
+    let reader = new FileReader();
+    reader.onload = r => {
+      console.log(r.target.result);
+      /**
+       * Make axios call
+       */
+
+    };
+    reader.readAsDataURL(files[0]);
+
+  }
+
   return (
     <>
       {props.createButton !== null && (   
@@ -17,10 +32,10 @@ const SideModal = (props) => {
             props.createButton === "user"
               ? "sideMenuOuter createSideModal sideUser"
               : props.createButton === "roles"
-              ? "sideMenuOuter createSideModal sideRoles"
-              : props.createButton === "groups"
-              ? "sideMenuOuter createSideModal sideGroups"
-              : "sideMenuOuter createSideModal"
+                ? "sideMenuOuter createSideModal sideRoles"
+                : props.createButton === "groups"
+                  ? "sideMenuOuter createSideModal sideGroups"
+                  : "sideMenuOuter createSideModal"
           }
         >
           <div className="sideMenuInner">
@@ -47,7 +62,7 @@ const SideModal = (props) => {
                       <p className="profilePicHeading">Set profile picture</p>
                       <div className="formField">
                         <label className="inputLabel">
-                          <input type="file" />
+                          <input type="file" onChange={(e) => handleImageUpload(e)} />
                           <span>
                             <figure
                               style={{
@@ -490,7 +505,7 @@ const SideModal = (props) => {
                 <div className="sideMenuHeader">
                   <h3>Create a Group</h3>
                   <p>
-                  Enter group name
+                    Enter group name
                   </p>
                 </div>
 

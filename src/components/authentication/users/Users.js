@@ -6,7 +6,8 @@ import HeaderDashboard from "../../shared/HeaderDashboard";
 import DashboardFooter from "../../shared/FooterDashboard";
 import InnerLeftMenu from "../../shared/InnerLeftMenu";
 import Filter from '../../shared/FilterAuth.js';
-import SideModal from '../../shared/SideModal'
+import SideModal from '../../shared/SideModal';
+import UserCreate from './UserCreate';
 
 
 const Users = (props) => {

@@ -1,8 +1,7 @@
 let {
     apiUrl,
     hostUrl,
-    baseUrl,
-    jwtSecrete
+    baseUrl
 } = require("./env");
 
 module.exports = {
@@ -10,10 +9,14 @@ module.exports = {
     hostUrl: hostUrl,
     baseUrl: baseUrl,
 
-    //Auth
+    //Auth - Role
     loginUrl: "https://cljnebnu2g.execute-api.us-east-1.amazonaws.com/dev/login",
-    //loginUrl: "https://jsonplaceholder.typicode.com/users",
-    jwtSecrete: jwtSecrete,
     roleUrl: "https://944mqenjuc.execute-api.us-east-1.amazonaws.com/dev/role",
-    fetchRolesUrl: "https://944mqenjuc.execute-api.us-east-1.amazonaws.com/dev/role/list"
+    fetchRolesUrl: "https://944mqenjuc.execute-api.us-east-1.amazonaws.com/dev/role/list",
+    deleteRoleUrl: "https://cpl2p29j5c.execute-api.us-east-1.amazonaws.com/dev/role/",
+
+    //Auth - User
+    fetchUsersUrl: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user/list",
+    imageUpload: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user/image/upload",
+    deleteUserUrl: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user/"
 }

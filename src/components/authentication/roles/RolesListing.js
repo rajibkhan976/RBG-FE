@@ -110,7 +110,7 @@ const RolesListing = (props) => {
      * Get roles from pagination component
      * @param {*} dataFromChild 
      */
-    const getRolesFn = (dataFromChild) => {
+    const getDataFn = (dataFromChild) => {
         console.log('Data from child', dataFromChild);
         if (dataFromChild) {
             setRolesData(dataFromChild.roles);
@@ -151,9 +151,9 @@ const RolesListing = (props) => {
     };
 
     useEffect(() => {
-        document.addEventListener("mousedown", handleClickOutside);
+        //document.addEventListener("mousedown", handleClickOutside);
         return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
+            //document.removeEventListener("mousedown", handleClickOutside);
         }
     }, [option])
 
@@ -335,7 +335,7 @@ const RolesListing = (props) => {
                                                     </button>
                                                         <button className="btn btnDelete"
                                                             onClick={() => {
-                                                                //deleteRole(elem._id);
+                                                                deleteRole(elem._id);
                                                             }}>
                                                             <span>
                                                                 <svg
@@ -379,9 +379,10 @@ const RolesListing = (props) => {
                 </div>
             </div>
             {rolesCount ? <Pagination
+                type="role"
                 paginationData={paginationData}
-                rolesCount={rolesCount}
-                getRoles={getRolesFn} /> : ''}
+                dataCount={rolesCount}
+                getData={getDataFn} /> : ''}
         </div>
     )
 }
