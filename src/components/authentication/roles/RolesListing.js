@@ -35,8 +35,8 @@ const RolesListing = (props) => {
     const optionsToggleRef = useRef(rolesData);
 
 
-    const toggleCreateHeader = () => {
-        props.toggleCreate("roles");
+    const toggleCreateHeader = (e) => {
+        props.toggleCreate(e);
     };
 
     const filterRoles = () => {
@@ -173,8 +173,9 @@ const RolesListing = (props) => {
     /**
      * Function to edit role
      */
-    const editRole = (roleId) => {
-        console.log('Edit role id', roleId);
+    const editRole = (role) => {
+        console.log('Edit role id', role);
+        toggleCreateHeader(role);
     }
 
     /**
@@ -308,7 +309,7 @@ const RolesListing = (props) => {
                                                     >
                                                         <button className="btn btnEdit"
                                                             onClick={() => {
-                                                                editRole(elem._id);
+                                                                editRole(elem);
                                                             }}>
                                                             <span>
                                                                 <svg

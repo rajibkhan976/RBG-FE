@@ -6,7 +6,7 @@ import HeaderDashboard from "../../shared/HeaderDashboard";
 import DashboardFooter from "../../shared/FooterDashboard";
 import InnerLeftMenu from "../../shared/InnerLeftMenu";
 import Filter from '../../shared/FilterAuth.js'
-import  RoleCreateModal from '../../shared/CreatRoleModal'
+import  RoleCreateModal from '../../shared/RoleModal'
 
 const Roles = () => {
   const [createButton, setCreateButton] = useState(null);

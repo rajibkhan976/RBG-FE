@@ -5,22 +5,40 @@ import arrowDown from "../../assets/images/arrowDown.svg";
 import { useState, useEffect } from "react";
 import { RoleServices } from "../../services/authentication/RoleServices";
 
-const CreateRoleModal = (props) => {
+const RoleModal = (props) => {
   const closeSideMenu = (e) => {
     e.preventDefault();
     props.setCreateButton(null);
   };
+
+  const editRole = props.createButton ? props.createButton : false;
+  
+  const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
   const [description, setDescription] = useState("");
-  const [status] = useState("active");
+  const [status, setStatus] = useState("active");
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [processing, setProcessing] = useState(false);
   const [formErrors, setFormErrors] = useState({
     name: "",
     description: "",
   });
-  const [saveAndNew, setSaveAndNew] = useState(false)
+  const [saveAndNew, setSaveAndNew] = useState(false);
+  
+  useEffect(() => {
+
+    /** Fillup states */ 
+    if (editRole && editRole._id && !id) {
+      setId(editRole._id);
+      setName(editRole.name);
+      setSlug(editRole.slug);
+      setDescription(editRole.description);
+      setStatus(editRole.status);
+    }
+
+  });
 
   const handleNameChange = (event) => {
     event.preventDefault();
@@ -48,10 +66,9 @@ const CreateRoleModal = (props) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    let isError = false;
+    setProcessing(true);
 
-    console.log('name>', name);
-    console.log('desc>', description);
+    let isError = false;
 
     /**
      * Check name field
@@ -80,6 +97,7 @@ const CreateRoleModal = (props) => {
       /**
        * Set form errors
        */
+      setProcessing(false);
       setFormErrors({
         name: formErrors.name,
         description: formErrors.description
@@ -89,13 +107,24 @@ const CreateRoleModal = (props) => {
       /**
        * Submit role create form
        */
+      let payload = {
+        name: name,
+        slug: slug,
+        description: description,
+        status: status
+      };
+
+      /**
+       * Lets decide the operation type
+       */
+      let oprationMethod = "createRole";
+      if (editRole && editRole._id) {
+        oprationMethod = "editRole";
+        payload.id = id;
+      }
+
       try {
-        await RoleServices.createRole({
-          name: name,
-          slug: slug,
-          description: description,
-          status: status
-        })
+        await RoleServices[oprationMethod](payload)
           .then(result => {
             console.log("Create role result", result)
                         
@@ -112,6 +141,7 @@ const CreateRoleModal = (props) => {
               } else {
                 props.setCreateButton(null);
               }
+              setProcessing(false);
               resetRoleForm();
             }, 2000)
             
@@ -121,6 +151,7 @@ const CreateRoleModal = (props) => {
         /**
          * Segregate error by http status
          */
+        setProcessing(false);
         console.log("Error in role create", e)
         if (e.response && e.response.status == 403) {
           setErrorMsg("You dont have permission to perform this action");
@@ -149,7 +180,8 @@ const CreateRoleModal = (props) => {
             
             <>
               <div className="sideMenuHeader">
-                <h3>Create an user role</h3>
+                
+                <h3>{editRole && editRole._id ? "Edit" : "Create"} an user role</h3>
                 <p>
                   We got you covered! Limit your Gym Staffs to access your
                   business information.
@@ -184,6 +216,7 @@ const CreateRoleModal = (props) => {
                       <input
                         type="text"
                         name="name"
+                        defaultValue={name}
                         onChange={handleNameChange}
                         placeholder="Ex. Manager"
                       />
@@ -197,22 +230,25 @@ const CreateRoleModal = (props) => {
                         onChange={handleDescriptionChange}
                         id=""
                         placeholder="Ex. Managers of production"
+                        defaultValue={description}
                       >
                       </textarea>
                     </div>
                   </div>
 
                   <div className="permissionButtons enterRoleNameBtn">
-                    <button className="creatUserBtn createBtn">
+                    <button disabled={processing}  className="creatUserBtn createBtn">
                       <img className="plusIcon" src={plus_icon} alt="" />
-                      <span>Create role</span>
+                      <span>{editRole && editRole._id ? "Edit" : "Create"} role</span>
                     </button>
-                    <button className="saveNnewBtn"
-                      onClick={handleSaveAndNew}
-                    >
-                      <span>Save & New</span>
-                      <img className="" src={arrow_forward} alt="" />
-                    </button>
+                    {!editRole && (
+                      <button disabled={processing} className="saveNnewBtn"
+                          onClick={handleSaveAndNew}
+                        >
+                          <span>Save & New</span>
+                          <img className="" src={arrow_forward} alt="" />
+                        </button>
+                    )}
                     </div>
                 </form>
               </div>
@@ -224,4 +260,4 @@ const CreateRoleModal = (props) => {
   );
 };
 
-export default CreateRoleModal;
+export default RoleModal;

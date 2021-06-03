@@ -14,6 +14,6 @@ module.exports = {
     loginUrl: "https://cljnebnu2g.execute-api.us-east-1.amazonaws.com/dev/login",
     //loginUrl: "https://jsonplaceholder.typicode.com/users",
     jwtSecrete: jwtSecrete,
-    roleUrl: "https://cpl2p29j5c.execute-api.us-east-1.amazonaws.com/dev/role",
-    fetchRolesUrl: "https://cpl2p29j5c.execute-api.us-east-1.amazonaws.com/dev/role/list"
+    roleUrl: "https://944mqenjuc.execute-api.us-east-1.amazonaws.com/dev/role",
+    fetchRolesUrl: "https://944mqenjuc.execute-api.us-east-1.amazonaws.com/dev/role/list"
 }
