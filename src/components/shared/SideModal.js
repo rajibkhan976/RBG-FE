@@ -14,16 +14,16 @@ const SideModal = (props) => {
 
   const handleImageUpload = (event) => {
     let files = event.target.files;
-    console.log('File', files);
+    
     let reader = new FileReader();
     reader.onload = r => {
       setImage(r.target.result);
-      console.log(r.target.result);
       /**
        * Make axios call
        */
       UserServices.fileUpload({
-        file: r.target.result
+        file: r.target.result,
+        name: files[0].name
       })
       .then((result) => {
         console.log('Profile pic: ', result);

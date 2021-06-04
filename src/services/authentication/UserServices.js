@@ -37,10 +37,11 @@ export const UserServices = {
             }
             console.log('File upload user service: ', fileData)
             axios
-                .put(
+                .post(
                     config.imageUpload,
                     {
-                        file : fileData.file
+                        file: fileData.file,
+                        name: fileData.name
                     },
                     { headers: headers }
                 )
