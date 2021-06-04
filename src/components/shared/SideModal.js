@@ -1,9 +1,12 @@
+import React, { useState } from 'react';
 import camera_icon from "../../assets/images/camera_icon.svg";
 import arrow_forward from "../../assets/images/arrow_forward.svg";
 import plus_icon from "../../assets/images/plus_icon.svg";
 import arrowDown from "../../assets/images/arrowDown.svg";
+import { UserServices } from "../../services/authentication/UserServices";
 
 const SideModal = (props) => {
+  const [image, setImage] = useState(null);
   const closeSideMenu = (e) => {
     e.preventDefault();
     props.setCreateButton(null);
@@ -14,11 +17,20 @@ const SideModal = (props) => {
     console.log('File', files);
     let reader = new FileReader();
     reader.onload = r => {
+      setImage(r.target.result);
       console.log(r.target.result);
       /**
        * Make axios call
        */
-
+      UserServices.fileUpload({
+        file: r.target.result
+      })
+      .then((result) => {
+        console.log('Profile pic: ', result);
+      })
+      .catch(err => {
+        console.log('Profile pic error', err);
+      });
     };
     reader.readAsDataURL(files[0]);
 
@@ -66,13 +78,12 @@ const SideModal = (props) => {
                           <span>
                             <figure
                               style={{
-                                backgroundImage: "url(" + camera_icon + ")",
+                                backgroundImage: "url(" + (image ? image : camera_icon) + ")",
                               }}
                             ></figure>
                             Profile picture
                           </span>
                         </label>
-                        <button className="btn uploadLink">Upload</button>
                       </div>
                     </div>
                     <div className="formInputs">

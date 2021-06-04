@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Pagination from "../../shared/Pagination";
 import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
@@ -10,6 +10,7 @@ import filter_icon from "../../../assets/images/filter_icon.svg";
 import plus_icon from "../../../assets/images/plus_icon.svg";
 import owner_img_1 from "../../../assets/images/owner_img_1.png";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
+import moment from "moment";
 
 const UsersListing = (props) => {
     const [dropdownPos, setDropdownPos] = useState('bottom');
@@ -55,27 +56,27 @@ const UsersListing = (props) => {
         console.log("newData : ", newData);
         setUsersData(newData);
     };
-    
+
     useEffect(() => {
         /**
          * Get page id and keyword from URL
          */
         let pageId = utils.getQueryVariable('page');
         let param = utils.getQueryVariable('search');
-        if(param) {
+        if (param) {
             setKeyword(param);
         }
         /**
          * Call to fetch roles
          */
-         fetchUsers(pageId, keyword);
+        fetchUsers(pageId, param);
     }, []);
 
     /**
      * Function to fetch users
      * @returns 
      */
-     const fetchUsers = async (pageId, keyword) => {
+    const fetchUsers = async (pageId, keyword) => {
         try {
             await UserServices.fetchUsers(pageId, keyword)
                 .then((result) => {
@@ -102,7 +103,7 @@ const UsersListing = (props) => {
      * Get user from pagination component
      * @param {*} dataFromChild 
      */
-     const getDataFn = (dataFromChild) => {
+    const getDataFn = (dataFromChild) => {
         console.log('Data from child', dataFromChild);
         if (dataFromChild) {
             setUsersData(dataFromChild.users);
@@ -118,7 +119,7 @@ const UsersListing = (props) => {
     /**
      * Handle options toggle
      */
-     const toggleOptions = (index) => {
+    const toggleOptions = (index) => {
         setOption(index !== null ? (option !== null ? null : index) : null);
     };
 
@@ -132,22 +133,39 @@ const UsersListing = (props) => {
     /**
      * Delete user
      */
-     const deleteUser = (userId) => {
-        console.log('Delete user Id', userId);
+    const deleteUser = async (userId) => {
+        if (userId) {
+            try {
+                await UserServices.deleteUser(userId)
+                    .then((result) => {
+                        if (result) {
+                            console.log('Role delete result', result);
+                            const newList = usersData.filter((user) => user._id !== userId);
+                            setUsersData(newList);
+                            setOption(null);
+                        }
+                    })
+                    .catch((error) => {
+                        console.log("Role delete error", error);
+                    });
+            } catch (e) {
+                console.log("Error in Role delete", e);
+            }
+        }
     }
 
     /**
      * Update keyword
      */
-     const handleKeywordChange = (event) => {
-        setKeyword(event.target.value ? event.target.value : '' );
+    const handleKeywordChange = (event) => {
+        setKeyword(event.target.value ? event.target.value : '');
         console.log('Keyword', keyword);
     }
 
     /**
      * Handle search functionality
      */
-     const handleSearch = (event) => {
+    const handleSearch = (event) => {
         event.preventDefault();
         utils.addQueryParameter('search', keyword);
         let pageId = utils.getQueryVariable('page');
@@ -169,12 +187,12 @@ const UsersListing = (props) => {
                 </div>
                 <div className="listFeatures">
                     <div className="searchBar">
-                    <form onSubmit={handleSearch}>
-                        <input type="search" placeholder="Search users" onChange={handleKeywordChange} autoComplete="off" value={keyword}/>
-                        <button className="searchIcon">
-                            <img src={search_icon} alt="" />
-                        </button>
-                    </form>
+                        <form onSubmit={handleSearch}>
+                            <input type="search" placeholder="Search users" onChange={handleKeywordChange} autoComplete="off" value={keyword} />
+                            <button className="searchIcon">
+                                <img src={search_icon} alt="" />
+                            </button>
+                        </form>
                     </div>
                     <button className="btn btn-filter" onClick={filterUsers}>
                         <p>Filter</p>
@@ -206,26 +224,26 @@ const UsersListing = (props) => {
                                             <div className="userName">
                                                 <button className="btn">
                                                     <img src={owner_img_1} alt="" />
-                                                    <p>{elem.username}</p>
+                                                    <p>{elem.firstName + ' ' + elem.lastName}</p>
                                                 </button>
                                             </div>
                                             <div className="phoneNum">
-                                                <button className="btn">{elem.phoneNumber}</button>
+                                                <button className="btn">{elem.phone}</button>
                                             </div>
                                             <div className="emailID">
                                                 <button className="btn">{elem.email}</button>
                                             </div>
                                             <div className="role">
-                                                <button className="btn">{elem.role}</button>
+                                                <button className="btn">{elem.role[0] ? elem.role[0].name : ''}</button>
                                             </div>
                                             <div className="assignedGroup">
-                                                <button className="btn">{elem.assignedGroup}</button>
+                                                <button className="btn">{elem.group[0] ? elem.group[0].name : ''}</button>
                                             </div>
                                             <div className="status">
                                                 <button className="btn">{elem.status}</button>
                                             </div>
                                             <div className="createDate">
-                                                <button className="btn">{elem.createdAt}</button>
+                                                <button className="btn">{moment(elem.createdAt).format("Do MMM YYYY")}</button>
                                                 <div className="info_3dot_icon">
                                                     <button
                                                         className="btn"
@@ -237,7 +255,7 @@ const UsersListing = (props) => {
                                                     </button>
                                                 </div>
                                                 <React.Fragment key={key + "_fragment"}>
-                                                <div
+                                                    <div
                                                         className={
                                                             option === key ? "dropdownOptions listOpen" : "listHide"
                                                         }

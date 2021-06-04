@@ -23,9 +23,9 @@ const Pagination = (props) => {
     /**
      * Make axios call
      */
-    if(currentPage !== props.paginationData.totalPages){
+    //if(currentPage !== props.paginationData.totalPages){
       getPaginatedData(props.type, pageId);
-    }
+    //}
   }
 
   /**

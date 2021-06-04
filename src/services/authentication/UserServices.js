@@ -4,7 +4,8 @@ import { isLoggedIn } from "../../services/authentication/AuthServices";
 import { message } from "../../helpers";
 
 let headers = {
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    'Accept': 'application/json',   
 };
 
 export const UserServices = {
@@ -34,13 +35,12 @@ export const UserServices = {
             if (isLoggedIn() === false) {
                 reject(message.loginFailed);
             }
+            console.log('File upload user service: ', fileData)
             axios
-                .post(
+                .put(
                     config.imageUpload,
                     {
-                        currentFile: fileData.currentFile,
-                        updatedFile: fileData.updatedFile,
-                        type: fileData.type
+                        file : fileData.file
                     },
                     { headers: headers }
                 )
@@ -52,6 +52,29 @@ export const UserServices = {
                         reject(error.response.data.error);
                     } else {
                         reject(message.connectionError);
+                    }
+                });
+        });
+    },
+    deleteUser: async (userId) => {
+        headers.Authorization = localStorage.getItem("_token");
+        return new Promise((resolve, reject) => {
+            if (isLoggedIn() === false) {
+                reject(message.loginFailed);
+            }
+            axios
+                .delete(
+                    config.deleteUserUrl + userId,
+                    { headers: headers }
+                )
+                .then((result) => {
+                    console.log('Delete user services result: ', result);
+                    resolve(result.data);
+                })
+                .catch((error) => {
+                    console.log('Delete user service error: ', error);
+                    if (error != null) {
+                        reject(error);
                     }
                 });
         });
