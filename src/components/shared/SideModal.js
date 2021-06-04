@@ -76,11 +76,9 @@ const SideModal = (props) => {
                         <label className="inputLabel">
                           <input type="file" onChange={(e) => handleImageUpload(e)} />
                           <span>
-                            <figure
-                              style={{
-                                backgroundImage: "url(" + (image ? image : camera_icon) + ")",
-                              }}
-                            ></figure>
+                            <span className="userProfilePic">
+                            <img src={image ? image : camera_icon} ></img>
+                            </span>
                             Profile picture
                           </span>
                         </label>
