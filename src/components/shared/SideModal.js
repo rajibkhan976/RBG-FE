@@ -1,40 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import camera_icon from "../../assets/images/camera_icon.svg";
 import arrow_forward from "../../assets/images/arrow_forward.svg";
 import plus_icon from "../../assets/images/plus_icon.svg";
 import arrowDown from "../../assets/images/arrowDown.svg";
-import { UserServices } from "../../services/authentication/UserServices";
 
 const SideModal = (props) => {
-  const [image, setImage] = useState(null);
+
   const closeSideMenu = (e) => {
     e.preventDefault();
     props.setCreateButton(null);
   };
-
-  const handleImageUpload = (event) => {
-    let files = event.target.files;
-    
-    let reader = new FileReader();
-    reader.onload = r => {
-      setImage(r.target.result);
-      /**
-       * Make axios call
-       */
-      UserServices.fileUpload({
-        file: r.target.result,
-        name: files[0].name
-      })
-      .then((result) => {
-        console.log('Profile pic: ', result);
-      })
-      .catch(err => {
-        console.log('Profile pic error', err);
-      });
-    };
-    reader.readAsDataURL(files[0]);
-
-  }
 
   return (
     <>
@@ -74,10 +49,10 @@ const SideModal = (props) => {
                       <p className="profilePicHeading">Set profile picture</p>
                       <div className="formField">
                         <label className="inputLabel">
-                          <input type="file" onChange={(e) => handleImageUpload(e)} />
+                          <input type="file"/>
                           <span>
                             <span className="userProfilePic">
-                            <img src={image ? image : camera_icon} ></img>
+                            <img src={camera_icon} ></img>
                             </span>
                             Profile picture
                           </span>

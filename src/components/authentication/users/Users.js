@@ -7,7 +7,7 @@ import DashboardFooter from "../../shared/FooterDashboard";
 import InnerLeftMenu from "../../shared/InnerLeftMenu";
 import Filter from '../../shared/FilterAuth.js';
 import SideModal from '../../shared/SideModal';
-import UserCreate from './UserCreate';
+import UserModal from './UserModal';
 
 
 const Users = (props) => {
@@ -46,7 +46,7 @@ const Users = (props) => {
         stateFilter={stateFilter}
         setStateFilter={setStateFilter}
       />
-      <SideModal
+      <UserModal
         createButton={createButton}
         setCreateButton={setCreateButton}
       />

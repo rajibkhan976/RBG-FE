@@ -27,6 +27,10 @@ const authReducer = (state = initialState, action) => {
       newState.isLoggedIn = false;
       newState.user = null;
       newState.message = null;
+      break;
+    default:
+      //Default
+      break;  
   }
   return newState;
 };
