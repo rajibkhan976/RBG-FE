@@ -137,11 +137,11 @@ const RolesListing = (props) => {
      */
     const handleSearch = (event) => {
         event.preventDefault();
-        if (keyword) {
+       // if (keyword) {
             utils.addQueryParameter('search', keyword);
             let pageId = utils.getQueryVariable('page');
             fetchRoles(pageId, keyword);
-        }
+       // }
     }
 
     /**
@@ -177,6 +177,7 @@ const RolesListing = (props) => {
     const editRole = (role) => {
         console.log('Edit role id', role);
         toggleCreateHeader(role);
+        setOption(null);
     }
 
     /**
