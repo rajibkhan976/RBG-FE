@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, createRef } from 'react';
+import moment from "moment";
 
 import Pagination from "../../shared/Pagination";
 import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
@@ -289,7 +290,7 @@ const RolesListing = (props) => {
                                                 </button>
                                             </div>
                                             <div className="createDate">
-                                                <button className="btn">{elem.createdAt}</button>
+                                                <button className="btn">{moment(elem.createdAt).format("Do MMM YYYY")}</button>
                                                 <div className="info_3dot_icon" ref={optionsToggleRef}>
                                                     <button
                                                         className="btn"

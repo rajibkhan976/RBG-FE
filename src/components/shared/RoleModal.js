@@ -4,6 +4,7 @@ import plus_icon from "../../assets/images/plus_icon.svg";
 import arrowDown from "../../assets/images/arrowDown.svg";
 import { useState, useEffect } from "react";
 import { RoleServices } from "../../services/authentication/RoleServices";
+import { history } from "../../helpers";
 
 const RoleModal = (props) => {
   const closeSideMenu = (e) => {
@@ -143,6 +144,7 @@ const RoleModal = (props) => {
               }
               setProcessing(false);
               resetRoleForm();
+              history.go(0)
             }, 2000)
             
           })
