@@ -4,18 +4,20 @@ import { useSelector } from 'react-redux';
 import { UnProtectedRoute } from "./middleware/UnProtectedRoute";
 import { ProtectedRoute } from "./middleware/ProtectedRoute";
 import DashboardRoutes from "./components/dashboard/DashboardRoutes";
+import { isLoggedIn } from "./services/authentication/AuthServices";
+
 
 import Login from "./components/authentication/login/Login";
 import Dashboard from "./components/dashboard/Dashboard";
 
 const Routes = () => {
   const logState = useSelector((state) => state.auth.isLoggedIn);
-  console.log('Redux store login status : '+ logState);
+  //console.log('Redux store login status : '+ logState, 'Is logged in : '+isLoggedIn());
 
   return (
     <React.Suspense fallback={<div />}>
       <Switch>
-        {logState ? (
+        {logState && isLoggedIn() ? (
           <UnProtectedRoute
             exact
             path={["/", "/login"]}

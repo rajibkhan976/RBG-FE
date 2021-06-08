@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RoleServices } from "../../services/authentication/RoleServices";
 import { UserServices } from "../../services/authentication/UserServices";
 import { utils } from "../../helpers";
@@ -6,6 +6,9 @@ import { utils } from "../../helpers";
 
 const Pagination = (props) => {
 
+  const [pageNumberLimit, setPageNumberLimit] = useState(5);
+  const [maxPageNumberLimit, setMaxPageNumberLimit] = useState(5);
+  const [minPageNumberLimit, setMinPageNumberLimit] = useState(0);
 
   const paginationHandleClick = (event) => {
     let currentPage = Number(event.target.value);
@@ -19,12 +22,12 @@ const Pagination = (props) => {
      * Get page id from URL
      */
     let pageId = utils.getQueryVariable('page');
-    
+
     /**
      * Make axios call
      */
     //if(currentPage !== props.paginationData.totalPages){
-      getPaginatedData(props.type, pageId);
+    getPaginatedData(props.type, pageId);
     //}
   }
 
@@ -33,7 +36,7 @@ const Pagination = (props) => {
    * @param {*} type 
    */
   const getPaginatedData = (type, pageId) => {
-    switch(type) {
+    switch (type) {
       case "role":
         fetchPaginatedRoles(pageId);
         break;
@@ -41,7 +44,7 @@ const Pagination = (props) => {
         fetchPaginatedUsers(pageId);
         break;
       default:
-        // code block
+      // code block
     }
   }
 
@@ -91,14 +94,18 @@ const Pagination = (props) => {
    * Render page numbers
    */
   const renderPageNumbers = pageNumbers.map(number => {
-    return (
-      <li
-        key={number}
-        id={number}
-      >
-        <button className={props.paginationData.currentPage === number ? "btn paginationBtn active" : "btn paginationBtn"} value={number} onClick={paginationHandleClick}>{number}</button>
-      </li>
-    );
+
+    if (number < maxPageNumberLimit + 1 && number > minPageNumberLimit) {
+      return (
+        <li
+          key={number}
+          id={number}
+        >
+          <button className={props.paginationData.currentPage === number ? "btn paginationBtn active" : "btn paginationBtn"} value={number} onClick={paginationHandleClick}>{number}</button>
+        </li>
+      );
+    }
+
   });
 
   /**
@@ -121,7 +128,16 @@ const Pagination = (props) => {
        */
       utils.addQueryParameter('page', newPage);
       getPaginatedData(props.type, newPage);
+
+      /**
+       * Update page numbers
+       */
+      if ((currentPageId - 1) % pageNumberLimit === 0) {
+        setMaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
+        setMinPageNumberLimit(minPageNumberLimit - pageNumberLimit);
+      }
     }
+
   }
 
   /**
@@ -137,8 +153,29 @@ const Pagination = (props) => {
       utils.addQueryParameter('page', newPage);
       getPaginatedData(props.type, newPage);
     }
+    /**
+     * Update page numbers
+     */
+    if (currentPageId + 1 > maxPageNumberLimit) {
+      setMaxPageNumberLimit(maxPageNumberLimit + pageNumberLimit);
+      setMinPageNumberLimit(minPageNumberLimit + pageNumberLimit);
+    }
   }
 
+  /**
+   * Triple dots for increment
+   */
+  let pageIncrementBtn = null;
+  if (pageNumbers.length > maxPageNumberLimit) {
+    pageIncrementBtn = <li className='btn' onClick={nextClickHandle}> &hellip; </li>;
+  }
+  /**
+   * Triple dots for decrement
+   */
+  let pageDecrementBtn = null;
+  if (minPageNumberLimit >= 1) {
+    pageDecrementBtn = <li className='btn' onClick={preClickHandle}> &hellip; </li>;
+  }
 
 
   return (
@@ -155,7 +192,9 @@ const Pagination = (props) => {
               </svg>
             </button>
           </li>
+          {pageDecrementBtn}
           {renderPageNumbers}
+          {pageIncrementBtn}
           <li>
             <button className="btn paginationBtn" onClick={nextClickHandle}>
               <svg
