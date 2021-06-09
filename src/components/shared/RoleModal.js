@@ -12,8 +12,8 @@ const RoleModal = (props) => {
     props.setCreateButton(null);
   };
 
-  const editRole = props.createButton ? props.createButton : false;
-  
+  let editRole = props.createButton ? props.createButton : false;
+
   const [id, setId] = useState("");
   const [name, setName] = useState("");
   const [slug, setSlug] = useState("");
@@ -27,19 +27,18 @@ const RoleModal = (props) => {
     description: "",
   });
   const [saveAndNew, setSaveAndNew] = useState(false);
-  
+
+
   useEffect(() => {
-
-    /** Fillup states */ 
-    if (editRole && editRole._id && !id) {
-      setId(editRole._id);
-      setName(editRole.name);
-      setSlug(editRole.slug);
-      setDescription(editRole.description);
-      setStatus(editRole.status);
-    }
-
-  });
+    /**
+     * Set role details
+     */
+    setId(editRole._id);
+    setName(editRole.name);
+    setSlug(editRole.slug);
+    setDescription(editRole.description);
+    setStatus(editRole.status);
+  }, [editRole]);
 
   const handleNameChange = (event) => {
     event.preventDefault();
@@ -48,7 +47,7 @@ const RoleModal = (props) => {
     let roleSlug = event.target.value ? ((event.target.value).toLowerCase()).replace(" ", "-") : "";
     setSlug(roleSlug);
   }
-  
+
   const handleDescriptionChange = (event) => {
     event.preventDefault();
     setDescription(event.target.value);
@@ -128,9 +127,9 @@ const RoleModal = (props) => {
         await RoleServices[oprationMethod](payload)
           .then(result => {
             console.log("Create role result", result)
-                        
+
             setSuccessMsg(result);
-            
+
             /**
              * Reset modal
              */
@@ -146,10 +145,10 @@ const RoleModal = (props) => {
               resetRoleForm();
               history.go(0)
             }, 2000)
-            
+
           })
       } catch (e) {
-        
+
         /**
          * Segregate error by http status
          */
@@ -161,14 +160,14 @@ const RoleModal = (props) => {
         else if (e.response && e.response.data.message) {
           setErrorMsg(e.response.data.message);
         }
-        
+
       }
     }
   }
 
 
   return (
-    <>  
+    <>
       {props.createButton !== null && (
         <div className="sideMenuOuter createSideModal sideRoles">
           <div className="sideMenuInner">
@@ -179,10 +178,10 @@ const RoleModal = (props) => {
               <span></span>
               <span></span>
             </button>
-            
+
             <>
               <div className="sideMenuHeader">
-                
+
                 <h3>{editRole && editRole._id ? "Edit" : "Create"} an user role</h3>
                 <p>
                   We got you covered! Limit your Gym Staffs to access your
@@ -191,8 +190,8 @@ const RoleModal = (props) => {
               </div>
 
               <div className="sideMenuBody">
-                
-                {successMsg && 
+
+                {successMsg &&
                   <div className="success successMsg">
                     <p>{successMsg}</p>
                   </div>
@@ -202,13 +201,13 @@ const RoleModal = (props) => {
                     <p>{errorMsg}</p>
                   </div>
                 }
-                {formErrors && 
+                {formErrors &&
                   <div className="error errorMsg">
                     {formErrors.name &&
-                    <p>{formErrors.name}</p>}
-                  
+                      <p>{formErrors.name}</p>}
+
                     {formErrors.description &&
-                    <p>{formErrors.description}</p>}
+                      <p>{formErrors.description}</p>}
                   </div>
                 }
                 <form onSubmit={handleSubmit}>
@@ -218,7 +217,7 @@ const RoleModal = (props) => {
                       <input
                         type="text"
                         name="name"
-                        defaultValue={name}
+                        defaultValue={name ? name : ''}
                         onChange={handleNameChange}
                         placeholder="Ex. Manager"
                       />
@@ -239,19 +238,19 @@ const RoleModal = (props) => {
                   </div>
 
                   <div className="permissionButtons enterRoleNameBtn">
-                    <button disabled={processing}  className="creatUserBtn createBtn">
+                    <button disabled={processing} className="creatUserBtn createBtn">
                       <img className="plusIcon" src={plus_icon} alt="" />
                       <span>{editRole && editRole._id ? "Edit" : "Create"} role</span>
                     </button>
                     {!editRole && (
                       <button disabled={processing} className="saveNnewBtn"
-                          onClick={handleSaveAndNew}
-                        >
-                          <span>Save & New</span>
-                          <img className="" src={arrow_forward} alt="" />
-                        </button>
+                        onClick={handleSaveAndNew}
+                      >
+                        <span>Save & New</span>
+                        <img className="" src={arrow_forward} alt="" />
+                      </button>
                     )}
-                    </div>
+                  </div>
                 </form>
               </div>
             </>

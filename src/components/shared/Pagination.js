@@ -22,12 +22,13 @@ const Pagination = (props) => {
      * Get page id from URL
      */
     let pageId = utils.getQueryVariable('page');
+    let keyword = utils.getQueryVariable('search');
 
     /**
      * Make axios call
      */
     //if(currentPage !== props.paginationData.totalPages){
-    getPaginatedData(props.type, pageId);
+    getPaginatedData(props.type, pageId, keyword);
     //}
   }
 
@@ -35,22 +36,22 @@ const Pagination = (props) => {
    * Get paginated data
    * @param {*} type 
    */
-  const getPaginatedData = (type, pageId) => {
+  const getPaginatedData = (type, pageId, keyword) => {
     switch (type) {
       case "role":
-        fetchPaginatedRoles(pageId);
+        fetchPaginatedRoles(pageId, keyword);
         break;
       case "user":
-        fetchPaginatedUsers(pageId);
+        fetchPaginatedUsers(pageId, keyword);
         break;
       default:
       // code block
     }
   }
 
-  const fetchPaginatedRoles = async (page) => {
+  const fetchPaginatedRoles = async (page, keyword) => {
     try {
-      await RoleServices.fetchRoles(page)
+      await RoleServices.fetchRoles(page, keyword)
         .then((result) => {
           console.log('Role listing result paginated', result.roles);
           if (result) {
@@ -65,9 +66,9 @@ const Pagination = (props) => {
     }
   }
 
-  const fetchPaginatedUsers = async (page) => {
+  const fetchPaginatedUsers = async (page, keyword) => {
     try {
-      await UserServices.fetchUsers(page)
+      await UserServices.fetchUsers(page, keyword)
         .then((result) => {
           console.log('User listing result paginated', result.users);
           if (result) {
@@ -121,13 +122,14 @@ const Pagination = (props) => {
    */
   const preClickHandle = () => {
     let currentPageId = props.paginationData.currentPage;
+    let keyword = utils.getQueryVariable('search');
     let newPage = Number(currentPageId) - 1;
     if (newPage > 0) {
       /**
        * Add new page id to URL
        */
       utils.addQueryParameter('page', newPage);
-      getPaginatedData(props.type, newPage);
+      getPaginatedData(props.type, newPage, keyword);
 
       /**
        * Update page numbers
@@ -145,13 +147,14 @@ const Pagination = (props) => {
    */
   const nextClickHandle = () => {
     let currentPageId = props.paginationData.currentPage;
+    let keyword = utils.getQueryVariable('search');
     let newPage = Number(currentPageId) + 1;
     if (newPage <= props.paginationData.totalPages) {
       /**
        * Add new page id to URL
        */
       utils.addQueryParameter('page', newPage);
-      getPaginatedData(props.type, newPage);
+      getPaginatedData(props.type, newPage, keyword);
     }
     /**
      * Update page numbers

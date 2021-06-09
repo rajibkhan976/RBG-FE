@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useSelector } from 'react-redux';
 import { NavLink, useLocation } from "react-router-dom";
 import BuilderSidebar from "../automation/automationLists/automationcanvas/BuilderSidebar";
 
@@ -9,7 +10,7 @@ import SidebarLogo from "../../assets/images/sidebar-logo.png";
 const InnerLeftMenu = (props) => {
   const pathURL = useLocation().pathname;
 
-  useEffect(() => {});
+  const rolesCount = useSelector((state) => state.role.count);
 
   return (
     <div className="menuDetails">
@@ -31,7 +32,7 @@ const InnerLeftMenu = (props) => {
                   <div className="indicator"></div>
                   <div className="linkDetails">
                     <p className="linkHeading">Roles</p>
-                    <span className="notificationNumber">10</span>
+                    <span className="notificationNumber">{ rolesCount }</span>
                     <br />
                     <p className="linkAbout">Manage user roles</p>
                   </div>

@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef, createRef } from 'react';
+import { useDispatch } from "react-redux";
 import moment from "moment";
+import * as actionTypes from "../../../actions/types";
 
 import Pagination from "../../shared/Pagination";
 import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
@@ -34,6 +36,7 @@ const RolesListing = (props) => {
     const [keyword, setKeyword] = useState(null);
     const [option, setOption] = useState(null);
     const optionsToggleRef = useRef(rolesData);
+    const dispatch = useDispatch();
 
 
     const toggleCreateHeader = (e) => {
@@ -91,6 +94,13 @@ const RolesListing = (props) => {
                     if (result) {
                         setRolesData(result.roles);
                         setRolesCount(result.pagination.count);
+                        /**
+                         * Update store
+                         */
+                         dispatch({
+                            type: actionTypes.ROLE_COUNT,
+                            count : result.pagination.count
+                        })
                         setPaginationData({
                             ...paginationData,
                             currentPage: result.pagination.currentPage,
@@ -138,8 +148,12 @@ const RolesListing = (props) => {
     const handleSearch = (event) => {
         event.preventDefault();
         let pageId = 1;
-        utils.addQueryParameter('search', keyword);
-        utils.addQueryParameter('page', pageId);
+        if(keyword) {
+            utils.addQueryParameter('search', keyword);
+        } else {
+            utils.removeQueryParameter('search');
+            utils.removeQueryParameter('page');
+        }
         fetchRoles(pageId, keyword);
     }
 
@@ -286,7 +300,7 @@ const RolesListing = (props) => {
                                             </div>
                                             <div className="phoneNum">
                                                 <button className="btn">0
-                                                    {/* {elem.numberOfAssigned} */}
+                                                    {elem.groupCount}
                                                 </button>
                                             </div>
                                             <div className="createDate">
