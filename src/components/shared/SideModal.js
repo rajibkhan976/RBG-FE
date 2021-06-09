@@ -65,7 +65,7 @@ const SideModal = (props) => {
                         <div className="infoInputs">
                           <ul>
                             <li>
-                              <div className="formField w-50">
+                              <div className="formField w-50 error">
                                 <p>First Name</p>
                                 <div className="inFormField">
                                   <input
@@ -75,6 +75,7 @@ const SideModal = (props) => {
                                     placeholder="Ex. Adam"
                                   />
                                 </div>
+                                <span className="errorMsg">This is not right</span>
                               </div>
                               <div className="formField w-50">
                                 <p>Last Name</p>
