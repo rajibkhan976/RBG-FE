@@ -542,23 +542,19 @@
     margin-bottom: 25px;
     background: #FFF4F4;
 }
-.errorForm li {
-    line-height: 18px;
-    color: #ED707A;
-    font-size: 13px;
-    position: relative;
-    padding-left: 15px;
+.errorForm ul {
+    margin-left: 15px;
 }
-.errorForm li:before {
-    content: '-';
-    font-size: 18px;
-    display: block;
-    height: 100%;
-    position: absolute;
-    left: 0;
+.errorForm li {
+    line-height: 15px;
+    color: #ED707A;
+    font-size: 10px;
+    position: relative;
+    list-style-type: disc;
+    list-style-position: outside;
 }
 .errorForm li + li {
-    margin-top: 8px;
+    margin-top: 5px;
 }
 .sideMenuBody {
     padding-top: 60px;
