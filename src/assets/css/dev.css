@@ -521,16 +521,53 @@
 .errorMsg {
     display: block;
     font-size: 12px;
-    color: #c74854;
+    color: #ED707A;
     line-height: 21px;
 }
 
 .error .inFormField input,
 .error .inFormField textarea,
 .error .inFormField select {
-    border: 1px solid #c74854;
+    border: 1px solid #ED707A;
+    background-color: #FFF4F4;
 }
 
 .infoInputs ul li {
     align-items: flex-start;
+}
+
+.errorForm {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    background: #FFF4F4;
+}
+.errorForm li {
+    line-height: 18px;
+    color: #ED707A;
+    font-size: 13px;
+    position: relative;
+    padding-left: 15px;
+}
+.errorForm li:before {
+    content: '-';
+    font-size: 18px;
+    display: block;
+    height: 100%;
+    position: absolute;
+    left: 0;
+}
+.errorForm li + li {
+    margin-top: 8px;
+}
+.sideMenuBody {
+    padding-top: 60px;
+}
+.btn-closeSideMenu {
+    background-color: #fff;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
 }

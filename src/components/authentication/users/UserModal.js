@@ -98,6 +98,23 @@ const UserModal = (props) => {
 
                         <>
                             <div className="sideMenuBody">
+                                <div className="errorForm">
+                                    <ul>
+                                        <li>
+                                            Lorem ipsum dolor emit
+                                        </li>
+                                        <li>
+                                            Lorem ipsum dolor emit Lorem ipsum dolor emit Lorem ipsum dolor emit
+                                        </li>
+                                        <li>
+                                            Lorem ipsum dolor emit Lorem ipsum dolor emit
+                                        </li>
+                                        <li>
+                                            Lorem ipsum dolor emit Lorem ipsum dolor emit Lorem ipsum dolor emit Lorem ipsum dolor emit Lorem ipsum dolor emit
+                                        </li>
+                                    </ul>
+                                </div>
+
                                 <form className="formBody" onSubmit={handleSubmit}>
                                     <div className="setProfilePic">
                                         <p className="profilePicHeading">Set profile picture</p>
@@ -119,7 +136,7 @@ const UserModal = (props) => {
                                             <div className="infoInputs">
                                                 <ul>
                                                     <li>
-                                                        <div className="formField w-50">
+                                                        <div className="formField w-50 error">
                                                             <p>First Name</p>
                                                             <div className="inFormField">
                                                                 <input
@@ -129,6 +146,7 @@ const UserModal = (props) => {
                                                                     onChange={handleFirstNameChange}
                                                                 />
                                                             </div>
+                                                            <span className="errorMsg">This is not right</span>
                                                         </div>
                                                         <div className="formField w-50">
                                                             <p>Last Name</p>
