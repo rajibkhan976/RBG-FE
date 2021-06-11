@@ -233,6 +233,23 @@ const UserModal = (props) => {
 
                         <>
                             <div className="sideMenuBody">
+                                <div className="errorForm">
+                                    <ul>
+                                        <li>
+                                            Lorem ipsum dolor emit
+                                        </li>
+                                        <li>
+                                            Lorem ipsum dolor emit Lorem ipsum dolor emit Lorem ipsum dolor emit
+                                        </li>
+                                        <li>
+                                            Lorem ipsum dolor emit Lorem ipsum dolor emit
+                                        </li>
+                                        <li>
+                                            Lorem ipsum dolor emit Lorem ipsum dolor emit Lorem ipsum dolor emit Lorem ipsum dolor emit Lorem ipsum dolor emit
+                                        </li>
+                                    </ul>
+                                </div>
+
                                 <form className="formBody" onSubmit={handleSubmit}>
                                     <div className="setProfilePic">
                                         <p className="profilePicHeading">Set profile picture</p>
