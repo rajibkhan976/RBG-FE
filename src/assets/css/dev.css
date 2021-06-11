@@ -683,10 +683,17 @@
     display: block;
     text-align: center;
 }
+
 .permissionHead .checkCutsom {
     float: right;
     display: flex;
 }
+
 .permissionHead label.checkCutsom span {
     margin: 0 8px 0 0;
+}
+
+.permissionHead .checkCutsom em {
+    color: #9BAEBC;
+    font-size: 13px;
 }
