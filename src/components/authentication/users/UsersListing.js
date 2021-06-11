@@ -5,6 +5,7 @@ import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
 import { UserServices } from "../../../services/authentication/UserServices";
 import { utils } from "../../../helpers";
 import Loader from "../../shared/Loader";
+import config from "../../../configuration/config";
 
 import search_icon from "../../../assets/images/search_icon.svg";
 import filter_icon from "../../../assets/images/filter_icon.svg";
@@ -230,7 +231,7 @@ const UsersListing = (props) => {
                                         <li className="owerInfo">
                                             <div className="userName">
                                                 <button className="btn">
-                                                    <img src={owner_img_1} alt="" />
+                                                    <img className="thumbImg" src={elem.image ? (config.bucketUrl + elem.image) : owner_img_1} alt="avatar" />
                                                     <p>{elem.firstName + ' ' + elem.lastName}</p>
                                                 </button>
                                             </div>

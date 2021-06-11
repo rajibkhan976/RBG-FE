@@ -19,5 +19,8 @@ module.exports = {
     userUrl: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user",
     fetchUsersUrl: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user/list",
     imageUpload: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user/image/upload",
-    deleteUserUrl: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user/"
+    deleteUserUrl: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user/",
+
+    //Bucket
+    bucketUrl : "https://wrapperbucket.s3.amazonaws.com/"
 }

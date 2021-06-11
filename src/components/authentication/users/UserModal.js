@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { UserServices } from "../../../services/authentication/UserServices";
 import { RoleServices } from "../../../services/authentication/RoleServices";
 import PermissionMatrix from "../../shared/PermissionMatrix";
+import { history } from "../../../helpers";
+import config from "../../../configuration/config";
 
 import camera_icon from "../../../assets/images/camera_icon.svg";
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
@@ -11,6 +13,7 @@ import arrowDown from "../../../assets/images/arrowDown.svg";
 
 const UserModal = (props) => {
     const [image, setImage] = useState(null);
+    const [profilePicName, setProfilePicName] = useState(null);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -34,25 +37,30 @@ const UserModal = (props) => {
 
     const handleImageUpload = (event) => {
         let files = event.target.files;
+        if (files && files.length) {
 
-        let reader = new FileReader();
-        reader.onload = r => {
-            setImage(r.target.result);
-            /**
-             * Make axios call
-             */
-            UserServices.fileUpload({
-                file: r.target.result,
-                name: files[0].name
-            })
-                .then((result) => {
-                    console.log('Profile pic: ', result);
+            let reader = new FileReader();
+            reader.onload = r => {
+                setImage(r.target.result);
+                /**
+                 * Make axios call
+                 */
+                UserServices.fileUpload({
+                    file: r.target.result,
+                    name: files[0].name
                 })
-                .catch(err => {
-                    console.log('Profile pic error', err);
-                });
-        };
-        reader.readAsDataURL(files[0]);
+                    .then((result) => {
+                        console.log('Profile pic: ', result);
+                        let avatar = config.bucketUrl + result.data.originalKey;
+                        setImage(avatar);
+                        setProfilePicName(result.data.originalKey);
+                    })
+                    .catch(err => {
+                        console.log('Profile pic error', err);
+                    });
+            };
+            reader.readAsDataURL(files[0]);
+        }
 
     }
     useEffect(() => {
@@ -187,9 +195,10 @@ const UserModal = (props) => {
             let payload = {
                 firstName: firstName,
                 lastName: lastName,
-                phoneNumber: phoneNumber,
+                phone: phoneNumber,
                 email: email,
-                groupId: groupId 
+                groupId: groupId,
+                image: profilePicName
             };
 
             /**
@@ -201,6 +210,7 @@ const UserModal = (props) => {
                 await UserServices[operationMethod](payload)
                     .then(result => {
                         console.log("Create user result", result)
+                        history.go(0);
                     })
             } catch (e) {
                 /**
@@ -233,7 +243,7 @@ const UserModal = (props) => {
 
                         <>
                             <div className="sideMenuBody">
-                                <div className="errorForm">
+                                {/* <div className="errorForm">
                                     <ul>
                                         <li>
                                             Lorem ipsum dolor emit
@@ -248,7 +258,7 @@ const UserModal = (props) => {
                                             Lorem ipsum dolor emit Lorem ipsum dolor emit Lorem ipsum dolor emit Lorem ipsum dolor emit Lorem ipsum dolor emit
                                         </li>
                                     </ul>
-                                </div>
+                                </div> */}
 
                                 <form className="formBody" onSubmit={handleSubmit}>
                                     <div className="setProfilePic">
@@ -260,8 +270,8 @@ const UserModal = (props) => {
                                                     <span className="userProfilePic">
                                                         <img src={image ? image : camera_icon} ></img>
                                                     </span>
-                            Profile picture
-                          </span>
+                                                        Profile picture
+                                                    </span>
                                             </label>
                                         </div>
                                     </div>

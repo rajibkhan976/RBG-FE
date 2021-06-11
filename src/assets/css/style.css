@@ -2175,3 +2175,9 @@ span.userProfilePic img {
   height: auto;
   max-height: unset;
 }
+
+.thumbImg {
+  height: 50px;
+  width: 50px;
+  border-radius: 25px;
+}
