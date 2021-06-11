@@ -18,13 +18,20 @@ const UserModal = (props) => {
     const [lastName, setLastName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
+    const [isOwner, setIsOwner] = useState(false);
+    const [logo, setLogo] = useState(null);
+    const [logoName, setLogoName] = useState(null);
+    const [orgName, setOrgName] = useState(null);
+    const [orgDescription, setOrgDescription] = useState(null);
     const [processing, setProcessing] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     const [formErrors, setFormErrors] = useState({
         firstName: "",
         lastName: "",
         phoneNumber: "",
-        email: ""
+        email: "",
+        orgName: "",
+        orgDescription: ""
     });
     const [roles, setRoles] = useState(null);
     const [groups, setGroups] = useState(null);
@@ -38,6 +45,7 @@ const UserModal = (props) => {
         props.setCreateButton(null);
     };
 
+<<<<<<< 41716395a27f87d80247a363e18e7a10b7d12ff8
     let editUser = props.createButton ? props.createButton : false;
 
     useEffect(() => {
@@ -50,6 +58,12 @@ const UserModal = (props) => {
 
     }, [editUser]);
 
+=======
+    /**
+     * Upload profile picture
+     * @param {*} event 
+     */
+>>>>>>> Organization owner V1.0
     const handleImageUpload = (event) => {
         let files = event.target.files;
         if (files && files.length) {
@@ -76,8 +90,36 @@ const UserModal = (props) => {
             };
             reader.readAsDataURL(files[0]);
         }
-
     }
+    
+    const handleLogoUpload = (event) => {
+        let files = event.target.files;
+        if (files && files.length) {
+
+            let reader = new FileReader();
+            reader.onload = r => {
+                setLogo(r.target.result);
+                /**
+                 * Make axios call
+                 */
+                UserServices.fileUpload({
+                    file: r.target.result,
+                    name: files[0].name
+                })
+                .then((result) => {
+                    console.log('Profile pic: ', result);
+                    let avatar = config.bucketUrl + result.data.originalKey;
+                    setLogo(avatar);
+                    setLogoName(result.data.originalKey);
+                })
+                .catch(err => {
+                    console.log('Profile pic error', err);
+                });
+            };
+            reader.readAsDataURL(files[0]);
+        }
+    }
+
     useEffect(() => {
         let pageId = 1;
         let keyword = null;
@@ -138,6 +180,34 @@ const UserModal = (props) => {
         event.preventDefault();
         setEmail(event.target.value);
     };
+
+    /**
+     * Handle id org owner checkbox
+     * @param {*} event 
+     */
+    const handleIsOrgChange = (event) => {
+        setIsOwner(event.target.checked)
+    };
+
+    /**
+     * Handle org name change
+     * @param {*} event 
+     */
+    const handleOrgNameChange = (event) => {
+        event.preventDefault();
+        setOrgName(event.target.value);
+    }
+
+    /**
+     * Handle org description change
+     * @param {*} event 
+     */
+    const handleOrgDescriptionChange = (event) => {
+        event.preventDefault();
+        setOrgDescription(event.target.value)
+    }
+
+    
     /**
      * Handle role change 
      * @param {*} event 
@@ -196,6 +266,22 @@ const UserModal = (props) => {
         }
 
         /**
+         * Check org name field
+         */
+        if (isOwner && !orgName) {
+            isError = true;
+            formErrorsCopy.orgName = "Please fillup the name";
+        }
+
+        /**
+        * Check org description field
+        */
+        if (isOwner && !orgDescription) {
+            isError = true;
+            formErrorsCopy.orgDescription = "Please fillup the description";
+        }
+
+        /**
          * Check the erros flag
          */
         if (isError) {
@@ -207,7 +293,9 @@ const UserModal = (props) => {
                 firstName: formErrors.firstName,
                 lastName: formErrors.lastName,
                 phoneNumber: formErrors.phoneNumber,
-                email: formErrors.email
+                email: formErrors.email,
+                orgName: formErrors.orgName,
+                orgDescription: formErrors.orgDescription
             });
             setTimeout(
                 () => setFormErrors({
@@ -217,10 +305,17 @@ const UserModal = (props) => {
                     phoneNumber: "",
                     email: ""
                 }),
-                3000
+                5000
             );
             console.log('formErrors', formErrors)
         } else {
+            /**
+             * Submit organization create form 
+             */
+            if (isOwner) {
+                
+            }
+
             //Submit the form
             console.log('Submit the form if no errors');
             /**
@@ -376,6 +471,65 @@ const UserModal = (props) => {
                                                     </li>
                                                 </ul>
                                             </div>
+                                        </div>                                      
+                                        <div className="infoField orgSection">
+                                            <div className="formField">                                                
+                                                <p className="">Is it organization owner?
+                                                    <input
+                                                        type="checkbox"
+                                                        name="isOrg"
+                                                        onChange={handleIsOrgChange}
+                                                        />
+                                                </p>                                               
+                                            </div>
+                                            {isOwner && (
+                                                <div className="infoInputs orgContent">
+                                                    <ul>
+                                                        <li>
+                                                            <div className="setProfilePic">
+                                                                <p className="profilePicHeading">Organization Information</p>
+                                                                <div className="formField">
+                                                                    <label className="inputLabel">
+                                                                        <input type="file" onChange={(e) => handleLogoUpload(e)} />
+                                                                        <span>
+                                                                            <span className="userProfilePic">
+                                                                                <img src={logo ? logo : camera_icon} ></img>
+                                                                            </span>
+                                                                                Organization Logo
+                                                                        </span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div className={formErrors.orgName ? "formField w-50 error" : "formField w-50"}>
+                                                                <p>Organization Name</p>
+                                                                <div className="inFormField">
+                                                                    <input
+                                                                        type="text"
+                                                                        name="orgName"
+                                                                        placeholder="Ex. Falcon Inc."
+                                                                        onChange={handleOrgNameChange}
+                                                                    />
+                                                                </div>
+                                                                {formErrors.orgName ? <span className="errorMsg">{formErrors.orgName}</span> : ''}
+                                                            </div>
+                                                        </li>
+                                                        <li>                                                        
+                                                            <div className={formErrors.orgDescription ? "formField w-100 error" : "formField w-100"}>
+                                                                <p>Organization Description</p>
+                                                                <div className="inFormField">
+                                                                    <textarea
+                                                                        name="orgDescription"
+                                                                        placeholder="Its a great organization"
+                                                                        onChange={handleOrgDescriptionChange}
+                                                                    >    
+                                                                    </textarea>
+                                                                </div>
+                                                                {formErrors.orgDescription ? <span className="errorMsg">{formErrors.orgDescription}</span> : ''}
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            )}
                                         </div>
                                         <div className="infoField assignRoleGroup">
                                             <p className="infoFieldHead">Assign Role & Group</p>

@@ -1279,6 +1279,10 @@ li.listHeading>div:after {
   width: 50%;
 }
 
+.formField.w-100 {
+  width: 100%;
+}
+
 .infoField.assignRoleGroup {
   margin-top: 50px;
 }
