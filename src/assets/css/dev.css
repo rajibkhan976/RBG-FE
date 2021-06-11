@@ -675,10 +675,18 @@
 
 .checkCutsom {
     font-size: 0;
+    cursor: pointer;
 }
 
 .inputCheckBox span:not(:first-child) .checkCutsom {
     height: 100%;
     display: block;
     text-align: center;
+}
+.permissionHead .checkCutsom {
+    float: right;
+    display: flex;
+}
+.permissionHead label.checkCutsom span {
+    margin: 0 8px 0 0;
 }

@@ -155,13 +155,32 @@ const PermissionMatrix = () => {
 
   const showMore = (e) => {
     e.preventDefault(e);
-    e.target.closest('.inputCheckBox').querySelectorAll('.optionMoreInput')[0].classList.toggle('show');
-  }
+    if (e.target.textContent === "+") {
+      e.target.textContent = "-";
+      e.target
+        .closest(".inputCheckBox")
+        .querySelectorAll(".optionMoreInput")[0]
+        .classList.add("show");
+    } else {
+      e.target.textContent = "+";
+      e.target
+        .closest(".inputCheckBox")
+        .querySelectorAll(".optionMoreInput")[0]
+        .classList.remove("show");
+    }
+  };
 
   return (
     <>
       <div className="permission">
-        <p className="permissionHead">Manage permissions</p>
+        <p className="permissionHead clearfix">
+          Manage permissions
+          <label className="checkCutsom">
+            <input type="checkbox" />
+            <span></span>
+            <em>All Data</em>
+          </label>
+        </p>
         <div className="InputsContainer">
           <ul>
             <li className="inputsContainerHead">
