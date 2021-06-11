@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { UserServices } from "../../../services/authentication/UserServices";
+import { RoleServices } from "../../../services/authentication/RoleServices";
 import PermissionMatrix from "../../shared/PermissionMatrix";
 
 import camera_icon from "../../../assets/images/camera_icon.svg";
@@ -14,6 +15,17 @@ const UserModal = (props) => {
     const [lastName, setLastName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
+    const [processing, setProcessing] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
+    const [formErrors, setFormErrors] = useState({
+        firstName: "",
+        lastName: "",
+        phoneNumber: "",
+        email: ""
+    });
+    const [roles, setRoles] = useState(null);
+    const [groups, setGroups] = useState(null);
+    const [groupId, setGroupId] = useState('603e42865e257524e35660c9');
 
     const closeSideMenu = (e) => {
         e.preventDefault();
@@ -43,6 +55,33 @@ const UserModal = (props) => {
         reader.readAsDataURL(files[0]);
 
     }
+    useEffect(() => {
+        let pageId = 1;
+        let keyword = null;
+
+        fetchRoles(pageId, keyword);
+    }, []);
+
+    /**
+     * Fetch roles
+     * @param {*} event 
+     */
+    const fetchRoles = async (pageId, keyword) => {
+        try {
+            await RoleServices.fetchRoles(pageId, keyword)
+                .then((result) => {
+                    console.log('Role drop-down result', result.roles);
+                    if (result) {
+                        setRoles(result.roles);
+                    }
+                })
+                .catch((error) => {
+                    console.log("Role drop-down error", error);
+                });
+        } catch (e) {
+            console.log("Error in Role drop-down", JSON.stringify(e));
+        }
+    }
 
     /**
      * Handle first name change
@@ -56,7 +95,7 @@ const UserModal = (props) => {
      * Handle last name change
      * @param {*} event 
      */
-     const handleLastNameChange = (event) => {
+    const handleLastNameChange = (event) => {
         event.preventDefault();
         setLastName(event.target.value);
     };
@@ -64,7 +103,7 @@ const UserModal = (props) => {
      * Handle phone number change
      * @param {*} event 
      */
-     const handlePhoneNumberChange = (event) => {
+    const handlePhoneNumberChange = (event) => {
         event.preventDefault();
         setPhoneNumber(event.target.value);
     };
@@ -72,17 +111,113 @@ const UserModal = (props) => {
      * Handle phone number change
      * @param {*} event 
      */
-     const handleEmailChange = (event) => {
+    const handleEmailChange = (event) => {
         event.preventDefault();
         setEmail(event.target.value);
     };
     /**
      * Handle submit
      */
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(event.target);
-    }; 
+        setProcessing(true);
+        let formErrorsCopy = formErrors;
+        let isError = false;
+
+        /**
+         * Check firstName field
+         */
+        if (!firstName) {
+            isError = true;
+            formErrorsCopy.firstName = "Please fillup the first name";
+        }
+        /**
+         * Check lastName field
+         */
+        if (!lastName) {
+            isError = true;
+            formErrorsCopy.lastName = "Please fillup the last name";
+        }
+        /**
+         * Check phone number field
+         */
+        if (!phoneNumber) {
+            isError = true;
+            formErrorsCopy.phoneNumber = "Please fillup the phone number";
+        }
+        /**
+         * Check email field
+         */
+        if (!email) {
+            isError = true;
+            formErrorsCopy.email = "Please fillup the email";
+        }
+
+        /**
+         * Check the erros flag
+         */
+        if (isError) {
+            /**
+             * Set form errors
+             */
+            setProcessing(false);
+            setFormErrors({
+                firstName: formErrors.firstName,
+                lastName: formErrors.lastName,
+                phoneNumber: formErrors.phoneNumber,
+                email: formErrors.email
+            });
+            setTimeout(
+                () => setFormErrors({
+                    ...formErrors,
+                    firstName: "",
+                    lastName: "",
+                    phoneNumber: "",
+                    email: ""
+                }),
+                3000
+            );
+            console.log('formErrors', formErrors)
+        } else {
+            //Submit the form
+            console.log('Submit the form if no errors');
+            /**
+             * Submit user create form
+             */
+            let payload = {
+                firstName: firstName,
+                lastName: lastName,
+                phoneNumber: phoneNumber,
+                email: email,
+                groupId: groupId 
+            };
+
+            /**
+             * Lets decide the operation type
+             */
+            let operationMethod = "createUser";
+
+            try {
+                await UserServices[operationMethod](payload)
+                    .then(result => {
+                        console.log("Create user result", result)
+                    })
+            } catch (e) {
+                /**
+                 * Segregate error by http status
+                 */
+                setProcessing(false);
+                console.log("Error in user create", e)
+                if (e.response && e.response.status == 403) {
+                    setErrorMsg("You dont have permission to perform this action");
+                }
+                else if (e.response && e.response.data.message) {
+                    setErrorMsg(e.response.data.message);
+                }
+            }
+
+        }
+    };
     return (
         <>
             {props.createButton !== null && (
@@ -119,7 +254,7 @@ const UserModal = (props) => {
                                             <div className="infoInputs">
                                                 <ul>
                                                     <li>
-                                                        <div className="formField w-50">
+                                                        <div className={formErrors.firstName ? "formField w-50 error" : "formField w-50"}>
                                                             <p>First Name</p>
                                                             <div className="inFormField">
                                                                 <input
@@ -129,8 +264,9 @@ const UserModal = (props) => {
                                                                     onChange={handleFirstNameChange}
                                                                 />
                                                             </div>
+                                                            {formErrors.firstName ? <span className="errorMsg">{formErrors.firstName}</span> : ''}
                                                         </div>
-                                                        <div className="formField w-50">
+                                                        <div className={formErrors.lastName ? "formField w-50 error" : "formField w-50"}>
                                                             <p>Last Name</p>
                                                             <div className="inFormField">
                                                                 <input
@@ -140,10 +276,11 @@ const UserModal = (props) => {
                                                                     onChange={handleLastNameChange}
                                                                 />
                                                             </div>
+                                                            {formErrors.lastName ? <span className="errorMsg">{formErrors.lastName}</span> : ''}
                                                         </div>
                                                     </li>
                                                     <li>
-                                                        <div className="formField w-50">
+                                                        <div className={formErrors.phoneNumber ? "formField w-50 error" : "formField w-50"}>
                                                             <p>Phone No</p>
                                                             <div className="inFormField">
                                                                 <input
@@ -153,8 +290,9 @@ const UserModal = (props) => {
                                                                     onChange={handlePhoneNumberChange}
                                                                 />
                                                             </div>
+                                                            {formErrors.phoneNumber ? <span className="errorMsg">{formErrors.phoneNumber}</span> : ''}
                                                         </div>
-                                                        <div className="formField w-50">
+                                                        <div className={formErrors.email ? "formField w-50 error" : "formField w-50"}>
                                                             <p>Email</p>
                                                             <div className="inFormField">
                                                                 <input
@@ -164,6 +302,7 @@ const UserModal = (props) => {
                                                                     onChange={handleEmailChange}
                                                                 />
                                                             </div>
+                                                            {formErrors.email ? <span className="errorMsg">{formErrors.email}</span> : ''}
                                                         </div>
                                                     </li>
                                                 </ul>
@@ -182,7 +321,14 @@ const UserModal = (props) => {
                                                                         backgroundImage: "url(" + arrowDown + ")",
                                                                     }}
                                                                 >
-                                                                    <option value="null">Gym Staff</option>
+                                                                    {roles ? roles.map((el, key) => {
+                                                                        return (
+                                                                            <React.Fragment key={key + "_role"}>
+                                                                                <option value={el._id}>{el.name}</option>
+                                                                            </React.Fragment>
+                                                                        );
+                                                                    }) : 'No data found'}
+
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -194,9 +340,8 @@ const UserModal = (props) => {
                                                                         backgroundImage: "url(" + arrowDown + ")",
                                                                     }}
                                                                 >
-                                                                    <option value="null">
-                                                                        Adam.smith@domain.com
-                                    </option>
+                                                                    <option value="603e42865e257524e35660c9">Top Manager</option>
+                                                                    <option value="603e72955e257524e35660d5">Manager-test</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -205,7 +350,7 @@ const UserModal = (props) => {
                                             </div>
                                         </div>
                                     </div>
-                                    <PermissionMatrix/>
+                                    <PermissionMatrix />
 
                                     <div className="permissionButtons">
                                         <button className="creatUserBtn createBtn">

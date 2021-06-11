@@ -16,6 +16,7 @@ module.exports = {
     deleteRoleUrl: "https://944mqenjuc.execute-api.us-east-1.amazonaws.com/dev/role/",
 
     //Auth - User
+    userUrl: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user",
     fetchUsersUrl: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user/list",
     imageUpload: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user/image/upload",
     deleteUserUrl: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user/"

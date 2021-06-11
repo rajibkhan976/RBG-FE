@@ -4,6 +4,7 @@ import Pagination from "../../shared/Pagination";
 import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
 import { UserServices } from "../../../services/authentication/UserServices";
 import { utils } from "../../../helpers";
+import Loader from "../../shared/Loader";
 
 import search_icon from "../../../assets/images/search_icon.svg";
 import filter_icon from "../../../assets/images/filter_icon.svg";
@@ -26,6 +27,7 @@ const UsersListing = (props) => {
     );
     const [keyword, setKeyword] = useState('');
     const [option, setOption] = useState(null);
+    const [isLoader, setIsLoader] = useState(false);
     const toggleCreateHeader = () => {
         props.toggleCreate("user");
     };
@@ -78,6 +80,7 @@ const UsersListing = (props) => {
      */
     const fetchUsers = async (pageId, keyword) => {
         try {
+            setIsLoader(true);
             await UserServices.fetchUsers(pageId, keyword)
                 .then((result) => {
                     console.log('User listing result', result.users);
@@ -89,12 +92,15 @@ const UsersListing = (props) => {
                             currentPage: result.pagination.currentPage,
                             totalPages: result.pagination.totalPages
                         });
+                        setIsLoader(false);
                     }
                 })
                 .catch((error) => {
+                    setIsLoader(false);
                     console.log("User listing error", error);
                 });
         } catch (e) {
+            setIsLoader(false);
             console.log("Error in User listing", e);
         }
     }
@@ -174,6 +180,7 @@ const UsersListing = (props) => {
 
     return (
         <div className="dashInnerUI">
+            {isLoader ? <Loader /> : ''}
             <div className="userListHead">
                 <div className="listInfo">
                     <ul className="listPath">

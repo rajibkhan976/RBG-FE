@@ -79,5 +79,29 @@ export const UserServices = {
                     }
                 });
         });
-    }
+    },
+    createUser: async (payload) => {
+        headers.Authorization = localStorage.getItem("_token");
+        return new Promise((resolve, reject) => {
+            if (isLoggedIn() === false) {
+                reject(message.loginFailed);
+            }
+            axios
+                .post(
+                    config.userUrl,
+                    payload,
+                    { headers: headers }
+                )
+                .then((result) => {
+                    console.log('Create user service result: ', result);
+                    resolve(result.data);
+                })
+                .catch((error) => {
+                    console.log('Create user service error: ', error);
+                    if (error != null) {
+                        reject(error);
+                    }
+                });
+        });
+    },
 };
