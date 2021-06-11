@@ -273,7 +273,6 @@
     fill: #305671;
 }
 
-
 .loginLogo svg {
     width: 100%;
     height: 100%;
@@ -525,9 +524,7 @@
     line-height: 21px;
 }
 
-.error .inFormField input,
-.error .inFormField textarea,
-.error .inFormField select {
+.error .inFormField input, .error .inFormField textarea, .error .inFormField select {
     border: 1px solid #ED707A;
     background-color: #FFF4F4;
 }
@@ -542,9 +539,11 @@
     margin-bottom: 25px;
     background: #FFF4F4;
 }
+
 .errorForm ul {
     margin-left: 15px;
 }
+
 .errorForm li {
     line-height: 15px;
     color: #ED707A;
@@ -553,12 +552,15 @@
     list-style-type: disc;
     list-style-position: outside;
 }
-.errorForm li + li {
+
+.errorForm li+li {
     margin-top: 5px;
 }
+
 .sideMenuBody {
     padding-top: 60px;
 }
+
 .btn-closeSideMenu {
     background-color: #fff;
     border-radius: 50%;
@@ -566,4 +568,117 @@
     -moz-border-radius: 50%;
     -ms-border-radius: 50%;
     -o-border-radius: 50%;
+}
+
+.inputCheckBox button.triggerMore {
+    display: inline-flex;
+    vertical-align: 0px;
+    width: auto;
+    margin-right: 2px;
+    border: none;
+    background: none;
+    padding: 0;
+    width: 13px;
+    align-items: center;
+    justify-content: center;
+    color: #9BAEBC;
+}
+
+.inputCheckBox span:nth-child(1) {
+    width: 30%;
+}
+
+.inputCheckBox {
+    flex-wrap: wrap;
+}
+
+.inputCheckBox+.inputCheckBox {
+    margin-top: 25px;
+}
+
+.inputCheckBox span:nth-child(1) p {
+    text-align: left;
+}
+
+.optionMoreInput {
+    width: 100%;
+    display: none;
+}
+
+.optionMoreInput.show {
+    display: block;
+    margin-top: 12px;
+}
+
+.optionMoreInput li {
+    display: flex;
+}
+
+.optionMoreInput li+li {
+    margin-top: 12px;
+}
+
+.optionMoreInput li span {
+    color: #9BAEBC;
+    font-size: 13px;
+}
+
+.optionMoreInput li span:first-child {
+    padding-left: 43px;
+}
+
+.optionMoreInput li input {
+    margin: 0;
+    height: auto;
+    min-height: inherit;
+}
+
+.checkCutsom input[type="checkbox"] {
+    display: none;
+}
+
+.checkCutsom input[type="checkbox"]+span {
+    width: 16px;
+    height: 16px;
+    margin: 3px 3px 3px 4px;
+    background: #FFFFFF;
+    border: 1px solid #9BAEBC;
+    box-sizing: border-box;
+    border-radius: 3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #fff;
+    position: relative;
+}
+
+.checkCutsom input[type="checkbox"]:checked+span {
+    background-color: #305671;
+    border-color: #305671;
+}
+
+.checkCutsom input[type="checkbox"]:checked+span:after {
+    content: '';
+    position: absolute;
+    width: 7px;
+    height: 1px;
+    border: 1px solid #fff;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+}
+
+.checkCutsom {
+    font-size: 0;
+}
+
+.inputCheckBox span:not(:first-child) .checkCutsom {
+    height: 100%;
+    display: block;
+    text-align: center;
 }
