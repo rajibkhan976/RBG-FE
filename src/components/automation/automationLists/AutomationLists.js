@@ -209,7 +209,7 @@ const AutomationLists = (props) => {
               })}
           </div>
         </div>
-        <DashboardPagination />
+        {/* <DashboardPagination /> */}
       </div>
     </>
   );
