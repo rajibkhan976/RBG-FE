@@ -28,12 +28,27 @@ const UserModal = (props) => {
     });
     const [roles, setRoles] = useState(null);
     const [groups, setGroups] = useState(null);
-    const [groupId, setGroupId] = useState('603e42865e257524e35660c9');
+    const [roleId, setRoleId] = useState('');
+    const [groupId, setGroupId] = useState('');
+    
+    const [editId, setEditId] = useState("");
 
     const closeSideMenu = (e) => {
         e.preventDefault();
         props.setCreateButton(null);
     };
+
+    let editUser = props.createButton ? props.createButton : false;
+
+    useEffect(() => {
+        setImage(editUser.image ? (config.bucketUrl + editUser.image) : null);
+        setEditId(editUser._id);
+        setFirstName(editUser.firstName);
+        setLastName(editUser.lastName);
+        setPhoneNumber(editUser.phone);
+        setEmail(editUser.email);
+
+    }, [editUser]);
 
     const handleImageUpload = (event) => {
         let files = event.target.files;
@@ -124,6 +139,25 @@ const UserModal = (props) => {
         setEmail(event.target.value);
     };
     /**
+     * Handle role change 
+     * @param {*} event 
+     */
+    const handleRoleChange = (event) => {
+        event.preventDefault();
+        console.log(event.target.value);
+        setRoleId(event.target.value);
+    }
+    /**
+     * Handle group change
+     * @param {*} event 
+     */
+    const handleGroupChange = (event) => {
+        event.preventDefault();
+        console.log('gc', event.target.value);
+        setGroupId(event.target.value);
+    }
+
+    /**
      * Handle submit
      */
     const handleSubmit = async (event) => {
@@ -205,6 +239,10 @@ const UserModal = (props) => {
              * Lets decide the operation type
              */
             let operationMethod = "createUser";
+            if (editId) {
+                operationMethod = "editUser";
+                payload.id = editId;
+              }
 
             try {
                 await UserServices[operationMethod](payload)
@@ -270,8 +308,8 @@ const UserModal = (props) => {
                                                     <span className="userProfilePic">
                                                         <img src={image ? image : camera_icon} ></img>
                                                     </span>
-                                                        Profile picture
-                                                    </span>
+                                                    Profile picture
+                                                </span>
                                             </label>
                                         </div>
                                     </div>
@@ -288,6 +326,7 @@ const UserModal = (props) => {
                                                                     type="text"
                                                                     name="firstName"
                                                                     placeholder="Ex. Adam"
+                                                                    defaultValue={firstName}
                                                                     onChange={handleFirstNameChange}
                                                                 />
                                                             </div>
@@ -300,6 +339,7 @@ const UserModal = (props) => {
                                                                     type="text"
                                                                     name="lastName"
                                                                     placeholder="Ex. Smith"
+                                                                    defaultValue={lastName}
                                                                     onChange={handleLastNameChange}
                                                                 />
                                                             </div>
@@ -314,6 +354,7 @@ const UserModal = (props) => {
                                                                     type="text"
                                                                     name="phoneNumber"
                                                                     placeholder="Eg. (555) 555-1234"
+                                                                    defaultValue={phoneNumber}
                                                                     onChange={handlePhoneNumberChange}
                                                                 />
                                                             </div>
@@ -326,6 +367,7 @@ const UserModal = (props) => {
                                                                     type="text"
                                                                     name="email"
                                                                     placeholder="Adam.smith@domain.com"
+                                                                    defaultValue={email}
                                                                     onChange={handleEmailChange}
                                                                 />
                                                             </div>
@@ -347,7 +389,9 @@ const UserModal = (props) => {
                                                                     style={{
                                                                         backgroundImage: "url(" + arrowDown + ")",
                                                                     }}
+                                                                    onChange={handleRoleChange}
                                                                 >
+                                                                    <option value="">Select role</option>
                                                                     {roles ? roles.map((el, key) => {
                                                                         return (
                                                                             <React.Fragment key={key + "_role"}>
@@ -366,7 +410,9 @@ const UserModal = (props) => {
                                                                     style={{
                                                                         backgroundImage: "url(" + arrowDown + ")",
                                                                     }}
+                                                                    onChange={handleGroupChange}
                                                                 >
+                                                                    <option value="">Select group</option>
                                                                     <option value="603e42865e257524e35660c9">Top Manager</option>
                                                                     <option value="603e72955e257524e35660d5">Manager-test</option>
                                                                 </select>
@@ -380,12 +426,12 @@ const UserModal = (props) => {
                                     <PermissionMatrix />
 
                                     <div className="permissionButtons">
-                                        <button className="creatUserBtn createBtn">
+                                        {!editId && <button className="creatUserBtn createBtn">
                                             <img className="plusIcon" src={plus_icon} alt="" />
                                             <span>Create an user</span>
-                                        </button>
+                                        </button> }
                                         <button className="saveNnewBtn">
-                                            <span>Save & New</span>
+                                            <span>{editId ? "Update user" : "Save & New"}</span>
                                             <img className="" src={arrow_forward} alt="" />
                                         </button>
                                     </div>

@@ -29,8 +29,8 @@ const UsersListing = (props) => {
     const [keyword, setKeyword] = useState('');
     const [option, setOption] = useState(null);
     const [isLoader, setIsLoader] = useState(false);
-    const toggleCreateHeader = () => {
-        props.toggleCreate("user");
+    const toggleCreateHeader = (e) => {
+        props.toggleCreate(e);
     };
 
     const filterUsers = () => {
@@ -133,8 +133,10 @@ const UsersListing = (props) => {
     /**
      * Edit user
      */
-    const editUser = (userId) => {
-        console.log('Edit user Id', userId);
+    const editUser = (user) => {
+        console.log('Edit user Id', user);
+        toggleCreateHeader(user);
+        setOption(null);
     }
 
     /**
@@ -270,7 +272,7 @@ const UsersListing = (props) => {
                                                     >
                                                         <button className="btn btnEdit"
                                                             onClick={() => {
-                                                                editUser(elem._id);
+                                                                editUser(elem);
                                                             }}>
                                                             <span>
                                                                 <svg

@@ -31,7 +31,7 @@ const PermissionMatrix = () => {
 
   const MoreOptions = () => {
     return (
-      <ul class="optionMoreInput">
+      <ul className="optionMoreInput">
         <li>
           <span>Roles</span>
           <span>
@@ -252,7 +252,7 @@ const PermissionMatrix = () => {
             <li className="inputCheckBox">
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
                 <p>
@@ -264,37 +264,37 @@ const PermissionMatrix = () => {
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name="" />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
@@ -303,7 +303,7 @@ const PermissionMatrix = () => {
             <li className="inputCheckBox">
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
                 <p>
@@ -315,37 +315,37 @@ const PermissionMatrix = () => {
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
@@ -354,7 +354,7 @@ const PermissionMatrix = () => {
             <li className="inputCheckBox">
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
                 <p>
@@ -366,37 +366,37 @@ const PermissionMatrix = () => {
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name="" />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name="" />
                   <span></span>
                 </label>
               </span>
@@ -405,7 +405,7 @@ const PermissionMatrix = () => {
             <li className="inputCheckBox">
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
                 <p>
@@ -417,37 +417,37 @@ const PermissionMatrix = () => {
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
@@ -456,7 +456,7 @@ const PermissionMatrix = () => {
             <li className="inputCheckBox">
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name="" />
                   <span></span>
                 </label>
                 <p>
@@ -468,37 +468,37 @@ const PermissionMatrix = () => {
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""/>
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
@@ -507,7 +507,7 @@ const PermissionMatrix = () => {
             <li className="inputCheckBox">
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
                 <p>
@@ -519,37 +519,37 @@ const PermissionMatrix = () => {
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
@@ -558,7 +558,7 @@ const PermissionMatrix = () => {
             <li className="inputCheckBox">
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
                 <p>
@@ -570,37 +570,37 @@ const PermissionMatrix = () => {
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
@@ -609,7 +609,7 @@ const PermissionMatrix = () => {
             <li className="inputCheckBox">
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
                 <p>
@@ -621,37 +621,37 @@ const PermissionMatrix = () => {
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
@@ -660,7 +660,7 @@ const PermissionMatrix = () => {
             <li className="inputCheckBox">
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
                 <p>
@@ -672,37 +672,37 @@ const PermissionMatrix = () => {
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
               <span>
                 <label className="checkCutsom">
-                  <input type="checkbox" name="" id="" />
+                  <input type="checkbox" name=""  />
                   <span></span>
                 </label>
               </span>
@@ -720,7 +720,7 @@ const PermissionMatrix = () => {
               <input
                 type="text"
                 name=""
-                id=""
+                
                 placeholder="Enter a new group name"
               />
             </div>
@@ -728,7 +728,7 @@ const PermissionMatrix = () => {
         </div>
         <div className="enableNotification">
           <label>
-            <input type="checkbox" name="" id="" />
+            <input type="checkbox" name=""  />
             <span>Notify users by mail on adding them to this group </span>
           </label>
         </div>
