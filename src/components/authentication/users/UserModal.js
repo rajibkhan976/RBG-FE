@@ -411,6 +411,7 @@ const UserModal = (props) => {
                                                                         backgroundImage: "url(" + arrowDown + ")",
                                                                     }}
                                                                     onChange={handleGroupChange}
+                                                                    value={editId ? (editUser.group[0] ? editUser.group[0]._id : '') : groupId}
                                                                 >
                                                                     <option value="">Select group</option>
                                                                     <option value="603e42865e257524e35660c9">Top Manager</option>
