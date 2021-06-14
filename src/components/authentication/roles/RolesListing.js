@@ -299,8 +299,8 @@ const RolesListing = (props) => {
                                                 </button>
                                             </div>
                                             <div className="phoneNum">
-                                                <button className="btn">0
-                                                    {elem.groupCount}
+                                                <button className="btn">
+                                                    {elem.userCount}
                                                 </button>
                                             </div>
                                             <div className="createDate">
