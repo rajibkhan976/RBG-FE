@@ -8,6 +8,7 @@ import InnerLeftMenu from "../../shared/InnerLeftMenu";
 import Filter from '../../shared/FilterAuth.js';
 import SideModal from '../../shared/SideModal';
 import UserModal from './UserModal';
+import UserFilter from './UserFilter';
 
 
 const Users = (props) => {
@@ -42,7 +43,7 @@ const Users = (props) => {
           </div>
         </div>
       </div>
-      <Filter
+      <UserFilter
         stateFilter={stateFilter}
         setStateFilter={setStateFilter}
       />
