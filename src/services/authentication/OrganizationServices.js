@@ -6,18 +6,18 @@ import { message } from "../../helpers";
 let headers = {
     "Content-Type": "application/json",
     'Accept': 'application/json',   
+    'Authorization': localStorage.getItem("_token")
 };
 
-export const UserServices = {
+export const OrganizationServices = {
     create: async (payload) => {
-        headers.Authorization = localStorage.getItem("_token");
         return new Promise((resolve, reject) => {
             if (isLoggedIn() === false) {
                 reject(message.loginFailed);
             }
             axios
                 .post(
-                    config.userUrl,
+                    config.orgUrl,
                     payload,
                     { headers: headers }
                 )

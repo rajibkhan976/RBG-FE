@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { UserServices } from "../../../services/authentication/UserServices";
 import { RoleServices } from "../../../services/authentication/RoleServices";
+import { OrganizationServices } from "../../../services/authentication/OrganizationServices";
 import PermissionMatrix from "../../shared/PermissionMatrix";
 import { history } from "../../../helpers";
 import config from "../../../configuration/config";
@@ -309,10 +310,39 @@ const UserModal = (props) => {
             );
             console.log('formErrors', formErrors)
         } else {
+           
             /**
              * Submit organization create form 
              */
+            let organizationId = null;
             if (isOwner) {
+                let slug = orgName.toLowerCase().replace(' ', '-');
+                let orgPayload = {
+                    name: orgName,
+                    slug: slug,
+                    code: slug,
+                    description: orgDescription,
+                    logo: logoName,
+                    status: "active"
+                }
+
+                try {
+                    await OrganizationServices.create(orgPayload)
+                        .then(result => {
+                            console.log("Org create ", result);
+                            organizationId = result._id;
+                    })
+                } catch (e) {
+                    setProcessing(false);
+                    console.log("Error in org create", e)
+                    if (e.response && e.response.status == 403) {
+                        setErrorMsg("You dont have permission to perform this action");
+                    }
+                    else if (e.response && e.response.data.message) {
+                        setErrorMsg(e.response.data.message);
+                    }
+                    return false
+                }
                 
             }
 
@@ -327,7 +357,9 @@ const UserModal = (props) => {
                 phone: phoneNumber,
                 email: email,
                 groupId: groupId,
-                image: profilePicName
+                image: profilePicName,
+                organizationId: organizationId,
+                isOwner: isOwner
             };
 
             /**
@@ -392,6 +424,13 @@ const UserModal = (props) => {
                                         </li>
                                     </ul>
                                 </div> */}
+
+                                
+                                {errorMsg &&
+                                    <div className="error errorMsg">
+                                        <p>{errorMsg}</p>
+                                    </div>
+                                }
 
                                 <form className="formBody" onSubmit={handleSubmit}>
                                     <div className="setProfilePic">
