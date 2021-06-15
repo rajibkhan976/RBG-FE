@@ -21,9 +21,9 @@ const UserModal = (props) => {
     const [email, setEmail] = useState('');
     const [isOwner, setIsOwner] = useState(false);
     const [logo, setLogo] = useState(null);
-    const [logoName, setLogoName] = useState(null);
-    const [orgName, setOrgName] = useState(null);
-    const [orgDescription, setOrgDescription] = useState(null);
+    const [logoName, setLogoName] = useState("");
+    const [orgName, setOrgName] = useState("");
+    const [orgDescription, setOrgDescription] = useState("");
     const [processing, setProcessing] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     const [formErrors, setFormErrors] = useState({
@@ -46,7 +46,6 @@ const UserModal = (props) => {
         props.setCreateButton(null);
     };
 
-<<<<<<< 41716395a27f87d80247a363e18e7a10b7d12ff8
     let editUser = props.createButton ? props.createButton : false;
 
     useEffect(() => {
@@ -57,14 +56,21 @@ const UserModal = (props) => {
         setPhoneNumber(editUser.phone);
         setEmail(editUser.email);
 
+        console.log('editUser', editUser)
+        if (editUser.isOrganizationOwner) {
+            setIsOwner(true);
+            setOrgName(editUser.organization.name);
+            setOrgDescription(editUser.organization.description);
+            setLogo(editUser.organization.logo ? (config.bucketUrl + editUser.organization.logo) : null);
+            setLogoName(editUser.organization.logo);
+        }
+
     }, [editUser]);
 
-=======
     /**
      * Upload profile picture
      * @param {*} event 
      */
->>>>>>> Organization owner V1.0
     const handleImageUpload = (event) => {
         let files = event.target.files;
         if (files && files.length) {
@@ -327,10 +333,20 @@ const UserModal = (props) => {
                 }
 
                 try {
-                    await OrganizationServices.create(orgPayload)
+                    /**
+                     * Lets decide the operation type
+                     */
+                    let operationOrgMethod = "create";
+                    if (isOwner && editUser.organization) {
+                        operationOrgMethod = "update";
+                        orgPayload.id = editUser.organization._id;
+                        orgPayload.ownerId = editId
+                    }
+
+                    await OrganizationServices[operationOrgMethod](orgPayload)
                         .then(result => {
-                            console.log("Org create ", result);
-                            organizationId = result._id;
+                            console.log("Org " + operationOrgMethod, result);
+                            organizationId = result._id;                           
                     })
                 } catch (e) {
                     setProcessing(false);
@@ -512,15 +528,19 @@ const UserModal = (props) => {
                                             </div>
                                         </div>                                      
                                         <div className="infoField orgSection">
-                                            <div className="formField">                                                
-                                                <p className="">Is it organization owner?
-                                                    <input
-                                                        type="checkbox"
-                                                        name="isOrg"
-                                                        onChange={handleIsOrgChange}
-                                                        />
-                                                </p>                                               
-                                            </div>
+                                            {!editUser && (
+                                                <div className="formField">                                                
+                                                    <p className="">Is it organization owner?
+                                                        <input
+                                                            type="checkbox"
+                                                            name="isOrg"
+                                                            defaultChecked={isOwner}
+                                                            onChange={handleIsOrgChange}
+                                                            />
+                                                    </p>                                               
+                                                </div>
+                                            )}
+                                            
                                             {isOwner && (
                                                 <div className="infoInputs orgContent">
                                                     <ul>
@@ -546,6 +566,7 @@ const UserModal = (props) => {
                                                                         type="text"
                                                                         name="orgName"
                                                                         placeholder="Ex. Falcon Inc."
+                                                                        defaultValue={orgName}
                                                                         onChange={handleOrgNameChange}
                                                                     />
                                                                 </div>
@@ -559,6 +580,7 @@ const UserModal = (props) => {
                                                                     <textarea
                                                                         name="orgDescription"
                                                                         placeholder="Its a great organization"
+                                                                        defaultValue={orgDescription}
                                                                         onChange={handleOrgDescriptionChange}
                                                                     >    
                                                                     </textarea>
@@ -620,11 +642,11 @@ const UserModal = (props) => {
                                     <PermissionMatrix />
 
                                     <div className="permissionButtons">
-                                        {!editId && <button className="creatUserBtn createBtn">
+                                        {!editId && <button className="creatUserBtn createBtn" disabled={processing}>
                                             <img className="plusIcon" src={plus_icon} alt="" />
                                             <span>Create an user</span>
                                         </button> }
-                                        <button className="saveNnewBtn">
+                                        <button className="saveNnewBtn" disabled={processing}>
                                             <span>{editId ? "Update user" : "Save & New"}</span>
                                             <img className="" src={arrow_forward} alt="" />
                                         </button>
