@@ -9,12 +9,17 @@ let headers = {
 };
 
 export const UserServices = {
-    fetchUsers: async (page = null, keyword = null) => {
+    fetchUsers: async (page = null, queryParams = null) => {
         headers.Authorization = localStorage.getItem("_token");
         return new Promise((resolve, reject) => {
             axios
                 .get(
-                    config.fetchUsersUrl + (page ? "/" + page : '') + (keyword ? "?search=" + keyword : ''),
+                    config.fetchUsersUrl + 
+                    (page ? "/" + page : '') + 
+                    (queryParams ? "?" + queryParams : ''),
+                    // (keyword ? "?search=" + keyword : '') +
+                    // (group ? "?group=" + group : ''),
+                    // (keyword && group ? "&group=" + group : ''),
                     { headers: headers }
                 )
                 .then((result) => {

@@ -35,7 +35,7 @@ const RolesListing = (props) => {
     );
     const [keyword, setKeyword] = useState(null);
     const [option, setOption] = useState(null);
-    const optionsToggleRef = useRef(rolesData);
+    const optionsToggleRef = useRef();
     const dispatch = useDispatch();
 
 
@@ -165,23 +165,23 @@ const RolesListing = (props) => {
     };
 
     useEffect(() => {
-        //document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("mousedown", handleClickOutside);
         return () => {
-            //document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("mousedown", handleClickOutside);
         }
-    }, [option])
+    }, []);
 
     /**
      * Handle outside click
      */
     const handleClickOutside = (event) => {
-        console.log('Handle outside click',optionsToggleRef.current, event.target, option);
+        //console.log('Handle outside click',optionsToggleRef, optionsToggleRef.current, event.target, option);
         if (optionsToggleRef.current.contains(event.target)) {
-            console.log('// inside click');
+            //console.log('// inside click');
             return;
-        }
-        console.log('// outside click');
-        // outside click
+          }
+          //console.log('// outside click');
+          setOption(null);
     }
 
     /**
@@ -279,7 +279,7 @@ const RolesListing = (props) => {
         </div>
       </div> */}
             <div className="userListBody">
-                <div className="listBody">
+                <div className="listBody" ref={optionsToggleRef}>
                     <ul className="tableListing">
                         <li className="listHeading userRole">
                             <div className="userName">Role Name</div>
@@ -305,7 +305,7 @@ const RolesListing = (props) => {
                                             </div>
                                             <div className="createDate">
                                                 <button className="btn">{moment(elem.createdAt).format("Do MMM YYYY")}</button>
-                                                <div className="info_3dot_icon" ref={optionsToggleRef}>
+                                                <div className="info_3dot_icon">
                                                     <button
                                                         className="btn"
                                                         onClick={() => {

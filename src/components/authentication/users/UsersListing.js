@@ -37,6 +37,24 @@ const UsersListing = (props) => {
         props.toggleFilter("user");
     };
 
+    /**
+     * Set filtered data
+     */
+    useEffect(() => {
+        if (props.getFilteredData) {
+            console.log('Reached detination', props.getFilteredData);
+            setUsersData(props.getFilteredData.users);
+            setUsersCount(props.getFilteredData.pagination.count);
+            //Set current page
+            setPaginationData({
+                ...paginationData,
+                currentPage: props.getFilteredData.pagination.currentPage,
+                totalPages: props.getFilteredData.pagination.totalPages
+            });          
+        }
+        
+    }, [props])
+
     const editThisUser = (e, el) => {
         let yPosition = el.clientY;
         let avHeight = window.innerHeight - (70 + 70 + 54 + 57)
@@ -176,9 +194,20 @@ const UsersListing = (props) => {
      */
     const handleSearch = (event) => {
         event.preventDefault();
-        utils.addQueryParameter('search', keyword);
+        
         let pageId = utils.getQueryVariable('page');
-        fetchUsers(pageId, keyword);
+        let group = utils.getQueryVariable('group');
+
+        let queryParams = new URLSearchParams();
+        if(keyword){
+            utils.addQueryParameter('search', keyword);
+            queryParams.append("search", keyword);
+        } else {
+            utils.removeQueryParameter('search');
+        }
+        queryParams.append("group", group);
+
+        fetchUsers(pageId, queryParams);
     }
 
     return (

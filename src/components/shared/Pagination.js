@@ -23,12 +23,13 @@ const Pagination = (props) => {
      */
     let pageId = utils.getQueryVariable('page');
     let keyword = utils.getQueryVariable('search');
+    let group = utils.getQueryVariable('group');
 
     /**
      * Make axios call
      */
     //if(currentPage !== props.paginationData.totalPages){
-    getPaginatedData(props.type, pageId, keyword);
+    getPaginatedData(props.type, pageId, keyword, group);
     //}
   }
 
@@ -36,13 +37,13 @@ const Pagination = (props) => {
    * Get paginated data
    * @param {*} type 
    */
-  const getPaginatedData = (type, pageId, keyword) => {
+  const getPaginatedData = (type, pageId, keyword, group) => {
     switch (type) {
       case "role":
         fetchPaginatedRoles(pageId, keyword);
         break;
       case "user":
-        fetchPaginatedUsers(pageId, keyword);
+        fetchPaginatedUsers(pageId, keyword, group);
         break;
       default:
       // code block
@@ -66,9 +67,9 @@ const Pagination = (props) => {
     }
   }
 
-  const fetchPaginatedUsers = async (page, keyword) => {
+  const fetchPaginatedUsers = async (page, keyword, group) => {
     try {
-      await UserServices.fetchUsers(page, keyword)
+      await UserServices.fetchUsers(page, keyword, group)
         .then((result) => {
           console.log('User listing result paginated', result.users);
           if (result) {
