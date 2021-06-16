@@ -17,9 +17,6 @@ export const UserServices = {
                     config.fetchUsersUrl + 
                     (page ? "/" + page : '') + 
                     (queryParams ? "?" + queryParams : ''),
-                    // (keyword ? "?search=" + keyword : '') +
-                    // (group ? "?group=" + group : ''),
-                    // (keyword && group ? "&group=" + group : ''),
                     { headers: headers }
                 )
                 .then((result) => {

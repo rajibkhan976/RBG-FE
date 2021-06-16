@@ -15,6 +15,9 @@ module.exports = {
     fetchRolesUrl: "https://944mqenjuc.execute-api.us-east-1.amazonaws.com/dev/role/list",
     deleteRoleUrl: "https://944mqenjuc.execute-api.us-east-1.amazonaws.com/dev/role/",
 
+    //Auth - Group
+    groupUrl: "https://tq5eh4daa1.execute-api.us-east-1.amazonaws.com/dev/group/",
+
     //Auth - User
     userUrl: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user",
     fetchUsersUrl: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user/list",

@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { PermissionServices } from "../../services/authentication/PermissionServices";
 
 const PermissionMatrix = () => {
+  const [entityData, setEntityData] = useState('');
+  const [actionData, setActionData] = useState('');
   const [isChecked, setIsChecked] = useState([
     {
       authentication: {
@@ -14,6 +17,7 @@ const PermissionMatrix = () => {
       },
     },
   ]);
+  const [errorMsg, setErrorMsg] = useState("");
 
   /**
    * Handle authentication checkbox
@@ -28,6 +32,30 @@ const PermissionMatrix = () => {
     //setCheckedState(updatedCheckedState);
     //setIsAuthenticationChecked(!isAuthenticationChecked);
   };
+
+  useEffect(() => {
+    /**
+     * Get entities
+     */
+    getEntities();
+  }, []);
+
+  const getEntities = async () => {
+    try {
+      await PermissionServices.entity()
+      .then(result => {
+        console.log('Permission entities', result);
+      })
+    } catch (e) {
+      console.log('Permission entities error', e);
+      if (e.response && e.response.status == 403) {
+        setErrorMsg("You dont have permission to perform this action");
+      }
+      else if (e.response && e.response.data.message) {
+        setErrorMsg(e.response.data.message);
+      }
+    }
+  }
 
   const MoreOptions = () => {
     return (

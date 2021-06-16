@@ -7,7 +7,10 @@ import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
 
 const UserFilter = (props) => {
-    //const [groupId, setGroupId] = useState('');
+    const [group, setGroup] = useState('');
+    const [fromDate, setFromDate] = useState('');
+    const [toDate, setToDate] = useState('');
+    const [status, setStatus] = useState('');
     const [isLoader, setIsLoader] = useState(false);
     const closeSideMenu = (e) => {
         e.preventDefault();
@@ -21,6 +24,7 @@ const UserFilter = (props) => {
     const handleGroupChange = (event) => {
         event.preventDefault();
         utils.addQueryParameter('group', event.target.value);
+        setGroup(event.target.value);
     }
     /**
      * Apply filter submit
@@ -30,10 +34,14 @@ const UserFilter = (props) => {
         let pageId = utils.getQueryVariable('page');
         let keyword = utils.getQueryVariable('search');
         let group = utils.getQueryVariable('group');
-        let fromDate = utils.getQueryVariable('formDate');
+        let fromDate = utils.getQueryVariable('fromDate');
         let toDate = utils.getQueryVariable('toDate');
+        let status = utils.getQueryVariable('status');
 
         let queryParams = new URLSearchParams();
+        if(pageId) {
+            queryParams.append("page", pageId);
+        }
         if(keyword) {
             queryParams.append("search", keyword);
         }
@@ -43,6 +51,9 @@ const UserFilter = (props) => {
         if(fromDate && toDate){
             queryParams.append('fromDate', fromDate);
             queryParams.append('toDate', toDate);
+        }
+        if(status) {
+            queryParams.append("status", status);
         }
 
         fetchUsers(pageId, queryParams);
@@ -88,7 +99,41 @@ const UserFilter = (props) => {
     const handleDateChange = (event) => {
         event.preventDefault();
         utils.addQueryParameter(event.target.name, event.target.value);
+        if( event.target.name === 'fromDate'){
+            setFromDate(event.target.value);
+        } else {
+            setToDate(event.target.value);
+        }
         console.log(event.target.name, event.target.value);
+    }
+
+    /**
+     * Handle status change
+     * @param {*} event 
+     */
+    const handleStatusChange = (event) => {
+        setStatus(event.target.value);
+        if(event.target.value) {
+            utils.addQueryParameter('status', event.target.value);
+        } else {
+            utils.removeQueryParameter('status');
+        }
+    }
+
+    /**
+     * Handle reset filter
+     */
+    const handleResetFilter = (event) => {
+        event.preventDefault();
+        setGroup('');
+        setFromDate('');
+        setToDate('');
+        setStatus('');
+        utils.removeQueryParameter('group');
+        utils.removeQueryParameter('fromDate');
+        utils.removeQueryParameter('toDate');
+        utils.removeQueryParameter('status');
+        fetchUsers(1);
     }
 
     return (
@@ -109,7 +154,7 @@ const UserFilter = (props) => {
                                 <div className="formField">
                                     <p>Select Group</p>
                                     <div className="inFormField">
-                                        <select style={{ backgroundImage: "url(" + arrowDown + ")" }} onChange={handleGroupChange}>
+                                        <select style={{ backgroundImage: "url(" + arrowDown + ")" }} onChange={handleGroupChange} value={group}>
                                             <option value="">Select group</option>
                                             <option value="group-1">Top Manager</option>
                                             <option value="group-4">Group4</option>
@@ -122,13 +167,13 @@ const UserFilter = (props) => {
                                         <div className="formField w-50">
                                             <p>From</p>
                                             <div className="inFormField">
-                                                <input type="date" name="formDate" id="formDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} />
+                                                <input type="date" name="fromDate" id="formDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} value={fromDate} />
                                             </div>
                                         </div>
                                         <div className="formField w-50">
                                             <p>To</p>
                                             <div className="inFormField">
-                                                <input type="date" name="toDate" id="toDate" placeholder="dd/mm/yyyy" onChange={handleDateChange}/>
+                                                <input type="date" name="toDate" id="toDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} value={toDate}/>
                                             </div>
                                         </div>
                                     </div>
@@ -137,8 +182,10 @@ const UserFilter = (props) => {
                                     <div className="formField">
                                         <p>Select Status</p>
                                         <div className="inFormField">
-                                            <select style={{ backgroundImage: "url(" + arrowDown + ")" }}>
+                                            <select style={{ backgroundImage: "url(" + arrowDown + ")" }} onChange={handleStatusChange} value={status}>
                                                 <option value="null">Select Status</option>
+                                                <option value="active">Active</option>
+                                                <option value="inactive">Inactive</option>
                                             </select>
                                         </div>
                                     </div>
@@ -148,7 +195,7 @@ const UserFilter = (props) => {
                                         <span>Apply Filter</span>
                                         <img className="" src={arrow_forward} alt="" />
                                     </button>
-                                    <button className="btn-link">Clear</button>
+                                    <button className="btn-link" onClick={handleResetFilter}>Clear</button>
                                 </div>
                             </form>
                         </div>

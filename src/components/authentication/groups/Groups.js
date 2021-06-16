@@ -7,6 +7,7 @@ import DashboardFooter from "../../shared/FooterDashboard";
 import InnerLeftMenu from "../../shared/InnerLeftMenu";
 import Filter from '../../shared/FilterAuth.js'
 import SideModal from '../../shared/SideModal'
+import GroupModal from "./GroupModal";
 
 const Groups = (props) => {
   const [createButton, setCreateButton] = useState(null);
@@ -44,7 +45,7 @@ const Groups = (props) => {
         stateFilter={stateFilter} 
         setStateFilter={setStateFilter} 
       />
-      <SideModal
+      <GroupModal
         createButton={createButton}
         setCreateButton={setCreateButton}
       />
