@@ -58,11 +58,14 @@ const UserModal = (props) => {
 
         console.log('editUser', editUser)
         if (editUser.isOrganizationOwner) {
+            console.log("Gym owner")
             setIsOwner(true);
             setOrgName(editUser.organization.name);
             setOrgDescription(editUser.organization.description);
             setLogo(editUser.organization.logo ? (config.bucketUrl + editUser.organization.logo) : null);
             setLogoName(editUser.organization.logo);
+        } else {
+            setIsOwner(false);
         }
 
     }, [editUser]);
@@ -528,7 +531,8 @@ const UserModal = (props) => {
                                             </div>
                                         </div>                                      
                                         <div className="infoField orgSection">
-                                            {!editUser && (
+                                            
+                                            {!editId && (
                                                 <div className="formField">                                                
                                                     <p className="">Is it organization owner?
                                                         <input

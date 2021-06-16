@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Pagination from "../../shared/Pagination";
 import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
 import { UserServices } from "../../../services/authentication/UserServices";
+import { OrganizationServices } from "../../../services/authentication/OrganizationServices";
 import { utils } from "../../../helpers";
 import Loader from "../../shared/Loader";
 import config from "../../../configuration/config";
@@ -159,16 +160,36 @@ const UsersListing = (props) => {
     }
 
     /**
-     * Delete user
+     * Delete user and organization
      */
-    const deleteUser = async (userId) => {
-        if (userId) {
+    const deleteUser = async (user) => {
+        if (
+            (user && !user.isOrganizationOwner)
+            || (
+                user
+                && user.isOrganizationOwner
+                && window.confirm("Are you sure! want to delete the organization and its owner?")
+            )
+        ) {
             try {
-                await UserServices.deleteUser(userId)
+                /**
+                 * Check and delete organization along with its owner
+                 */
+                if (user.isOrganizationOwner) {
+                    await OrganizationServices.delete(user.organization._id)
+                        .then(result => {
+                            console.log("Organization deleted")
+                        })
+                }
+
+                /**
+                 * Delete the user
+                 */
+                await UserServices.deleteUser(user._id)
                     .then((result) => {
                         if (result) {
                             console.log('Role delete result', result);
-                            const newList = usersData.filter((user) => user._id !== userId);
+                            const newList = usersData.filter((u) => u._id !== user._id);
                             setUsersData(newList);
                             setOption(null);
                         }
@@ -330,7 +351,7 @@ const UsersListing = (props) => {
                                                                 </button>
                                                                 <button className="btn btnDelete"
                                                                     onClick={() => {
-                                                                        deleteUser(elem._id);
+                                                                        deleteUser(elem);
                                                                     }}>
                                                                     <span>
                                                                         <svg

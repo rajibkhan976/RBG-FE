@@ -56,4 +56,26 @@ export const OrganizationServices = {
                 });
         });
     },
+    delete: async (id) => {
+        return new Promise((resolve, reject) => {
+            if (isLoggedIn() === false) {
+                reject(message.loginFailed);
+            }
+            axios
+                .delete(
+                    config.orgUrl + "/" + id,
+                    { headers: headers }
+                )
+                .then((result) => {
+                    console.log('Create organization service result: ', result);
+                    resolve(result.data);
+                })
+                .catch((error) => {
+                    console.log('Create organization service error: ', error);
+                    if (error != null) {
+                        reject(error);
+                    }
+                });
+        });
+    },
 };
