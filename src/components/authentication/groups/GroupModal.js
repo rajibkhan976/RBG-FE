@@ -48,8 +48,8 @@ const GroupModal = (props) => {
 
                                 <div className="permissionButtons">
                                     <button className="creatUserBtn createBtn">
-                                        <img className="plusIcon" src={plus_icon} alt="" />
-                                        <span>Create a group</span>
+                                        <span>Save</span>
+                                        <img className="" src={arrow_forward} alt="" />
                                     </button>
                                     <button className="saveNnewBtn">
                                         <span>Save & New</span>

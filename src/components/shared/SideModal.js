@@ -439,8 +439,8 @@ const SideModal = (props) => {
 
                     <div className="permissionButtons">
                       <button className="creatUserBtn createBtn">
-                        <img className="plusIcon" src={plus_icon} alt="" />
-                        <span>Create an user</span>
+                        <span>Save</span>
+                        <img className="" src={arrow_forward} alt="" />
                       </button>
                       <button className="saveNnewBtn">
                         <span>Save & New</span>
@@ -475,8 +475,8 @@ const SideModal = (props) => {
 
                   <div className="permissionButtons enterRoleNameBtn">
                     <button className="creatUserBtn createBtn">
-                      <img className="plusIcon" src={plus_icon} alt="" />
-                      <span>Create role</span>
+                      <span>Save</span>
+                      <img className="" src={arrow_forward} alt="" />
                     </button>
                     <button className="saveNnewBtn">
                       <span>Save & New</span>
@@ -783,8 +783,8 @@ const SideModal = (props) => {
 
                     <div className="permissionButtons">
                       <button className="creatUserBtn createBtn">
-                        <img className="plusIcon" src={plus_icon} alt="" />
-                        <span>Create a group</span>
+                        <span>Save</span>
+                        <img className="" src={arrow_forward} alt="" />
                       </button>
                       <button className="saveNnewBtn">
                         <span>Save & New</span>

@@ -1437,6 +1437,9 @@ img.dropDownIcon {
 .creatUserBtn.createBtn {
   margin-right: 10px;
 }
+.creatUserBtn.createBtn img {
+  padding-left: 14px;
+}
 
 .saveNnewBtn {
   background: #305671;

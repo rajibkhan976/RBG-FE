@@ -643,8 +643,8 @@ const UserModal = (props) => {
 
                                     <div className="permissionButtons">
                                         {!editId && <button className="creatUserBtn createBtn" disabled={processing}>
-                                            <img className="plusIcon" src={plus_icon} alt="" />
-                                            <span>Create an user</span>
+                                            <span>Save</span>
+                                            <img className="" src={arrow_forward} alt="" />
                                         </button> }
                                         <button className="saveNnewBtn" disabled={processing}>
                                             <span>{editId ? "Update user" : "Save & New"}</span>
