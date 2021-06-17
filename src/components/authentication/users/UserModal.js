@@ -38,7 +38,7 @@ const UserModal = (props) => {
     const [groups, setGroups] = useState(null);
     const [roleId, setRoleId] = useState('');
     const [groupId, setGroupId] = useState('');
-    
+
     const [editId, setEditId] = useState("");
 
     const closeSideMenu = (e) => {
@@ -101,7 +101,7 @@ const UserModal = (props) => {
             reader.readAsDataURL(files[0]);
         }
     }
-    
+
     const handleLogoUpload = (event) => {
         let files = event.target.files;
         if (files && files.length) {
@@ -116,15 +116,15 @@ const UserModal = (props) => {
                     file: r.target.result,
                     name: files[0].name
                 })
-                .then((result) => {
-                    console.log('Profile pic: ', result);
-                    let avatar = config.bucketUrl + result.data.originalKey;
-                    setLogo(avatar);
-                    setLogoName(result.data.originalKey);
-                })
-                .catch(err => {
-                    console.log('Profile pic error', err);
-                });
+                    .then((result) => {
+                        console.log('Profile pic: ', result);
+                        let avatar = config.bucketUrl + result.data.originalKey;
+                        setLogo(avatar);
+                        setLogoName(result.data.originalKey);
+                    })
+                    .catch(err => {
+                        console.log('Profile pic error', err);
+                    });
             };
             reader.readAsDataURL(files[0]);
         }
@@ -217,7 +217,7 @@ const UserModal = (props) => {
         setOrgDescription(event.target.value)
     }
 
-    
+
     /**
      * Handle role change 
      * @param {*} event 
@@ -319,7 +319,7 @@ const UserModal = (props) => {
             );
             console.log('formErrors', formErrors)
         } else {
-           
+
             /**
              * Submit organization create form 
              */
@@ -349,8 +349,8 @@ const UserModal = (props) => {
                     await OrganizationServices[operationOrgMethod](orgPayload)
                         .then(result => {
                             console.log("Org " + operationOrgMethod, result);
-                            organizationId = result._id;                           
-                    })
+                            organizationId = result._id;
+                        })
                 } catch (e) {
                     setProcessing(false);
                     console.log("Error in org create", e)
@@ -362,7 +362,7 @@ const UserModal = (props) => {
                     }
                     return false
                 }
-                
+
             }
 
             //Submit the form
@@ -388,7 +388,7 @@ const UserModal = (props) => {
             if (editId) {
                 operationMethod = "editUser";
                 payload.id = editId;
-              }
+            }
 
             try {
                 await UserServices[operationMethod](payload)
@@ -444,7 +444,7 @@ const UserModal = (props) => {
                                     </ul>
                                 </div> */}
 
-                                
+
                                 {errorMsg &&
                                     <div className="error errorMsg">
                                         <p>{errorMsg}</p>
@@ -529,22 +529,22 @@ const UserModal = (props) => {
                                                     </li>
                                                 </ul>
                                             </div>
-                                        </div>                                      
+                                        </div>
                                         <div className="infoField orgSection">
-                                            
+
                                             {!editId && (
-                                                <div className="formField">                                                
+                                                <div className="formField">
                                                     <p className="">Is it organization owner?
                                                         <input
                                                             type="checkbox"
                                                             name="isOrg"
                                                             defaultChecked={isOwner}
                                                             onChange={handleIsOrgChange}
-                                                            />
-                                                    </p>                                               
+                                                        />
+                                                    </p>
                                                 </div>
                                             )}
-                                            
+
                                             {isOwner && (
                                                 <div className="infoInputs orgContent">
                                                     <ul>
@@ -558,7 +558,7 @@ const UserModal = (props) => {
                                                                             <span className="userProfilePic">
                                                                                 <img src={logo ? logo : camera_icon} ></img>
                                                                             </span>
-                                                                                Organization Logo
+                                                                            Organization Logo
                                                                         </span>
                                                                     </label>
                                                                 </div>
@@ -577,7 +577,7 @@ const UserModal = (props) => {
                                                                 {formErrors.orgName ? <span className="errorMsg">{formErrors.orgName}</span> : ''}
                                                             </div>
                                                         </li>
-                                                        <li>                                                        
+                                                        <li>
                                                             <div className={formErrors.orgDescription ? "formField w-100 error" : "formField w-100"}>
                                                                 <p>Organization Description</p>
                                                                 <div className="inFormField">
@@ -586,7 +586,7 @@ const UserModal = (props) => {
                                                                         placeholder="Its a great organization"
                                                                         defaultValue={orgDescription}
                                                                         onChange={handleOrgDescriptionChange}
-                                                                    >    
+                                                                    >
                                                                     </textarea>
                                                                 </div>
                                                                 {formErrors.orgDescription ? <span className="errorMsg">{formErrors.orgDescription}</span> : ''}
@@ -644,12 +644,33 @@ const UserModal = (props) => {
                                         </div>
                                     </div>
                                     <PermissionMatrix />
+                                    <p className="staredInfo">
+                                        * You can customize permissions for this user based on your need.
+                                    </p>
+                                    <div className="newGroupName">
+                                        <div className="formField w-50">
+                                            <p>Create a new group with the new permissions *</p>
+                                            <div className="inFormField">
+                                                <input
+                                                    type="text"
+                                                    name=""
 
+                                                    placeholder="Enter a new group name"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="enableNotification">
+                                        <label>
+                                            <input type="checkbox" name="" />
+                                            <span>Notify users by mail on adding them to this group </span>
+                                        </label>
+                                    </div>
                                     <div className="permissionButtons">
                                         {!editId && <button className="creatUserBtn createBtn" disabled={processing}>
-                                            <span>Save</span>
-                                            <img className="" src={arrow_forward} alt="" />
-                                        </button> }
+                                            <img className="plusIcon" src={plus_icon} alt="" />
+                                            <span>Create an user</span>
+                                        </button>}
                                         <button className="saveNnewBtn" disabled={processing}>
                                             <span>{editId ? "Update user" : "Save & New"}</span>
                                             <img className="" src={arrow_forward} alt="" />

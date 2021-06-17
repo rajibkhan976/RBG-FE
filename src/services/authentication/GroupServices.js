@@ -29,4 +29,17 @@ export const GroupServices = {
                 });
         });
     },
+    createGroup: async (payload) => {
+        headers.Authorization = localStorage.getItem("_token");
+        try {
+            const result = await axios.post(config.groupUrl, payload, { headers: headers });
+            console.log('Create group service : ', result);
+            return result.data;
+        } catch (e) {
+            console.log('Create group service error: ', e);
+            return e;
+        }
+
+    }
+
 }
