@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { RoleServices } from "../../services/authentication/RoleServices";
 import { UserServices } from "../../services/authentication/UserServices";
 import { utils } from "../../helpers";
+import { GroupServices } from '../../services/authentication/GroupServices';
 
 
 const Pagination = (props) => {
@@ -45,6 +46,9 @@ const Pagination = (props) => {
       case "user":
         fetchPaginatedUsers(pageId, keyword, group);
         break;
+      case "group":
+        fetchPaginatedGroups(pageId, keyword, group);
+        break;
       default:
       // code block
     }
@@ -72,6 +76,24 @@ const Pagination = (props) => {
       await UserServices.fetchUsers(page, keyword, group)
         .then((result) => {
           console.log('User listing result paginated', result.users);
+          if (result) {
+            broadcastToParent(result);
+          }
+        })
+        .catch((error) => {
+          console.log("User listing error", error);
+        });
+    } catch (e) {
+      console.log("Error in User listing", e);
+    }
+  }
+
+  // api call for groups current page data
+  const fetchPaginatedGroups = async (page, keyword, group) => {
+    try {
+      await GroupServices.fetchGroups(page, keyword, group)
+        .then((result) => {
+          console.log('User listing result paginated', result.groups);
           if (result) {
             broadcastToParent(result);
           }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useEffect, useState } from "react";
-import DashboardPagination from "../../shared/Pagination";
+import Pagination from "../../shared/Pagination";
 import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
 
 import search_icon from "../../../assets/images/search_icon.svg";
@@ -15,6 +15,15 @@ const GroupListing = (props) => {
     const [dropdownPos, setDropdownPos] = useState('bottom');
     const [groupsData, setGroupsData] = useState(null);
     const [keyword, setKeyword] = useState('');
+    const [groupsCount, setGroupsCount] = useState(0);
+    const [paginationData, setPaginationData] = useState(
+        {
+            count: null,
+            totalPages: null,
+            currentPage: 1,
+            limit: 10
+        }
+    );
 
     const toggleCreateHeader = () => {
         props.toggleCreate("groups");
@@ -23,6 +32,24 @@ const GroupListing = (props) => {
     const filterGroups = () => {
         props.toggleFilter("groups");
     };
+
+    /**
+     * Set filtered data
+     */
+    useEffect(() => {
+        if (props.getFilteredData) {
+            console.log('Reached detination', props.getFilteredData);
+            setGroupsData(props.getFilteredData.users);
+            setGroupsCount(props.getFilteredData.pagination.count ? props.getFilteredData.pagination.count : 0);
+            //Set current page
+            setPaginationData({
+                ...paginationData,
+                currentPage: props.getFilteredData.pagination.currentPage,
+                totalPages: props.getFilteredData.pagination.totalPages
+            });
+        }
+
+    }, [props])
 
     const editThisGroup = (e, el) => {
         let yPosition = el.clientY;
@@ -72,15 +99,15 @@ const GroupListing = (props) => {
             // setIsLoader(true);
             await GroupServices.fetchGroups(pageId, keyword)
                 .then((result) => {
-                    console.log('Groups listing result', result.users);
+                    console.log('Groups listing result', result);
                     if (result) {
-                        setGroupsData(result);
-                        // setGroupsCount(result.pagination.count);
-                        // setPaginationData({
-                        //     ...paginationData,
-                        //     currentPage: result.pagination.currentPage,
-                        //     totalPages: result.pagination.totalPages
-                        // });
+                        setGroupsData(result.groups);
+                        setGroupsCount(result.pagination.count);
+                        setPaginationData({
+                            ...paginationData,
+                            currentPage: result.pagination.currentPage,
+                            totalPages: result.pagination.totalPages
+                        });
                         // setIsLoader(false);
                     }
                 })
@@ -94,6 +121,49 @@ const GroupListing = (props) => {
         }
     }
 
+    /**
+     * Get user from pagination component
+     * @param {*} dataFromChild 
+     */
+     const getDataFn = (dataFromChild) => {
+        console.log('Data from child', dataFromChild);
+        if (dataFromChild) {
+            setGroupsData(dataFromChild.groups);
+            //Set current page
+            setPaginationData({
+                ...paginationData,
+                currentPage: dataFromChild.pagination.currentPage,
+                totalPages: dataFromChild.pagination.totalPages
+            });
+        }
+    }
+
+    /**
+     * Update keyword
+     */
+     const handleKeywordChange = (event) => {
+        setKeyword(event.target.value ? event.target.value : '');
+        console.log('Keyword', keyword);
+    }
+
+    /**
+     * Handle search functionality
+     */
+    const handleSearch = (event) => {
+        event.preventDefault();
+
+        let pageId = utils.getQueryVariable('page');
+
+        let queryParams = new URLSearchParams();
+        if (keyword) {
+            utils.addQueryParameter('search', keyword);
+            queryParams.append("search", keyword);
+        } else {
+            utils.removeQueryParameter('search');
+        }
+
+        fetchGroups(pageId, queryParams);
+    }
 
     return (
         <div className="dashInnerUI">
@@ -106,14 +176,16 @@ const GroupListing = (props) => {
                     <h2 className="inDashboardHeader">User Groups (0)</h2>
                     <p className="userListAbout">
                         Create & manage groups for your business
-          </p>
+                    </p>
                 </div>
                 <div className="listFeatures">
                     <div className="searchBar">
-                        <input type="search" name="" id="" placeholder="Search users" />
-                        <button className="searchIcon">
-                            <img src={search_icon} alt="" />
-                        </button>
+                        <form onSubmit={handleSearch}>
+                            <input type="search" name="" id="" placeholder="Search groups" onChange={handleKeywordChange} autoComplete="off" value={keyword} />
+                            <button className="searchIcon">
+                                <img src={search_icon} alt="" />
+                            </button>
+                        </form>
                     </div>
                     <button className="btn btn-filter" onClick={filterGroups}>
                         <p>Filter</p>
@@ -170,7 +242,7 @@ const GroupListing = (props) => {
                     </ul>
                 </div>
             </div>
-            {/* <DashboardPagination /> */}
+            <Pagination type="group" paginationData={paginationData} dataCount={groupsCount} getData={getDataFn} />
         </div>
     )
 }

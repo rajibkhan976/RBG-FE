@@ -2,7 +2,8 @@ import axios from "axios";
 import config from "../../configuration/config";
 
 let headers = {
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
+    'Accept': 'application/json',   
 };
 
 export const GroupServices = {
