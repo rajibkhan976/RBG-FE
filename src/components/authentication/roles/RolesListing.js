@@ -6,6 +6,7 @@ import * as actionTypes from "../../../actions/types";
 import Pagination from "../../shared/Pagination";
 import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
 
+import Loader from "../../shared/Loader";
 import search_icon from "../../../assets/images/search_icon.svg";
 import filter_icon from "../../../assets/images/filter_icon.svg";
 import plus_icon from "../../../assets/images/plus_icon.svg";
@@ -37,6 +38,7 @@ const RolesListing = (props) => {
     const [option, setOption] = useState(null);
     const optionsToggleRef = useRef();
     const dispatch = useDispatch();
+    const [isLoader, setIsLoader] = useState(false);
 
 
     const toggleCreateHeader = (e) => {
@@ -45,29 +47,6 @@ const RolesListing = (props) => {
 
     const filterRoles = () => {
         props.toggleFilter("roles");
-    };
-
-    const editThisRole = (elementId, event) => {
-        let yPosition = event.clientY;
-        let avHeight = window.innerHeight - (70 + 70 + 54 + 57)
-        if ((yPosition + 70) > avHeight) {
-            setDropdownPos("top")
-        }
-        else {
-            setDropdownPos("bottom")
-        }
-
-        const data = rolesData.filter((i) => i._id === elementId);
-        console.log("ROLES E? : ", data);
-        data[0].isEditing = !data[0].isEditing;
-        console.log("ROLES data  :: ", data[0].isEditing);
-        const newData = rolesData.map((el, i) => {
-            if (el._id === elementId) {
-                return data[0];
-            } else return event;
-        });
-        console.log("ROLES newData : ", newData);
-        setRolesData(newData);
     };
 
     useEffect(() => {
@@ -88,6 +67,7 @@ const RolesListing = (props) => {
      */
     const fetchRoles = async (pageId, keyword) => {
         try {
+            setIsLoader(true);
             await RoleServices.fetchRoles(pageId, keyword)
                 .then((result) => {
                     console.log('Role listing result', result.roles);
@@ -107,11 +87,14 @@ const RolesListing = (props) => {
                             totalPages: result.pagination.totalPages
                         });
                     }
+                    setIsLoader(false);
                 })
                 .catch((error) => {
+                    setIsLoader(false);
                     console.log("Role listing error", error);
                 });
         } catch (e) {
+            setIsLoader(false);
             console.log("Error in Role listing", JSON.stringify(e));
         }
     }
@@ -219,6 +202,7 @@ const RolesListing = (props) => {
 
     return (
         <div className="dashInnerUI">
+            {isLoader ? <Loader /> : ''}
             <div className="userListHead">
                 <div className="listInfo">
                     <ul className="listPath">
