@@ -79,7 +79,7 @@ const UserFilter = (props) => {
                     console.log('User listing result', result.users);
                     if (result) {
                         broadcastToParent(result);
-                        props.setStateFilter(null);
+                        //props.setStateFilter(null);
                         setIsLoader(false);
                     }
                 })
