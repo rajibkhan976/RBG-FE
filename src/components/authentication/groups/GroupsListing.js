@@ -8,45 +8,13 @@ import filter_icon from "../../../assets/images/filter_icon.svg";
 import plus_icon from "../../../assets/images/plus_icon.svg";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 
+import { utils } from "../../../helpers";
+import { GroupServices } from '../../../services/authentication/GroupServices';
+
 const GroupListing = (props) => {
     const [dropdownPos, setDropdownPos] = useState('bottom');
-    const [groupsData, setGroupsData] = useState([
-        {
-            keyId: "grp-1",
-            groupName: "Gym Manager",
-            numberOfAssigned: 2,
-            createdOn: "2nd Feb 2021",
-            isEditing: false,
-        },
-        {
-            keyId: "grp-2",
-            groupName: "Gym Staff",
-            numberOfAssigned: 23,
-            createdOn: "2nd Feb 2021",
-            isEditing: false,
-        },
-        {
-            keyId: "grp-3",
-            groupName: "Senior Gym Staff",
-            numberOfAssigned: 2,
-            createdOn: "2nd Feb 2021",
-            isEditing: false,
-        },
-        {
-            keyId: "grp-4",
-            groupName: "Marketing Head",
-            numberOfAssigned: 2,
-            createdOn: "2nd Feb 2021",
-            isEditing: false,
-        },
-        {
-            keyId: "grp-5",
-            groupName: "Sales Staff - in bound",
-            numberOfAssigned: 2,
-            createdOn: "2nd Feb 2021",
-            isEditing: false,
-        },
-    ]);
+    const [groupsData, setGroupsData] = useState(null);
+    const [keyword, setKeyword] = useState('');
 
     const toggleCreateHeader = () => {
         props.toggleCreate("groups");
@@ -80,8 +48,53 @@ const GroupListing = (props) => {
     };
 
     useEffect(() => {
-        console.log("groupsData after setGroupsData :", groupsData);
-    }, [groupsData]);
+        // console.log("groupsData after setGroupsData :", groupsData);
+        /**
+         * Get page id and keyword from URL
+         */
+         let pageId = utils.getQueryVariable('page');
+         let param = utils.getQueryVariable('search');
+         if (param) {
+             setKeyword(param);
+         }
+         /**
+          * Call to fetch roles
+          */
+         fetchGroups(pageId, param);
+    }, []);
+
+    /**
+     * Function to fetch users
+     * @returns 
+     */
+     const fetchGroups = async (pageId, keyword) => {
+        try {
+            // setIsLoader(true);
+            await GroupServices.fetchGroups(pageId, keyword)
+                .then((result) => {
+                    console.log('Groups listing result', result.users);
+                    if (result) {
+                        setGroupsData(result);
+                        // setGroupsCount(result.pagination.count);
+                        // setPaginationData({
+                        //     ...paginationData,
+                        //     currentPage: result.pagination.currentPage,
+                        //     totalPages: result.pagination.totalPages
+                        // });
+                        // setIsLoader(false);
+                    }
+                })
+                .catch((error) => {
+                    // setIsLoader(false);
+                    console.log("Groups listing error", error);
+                });
+        } catch (e) {
+            // setIsLoader(false);
+            console.log("Error in Group listing", e);
+        }
+    }
+
+
     return (
         <div className="dashInnerUI">
             <div className="userListHead">
@@ -122,19 +135,20 @@ const GroupListing = (props) => {
               </div>
                             <div className="createDate">Created on</div>
                         </li>
-                        {groupsData.length &&
+                        {groupsData &&
                             groupsData.map((elem, i) => {
                                 return (
                                     <>
                                         <li className="owerInfo userRole" key={elem.keyId}>
                                             <div className="userName">
                                                 <button className="btn">
-                                                    <p>{elem.groupName}</p>
+                                                    <p>{elem.name}</p>
                                                 </button>
                                             </div>
                                             <div className="phoneNum">
                                                 <button className="btn">
-                                                    {elem.numberOfAssigned}
+                                                    {/* {elem.numberOfAssigned} */}
+                                                    0
                                                 </button>
                                             </div>
                                             <div className="createDate">
