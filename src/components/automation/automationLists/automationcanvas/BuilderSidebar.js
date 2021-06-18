@@ -56,6 +56,9 @@ const Sidebar = () => {
               />
             </g>
           </svg>
+          <div className="nodeNameTooltip">
+            Webhook
+          </div>
         </div>
       </div>
       <div className="sidebarHeader">
@@ -111,6 +114,9 @@ const Sidebar = () => {
               <line className="a" x1="7" transform="translate(15 18)" />
             </g>
           </svg>
+          <div className="nodeNameTooltip">
+            Email
+          </div>
         </div>
         <div
             className="dndnode"
@@ -150,6 +156,9 @@ const Sidebar = () => {
               />
             </g>
           </svg>
+          <div className="nodeNameTooltip">
+            SMS
+          </div>
         </div>
       </div>
     </>

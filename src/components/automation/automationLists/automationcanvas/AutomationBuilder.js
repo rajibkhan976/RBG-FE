@@ -17,6 +17,11 @@ import edit_grey from "../../../../assets/images/edit_grey.svg";
 import trashIcon from "../../../../assets/images/iconfinder_trash-2_2561228.svg";
 import whiteAddIcon from "../../../../assets/images/add_white_24dp.svg";
 import whiteSlash from "../../../../assets/images/remove_white_24dp.svg";
+import resetIcon from "../../../../assets/images/resetIcon.svg";
+import blueSettingIcon from "../../../../assets/images/blueSettingIcon.svg";
+import plus_icon from "../../../../assets/images/plus_icon.svg";
+
+
 
 
 const onNodeMouseMove = (event, node) => {};
@@ -538,21 +543,40 @@ const AutomationBuilder = () => {
               >
                 <Controls />
               </ReactFlow>
+              <div className="automationTopLeft">
+                <input type="text" className="automationNameArea" placeholder="Enter your automation name" />
+                <button className="automationSetting">
+                  <img src={blueSettingIcon} alt="" />
+                </button>
+                <div className="automationPublish">
+                  <button className="automationPublishBtn">
+                    <img src={plus_icon} alt="" />
+                    Publish
+                  </button>
+                </div>
+                <div className="autoInfo">
+                  <span>?</span>
+                  <div className="autoInfoBox">
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores hic ipsum quaerat repellat architecto corporis minus adipisci facere iusto explicabo sint nulla, eligendi pariatur suscipit ex ut voluptate ea consequatur!
+                  </div>
+                </div>
+              </div>
               <div className="buttonArea">
                 <button
                     type="button"
-                    className="button"
+                    className="reserAutoBtn"
                     onClick={resetAutomation}
                 >
+                  <img src={resetIcon} alt="" />
                   Reset
                 </button>
-                <button
+                {/* <button
                     type="button"
                     className="button"
                     onClick={getBlueprintDetails}
                 >
                   Save
-                </button>
+                </button> */}
               </div>
             </div>
             {automationModal != null ? (automationModal === 'trigger' ?
