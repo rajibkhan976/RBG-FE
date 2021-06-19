@@ -20,6 +20,7 @@ const getAsl = async payload => {
         method: 'post',
         url: 'https://5uetvsgrhl.execute-api.us-east-1.amazonaws.com/dev/create-asl',
         headers: {
+            'Authorization': localStorage.getItem("_token"),
             'Content-Type': 'text/plain'
         },
         data : payload
@@ -31,8 +32,9 @@ const getAsl = async payload => {
 const generateUrl = async payload => {
     var config = {
         method: 'post',
-        url: 'http://localhost:3005/dev/generate',
+        url: 'https://prcriy2ij4.execute-api.us-east-1.amazonaws.com/dev/generate',
         headers: {
+            'Authorization': localStorage.getItem("_token"),
             'Content-Type': 'text/plain'
         },
         data : payload
@@ -44,8 +46,9 @@ const generateUrl = async payload => {
 const saveAsl = async payload => {
     var config = {
         method: 'post',
-        url: 'http://localhost:3005/dev/save',
+        url: 'https://prcriy2ij4.execute-api.us-east-1.amazonaws.com/dev/save',
         headers: {
+            'Authorization': localStorage.getItem("_token"),
             'Content-Type': 'text/plain'
         },
         data : payload
@@ -54,10 +57,55 @@ const saveAsl = async payload => {
     return await axios(config);
 }
 
+const saveAutomation = async payload => {
+    var config = {
+        method: 'post',
+        url: 'https://6je33zoyve.execute-api.us-east-1.amazonaws.com/dev/create',
+        headers: {
+            'Authorization': localStorage.getItem("_token"),
+            'Content-Type': 'text/plain'
+        },
+        data : payload
+    };
+
+    return await axios(config);
+}
+
+const getAutomations = async payload => {
+    var config = {
+        method: 'post',
+        url: 'https://6je33zoyve.execute-api.us-east-1.amazonaws.com/get-automations',
+        headers: {
+            'Authorization': localStorage.getItem("_token"),
+            'Content-Type': 'text/plain'
+        },
+        data : payload
+    };
+
+    return await axios(config);
+}
+const updateArn = async payload => {
+    var config = {
+        method: 'post',
+        url: 'https://6je33zoyve.execute-api.us-east-1.amazonaws.com/dev/update-arn',
+        headers: {
+            'Authorization': localStorage.getItem("_token"),
+            'Content-Type': 'text/plain'
+        },
+        data : payload
+    };
+
+    return await axios(config);
+}
+
+
 const apis = {
     getAsl,
     saveAsl,
-    generateUrl
+    generateUrl,
+    saveAutomation,
+    getAutomations,
+    updateArn
 }
 
 export default apis

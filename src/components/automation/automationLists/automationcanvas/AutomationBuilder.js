@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, {useState, useRef, useEffect} from "react";
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -7,8 +7,7 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import "./automation.css";
 import { FilterNode, TriggerNode, ActionNode, ActionMessage } from "./nodes";
-import apis, { getAsl } from "./services/";
-/*import { email, trigger, filter, message } from  "./modals"*/
+import apis from "./services/";
 import {Filter} from "./modals/filter";
 import CloseModal from "../../../../assets/images/cross_icon.svg";
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
@@ -20,10 +19,8 @@ import whiteSlash from "../../../../assets/images/remove_white_24dp.svg";
 import resetIcon from "../../../../assets/images/resetIcon.svg";
 import blueSettingIcon from "../../../../assets/images/blueSettingIcon.svg";
 import plus_icon from "../../../../assets/images/plus_icon.svg";
-
-
-
-
+import { history } from "../../../../helpers";
+import Loader from "../../../shared/Loader";
 const onNodeMouseMove = (event, node) => {};
 
 const onNodeContextMenu = (event, node) => {
@@ -38,6 +35,12 @@ let nodeId = localStorage.getItem("nodeId")
     : 0;
 let edgeId = localStorage.getItem("edgeId")
     ? JSON.parse(localStorage.getItem("edgeId"))
+    : 0;
+let autoName = localStorage.getItem("automationName")
+    ? JSON.parse(localStorage.getItem("automationName"))
+    : "";
+let autoId = localStorage.getItem("automationId")
+    ? JSON.parse(localStorage.getItem("automationId"))
     : 0;
 let url = localStorage.getItem('url') ? JSON.parse(localStorage.getItem('url')) : '';
 let unique_id = localStorage.getItem('id') ? JSON.parse(localStorage.getItem('id')) : '';
@@ -58,6 +61,10 @@ const AutomationBuilder = () => {
   const [elements, setElements] = useState(iniElements);
   const [bgColor] = useState(initBgColor);
   const [automationModal, setAutomationModal] = useState(null);
+  const [automationName, setAutomationName] = useState(autoName);
+  const [automationId, setautomationId] = useState(autoId);
+  const [automationNameError, setautomationNameError] = useState(null);
+  const [isLoader, setIsLoader] = useState(false);
   let [modal] = useState(null)
   const onNodeMouseEnter = (event, node) => {
     const thisNodeTarget = event.target;
@@ -181,7 +188,10 @@ const AutomationBuilder = () => {
   const closeFilterModal = () => {
     setAutomationModal(null);
   };
-
+  const handleNameChange = (event) => {
+    event.preventDefault();
+    setAutomationName(event.target.value);
+  }
   const generateWebhook = async () => {
     const bluePrintElem = elements.filter((el) => typeof el.source == 'undefined');
     const brokenElem = bluePrintElem.find(el => {
@@ -322,8 +332,50 @@ const AutomationBuilder = () => {
     localStorage.removeItem("element");
     localStorage.removeItem("nodeId");
     localStorage.removeItem("edgeId");
+    localStorage.removeItem("automationName");
+    localStorage.removeItem("automationId");
     setElements((els) => removeElements(elements, els));
   };
+
+  const saveAutomation = async () => {
+    if (!automationName) {
+      setautomationNameError('bounce');
+      removeClass();
+    } else {
+      const bluePrintElem = elements.filter(
+          (el) => typeof el.source == "undefined"
+      );
+      const brokenElem = bluePrintElem.find((el) => {
+        if (
+            (el.type !== "trigger" && el.data.nodes.previous == "") ||
+            (el.type === "trigger" && el.data.nodes.next.length == 0)
+        ) {
+          return el;
+        }
+      });
+      if (typeof brokenElem == "undefined") {
+        let payload = {name: automationName, id: automationId, nodeId: nodeId, edgeId: edgeId, blueprint: elements};
+        setIsLoader(true);
+        await apis.saveAutomation(JSON.stringify(payload)).then((res) => {
+          setIsLoader(false);
+          if (res.data.success) {
+            console.log("api success");
+            history.push('/automation-list');
+            window.location.reload(false);
+          } else {
+            console.log("api error ! " + res.data.message);
+          }
+        });
+      } else {
+        alert("You have broken element. Make sure to connect all the nodes");
+      }
+    }
+  };
+  const removeClass = () => {
+    setTimeout(() => {
+      setautomationNameError('');
+    }, 1500);
+  }
 
   const getBlueprintDetails = async () => {
     const bluePrintElem = elements.filter(
@@ -366,7 +418,8 @@ const AutomationBuilder = () => {
     /* ================================== ASL Genaration End ================================== */
   };
 
-  const onDrop = (event) => {
+  const onDrop = async (event) => {
+
     event.preventDefault();
     const types = {
       trigger: "Trigger",
@@ -374,25 +427,57 @@ const AutomationBuilder = () => {
       filter: "Filter",
       actionMessage: "ActionMessage"
     };
+    let newNode = {};
     const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
     const type = event.dataTransfer.getData("application/reactflow");
     const position = reactFlowInstance.project({
       x: event.clientX - reactFlowBounds.left,
       y: event.clientY - reactFlowBounds.top,
     });
-    const newNode = {
-      id: getNodeId(type),
-      type,
-      position,
-      data: { label: `${types[type]}`, nodes: { next: [], previous: "" } },
-    };
+    if (type === 'trigger') {
+      setIsLoader(true)
+      let payload = {id: 0}
+      await apis.generateUrl(JSON.stringify(payload)).then(res => {
+        setIsLoader(false);
+        if (res.data.success) {
+          console.log("api success");
+          newNode = {
+            id: getNodeId(type),
+            type,
+            position,
+            data: {
+              label: `${types[type]}`,
+              nodes: {next: [], previous: ""},
+              url: res.data.url,
+              id: res.data.id
+            },
+          };
+        } else {
+          console.log("api error ! " + res.data.message);
+        }
+      });
+    } else {
+      newNode = {
+        id: getNodeId(type),
+        type,
+        position,
+        data: {label: `${types[type]}`, nodes: {next: [], previous: ""}},
+      };
+    }
+
     setElements((es) => es.concat(newNode));
   };
   const getConnectionDetails = (source, target) => {
     const sourcePosition = source.indexOf("-");
-    const sourceType = source.substring(0, sourcePosition);
+    let sourceType = source.substring(0, sourcePosition);
     const targetPosition = target.indexOf("-");
-    const targetType = target.substring(0, targetPosition);
+    let targetType = target.substring(0, targetPosition);
+    if (sourceType === 'actionMessage') {
+      sourceType = 'action';
+    }
+    if (targetType === 'actionMessage') {
+      targetType = 'action';
+    }
     let returnType = false;
     let connectedTrigger = false;
     let connectedAction = false;
@@ -521,6 +606,7 @@ const AutomationBuilder = () => {
   };
   return (
       <>
+        {isLoader ? <Loader /> : ''}
         <div className="automationDnD">
           <ReactFlowProvider>
             <div className="reactflow-wrapper" ref={reactFlowWrapper}>
@@ -544,14 +630,14 @@ const AutomationBuilder = () => {
                 <Controls />
               </ReactFlow>
               <div className="automationTopLeft">
-                <input type="text" className="automationNameArea" placeholder="Enter your automation name" />
+                <input type="text" className={`automationNameArea ${automationNameError}`} placeholder="Enter your automation name"  onChange={handleNameChange} value={automationName}/>
                 <button className="automationSetting">
                   <img src={blueSettingIcon} alt="" />
                 </button>
                 <div className="automationPublish">
-                  <button className="automationPublishBtn">
+                  <button className="automationPublishBtn" onClick={saveAutomation}>
                     <img src={plus_icon} alt="" />
-                    Publish
+                    Save
                   </button>
                 </div>
                 <div className="autoInfo">
@@ -573,7 +659,7 @@ const AutomationBuilder = () => {
                 {/* <button
                     type="button"
                     className="button"
-                    onClick={getBlueprintDetails}
+                    onClick={saveAutomation}
                 >
                   Save
                 </button> */}
@@ -604,7 +690,7 @@ const AutomationBuilder = () => {
                           </div>
                         </div>
                         <div className="saveButton">
-                          <button>Save <img src={chevron_right_white_24dp} alt=""/></button>
+                          <button onClick={closeFilterModal}>Save <img src={chevron_right_white_24dp} alt=""/></button>
                         </div>
                       </div>
                     </div>
@@ -641,7 +727,7 @@ const AutomationBuilder = () => {
                             </div>
 
                             <div className="saveButton">
-                              <button>Save <img src={chevron_right_white_24dp} alt=""/></button>
+                              <button onClick={closeFilterModal}>Save <img src={chevron_right_white_24dp} alt=""/></button>
                             </div>
                           </div>
                         </div>
