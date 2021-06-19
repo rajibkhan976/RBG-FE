@@ -389,7 +389,7 @@ footer.page-footer {
 
 .bounce {
     outline: 0;
-    border-color: red;
+    border-color: red !important;
     animation-name: bounce;
     animation-duration: .5s;
     animation-delay: 0.25s;

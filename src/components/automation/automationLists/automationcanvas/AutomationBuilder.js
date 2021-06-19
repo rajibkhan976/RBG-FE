@@ -42,8 +42,6 @@ let autoName = localStorage.getItem("automationName")
 let autoId = localStorage.getItem("automationId")
     ? JSON.parse(localStorage.getItem("automationId"))
     : 0;
-let url = localStorage.getItem('url') ? JSON.parse(localStorage.getItem('url')) : '';
-let unique_id = localStorage.getItem('id') ? JSON.parse(localStorage.getItem('id')) : '';
 const getNodeId = (type) => type + `-${nodeId++}`;
 const getEdgeId = () => `edge-${edgeId++}`;
 const nodeTypes = {
@@ -65,11 +63,18 @@ const AutomationBuilder = () => {
   const [automationId, setautomationId] = useState(autoId);
   const [automationNameError, setautomationNameError] = useState(null);
   const [isLoader, setIsLoader] = useState(false);
-  let [modal] = useState(null)
+  const [automationUrl, setAutomationUrl] = useState('');
+  const [automationUrlId, setAutomationUrlId] = useState('');
+  const [to, setTo] = useState('');
+  const [toError, setToError] = useState(false);
+  const [from, setFrom] = useState('');
+  const [fromError, setFromError] = useState(false);
+  const [body, setBody] = useState('');
+  const [bodyError, setBodyError] = useState(false);
+  const [nId, setNId] = useState(false);
   const onNodeMouseEnter = (event, node) => {
     const thisNodeTarget = event.target;
     const thisNodeType = node.data.label;
-
     if (
         document.querySelector(".btnEditNode") !== null &&
         document.querySelectorAll(".btnEditNode").length > -1
@@ -178,11 +183,23 @@ const AutomationBuilder = () => {
   };
 
   const actionMessageEdit = (e, n) => {
+    setTo(n.data.to);
+    setFrom(n.data.from);
+    setBody(n.data.body);
+    setNId(n.id);
+    console.log(n)
     setAutomationModal("actionMessage");
   };
 
+  const refreshWebhook = (id) => {
+    console.log('refresh', id);
+  };
+
   const triggerEdit = (e, n) => {
+    setAutomationUrl(n.data.url);
+    setAutomationUrlId(n.data.id);
     setAutomationModal("trigger");
+
   };
 
   const closeFilterModal = () => {
@@ -192,36 +209,33 @@ const AutomationBuilder = () => {
     event.preventDefault();
     setAutomationName(event.target.value);
   }
-  const generateWebhook = async () => {
-    const bluePrintElem = elements.filter((el) => typeof el.source == 'undefined');
-    const brokenElem = bluePrintElem.find(el => {
-      if((el.type !== 'trigger' && el.data.nodes.previous == '') || (el.type === 'trigger' && el.data.nodes.next.length == 0)) {
-        return el
-      }
-    });
-    if(typeof brokenElem == 'undefined') {
-      console.log('api called');
-      let aslId = localStorage.getItem('id') ? JSON.parse(localStorage.getItem('id')) : 0;
-      let payload = {'id': aslId};
-      await apis.generateUrl(JSON.stringify(payload)).then(res => {
-        if (res.data.success) {
-          console.log('api success', res.data);
-          url = JSON.stringify(res.data.url);
-          unique_id = JSON.stringify(res.data.id);
-          localStorage.setItem('url', url);
-          localStorage.setItem('id', unique_id);
-          localStorage.setItem('element', JSON.stringify(elements));
-          localStorage.setItem('nodeId', JSON.stringify(nodeId));
-          localStorage.setItem('edgeId', JSON.stringify(edgeId));
-          setTimeout(() => {
-            window.location.reload(false);
-          }, 500);
-        } else {
-          console.log('api error ! ' + res.data.message);
-        }
-      });
+  const handleToChange = (event) => {
+    event.preventDefault();
+    let pattern = new RegExp(/^[0-9\b]+$/);
+    if (pattern.test(event.target.value)) {
+      setTo(event.target.value);
+    } else {
+      setTo('');
+      setToError('bounce');
+      removeClass();
     }
-  };
+  }
+  const handleFromChange = (event) => {
+    event.preventDefault();
+    let pattern = new RegExp(/^[0-9\b]+$/);
+    if (pattern.test(event.target.value)) {
+      setFrom(event.target.value);
+    } else {
+      setFrom('');
+      setFromError('bounce');
+      removeClass();
+    }
+  }
+  const handleBodyChange = (event) => {
+    event.preventDefault();
+    setBody(event.target.value);
+  }
+
 
   const onConnect = (params) => {
     let validate = getConnectionDetails(params.source, params.target);
@@ -336,8 +350,37 @@ const AutomationBuilder = () => {
     localStorage.removeItem("automationId");
     setElements((els) => removeElements(elements, els));
   };
-
+  const saveMessage = async () => {
+    let count = 0;
+    if (!to) {
+      setToError('bounce');
+      count = count + 1;
+    }
+    if (!from) {
+      setFromError('bounce');
+      count = count + 1;
+    }
+    if (!body) {
+      setBodyError('bounce');
+      count = count + 1;
+    }
+    removeClass();
+    if (count === 0) {
+      setElements((elms) =>
+          elms.map((el) => {
+            if (el.id === nId) {
+              el.data.to = to;
+              el.data.from = from;
+              el.data.body = body;
+            }
+            return { ...el };
+          })
+      );
+      closeFilterModal();
+    }
+  };
   const saveAutomation = async () => {
+    console.log(elements)
     if (!automationName) {
       setautomationNameError('bounce');
       removeClass();
@@ -374,52 +417,13 @@ const AutomationBuilder = () => {
   const removeClass = () => {
     setTimeout(() => {
       setautomationNameError('');
+      setToError('');
+      setFromError('');
+      setBodyError('');
     }, 1500);
   }
 
-  const getBlueprintDetails = async () => {
-    const bluePrintElem = elements.filter(
-        (el) => typeof el.source == "undefined"
-    );
-    const brokenElem = bluePrintElem.find((el) => {
-      if (
-          (el.type !== "trigger" && el.data.nodes.previous == "") ||
-          (el.type === "trigger" && el.data.nodes.next.length == 0)
-      ) {
-        return el;
-      }
-    });
-    if (typeof brokenElem == "undefined") {
-      console.log(bluePrintElem);
-      localStorage.removeItem("element");
-      localStorage.removeItem("nodeId");
-      localStorage.removeItem("edgeId");
-      setTimeout(() => {
-        localStorage.setItem("element", JSON.stringify(elements));
-        localStorage.setItem("nodeId", JSON.stringify(nodeId));
-        localStorage.setItem("edgeId", JSON.stringify(edgeId));
-      }, 500);
-    } else {
-      alert("You have broken element. Make sure to connect all the nodes");
-    }
-
-    /* ================================== ASL Genaration Start ================================== */
-    let payload = { element: elements };
-    console.log("api started");
-    await apis.getAsl(JSON.stringify(payload)).then((res) => {
-      if (res.data.success) {
-        console.log("api success");
-        console.log(res.data.asl);
-      } else {
-        console.log("api error ! " + res.data.message);
-      }
-    });
-
-    /* ================================== ASL Genaration End ================================== */
-  };
-
   const onDrop = async (event) => {
-
     event.preventDefault();
     const types = {
       trigger: "Trigger",
@@ -456,6 +460,17 @@ const AutomationBuilder = () => {
           console.log("api error ! " + res.data.message);
         }
       });
+    } else if (type === 'actionMessage') {
+      newNode = {
+        id: getNodeId(type),
+        type,
+        position,
+        data: {
+          label: `${types[type]}`,
+          nodes: {next: [], previous: ""},
+          messageArn: 'arn:aws:lambda:us-east-1:670103364767:function:smsaction-dev-hello'
+        },
+      };
     } else {
       newNode = {
         id: getNodeId(type),
@@ -643,7 +658,7 @@ const AutomationBuilder = () => {
                 <div className="autoInfo">
                   <span>?</span>
                   <div className="autoInfoBox">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores hic ipsum quaerat repellat architecto corporis minus adipisci facere iusto explicabo sint nulla, eligendi pariatur suscipit ex ut voluptate ea consequatur!
+                    Lorem ipsum dolor
                   </div>
                 </div>
               </div>
@@ -656,13 +671,6 @@ const AutomationBuilder = () => {
                   <img src={resetIcon} alt="" />
                   Reset
                 </button>
-                {/* <button
-                    type="button"
-                    className="button"
-                    onClick={saveAutomation}
-                >
-                  Save
-                </button> */}
               </div>
             </div>
             {automationModal != null ? (automationModal === 'trigger' ?
@@ -683,10 +691,10 @@ const AutomationBuilder = () => {
                         <div className="formFieldsArea">
                           <div className="inputField">
                             <label htmlFor="">webhook URL</label>
-                            <input type="text" name="" id="" value="http://localhost:3005/create/207742fdfbaa"/>
+                            <input type="text" name="webhook-url" id="webhook-url" value={automationUrl} />
                           </div>
                           <div className="inputField">
-                            <button className="refreshFieldsBtn">Test Webhook</button>
+                            <button className="refreshFieldsBtn" onClick={refreshWebhook(automationUrlId)}>Refresh Fields</button>
                           </div>
                         </div>
                         <div className="saveButton">
@@ -714,20 +722,20 @@ const AutomationBuilder = () => {
                             <div className="emailDetails">
                               <div className="inputField">
                                 <label htmlFor="">To</label>
-                                <input className="icon" type="text" name="" id=""/>
+                                <input className={`icon ${toError}`} type="text" name="" id="" value={to} onChange={handleToChange}/>
                               </div>
                               <div className="inputField">
                                 <label htmlFor="">From</label>
-                                <input className="icon" type="text" name="" id=""/>
+                                <input className={`icon ${fromError}`} type="text" name="" id="" value={from} onChange={handleFromChange}/>
                               </div>
                               <div className="inputField">
                                 <label htmlFor="">Body</label>
-                                <textarea></textarea>
+                                <textarea className={`${bodyError}`} name="body" onChange={handleBodyChange}>{body}</textarea>
                               </div>
                             </div>
 
                             <div className="saveButton">
-                              <button onClick={closeFilterModal}>Save <img src={chevron_right_white_24dp} alt=""/></button>
+                              <button onClick={saveMessage}>Save <img src={chevron_right_white_24dp} alt=""/></button>
                             </div>
                           </div>
                         </div>

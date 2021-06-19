@@ -74,7 +74,8 @@ const saveAutomation = async payload => {
 const getAutomations = async payload => {
     var config = {
         method: 'post',
-        url: 'https://6je33zoyve.execute-api.us-east-1.amazonaws.com/get-automations',
+        url: 'https://6je33zoyve.execute-api.us-east-1.amazonaws.com/dev/get-automations',
+        //url: 'http://localhost:3005/dev/get-automations',
         headers: {
             'Authorization': localStorage.getItem("_token"),
             'Content-Type': 'text/plain'
