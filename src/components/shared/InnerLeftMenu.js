@@ -11,6 +11,7 @@ const InnerLeftMenu = (props) => {
   const pathURL = useLocation().pathname;
   const [automationObject, setAutomationObject] = useState({});
   const rolesCount = useSelector((state) => state.role.count);
+  const groupsCount = useSelector((state) => state.group.count);
   useEffect(() => {
     if (props.automationListItem) {
       setAutomationObject(props.automationListItem)
@@ -51,7 +52,7 @@ const InnerLeftMenu = (props) => {
                   <div className="indicator"></div>
                   <div className="linkDetails">
                     <p className="linkHeading">Groups</p>
-                    <span className="notificationNumber">5</span>
+                    <span className="notificationNumber">{ groupsCount}</span>
                     <br />
                     <p className="linkAbout">Manage user groups</p>
                   </div>

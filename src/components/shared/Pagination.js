@@ -3,6 +3,7 @@ import { RoleServices } from "../../services/authentication/RoleServices";
 import { UserServices } from "../../services/authentication/UserServices";
 import { utils } from "../../helpers";
 import { GroupServices } from '../../services/authentication/GroupServices';
+import Loader from "./Loader";
 
 
 const Pagination = (props) => {
@@ -10,6 +11,7 @@ const Pagination = (props) => {
   const [pageNumberLimit, setPageNumberLimit] = useState(5);
   const [maxPageNumberLimit, setMaxPageNumberLimit] = useState(5);
   const [minPageNumberLimit, setMinPageNumberLimit] = useState(0);
+  const [isLoader, setIsLoader] = useState(false);
 
   const paginationHandleClick = (event) => {
     let currentPage = Number(event.target.value);
@@ -56,34 +58,42 @@ const Pagination = (props) => {
 
   const fetchPaginatedRoles = async (page, keyword) => {
     try {
+      setIsLoader(true);
       await RoleServices.fetchRoles(page, keyword)
         .then((result) => {
           console.log('Role listing result paginated', result.roles);
           if (result) {
             broadcastToParent(result);
+            setIsLoader(false);
           }
         })
         .catch((error) => {
+          setIsLoader(false);
           console.log("Role listing error", error);
         });
     } catch (e) {
+      setIsLoader(false);
       console.log("Error in Role listing", e);
     }
   }
 
   const fetchPaginatedUsers = async (page, keyword, group) => {
     try {
+      setIsLoader(true);
       await UserServices.fetchUsers(page, keyword, group)
         .then((result) => {
           console.log('User listing result paginated', result.users);
           if (result) {
             broadcastToParent(result);
+            setIsLoader(false);
           }
         })
         .catch((error) => {
+          setIsLoader(false);
           console.log("User listing error", error);
         });
     } catch (e) {
+      setIsLoader(false);
       console.log("Error in User listing", e);
     }
   }
@@ -91,17 +101,21 @@ const Pagination = (props) => {
   // api call for groups current page data
   const fetchPaginatedGroups = async (page, keyword, group) => {
     try {
+      setIsLoader(true);
       await GroupServices.fetchGroups(page, keyword, group)
         .then((result) => {
           console.log('User listing result paginated', result.groups);
           if (result) {
             broadcastToParent(result);
+            setIsLoader(false);
           }
         })
         .catch((error) => {
+          setIsLoader(false);
           console.log("User listing error", error);
         });
     } catch (e) {
+      setIsLoader(false);
       console.log("Error in User listing", e);
     }
   }
@@ -206,6 +220,7 @@ const Pagination = (props) => {
 
   return (
     <>
+      {isLoader ? <Loader /> : ''}
       <div className="paginationOuter">
         <ul>
           <li>

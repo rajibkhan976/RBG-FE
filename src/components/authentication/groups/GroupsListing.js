@@ -1,7 +1,10 @@
 import React from 'react';
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import Pagination from "../../shared/Pagination";
+import * as actionTypes from "../../../actions/types";
 import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
+import Loader from "../../shared/Loader";
 
 import search_icon from "../../../assets/images/search_icon.svg";
 import filter_icon from "../../../assets/images/filter_icon.svg";
@@ -24,6 +27,8 @@ const GroupListing = (props) => {
             limit: 10
         }
     );
+    const dispatch = useDispatch();
+    const [isLoader, setIsLoader] = useState(false);
 
     const toggleCreateHeader = () => {
         props.toggleCreate("groups");
@@ -96,27 +101,34 @@ const GroupListing = (props) => {
      */
      const fetchGroups = async (pageId, keyword) => {
         try {
-            // setIsLoader(true);
+            setIsLoader(true);
             await GroupServices.fetchGroups(pageId, keyword)
                 .then((result) => {
                     console.log('Groups listing result', result);
                     if (result) {
                         setGroupsData(result.groups);
                         setGroupsCount(result.pagination.count);
+                        /**
+                         * Update store
+                         */
+                         dispatch({
+                            type: actionTypes.GROUP_COUNT,
+                            count : result.pagination.count
+                        })
                         setPaginationData({
                             ...paginationData,
                             currentPage: result.pagination.currentPage,
                             totalPages: result.pagination.totalPages
                         });
-                        // setIsLoader(false);
+                        setIsLoader(false);
                     }
                 })
                 .catch((error) => {
-                    // setIsLoader(false);
+                    setIsLoader(false);
                     console.log("Groups listing error", error);
                 });
         } catch (e) {
-            // setIsLoader(false);
+            setIsLoader(false);
             console.log("Error in Group listing", e);
         }
     }
@@ -167,6 +179,7 @@ const GroupListing = (props) => {
 
     return (
         <div className="dashInnerUI">
+            {isLoader ? <Loader /> : ''}
             <div className="userListHead">
                 <div className="listInfo">
                     <ul className="listPath">

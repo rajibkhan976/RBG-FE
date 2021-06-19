@@ -4,3 +4,5 @@ export const LOGIN_FAILURE = "LOGIN_FAILURE";
 export const LOGOUT = "LOGOUT";
 // Role
 export const ROLE_COUNT = "ROLE_COUNT";
+// Group
+export const GROUP_COUNT = "GROUP_COUNT";
