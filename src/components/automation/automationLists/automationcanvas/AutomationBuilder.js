@@ -619,6 +619,9 @@ const AutomationBuilder = () => {
 
     return returnType;
   };
+  const onClickCopy = (text) => {
+    navigator.clipboard.writeText(text)
+  }
   return (
       <>
         {isLoader ? <Loader /> : ''}
@@ -691,7 +694,7 @@ const AutomationBuilder = () => {
                         <div className="formFieldsArea">
                           <div className="inputField">
                             <label htmlFor="">webhook URL</label>
-                            <input type="text" name="webhook-url" id="webhook-url" value={automationUrl} />
+                            <input type="text" name="webhook-url" id="webhook-url" value={automationUrl} onClick={onClickCopy(automationUrl)}/>
                           </div>
                           <div className="inputField">
                             <button className="refreshFieldsBtn" onClick={refreshWebhook(automationUrlId)}>Refresh Fields</button>

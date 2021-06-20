@@ -6,7 +6,7 @@ import { history } from "../../helpers";
 const AutomationRoutes = (props) => {
   return (
     <React.Fragment>
-      <ProtectedRoute path={["/automation-list", "/automation-builder", "/automation-details"]} component={Automation} history={history}/>
+      <ProtectedRoute path={["/automation-list", "/automation-builder", "/automation-details"]} component={Automation}/>
     </React.Fragment>
   );
 }

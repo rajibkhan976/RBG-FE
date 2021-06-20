@@ -1,20 +1,5 @@
 import axios from 'axios'
 
-// const api = axios.create({
-//     baseURL: 'https://wrnwkinapa.execute-api.us-east-1.amazonaws.com',
-// });
-
-// let config = {
-//     headers: {
-//         'Accept': 'application/json',
-//         'Content-Type': 'application/json',
-//         'Access-Control-Allow-Origin': '*'
-//     },
-//     crossDomain: true
-
-// }
-// export const getAsl = payload => api.post(`/dev/create-asl `, payload, config)
-
 const getAsl = async payload => {
     var config = {
         method: 'post',
@@ -32,10 +17,10 @@ const getAsl = async payload => {
 const generateUrl = async payload => {
     var config = {
         method: 'post',
-        url: 'https://prcriy2ij4.execute-api.us-east-1.amazonaws.com/dev/generate',
+        url: 'https://prcriy2ij4.execute-api.us-east-1.amazonaws.com/dev/automation/webhook/generate',
         headers: {
             'Authorization': localStorage.getItem("_token"),
-            'Content-Type': 'text/plain'
+            "Content-Type": "application/json"
         },
         data : payload
     };
@@ -46,10 +31,10 @@ const generateUrl = async payload => {
 const saveAsl = async payload => {
     var config = {
         method: 'post',
-        url: 'https://prcriy2ij4.execute-api.us-east-1.amazonaws.com/dev/save',
+        url: 'https://prcriy2ij4.execute-api.us-east-1.amazonaws.com/dev/automation/webhook/generate',
         headers: {
             'Authorization': localStorage.getItem("_token"),
-            'Content-Type': 'text/plain'
+            "Content-Type": "application/json"
         },
         data : payload
     };
@@ -60,10 +45,10 @@ const saveAsl = async payload => {
 const saveAutomation = async payload => {
     var config = {
         method: 'post',
-        url: 'https://6je33zoyve.execute-api.us-east-1.amazonaws.com/dev/create',
+        url: 'https://402pgi0zp9.execute-api.us-east-1.amazonaws.com/dev/automation',
         headers: {
             'Authorization': localStorage.getItem("_token"),
-            'Content-Type': 'text/plain'
+            "Content-Type": "application/json"
         },
         data : payload
     };
@@ -74,13 +59,12 @@ const saveAutomation = async payload => {
 const getAutomations = async payload => {
     var config = {
         method: 'post',
-        url: 'https://6je33zoyve.execute-api.us-east-1.amazonaws.com/dev/get-automations',
-        //url: 'http://localhost:3005/dev/get-automations',
+        url: 'https://402pgi0zp9.execute-api.us-east-1.amazonaws.com/dev/automation/list',
+        //url: 'http://localhost:3005/dev/automation/list',
         headers: {
             'Authorization': localStorage.getItem("_token"),
-            'Content-Type': 'text/plain'
-        },
-        data : payload
+            "Content-Type": "application/json"
+        }
     };
 
     return await axios(config);
