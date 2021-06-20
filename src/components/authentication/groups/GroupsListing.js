@@ -1,6 +1,7 @@
 import React from 'react';
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import moment from "moment";
 import Pagination from "../../shared/Pagination";
 import * as actionTypes from "../../../actions/types";
 import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
@@ -186,7 +187,7 @@ const GroupListing = (props) => {
                         <li>Users & Controls</li>
                         <li>Groups</li>
                     </ul>
-                    <h2 className="inDashboardHeader">User Groups (0)</h2>
+                    <h2 className="inDashboardHeader">User Groups ({ groupsCount })</h2>
                     <p className="userListAbout">
                         Create & manage groups for your business
                     </p>
@@ -237,7 +238,7 @@ const GroupListing = (props) => {
                                                 </button>
                                             </div>
                                             <div className="createDate">
-                                                <button className="btn">{elem.createdOn}</button>
+                                                <button className="btn">{moment(elem.createdAt).format("Do MMM YYYY")}</button>
                                                 <div className="info_3dot_icon">
                                                     <button
                                                         className="btn"
