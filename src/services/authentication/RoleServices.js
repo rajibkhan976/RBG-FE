@@ -8,23 +8,18 @@ let headers = {
 export const RoleServices = {
     fetchRoles: async (page = null, keyword = null) => {
         headers.Authorization = localStorage.getItem("_token");
-        return new Promise((resolve, reject) => {
-            axios
-                .get(
-                    config.fetchRolesUrl + (page ? "/" + page : '') + (keyword ? "?search=" + keyword : ''),
-                    { headers: headers }
-                )
-                .then((result) => {
-                    console.log('Fetch roles services result: ', result);
-                    resolve(result.data);
-                })
-                .catch((error) => {
-                    console.log('Fetch roles service error: ', error);
-                    if (error != null) {
-                        reject(error);
-                    }
-                });
-        });
+        try {
+            const result = await axios.get(
+                config.fetchRolesUrl + 
+                (page ? "/" + page : '') + 
+                (keyword ? "?search=" + keyword : ''), 
+                { headers: headers });
+            console.log('Fetch roles services result in async await : ', result);
+            return result.data;
+        } catch (e) {
+            console.log('Fetch roles service error: ', e);
+            return e;
+        }
     },
     createRole: async (payload) => {
         headers.Authorization = localStorage.getItem("_token");
@@ -88,5 +83,5 @@ export const RoleServices = {
                 });
         });
     },
-    
+
 };

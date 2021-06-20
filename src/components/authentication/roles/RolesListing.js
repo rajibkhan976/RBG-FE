@@ -68,31 +68,23 @@ const RolesListing = (props) => {
     const fetchRoles = async (pageId, keyword) => {
         try {
             setIsLoader(true);
-            await RoleServices.fetchRoles(pageId, keyword)
-                .then((result) => {
-                    console.log('Role listing result', result.roles);
-                    if (result) {
-                        setRolesData(result.roles);
-                        setRolesCount(result.pagination.count);
-                        /**
-                         * Update store
-                         */
-                        dispatch({
-                            type: actionTypes.ROLE_COUNT,
-                            count : result.pagination.count
-                        })
-                        setPaginationData({
-                            ...paginationData,
-                            currentPage: result.pagination.currentPage,
-                            totalPages: result.pagination.totalPages
-                        });
-                    }
-                    setIsLoader(false);
-                })
-                .catch((error) => {
-                    setIsLoader(false);
-                    console.log("Role listing error", error);
+            const result = await RoleServices.fetchRoles(pageId, keyword);
+            console.log('Data', result.roles);
+            if(result) {
+                setRolesData(result.roles);
+                setRolesCount(result.pagination.count);
+                // UPDATE STORE
+                dispatch({
+                    type: actionTypes.ROLE_COUNT,
+                    count : result.pagination.count
                 });
+                setPaginationData({
+                    ...paginationData,
+                    currentPage: result.pagination.currentPage,
+                    totalPages: result.pagination.totalPages
+                });
+                setIsLoader(false);
+            }
         } catch (e) {
             setIsLoader(false);
             console.log("Error in Role listing", JSON.stringify(e));
