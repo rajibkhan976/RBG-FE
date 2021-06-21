@@ -439,10 +439,8 @@ const AutomationBuilder = () => {
       y: event.clientY - reactFlowBounds.top,
     });
     if (type === 'trigger') {
-      setIsLoader(true)
       let payload = {id: 0}
       await apis.generateUrl(JSON.stringify(payload)).then(res => {
-        setIsLoader(false);
         if (res.data.success) {
           console.log("api success");
           newNode = {

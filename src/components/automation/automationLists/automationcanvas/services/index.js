@@ -3,7 +3,7 @@ import axios from 'axios'
 const getAsl = async payload => {
     var config = {
         method: 'post',
-        url: 'https://5uetvsgrhl.execute-api.us-east-1.amazonaws.com/dev/create-asl',
+        url: 'https://5uetvsgrhl.execute-api.us-east-1.amazonaws.com/dev/automation/create-asl',
         headers: {
             'Authorization': localStorage.getItem("_token"),
             'Content-Type': 'text/plain'

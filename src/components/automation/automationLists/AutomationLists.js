@@ -12,6 +12,11 @@ import {removeElements} from "react-flow-renderer";
 
 const AutomationLists = (props) => {
   useEffect(() => {
+    localStorage.removeItem("element");
+    localStorage.removeItem("nodeId");
+    localStorage.removeItem("edgeId");
+    localStorage.removeItem("automationName");
+    localStorage.removeItem("automationId");
     fetchAutomations();
   }, []);
   const [isLoader, setIsLoader] = useState(false);
@@ -35,7 +40,15 @@ const AutomationLists = (props) => {
   };
 
   const toggleCreateHeader = () => {
-    props.toggleCreate("automation");
+    localStorage.removeItem("element");
+    localStorage.removeItem("nodeId");
+    localStorage.removeItem("edgeId");
+    localStorage.removeItem("automationName");
+    localStorage.removeItem("automationId");
+    setTimeout(() => {
+      props.toggleCreate("automation");
+      window.location.reload(false);
+    }, 100)
   };
 
   const automationDropdown = (e, el) => {
@@ -114,7 +127,6 @@ const AutomationLists = (props) => {
       props.toggleCreate("automation");
       window.location.reload(false);
     }, 500);
-
   }
 
   return (
@@ -159,10 +171,10 @@ const AutomationLists = (props) => {
                 Created on <button className="shortTable"></button>
               </div>
               <div className="listCell cellWidth_10">
-                
+
               </div>
               <div className="listCell cellWidth_5">
-                
+
               </div>
             </div>
             {automationData.length ?
