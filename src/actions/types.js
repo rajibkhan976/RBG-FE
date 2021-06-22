@@ -6,3 +6,5 @@ export const LOGOUT = "LOGOUT";
 export const ROLE_COUNT = "ROLE_COUNT";
 // Group
 export const GROUP_COUNT = "GROUP_COUNT";
+// Automation
+export const AUTOMATION_COUNT = "AUTOMATION_COUNT";

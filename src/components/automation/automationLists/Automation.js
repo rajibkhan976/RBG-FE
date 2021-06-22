@@ -15,9 +15,13 @@ const Automation = (props) => {
   const [createButton, setCreateButton] = useState(null);
   const [stateFilter, setStateFilter] = useState(null);
   const [automationListItem, setAutomationListItem] = useState({});
+  const [automationElement, setAutomationElement] = useState({});
 
   const toggleCreate = (e) => {
     history.push("/automation-builder");
+  };
+  const toggleCreateAutomation = (e) => {
+    history.push("/automation-list");
   };
   const toggleFilter = (e) => {
     setStateFilter(e);
@@ -25,6 +29,10 @@ const Automation = (props) => {
 
   const automationListObject = (e) => {
     setAutomationListItem(e)
+  }
+
+  const automationElementSet = (e) => {
+    setAutomationElement(e)
   }
 
   return (
@@ -53,6 +61,7 @@ const Automation = (props) => {
                     toggleFilter={toggleFilter}
                     toggleCreate={toggleCreate}
                     automationListObject={automationListObject}
+                    automationElementSet={automationElementSet}
                   />
                   <DashboardFooter />
                 </div>
@@ -68,8 +77,8 @@ const Automation = (props) => {
                 />
                 <div className="dashInnerStructure">
                   <AutomationBuilder
-                    toggleFilter={toggleFilter}
-                    toggleCreate={toggleCreate}
+                    automationElement={automationElement}
+                    toggleCreateAutomation={toggleCreateAutomation}
                   />
                   <DashboardFooter />
                 </div>

@@ -1,54 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import DashboardPagination from "../../shared/Pagination";
-import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
 import plus_icon from "../../../assets/images/plus_icon.svg";
 import flash_red from "../../../assets/images/flash_red.svg";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 import apis from "./automationcanvas/services";
 import Loader from "../../shared/Loader";
 import moment from "moment";
-import {removeElements} from "react-flow-renderer";
+import {AutomationServices} from "../../../services/automation/AutomationServices";
+import { useDispatch } from "react-redux";
+import * as actionTypes from "../../../actions/types";
 
 const AutomationLists = (props) => {
   useEffect(() => {
-    localStorage.removeItem("element");
-    localStorage.removeItem("nodeId");
-    localStorage.removeItem("edgeId");
-    localStorage.removeItem("automationName");
-    localStorage.removeItem("automationId");
     fetchAutomations();
   }, []);
   const [isLoader, setIsLoader] = useState(false);
   const [dropdownPos, setDropdownPos] = useState("bottom");
   let [automationData, setAutomationData] = useState([]);
+  const dispatch = useDispatch();
   const fetchAutomations = async () => {
-    let payload = {};
     setIsLoader(true);
-    await apis.getAutomations(JSON.stringify(payload)).then((res) => {
-      setIsLoader(false);
-      if (res.data.success) {
-        console.log("api success");
-        setAutomationData(res.data.data)
-      } else {
-        console.log("api error ! " + res.data.message);
-      }
-    });
+    const automationLists = await AutomationServices.getAutomations();
+    setIsLoader(false);
+    if (automationLists.data.success) {
+      setAutomationData(automationLists.data.data)
+      dispatch({
+        type: actionTypes.AUTOMATION_COUNT,
+        count : automationLists.data.pagination.count
+      });
+    } else {
+      console.log("api error ! " + automationLists.data.message);
+    }
   };
   const passAutomationItem = (e) => {
     props.automationListObject(e);
   };
 
   const toggleCreateHeader = () => {
-    localStorage.removeItem("element");
-    localStorage.removeItem("nodeId");
-    localStorage.removeItem("edgeId");
-    localStorage.removeItem("automationName");
-    localStorage.removeItem("automationId");
-    setTimeout(() => {
-      props.toggleCreate("automation");
-      window.location.reload(false);
-    }, 100)
+    props.automationElementSet({});
+    props.toggleCreate("automation");
   };
 
   const automationDropdown = (e, el) => {
@@ -61,20 +51,16 @@ const AutomationLists = (props) => {
     }
 
     const data = automationData.filter((i) => i._id === e);
-    console.log("E? : ", data);
     data[0].isEditing = !data[0].isEditing;
-    console.log("data  :: ", data[0].isEditing);
     const newAutomationData = automationData.map((el, i) => {
       if (el._id === e) {
         return data[0];
       } else return el;
     });
-    console.log("New AutomationData : ", newAutomationData);
     setAutomationData(newAutomationData);
   };
 
   const modifyStatus = async (e, el, elem) => {
-    console.log('statyus', elem);
     setIsLoader(true);
     const data = automationData.filter((i) => i._id === e);
     data[0].status = data[0].status ? false : true;
@@ -104,7 +90,6 @@ const AutomationLists = (props) => {
         return data[0];
       } else return el;
     });
-    console.log("New Status : ", newStatus);
     setAutomationData(newStatus);
   };
 
@@ -112,21 +97,8 @@ const AutomationLists = (props) => {
     console.log(thisId, element);
   }
   const automationEdit = (elem) => {
-    setIsLoader(true);
-    localStorage.removeItem("element");
-    localStorage.removeItem("nodeId");
-    localStorage.removeItem("edgeId");
-    localStorage.removeItem("automationName");
-    localStorage.removeItem("automationId");
-    setTimeout(() => {
-      localStorage.setItem("element", JSON.stringify(elem.blueprint));
-      localStorage.setItem("nodeId", JSON.stringify(elem.nodeId));
-      localStorage.setItem("edgeId", JSON.stringify(elem.edgeId));
-      localStorage.setItem("automationName", JSON.stringify(elem.name));
-      localStorage.setItem("automationId", JSON.stringify(elem._id));
-      props.toggleCreate("automation");
-      window.location.reload(false);
-    }, 500);
+    props.automationElementSet(elem);
+    props.toggleCreate("automation");
   }
 
   return (
@@ -164,9 +136,9 @@ const AutomationLists = (props) => {
               <div className="listCell cellWidth_15">
                 # of people completed <button className="shortTable"></button>
               </div>
-              {/*<div className="listCell cellWidth_15">
+              <div className="listCell cellWidth_15">
                 Created by <button className="shortTable"></button>
-              </div>*/}
+              </div>
               <div className="listCell cellWidth_15">
                 Created on <button className="shortTable"></button>
               </div>
@@ -221,9 +193,9 @@ const AutomationLists = (props) => {
                           </div>
                         </div>
                       </div>
-                      {/*<div className="listCell cellWidth_15">
-                        <p>{elem.created_by}</p>
-                      </div>*/}
+                      <div className="listCell cellWidth_15">
+                        <p>{elem.created_by_user.firstName + " " + elem.created_by_user.lastName}</p>
+                      </div>
                       <div className="listCell cellWidth_15">
                         <p>{moment(elem.createdAt).format("Do MMM YYYY")}</p>
                       </div>

@@ -455,7 +455,7 @@
     right: 0;
     bottom: 0;
     background: rgba(48, 86, 113, 20%);
-    z-index: 5;
+    z-index: 99;
 }.automationCog .a {
     fill: #434345;
     -webkit-appearance: none;
@@ -478,7 +478,7 @@
     right: 0;
     bottom: 0;
     background: rgba(48, 86, 113, 20%);
-    z-index: 5;
+    z-index: 99;
 }
 
 /* ------------------- */
@@ -1055,7 +1055,7 @@
     right: 0;
     bottom: 0;
     background: rgba(48, 86, 113, 20%);
-    z-index: 5;
+    z-index: 99;
 }
 
 /* ------------------- */

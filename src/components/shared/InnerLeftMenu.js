@@ -12,6 +12,7 @@ const InnerLeftMenu = (props) => {
   const [automationObject, setAutomationObject] = useState({});
   const rolesCount = useSelector((state) => state.role.count);
   const groupsCount = useSelector((state) => state.group.count);
+  const automationCount = useSelector((state) => state.automation.count);
   useEffect(() => {
     if (props.automationListItem) {
       setAutomationObject(props.automationListItem)
@@ -90,7 +91,7 @@ const InnerLeftMenu = (props) => {
                     <div className="indicator"></div>
                     <div className="linkDetails">
                       <p className="linkHeading">Automation Lists</p>
-                      <span className="notificationNumber">5</span>
+                      <span className="notificationNumber">{automationCount}</span>
                       <br />
                       <p className="linkAbout">Manage your automations</p>
                     </div>
@@ -102,7 +103,7 @@ const InnerLeftMenu = (props) => {
           <>
             <BuilderSidebar />
           </>
-        ) : (pathURL === "/automation-details" && automationObject.keyId) ? (
+        ) : (pathURL === "/automation-details" && automationObject._id) ? (
           <>
             <div className="sidebarHeader">
               <h4>
@@ -116,7 +117,7 @@ const InnerLeftMenu = (props) => {
                   <div className="indicator"></div>
                   <div className="linkDetails">
                     <p className="linkHeading">
-                      {automationObject.autoName}
+                      {automationObject.name}
                     </p>
                     <br />
                     <p className="linkAbout">Manage your automation details</p>

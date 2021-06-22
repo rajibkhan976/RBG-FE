@@ -9,59 +9,25 @@ import "./automation.css";
 import { FilterNode, TriggerNode, ActionNode, ActionMessage } from "./nodes";
 import apis from "./services/";
 import {Filter} from "./modals/filter";
-import CloseModal from "../../../../assets/images/cross_icon.svg";
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
 import chevron_right_white_24dp from "../../../../assets/images/chevron_right_white_24dp.svg";
-import edit_grey from "../../../../assets/images/edit_grey.svg";
-import trashIcon from "../../../../assets/images/iconfinder_trash-2_2561228.svg";
-import whiteAddIcon from "../../../../assets/images/add_white_24dp.svg";
-import whiteSlash from "../../../../assets/images/remove_white_24dp.svg";
 import resetIcon from "../../../../assets/images/resetIcon.svg";
 import blueSettingIcon from "../../../../assets/images/blueSettingIcon.svg";
 import plus_icon from "../../../../assets/images/plus_icon.svg";
-import { history } from "../../../../helpers";
 import Loader from "../../../shared/Loader";
-const onNodeMouseMove = (event, node) => {};
+import {AutomationServices} from "../../../../services/automation/AutomationServices";
 
-const onNodeContextMenu = (event, node) => {
-  event.preventDefault();
-};
-
-const edgeType = "smoothstep";
-const initBgColor = "#1A192B";
-
-let nodeId = localStorage.getItem("nodeId")
-    ? JSON.parse(localStorage.getItem("nodeId"))
-    : 0;
-let edgeId = localStorage.getItem("edgeId")
-    ? JSON.parse(localStorage.getItem("edgeId"))
-    : 0;
-let autoName = localStorage.getItem("automationName")
-    ? JSON.parse(localStorage.getItem("automationName"))
-    : "";
-let autoId = localStorage.getItem("automationId")
-    ? JSON.parse(localStorage.getItem("automationId"))
-    : 0;
-const getNodeId = (type) => type + `-${nodeId++}`;
-const getEdgeId = () => `edge-${edgeId++}`;
-const nodeTypes = {
-  trigger: TriggerNode,
-  filter: FilterNode,
-  action: ActionNode,
-  actionMessage: ActionMessage
-};
-const AutomationBuilder = () => {
-  let iniElements = localStorage.getItem("element")
-      ? JSON.parse(localStorage.getItem("element"))
-      : [];
+const AutomationBuilder = (props) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [elements, setElements] = useState(iniElements);
-  const [bgColor] = useState(initBgColor);
+  const [idNode, setIdNode] = useState(0);
+  const [idEdge, setIdEdge] = useState(0);
+  const [elements, setElements] = useState([]);
+  const [bgColor] = useState("#1A192B");
   const [automationModal, setAutomationModal] = useState(null);
-  const [automationName, setAutomationName] = useState(autoName);
-  const [automationId, setautomationId] = useState(autoId);
-  const [automationNameError, setautomationNameError] = useState(null);
+  const [automationName, setAutomationName] = useState('');
+  const [automationId, setAutomationId] = useState(0);
+  const [automationNameError, setAutomationNameError] = useState(null);
   const [isLoader, setIsLoader] = useState(false);
   const [automationUrl, setAutomationUrl] = useState('');
   const [automationUrlId, setAutomationUrlId] = useState('');
@@ -72,6 +38,13 @@ const AutomationBuilder = () => {
   const [body, setBody] = useState('');
   const [bodyError, setBodyError] = useState(false);
   const [nId, setNId] = useState(false);
+  const edgeType = "smoothstep";
+  const nodeTypes = {
+    trigger: TriggerNode,
+    filter: FilterNode,
+    action: ActionNode,
+    actionMessage: ActionMessage
+  };
   const onNodeMouseEnter = (event, node) => {
     const thisNodeTarget = event.target;
     const thisNodeType = node.data.label;
@@ -88,7 +61,21 @@ const AutomationBuilder = () => {
       }
     }
 
+    if (
+      document.querySelector(".btnDeleteNode") !== null &&
+      document.querySelectorAll(".btnDeleteNode").length > -1
+    ) {
+      for (
+        var i = 0;
+        i < document.querySelectorAll(".btnDeleteNode").length;
+        i++
+      ) {
+        document.querySelectorAll(".btnDeleteNode")[i].remove();
+      }
+    }
+
     const editButton = document.createElement("button");
+    const deleteButton = document.createElement("button");
 
     switch (thisNodeType) {
       case "Trigger":
@@ -107,6 +94,16 @@ const AutomationBuilder = () => {
             triggerEdit(event, node)
         );
         thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
+
+        deleteButton.classList.add(
+          "btn",
+          "btnDeleteNode",
+          thisNodeType.toLowerCase() + "-Deletebtn"
+        );
+        deleteButton.addEventListener("click", (event) =>
+            deleteNode(event, node)
+        );
+        thisNodeTarget.closest(".react-flow__node-trigger").appendChild(deleteButton);
         break;
 
       case "Filter":
@@ -125,6 +122,16 @@ const AutomationBuilder = () => {
             filterEdit(event, node)
         );
         thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
+
+        deleteButton.classList.add(
+          "btn",
+          "btnDeleteNode",
+          thisNodeType.toLowerCase() + "-Deletebtn"
+        );
+        deleteButton.addEventListener("click", (event) =>
+            deleteNode(event, node)
+        );
+        thisNodeTarget.closest(".react-flow__node-filter").appendChild(deleteButton);
         break;
 
       case "Action":
@@ -143,6 +150,16 @@ const AutomationBuilder = () => {
             actionEdit(event, node)
         );
         thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
+
+        deleteButton.classList.add(
+            "btn",
+            "btnDeleteNode",
+            thisNodeType.toLowerCase() + "-Deletebtn"
+        );
+        deleteButton.addEventListener("click", (event) =>
+            deleteNode(event, node)
+        );
+        thisNodeTarget.closest(".react-flow__node-action").appendChild(deleteButton);
         break;
 
       case "ActionMessage":
@@ -161,16 +178,39 @@ const AutomationBuilder = () => {
             actionMessageEdit(event, node)
         );
         thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
+
+        deleteButton.classList.add(
+          "btn",
+          "btnDeleteNode",
+          thisNodeType.toLowerCase() + "-Deletebtn"
+        );
+        deleteButton.addEventListener("click", (event) =>
+            deleteNode(event, node)
+        );
+        thisNodeTarget.closest(".react-flow__node-actionMessage").appendChild(deleteButton);
         break;
 
       default:
         break;
     }
   };
+  const getNodeId = (type) => {
+    let number = Number(idNode) + 1;
+    setIdNode(number);
+    return type + `-${number}`;
+  };
+  const getEdgeId = () => {
+    let number = Number(idEdge) + 1;
+    setIdEdge(number)
+    return `edge-${number}`;
+  };
   const onNodeMouseLeave = (event, node) => {
     const thisNodeTarget = event.target;
     if (thisNodeTarget.parentNode.querySelector(".btnEditNode")) {
       thisNodeTarget.parentNode.querySelector(".btnEditNode").remove();
+    }
+    if (thisNodeTarget.parentNode.querySelector(".btnDeleteNode")) {
+      thisNodeTarget.parentNode.querySelector(".btnDeleteNode").remove();
     }
   };
 
@@ -187,7 +227,6 @@ const AutomationBuilder = () => {
     setFrom(n.data.from);
     setBody(n.data.body);
     setNId(n.id);
-    console.log(n)
     setAutomationModal("actionMessage");
   };
 
@@ -280,6 +319,7 @@ const AutomationBuilder = () => {
       }, 500);
     }
   };
+
   const onElementsRemove = (elementsToRemove) => {
     if (elementsToRemove.length) {
       if (
@@ -321,7 +361,9 @@ const AutomationBuilder = () => {
       });
     }
   };
-
+  const deleteNode = (e, elm) => {
+    onElementsRemove([elm])
+  };
   const onLoad = (_reactFlowInstance) =>
       setReactFlowInstance(_reactFlowInstance);
 
@@ -343,11 +385,9 @@ const AutomationBuilder = () => {
   };
 
   const resetAutomation = () => {
-    localStorage.removeItem("element");
-    localStorage.removeItem("nodeId");
-    localStorage.removeItem("edgeId");
-    localStorage.removeItem("automationName");
-    localStorage.removeItem("automationId");
+    setElements([])
+    setAutomationId(0);
+    setAutomationName('');
     setElements((els) => removeElements(elements, els));
   };
   const saveMessage = async () => {
@@ -380,9 +420,8 @@ const AutomationBuilder = () => {
     }
   };
   const saveAutomation = async () => {
-    console.log(elements)
     if (!automationName) {
-      setautomationNameError('bounce');
+      setAutomationNameError('bounce');
       removeClass();
     } else {
       const bluePrintElem = elements.filter(
@@ -397,18 +436,15 @@ const AutomationBuilder = () => {
         }
       });
       if (typeof brokenElem == "undefined") {
-        let payload = {name: automationName, id: automationId, nodeId: nodeId, edgeId: edgeId, blueprint: elements};
+        let payload = {name: automationName, id: automationId, nodeId: idNode, edgeId: idEdge, blueprint: elements};
         setIsLoader(true);
-        await apis.saveAutomation(JSON.stringify(payload)).then((res) => {
-          setIsLoader(false);
-          if (res.data.success) {
-            console.log("api success");
-            history.push('/automation-list');
-            window.location.reload(false);
-          } else {
-            console.log("api error ! " + res.data.message);
-          }
-        });
+        let response = await AutomationServices.saveAutomation(JSON.stringify(payload));
+        setIsLoader(false);
+        if (response.data.success) {
+          props.toggleCreateAutomation('automation-list')
+        } else {
+          console.log("api error ! " + response.data.message);
+        }
       } else {
         alert("You have broken element. Make sure to connect all the nodes");
       }
@@ -416,7 +452,7 @@ const AutomationBuilder = () => {
   };
   const removeClass = () => {
     setTimeout(() => {
-      setautomationNameError('');
+      setAutomationNameError('');
       setToError('');
       setFromError('');
       setBodyError('');
@@ -439,8 +475,10 @@ const AutomationBuilder = () => {
       y: event.clientY - reactFlowBounds.top,
     });
     if (type === 'trigger') {
-      let payload = {id: 0}
+      let payload = {id: 0};
+      setIsLoader(true);
       await apis.generateUrl(JSON.stringify(payload)).then(res => {
+        setIsLoader(false);
         if (res.data.success) {
           console.log("api success");
           newNode = {
@@ -477,7 +515,6 @@ const AutomationBuilder = () => {
         data: {label: `${types[type]}`, nodes: {next: [], previous: ""}},
       };
     }
-
     setElements((es) => es.concat(newNode));
   };
   const getConnectionDetails = (source, target) => {
@@ -498,6 +535,7 @@ const AutomationBuilder = () => {
     let duplicateConnection = false;
     let parallelFilter = false;
     let activeConnection = false;
+    let multipleTrigger = false;
     const updatedElem = [...elements];
     updatedElem.forEach((el) => {
       if (source === el.source && target === el.target) {
@@ -511,6 +549,14 @@ const AutomationBuilder = () => {
           if (target === el.source || target === el.target) {
             activeConnection = true;
           }
+        }
+      }
+      if (sourceType === 'trigger' && el.source !== undefined) {
+        const newSource = el.source;
+        const newSourcePosition = newSource.indexOf("-");
+        let sourceType = newSource.substring(0, newSourcePosition);
+        if (sourceType === 'trigger') {
+          multipleTrigger = true;
         }
       }
       if (el.source === source) {
@@ -545,7 +591,7 @@ const AutomationBuilder = () => {
         }
       }
     });
-    if (duplicateConnection || activeConnection || parallelFilter) {
+    if (duplicateConnection || activeConnection || parallelFilter || multipleTrigger) {
       returnType = false;
     } else {
       switch (sourceType) {
@@ -620,6 +666,15 @@ const AutomationBuilder = () => {
   const onClickCopy = (text) => {
     navigator.clipboard.writeText(text)
   }
+  useEffect(() => {
+    if (Object.keys(props.automationElement).length) {
+      setElements(props.automationElement.blueprint)
+      setAutomationId(props.automationElement._id);
+      setAutomationName(props.automationElement.name);
+      setIdEdge(props.automationElement.nodeId);
+      setIdEdge(props.automationElement.edgeId);
+    }
+  }, [props.automationElement]);
   return (
       <>
         {isLoader ? <Loader /> : ''}
@@ -637,9 +692,7 @@ const AutomationBuilder = () => {
                   selectNodesOnDrag={false}
                   connectionLineType={edgeType}
                   onNodeMouseEnter={onNodeMouseEnter}
-                  onNodeMouseMove={onNodeMouseMove}
                   onNodeMouseLeave={onNodeMouseLeave}
-                  onNodeContextMenu={onNodeContextMenu}
                   style={{ background: bgColor }}
                   onNodeDragStop={onNodeDragStop}
               >
@@ -692,7 +745,7 @@ const AutomationBuilder = () => {
                         <div className="formFieldsArea">
                           <div className="inputField">
                             <label htmlFor="">webhook URL</label>
-                            <input type="text" name="webhook-url" id="webhook-url" value={automationUrl} onClick={onClickCopy(automationUrl)}/>
+                            <input type="text" name="webhook-url" id="webhook-url" value={automationUrl} onClick={onClickCopy(automationUrl)} readOnly={true}/>
                           </div>
                           <div className="inputField">
                             <button className="refreshFieldsBtn" onClick={refreshWebhook(automationUrlId)}>Refresh Fields</button>
