@@ -22,10 +22,10 @@
 .dropdownOptions {
     position: absolute;
     top: 100%;
-    right: 0;
+    right: 10px;
     border-radius: 3px;
     background: #FFFFFF 0% 0% no-repeat padding-box;
-    box-shadow: 0px 0px 30px #00000012;
+    box-shadow: 0px 0px 30px #00000020;
     width: 100px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -631,10 +631,6 @@
 
 .errorForm li+li {
     margin-top: 5px;
-}
-
-.sideMenuBody {
-    padding-top: 60px;
 }
 
 .btn-closeSideMenu {
