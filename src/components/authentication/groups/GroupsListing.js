@@ -233,8 +233,7 @@ const GroupListing = (props) => {
                                             </div>
                                             <div className="phoneNum">
                                                 <button className="btn">
-                                                    {/* {elem.numberOfAssigned} */}
-                                                    0
+                                                    {elem.userCount}
                                                 </button>
                                             </div>
                                             <div className="createDate">
