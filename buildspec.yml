@@ -20,4 +20,4 @@ phases:
 artifacts:
   type: zip
   files:
-    - rbgstage.zip
+    - s3://rbgstage/deploy/rbgstage.zip
