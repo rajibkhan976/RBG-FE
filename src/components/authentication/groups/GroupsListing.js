@@ -45,7 +45,7 @@ const GroupListing = (props) => {
     useEffect(() => {
         if (props.getFilteredData) {
             console.log('Reached detination', props.getFilteredData);
-            setGroupsData(props.getFilteredData.users);
+            setGroupsData(props.getFilteredData.groups);
             setGroupsCount(props.getFilteredData.pagination.count ? props.getFilteredData.pagination.count : 0);
             //Set current page
             setPaginationData({
