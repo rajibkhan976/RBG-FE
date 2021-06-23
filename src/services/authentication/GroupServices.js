@@ -39,7 +39,17 @@ export const GroupServices = {
             console.log('Create group service error: ', e);
             return e;
         }
-
+    },
+    deleteGroup: async (groupId) => {
+        headers.Authorization = localStorage.getItem("_token");
+        try {
+            const result = await axios.delete(config.groupUrl + groupId, { headers: headers });
+            console.log('Delete group service : ', result);
+            return result.data;
+        } catch (e) {
+            console.log('Delete group service error: ', e);
+            return e;
+        }
     }
 
 }
