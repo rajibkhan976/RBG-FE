@@ -74,6 +74,17 @@ export const AutomationServices = {
             data : payload
         };
         return axios(configAxios);
+    },
+    deleteArn: (payload) => {
+        let configAxios = {
+            method: 'post',
+            url: config.automationBasicUrl + '/automation/delete-arn',
+            headers: {
+                'Authorization': localStorage.getItem("_token"),
+                "Content-Type": "application/json"
+            },
+            data : payload
+        };
+        return axios(configAxios);
     }
-
 };

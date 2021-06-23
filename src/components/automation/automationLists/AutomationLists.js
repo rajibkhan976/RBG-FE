@@ -111,7 +111,14 @@ const AutomationLists = (props) => {
         console.log("api error ! " + asl.data.message);
       }
     } else {
+      let payloadArn = {id: elem._id}
+      let updateArn = await AutomationServices.deleteArn(JSON.stringify(payloadArn));
       setIsLoader(false);
+      if (updateArn.data.success) {
+        console.log('respnse updated');
+      } else {
+        console.log("api error ! " + updateArn.data.message);
+      }
     }
     const newStatus = autoData.map((el, i) => {
       if (el._id === e) {
