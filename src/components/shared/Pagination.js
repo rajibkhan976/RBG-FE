@@ -43,7 +43,7 @@ const Pagination = (props) => {
   const getPaginatedData = (type, pageId, keyword, group) => {
     switch (type) {
       case "role":
-        fetchPaginatedRoles(pageId, keyword);
+        fetchPaginatedRoles();
         break;
       case "user":
         fetchPaginatedUsers(pageId, keyword, group);
@@ -56,10 +56,24 @@ const Pagination = (props) => {
     }
   }
 
-  const fetchPaginatedRoles = async (page, keyword) => {
+  const fetchPaginatedRoles = async () => {
     try {
       setIsLoader(true);
-      await RoleServices.fetchRoles(page, keyword)
+
+      let pageId = utils.getQueryVariable('page');
+
+      let queryParams = new URLSearchParams();
+      if (utils.getQueryVariable('search')) {
+        queryParams.append("search", utils.getQueryVariable('search'));
+      }
+      if (utils.getQueryVariable('fromDate')) {
+        queryParams.append("fromDate", utils.getQueryVariable('fromDate'));
+      }
+      if (utils.getQueryVariable('toDate')) {
+        queryParams.append("toDate", utils.getQueryVariable('toDate'));
+      }
+
+      await RoleServices.fetchRoles(pageId, queryParams)
         .then((result) => {
           console.log('Role listing result paginated', result.roles);
           if (result) {
@@ -133,7 +147,7 @@ const Pagination = (props) => {
    */
   const renderPageNumbers = pageNumbers.map(number => {
 
-    if (number < maxPageNumberLimit + 1 && number > minPageNumberLimit) {
+    if (number < maxPageNumberLimit && number > minPageNumberLimit) {
       return (
         <li
           key={number}

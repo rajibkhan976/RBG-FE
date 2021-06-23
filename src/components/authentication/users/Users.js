@@ -28,7 +28,7 @@ const Users = (props) => {
    * @param {*} dataFromChild 
    */
   const getDataFn = (dataFromChild) => {
-    //console.log('Filtered Data from child', dataFromChild);
+    // console.log('Filtered Data from child', dataFromChild);
     if(dataFromChild) {
       setFilteredData(dataFromChild);
     }

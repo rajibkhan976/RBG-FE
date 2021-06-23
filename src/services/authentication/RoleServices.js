@@ -6,13 +6,13 @@ let headers = {
 };
 
 export const RoleServices = {
-    fetchRoles: async (page = null, keyword = null) => {
+    fetchRoles: async (page = null, queryParams = null) => {
         headers.Authorization = localStorage.getItem("_token");
         try {
             const result = await axios.get(
                 config.fetchRolesUrl + 
-                (page ? "/" + page : '') + 
-                (keyword ? "?search=" + keyword : ''), 
+                (page ? "/" + page : '') +     
+                (queryParams ? "?" + queryParams : ''), 
                 { headers: headers });
             console.log('Fetch roles services result in async await : ', result);
             return result.data;

@@ -55,10 +55,20 @@ const RolesListing = (props) => {
          */
         let pageId = utils.getQueryVariable('page');
         let keyword = utils.getQueryVariable('search');
+        let queryParams = new URLSearchParams();
+        if (keyword) {
+            queryParams.append("search", keyword);
+        }
+        if (utils.getQueryVariable('fromDate')) {
+            queryParams.append("fromDate", utils.getQueryVariable('fromDate'));
+        }
+        if (utils.getQueryVariable('toDate')) {
+            queryParams.append("toDate", utils.getQueryVariable('toDate'));
+        }
         /**
          * Call to fetch roles
          */
-        fetchRoles(pageId, keyword);
+        fetchRoles(pageId, queryParams);
     }, []);
 
     /**
@@ -91,6 +101,23 @@ const RolesListing = (props) => {
         }
     }
 
+    /**
+     * Set filtered data
+     */
+    useEffect(() => {
+        if (props.getFilteredData) {
+            console.log('Reached detination', props.getFilteredData);
+            setRolesData(props.getFilteredData.roles);
+            setRolesCount(props.getFilteredData.pagination.count ? props.getFilteredData.pagination.count : 0);
+            //Set current page
+            setPaginationData({
+                ...paginationData,
+                currentPage: props.getFilteredData.pagination.currentPage,
+                totalPages: props.getFilteredData.pagination.totalPages
+            });
+        }
+
+    }, [props.getFilteredData])
 
     /**
      * Get roles from pagination component
@@ -123,13 +150,23 @@ const RolesListing = (props) => {
     const handleSearch = (event) => {
         event.preventDefault();
         let pageId = 1;
+        utils.removeQueryParameter('page');
+        let queryParams = new URLSearchParams();
         if(keyword) {
             utils.addQueryParameter('search', keyword);
+            queryParams.append("search", keyword);
         } else {
+            queryParams.delete("search")
             utils.removeQueryParameter('search');
-            utils.removeQueryParameter('page');
         }
-        fetchRoles(pageId, keyword);
+        if (utils.getQueryVariable('fromDate')) {
+            queryParams.append("fromDate", utils.getQueryVariable('fromDate'));
+        }
+        if (utils.getQueryVariable('toDate')) {
+            queryParams.append("toDate", utils.getQueryVariable('toDate'));
+        }
+        console.log('queryParams', queryParams);
+        fetchRoles(pageId, queryParams);
     }
 
     /**
@@ -150,7 +187,6 @@ const RolesListing = (props) => {
      * Handle outside click
      */
     const handleClickOutside = (event) => {
-        //console.log('Handle outside click',optionsToggleRef, optionsToggleRef.current, event.target, option);
         if (optionsToggleRef.current.contains(event.target)) {
             //console.log('// inside click');
             return;
@@ -207,7 +243,7 @@ const RolesListing = (props) => {
                 <div className="listFeatures">
                     <div className="searchBar">
                         <form onSubmit={handleSearch}>
-                            <input type="search" name="search" placeholder="Search roles" onChange={handleKeywordChange} autoComplete="off" />
+                            <input type="search" name="search" placeholder="Search roles" defaultValue={keyword} onChange={handleKeywordChange} autoComplete="off" />
                             <button className="searchIcon">
                                 <img src={search_icon} alt="" />
                             </button>
