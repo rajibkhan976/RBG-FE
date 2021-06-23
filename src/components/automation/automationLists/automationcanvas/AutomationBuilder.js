@@ -420,6 +420,7 @@ const AutomationBuilder = (props) => {
     }
   };
   const saveAutomation = async () => {
+    console.log(JSON.stringify(elements))
     if (!automationName) {
       setAutomationNameError('bounce');
       removeClass();
@@ -477,25 +478,24 @@ const AutomationBuilder = (props) => {
     if (type === 'trigger') {
       let payload = {id: 0};
       setIsLoader(true);
-      await apis.generateUrl(JSON.stringify(payload)).then(res => {
-        setIsLoader(false);
-        if (res.data.success) {
-          console.log("api success");
-          newNode = {
-            id: getNodeId(type),
-            type,
-            position,
-            data: {
-              label: `${types[type]}`,
-              nodes: {next: [], previous: ""},
-              url: res.data.url,
-              id: res.data.id
-            },
-          };
-        } else {
-          console.log("api error ! " + res.data.message);
-        }
-      });
+      let res = await AutomationServices.generateUrl(JSON.stringify(payload));
+      setIsLoader(false);
+      if (res.data.success) {
+        console.log("api success");
+        newNode = {
+          id: getNodeId(type),
+          type,
+          position,
+          data: {
+            label: `${types[type]}`,
+            nodes: {next: [], previous: ""},
+            url: res.data.url,
+            id: res.data.id
+          },
+        };
+      } else {
+        console.log("api error ! " + res.data.message);
+      }
     } else if (type === 'actionMessage') {
       newNode = {
         id: getNodeId(type),
@@ -664,7 +664,7 @@ const AutomationBuilder = (props) => {
     return returnType;
   };
   const onClickCopy = (text) => {
-    navigator.clipboard.writeText(text)
+    window.navigator.clipboard.writeText(text)
   }
   useEffect(() => {
     if (Object.keys(props.automationElement).length) {

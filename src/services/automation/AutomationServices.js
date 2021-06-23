@@ -3,20 +3,20 @@ import config from "../../configuration/config";
 
 export const AutomationServices = {
     getAsl: async (payload) => {
-        let config = {
+        let configAxios = {
             method: 'post',
             url: config.automationAslUrl + '/automation/create-asl',
             headers: {
                 'Authorization': localStorage.getItem("_token"),
-                "Content-Type": "application/json"
+                "Content-Type": "text/plain"
             },
             data : payload
         };
 
-        return await axios(config);
+        return await axios(configAxios);
     },
     generateUrl: async(payload) => {
-        let config = {
+        let configAxios = {
             method: 'post',
             url: config.automationWebhookUrl + '/automation/webhook/generate',
             headers: {
@@ -25,10 +25,10 @@ export const AutomationServices = {
             },
             data : payload
         };
-        return await axios(config);
+        return await axios(configAxios);
     },
     saveAsl: async(payload) => {
-        let config = {
+        let configAxios = {
             method: 'post',
             url: config.automationWebhookUrl + '/automation/webhook/generate',
             headers: {
@@ -38,7 +38,7 @@ export const AutomationServices = {
             data : payload
         };
 
-        return await axios(config);
+        return await axios(configAxios);
     },
     saveAutomation: (payload) => {
         let configAxios = {
@@ -66,7 +66,7 @@ export const AutomationServices = {
     updateArn: (payload) => {
         let configAxios = {
             method: 'post',
-            url: config.automationBasicUrl + '/update-arn',
+            url: config.automationBasicUrl + '/automation/update-arn',
             headers: {
                 'Authorization': localStorage.getItem("_token"),
                 "Content-Type": "application/json"

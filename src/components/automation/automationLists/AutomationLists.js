@@ -83,40 +83,45 @@ const AutomationLists = (props) => {
         return data[0];
       } else return el;
     });
-    setAutomationData(newAutomationData);
+    setAutomationData({
+      data: newAutomationData,
+      count: automationData.count
+    });
   };
 
   const modifyStatus = async (e, el, elem) => {
     setIsLoader(true);
-    const data = automationData.filter((i) => i._id === e);
+    let autoData = automationData.data;
+    const data = autoData.filter((i) => i._id === e);
     data[0].status = data[0].status ? false : true;
     if (data[0].status) {
       let payload = { element: elem.blueprint };
-      await apis.getAsl(JSON.stringify(payload)).then(async (res) => {
-        if (res.data.success) {
-          let payload = { id: elem._id, arn: res.data.data, status: true }
-          await apis.updateArn(JSON.stringify(payload)).then((res) => {
-            setIsLoader(false);
-            if (res.data.success) {
-              console.log('respnse updated');
-            } else {
-              console.log("api error ! " + res.data.message);
-            }
-          });
+      let asl = await AutomationServices.getAsl(JSON.stringify(payload));
+      if (asl.data.success) {
+        let payloadArn = {id: elem._id, arn: asl.data.data, status: true}
+        let updateArn = await AutomationServices.updateArn(JSON.stringify(payloadArn));
+        setIsLoader(false);
+        if (updateArn.data.success) {
+          console.log('respnse updated');
         } else {
-          setIsLoader(false);
-          console.log("api error ! " + res.data.message);
+          console.log("api error ! " + updateArn.data.message);
         }
-      });
+      } else {
+        setIsLoader(false);
+        console.log("api error ! " + asl.data.message);
+      }
     } else {
       setIsLoader(false);
     }
-    const newStatus = automationData.data.map((el, i) => {
+    const newStatus = autoData.map((el, i) => {
       if (el._id === e) {
         return data[0];
       } else return el;
     });
-    setAutomationData(newStatus);
+    setAutomationData({
+      data: newStatus,
+      count: automationData.count
+    });
   };
 
   const checkChange = (thisId, element) => {
