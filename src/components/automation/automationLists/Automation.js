@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, lazy, Suspense } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import AutomationLists from "./AutomationLists";
-import AutomationBuilder from "./automationcanvas/AutomationBuilder";
+// import AutomationBuilder from "./automationcanvas/AutomationBuilder";
 import AutomationDetails from './automationDetails/AutomationDetails';
 
 import LeftMenu from "../../shared/LeftMenu";
 import HeaderDashboard from "../../shared/HeaderDashboard";
 import DashboardFooter from "../../shared/FooterDashboard";
 import InnerLeftMenu from "../../shared/InnerLeftMenu";
+import Loader from "../../shared/Loader";
+const AutomationLists = lazy(() => import('./AutomationLists'));
+const AutomationBuilder = lazy(() => import('./automationcanvas/AutomationBuilder'));
 
 const Automation = (props) => {
   let history = useHistory();
@@ -42,8 +44,8 @@ const Automation = (props) => {
           pathURL === "/automation-builder"
             ? "dashboardBody automationBuilderBody d-flex f-align-center"
             : pathURL === "/automation-list"
-            ? "dashboardBody d-flex f-align-center"
-            : "dashboardBody d-flex f-align-center"
+              ? "dashboardBody d-flex f-align-center"
+              : "dashboardBody d-flex f-align-center"
         }
       >
         <LeftMenu />
@@ -57,12 +59,14 @@ const Automation = (props) => {
                   stateFilter={stateFilter}
                 />
                 <div className="dashInnerStructure">
-                  <AutomationLists
-                    toggleFilter={toggleFilter}
-                    toggleCreate={toggleCreate}
-                    automationListObject={automationListObject}
-                    automationElementSet={automationElementSet}
-                  />
+                  <Suspense fallback={<Loader />}>
+                    <AutomationLists
+                      toggleFilter={toggleFilter}
+                      toggleCreate={toggleCreate}
+                      automationListObject={automationListObject}
+                      automationElementSet={automationElementSet}
+                    />
+                  </Suspense>
                   <DashboardFooter />
                 </div>
               </div>
@@ -76,10 +80,12 @@ const Automation = (props) => {
                   stateFilter={stateFilter}
                 />
                 <div className="dashInnerStructure">
-                  <AutomationBuilder
-                    automationElement={automationElement}
-                    toggleCreateAutomation={toggleCreateAutomation}
-                  />
+                  <Suspense fallback={<Loader />}>
+                    <AutomationBuilder
+                      automationElement={automationElement}
+                      toggleCreateAutomation={toggleCreateAutomation}
+                    />
+                  </Suspense>
                   <DashboardFooter />
                 </div>
               </div>

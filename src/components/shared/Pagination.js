@@ -4,6 +4,7 @@ import { UserServices } from "../../services/authentication/UserServices";
 import { utils } from "../../helpers";
 import { GroupServices } from '../../services/authentication/GroupServices';
 import Loader from "./Loader";
+import { AutomationServices } from '../../services/automation/AutomationServices';
 
 
 const Pagination = (props) => {
@@ -51,8 +52,26 @@ const Pagination = (props) => {
       case "group":
         fetchPaginatedGroups(pageId, keyword, group);
         break;
+      case "automation":
+        fetchPaginatedAutomation(pageId);
+        break;
       default:
       // code block
+    }
+  }
+
+  const fetchPaginatedAutomation = async (page) => {
+    console.log("Page ID",page);
+    try {
+      setIsLoader(true);
+      const res = await AutomationServices.getAutomations(page);
+      if(res.data) {
+        broadcastToParent(res.data);
+      }
+      setIsLoader(false);
+    } catch (e) {
+      setIsLoader(false);
+      console.log("Error in Automation listing", e.stack);
     }
   }
 

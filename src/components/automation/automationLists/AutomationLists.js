@@ -6,32 +6,58 @@ import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 import apis from "./automationcanvas/services";
 import Loader from "../../shared/Loader";
 import moment from "moment";
-import {AutomationServices} from "../../../services/automation/AutomationServices";
+import { AutomationServices } from "../../../services/automation/AutomationServices";
 import { useDispatch } from "react-redux";
 import * as actionTypes from "../../../actions/types";
+import { utils } from "../../../helpers";
+import Pagination from "../../shared/Pagination";
 
 const AutomationLists = (props) => {
+  // USEEFFECT() Life cycle hook 
   useEffect(() => {
-    fetchAutomations();
+    let pageID = utils.getQueryVariable('page');
+    fetchAutomations(pageID);
   }, []);
+
   const [isLoader, setIsLoader] = useState(false);
   const [dropdownPos, setDropdownPos] = useState("bottom");
-  let [automationData, setAutomationData] = useState([]);
+  const [automationData, setAutomationData] = useState({
+    data: [],
+    count: 0
+  });
+
+  const [paginationData, setPaginationData] = useState({
+    count: null,
+    totalPages: null,
+    currentPage: 1,
+    limit: 10
+  });
+
   const dispatch = useDispatch();
-  const fetchAutomations = async () => {
+
+  const fetchAutomations = async (pageID) => {
     setIsLoader(true);
-    const automationLists = await AutomationServices.getAutomations();
+    const automationLists = await AutomationServices.getAutomations(pageID);
     setIsLoader(false);
     if (automationLists.data.success) {
-      setAutomationData(automationLists.data.data)
+      setAutomationData({
+        data: automationLists.data.data,
+        count: automationLists.data.pagination.count
+      });
       dispatch({
         type: actionTypes.AUTOMATION_COUNT,
-        count : automationLists.data.pagination.count
+        count: automationLists.data.pagination.count
+      });
+      setPaginationData({
+        ...paginationData,
+        currentPage: automationLists.data.pagination.currentPage,
+        totalPages: automationLists.data.pagination.totalPages
       });
     } else {
       console.log("api error ! " + automationLists.data.message);
     }
   };
+
   const passAutomationItem = (e) => {
     props.automationListObject(e);
   };
@@ -50,9 +76,9 @@ const AutomationLists = (props) => {
       setDropdownPos("bottom");
     }
 
-    const data = automationData.filter((i) => i._id === e);
+    const data = automationData.data.filter((i) => i._id === e);
     data[0].isEditing = !data[0].isEditing;
-    const newAutomationData = automationData.map((el, i) => {
+    const newAutomationData = automationData.data.map((el, i) => {
       if (el._id === e) {
         return data[0];
       } else return el;
@@ -68,7 +94,7 @@ const AutomationLists = (props) => {
       let payload = { element: elem.blueprint };
       await apis.getAsl(JSON.stringify(payload)).then(async (res) => {
         if (res.data.success) {
-          let payload = {id: elem._id, arn: res.data.data, status: true}
+          let payload = { id: elem._id, arn: res.data.data, status: true }
           await apis.updateArn(JSON.stringify(payload)).then((res) => {
             setIsLoader(false);
             if (res.data.success) {
@@ -85,7 +111,7 @@ const AutomationLists = (props) => {
     } else {
       setIsLoader(false);
     }
-    const newStatus = automationData.map((el, i) => {
+    const newStatus = automationData.data.map((el, i) => {
       if (el._id === e) {
         return data[0];
       } else return el;
@@ -96,9 +122,27 @@ const AutomationLists = (props) => {
   const checkChange = (thisId, element) => {
     console.log(thisId, element);
   }
+
   const automationEdit = (elem) => {
     props.automationElementSet(elem);
     props.toggleCreate("automation");
+  }
+
+  const getDataFn = (dataFromChild) => {
+    console.log('Data from child', dataFromChild);
+    if (dataFromChild) {
+      // setAutomationData(dataFromChild.data);
+      setAutomationData({
+        data: dataFromChild.data,
+        count: dataFromChild.pagination.count
+      });
+      //Set current page
+      setPaginationData({
+        ...paginationData,
+        currentPage: dataFromChild.pagination.currentPage,
+        totalPages: dataFromChild.pagination.totalPages
+      });
+    }
   }
 
   return (
@@ -111,7 +155,7 @@ const AutomationLists = (props) => {
               <li>Automations</li>
               <li>Listing</li>
             </ul>
-            <h2 className="inDashboardHeader">List of automations <span>({automationData.length})</span></h2>
+            <h2 className="inDashboardHeader">List of automations <span>({automationData.count})</span></h2>
             <p className="userListAbout">
               Create & manage your multiple automations to automate your task
             </p>
@@ -149,8 +193,8 @@ const AutomationLists = (props) => {
 
               </div>
             </div>
-            {automationData.length ?
-              automationData.map((elem, i) => {
+            {automationData.data.length ?
+              automationData.data.map((elem, i) => {
                 return (
                   <>
                     <div className="listRow" key={elem._id}>
@@ -171,7 +215,7 @@ const AutomationLists = (props) => {
                         <p
                           className={elem.status ? "red" : "green"}
                         >
-                          {elem.status ? "Published" : "Draft" }
+                          {elem.status ? "Published" : "Draft"}
                         </p>
                       </div>
                       <div className="listCell cellWidth_15">
@@ -183,7 +227,7 @@ const AutomationLists = (props) => {
                                 width:
                                   (elem.completedPeople /
                                     elem.totalforCompletion) *
-                                  100+'%',
+                                  100 + '%',
                               }}
                             ></div>
                           </div>
@@ -224,95 +268,100 @@ const AutomationLists = (props) => {
                           </button>
                         </div>
                         {elem.isEditing && (
-                            <div
-                                className="dropdownOptions"
-                                style={{
-                                  top: dropdownPos === "top" ? "auto" : "100%",
-                                  bottom: dropdownPos === "top" ? "100%" : "auto",
-                                }}
-                            >
-                              <button className="btn btnClone">
-            <span>
-              <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 13.398 13.398"
-                  className="cloneIcon"
-              >
-                <path
-                    className="a"
-                    d="M12.441,12.2V4.067a.243.243,0,0,0-.239-.239H4.067a.243.243,0,0,0-.239.239V12.2a.243.243,0,0,0,.239.239H12.2a.243.243,0,0,0,.239-.239ZM13.4,4.067V12.2a1.2,1.2,0,0,1-1.2,1.2H4.067a1.2,1.2,0,0,1-1.2-1.2V4.067a1.2,1.2,0,0,1,1.2-1.2H12.2a1.2,1.2,0,0,1,1.2,1.2ZM10.527,1.2v1.2H9.57V1.2A.243.243,0,0,0,9.331.957H1.2A.243.243,0,0,0,.957,1.2V9.331A.243.243,0,0,0,1.2,9.57h1.2v.957H1.2a1.152,1.152,0,0,1-.845-.351A1.152,1.152,0,0,1,0,9.331V1.2A1.152,1.152,0,0,1,.351.351,1.152,1.152,0,0,1,1.2,0H9.331a1.152,1.152,0,0,1,.845.351A1.152,1.152,0,0,1,10.527,1.2Z"
-                />
-              </svg>
-            </span>
-                                Clone
-                              </button>
-                              <button className="btn btnEdit" onClick={(el) => automationEdit(elem)}>
-                                <span>
-                                  <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      viewBox="0 0 13.553 13.553"
-                                      className="editIcon"
-                                  >
-                                    <g transform="translate(0.75 0.75)">
-                                      <path
-                                          className="a"
-                                          d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423"
-                                          transform="translate(-2 -2.795)"
-                                      />
-                                      <path
-                                          className="a"
-                                          d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z"
-                                          transform="translate(-4.384 -2)"
-                                      />
-                                    </g>
-                                  </svg>
-                                </span>
-                                Edit
-                              </button>
-                              <button className="btn btnDelete">
-            <span>
-              <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="12.347"
-                  height="13.553"
-                  viewBox="0 0 12.347 13.553"
-                  className="deleteIcon"
-              >
-                <g transform="translate(0.75 0.75)">
-                  <path className="a" transform="translate(-3 -3.589)" />
-                  <path
-                      className="a"
-                      d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
-                      transform="translate(-3.795 -2)"
-                  />
-                  <line
-                      className="a"
-                      y2="3"
-                      transform="translate(4.397 6.113)"
-                  />
-                  <line
-                      className="a"
-                      y2="3"
-                      transform="translate(6.397 6.113)"
-                  />
-                </g>
-              </svg>
-            </span>
-                                Delete
-                              </button>
-                            </div>
+                          <div
+                            className="dropdownOptions"
+                            style={{
+                              top: dropdownPos === "top" ? "auto" : "100%",
+                              bottom: dropdownPos === "top" ? "100%" : "auto",
+                            }}
+                          >
+                            <button className="btn btnClone">
+                              <span>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 13.398 13.398"
+                                  className="cloneIcon"
+                                >
+                                  <path
+                                    className="a"
+                                    d="M12.441,12.2V4.067a.243.243,0,0,0-.239-.239H4.067a.243.243,0,0,0-.239.239V12.2a.243.243,0,0,0,.239.239H12.2a.243.243,0,0,0,.239-.239ZM13.4,4.067V12.2a1.2,1.2,0,0,1-1.2,1.2H4.067a1.2,1.2,0,0,1-1.2-1.2V4.067a1.2,1.2,0,0,1,1.2-1.2H12.2a1.2,1.2,0,0,1,1.2,1.2ZM10.527,1.2v1.2H9.57V1.2A.243.243,0,0,0,9.331.957H1.2A.243.243,0,0,0,.957,1.2V9.331A.243.243,0,0,0,1.2,9.57h1.2v.957H1.2a1.152,1.152,0,0,1-.845-.351A1.152,1.152,0,0,1,0,9.331V1.2A1.152,1.152,0,0,1,.351.351,1.152,1.152,0,0,1,1.2,0H9.331a1.152,1.152,0,0,1,.845.351A1.152,1.152,0,0,1,10.527,1.2Z"
+                                  />
+                                </svg>
+                              </span>
+                              Clone
+                            </button>
+                            <button className="btn btnEdit" onClick={(el) => automationEdit(elem)}>
+                              <span>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  viewBox="0 0 13.553 13.553"
+                                  className="editIcon"
+                                >
+                                  <g transform="translate(0.75 0.75)">
+                                    <path
+                                      className="a"
+                                      d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423"
+                                      transform="translate(-2 -2.795)"
+                                    />
+                                    <path
+                                      className="a"
+                                      d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z"
+                                      transform="translate(-4.384 -2)"
+                                    />
+                                  </g>
+                                </svg>
+                              </span>
+                              Edit
+                            </button>
+                            <button className="btn btnDelete">
+                              <span>
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="12.347"
+                                  height="13.553"
+                                  viewBox="0 0 12.347 13.553"
+                                  className="deleteIcon"
+                                >
+                                  <g transform="translate(0.75 0.75)">
+                                    <path className="a" transform="translate(-3 -3.589)" />
+                                    <path
+                                      className="a"
+                                      d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
+                                      transform="translate(-3.795 -2)"
+                                    />
+                                    <line
+                                      className="a"
+                                      y2="3"
+                                      transform="translate(4.397 6.113)"
+                                    />
+                                    <line
+                                      className="a"
+                                      y2="3"
+                                      transform="translate(6.397 6.113)"
+                                    />
+                                  </g>
+                                </svg>
+                              </span>
+                              Delete
+                            </button>
+                          </div>
                         )}
                       </div>
                     </div>
                   </>
                 );
               }) :
-                <div className="listCell">
-                  No automation found
-                </div>
+              <div className="listCell">
+                No automation found
+              </div>
             }
           </div>
         </div>
+        {automationData.count ? <Pagination
+          type="automation"
+          paginationData={paginationData}
+          dataCount={automationData.count}
+          getData={getDataFn} /> : ''}
         {/* <DashboardPagination /> */}
       </div>
     </>

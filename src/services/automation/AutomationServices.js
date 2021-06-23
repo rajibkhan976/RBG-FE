@@ -52,10 +52,10 @@ export const AutomationServices = {
         };
         return axios(configAxios);
     },
-    getAutomations: (page) => {
+    getAutomations: async (page) => {
         let configAxios = {
             method: 'get',
-            url: config.automationBasicUrl + '/automation/list '  + (page ? "/" + page : ''),
+            url: config.automationBasicUrl + '/automation/list'  + (page ? "/" + page : ''),
             headers: {
                 'Authorization': localStorage.getItem("_token"),
                 "Content-Type": "application/json"
