@@ -50,35 +50,33 @@ const RolesListing = (props) => {
     };
 
     useEffect(() => {
-        /**
-         * Get page id and keyword from URL
-         */
-        let pageId = utils.getQueryVariable('page');
-        let keyword = utils.getQueryVariable('search');
-        let queryParams = new URLSearchParams();
-        if (keyword) {
-            queryParams.append("search", keyword);
-        }
-        if (utils.getQueryVariable('fromDate')) {
-            queryParams.append("fromDate", utils.getQueryVariable('fromDate'));
-        }
-        if (utils.getQueryVariable('toDate')) {
-            queryParams.append("toDate", utils.getQueryVariable('toDate'));
-        }
-        /**
-         * Call to fetch roles
-         */
-        fetchRoles(pageId, queryParams);
+        fetchRoles();
     }, []);
 
     /**
      * Function to fetch roles
      * @returns
      */
-    const fetchRoles = async (pageId, keyword) => {
+    const fetchRoles = async () => {
+
+        let pageId = utils.getQueryVariable('page') || 1;
+        let keyword = utils.getQueryVariable('search');
+        let fromDt = utils.getQueryVariable('fromDate');
+        let toDt = utils.getQueryVariable('toDate');
+        let queryParams = new URLSearchParams();
+        if (keyword) {
+            queryParams.append("search", keyword);
+        }
+        if (fromDt) {
+            queryParams.append("fromDate", fromDt);
+        }
+        if (toDt) {
+            queryParams.append("toDate", toDt);
+        }
+
         try {
             setIsLoader(true);
-            const result = await RoleServices.fetchRoles(pageId, keyword);
+            const result = await RoleServices.fetchRoles(pageId, queryParams);
             console.log('Data', result.roles);
             if(result) {
                 setRolesData(result.roles);
@@ -120,20 +118,10 @@ const RolesListing = (props) => {
     }, [props.getFilteredData])
 
     /**
-     * Get roles from pagination component
-     * @param {*} dataFromChild
+     * Handle pagination click
      */
-    const getDataFn = (dataFromChild) => {
-        console.log('Data from child', dataFromChild);
-        if (dataFromChild) {
-            setRolesData(dataFromChild.roles);
-            //Set current page
-            setPaginationData({
-                ...paginationData,
-                currentPage: dataFromChild.pagination.currentPage,
-                totalPages: dataFromChild.pagination.totalPages
-            });
-        }
+    const paginationCallbackHandle = () => {
+        fetchRoles();
     }
 
     /**
@@ -149,24 +137,14 @@ const RolesListing = (props) => {
      */
     const handleSearch = (event) => {
         event.preventDefault();
-        let pageId = 1;
-        utils.removeQueryParameter('page');
-        let queryParams = new URLSearchParams();
+
+        utils.addQueryParameter('page', 1);
         if(keyword) {
             utils.addQueryParameter('search', keyword);
-            queryParams.append("search", keyword);
         } else {
-            queryParams.delete("search")
             utils.removeQueryParameter('search');
-        }
-        if (utils.getQueryVariable('fromDate')) {
-            queryParams.append("fromDate", utils.getQueryVariable('fromDate'));
-        }
-        if (utils.getQueryVariable('toDate')) {
-            queryParams.append("toDate", utils.getQueryVariable('toDate'));
-        }
-        console.log('queryParams', queryParams);
-        fetchRoles(pageId, queryParams);
+        }        
+        fetchRoles();
     }
 
     /**
@@ -259,37 +237,7 @@ const RolesListing = (props) => {
                     </button>
                 </div>
             </div>
-            {/* <div className="userListBody">
-        <div className="listBody">
-          <ul>
-            <li className="listHeading userRole">
-              <div className="userName">
-                Role Name
-                
-              </div>
-              <div className="phoneNum assignedPeople">
-                No. of people assigned
-                
-              </div>
-              <div className="emailID">
-                Created on
-                
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <div className="createNew">
-          <span>
-            <img src={list_board_icon} alt="" />
-            <p>You haven’t created any roles yet.</p>
-          </span>
-          <button className="creatUserBtn" onClick={toggleCreateHeader}>
-            <img className="plusIcon" src={plus_icon} alt="" />
-            <span>Create a new role</span>
-          </button>
-        </div>
-      </div> */}
+            
             <div className="userListBody">
                 <div className="listBody" ref={optionsToggleRef}>
                     <ul className="tableListing">
@@ -409,7 +357,7 @@ const RolesListing = (props) => {
                 type="role"
                 paginationData={paginationData}
                 dataCount={rolesCount}
-                getData={getDataFn} /> : ''}
+                callback={paginationCallbackHandle} /> : ''}
         </div>
     )
 }

@@ -84,7 +84,6 @@ const UsersListing = (props) => {
         /**
          * Get page id and keyword from URL
          */
-        let pageId = utils.getQueryVariable('page');
         let param = utils.getQueryVariable('search');
         if (param) {
             setKeyword(param);
@@ -92,17 +91,48 @@ const UsersListing = (props) => {
         /**
          * Call to fetch roles
          */
-        fetchUsers(pageId, param);
+        console.log('param', param)
+        fetchUsers();
     }, []);
+
+    const getQueryParams = async () => {
+        let search = utils.getQueryVariable('search');
+        let group = utils.getQueryVariable('group');
+        let fromDate = utils.getQueryVariable('fromDate');
+        let toDate = utils.getQueryVariable('toDate');
+        let status = utils.getQueryVariable('status');
+
+        let queryParams = new URLSearchParams();
+
+        console.log('search', search)
+        if (search) {
+            queryParams.append("search", search);
+        }
+        if (group) {
+            queryParams.append("group", group);
+        }
+        if (fromDate && toDate) {
+            queryParams.append('fromDate', fromDate);
+            queryParams.append('toDate', toDate);
+        }
+        if (status) {
+            queryParams.append("status", status);
+        }
+        return queryParams;
+    }
 
     /**
      * Function to fetch users
      * @returns 
      */
-    const fetchUsers = async (pageId, keyword) => {
+    const fetchUsers = async () => {
+
+        let pageId = utils.getQueryVariable('page');        
+        let queryParams = await getQueryParams();
+        console.log('queryParams', queryParams.toString() )
         try {
             setIsLoader(true);
-            await UserServices.fetchUsers(pageId, keyword)
+            await UserServices.fetchUsers(pageId, queryParams)
                 .then((result) => {
                     console.log('User listing result', result.users);
                     if (result) {
@@ -126,21 +156,12 @@ const UsersListing = (props) => {
         }
     }
 
+    
     /**
-     * Get user from pagination component
-     * @param {*} dataFromChild 
+     * Handle pagination click
      */
-    const getDataFn = (dataFromChild) => {
-        console.log('Data from child', dataFromChild);
-        if (dataFromChild) {
-            setUsersData(dataFromChild.users);
-            //Set current page
-            setPaginationData({
-                ...paginationData,
-                currentPage: dataFromChild.pagination.currentPage,
-                totalPages: dataFromChild.pagination.totalPages
-            });
-        }
+    const paginationCallbackHandle = () => {
+        fetchUsers();
     }
 
     /**
@@ -217,19 +238,14 @@ const UsersListing = (props) => {
     const handleSearch = (event) => {
         event.preventDefault();
 
-        let pageId = utils.getQueryVariable('page');
-        let group = utils.getQueryVariable('group');
-
-        let queryParams = new URLSearchParams();
+        utils.addQueryParameter('page', 1);
         if (keyword) {
             utils.addQueryParameter('search', keyword);
-            queryParams.append("search", keyword);
         } else {
             utils.removeQueryParameter('search');
         }
-        queryParams.append("group", group);
 
-        fetchUsers(pageId, queryParams);
+        fetchUsers();
     }
 
     return (
@@ -397,7 +413,7 @@ const UsersListing = (props) => {
                         type="user"
                         paginationData={paginationData}
                         dataCount={usersCount}
-                        getData={getDataFn} />
+                        callback={paginationCallbackHandle} />
                 </> :
                 <div className="createNew">
                     <span>

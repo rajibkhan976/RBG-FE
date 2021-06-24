@@ -13,6 +13,13 @@ const Pagination = (props) => {
   const [minPageNumberLimit, setMinPageNumberLimit] = useState(0);
   const [isLoader, setIsLoader] = useState(false);
 
+  /**
+   * Callback to parent to fetch data
+   */
+  const callback = () => {
+    props.callback()
+  }
+
   const paginationHandleClick = (event) => {
     let currentPage = Number(event.target.value);
 
@@ -20,95 +27,26 @@ const Pagination = (props) => {
      * Add query parameter
      */
     utils.addQueryParameter('page', currentPage);
-
-    /**
-     * Get page id from URL
-     */
-    let pageId = utils.getQueryVariable('page');
-    let keyword = utils.getQueryVariable('search');
-    let group = utils.getQueryVariable('group');
-
-    /**
-     * Make axios call
-     */
-    //if(currentPage !== props.paginationData.totalPages){
-    getPaginatedData(props.type, pageId, keyword, group);
-    //}
+    getPaginatedData();
   }
 
   /**
    * Get paginated data
    * @param {*} type 
    */
-  const getPaginatedData = (type, pageId, keyword, group) => {
-    switch (type) {
+  const getPaginatedData = (pageId=null, keyword=null, group=null) => {
+    switch (props.type) {
       case "role":
-        fetchPaginatedRoles();
+        callback();
         break;
       case "user":
-        fetchPaginatedUsers(pageId, keyword, group);
+        callback();
         break;
       case "group":
         fetchPaginatedGroups(pageId, keyword, group);
         break;
       default:
       // code block
-    }
-  }
-
-  const fetchPaginatedRoles = async () => {
-    try {
-      setIsLoader(true);
-
-      let pageId = utils.getQueryVariable('page');
-
-      let queryParams = new URLSearchParams();
-      if (utils.getQueryVariable('search')) {
-        queryParams.append("search", utils.getQueryVariable('search'));
-      }
-      if (utils.getQueryVariable('fromDate')) {
-        queryParams.append("fromDate", utils.getQueryVariable('fromDate'));
-      }
-      if (utils.getQueryVariable('toDate')) {
-        queryParams.append("toDate", utils.getQueryVariable('toDate'));
-      }
-
-      await RoleServices.fetchRoles(pageId, queryParams)
-        .then((result) => {
-          console.log('Role listing result paginated', result.roles);
-          if (result) {
-            broadcastToParent(result);
-            setIsLoader(false);
-          }
-        })
-        .catch((error) => {
-          setIsLoader(false);
-          console.log("Role listing error", error);
-        });
-    } catch (e) {
-      setIsLoader(false);
-      console.log("Error in Role listing", e);
-    }
-  }
-
-  const fetchPaginatedUsers = async (page, keyword, group) => {
-    try {
-      setIsLoader(true);
-      await UserServices.fetchUsers(page, keyword, group)
-        .then((result) => {
-          console.log('User listing result paginated', result.users);
-          if (result) {
-            broadcastToParent(result);
-            setIsLoader(false);
-          }
-        })
-        .catch((error) => {
-          setIsLoader(false);
-          console.log("User listing error", error);
-        });
-    } catch (e) {
-      setIsLoader(false);
-      console.log("Error in User listing", e);
     }
   }
 
@@ -176,11 +114,12 @@ const Pagination = (props) => {
     let keyword = utils.getQueryVariable('search');
     let newPage = Number(currentPageId) - 1;
     if (newPage > 0) {
+      
       /**
        * Add new page id to URL
        */
       utils.addQueryParameter('page', newPage);
-      getPaginatedData(props.type, newPage, keyword);
+      getPaginatedData();
 
       /**
        * Update page numbers
@@ -201,11 +140,12 @@ const Pagination = (props) => {
     let keyword = utils.getQueryVariable('search');
     let newPage = Number(currentPageId) + 1;
     if (newPage <= props.paginationData.totalPages) {
+
       /**
        * Add new page id to URL
        */
       utils.addQueryParameter('page', newPage);
-      getPaginatedData(props.type, newPage, keyword);
+      getPaginatedData();
     }
     /**
      * Update page numbers
