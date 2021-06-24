@@ -224,7 +224,7 @@ const GroupListing = (props) => {
                         {groupsData &&
                             groupsData.map((elem, i) => {
                                 return (
-                                    <>
+                                    <React.Fragment key={i + "group"}>
                                         <li className="owerInfo userRole" key={elem.keyId}>
                                             <div className="userName">
                                                 <button className="btn">
@@ -250,7 +250,7 @@ const GroupListing = (props) => {
                                                 {elem.isEditing && <TableOptionsDropdown dropdownPos={dropdownPos} dropdownType="groupsDropdown" />}
                                             </div>
                                         </li>
-                                    </>
+                                    </React.Fragment>
                                 );
                             })}
                     </ul>
