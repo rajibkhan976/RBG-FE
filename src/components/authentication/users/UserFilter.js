@@ -21,24 +21,6 @@ const UserFilter = (props) => {
     };
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        // let group = utils.getQueryVariable('group');
-        // if(group) {
-        //     setGroup(group)
-        // }
-        // let fromDate = utils.getQueryVariable('fromDate');
-        // let toDate = utils.getQueryVariable('toDate');
-        // if(fromDate && toDate) {
-        //     setFromDate(fromDate);
-        //     setToDate(toDate);
-        // }
-        // let status = utils.getQueryVariable('status');
-        // if(status) {
-        //     setStatus(status);
-        // }
-        
-    }, []);
-
     /**
      * Handle group change
      * @param {*} event 
