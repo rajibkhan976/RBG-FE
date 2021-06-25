@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { useDispatch, useSelector } from 'react-redux';
 import Pagination from "../../shared/Pagination";
 import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
 import { UserServices } from "../../../services/authentication/UserServices";
@@ -7,6 +7,7 @@ import { OrganizationServices } from "../../../services/authentication/Organizat
 import { utils } from "../../../helpers";
 import Loader from "../../shared/Loader";
 import config from "../../../configuration/config";
+import * as actionTypes from "../../../actions/types";
 
 import search_icon from "../../../assets/images/search_icon.svg";
 import filter_icon from "../../../assets/images/filter_icon.svg";
@@ -35,6 +36,10 @@ const UsersListing = (props) => {
         props.toggleCreate(e);
     };
 
+    const dispatch = useDispatch();
+    const isFiltered = useSelector((state) => state.user.filter);
+    
+
     const filterUsers = () => {
         props.toggleFilter("user");
     };
@@ -43,42 +48,18 @@ const UsersListing = (props) => {
      * Set filtered data
      */
     useEffect(() => {
-        if (props.getFilteredData) {
-            console.log('Reached detination', props.getFilteredData);
-            setUsersData(props.getFilteredData.users);
-            setUsersCount(props.getFilteredData.pagination.count ? props.getFilteredData.pagination.count : 0);
-            //Set current page
-            setPaginationData({
-                ...paginationData,
-                currentPage: props.getFilteredData.pagination.currentPage,
-                totalPages: props.getFilteredData.pagination.totalPages
+        if (isFiltered) {
+            console.log('is filtered inside');
+            fetchUsers();
+            // UPDATE STORE
+            dispatch({
+                type: actionTypes.USER_FILTER,
+                filter : false
             });
         }
 
-    }, [props])
-
-    const editThisUser = (e, el) => {
-        let yPosition = el.clientY;
-        let avHeight = window.innerHeight - (70 + 70 + 54 + 57)
-        if ((yPosition + 70) > avHeight) {
-            setDropdownPos("top")
-        }
-        else {
-            setDropdownPos("bottom")
-        }
-
-        const data = usersData.filter((i) => i.keyId === e);
-        console.log("E? : ", data, "EL:::");
-        data[0].isEditing = !data[0].isEditing;
-        console.log("data  :: ", data[0].isEditing);
-        const newData = usersData.map((el, i) => {
-            if (el.keyId === e) {
-                return data[0];
-            } else return el;
-        });
-        console.log("newData : ", newData);
-        setUsersData(newData);
-    };
+    }, [isFiltered]);
+    
 
     useEffect(() => {
         /**
@@ -163,6 +144,7 @@ const UsersListing = (props) => {
     const paginationCallbackHandle = () => {
         fetchUsers();
     }
+
 
     /**
      * Handle options toggle

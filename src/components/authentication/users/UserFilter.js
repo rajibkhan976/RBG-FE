@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { utils } from "../../../helpers";
 import { UserServices } from "../../../services/authentication/UserServices";
 import Loader from "../../shared/Loader";
+import * as actionTypes from "../../../actions/types";
+
 
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
@@ -16,6 +19,25 @@ const UserFilter = (props) => {
         e.preventDefault();
         props.setStateFilter(null);
     };
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        // let group = utils.getQueryVariable('group');
+        // if(group) {
+        //     setGroup(group)
+        // }
+        // let fromDate = utils.getQueryVariable('fromDate');
+        // let toDate = utils.getQueryVariable('toDate');
+        // if(fromDate && toDate) {
+        //     setFromDate(fromDate);
+        //     setToDate(toDate);
+        // }
+        // let status = utils.getQueryVariable('status');
+        // if(status) {
+        //     setStatus(status);
+        // }
+        
+    }, []);
 
     /**
      * Handle group change
@@ -29,68 +51,13 @@ const UserFilter = (props) => {
     /**
      * Apply filter submit
      */
-    const handleApplyFilter = (event) => {
-        event.preventDefault();
-        let pageId = utils.getQueryVariable('page');
-        let keyword = utils.getQueryVariable('search');
-        let group = utils.getQueryVariable('group');
-        let fromDate = utils.getQueryVariable('fromDate');
-        let toDate = utils.getQueryVariable('toDate');
-        let status = utils.getQueryVariable('status');
-
-        let queryParams = new URLSearchParams();
-        if(pageId) {
-            queryParams.append("page", pageId);
-        }
-        if(keyword) {
-            queryParams.append("search", keyword);
-        }
-        if(group) {
-            queryParams.append("group", group);
-        }
-        if(fromDate && toDate){
-            queryParams.append('fromDate', fromDate);
-            queryParams.append('toDate', toDate);
-        }
-        if(status) {
-            queryParams.append("status", status);
-        }
-
-        fetchUsers(pageId, queryParams);
-    }
-
-    /**
-   * Send the data to user listing component
-   * @param {*} data
-   */
-    const broadcastToParent = (data) => {
-        props.getData(data);
-    };
-
-    /**
-     * Function to fetch users based on filter
-     * @returns 
-     */
-    const fetchUsers = async (pageId, queryParams) => {
-        try {
-            setIsLoader(true);
-            await UserServices.fetchUsers(pageId, queryParams)
-                .then((result) => {
-                    console.log('User listing result', result.users);
-                    if (result) {
-                        broadcastToParent(result);
-                        props.setStateFilter(null);
-                        setIsLoader(false);
-                    }
-                })
-                .catch((error) => {
-                    setIsLoader(false);
-                    console.log("User listing error", error);
-                });
-        } catch (e) {
-            setIsLoader(false);
-            console.log("Error in User listing", e);
-        }
+    const handleApplyFilter = (e) => {
+        e.preventDefault();
+        // UPDATE STORE
+        dispatch({
+            type: actionTypes.USER_FILTER,
+            filter : true
+        });
     }
 
     /**
@@ -133,7 +100,11 @@ const UserFilter = (props) => {
         utils.removeQueryParameter('fromDate');
         utils.removeQueryParameter('toDate');
         utils.removeQueryParameter('status');
-        fetchUsers(1);
+        // UPDATE STORE
+        dispatch({
+            type: actionTypes.USER_FILTER,
+            filter : true
+        });
     }
 
     return (

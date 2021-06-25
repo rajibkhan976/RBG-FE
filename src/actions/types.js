@@ -6,5 +6,7 @@ export const LOGOUT = "LOGOUT";
 export const ROLE_COUNT = "ROLE_COUNT";
 // Group
 export const GROUP_COUNT = "GROUP_COUNT";
+//User
+export const USER_FILTER = "USER_FILTER";
 // Permission
 export const UPDATE_PERMISSION = "UPDATE_PERMISSION";
