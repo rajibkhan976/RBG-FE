@@ -95,7 +95,7 @@ const Sidebar = () => {
       <div className="dndNodes actionNodes">
         <div
           className="dndnode"
-          onDragStart={(event) => onDragStart(event, "action")}
+          onDragStart={(event) => onDragStart(event, "actionEmail")}
           draggable
         >
           <svg

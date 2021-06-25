@@ -6,7 +6,7 @@ import ReactFlow, {
   Controls,
 } from "react-flow-renderer";
 import "./automation.css";
-import { FilterNode, TriggerNode, ActionNode, ActionMessage } from "./nodes";
+import { FilterNode, TriggerNode, ActionEmail, ActionMessage } from "./nodes";
 import {Filter} from "./modals/filter";
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
 import chevron_right_white_24dp from "../../../../assets/images/chevron_right_white_24dp.svg";
@@ -38,11 +38,18 @@ const AutomationBuilder = (props) => {
   const [bodyError, setBodyError] = useState(false);
   const [nId, setNId] = useState(false);
   const [webhookData, setWebhookData] = useState([]);
+  const [toEmail, setToEmail] = useState('');
+  const [toEmailError, setToEmailError] = useState(false);
+  const [subject, setSubject] = useState('');
+  const [subjectError, setSubjectError] = useState(false);
+  const [bodyEmail, setBodyEmail] = useState('');
+  const [bodyEmailError, setBodyEmailError] = useState(false);
+  const [nodeEmailId, setNodeEmailId] = useState(false);
   const edgeType = "smoothstep";
   const nodeTypes = {
     trigger: TriggerNode,
     filter: FilterNode,
-    action: ActionNode,
+    actionEmail: ActionEmail,
     actionMessage: ActionMessage
   };
   const onNodeMouseEnter = (event, node) => {
@@ -134,7 +141,7 @@ const AutomationBuilder = (props) => {
         thisNodeTarget.closest(".react-flow__node-filter").appendChild(deleteButton);
         break;
 
-      case "Action":
+      case "ActionEmail":
         editButton.classList.add(
             "btn",
             "btnEditNode",
@@ -159,7 +166,7 @@ const AutomationBuilder = (props) => {
         deleteButton.addEventListener("click", (event) =>
             deleteNode(event, node)
         );
-        thisNodeTarget.closest(".react-flow__node-action").appendChild(deleteButton);
+        thisNodeTarget.closest(".react-flow__node-actionEmail").appendChild(deleteButton);
         break;
 
       case "ActionMessage":
@@ -219,7 +226,11 @@ const AutomationBuilder = (props) => {
   };
 
   const actionEdit = (e, n) => {
-    setAutomationModal("action");
+    setToEmail(n.data.to);
+    setSubject(n.data.subject);
+    setBodyEmail(n.data.body);
+    setNodeEmailId(n.id);
+    setAutomationModal("actionEmail");
   };
 
   const actionMessageEdit = (e, n) => {
@@ -295,6 +306,21 @@ const AutomationBuilder = (props) => {
   const handleBodyChange = (event) => {
     event.preventDefault();
     setBody(event.target.value);
+  }
+
+  const handleSubjectChange = (event) => {
+    event.preventDefault();
+    setSubject(event.target.value);
+  }
+
+  const handleToEmailChange = (event) => {
+    event.preventDefault();
+    setToEmail(event.target.value);
+  }
+
+  const handleBodyEmailChange = (event) => {
+    event.preventDefault();
+    setBodyEmail(event.target.value);
   }
 
 
@@ -446,6 +472,35 @@ const AutomationBuilder = (props) => {
       closeFilterModal();
     }
   };
+  const saveEmail = async () => {
+    let count = 0;
+    if (!toEmail) {
+      setToEmailError('bounce');
+      count = count + 1;
+    }
+    if (!subject) {
+      setSubjectError('bounce');
+      count = count + 1;
+    }
+    if (!bodyEmail) {
+      setBodyEmailError('bounce');
+      count = count + 1;
+    }
+    removeClass();
+    if (count === 0) {
+      setElements((elms) =>
+          elms.map((el) => {
+            if (el.id === nodeEmailId) {
+              el.data.to = toEmail;
+              el.data.subject = subject;
+              el.data.body = bodyEmail;
+            }
+            return { ...el };
+          })
+      );
+      closeFilterModal();
+    }
+  };
   const saveAutomation = async () => {
     console.log(JSON.stringify(elements))
     if (!automationName) {
@@ -484,6 +539,9 @@ const AutomationBuilder = (props) => {
       setToError('');
       setFromError('');
       setBodyError('');
+      setToEmailError('');
+      setSubjectError('');
+      setBodyEmailError('');
     }, 1500);
   }
   const generateUrlOfWebhook = async (nodeId) => {
@@ -508,7 +566,7 @@ const AutomationBuilder = (props) => {
     event.preventDefault();
     const types = {
       trigger: "Trigger",
-      action: "Action",
+      actionEmail: "ActionEmail",
       filter: "Filter",
       actionMessage: "ActionMessage"
     };
@@ -541,9 +599,24 @@ const AutomationBuilder = (props) => {
         data: {
           label: `${types[type]}`,
           nodes: {next: [], previous: ""},
-          messageArn: 'arn:aws:lambda:us-east-1:670103364767:function:smsaction-dev-sendMessage',
+          arn: 'arn:aws:lambda:us-east-1:670103364767:function:smsaction-dev-sendMessage',
           to: '',
           from: '',
+          body: ''
+        },
+      };
+      setElements((es) => es.concat(newNode));
+    } else if (type === 'actionEmail') {
+      newNode = {
+        id: getNodeId(type),
+        type,
+        position,
+        data: {
+          label: `${types[type]}`,
+          nodes: {next: [], previous: ""},
+          arn: 'arn:aws:lambda:us-east-1:670103364767:function:emailaction-dev-sendEmail',
+          to: '',
+          subject: '',
           body: ''
         },
       };
@@ -567,6 +640,12 @@ const AutomationBuilder = (props) => {
       sourceType = 'action';
     }
     if (targetType === 'actionMessage') {
+      targetType = 'action';
+    }
+    if (sourceType === 'actionEmail') {
+      sourceType = 'action';
+    }
+    if (targetType === 'actionEmail') {
       targetType = 'action';
     }
     let returnType = false;
@@ -848,7 +927,45 @@ const AutomationBuilder = (props) => {
                       </div>
 
                     </div>
-                    : "")) : ""}
+                    : (automationModal === 'actionEmail' ?
+                        <div className="automationModal filterModal">
+                          <div className="nodeSettingModal">
+                            <div className="formHead">
+                              <div className="heading">
+                                <p>Email Settings</p>
+                              </div>
+                              <div className="closeButton">
+                                <button onClick={closeFilterModal}>
+                                  <img src={closewhite24dp} alt="Close Filter Modal"/>
+                                </button>
+                              </div>
+                            </div>
+                            <div className="formBody">
+                              <div className="formBodyContainer">
+                                <div className="emailDetails">
+                                  <div className="inputField">
+                                    <label htmlFor="subject">Subject</label>
+                                    <input className={`icon ${subjectError}`} type="text" name="subject" id="subject" value={subject} onChange={handleSubjectChange}/>
+                                  </div>
+                                  <div className="inputField">
+                                    <label htmlFor="toEmail">To</label>
+                                    <input className={`icon ${toEmailError}`} type="text" name="toEmail" id="toEmail" value={toEmail} onChange={handleToEmailChange}/>
+                                  </div>
+                                  <div className="inputField">
+                                    <label htmlFor="bodyEmail">Body</label>
+                                    <textarea className={`icon ${bodyEmailError}`} name="bodyEmail" id="bodyEmail" onChange={handleBodyEmailChange}>{bodyEmail}</textarea>
+                                  </div>
+                                </div>
+
+                                <div className="saveButton">
+                                  <button onClick={saveEmail}>Save <img src={chevron_right_white_24dp} alt=""/></button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+                        : ""))) : ""}
           </ReactFlowProvider>
         </div>
       </>
