@@ -52,16 +52,20 @@ export const AutomationServices = {
         };
         return axios(configAxios);
     },
-    getAutomations: async (page) => {
-        let configAxios = {
-            method: 'get',
-            url: config.automationBasicUrl + '/automation/list'  + (page ? "/" + page : ''),
-            headers: {
-                'Authorization': localStorage.getItem("_token"),
-                "Content-Type": "application/json"
-            }
-        };
-        return axios(configAxios);
+    getAutomations: (page) => {
+        try {
+            let configAxios = {
+                method: 'get',
+                url: config.automationBasicUrl + '/automation/list'  + (page ? "/" + page : ''),
+                headers: {
+                    'Authorization': localStorage.getItem("_token"),
+                    "Content-Type": "application/json"
+                }
+            };
+            return axios(configAxios);
+        } catch (e) {
+            alert(e);
+        }
     },
     updateArn: (payload) => {
         let configAxios = {
@@ -79,6 +83,30 @@ export const AutomationServices = {
         let configAxios = {
             method: 'post',
             url: config.automationBasicUrl + '/automation/delete-arn',
+            headers: {
+                'Authorization': localStorage.getItem("_token"),
+                "Content-Type": "application/json"
+            },
+            data : payload
+        };
+        return axios(configAxios);
+    },
+    fetchFields: (payload) => {
+        let configAxios = {
+            method: 'post',
+            url: config.automationWebhookUrl + '/automation/webhook/fetch-fields',
+            headers: {
+                'Authorization': localStorage.getItem("_token"),
+                "Content-Type": "application/json"
+            },
+            data : payload
+        };
+        return axios(configAxios);
+    },
+    deleteWebhookNode: (payload) => {
+        let configAxios = {
+            method: 'post',
+            url: config.automationWebhookUrl + '/automation/webhook/delete-webhook',
             headers: {
                 'Authorization': localStorage.getItem("_token"),
                 "Content-Type": "application/json"

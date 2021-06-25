@@ -7,7 +7,6 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import "./automation.css";
 import { FilterNode, TriggerNode, ActionNode, ActionMessage } from "./nodes";
-import apis from "./services/";
 import {Filter} from "./modals/filter";
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
 import chevron_right_white_24dp from "../../../../assets/images/chevron_right_white_24dp.svg";
@@ -38,6 +37,7 @@ const AutomationBuilder = (props) => {
   const [body, setBody] = useState('');
   const [bodyError, setBodyError] = useState(false);
   const [nId, setNId] = useState(false);
+  const [webhookData, setWebhookData] = useState([]);
   const edgeType = "smoothstep";
   const nodeTypes = {
     trigger: TriggerNode,
@@ -230,15 +230,37 @@ const AutomationBuilder = (props) => {
     setAutomationModal("actionMessage");
   };
 
-  const refreshWebhook = (id) => {
-    console.log('refresh', id);
+  const refreshWebhook = async (id) => {
+    setWebhookData([]);
+    if (id) {
+      let payload = {'unique_id': id};
+      setIsLoader(true);
+      let fetchFields = await AutomationServices.fetchFields(JSON.stringify(payload));
+      setIsLoader(false);
+      if (fetchFields.data.success) {
+        setWebhookData(fetchFields.data.data);
+      } else {
+        console.log("api error ! " + fetchFields.data.message);
+      }
+    }
   };
 
-  const triggerEdit = (e, n) => {
+  const triggerEdit = async (e, n) => {
     setAutomationUrl(n.data.url);
     setAutomationUrlId(n.data.id);
     setAutomationModal("trigger");
-
+    setWebhookData([]);
+    if (n.data.id) {
+      let payload = {'unique_id': n.data.id};
+      setIsLoader(true);
+      let fetchFields = await AutomationServices.fetchFields(JSON.stringify(payload));
+      setIsLoader(false);
+      if (fetchFields.data.success) {
+        setWebhookData(fetchFields.data.data);
+      } else {
+        console.log("api error ! " + fetchFields.data.message);
+      }
+    }
   };
 
   const closeFilterModal = () => {
@@ -361,8 +383,13 @@ const AutomationBuilder = (props) => {
       });
     }
   };
-  const deleteNode = (e, elm) => {
-    onElementsRemove([elm])
+  const deleteNode = async (e, elm) => {
+    onElementsRemove([elm]);
+    if (elm.type === 'trigger' && elm.data.id) {
+      let payload = {'unique_id': elm.data.id};
+      let deleteWebhook = await AutomationServices.deleteWebhookNode(JSON.stringify(payload));
+      console.log(deleteWebhook);
+    }
   };
   const onLoad = (_reactFlowInstance) =>
       setReactFlowInstance(_reactFlowInstance);
@@ -459,7 +486,24 @@ const AutomationBuilder = (props) => {
       setBodyError('');
     }, 1500);
   }
-
+  const generateUrlOfWebhook = async (nodeId) => {
+    let payload = {id: 0};
+    let res = await AutomationServices.generateUrl(JSON.stringify(payload));
+    if (res.data.success) {
+      console.log("api success");
+      setElements((elms) =>
+          elms.map((el) => {
+            if (el.id === nodeId) {
+              el.data.url = res.data.url;
+              el.data.id = res.data.id;
+            }
+            return { ...el };
+          })
+      );
+    } else {
+      console.log("api error ! " + res.data.message);
+    }
+  }
   const onDrop = async (event) => {
     event.preventDefault();
     const types = {
@@ -476,26 +520,19 @@ const AutomationBuilder = (props) => {
       y: event.clientY - reactFlowBounds.top,
     });
     if (type === 'trigger') {
-      let payload = {id: 0};
-      setIsLoader(true);
-      let res = await AutomationServices.generateUrl(JSON.stringify(payload));
-      setIsLoader(false);
-      if (res.data.success) {
-        console.log("api success");
-        newNode = {
-          id: getNodeId(type),
-          type,
-          position,
-          data: {
-            label: `${types[type]}`,
-            nodes: {next: [], previous: ""},
-            url: res.data.url,
-            id: res.data.id
-          },
-        };
-      } else {
-        console.log("api error ! " + res.data.message);
-      }
+      newNode = {
+        id: getNodeId(type),
+        type,
+        position,
+        data: {
+          label: `${types[type]}`,
+          nodes: {next: [], previous: ""},
+          url: '',
+          id: ''
+        },
+      };
+      setElements((es) => es.concat(newNode));
+      generateUrlOfWebhook(newNode.id);
     } else if (type === 'actionMessage') {
       newNode = {
         id: getNodeId(type),
@@ -504,9 +541,13 @@ const AutomationBuilder = (props) => {
         data: {
           label: `${types[type]}`,
           nodes: {next: [], previous: ""},
-          messageArn: 'arn:aws:lambda:us-east-1:670103364767:function:smsaction-dev-hello'
+          messageArn: 'arn:aws:lambda:us-east-1:670103364767:function:smsaction-dev-sendMessage',
+          to: '',
+          from: '',
+          body: ''
         },
       };
+      setElements((es) => es.concat(newNode));
     } else {
       newNode = {
         id: getNodeId(type),
@@ -514,8 +555,8 @@ const AutomationBuilder = (props) => {
         position,
         data: {label: `${types[type]}`, nodes: {next: [], previous: ""}},
       };
+      setElements((es) => es.concat(newNode));
     }
-    setElements((es) => es.concat(newNode));
   };
   const getConnectionDetails = (source, target) => {
     const sourcePosition = source.indexOf("-");
@@ -664,7 +705,8 @@ const AutomationBuilder = (props) => {
     return returnType;
   };
   const onClickCopy = (text) => {
-    window.navigator.clipboard.writeText(text)
+    //window.navigator.clipboard.writeText(text);
+    console.log(text);
   }
   useEffect(() => {
     if (Object.keys(props.automationElement).length) {
@@ -745,10 +787,20 @@ const AutomationBuilder = (props) => {
                         <div className="formFieldsArea">
                           <div className="inputField">
                             <label htmlFor="">webhook URL</label>
-                            <input type="text" name="webhook-url" id="webhook-url" value={automationUrl} onClick={onClickCopy(automationUrl)} readOnly={true}/>
+                            <input type="text" name="webhook-url" id="webhook-url" value={automationUrl} onClick={() => onClickCopy(automationUrl)} readOnly={true}/>
                           </div>
+                          {Object.keys(webhookData).length ? (
+                                Object.keys(webhookData).map((value, key) => (
+                                    <div className="inputField">
+                                      <label htmlFor="">{value}</label>
+                                      <input type="text" name={"webhook-url"+key} id={"webhook-url-"+key} value={webhookData[value]} readOnly={true}/>
+                                    </div>
+                                ))
+                              )
+                             : ""
+                          }
                           <div className="inputField">
-                            <button className="refreshFieldsBtn" onClick={refreshWebhook(automationUrlId)}>Refresh Fields</button>
+                            <button className="refreshFieldsBtn" onClick={() => refreshWebhook(automationUrlId)}>Refresh Fields</button>
                           </div>
                         </div>
                         <div className="saveButton">
