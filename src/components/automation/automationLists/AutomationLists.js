@@ -157,6 +157,31 @@ const AutomationLists = (props) => {
     }
   }
 
+  const deleteAutomation = async(automationID) => {
+    try {
+      // Enable loader
+      setIsLoader(true);
+      // Call delete automation service
+      await AutomationServices.deleteAutomation(automationID);
+      // Reduce the count
+      const newCount = automationData.count - 1;
+      // Filter out the automation by checking with id
+      const newAutomationData = automationData.data.filter(el => el._id !== automationID);
+      // Reset the automation data with new filter and new count
+      setAutomationData({
+        data: newAutomationData,
+        count: newCount
+      })
+    } catch (e) {
+      // Alert for any exception. [Later need to change in error component];
+      window.alert(e.message);
+    } finally {
+      // Disable the loader
+      setIsLoader(false);
+    }
+      
+  }
+
   return (
     <>
       {isLoader ? <Loader /> : ''}
@@ -325,7 +350,12 @@ const AutomationLists = (props) => {
                               </span>
                               Edit
                             </button>
-                            <button className="btn btnDelete">
+                            <button className="btn btnDelete"
+                            onClick={() => {
+                                if(window.confirm('Are you sure you want to delete this automation?')) {
+                                  deleteAutomation(elem._id);
+                                }
+                            }}>
                               <span>
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"

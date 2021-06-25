@@ -33,5 +33,7 @@ module.exports = {
     automationBasicUrl: "https://402pgi0zp9.execute-api.us-east-1.amazonaws.com/dev",
     //automationBasicUrl: "http://localhost:3005/dev",
     automationWebhookUrl: "https://prcriy2ij4.execute-api.us-east-1.amazonaws.com/dev",
-    automationAslUrl: "https://5uetvsgrhl.execute-api.us-east-1.amazonaws.com/dev"
+    automationAslUrl: "https://5uetvsgrhl.execute-api.us-east-1.amazonaws.com/dev",
+    // Delete Automation
+    automationDeleteUrl: "https://402pgi0zp9.execute-api.us-east-1.amazonaws.com/dev/automation/delete"
 }

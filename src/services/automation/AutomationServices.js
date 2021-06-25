@@ -114,5 +114,29 @@ export const AutomationServices = {
             data : payload
         };
         return axios(configAxios);
+    },
+    deleteAutomation: async (automationID) => {
+        try {
+            const url = config.automationDeleteUrl + "/" + automationID;
+            const options = {
+                headers: {
+                    Authorization: localStorage.getItem("_token")
+                }
+            }
+            const res = await axios.delete(url, options);
+            console.log(res);
+            if(res.status == 200) {
+                return {
+                    status: res.status,
+                    message: res.data.message,
+                    details: res.data.details
+                }
+            } else {
+                throw new Error(res.data.message)
+            }
+            console.log(res.data);
+        } catch (e) {
+            throw new Error(e.message)
+        }
     }
 };
