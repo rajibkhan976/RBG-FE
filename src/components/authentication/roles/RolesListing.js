@@ -26,6 +26,8 @@ const RolesListing = (props) => {
     const [dropdownPos, setDropdownPos] = useState('bottom');
     const [rolesData, setRolesData] = useState(null);
     const [rolesCount, setRolesCount] = useState(0);
+    const [sortBy, setSortBy] = useState("");
+    const [sortType, setSortType] = useState("asc");
     const [paginationData, setPaginationData] = useState(
         {
             count: null,
@@ -50,19 +52,20 @@ const RolesListing = (props) => {
     };
 
     useEffect(() => {
+        setSortBy(utils.getQueryVariable('sortBy'));
+        setSortType(utils.getQueryVariable('sortType')); 
         fetchRoles();
     }, []);
 
     /**
-     * Function to fetch roles
-     * @returns
+     * Get all query params
      */
-    const fetchRoles = async () => {
-
-        let pageId = utils.getQueryVariable('page') || 1;
+    const getQueryParams = async () => {
         let keyword = utils.getQueryVariable('search');
         let fromDt = utils.getQueryVariable('fromDate');
         let toDt = utils.getQueryVariable('toDate');
+        let srtBy = utils.getQueryVariable('sortBy');
+        let srtType = utils.getQueryVariable('sortType');
         let queryParams = new URLSearchParams();
         if (keyword) {
             queryParams.append("search", keyword);
@@ -73,6 +76,23 @@ const RolesListing = (props) => {
         if (toDt) {
             queryParams.append("toDate", toDt);
         }
+        if (srtBy) {
+            queryParams.append("sortBy", srtBy);
+        }
+        if (srtType) {
+            queryParams.append("sortType", srtType);
+        }
+        return queryParams;
+    }
+
+    /**
+     * Function to fetch roles
+     * @returns
+     */
+    const fetchRoles = async () => {
+
+        let pageId = utils.getQueryVariable('page') || 1;
+        let queryParams = await getQueryParams();
 
         try {
             setIsLoader(true);
@@ -206,6 +226,25 @@ const RolesListing = (props) => {
         }
     }
 
+    const handleSortBy = (field) => {       
+        // Set sort type
+        let type = "asc"
+        if (field == sortBy) {
+            if (sortType == "asc") {
+                type = "dsc";
+            }
+        }
+        
+        // Set state and Update query param
+        setSortBy(field);
+        setSortType(type); 
+        utils.addQueryParameter('sortBy', field);
+        utils.addQueryParameter('sortType', type);
+
+        // Fetch data
+        fetchRoles()
+    }
+
     return (
         <div className="dashInnerUI">
             {isLoader ? <Loader /> : ''}
@@ -242,11 +281,18 @@ const RolesListing = (props) => {
                 <div className="listBody" ref={optionsToggleRef}>
                     <ul className="tableListing">
                         <li className="listHeading userRole">
-                            <div className="userName">Role Name</div>
-                            <div className="phoneNum assignedPeople">
+                            <div
+                                className={"userName " + (sortBy == "name" ? "sort " + sortType : "")}
+                                onClick={() => handleSortBy("name")}>Role Name</div>
+                            <div
+                                className={"phoneNum assignedPeople " + (sortBy == "people" ? "sort " + sortType : "")}
+                                onClick={() => handleSortBy("people")}>
                                 No. of people assigned
                             </div>
-                            <div className="createDate">Created on</div>
+                            <div
+                                className={"createDate " + (sortBy == "createdAt" ? "sort " + sortType : "")}
+                                onClick={() => handleSortBy("createdAt")}
+                            >Created on</div>
                         </li>
                         {rolesData ?
                             rolesData.map((elem, key) => {
