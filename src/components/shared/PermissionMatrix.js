@@ -181,16 +181,6 @@ const PermissionMatrix = (props) => {
   }
 
   /**
-   * Dynamically set permissions
-   * @param {*} entityId 
-   * @param {*} actionId 
-   * @param {*} actionTypeId 
-   */
-  const dynamicallySetPermissions = (entityId, actionId, actionTypeId) => {
-
-  }
-
-  /**
    * Handle entity change
    */
   const handleEntityChange = async (e) => {
@@ -256,43 +246,7 @@ const PermissionMatrix = (props) => {
     let isParentEntity = entityData.findIndex(entity => entity._id === entityId);
     let hasEntity = hasEntitySet(permissions, entityId);
 
-    if (isParentEntity >= 0) {
-      console.log('Is parent entity ff', isParentEntity, hasEntity);
-      permissions.push({
-        entity: entityId,
-        actions: [
-          {
-            actionId: actionId,
-            actionTypeId: actionTypeId
-          }
-        ]
-      })
-
-
-      entityData.map((entity, key) => {
-        if (entity._id === entityId && isCheckedAction) {
-          entity.subEntity.map((subEntityEle, key) => {
-            permissions.push({
-              entity: subEntityEle._id,
-              actions: [
-                {
-                  actionId: actionId,
-                  actionTypeId: actionTypeId
-                }
-              ]
-            })
-          });
-        } else if (entity._id === entityId && !isCheckedAction) {
-          /**
-           * Empty permissions
-           */
-          permissions.splice(0, permissions.length)
-          console.log('Infection cleared again', permissions);
-        }
-      });
-      console.log('Infection', permissions);
-
-    } 
+    
     if (hasEntity >= 0) {
       console.log('inside has entity');
       /**
@@ -314,6 +268,7 @@ const PermissionMatrix = (props) => {
          * remove specific action
          */
         result[0].actions.splice(result[0].actions.findIndex(a => a.actionId === actionId), 1);
+
         /**
          * If actions count zero
          * then delete the entity
@@ -321,6 +276,23 @@ const PermissionMatrix = (props) => {
         if (result[0].actions.length === 0) {
           //console.log('Updated actions after delete', result[0].actions.length);
           permissions.splice(permissions.findIndex(p => p.entity === entityId), 1);
+        }
+
+        /**
+        * if parent entity selected
+        * remove the action to all the
+        * entity
+        */
+         if (isParentEntity >= 0) {
+          permissions.map((permission, key) => {
+            if (permission.entity !== entityId) {
+              permission.actions.splice(permission.actions.findIndex(a => a.actionId === actionId), 1);
+              if(permission.actions.length === 0) {
+                console.log('actions length became zero', permissions.findIndex(p => p.entity === permission.entity))
+                // permissions.splice(permissions.filter(p => p.entity === permission.entity), 1);
+              }
+            }
+          });
         }
 
       } else {
@@ -334,14 +306,65 @@ const PermissionMatrix = (props) => {
             actionTypeId: actionTypeId
           }
         )
+        /**
+         * if parent entity selected
+         * add the action to all the
+         * entity
+         */
+        if (isParentEntity >= 0) {
+          console.log('inside has entity parent entity', permissions);
+          permissions.map((permission, key) => {
+            if (permission.entity !== entityId) {
+              permission.actions.push(
+                {
+                  actionId: actionId,
+                  actionTypeId: actionTypeId
+                }
+              );
+            }
+          });
+        }
+
       }
       //console.log('update specific actions', result[0].actions);
     } else {
       /**
        * Entity not preset
        */
-      if (!isParentEntity) {
-        console.log('else part');
+      console.log('else part', isParentEntity);
+      if (isParentEntity >= 0) {
+        /**
+         * If selected parent entity
+         * then add the same action
+         * for all the individual
+         * entity
+         */
+        console.log('if to else part')
+        entityData.map((entity, key) => {
+          if (entity._id === entityId && isCheckedAction) {
+            permissions.push({
+              entity: entityId,
+              actions: [
+                {
+                  actionId: actionId,
+                  actionTypeId: actionTypeId
+                }
+              ]
+            })
+            entity.subEntity.map((subEntityEle, key) => {
+              permissions.push({
+                entity: subEntityEle._id,
+                actions: [
+                  {
+                    actionId: actionId,
+                    actionTypeId: actionTypeId
+                  }
+                ]
+              })
+            });
+          }
+        })
+      } else {
         permissions.push({
           entity: entityId,
           actions: [
@@ -352,6 +375,7 @@ const PermissionMatrix = (props) => {
           ]
         })
       }
+
     }
     // console.log('updated permissions', permissions);
 
