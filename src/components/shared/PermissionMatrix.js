@@ -246,7 +246,7 @@ const PermissionMatrix = (props) => {
     let isParentEntity = entityData.findIndex(entity => entity._id === entityId);
     let hasEntity = hasEntitySet(permissions, entityId);
 
-    
+
     if (hasEntity >= 0) {
       console.log('inside has entity');
       /**
@@ -283,16 +283,16 @@ const PermissionMatrix = (props) => {
         * remove the action to all the
         * entity
         */
-         if (isParentEntity >= 0) {
+        if (isParentEntity >= 0) {
           permissions.map((permission, key) => {
             if (permission.entity !== entityId) {
               permission.actions.splice(permission.actions.findIndex(a => a.actionId === actionId), 1);
-              if(permission.actions.length === 0) {
-                console.log('actions length became zero', permissions.findIndex(p => p.entity === permission.entity))
-                // permissions.splice(permissions.filter(p => p.entity === permission.entity), 1);
+              if (permission.actions.length === 0) {
+                console.log('Length became zero');
               }
             }
           });
+
         }
 
       } else {
@@ -382,6 +382,7 @@ const PermissionMatrix = (props) => {
     /**
      * Send data to parent
      */
+    
     broadcastToParent(permissions);
   }
 
