@@ -16,9 +16,6 @@ const login = (email, password) => {
                     });
                 }
             })
-            .then(() => {
-                history.push('/dashboard')
-            })
             .catch(error => {
                 if (error) {
                     //console.log('Auth actions error', error.response.data);

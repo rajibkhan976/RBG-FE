@@ -6,10 +6,14 @@ import Loader from "./Loader";
 const PermissionMatrix = (props) => {
   const [entityData, setEntityData] = useState('');
   const [actionData, setActionData] = useState('');
+  const [actionTypeData, setActionTypeData] = useState('');
   const [errorMsg, setErrorMsg] = useState("");
   const [permissions, setPermissions] = useState([]);
   const [isLoader, setIsLoader] = useState(false);
-  const [actionTypeId, setActionTypeId] = useState('606caa9d8dd1e227032b01d6');
+  const [actionTypeId, setActionTypeId] = useState('');
+  const [editActionTypeId, setEditActionTypeId] = useState('');
+  const [editedPermissionData, setEditedPermissionData] = useState([]);
+
 
   useEffect(() => {
     /**
@@ -20,7 +24,83 @@ const PermissionMatrix = (props) => {
      * Call to get actions
      */
     getActions();
+
   }, []);
+
+  /**
+   * Depends on edited action type ID
+   */
+  useEffect(() => {
+    /**
+      * Call to get action types
+      */
+    getActionTypes();
+  }, [editActionTypeId]);
+
+  /**
+   * Pre populate permission matrix data
+   */
+  useEffect(() => {
+    console.log('Props', props.setPermissionData);
+
+    if (Array.isArray(props.setPermissionData) && props.setPermissionData.length) {
+      // console.log('set permission data', props.setPermissionData);
+      setPermissions(props.setPermissionData);
+      /**
+       * Set action type
+       */
+      setEditActionTypeId(props.setPermissionData[0].actions[0].actionTypeId)
+      // console.log('action type Id', props.setPermissionData[0].actions[0].actionTypeId)
+      props.setPermissionData.map((permission, key) => {
+        // console.log('here permission', permission);
+        let associatedActions = [];
+        permission.actions.map((action, key) => {
+          // console.log('here action', action);
+          associatedActions.push(action.actionId);
+        });
+        editedPermissionData[permission.entity] = associatedActions;
+      })
+      // console.log('get en arr', editedPermissionData);
+      getEntities();
+    }
+  }, [props.setPermissionData]);
+
+  /**
+   * Handle data type
+   */
+  const handleActionType = (e) => {
+    // console.log('Type id', e.target.value)
+
+    let actionTypes = actionTypeData.map((actionType, key) => {
+      return {
+        isChecked: (e.target.value === actionType._id ? true : false),
+        _id: actionType._id,
+        name: actionType.name,
+        slug: actionType.slug,
+      }
+    });
+    setActionTypeData(actionTypes);
+    setActionTypeId(e.target.value);
+    /**
+     * Update action type ID
+     * for all the entities
+     */
+    if (permissions.length) {
+      let updatedPermission = permissions.map((entities, key) => {
+        return {
+          entity: entities.entity,
+          actions: entities.actions.map((action, key) => {
+            return {
+              actionId: action.actionId,
+              actionTypeId: e.target.value
+            }
+          })
+        }
+      });
+      // console.log('update permission set', updatedPermission);
+      setPermissions(updatedPermission);
+    }
+  }
 
   /**
    * Function get entities
@@ -33,6 +113,7 @@ const PermissionMatrix = (props) => {
           //console.log('Permission entities', result);
           if (result) {
             let entities = result.entities.map((entity, key) => {
+
               return {
                 isChecked: false,
                 _id: entity._id,
@@ -46,7 +127,7 @@ const PermissionMatrix = (props) => {
                     name: subEntity.name,
                     associatedActions: entity.associatedActions.map((subEntityAction, key) => {
                       return {
-                        isChecked: false,
+                        isChecked: editedPermissionData[subEntity._id] && editedPermissionData[subEntity._id].includes(subEntityAction._id) ? true : false,
                         _id: subEntityAction._id,
                         slug: subEntityAction.slug,
                         name: subEntityAction.name,
@@ -56,7 +137,7 @@ const PermissionMatrix = (props) => {
                 }),
                 associatedActions: entity.associatedActions.map((associatedAction, key) => {
                   return {
-                    isChecked: false,
+                    isChecked: editedPermissionData[entity._id] && editedPermissionData[entity._id].includes(associatedAction._id) ? true : false,
                     _id: associatedAction._id,
                     slug: associatedAction.slug,
                     name: associatedAction.name,
@@ -113,6 +194,43 @@ const PermissionMatrix = (props) => {
   }
 
   /**
+   * Function get action types
+   */
+  const getActionTypes = async () => {
+    try {
+      await PermissionServices.actionType()
+        .then(result => {
+          // console.log('Permission action types', result);
+          if (result) {
+            let actionTypes = result.actionTypes.map((actionType, key) => {
+              return {
+                isChecked: editActionTypeId ? (actionType._id === editActionTypeId ? true : false) : (actionType._id === result.actionTypes[0]._id ? true : false),
+                _id: actionType._id,
+                name: actionType.name,
+                slug: actionType.slug,
+              }
+            });
+            setActionTypeData(actionTypes);
+            /**
+             * If edit take edited action type id
+             * else take own data action type id
+             */
+            // console.log('Edited id', editActionTypeId);
+            setActionTypeId(editActionTypeId ? editActionTypeId : actionTypes[0]._id);
+          }
+        })
+    } catch (e) {
+      console.log('Permission action types error', e);
+      if (e.response && e.response.status == 403) {
+        setErrorMsg("You dont have permission to perform this action");
+      }
+      else if (e.response && e.response.data.message) {
+        setErrorMsg(e.response.data.message);
+      }
+    }
+  }
+
+  /**
    * Show more button
    * for subentities
    * @param {*} e 
@@ -138,7 +256,7 @@ const PermissionMatrix = (props) => {
    * @param {*} e 
    */
   const globalPermissionState = (isChecked, entityId, actionId) => {
-    // console.log('Global permission state', entityId, actionId);
+    console.log('Global permission state', entityId, actionId);
     let entities = entityData.map((entity, key) => {
       return {
         isChecked: !actionId && (entity._id === entityId) ? isChecked : false,
@@ -216,13 +334,17 @@ const PermissionMatrix = (props) => {
             entity: subEntityEle._id, actions
           })
         });
-        console.log('Infection', permissions);
+        console.log('Handle entity change', permissions);
       } else if (entity._id === entityId && !isCheckedEntity) {
         /**
          * Empty permissions
          */
-        permissions.splice(0, permissions.length)
-        console.log('Infection cleared', permissions);
+        permissions.splice(permissions.findIndex(entity => entity._id === entityId), 1);
+        entity.subEntity.map((subEntityEle, key) => {
+          permissions.splice(permissions.findIndex(entity => subEntityEle._id === entityId), 1);
+        });
+
+        console.log('Handle entity change cleared', permissions);
       }
     });
     /**
@@ -235,7 +357,7 @@ const PermissionMatrix = (props) => {
    * Handle entity change
    */
   const handleActionChange = async (e, entityId, entitySlug, actionId, actionSlug) => {
-    console.log('Hernia: ', entityId, entitySlug, 'Action: ', actionId, actionSlug);
+    console.log('Handle action change: ', entityId, entitySlug, 'Action: ', actionId, actionSlug);
     /**
      * Check or uncheck UI
      */
@@ -382,7 +504,7 @@ const PermissionMatrix = (props) => {
     /**
      * Send data to parent
      */
-    
+
     broadcastToParent(permissions);
   }
 
@@ -413,11 +535,17 @@ const PermissionMatrix = (props) => {
         {isLoader ? <Loader /> : ''}
         <p className="permissionHead clearfix">
           Manage permissions
-          <label className="checkCutsom">
-            <input type="checkbox" />
-            <span></span>
-            <em>All Data</em>
-          </label>
+          {actionTypeData && actionTypeData.map((el, key) => {
+            return (
+              <React.Fragment key={key + "actionTypes"}>
+                <label className="checkCutsom">
+                  <input type="checkbox" value={el._id} checked={el.isChecked} onChange={handleActionType} />
+                  <span></span>
+                  <em>{el.name}</em>
+                </label>
+              </React.Fragment>
+            );
+          })}
         </p>
         <div className="InputsContainer">
           <ul>

@@ -41,7 +41,7 @@ const Pagination = (props) => {
    */
   const renderPageNumbers = pageNumbers.map(number => {
 
-    if (number < maxPageNumberLimit && number > minPageNumberLimit) {
+    if (number <= maxPageNumberLimit && number > minPageNumberLimit) {
       return (
         <li
           key={number}

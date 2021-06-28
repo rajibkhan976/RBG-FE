@@ -69,6 +69,7 @@ const Groups = (props) => {
       <GroupModal
         createButton={createButton}
         setCreateButton={setCreateButton}
+        getData={getDataFn}
       />
     </div>
   );

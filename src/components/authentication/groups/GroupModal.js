@@ -23,6 +23,21 @@ const GroupModal = (props) => {
         permission: ""
     });
     const [errorMsg, setErrorMsg] = useState("");
+    const [permissionData, setPermissionData] = useState([]);
+    const [saveAndNew, setSaveAndNew] = useState(false);
+    const [editGroupId, setEditGroupId] = useState('');
+
+    let editGroup = props.createButton ? props.createButton : false;
+
+    /**
+     * Edit group
+     */
+    useEffect(() => {
+        setEditGroupId(editGroup._id);
+        setGroupName(editGroup.name);
+        setRoleId(editGroup.roleId);
+        setPermissionData(editGroup.permissions);
+    }, [editGroup])
 
     const closeSideMenu = (e) => {
         e.preventDefault();
@@ -30,7 +45,7 @@ const GroupModal = (props) => {
     };
 
     useEffect(() => {
-        let pageId = 1;
+        let pageId = "all";
         let keyword = null;
 
         fetchRoles(pageId, keyword);
@@ -58,8 +73,11 @@ const GroupModal = (props) => {
      * Reset group form
      * @param {*} e 
      */
-    const resetRoleForm = () => {
-        setGroupName(null);
+    const resetGroupForm = () => {
+        console.log('Reset group from');
+        setGroupName('');
+        setRoleId('');
+        setPermissions([]);
     }
 
     /**
@@ -85,7 +103,7 @@ const GroupModal = (props) => {
      * Get roles from pagination component
      * @param {*} dataFromChild
      */
-     const getDataFn = (dataFromChild) => {
+    const getDataFn = (dataFromChild) => {
         console.log('Data from child', dataFromChild);
         if (dataFromChild) {
             setPermissions(dataFromChild);
@@ -164,12 +182,31 @@ const GroupModal = (props) => {
              * Lets decide the operation type
              */
             let oprationMethod = "createGroup";
+            if (editGroupId) {
+                oprationMethod = "editGroup";
+                payload.id = editGroupId;
+            }
+
             try {
                 setIsLoader(true);
                 const result = await GroupServices[oprationMethod](payload)
                 if (result) {
+                    /**
+                     * Reset modal
+                     */
+                    if (saveAndNew) {
+                        console.log('save and new')
+                        setSaveAndNew(false);
+                        resetGroupForm();
+                        props.setCreateButton(null);
+                        props.setCreateButton('groups');
+                    } else {
+                        console.log('else save and new')
+                        props.setCreateButton(null);
+                    }
+                    fetchGroups(1);
+                    setProcessing(false);
                     setIsLoader(false);
-                    history.go(0);
                 }
             } catch (e) {
                 /**
@@ -190,6 +227,43 @@ const GroupModal = (props) => {
         }
     }
 
+    const handleSaveAndNew = () => {
+        setSaveAndNew(true);
+    }
+
+    /**
+     * Send the data to group listing component
+     * @param {*} data
+     */
+    const broadcastToParent = (data) => {
+        props.getData(data);
+    };
+
+    /**
+     * Function to fetch users based on filter
+     * @returns 
+     */
+    const fetchGroups = async (pageId, queryParams) => {
+        try {
+            setIsLoader(true);
+            await GroupServices.fetchGroups(pageId, queryParams)
+                .then((result) => {
+                    console.log('Group listing result', result.groups);
+                    if (result) {
+                        broadcastToParent(result);
+                        setIsLoader(false);
+                    }
+                })
+                .catch((error) => {
+                    setIsLoader(false);
+                    console.log("Group listing error", error);
+                });
+        } catch (e) {
+            setIsLoader(false);
+            console.log("Error in Group listing", e);
+        }
+    }
+
     return (
         <>
             {props.createButton !== null && (
@@ -204,7 +278,7 @@ const GroupModal = (props) => {
                             <span></span>
                         </button>
                         <div className="sideMenuHeader">
-                            <h3>Create a Group</h3>
+                            <h3>{editGroupId ? 'Edit' : 'Create'} a Group</h3>
                             <p>
                                 Enter group name
                             </p>
@@ -224,6 +298,7 @@ const GroupModal = (props) => {
                                                             name="groupName"
                                                             onChange={handleGroupNameChange}
                                                             placeholder="Ex. Gym Staffs"
+                                                            defaultValue={groupName ? groupName : ''}
                                                         />
                                                     </div>
                                                     {formErrors.groupName ? <span className="errorMsg">{formErrors.groupName}</span> : ''}
@@ -236,6 +311,7 @@ const GroupModal = (props) => {
                                                                 backgroundImage: "url(" + arrowDown + ")",
                                                             }}
                                                             onChange={handleRoleChange}
+                                                            value={roleId ? roleId : ''}
                                                         >
                                                             <option value="">Select role</option>
                                                             {roles ? roles.map((el, key) => {
@@ -253,16 +329,22 @@ const GroupModal = (props) => {
                                         </ul>
                                     </div>
                                 </div>
-                                <PermissionMatrix getData={getDataFn}/>
+                                <PermissionMatrix
+                                    getData={getDataFn}
+                                    setPermissionData={permissionData}
+                                />
                                 <div className="permissionButtons">
                                     <button className="creatUserBtn createBtn">
                                         <span>Save</span>
                                         <img className="" src={arrow_forward} alt="" />
                                     </button>
-                                    <button className="saveNnewBtn">
-                                        <span>Save & New</span>
-                                        <img className="" src={arrow_forward} alt="" />
-                                    </button>
+                                    {!editGroupId &&
+                                        <button className="saveNnewBtn" onClick={handleSaveAndNew}>
+                                            <span>Save & New</span>
+                                            <img className="" src={arrow_forward} alt="" />
+                                        </button>
+                                    }
+
                                 </div>
                             </form>
                         </div>

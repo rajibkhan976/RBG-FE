@@ -757,6 +757,10 @@
     display: flex;
 }
 
+.permissionHead .checkCutsom + .checkCutsom {
+    margin-right: 10px;
+}
+
 .permissionHead label.checkCutsom span {
     margin: 0 8px 0 0;
 }

@@ -5,7 +5,7 @@ import { message } from "../../helpers";
 
 let headers = {
     "Content-Type": "application/json",
-    'Accept': 'application/json',   
+    'Accept': 'application/json',
 };
 
 export const UserServices = {
@@ -14,8 +14,8 @@ export const UserServices = {
         return new Promise((resolve, reject) => {
             axios
                 .get(
-                    config.fetchUsersUrl + 
-                    (page ? "/" + page : '') + 
+                    config.fetchUsersUrl +
+                    (page ? "/" + page : '') +
                     (queryParams ? "?" + queryParams : ''),
                     { headers: headers }
                 )
@@ -127,4 +127,16 @@ export const UserServices = {
                 });
         });
     },
+    fetchGroupsByRoleId: async (roleId) => {
+        headers.Authorization = localStorage.getItem("_token");
+        try {
+            const getGroups = await axios.get(
+                config.fetchGroups + roleId,
+                { headers: headers }
+            );
+            return getGroups.data;
+        } catch (error) {
+            throw new Error(error);
+        }
+    }
 };

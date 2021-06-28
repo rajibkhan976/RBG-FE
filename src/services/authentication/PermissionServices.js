@@ -55,5 +55,29 @@ export const PermissionServices = {
                     }
                 });
         });
+    },
+    actionType : async() => {
+        headers.Authorization = localStorage.getItem("_token");
+        return new Promise((resolve, reject) => {
+            if (isLoggedIn() === false) {
+                reject(message.loginFailed);
+            }
+            axios
+                .get(
+                    config.groupUrl + "actionType",
+                    { headers: headers }
+                )
+                .then((result) => {
+                    //console.log('action: ', result.data);
+                    resolve(result.data);
+                })
+                .catch((error) => {
+                    if (error != null && error.response != null) {
+                        reject(error.response.data.error);
+                    } else {
+                        reject(message.connectionError);
+                    }
+                });
+        });
     }
 };

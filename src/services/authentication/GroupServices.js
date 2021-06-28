@@ -33,6 +33,27 @@ export const GroupServices = {
             return e;
         }
     },
+    editGroup: async (payload) => {
+        headers.Authorization = localStorage.getItem("_token");
+        return new Promise((resolve, reject) => {
+            axios
+                .put(
+                    config.groupUrl + payload.id,
+                    payload,
+                    { headers: headers }
+                )
+                .then((result) => {
+                    console.log('Create group service result: ', result);
+                    resolve(result.data);
+                })
+                .catch((error) => {
+                    console.log('Create group service error: ', error);
+                    if (error != null) {
+                        reject(error);
+                    }
+                });
+        });
+    },
     deleteGroup: async (groupId) => {
         headers.Authorization = localStorage.getItem("_token");
         try {

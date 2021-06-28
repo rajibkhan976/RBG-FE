@@ -33,8 +33,8 @@ const GroupListing = (props) => {
     const [sortBy, setSortBy] = useState("");
     const [sortType, setSortType] = useState("asc");
 
-    const toggleCreateHeader = () => {
-        props.toggleCreate("groups");
+    const toggleCreateHeader = (e) => {
+        props.toggleCreate(e);
     };
 
     const filterGroups = () => {
