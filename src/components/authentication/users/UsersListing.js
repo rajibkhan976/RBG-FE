@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { useDispatch, useSelector } from 'react-redux';
 import Pagination from "../../shared/Pagination";
 import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
 import { UserServices } from "../../../services/authentication/UserServices";
@@ -7,6 +7,7 @@ import { OrganizationServices } from "../../../services/authentication/Organizat
 import { utils } from "../../../helpers";
 import Loader from "../../shared/Loader";
 import config from "../../../configuration/config";
+import * as actionTypes from "../../../actions/types";
 
 import search_icon from "../../../assets/images/search_icon.svg";
 import filter_icon from "../../../assets/images/filter_icon.svg";
@@ -20,6 +21,8 @@ const UsersListing = (props) => {
     const [dropdownPos, setDropdownPos] = useState('bottom');
     const [usersData, setUsersData] = useState(null);
     const [usersCount, setUsersCount] = useState(0);
+    const [sortBy, setSortBy] = useState("");
+    const [sortType, setSortType] = useState("asc");
     const [paginationData, setPaginationData] = useState(
         {
             count: null,
@@ -35,6 +38,10 @@ const UsersListing = (props) => {
         props.toggleCreate(e);
     };
 
+    const dispatch = useDispatch();
+    const isFiltered = useSelector((state) => state.user.filter);
+    
+
     const filterUsers = () => {
         props.toggleFilter("user");
     };
@@ -43,48 +50,23 @@ const UsersListing = (props) => {
      * Set filtered data
      */
     useEffect(() => {
-        if (props.getFilteredData) {
-            console.log('Reached detination', props.getFilteredData);
-            setUsersData(props.getFilteredData.users);
-            setUsersCount(props.getFilteredData.pagination.count ? props.getFilteredData.pagination.count : 0);
-            //Set current page
-            setPaginationData({
-                ...paginationData,
-                currentPage: props.getFilteredData.pagination.currentPage,
-                totalPages: props.getFilteredData.pagination.totalPages
+        if (isFiltered) {
+            console.log('is filtered inside');
+            fetchUsers();
+            // UPDATE STORE
+            dispatch({
+                type: actionTypes.USER_FILTER,
+                filter : false
             });
         }
 
-    }, [props])
-
-    const editThisUser = (e, el) => {
-        let yPosition = el.clientY;
-        let avHeight = window.innerHeight - (70 + 70 + 54 + 57)
-        if ((yPosition + 70) > avHeight) {
-            setDropdownPos("top")
-        }
-        else {
-            setDropdownPos("bottom")
-        }
-
-        const data = usersData.filter((i) => i.keyId === e);
-        console.log("E? : ", data, "EL:::");
-        data[0].isEditing = !data[0].isEditing;
-        console.log("data  :: ", data[0].isEditing);
-        const newData = usersData.map((el, i) => {
-            if (el.keyId === e) {
-                return data[0];
-            } else return el;
-        });
-        console.log("newData : ", newData);
-        setUsersData(newData);
-    };
+    }, [isFiltered]);
+    
 
     useEffect(() => {
         /**
          * Get page id and keyword from URL
          */
-        let pageId = utils.getQueryVariable('page');
         let param = utils.getQueryVariable('search');
         if (param) {
             setKeyword(param);
@@ -92,17 +74,56 @@ const UsersListing = (props) => {
         /**
          * Call to fetch roles
          */
-        fetchUsers(pageId, param);
+        console.log('param', param)
+        fetchUsers();
     }, []);
+
+    const getQueryParams = async () => {
+        let search = utils.getQueryVariable('search');
+        let group = utils.getQueryVariable('group');
+        let fromDate = utils.getQueryVariable('fromDate');
+        let toDate = utils.getQueryVariable('toDate');
+        let status = utils.getQueryVariable('status');
+        let srtBy = utils.getQueryVariable('sortBy');
+        let srtType = utils.getQueryVariable('sortType');
+
+        let queryParams = new URLSearchParams();
+
+        console.log('search', search)
+        if (search) {
+            queryParams.append("search", search);
+        }
+        if (group) {
+            queryParams.append("group", group);
+        }
+        if (fromDate && toDate) {
+            queryParams.append('fromDate', fromDate);
+            queryParams.append('toDate', toDate);
+        }
+        if (status) {
+            queryParams.append("status", status);
+        }
+        if (srtBy) {
+            queryParams.append("sortBy", srtBy);
+        }
+        if (srtType) {
+            queryParams.append("sortType", srtType);
+        }
+        return queryParams;
+    }
 
     /**
      * Function to fetch users
      * @returns 
      */
-    const fetchUsers = async (pageId, keyword) => {
+    const fetchUsers = async () => {
+
+        let pageId = utils.getQueryVariable('page');        
+        let queryParams = await getQueryParams();
+        console.log('queryParams', queryParams.toString() )
         try {
             setIsLoader(true);
-            await UserServices.fetchUsers(pageId, keyword)
+            await UserServices.fetchUsers(pageId, queryParams)
                 .then((result) => {
                     console.log('User listing result', result.users);
                     if (result) {
@@ -126,22 +147,14 @@ const UsersListing = (props) => {
         }
     }
 
+    
     /**
-     * Get user from pagination component
-     * @param {*} dataFromChild 
+     * Handle pagination click
      */
-    const getDataFn = (dataFromChild) => {
-        console.log('Data from child', dataFromChild);
-        if (dataFromChild) {
-            setUsersData(dataFromChild.users);
-            //Set current page
-            setPaginationData({
-                ...paginationData,
-                currentPage: dataFromChild.pagination.currentPage,
-                totalPages: dataFromChild.pagination.totalPages
-            });
-        }
+    const paginationCallbackHandle = () => {
+        fetchUsers();
     }
+
 
     /**
      * Handle options toggle
@@ -217,19 +230,33 @@ const UsersListing = (props) => {
     const handleSearch = (event) => {
         event.preventDefault();
 
-        let pageId = utils.getQueryVariable('page');
-        let group = utils.getQueryVariable('group');
-
-        let queryParams = new URLSearchParams();
+        utils.addQueryParameter('page', 1);
         if (keyword) {
             utils.addQueryParameter('search', keyword);
-            queryParams.append("search", keyword);
         } else {
             utils.removeQueryParameter('search');
         }
-        queryParams.append("group", group);
 
-        fetchUsers(pageId, queryParams);
+        fetchUsers();
+    }
+
+    const handleSortBy = (field) => {
+        // Set sort type
+        let type = "asc"
+        if (field == sortBy) {
+            if (sortType == "asc") {
+                type = "dsc";
+            }
+        }
+
+        // Set state and Update query param
+        setSortBy(field);
+        setSortType(type);
+        utils.addQueryParameter('sortBy', field);
+        utils.addQueryParameter('sortType', type);
+
+        // Fetch data
+        fetchUsers()
     }
 
     return (
@@ -271,13 +298,34 @@ const UsersListing = (props) => {
                         <div className="listBody">
                             <ul className="tableListing">
                                 <li className="listHeading">
-                                    <div className="userName">User Name</div>
-                                    <div className="phoneNum">Phone No</div>
-                                    <div className="emailID">Email Id</div>
-                                    <div className="role">Role</div>
-                                    <div className="assignedGroup">Assigned Group</div>
-                                    <div className="status">Status</div>
-                                    <div className="createDate">Created on</div>
+                                    <div
+                                        className={"userName " + (sortBy == "name" ? "sort " + sortType : "")}
+                                        onClick={() => handleSortBy("name")}
+                                    >User Name</div>
+                                    <div
+                                        className={"phoneNum " + (sortBy == "phone" ? "sort " + sortType : "")}
+                                        onClick={() => handleSortBy("phone")}
+                                    >Phone No</div>
+                                    <div
+                                        className={"emailID " + (sortBy == "email" ? "sort " + sortType : "")}
+                                        onClick={() => handleSortBy("email")}
+                                    >Email Id</div>
+                                    <div
+                                        className={"role " + (sortBy == "role" ? "sort " + sortType : "")}
+                                        onClick={() => handleSortBy("role")}
+                                    >Role</div>
+                                    <div
+                                        className={"assignedGroup " + (sortBy == "group" ? "sort " + sortType : "")}
+                                        onClick={() => handleSortBy("group")}
+                                    >Assigned Group</div>
+                                    <div
+                                        className={"status " + (sortBy == "status" ? "sort " + sortType : "")}
+                                        onClick={() => handleSortBy("status")}
+                                    >Status</div>
+                                    <div
+                                        className={"createDate " + (sortBy == "createdAt" ? "sort " + sortType : "")}
+                                        onClick={() => handleSortBy("createdAt")}
+                                    >Created on</div>
                                 </li>
                                 {usersData &&
                                     usersData.map((elem, key) => {
@@ -397,7 +445,7 @@ const UsersListing = (props) => {
                         type="user"
                         paginationData={paginationData}
                         dataCount={usersCount}
-                        getData={getDataFn} />
+                        callback={paginationCallbackHandle} />
                 </> :
                 <div className="createNew">
                     <span>

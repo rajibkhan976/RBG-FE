@@ -26,6 +26,8 @@ const RolesListing = (props) => {
     const [dropdownPos, setDropdownPos] = useState('bottom');
     const [rolesData, setRolesData] = useState(null);
     const [rolesCount, setRolesCount] = useState(0);
+    const [sortBy, setSortBy] = useState("");
+    const [sortType, setSortType] = useState("asc");
     const [paginationData, setPaginationData] = useState(
         {
             count: null,
@@ -50,25 +52,51 @@ const RolesListing = (props) => {
     };
 
     useEffect(() => {
-        /**
-         * Get page id and keyword from URL
-         */
-        let pageId = utils.getQueryVariable('page');
-        let keyword = utils.getQueryVariable('search');
-        /**
-         * Call to fetch roles
-         */
-        fetchRoles(pageId, keyword);
+        setSortBy(utils.getQueryVariable('sortBy'));
+        setSortType(utils.getQueryVariable('sortType')); 
+        fetchRoles();
     }, []);
+
+    /**
+     * Get all query params
+     */
+    const getQueryParams = async () => {
+        let keyword = utils.getQueryVariable('search');
+        let fromDt = utils.getQueryVariable('fromDate');
+        let toDt = utils.getQueryVariable('toDate');
+        let srtBy = utils.getQueryVariable('sortBy');
+        let srtType = utils.getQueryVariable('sortType');
+        let queryParams = new URLSearchParams();
+        if (keyword) {
+            queryParams.append("search", keyword);
+        }
+        if (fromDt) {
+            queryParams.append("fromDate", fromDt);
+        }
+        if (toDt) {
+            queryParams.append("toDate", toDt);
+        }
+        if (srtBy) {
+            queryParams.append("sortBy", srtBy);
+        }
+        if (srtType) {
+            queryParams.append("sortType", srtType);
+        }
+        return queryParams;
+    }
 
     /**
      * Function to fetch roles
      * @returns
      */
-    const fetchRoles = async (pageId, keyword) => {
+    const fetchRoles = async () => {
+
+        let pageId = utils.getQueryVariable('page') || 1;
+        let queryParams = await getQueryParams();
+
         try {
             setIsLoader(true);
-            const result = await RoleServices.fetchRoles(pageId, keyword);
+            const result = await RoleServices.fetchRoles(pageId, queryParams);
             console.log('Data', result.roles);
             if(result) {
                 setRolesData(result.roles);
@@ -91,22 +119,29 @@ const RolesListing = (props) => {
         }
     }
 
-
     /**
-     * Get roles from pagination component
-     * @param {*} dataFromChild
+     * Set filtered data
      */
-    const getDataFn = (dataFromChild) => {
-        console.log('Data from child', dataFromChild);
-        if (dataFromChild) {
-            setRolesData(dataFromChild.roles);
+    useEffect(() => {
+        if (props.getFilteredData) {
+            console.log('Reached detination', props.getFilteredData);
+            setRolesData(props.getFilteredData.roles);
+            setRolesCount(props.getFilteredData.pagination.count ? props.getFilteredData.pagination.count : 0);
             //Set current page
             setPaginationData({
                 ...paginationData,
-                currentPage: dataFromChild.pagination.currentPage,
-                totalPages: dataFromChild.pagination.totalPages
+                currentPage: props.getFilteredData.pagination.currentPage,
+                totalPages: props.getFilteredData.pagination.totalPages
             });
         }
+
+    }, [props.getFilteredData])
+
+    /**
+     * Handle pagination click
+     */
+    const paginationCallbackHandle = () => {
+        fetchRoles();
     }
 
     /**
@@ -122,14 +157,14 @@ const RolesListing = (props) => {
      */
     const handleSearch = (event) => {
         event.preventDefault();
-        let pageId = 1;
+
+        utils.addQueryParameter('page', 1);
         if(keyword) {
             utils.addQueryParameter('search', keyword);
         } else {
             utils.removeQueryParameter('search');
-            utils.removeQueryParameter('page');
-        }
-        fetchRoles(pageId, keyword);
+        }        
+        fetchRoles();
     }
 
     /**
@@ -150,7 +185,6 @@ const RolesListing = (props) => {
      * Handle outside click
      */
     const handleClickOutside = (event) => {
-        //console.log('Handle outside click',optionsToggleRef, optionsToggleRef.current, event.target, option);
         if (optionsToggleRef.current.contains(event.target)) {
             //console.log('// inside click');
             return;
@@ -192,6 +226,25 @@ const RolesListing = (props) => {
         }
     }
 
+    const handleSortBy = (field) => {       
+        // Set sort type
+        let type = "asc"
+        if (field == sortBy) {
+            if (sortType == "asc") {
+                type = "dsc";
+            }
+        }
+        
+        // Set state and Update query param
+        setSortBy(field);
+        setSortType(type); 
+        utils.addQueryParameter('sortBy', field);
+        utils.addQueryParameter('sortType', type);
+
+        // Fetch data
+        fetchRoles()
+    }
+
     return (
         <div className="dashInnerUI">
             {isLoader ? <Loader /> : ''}
@@ -207,7 +260,7 @@ const RolesListing = (props) => {
                 <div className="listFeatures">
                     <div className="searchBar">
                         <form onSubmit={handleSearch}>
-                            <input type="search" name="search" placeholder="Search roles" onChange={handleKeywordChange} autoComplete="off" />
+                            <input type="search" name="search" placeholder="Search roles" defaultValue={keyword} onChange={handleKeywordChange} autoComplete="off" />
                             <button className="searchIcon">
                                 <img src={search_icon} alt="" />
                             </button>
@@ -223,46 +276,23 @@ const RolesListing = (props) => {
                     </button>
                 </div>
             </div>
-            {/* <div className="userListBody">
-        <div className="listBody">
-          <ul>
-            <li className="listHeading userRole">
-              <div className="userName">
-                Role Name
-                
-              </div>
-              <div className="phoneNum assignedPeople">
-                No. of people assigned
-                
-              </div>
-              <div className="emailID">
-                Created on
-                
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <div className="createNew">
-          <span>
-            <img src={list_board_icon} alt="" />
-            <p>You haven’t created any roles yet.</p>
-          </span>
-          <button className="creatUserBtn" onClick={toggleCreateHeader}>
-            <img className="plusIcon" src={plus_icon} alt="" />
-            <span>Create a new role</span>
-          </button>
-        </div>
-      </div> */}
+            
             <div className="userListBody">
                 <div className="listBody" ref={optionsToggleRef}>
                     <ul className="tableListing">
                         <li className="listHeading userRole">
-                            <div className="userName">Role Name</div>
-                            <div className="phoneNum assignedPeople">
+                            <div
+                                className={"userName " + (sortBy == "name" ? "sort " + sortType : "")}
+                                onClick={() => handleSortBy("name")}>Role Name</div>
+                            <div
+                                className={"phoneNum assignedPeople " + (sortBy == "people" ? "sort " + sortType : "")}
+                                onClick={() => handleSortBy("people")}>
                                 No. of people assigned
                             </div>
-                            <div className="createDate">Created on</div>
+                            <div
+                                className={"createDate " + (sortBy == "createdAt" ? "sort " + sortType : "")}
+                                onClick={() => handleSortBy("createdAt")}
+                            >Created on</div>
                         </li>
                         {rolesData ?
                             rolesData.map((elem, key) => {
@@ -373,7 +403,7 @@ const RolesListing = (props) => {
                 type="role"
                 paginationData={paginationData}
                 dataCount={rolesCount}
-                getData={getDataFn} /> : ''}
+                callback={paginationCallbackHandle} /> : ''}
         </div>
     )
 }

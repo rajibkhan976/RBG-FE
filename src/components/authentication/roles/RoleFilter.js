@@ -1,45 +1,95 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { utils } from "../../../helpers";
-import { UserServices } from "../../../services/authentication/UserServices";
+import { RoleServices } from "../../../services/authentication/RoleServices";
 import Loader from "../../shared/Loader";
-import * as actionTypes from "../../../actions/types";
-
 
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
 
-const UserFilter = (props) => {
-    const [group, setGroup] = useState('');
+const RoleFilter = (props) => {
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
-    const [status, setStatus] = useState('');
     const [isLoader, setIsLoader] = useState(false);
     const closeSideMenu = (e) => {
         e.preventDefault();
         props.setStateFilter(null);
     };
-    const dispatch = useDispatch();
 
-    /**
-     * Handle group change
-     * @param {*} event 
-     */
-    const handleGroupChange = (event) => {
-        event.preventDefault();
-        utils.addQueryParameter('group', event.target.value);
-        setGroup(event.target.value);
-    }
+    useEffect(() => {
+        /**
+         * Get page id and keyword from URL
+         */
+        let fromDt = utils.getQueryVariable('fromDate');
+        let toDt = utils.getQueryVariable('fromDate');
+        let queryParams = new URLSearchParams();
+        if (fromDt) {
+            setFromDate(fromDt)
+        }
+        if (toDt) {
+            setToDate(toDt);
+        }
+        
+    }, []);
+
     /**
      * Apply filter submit
      */
-    const handleApplyFilter = (e) => {
-        e.preventDefault();
-        // UPDATE STORE
-        dispatch({
-            type: actionTypes.USER_FILTER,
-            filter : true
-        });
+    const handleApplyFilter = (event) => {
+        event.preventDefault();
+        let pageId = 1;
+        let keyword = utils.getQueryVariable('search');
+        let fromDate = utils.getQueryVariable('fromDate');
+        let toDate = utils.getQueryVariable('toDate');
+
+        let queryParams = new URLSearchParams();
+        
+        queryParams.append("page", pageId);
+
+        utils.removeQueryParameter('page');
+
+        if(keyword) {
+            queryParams.append("search", keyword);
+        }
+        if(fromDate && toDate){
+            queryParams.append('fromDate', fromDate);
+            queryParams.append('toDate', toDate);
+        }
+        
+        fetchRoles(pageId, queryParams);
+    }
+
+    /**
+   * Send the data to user listing component
+   * @param {*} data
+   */
+    const broadcastToParent = (data) => {
+        props.getData(data);
+    };
+
+    /**
+     * Function to fetch users based on filter
+     * @returns 
+     */
+    const fetchRoles = async (pageId, queryParams) => {
+        try {
+            setIsLoader(true);
+            await RoleServices.fetchRoles(pageId, queryParams)
+                .then((result) => {
+                    console.log('Role listing result', result.roles);
+                    if (result) {
+                        broadcastToParent(result);
+                        // props.setStateFilter(null);
+                        setIsLoader(false);
+                    }
+                })
+                .catch((error) => {
+                    setIsLoader(false);
+                    console.log("User listing error", error);
+                });
+        } catch (e) {
+            setIsLoader(false);
+            console.log("Error in User listing", e);
+        }
     }
 
     /**
@@ -54,39 +104,25 @@ const UserFilter = (props) => {
             setToDate(event.target.value);
         }
         console.log(event.target.name, event.target.value);
-    }
-
-    /**
-     * Handle status change
-     * @param {*} event 
-     */
-    const handleStatusChange = (event) => {
-        setStatus(event.target.value);
-        if(event.target.value) {
-            utils.addQueryParameter('status', event.target.value);
-        } else {
-            utils.removeQueryParameter('status');
-        }
-    }
+    }   
 
     /**
      * Handle reset filter
      */
     const handleResetFilter = (event) => {
         event.preventDefault();
-        setGroup('');
         setFromDate('');
         setToDate('');
-        setStatus('');
-        utils.removeQueryParameter('group');
         utils.removeQueryParameter('fromDate');
         utils.removeQueryParameter('toDate');
-        utils.removeQueryParameter('status');
-        // UPDATE STORE
-        dispatch({
-            type: actionTypes.USER_FILTER,
-            filter : true
-        });
+
+        let queryParams = new URLSearchParams();
+        let keyword = utils.getQueryVariable('search');
+        if (keyword) {
+            queryParams.append("search", keyword);
+        }
+        
+        fetchRoles(1, queryParams);
     }
 
     return (
@@ -94,6 +130,7 @@ const UserFilter = (props) => {
             {props.stateFilter !== null && (
                 <div className="sideMenuOuter filterUserMenu">
                     {isLoader ? <Loader /> : ''}
+                    
                     <div className="sideMenuInner">
                         <button
                             className="btn btn-closeSideMenu"
@@ -102,18 +139,11 @@ const UserFilter = (props) => {
                             <span></span>
                             <span></span>
                         </button>
+                        <div className="sideMenuHeader">
+                            <h3>Filter</h3>
+                        </div>
                         <div className="sideMenuBody">
                             <form className="formBody" onSubmit={handleApplyFilter}>
-                                <div className="formField">
-                                    <p>Select Group</p>
-                                    <div className="inFormField">
-                                        <select style={{ backgroundImage: "url(" + arrowDown + ")" }} onChange={handleGroupChange} value={group}>
-                                            <option value="">Select group</option>
-                                            <option value="group-1">Top Manager</option>
-                                            <option value="group-4">Group4</option>
-                                        </select>
-                                    </div>
-                                </div>
                                 <div className="createdDate">
                                     <p>Created on</p>
                                     <div className="createdDateFields">
@@ -128,18 +158,6 @@ const UserFilter = (props) => {
                                             <div className="inFormField">
                                                 <input type="date" name="toDate" id="toDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} value={toDate}/>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="selectStatus">
-                                    <div className="formField">
-                                        <p>Select Status</p>
-                                        <div className="inFormField">
-                                            <select style={{ backgroundImage: "url(" + arrowDown + ")" }} onChange={handleStatusChange} value={status}>
-                                                <option value="null">Select Status</option>
-                                                <option value="active">Active</option>
-                                                <option value="inactive">Inactive</option>
-                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -159,4 +177,4 @@ const UserFilter = (props) => {
     )
 }
 
-export default UserFilter;
+export default RoleFilter;

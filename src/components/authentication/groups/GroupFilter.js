@@ -1,25 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { utils } from "../../../helpers";
-import { UserServices } from "../../../services/authentication/UserServices";
+import { GroupServices } from "../../../services/authentication/GroupServices";
 import Loader from "../../shared/Loader";
-import * as actionTypes from "../../../actions/types";
-
 
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
 
-const UserFilter = (props) => {
+const GroupFilter = (props) => {
     const [group, setGroup] = useState('');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
     const [status, setStatus] = useState('');
     const [isLoader, setIsLoader] = useState(false);
+
     const closeSideMenu = (e) => {
         e.preventDefault();
         props.setStateFilter(null);
     };
-    const dispatch = useDispatch();
 
     /**
      * Handle group change
@@ -33,13 +30,65 @@ const UserFilter = (props) => {
     /**
      * Apply filter submit
      */
-    const handleApplyFilter = (e) => {
-        e.preventDefault();
-        // UPDATE STORE
-        dispatch({
-            type: actionTypes.USER_FILTER,
-            filter : true
-        });
+    const handleApplyFilter = (event) => {
+        event.preventDefault();
+        let pageId = utils.getQueryVariable('page');
+        let keyword = utils.getQueryVariable('search');
+        // let group = utils.getQueryVariable('group');
+        let fromDate = utils.getQueryVariable('fromDate');
+        let toDate = utils.getQueryVariable('toDate');
+        // let status = utils.getQueryVariable('status');
+
+        let queryParams = new URLSearchParams();
+        if(pageId) {
+            queryParams.append("page", pageId);
+        }
+        if(keyword) {
+            queryParams.append("search", keyword);
+        }
+        if(fromDate && toDate){
+            queryParams.append('fromDate', fromDate);
+            queryParams.append('toDate', toDate);
+        }
+        // if(status) {
+        //     queryParams.append("status", status);
+        // }
+
+        fetchGroups(pageId, queryParams);
+    }
+
+    /**
+   * Send the data to group listing component
+   * @param {*} data
+   */
+    const broadcastToParent = (data) => {
+        props.getData(data);
+    };
+
+    /**
+     * Function to fetch users based on filter
+     * @returns 
+     */
+    const fetchGroups = async (pageId, queryParams) => {
+        try {
+            setIsLoader(true);
+            await GroupServices.fetchGroups(pageId, queryParams)
+                .then((result) => {
+                    console.log('Group listing result', result.groups);
+                    if (result) {
+                        broadcastToParent(result);
+                        // props.setStateFilter(null);
+                        setIsLoader(false);
+                    }
+                })
+                .catch((error) => {
+                    setIsLoader(false);
+                    console.log("Group listing error", error);
+                });
+        } catch (e) {
+            setIsLoader(false);
+            console.log("Error in Group listing", e);
+        }
     }
 
     /**
@@ -82,11 +131,7 @@ const UserFilter = (props) => {
         utils.removeQueryParameter('fromDate');
         utils.removeQueryParameter('toDate');
         utils.removeQueryParameter('status');
-        // UPDATE STORE
-        dispatch({
-            type: actionTypes.USER_FILTER,
-            filter : true
-        });
+        fetchGroups(1);
     }
 
     return (
@@ -104,16 +149,6 @@ const UserFilter = (props) => {
                         </button>
                         <div className="sideMenuBody">
                             <form className="formBody" onSubmit={handleApplyFilter}>
-                                <div className="formField">
-                                    <p>Select Group</p>
-                                    <div className="inFormField">
-                                        <select style={{ backgroundImage: "url(" + arrowDown + ")" }} onChange={handleGroupChange} value={group}>
-                                            <option value="">Select group</option>
-                                            <option value="group-1">Top Manager</option>
-                                            <option value="group-4">Group4</option>
-                                        </select>
-                                    </div>
-                                </div>
                                 <div className="createdDate">
                                     <p>Created on</p>
                                     <div className="createdDateFields">
@@ -128,18 +163,6 @@ const UserFilter = (props) => {
                                             <div className="inFormField">
                                                 <input type="date" name="toDate" id="toDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} value={toDate}/>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="selectStatus">
-                                    <div className="formField">
-                                        <p>Select Status</p>
-                                        <div className="inFormField">
-                                            <select style={{ backgroundImage: "url(" + arrowDown + ")" }} onChange={handleStatusChange} value={status}>
-                                                <option value="null">Select Status</option>
-                                                <option value="active">Active</option>
-                                                <option value="inactive">Inactive</option>
-                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -159,4 +182,4 @@ const UserFilter = (props) => {
     )
 }
 
-export default UserFilter;
+export default GroupFilter;

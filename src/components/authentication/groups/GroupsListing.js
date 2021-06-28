@@ -30,6 +30,7 @@ const GroupListing = (props) => {
     );
     const dispatch = useDispatch();
     const [isLoader, setIsLoader] = useState(false);
+    const [option, setOption] = useState(null);
 
     const toggleCreateHeader = () => {
         props.toggleCreate("groups");
@@ -45,7 +46,7 @@ const GroupListing = (props) => {
     useEffect(() => {
         if (props.getFilteredData) {
             console.log('Reached detination', props.getFilteredData);
-            setGroupsData(props.getFilteredData.users);
+            setGroupsData(props.getFilteredData.groups);
             setGroupsCount(props.getFilteredData.pagination.count ? props.getFilteredData.pagination.count : 0);
             //Set current page
             setPaginationData({
@@ -152,6 +153,13 @@ const GroupListing = (props) => {
     }
 
     /**
+     * Handle options toggle
+     */
+     const toggleOptions = (index) => {
+        setOption(index !== null ? (option !== null ? null : index) : null);
+    };
+
+    /**
      * Update keyword
      */
      const handleKeywordChange = (event) => {
@@ -176,6 +184,38 @@ const GroupListing = (props) => {
         }
 
         fetchGroups(pageId, queryParams);
+    }
+
+    /**
+     * Edit group
+     */
+     const editGroup = (group) => {
+        console.log('Edit group Id', group);
+        toggleCreateHeader(group);
+        setOption(null);
+    }
+
+    /**
+     * Delete group
+     */
+    const deleteGroup = async (group) => {
+        if(!window.confirm("Are you sure! want to delete the organization and its owner?")) return;
+        try {
+            /**
+             * Delete the group
+             */
+            await GroupServices.deleteGroup(group._id)
+                .then((result) => {
+                    if (result) {
+                        console.log('Group delete result', result);
+                        const newList = groupsData.filter((g) => g._id !== group._id);
+                        setGroupsData(newList);
+                        setOption(null);
+                    }
+                });
+        } catch (e) {
+            console.log("Error in Group delete", e);
+        }
     }
 
     return (
@@ -222,9 +262,9 @@ const GroupListing = (props) => {
                             <div className="createDate">Created on</div>
                         </li>
                         {groupsData &&
-                            groupsData.map((elem, i) => {
+                            groupsData.map((elem, key) => {
                                 return (
-                                    <>
+                                    <React.Fragment key={key + "group"}>
                                         <li className="owerInfo userRole" key={elem.keyId}>
                                             <div className="userName">
                                                 <button className="btn">
@@ -233,8 +273,7 @@ const GroupListing = (props) => {
                                             </div>
                                             <div className="phoneNum">
                                                 <button className="btn">
-                                                    {/* {elem.numberOfAssigned} */}
-                                                    0
+                                                    {elem.userCount}
                                                 </button>
                                             </div>
                                             <div className="createDate">
@@ -242,15 +281,84 @@ const GroupListing = (props) => {
                                                 <div className="info_3dot_icon">
                                                     <button
                                                         className="btn"
-                                                        onClick={(el) => editThisGroup(elem.keyId, el)}
+                                                        onClick={() => {
+                                                            toggleOptions(key);
+                                                        }}
                                                     >
                                                         <img src={info_3dot_icon} alt="" />
                                                     </button>
                                                 </div>
-                                                {elem.isEditing && <TableOptionsDropdown dropdownPos={dropdownPos} dropdownType="groupsDropdown" />}
+                                                <React.Fragment key={key + "_fragment"}>
+                                                    <div
+                                                        className={
+                                                            option === key ? "dropdownOptions listOpen" : "listHide"
+                                                        }
+                                                    >
+                                                        <button className="btn btnEdit"
+                                                            onClick={() => {
+                                                                editGroup(elem);
+                                                            }}>
+                                                            <span>
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    viewBox="0 0 13.553 13.553"
+                                                                    className="editIcon"
+                                                                >
+                                                                    <g transform="translate(0.75 0.75)">
+                                                                        <path
+                                                                            className="a"
+                                                                            d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423"
+                                                                            transform="translate(-2 -2.795)"
+                                                                        />
+                                                                        <path
+                                                                            className="a"
+                                                                            d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z"
+                                                                            transform="translate(-4.384 -2)"
+                                                                        />
+                                                                    </g>
+                                                                </svg>
+                                                            </span>
+                                                            Edit
+                                                        </button>
+                                                        <button className="btn btnDelete"
+                                                            onClick={() => {
+                                                                deleteGroup(elem);
+                                                            }}>
+                                                            <span>
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    width="12.347"
+                                                                    height="13.553"
+                                                                    viewBox="0 0 12.347 13.553"
+                                                                    className="deleteIcon"
+                                                                >
+                                                                    <g transform="translate(0.75 0.75)">
+                                                                        <path className="a" transform="translate(-3 -3.589)" />
+                                                                        <path
+                                                                            className="a"
+                                                                            d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
+                                                                            transform="translate(-3.795 -2)"
+                                                                        />
+                                                                        <line
+                                                                            className="a"
+                                                                            y2="3"
+                                                                            transform="translate(4.397 6.113)"
+                                                                        />
+                                                                        <line
+                                                                            className="a"
+                                                                            y2="3"
+                                                                            transform="translate(6.397 6.113)"
+                                                                        />
+                                                                    </g>
+                                                                </svg>
+                                                            </span>
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </React.Fragment>
                                             </div>
                                         </li>
-                                    </>
+                                    </React.Fragment>
                                 );
                             })}
                     </ul>

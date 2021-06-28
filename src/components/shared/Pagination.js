@@ -14,6 +14,13 @@ const Pagination = (props) => {
   const [minPageNumberLimit, setMinPageNumberLimit] = useState(0);
   const [isLoader, setIsLoader] = useState(false);
 
+  /**
+   * Callback to parent to fetch data
+   */
+  const callback = () => {
+    props.callback()
+  }
+
   const paginationHandleClick = (event) => {
     let currentPage = Number(event.target.value);
 
@@ -21,33 +28,20 @@ const Pagination = (props) => {
      * Add query parameter
      */
     utils.addQueryParameter('page', currentPage);
-
-    /**
-     * Get page id from URL
-     */
-    let pageId = utils.getQueryVariable('page');
-    let keyword = utils.getQueryVariable('search');
-    let group = utils.getQueryVariable('group');
-
-    /**
-     * Make axios call
-     */
-    //if(currentPage !== props.paginationData.totalPages){
-    getPaginatedData(props.type, pageId, keyword, group);
-    //}
+    getPaginatedData();
   }
 
   /**
    * Get paginated data
    * @param {*} type 
    */
-  const getPaginatedData = (type, pageId, keyword, group) => {
-    switch (type) {
+  const getPaginatedData = (pageId=null, keyword=null, group=null) => {
+    switch (props.type) {
       case "role":
-        fetchPaginatedRoles(pageId, keyword);
+        callback();
         break;
       case "user":
-        fetchPaginatedUsers(pageId, keyword, group);
+        callback();
         break;
       case "group":
         fetchPaginatedGroups(pageId, keyword, group);
@@ -152,7 +146,7 @@ const Pagination = (props) => {
    */
   const renderPageNumbers = pageNumbers.map(number => {
 
-    if (number < maxPageNumberLimit + 1 && number > minPageNumberLimit) {
+    if (number < maxPageNumberLimit && number > minPageNumberLimit) {
       return (
         <li
           key={number}
@@ -181,11 +175,12 @@ const Pagination = (props) => {
     let keyword = utils.getQueryVariable('search');
     let newPage = Number(currentPageId) - 1;
     if (newPage > 0) {
+      
       /**
        * Add new page id to URL
        */
       utils.addQueryParameter('page', newPage);
-      getPaginatedData(props.type, newPage, keyword);
+      getPaginatedData();
 
       /**
        * Update page numbers
@@ -206,11 +201,12 @@ const Pagination = (props) => {
     let keyword = utils.getQueryVariable('search');
     let newPage = Number(currentPageId) + 1;
     if (newPage <= props.paginationData.totalPages) {
+
       /**
        * Add new page id to URL
        */
       utils.addQueryParameter('page', newPage);
-      getPaginatedData(props.type, newPage, keyword);
+      getPaginatedData();
     }
     /**
      * Update page numbers
