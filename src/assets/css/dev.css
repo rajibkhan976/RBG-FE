@@ -769,9 +769,6 @@
     color: #9BAEBC;
     font-size: 13px;
 }
-.sideMenuOuter {
-    z-index: 5;
-}
 
 .notificationsMenu .sideMenuBody {
     padding-left: 0;
