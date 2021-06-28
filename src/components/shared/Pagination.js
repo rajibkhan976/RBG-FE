@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { RoleServices } from "../../services/authentication/RoleServices";
-import { UserServices } from "../../services/authentication/UserServices";
 import { utils } from "../../helpers";
 import { GroupServices } from '../../services/authentication/GroupServices';
 import Loader from "./Loader";
-import { AutomationServices } from '../../services/automation/AutomationServices';
 
 
 const Pagination = (props) => {
@@ -47,67 +44,10 @@ const Pagination = (props) => {
         fetchPaginatedGroups(pageId, keyword, group);
         break;
       case "automation":
-        fetchPaginatedAutomation(pageId);
+        callback();
         break;
       default:
       // code block
-    }
-  }
-
-  const fetchPaginatedAutomation = async (page) => {
-    console.log("Page ID",page);
-    try {
-      setIsLoader(true);
-      const res = await AutomationServices.getAutomations(page);
-      if(res.data) {
-        broadcastToParent(res.data);
-      }
-      setIsLoader(false);
-    } catch (e) {
-      setIsLoader(false);
-      console.log("Error in Automation listing", e.stack);
-    }
-  }
-
-  const fetchPaginatedRoles = async (page, keyword) => {
-    try {
-      setIsLoader(true);
-      await RoleServices.fetchRoles(page, keyword)
-        .then((result) => {
-          console.log('Role listing result paginated', result.roles);
-          if (result) {
-            broadcastToParent(result);
-            setIsLoader(false);
-          }
-        })
-        .catch((error) => {
-          setIsLoader(false);
-          console.log("Role listing error", error);
-        });
-    } catch (e) {
-      setIsLoader(false);
-      console.log("Error in Role listing", e);
-    }
-  }
-
-  const fetchPaginatedUsers = async (page, keyword, group) => {
-    try {
-      setIsLoader(true);
-      await UserServices.fetchUsers(page, keyword, group)
-        .then((result) => {
-          console.log('User listing result paginated', result.users);
-          if (result) {
-            broadcastToParent(result);
-            setIsLoader(false);
-          }
-        })
-        .catch((error) => {
-          setIsLoader(false);
-          console.log("User listing error", error);
-        });
-    } catch (e) {
-      setIsLoader(false);
-      console.log("Error in User listing", e);
     }
   }
 

@@ -35,7 +35,8 @@ const AutomationLists = (props) => {
 
   const dispatch = useDispatch();
 
-  const fetchAutomations = async (pageID) => {
+  const fetchAutomations = async () => {
+    const pageID = utils.getQueryVariable('page') || 1;
     setIsLoader(true);
     const automationLists = await AutomationServices.getAutomations(pageID);
     setIsLoader(false);
@@ -138,23 +139,6 @@ const AutomationLists = (props) => {
   const automationEdit = (elem) => {
     props.automationElementSet(elem);
     props.toggleCreate("automation");
-  }
-
-  const getDataFn = (dataFromChild) => {
-    console.log('Data from child', dataFromChild);
-    if (dataFromChild) {
-      // setAutomationData(dataFromChild.data);
-      setAutomationData({
-        data: dataFromChild.data,
-        count: dataFromChild.pagination.count
-      });
-      //Set current page
-      setPaginationData({
-        ...paginationData,
-        currentPage: dataFromChild.pagination.currentPage,
-        totalPages: dataFromChild.pagination.totalPages
-      });
-    }
   }
 
   const deleteAutomation = async(automationID) => {
@@ -403,8 +387,7 @@ const AutomationLists = (props) => {
           type="automation"
           paginationData={paginationData}
           dataCount={automationData.count}
-          getData={getDataFn} /> : ''}
-        {/* <DashboardPagination /> */}
+          callback={fetchAutomations} /> : ''}
       </div>
     </>
   );
