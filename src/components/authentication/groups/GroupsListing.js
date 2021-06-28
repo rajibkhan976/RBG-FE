@@ -4,7 +4,6 @@ import { useDispatch } from "react-redux";
 import moment from "moment";
 import Pagination from "../../shared/Pagination";
 import * as actionTypes from "../../../actions/types";
-import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
 import Loader from "../../shared/Loader";
 
 import search_icon from "../../../assets/images/search_icon.svg";
@@ -31,6 +30,8 @@ const GroupListing = (props) => {
     const dispatch = useDispatch();
     const [isLoader, setIsLoader] = useState(false);
     const [option, setOption] = useState(null);
+    const [sortBy, setSortBy] = useState("");
+    const [sortType, setSortType] = useState("asc");
 
     const toggleCreateHeader = () => {
         props.toggleCreate("groups");
@@ -39,6 +40,13 @@ const GroupListing = (props) => {
     const filterGroups = () => {
         props.toggleFilter("groups");
     };
+
+    /**
+     * Handle pagination click
+     */
+     const paginationCallbackHandle = () => {
+        fetchGroups();
+    }
 
     /**
      * Set filtered data
@@ -57,6 +65,34 @@ const GroupListing = (props) => {
         }
 
     }, [props])
+
+    /**
+     * Get all query params
+     */
+     const getQueryParams = async () => {
+        let keyword = utils.getQueryVariable('search');
+        let fromDt = utils.getQueryVariable('fromDate');
+        let toDt = utils.getQueryVariable('toDate');
+        let srtBy = utils.getQueryVariable('sortBy');
+        let srtType = utils.getQueryVariable('sortType');
+        let queryParams = new URLSearchParams();
+        if (keyword) {
+            queryParams.append("search", keyword);
+        }
+        if (fromDt) {
+            queryParams.append("fromDate", fromDt);
+        }
+        if (toDt) {
+            queryParams.append("toDate", toDt);
+        }
+        if (srtBy) {
+            queryParams.append("sortBy", srtBy);
+        }
+        if (srtType) {
+            queryParams.append("sortType", srtType);
+        }
+        return queryParams;
+    }
 
     const editThisGroup = (e, el) => {
         let yPosition = el.clientY;
@@ -86,52 +122,46 @@ const GroupListing = (props) => {
         /**
          * Get page id and keyword from URL
          */
-         let pageId = utils.getQueryVariable('page');
-         let param = utils.getQueryVariable('search');
-         if (param) {
-             setKeyword(param);
-         }
+        setSortBy(utils.getQueryVariable('sortBy'));
+        setSortType(utils.getQueryVariable('sortType')); 
          /**
           * Call to fetch roles
           */
-         fetchGroups(pageId, param);
+         fetchGroups();
     }, []);
 
     /**
      * Function to fetch users
      * @returns 
      */
-     const fetchGroups = async (pageId, keyword) => {
+     const fetchGroups = async () => {
+        let pageId = utils.getQueryVariable('page') || 1;
+        let queryParams = await getQueryParams();
+
         try {
             setIsLoader(true);
-            await GroupServices.fetchGroups(pageId, keyword)
-                .then((result) => {
-                    console.log('Groups listing result', result);
-                    if (result) {
-                        setGroupsData(result.groups);
-                        setGroupsCount(result.pagination.count);
-                        /**
-                         * Update store
-                         */
-                         dispatch({
-                            type: actionTypes.GROUP_COUNT,
-                            count : result.pagination.count
-                        })
-                        setPaginationData({
-                            ...paginationData,
-                            currentPage: result.pagination.currentPage,
-                            totalPages: result.pagination.totalPages
-                        });
-                        setIsLoader(false);
-                    }
+            const result = await GroupServices.fetchGroups(pageId, queryParams);
+            if (result) {
+                setGroupsData(result.groups);
+                setGroupsCount(result.pagination.count);
+                /**
+                 * Update store
+                 */
+                 dispatch({
+                    type: actionTypes.GROUP_COUNT,
+                    count : result.pagination.count
                 })
-                .catch((error) => {
-                    setIsLoader(false);
-                    console.log("Groups listing error", error);
+                setPaginationData({
+                    ...paginationData,
+                    currentPage: result.pagination.currentPage,
+                    totalPages: result.pagination.totalPages
                 });
+            }
         } catch (e) {
-            setIsLoader(false);
             console.log("Error in Group listing", e);
+            throw new Error(e);
+        } finally {
+            setIsLoader(false);
         }
     }
 
@@ -173,17 +203,14 @@ const GroupListing = (props) => {
     const handleSearch = (event) => {
         event.preventDefault();
 
-        let pageId = utils.getQueryVariable('page');
-
-        let queryParams = new URLSearchParams();
-        if (keyword) {
+        utils.addQueryParameter('page', 1);
+        if(keyword) {
             utils.addQueryParameter('search', keyword);
-            queryParams.append("search", keyword);
         } else {
             utils.removeQueryParameter('search');
-        }
+        } 
 
-        fetchGroups(pageId, queryParams);
+        fetchGroups();
     }
 
     /**
@@ -216,6 +243,25 @@ const GroupListing = (props) => {
         } catch (e) {
             console.log("Error in Group delete", e);
         }
+    }
+
+    const handleSortBy = (field) => {       
+        // Set sort type
+        let type = "asc"
+        if (field == sortBy) {
+            if (sortType == "asc") {
+                type = "dsc";
+            }
+        }
+        
+        // Set state and Update query param
+        setSortBy(field);
+        setSortType(type); 
+        utils.addQueryParameter('sortBy', field);
+        utils.addQueryParameter('sortType', type);
+
+        // Fetch data
+        fetchGroups()
     }
 
     return (
@@ -255,11 +301,15 @@ const GroupListing = (props) => {
                 <div className="listBody">
                     <ul className="tableListing">
                         <li className="listHeading userRole">
-                            <div className="userName">Group Name</div>
-                            <div className="phoneNum assignedPeople">
+                            <div className={"userName " + (sortBy == "name" ? "sort " + sortType : "")} onClick={() => handleSortBy("name")}>
+                                Group Name
+                            </div>
+                            <div className={"phoneNum assignedPeople " + (sortBy == "people" ? "sort " + sortType : "")} onClick={() => handleSortBy("people")}>
                                 No. of people assigned
-              </div>
-                            <div className="createDate">Created on</div>
+                            </div>
+                            <div className={"createDate " + (sortBy == "createdAt" ? "sort " + sortType : "")} onClick={() => handleSortBy("createdAt")}>
+                                Created on
+                            </div>
                         </li>
                         {groupsData &&
                             groupsData.map((elem, key) => {
@@ -364,7 +414,7 @@ const GroupListing = (props) => {
                     </ul>
                 </div>
             </div>
-            <Pagination type="group" paginationData={paginationData} dataCount={groupsCount} getData={getDataFn} />
+            { groupsCount? <Pagination paginationData={paginationData} dataCount={groupsCount} callback={paginationCallbackHandle} /> : '' }
         </div>
     )
 }
