@@ -264,7 +264,7 @@ const GroupListing = (props) => {
                         {groupsData &&
                             groupsData.map((elem, key) => {
                                 return (
-                                    <>
+                                    <React.Fragment key={i + "group"}>
                                         <li className="owerInfo userRole" key={elem.keyId}>
                                             <div className="userName">
                                                 <button className="btn">
@@ -358,7 +358,7 @@ const GroupListing = (props) => {
                                                 </React.Fragment>
                                             </div>
                                         </li>
-                                    </>
+                                    </React.Fragment>
                                 );
                             })}
                     </ul>

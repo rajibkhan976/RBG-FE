@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
 
+import { GroupServices } from '../../../services/authentication/GroupServices';
 import { RoleServices } from "../../../services/authentication/RoleServices";
+import { history } from "../../../helpers";
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
-import plus_icon from "../../../assets/images/plus_icon.svg";
 import PermissionMatrix from '../../shared/PermissionMatrix';
 import Loader from '../../shared/Loader';
-import { GroupServices } from '../../../services/authentication/GroupServices';
 
 
 const GroupModal = (props) => {
@@ -170,6 +169,7 @@ const GroupModal = (props) => {
                 const result = await GroupServices[oprationMethod](payload)
                 if (result) {
                     setIsLoader(false);
+                    history.go(0);
                 }
             } catch (e) {
                 /**
