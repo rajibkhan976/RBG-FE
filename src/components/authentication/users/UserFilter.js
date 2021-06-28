@@ -102,6 +102,9 @@ const UserFilter = (props) => {
                             <span></span>
                             <span></span>
                         </button>
+                        <div className="sideMenuHeader">
+                            <h3 className="liteHeading">Apply Filter</h3>
+                        </div>
                         <div className="sideMenuBody">
                             <form className="formBody" onSubmit={handleApplyFilter}>
                                 <div className="formField">

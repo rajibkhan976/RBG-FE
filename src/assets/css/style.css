@@ -619,7 +619,7 @@ input:focus+.searchIco #search-ico .a {
   bottom: 0;
   right: 0;
   left: 0;
-  z-index: 3;
+  z-index: 99;
   background: rgb(48 86 113 / 20%);
 }
 
@@ -630,7 +630,7 @@ input:focus+.searchIco #search-ico .a {
 
 .filterUserMenu .sideMenuInner, .sideRoles .sideMenuInner {
   width: 100%;
-  max-width: 457px;
+  max-width: 460px;
 }
 
 .sideMenuInner {
@@ -662,8 +662,14 @@ input:focus+.searchIco #search-ico .a {
   line-height: 30px;
   position: relative;
   padding-right: 140px;
+  margin-top: 20px;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.sideMenuHeader .liteHeading {
+  font-weight: normal;
+  font-size: 16px;
 }
 
 .sideMenuHeader h3 .btn-link {
@@ -953,7 +959,8 @@ input:focus+.searchIco #search-ico .a {
 
 .userListBody {
   flex: 1 1 auto;
-  overflow: auto;
+  overflow-y: auto;
+  position: relative;
 }
 
 .tableListing li {
@@ -974,6 +981,7 @@ input:focus+.searchIco #search-ico .a {
   height: 60px;
   padding: 0 16px;
   position: relative;
+  border-bottom: 4px solid #f6f8fa;
 }
 
 li.listHeading>div {
@@ -992,12 +1000,19 @@ li.listHeading>div:after {
   vertical-align: middle;
   width: 9px;
   height: 13px;
-  background-image: url('../images/sortTable.png');
+  background-image: url('../images/off_icon.svg');
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 9px auto;
   pointer-events: none;
   margin-left: 13px;
+}
+
+li.listHeading>div.asc::after {
+  background-image: url('../images/only_down_icon.svg');
+}
+li.listHeading>div.dsc::after {
+  background-image: url('../images/only_up_icon.svg');
 }
 
 .arrowUp, .arrowDown {
@@ -1262,7 +1277,7 @@ li.listHeading>div:after {
   border: 1px solid #D3D9DE;
   border-radius: 5px;
   box-sizing: border-box;
-  color: #9BAEBC;
+  color: #305671;
   font-size: 13px;
   font-family: 'Poppins', sans-serif;
 }
@@ -1522,6 +1537,11 @@ img.dropDownIcon {
   width: 148px;
 }
 
+.createdDateFields .formField input[type="date"] {
+  width: 157px;
+  padding-right: 5px;
+}
+
 .selectStatus {
   margin-top: 20px;
 }
@@ -1718,7 +1738,7 @@ img.dropDownIcon {
 
 
 .sideMenuBody form {
-  padding: 0 30px 30px;
+  padding: 0 25px 30px;
 }
 
 .sideMenuBody::-webkit-scrollbar {
@@ -1774,18 +1794,19 @@ img.dropDownIcon {
   background-color: #F1A668;
 }
 
-.listBody {
-  position: relative;
-}
 
 .tableListing {
   display: table;
   width: 100%;
-  border-spacing: 0 4px;
+  border-spacing: 0;
+  overflow-y: auto;
 }
 
 .tableListing li.listHeading {
   position: sticky;
+  background: #f6f8fa;
+  top: 0;
+  z-index: 10;
 }
 
 .paginationOuter .btn svg {

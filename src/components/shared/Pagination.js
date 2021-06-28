@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { utils } from "../../helpers";
-import { GroupServices } from '../../services/authentication/GroupServices';
 import Loader from "./Loader";
 
 
@@ -25,52 +24,7 @@ const Pagination = (props) => {
      * Add query parameter
      */
     utils.addQueryParameter('page', currentPage);
-    getPaginatedData();
-  }
-
-  /**
-   * Get paginated data
-   * @param {*} type 
-   */
-  const getPaginatedData = (pageId=null, keyword=null, group=null) => {
-    switch (props.type) {
-      case "role":
-        callback();
-        break;
-      case "user":
-        callback();
-        break;
-      case "group":
-        fetchPaginatedGroups(pageId, keyword, group);
-        break;
-      case "automation":
-        callback();
-        break;
-      default:
-      // code block
-    }
-  }
-
-  // api call for groups current page data
-  const fetchPaginatedGroups = async (page, keyword, group) => {
-    try {
-      setIsLoader(true);
-      await GroupServices.fetchGroups(page, keyword, group)
-        .then((result) => {
-          console.log('User listing result paginated', result.groups);
-          if (result) {
-            broadcastToParent(result);
-            setIsLoader(false);
-          }
-        })
-        .catch((error) => {
-          setIsLoader(false);
-          console.log("User listing error", error);
-        });
-    } catch (e) {
-      setIsLoader(false);
-      console.log("Error in User listing", e);
-    }
+    callback();
   }
 
   /**
@@ -100,14 +54,6 @@ const Pagination = (props) => {
   });
 
   /**
-   * Send the data to parent component
-   * @param {*} data
-   */
-  const broadcastToParent = (data) => {
-    props.getData(data);
-  };
-
-  /**
    * Previous button click
    */
   const preClickHandle = () => {
@@ -115,12 +61,12 @@ const Pagination = (props) => {
     let keyword = utils.getQueryVariable('search');
     let newPage = Number(currentPageId) - 1;
     if (newPage > 0) {
-      
+
       /**
        * Add new page id to URL
        */
       utils.addQueryParameter('page', newPage);
-      getPaginatedData();
+      callback();
 
       /**
        * Update page numbers
@@ -146,7 +92,7 @@ const Pagination = (props) => {
        * Add new page id to URL
        */
       utils.addQueryParameter('page', newPage);
-      getPaginatedData();
+      callback();
     }
     /**
      * Update page numbers
