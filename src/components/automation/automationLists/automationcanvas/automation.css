@@ -377,6 +377,10 @@ footer.page-footer {
     border-bottom: 10px solid #fffdf2;
 }
 
+.webhookDataFields {
+    background: #D3D9DE no-repeat right 15px center / 18px auto;
+}
+
 @media screen and (min-width: 768px) {
     .automationDnD {
         flex-direction: row;

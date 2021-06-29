@@ -38,6 +38,8 @@ const AutomationBuilder = (props) => {
   const [bodyError, setBodyError] = useState(false);
   const [nId, setNId] = useState(false);
   const [webhookData, setWebhookData] = useState([]);
+  const [messageData, setMessageData] = useState([]);
+  const [emailData, setEmailData] = useState([]);
   const [toEmail, setToEmail] = useState('');
   const [toEmailError, setToEmailError] = useState(false);
   const [subject, setSubject] = useState('');
@@ -45,6 +47,8 @@ const AutomationBuilder = (props) => {
   const [bodyEmail, setBodyEmail] = useState('');
   const [bodyEmailError, setBodyEmailError] = useState(false);
   const [nodeEmailId, setNodeEmailId] = useState(false);
+  const [triggerNodeId, setTriggerNodeId] = useState(0);
+  const [cursorElement, setCursorElement] = useState(false);
   const edgeType = "smoothstep";
   const nodeTypes = {
     trigger: TriggerNode,
@@ -230,6 +234,11 @@ const AutomationBuilder = (props) => {
     setSubject(n.data.subject);
     setBodyEmail(n.data.body);
     setNodeEmailId(n.id);
+    if (n.data.data !== undefined) {
+      setEmailData(n.data.data);
+    } else {
+      setEmailData([]);
+    }
     setAutomationModal("actionEmail");
   };
 
@@ -238,10 +247,15 @@ const AutomationBuilder = (props) => {
     setFrom(n.data.from);
     setBody(n.data.body);
     setNId(n.id);
+    if (n.data.data !== undefined) {
+      setMessageData(n.data.data);
+    } else {
+      setMessageData([]);
+    }
     setAutomationModal("actionMessage");
   };
 
-  const refreshWebhook = async (id) => {
+  const refreshWebhook = async (id, nodeI) => {
     setWebhookData([]);
     if (id) {
       let payload = {'unique_id': id};
@@ -250,6 +264,14 @@ const AutomationBuilder = (props) => {
       setIsLoader(false);
       if (fetchFields.data.success) {
         setWebhookData(fetchFields.data.data);
+        setElements((elms) =>
+            elms.map((el) => {
+              if (el.id === nodeI) {
+                el.data.data = fetchFields.data.data;
+              }
+              return { ...el };
+            })
+        );
       } else {
         console.log("api error ! " + fetchFields.data.message);
       }
@@ -260,18 +282,12 @@ const AutomationBuilder = (props) => {
     setAutomationUrl(n.data.url);
     setAutomationUrlId(n.data.id);
     setAutomationModal("trigger");
-    setWebhookData([]);
-    if (n.data.id) {
-      let payload = {'unique_id': n.data.id};
-      setIsLoader(true);
-      let fetchFields = await AutomationServices.fetchFields(JSON.stringify(payload));
-      setIsLoader(false);
-      if (fetchFields.data.success) {
-        setWebhookData(fetchFields.data.data);
-      } else {
-        console.log("api error ! " + fetchFields.data.message);
-      }
+    if (n.data.data !== undefined) {
+      setWebhookData(n.data.data);
+    } else {
+      setWebhookData([]);
     }
+    setTriggerNodeId(n.id);
   };
 
   const closeFilterModal = () => {
@@ -283,46 +299,55 @@ const AutomationBuilder = (props) => {
   }
   const handleToChange = (event) => {
     event.preventDefault();
-    let pattern = new RegExp(/^[0-9\b]+$/);
-    if (pattern.test(event.target.value)) {
-      setTo(event.target.value);
-    } else {
-      setTo('');
-      setToError('bounce');
-      removeClass();
-    }
+    setCursorElement(event);
+    setTo(event.target.value);
   }
   const handleFromChange = (event) => {
     event.preventDefault();
-    let pattern = new RegExp(/^[0-9\b]+$/);
-    if (pattern.test(event.target.value)) {
-      setFrom(event.target.value);
-    } else {
-      setFrom('');
-      setFromError('bounce');
-      removeClass();
-    }
+    setCursorElement(event);
+    setFrom(event.target.value);
   }
   const handleBodyChange = (event) => {
     event.preventDefault();
+    setCursorElement(event);
     setBody(event.target.value);
   }
 
   const handleSubjectChange = (event) => {
     event.preventDefault();
+    setCursorElement(event);
     setSubject(event.target.value);
   }
 
   const handleToEmailChange = (event) => {
     event.preventDefault();
+    setCursorElement(event);
     setToEmail(event.target.value);
   }
 
   const handleBodyEmailChange = (event) => {
     event.preventDefault();
+    setCursorElement(event);
     setBodyEmail(event.target.value);
   }
 
+  const updateDataInTarget = (params) => {
+    const updatedElem = [...elements];
+    let data = {};
+    updatedElem.forEach((el) => {
+      if (params.source === el.id) {
+        data = el.data.data;
+      }
+    });
+    setElements((elms) =>
+        elms.map((el) => {
+          if (el.id === params.target) {
+            el.data.data = data;
+          }
+          return { ...el };
+        })
+    );
+  };
 
   const onConnect = (params) => {
     let validate = getConnectionDetails(params.source, params.target);
@@ -342,6 +367,7 @@ const AutomationBuilder = (props) => {
           el.data.nodes.previous = params.source;
         }
       });
+      updateDataInTarget(params);
     } else {
       let id = getEdgeId();
       setElements((els) =>
@@ -586,7 +612,8 @@ const AutomationBuilder = (props) => {
           label: `${types[type]}`,
           nodes: {next: [], previous: ""},
           url: '',
-          id: ''
+          id: '',
+          data: {}
         },
       };
       setElements((es) => es.concat(newNode));
@@ -787,6 +814,36 @@ const AutomationBuilder = (props) => {
     //window.navigator.clipboard.writeText(text);
     console.log(text);
   }
+  const copyTag = (text) => {
+    let e = cursorElement;
+    if (e.target) {
+      let cursorPosition = e.target.selectionStart
+      let textBeforeCursorPosition = e.target.value.substring(0, cursorPosition)
+      let textAfterCursorPosition = e.target.value.substring(cursorPosition, e.target.value.length)
+      e.target.value = textBeforeCursorPosition + " [" + text + "] " + textAfterCursorPosition
+      let fieldName = e.target.name;
+      switch (fieldName) {
+        case 'messageTo':
+          setTo(e.target.value);
+          break;
+        case 'messageFrom':
+          setFrom(e.target.value);
+          break;
+        case 'messageBody':
+          setBody(e.target.value);
+          break;
+        case 'subject':
+          setSubject(e.target.value);
+          break;
+        case 'toEmail':
+          setToEmail(e.target.value);
+          break;
+        case 'bodyEmail':
+          setBodyEmail(e.target.value);
+          break;
+      }
+    }
+  }
   useEffect(() => {
     if (Object.keys(props.automationElement).length) {
       setElements(props.automationElement.blueprint)
@@ -868,18 +925,18 @@ const AutomationBuilder = (props) => {
                             <label htmlFor="">webhook URL</label>
                             <input type="text" name="webhook-url" id="webhook-url" value={automationUrl} onClick={() => onClickCopy(automationUrl)} readOnly={true}/>
                           </div>
-                          {Object.keys(webhookData).length ? (
-                                Object.keys(webhookData).map((value, key) => (
-                                    <div className="inputField">
-                                      <label htmlFor="">{value}</label>
-                                      <input type="text" name={"webhook-url"+key} id={"webhook-url-"+key} value={webhookData[value]} readOnly={true}/>
-                                    </div>
-                                ))
-                              )
-                             : ""
-                          }
                           <div className="inputField">
-                            <button className="refreshFieldsBtn" onClick={() => refreshWebhook(automationUrlId)}>Refresh Fields</button>
+                            <button className="refreshFieldsBtn" onClick={() => refreshWebhook(automationUrlId, triggerNodeId)}>Refresh Fields</button>
+                          </div>
+                          <div className="webhookDataFields">
+                          {Object.keys(webhookData).length ? (
+                                  Object.keys(webhookData).map((value, key) => (
+                                      <div>
+                                        <p><span>{value}</span>:<span>{webhookData[value]}</span>{key === 0 ? "" : ", "}</p>
+                                      </div>
+                                  ))
+                                ) : ""
+                          }
                           </div>
                         </div>
                         <div className="saveButton">
@@ -907,18 +964,25 @@ const AutomationBuilder = (props) => {
                             <div className="emailDetails">
                               <div className="inputField">
                                 <label htmlFor="">To</label>
-                                <input className={`icon ${toError}`} type="text" name="" id="" value={to} onChange={handleToChange}/>
+                                <input className={`icon ${toError}`} type="text" name="messageTo" id="" value={to} onChange={handleToChange} onClick={handleToChange}/>
                               </div>
                               <div className="inputField">
                                 <label htmlFor="">From</label>
-                                <input className={`icon ${fromError}`} type="text" name="" id="" value={from} onChange={handleFromChange}/>
+                                <input className={`icon ${fromError}`} type="text" name="messageFrom" id="" value={from} onChange={handleFromChange} onClick={handleFromChange}/>
                               </div>
                               <div className="inputField">
                                 <label htmlFor="">Body</label>
-                                <textarea className={`${bodyError}`} name="body" onChange={handleBodyChange}>{body}</textarea>
+                                <textarea className={`${bodyError}`} name="messageBody" onChange={handleBodyChange} onClick={handleBodyChange}>{body}</textarea>
                               </div>
                             </div>
-
+                            <div className="messageTag">
+                              {Object.keys(messageData).length ? (
+                                  Object.keys(messageData).map((value, key) => (
+                                      <button onClick={() => copyTag(value)}>{value}</button>
+                                  ))
+                              ) : ""
+                              }
+                            </div>
                             <div className="saveButton">
                               <button onClick={saveMessage}>Save <img src={chevron_right_white_24dp} alt=""/></button>
                             </div>
@@ -945,18 +1009,25 @@ const AutomationBuilder = (props) => {
                                 <div className="emailDetails">
                                   <div className="inputField">
                                     <label htmlFor="subject">Subject</label>
-                                    <input className={`icon ${subjectError}`} type="text" name="subject" id="subject" value={subject} onChange={handleSubjectChange}/>
+                                    <input className={`icon ${subjectError}`} type="text" name="subject" id="subject" value={subject} onChange={handleSubjectChange} onClick={handleSubjectChange}/>
                                   </div>
                                   <div className="inputField">
                                     <label htmlFor="toEmail">To</label>
-                                    <input className={`icon ${toEmailError}`} type="text" name="toEmail" id="toEmail" value={toEmail} onChange={handleToEmailChange}/>
+                                    <input className={`icon ${toEmailError}`} type="text" name="toEmail" id="toEmail" value={toEmail} onChange={handleToEmailChange} onClick={handleToEmailChange}/>
                                   </div>
                                   <div className="inputField">
                                     <label htmlFor="bodyEmail">Body</label>
-                                    <textarea className={`icon ${bodyEmailError}`} name="bodyEmail" id="bodyEmail" onChange={handleBodyEmailChange}>{bodyEmail}</textarea>
+                                    <textarea className={`icon ${bodyEmailError}`} name="bodyEmail" id="bodyEmail" onChange={handleBodyEmailChange} onClick={handleBodyEmailChange}>{bodyEmail}</textarea>
                                   </div>
                                 </div>
-
+                                <div className="emailTag">
+                                  {Object.keys(emailData).length ? (
+                                      Object.keys(emailData).map((value, key) => (
+                                          <button onClick={() => copyTag(value)}>{value}</button>
+                                      ))
+                                  ) : ""
+                                  }
+                                </div>
                                 <div className="saveButton">
                                   <button onClick={saveEmail}>Save <img src={chevron_right_white_24dp} alt=""/></button>
                                 </div>
