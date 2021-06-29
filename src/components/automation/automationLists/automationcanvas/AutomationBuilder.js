@@ -814,15 +814,14 @@ const AutomationBuilder = (props) => {
     //window.navigator.clipboard.writeText(text);
     console.log(text);
   }
-  const copyTag = (text) => {
+  const copyTag = (text, field) => {
     let e = cursorElement;
-    if (e.target) {
+    if (e.target && e.target.name === field) {
       let cursorPosition = e.target.selectionStart
       let textBeforeCursorPosition = e.target.value.substring(0, cursorPosition)
       let textAfterCursorPosition = e.target.value.substring(cursorPosition, e.target.value.length)
       e.target.value = textBeforeCursorPosition + " [" + text + "] " + textAfterCursorPosition
-      let fieldName = e.target.name;
-      switch (fieldName) {
+      switch (field) {
         case 'messageTo':
           setTo(e.target.value);
           break;
@@ -840,6 +839,29 @@ const AutomationBuilder = (props) => {
           break;
         case 'bodyEmail':
           setBodyEmail(e.target.value);
+          break;
+      }
+    } else {
+      console.log('there', field, text);
+      switch (field) {
+        case 'messageTo':
+          setTo(to + " [" + text + "] ");
+          break;
+        case 'messageFrom':
+          setFrom(from + " [" + text + "] ");
+          break;
+        case 'messageBody':
+          setBody( body + " [" + text + "] ");
+          break;
+        case 'subject':
+          setSubject(subject + " [" + text + "] ");
+          break;
+        case 'toEmail':
+          setToEmail(toEmail + " [" + text + "] ");
+          break;
+        case 'bodyEmail':
+          console.log(bodyEmail + " [" + text + "] ")
+          setBodyEmail(bodyEmail + " [" + text + "] ");
           break;
       }
     }
@@ -966,19 +988,27 @@ const AutomationBuilder = (props) => {
                                 <label htmlFor="">To</label>
                                 <input className={`icon ${toError}`} type="text" name="messageTo" id="" value={to} onChange={handleToChange} onClick={handleToChange}/>
                               </div>
+                              <div className="messageTagTo">
+                                {Object.keys(messageData).length ? (
+                                    Object.keys(messageData).map((value, key) => (
+                                        <button onClick={() => copyTag(value, 'messageTo')}>{value}</button>
+                                    ))
+                                ) : ""
+                                }
+                              </div>
                               <div className="inputField">
                                 <label htmlFor="">From</label>
                                 <input className={`icon ${fromError}`} type="text" name="messageFrom" id="" value={from} onChange={handleFromChange} onClick={handleFromChange}/>
                               </div>
                               <div className="inputField">
                                 <label htmlFor="">Body</label>
-                                <textarea className={`${bodyError}`} name="messageBody" onChange={handleBodyChange} onClick={handleBodyChange}>{body}</textarea>
+                                <textarea className={`${bodyError}`} name="messageBody" onChange={handleBodyChange} onClick={handleBodyChange} value={body}>{body}</textarea>
                               </div>
                             </div>
-                            <div className="messageTag">
+                            <div className="messageTagBody">
                               {Object.keys(messageData).length ? (
                                   Object.keys(messageData).map((value, key) => (
-                                      <button onClick={() => copyTag(value)}>{value}</button>
+                                      <button onClick={() => copyTag(value, 'messageBody')}>{value}</button>
                                   ))
                               ) : ""
                               }
@@ -1011,19 +1041,36 @@ const AutomationBuilder = (props) => {
                                     <label htmlFor="subject">Subject</label>
                                     <input className={`icon ${subjectError}`} type="text" name="subject" id="subject" value={subject} onChange={handleSubjectChange} onClick={handleSubjectChange}/>
                                   </div>
+                                  <div className="emailTagSubject">
+                                    {Object.keys(emailData).length ? (
+                                        Object.keys(emailData).map((value, key) => (
+                                            <button onClick={() => copyTag(value, 'subject')}>{value}</button>
+                                        ))
+                                    ) : ""
+                                    }
+                                  </div>
                                   <div className="inputField">
                                     <label htmlFor="toEmail">To</label>
                                     <input className={`icon ${toEmailError}`} type="text" name="toEmail" id="toEmail" value={toEmail} onChange={handleToEmailChange} onClick={handleToEmailChange}/>
                                   </div>
+                                  <div className="emailTagToEmail">
+                                    {Object.keys(emailData).length ? (
+                                        Object.keys(emailData).map((value, key) => (
+                                            <button onClick={() => copyTag(value, 'toEmail')}>{value}</button>
+                                        ))
+                                    ) : ""
+                                    }
+                                  </div>
                                   <div className="inputField">
                                     <label htmlFor="bodyEmail">Body</label>
-                                    <textarea className={`icon ${bodyEmailError}`} name="bodyEmail" id="bodyEmail" onChange={handleBodyEmailChange} onClick={handleBodyEmailChange}>{bodyEmail}</textarea>
+                                    <textarea className={`icon ${bodyEmailError}`} name="bodyEmail" id="bodyEmail" onChange={handleBodyEmailChange}
+                                              onClick={handleBodyEmailChange} value={bodyEmail}>{bodyEmail}</textarea>
                                   </div>
                                 </div>
-                                <div className="emailTag">
+                                <div className="emailTagEmailBody">
                                   {Object.keys(emailData).length ? (
                                       Object.keys(emailData).map((value, key) => (
-                                          <button onClick={() => copyTag(value)}>{value}</button>
+                                          <button onClick={() => copyTag(value, 'bodyEmail')}>{value}</button>
                                       ))
                                   ) : ""
                                   }
