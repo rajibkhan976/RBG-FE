@@ -534,13 +534,17 @@ const UserModal = (props) => {
 
                                             {!editId && (
                                                 <div className="formField">
-                                                    <p className="">Is it organization owner?
-                                                        <input
-                                                            type="checkbox"
-                                                            name="isOrg"
-                                                            defaultChecked={isOwner}
-                                                            onChange={handleIsOrgChange}
-                                                        />
+                                                    <p className="">Is it organization owner? 
+                                                        
+                                                        <div class="customCheckbox marginLeft">
+                                                            <input
+                                                                type="checkbox"
+                                                                name="isOrg"
+                                                                defaultChecked={isOwner}
+                                                                onChange={handleIsOrgChange}
+                                                            />
+                                                            <span></span>
+                                                        </div>
                                                     </p>
                                                 </div>
                                             )}
@@ -662,7 +666,10 @@ const UserModal = (props) => {
                                     </div>
                                     <div className="enableNotification">
                                         <label>
-                                            <input type="checkbox" name="" />
+                                            <div class="customCheckbox">
+                                                <input type="checkbox" />
+                                                <span></span>
+                                            </div>
                                             <span>Notify users by mail on adding them to this group </span>
                                         </label>
                                     </div>
