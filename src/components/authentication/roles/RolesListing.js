@@ -153,6 +153,15 @@ const RolesListing = (props) => {
     }
 
     /**
+     * Trigger search when keyword is empty
+     */
+    useEffect(() => {
+       if (keyword == "") {
+           handleSearch({preventDefault: () => {}})
+       }
+    }, [keyword])
+
+    /**
      * Handle search functionality
      */
     const handleSearch = (event) => {
