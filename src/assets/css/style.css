@@ -84,8 +84,11 @@ label {
 .btn-link {
   color: #55BBC9;
   display: inline-flex;
-  text-decoration: underline;
-  padding: 0;
+  background-image: linear-gradient(to right, #55BBC9 33%, rgba(255,255,255,0) 0%);
+background-position: bottom;
+background-size: 4px 2px;
+background-repeat: repeat-x;
+  padding: 0 0 5px 0;
 }
 
 .btn img {
@@ -296,6 +299,7 @@ audio, video {
   height: 100vh;
   background: #fff;
   overflow-y: auto;
+  z-index: 10;
 }
 
 .routeMenu::-webkit-scrollbar {
@@ -515,7 +519,8 @@ audio, video {
   width: 100%;
   border: none;
   padding: 0 41px 0 90px;
-  font-size: 13px;
+  font-size: 14px;
+  color: #305671;
 }
 
 .headerSearch input::-webkit-input-placeholder {
@@ -560,7 +565,8 @@ audio, video {
   -o-transform: translateY(-50%);
 }
 
-input:focus+.searchIco #search-ico .a {
+input:focus + .searchIco #search-ico .a, 
+.searchBar input:focus + .searchIcon #search-ico .a {
   fill: #ED707A;
   stroke: #ED707A;
 }
@@ -572,8 +578,9 @@ input:focus+.searchIco #search-ico .a {
 .dashboardElComponent {
   margin-right: 0;
   position: relative;
-  padding: 0 0 0 294px;
+  padding: 0;
   height: 100%;
+  transition: all 0.5s ease 0s;
 }
 
 .dashInnerStructure {
@@ -612,15 +619,23 @@ input:focus+.searchIco #search-ico .a {
 
 .menuDetails {
   position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
   z-index: 2;
+  top: 0;
+  left: -300px;
+  bottom: 0;
   width: 294px;
   height: 100%;
   background: #E9EFF5; 
   display: flex;
   flex-direction: column;
+  transition: all 0.5s ease 0s;
+}
+
+.openSubmenu .menuDetails {
+  left: 0;
+}
+.openSubmenu .dashboardElComponent {
+  padding-left: 294px;
 }
 
 /* Side Menu Tray */
@@ -660,7 +675,7 @@ input:focus+.searchIco #search-ico .a {
 }
 
 .sideMenuHeader {
-  padding: 25px 30px;
+  padding: 25px;
   padding-right: 44px;
   position: relative;
 }
@@ -837,10 +852,12 @@ input:focus+.searchIco #search-ico .a {
   position: absolute;
   right: 10px;
   top: 30px;
+  cursor: pointer;
 }
 
 .linkImg {
   margin: 70px 0px 0px 55px;
+  display: none;
 }
 
 /* Dashboard Body */
@@ -901,8 +918,9 @@ input:focus+.searchIco #search-ico .a {
 
 .searchBar input {
   border: none;
-  color: #9BAEBC;
+  color: #305671;
   width: 90%;
+  font-size: 14px;
 }
 
 .searchBar input::placeholder {
@@ -921,7 +939,7 @@ input:focus+.searchIco #search-ico .a {
   transform: translateY(-50%);
 }
 
-.btn-filter {
+/* .btn-filter {
   width: 83px;
   height: 40px;
   background: #fff;
@@ -934,6 +952,18 @@ input:focus+.searchIco #search-ico .a {
   flex-direction: row;
   cursor: pointer;
   margin-right: 15px;
+} */
+
+.btn-filter {
+  width: 30px;
+  height: 40px;
+  background: none;
+  position: relative;
+  border: 0;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 15px;
 }
 
 .btn-filter p {
@@ -943,7 +973,7 @@ input:focus+.searchIco #search-ico .a {
 }
 
 .filterIcon {
-  margin-right: 15px;
+  width: 20px;
 }
 
 .creatUserBtn {
@@ -1099,9 +1129,10 @@ li.listHeading>div.dsc::after {
 .userName .btn {
   display: flex;
   flex-direction: row;
-  align-content: center;
-  align-items: center;
+  align-content: left;
+  align-items: left;
   text-decoration: none;
+  text-align: left;
 }
 
 .userName .btn p {
@@ -1301,6 +1332,10 @@ li.listHeading>div.dsc::after {
   background-repeat: no-repeat;
   background-position: right 11px center;
   padding-right: 40px;
+}
+
+.inFormField input::placeholder {
+  color: #9BAEBC;
 }
 
 .formField.w-50 {
@@ -1554,6 +1589,10 @@ img.dropDownIcon {
   padding-right: 5px;
 }
 
+.createdDateFields .formField input::placeholder {
+  color: #9BAEBC;
+}
+
 .selectStatus {
   margin-top: 20px;
 }
@@ -1619,7 +1658,7 @@ img.dropDownIcon {
 }
 
 .listHeading.userRole .phoneNum.assignedPeople, .owerInfo.userRole .phoneNum {
-  width: 50%;
+  max-width: 200px;
 }
 
 .listHeading.userRole .emailID, .owerInfo.userRole .emailID {
@@ -3139,12 +3178,11 @@ span.userProfilePic img {
 }
 .alertBoxFooter .saveNnewBtn {
   float: left;
-}
-.alertBoxFooter .saveNnewBtn {
   min-width: 80px;
+  width: auto;
 }
 .alertBox .btn-link {
-  background: transparent;
+  background-color: transparent;
   border: none;
   float: right;
   margin-top: 14px;

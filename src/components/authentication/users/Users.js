@@ -16,6 +16,12 @@ const Users = (props) => {
   const [createButton, setCreateButton] = useState(null);
   const [stateFilter, setStateFilter] = useState(null);
 
+  const [showLeftSubMenu, setShowLeftSubMenu] = useState(true);
+
+  const toggleLeftSubMenu = (status = false) => {
+    setShowLeftSubMenu(status)
+  };
+
   const toggleCreate = (e) => {
     setCreateButton(e);
   };
@@ -26,10 +32,10 @@ const Users = (props) => {
   return (
     <div className="mainComponent">
       <CustomAlert/>
-      <div className="dashboardBody d-flex f-align-center">
+      <div className={"dashboardBody d-flex f-align-center "  + (showLeftSubMenu ? "openSubmenu" : "")}>
         <LeftMenu />
         <div className="dashMain">
-          <InnerLeftMenu />
+          <InnerLeftMenu toggleLeftSubMenu={toggleLeftSubMenu}  />
           <div className="dashboardElComponent">
             <HeaderDashboard
               toggleCreate={toggleCreate}

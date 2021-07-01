@@ -15,6 +15,12 @@ const Groups = (props) => {
   const [stateFilter, setStateFilter] = useState(null);
   const [filteredData, setFilteredData] = useState(null);
 
+  const [showLeftSubMenu, setShowLeftSubMenu] = useState(true);
+
+  const toggleLeftSubMenu = (status = false) => {
+    setShowLeftSubMenu(status)
+  };
+
   const toggleCreate = (e) => {
     setCreateButton(e);
   };
@@ -35,10 +41,10 @@ const Groups = (props) => {
 
   return (
     <div className="mainComponent">
-      <div className="dashboardBody d-flex f-align-center">
+      <div className={"dashboardBody d-flex f-align-center "  + (showLeftSubMenu ? "openSubmenu" : "")} >
         <LeftMenu />
         <div className="dashMain">
-          <InnerLeftMenu />
+          <InnerLeftMenu toggleLeftSubMenu={toggleLeftSubMenu} />
           <div className="dashboardElComponent">
             <HeaderDashboard
               toggleCreate={toggleCreate}

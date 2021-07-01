@@ -239,7 +239,7 @@ const RoleModal = (props) => {
 
                   <div className="permissionButtons enterRoleNameBtn">
                     <button disabled={processing} className="creatUserBtn createBtn">
-                      <span>{editRole && editRole._id ? "Save" : "Save"} role</span>
+                      <span>{editRole && editRole._id ? "Save" : "Save"}</span>
                       <img className="" src={arrow_forward} alt="" />
                     </button>
                     {!editRole && (
