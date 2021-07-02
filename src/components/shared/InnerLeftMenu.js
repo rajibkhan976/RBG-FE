@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux';
 import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, Redirect } from "react-router-dom";
 import BuilderSidebar from "../automation/automationLists/automationcanvas/BuilderSidebar";
+import { InnerLeftMenuServices } from "../../services/shared/InnerLeftMenuService"
 
 import white_arrow_right from "../../assets/images/white_arrow_right.svg";
 import undraw_personal_settings_kihd from "../../assets/images/undraw_personal_settings_kihd.svg";
@@ -10,13 +11,19 @@ import SidebarLogo from "../../assets/images/sidebar-logo.png";
 const InnerLeftMenu = (props) => {
   const pathURL = useLocation().pathname;
   const [automationObject, setAutomationObject] = useState({});
-  const rolesCount = useSelector((state) => state.role.count);
-  const groupsCount = useSelector((state) => state.group.count);
+  // const rolesCount = useSelector((state) => state.role.count);
+  // const groupsCount = useSelector((state) => state.group.count);
+  const [rolesCount, setRolesCount] = useState(0);
+  const [groupsCount, setGroupsCount] = useState(0);
+  const [usersCount, setUsersCount] = useState(0);
+
   useEffect(() => {
     if (props.automationListItem) {
       setAutomationObject(props.automationListItem)
     }
-  });
+
+    fetchCounts();
+  }, []);
 
   const toggleLeftSubMenu = (status = false) => {
     console.log("'status i n inner bar", status)
@@ -25,6 +32,25 @@ const InnerLeftMenu = (props) => {
       props.toggleLeftSubMenu && props.toggleLeftSubMenu(status)
     //}
   }
+
+  /**
+     * Function to fetch users
+     * @returns 
+     */
+   const fetchCounts = async () => {
+    try {
+        const result = await InnerLeftMenuServices.fetchCounts();
+        console.log("fetchCount function result", result)
+        if(result) {
+          setRolesCount(result.roles);
+          setGroupsCount(result.groups);
+          setUsersCount(result.users);
+        }
+    } catch (e) {
+        console.log("Error in fetchCount", e);
+        throw new Error(e);
+    }
+}
 
   return (
     <div className="menuDetails">
@@ -73,7 +99,7 @@ const InnerLeftMenu = (props) => {
                   <div className="indicator"></div>
                   <div className="linkDetails">
                     <p className="linkHeading">Users</p>
-                    <span className="notificationNumber">48</span>
+                    <span className="notificationNumber">{ usersCount }</span>
                     <br />
                     <p className="linkAbout">Manage users & sub-users</p>
                   </div>
