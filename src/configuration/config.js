@@ -26,5 +26,8 @@ module.exports = {
     // Auth - org
     orgUrl: "https://2tm7g6mwof.execute-api.us-east-1.amazonaws.com/dev/organization",
     //Bucket
-    bucketUrl : "https://wrapperbucket.s3.amazonaws.com/"
+    bucketUrl : "https://wrapperbucket.s3.amazonaws.com/",
+
+    // inner left menu api service
+    innerLeftMenuApiUrl: "https://4gvirnff9l.execute-api.us-east-1.amazonaws.com/dev/inner-left-menu"
 }  
