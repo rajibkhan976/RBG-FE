@@ -4,12 +4,18 @@ import plus_icon from "../../assets/images/plus_icon.svg";
 import arrowDown from "../../assets/images/arrowDown.svg";
 import { useState, useEffect } from "react";
 import { RoleServices } from "../../services/authentication/RoleServices";
-import { history } from "../../helpers";
+import { history, utils } from "../../helpers";
 
 const RoleModal = (props) => {
   const closeSideMenu = (e) => {
     e.preventDefault();
     props.setCreateButton(null);
+    setFormErrors({
+      name: "",
+      description: "",
+    })
+    setErrorMsg(null);
+    setChanged(false);
   };
 
   let editRole = props.createButton ? props.createButton : false;
@@ -22,12 +28,14 @@ const RoleModal = (props) => {
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [processing, setProcessing] = useState(false);
+  const [changed, setChanged] = useState(false);
   const [formErrors, setFormErrors] = useState({
     name: "",
     description: "",
   });
   const [saveAndNew, setSaveAndNew] = useState(false);
 
+  console.log("formErrors", formErrors);
 
   useEffect(() => {
     /**
@@ -41,16 +49,40 @@ const RoleModal = (props) => {
   }, [editRole]);
 
   const handleNameChange = (event) => {
-    event.preventDefault();
+    // event.preventDefault();
     setName(event.target.value);
-
+    console.log('role name changed', event.target.value);
     let roleSlug = event.target.value ? ((event.target.value).toLowerCase()).replace(" ", "-") : "";
     setSlug(roleSlug);
+    setChanged(true);
   }
 
   const handleDescriptionChange = (event) => {
     event.preventDefault();
     setDescription(event.target.value);
+    setChanged(true);
+  }
+
+  /**
+   * Handle name on key backspace press
+   * @param {*} event 
+   */
+  const handleNameKeyUp = (event) => {
+    if (event.keyCode == 8) {
+      setName(event.target.value);
+      setChanged(true);
+    }
+  }
+
+  /**
+   * Handle name on key backspace press
+   * @param {*} event 
+   */
+  const handleDescriptionKeyUp = (event) => {
+    if (event.keyCode == 8) {
+      setDescription(event.target.value);
+      setChanged(true);
+    }
   }
 
   const handleSaveAndNew = () => {
@@ -65,6 +97,8 @@ const RoleModal = (props) => {
   }
 
   const handleSubmit = async (event) => {
+
+  
     event.preventDefault();
     setProcessing(true);
 
@@ -80,15 +114,6 @@ const RoleModal = (props) => {
       formErrors.name = null;
     }
 
-    /**
-     * Check description field
-     */
-    if (!description) {
-      isError = true;
-      formErrors.description = "Please fillup the description";
-    } else {
-      formErrors.description = null
-    }
 
     /**
      * Check the erros flag
@@ -103,6 +128,12 @@ const RoleModal = (props) => {
         description: formErrors.description
       });
       console.log('formErrors', formErrors)
+    } else if (!changed && editRole) {
+      /**
+       * Stop hiting API if there is no changes
+       */
+      setErrorMsg("Please modify something to update");
+      setProcessing(false);
     } else {
       /**
        * Submit role create form
@@ -134,16 +165,17 @@ const RoleModal = (props) => {
              * Reset modal
              */
             setTimeout(() => {
+              setProcessing(false);
+              resetRoleForm();
               if (saveAndNew) {
                 setSaveAndNew(false);
                 props.setCreateButton(null);
                 props.setCreateButton('role');
               } else {
+                utils.addQueryParameter('page', 1);
                 props.setCreateButton(null);
+                history.go(0)
               }
-              setProcessing(false);
-              resetRoleForm();
-              history.go(0)
             }, 2000)
 
           })
@@ -182,7 +214,7 @@ const RoleModal = (props) => {
             <>
               <div className="sideMenuHeader">
 
-                <h3>{editRole && editRole._id ? "Edit" : "Create"} an user role</h3>
+                <h3>Role</h3>
                 <p>
                   We got you covered! Limit your Gym Staffs to access your
                   business information.
@@ -190,7 +222,7 @@ const RoleModal = (props) => {
               </div>
 
               <div className="sideMenuBody">
-{/* 
+ 
                 {successMsg &&
                   <div className="success successMsg">
                     <p>{successMsg}</p>
@@ -201,24 +233,16 @@ const RoleModal = (props) => {
                     <p>{errorMsg}</p>
                   </div>
                 }
-                {formErrors &&
-                  <div className="error errorMsg">
-                    {formErrors.name &&
-                      <p>{formErrors.name}</p>}
-
-                    {formErrors.description &&
-                      <p>{formErrors.description}</p>}
-                  </div>
-                } */}
                 <form onSubmit={handleSubmit}>
                   <div className={"formField " + (formErrors.name ? "error" : "")}>
-                    <p>Enter role name</p>
+                    <p>Enter role name <span>*</span></p>
                     <div className="inFormField">
                       <input
                         type="text"
                         name="name"
                         defaultValue={name ? name : ''}
                         onChange={handleNameChange}
+                        onKeyUp={handleNameKeyUp}
                         placeholder="Ex. Manager"
                       />
                     </div>
@@ -233,6 +257,7 @@ const RoleModal = (props) => {
                       <textarea
                         name="description"
                         onChange={handleDescriptionChange}
+                        onKeyUp={handleDescriptionKeyUp}
                         id=""
                         placeholder="Ex. Managers of production"
                         defaultValue={description}
@@ -248,8 +273,9 @@ const RoleModal = (props) => {
                     <button disabled={processing} className="creatUserBtn createBtn">
                       <span>{editRole && editRole._id ? "Save" : "Save"}</span>
                       <img className="" src={arrow_forward} alt="" />
-                    </button>
-                    {!editRole && (
+                    </button> 
+                   
+                    {!editRole._id && (
                       <button disabled={processing} className="saveNnewBtn"
                         onClick={handleSaveAndNew}
                       >

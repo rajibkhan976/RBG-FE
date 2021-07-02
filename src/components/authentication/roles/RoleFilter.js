@@ -156,7 +156,7 @@ const RoleFilter = (props) => {
                                         <div className="formField w-50">
                                             <p>To</p>
                                             <div className="inFormField">
-                                                <input type="date" name="toDate" id="toDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} value={toDate}/>
+                                                <input type="date" min name="toDate" min={fromDate} id="toDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} value={toDate}/>
                                             </div>
                                         </div>
                                     </div>
