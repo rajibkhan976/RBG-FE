@@ -40,7 +40,7 @@ const Roles = () => {
   
   return (
     <div className="mainComponent">
-      <SuccessAlert/>
+      {/* <SuccessAlert/> */}
       <div className={"dashboardBody d-flex f-align-center "  + (showLeftSubMenu ? "openSubmenu" : "")}>
         <LeftMenu />
         <div className="dashMain">

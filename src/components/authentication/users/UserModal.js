@@ -39,9 +39,14 @@ const UserModal = (props) => {
     const [groups, setGroups] = useState(null);
     const [roleId, setRoleId] = useState('');
     const [groupId, setGroupId] = useState('');
+    const [editGroupId, setEditGroupId] = useState('');
     const [isLoader, setIsLoader] = useState(false);
     const [editId, setEditId] = useState("");
     const [permissionData, setPermissionData] = useState([]);
+    const [isOrgPermission, setIsOrgPermission] = useState(false);
+    const [isModifiedPermission, setIsModifiedPermission] = useState(false);
+    const [isEmailNotification, setIsEmailNotification] = useState(false);
+
 
     const closeSideMenu = (e) => {
         e.preventDefault();
@@ -57,6 +62,11 @@ const UserModal = (props) => {
         setLastName(editUser.lastName);
         setPhoneNumber(editUser.phone);
         setEmail(editUser.email);
+        // if (editUser && editUser.role.length && editUser.group.length) {
+        //     setRoleId(editUser.role[0]._id);
+        //     getGroupsByRoleId(editUser.role[0]._id);
+        //     setEditGroupId(editUser.group[0]._id);
+        // }
 
         console.log('editUser', editUser)
         if (editUser.isOrganizationOwner) {
@@ -68,6 +78,14 @@ const UserModal = (props) => {
             setLogoName(editUser.organization.logo);
         } else {
             setIsOwner(false);
+        }
+
+        /**
+         * Reset permissions
+         */
+        if (!editUser) {
+            console.log('Reset permissions');
+            setPermissionData([]);
         }
 
     }, [editUser]);
@@ -147,7 +165,7 @@ const UserModal = (props) => {
         try {
             await RoleServices.fetchRoles(pageId, keyword)
                 .then((result) => {
-                    console.log('Role drop-down result', result.roles);
+                    // console.log('Role drop-down result', result.roles);
                     if (result) {
                         setRoles(result.roles);
                     }
@@ -238,7 +256,7 @@ const UserModal = (props) => {
         setIsLoader(true);
         try {
             const groups = await UserServices.fetchGroupsByRoleId(roleId);
-            if(groups) {
+            if (groups) {
                 console.log('Fetched groups', groups);
                 setGroups(groups);
                 setIsLoader(false);
@@ -256,10 +274,11 @@ const UserModal = (props) => {
         event.preventDefault();
         console.log('gc', event.target.value);
         let groupId = event.target.value;
+        setGroupId(groupId);
         var selectedGroup = groups.filter(group => {
             return group._id === groupId
         });
-        if(selectedGroup.length) {
+        if (selectedGroup.length) {
             console.log('Selected group', selectedGroup);
             setPermissionData(selectedGroup[0].permissions);
         }
@@ -269,7 +288,7 @@ const UserModal = (props) => {
      * Get permission matrix data set
      * @param {*} dataFromChild
      */
-     const getDataFn = (dataFromChild) => {
+    const getDataFn = (dataFromChild) => {
         console.log('Data from permission matrix', dataFromChild);
         // if (dataFromChild) {
         //     setPermissions(dataFromChild);
@@ -467,7 +486,7 @@ const UserModal = (props) => {
                         <div className="sideMenuHeader">
                             <h3>User</h3>
                             <p>
-                            Manage all the users' details in your organization
+                                Manage all the users' details in your organization
                             </p>
                         </div>
 
@@ -578,11 +597,11 @@ const UserModal = (props) => {
                                         </div>
                                         <div className="infoField orgSection">
 
-                                            {!editId && (
+                                            {!editId && isOrgPermission && (
                                                 <div className="formField">
-                                                    <p className="">Is it organization owner? 
-                                                        
-                                                        <div class="customCheckbox marginLeft">
+                                                    <p className="">Is it organization owner?
+
+                                                        <div className="customCheckbox marginLeft">
                                                             <input
                                                                 type="checkbox"
                                                                 name="isOrg"
@@ -659,6 +678,7 @@ const UserModal = (props) => {
                                                                         backgroundImage: "url(" + arrowDown + ")",
                                                                     }}
                                                                     onChange={handleRoleChange}
+                                                                    value={roleId ? roleId : ''}
                                                                 >
                                                                     <option value="">Select role</option>
                                                                     {roles ? roles.map((el, key) => {
@@ -680,6 +700,7 @@ const UserModal = (props) => {
                                                                         backgroundImage: "url(" + arrowDown + ")",
                                                                     }}
                                                                     onChange={handleGroupChange}
+                                                                    value={editGroupId ? editGroupId : ''}
                                                                 >
                                                                     <option value="">Select group</option>
                                                                     {groups ? groups.map((el, key) => {
@@ -697,14 +718,14 @@ const UserModal = (props) => {
                                             </div>
                                         </div>
                                     </div>
-                                    <PermissionMatrix 
-                                    getData={getDataFn}
-                                    setPermissionData={permissionData} 
+                                    <PermissionMatrix
+                                        getData={getDataFn}
+                                        setPermissionData={permissionData}
                                     />
                                     <p className="staredInfo">
                                         * You can customize permissions for this user based on your need.
                                     </p>
-                                    <div className="newGroupName">
+                                    {isModifiedPermission && <div className="newGroupName">
                                         <div className="formField w-50">
                                             <p>Create a new group with the new permissions *</p>
                                             <div className="inFormField">
@@ -716,16 +737,16 @@ const UserModal = (props) => {
                                                 />
                                             </div>
                                         </div>
-                                    </div>
-                                    <div className="enableNotification">
+                                    </div>}
+                                    {isEmailNotification && <div className="enableNotification">
                                         <label>
-                                            <div class="customCheckbox">
+                                            <div className="customCheckbox">
                                                 <input type="checkbox" />
                                                 <span></span>
                                             </div>
                                             <span>Notify users by mail on adding them to this group </span>
                                         </label>
-                                    </div>
+                                    </div>}
                                     <div className="permissionButtons">
                                         {!editId && <button className="creatUserBtn createBtn" disabled={processing}>
                                             <img className="plusIcon" src={plus_icon} alt="" />
