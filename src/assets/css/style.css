@@ -3202,3 +3202,50 @@ span.userProfilePic img {
   float: right;
   margin-top: 14px;
 }
+
+
+.popupMessage {
+  min-width: 350px;
+  background: #ececec;
+  border: 1px solid #d6d6d6;
+  border-radius: 10px;
+  padding: 25px;
+  margin-top: 30px;
+  position: fixed;
+  z-index: 999;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.popupMessage p {
+  padding: 5px 0;
+  font-size: 16px;
+  text-align: center;
+  color: #929292;
+}
+
+.popupMessage.success {
+  background: #E8FFEC;
+  border: 1px solid #c2e4c8;
+}
+.popupMessage.success p {
+  color: #48a357;
+}
+
+.popupMessage.warning {
+  background: #fff8e8;
+  border: 1px solid #ffe19c;
+}
+.popupMessage.warning p {
+  color: #dc9d28;
+}
+
+.popupMessage.error {
+  background: #ffe8e8;
+  border: 1px solid #f7c0c0;
+}
+.popupMessage.error p {
+  color: #c55757;
+}

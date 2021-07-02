@@ -8,6 +8,7 @@ import InnerLeftMenu from "../../shared/InnerLeftMenu";
 import Filter from '../../shared/FilterAuth.js'
 import RoleCreateModal from '../../shared/RoleModal'
 import RoleFilter from './RoleFilter';
+import SuccessAlert from '../../shared/messages/success';
 
 const Roles = () => {
   const [createButton, setCreateButton] = useState(null);
@@ -39,6 +40,7 @@ const Roles = () => {
   
   return (
     <div className="mainComponent">
+      <SuccessAlert/>
       <div className={"dashboardBody d-flex f-align-center "  + (showLeftSubMenu ? "openSubmenu" : "")}>
         <LeftMenu />
         <div className="dashMain">
