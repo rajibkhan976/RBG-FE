@@ -147,7 +147,7 @@ const UserModal = (props) => {
         try {
             await RoleServices.fetchRoles(pageId, keyword)
                 .then((result) => {
-                    console.log('Role drop-down result', result.roles);
+                    // console.log('Role drop-down result', result.roles);
                     if (result) {
                         setRoles(result.roles);
                     }
@@ -262,6 +262,8 @@ const UserModal = (props) => {
         if(selectedGroup.length) {
             console.log('Selected group', selectedGroup);
             setPermissionData(selectedGroup[0].permissions);
+        } else {
+            setPermissionData([]);
         }
     }
 
@@ -582,7 +584,7 @@ const UserModal = (props) => {
                                                 <div className="formField">
                                                     <p className="">Is it organization owner? 
                                                         
-                                                        <div class="customCheckbox marginLeft">
+                                                        <div className="customCheckbox marginLeft">
                                                             <input
                                                                 type="checkbox"
                                                                 name="isOrg"
@@ -719,7 +721,7 @@ const UserModal = (props) => {
                                     </div>
                                     <div className="enableNotification">
                                         <label>
-                                            <div class="customCheckbox">
+                                            <div className="customCheckbox">
                                                 <input type="checkbox" />
                                                 <span></span>
                                             </div>
