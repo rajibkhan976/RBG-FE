@@ -52,11 +52,15 @@ export const AutomationServices = {
         };
         return axios(configAxios);
     },
-    getAutomations: (page) => {
+    getAutomations: (page, queryParams = null) => {
+        // const pageId = utils.getQueryVariable('page') || 1;
+        // const queryParams = await getQueryParams();page
         try {
-            let configAxios = {
+            let urlPattern = config.automationBasicUrl + '/automation/list/' + page;
+            urlPattern += (queryParams)? queryParams: "";
+            const configAxios = {
                 method: 'get',
-                url: config.automationBasicUrl + '/automation/list'  + (page ? "/" + page : ''),
+                url: urlPattern,
                 headers: {
                     'Authorization': localStorage.getItem("_token"),
                     "Content-Type": "application/json"

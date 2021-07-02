@@ -1179,3 +1179,228 @@
 .infoInputs ul li {
     align-items: flex-start;
 }
+
+
+/* Automation UI fix */
+.inFormField {
+    position: relative;
+}
+.shortTable {
+  width: 9px;
+  height: 13px;
+  background-image: url("../images/off_icon.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 9px auto;
+  pointer-events: none;
+}
+.listCell.asc .shortTable {
+  background-image: url('../images/only_down_icon.svg');
+}
+.listCell.dsc .shortTable {
+  background-image: url('../images/only_up_icon.svg');
+}
+.inFormField .refreshFieldsBtn {
+    flex: 0 0 40px;
+    margin-left: 10px;
+    padding: 0;
+    height: 40px;
+    background-position: center center;
+    background-size: 26px;
+}
+.webhook #webhook-url {
+    margin-top: 0;
+    margin-right: 12px;
+}
+.triggerSetting .inFormField {
+    margin-top: 10px;
+}
+.triggerSetting .inFormField input {
+    margin-top: 0;
+}
+.emailDetails .inFormField input {
+    margin-top: 0 !important;
+    background-image: none !important;
+}
+.emailDetails .inFormField {
+    margin-top: 10px;
+}
+.emailDetails .inFormField .toggleTags {
+    width: 40px;
+    height: 100%;
+    border: none;
+    background: none;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    right: 0;
+    top: 0;
+    padding: 0;
+    background-image: url('../images/icon_browse_contacts.svg');
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+.toggleTags img {
+    pointer-events: none;
+}
+.emailTagSubject button,
+.emailTagEmailBody button,
+.messageTagBody button {
+    display: inline-block;
+    background: #55BBC9;
+    padding: 4px 5px;
+    color: #ffffff;
+    font-size: 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    margin-right: 3px;
+    border: none;
+}
+.emailTagSubject button:hover,
+.emailTagEmailBody button:hover,
+.messageTagBody button:hover {
+    background-color: #305671;
+}
+
+.webhookDataFields {
+    background-color: transparent !important;
+}
+
+.webhookDataFields h5 {
+    color: #2F5771;
+    font-weight: 500;
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+.listpayloads {
+    padding: 12px 8px;
+    border-radius: 8px;
+    background: #DDE4EC;
+    display: inline-block;
+    max-width: 100%;
+    box-shadow: 2px 2px 10px rgb(0 0 0 / 2%);
+}
+.listpayloads li + li {
+    margin-top: 10px;
+}
+.listpayloads li p {
+    font-size: 14px;
+    color: #2F5771;
+}
+
+.listpayloads li p:after {
+    clear: both;
+    content: '';
+    display: block;
+}
+
+.listpayloads li p span:first-child {
+    font-weight: bold;
+    text-transform: capitalize;
+    float: left;
+    width: 90px;
+}
+.listpayloads li p span:last-child {
+    display: block;
+    overflow: hidden;
+}
+.webhookDataFields h5 figure {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px;
+    width: 20px;
+}
+.webhookDataFields h5 figure svg {
+    max-width: 100%;
+}
+
+.emailTagSubject, .emailTagEmailBody {
+    margin-top: 8px;
+    font-size: 0;
+}
+
+.inputField {
+    position: relative;
+}
+.emailTagToEmail,
+.emailTagSubject,
+.messageTagTo {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    width: 150px;
+    z-index: 1;
+    background: #fff;
+    padding: 0 10px 9px 10px;
+    margin-top: 5px;
+    box-shadow: 0 0 5px rgb(0 0 0 / 10%);
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    display: none;
+    max-height: 150px;
+    overflow: auto;
+}
+.emailTagToEmail button,
+.emailTagSubject button,
+.messageTagTo button {
+    display: block;
+    cursor: pointer;
+    position: relative;
+    padding: 5px 0;
+    color: #305671;
+    width: 100%;
+    text-align: left;
+    border: none;
+    background: transparent;
+    font-size: 13px;
+}
+.emailTagToEmail button:hover,
+.emailTagSubject button:hover,
+.messageTagTo button:hover {
+    color: #55BBC9;
+    background-color: rgba(0,0,0,0.01);
+}
+
+
+.listCell {
+    cursor: pointer;
+}
+.listCell .shortTable {
+    width: 9px;
+    height: 13px;
+    background-image: url('../images/off_icon.svg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 9px auto;
+    pointer-events: none;
+}
+.listCell.asc .shortTable {
+    background-image: url('../images/only_down_icon.svg');
+}
+.listCell.desc .shortTable {
+    background-image: url('../images/only_up_icon.svg');
+}
+.emailTagToEmail h6,
+.emailTagSubject h6,
+.messageTagTo h6 {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    padding: 8px 0 5px 0;
+    z-index: 1;
+    font-size: 14px;
+    color: #434345;
+}
+.inputField.active .emailTagToEmail,
+.inputField.active .emailTagSubject,
+.inputField.active .messageTagTo {
+    display: block;
+}

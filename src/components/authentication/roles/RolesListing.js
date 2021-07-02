@@ -171,6 +171,7 @@ const RolesListing = (props) => {
      * Handle options toggle
      */
     const toggleOptions = (index) => {
+        console.log("Index",index);
         setOption(index !== null ? (option !== null ? null : index) : null);
     };
 

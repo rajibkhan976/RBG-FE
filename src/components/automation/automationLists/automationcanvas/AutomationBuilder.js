@@ -866,6 +866,13 @@ const AutomationBuilder = (props) => {
       }
     }
   }
+
+  const toggletoMail = (e) => {
+    e.preventDefault();
+    
+    e.target.closest('.inputField').classList.toggle('active');
+  }
+
   useEffect(() => {
     if (Object.keys(props.automationElement).length) {
       setElements(props.automationElement.blueprint)
@@ -945,20 +952,32 @@ const AutomationBuilder = (props) => {
                         <div className="formFieldsArea">
                           <div className="inputField">
                             <label htmlFor="">webhook URL</label>
-                            <input type="text" name="webhook-url" id="webhook-url" value={automationUrl} onClick={() => onClickCopy(automationUrl)} readOnly={true}/>
+                            <div class="inFormField d-flex">
+                              <input type="text" name="webhook-url" id="webhook-url" value={automationUrl} onClick={() => onClickCopy(automationUrl)} readOnly={true}/>
+                              <button className="refreshFieldsBtn" onClick={() => refreshWebhook(automationUrlId, triggerNodeId)}></button>
+                            </div>
                           </div>
-                          <div className="inputField">
+                          {/* <div className="inputField">
                             <button className="refreshFieldsBtn" onClick={() => refreshWebhook(automationUrlId, triggerNodeId)}>Refresh Fields</button>
-                          </div>
+                          </div> */}
                           <div className="webhookDataFields">
-                          {Object.keys(webhookData).length ? (
-                                  Object.keys(webhookData).map((value, key) => (
-                                      <div>
-                                        <p><span>{value}</span>:<span>{webhookData[value]}</span>{key === 0 ? "" : ", "}</p>
-                                      </div>
-                                  ))
-                                ) : ""
-                          }
+                            <h5>
+                              <figure>
+                              <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" x2="6" y1="9" y2="21"/></svg>
+                              </figure>
+                              Request</h5>
+                            <div className="listpayloads">
+                              <ul>
+                              {Object.keys(webhookData).length ? (
+                                      Object.keys(webhookData).map((value, key) => (
+                                          <li>
+                                            <p><span>{value}:</span><span>{webhookData[value]}</span>{key === 0 ? "" : " "}</p>
+                                          </li>
+                                      ))
+                                    ) : ""
+                              }
+                              </ul>
+                            </div>
                           </div>
                         </div>
                         <div className="saveButton">
@@ -986,9 +1005,12 @@ const AutomationBuilder = (props) => {
                             <div className="emailDetails">
                               <div className="inputField">
                                 <label htmlFor="">To</label>
+                                <div className="inFormField">
                                 <input className={`icon ${toError}`} type="text" name="messageTo" id="" value={to} onChange={handleToChange} onClick={handleToChange}/>
-                              </div>
+                                <button class="toggleTags" onClick={(e)=>toggletoMail(e)}></button>
+                                </div>
                               <div className="messageTagTo">
+                                <h6>Select Option(s)</h6>
                                 {Object.keys(messageData).length ? (
                                     Object.keys(messageData).map((value, key) => (
                                         <button onClick={() => copyTag(value, 'messageTo')}>{value}</button>
@@ -996,15 +1018,19 @@ const AutomationBuilder = (props) => {
                                 ) : ""
                                 }
                               </div>
+                              </div>
                               <div className="inputField">
                                 <label htmlFor="">From</label>
+                                <div className="inFormField">
                                 <input className={`icon ${fromError}`} type="text" name="messageFrom" id="" value={from} onChange={handleFromChange} onClick={handleFromChange}/>
+                                <button class="toggleTags" onClick={(e)=>toggletoMail(e)}></button>
+                                </div>
                               </div>
                               <div className="inputField">
                                 <label htmlFor="">Body</label>
+                                <div className="inFormField">
                                 <textarea className={`${bodyError}`} name="messageBody" onChange={handleBodyChange} onClick={handleBodyChange} value={body}>{body}</textarea>
-                              </div>
-                            </div>
+                                </div>
                             <div className="messageTagBody">
                               {Object.keys(messageData).length ? (
                                   Object.keys(messageData).map((value, key) => (
@@ -1012,6 +1038,8 @@ const AutomationBuilder = (props) => {
                                   ))
                               ) : ""
                               }
+                            </div>
+                              </div>
                             </div>
                             <div className="saveButton">
                               <button onClick={saveMessage}>Save <img src={chevron_right_white_24dp} alt=""/></button>
@@ -1039,21 +1067,28 @@ const AutomationBuilder = (props) => {
                                 <div className="emailDetails">
                                   <div className="inputField">
                                     <label htmlFor="subject">Subject</label>
-                                    <input className={`icon ${subjectError}`} type="text" name="subject" id="subject" value={subject} onChange={handleSubjectChange} onClick={handleSubjectChange}/>
-                                  </div>
+                                    <div className="inFormField">
+                                      <input className={`icon ${subjectError}`} type="text" name="subject" id="subject" value={subject} onChange={handleSubjectChange} onClick={handleSubjectChange}/>
+                                      <button className="toggleTags" onClick={(e)=>toggletoMail(e)}></button>
+                                    </div>
                                   <div className="emailTagSubject">
+                                    <h6>Select Option(s)</h6>
                                     {Object.keys(emailData).length ? (
-                                        Object.keys(emailData).map((value, key) => (
-                                            <button onClick={() => copyTag(value, 'subject')}>{value}</button>
+                                      Object.keys(emailData).map((value, key) => (
+                                        <button onClick={() => copyTag(value, 'subject')}>{value}</button>
                                         ))
-                                    ) : ""
-                                    }
+                                        ) : ""
+                                      }
+                                  </div>
                                   </div>
                                   <div className="inputField">
                                     <label htmlFor="toEmail">To</label>
-                                    <input className={`icon ${toEmailError}`} type="text" name="toEmail" id="toEmail" value={toEmail} onChange={handleToEmailChange} onClick={handleToEmailChange}/>
-                                  </div>
+                                    <div className="inFormField">
+                                      <input className={`icon ${toEmailError}`} type="text" name="toEmail" id="toEmail" value={toEmail} onChange={handleToEmailChange} onClick={handleToEmailChange}/>
+                                      <button className="toggleTags" onClick={(e)=>toggletoMail(e)}></button>
+                                    </div>
                                   <div className="emailTagToEmail">
+                                    <h6>Select Option(s)</h6>
                                     {Object.keys(emailData).length ? (
                                         Object.keys(emailData).map((value, key) => (
                                             <button onClick={() => copyTag(value, 'toEmail')}>{value}</button>
@@ -1061,12 +1096,13 @@ const AutomationBuilder = (props) => {
                                     ) : ""
                                     }
                                   </div>
+                                  </div>
                                   <div className="inputField">
                                     <label htmlFor="bodyEmail">Body</label>
-                                    <textarea className={`icon ${bodyEmailError}`} name="bodyEmail" id="bodyEmail" onChange={handleBodyEmailChange}
+                                    <div className="inFormField">
+                                      <textarea className={`icon ${bodyEmailError}`} name="bodyEmail" id="bodyEmail" onChange={handleBodyEmailChange}
                                               onClick={handleBodyEmailChange} value={bodyEmail}>{bodyEmail}</textarea>
-                                  </div>
-                                </div>
+                                    </div>
                                 <div className="emailTagEmailBody">
                                   {Object.keys(emailData).length ? (
                                       Object.keys(emailData).map((value, key) => (
@@ -1074,6 +1110,8 @@ const AutomationBuilder = (props) => {
                                       ))
                                   ) : ""
                                   }
+                                </div>
+                                  </div>
                                 </div>
                                 <div className="saveButton">
                                   <button onClick={saveEmail}>Save <img src={chevron_right_white_24dp} alt=""/></button>

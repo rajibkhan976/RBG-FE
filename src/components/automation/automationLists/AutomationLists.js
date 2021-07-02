@@ -11,19 +11,28 @@ import { useDispatch } from "react-redux";
 import * as actionTypes from "../../../actions/types";
 import { utils } from "../../../helpers";
 import Pagination from "../../shared/Pagination";
+import CustomAlert from "../../alert";
 
 const AutomationLists = (props) => {
   // USEEFFECT() Life cycle hook 
   useEffect(() => {
-    let pageID = utils.getQueryVariable('page');
-    fetchAutomations(pageID);
+    fetchAutomations();
   }, []);
 
   const [isLoader, setIsLoader] = useState(false);
+  const [isAlert, setIsAlert] = useState({
+    show: false,
+    id: null
+  });
   const [dropdownPos, setDropdownPos] = useState("bottom");
   const [automationData, setAutomationData] = useState({
     data: [],
     count: 0
+  });
+
+  const [sort, setSort] = useState({
+    sortBy: "",
+    sortType: ""
   });
 
   const [paginationData, setPaginationData] = useState({
@@ -37,8 +46,14 @@ const AutomationLists = (props) => {
 
   const fetchAutomations = async () => {
     const pageID = utils.getQueryVariable('page') || 1;
+    let queryParams = null;
+    if (utils.getQueryVariable('sortBy')) {
+      queryParams = "?sortBy=" + utils.getQueryVariable('sortBy');
+      queryParams += "&sortType=" + utils.getQueryVariable('sortType');
+    }
+    // console.log(queryParams);
     setIsLoader(true);
-    const automationLists = await AutomationServices.getAutomations(pageID);
+    const automationLists = await AutomationServices.getAutomations(pageID, queryParams);
     setIsLoader(false);
     if (automationLists.data.success) {
       setAutomationData({
@@ -69,6 +84,8 @@ const AutomationLists = (props) => {
   };
 
   const automationDropdown = (e, el) => {
+    // console.log("E", e);
+    // console.log("EL", el);
     let yPosition = el.clientY;
     let avHeight = window.innerHeight - (70 + 70 + 54 + 57);
     if (yPosition + 70 > avHeight) {
@@ -99,7 +116,7 @@ const AutomationLists = (props) => {
       let payload = { element: elem.blueprint };
       let asl = await AutomationServices.getAsl(JSON.stringify(payload));
       if (asl.data.success) {
-        let payloadArn = {id: elem._id, arn: asl.data.data, status: true}
+        let payloadArn = { id: elem._id, arn: asl.data.data, status: true }
         let updateArn = await AutomationServices.updateArn(JSON.stringify(payloadArn));
         setIsLoader(false);
         if (updateArn.data.success) {
@@ -112,7 +129,7 @@ const AutomationLists = (props) => {
         console.log("api error ! " + asl.data.message);
       }
     } else {
-      let payloadArn = {id: elem._id}
+      let payloadArn = { id: elem._id }
       let updateArn = await AutomationServices.deleteArn(JSON.stringify(payloadArn));
       setIsLoader(false);
       if (updateArn.data.success) {
@@ -141,21 +158,35 @@ const AutomationLists = (props) => {
     props.toggleCreate("automation");
   }
 
-  const deleteAutomation = async(automationID) => {
+  const deleteAutomation = async (automationID, isConfirmed = null) => {
     try {
-      // Enable loader
-      setIsLoader(true);
-      // Call delete automation service
-      await AutomationServices.deleteAutomation(automationID);
-      // Reduce the count
-      const newCount = automationData.count - 1;
-      // Filter out the automation by checking with id
-      const newAutomationData = automationData.data.filter(el => el._id !== automationID);
-      // Reset the automation data with new filter and new count
-      setAutomationData({
-        data: newAutomationData,
-        count: newCount
-      })
+      if (!isConfirmed) {
+        setIsAlert({
+          show: true,
+          id: automationID
+        });
+      } else {
+        if (isConfirmed == "yes") {
+          // Enable loader
+          setIsLoader(true);
+          // Call delete automation service
+          await AutomationServices.deleteAutomation(automationID);
+          // Reduce the count
+          const newCount = automationData.count - 1;
+          // Filter out the automation by checking with id
+          const newAutomationData = automationData.data.filter(el => el._id !== automationID);
+          // Reset the automation data with new filter and new count
+          setAutomationData({
+            data: newAutomationData,
+            count: newCount
+          })
+        }
+        setIsAlert({
+          show: false,
+          id: null
+        });
+      }
+
     } catch (e) {
       // Alert for any exception. [Later need to change in error component];
       window.alert(e.message);
@@ -163,12 +194,46 @@ const AutomationLists = (props) => {
       // Disable the loader
       setIsLoader(false);
     }
-      
+
+  }
+
+  const handleSort = (sortname) => {
+    // Check if sort type is blank then toggle to asc if asc then desc if desc then blank
+    let [sortingBy, sortingType] = "";
+    switch (sort.sortType) {
+      case "asc":
+        sortingBy = sortname;
+        sortingType = "desc";
+        break;
+      case "desc":
+        sortingBy = "";
+        sortingType = "";
+        break;
+      default:
+        sortingBy = sortname;
+        sortingType = "asc";
+        break;
+    }
+    // Change the sort states
+    setSort({
+      sortBy: sortingBy,
+      sortType: sortingType
+    });
+    // Check if toggled sort is blank then remove the sort query params or add query params
+    if (!sortingBy && !sortingType) {
+      utils.removeQueryParameter('sortBy');
+      utils.removeQueryParameter('sortType');
+    } else {
+      utils.addQueryParameter('sortBy', sortingBy);
+      utils.addQueryParameter('sortType', sortingType);
+    }
+    fetchAutomations();
   }
 
   return (
     <>
       {isLoader ? <Loader /> : ''}
+      {isAlert.show ? <CustomAlert callback={(isConfirmed) => deleteAutomation(isAlert.id, isConfirmed)} /> : ''}
       <div className="dashInnerUI">
         <div className="userListHead">
           <div className="listInfo">
@@ -192,19 +257,19 @@ const AutomationLists = (props) => {
         <div className="userListBody">
           <div className="listArea">
             <div className="listHead">
-              <div className="listCell cellWidth_30">
+              <div className={sort?.sortBy == "name"? "listCell cellWidth_30 "+sort.sortType: "listCell cellWidth_30"} onClick={() => handleSort('name')}>
                 Automation Name <button className="shortTable"></button>
               </div>
-              <div className="listCell cellWidth_10">
+              <div className={sort?.sortBy == "status"? "listCell cellWidth_10 "+sort.sortType: "listCell cellWidth_10"} onClick={() => handleSort('status')}>
                 Status <button className="shortTable"></button>
               </div>
               <div className="listCell cellWidth_15">
                 # of people completed <button className="shortTable"></button>
               </div>
-              <div className="listCell cellWidth_15">
+              <div className={sort?.sortBy == "user"? "listCell cellWidth_15 "+sort.sortType: "listCell cellWidth_15"} onClick={() => handleSort('user')}>
                 Created by <button className="shortTable"></button>
               </div>
-              <div className="listCell cellWidth_15">
+              <div className={sort?.sortBy == "createdAt"? "listCell cellWidth_15 "+sort.sortType: "listCell cellWidth_15"} onClick={() => handleSort('createdAt')}>
                 Created on <button className="shortTable"></button>
               </div>
               <div className="listCell cellWidth_10">
@@ -234,7 +299,7 @@ const AutomationLists = (props) => {
                       </div>
                       <div className="listCell cellWidth_10">
                         <p
-                          className={elem.status ? "red" : "green"}
+                          className={elem.status ? "green" : "red"}
                         >
                           {elem.status ? "Published" : "Draft"}
                         </p>
@@ -335,11 +400,7 @@ const AutomationLists = (props) => {
                               Edit
                             </button>
                             <button className="btn btnDelete"
-                            onClick={() => {
-                                if(window.confirm('Are you sure you want to delete this automation?')) {
-                                  deleteAutomation(elem._id);
-                                }
-                            }}>
+                              onClick={() => { deleteAutomation(elem._id) }}>
                               <span>
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
