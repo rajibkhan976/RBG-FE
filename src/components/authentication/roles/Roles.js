@@ -8,11 +8,18 @@ import InnerLeftMenu from "../../shared/InnerLeftMenu";
 import Filter from '../../shared/FilterAuth.js'
 import RoleCreateModal from '../../shared/RoleModal'
 import RoleFilter from './RoleFilter';
+import SuccessAlert from '../../shared/messages/success';
 
 const Roles = () => {
   const [createButton, setCreateButton] = useState(null);
   const [stateFilter, setStateFilter] = useState(null);
   const [filteredData, setFilteredData] = useState(null);
+
+  const [showLeftSubMenu, setShowLeftSubMenu] = useState(true);
+
+  const toggleLeftSubMenu = (status = false) => {
+    setShowLeftSubMenu(status)
+  };
 
   const toggleCreate = (e) => {                                                                       
     setCreateButton(e);
@@ -33,10 +40,11 @@ const Roles = () => {
   
   return (
     <div className="mainComponent">
-      <div className="dashboardBody d-flex f-align-center">
+      {/* <SuccessAlert/> */}
+      <div className={"dashboardBody d-flex f-align-center "  + (showLeftSubMenu ? "openSubmenu" : "")}>
         <LeftMenu />
         <div className="dashMain">
-          <InnerLeftMenu />
+          <InnerLeftMenu toggleLeftSubMenu={toggleLeftSubMenu}  />
           <div className="dashboardElComponent">
             <HeaderDashboard 
               toggleCreate={toggleCreate} 

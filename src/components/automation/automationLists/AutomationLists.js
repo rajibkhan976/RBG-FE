@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 import * as actionTypes from "../../../actions/types";
 import { utils } from "../../../helpers";
 import Pagination from "../../shared/Pagination";
-import CustomAlert from "../../alert";
+import ConfirmBox from "../../shared/confirmBox";
 
 const AutomationLists = (props) => {
   // USEEFFECT() Life cycle hook 
@@ -233,7 +233,7 @@ const AutomationLists = (props) => {
   return (
     <>
       {isLoader ? <Loader /> : ''}
-      {isAlert.show ? <CustomAlert callback={(isConfirmed) => deleteAutomation(isAlert.id, isConfirmed)} /> : ''}
+      {isAlert.show ? <ConfirmBox callback={(isConfirmed) => deleteAutomation(isAlert.id, isConfirmed)} /> : ''}
       <div className="dashInnerUI">
         <div className="userListHead">
           <div className="listInfo">
@@ -249,7 +249,7 @@ const AutomationLists = (props) => {
           <div className="listFeatures">
             <button className="creatUserBtn" onClick={toggleCreateHeader}>
               <img className="plusIcon" src={plus_icon} alt="" />
-              <span>Create New Automation</span>
+              <span>Create</span>
             </button>
           </div>
         </div>

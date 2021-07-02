@@ -19,11 +19,21 @@ const InnerLeftMenu = (props) => {
     }
   });
 
+  const toggleLeftSubMenu = (status = false) => {
+    console.log("'status i n inner bar", status)
+    
+    //if(typeof props.toggleLeftSubmenu == "function"){
+      props.toggleLeftSubMenu && props.toggleLeftSubMenu(status)
+    //}
+  }
+
   return (
     <div className="menuDetails">
       <figure className="logoSidebar">
         <img src={SidebarLogo} alt="" />
       </figure>
+
+      {console.log("------------------------", props)}
 
       <div className="innerMenuScroll">
         {(pathURL === "/roles" ||
@@ -33,7 +43,7 @@ const InnerLeftMenu = (props) => {
             <div className="sidebarHeader">
               <h4>
                 User & Controls
-                <img className="arrowIcon" src={white_arrow_right} alt="" />
+                <img className="arrowIcon" src={white_arrow_right} alt="" onClick={() => toggleLeftSubMenu(false)} />
               </h4>
             </div>
             <ul>
@@ -82,7 +92,7 @@ const InnerLeftMenu = (props) => {
               <div className="sidebarHeader">
                 <h4>
                   Automations
-                  <img className="arrowIcon" src={white_arrow_right} alt="" />
+                  <img className="arrowIcon" src={white_arrow_right} alt="" onClick={() => toggleLeftSubMenu(false)} />
                 </h4>
               </div>
               <ul>
@@ -108,7 +118,7 @@ const InnerLeftMenu = (props) => {
             <div className="sidebarHeader">
               <h4>
                 Automation Details
-                <img className="arrowIcon" src={white_arrow_right} alt="" />
+                <img className="arrowIcon" src={white_arrow_right} alt="" onClick={() => toggleLeftSubMenu(false)} />
               </h4>
             </div>
             <ul className="automationInDetails">

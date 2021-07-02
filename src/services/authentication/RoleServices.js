@@ -10,7 +10,7 @@ export const RoleServices = {
         headers.Authorization = localStorage.getItem("_token");
         try {
             const result = await axios.get(
-                config.fetchRolesUrl + 
+                config.roleUrl +"/list" + 
                 (page ? "/" + page : '') +     
                 (queryParams ? "?" + queryParams : ''), 
                 { headers: headers });
@@ -68,7 +68,7 @@ export const RoleServices = {
         return new Promise((resolve, reject) => {
             axios
                 .delete(
-                    config.deleteRoleUrl + roleId,
+                    config.roleUrl + "/" + roleId,
                     { headers: headers }
                 )
                 .then((result) => {

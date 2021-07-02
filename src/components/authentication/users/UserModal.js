@@ -5,6 +5,7 @@ import { OrganizationServices } from "../../../services/authentication/Organizat
 import PermissionMatrix from "../../shared/PermissionMatrix";
 import { history } from "../../../helpers";
 import config from "../../../configuration/config";
+import Loader from '../../shared/Loader';
 
 import camera_icon from "../../../assets/images/camera_icon.svg";
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
@@ -38,8 +39,9 @@ const UserModal = (props) => {
     const [groups, setGroups] = useState(null);
     const [roleId, setRoleId] = useState('');
     const [groupId, setGroupId] = useState('');
-
+    const [isLoader, setIsLoader] = useState(false);
     const [editId, setEditId] = useState("");
+    const [permissionData, setPermissionData] = useState([]);
 
     const closeSideMenu = (e) => {
         e.preventDefault();
@@ -131,7 +133,7 @@ const UserModal = (props) => {
     }
 
     useEffect(() => {
-        let pageId = 1;
+        let pageId = "all";
         let keyword = null;
 
         fetchRoles(pageId, keyword);
@@ -145,7 +147,7 @@ const UserModal = (props) => {
         try {
             await RoleServices.fetchRoles(pageId, keyword)
                 .then((result) => {
-                    console.log('Role drop-down result', result.roles);
+                    // console.log('Role drop-down result', result.roles);
                     if (result) {
                         setRoles(result.roles);
                     }
@@ -225,7 +227,26 @@ const UserModal = (props) => {
     const handleRoleChange = (event) => {
         event.preventDefault();
         console.log(event.target.value);
-        setRoleId(event.target.value);
+        //setRoleId(event.target.value);
+        getGroupsByRoleId(event.target.value);
+    }
+    /**
+     * Get groups by role ID
+     * @param {*} event 
+     */
+    const getGroupsByRoleId = async (roleId) => {
+        setIsLoader(true);
+        try {
+            const groups = await UserServices.fetchGroupsByRoleId(roleId);
+            if(groups) {
+                console.log('Fetched groups', groups);
+                setGroups(groups);
+                setIsLoader(false);
+            }
+        } catch (error) {
+            console.error('Get groups', error);
+            setIsLoader(false);
+        }
     }
     /**
      * Handle group change
@@ -234,7 +255,27 @@ const UserModal = (props) => {
     const handleGroupChange = (event) => {
         event.preventDefault();
         console.log('gc', event.target.value);
-        setGroupId(event.target.value);
+        let groupId = event.target.value;
+        var selectedGroup = groups.filter(group => {
+            return group._id === groupId
+        });
+        if(selectedGroup.length) {
+            console.log('Selected group', selectedGroup);
+            setPermissionData(selectedGroup[0].permissions);
+        } else {
+            setPermissionData([]);
+        }
+    }
+
+    /**
+     * Get permission matrix data set
+     * @param {*} dataFromChild
+     */
+     const getDataFn = (dataFromChild) => {
+        console.log('Data from permission matrix', dataFromChild);
+        // if (dataFromChild) {
+        //     setPermissions(dataFromChild);
+        // }
     }
 
     /**
@@ -416,6 +457,7 @@ const UserModal = (props) => {
         <>
             {props.createButton !== null && (
                 <div className="sideMenuOuter createSideModal sideUser">
+                    {isLoader ? <Loader /> : ''}
                     <div className="sideMenuInner">
                         <button
                             className="btn btn-closeSideMenu"
@@ -424,6 +466,12 @@ const UserModal = (props) => {
                             <span></span>
                             <span></span>
                         </button>
+                        <div className="sideMenuHeader">
+                            <h3>User</h3>
+                            <p>
+                            Manage all the users' details in your organization
+                            </p>
+                        </div>
 
                         <>
                             <div className="sideMenuBody">
@@ -536,7 +584,7 @@ const UserModal = (props) => {
                                                 <div className="formField">
                                                     <p className="">Is it organization owner? 
                                                         
-                                                        <div class="customCheckbox marginLeft">
+                                                        <div className="customCheckbox marginLeft">
                                                             <input
                                                                 type="checkbox"
                                                                 name="isOrg"
@@ -621,7 +669,7 @@ const UserModal = (props) => {
                                                                                 <option value={el._id}>{el.name}</option>
                                                                             </React.Fragment>
                                                                         );
-                                                                    }) : 'No data found'}
+                                                                    }) : ''}
 
                                                                 </select>
                                                             </div>
@@ -634,11 +682,15 @@ const UserModal = (props) => {
                                                                         backgroundImage: "url(" + arrowDown + ")",
                                                                     }}
                                                                     onChange={handleGroupChange}
-                                                                    value={groupId ? groupId : (editId ? editUser.group[0] ? editUser.group[0]._id : '' : '')}
                                                                 >
                                                                     <option value="">Select group</option>
-                                                                    <option value="603e42865e257524e35660c9">Top Manager</option>
-                                                                    <option value="603e72955e257524e35660d5">Manager-test</option>
+                                                                    {groups ? groups.map((el, key) => {
+                                                                        return (
+                                                                            <React.Fragment key={key + "_groups"}>
+                                                                                <option value={el._id}>{el.name}</option>
+                                                                            </React.Fragment>
+                                                                        );
+                                                                    }) : ''}
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -647,7 +699,10 @@ const UserModal = (props) => {
                                             </div>
                                         </div>
                                     </div>
-                                    <PermissionMatrix />
+                                    <PermissionMatrix 
+                                    getData={getDataFn}
+                                    setPermissionData={permissionData} 
+                                    />
                                     <p className="staredInfo">
                                         * You can customize permissions for this user based on your need.
                                     </p>
@@ -666,7 +721,7 @@ const UserModal = (props) => {
                                     </div>
                                     <div className="enableNotification">
                                         <label>
-                                            <div class="customCheckbox">
+                                            <div className="customCheckbox">
                                                 <input type="checkbox" />
                                                 <span></span>
                                             </div>

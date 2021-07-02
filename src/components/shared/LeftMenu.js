@@ -80,7 +80,7 @@ function LeftMenu(props) {
           <NavLink
             className="leftMenuLink"
             isActive={() => ['/roles', '/groups', '/users']}
-            activeClassName={(pathURL === "/roles" || pathURL === "/groups" || pathURL === "/users") && "selected"}
+            activeClassName={(pathURL === "/roles" || pathURL === "/groups" || pathURL === "/users") ? "selected" : ''}
             to="/roles"
           >
             <svg
@@ -202,7 +202,7 @@ function LeftMenu(props) {
           <NavLink
             className="leftMenuLink"
             isActive={() => ['/automation-list', '/automation-builder']}
-            activeClassName={(pathURL === "/automation-list" || pathURL === '/automation-builder' || pathURL === '/automation-details') && "selected"}
+            activeClassName={(pathURL === "/automation-list" || pathURL === '/automation-builder' || pathURL === '/automation-details') ? "selected" : ""}
             to="/automation-list"
           >
             <svg

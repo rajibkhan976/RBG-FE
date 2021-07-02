@@ -36,10 +36,9 @@ const SideModal = (props) => {
             {props.createButton === "user" ? (
               <>
                 <div className="sideMenuHeader">
-                  <h3>Create an User</h3>
+                  <h3>User</h3>
                   <p>
-                    Create multiple sub-users with different access permissions
-                    of your business.
+                  Manage all the users' details in your organization
                   </p>
                 </div>
 
@@ -453,10 +452,8 @@ const SideModal = (props) => {
             ) : props.createButton === "roles" ? (
               <>
                 <div className="sideMenuHeader">
-                  <h3>Create an user role</h3>
-                  <p>
-                    We got you covered! Limit your Gym Staffs to access your
-                    business information.
+                  <h3>Role</h3>
+                  <p>Create different roles
                   </p>
                 </div>
 
@@ -490,7 +487,7 @@ const SideModal = (props) => {
                 <div className="sideMenuHeader">
                   <h3>Create a Group</h3>
                   <p>
-                    Enter group name
+                  Create different groups and assign permissions to each group to access modules
                   </p>
                 </div>
 

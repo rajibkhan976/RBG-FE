@@ -190,7 +190,7 @@ const RoleModal = (props) => {
               </div>
 
               <div className="sideMenuBody">
-
+{/* 
                 {successMsg &&
                   <div className="success successMsg">
                     <p>{successMsg}</p>
@@ -209,9 +209,9 @@ const RoleModal = (props) => {
                     {formErrors.description &&
                       <p>{formErrors.description}</p>}
                   </div>
-                }
+                } */}
                 <form onSubmit={handleSubmit}>
-                  <div className="formField">
+                  <div className={"formField " + (formErrors.name ? "error" : "")}>
                     <p>Enter role name</p>
                     <div className="inFormField">
                       <input
@@ -222,8 +222,12 @@ const RoleModal = (props) => {
                         placeholder="Ex. Manager"
                       />
                     </div>
+                    
+                    {formErrors.name && 
+                      <span className="errorMsg">{formErrors.name}</span>
+                    }
                   </div>
-                  <div className="formField">
+                  <div className={"formField " + (formErrors.description ? "error" : "")}>
                     <p>Enter role description</p>
                     <div className="inFormField">
                       <textarea
@@ -235,11 +239,14 @@ const RoleModal = (props) => {
                       >
                       </textarea>
                     </div>
+                    {formErrors.description && 
+                      <span className="errorMsg">{formErrors.description}</span>
+                    }
                   </div>
 
                   <div className="permissionButtons enterRoleNameBtn">
                     <button disabled={processing} className="creatUserBtn createBtn">
-                      <span>{editRole && editRole._id ? "Save" : "Save"} role</span>
+                      <span>{editRole && editRole._id ? "Save" : "Save"}</span>
                       <img className="" src={arrow_forward} alt="" />
                     </button>
                     {!editRole && (

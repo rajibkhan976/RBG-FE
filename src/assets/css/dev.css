@@ -99,11 +99,7 @@
 .sidebarHeader .arrowIcon {
     top: 50%;
     right: 10px;
-    transform: translateY(-50%);
-    -webkit-transform: translateY(-50%);
-    -moz-transform: translateY(-50%);
-    -ms-transform: translateY(-50%);
-    -o-transform: translateY(-50%);
+    transform: translateY(-50%) rotate(180deg);
 }
 
 .listArea {
@@ -759,6 +755,10 @@
 .permissionHead .checkCutsom {
     float: right;
     display: flex;
+}
+
+.permissionHead .checkCutsom + .checkCutsom {
+    margin-right: 10px;
 }
 
 .permissionHead label.checkCutsom span {

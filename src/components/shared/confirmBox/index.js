@@ -2,7 +2,7 @@ import { directive } from '@babel/types';
 import react from 'react';
 
 
-const CustomAlert = (props) => {
+const ConfirmBox = (props) => {
     const confirmed = (isConfirmed) => {
         props.callback(isConfirmed);
     }
@@ -27,4 +27,4 @@ const CustomAlert = (props) => {
     )
 };
 
-export default CustomAlert;
+export default ConfirmBox;

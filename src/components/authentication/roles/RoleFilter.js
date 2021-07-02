@@ -140,7 +140,7 @@ const RoleFilter = (props) => {
                             <span></span>
                         </button>
                         <div className="sideMenuHeader">
-                            <h3>Filter</h3>
+                            <h3 className="liteHeading">Apply Filter</h3>
                         </div>
                         <div className="sideMenuBody">
                             <form className="formBody" onSubmit={handleApplyFilter}>

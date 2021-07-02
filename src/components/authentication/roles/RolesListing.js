@@ -153,6 +153,15 @@ const RolesListing = (props) => {
     }
 
     /**
+     * Trigger search when keyword is empty
+     */
+    useEffect(() => {
+       if (keyword == "") {
+           handleSearch({preventDefault: () => {}})
+       }
+    }, [keyword])
+
+    /**
      * Handle search functionality
      */
     const handleSearch = (event) => {
@@ -255,25 +264,43 @@ const RolesListing = (props) => {
                         <li>Users & Controls</li>
                         <li>Roles</li>
                     </ul>
-                    <h2 className="inDashboardHeader">User Roles ({rolesCount})</h2>
-                    <p className="userListAbout">Create & manage roles for your users</p>
+                    <h2 className="inDashboardHeader">Roles ({rolesCount})</h2>
+                    <p className="userListAbout">Manage user roles</p>
                 </div>
                 <div className="listFeatures">
                     <div className="searchBar">
                         <form onSubmit={handleSearch}>
                             <input type="search" name="search" placeholder="Search roles" defaultValue={keyword} onChange={handleKeywordChange} autoComplete="off" />
                             <button className="searchIcon">
-                                <img src={search_icon} alt="" />
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="19.069"
+                                height="19"
+                                viewBox="0 0 19.069 19"
+                                id="search-ico"
+                                >
+                                    <g transform="translate(-1.5 -1.5)">
+                                        <path
+                                        className="a"
+                                        d="M9.071,2a7.071,7.071,0,1,0,7.071,7.071A7.08,7.08,0,0,0,9.071,2Zm0,12.857a5.786,5.786,0,1,1,5.786-5.786A5.792,5.792,0,0,1,9.071,14.857Z"
+                                        />
+                                        <path
+                                        className="a"
+                                        d="M26.954,26.045,23.1,22.188a.643.643,0,1,0-.909.909l3.858,3.857a.643.643,0,0,0,.909-.909Z"
+                                        transform="translate(-7.142 -7.143)"
+                                        />
+                                    </g>
+                                </svg>
                             </button>
                         </form>
                     </div>
                     <button className="btn btn-filter" onClick={filterRoles}>
-                        <p>Filter</p>
+                        {/* <p>Filter</p> */}
                         <img className="filterIcon" src={filter_icon} alt="" />
                     </button>
                     <button className="creatUserBtn" onClick={toggleCreateHeader}>
                         <img className="plusIcon" src={plus_icon} alt="" />
-                        <span>Create a new role</span>
+                        <span>Create</span>
                     </button>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import config from "../../configuration/config";
 import jwt from "jsonwebtoken";
+import { history } from "../../helpers"
 
 let headers = {
   "Content-Type": "application/json"
@@ -37,6 +38,7 @@ export const isLoggedIn = () => {
     if (jwtDecode.exp < new Date().getTime() / 1000) {
       console.log("Session expired");
       localStorage.removeItem("_token");
+      history.go(0);
       return false;
     }
     return true;
