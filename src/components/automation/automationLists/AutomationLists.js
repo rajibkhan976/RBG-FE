@@ -135,7 +135,7 @@ const AutomationLists = (props) => {
           <div className="listFeatures">
             <button className="creatUserBtn" onClick={toggleCreateHeader}>
               <img className="plusIcon" src={plus_icon} alt="" />
-              <span>Create New Automation</span>
+              <span>Create</span>
             </button>
           </div>
         </div>

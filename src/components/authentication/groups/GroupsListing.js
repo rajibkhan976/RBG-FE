@@ -275,7 +275,7 @@ const GroupListing = (props) => {
                     </ul>
                     <h2 className="inDashboardHeader">Groups ({ groupsCount })</h2>
                     <p className="userListAbout">
-                        Create & manage groups for your business
+                        Manage user groups
                     </p>
                 </div>
                 <div className="listFeatures">
@@ -311,7 +311,7 @@ const GroupListing = (props) => {
                     </button>
                     <button className="creatUserBtn" onClick={toggleCreateHeader}>
                         <img className="plusIcon" src={plus_icon} alt="" />
-                        <span>Create a new group</span>
+                        <span>Create</span>
                     </button>
                 </div>
             </div>

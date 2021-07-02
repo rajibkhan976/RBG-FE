@@ -1227,7 +1227,7 @@ li.listHeading>div.dsc::after {
 
 .setProfilePic {
   position: relative;
-  margin-top: 50px;
+  margin-top: 30px;
 }
 
 .profilePicHeading {
@@ -3055,14 +3055,29 @@ span.userProfilePic img {
   max-height: calc(100vh - 360px);
 }
 
-.importErrorMsg {
+.formMsg {
   text-align: center;
   font-size: 16px;
-  color: #985959;
-  background: #FAE7E7;
+  color: #8f8f8f;
+  background: #dfdfdf;
   padding: 14px;
   border-radius: 10px;
   margin: 20px 0;
+}
+
+.formMsg.error {
+  color: #985959;
+  background: #FAE7E7;
+}
+
+.formMsg.success {
+  color: #629859;
+  background: #e5f9e0;
+}
+
+.formMsg.warning {
+  color: #ce7f3b;
+  background: #fbf2d6;
 }
 
 .uploadedDataSummary h3, 

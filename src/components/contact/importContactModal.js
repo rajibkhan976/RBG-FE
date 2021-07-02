@@ -405,7 +405,7 @@ const ImportContactModal = () => {
                     </div>
 
                     <div id="stpe_4" className="hide">
-                        <div className="importErrorMsg">Following fields are not mapped.</div>
+                        <div className="formMsg error">Following fields are not mapped.</div>
                         <div className="formAccordion">
                             <div className="accoRow">
                                 <div className="accoRowHead">

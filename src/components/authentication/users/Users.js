@@ -31,7 +31,7 @@ const Users = (props) => {
 
   return (
     <div className="mainComponent">
-      <CustomAlert/>
+      {/* <CustomAlert/> */}
       <div className={"dashboardBody d-flex f-align-center "  + (showLeftSubMenu ? "openSubmenu" : "")}>
         <LeftMenu />
         <div className="dashMain">

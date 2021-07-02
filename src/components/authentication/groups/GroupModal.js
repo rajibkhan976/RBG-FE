@@ -278,9 +278,11 @@ const GroupModal = (props) => {
                             <span></span>
                         </button>
                         <div className="sideMenuHeader">
-                            <h3>{editGroupId ? 'Edit' : 'Create'} a Group</h3>
+
+                            <h3>{editGroupId ? 'Edit ' : ''}Group</h3>
+
                             <p>
-                                Enter group name
+                            Create different groups and assign permissions to each group to access modules
                             </p>
                         </div>
 

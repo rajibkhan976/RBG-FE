@@ -306,7 +306,7 @@ const UsersListing = (props) => {
                     </button>
                     <button className="creatUserBtn" onClick={toggleCreateHeader}>
                         <img className="plusIcon" src={plus_icon} alt="" />
-                        <span>Create an user</span>
+                        <span>Create</span>
                     </button>
                 </div>
             </div>

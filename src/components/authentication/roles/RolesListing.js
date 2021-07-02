@@ -264,7 +264,7 @@ const RolesListing = (props) => {
                         <li>Roles</li>
                     </ul>
                     <h2 className="inDashboardHeader">Roles ({rolesCount})</h2>
-                    <p className="userListAbout">Create & manage roles for your users</p>
+                    <p className="userListAbout">Manage user roles</p>
                 </div>
                 <div className="listFeatures">
                     <div className="searchBar">
@@ -299,7 +299,7 @@ const RolesListing = (props) => {
                     </button>
                     <button className="creatUserBtn" onClick={toggleCreateHeader}>
                         <img className="plusIcon" src={plus_icon} alt="" />
-                        <span>Create a new role</span>
+                        <span>Create</span>
                     </button>
                 </div>
             </div>

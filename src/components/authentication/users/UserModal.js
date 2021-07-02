@@ -464,6 +464,12 @@ const UserModal = (props) => {
                             <span></span>
                             <span></span>
                         </button>
+                        <div className="sideMenuHeader">
+                            <h3>User</h3>
+                            <p>
+                            Manage all the users' details in your organization
+                            </p>
+                        </div>
 
                         <>
                             <div className="sideMenuBody">
