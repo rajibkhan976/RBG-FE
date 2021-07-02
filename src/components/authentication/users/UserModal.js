@@ -255,10 +255,11 @@ const UserModal = (props) => {
     const handleGroupChange = (event) => {
         event.preventDefault();
         console.log('gc', event.target.value);
-        let groupId = event.target.value;
+        setGroupId(event.target.value);
         var selectedGroup = groups.filter(group => {
             return group._id === groupId
         });
+        console.log('selected group', groupId);
         if(selectedGroup.length) {
             console.log('Selected group', selectedGroup);
             setPermissionData(selectedGroup[0].permissions);
@@ -408,6 +409,7 @@ const UserModal = (props) => {
 
             //Submit the form
             console.log('Submit the form if no errors');
+            console.log('group id under handle submit', groupId);
             /**
              * Submit user create form
              */
