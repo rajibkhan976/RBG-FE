@@ -9,7 +9,7 @@ import Filter from '../../shared/FilterAuth.js';
 import SideModal from '../../shared/SideModal';
 import UserModal from './UserModal';
 import UserFilter from './UserFilter';
-import CustomAlert from '../../alert';
+import ConfirmBox from '../../shared/confirmBox';
 
 
 const Users = (props) => {
@@ -31,7 +31,7 @@ const Users = (props) => {
 
   return (
     <div className="mainComponent">
-      {/* <CustomAlert/> */}
+      {/* <ConfirmBox/> */}
       <div className={"dashboardBody d-flex f-align-center "  + (showLeftSubMenu ? "openSubmenu" : "")}>
         <LeftMenu />
         <div className="dashMain">

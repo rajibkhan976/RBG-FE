@@ -2,7 +2,7 @@ import { directive } from '@babel/types';
 import react from 'react';
 
 
-const CustomAlert = () => {
+const ConfirmBox = () => {
     return (
         <div className="customAlert">
             <div className="alertBackscreen"></div>
@@ -24,4 +24,4 @@ const CustomAlert = () => {
     )
 };
 
-export default CustomAlert;
+export default ConfirmBox;
