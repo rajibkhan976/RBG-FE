@@ -42,7 +42,7 @@ const Automation = (props) => {
       <div
         className={
           pathURL === "/automation-builder"
-            ? "dashboardBody automationBuilderBody d-flex f-align-center"
+            ? "dashboardBody openSubmenu automationBuilderBody d-flex f-align-center"
             : pathURL === "/automation-list"
               ? "dashboardBody d-flex f-align-center"
               : "dashboardBody d-flex f-align-center"

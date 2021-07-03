@@ -271,6 +271,12 @@
     background: #009DFF;
     /*DEFAULT BG COLOR*/
 }
+.actionNodes .smsNode {
+    background: #6C22B5;
+}
+.actionNodes .delayNode {
+    background: #05D3F8;
+}
 
 .dndnode svg {
     max-width: 29px;
@@ -1241,6 +1247,9 @@
     background-repeat: no-repeat;
     background-position: center center;
 }
+.emailDetails .subjectField .toggleTags {
+    background-image: url('../images/icon_browse_keywords.svg');
+}
 .toggleTags img {
     pointer-events: none;
 }
@@ -1329,7 +1338,8 @@
 }
 .emailTagToEmail,
 .emailTagSubject,
-.messageTagTo {
+.messageTagTo,
+.delayTimings {
     position: absolute;
     right: 0;
     top: 100%;
@@ -1390,7 +1400,8 @@
 }
 .emailTagToEmail h6,
 .emailTagSubject h6,
-.messageTagTo h6 {
+.messageTagTo h6,
+.delayTimings h6 {
     position: sticky;
     top: 0;
     background-color: #fff;
@@ -1403,4 +1414,58 @@
 .inputField.active .emailTagSubject,
 .inputField.active .messageTagTo {
     display: block;
+}
+.delayDetails #delayTm {
+    flex: 0 0 calc(100% - 120px);
+    padding-right: 15px;
+}
+.delayDetails select.formField {
+    flex: 0 0 105px;
+    margin-left: auto;
+}
+.triggerDelay .a{
+    fill:#8deeff;
+    stroke:#8deeff;
+    stroke-width:0.5px;
+}
+.actionNode .triggerDelay {
+    width: 33px;
+}
+
+.btnDeleteNode {
+    left: calc(50% - 10px);
+    bottom: -8px;
+}
+
+.btnEditNode {
+    border-color: #434345;    
+}
+.btnEditNode svg  {
+    fill: #434345;    
+}
+.react-flow__handle {
+    background: #C7DAEB !important;
+}
+.react-flow__edge-path {
+    stroke: #C7DAEB !important;
+}
+.actionNodeSMS {
+    background: #6c22b5;
+}
+.actionNodeDelay {
+    background: #05d3f8;
+}
+.delaySettingModal {
+    width: 400px;
+}
+.delaySettingModal .formField {
+    margin-bottom: 0;
+}
+.delayDetails + .saveButton {
+    margin-top: 0;
+}
+.delayDetails #delayTm::-webkit-outer-spin-button,
+.delayDetails #delayTm::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

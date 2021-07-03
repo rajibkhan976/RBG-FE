@@ -14,7 +14,7 @@ export default memo(({ data }) => {
                 position="left"
                 style={{ background: '#555', border: '4px solid #FFF' }}
             />
-            <div style={style} className="actionNode">
+            <div style={style} className="actionNode  actionNodeSMS">
                 {/* {data.label} */}
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
