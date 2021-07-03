@@ -23,11 +23,14 @@ import { utils } from "../../../helpers";
 // import list_board_icon from "../../../assets/images/list_board_icon.svg";
 
 const RolesListing = (props) => {
+    const messageDelay = 5000; // ms
     const [dropdownPos, setDropdownPos] = useState('bottom');
     const [rolesData, setRolesData] = useState(null);
     const [rolesCount, setRolesCount] = useState(0);
     const [sortBy, setSortBy] = useState("");
     const [sortType, setSortType] = useState("asc");
+    const [successMsg, setSuccessMsg] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
     const [paginationData, setPaginationData] = useState(
         {
             count: null,
@@ -56,6 +59,14 @@ const RolesListing = (props) => {
         setSortType(utils.getQueryVariable('sortType')); 
         fetchRoles();
     }, []);
+
+    /**
+     * Auto hide success or error message
+     */
+    useEffect(() => {
+        if (successMsg) setTimeout(() => { setSuccessMsg("") } , messageDelay)
+        if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
+    }, [successMsg, errorMsg] )
 
     /**
      * Get all query params
@@ -115,6 +126,12 @@ const RolesListing = (props) => {
             }
         } catch (e) {
             setIsLoader(false);
+            if (e.response && e.response.status == 403) {
+                setErrorMsg("You dont have permission to perform this action");
+            }
+            else if (e.response && e.response.data.message) {
+                setErrorMsg(e.response.data.message);
+            }
             console.log("Error in Role listing", JSON.stringify(e));
         }
     }
@@ -217,22 +234,28 @@ const RolesListing = (props) => {
      */
     const deleteRole = async (roleId) => {
         if (roleId) {
-            try {
-                await RoleServices.deleteRole(roleId)
-                    .then((result) => {
-                        if(result) {
-                            console.log('Role delete result', result);
-                            const newList = rolesData.filter((role) => role._id !== roleId);
-                            setRolesData(newList);
-                            setOption(null);
-                        }
-                    })
-                    .catch((error) => {
-                        console.log("Role delete error", error);
-                    });
-            } catch (e) {
-                console.log("Error in Role delete", e);
-            }
+            setOption(null);
+            await RoleServices.deleteRole(roleId)
+                .then((result) => {
+                    if (result) {
+                        console.log('Role delete result', result);
+                        const newList = rolesData.filter((role) => role._id !== roleId);
+                        setRolesData(newList);
+                        setSuccessMsg("Role deleted successfully");
+                    }
+                })
+                .catch((e) => {
+                    if (e.response && e.response.status == 403) {
+                        setErrorMsg("You dont have permission to perform this action");
+                    }
+                    else if (e.response && e.response.data.message) {
+                        setErrorMsg(e.response.data.message);
+                    } else if (e.response && typeof e.response.data == "string") {
+                        setErrorMsg(e.response.data);
+                    }
+                    
+                    console.log("Role delete error >>", e, typeof e.response.data == "string");
+                });
         }
     }
 
@@ -306,6 +329,16 @@ const RolesListing = (props) => {
             </div>
             
             <div className="userListBody">
+                {successMsg &&
+                    <div className="success successMsg">
+                        <p>{successMsg}</p>
+                    </div>
+                }
+                {errorMsg &&
+                    <div className="error errorMsg">
+                        <p>{errorMsg}</p>
+                    </div>
+                }
                 <div className="listBody" ref={optionsToggleRef}>
                     <ul className="tableListing">
                         <li className="listHeading userRole">

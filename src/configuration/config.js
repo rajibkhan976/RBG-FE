@@ -34,5 +34,7 @@ module.exports = {
     automationWebhookUrl: "https://prcriy2ij4.execute-api.us-east-1.amazonaws.com/dev",
     automationAslUrl: "https://5uetvsgrhl.execute-api.us-east-1.amazonaws.com/dev",
     // Delete Automation
-    automationDeleteUrl: "https://402pgi0zp9.execute-api.us-east-1.amazonaws.com/dev/automation/delete"
-}
+    automationDeleteUrl: "https://402pgi0zp9.execute-api.us-east-1.amazonaws.com/dev/automation/delete",
+    // inner left menu api service
+    innerLeftMenuApiUrl: "https://4gvirnff9l.execute-api.us-east-1.amazonaws.com/dev/inner-left-menu"
+}  

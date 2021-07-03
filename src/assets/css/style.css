@@ -3227,21 +3227,20 @@ span.userProfilePic img {
   background: #ececec;
   border: 1px solid #d6d6d6;
   border-radius: 10px;
-  padding: 25px;
-  margin-top: 30px;
+  padding: 10px;
   position: fixed;
   z-index: 999;
-  top: 100px;
+  top: 180px;
   left: 50%;
   transform: translateX(-50%);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
 .popupMessage p {
-  padding: 5px 0;
-  font-size: 16px;
-  text-align: center;
+  padding: 5px 0 5px 36px;
+  font-size: 14px;
   color: #929292;
+  display: inline-block;
 }
 
 .popupMessage.success {
@@ -3250,14 +3249,16 @@ span.userProfilePic img {
 }
 .popupMessage.success p {
   color: #48a357;
+  background: url('../images/msg_success_icon.svg') no-repeat left center / 27px auto;
 }
 
 .popupMessage.warning {
-  background: #fff8e8;
-  border: 1px solid #ffe19c;
+  background: #ffe6c8;
+  border: 1px solid #dcc5aa;
 }
 .popupMessage.warning p {
-  color: #dc9d28;
+  color: #c76007;
+  background: url('../images/msg_warning_icon.svg') no-repeat left center / 25px auto;
 }
 
 .popupMessage.error {
@@ -3266,4 +3267,5 @@ span.userProfilePic img {
 }
 .popupMessage.error p {
   color: #c55757;
+  background: url('../images/msg_error_icon.svg') no-repeat left center / 25px auto;
 }
