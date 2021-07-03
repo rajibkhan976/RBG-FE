@@ -852,14 +852,15 @@ const AutomationBuilder = (props) => {
           }
         }
       }
-      if (sourceType === 'trigger' && el.source !== undefined) {
+      /*if (sourceType === 'trigger' && el.source !== undefined) {
         const newSource = el.source;
         const newSourcePosition = newSource.indexOf("-");
-        let sourceType = newSource.substring(0, newSourcePosition);
+        let sourceTypeNew = newSource.substring(0, newSourcePosition);
+        console.log(sourceTypeNew, sourceType)
         if (sourceType === 'trigger') {
           multipleTrigger = true;
         }
-      }
+      }*/
       if (el.source === source) {
         const matchedTarget = el.target;
         const matchedTargetPosition = matchedTarget.indexOf("-");
@@ -892,6 +893,7 @@ const AutomationBuilder = (props) => {
         }
       }
     });
+    console.log(duplicateConnection, activeConnection, parallelFilter, multipleTrigger)
     if (duplicateConnection || activeConnection || parallelFilter || multipleTrigger) {
       returnType = false;
     } else {
