@@ -1472,9 +1472,12 @@ const AutomationBuilder = (props) => {
                                                               <div className="inputField field_2">
                                                                 <select name="" id="" value={con.condition} onChange={(e) => handelFilterFieldChange('condition', value.index, con.and, e)}>
                                                                   <option value="">Please Select</option>
-                                                                  <option value="equalTo">Equal to</option>
-                                                                  <option value="greaterThan">Greater than</option>
-                                                                  <option value="lessThan">Less than</option>
+                                                                  <option value="StringEquals">String Equal to</option>
+                                                                  <option value="NumericEquals">Numeric Equal to</option>
+                                                                  <option value="NumericGreaterThan">Numeric Greater than</option>
+                                                                  <option value="NumericGreaterThanEquals">Numeric Greater than equal to</option>
+                                                                  <option value="NumericLessThan">Numeric Less than</option>
+                                                                  <option value="NumericLessThanEquals">Numeric Less than equal to</option>
                                                                 </select>
                                                               </div>
                                                               <div className="inputField field_3">
