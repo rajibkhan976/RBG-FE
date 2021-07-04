@@ -62,11 +62,12 @@ const UserModal = (props) => {
         setLastName(editUser.lastName);
         setPhoneNumber(editUser.phone);
         setEmail(editUser.email);
-        // if (editUser && editUser.role.length && editUser.group.length) {
-        //     setRoleId(editUser.role[0]._id);
-        //     getGroupsByRoleId(editUser.role[0]._id);
-        //     setEditGroupId(editUser.group[0]._id);
-        // }
+        if (editUser && editUser.role && editUser.group) {
+            setRoleId(editUser.role[0]._id);
+            getGroupsByRoleId(editUser.role[0]._id);
+            setEditGroupId(editUser.group[0]._id);
+            setPermissionData(editUser.group[0].permissions);
+        }
 
         console.log('editUser', editUser)
         if (editUser.isOrganizationOwner) {
@@ -85,6 +86,8 @@ const UserModal = (props) => {
          */
         if (!editUser) {
             console.log('Reset permissions');
+            setRoleId('');
+            setEditGroupId('');
             setPermissionData([]);
         }
 
