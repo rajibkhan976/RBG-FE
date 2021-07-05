@@ -248,7 +248,7 @@ const UserModal = (props) => {
     const handleRoleChange = (event) => {
         event.preventDefault();
         console.log(event.target.value);
-        //setRoleId(event.target.value);
+        setRoleId(event.target.value);
         getGroupsByRoleId(event.target.value);
     }
     /**
@@ -706,7 +706,7 @@ const UserModal = (props) => {
                                                                         backgroundImage: "url(" + arrowDown + ")",
                                                                     }}
                                                                     onChange={handleGroupChange}
-                                                                    value={editGroupId ? editGroupId : ''}
+                                                                    value={editGroupId ? editGroupId : (groupId ? groupId : '')}
                                                                 >
                                                                     <option value="">Select group</option>
                                                                     {groups ? groups.map((el, key) => {
