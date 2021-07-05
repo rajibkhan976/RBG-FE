@@ -215,10 +215,7 @@ const RoleModal = (props) => {
               <div className="sideMenuHeader">
 
                 <h3>Role</h3>
-                <p>
-                  We got you covered! Limit your Gym Staffs to access your
-                  business information.
-                  </p>
+                <p>Create different roles</p>
               </div>
 
               <div className="sideMenuBody">
