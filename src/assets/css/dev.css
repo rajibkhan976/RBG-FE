@@ -1469,3 +1469,26 @@
   -webkit-appearance: none;
   margin: 0;
 }
+
+/* SMS FIX */
+.smsNode .a,
+.smsNode .b{
+    fill:none;stroke:#c9aae8;stroke-linejoin:round;stroke-miterlimit:10;stroke-width:1.5px;
+}
+.smsNode .b{
+    stroke-linecap:round;
+}
+.actionNodeSMS .smsNode {
+    width: 44px;
+}
+.actionNodeSMS .smsNode .a,
+.actionNodeSMS .smsNode .b{
+    stroke:#ffffff;
+}
+.actionNode.actionNodeSMS {
+    background-color: #6C22B5 ;
+}
+.actionNode.actionNodeDelay {
+    background-color: #05D3F8;
+}
+/* SMS FIX */
