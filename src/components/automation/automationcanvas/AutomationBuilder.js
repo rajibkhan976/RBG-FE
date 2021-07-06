@@ -8,17 +8,17 @@ import ReactFlow, {
 import "./automation.css";
 import { FilterNode, TriggerNode, ActionEmail, ActionMessage, ActionDelay } from "./nodes";
 import {Filter} from "./modals/filter";
-import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
-import chevron_right_white_24dp from "../../../../assets/images/chevron_right_white_24dp.svg";
-import resetIcon from "../../../../assets/images/resetIcon.svg";
-import blueSettingIcon from "../../../../assets/images/blueSettingIcon.svg";
-import plus_icon from "../../../../assets/images/plus_icon.svg";
-import Loader from "../../../shared/Loader";
-import {AutomationServices} from "../../../../services/automation/AutomationServices";
-import edit_grey from "../../../../assets/images/edit_grey.svg";
-import trashIcon from "../../../../assets/images/iconfinder_trash-2_2561228.svg";
-import whiteAddIcon from "../../../../assets/images/add_white_24dp.svg";
-import whiteSlash from "../../../../assets/images/remove_white_24dp.svg";
+import closewhite24dp from "../../../assets/images/close_white_24dp.svg";
+import chevron_right_white_24dp from "../../../assets/images/chevron_right_white_24dp.svg";
+import resetIcon from "../../../assets/images/resetIcon.svg";
+import blueSettingIcon from "../../../assets/images/blueSettingIcon.svg";
+import plus_icon from "../../../assets/images/plus_icon.svg";
+import Loader from "../../shared/Loader";
+import {AutomationServices} from "../../../services/automation/AutomationServices";
+import edit_grey from "../../../assets/images/edit_grey.svg";
+import trashIcon from "../../../assets/images/iconfinder_trash-2_2561228.svg";
+import whiteAddIcon from "../../../assets/images/add_white_24dp.svg";
+import whiteSlash from "../../../assets/images/remove_white_24dp.svg";
 
 const AutomationBuilder = (props) => {
   const reactFlowWrapper = useRef(null);
@@ -1148,6 +1148,36 @@ const AutomationBuilder = (props) => {
         <div className="automationDnD">
           <ReactFlowProvider>
             <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+              <div className="automationRow">
+                <div className="automationTopLeft">
+                  <input type="text" className={`automationNameArea ${automationNameError}`} placeholder="Enter your automation name"  onChange={handleNameChange} value={automationName}/>
+                  <button className="automationSetting">
+                    <img src={blueSettingIcon} alt="" />
+                  </button>
+                  <div className="automationPublish">
+                    <button className="automationPublishBtn" onClick={saveAutomation}>
+                      <img src={plus_icon} alt="" />
+                      Save
+                    </button>
+                  </div>
+                  <div className="autoInfo">
+                    <span>?</span>
+                    <div className="autoInfoBox">
+                      Lorem ipsum dolor
+                    </div>
+                  </div>
+                </div>
+                <div className="buttonArea">
+                  <button
+                      type="button"
+                      className="reserAutoBtn"
+                      onClick={resetAutomation}
+                  >
+                    <img src={resetIcon} alt="" />
+                    Reset
+                  </button>
+                </div>
+              </div>
               <ReactFlow
                   elements={elements}
                   onConnect={onConnect}
@@ -1165,34 +1195,6 @@ const AutomationBuilder = (props) => {
               >
                 <Controls />
               </ReactFlow>
-              <div className="automationTopLeft">
-                <input type="text" className={`automationNameArea ${automationNameError}`} placeholder="Enter your automation name"  onChange={handleNameChange} value={automationName}/>
-                <button className="automationSetting">
-                  <img src={blueSettingIcon} alt="" />
-                </button>
-                <div className="automationPublish">
-                  <button className="automationPublishBtn" onClick={saveAutomation}>
-                    <img src={plus_icon} alt="" />
-                    Save
-                  </button>
-                </div>
-                <div className="autoInfo">
-                  <span>?</span>
-                  <div className="autoInfoBox">
-                    Lorem ipsum dolor
-                  </div>
-                </div>
-              </div>
-              <div className="buttonArea">
-                <button
-                    type="button"
-                    className="reserAutoBtn"
-                    onClick={resetAutomation}
-                >
-                  <img src={resetIcon} alt="" />
-                  Reset
-                </button>
-              </div>
             </div>
             {automationModal != null ? (automationModal === 'trigger' ?
                 <div className="automationModal filterModal triggerSetting">

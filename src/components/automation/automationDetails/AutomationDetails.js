@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Redirect } from "react-router-dom";
-import DashboardPagination from "../../../shared/Pagination";
-import TableOptionsDropdown from "../../../shared/TableOptionsDropdown";
+import DashboardPagination from "../../shared/Pagination";
+import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
+import ListHeader from "../automation-shared/ListHeader";
 
-import arrowDown from "../../../../assets/images/arrowDown.svg";
-import DefaultUserImage from "../../../../assets/images/user.png";
-import info_3dot_icon from "../../../../assets/images/info_3dot_icon.svg";
-import arrow_forward from "../../../../assets/images/arrow_forward.svg";
+import arrowDown from "../../../assets/images/arrowDown.svg";
+import DefaultUserImage from "../../../assets/images/user.png";
+import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
+import arrow_forward from "../../../assets/images/arrow_forward.svg";
 
 function AutomationDetails(props) {
   const [dropdownPos, setDropdownPos] = useState("bottom");
@@ -80,26 +81,11 @@ function AutomationDetails(props) {
       props.automationListItem.autoName !== null &&
       props.automationListItem.autoName !== "" ? (
         <div className="dashInnerUI dashboardInnerDetails">
-          <div className="userListHead">
-            <div className="listInfo">
-              <ul className="listPath">
-                <li>Automations</li>
-              </ul>
-              <h2 className="inDashboardHeader">{automationObject.autoName}</h2>
-              <div className="automationShortInfo">
-                <ul>
-                  <li>
-                    <span>Created By</span>
-                    <h4>{automationObject.createdBy}</h4>
-                  </li>
-                  <li>
-                    <span>Created On</span>
-                    <h4>{automationObject.createdOn}</h4>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
+        <ListHeader
+          autoName={automationObject.autoName}
+          createdBy={automationObject.createdBy}
+          createdOn={automationObject.createdOn}
+        />
           <div className="tabDetailsList">
             <ul>
               <li>

@@ -5,7 +5,7 @@ function LeftMenu(props) {
   const pathURL = useLocation().pathname
 
   useEffect(() => {
-  });
+  },[]);
 
   return (
     <div className="routeMenu">

@@ -6,6 +6,7 @@ import { ProtectedRoute } from "./middleware/ProtectedRoute";
 import DashboardRoutes from "./components/dashboard/DashboardRoutes";
 import { isLoggedIn } from "./services/authentication/AuthServices";
 import NotFound from "./components/shared/NotFound";
+import MainComponent from './components/MainComponent'
 
 import Login from "./components/authentication/login/Login";
 import Dashboard from "./components/dashboard/Dashboard";
@@ -43,10 +44,10 @@ const Routes = () => {
           path="/dashboard"
           component={() => {
             console.log("Dashboard CALLLL ");
-            return <Dashboard />;
+            return <MainComponent />;
           }}
         />
-        <Route component={DashboardRoutes} />
+        <Route component={MainComponent} />
       </Switch>
     </React.Suspense>
   );

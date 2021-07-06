@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, Redirect } from "react-router-dom";
-import BuilderSidebar from "../automation/automationLists/automationcanvas/BuilderSidebar";
+import BuilderSidebar from "../automation/automationcanvas/BuilderSidebar";
 import { InnerLeftMenuServices } from "../../services/shared/InnerLeftMenuService"
 
 import white_arrow_right from "../../assets/images/white_arrow_right.svg";

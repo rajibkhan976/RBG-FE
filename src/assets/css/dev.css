@@ -1422,6 +1422,7 @@
 .delayDetails select.formField {
     flex: 0 0 105px;
     margin-left: auto;
+    margin-top: 0;
 }
 .triggerDelay .a{
     fill:#8deeff;
@@ -1492,3 +1493,40 @@
     background-color: #05D3F8;
 }
 /* SMS FIX */
+
+/* IF LOADER IS SET TO APPEAR ONLY INSIDE */
+.dashInnerStructure {
+    position: relative;
+}
+.dashInnerUI .loaderOuter,
+.dashInnerStructure .loaderOuter {
+    position: absolute;
+}
+.sideMenuOuter .loaderOuter {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+}
+/* IF LOADER IS SET TO APPEAR ONLY INSIDE */
+
+.automationDnD .reactflow-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+.automationRow .automationTopLeft {
+    position: static;
+    left: 0;
+}
+.automationRow .buttonArea {
+    position: static;
+}
+.automationRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right: 30px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}

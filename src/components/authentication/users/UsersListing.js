@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Pagination from "../../shared/Pagination";
-import TableOptionsDropdown from "../../shared/TableOptionsDropdown";
+import ListHead from '../auth-shared/ListHead';
 import { UserServices } from "../../../services/authentication/UserServices";
 import { OrganizationServices } from "../../../services/authentication/OrganizationServices";
 import { utils } from "../../../helpers";
@@ -9,9 +9,6 @@ import Loader from "../../shared/Loader";
 import config from "../../../configuration/config";
 import * as actionTypes from "../../../actions/types";
 
-import search_icon from "../../../assets/images/search_icon.svg";
-import filter_icon from "../../../assets/images/filter_icon.svg";
-import plus_icon from "../../../assets/images/plus_icon.svg";
 import owner_img_1 from "../../../assets/images/owner_img_1.png";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 import list_board_icon from "../../../assets/images/list_board_icon.svg";
@@ -160,7 +157,8 @@ const UsersListing = (props) => {
      * Handle options toggle
      */
     const toggleOptions = (index) => {
-        setOption(index !== null ? (option !== null ? null : index) : null);
+        // setOption(index !== null ? (option !== null ? null : index) : null);
+        setOption(index !== option ? index : null);
     };
 
     /**
@@ -262,54 +260,14 @@ const UsersListing = (props) => {
     return (
         <div className="dashInnerUI">
             {isLoader ? <Loader /> : ''}
-            <div className="userListHead">
-                <div className="listInfo">
-                    <ul className="listPath">
-                        <li>Users & Controls</li>
-                        <li>Users</li>
-                    </ul>
-                    <h2 className="inDashboardHeader">Users ({usersCount})</h2>
-                    <p className="userListAbout">
-                        Create & manage multiple sub-users with different access
-                    </p>
-                </div>
-                <div className="listFeatures">
-                    <div className="searchBar">
-                        <form onSubmit={handleSearch}>
-                            <input type="search" placeholder="Search users" onChange={handleKeywordChange} autoComplete="off" value={keyword} />
-                            <button className="searchIcon">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="19.069"
-                                height="19"
-                                viewBox="0 0 19.069 19"
-                                id="search-ico"
-                                >
-                                    <g transform="translate(-1.5 -1.5)">
-                                        <path
-                                        className="a"
-                                        d="M9.071,2a7.071,7.071,0,1,0,7.071,7.071A7.08,7.08,0,0,0,9.071,2Zm0,12.857a5.786,5.786,0,1,1,5.786-5.786A5.792,5.792,0,0,1,9.071,14.857Z"
-                                        />
-                                        <path
-                                        className="a"
-                                        d="M26.954,26.045,23.1,22.188a.643.643,0,1,0-.909.909l3.858,3.857a.643.643,0,0,0,.909-.909Z"
-                                        transform="translate(-7.142 -7.143)"
-                                        />
-                                    </g>
-                                </svg>
-                            </button>
-                        </form>
-                    </div>
-                    <button className="btn btn-filter" onClick={filterUsers}>
-                        {/* <p>Filter</p> */}
-                        <img className="filterIcon" src={filter_icon} alt="" />
-                    </button>
-                    <button className="creatUserBtn" onClick={toggleCreateHeader}>
-                        <img className="plusIcon" src={plus_icon} alt="" />
-                        <span>Create</span>
-                    </button>
-                </div>
-            </div>
+            <ListHead
+            toggleCreateHeader={toggleCreateHeader}
+            filterUsers={filterUsers}
+            handleSearch={handleSearch}
+            handleKeywordChange={handleKeywordChange}
+            usersCount={usersCount}
+            keyword={keyword}
+            />
             {usersCount ?
                 <>
                     <div className="userListBody">

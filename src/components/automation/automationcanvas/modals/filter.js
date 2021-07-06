@@ -1,10 +1,10 @@
 import React, { memo, useState } from 'react';
-import closewhite24dp from "../../../../../assets/images/close_white_24dp.svg";
-import edit_grey from "../../../../../assets/images/edit_grey.svg";
-import trashIcon from "../../../../../assets/images/iconfinder_trash-2_2561228.svg";
-import whiteAddIcon from "../../../../../assets/images/add_white_24dp.svg";
-import whiteSlash from "../../../../../assets/images/remove_white_24dp.svg";
-import chevron_right_white_24dp from "../../../../../assets/images/chevron_right_white_24dp.svg";
+import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
+import edit_grey from "../../../../assets/images/edit_grey.svg";
+import trashIcon from "../../../../assets/images/iconfinder_trash-2_2561228.svg";
+import whiteAddIcon from "../../../../assets/images/add_white_24dp.svg";
+import whiteSlash from "../../../../assets/images/remove_white_24dp.svg";
+import chevron_right_white_24dp from "../../../../assets/images/chevron_right_white_24dp.svg";
 
 function Filter() {
     const [automationModal, setAutomationModal] = useState(null);

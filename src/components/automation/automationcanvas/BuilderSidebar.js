@@ -1,5 +1,5 @@
 import React from "react";
-import white_arrow_right from "../../../../assets/images/white_arrow_right.svg";
+import white_arrow_right from "../../../assets/images/white_arrow_right.svg";
 
 const Sidebar = () => {
   const onDragStart = (event, nodeType) => {

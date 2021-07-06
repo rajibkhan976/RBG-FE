@@ -480,8 +480,8 @@ const UserModal = (props) => {
         <>
             {props.createButton !== null && (
                 <div className="sideMenuOuter createSideModal sideUser">
-                    {isLoader ? <Loader /> : ''}
                     <div className="sideMenuInner">
+                    {isLoader ? <Loader /> : ''}
                         <button
                             className="btn btn-closeSideMenu"
                             onClick={(e) => closeSideMenu(e)}

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-import plus_icon from "../../../assets/images/plus_icon.svg";
 import flash_red from "../../../assets/images/flash_red.svg";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
-import apis from "./automationcanvas/services";
+import apis from "../automationcanvas/services";
 import Loader from "../../shared/Loader";
 import moment from "moment";
+import ListHeader from "../automation-shared/ListHeader";
 import { AutomationServices } from "../../../services/automation/AutomationServices";
 import { useDispatch } from "react-redux";
 import * as actionTypes from "../../../actions/types";
@@ -14,7 +14,7 @@ import Pagination from "../../shared/Pagination";
 import ConfirmBox from "../../shared/confirmBox";
 
 const AutomationLists = (props) => {
-  // USEEFFECT() Life cycle hook 
+  // USEEFFECT() Life cycle hook
   useEffect(() => {
     fetchAutomations();
   }, []);
@@ -22,52 +22,55 @@ const AutomationLists = (props) => {
   const [isLoader, setIsLoader] = useState(false);
   const [isAlert, setIsAlert] = useState({
     show: false,
-    id: null
+    id: null,
   });
   const [dropdownPos, setDropdownPos] = useState("bottom");
   const [automationData, setAutomationData] = useState({
     data: [],
-    count: 0
+    count: 0,
   });
 
   const [sort, setSort] = useState({
     sortBy: "",
-    sortType: ""
+    sortType: "",
   });
 
   const [paginationData, setPaginationData] = useState({
     count: null,
     totalPages: null,
     currentPage: 1,
-    limit: 10
+    limit: 10,
   });
 
   const dispatch = useDispatch();
 
   const fetchAutomations = async () => {
-    const pageID = utils.getQueryVariable('page') || 1;
+    const pageID = utils.getQueryVariable("page") || 1;
     let queryParams = null;
-    if (utils.getQueryVariable('sortBy')) {
-      queryParams = "?sortBy=" + utils.getQueryVariable('sortBy');
-      queryParams += "&sortType=" + utils.getQueryVariable('sortType');
+    if (utils.getQueryVariable("sortBy")) {
+      queryParams = "?sortBy=" + utils.getQueryVariable("sortBy");
+      queryParams += "&sortType=" + utils.getQueryVariable("sortType");
     }
     // console.log(queryParams);
     setIsLoader(true);
-    const automationLists = await AutomationServices.getAutomations(pageID, queryParams);
+    const automationLists = await AutomationServices.getAutomations(
+      pageID,
+      queryParams
+    );
     setIsLoader(false);
     if (automationLists.data.success) {
       setAutomationData({
         data: automationLists.data.data,
-        count: automationLists.data.pagination.count
+        count: automationLists.data.pagination.count,
       });
       dispatch({
         type: actionTypes.AUTOMATION_COUNT,
-        count: automationLists.data.pagination.count
+        count: automationLists.data.pagination.count,
       });
       setPaginationData({
         ...paginationData,
         currentPage: automationLists.data.pagination.currentPage,
-        totalPages: automationLists.data.pagination.totalPages
+        totalPages: automationLists.data.pagination.totalPages,
       });
     } else {
       console.log("api error ! " + automationLists.data.message);
@@ -76,11 +79,6 @@ const AutomationLists = (props) => {
 
   const passAutomationItem = (e) => {
     props.automationListObject(e);
-  };
-
-  const toggleCreateHeader = () => {
-    props.automationElementSet({});
-    props.toggleCreate("automation");
   };
 
   const automationDropdown = (e, el) => {
@@ -95,7 +93,15 @@ const AutomationLists = (props) => {
     }
 
     const data = automationData.data.filter((i) => i._id === e);
+    const otherData = automationData.data.filter((i) => i._id !== e);
+
     data[0].isEditing = !data[0].isEditing;
+
+    otherData.map((ex) => {
+      console.log(ex);
+      ex.isEditing = false;
+    });
+
     const newAutomationData = automationData.data.map((el, i) => {
       if (el._id === e) {
         return data[0];
@@ -103,7 +109,7 @@ const AutomationLists = (props) => {
     });
     setAutomationData({
       data: newAutomationData,
-      count: automationData.count
+      count: automationData.count,
     });
   };
 
@@ -116,11 +122,13 @@ const AutomationLists = (props) => {
       let payload = { element: elem.blueprint };
       let asl = await AutomationServices.getAsl(JSON.stringify(payload));
       if (asl.data.success) {
-        let payloadArn = { id: elem._id, arn: asl.data.data, status: true }
-        let updateArn = await AutomationServices.updateArn(JSON.stringify(payloadArn));
+        let payloadArn = { id: elem._id, arn: asl.data.data, status: true };
+        let updateArn = await AutomationServices.updateArn(
+          JSON.stringify(payloadArn)
+        );
         setIsLoader(false);
         if (updateArn.data.success) {
-          console.log('respnse updated');
+          console.log("respnse updated");
         } else {
           console.log("api error ! " + updateArn.data.message);
         }
@@ -129,11 +137,13 @@ const AutomationLists = (props) => {
         console.log("api error ! " + asl.data.message);
       }
     } else {
-      let payloadArn = { id: elem._id }
-      let updateArn = await AutomationServices.deleteArn(JSON.stringify(payloadArn));
+      let payloadArn = { id: elem._id };
+      let updateArn = await AutomationServices.deleteArn(
+        JSON.stringify(payloadArn)
+      );
       setIsLoader(false);
       if (updateArn.data.success) {
-        console.log('respnse updated');
+        console.log("respnse updated");
       } else {
         console.log("api error ! " + updateArn.data.message);
       }
@@ -145,25 +155,21 @@ const AutomationLists = (props) => {
     });
     setAutomationData({
       data: newStatus,
-      count: automationData.count
+      count: automationData.count,
     });
   };
-
-  const checkChange = (thisId, element) => {
-    console.log(thisId, element);
-  }
 
   const automationEdit = (elem) => {
     props.automationElementSet(elem);
     props.toggleCreate("automation");
-  }
+  };
 
   const deleteAutomation = async (automationID, isConfirmed = null) => {
     try {
       if (!isConfirmed) {
         setIsAlert({
           show: true,
-          id: automationID
+          id: automationID,
         });
       } else {
         if (isConfirmed == "yes") {
@@ -174,19 +180,20 @@ const AutomationLists = (props) => {
           // Reduce the count
           const newCount = automationData.count - 1;
           // Filter out the automation by checking with id
-          const newAutomationData = automationData.data.filter(el => el._id !== automationID);
+          const newAutomationData = automationData.data.filter(
+            (el) => el._id !== automationID
+          );
           // Reset the automation data with new filter and new count
           setAutomationData({
             data: newAutomationData,
-            count: newCount
-          })
+            count: newCount,
+          });
         }
         setIsAlert({
           show: false,
-          id: null
+          id: null,
         });
       }
-
     } catch (e) {
       // Alert for any exception. [Later need to change in error component];
       window.alert(e.message);
@@ -194,8 +201,7 @@ const AutomationLists = (props) => {
       // Disable the loader
       setIsLoader(false);
     }
-
-  }
+  };
 
   const handleSort = (sortname) => {
     // Check if sort type is blank then toggle to asc if asc then desc if desc then blank
@@ -217,69 +223,90 @@ const AutomationLists = (props) => {
     // Change the sort states
     setSort({
       sortBy: sortingBy,
-      sortType: sortingType
+      sortType: sortingType,
     });
     // Check if toggled sort is blank then remove the sort query params or add query params
     if (!sortingBy && !sortingType) {
-      utils.removeQueryParameter('sortBy');
-      utils.removeQueryParameter('sortType');
+      utils.removeQueryParameter("sortBy");
+      utils.removeQueryParameter("sortType");
     } else {
-      utils.addQueryParameter('sortBy', sortingBy);
-      utils.addQueryParameter('sortType', sortingType);
+      utils.addQueryParameter("sortBy", sortingBy);
+      utils.addQueryParameter("sortType", sortingType);
     }
     fetchAutomations();
-  }
+  };
+
+  const toggleCreateHeader = () => {
+    props.automationElementSet({});
+    props.toggleCreate("automation");
+  };
 
   return (
     <>
-      {isLoader ? <Loader /> : ''}
-      {isAlert.show ? <ConfirmBox callback={(isConfirmed) => deleteAutomation(isAlert.id, isConfirmed)} /> : ''}
-      <div className="dashInnerUI">
-        <div className="userListHead">
-          <div className="listInfo">
-            <ul className="listPath">
-              <li>Automations</li>
-              <li>Listing</li>
-            </ul>
-            <h2 className="inDashboardHeader">List of automations <span>({automationData.count})</span></h2>
-            <p className="userListAbout">
-              Create & manage your multiple automations to automate your task
-            </p>
-          </div>
-          <div className="listFeatures">
-            <button className="creatUserBtn" onClick={toggleCreateHeader}>
-              <img className="plusIcon" src={plus_icon} alt="" />
-              <span>Create</span>
-            </button>
-          </div>
-        </div>
+      {isLoader ? <Loader /> : ""}
+      {isAlert.show ? (
+        <ConfirmBox
+          callback={(isConfirmed) => deleteAutomation(isAlert.id, isConfirmed)}
+        />
+      ) : (
+        ""
+      )}
 
+      <div className="dashInnerUI">
+        <ListHeader
+          toggleCreateHeader={toggleCreateHeader}
+          automationData={automationData}
+        />
         <div className="userListBody">
           <div className="listArea">
             <div className="listHead">
-              <div className={sort?.sortBy == "name"? "listCell cellWidth_30 "+sort.sortType: "listCell cellWidth_30"} onClick={() => handleSort('name')}>
+              <div
+                className={
+                  sort?.sortBy == "name"
+                    ? "listCell cellWidth_30 " + sort.sortType
+                    : "listCell cellWidth_30"
+                }
+                onClick={() => handleSort("name")}
+              >
                 Automation Name <button className="shortTable"></button>
               </div>
-              <div className={sort?.sortBy == "status"? "listCell cellWidth_10 "+sort.sortType: "listCell cellWidth_10"} onClick={() => handleSort('status')}>
+              <div
+                className={
+                  sort?.sortBy == "status"
+                    ? "listCell cellWidth_10 " + sort.sortType
+                    : "listCell cellWidth_10"
+                }
+                onClick={() => handleSort("status")}
+              >
                 Status <button className="shortTable"></button>
               </div>
               <div className="listCell cellWidth_15">
                 # of people completed <button className="shortTable"></button>
               </div>
-              <div className={sort?.sortBy == "user"? "listCell cellWidth_15 "+sort.sortType: "listCell cellWidth_15"} onClick={() => handleSort('user')}>
+              <div
+                className={
+                  sort?.sortBy == "user"
+                    ? "listCell cellWidth_15 " + sort.sortType
+                    : "listCell cellWidth_15"
+                }
+                onClick={() => handleSort("user")}
+              >
                 Created by <button className="shortTable"></button>
               </div>
-              <div className={sort?.sortBy == "createdAt"? "listCell cellWidth_15 "+sort.sortType: "listCell cellWidth_15"} onClick={() => handleSort('createdAt')}>
+              <div
+                className={
+                  sort?.sortBy == "createdAt"
+                    ? "listCell cellWidth_15 " + sort.sortType
+                    : "listCell cellWidth_15"
+                }
+                onClick={() => handleSort("createdAt")}
+              >
                 Created on <button className="shortTable"></button>
               </div>
-              <div className="listCell cellWidth_10">
-
-              </div>
-              <div className="listCell cellWidth_5">
-
-              </div>
+              <div className="listCell cellWidth_10"></div>
+              <div className="listCell cellWidth_5"></div>
             </div>
-            {automationData.data.length ?
+            {automationData.data.length ? (
               automationData.data.map((elem, i) => {
                 return (
                   <>
@@ -289,18 +316,19 @@ const AutomationLists = (props) => {
                           <img src={flash_red} alt="" />
                         </div>
                         <p>
-                          <NavLink
+                          {/* <NavLink
                             to="/automation-details"
                             onClick={() => passAutomationItem(elem)}
                           >
                             {elem.name}
-                          </NavLink>
+                          </NavLink> */}
+                          <span>
+                            {elem.name}
+                          </span>
                         </p>
                       </div>
                       <div className="listCell cellWidth_10">
-                        <p
-                          className={elem.status ? "green" : "red"}
-                        >
+                        <p className={elem.status ? "green" : "red"}>
                           {elem.status ? "Published" : "Draft"}
                         </p>
                       </div>
@@ -313,7 +341,8 @@ const AutomationLists = (props) => {
                                 width:
                                   (elem.completedPeople /
                                     elem.totalforCompletion) *
-                                  100 + '%',
+                                    100 +
+                                  "%",
                               }}
                             ></div>
                           </div>
@@ -324,7 +353,11 @@ const AutomationLists = (props) => {
                         </div>
                       </div>
                       <div className="listCell cellWidth_15">
-                        <p>{elem.created_by_user.firstName + " " + elem.created_by_user.lastName}</p>
+                        <p>
+                          {elem.created_by_user.firstName +
+                            " " +
+                            elem.created_by_user.lastName}
+                        </p>
                       </div>
                       <div className="listCell cellWidth_15">
                         <p>{moment(elem.createdAt).format("Do MMM YYYY")}</p>
@@ -332,9 +365,7 @@ const AutomationLists = (props) => {
                       <div className="listCell cellWidth_10">
                         <label
                           className={
-                            elem.status
-                              ? "toggleBtn active"
-                              : "toggleBtn"
+                            elem.status ? "toggleBtn active" : "toggleBtn"
                           }
                         >
                           <input
@@ -376,7 +407,10 @@ const AutomationLists = (props) => {
                               </span>
                               Clone
                             </button>
-                            <button className="btn btnEdit" onClick={(el) => automationEdit(elem)}>
+                            <button
+                              className="btn btnEdit"
+                              onClick={(el) => automationEdit(elem)}
+                            >
                               <span>
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -399,8 +433,12 @@ const AutomationLists = (props) => {
                               </span>
                               Edit
                             </button>
-                            <button className="btn btnDelete"
-                              onClick={() => { deleteAutomation(elem._id) }}>
+                            <button
+                              className="btn btnDelete"
+                              onClick={() => {
+                                deleteAutomation(elem._id);
+                              }}
+                            >
                               <span>
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -410,7 +448,10 @@ const AutomationLists = (props) => {
                                   className="deleteIcon"
                                 >
                                   <g transform="translate(0.75 0.75)">
-                                    <path className="a" transform="translate(-3 -3.589)" />
+                                    <path
+                                      className="a"
+                                      transform="translate(-3 -3.589)"
+                                    />
                                     <path
                                       className="a"
                                       d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
@@ -437,18 +478,22 @@ const AutomationLists = (props) => {
                     </div>
                   </>
                 );
-              }) :
-              <div className="listCell">
-                No automation found
-              </div>
-            }
+              })
+            ) : (
+              <div className="listCell">No automation found</div>
+            )}
           </div>
         </div>
-        {automationData.count ? <Pagination
-          type="automation"
-          paginationData={paginationData}
-          dataCount={automationData.count}
-          callback={fetchAutomations} /> : ''}
+        {automationData.count ? (
+          <Pagination
+            type="automation"
+            paginationData={paginationData}
+            dataCount={automationData.count}
+            callback={fetchAutomations}
+          />
+        ) : (
+          ""
+        )}
       </div>
     </>
   );
