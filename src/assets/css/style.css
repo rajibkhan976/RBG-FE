@@ -648,8 +648,13 @@ input:focus + .searchIco #search-ico .a,
   left: 0;
   z-index: 99;
   background: rgb(48 86 113 / 20%);
+  opacity: 1;
+  transition: all 1s ease 0s;
 }
-
+.sideMenuOuter.hideSlide {
+  opacity: 0;
+  right: -100%;
+}
 .createSideModal .sideMenuInner {
   width: 100%;
   max-width: 680px;
@@ -3061,11 +3066,11 @@ span.userProfilePic img {
 }
  
 .formAccordion::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 6px #D3D9DE;
+  box-shadow: inset 0 0 6px #c3cfd4;
 }
  
 .formAccordion::-webkit-scrollbar-thumb {
-  background-color: #b1c8ca;
+  background-color: #315571;
   outline: transparent;
 }
 
@@ -3148,6 +3153,8 @@ span.userProfilePic img {
 
 .errorList ul {
   margin-top: 20px;
+  height: 192px;
+  overflow-y: auto;
 }
 .errorList li {
   display: inline-block;
@@ -3170,6 +3177,19 @@ span.userProfilePic img {
   color: #305671;
   line-height: 20px;
   width: calc(100% - 200px);
+}
+
+.errorList ul::-webkit-scrollbar {
+  width: 4px;
+}
+
+.errorList ul::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px #c3cfd4;
+}
+
+.errorList ul::-webkit-scrollbar-thumb {
+  background-color: #315571;
+  outline: transparent;
 }
 
 .marginLeft {

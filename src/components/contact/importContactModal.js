@@ -14,31 +14,59 @@ const ImportContactModal = () => {
             document.getElementById("stpe_" + i).classList.add("hide");
         }
 
+        
+
         if(stepCount < 5) {
+            for(let j=0; j <= stepCount; j++){
+                document.getElementsByClassName("importStape")[j].classList.add("active");
+            }
             stepCount++;
         } else {
             stepCount = 1;
+            
         }
         document.getElementById("currentStep").innerHTML = stepCount;
         document.getElementById("stpe_" + stepCount).classList.remove("hide");
     };
 
+    const closeModal = () => {
+        document.getElementById("import_Modal").classList.add("hideSlide");
+    }
+
+    const uploadFileFn = () => {
+        let fullPath = document.getElementById('uploadContactFile').value;
+        if (fullPath) {
+            let startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
+            let filename = fullPath.substring(startIndex);
+            if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
+                filename = filename.substring(1);
+            }
+            stepCount = 2;
+            document.getElementById("stpe_1").classList.add("hide");
+            document.getElementById("stpe_2").classList.remove("hide");
+            document.getElementsByClassName("importStape")[1].classList.add("active");
+            document.getElementById("currentStep").innerHTML = stepCount;
+            document.getElementById("addedFileName").innerHTML = filename;
+        }
+    }
+    
+
     return (
-        <div className="sideMenuOuter">
+        <div className="sideMenuOuter" id="import_Modal">
             <div className="sideMenuInner importModalContainer">
                 <div className="sideMenuHeader">
-                    <h3>Import Data</h3>
-                    <p>Lorem ipsum dolor sit amet</p>
-                    <button className="btn btn-closeSideMenu"><span></span><span></span></button>
+                    <h3>Import Contacts</h3>
+                    <p>Upload contacts in your organization</p>
+                    <button className="btn btn-closeSideMenu" onClick={() => closeModal()}><span></span><span></span></button>
                 </div>
                 <div className="importModalBody">
                     <div className="importStapeList">
                         <ul>
-                            <li className="active">Upload File<span>&gt;</span></li>
-                            <li>Mapping Details<span>&gt;</span></li>
-                            <li>Confirm Mapping<span>&gt;</span></li>
-                            <li>Handle Duplicates<span>&gt;</span></li>
-                            <li>Import Summary</li>
+                            <li className="active importStape" data-step="1">Upload File<span>&gt;</span></li>
+                            <li className="importStape" data-step="2">Mapping Details<span>&gt;</span></li>
+                            <li className="importStape" data-step="3">Confirm Mapping<span>&gt;</span></li>
+                            <li className="importStape" data-step="4">Handle Duplicates<span>&gt;</span></li>
+                            <li className="importStape" data-step="5">Import Summary</li>
                         </ul>
                     </div>
                     <div id="stpe_1" className="">
@@ -94,7 +122,7 @@ const ImportContactModal = () => {
                                 </p>
                                 <div className="uploadFileBtn fileInput">
                                     Upload File
-                                    <input type="file" />
+                                    <input type="file" id="uploadContactFile" onChange={uploadFileFn} accept=".xls, .xlsx, .csx"/>
                                 </div>
                                 <a href="" className="downloadSample">Download sample template for Import</a>
                             </div>
@@ -149,22 +177,22 @@ const ImportContactModal = () => {
                                         </div>
                                     </div>
                                 </li>
-                                <div className="executeWorkflow">
+                                {/* <div className="executeWorkflow">
                                     <div className="customCheckbox">
                                         <input type="checkbox" name="duplicates" />
                                         <span></span>
                                     </div>
                                     <p className="spclLabel">Execute Workflow</p>
-                                </div>
+                                </div> */}
                             </ul>
                             <div className="fileImportBox">
                                 <figure className="statusIcon">
                                     <img src={fileDoneIcon} alt="" />
                                 </figure>
-                                <h3>file_name.csv</h3>
+                                <h3 id="addedFileName"></h3>
                                 <div className="uploadFileBtn">
                                     Remove & New
-                                    <input type="file" />
+                                    <input type="file" accept=".xls, .xlsx, .csx"/>
                                 </div>
                             </div>
                         </div>
@@ -195,7 +223,7 @@ const ImportContactModal = () => {
                                                     <label>* Employee Id</label>
                                                     <div className="inFormField">
                                                         <select name="" id="" style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                            <option value="">employeeid*(c:0)</option>
+                                                            <option value="">employee id*(c:0)</option>
                                                         </select>
                                                     </div>
                                                 </div>
@@ -218,7 +246,7 @@ const ImportContactModal = () => {
                                                     </div>
                                                 </div>
                                                 <div className="formField w-50">
-                                                    <label>* Last name</label>
+                                                    <label>* Last Name</label>
                                                     <div className="inFormField">
                                                         <select name="" id="" style={{backgroundImage: "url(" + arrowDown + ")",}}>
                                                             <option value="">last name*(c:2)</option>
@@ -689,7 +717,7 @@ const ImportContactModal = () => {
 
                 </div>
                 <div className="importModalFooter">
-                    <button className="nextButton" onClick={nextStep}>Next <img src={arrow_forward} alt="" /></button>
+                    <button className="nextButton" onClick={nextStep}>{stepCount < 5 ? "Next" : "Done"} <img src={arrow_forward} alt="" /></button>
                     <p className="stapeIndicator">Step: <span id="currentStep">1</span> of 5</p>
                 </div>
             </div>
