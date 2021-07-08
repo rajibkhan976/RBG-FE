@@ -3,10 +3,12 @@ import ReactFlow, {
   ReactFlowProvider,
   addEdge,
   removeElements,
+  updateEdge,
   Controls,
 } from "react-flow-renderer";
 import "./automation.css";
 import { FilterNode, TriggerNode, ActionEmail, ActionMessage, ActionDelay } from "./nodes";
+import { CustomEdge } from './edges';
 import {Filter} from "./modals/filter";
 import closewhite24dp from "../../../assets/images/close_white_24dp.svg";
 import chevron_right_white_24dp from "../../../assets/images/chevron_right_white_24dp.svg";
@@ -63,7 +65,10 @@ const AutomationBuilder = (props) => {
   const [filterAnd, setFilterAnd] = useState(0);
   const [filterOr, setFilterOr] = useState(0);
   const [filterId, setFilterId] = useState(0);
-  const edgeType = "smoothstep";
+  const edgeTypes = {
+    buttonedge: CustomEdge,
+  };
+  const edgeType = 'buttonedge';
   const nodeTypes = {
     trigger: TriggerNode,
     filter: FilterNode,
@@ -267,7 +272,6 @@ const AutomationBuilder = (props) => {
       thisNodeTarget.parentNode.querySelector(".btnDeleteNode").remove();
     }
   };
-
   const filterEdit = (e, n) => {
     setFilterId(n.id);
     if (n.data.data !== undefined) {
@@ -292,7 +296,6 @@ const AutomationBuilder = (props) => {
     }
     setAutomationModal("filter");
   };
-
   const actionEdit = (e, n) => {
     setToEmail(n.data.to);
     setSubject(n.data.subject);
@@ -305,7 +308,6 @@ const AutomationBuilder = (props) => {
     }
     setAutomationModal("actionEmail");
   };
-
   const actionMessageEdit = (e, n) => {
     setTo(n.data.to);
     setFrom(n.data.from);
@@ -318,7 +320,6 @@ const AutomationBuilder = (props) => {
     }
     setAutomationModal("actionMessage");
   };
-
   const actionDelayEdit = (e, n) => {
     setDelayTime(n.data.time);
     setDelayType(n.data.timeType);
@@ -330,7 +331,6 @@ const AutomationBuilder = (props) => {
     }
     setAutomationModal("actionDelay");
   };
-
   const refreshWebhook = async (id, nodeI) => {
     setWebhookData([]);
     if (id) {
@@ -353,7 +353,6 @@ const AutomationBuilder = (props) => {
       }
     }
   };
-
   const triggerEdit = async (e, n) => {
     setAutomationUrl(n.data.url);
     setAutomationUrlId(n.data.id);
@@ -365,7 +364,6 @@ const AutomationBuilder = (props) => {
     }
     setTriggerNodeId(n.id);
   };
-
   const closeFilterModal = () => {
     setAutomationModal(null);
   };
@@ -388,19 +386,16 @@ const AutomationBuilder = (props) => {
     setCursorElement(event);
     setBody(event.target.value);
   }
-
   const handleSubjectChange = (event) => {
     event.preventDefault();
     setCursorElement(event);
     setSubject(event.target.value);
   }
-
   const handleToEmailChange = (event) => {
     event.preventDefault();
     setCursorElement(event);
     setToEmail(event.target.value);
   }
-
   const handleDelayChange = (event) => {
     event.preventDefault();
     if (event.target.value > 0) {
@@ -414,13 +409,11 @@ const AutomationBuilder = (props) => {
     event.preventDefault();
     setDelayType(event.target.value);
   }
-
   const handleBodyEmailChange = (event) => {
     event.preventDefault();
     setCursorElement(event);
     setBodyEmail(event.target.value);
   }
-
   const updateDataInTarget = (params) => {
     const updatedElem = [...elements];
     let data = {};
@@ -438,13 +431,13 @@ const AutomationBuilder = (props) => {
         })
     );
   };
-
-  const onConnect = (params) => {
+  const onConnect = async (params) => {
     let validate = getConnectionDetails(params.source, params.target);
     if (validate) {
-      setElements((els) =>
+      const edge = getEdgeId();
+      await setElements((els) =>
           addEdge(
-              { ...params, id: getEdgeId(), type: edgeType, animated: true },
+              { ...params, id: edge, type: edgeType, animated: true, data: {onRemove: onEdgeClick}},
               els
           )
       );
@@ -483,13 +476,13 @@ const AutomationBuilder = (props) => {
       }, 500);
     }
   };
-
   const onElementsRemove = (elementsToRemove) => {
     if (elementsToRemove.length) {
       if (
+          elementsToRemove[0].data !== undefined && (
           elementsToRemove[0].data.nodes.previous === "" ||
           elementsToRemove[0].data.nodes.next.length === 0
-      ) {
+      )) {
         setElements((els) => removeElements(elementsToRemove, els));
         return;
       }
@@ -532,9 +525,9 @@ const AutomationBuilder = (props) => {
       let deleteWebhook = await AutomationServices.deleteWebhookNode(JSON.stringify(payload));
     }
   };
-  const onLoad = (_reactFlowInstance) =>
-      setReactFlowInstance(_reactFlowInstance);
-
+  const onLoad = (_reactFlowInstance) => {
+    setReactFlowInstance(_reactFlowInstance);
+  }
   const onDragOver = (event) => {
     event.preventDefault();
     event.dataTransfer.dropEffect = "move";
@@ -551,7 +544,6 @@ const AutomationBuilder = (props) => {
         })
     );
   };
-
   const resetAutomation = () => {
     setElements([])
     setAutomationId(0);
@@ -707,6 +699,7 @@ const AutomationBuilder = (props) => {
       console.log("api error ! " + res.data.message);
     }
   }
+
   const onDrop = async (event) => {
     event.preventDefault();
     const types = {
@@ -967,8 +960,9 @@ const AutomationBuilder = (props) => {
     return returnType;
   };
   const onClickCopy = (text) => {
-    //window.navigator.clipboard.writeText(text);
-    console.log(text);
+    setTimeout( () =>  {
+      window.navigator.clipboard.writeText(text);
+    }, 100);
   }
   const copyTag = (text, field) => {
     let e = cursorElement;
@@ -1021,10 +1015,8 @@ const AutomationBuilder = (props) => {
       }
     }
   }
-
   const toggletoMail = (e) => {
     e.preventDefault();
-
     e.target.closest('.inputField').classList.toggle('active');
   }
   const addAnd = (value) => {
@@ -1132,7 +1124,12 @@ const AutomationBuilder = (props) => {
         })
     );
   }
-
+  const onEdgeClick = (id) => {
+    let elems = [{
+      id: id
+    }];
+    setElements((els) => removeElements(elems, elements));
+  };
   useEffect(() => {
     if (Object.keys(props.automationElement).length) {
       setElements(props.automationElement.blueprint)
@@ -1185,9 +1182,10 @@ const AutomationBuilder = (props) => {
                   onLoad={onLoad}
                   onDrop={onDrop}
                   nodeTypes={nodeTypes}
+                  data={elements}
                   onDragOver={onDragOver}
                   selectNodesOnDrag={false}
-                  connectionLineType={edgeType}
+                  edgeTypes={edgeTypes}
                   onNodeMouseEnter={onNodeMouseEnter}
                   onNodeMouseLeave={onNodeMouseLeave}
                   style={{ background: bgColor }}
