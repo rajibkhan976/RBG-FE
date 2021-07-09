@@ -165,6 +165,19 @@ const AutomationLists = (props) => {
   };
 
   const deleteAutomation = async (automationID, isConfirmed = null) => {
+    const clickedforDeletion = automationData.data.filter((i) => i._id === automationID);    
+    clickedforDeletion[0].isEditing = false;
+
+    const newAutomationData = automationData.data.map((el, i) => {
+      if (el._id === automationID) {
+        return clickedforDeletion[0];
+      } else return el;
+    });
+    setAutomationData({
+      data: newAutomationData,
+      count: automationData.count,
+    });
+    
     try {
       if (!isConfirmed) {
         setIsAlert({
