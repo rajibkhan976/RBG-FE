@@ -1,33 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import arrowDown from "../../assets/images/arrowDown.svg";
 import download_cloud_icon from "../../assets/images/download_cloud_icon.svg";
 import arrow_forward from "../../assets/images/arrow_forward.svg";
 import user_done_icon from "../../assets/images/user_done_icon.svg";
 import fileDoneIcon from "../../assets/images/fileDoneIcon.svg";
+import fileFail_icon from "../../assets/images/fileFail_icon.svg";
+import done_white_icon from "../../assets/images/done_white.svg";
 
 const ImportContactModal = () => {
 
-    let stepCount = 1;
-    const nextStep = () => {
-        for(let i=1; i <= 5; i++){
-            document.getElementById("stpe_" + i).classList.add("hide");
-        }
-
-        
-
-        if(stepCount < 5) {
-            for(let j=0; j <= stepCount; j++){
-                document.getElementsByClassName("importStape")[j].classList.add("active");
-            }
-            stepCount++;
-        } else {
-            stepCount = 1;
-            
-        }
-        document.getElementById("currentStep").innerHTML = stepCount;
-        document.getElementById("stpe_" + stepCount).classList.remove("hide");
-    };
+    const [fileName, setFileName] = useState("Please import file");
+    const [fileImportStatus, setFileImportStatus] = useState(false);
+    const [nextStep, setNextStep] = useState(false);
+    const [currentStep, setCurrentStep]= useState(1);
 
     const closeModal = () => {
         document.getElementById("import_Modal").classList.add("hideSlide");
@@ -41,14 +27,40 @@ const ImportContactModal = () => {
             if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
                 filename = filename.substring(1);
             }
-            stepCount = 2;
-            document.getElementById("stpe_1").classList.add("hide");
-            document.getElementById("stpe_2").classList.remove("hide");
-            document.getElementsByClassName("importStape")[1].classList.add("active");
-            document.getElementById("currentStep").innerHTML = stepCount;
-            document.getElementById("addedFileName").innerHTML = filename;
+            
+            setFileName(filename);
+            setFileImportStatus(true);
+            setNextStep(2);
         }
     }
+
+    const goNextStep = (nextStep) => {
+        
+
+        if (currentStep === 1 && nextStep === 2){
+            document.getElementById("step_2").classList.remove("hide");
+            document.getElementById("step_1").classList.add("hide");
+            setCurrentStep(nextStep);
+            document.querySelectorAll(".importStape")[1].classList.add("active");
+            setNextStep(3);
+        } else if (currentStep === 2 && nextStep === 3) {
+            document.getElementById("step_3").classList.remove("hide");
+            document.getElementById("step_2").classList.add("hide");
+            setCurrentStep(nextStep);
+            document.querySelectorAll(".importStape")[2].classList.add("active");
+            setNextStep(5);
+        }
+        else if (currentStep === 3 && nextStep === 5) {
+            document.getElementById("step_5").classList.remove("hide");
+            document.getElementById("step_3").classList.add("hide");
+            setCurrentStep(nextStep);
+            document.querySelectorAll(".importStape")[3].classList.add("active");
+            document.querySelectorAll(".importStape")[4].classList.add("active");
+            setNextStep(false);
+        }
+    }
+
+    
     
 
     return (
@@ -62,14 +74,14 @@ const ImportContactModal = () => {
                 <div className="importModalBody">
                     <div className="importStapeList">
                         <ul>
-                            <li className="active importStape" data-step="1">Upload File<span>&gt;</span></li>
+                            <li className="importStape active" data-step="1">Upload File<span>&gt;</span></li>
                             <li className="importStape" data-step="2">Mapping Details<span>&gt;</span></li>
                             <li className="importStape" data-step="3">Confirm Mapping<span>&gt;</span></li>
                             <li className="importStape" data-step="4">Handle Duplicates<span>&gt;</span></li>
                             <li className="importStape" data-step="5">Import Summary</li>
                         </ul>
                     </div>
-                    <div id="stpe_1" className="">
+                    <div id="step_1" className="">
                         <div className="infoInputs">
                             <ul>
                                 <li>
@@ -112,19 +124,21 @@ const ImportContactModal = () => {
                                     </div>
                                 </li>
                             </ul>
+                            {/* use class "error" with "fileImportBox" class to show error color */}
                             <div className="fileImportBox">
                                 <figure className="statusIcon">
-                                    <img src={download_cloud_icon} alt="" />
+                                    {/* use image "{fileFail_icon}" for showin error file icon */}
+                                    <img src={fileImportStatus ? fileDoneIcon : download_cloud_icon} alt="" />
                                 </figure>
-                                <h3>Choose the file to be imported</h3>
-                                <p className="inportInfo">
+                                <h3>{fileImportStatus ? fileName : "Choose the file to be imported"}</h3>
+                                <p className={fileImportStatus ? "inportInfo hide" : "inportInfo"}>
                                     [Only xls, xlsx and csv formats are supported]<br />Maximum upload size is 5 MB
                                 </p>
-                                <div className="uploadFileBtn fileInput">
-                                    Upload File
+                                <div className={fileImportStatus ? "uploadFileBtn" : "uploadFileBtn fileInput"}>
+                                    {fileImportStatus ? "Remove & New" : "Upload File"}
                                     <input type="file" id="uploadContactFile" onChange={uploadFileFn} accept=".xls, .xlsx, .csx"/>
                                 </div>
-                                <a href="" className="downloadSample">Download sample template for Import</a>
+                                <a href="" className={fileImportStatus ? "hide" : "downloadSample"}>Download sample template for Import</a>
                             </div>
                         </div>
                         <div className="importNote">
@@ -135,7 +149,7 @@ const ImportContactModal = () => {
                         </div>
                     </div>
 
-                    <div id="stpe_2" className="hide">
+                    {/* <div id="stpe_2" className="hide">
                         <div className="infoInputs">
                             <ul>
                                 <li>
@@ -177,19 +191,19 @@ const ImportContactModal = () => {
                                         </div>
                                     </div>
                                 </li>
-                                {/* <div className="executeWorkflow">
+                                <div className="executeWorkflow">
                                     <div className="customCheckbox">
                                         <input type="checkbox" name="duplicates" />
                                         <span></span>
                                     </div>
                                     <p className="spclLabel">Execute Workflow</p>
-                                </div> */}
+                                </div> 
                             </ul>
                             <div className="fileImportBox">
                                 <figure className="statusIcon">
                                     <img src={fileDoneIcon} alt="" />
                                 </figure>
-                                <h3 id="addedFileName"></h3>
+                                <h3 id="addedFileName">{fileName}</h3>
                                 <div className="uploadFileBtn">
                                     Remove & New
                                     <input type="file" accept=".xls, .xlsx, .csx"/>
@@ -202,9 +216,9 @@ const ImportContactModal = () => {
                                 Import sheet, if duplicate record is found based on <span>“Email Id”</span> the last duplicate row will be taken as valid record.
                             </p>
                         </div>
-                    </div>
+                    </div> */}
 
-                    <div id="stpe_3" className="hide">
+                    <div id="step_2" className="hide">
                         <div className="totalReconds">
                             <img src={user_done_icon} alt="" />
                             <p><span>1, 86 ,564</span> Records found</p>
@@ -432,7 +446,8 @@ const ImportContactModal = () => {
                         </div>
                     </div>
 
-                    <div id="stpe_4" className="hide">
+                    <div id="step_3" className="hide">
+                        {/* use class "error" with "formMsg" class to show error message */}
                         <div className="formMsg error">Following fields are not mapped.</div>
                         <div className="formAccordion">
                             <div className="accoRow">
@@ -444,12 +459,15 @@ const ImportContactModal = () => {
                                     <div className="infoInputs">
                                         <ul>
                                             <li>
+                                                {/* use class "error" with "formField" class to show error fields */}
                                                 <div className="formField w-50 error">
                                                     <label>* Employee Id</label>
                                                     <div className="inFormField">
                                                         <select name="" id="" style={{backgroundImage: "url(" + arrowDown + ")",}}>
                                                             <option value="">Select</option>
                                                         </select>
+                                                        {/* use <p> here to show the filed error message*/}
+                                                        <p>Here will be the error message</p>
                                                     </div>
                                                 </div>
                                                 <div className="formField w-50 error">
@@ -650,7 +668,7 @@ const ImportContactModal = () => {
                         </div>
                     </div>
 
-                    <div id="stpe_5" className="hide">
+                    <div id="step_5" className="hide">
                         <div className="fileImportBox green">
                             <figure className="statusIcon">
                                 <img src={fileDoneIcon} alt="" />
@@ -683,7 +701,7 @@ const ImportContactModal = () => {
                                     </div>
                                 </li>
                                 <li>
-                                    <div className="summryCell">
+                                    <div className="summryCell error">
                                         <p>Number of errors</p>
                                         <span>6</span>  
                                     </div>
@@ -717,8 +735,11 @@ const ImportContactModal = () => {
 
                 </div>
                 <div className="importModalFooter">
-                    <button className="nextButton" onClick={nextStep}>{stepCount < 5 ? "Next" : "Done"} <img src={arrow_forward} alt="" /></button>
-                    <p className="stapeIndicator">Step: <span id="currentStep">1</span> of 5</p>
+                    <button className={currentStep === 5 ? "nextButton lastStepBtn" :  "nextButton"} onClick={() => goNextStep(nextStep)}>
+                        <span>Next <img src={arrow_forward} alt="" /></span>
+                        <span className="doneStepBtn"><img src={done_white_icon} alt="" /> Finish</span>
+                    </button>
+                    <p className="stapeIndicator">Step: {currentStep} of 5</p>
                 </div>
             </div>
         </div>

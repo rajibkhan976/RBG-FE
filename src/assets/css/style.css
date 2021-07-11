@@ -2891,6 +2891,13 @@ span.userProfilePic img {
   margin-top: 30px;
 }
 
+.fileImportBox.error {
+  background: #fff1f1;
+  border-color: #ecd0d0;
+  padding: 30px;
+  margin-top: 30px;
+}
+
 .fileImportBox h3 {
   font-size: 16px;
   font-weight: normal;
@@ -2900,6 +2907,10 @@ span.userProfilePic img {
 
 .fileImportBox.green h3 {
   margin-bottom: 10px;
+}
+
+.fileImportBox.error h3 {
+  color: #ED707A;
 }
 
 .fileImportBox .inportInfo {
@@ -2980,13 +2991,33 @@ span.userProfilePic img {
   flex-direction: row;
   color: #fff;
   font-size: 14px;
-  padding: 0 20px;
+  padding: 0 15px 0 20px;
   width: 90px;
   margin: 0 auto;
 }
 
 .nextButton img {
-  padding-left: 14px;
+  padding-left: 10px;
+}
+
+.doneStepBtn {
+  display: none;
+}
+
+.nextButton.lastStepBtn {
+  width: 105px;
+  padding-left: 15px;
+}
+.nextButton.lastStepBtn span {
+  display: none;
+}
+.nextButton.lastStepBtn img {
+  padding-right: 10px;
+  padding-left: 0;
+  float: left;
+}
+.nextButton.lastStepBtn .doneStepBtn {
+  display: block;
 }
 
 .importModalFooter .stapeIndicator {
@@ -3150,7 +3181,9 @@ span.userProfilePic img {
   font-weight: bold;
   line-height: 23px;
 }
-
+.uploadedDataSummary li .summryCell.error span {
+  color: #ED707A;
+}
 .errorList ul {
   margin-top: 20px;
   height: 192px;
@@ -3168,7 +3201,7 @@ span.userProfilePic img {
 .errorList li .errorRowNo {
   float: left;
   font-size: 13px;
-  color: #9BAEBC;
+  color: #ED707A;
   width: 200px;
 }
 .errorList li p {

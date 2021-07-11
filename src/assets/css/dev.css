@@ -607,6 +607,7 @@
     background-color: #FFF4F4;
 }
 
+
 .infoInputs ul li {
     align-items: flex-start;
 }
@@ -1180,6 +1181,13 @@
 .error .inFormField textarea,
 .error .inFormField select {
     border: 1px solid #c74854;
+}
+
+
+.error .inFormField p {
+    color: #ED707A;
+    margin-top: 5px;
+    font-size: 12px;
 }
 
 .infoInputs ul li {
