@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import flash_red from "../../../assets/images/flash_red.svg";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
@@ -19,6 +19,8 @@ const AutomationLists = (props) => {
     fetchAutomations();
   }, []);
 
+  
+  const optionsToggleRef = useRef();
   const [isLoader, setIsLoader] = useState(false);
   const [isAlert, setIsAlert] = useState({
     show: false,
@@ -98,7 +100,6 @@ const AutomationLists = (props) => {
     data[0].isEditing = !data[0].isEditing;
 
     otherData.map((ex) => {
-      console.log(ex);
       ex.isEditing = false;
     });
 
@@ -254,6 +255,33 @@ const AutomationLists = (props) => {
     props.toggleCreate("automation");
   };
 
+  useEffect(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+          document.removeEventListener("mousedown", handleClickOutside);
+      }
+  }, []);
+  
+  const handleClickOutside = (event) => {
+    if (optionsToggleRef.current.contains(event.target)) {
+      //console.log('// inside click');
+      return;
+    }
+    //console.log('// outside click');
+    const data = automationData.data;
+
+    data.map((ex) => {
+      ex.isEditing = false;
+    });
+    
+    setAutomationData({
+      data: data,
+      count: automationData.count,
+    });
+
+    console.log(data);
+  }
+
   return (
     <>
       {isLoader ? <Loader /> : ""}
@@ -270,7 +298,7 @@ const AutomationLists = (props) => {
           toggleCreateHeader={toggleCreateHeader}
           automationData={automationData}
         />
-        <div className="userListBody">
+        <div className="userListBody" ref={optionsToggleRef}>
           <div className="listArea">
             <div className="listHead">
               <div
