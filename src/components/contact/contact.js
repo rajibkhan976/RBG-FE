@@ -1,11 +1,12 @@
 import React from "react";
+import ContactListing from "./ContactListing";
 
 import ImportContactModal from "./importContactModal";
 
 const contact = () => {
   return (
     <>
-      <div className="dashInnerUI"></div>
+      <ContactListing />
       <ImportContactModal />
     </>
   );

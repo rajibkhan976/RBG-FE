@@ -1146,7 +1146,7 @@ li.listHeading>div.dsc::after {
   margin-left: 15px;
 }
 
-.phoneNum .btn, .emailID .btn, .role .btn, .assignedGroup .btn, .status .btn, .createDate .btn {
+.phoneNum .btn, .emailID .btn, .role .btn, .assignedGroup .btn, .status .btn, .createDate .btn, .dataTableCell .btn {
   color: #305671;
   font-size: 13px;
   text-decoration: none;
@@ -3321,4 +3321,40 @@ span.userProfilePic img {
 .popupMessage.error p {
   color: #c55757;
   background: url('../images/msg_error_icon.svg') no-repeat left center / 25px auto;
+}
+
+
+.contactHead {
+  display: block;
+  margin-bottom: 18px;
+}
+.contactHead .userListHead {
+  margin-bottom: 23px;
+}
+.head_ctrlRow {
+  display: inline-block;
+  width: 100%;
+}
+.head_ctrlRow_left {
+  float: left;
+}
+.head_ctrlRow_right {
+  float: right;
+}
+.head_ctrlRow .saveNnewBtn {
+  display: inline-flex;
+}
+.saveNnewBtn.massUpdateBtn {
+  width: 123px;
+}
+.saveNnewBtn.impContactBtn {
+  width: 168px;
+}
+.saveNnewBtn.expContactBtn {
+  margin-left: 14px;
+  border: 1px solid #9BAEBC;
+  color: #9BAEBC;
+  background: #F6F8FA;
+  width: 155px;
+  transform: translateY(-3px);
 }

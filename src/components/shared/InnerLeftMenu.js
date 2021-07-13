@@ -162,9 +162,30 @@ const InnerLeftMenu = (props) => {
               </li>
             </ul>
           </>
-        ) : (
-          ''
-        )}
+        ) : (pathURL === "/contacts") ? (
+          <>
+            <div className="sidebarHeader">
+              <h4>
+                Contacts
+                <img className="arrowIcon" src={white_arrow_right} alt=""/>
+              </h4>
+            </div>
+            <ul className="automationInDetails">
+              <li>
+                <span className="leftMenuInnerLink active">
+                  <div className="indicator"></div>
+                  <div className="linkDetails">
+                    <p className="linkHeading">
+                      My Contacts <span className="notificationNumber">123</span>
+                    </p>
+                    <br />
+                    <p className="linkAbout">Create, import & manage your contacts</p>
+                  </div>
+                </span>
+              </li>
+            </ul>
+          </>
+        ) : ('')}
       </div>
     </div>
   );

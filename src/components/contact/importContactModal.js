@@ -64,7 +64,7 @@ const ImportContactModal = () => {
     
 
     return (
-        <div className="sideMenuOuter" id="import_Modal">
+        <div className="sideMenuOuter hide" id="import_Modal">
             <div className="sideMenuInner importModalContainer">
                 <div className="sideMenuHeader">
                     <h3>Import Contacts</h3>
