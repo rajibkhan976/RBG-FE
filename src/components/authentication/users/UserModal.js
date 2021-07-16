@@ -166,16 +166,14 @@ const UserModal = (props) => {
      */
     const fetchRoles = async (pageId, keyword) => {
         try {
-            await RoleServices.fetchRoles(pageId, keyword)
-                .then((result) => {
+            const result = await RoleServices.fetchRoles(pageId, keyword);
+                // .then((result) => {
                     // console.log('Role drop-down result', result.roles);
-                    if (result) {
-                        setRoles(result.roles);
-                    }
-                })
-                .catch((error) => {
-                    console.log("Role drop-down error", error);
-                });
+            if (result) {
+                setRoles(result.roles);
+            } else {
+                console.log("Role drop-down error");
+            }
         } catch (e) {
             console.log("Error in Role drop-down", JSON.stringify(e));
         }
@@ -476,6 +474,7 @@ const UserModal = (props) => {
 
         }
     };
+
     return (
         <>
             {props.createButton !== null && (

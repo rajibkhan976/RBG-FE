@@ -1,11 +1,11 @@
-import React, { useState, Suspense, lazy } from "react";
+import React, { useState, lazy } from "react";
 import { Route, Switch, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+// import { useDispatch } from "react-redux";
 import LeftMenu from "./shared/LeftMenu";
 import HeaderDashboard from "./shared/HeaderDashboard";
 import DashboardFooter from "./shared/FooterDashboard";
 import InnerLeftMenu from "./shared/InnerLeftMenu";
-import AuthActions from "../actions/AuthActions";
+// import AuthActions from "../actions/AuthActions";
 
 const Dashboard = lazy(() => import("./dashboard/Dashboard"));
 const AuthRoutes = lazy(() => import("./authentication/AuthRoutes"));
@@ -28,10 +28,10 @@ const MainComponent = () => {
     setShowLeftSubMenu(status);
   };
 
-  const dispatch = useDispatch();
-  const logOut = () => {
-    dispatch(AuthActions.logout());
-  };
+  // const dispatch = useDispatch();
+  // const logOut = () => {
+  //   dispatch(AuthActions.logout());
+  // };
 
   return (
     <div className="mainComponent">

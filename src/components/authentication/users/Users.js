@@ -3,7 +3,7 @@ import UsersListing from "./UsersListing";
 
 import UserModal from "./UserModal";
 import UserFilter from "./UserFilter";
-import ConfirmBox from "../../shared/confirmBox";
+// import ConfirmBox from "../../shared/confirmBox";
 
 const Users = (props) => {
   const [createButton, setCreateButton] = useState(null);

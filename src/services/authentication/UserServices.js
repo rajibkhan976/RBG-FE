@@ -10,27 +10,25 @@ let headers = {
 
 export const UserServices = {
     fetchUsers: async (page = null, queryParams = null) => {
-        headers.Authorization = localStorage.getItem("_token");
-        return new Promise((resolve, reject) => {
-            axios
-                .get(
-                    config.fetchUsersUrl +
-                    (page ? "/" + page : '') +
-                    (queryParams ? "?" + queryParams : ''),
-                    { headers: headers }
-                )
-                .then((result) => {
-                    //console.log('Fetch users services result: ', result);
-                    resolve(result.data);
-                })
-                .catch((error) => {
-                    console.log('Fetch users service error: ', error);
-                    if (error != null) {
-                        reject(error);
-                    }
-                });
-        });
+        try {
+            const url = config.fetchUsersUrl + (page ? "/" + page : '') + (queryParams ? "?" + queryParams : '');
+            const options = {
+                headers: {
+                    ...headers,
+                    Authorization: localStorage.getItem("_token")
+                }
+            };
+            const result = await axios.get(url, options);
+            if (result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an issue while fetching users. Please contact support.");
+            }
+        } catch (e) {
+            throw new Error(e.message);
+        }
     },
+
     fileUpload: fileData => {
         headers.Authorization = localStorage.getItem("_token");
         return new Promise((resolve, reject) => {
@@ -59,80 +57,103 @@ export const UserServices = {
                 });
         });
     },
+
     deleteUser: async (userId) => {
-        headers.Authorization = localStorage.getItem("_token");
-        return new Promise((resolve, reject) => {
+        try {
             if (isLoggedIn() === false) {
-                reject(message.loginFailed);
+                throw new Error(message.loginFailed);
             }
-            axios
-                .delete(
-                    config.deleteUserUrl + userId,
-                    { headers: headers }
-                )
-                .then((result) => {
-                    console.log('Delete user services result: ', result);
-                    resolve(result.data);
-                })
-                .catch((error) => {
-                    console.log('Delete user service error: ', error);
-                    if (error != null) {
-                        reject(error);
-                    }
-                });
-        });
+            const url = config.deleteUserUrl + userId;
+            const options = {
+                headers: {
+                    ...headers,
+                    Authorization: localStorage.getItem("_token")
+                }
+            };
+            const result = await axios.delete(url, options);
+            if (result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an issue while deleting user. Please contact support.");
+            }
+        } catch (e) {
+            throw new Error(e.message);
+        }
+        // headers.Authorization = localStorage.getItem("_token");
+        // return new Promise((resolve, reject) => {
+        //     if (isLoggedIn() === false) {
+        //         reject(message.loginFailed);
+        //     }
+        //     axios
+        //         .delete(
+        //             config.deleteUserUrl + userId,
+        //             { headers: headers }
+        //         )
+        //         .then((result) => {
+        //             console.log('Delete user services result: ', result);
+        //             resolve(result.data);
+        //         })
+        //         .catch((error) => {
+        //             console.log('Delete user service error: ', error);
+        //             if (error != null) {
+        //                 reject(error);
+        //             }
+        //         });
+        // });
     },
+
     createUser: async (payload) => {
-        headers.Authorization = localStorage.getItem("_token");
-        return new Promise((resolve, reject) => {
+        try {
             if (isLoggedIn() === false) {
-                reject(message.loginFailed);
+                throw new Error(message.loginFailed);
             }
-            axios
-                .post(
-                    config.userUrl,
-                    payload,
-                    { headers: headers }
-                )
-                .then((result) => {
-                    console.log('Create user service result: ', result);
-                    resolve(result.data);
-                })
-                .catch((error) => {
-                    console.log('Create user service error: ', error);
-                    if (error != null) {
-                        reject(error);
-                    }
-                });
-        });
+            const options = {
+                headers: {
+                    ...headers,
+                    Authorization: localStorage.getItem("_token")
+                }
+            };
+            const result = await axios.post(config.userUrl, payload, options);
+            if (result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an issue while creating user. Please contact support.");
+            }
+        } catch (e) {
+            throw new Error(e.message);
+        }
     },
+
     editUser: async (payload) => {
-        headers.Authorization = localStorage.getItem("_token");
-        return new Promise((resolve, reject) => {
-            axios
-                .put(
-                    config.userUrl + "/" + payload.id,
-                    payload,
-                    { headers: headers }
-                )
-                .then((result) => {
-                    console.log('Create user service result: ', result);
-                    resolve(result.data);
-                })
-                .catch((error) => {
-                    console.log('Create user service error: ', error);
-                    if (error != null) {
-                        reject(error);
-                    }
-                });
-        });
+        try {
+            const url = config.userUrl + "/" + payload.id;
+            const options = {
+                headers: {
+                    ...headers,
+                    Authorization: localStorage.getItem("_token")
+                }
+            };
+            const result = await axios.put(url, payload, options);
+            if (result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an issue while updating the user. Please contact support.");
+            }
+        } catch (e) {
+            throw new Error(e.message);
+        }
     },
+
     fetchGroupsByRoleId: async (roleId) => {
-        headers.Authorization = localStorage.getItem("_token");
         try {
             const getGroups = await axios.get(
                 config.fetchGroups + roleId,
-                { headers: headers }
+                {
+                    headers: {
+                        ...headers,
+                        Authorization: localStorage.getItem("_token")
+                    }
+                }
             );
             return getGroups.data;
         } catch (error) {

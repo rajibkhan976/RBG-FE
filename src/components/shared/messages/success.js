@@ -1,10 +1,10 @@
 import react from 'react';
 
 
-const SuccessAlert = () => {
+const SuccessAlert = (props) => {
     return(
         <div className="popupMessage success">
-            <p>Message will go here</p>
+            <p>{props.message}</p>
         </div>
     )
 }

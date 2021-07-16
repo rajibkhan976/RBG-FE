@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { GroupServices } from '../../../services/authentication/GroupServices';
 import { RoleServices } from "../../../services/authentication/RoleServices";
-import { history } from "../../../helpers";
+// import { history } from "../../../helpers";
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
 import PermissionMatrix from '../../shared/PermissionMatrix';
@@ -243,24 +243,18 @@ const GroupModal = (props) => {
      * Function to fetch users based on filter
      * @returns 
      */
-    const fetchGroups = async (pageId, queryParams) => {
+    const fetchGroups = async (pageId, queryParams = null) => {
         try {
             setIsLoader(true);
-            await GroupServices.fetchGroups(pageId, queryParams)
-                .then((result) => {
-                    console.log('Group listing result', result.groups);
-                    if (result) {
-                        broadcastToParent(result);
-                        setIsLoader(false);
-                    }
-                })
-                .catch((error) => {
-                    setIsLoader(false);
-                    console.log("Group listing error", error);
-                });
+            const result = await GroupServices.fetchGroups(pageId, queryParams);
+            console.log('Group listing result', result.groups);
+            if (result) {
+                broadcastToParent(result);
+            }
         } catch (e) {
-            setIsLoader(false);
             console.log("Error in Group listing", e);
+        } finally {
+            setIsLoader(false);
         }
     }
 
@@ -282,7 +276,7 @@ const GroupModal = (props) => {
                             <h3>{editGroupId ? 'Edit ' : ''}Group</h3>
 
                             <p>
-                            Create different groups and assign permissions to each group to access modules
+                                Create different groups and assign permissions to each group to access modules
                             </p>
                         </div>
 

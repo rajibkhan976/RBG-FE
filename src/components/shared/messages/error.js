@@ -1,10 +1,10 @@
 import react from 'react';
 
 
-const ErrorAlert = () => {
+const ErrorAlert = (props) => {
     return(
         <div className="popupMessage error">
-            <p>Message will go here</p>
+            <p>{props.message}</p>
         </div>
     )
 }

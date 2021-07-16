@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 import Pagination from "../../shared/Pagination";
 import ListHead from '../auth-shared/ListHead';
 import { UserServices } from "../../../services/authentication/UserServices";
@@ -37,7 +39,7 @@ const UsersListing = (props) => {
 
     const dispatch = useDispatch();
     const isFiltered = useSelector((state) => state.user.filter);
-    
+
 
     const filterUsers = () => {
         props.toggleFilter("user");
@@ -53,12 +55,12 @@ const UsersListing = (props) => {
             // UPDATE STORE
             dispatch({
                 type: actionTypes.USER_FILTER,
-                filter : false
+                filter: false
             });
         }
 
     }, [isFiltered]);
-    
+
 
     useEffect(() => {
         /**
@@ -76,15 +78,15 @@ const UsersListing = (props) => {
     }, []);
 
     const getQueryParams = async () => {
-        let search = utils.getQueryVariable('search');
-        let group = utils.getQueryVariable('group');
-        let fromDate = utils.getQueryVariable('fromDate');
-        let toDate = utils.getQueryVariable('toDate');
-        let status = utils.getQueryVariable('status');
-        let srtBy = utils.getQueryVariable('sortBy');
-        let srtType = utils.getQueryVariable('sortType');
+        const search = utils.getQueryVariable('search');
+        const group = utils.getQueryVariable('group');
+        const fromDate = utils.getQueryVariable('fromDate');
+        const toDate = utils.getQueryVariable('toDate');
+        const status = utils.getQueryVariable('status');
+        const srtBy = utils.getQueryVariable('sortBy');
+        const srtType = utils.getQueryVariable('sortType');
 
-        let queryParams = new URLSearchParams();
+        const queryParams = new URLSearchParams();
 
         console.log('search', search)
         if (search) {
@@ -115,42 +117,34 @@ const UsersListing = (props) => {
      */
     const fetchUsers = async () => {
 
-        let pageId = utils.getQueryVariable('page');        
-        let queryParams = await getQueryParams();
-        console.log('queryParams', queryParams.toString() )
+        const pageId = utils.getQueryVariable('page');
+        const queryParams = await getQueryParams();
+        console.log('queryParams', queryParams.toString())
         try {
             setIsLoader(true);
-            await UserServices.fetchUsers(pageId, queryParams)
-                .then((result) => {
-                    console.log('User listing result', result.users);
-                    if (result) {
-                        setUsersData(result.users);
-                        setUsersCount(result.pagination.count);
-                        setPaginationData({
-                            ...paginationData,
-                            currentPage: result.pagination.currentPage,
-                            totalPages: result.pagination.totalPages
-                        });
-                        setIsLoader(false);
-                    }
-                })
-                .catch((error) => {
-                    setIsLoader(false);
-                    console.log("User listing error", error);
+            const result = await UserServices.fetchUsers(pageId, queryParams);
+                // .then((result) => {
+            console.log('User listing result', result.users);
+            if (result) {
+                setUsersData(result.users);
+                setUsersCount(result.pagination.count);
+                setPaginationData({
+                    ...paginationData,
+                    currentPage: result.pagination.currentPage,
+                    totalPages: result.pagination.totalPages
                 });
+            }
         } catch (e) {
-            setIsLoader(false);
+            // setIsLoader(false);
             console.log("Error in User listing", e);
+        } finally {
+            setIsLoader(false);
         }
     }
 
-    
-    /**
-     * Handle pagination click
-     */
-    const paginationCallbackHandle = () => {
-        fetchUsers();
-    }
+    // const paginationCallbackHandle = () => {
+    //     fetchUsers();
+    // }
 
 
     /**
@@ -187,27 +181,24 @@ const UsersListing = (props) => {
                  * Check and delete organization along with its owner
                  */
                 if (user.isOrganizationOwner) {
-                    await OrganizationServices.delete(user.organization._id)
-                        .then(result => {
-                            console.log("Organization deleted")
-                        })
+                    await OrganizationServices.delete(user.organization._id);
                 }
 
                 /**
                  * Delete the user
                  */
-                await UserServices.deleteUser(user._id)
-                    .then((result) => {
-                        if (result) {
-                            console.log('Role delete result', result);
-                            const newList = usersData.filter((u) => u._id !== user._id);
-                            setUsersData(newList);
-                            setOption(null);
-                        }
-                    })
-                    .catch((error) => {
-                        console.log("Role delete error", error);
-                    });
+                const result = await UserServices.deleteUser(user._id)
+                    // .then((result) => {
+                if (result) {
+                    console.log('Role delete result', result);
+                    const newList = usersData.filter((u) => u._id !== user._id);
+                    setUsersData(newList);
+                    setOption(null);
+                }
+                    // })
+                    // .catch((error) => {
+                    //     console.log("Role delete error", error);
+                    // });
             } catch (e) {
                 console.log("Error in Role delete", e);
             }
@@ -261,12 +252,12 @@ const UsersListing = (props) => {
         <div className="dashInnerUI">
             {isLoader ? <Loader /> : ''}
             <ListHead
-            toggleCreateHeader={toggleCreateHeader}
-            filterUsers={filterUsers}
-            handleSearch={handleSearch}
-            handleKeywordChange={handleKeywordChange}
-            usersCount={usersCount}
-            keyword={keyword}
+                toggleCreateHeader={toggleCreateHeader}
+                filterUsers={filterUsers}
+                handleSearch={handleSearch}
+                handleKeywordChange={handleKeywordChange}
+                usersCount={usersCount}
+                keyword={keyword}
             />
             {usersCount ?
                 <>
@@ -310,7 +301,14 @@ const UsersListing = (props) => {
                                                 <li className="owerInfo">
                                                     <div className="userName">
                                                         <button className="btn">
-                                                            <img className="thumbImg" src={elem.image ? (config.bucketUrl + elem.image) : owner_img_1} alt="avatar" />
+                                                            {/* <img className="thumbImg" src={elem.image ? (config.bucketUrl + elem.image) : owner_img_1} alt="avatar" /> */}
+                                                            <LazyLoadImage
+                                                                className="thumbImg"
+                                                                src={elem.image ? (config.bucketUrl + elem.image) : owner_img_1}
+                                                                alt="avatar"
+                                                                effect="blur"
+                                                                placeholderSrc={owner_img_1}
+                                                            />
                                                             <p>{elem.firstName + ' ' + elem.lastName}</p>
                                                         </button>
                                                     </div>
@@ -417,11 +415,13 @@ const UsersListing = (props) => {
                             </ul>
                         </div>
                     </div>
+                    {usersCount > paginationData.limit?
                     <Pagination
                         type="user"
                         paginationData={paginationData}
                         dataCount={usersCount}
-                        callback={paginationCallbackHandle} />
+                        callback={fetchUsers} />:''
+                    }
                 </> :
                 <div className="createNew">
                     <span>

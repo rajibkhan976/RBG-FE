@@ -7,9 +7,9 @@ import * as actionTypes from "../../../actions/types";
 import Loader from "../../shared/Loader";
 import ListHead from '../auth-shared/ListHead';
 
-import search_icon from "../../../assets/images/search_icon.svg";
-import filter_icon from "../../../assets/images/filter_icon.svg";
-import plus_icon from "../../../assets/images/plus_icon.svg";
+// import search_icon from "../../../assets/images/search_icon.svg";
+// import filter_icon from "../../../assets/images/filter_icon.svg";
+// import plus_icon from "../../../assets/images/plus_icon.svg";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 
 import { utils } from "../../../helpers";
@@ -42,12 +42,12 @@ const GroupListing = (props) => {
         props.toggleFilter("groups");
     };
 
-    /**
-     * Handle pagination click
-     */
-     const paginationCallbackHandle = () => {
-        fetchGroups();
-    }
+    // /**
+    //  * Handle pagination click
+    //  */
+    //  const paginationCallbackHandle = () => {
+    //     fetchGroups();
+    // }
 
     /**
      * Set filtered data
@@ -70,7 +70,7 @@ const GroupListing = (props) => {
     /**
      * Get all query params
      */
-     const getQueryParams = async () => {
+    const getQueryParams = async () => {
         let keyword = utils.getQueryVariable('search');
         let fromDt = utils.getQueryVariable('fromDate');
         let toDt = utils.getQueryVariable('toDate');
@@ -124,18 +124,18 @@ const GroupListing = (props) => {
          * Get page id and keyword from URL
          */
         setSortBy(utils.getQueryVariable('sortBy'));
-        setSortType(utils.getQueryVariable('sortType')); 
-         /**
-          * Call to fetch roles
-          */
-         fetchGroups();
+        setSortType(utils.getQueryVariable('sortType'));
+        /**
+         * Call to fetch roles
+         */
+        fetchGroups();
     }, []);
 
     /**
      * Function to fetch users
      * @returns 
      */
-     const fetchGroups = async () => {
+    const fetchGroups = async () => {
         let pageId = utils.getQueryVariable('page') || 1;
         let queryParams = await getQueryParams();
 
@@ -148,9 +148,9 @@ const GroupListing = (props) => {
                 /**
                  * Update store
                  */
-                 dispatch({
+                dispatch({
                     type: actionTypes.GROUP_COUNT,
-                    count : result.pagination.count
+                    count: result.pagination.count
                 })
                 setPaginationData({
                     ...paginationData,
@@ -166,27 +166,27 @@ const GroupListing = (props) => {
         }
     }
 
-    /**
-     * Get user from pagination component
-     * @param {*} dataFromChild 
-     */
-     const getDataFn = (dataFromChild) => {
-        console.log('Data from child', dataFromChild);
-        if (dataFromChild) {
-            setGroupsData(dataFromChild.groups);
-            //Set current page
-            setPaginationData({
-                ...paginationData,
-                currentPage: dataFromChild.pagination.currentPage,
-                totalPages: dataFromChild.pagination.totalPages
-            });
-        }
-    }
+    // /**
+    //  * Get user from pagination component
+    //  * @param {*} dataFromChild 
+    //  */
+    //  const getDataFn = (dataFromChild) => {
+    //     console.log('Data from child', dataFromChild);
+    //     if (dataFromChild) {
+    //         setGroupsData(dataFromChild.groups);
+    //         //Set current page
+    //         setPaginationData({
+    //             ...paginationData,
+    //             currentPage: dataFromChild.pagination.currentPage,
+    //             totalPages: dataFromChild.pagination.totalPages
+    //         });
+    //     }
+    // }
 
     /**
      * Handle options toggle
      */
-     const toggleOptions = (index) => {
+    const toggleOptions = (index) => {
         // setOption(index !== null ? (option !== null ? null : index) : null);
         setOption(index !== option ? index : null);
     };
@@ -194,7 +194,7 @@ const GroupListing = (props) => {
     /**
      * Update keyword
      */
-     const handleKeywordChange = (event) => {
+    const handleKeywordChange = (event) => {
         setKeyword(event.target.value ? event.target.value : '');
         console.log('Keyword', keyword);
     }
@@ -206,11 +206,11 @@ const GroupListing = (props) => {
         event.preventDefault();
 
         utils.addQueryParameter('page', 1);
-        if(keyword) {
+        if (keyword) {
             utils.addQueryParameter('search', keyword);
         } else {
             utils.removeQueryParameter('search');
-        } 
+        }
 
         fetchGroups();
     }
@@ -218,7 +218,7 @@ const GroupListing = (props) => {
     /**
      * Edit group
      */
-     const editGroup = (group) => {
+    const editGroup = (group) => {
         console.log('Edit group Id', group);
         toggleCreateHeader(group);
         setOption(null);
@@ -228,26 +228,25 @@ const GroupListing = (props) => {
      * Delete group
      */
     const deleteGroup = async (group) => {
-        if(!window.confirm("Are you sure! want to delete the organization and its owner?")) return;
+        if (!window.confirm("Are you sure! want to delete the organization and its owner?")) return;
         try {
             /**
              * Delete the group
              */
-            await GroupServices.deleteGroup(group._id)
-                .then((result) => {
-                    if (result) {
-                        console.log('Group delete result', result);
-                        const newList = groupsData.filter((g) => g._id !== group._id);
-                        setGroupsData(newList);
-                        setOption(null);
-                    }
-                });
+            const result = await GroupServices.deleteGroup(group._id);
+            if (result) {
+                console.log('Group delete result', result);
+                const newList = groupsData.filter((g) => g._id !== group._id);
+                setGroupsData(newList);
+                setOption(null);
+                setGroupsCount(groupsCount-1);
+            }
         } catch (e) {
             console.log("Error in Group delete", e);
         }
     }
 
-    const handleSortBy = (field) => {       
+    const handleSortBy = (field) => {
         // Set sort type
         let type = "asc"
         if (field == sortBy) {
@@ -255,10 +254,10 @@ const GroupListing = (props) => {
                 type = "dsc";
             }
         }
-        
+
         // Set state and Update query param
         setSortBy(field);
-        setSortType(type); 
+        setSortType(type);
         utils.addQueryParameter('sortBy', field);
         utils.addQueryParameter('sortType', type);
 
@@ -276,9 +275,8 @@ const GroupListing = (props) => {
                 toggleCreateHeader={toggleCreateHeader}
                 keyword={keyword}
                 handleKeywordChange={handleKeywordChange}
-                toggleCreateHeader={toggleCreateHeader}
             />
-            
+
             <div className="userListBody">
                 <div className="listBody">
                     <ul className="tableListing">
@@ -396,7 +394,7 @@ const GroupListing = (props) => {
                     </ul>
                 </div>
             </div>
-            { groupsCount? <Pagination paginationData={paginationData} dataCount={groupsCount} callback={paginationCallbackHandle} /> : '' }
+            {groupsCount > paginationData.limit ? <Pagination paginationData={paginationData} dataCount={groupsCount} callback={fetchGroups} /> : ''}
         </div>
     )
 }

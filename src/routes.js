@@ -3,13 +3,10 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { UnProtectedRoute } from "./middleware/UnProtectedRoute";
 import { ProtectedRoute } from "./middleware/ProtectedRoute";
-import DashboardRoutes from "./components/dashboard/DashboardRoutes";
 import { isLoggedIn } from "./services/authentication/AuthServices";
-import NotFound from "./components/shared/NotFound";
 import MainComponent from './components/MainComponent'
 
 import Login from "./components/authentication/login/Login";
-import Dashboard from "./components/dashboard/Dashboard";
 import AuthActions from "./actions/AuthActions";
 
 const Routes = () => {

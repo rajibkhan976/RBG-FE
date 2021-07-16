@@ -3,7 +3,7 @@ import RolesListing from "./RolesListing";
 
 import RoleCreateModal from "../../shared/RoleModal";
 import RoleFilter from "./RoleFilter";
-import SuccessAlert from "../../shared/messages/success";
+// import SuccessAlert from "../../shared/messages/success";
 
 const Roles = () => {
   const [createButton, setCreateButton] = useState(null);

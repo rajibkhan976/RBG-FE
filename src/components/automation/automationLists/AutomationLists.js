@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
-import { NavLink } from "react-router-dom";
+// import { NavLink } from "react-router-dom";
 import flash_red from "../../../assets/images/flash_red.svg";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
-import apis from "../automationcanvas/services";
+// import apis from "../automationcanvas/services";
 import Loader from "../../shared/Loader";
 import moment from "moment";
 import ListHeader from "../automation-shared/ListHeader";
@@ -210,7 +210,8 @@ const AutomationLists = (props) => {
       }
     } catch (e) {
       // Alert for any exception. [Later need to change in error component];
-      window.alert(e.message);
+      // window.alert(e.message);
+      console.log("Error Listing Automation",e);
     } finally {
       // Disable the loader
       setIsLoader(false);
@@ -525,7 +526,7 @@ const AutomationLists = (props) => {
             )}
           </div>
         </div>
-        {automationData.count ? (
+        {automationData.count > 10 ? (
           <Pagination
             type="automation"
             paginationData={paginationData}

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { useDispatch } from "react-redux";
 import moment from "moment";
 import * as actionTypes from "../../../actions/types";
-
+import { ErrorAlert, SuccessAlert } from '../../shared/messages';
 import Pagination from "../../shared/Pagination";
 import ListHead from '../auth-shared/ListHead';
 
@@ -69,12 +69,12 @@ const RolesListing = (props) => {
      * Get all query params
      */
     const getQueryParams = async () => {
-        let keyword = utils.getQueryVariable('search');
-        let fromDt = utils.getQueryVariable('fromDate');
-        let toDt = utils.getQueryVariable('toDate');
-        let srtBy = utils.getQueryVariable('sortBy');
-        let srtType = utils.getQueryVariable('sortType');
-        let queryParams = new URLSearchParams();
+        const keyword = utils.getQueryVariable('search');
+        const fromDt = utils.getQueryVariable('fromDate');
+        const toDt = utils.getQueryVariable('toDate');
+        const srtBy = utils.getQueryVariable('sortBy');
+        const srtType = utils.getQueryVariable('sortType');
+        const queryParams = new URLSearchParams();
         if (keyword) {
             queryParams.append("search", keyword);
         }
@@ -286,20 +286,14 @@ const RolesListing = (props) => {
                 toggleCreateHeader={toggleCreateHeader}
                 keyword={keyword}
                 handleKeywordChange={handleKeywordChange}
-                toggleCreateHeader={toggleCreateHeader}
             />
-            
-            <div className="userListBody">
-                {successMsg &&
-                    <div className="success successMsg">
-                        <p>{successMsg}</p>
-                    </div>
+            {successMsg &&
+                    <SuccessAlert message={successMsg}></SuccessAlert>
                 }
                 {errorMsg &&
-                    <div className="error errorMsg">
-                        <p>{errorMsg}</p>
-                    </div>
+                    <ErrorAlert message={errorMsg}></ErrorAlert>
                 }
+            <div className="userListBody">
                 <div className="listBody" ref={optionsToggleRef}>
                     <ul className="tableListing">
                         <li className="listHeading userRole">
@@ -421,7 +415,7 @@ const RolesListing = (props) => {
                     </ul>
                 </div>
             </div>
-            {rolesCount ? <Pagination
+            {rolesCount > paginationData.limit ? <Pagination
                 type="role"
                 paginationData={paginationData}
                 dataCount={rolesCount}

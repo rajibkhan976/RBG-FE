@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { utils } from "../../../helpers";
 import { GroupServices } from "../../../services/authentication/GroupServices";
 import Loader from "../../shared/Loader";
 
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
-import arrowDown from "../../../assets/images/arrowDown.svg";
+// import arrowDown from "../../../assets/images/arrowDown.svg";
 
 const GroupFilter = (props) => {
     const [group, setGroup] = useState('');
@@ -32,21 +32,21 @@ const GroupFilter = (props) => {
      */
     const handleApplyFilter = (event) => {
         event.preventDefault();
-        let pageId = utils.getQueryVariable('page');
-        let keyword = utils.getQueryVariable('search');
+        const pageId = utils.getQueryVariable('page');
+        const keyword = utils.getQueryVariable('search');
         // let group = utils.getQueryVariable('group');
-        let fromDate = utils.getQueryVariable('fromDate');
-        let toDate = utils.getQueryVariable('toDate');
+        const fromDate = utils.getQueryVariable('fromDate');
+        const toDate = utils.getQueryVariable('toDate');
         // let status = utils.getQueryVariable('status');
 
         let queryParams = new URLSearchParams();
-        if(pageId) {
+        if (pageId) {
             queryParams.append("page", pageId);
         }
-        if(keyword) {
+        if (keyword) {
             queryParams.append("search", keyword);
         }
-        if(fromDate && toDate){
+        if (fromDate && toDate) {
             queryParams.append('fromDate', fromDate);
             queryParams.append('toDate', toDate);
         }
@@ -72,22 +72,19 @@ const GroupFilter = (props) => {
     const fetchGroups = async (pageId, queryParams) => {
         try {
             setIsLoader(true);
-            await GroupServices.fetchGroups(pageId, queryParams)
-                .then((result) => {
-                    console.log('Group listing result', result.groups);
-                    if (result) {
-                        broadcastToParent(result);
-                        // props.setStateFilter(null);
-                        setIsLoader(false);
-                    }
-                })
-                .catch((error) => {
-                    setIsLoader(false);
-                    console.log("Group listing error", error);
-                });
+            const result = await GroupServices.fetchGroups(pageId, queryParams);
+            // .then((result) => {
+            console.log('Group listing result', result.groups);
+            if (result) {
+                broadcastToParent(result);
+                // props.setStateFilter(null);
+                // setIsLoader(false);
+            }
         } catch (e) {
-            setIsLoader(false);
+            // setIsLoader(false);
             console.log("Error in Group listing", e);
+        } finally {
+            setIsLoader(false);
         }
     }
 
@@ -97,7 +94,7 @@ const GroupFilter = (props) => {
     const handleDateChange = (event) => {
         event.preventDefault();
         utils.addQueryParameter(event.target.name, event.target.value);
-        if( event.target.name === 'fromDate'){
+        if (event.target.name === 'fromDate') {
             setFromDate(event.target.value);
         } else {
             setToDate(event.target.value);
@@ -105,18 +102,14 @@ const GroupFilter = (props) => {
         console.log(event.target.name, event.target.value);
     }
 
-    /**
-     * Handle status change
-     * @param {*} event 
-     */
-    const handleStatusChange = (event) => {
-        setStatus(event.target.value);
-        if(event.target.value) {
-            utils.addQueryParameter('status', event.target.value);
-        } else {
-            utils.removeQueryParameter('status');
-        }
-    }
+    // const handleStatusChange = (event) => {
+    //     setStatus(event.target.value);
+    //     if (event.target.value) {
+    //         utils.addQueryParameter('status', event.target.value);
+    //     } else {
+    //         utils.removeQueryParameter('status');
+    //     }
+    // }
 
     /**
      * Handle reset filter
@@ -164,7 +157,7 @@ const GroupFilter = (props) => {
                                         <div className="formField w-50">
                                             <p>To</p>
                                             <div className="inFormField">
-                                                <input type="date" name="toDate" id="toDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} value={toDate}/>
+                                                <input type="date" name="toDate" id="toDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} value={toDate} />
                                             </div>
                                         </div>
                                     </div>
