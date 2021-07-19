@@ -261,28 +261,31 @@ const AutomationLists = (props) => {
       return () => {
           document.removeEventListener("mousedown", handleClickOutside);
       }
-  }, []);
+  }, [automationData.data]);
   
   const handleClickOutside = (event) => {
     if (optionsToggleRef.current.contains(event.target)) {
-      //console.log('// inside click');
       return;
     }
-    //console.log('// outside click');
-    const data = automationData.data;
 
-    data.map((ex) => {
-      if(ex.isEditing == true) {
-        ex.isEditing = false;
-      } else {
-        ex.isEditing = ex.isEditing;
-      }
-    });
-    
-    setAutomationData({
-      data: data,
-      count: automationData.count,
-    });
+    if (automationData.data.length > 0) {
+      const data = automationData.data;
+
+      data.map((ex) => {
+        if(ex.isEditing == true) {
+          ex.isEditing = false;
+          console.log(data);
+        } else {
+          ex.isEditing = ex.isEditing;
+          console.log(data);
+        }
+      });
+      
+      setAutomationData({
+        data: data,
+        count: automationData.count,
+      });
+    }
   }
 
   return (
