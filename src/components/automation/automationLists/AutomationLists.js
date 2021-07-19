@@ -272,15 +272,17 @@ const AutomationLists = (props) => {
     const data = automationData.data;
 
     data.map((ex) => {
-      ex.isEditing = false;
+      if(ex.isEditing == true) {
+        ex.isEditing = false;
+      } else {
+        ex.isEditing = ex.isEditing;
+      }
     });
     
     setAutomationData({
       data: data,
       count: automationData.count,
     });
-
-    console.log(data);
   }
 
   return (
