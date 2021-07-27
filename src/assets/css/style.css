@@ -3363,3 +3363,13 @@ span.userProfilePic img {
   width: 155px;
   transform: translateY(-3px);
 }
+
+
+.errorField .errorMsg {
+  display: block;
+}
+
+.errorField input {
+  border: 1px solid #c74854;
+  background-color: #fff4f4;
+}

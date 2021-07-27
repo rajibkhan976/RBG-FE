@@ -30,7 +30,7 @@ const Login = (props) => {
     let emailValid = props.emailValid;
     let passwordValid = props.passwordValid;
     emailValid = email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-    passwordValid = password.length >= 6;
+    passwordValid = password.length >= 1;
     if (type === "email" && email.length) {
       setFormErrors({
         ...formErrors,
@@ -68,6 +68,13 @@ const Login = (props) => {
     if (!password) {
       isError = true;
       formErrorsCopy.password = "Please fillup the password";
+    }
+
+    /**
+     * Validation 
+     */
+    if(formErrorsCopy.email || formErrorsCopy.password) {
+      isError = true;
     }
 
     /**
@@ -118,14 +125,14 @@ const Login = (props) => {
           </svg>
         </figure>
         <form className="formBody" onSubmit={handleSubmit}>
+          <h1>Login</h1>
           {errorMessage ? (
             <div className="errorLogin text-center">{errorMessage}</div>
           ) : null}
-          <h1>Login</h1>
           <div className="formInputs">
             <label>Email</label>
 
-            <div className="inFormField">
+            <div className={formErrors.email? "inFormField errorField" : "inFormField"}>
               <input
                 type="text"
                 name="email"
@@ -133,12 +140,14 @@ const Login = (props) => {
                 onBlur={() => validateField("email")}
                 placeholder="Email"
               />
+              {formErrors.email ? (
+                <div className="errorMsg">{formErrors.email}</div>
+              ) : null}
             </div>
           </div>
           <div className="formInputs">
             <label>Password</label>
-
-            <div className="inFormField">
+            <div className={formErrors.password? "inFormField errorField" : "inFormField"}>
               <input
                 type="password"
                 name="password"
@@ -146,6 +155,9 @@ const Login = (props) => {
                 onBlur={() => validateField("password")}
                 placeholder="Password"
               />
+              {formErrors.password ? (
+                <div className="errorMsg">{formErrors.password}</div>
+              ) : null}
             </div>
           </div>
           <div className="formInputs">

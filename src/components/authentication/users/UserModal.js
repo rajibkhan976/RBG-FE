@@ -11,6 +11,7 @@ import camera_icon from "../../../assets/images/camera_icon.svg";
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import plus_icon from "../../../assets/images/plus_icon.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
+import { GroupServices } from '../../../services/authentication/GroupServices';
 
 
 const UserModal = (props) => {
@@ -33,7 +34,8 @@ const UserModal = (props) => {
         phoneNumber: "",
         email: "",
         orgName: "",
-        orgDescription: ""
+        orgDescription: "",
+        groupName: ""
     });
     const [roles, setRoles] = useState(null);
     const [groups, setGroups] = useState(null);
@@ -43,9 +45,13 @@ const UserModal = (props) => {
     const [isLoader, setIsLoader] = useState(false);
     const [editId, setEditId] = useState("");
     const [permissionData, setPermissionData] = useState([]);
+    const [copyPermissionData, setCopyPermissionData] = useState([]);
     const [isOrgPermission, setIsOrgPermission] = useState(false);
     const [isModifiedPermission, setIsModifiedPermission] = useState(false);
     const [isEmailNotification, setIsEmailNotification] = useState(false);
+    const [groupName, setGroupName] = useState('');
+    // const [newGroupId, setNewGroupId] = useState('');
+
 
 
     const closeSideMenu = (e) => {
@@ -54,6 +60,7 @@ const UserModal = (props) => {
     };
 
     let editUser = props.createButton ? props.createButton : false;
+    let temp = [];
 
     useEffect(() => {
         setImage(editUser.image ? (config.bucketUrl + editUser.image) : null);
@@ -65,7 +72,7 @@ const UserModal = (props) => {
         if (editUser && editUser.role && editUser.group) {
             setRoleId(editUser.role[0]._id);
             getGroupsByRoleId(editUser.role[0]._id);
-            setEditGroupId(editUser.group[0]._id);
+            setGroupId(editUser.group[0]._id);
             setPermissionData(editUser.group[0].permissions);
         }
 
@@ -87,7 +94,7 @@ const UserModal = (props) => {
         if (!editUser) {
             console.log('Reset permissions');
             setRoleId('');
-            setEditGroupId('');
+            setGroupId('');
             setPermissionData([]);
         }
 
@@ -167,8 +174,8 @@ const UserModal = (props) => {
     const fetchRoles = async (pageId, keyword) => {
         try {
             const result = await RoleServices.fetchRoles(pageId, keyword);
-                // .then((result) => {
-                    // console.log('Role drop-down result', result.roles);
+            // .then((result) => {
+            // console.log('Role drop-down result', result.roles);
             if (result) {
                 setRoles(result.roles);
             } else {
@@ -276,15 +283,26 @@ const UserModal = (props) => {
         console.log('gc', event.target.value);
         let groupId = event.target.value;
         setGroupId(groupId);
-        var selectedGroup = groups.filter(group => {
+        let selectedGroup = groups.filter(group => {
             return group._id === groupId
         });
         if (selectedGroup.length) {
             console.log('Selected group', selectedGroup);
             setPermissionData(selectedGroup[0].permissions);
+            //Keep a original copy of permissions data
+            setCopyPermissionData([...selectedGroup[0].permissions]);
         } else {
             setPermissionData([]);
         }
+    }
+
+    /**
+     * Handle group name change
+     * @param {*} event 
+     */
+     const handleGroupNameChange = (event) => {
+        event.preventDefault();
+        setGroupName(event.target.value);
     }
 
     /**
@@ -292,11 +310,25 @@ const UserModal = (props) => {
      * @param {*} dataFromChild
      */
     const getDataFn = (dataFromChild) => {
-        console.log('Data from permission matrix', dataFromChild);
-        // if (dataFromChild) {
-        //     setPermissions(dataFromChild);
-        // }
+        console.log('Data from permission matrix', copyPermissionData, dataFromChild);
+        let isEqual = equals(copyPermissionData, dataFromChild);
+        //If pemission data not equal with original permission data
+        if (!isEqual) {
+            //Display group name input box
+            setIsModifiedPermission(true);
+        } else {
+            //Hide group name input box
+            setIsModifiedPermission(false);
+        }
     }
+
+    /**
+     * Function to compare two arrays
+     * @param {*} a 
+     * @param {*} b 
+     * @returns 
+     */
+    const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
     /**
      * Handle submit
@@ -353,6 +385,14 @@ const UserModal = (props) => {
         }
 
         /**
+         * Check new group name
+         */
+        if (isModifiedPermission && !groupName) {
+            isError = true;
+            formErrorsCopy.groupName = "Please fillup the group name";
+        }
+
+        /**
          * Check the erros flag
          */
         if (isError) {
@@ -366,7 +406,8 @@ const UserModal = (props) => {
                 phoneNumber: formErrors.phoneNumber,
                 email: formErrors.email,
                 orgName: formErrors.orgName,
-                orgDescription: formErrors.orgDescription
+                orgDescription: formErrors.orgDescription,
+                groupName: formErrors.groupName
             });
             setTimeout(
                 () => setFormErrors({
@@ -374,12 +415,33 @@ const UserModal = (props) => {
                     firstName: "",
                     lastName: "",
                     phoneNumber: "",
-                    email: ""
+                    email: "",
+                    groupName: ""
                 }),
                 5000
             );
             console.log('formErrors', formErrors)
         } else {
+            /**
+             * Submit group create form
+             * Add group name if given new permissions
+             */
+             let newGroupId = '';
+             if(isModifiedPermission){
+                //payload.groupName = groupName;
+                let oprationMethod = "createGroup";
+                let groupPayload = {
+                    name: groupName,
+                    roleId: roleId,
+                    permissions: permissionData
+                };
+                const result = await GroupServices[oprationMethod](groupPayload)
+                if (result) {
+                    newGroupId = (result._id);
+                    console.log('Group created successfully', result._id);
+                }
+            }
+            
 
             /**
              * Submit organization create form 
@@ -428,7 +490,7 @@ const UserModal = (props) => {
 
             //Submit the form
             console.log('Submit the form if no errors');
-            console.log('group id under handle submit', groupId);
+            console.log('group id under handle submit', newGroupId, groupId);
             /**
              * Submit user create form
              */
@@ -437,7 +499,7 @@ const UserModal = (props) => {
                 lastName: lastName,
                 phone: phoneNumber,
                 email: email,
-                groupId: groupId,
+                groupId: newGroupId ? newGroupId : groupId,
                 image: profilePicName,
                 organizationId: organizationId,
                 isOwner: isOwner
@@ -451,6 +513,7 @@ const UserModal = (props) => {
                 operationMethod = "editUser";
                 payload.id = editId;
             }
+
 
             try {
                 await UserServices[operationMethod](payload)
@@ -480,7 +543,7 @@ const UserModal = (props) => {
             {props.createButton !== null && (
                 <div className="sideMenuOuter createSideModal sideUser">
                     <div className="sideMenuInner">
-                    {isLoader ? <Loader /> : ''}
+                        {isLoader ? <Loader /> : ''}
                         <button
                             className="btn btn-closeSideMenu"
                             onClick={(e) => closeSideMenu(e)}
@@ -604,8 +667,8 @@ const UserModal = (props) => {
 
                                             {!editId && isOrgPermission && (
                                                 <div className="formField">
-                                                    <p className="">Is it organization owner? 
-                                                        
+                                                    <p className="">Is it organization owner?
+
                                                         <div className="customCheckbox marginLeft">
                                                             <input
                                                                 type="checkbox"
@@ -705,7 +768,7 @@ const UserModal = (props) => {
                                                                         backgroundImage: "url(" + arrowDown + ")",
                                                                     }}
                                                                     onChange={handleGroupChange}
-                                                                    value={editGroupId ? editGroupId : (groupId ? groupId : '')}
+                                                                    value={(groupId ? groupId : '')}
                                                                 >
                                                                     <option value="">Select group</option>
                                                                     {groups ? groups.map((el, key) => {
@@ -731,16 +794,18 @@ const UserModal = (props) => {
                                         * You can customize permissions for this user based on your need.
                                     </p>
                                     {isModifiedPermission && <div className="newGroupName">
-                                        <div className="formField w-50">
+                                        <div className={formErrors.groupName ? "formField w-50 error" : "formField w-50"}>
                                             <p>Create a new group with the new permissions *</p>
                                             <div className="inFormField">
                                                 <input
                                                     type="text"
                                                     name=""
-
                                                     placeholder="Enter a new group name"
+                                                    defaultValue={groupName}
+                                                    onChange={handleGroupNameChange}
                                                 />
                                             </div>
+                                            {formErrors.groupName ? <span className="errorMsg">{formErrors.groupName}</span> : ''}
                                         </div>
                                     </div>}
                                     {isEmailNotification && <div className="enableNotification">
