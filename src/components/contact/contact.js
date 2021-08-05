@@ -1,15 +1,24 @@
-import React from "react";
+import React, {useState} from "react";
 import ContactListing from "./ContactListing";
 
-import ImportContactModal from "./importContactModal";
+import ImportContact from "./importContact";
 
-const contact = () => {
-  return (
+const Contact = () => {
+    const [isModal, setIsModal] = useState(false);
+    const openModal = () => {
+      setIsModal(true);
+    }
+    const hideModal = () => {
+        setIsModal(false);
+    }
+    return (
     <>
-      <ContactListing />
-      <ImportContactModal />
+      <ContactListing openModal={() => {openModal()}}/>
+        { isModal &&
+            <ImportContact hideModal={() => {hideModal()}} />
+        }
     </>
-  );
+    );
 };
 
-export default contact;
+export default Contact;

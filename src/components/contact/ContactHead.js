@@ -2,8 +2,7 @@ import React from 'react';
 import download_icon from '../../../src/assets/images/download_icon.svg';
 import uparrow_icon_grey from '../../../src/assets/images/uparrow_icon_grey.svg';
 
-const ContactHead = () => {
-
+const ContactHead = (props) => {
     return (
         <div className="contactHead">
             <div class="userListHead">
@@ -38,7 +37,7 @@ const ContactHead = () => {
                     <button className="saveNnewBtn massUpdateBtn">Mass Update</button>
                 </div>
                 <div className="head_ctrlRow_right">
-                    <button className="saveNnewBtn impContactBtn"><img src={download_icon} alt="" /> Import Contacts</button>
+                    <button className="saveNnewBtn impContactBtn" onClick={() => props.openImportContact()}><img src={download_icon} alt="" /> Import Contacts</button>
                     <button className="saveNnewBtn expContactBtn"><img src={uparrow_icon_grey} alt="" /> Export Contacts</button>
                 </div>
             </div>

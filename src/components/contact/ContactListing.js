@@ -5,11 +5,11 @@ import owner_img_1 from '../../../src/assets/images/owner_img_1.png';
 
 
 
-const ContactListing = () => {
+const ContactListing = (props) => {
 
     return (
         <div className="dashInnerUI">
-            <ContactHead></ContactHead>
+            <ContactHead openImportContact={() => props.openModal()}></ContactHead>
             <div className="userListBody">
                 <div className="listBody">
                     <ul className="tableListing">

@@ -2770,7 +2770,10 @@ span.userProfilePic img {
 }
 
 .importModalBody {
-  padding: 20px 30px;
+  padding: 5px 30px;
+}
+.importModalStep {
+  padding: 5px 30px;
   height: calc(100vh - 210px);
 }
 
@@ -2796,6 +2799,9 @@ span.userProfilePic img {
 }
 
 .importModalBody .infoInputs {
+  margin-top: 30px;
+}
+.importModalStep .infoInputs {
   margin-top: 30px;
 }
 
@@ -3079,9 +3085,8 @@ span.userProfilePic img {
 .importModalBody .accoRowBody .infoInputs {
   margin-top: 10px;
 }
-
-.accoRow.collapse .accoRowBody{
-  display: none;
+.importModalStep .accoRowBody .infoInputs {
+  margin-top: 10px;
 }
 
 .accoRow.collapse .accoToggler {
