@@ -911,7 +911,6 @@ input:focus + .searchIco #search-ico .a,
 }
 
 .searchBar {
-  border: #C7DAEB;
   width: 423px;
   height: 40px;
   background: #fff;
@@ -1150,6 +1149,7 @@ li.listHeading>div.dsc::after {
   color: #305671;
   font-size: 13px;
   text-decoration: none;
+  min-height: 38px;
 }
 
 .emailID .btn {
@@ -2770,10 +2770,7 @@ span.userProfilePic img {
 }
 
 .importModalBody {
-  padding: 5px 30px;
-}
-.importModalStep {
-  padding: 5px 30px;
+  padding: 20px 30px;
   height: calc(100vh - 210px);
 }
 
@@ -2799,9 +2796,6 @@ span.userProfilePic img {
 }
 
 .importModalBody .infoInputs {
-  margin-top: 30px;
-}
-.importModalStep .infoInputs {
   margin-top: 30px;
 }
 
@@ -2835,6 +2829,7 @@ span.userProfilePic img {
   margin: 0;
   height: 16px;
   width: 16px;
+  border-radius: 3px;
   position: absolute;
   z-index: 5;
   left: 0;
@@ -2863,7 +2858,7 @@ span.userProfilePic img {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #305671 url("../images/done_white_24dp.svg") no-repeat center center / 10px auto;
+  background: #305671 url("../images/tick.svg") no-repeat center center / 10px auto;
   border-color: #305671;
 }
 
@@ -3085,8 +3080,9 @@ span.userProfilePic img {
 .importModalBody .accoRowBody .infoInputs {
   margin-top: 10px;
 }
-.importModalStep .accoRowBody .infoInputs {
-  margin-top: 10px;
+
+.accoRow.collapse .accoRowBody{
+  display: none;
 }
 
 .accoRow.collapse .accoToggler {
@@ -3364,14 +3360,141 @@ span.userProfilePic img {
   transform: translateY(-3px);
 }
 
-
-.errorField .errorMsg {
-  display: block;
+.extraDottedBtn {
+  float: left;
+  width: 30px;
+  height: 26px;
+  margin-top: 8px;
+  margin-right: 25px;
+  background: url("../images/sixDotted_icon.svg") no-repeat center;
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.3s ease 0s;
+}
+li:hover .extraDottedBtn {
+  opacity: 1;
 }
 
-.errorField input {
-  border: 1px solid #c74854;
-  background-color: #fff4f4;
+.tableCellUserImg {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 14px;
+}
+
+.tableListing li>div.firstCell {
+  min-width: 230px;
+}
+.tableListing li>div.userNameCell {
+  min-width: 230px;
+}
+.contactListingTable {
+  position: relative;
+  overflow-x: scroll;
+  min-height: 600px;
+}
+
+.tableDataConfigArea {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  top: 15px;
+  width: 75px;
+  height: 45px;
+}
+
+.contactListingTable .tableListing li:first-child>div:first-child{
+  padding-left: 75px;
+}
+
+.configColBtn {
+  width: 20px;
+  height: 20px;
+  background: url("../images/configCol_icon.svg") no-repeat center;
+  border: none;
+  margin-top: 5px;
+}
+
+.configColModal {
+  position: absolute;
+  z-index: 30;
+  left: 0;
+  top: 33px;
+  width: 260px;
+  height: 468px;
+  padding: 12px;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.12);
+}
+
+.configColModalHead {
+  margin-bottom: 16px;
+}
+
+.configColModalHead input {
+  width: 236px;
+  height: 40px;
+  background: #fff url("../images/search_icon.svg") no-repeat left 10px center;
+  border-radius: 5px;
+  position: relative;
+  border: 1px solid #C7DAEB;
+  color: #305671;
+  font-size: 13px;
+  font-family: 'Poppins', sans-serif;
+  padding-left: 36px;
+}
+
+.configColModalHead input:focus {
+  background-image: url("../images/search_icon_orange.svg");
+}
+
+.configColModalBody {
+  height: 330px;
+  overflow-y: scroll;
+}
+
+.configColModalBody::-webkit-scrollbar {
+  width: 4px;
+}
+.configColModalBody::-webkit-scrollbar-track {
+  background-color: #E9EFF5;
+}
+.configColModalBody::-webkit-scrollbar-thumb {
+  background-color: #305671;
+}
+
+.configColModalBody li {
+  font-size: 14px;
+  color: #305671;
+  padding: 10px 0;
+}
+.configColModalBody li:hover {
+  background: url("../images/move_icon.svg") no-repeat right 14px center;
+}
+.configColModalBody li span {
+  padding-left: 3px;
+}
+
+.configColModalfooter {
+  display: inline-block;
+  width: 100%;
+  margin-top: 14px;
+}
+
+.configColModalfooter .saveNnewBtn {
+  width: 88px;
+  float: left;
+}
+
+.configColModalfooter .btn-link {
+  background-color: transparent;
+  border: none;
+  float: right;
+  margin-top: 10px;
+  margin-right: 12px;
 }
 
 .innerDrawerMessage{

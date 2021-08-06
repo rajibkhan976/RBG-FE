@@ -5,6 +5,7 @@ import GroupReducer from "./groupReducer";
 import automationReducer from "./automationReducers";
 import PermissionReducer from "./permissionReducer";
 import userReducer from "./userReducer";
+import ContactReducer from "./contactReducers";
 
 const rootReducer = combineReducers({
     auth: AuthReducer,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
     automation: automationReducer,
     user: userReducer,
     permission: PermissionReducer,
+    contact: ContactReducer
 });
 
 export default rootReducer;

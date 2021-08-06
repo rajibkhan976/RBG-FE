@@ -38,5 +38,9 @@ module.exports = {
     // inner left menu api service
     innerLeftMenuApiUrl: "https://4gvirnff9l.execute-api.us-east-1.amazonaws.com/dev/inner-left-menu",
     // Import Contact
-    importContactUrl: 'https://04w6eb9h7e.execute-api.us-east-1.amazonaws.com/dev/contact'
+    importContactUrl: 'https://04w6eb9h7e.execute-api.us-east-1.amazonaws.com/dev/contact',
+    // Contact Service API service
+    getContactsUrl: "https://rn7zcog7n8.execute-api.us-east-1.amazonaws.com/dev/contact/list",
+    setColumnUrl: "https://g2s7gtsx35.execute-api.us-east-1.amazonaws.com/dev/contact/order",
+    getColumnUrl: "https://g2s7gtsx35.execute-api.us-east-1.amazonaws.com/dev/contact/order"
 }  

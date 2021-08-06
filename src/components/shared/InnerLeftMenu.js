@@ -17,6 +17,7 @@ const InnerLeftMenu = (props) => {
   const [groupsCount, setGroupsCount] = useState(0);
   const [usersCount, setUsersCount] = useState(0);
   const automationCount = useSelector((state) => state.automation.count);
+  const contactCount = useSelector((state) => state.contact.count);
 
   useEffect(() => {
     if (props.automationListItem) {
@@ -176,7 +177,7 @@ const InnerLeftMenu = (props) => {
                   <div className="indicator"></div>
                   <div className="linkDetails">
                     <p className="linkHeading">
-                      My Contacts <span className="notificationNumber">123</span>
+                      My Contacts <span className="notificationNumber">{contactCount}</span>
                     </p>
                     <br />
                     <p className="linkAbout">Create, import & manage your contacts</p>

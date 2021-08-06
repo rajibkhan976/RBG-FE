@@ -12,3 +12,5 @@ export const AUTOMATION_COUNT = "AUTOMATION_COUNT";
 export const USER_FILTER = "USER_FILTER";
 // Permission
 export const UPDATE_PERMISSION = "UPDATE_PERMISSION";
+// Contacts
+export const CONTACTS_COUNT = "CONTACTS_COUNT";
