@@ -5,6 +5,7 @@ import arrowDown from "../../assets/images/arrowDown.svg";
 import { useState, useEffect } from "react";
 import { RoleServices } from "../../services/authentication/RoleServices";
 import { history, utils } from "../../helpers";
+import { ErrorAlert, SuccessAlert } from './messages';
 
 const RoleModal = (props) => {
   const closeSideMenu = (e) => {
@@ -34,8 +35,17 @@ const RoleModal = (props) => {
     description: "",
   });
   const [saveAndNew, setSaveAndNew] = useState(false);
+  const messageDelay = 5000; // ms
 
   console.log("formErrors", formErrors);
+
+  /**
+   * Auto hide success or error message
+   */
+  useEffect(() => {
+    if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
+    if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
+  }, [successMsg, errorMsg])
 
   useEffect(() => {
     /**
@@ -98,7 +108,7 @@ const RoleModal = (props) => {
 
   const handleSubmit = async (event) => {
 
-  
+
     event.preventDefault();
     setProcessing(true);
 
@@ -186,13 +196,7 @@ const RoleModal = (props) => {
          */
         setProcessing(false);
         console.log("Error in role create", e)
-        if (e.response && e.response.status == 403) {
-          setErrorMsg("You dont have permission to perform this action");
-        }
-        else if (e.response && e.response.data.message) {
-          setErrorMsg(e.response.data.message);
-        }
-
+        setErrorMsg(e.message);
       }
     }
   }
@@ -219,14 +223,13 @@ const RoleModal = (props) => {
               </div>
 
               <div className="sideMenuBody">
- 
                 {successMsg &&
-                  <div className="success successMsg">
+                  <div className="popupMessage success innerDrawerMessage">
                     <p>{successMsg}</p>
                   </div>
                 }
                 {errorMsg &&
-                  <div className="error errorMsg">
+                  <div className="popupMessage error innerDrawerMessage">
                     <p>{errorMsg}</p>
                   </div>
                 }
@@ -243,8 +246,8 @@ const RoleModal = (props) => {
                         placeholder="Ex. Manager"
                       />
                     </div>
-                    
-                    {formErrors.name && 
+
+                    {formErrors.name &&
                       <span className="errorMsg">{formErrors.name}</span>
                     }
                   </div>
@@ -261,7 +264,7 @@ const RoleModal = (props) => {
                       >
                       </textarea>
                     </div>
-                    {formErrors.description && 
+                    {formErrors.description &&
                       <span className="errorMsg">{formErrors.description}</span>
                     }
                   </div>
@@ -270,8 +273,8 @@ const RoleModal = (props) => {
                     <button disabled={processing} className="creatUserBtn createBtn">
                       <span>{editRole && editRole._id ? "Save" : "Save"}</span>
                       <img className="" src={arrow_forward} alt="" />
-                    </button> 
-                   
+                    </button>
+
                     {!editRole._id && (
                       <button disabled={processing} className="saveNnewBtn"
                         onClick={handleSaveAndNew}

@@ -23,9 +23,11 @@ const GroupModal = (props) => {
         permission: ""
     });
     const [errorMsg, setErrorMsg] = useState("");
+    const [successMsg, setSuccessMsg] = useState("");
     const [permissionData, setPermissionData] = useState([]);
     const [saveAndNew, setSaveAndNew] = useState(false);
     const [editGroupId, setEditGroupId] = useState('');
+    const messageDelay = 5000; // ms
 
     let editGroup = props.createButton ? props.createButton : false;
 
@@ -43,6 +45,14 @@ const GroupModal = (props) => {
         e.preventDefault();
         props.setCreateButton(null);
     };
+
+    /**
+     * Auto hide success or error message
+     */
+    useEffect(() => {
+        if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
+        if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
+    }, [successMsg, errorMsg])
 
     useEffect(() => {
         let pageId = "all";
@@ -215,12 +225,7 @@ const GroupModal = (props) => {
                 setIsLoader(false);
                 setProcessing(false);
                 console.log("Error in role create", e)
-                if (e.response && e.response.status == 403) {
-                    setErrorMsg("You dont have permission to perform this action");
-                }
-                else if (e.response && e.response.data.message) {
-                    setErrorMsg(e.response.data.message);
-                }
+                setErrorMsg(e.message)
 
             }
 
@@ -279,6 +284,16 @@ const GroupModal = (props) => {
                                 Create different groups and assign permissions to each group to access modules
                             </p>
                         </div>
+                        {successMsg &&
+                            <div className="popupMessage success innerDrawerMessage">
+                                <p>{successMsg}</p>
+                            </div>
+                        }
+                        {errorMsg &&
+                            <div className="popupMessage error innerDrawerMessage">
+                                <p>{errorMsg}</p>
+                            </div>
+                        }
 
                         <div className="sideMenuBody">
                             <form className="formBody" onSubmit={handleSubmit}>

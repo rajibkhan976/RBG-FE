@@ -25,7 +25,7 @@ export const UserServices = {
                 throw new Error("There is an issue while fetching users. Please contact support.");
             }
         } catch (e) {
-            throw new Error(e.message);
+            throw new Error(e.response.data.message);
         }
     },
 

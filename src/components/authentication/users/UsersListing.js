@@ -10,7 +10,7 @@ import { utils } from "../../../helpers";
 import Loader from "../../shared/Loader";
 import config from "../../../configuration/config";
 import * as actionTypes from "../../../actions/types";
-
+import { ErrorAlert, SuccessAlert } from '../../shared/messages';
 import owner_img_1 from "../../../assets/images/owner_img_1.png";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 import list_board_icon from "../../../assets/images/list_board_icon.svg";
@@ -33,6 +33,10 @@ const UsersListing = (props) => {
     const [keyword, setKeyword] = useState('');
     const [option, setOption] = useState(null);
     const [isLoader, setIsLoader] = useState(false);
+    const [successMsg, setSuccessMsg] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
+    const messageDelay = 5000; // ms
+
     const toggleCreateHeader = (e) => {
         props.toggleCreate(e);
     };
@@ -60,6 +64,14 @@ const UsersListing = (props) => {
         }
 
     }, [isFiltered]);
+
+    /**
+     * Auto hide success or error message
+     */
+     useEffect(() => {
+        if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
+        if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
+    }, [successMsg, errorMsg])
 
 
     useEffect(() => {
@@ -137,15 +149,11 @@ const UsersListing = (props) => {
         } catch (e) {
             // setIsLoader(false);
             console.log("Error in User listing", e);
+            setErrorMsg(e.message);
         } finally {
             setIsLoader(false);
         }
     }
-
-    // const paginationCallbackHandle = () => {
-    //     fetchUsers();
-    // }
-
 
     /**
      * Handle options toggle
@@ -259,6 +267,12 @@ const UsersListing = (props) => {
                 usersCount={usersCount}
                 keyword={keyword}
             />
+            {successMsg &&
+                <SuccessAlert message={successMsg}></SuccessAlert>
+            }
+            {errorMsg &&
+                <ErrorAlert message={errorMsg}></ErrorAlert>
+            }
             {usersCount ?
                 <>
                     <div className="userListBody">

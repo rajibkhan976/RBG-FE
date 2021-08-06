@@ -4,13 +4,12 @@ import { isLoggedIn } from "../../services/authentication/AuthServices";
 import { message } from "../../helpers";
 
 let headers = {
-    "Content-Type": "application/json",
-    "Authorization": localStorage.getItem("_token")
+    "Content-Type": "application/json"
 };
 
 export const PermissionServices = {
     entity : async() => {
-        // headers.Authorization = localStorage.getItem("_token");
+        headers.Authorization = localStorage.getItem("_token");
         try {
             if (isLoggedIn() === false) {
                 throw new Error(message.loginFailed);
@@ -49,7 +48,7 @@ export const PermissionServices = {
     },
 
     action : async() => {
-        // headers.Authorization = localStorage.getItem("_token");
+        headers.Authorization = localStorage.getItem("_token");
         try {
             if (isLoggedIn() === false) {
                 throw new Error(message.loginFailed);
@@ -88,7 +87,7 @@ export const PermissionServices = {
     },
 
     actionType : async() => {
-        // headers.Authorization = localStorage.getItem("_token");
+        headers.Authorization = localStorage.getItem("_token");
         try {
             if (isLoggedIn() === false) {
                 throw new Error(message.loginFailed);

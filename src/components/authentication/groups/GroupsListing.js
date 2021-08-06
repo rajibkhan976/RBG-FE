@@ -14,6 +14,7 @@ import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 
 import { utils } from "../../../helpers";
 import { GroupServices } from '../../../services/authentication/GroupServices';
+import { ErrorAlert, SuccessAlert } from '../../shared/messages';
 
 const GroupListing = (props) => {
     const [dropdownPos, setDropdownPos] = useState('bottom');
@@ -33,6 +34,9 @@ const GroupListing = (props) => {
     const [option, setOption] = useState(null);
     const [sortBy, setSortBy] = useState("");
     const [sortType, setSortType] = useState("asc");
+    const [successMsg, setSuccessMsg] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
+    const messageDelay = 5000; // ms
 
     const toggleCreateHeader = (e) => {
         props.toggleCreate(e);
@@ -41,13 +45,6 @@ const GroupListing = (props) => {
     const filterGroups = () => {
         props.toggleFilter("groups");
     };
-
-    // /**
-    //  * Handle pagination click
-    //  */
-    //  const paginationCallbackHandle = () => {
-    //     fetchGroups();
-    // }
 
     /**
      * Set filtered data
@@ -66,6 +63,14 @@ const GroupListing = (props) => {
         }
 
     }, [props])
+
+    /**
+     * Auto hide success or error message
+     */
+     useEffect(() => {
+        if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
+        if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
+    }, [successMsg, errorMsg])
 
     /**
      * Get all query params
@@ -160,7 +165,7 @@ const GroupListing = (props) => {
             }
         } catch (e) {
             console.log("Error in Group listing", e);
-            throw new Error(e);
+            setErrorMsg(e.message);
         } finally {
             setIsLoader(false);
         }
@@ -239,7 +244,7 @@ const GroupListing = (props) => {
                 const newList = groupsData.filter((g) => g._id !== group._id);
                 setGroupsData(newList);
                 setOption(null);
-                setGroupsCount(groupsCount-1);
+                setGroupsCount(groupsCount - 1);
             }
         } catch (e) {
             console.log("Error in Group delete", e);
@@ -276,6 +281,12 @@ const GroupListing = (props) => {
                 keyword={keyword}
                 handleKeywordChange={handleKeywordChange}
             />
+            {successMsg &&
+                <SuccessAlert message={successMsg}></SuccessAlert>
+            }
+            {errorMsg &&
+                <ErrorAlert message={errorMsg}></ErrorAlert>
+            }
 
             <div className="userListBody">
                 <div className="listBody">

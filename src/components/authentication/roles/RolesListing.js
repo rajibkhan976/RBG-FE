@@ -53,7 +53,7 @@ const RolesListing = (props) => {
 
     useEffect(() => {
         setSortBy(utils.getQueryVariable('sortBy'));
-        setSortType(utils.getQueryVariable('sortType')); 
+        setSortType(utils.getQueryVariable('sortType'));
         fetchRoles();
     }, []);
 
@@ -61,9 +61,9 @@ const RolesListing = (props) => {
      * Auto hide success or error message
      */
     useEffect(() => {
-        if (successMsg) setTimeout(() => { setSuccessMsg("") } , messageDelay)
+        if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
         if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
-    }, [successMsg, errorMsg] )
+    }, [successMsg, errorMsg])
 
     /**
      * Get all query params
@@ -106,13 +106,13 @@ const RolesListing = (props) => {
             setIsLoader(true);
             const result = await RoleServices.fetchRoles(pageId, queryParams);
             console.log('Data', result.roles);
-            if(result) {
+            if (result) {
                 setRolesData(result.roles);
                 setRolesCount(result.pagination.count);
                 // UPDATE STORE
                 dispatch({
                     type: actionTypes.ROLE_COUNT,
-                    count : result.pagination.count
+                    count: result.pagination.count
                 });
                 setPaginationData({
                     ...paginationData,
@@ -122,14 +122,10 @@ const RolesListing = (props) => {
                 setIsLoader(false);
             }
         } catch (e) {
+            setErrorMsg(e.message);
+            // console.log("Error in Role listing",e.message);
+        } finally {
             setIsLoader(false);
-            if (e.response && e.response.status == 403) {
-                setErrorMsg("You dont have permission to perform this action");
-            }
-            else if (e.response && e.response.data.message) {
-                setErrorMsg(e.response.data.message);
-            }
-            console.log("Error in Role listing", JSON.stringify(e));
         }
     }
 
@@ -170,9 +166,9 @@ const RolesListing = (props) => {
      * Trigger search when keyword is empty
      */
     useEffect(() => {
-       if (keyword == "") {
-           handleSearch({preventDefault: () => {}})
-       }
+        if (keyword == "") {
+            handleSearch({ preventDefault: () => { } })
+        }
     }, [keyword])
 
     /**
@@ -182,11 +178,11 @@ const RolesListing = (props) => {
         event.preventDefault();
 
         utils.addQueryParameter('page', 1);
-        if(keyword) {
+        if (keyword) {
             utils.addQueryParameter('search', keyword);
         } else {
             utils.removeQueryParameter('search');
-        }        
+        }
         fetchRoles();
     }
 
@@ -213,9 +209,9 @@ const RolesListing = (props) => {
         if (optionsToggleRef.current.contains(event.target)) {
             //console.log('// inside click');
             return;
-          }
-          //console.log('// outside click');
-          setOption(null);
+        }
+        //console.log('// outside click');
+        setOption(null);
     }
 
     /**
@@ -243,21 +239,12 @@ const RolesListing = (props) => {
                     }
                 })
                 .catch((e) => {
-                    if (e.response && e.response.status == 403) {
-                        setErrorMsg("You dont have permission to perform this action");
-                    }
-                    else if (e.response && e.response.data.message) {
-                        setErrorMsg(e.response.data.message);
-                    } else if (e.response && typeof e.response.data == "string") {
-                        setErrorMsg(e.response.data);
-                    }
-                    
-                    console.log("Role delete error >>", e, typeof e.response.data == "string");
+                    setErrorMsg(e.message);
                 });
         }
     }
 
-    const handleSortBy = (field) => {       
+    const handleSortBy = (field) => {
         // Set sort type
         let type = "asc"
         if (field == sortBy) {
@@ -265,10 +252,10 @@ const RolesListing = (props) => {
                 type = "dsc";
             }
         }
-        
+
         // Set state and Update query param
         setSortBy(field);
-        setSortType(type); 
+        setSortType(type);
         utils.addQueryParameter('sortBy', field);
         utils.addQueryParameter('sortType', type);
 
@@ -288,11 +275,11 @@ const RolesListing = (props) => {
                 handleKeywordChange={handleKeywordChange}
             />
             {successMsg &&
-                    <SuccessAlert message={successMsg}></SuccessAlert>
-                }
-                {errorMsg &&
-                    <ErrorAlert message={errorMsg}></ErrorAlert>
-                }
+                <SuccessAlert message={successMsg}></SuccessAlert>
+            }
+            {errorMsg &&
+                <ErrorAlert message={errorMsg}></ErrorAlert>
+            }
             <div className="userListBody">
                 <div className="listBody" ref={optionsToggleRef}>
                     <ul className="tableListing">
@@ -345,9 +332,9 @@ const RolesListing = (props) => {
                                                         }
                                                     >
                                                         <button className="btn btnEdit"
-                                                                onClick={() => {
-                                                                    editRole(elem);
-                                                                }}>
+                                                            onClick={() => {
+                                                                editRole(elem);
+                                                            }}>
                                                             <span>
                                                                 <svg
                                                                     xmlns="http://www.w3.org/2000/svg"
@@ -371,9 +358,9 @@ const RolesListing = (props) => {
                                                             Edit
                                                         </button>
                                                         <button className="btn btnDelete"
-                                                                onClick={() => {
-                                                                    deleteRole(elem._id);
-                                                                }}>
+                                                            onClick={() => {
+                                                                deleteRole(elem._id);
+                                                            }}>
                                                             <span>
                                                                 <svg
                                                                     xmlns="http://www.w3.org/2000/svg"

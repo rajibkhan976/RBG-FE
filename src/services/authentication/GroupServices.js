@@ -5,16 +5,16 @@ let headers = {
     "Content-Type": "application/json",
     'Accept': 'application/json',
 };
-const token = localStorage.getItem("_token");
+
 export const GroupServices = {
     fetchGroups: async (page = null, queryParams = null) => {
-        // headers.Authorization = localStorage.getItem("_token");
+        headers.Authorization = localStorage.getItem("_token");
         try {
             const result = await axios.get(
                 config.groupUrl + 'list' +
                 (page ? "/" + page : '') +
                 (queryParams ? "?" + queryParams : ''),
-                { headers: { ...headers, Authorization: token } });
+                { headers: headers });
             if (result.status === 200) {
                 return result.data;
             } else {
@@ -22,12 +22,13 @@ export const GroupServices = {
             }
         } catch (e) {
             // console.log("fetchGroups() service error result", e);
-            throw new Error(e);
+            throw new Error(e.response.data.message);
         }
     },
     createGroup: async (payload) => {
+        headers.Authorization = localStorage.getItem("_token");
         try {
-            const result = await axios.post(config.groupUrl, payload, { headers: { ...headers, Authorization: token } });
+            const result = await axios.post(config.groupUrl, payload, { headers: headers });
             if (result.status === 200) {
                 return result.data;
             } else {
@@ -35,16 +36,17 @@ export const GroupServices = {
             }
 
         } catch (e) {
-            throw new Error(e);
+            throw new Error(e.response.data.message);
         }
     },
 
     editGroup: async (payload) => {
+        headers.Authorization = localStorage.getItem("_token");
         try {
             const result = await axios.put(
                 config.groupUrl + payload.id,
                 payload,
-                { headers: { ...headers, Authorization: token } }
+                { headers: headers }
             );
             if (result.status === 200) {
                 return result.data;
@@ -56,8 +58,9 @@ export const GroupServices = {
         }
     },
     deleteGroup: async (groupId) => {
+        headers.Authorization = localStorage.getItem("_token");
         try {
-            const result = await axios.delete(config.groupUrl + groupId, { headers: { ...headers, Authorization: token } });
+            const result = await axios.delete(config.groupUrl + groupId, { headers: headers });
             if (result.status === 200) {
                 return result.data;
             } else {

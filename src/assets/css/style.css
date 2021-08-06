@@ -3373,3 +3373,11 @@ span.userProfilePic img {
   border: 1px solid #c74854;
   background-color: #fff4f4;
 }
+
+.innerDrawerMessage{
+  position: relative;
+  top: 0;
+  left: 0;
+  transform: unset;
+  margin: 0 25px 20px;
+}

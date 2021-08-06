@@ -5,12 +5,12 @@ import { message } from "../../helpers";
 
 let headers = {
     "Content-Type": "application/json",
-    'Accept': 'application/json',   
-    'Authorization': localStorage.getItem("_token")
+    'Accept': 'application/json'
 };
 
 export const OrganizationServices = {
-    create: async (payload) => {
+    create: (payload) => {
+        headers.Authorization = localStorage.getItem("_token");
         return new Promise((resolve, reject) => {
             if (isLoggedIn() === false) {
                 reject(message.loginFailed);
@@ -33,7 +33,8 @@ export const OrganizationServices = {
                 });
         });
     },
-    update: async (payload) => {
+    update: (payload) => {
+        headers.Authorization = localStorage.getItem("_token");
         return new Promise((resolve, reject) => {
             if (isLoggedIn() === false) {
                 reject(message.loginFailed);
@@ -56,7 +57,8 @@ export const OrganizationServices = {
                 });
         });
     },
-    delete: async (id) => {
+    delete: (id) => {
+        headers.Authorization = localStorage.getItem("_token");
         return new Promise((resolve, reject) => {
             if (isLoggedIn() === false) {
                 reject(message.loginFailed);
