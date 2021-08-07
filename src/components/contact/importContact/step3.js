@@ -38,13 +38,13 @@ function FinalStep(props) {
                             <li>
                                 <div className="summryCell">
                                     <p>Total records updated</p>
-                                    <span>{custom.duplicateCount}</span>
+                                    <span>{custom.newData}</span>
                                 </div>
                             </li>
                             <li>
                                 <div className="summryCell">
                                     <p>Total records skipped</p>
-                                    <span>{custom.newData}</span>
+                                    <span>{custom.duplicateCount}</span>
                                 </div>
                             </li>
                             <li>
