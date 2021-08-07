@@ -426,6 +426,7 @@ const UserModal = (props) => {
              * Submit group create form
              * Add group name if given new permissions
              */
+             setIsLoader(true);
              let newGroupId = '';
              if(isModifiedPermission){
                 //payload.groupName = groupName;
@@ -533,6 +534,8 @@ const UserModal = (props) => {
                 else if (e.response && e.response.data.message) {
                     setErrorMsg(e.response.data.message);
                 }
+            } finally {
+                setIsLoader(false);
             }
 
         }

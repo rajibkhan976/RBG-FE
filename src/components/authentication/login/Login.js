@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AuthActions from "../../../actions/AuthActions";
+import Loader from "../../shared/Loader";
 
 const Login = (props) => {
   document.title = "Login";
@@ -99,12 +100,23 @@ const Login = (props) => {
         email: "",
         password: "",
       });
-      dispatch(AuthActions.login(email, password));
+      dispatch(AuthActions.login(email, password))
+      .then(() => {
+        // console.log('then');
+      })
+      .catch(() => {
+        // console.log('catch');
+      })
+      .finally(() => {
+        setLoader(false);
+        // console.log('dispatch finished');
+      })
     }
   };
 
   return (
     <div className="mainComponent">
+      {loader ? <Loader /> : ''}
       <div className="authBody d-flex f-align-center f-justify-center">
         <figure className="loginLogo">
           <svg

@@ -3504,3 +3504,12 @@ li:hover .extraDottedBtn {
   transform: unset;
   margin: 0 25px 20px;
 }
+
+.errorField .errorMsg {
+  display: block;
+}
+
+.errorField input {
+  border: 1px solid #c74854;
+  background-color: #fff4f4;
+}

@@ -6,25 +6,30 @@ import { history } from '../helpers';
 const login = (email, password) => {
     console.log('auth actions login hit');
     return dispatch => {
-        userLogin(email, password)
-            .then(response => {
-                //console.log('Auth actions response', response);
-                if (response) {
-                    dispatch({
-                        type: actionTypes.USER_LOGIN,
-                        user: response
-                    });
-                }
-            })
-            .catch(error => {
-                if (error) {
-                    //console.log('Auth actions error', error.response.data);
-                    dispatch({
-                        type: actionTypes.LOGIN_FAILURE,
-                        message: error.response.data
-                    });
-                }
-            });
+        return new Promise((resolve, reject) => {
+            userLogin(email, password)
+                .then(response => {
+                    //console.log('Auth actions response', response);
+                    if (response) {
+                        dispatch({
+                            type: actionTypes.USER_LOGIN,
+                            user: response
+                        });
+                        resolve();
+                    }
+                })
+                .catch(error => {
+                    if (error) {
+                        //console.log('Auth actions error', error.response.data);
+                        dispatch({
+                            type: actionTypes.LOGIN_FAILURE,
+                            message: error.response.data
+                        });
+                    }
+                    reject();
+                });
+            
+        });
     };
 };
 
