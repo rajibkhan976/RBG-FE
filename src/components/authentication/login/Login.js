@@ -62,6 +62,9 @@ const Login = (props) => {
     if (!email) {
       isError = true;
       formErrorsCopy.email = "Please fillup the email";
+    } else {
+      isError = false;
+      formErrorsCopy.email = "";
     }
     /**
      * Check password field
@@ -69,12 +72,15 @@ const Login = (props) => {
     if (!password) {
       isError = true;
       formErrorsCopy.password = "Please fillup the password";
+    } else {
+      isError = false;
+      formErrorsCopy.password = "";
     }
 
     /**
      * Validation 
      */
-    if(formErrorsCopy.email || formErrorsCopy.password) {
+    if (formErrorsCopy.email || formErrorsCopy.password) {
       isError = true;
     }
 
@@ -101,16 +107,16 @@ const Login = (props) => {
         password: "",
       });
       dispatch(AuthActions.login(email, password))
-      .then(() => {
-        // console.log('then');
-      })
-      .catch(() => {
-        // console.log('catch');
-      })
-      .finally(() => {
-        setLoader(false);
-        // console.log('dispatch finished');
-      })
+        .then(() => {
+          // console.log('then');
+        })
+        .catch(() => {
+          // console.log('catch');
+        })
+        .finally(() => {
+          setLoader(false);
+          // console.log('dispatch finished');
+        })
     }
   };
 
@@ -144,7 +150,7 @@ const Login = (props) => {
           <div className="formInputs">
             <label>Email</label>
 
-            <div className={formErrors.email? "inFormField errorField" : "inFormField"}>
+            <div className={formErrors.email ? "inFormField errorField" : "inFormField"}>
               <input
                 type="text"
                 name="email"
@@ -159,7 +165,7 @@ const Login = (props) => {
           </div>
           <div className="formInputs">
             <label>Password</label>
-            <div className={formErrors.password? "inFormField errorField" : "inFormField"}>
+            <div className={formErrors.password ? "inFormField errorField" : "inFormField"}>
               <input
                 type="password"
                 name="password"
