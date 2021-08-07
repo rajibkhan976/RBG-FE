@@ -11,6 +11,7 @@ function FinalStep(props) {
                     <ul>
                         <li className="importStape active" data-step="1">Upload File<span>&gt;</span></li>
                         <li className="importStape active" data-step="2">Mapping Details<span>&gt;</span></li>
+                        <li className="importStape active" data-step="2">Confirm Mapping<span>&gt;</span></li>
                         <li className="importStape active" data-step="3">Import Summary</li>
                     </ul>
                 </div>
@@ -49,32 +50,22 @@ function FinalStep(props) {
                             <li>
                                 <div className="summryCell error">
                                     <p>Number of errors</p>
-                                    <span>{custom.errors}</span>
+                                    <span>{custom.errors.length}</span>
                                 </div>
                             </li>
                         </ul>
                     </div>
-                    <div className="errorList hide">
+                    <div className="errorList">
                         <h3>Error Details</h3>
                         <ul>
-                            <li>
-                                <div className="errorRowNo">Row 2:</div>
-                                <p>
-                                    Enter a valid email address for Email ID Select a value for Blood Group Select a value for “Is this person in common list”
-                                </p>
-                            </li>
-                            <li>
-                                <div className="errorRowNo">Row 12:</div>
-                                <p>
-                                    Enter a valid email address for Email ID Select a value for Blood Group Select a value for “Is this person in common list”
-                                </p>
-                            </li>
-                            <li>
-                                <div className="errorRowNo">Row 15:</div>
-                                <p>
-                                    Enter a valid email address for Email ID Select a value for Blood Group Select a value for “Is this person in common list”
-                                </p>
-                            </li>
+                            { custom.errors.map((error) =>
+                                <li>
+                                    <div className="errorRowNo">Row 2:</div>
+                                    <p>
+                                        {error}
+                                    </p>
+                                </li>
+                            )}
                         </ul>
                     </div>
                 </div>

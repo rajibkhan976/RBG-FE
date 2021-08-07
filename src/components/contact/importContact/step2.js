@@ -72,10 +72,14 @@ function Step2(props) {
         if (custom.primaryField === 'email') {
             if (email === "") {
                 setPrimaryError(true);
+                setEmailError(true);
+                return false;
             }
         } else {
             if (phone === '') {
                 setPrimaryError(true);
+                setPhoneError(true);
+                return false;
             }
         }
         if (clickCount === 0) {
@@ -414,16 +418,19 @@ function Step2(props) {
                     <ul>
                         <li className="importStape active" data-step="1">Upload File<span>&gt;</span></li>
                         <li className="importStape active" data-step="2">Mapping Details<span>&gt;</span></li>
+                        <li className={"importStape " + (!primaryError && clickCount > 0 ? 'active' : '')} data-step="2">Confirm Mapping<span>&gt;</span></li>
                         <li className="importStape" data-step="3">Import Summary</li>
                     </ul>
                 </div>
                 <div id="step_2">
-                    <div className="totalReconds">
-                        <img src={user_done_icon} alt="" />
-                        <p><span>{ totalRecord }</span> Records found</p>
-                    </div>
+                    {(!primaryError && clickCount > 0) ? "" :
+                        <div className="totalReconds">
+                            <img src={user_done_icon} alt="" />
+                            <p><span>{ totalRecord }</span> Records found</p>
+                        </div>
+                    }
                     { error > 0 && <div className="formMsg error">Following fields are not mapped.</div>}
-                    { primaryError && <div className="formMsg error">Primary Field { primaryError } is not Selected.</div>}
+                    { primaryError && <div className="formMsg error">Primary Field is not Selected.</div>}
                     <div className="formAccordion">
                         <div className={"accoRow " + (!openBasicInfo ? 'collapse' : '')}>
                             <div className="accoRowHead">
