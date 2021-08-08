@@ -13,6 +13,7 @@ import Pagination from '../shared/Pagination';
 
 
 const ContactListing = (props) => {
+    const [tableWidth, setTableWidth] = useState(500);
     const messageDelay = 5000; // ms
     const [contactList, setContactList] = useState([]);
     const [isLoader, setIsLoader] = useState(false);
@@ -33,6 +34,15 @@ const ContactListing = (props) => {
         limit: 10
     });
     const dispatch = useDispatch();
+
+    const handelSize = () => {
+        setTableWidth(window.innerWidth - 504);
+    }
+
+    useEffect(() => {
+        handelSize();
+    }, []);
+    
 
     useEffect(() => {
         // fetchColumns();
@@ -284,7 +294,7 @@ const ContactListing = (props) => {
                 <ErrorAlert message={errorMsg}></ErrorAlert>
             }
             <div className="userListBody">
-                <div className="listBody contactListingTable">
+                <div className="listBody contactListingTable" style={{'width': tableWidth}}>
                     <div className="tableDataConfigArea">
                         <div className="configColArea">
                             <button className="configColBtn" onClick={() => setColModalStatus(!colModalStatus)}></button>
@@ -352,7 +362,7 @@ const ContactListing = (props) => {
                                     {savedColList.map((item, index) => {
                                         if (item.status) {
                                             return (
-                                                <div className="dataTableCell">
+                                                <div className={item.id === "name" ? "dataTableCell user" : "dataTableCell" }>
                                                     {(index === 0) ? <button className="extraDottedBtn"></button> : ""}
                                                     <button className="btn">
                                                         {(item.id === "name") ? <span className="tableCellUserImg">

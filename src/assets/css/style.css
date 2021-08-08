@@ -1005,8 +1005,9 @@ input:focus + .searchIco #search-ico .a,
 
 .userListBody {
   flex: 1 1 auto;
-  overflow-y: auto;
+  overflow: auto;
   position: relative;
+  margin-right: 46px;
 }
 
 .tableListing li {
@@ -1028,6 +1029,7 @@ input:focus + .searchIco #search-ico .a,
   padding: 0 16px;
   position: relative;
   border-bottom: 4px solid #f6f8fa;
+  min-width: 200px;
 }
 
 li.listHeading>div {
@@ -1154,6 +1156,10 @@ li.listHeading>div.dsc::after {
 
 .emailID .btn {
   color: #55BBC9;
+}
+
+.dataTableCell.user {
+  min-width: 250px;
 }
 
 .info_3dot_icon {
@@ -1839,7 +1845,9 @@ img.dropDownIcon {
 }
 
 .userListBody::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
+  height: 3px;
+  transition: all 0.3s ease 0s;
 }
 
 .userListBody::-webkit-scrollbar-track {
@@ -1848,6 +1856,11 @@ img.dropDownIcon {
 
 .userListBody::-webkit-scrollbar-thumb {
   background-color: #F1A668;
+}
+
+.userListBody:hover::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
 
@@ -3392,7 +3405,6 @@ li:hover .extraDottedBtn {
 }
 .contactListingTable {
   position: relative;
-  overflow-x: scroll;
   min-height: 600px;
 }
 
