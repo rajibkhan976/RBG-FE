@@ -283,7 +283,8 @@ function Step2(props) {
                         duplicateCount: duplicateCount,
                         newData: newData,
                         totalRecords: totalRecord,
-                        errors: errors
+                        errors: errors,
+                        duplicate: custom.duplicate
                     }
                     props.setState('custom', object);
                     props.next();

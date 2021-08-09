@@ -32,19 +32,13 @@ function FinalStep(props) {
                             <li>
                                 <div className="summryCell">
                                     <p>Total records added</p>
-                                    <span>{custom.totalRecords}</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div className="summryCell">
-                                    <p>Total records updated</p>
                                     <span>{custom.newData}</span>
                                 </div>
                             </li>
                             <li>
                                 <div className="summryCell">
-                                    <p>Total records skipped</p>
-                                    <span>{custom.duplicateCount}</span>
+                                    <p>Total records {custom.duplicate === 'skip' ? 'skipped' : 'updated' }</p>
+                                    <span>{custom.totalRecords - (custom.newData + custom.errors.length )}</span>
                                 </div>
                             </li>
                             <li>
@@ -55,19 +49,22 @@ function FinalStep(props) {
                             </li>
                         </ul>
                     </div>
-                    <div className="errorList">
+                    { custom.errors.length ?
+                        <div className="errorList">
                         <h3>Error Details</h3>
                         <ul>
-                            { custom.errors.map((error) =>
+                            { custom.errors.map((error, index) =>
                                 <li>
-                                    <div className="errorRowNo">Row 2:</div>
+                                    <div className="errorRowNo">Row { error.index }:</div>
                                     <p>
-                                        {error}
+                                        {error.message}
                                     </p>
                                 </li>
                             )}
                         </ul>
                     </div>
+                        : ""
+                    }
                 </div>
             </div>
             <div className="importModalFooter">
