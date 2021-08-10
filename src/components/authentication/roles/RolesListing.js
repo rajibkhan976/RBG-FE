@@ -10,6 +10,7 @@ import Loader from "../../shared/Loader";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 import { RoleServices } from "../../../services/authentication/RoleServices";
 import { utils } from "../../../helpers";
+import ConfirmBox from "../../shared/confirmBox";
 
 const RolesListing = (props) => {
     const messageDelay = 5000; // ms
@@ -33,6 +34,11 @@ const RolesListing = (props) => {
     const optionsToggleRef = useRef();
     const dispatch = useDispatch();
     const [isLoader, setIsLoader] = useState(false);
+    const [isDeleted, setIsDeleted] = useState(false);
+    const [isAlert, setIsAlert] = useState({
+        show: false,
+        id: null,
+    });
 
 
     const toggleCreateHeader = (e) => {
@@ -56,6 +62,17 @@ const RolesListing = (props) => {
         if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
         if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
     }, [successMsg, errorMsg])
+
+    /**
+     * If delete state is true
+     * fetch roles again
+     */
+    useEffect(() => {
+        if (isDeleted) {
+            console.log('delete state changed', isDeleted);
+            fetchRoles();
+        }
+    }, [isDeleted])
 
     /**
      * Get all query params
@@ -201,7 +218,7 @@ const RolesListing = (props) => {
             //console.log('// inside click');
             return;
         }
-        //console.log('// outside click');
+        // console.log('// outside click');
         setOption(null);
     }
 
@@ -217,21 +234,38 @@ const RolesListing = (props) => {
     /**
      * Function to delete role
      */
-    const deleteRole = async (roleId) => {
-        if (roleId) {
+    const deleteRole = async (roleId, isConfirmed = null) => {
+        if (!isConfirmed && roleId) {
+            setIsAlert({
+                show: true,
+                id: roleId,
+            });
+        } else if (isConfirmed == "yes" && roleId) {
             setOption(null);
+            setIsLoader(true);
             await RoleServices.deleteRole(roleId)
                 .then((result) => {
                     if (result) {
                         console.log('Role delete result', result);
-                        const newList = rolesData.filter((role) => role._id !== roleId);
-                        setRolesData(newList);
+                        setIsDeleted(true);
                         setSuccessMsg("Role deleted successfully");
                     }
                 })
                 .catch((e) => {
                     setErrorMsg(e.message);
+                })
+                .finally(() => {
+                    setIsAlert({
+                        show: false,
+                        id: null,
+                    });
+                    setIsLoader(false);
                 });
+        } else {
+            setIsAlert({
+                show: false,
+                id: null,
+            });
         }
     }
 
@@ -257,6 +291,13 @@ const RolesListing = (props) => {
     return (
         <div className="dashInnerUI">
             {isLoader ? <Loader /> : ''}
+            {isAlert.show ? (
+                <ConfirmBox
+                    callback={(isConfirmed) => deleteRole(isAlert.id, isConfirmed)}
+                />
+            ) : (
+                ""
+            )}
             <ListHead
                 rolesCount={rolesCount}
                 handleSearch={handleSearch}

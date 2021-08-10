@@ -45,6 +45,7 @@ const UsersListing = (props) => {
     useEffect(() => {
         handelSize();
     }, []);
+    const [isDeleted, setIsDeleted] = useState(false);
 
     const toggleCreateHeader = (e) => {
         props.toggleCreate(e);
@@ -97,6 +98,17 @@ const UsersListing = (props) => {
         console.log('param', param)
         fetchUsers();
     }, []);
+
+    /**
+     * If delete state is true
+     * fetch groups again
+     */
+     useEffect(() => {
+        if (isDeleted) {
+            console.log('delete state changed', isDeleted);
+            fetchUsers();
+        }
+    }, [isDeleted])
 
     const getQueryParams = async () => {
         const search = utils.getQueryVariable('search');
@@ -207,10 +219,10 @@ const UsersListing = (props) => {
                 const result = await UserServices.deleteUser(user._id)
                     // .then((result) => {
                 if (result) {
-                    console.log('Role delete result', result);
-                    const newList = usersData.filter((u) => u._id !== user._id);
-                    setUsersData(newList);
+                    console.log('User delete result', result);
                     setOption(null);
+                    setIsDeleted(true);
+                    setSuccessMsg("User deleted successfully");
                 }
                     // })
                     // .catch((error) => {

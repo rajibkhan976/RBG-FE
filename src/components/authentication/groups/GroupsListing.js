@@ -15,6 +15,7 @@ import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 import { utils } from "../../../helpers";
 import { GroupServices } from '../../../services/authentication/GroupServices';
 import { ErrorAlert, SuccessAlert } from '../../shared/messages';
+import ConfirmBox from "../../shared/confirmBox";
 
 const GroupListing = (props) => {
     const [dropdownPos, setDropdownPos] = useState('bottom');
@@ -37,6 +38,11 @@ const GroupListing = (props) => {
     const [successMsg, setSuccessMsg] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const messageDelay = 5000; // ms
+    const [isDeleted, setIsDeleted] = useState(false);
+    const [isAlert, setIsAlert] = useState({
+        show: false,
+        id: null,
+    });
 
     const toggleCreateHeader = (e) => {
         props.toggleCreate(e);
@@ -67,7 +73,7 @@ const GroupListing = (props) => {
     /**
      * Auto hide success or error message
      */
-     useEffect(() => {
+    useEffect(() => {
         if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
         if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
     }, [successMsg, errorMsg])
@@ -131,10 +137,21 @@ const GroupListing = (props) => {
         setSortBy(utils.getQueryVariable('sortBy'));
         setSortType(utils.getQueryVariable('sortType'));
         /**
-         * Call to fetch roles
+         * Call to fetch groups
          */
         fetchGroups();
     }, []);
+
+    /**
+     * If delete state is true
+     * fetch groups again
+     */
+    useEffect(() => {
+        if (isDeleted) {
+            console.log('delete state changed', isDeleted);
+            fetchGroups();
+        }
+    }, [isDeleted])
 
     /**
      * Function to fetch users
@@ -232,23 +249,41 @@ const GroupListing = (props) => {
     /**
      * Delete group
      */
-    const deleteGroup = async (group) => {
-        if (!window.confirm("Are you sure! want to delete the organization and its owner?")) return;
-        try {
-            /**
-             * Delete the group
-             */
-            const result = await GroupServices.deleteGroup(group._id);
-            if (result) {
-                console.log('Group delete result', result);
-                const newList = groupsData.filter((g) => g._id !== group._id);
-                setGroupsData(newList);
-                setOption(null);
-                setGroupsCount(groupsCount - 1);
+    const deleteGroup = async (groupId, isConfirmed = null) => {
+        setOption(null);
+        if (!isConfirmed && groupId) {
+            setIsAlert({
+                show: true,
+                id: groupId,
+            });
+        } else if (isConfirmed == "yes" && groupId) {
+            setIsLoader(true);
+            try {
+                /**
+                 * Delete the group
+                 */
+                const result = await GroupServices.deleteGroup(groupId);
+                if (result) {
+                    console.log('Group delete result', result);
+                    setIsDeleted(true);
+                    setSuccessMsg("Group deleted successfully");
+                }
+            } catch (e) {
+                console.log("Error in Group delete", e);
+            } finally {
+                setIsAlert({
+                    show: false,
+                    id: null,
+                });
+                setIsLoader(false);
             }
-        } catch (e) {
-            console.log("Error in Group delete", e);
+        } else {
+            setIsAlert({
+                show: false,
+                id: null,
+            });
         }
+
     }
 
     const handleSortBy = (field) => {
@@ -273,6 +308,13 @@ const GroupListing = (props) => {
     return (
         <div className="dashInnerUI">
             {isLoader ? <Loader /> : ''}
+            {isAlert.show ? (
+                <ConfirmBox
+                    callback={(isConfirmed) => deleteGroup(isAlert.id, isConfirmed)}
+                />
+            ) : (
+                ""
+            )}
             <ListHead
                 groupsCount={groupsCount}
                 handleSearch={handleSearch}
@@ -363,7 +405,7 @@ const GroupListing = (props) => {
                                                         </button>
                                                         <button className="btn btnDelete"
                                                             onClick={() => {
-                                                                deleteGroup(elem);
+                                                                deleteGroup(elem._id);
                                                             }}>
                                                             <span>
                                                                 <svg
