@@ -1,17 +1,26 @@
-import React from "react";
+import React, {useState} from "react";
 import { Route } from "react-router-dom";
 import AuthRoutes from "../authentication/AuthRoutes";
 import AutomationRoutes from "../automation/AutomationRoutes";
 import ContactRoutes from "../contact/ContactRoutes";
+import DashboardFooter from "../shared/FooterDashboard";
+import HeaderDashboard from "../shared/HeaderDashboard";
+import InnerLeftMenu from "../shared/InnerLeftMenu";
 import NotFound from "../shared/NotFound";
+import Dashboard from "./Dashboard";
 
 const DashboardRouting = (props) => {
+
   return (
     <React.Fragment>
-      <Route component={AuthRoutes} />
-      <Route component={AutomationRoutes} />
-      <Route component={ContactRoutes} />
-      <Route path={["*", "/404"]} component={NotFound}/>
+      <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} routeMenu="dashboard"/>
+      <div className="dashboardElComponent">
+        <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} />
+        <div className="dashInnerStructure">
+          <Dashboard/>
+          <DashboardFooter />
+        </div>
+      </div>
     </React.Fragment>
   );
 };

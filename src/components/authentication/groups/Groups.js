@@ -5,6 +5,7 @@ import GroupModal from "./GroupModal";
 import GroupFilter from "./GroupFilter";
 
 const Groups = (props) => {
+  document.title = "Groups";
   const [createButton, setCreateButton] = useState(null);
   const [stateFilter, setStateFilter] = useState(null);
   const [filteredData, setFilteredData] = useState(null);

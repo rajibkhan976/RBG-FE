@@ -6,6 +6,7 @@ import RoleFilter from "./RoleFilter";
 // import SuccessAlert from "../../shared/messages/success";
 
 const Roles = () => {
+  document.title = "Roles";
   const [createButton, setCreateButton] = useState(null);
   const [stateFilter, setStateFilter] = useState(null);
   const [filteredData, setFilteredData] = useState(null);

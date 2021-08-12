@@ -6,6 +6,7 @@ import UserFilter from "./UserFilter";
 // import ConfirmBox from "../../shared/confirmBox";
 
 const Users = (props) => {
+  document.title = "Users";
   const [createButton, setCreateButton] = useState(null);
   const [stateFilter, setStateFilter] = useState(null);
 
