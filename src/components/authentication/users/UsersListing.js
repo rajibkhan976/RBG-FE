@@ -36,6 +36,15 @@ const UsersListing = (props) => {
     const [successMsg, setSuccessMsg] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const messageDelay = 5000; // ms
+    const [tableWidth, setTableWidth] = useState(500);
+
+    const handelSize = () => {
+        setTableWidth(window.innerWidth - 454);
+    }
+
+    useEffect(() => {
+        handelSize();
+    }, []);
 
     const toggleCreateHeader = (e) => {
         props.toggleCreate(e);
@@ -275,7 +284,7 @@ const UsersListing = (props) => {
             }
             {usersCount ?
                 <>
-                    <div className="userListBody">
+                    <div className="userListBody" style={{'width': tableWidth}}>
                         <div className="listBody">
                             <ul className="tableListing">
                                 <li className="listHeading">

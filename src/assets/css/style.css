@@ -1858,11 +1858,6 @@ img.dropDownIcon {
   background-color: #F1A668;
 }
 
-.userListBody:hover::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
 
 .tableListing {
   display: table;
