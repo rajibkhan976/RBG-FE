@@ -24,7 +24,8 @@ function Step1(props) {
     }
     const uploadFileFn = (event) => {
         let file = event.target.files[0];
-        if (file && file.type === 'text/csv' && file.size < 5000000) {
+        console.log('Check file obj', file);
+        if (file && (file.type === 'text/csv' || file.type === 'application/vnd.ms-excel') && file.size < 5000000) {
             const config = {
                 bucketName: env.REACT_APP_BUCKET_NAME,
                 region: env.REACT_APP_REGION,
