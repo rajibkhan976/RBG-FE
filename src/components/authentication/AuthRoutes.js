@@ -6,7 +6,6 @@ import Users from "./users/Users";
 import InnerLeftMenu from "../shared/InnerLeftMenu";
 import HeaderDashboard from "../shared/HeaderDashboard";
 import DashboardFooter from "../shared/FooterDashboard";
-import NotFound from "../shared/NotFound";
 
 const AuthRoutes = (props) => {
   

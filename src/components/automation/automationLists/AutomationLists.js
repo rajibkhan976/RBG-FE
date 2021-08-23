@@ -12,6 +12,7 @@ import * as actionTypes from "../../../actions/types";
 import { utils } from "../../../helpers";
 import Pagination from "../../shared/Pagination";
 import ConfirmBox from "../../shared/confirmBox";
+import { ErrorAlert, SuccessAlert } from "../../shared/messages";
 
 const AutomationLists = (props) => {
   // USEEFFECT() Life cycle hook
@@ -19,7 +20,7 @@ const AutomationLists = (props) => {
     fetchAutomations();
   }, []);
 
-  
+  const messageDelay = 5000; // ms
   const optionsToggleRef = useRef();
   const [isLoader, setIsLoader] = useState(false);
   const [isAlert, setIsAlert] = useState({
@@ -44,38 +45,56 @@ const AutomationLists = (props) => {
     limit: 10,
   });
 
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  /**
+     * Auto hide success or error message
+     */
+  useEffect(() => {
+    if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
+    if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
+  }, [successMsg, errorMsg])
+
   const dispatch = useDispatch();
 
   const fetchAutomations = async () => {
-    const pageID = utils.getQueryVariable("page") || 1;
-    let queryParams = null;
-    if (utils.getQueryVariable("sortBy")) {
-      queryParams = "?sortBy=" + utils.getQueryVariable("sortBy");
-      queryParams += "&sortType=" + utils.getQueryVariable("sortType");
-    }
-    // console.log(queryParams);
-    setIsLoader(true);
-    const automationLists = await AutomationServices.getAutomations(
-      pageID,
-      queryParams
-    );
-    setIsLoader(false);
-    if (automationLists.data.success) {
-      setAutomationData({
-        data: automationLists.data.data,
-        count: automationLists.data.pagination.count,
-      });
-      dispatch({
-        type: actionTypes.AUTOMATION_COUNT,
-        count: automationLists.data.pagination.count,
-      });
-      setPaginationData({
-        ...paginationData,
-        currentPage: automationLists.data.pagination.currentPage,
-        totalPages: automationLists.data.pagination.totalPages,
-      });
-    } else {
-      console.log("api error ! " + automationLists.data.message);
+    try {
+
+      const pageID = utils.getQueryVariable("page") || 1;
+      let queryParams = null;
+      if (utils.getQueryVariable("sortBy")) {
+        queryParams = "?sortBy=" + utils.getQueryVariable("sortBy");
+        queryParams += "&sortType=" + utils.getQueryVariable("sortType");
+      }
+      // console.log(queryParams);
+      setIsLoader(true);
+      const automationLists = await AutomationServices.getAutomations(
+        pageID,
+        queryParams
+      );
+
+      if (automationLists.data.success) {
+        setAutomationData({
+          data: automationLists.data.data,
+          count: automationLists.data.pagination.count,
+        });
+        dispatch({
+          type: actionTypes.AUTOMATION_COUNT,
+          count: automationLists.data.pagination.count,
+        });
+        setPaginationData({
+          ...paginationData,
+          currentPage: automationLists.data.pagination.currentPage,
+          totalPages: automationLists.data.pagination.totalPages,
+        });
+      } else {
+        console.log("api error ! " + automationLists.data.message);
+      }
+    } catch (e) {
+      setErrorMsg(e.message);
+    } finally {
+      setIsLoader(false);
     }
   };
 
@@ -118,46 +137,54 @@ const AutomationLists = (props) => {
     setIsLoader(true);
     let autoData = automationData.data;
     const data = autoData.filter((i) => i._id === e);
-    data[0].status = data[0].status ? false : true;
-    if (data[0].status) {
-      let payload = { element: elem.blueprint };
-      let asl = await AutomationServices.getAsl(JSON.stringify(payload));
-      if (asl.data.success) {
-        let payloadArn = { id: elem._id, arn: asl.data.data, status: true };
-        let updateArn = await AutomationServices.updateArn(
-          JSON.stringify(payloadArn)
-        );
-        setIsLoader(false);
-        if (updateArn.data.success) {
-          console.log("respnse updated");
+    try {
+      data[0].status = data[0].status ? false : true;
+      if (data[0].status) {
+        let payload = { element: elem.blueprint };
+        let asl = await AutomationServices.getAsl(JSON.stringify(payload));
+        if (asl.data.success) {
+          let payloadArn = { id: elem._id, arn: asl.data.data, status: true };
+          let updateArn = await AutomationServices.updateArn(
+            JSON.stringify(payloadArn)
+          );
+          if (updateArn.data.success) {
+            console.log("respnse updated");
+            setSuccessMsg("Automation status updated successfully");
+          } else {
+            console.log("api error ! " + updateArn.data.message);
+            setErrorMsg(updateArn.data.message);
+          }
         } else {
-          console.log("api error ! " + updateArn.data.message);
+          console.log("api error ! " + asl.data.message);
+          setErrorMsg(asl.data.message);
         }
       } else {
-        setIsLoader(false);
-        console.log("api error ! " + asl.data.message);
+        let payloadArn = { id: elem._id };
+        let updateArn = await AutomationServices.deleteArn(
+          JSON.stringify(payloadArn)
+        );
+        if (updateArn.data.success) {
+          console.log("respnse updated");
+          setSuccessMsg("Automation status updated successfully");
+        } else {
+          setErrorMsg(updateArn.data.message);
+        }
       }
-    } else {
-      let payloadArn = { id: elem._id };
-      let updateArn = await AutomationServices.deleteArn(
-        JSON.stringify(payloadArn)
-      );
+      const newStatus = autoData.map((el, i) => {
+        if (el._id === e) {
+          return data[0];
+        } else return el;
+      });
+      setAutomationData({
+        data: newStatus,
+        count: automationData.count,
+      });
+    } catch (e) {
+      console.log("Error Response")
+      setErrorMsg(e.message);
+    } finally {
       setIsLoader(false);
-      if (updateArn.data.success) {
-        console.log("respnse updated");
-      } else {
-        console.log("api error ! " + updateArn.data.message);
-      }
     }
-    const newStatus = autoData.map((el, i) => {
-      if (el._id === e) {
-        return data[0];
-      } else return el;
-    });
-    setAutomationData({
-      data: newStatus,
-      count: automationData.count,
-    });
   };
 
   const automationEdit = (elem) => {
@@ -166,7 +193,7 @@ const AutomationLists = (props) => {
   };
 
   const deleteAutomation = async (automationID, isConfirmed = null) => {
-    const clickedforDeletion = automationData.data.filter((i) => i._id === automationID);    
+    const clickedforDeletion = automationData.data.filter((i) => i._id === automationID);
     clickedforDeletion[0].isEditing = false;
 
     const newAutomationData = automationData.data.map((el, i) => {
@@ -178,7 +205,7 @@ const AutomationLists = (props) => {
       data: newAutomationData,
       count: automationData.count,
     });
-    
+
     try {
       if (!isConfirmed) {
         setIsAlert({
@@ -190,7 +217,13 @@ const AutomationLists = (props) => {
           // Enable loader
           setIsLoader(true);
           // Call delete automation service
-          await AutomationServices.deleteAutomation(automationID);
+          const res = await AutomationServices.deleteAutomation(automationID);
+          console.log("Delete Response", res);
+          if(res.status === 200) {
+            setSuccessMsg(res.message);
+          } else {
+            setErrorMsg(res.message);
+          }
           // Reduce the count
           const newCount = automationData.count - 1;
           // Filter out the automation by checking with id
@@ -211,7 +244,8 @@ const AutomationLists = (props) => {
     } catch (e) {
       // Alert for any exception. [Later need to change in error component];
       // window.alert(e.message);
-      console.log("Error Listing Automation",e);
+      console.log("Error Listing Automation", e);
+      setErrorMsg(e.message)
     } finally {
       // Disable the loader
       setIsLoader(false);
@@ -257,12 +291,12 @@ const AutomationLists = (props) => {
   };
 
   useEffect(() => {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-          document.removeEventListener("mousedown", handleClickOutside);
-      }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
   }, [automationData.data]);
-  
+
   const handleClickOutside = (event) => {
     if (optionsToggleRef.current.contains(event.target)) {
       return;
@@ -272,15 +306,15 @@ const AutomationLists = (props) => {
       const data = automationData.data;
 
       data.map((ex) => {
-        if(ex.isEditing == true) {
+        if (ex.isEditing == true) {
           ex.isEditing = false;
-          console.log(data);
+          // console.log(data);
         } else {
           ex.isEditing = ex.isEditing;
-          console.log(data);
+          // console.log(data);
         }
       });
-      
+
       setAutomationData({
         data: data,
         count: automationData.count,
@@ -304,6 +338,13 @@ const AutomationLists = (props) => {
           toggleCreateHeader={toggleCreateHeader}
           automationData={automationData}
         />
+
+        {successMsg &&
+          <SuccessAlert message={successMsg}></SuccessAlert>
+        }
+        {errorMsg &&
+          <ErrorAlert message={errorMsg}></ErrorAlert>
+        }
         <div className="userListBody" ref={optionsToggleRef}>
           <div className="listArea">
             <div className="listHead">
@@ -388,7 +429,7 @@ const AutomationLists = (props) => {
                                 width:
                                   (elem.completedPeople /
                                     elem.totalforCompletion) *
-                                    100 +
+                                  100 +
                                   "%",
                               }}
                             ></div>

@@ -10,10 +10,7 @@ export const ContactService = {
         try {
             const url = config.getContactsUrl + (page ? "/" + page : '') + (queryParams ? "?" + queryParams : '');
             const options = {
-                headers: {
-                    ...headers,
-                    Authorization: localStorage.getItem("_token")
-                }
+                headers: headers
             };
             const result = await axios.get(url, options);
             if (result.status === 200) {
@@ -30,10 +27,7 @@ export const ContactService = {
         try {
             const url = config.getColumnUrl;
             const options = {
-                headers: {
-                    ...headers,
-                    Authorization: localStorage.getItem("_token")
-                }
+                headers: headers
             };
             const result = await axios.get(url, options);
             if (result.status === 200) {
@@ -47,14 +41,8 @@ export const ContactService = {
     },
     saveColumns: async(payload) => {
         try {
-            // if (isLoggedIn() === false) {
-            //     throw new Error(message.loginFailed);
-            // }
             const options = {
-                headers: {
-                    ...headers,
-                    Authorization: localStorage.getItem("_token")
-                }
+                headers: headers
             };
             const result = await axios.put(config.setColumnUrl, payload, options);
             if (result.status === 200) {

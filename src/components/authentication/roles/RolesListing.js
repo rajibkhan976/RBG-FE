@@ -11,14 +11,6 @@ import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 import { RoleServices } from "../../../services/authentication/RoleServices";
 import { utils } from "../../../helpers";
 
-// import owner_img_1 from "../../../assets/images/owner_img_1.png";
-// import more_pages_Icon from "../../../assets/images/more_pages_Icon.svg";
-// import arrow from "../../../assets/images/arrow.svg";
-// import cross_icon from "../../../assets/images/cross_icon.svg";
-// import camera_icon from "../../../assets/images/camera_icon.svg";
-// import arrow_forward from "../../../assets/images/arrow_forward.svg";
-// import list_board_icon from "../../../assets/images/list_board_icon.svg";
-
 const RolesListing = (props) => {
     const messageDelay = 5000; // ms
     const [dropdownPos, setDropdownPos] = useState('bottom');
@@ -123,7 +115,6 @@ const RolesListing = (props) => {
             }
         } catch (e) {
             setErrorMsg(e.message);
-            // console.log("Error in Role listing",e.message);
         } finally {
             setIsLoader(false);
         }

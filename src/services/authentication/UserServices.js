@@ -13,10 +13,7 @@ export const UserServices = {
         try {
             const url = config.fetchUsersUrl + (page ? "/" + page : '') + (queryParams ? "?" + queryParams : '');
             const options = {
-                headers: {
-                    ...headers,
-                    Authorization: localStorage.getItem("_token")
-                }
+                headers: headers
             };
             const result = await axios.get(url, options);
             if (result.status === 200) {
@@ -25,12 +22,18 @@ export const UserServices = {
                 throw new Error("There is an issue while fetching users. Please contact support.");
             }
         } catch (e) {
-            throw new Error(e.response.data.message);
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
     },
 
     fileUpload: fileData => {
-        headers.Authorization = localStorage.getItem("_token");
+        // headers.Authorization = localStorage.getItem("_token");
         return new Promise((resolve, reject) => {
             if (isLoggedIn() === false) {
                 reject(message.loginFailed);
@@ -65,10 +68,7 @@ export const UserServices = {
             }
             const url = config.deleteUserUrl + userId;
             const options = {
-                headers: {
-                    ...headers,
-                    Authorization: localStorage.getItem("_token")
-                }
+                headers: headers
             };
             const result = await axios.delete(url, options);
             if (result.status === 200) {
@@ -77,7 +77,13 @@ export const UserServices = {
                 throw new Error("There is an issue while deleting user. Please contact support.");
             }
         } catch (e) {
-            throw new Error(e.message);
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
         // headers.Authorization = localStorage.getItem("_token");
         // return new Promise((resolve, reject) => {
@@ -108,10 +114,7 @@ export const UserServices = {
                 throw new Error(message.loginFailed);
             }
             const options = {
-                headers: {
-                    ...headers,
-                    Authorization: localStorage.getItem("_token")
-                }
+                headers: headers
             };
             const result = await axios.post(config.userUrl, payload, options);
             if (result.status === 200) {
@@ -120,7 +123,13 @@ export const UserServices = {
                 throw new Error("There is an issue while creating user. Please contact support.");
             }
         } catch (e) {
-            throw new Error(e.message);
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
     },
 
@@ -128,10 +137,7 @@ export const UserServices = {
         try {
             const url = config.userUrl + "/" + payload.id;
             const options = {
-                headers: {
-                    ...headers,
-                    Authorization: localStorage.getItem("_token")
-                }
+                headers: headers
             };
             const result = await axios.put(url, payload, options);
             if (result.status === 200) {
@@ -149,15 +155,18 @@ export const UserServices = {
             const getGroups = await axios.get(
                 config.fetchGroups + roleId,
                 {
-                    headers: {
-                        ...headers,
-                        Authorization: localStorage.getItem("_token")
-                    }
+                    headers: headers
                 }
             );
             return getGroups.data;
-        } catch (error) {
-            throw new Error(error);
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
     }
 };

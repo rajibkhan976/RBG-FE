@@ -19,6 +19,7 @@ const MainComponent = () => {
   const toggleCreate = (e) => {
     setCreateButton(e);
   };
+  console.log("Main Component")
   return (
     <div className="mainComponent">
       <div
@@ -43,10 +44,10 @@ const MainComponent = () => {
             <Route exact path="/contacts">
               <ContactRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}/>
             </Route>
-            <Route path="*">
+            <Route exact path="/" component={() => <Redirect to="/dashboard" />} />
+            <Route exact path="*">
               <NotFound toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}/>
             </Route>
-            <Route exact path="/" component={() => <Redirect to="/dashboard" />} />
           </Switch>
         </div>
       </div>

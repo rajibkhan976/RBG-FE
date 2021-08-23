@@ -7,7 +7,6 @@ export const ImportContactServices = {
             method: 'post',
             url: config.importContactUrl + '/upload-csv',
             headers: {
-                'Authorization': localStorage.getItem("_token"),
                 "Content-Type": "text/plain"
             },
             data : payload
@@ -20,7 +19,6 @@ export const ImportContactServices = {
             method: 'post',
             url: config.importContactUrl + '/import-csv',
             headers: {
-                'Authorization': localStorage.getItem("_token"),
                 "Content-Type": "text/plain"
             },
             data : payload

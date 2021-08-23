@@ -10,7 +10,7 @@ let headers = {
 
 export const OrganizationServices = {
     create: (payload) => {
-        headers.Authorization = localStorage.getItem("_token");
+        // headers.Authorization = localStorage.getItem("_token");
         return new Promise((resolve, reject) => {
             if (isLoggedIn() === false) {
                 reject(message.loginFailed);
@@ -34,7 +34,7 @@ export const OrganizationServices = {
         });
     },
     update: (payload) => {
-        headers.Authorization = localStorage.getItem("_token");
+        // headers.Authorization = localStorage.getItem("_token");
         return new Promise((resolve, reject) => {
             if (isLoggedIn() === false) {
                 reject(message.loginFailed);
@@ -58,7 +58,7 @@ export const OrganizationServices = {
         });
     },
     delete: (id) => {
-        headers.Authorization = localStorage.getItem("_token");
+        // headers.Authorization = localStorage.getItem("_token");
         return new Promise((resolve, reject) => {
             if (isLoggedIn() === false) {
                 reject(message.loginFailed);

@@ -9,7 +9,11 @@ import "./assets/css/style.css";
 import "./assets/css/dev.css";
 import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter as Router } from "react-router-dom";
+import axios from "axios";
+import { rbgInstance } from "./configuration/rbgInstance";
 
+axios.interceptors.request.use(rbgInstance.authorizerInterceptor);
+rbgInstance.disableProdConsole();
 
 //const store = createStore(rootReducer, compose(applyMiddleware(thunk), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()) );
 const store = createStore(rootReducer, compose(applyMiddleware(thunk)) );

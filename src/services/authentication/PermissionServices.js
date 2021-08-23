@@ -9,7 +9,7 @@ let headers = {
 
 export const PermissionServices = {
     entity : async() => {
-        headers.Authorization = localStorage.getItem("_token");
+        // headers.Authorization = localStorage.getItem("_token");
         try {
             if (isLoggedIn() === false) {
                 throw new Error(message.loginFailed);
@@ -24,31 +24,10 @@ export const PermissionServices = {
         } catch (e) {
             throw new Error(e.message);
         }
-        // return new Promise((resolve, reject) => {
-        //     if (isLoggedIn() === false) {
-        //         reject(message.loginFailed);
-        //     }
-        //     axios
-        //         .get(
-        //             config.groupUrl + "entity",
-        //             { headers: headers }
-        //         )
-        //         .then((result) => {
-        //             //console.log('Entity: ', result.data);
-        //             resolve(result.data);
-        //         })
-        //         .catch((error) => {
-        //             if (error != null && error.response != null) {
-        //                 reject(error.response.data.error);
-        //             } else {
-        //                 reject(message.connectionError);
-        //             }
-        //         });
-        // });
     },
 
     action : async() => {
-        headers.Authorization = localStorage.getItem("_token");
+        // headers.Authorization = localStorage.getItem("_token");
         try {
             if (isLoggedIn() === false) {
                 throw new Error(message.loginFailed);
@@ -63,31 +42,10 @@ export const PermissionServices = {
         } catch (e) {
             throw new Error(e.message);
         }
-        // return new Promise((resolve, reject) => {
-        //     if (isLoggedIn() === false) {
-        //         reject(message.loginFailed);
-        //     }
-        //     axios
-        //         .get(
-        //             config.groupUrl + "action",
-        //             { headers: headers }
-        //         )
-        //         .then((result) => {
-        //             //console.log('action: ', result.data);
-        //             resolve(result.data);
-        //         })
-        //         .catch((error) => {
-        //             if (error != null && error.response != null) {
-        //                 reject(error.response.data.error);
-        //             } else {
-        //                 reject(message.connectionError);
-        //             }
-        //         });
-        // });
     },
 
     actionType : async() => {
-        headers.Authorization = localStorage.getItem("_token");
+        // headers.Authorization = localStorage.getItem("_token");
         try {
             if (isLoggedIn() === false) {
                 throw new Error(message.loginFailed);
@@ -102,26 +60,5 @@ export const PermissionServices = {
         } catch (e) {
             throw new Error(e.message);
         }
-        // return new Promise((resolve, reject) => {
-        //     if (isLoggedIn() === false) {
-        //         reject(message.loginFailed);
-        //     }
-        //     axios
-        //         .get(
-        //             config.groupUrl + "actionType",
-        //             { headers: headers }
-        //         )
-        //         .then((result) => {
-        //             //console.log('action: ', result.data);
-        //             resolve(result.data);
-        //         })
-        //         .catch((error) => {
-        //             if (error != null && error.response != null) {
-        //                 reject(error.response.data.error);
-        //             } else {
-        //                 reject(message.connectionError);
-        //             }
-        //         });
-        // });
     }
 };

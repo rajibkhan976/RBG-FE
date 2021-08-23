@@ -3,133 +3,203 @@ import config from "../../configuration/config";
 
 export const AutomationServices = {
     getAsl: async (payload) => {
-        let configAxios = {
-            method: 'post',
-            url: config.automationAslUrl + '/automation/create-asl',
-            headers: {
-                'Authorization': localStorage.getItem("_token"),
-                "Content-Type": "text/plain"
-            },
-            data : payload
-        };
-
-        return await axios(configAxios);
+        try {
+            let configAxios = {
+                method: 'post',
+                url: config.automationAslUrl + '/automation/create-asl',
+                headers: {
+                    "Content-Type": "text/plain"
+                },
+                data: payload
+            };
+            return await axios(configAxios);
+        } catch (e) {
+            if (!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
     },
-    generateUrl: async(payload) => {
-        let configAxios = {
-            method: 'post',
-            url: config.automationWebhookUrl + '/automation/webhook/generate',
-            headers: {
-                'Authorization': localStorage.getItem("_token"),
-                "Content-Type": "application/json"
-            },
-            data : payload
-        };
-        return await axios(configAxios);
+    generateUrl: async (payload) => {
+        try {
+            let configAxios = {
+                method: 'post',
+                url: config.automationWebhookUrl + '/automation/webhook/generate',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: payload
+            };
+            return await axios(configAxios);
+        } catch (e) {
+            if (!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
     },
-    saveAsl: async(payload) => {
-        let configAxios = {
-            method: 'post',
-            url: config.automationWebhookUrl + '/automation/webhook/generate',
-            headers: {
-                'Authorization': localStorage.getItem("_token"),
-                "Content-Type": "application/json"
-            },
-            data : payload
-        };
+    saveAsl: async (payload) => {
+        try {
+            let configAxios = {
+                method: 'post',
+                url: config.automationWebhookUrl + '/automation/webhook/generate',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: payload
+            };
 
-        return await axios(configAxios);
+            return await axios(configAxios);
+        } catch (e) {
+            if (!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
     },
     saveAutomation: (payload) => {
-        let configAxios = {
-            method: 'post',
-            url: config.automationBasicUrl + '/automation',
-            headers: {
-                'Authorization': localStorage.getItem("_token"),
-                "Content-Type": "application/json"
-            },
-            data : payload
-        };
-        return axios(configAxios);
+        try {
+            let configAxios = {
+                method: 'post',
+                url: config.automationBasicUrl + '/automation',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: payload
+            };
+            return axios(configAxios);
+        } catch (e) {
+            if (!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
     },
     getAutomations: (page, queryParams = null) => {
         // const pageId = utils.getQueryVariable('page') || 1;
         // const queryParams = await getQueryParams();page
         try {
             let urlPattern = config.automationBasicUrl + '/automation/list/' + page;
-            urlPattern += (queryParams)? queryParams: "";
+            urlPattern += (queryParams) ? queryParams : "";
             const configAxios = {
                 method: 'get',
                 url: urlPattern,
                 headers: {
-                    'Authorization': localStorage.getItem("_token"),
                     "Content-Type": "application/json"
                 }
             };
             return axios(configAxios);
         } catch (e) {
-            alert(e);
+            if (!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
     },
     updateArn: (payload) => {
-        let configAxios = {
-            method: 'post',
-            url: config.automationBasicUrl + '/automation/update-arn',
-            headers: {
-                'Authorization': localStorage.getItem("_token"),
-                "Content-Type": "application/json"
-            },
-            data : payload
-        };
-        return axios(configAxios);
+        try {
+            let configAxios = {
+                method: 'post',
+                url: config.automationBasicUrl + '/automation/update-arn',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: payload
+            };
+            return axios(configAxios);
+        } catch (e) {
+            if (!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
     },
     deleteArn: (payload) => {
-        let configAxios = {
-            method: 'post',
-            url: config.automationBasicUrl + '/automation/delete-arn',
-            headers: {
-                'Authorization': localStorage.getItem("_token"),
-                "Content-Type": "application/json"
-            },
-            data : payload
-        };
-        return axios(configAxios);
+        try {
+            let configAxios = {
+                method: 'post',
+                url: config.automationBasicUrl + '/automation/delete-arn',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: payload
+            };
+            return axios(configAxios);
+        } catch (e) {
+            if (!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
     },
     fetchFields: (payload) => {
-        let configAxios = {
-            method: 'post',
-            url: config.automationWebhookUrl + '/automation/webhook/fetch-fields',
-            headers: {
-                'Authorization': localStorage.getItem("_token"),
-                "Content-Type": "application/json"
-            },
-            data : payload
-        };
-        return axios(configAxios);
+        try {
+            let configAxios = {
+                method: 'post',
+                url: config.automationWebhookUrl + '/automation/webhook/fetch-fields',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: payload
+            };
+            return axios(configAxios);
+        } catch (e) {
+            if (!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
     },
     deleteWebhookNode: (payload) => {
-        let configAxios = {
-            method: 'post',
-            url: config.automationWebhookUrl + '/automation/webhook/delete-webhook',
-            headers: {
-                'Authorization': localStorage.getItem("_token"),
-                "Content-Type": "application/json"
-            },
-            data : payload
-        };
-        return axios(configAxios);
+        try {
+            let configAxios = {
+                method: 'post',
+                url: config.automationWebhookUrl + '/automation/webhook/delete-webhook',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: payload
+            };
+            return axios(configAxios);
+        } catch (e) {
+            if (!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
     },
     deleteAutomation: async (automationID) => {
         try {
             const url = config.automationDeleteUrl + "/" + automationID;
-            const options = {
-                headers: {
-                    Authorization: localStorage.getItem("_token")
-                }
-            }
-            const res = await axios.delete(url, options);
-            console.log(res);
-            if(res.status == 200) {
+            const res = await axios.delete(url);
+            if (res.status == 200) {
                 return {
                     status: res.status,
                     message: res.data.message,
@@ -138,9 +208,14 @@ export const AutomationServices = {
             } else {
                 throw new Error(res.data.message)
             }
-            console.log(res.data);
         } catch (e) {
-            throw new Error(e.message)
+            if (!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
     }
 };
