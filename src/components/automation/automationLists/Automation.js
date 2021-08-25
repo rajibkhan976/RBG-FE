@@ -44,6 +44,7 @@ const Automation = (props) => {
                   toggleCreate={toggleCreate}
                   automationListObject={automationListObject}
                   automationElementSet={automationElementSet}
+                  key={Math.random().toString()}
                 />
               </Suspense>
             </>

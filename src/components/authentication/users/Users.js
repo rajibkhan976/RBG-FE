@@ -20,7 +20,7 @@ const Users = (props) => {
   return (
     <>
       {/* <ConfirmBox/> */}
-      <UsersListing toggleFilter={toggleFilter} toggleCreate={toggleCreate} />
+      <UsersListing toggleFilter={toggleFilter} toggleCreate={toggleCreate} key={Math.random().toString()}/>
       <UserFilter stateFilter={stateFilter} setStateFilter={setStateFilter} />
       <UserModal
         createButton={createButton}

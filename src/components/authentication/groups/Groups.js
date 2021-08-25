@@ -35,6 +35,7 @@ const Groups = (props) => {
         toggleFilter={toggleFilter}
         toggleCreate={toggleCreate}
         getFilteredData={filteredData}
+        key={Math.random().toString()}
       />
       <GroupFilter
         stateFilter={stateFilter}

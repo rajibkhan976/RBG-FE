@@ -8,18 +8,23 @@ import HeaderDashboard from "../shared/HeaderDashboard";
 import DashboardFooter from "../shared/FooterDashboard";
 
 const AuthRoutes = (props) => {
-  
+  const [randomID, setRandomID] = useState(Math.random().toString());
+  const renderID = (randomID) => {
+    console.log("Random ID", randomID);
+  }
   return (
     <React.Fragment>
-      <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} routeMenu="auth"/>
+      <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} routeMenu="auth" reRender={(id) => renderID(id)} />
       <div className="dashboardElComponent">
         <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} />
         <div className="dashInnerStructure">
-          <Switch>
-            <Route path="/roles" component={Roles} />
-            <Route path="/groups" component={Groups}/>
-            <Route path="/users" component={Users}/>
-          </Switch>
+          <Route path="/roles" component={Roles} />
+          {/* <Route
+            path="/roles"
+            render={(props) => <Roles key={randomID} {...props} />}
+          /> */}
+          <Route path="/groups" component={Groups} />
+          <Route path="/users" component={Users} />
           <DashboardFooter />
         </div>
       </div>

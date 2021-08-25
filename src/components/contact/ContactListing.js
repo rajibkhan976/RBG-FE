@@ -33,6 +33,7 @@ const ContactListing = (props) => {
         currentPage: 1,
         limit: 10
     });
+    const [searchModalVal, setSearchModalVal] = useState("");
     const dispatch = useDispatch();
 
     const handelSize = () => {
@@ -42,7 +43,7 @@ const ContactListing = (props) => {
     useEffect(() => {
         handelSize();
     }, []);
-    
+
 
     useEffect(() => {
         // fetchColumns();
@@ -161,8 +162,6 @@ const ContactListing = (props) => {
         console.log(dataList);
     }
 
-
-
     // a little function to help us with reordering the result
     const reorder = (startIndex, endIndex) => {
         // const result = Array.from(list);
@@ -212,6 +211,7 @@ const ContactListing = (props) => {
                 setSavedColList(listCol);
                 setColModalStatus(false);
                 handleCheckedColListHead();
+                setSearchModalVal("");
             } else {
                 setErrorMsg("Error in saving the columns. Please try again.");
             }
@@ -223,12 +223,12 @@ const ContactListing = (props) => {
     }
 
     const handleClear = () => {
-        console.log("Clear Clicked")
         const localSavedCol = localStorage.getItem("storedSavedColList", []);
         const storedSavedColList = (localSavedCol === null) ? [] : JSON.parse(localSavedCol);
         setListCol(storedSavedColList);
         setSavedColList(storedSavedColList);
-        setColModalStatus(false);
+        // setColModalStatus(false);
+        setSearchModalVal("");
 
         // for (let k = 0; k < preSavedCol.length; k++) {
         //     if (preSavedCol[k].status) {
@@ -277,6 +277,85 @@ const ContactListing = (props) => {
         fetchContact();
     }
 
+    const GenerateColumns = () => {
+        console.log(savedColList);
+        return (
+            <li className="listHeading">
+                {savedColList.map((item, index) => {
+                    return (
+                        <>
+                            {item.status ? <div className="dataTableCell"
+                                onClick={() => handleSortBy(item.id)}>{item.name}</div> : ""}
+                        </>
+                    )
+                })}
+            </li>
+        )
+    }
+
+    const GenerateContacts = () => {
+        return contactList.map(ele => {
+            let j = 0;
+            return (
+                <li>
+                    {savedColList.map((item) => {
+                        if (item.status) {
+                            j++;
+                            return (
+                                <div className={item.id === "name" ? "dataTableCell user" : "dataTableCell"}>
+                                    {(j === 1) ? <button className="extraDottedBtn"></button> : ""}
+                                    <button className="btn">
+                                        {(item.id === "name") ? <span className="tableCellUserImg">
+                                            <img src={owner_img_1} alt="" />
+                                        </span> : ""}
+                                        {ele[item.id]}
+                                    </button>
+                                </div>
+                            )
+
+                        }
+
+                    })}
+                </li>
+            )
+        })
+    }
+
+    const GenerateColumnDraggableModal = (prop) => {
+        return (
+            <DragDropContext onDragEnd={onDragEnd}>
+                <Droppable droppableId="dropPlate">
+                    {(provided) => {
+                        return (
+                            <ul ref={provided.innerRef}>
+                                {listCol.filter(el => el.name.toLowerCase().includes(prop.searchData.toLowerCase())).map((item, index) => (
+                                    <Draggable key={item.id} draggableId={item.id} index={index}>
+                                        {(provided) => (
+
+                                            <li
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                            >
+                                                <label>
+                                                    <div className="customCheckbox">
+                                                        <input type="checkbox" onChange={(e) => handleCheckCol(e.target.checked, item.id)} checked={item.status} />
+                                                        <span></span>
+                                                    </div>
+                                                    <span>{item?.name}</span>
+                                                </label>
+                                            </li>
+                                        )}
+                                    </Draggable>
+                                ))}
+                                {provided.placeholder}
+                            </ul>
+                        )
+                    }}
+                </Droppable>
+            </DragDropContext>
+        );
+    }
 
     return (
         <div className="dashInnerUI">
@@ -294,48 +373,19 @@ const ContactListing = (props) => {
                 <ErrorAlert message={errorMsg}></ErrorAlert>
             }
             <div className="userListBody">
-                <div className="listBody contactListingTable" style={{'width': tableWidth}}>
+                <div className="listBody contactListingTable" style={{ 'width': tableWidth }}>
                     <div className="tableDataConfigArea">
                         <div className="configColArea">
                             <button className="configColBtn" onClick={() => setColModalStatus(!colModalStatus)}></button>
                             {colModalStatus ?
                                 <div className="configColModal">
                                     <div className="configColModalHead">
-                                        <input type="search" placeholder="Search" />
+                                        <input type="search" placeholder="Search" 
+                                        onChange={(event) => setSearchModalVal(event.target.value)}
+                                        value={searchModalVal}/>
                                     </div>
                                     <div className="configColModalBody">
-                                        <DragDropContext onDragEnd={onDragEnd}>
-
-                                            <Droppable droppableId="dropPlate">
-                                                {(provided) => {
-                                                    return (
-                                                        <ul ref={provided.innerRef}>
-                                                            {listCol.map((item, index) => (
-                                                                <Draggable key={item.id} draggableId={item.id} index={index}>
-                                                                    {(provided) => (
-                                                                        <li
-                                                                            ref={provided.innerRef}
-                                                                            {...provided.draggableProps}
-                                                                            {...provided.dragHandleProps}
-                                                                        >
-                                                                            <label>
-                                                                                <div className="customCheckbox">
-                                                                                    <input type="checkbox" onChange={(e) => handleCheckCol(e.target.checked, item.id)} checked={item.status} />
-                                                                                    <span></span>
-                                                                                </div>
-                                                                                <span>{item?.name}</span>
-                                                                            </label>
-                                                                        </li>
-                                                                    )}
-                                                                </Draggable>
-                                                            ))}
-                                                            {provided.placeholder}
-                                                        </ul>
-                                                    )
-                                                }}
-                                            </Droppable>
-                                        </DragDropContext>
-
+                                        <GenerateColumnDraggableModal searchData={searchModalVal}/>
                                     </div>
                                     <div className="configColModalfooter">
                                         <button className="saveNnewBtn" onClick={() => handleSave()}>Save <img src={arrow_forward} alt="" /></button>
@@ -346,40 +396,8 @@ const ContactListing = (props) => {
                         </div>
                     </div>
                     <ul className="tableListing">
-                        <li className="listHeading">
-                            {savedColList.map((item, index) => {
-                                return (
-                                    <>
-                                        {item.status ? <div className="dataTableCell"
-                                            onClick={() => handleSortBy(item.id)}>{item.name}</div> : ""}
-                                    </>
-                                )
-                            })}
-                        </li>
-                        {contactList.map((ele, index) => {
-                            return (
-                                <li>
-                                    {savedColList.map((item, index) => {
-                                        if (item.status) {
-                                            return (
-                                                <div className={item.id === "name" ? "dataTableCell user" : "dataTableCell" }>
-                                                    {(index === 0) ? <button className="extraDottedBtn"></button> : ""}
-                                                    <button className="btn">
-                                                        {(item.id === "name") ? <span className="tableCellUserImg">
-                                                            <img src={owner_img_1} alt="" />
-                                                        </span> : ""}
-                                                        {ele[item.id]}
-                                                    </button>
-                                                </div>
-                                            )
-                                        }
-
-                                    })}
-                                </li>
-                            )
-                        })}
-
-                        {/* {contactList.length} */}
+                        <GenerateColumns />
+                        <GenerateContacts />
                     </ul>
                 </div>
             </div>

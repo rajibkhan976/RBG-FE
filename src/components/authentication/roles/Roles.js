@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import RolesListing from "./RolesListing";
 
 import RoleCreateModal from "../../shared/RoleModal";
@@ -7,10 +7,10 @@ import RoleFilter from "./RoleFilter";
 
 const Roles = () => {
   document.title = "Roles";
+  console.log("Render Roles")
   const [createButton, setCreateButton] = useState(null);
   const [stateFilter, setStateFilter] = useState(null);
   const [filteredData, setFilteredData] = useState(null);
-  
   const toggleCreate = (e) => {
     setCreateButton(e);
   };
@@ -35,6 +35,7 @@ const Roles = () => {
         toggleFilter={toggleFilter}
         toggleCreate={toggleCreate}
         getFilteredData={filteredData}
+        key={Math.random().toString()}
       />
       <RoleFilter
         stateFilter={stateFilter}

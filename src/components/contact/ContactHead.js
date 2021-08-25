@@ -9,7 +9,7 @@ const ContactHead = (props) => {
                 <div class="listInfo">
                     <ul class="listPath">
                         <li>Users &amp; Controls</li>
-                        <li>Contact List</li>
+                        <li>Contacts List</li>
                     </ul>
                     <h2 class="inDashboardHeader">Contacts List ({props.totalCount})</h2>
                     <p class="userListAbout">Create, import &amp; manage your contacts</p>
@@ -51,7 +51,7 @@ const ContactHead = (props) => {
                     <button class="btn btn-filter" >
                         <img class="filterIcon" src="/static/media/filter_icon.dac97ac8.svg" alt="" />
                     </button>
-                    <button class="creatUserBtn">
+                    <button class="creatUserBtn" disabled="disabled">
                         <img class="plusIcon" src="/static/media/plus_icon.200ad5cb.svg" alt="" />
                         <span>Create</span>
                     </button>
