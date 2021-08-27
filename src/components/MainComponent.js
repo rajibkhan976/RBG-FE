@@ -1,6 +1,7 @@
-import React, { useState, lazy } from "react";
+import React, { useState, lazy, useEffect } from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 // import { useDispatch } from "react-redux";
+import { useSelector } from 'react-redux';
 import LeftMenu from "./shared/LeftMenu";
 import DashboardRoutes from "./dashboard/DashboardRoutes"
 import AuthRoutes from "./authentication/AuthRoutes";
@@ -17,6 +18,16 @@ const MainComponent = () => {
   const toggleLeftSubMenu = (status = false) => {
     setshowInnerleftMenu(status);
   };
+  const [showLeftSubMenu, setShowLeftSubMenu] = useState(true);
+  const [isShowContact, setIsShowContact] = useState(false);
+  const modalId = useSelector((state) => state.contact.contact_modal_id);
+  useEffect(() => {
+    if (modalId !== '') {
+      setIsShowContact(true);
+    } else {
+      setIsShowContact(false);
+    }
+  }, [modalId]);
   const toggleCreate = (e) => {
     setCreateButton(e);
   };
@@ -54,8 +65,9 @@ const MainComponent = () => {
           </div>
         </div>
       </div>
-      <ContactModal></ContactModal>
-  </>
+      { isShowContact && <ContactModal contactId={modalId}/>}
+      
+    </>
   );
 };
 

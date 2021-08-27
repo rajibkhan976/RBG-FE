@@ -14,3 +14,4 @@ export const USER_FILTER = "USER_FILTER";
 export const UPDATE_PERMISSION = "UPDATE_PERMISSION";
 // Contacts
 export const CONTACTS_COUNT = "CONTACTS_COUNT";
+export const CONTACTS_MODAL_ID = "CONTACTS_MODAL_ID";

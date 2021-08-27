@@ -303,7 +303,7 @@ const ContactListing = (props) => {
                             j++;
                             return (
                                 <div className={item.id === "name" ? "dataTableCell user" : "dataTableCell"}>
-                                    {(j === 1) ? <button className="extraDottedBtn"></button> : ""}
+                                    {(j === 1) ? <button className="extraDottedBtn" onClick={() => openContactModal(ele._id)}></button> : ""}
                                     <button className="btn">
                                         {(item.id === "name") ? <span className="tableCellUserImg">
                                             <img src={owner_img_1} alt="" />
@@ -357,6 +357,12 @@ const ContactListing = (props) => {
         );
     }
 
+    const openContactModal = (id) => {
+        dispatch({
+            type: actionTypes.CONTACTS_MODAL_ID,
+            contact_modal_id: id,
+        });
+    } 
     return (
         <div className="dashInnerUI">
             {isLoader ? <Loader /> : ''}
