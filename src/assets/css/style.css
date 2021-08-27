@@ -3655,9 +3655,12 @@ li:hover .extraDottedBtn {
 
 .userInfoArea .userName {
   float: left;
+  width: auto;
+  min-width: none;
   color: #fff;
   font-size: 20px;
   font-weight: bold;
+  text-transform: capitalize;
   margin-top: 10px;
   margin-left: 32px;
 }

@@ -8,7 +8,7 @@ let headers = {
 export const ContactService = {
     fetchUsers: async (page = null, queryParams = null) => {
         try {
-            const url = config.getContactsUrl + (page ? "/" + page : '') + (queryParams ? "?" + queryParams : '');
+            const url = config.getContactsUrl + "/list" + (page ? "/" + page : '') + (queryParams ? "?" + queryParams : '');
             const options = {
                 headers: headers
             };
@@ -71,6 +71,42 @@ export const ContactService = {
             }
         } catch (e) {
             throw new Error(e.response.data.message);
+        }
+    },
+    fetchContact: (payload) => {
+        // try {
+        //     const url = config.getContactsUrl + "/fetch";
+        //     const options = {
+        //         headers: headers
+        //     };
+        //     const result = await axios.post(url, payload, options);
+        //     if (result.status === 200){
+        //         return result.data;
+        //     } else {
+        //         throw new Error(result.data.message);
+        //     }
+        // } catch (error) {
+        //     console.log(error);
+        //     throw new Error(error.response.data.message);
+        // }
+        try {
+            let configAxios = {
+                method: 'post',
+                url: config.getContactsUrl + '/fetch',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: payload
+            };
+            return axios(configAxios);
+        } catch (e) {
+            if (!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
     }
 };

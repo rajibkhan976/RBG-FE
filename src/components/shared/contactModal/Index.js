@@ -4,6 +4,8 @@ import Attendance from "./pages/Attendance";
 import { Step, Steps, NavigationComponentProps} from "react-step-builder";
 import { useDispatch } from "react-redux";
 import * as actionTypes from "../../../actions/types";
+import { ContactService } from "../../../services/contact/ContactServices";
+
 import minimize_icon from "../../../assets/images/minimize_icon.svg";
 import cross_white from "../../../assets/images/cross_white.svg";
 import user_100X100 from "../../../assets/images/user_100X100.png";
@@ -40,6 +42,11 @@ const ContactModal = (props) => {
 
     const [stickeyHeadStatus, setStickeyHeadStatus] = useState(false);
     const [contactModalOpenStatus, setContactModalOpenStatus] = useState(true);
+    const [contactModalOpenError, setContactModalOpenError] = useState("");
+    const [contactData, setContactData] = useState({
+        firstName: "",
+        lastName: ""
+    });
     const dispatch = useDispatch();
     const closeContactModal = () => {
         dispatch({
@@ -51,9 +58,32 @@ const ContactModal = (props) => {
     const formScroll = (formScrollStatus) => {
         setStickeyHeadStatus(formScrollStatus);
     };
+
+    const getContact = async (contactId) => {
+        let payload = {
+            id: contactId
+        }
+        const contact = await ContactService.fetchContact(JSON.stringify(payload));
+        if (contact.status === 200) {
+            setContactData(contact.data.contact);
+        } else {
+            setContactModalOpenError(contact.message);
+            setTimeout(() => {
+                setContactModalOpenError("");
+            }, 500);
+            console.log(contact.message);
+        }
+        
+        console.log(contact, "kjfdlsjl dlj ldlfjldfjs");
+    }
+
     useEffect(() => {
-        console.log(props.contactId)
+        console.log(props.contactId);
+        getContact(props.contactId);
       }, []);
+
+    
+
     return(
         <>
             <div className="modal contactModal">
@@ -79,10 +109,7 @@ const ContactModal = (props) => {
                                     </button>
                                 </div>
                                 <div className="userName">
-                                    Richard Nile
-                                    <button className="editUserName">
-                                        <img src={editIcon_white} alt="" /> 
-                                    </button>
+                                    {contactData.firstName + " " + contactData.lastName}
                                 </div>
                                 <div className="ltValue">
                                     <header>Life Time Value :</header>

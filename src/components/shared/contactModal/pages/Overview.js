@@ -18,6 +18,7 @@ const Overview = (props) => {
     const fetchCountry = async () => {
         let conntryResponse = await ContactService.fetchCountry();
         setPhoneCountryCode(conntryResponse);
+        console.log(conntryResponse, "country");
     };
 
     useEffect(() => {
