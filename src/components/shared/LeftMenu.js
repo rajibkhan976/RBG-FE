@@ -204,6 +204,7 @@ function LeftMenu(props) {
             isActive={() => ['/automation-list', '/automation-builder']}
             activeClassName={(pathURL === "/automation-list" || pathURL === '/automation-builder' || pathURL === '/automation-details') ? "selected" : ""}
             to="/automation-list"
+            title="Automation"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

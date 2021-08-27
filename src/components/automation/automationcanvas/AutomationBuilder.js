@@ -556,10 +556,6 @@ const AutomationBuilder = (props) => {
       setToError('bounce');
       count = count + 1;
     }
-    if (!from) {
-      setFromError('bounce');
-      count = count + 1;
-    }
     if (!body) {
       setBodyError('bounce');
       count = count + 1;
@@ -570,7 +566,6 @@ const AutomationBuilder = (props) => {
           elms.map((el) => {
             if (el.id === nId) {
               el.data.to = to;
-              el.data.from = from;
               el.data.body = body;
             }
             return { ...el };
@@ -1148,20 +1143,11 @@ const AutomationBuilder = (props) => {
               <div className="automationRow">
                 <div className="automationTopLeft">
                   <input type="text" className={`automationNameArea ${automationNameError}`} placeholder="Enter your automation name"  onChange={handleNameChange} value={automationName}/>
-                  <button className="automationSetting">
-                    <img src={blueSettingIcon} alt="" />
-                  </button>
                   <div className="automationPublish">
                     <button className="automationPublishBtn" onClick={saveAutomation}>
                       <img src={plus_icon} alt="" />
                       Save
                     </button>
-                  </div>
-                  <div className="autoInfo">
-                    <span>?</span>
-                    <div className="autoInfoBox">
-                      Lorem ipsum dolor
-                    </div>
                   </div>
                 </div>
                 <div className="buttonArea">
@@ -1281,13 +1267,6 @@ const AutomationBuilder = (props) => {
                                 ) : ""
                                 }
                               </div>
-                              </div>
-                              <div className="inputField">
-                                <label htmlFor="">From</label>
-                                <div className="inFormField">
-                                <input className={`icon ${fromError}`} type="text" name="messageFrom" id="" value={from} onChange={handleFromChange} onClick={handleFromChange}/>
-                                <button class="toggleTags" onClick={(e)=>toggletoMail(e)}></button>
-                                </div>
                               </div>
                               <div className="inputField">
                                 <label htmlFor="">Body</label>

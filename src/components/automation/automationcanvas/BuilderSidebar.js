@@ -84,6 +84,9 @@ const Sidebar = () => {
               transform="translate(-2.229 -5.25)"
             />
           </svg>
+          <div className="nodeNameTooltip">
+            Filter
+          </div>
         </div>
       </div>
       <div className="sidebarHeader">

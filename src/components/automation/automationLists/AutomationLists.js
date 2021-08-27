@@ -391,8 +391,8 @@ const AutomationLists = (props) => {
               >
                 Created on <button className="shortTable"></button>
               </div>
-              <div className="listCell cellWidth_10"></div>
-              <div className="listCell cellWidth_5"></div>
+              <div className="listCell cellWidth_10">Status</div>
+              <div className="listCell cellWidth_5">Actions</div>
             </div>
             {automationData.data.length ? (
               automationData.data.map((elem, i) => {
