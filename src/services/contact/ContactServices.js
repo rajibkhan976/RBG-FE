@@ -56,5 +56,21 @@ export const ContactService = {
         } catch (e) {
             throw new Error(e.response.data.message);
         }
+    },
+    fetchCountry: async() => {
+        try {
+            const url = config.fetchCountryUrl;
+            const options = {
+                headers: headers
+            };
+            const result = await axios.get(url, options);
+            if (result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error(result.data.message);
+            }
+        } catch (e) {
+            throw new Error(e.response.data.message);
+        }
     }
 };
