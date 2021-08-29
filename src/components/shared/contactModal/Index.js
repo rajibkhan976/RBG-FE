@@ -132,11 +132,11 @@ const ContactModal = (props) => {
                                 <div className="userContacts">
                                     <div className="userPhone">
                                         <img src={phone_call_icon_white} alt="" /> 
-                                        <span>+1-4132045887</span>
+                                        <span>{contactData.mobile}</span>
                                     </div>
                                     <div className="userEmail">
                                         <img src={email_icon_white} alt="" /> 
-                                        <span>richardnile@gmail.com</span>
+                                        <span>{contactData.email}</span>
                                     </div>
                                 </div>
                                 <div className="clockinArea">
@@ -152,7 +152,7 @@ const ContactModal = (props) => {
                                         <span className="cellInfoIcon">
                                             <img src={user_icon_white} alt="" />
                                         </span>
-                                        <span className="infoCellTxt">rank name</span>
+                                        <span className="infoCellTxt">{contactData.jobRole}</span>
                                     </div>
                                     <div className="userInfoCell">
                                         <span className="cellInfoIcon">
