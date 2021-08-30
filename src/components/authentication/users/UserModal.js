@@ -74,6 +74,8 @@ const UserModal = (props) => {
             getGroupsByRoleId(editUser.role[0]._id);
             setGroupId(editUser.group[0]._id);
             setPermissionData(editUser.group[0].permissions);
+            //Keep a original copy of permissions data
+            setCopyPermissionData(JSON.parse(JSON.stringify(editUser.group[0].permissions)));
         }
 
         console.log('editUser', editUser)
@@ -96,6 +98,7 @@ const UserModal = (props) => {
             setRoleId('');
             setGroupId('');
             setPermissionData([]);
+            setIsModifiedPermission(false);
         }
 
     }, [editUser]);
@@ -255,6 +258,9 @@ const UserModal = (props) => {
         console.log(event.target.value);
         setRoleId(event.target.value);
         getGroupsByRoleId(event.target.value);
+        // Set permissions to null
+        console.log('Set permission data to null')
+        setPermissionData([]);
     }
     /**
      * Get groups by role ID
@@ -290,7 +296,7 @@ const UserModal = (props) => {
             console.log('Selected group', selectedGroup);
             setPermissionData(selectedGroup[0].permissions);
             //Keep a original copy of permissions data
-            setCopyPermissionData([...selectedGroup[0].permissions]);
+            setCopyPermissionData(JSON.parse(JSON.stringify(selectedGroup[0].permissions)));
         } else {
             setPermissionData([]);
         }
@@ -300,7 +306,7 @@ const UserModal = (props) => {
      * Handle group name change
      * @param {*} event 
      */
-     const handleGroupNameChange = (event) => {
+    const handleGroupNameChange = (event) => {
         event.preventDefault();
         setGroupName(event.target.value);
     }
@@ -310,8 +316,10 @@ const UserModal = (props) => {
      * @param {*} dataFromChild
      */
     const getDataFn = (dataFromChild) => {
-        console.log('Data from permission matrix', copyPermissionData, dataFromChild);
-        let isEqual = equals(copyPermissionData, dataFromChild);
+        let clonePermissions = copyPermissionData;
+        console.log('Data from permission matrix', clonePermissions, dataFromChild);
+        let isEqual = equals(clonePermissions, dataFromChild);
+        console.log('is Equal', isEqual);
         //If pemission data not equal with original permission data
         if (!isEqual) {
             //Display group name input box
@@ -324,11 +332,42 @@ const UserModal = (props) => {
 
     /**
      * Function to compare two arrays
-     * @param {*} a 
-     * @param {*} b 
+     * @param {*} originalPermissions 
+     * @param {*} newPermissions 
      * @returns 
      */
-    const equals = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+    const equals = (originalPermissions, newPermissions) => {
+        // Check original and new permission set length
+        if (originalPermissions.length !== newPermissions.length) return false;
+
+        let status = [];
+        // Check actions array for comparison
+        originalPermissions.forEach((orgEl, orgKey) => {
+            // console.log('org el key', orgKey, orgEl);
+            newPermissions.forEach((newEl, newKey) => {
+                // console.log('new el key', newKey, newEl, orgEl.entity, newEl.entity);
+                //If actions length not matched - then clearly we can say pemission set updated
+                if ((orgEl.entity === newEl.entity) && (orgEl.actions.length !== newEl.actions.length)) {
+                    console.log('actions set not matched for ', orgEl.entity);
+                    status.push(false);
+                }
+
+                //If actions length matched - then compare for the specific actions
+                if ((orgEl.entity === newEl.entity) && (orgEl.actions.length === newEl.actions.length)) {
+                    console.log('actions set matched for ', orgEl.entity, 'original actions', orgEl.actions, 'new actions', newEl.actions);
+                    if(JSON.stringify(orgEl.actions) === JSON.stringify(newEl.actions)) {
+                        console.log('matched')
+                        status.push(true);
+                    } else {
+                        console.log('not matched');
+                        status.push(false);
+                    }
+                }
+            });
+        })
+        console.log('status', status, status.every(v => v === true));
+        return status.every(v => v === true);
+    }
 
     /**
      * Handle submit
@@ -426,9 +465,9 @@ const UserModal = (props) => {
              * Submit group create form
              * Add group name if given new permissions
              */
-             setIsLoader(true);
-             let newGroupId = '';
-             if(isModifiedPermission){
+            setIsLoader(true);
+            let newGroupId = '';
+            if (isModifiedPermission) {
                 //payload.groupName = groupName;
                 let oprationMethod = "createGroup";
                 let groupPayload = {
@@ -442,7 +481,7 @@ const UserModal = (props) => {
                     console.log('Group created successfully', result._id);
                 }
             }
-            
+
 
             /**
              * Submit organization create form 
