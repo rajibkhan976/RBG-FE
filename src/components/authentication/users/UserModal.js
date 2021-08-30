@@ -6,6 +6,7 @@ import PermissionMatrix from "../../shared/PermissionMatrix";
 import { history } from "../../../helpers";
 import config from "../../../configuration/config";
 import Loader from '../../shared/Loader';
+import { ContactService } from "../../../services/contact/ContactServices";
 
 import camera_icon from "../../../assets/images/camera_icon.svg";
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
@@ -51,8 +52,40 @@ const UserModal = (props) => {
     const [isEmailNotification, setIsEmailNotification] = useState(false);
     const [groupName, setGroupName] = useState('');
     // const [newGroupId, setNewGroupId] = useState('');
+    const [phoneCountryCode, setPhoneCountryCode] = useState([]);
+    const [basicinfoMobilePhone, setBasicinfoMobilePhone] = useState({
+        countryCode: "US",
+        dailCode: "+1",
+        number: "1234567890"
+    });
 
+    const fetchCountry = async () => {
+        let conntryResponse = await ContactService.fetchCountry();
+        setPhoneCountryCode(conntryResponse);
+        console.log(conntryResponse, "country");
+    };
 
+    useEffect(() => {
+        fetchCountry();
+    }, []);
+
+    const countrycodeOpt = phoneCountryCode ? phoneCountryCode.map((el, key) => {
+        return (
+            <option value={el.code} data-dailcode={el.prefix} key={key} >{el.code} ({el.prefix})</option>
+        )
+    }
+    ) : '';
+
+    const handelBasicinfoMobilePhon = (event) => {
+        const {name, value} = event.target;
+        if(name == "countryCode"){
+            const daileCodeindex = event.target[event.target.selectedIndex];
+            let dailCode = daileCodeindex != undefined ? daileCodeindex.getAttribute("data-dailcode") : "+1";
+            setBasicinfoMobilePhone(prevState => ({...prevState, dailCode: dailCode}));
+        }
+        
+        setBasicinfoMobilePhone(prevState => ({...prevState, [name]: value}));
+    };
 
     const closeSideMenu = (e) => {
         e.preventDefault();
@@ -355,7 +388,7 @@ const UserModal = (props) => {
                 //If actions length matched - then compare for the specific actions
                 if ((orgEl.entity === newEl.entity) && (orgEl.actions.length === newEl.actions.length)) {
                     console.log('actions set matched for ', orgEl.entity, 'original actions', orgEl.actions, 'new actions', newEl.actions);
-                    if(JSON.stringify(orgEl.actions) === JSON.stringify(newEl.actions)) {
+                    if (JSON.stringify(orgEl.actions) === JSON.stringify(newEl.actions)) {
                         console.log('matched')
                         status.push(true);
                     } else {
@@ -677,13 +710,21 @@ const UserModal = (props) => {
                                                     <li>
                                                         <div className={formErrors.phoneNumber ? "formField w-50 error" : "formField w-50"}>
                                                             <p>Phone No</p>
-                                                            <div className="inFormField">
+                                                            <div className="inFormField countryCodeField">
+                                                                <div className="countryCode cmnFieldStyle">
+                                                                    <div className="countryName">{basicinfoMobilePhone.countryCode}</div>
+                                                                    <div className="daileCode">{basicinfoMobilePhone.dailCode}</div>
+                                                                    <select className="selectCountry" name="countryCode" defaultValue={basicinfoMobilePhone.countryCode} onChange={handelBasicinfoMobilePhon}>
+                                                                        {countrycodeOpt}
+                                                                    </select>
+                                                                </div>
                                                                 <input
                                                                     type="text"
                                                                     name="phoneNumber"
                                                                     placeholder="Eg. (555) 555-1234"
                                                                     defaultValue={phoneNumber}
                                                                     onChange={handlePhoneNumberChange}
+                                                                    className="cmnFieldStyle"
                                                                 />
                                                             </div>
                                                             {formErrors.phoneNumber ? <span className="errorMsg">{formErrors.phoneNumber}</span> : ''}
