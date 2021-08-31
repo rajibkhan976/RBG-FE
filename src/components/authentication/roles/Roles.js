@@ -35,7 +35,7 @@ const Roles = () => {
         toggleFilter={toggleFilter}
         toggleCreate={toggleCreate}
         getFilteredData={filteredData}
-        key={Math.random().toString()}
+        // key={Math.random().toString()}
       />
       <RoleFilter
         stateFilter={stateFilter}

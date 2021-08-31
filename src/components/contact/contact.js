@@ -12,9 +12,10 @@ const Contact = () => {
     const hideModal = () => {
         setIsModal(false);
     }
+    // key={Math.random().toString()}
     return (
     <>
-      <ContactListing openModal={() => {openModal()}} key={Math.random().toString()}/>
+      <ContactListing openModal={() => {openModal()}}/>
         { isModal &&
             <ImportContact hideModal={() => {hideModal()}} />
         }
