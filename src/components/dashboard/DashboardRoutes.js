@@ -13,7 +13,7 @@ const DashboardRouting = (props) => {
 
   return (
     <React.Fragment>
-      <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} routeMenu="dashboard"/>
+      <InnerLeftMenu routeMenu="dashboard"/>
       <div className="dashboardElComponent">
         <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} />
         <div className="dashInnerStructure">

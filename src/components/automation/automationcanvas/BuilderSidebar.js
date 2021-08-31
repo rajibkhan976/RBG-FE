@@ -11,7 +11,6 @@ const Sidebar = () => {
       <div className="sidebarHeader">
         <h4>
           Triggers
-          <img className="arrowIcon" src={white_arrow_right} alt="" />
         </h4>
       </div>
       {/* <div className="description">
@@ -64,7 +63,6 @@ const Sidebar = () => {
       <div className="sidebarHeader">
         <h4>
           Filter
-          <img className="arrowIcon" src={white_arrow_right} alt="" />
         </h4>
       </div>
       <div className="dndNodes filterNodes">
@@ -92,7 +90,6 @@ const Sidebar = () => {
       <div className="sidebarHeader">
         <h4>
           Action
-          <img className="arrowIcon" src={white_arrow_right} alt="" />
         </h4>
       </div>
       <div className="dndNodes actionNodes">

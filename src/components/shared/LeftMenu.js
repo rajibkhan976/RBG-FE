@@ -1,11 +1,24 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
+
 
 function LeftMenu(props) {
   const pathURL = useLocation().pathname
 
+  const [tglLeftMenuStatus, setTglLeftMenuStatus] = useState(false);
+
   useEffect(() => {
   },[]);
+
+  const toggleLeftSubMenu = (status) => {  
+    if(tglLeftMenuStatus){
+      setTglLeftMenuStatus(false);
+    } else {
+      setTglLeftMenuStatus(true);
+    }
+    console.log("'status i n inner bar", tglLeftMenuStatus);
+    props.toggleLeftSubMenu && props.toggleLeftSubMenu(tglLeftMenuStatus);
+  }
 
   return (
     <div className="routeMenu">
@@ -40,7 +53,7 @@ function LeftMenu(props) {
             </svg>
           </NavLink>
         </li>
-        <li>
+        {/* <li>
           <NavLink
             className="leftMenuLink"
             activeClassName="selected"
@@ -75,7 +88,7 @@ function LeftMenu(props) {
               </g>
             </svg>
           </NavLink>
-        </li>
+        </li> */}
         <li>
           <NavLink
             className="leftMenuLink"
@@ -96,7 +109,7 @@ function LeftMenu(props) {
             </svg>
           </NavLink>
         </li>
-        <li>
+        {/* <li>
           <NavLink
             className="leftMenuLink"
             activeClassName="selected"
@@ -197,7 +210,7 @@ function LeftMenu(props) {
               </g>
             </svg>
           </NavLink>
-        </li>
+        </li> */}
         <li>
           <NavLink
             className="leftMenuLink"
@@ -277,7 +290,7 @@ function LeftMenu(props) {
             </svg>
           </NavLink>
         </li>
-        <li>
+        {/* <li>
           <NavLink
             className="leftMenuLink"
             activeClassName="selected"
@@ -401,8 +414,12 @@ function LeftMenu(props) {
               </g>
             </svg>
           </NavLink>
-        </li>
+        </li> */}
       </ul>
+      <div className="leftMenuToggle">
+        <button className={tglLeftMenuStatus ? "leftMenuToggleBtn active" : "leftMenuToggleBtn"} onClick={() => toggleLeftSubMenu()}></button>
+      </div>
+      
     </div>
   );
 }

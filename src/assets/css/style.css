@@ -296,7 +296,8 @@ audio, video {
 /* left bar */
 
 .routeMenu {
-  height: 100vh;
+  height: calc(100vh - 80px);
+  margin-bottom: 80px;
   background: #fff;
   overflow-y: auto;
   z-index: 10;
@@ -3796,25 +3797,23 @@ li:hover .extraDottedBtn {
   margin-left: 20px;
 }
 
-.redBtnContainer {
-  width: 72px;
-  height: 152px;
-  background: #ED707A;
-  border-radius: 5px;
-  position: absolute;
-  right: 20px;
-  bottom: -93px;
+.tabBarArea>div.redBtnContainer {
+  width: 157px;
+  height: 58px;
+  float: right;
+  background: #9BAEBC;
 }
 
-.redBtnContainer .redTabBtn {
+.tabBarArea>div.redBtnContainer .redTabBtn {
   width: 32px;
   height: 32px;
-  margin-left: 20px;
+  margin-left: 15px;
   margin-top: 15px;
   border: 1px solid #fff;
   border-radius: 50%;
   background: none;
   line-height: 32px;
+  padding: 0;
 }
 
 .tabBarArea>div {
@@ -3976,6 +3975,8 @@ textarea.cmnFieldStyle {
   padding-top: 2px;
 }
 .selectCountry {
+  color: #305671;
+  font-size: 14px;
   position: absolute;
   left: 0;
   top: 0;
@@ -4037,5 +4038,26 @@ div button.btn-link {
   background-repeat: repeat-x;
   padding: 10px 0 5px 0;
   float: left;
+}
+
+.leftMenuToggle {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  background: #fff;
+  width: 70px;
+  height: 80px;
+}
+.leftMenuToggleBtn {
+  width: 28px;
+  height: 26px;
+  margin-left: 21px;
+  margin-top: 20px;
+  border: none;
+  background: #fff url("../images/menu_expand_icon.svg") no-repeat;
+  cursor: pointer;
+}
+.leftMenuToggleBtn.active {
+  background-image: url("../images/menu_collapse_icon.svg");
 }
 

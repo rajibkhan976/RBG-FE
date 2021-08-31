@@ -15,7 +15,7 @@ const MainComponent = () => {
   const [showInnerleftMenu, setshowInnerleftMenu] = useState(true);
   const [createButton, setCreateButton] = useState(null);
 
-  const toggleLeftSubMenu = (status = false) => {
+  const toggleLeftSubMenu = (status) => {
     setshowInnerleftMenu(status);
   };
   const [showLeftSubMenu, setShowLeftSubMenu] = useState(true);
@@ -37,12 +37,12 @@ const MainComponent = () => {
       <div className="mainComponent">
         <div
           className={
-            "dashboardBody d-flex f-align-center " +
+            "dashboardBody d-flex " +
             (pathURL === '/automation-list' || pathURL === '/automation-builder' ? ' automationBuilderBody ' : '') +
             (showInnerleftMenu ? "openSubmenu" : "")
           }
         >
-          <LeftMenu />
+          <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu}/>
           <div className="dashMain">
             <Switch>
               <Route exact path="/dashboard">

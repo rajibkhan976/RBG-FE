@@ -175,7 +175,10 @@ const ContactModal = (props) => {
                                 </div>
                             </div>
                         </div>
-                        {/* <div className="redBtnContainer">
+                        
+                    </div>
+                    <div className="tabBarArea">
+                        <div className="redBtnContainer">
                             <button className="redTabBtn">
                                 <img src={exchange_icon_white} alt="" />
                             </button>
@@ -185,13 +188,12 @@ const ContactModal = (props) => {
                             <button className="redTabBtn">
                                 <img src={note_icon_white} alt="" />
                             </button>
-                        </div> */}
-                    </div>
-                    <div className="tabBarArea">
+                        </div>
                         <Steps config={config}>
                             <Step title="Overview" component={Overview} contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
                             <Step title="Attendance" component={Attendance} />
                         </Steps>
+                        
                     </div>
 
                     
