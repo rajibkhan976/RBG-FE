@@ -59,6 +59,8 @@ const UserModal = (props) => {
         number: "1234567890"
     });
 
+    const [resetPermissions, setResetPermissions] = useState(false);
+
     const fetchCountry = async () => {
         let conntryResponse = await ContactService.fetchCountry();
         setPhoneCountryCode(conntryResponse);
@@ -293,7 +295,7 @@ const UserModal = (props) => {
         getGroupsByRoleId(event.target.value);
         // Set permissions to null
         console.log('Set permission data to null')
-        setPermissionData([]);
+        setResetPermissions('yes');
     }
     /**
      * Get groups by role ID
@@ -872,6 +874,7 @@ const UserModal = (props) => {
                                     <PermissionMatrix
                                         getData={getDataFn}
                                         setPermissionData={permissionData}
+                                        resetPermissions={resetPermissions}
                                     />
                                     <p className="staredInfo">
                                         * You can customize permissions for this user based on your need.
