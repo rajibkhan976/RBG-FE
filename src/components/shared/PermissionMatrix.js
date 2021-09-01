@@ -37,7 +37,7 @@ const PermissionMatrix = (props) => {
       */
      getActionTypes();
 
-  }, [actionTypeId])
+  }, [props.setPermissionData, actionTypeId])
 
   useEffect(() => {
     if (props.resetPermissions == 'yes') {
