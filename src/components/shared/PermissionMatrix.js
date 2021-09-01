@@ -29,12 +29,15 @@ const PermissionMatrix = (props) => {
      */
     getActions();
 
+  }, []);
+
+  useEffect(() => {
     /**
       * Call to get action types
       */
-    getActionTypes();
+     getActionTypes();
 
-  }, []);
+  }, [actionTypeId])
 
   useEffect(() => {
     if (props.resetPermissions == 'yes') {
@@ -42,8 +45,6 @@ const PermissionMatrix = (props) => {
       setEditedPermissionData([]);
       // Reflect permission data
       getEntities();
-      //Reflect action type
-      getActionTypes();
     }
   }, [props.resetPermissions])
 
@@ -71,20 +72,7 @@ const PermissionMatrix = (props) => {
       });
       // Reflect permission data
       getEntities();
-      //Reflect action type
-      getActionTypes();
     }
-
-    //Reset permissions
-    // if (typeof props.setPermissionData !== "undefined" && !props.setPermissionData.length) {
-    //   console.log('Else Pm Ue', props.setPermissionData);
-    //   //Empty edited permission data
-    //   setEditedPermissionData([]);
-    //   // Reflect permission data
-    //   getEntities();
-    //   //Reflect action type
-    //   getActionTypes();
-    // }
 
   }, [props.setPermissionData]);
 
