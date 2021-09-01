@@ -34,6 +34,29 @@ export const utils = {
         currentUrlParams.delete(param);
         history.push(
             window.location.pathname + "?" + currentUrlParams.toString()
-        );   
+        );
+    },
+    /**
+     * Organize the permission object
+     * @param {Object} permissionObj Permission object which is being sent by backend
+     */
+    organizePermissions: (permissionObj) => {
+        try {
+            const permissions = [...permissionObj];
+            const organizedPermissions = permissions.map(el => {
+                const mergedActions = [];
+                el.actions.forEach((action, index) => {
+                    mergedActions.push(action);
+                });
+                return {
+                    "entity": el.entity,
+                    "actions": mergedActions
+                }
+            });
+
+            return organizedPermissions;
+        } catch (e) {
+            throw new Error(e.message);
+        }
     }
 }

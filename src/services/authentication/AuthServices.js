@@ -1,7 +1,7 @@
 import axios from "axios";
 import config from "../../configuration/config";
 import jwt from "jsonwebtoken";
-import { history } from "../../helpers"
+import { history, utils } from "../../helpers"
 
 let headers = {
   "Content-Type": "application/json"
@@ -18,9 +18,12 @@ export const userLogin = (email, password, rememberMe = false) => {
       .then((result) => {
         //console.log('user login: ', result.data);
         localStorage.setItem("_token", result.data.token);
+        const permissions = utils.organizePermissions(result.data.permission);
+        localStorage.setItem("permissions", JSON.stringify(permissions));
         resolve(result.data);
       })
       .catch((error) => {
+        console.log("Error triggered from Login in auth service", error)
         if (error != null) {
           reject(error);
         }
@@ -50,6 +53,7 @@ export const isLoggedIn = () => {
 export const userLogout = () => {
   localStorage.removeItem("_token");
   localStorage.removeItem("storedSavedColList");
+  localStorage.removeItem("permissions");
   return true;
 };
 

@@ -15,6 +15,8 @@ import owner_img_1 from "../../../assets/images/owner_img_1.png";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 import list_board_icon from "../../../assets/images/list_board_icon.svg";
 import moment from "moment";
+import responses from '../../../configuration/responses';
+import env from '../../../configuration/env';
 
 const UsersListing = (props) => {
     const [dropdownPos, setDropdownPos] = useState('bottom');
@@ -37,6 +39,7 @@ const UsersListing = (props) => {
     const [errorMsg, setErrorMsg] = useState("");
     const messageDelay = 5000; // ms
     const [tableWidth, setTableWidth] = useState(500);
+    const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "user")));
 
     const handelSize = () => {
         setTableWidth(window.innerWidth - 454);
@@ -48,7 +51,13 @@ const UsersListing = (props) => {
     const [isDeleted, setIsDeleted] = useState(false);
 
     const toggleCreateHeader = (e) => {
-        props.toggleCreate(e);
+        const createPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("create");
+        if (createPermission) {
+            props.toggleCreate(e);
+        } else {
+            setErrorMsg(responses.permissions.user.create);
+        }
+        // props.toggleCreate(e);
     };
 
     const dispatch = useDispatch();
@@ -56,7 +65,12 @@ const UsersListing = (props) => {
 
 
     const filterUsers = () => {
-        props.toggleFilter("user");
+        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("read");
+        if (readPermission) {
+            props.toggleFilter("user");
+        } else {
+            setErrorMsg(responses.permissions.user.read);
+        }
     };
 
     /**
@@ -78,7 +92,7 @@ const UsersListing = (props) => {
     /**
      * Auto hide success or error message
      */
-     useEffect(() => {
+    useEffect(() => {
         if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
         if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
     }, [successMsg, errorMsg])
@@ -103,7 +117,7 @@ const UsersListing = (props) => {
      * If delete state is true
      * fetch groups again
      */
-     useEffect(() => {
+    useEffect(() => {
         if (isDeleted) {
             console.log('delete state changed', isDeleted);
             fetchUsers();
@@ -149,14 +163,18 @@ const UsersListing = (props) => {
      * @returns 
      */
     const fetchUsers = async () => {
-
+        // const readPermission = await permissions.actions.includes("read");
+        const readPermission = (Object.keys(permissions).length)?await permissions.actions.includes("read"):false;
         const pageId = utils.getQueryVariable('page');
         const queryParams = await getQueryParams();
         console.log('queryParams', queryParams.toString())
         try {
             setIsLoader(true);
+            if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
+                throw new Error(responses.permissions.user.read);
+            }
             const result = await UserServices.fetchUsers(pageId, queryParams);
-                // .then((result) => {
+            // .then((result) => {
             console.log('User listing result', result.users);
             if (result) {
                 setUsersData(result.users);
@@ -188,15 +206,22 @@ const UsersListing = (props) => {
      * Edit user
      */
     const editUser = (user) => {
-        console.log('Edit user Id', user);
-        toggleCreateHeader(user);
-        setOption(null);
+        const updatePermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("update");
+        if (updatePermission) {
+            console.log('Edit user Id', user);
+            toggleCreateHeader(user);
+            setOption(null);
+        } else {
+            setErrorMsg(responses.permissions.user.edit);
+        }
+
     }
 
     /**
      * Delete user and organization
      */
     const deleteUser = async (user) => {
+
         if (
             (user && !user.isOrganizationOwner)
             || (
@@ -206,6 +231,10 @@ const UsersListing = (props) => {
             )
         ) {
             try {
+                const deletePermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("delete");
+                if (deletePermission === false) {
+                    throw new Error(responses.permissions.user.delete);
+                }
                 /**
                  * Check and delete organization along with its owner
                  */
@@ -217,19 +246,20 @@ const UsersListing = (props) => {
                  * Delete the user
                  */
                 const result = await UserServices.deleteUser(user._id)
-                    // .then((result) => {
+                // .then((result) => {
                 if (result) {
                     console.log('User delete result', result);
                     setOption(null);
                     setIsDeleted(true);
                     setSuccessMsg("User deleted successfully");
                 }
-                    // })
-                    // .catch((error) => {
-                    //     console.log("Role delete error", error);
-                    // });
+                // })
+                // .catch((error) => {
+                //     console.log("Role delete error", error);
+                // });
             } catch (e) {
                 console.log("Error in Role delete", e);
+                setErrorMsg(e.message);
             }
         }
     }
@@ -248,14 +278,21 @@ const UsersListing = (props) => {
     const handleSearch = (event) => {
         event.preventDefault();
 
-        utils.addQueryParameter('page', 1);
-        if (keyword) {
-            utils.addQueryParameter('search', keyword);
+        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("read");
+        if (readPermission) {
+            utils.addQueryParameter('page', 1);
+            if (keyword) {
+                utils.addQueryParameter('search', keyword);
+            } else {
+                utils.removeQueryParameter('search');
+            }
+
+            fetchUsers();
         } else {
-            utils.removeQueryParameter('search');
+            setErrorMsg(responses.permissions.user.read);
         }
 
-        fetchUsers();
+
     }
 
     const handleSortBy = (field) => {
@@ -296,7 +333,7 @@ const UsersListing = (props) => {
             }
             {usersCount ?
                 <>
-                    <div className="userListBody" style={{'width': tableWidth}}>
+                    <div className="userListBody" style={{ 'width': tableWidth }}>
                         <div className="listBody">
                             <ul className="tableListing">
                                 <li className="listHeading">
@@ -450,12 +487,12 @@ const UsersListing = (props) => {
                             </ul>
                         </div>
                     </div>
-                    {usersCount > paginationData.limit?
-                    <Pagination
-                        type="user"
-                        paginationData={paginationData}
-                        dataCount={usersCount}
-                        callback={fetchUsers} />:''
+                    {usersCount > paginationData.limit ?
+                        <Pagination
+                            type="user"
+                            paginationData={paginationData}
+                            dataCount={usersCount}
+                            callback={fetchUsers} /> : ''
                     }
                 </> :
                 <div className="createNew">

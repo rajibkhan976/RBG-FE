@@ -16,6 +16,8 @@ import { utils } from "../../../helpers";
 import { GroupServices } from '../../../services/authentication/GroupServices';
 import { ErrorAlert, SuccessAlert } from '../../shared/messages';
 import ConfirmBox from "../../shared/confirmBox";
+import responses from '../../../configuration/responses';
+import env from '../../../configuration/env';
 
 const GroupListing = (props) => {
     const [dropdownPos, setDropdownPos] = useState('bottom');
@@ -43,13 +45,24 @@ const GroupListing = (props) => {
         show: false,
         id: null,
     });
+    const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "group")));
 
     const toggleCreateHeader = (e) => {
-        props.toggleCreate(e);
+        const createPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("create");
+        if (createPermission) {
+            props.toggleCreate(e);
+        } else {
+            setErrorMsg(responses.permissions.group.create);
+        }
     };
 
     const filterGroups = () => {
-        props.toggleFilter("groups");
+        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("read");
+        if (readPermission) {
+            props.toggleFilter("groups");
+        } else {
+            setErrorMsg(responses.permissions.group.read);
+        }
     };
 
     /**
@@ -158,11 +171,15 @@ const GroupListing = (props) => {
      * @returns 
      */
     const fetchGroups = async () => {
+        const readPermission = (Object.keys(permissions).length)?await permissions.actions.includes("read"):false;
         let pageId = utils.getQueryVariable('page') || 1;
         let queryParams = await getQueryParams();
 
         try {
             setIsLoader(true);
+            if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
+                throw new Error(responses.permissions.group.read);
+            }
             const result = await GroupServices.fetchGroups(pageId, queryParams);
             if (result) {
                 setGroupsData(result.groups);
@@ -225,40 +242,55 @@ const GroupListing = (props) => {
      * Handle search functionality
      */
     const handleSearch = (event) => {
+
         event.preventDefault();
 
-        utils.addQueryParameter('page', 1);
-        if (keyword) {
-            utils.addQueryParameter('search', keyword);
+        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("read");
+        if (readPermission) {
+            utils.addQueryParameter('page', 1);
+            if (keyword) {
+                utils.addQueryParameter('search', keyword);
+            } else {
+                utils.removeQueryParameter('search');
+            }
+            fetchGroups();
         } else {
-            utils.removeQueryParameter('search');
+            setErrorMsg(responses.permissions.group.read);
         }
-
-        fetchGroups();
     }
 
     /**
      * Edit group
      */
     const editGroup = (group) => {
-        console.log('Edit group Id', group);
-        toggleCreateHeader(group);
-        setOption(null);
+        const updatePermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("update");
+        if (updatePermission) {
+            console.log('Edit group Id', group);
+            toggleCreateHeader(group);
+            setOption(null);
+        } else {
+            setErrorMsg(responses.permissions.group.edit);
+        }
+
     }
 
     /**
      * Delete group
      */
     const deleteGroup = async (groupId, isConfirmed = null) => {
-        setOption(null);
-        if (!isConfirmed && groupId) {
-            setIsAlert({
-                show: true,
-                id: groupId,
-            });
-        } else if (isConfirmed == "yes" && groupId) {
-            setIsLoader(true);
-            try {
+        try {
+            const deletePermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("delete");
+            if (!deletePermission) {
+                throw new Error(responses.permissions.group.delete);
+            }
+            setOption(null);
+            if (!isConfirmed && groupId) {
+                setIsAlert({
+                    show: true,
+                    id: groupId,
+                });
+            } else if (isConfirmed == "yes" && groupId) {
+                setIsLoader(true);
                 /**
                  * Delete the group
                  */
@@ -268,22 +300,22 @@ const GroupListing = (props) => {
                     setIsDeleted(true);
                     setSuccessMsg("Group deleted successfully");
                 }
-            } catch (e) {
-                console.log("Error in Group delete", e);
-            } finally {
+            } else {
                 setIsAlert({
                     show: false,
                     id: null,
                 });
-                setIsLoader(false);
             }
-        } else {
+        } catch (e) {
+            setErrorMsg(e.message);
+        } finally {
+            setIsLoader(false);
             setIsAlert({
                 show: false,
                 id: null,
             });
+            setIsLoader(false);
         }
-
     }
 
     const handleSortBy = (field) => {

@@ -13,6 +13,8 @@ import { utils } from "../../../helpers";
 import Pagination from "../../shared/Pagination";
 import ConfirmBox from "../../shared/confirmBox";
 import { ErrorAlert, SuccessAlert } from "../../shared/messages";
+import responses from "../../../configuration/responses";
+import env from "../../../configuration/env";
 
 const AutomationLists = (props) => {
   // USEEFFECT() Life cycle hook
@@ -47,7 +49,7 @@ const AutomationLists = (props) => {
 
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-
+  const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "automation")));
   /**
      * Auto hide success or error message
      */
@@ -60,7 +62,10 @@ const AutomationLists = (props) => {
 
   const fetchAutomations = async () => {
     try {
-
+      const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
+      if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
+        throw new Error(responses.permissions.automation.read);
+      }
       const pageID = utils.getQueryVariable("page") || 1;
       let queryParams = null;
       if (utils.getQueryVariable("sortBy")) {
@@ -188,25 +193,34 @@ const AutomationLists = (props) => {
   };
 
   const automationEdit = (elem) => {
-    props.automationElementSet(elem);
-    props.toggleCreate("automation");
+    const updatePermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("update");
+    if (updatePermission) {
+      props.automationElementSet(elem);
+      props.toggleCreate("automation");
+    } else {
+      setErrorMsg(responses.permissions.automation.edit);
+    }
+
   };
 
   const deleteAutomation = async (automationID, isConfirmed = null) => {
-    const clickedforDeletion = automationData.data.filter((i) => i._id === automationID);
-    clickedforDeletion[0].isEditing = false;
-
-    const newAutomationData = automationData.data.map((el, i) => {
-      if (el._id === automationID) {
-        return clickedforDeletion[0];
-      } else return el;
-    });
-    setAutomationData({
-      data: newAutomationData,
-      count: automationData.count,
-    });
-
     try {
+      const deletePermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("delete");
+      if (deletePermission === false) {
+        throw new Error(responses.permissions.automation.delete);
+      }
+      const clickedforDeletion = automationData.data.filter((i) => i._id === automationID);
+      clickedforDeletion[0].isEditing = false;
+
+      const newAutomationData = automationData.data.map((el, i) => {
+        if (el._id === automationID) {
+          return clickedforDeletion[0];
+        } else return el;
+      });
+      setAutomationData({
+        data: newAutomationData,
+        count: automationData.count,
+      });
       if (!isConfirmed) {
         setIsAlert({
           show: true,
@@ -219,7 +233,7 @@ const AutomationLists = (props) => {
           // Call delete automation service
           const res = await AutomationServices.deleteAutomation(automationID);
           console.log("Delete Response", res);
-          if(res.status === 200) {
+          if (res.status === 200) {
             setSuccessMsg(res.message);
           } else {
             setErrorMsg(res.message);
@@ -286,8 +300,13 @@ const AutomationLists = (props) => {
   };
 
   const toggleCreateHeader = () => {
-    props.automationElementSet({});
-    props.toggleCreate("automation");
+    const createAutomation = (Object.keys(permissions).length) ? permissions.actions.includes("create") : false;
+    if (createAutomation && env.ACTIVE_PERMISSION_CHECKING === false) {
+      props.automationElementSet({});
+      props.toggleCreate("automation");
+    } else {
+        setErrorMsg(responses.permissions.automation.create);
+    }
   };
 
   useEffect(() => {

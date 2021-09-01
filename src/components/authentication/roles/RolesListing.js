@@ -11,6 +11,8 @@ import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 import { RoleServices } from "../../../services/authentication/RoleServices";
 import { utils } from "../../../helpers";
 import ConfirmBox from "../../shared/confirmBox";
+import responses from '../../../configuration/responses';
+import env from '../../../configuration/env';
 
 const RolesListing = (props) => {
     const messageDelay = 5000; // ms
@@ -39,14 +41,28 @@ const RolesListing = (props) => {
         show: false,
         id: null,
     });
-
+    // Permission Set
+    const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "role")));
 
     const toggleCreateHeader = (e) => {
-        props.toggleCreate(e);
+        const createPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("create");
+        // const createPermission = permissions.actions.includes("create");
+        console.clear()
+        console.log(createPermission);
+        if(createPermission) {
+            props.toggleCreate(e);
+        } else {
+            setErrorMsg(responses.permissions.role.create);
+        }
     };
 
     const filterRoles = () => {
-        props.toggleFilter("roles");
+        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("read");
+        if(readPermission) {
+            props.toggleFilter("roles");
+        } else {
+            setErrorMsg(responses.permissions.role.read);
+        }
     };
 
     useEffect(() => {
@@ -107,12 +123,15 @@ const RolesListing = (props) => {
      * @returns
      */
     const fetchRoles = async () => {
-
+        const readPermission = (Object.keys(permissions).length)?await permissions.actions.includes("read"):false;
+        console.log("Permission", permissions)
         let pageId = utils.getQueryVariable('page') || 1;
         let queryParams = await getQueryParams();
-
         try {
             setIsLoader(true);
+            if(readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
+                throw new Error(responses.permissions.role.read);
+            } 
             const result = await RoleServices.fetchRoles(pageId, queryParams);
             console.log('Data', result.roles);
             if (result) {
@@ -183,15 +202,20 @@ const RolesListing = (props) => {
      * Handle search functionality
      */
     const handleSearch = (event) => {
-        event.preventDefault();
-
-        utils.addQueryParameter('page', 1);
-        if (keyword) {
-            utils.addQueryParameter('search', keyword);
+        const searchPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("read");
+        if(searchPermission) {
+            event.preventDefault();
+    
+            utils.addQueryParameter('page', 1);
+            if (keyword) {
+                utils.addQueryParameter('search', keyword);
+            } else {
+                utils.removeQueryParameter('search');
+            }
+            fetchRoles();
         } else {
-            utils.removeQueryParameter('search');
+            setErrorMsg(responses.permissions.role.read);
         }
-        fetchRoles();
     }
 
     /**
@@ -226,15 +250,27 @@ const RolesListing = (props) => {
      * Function to edit role
      */
     const editRole = (role) => {
-        console.log('Edit role id', role);
-        toggleCreateHeader(role);
-        setOption(null);
+        const editPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("update");
+        if(editPermission) {
+            console.log('Edit role id', role);
+            toggleCreateHeader(role);
+            setOption(null);
+        } else {
+            setErrorMsg(responses.permissions.role.edit)
+        }
+        
     }
 
     /**
      * Function to delete role
      */
     const deleteRole = async (roleId, isConfirmed = null) => {
+        // Permission Checking
+        const deletePermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("delete");
+        if(deletePermission == false) {
+            setErrorMsg(responses.permissions.role.delete);
+            return;
+        }
         if (!isConfirmed && roleId) {
             setIsAlert({
                 show: true,

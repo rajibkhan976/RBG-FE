@@ -10,6 +10,8 @@ import { ContactService } from "../../services/contact/ContactServices";
 import { utils } from "../../helpers";
 import Loader from "../shared/Loader";
 import Pagination from '../shared/Pagination';
+import responses from '../../configuration/responses';
+import env from '../../configuration/env';
 
 
 const ContactListing = (props) => {
@@ -34,6 +36,7 @@ const ContactListing = (props) => {
         limit: 10
     });
     const [searchModalVal, setSearchModalVal] = useState("");
+    const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "contact")));
     const dispatch = useDispatch();
 
     const handelSize = () => {
@@ -77,6 +80,12 @@ const ContactListing = (props) => {
         const queryParams = await getQueryParams();
         // console.log('queryParams', queryParams.toString() )
         try {
+            const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
+            console.clear();
+            console.log(readPermission);
+            if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
+                throw new Error(responses.permissions.automation.read);
+            }
             // setIsLoader(true);
             const result = await ContactService.fetchUsers(pageId, queryParams);
             if (result) {
@@ -103,6 +112,10 @@ const ContactListing = (props) => {
     const fetchColumns = async () => {
         setIsLoader(true);
         try {
+            const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
+            if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
+                throw new Error("");
+            }
             const result = await ContactService.fetchColumns();
             // console.clear();
             // console.log(result);
@@ -265,16 +278,19 @@ const ContactListing = (props) => {
     }
 
     const handleSearch = (event) => {
-        event.preventDefault();
-
-        utils.addQueryParameter('page', 1);
-        if (keyword) {
-            utils.addQueryParameter('search', keyword);
+        const readPermission = (Object.keys(permissions).length) ? permissions.actions.includes("read") : false;
+        if (readPermission && env.ACTIVE_PERMISSION_CHECKING === false) {
+            event.preventDefault();
+            utils.addQueryParameter('page', 1);
+            if (keyword) {
+                utils.addQueryParameter('search', keyword);
+            } else {
+                utils.removeQueryParameter('search');
+            }
+            fetchContact();
         } else {
-            utils.removeQueryParameter('search');
+            setErrorMsg(responses.permissions.contact.read);
         }
-
-        fetchContact();
     }
 
     const GenerateColumns = () => {
@@ -362,7 +378,16 @@ const ContactListing = (props) => {
             type: actionTypes.CONTACTS_MODAL_ID,
             contact_modal_id: id,
         });
-    } 
+    }
+
+    const handleImportModal = () => {
+        const readPermission = (Object.keys(permissions).length) ? permissions.actions.includes("import") : false;
+        if (readPermission && env.ACTIVE_PERMISSION_CHECKING === false) {
+            props.openModal()
+        } else {
+            setErrorMsg(responses.permissions.contact.import);
+        }
+    }
     return (
         <div className="dashInnerUI">
             {isLoader ? <Loader /> : ''}
@@ -371,7 +396,7 @@ const ContactListing = (props) => {
                 handleSearch={handleSearch}
                 handleKeywordChange={handleKeywordChange}
                 keyword={keyword}
-                openImportContact={() => props.openModal()}></ContactHead>
+                openImportContact={handleImportModal}></ContactHead>
             {successMsg &&
                 <SuccessAlert message={successMsg}></SuccessAlert>
             }
@@ -386,12 +411,12 @@ const ContactListing = (props) => {
                             {colModalStatus ?
                                 <div className="configColModal">
                                     <div className="configColModalHead">
-                                        <input type="search" placeholder="Search" 
-                                        onChange={(event) => setSearchModalVal(event.target.value)}
-                                        value={searchModalVal}/>
+                                        <input type="search" placeholder="Search"
+                                            onChange={(event) => setSearchModalVal(event.target.value)}
+                                            value={searchModalVal} />
                                     </div>
                                     <div className="configColModalBody">
-                                        <GenerateColumnDraggableModal searchData={searchModalVal}/>
+                                        <GenerateColumnDraggableModal searchData={searchModalVal} />
                                     </div>
                                     <div className="configColModalfooter">
                                         <button className="saveNnewBtn" onClick={() => handleSave()}>Save <img src={arrow_forward} alt="" /></button>
