@@ -301,7 +301,7 @@ const AutomationLists = (props) => {
 
   const toggleCreateHeader = () => {
     const createAutomation = (Object.keys(permissions).length) ? permissions.actions.includes("create") : false;
-    if (createAutomation && env.ACTIVE_PERMISSION_CHECKING === false) {
+    if (createAutomation && env.ACTIVE_PERMISSION_CHECKING === 1) {
       props.automationElementSet({});
       props.toggleCreate("automation");
     } else {

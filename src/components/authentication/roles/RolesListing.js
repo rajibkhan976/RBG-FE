@@ -45,20 +45,34 @@ const RolesListing = (props) => {
     const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "role")));
 
     const toggleCreateHeader = (e) => {
-        const createPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("create");
-        // const createPermission = permissions.actions.includes("create");
-        console.clear()
-        console.log(createPermission);
-        if(createPermission) {
-            props.toggleCreate(e);
+        // const createPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("create");
+        // const createPermission = (Object.keys(permissions).length) ? permissions.actions.includes("create") : false;
+        // if (createPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
+        //     props.toggleCreate(e);
+        // } else {
+        //     setErrorMsg(responses.permissions.role.create);
+        // }
+
+        if (typeof e._id === "undefined") {
+            const createPermission = (Object.keys(permissions).length) ? permissions.actions.includes("create") : false;
+            if (createPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
+                props.toggleCreate(e);
+            } else {
+                setErrorMsg(responses.permissions.group.create);
+            }
         } else {
-            setErrorMsg(responses.permissions.role.create);
+            const updatePermission = (Object.keys(permissions).length) ? permissions.actions.includes("update") : false;
+            if (updatePermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
+                props.toggleCreate(e);
+            } else {
+                setErrorMsg(responses.permissions.role.edit);
+            }
         }
     };
 
     const filterRoles = () => {
-        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("read");
-        if(readPermission) {
+        const readPermission = (Object.keys(permissions).length) ? permissions.actions.includes("create") : false;
+        if (readPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
             props.toggleFilter("roles");
         } else {
             setErrorMsg(responses.permissions.role.read);
@@ -123,15 +137,15 @@ const RolesListing = (props) => {
      * @returns
      */
     const fetchRoles = async () => {
-        const readPermission = (Object.keys(permissions).length)?await permissions.actions.includes("read"):false;
+        const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
         console.log("Permission", permissions)
         let pageId = utils.getQueryVariable('page') || 1;
         let queryParams = await getQueryParams();
         try {
             setIsLoader(true);
-            if(readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
+            if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
                 throw new Error(responses.permissions.role.read);
-            } 
+            }
             const result = await RoleServices.fetchRoles(pageId, queryParams);
             console.log('Data', result.roles);
             if (result) {
@@ -202,10 +216,10 @@ const RolesListing = (props) => {
      * Handle search functionality
      */
     const handleSearch = (event) => {
-        const searchPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("read");
-        if(searchPermission) {
+        const searchPermission = (Object.keys(permissions).length) ? permissions.actions.includes("create") : false;
+        if (searchPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
             event.preventDefault();
-    
+
             utils.addQueryParameter('page', 1);
             if (keyword) {
                 utils.addQueryParameter('search', keyword);
@@ -250,15 +264,9 @@ const RolesListing = (props) => {
      * Function to edit role
      */
     const editRole = (role) => {
-        const editPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("update");
-        if(editPermission) {
-            console.log('Edit role id', role);
-            toggleCreateHeader(role);
-            setOption(null);
-        } else {
-            setErrorMsg(responses.permissions.role.edit)
-        }
-        
+        console.log('Edit role id', role);
+        toggleCreateHeader(role);
+        setOption(null);
     }
 
     /**
@@ -266,8 +274,8 @@ const RolesListing = (props) => {
      */
     const deleteRole = async (roleId, isConfirmed = null) => {
         // Permission Checking
-        const deletePermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("delete");
-        if(deletePermission == false) {
+        const deletePermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : permissions.actions.includes("delete");
+        if (deletePermission == false) {
             setErrorMsg(responses.permissions.role.delete);
             return;
         }

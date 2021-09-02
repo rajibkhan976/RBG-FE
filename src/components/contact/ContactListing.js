@@ -279,7 +279,7 @@ const ContactListing = (props) => {
 
     const handleSearch = (event) => {
         const readPermission = (Object.keys(permissions).length) ? permissions.actions.includes("read") : false;
-        if (readPermission && env.ACTIVE_PERMISSION_CHECKING === false) {
+        if (readPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
             event.preventDefault();
             utils.addQueryParameter('page', 1);
             if (keyword) {
@@ -382,7 +382,7 @@ const ContactListing = (props) => {
 
     const handleImportModal = () => {
         const readPermission = (Object.keys(permissions).length) ? permissions.actions.includes("import") : false;
-        if (readPermission && env.ACTIVE_PERMISSION_CHECKING === false) {
+        if (readPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
             props.openModal()
         } else {
             setErrorMsg(responses.permissions.contact.import);

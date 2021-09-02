@@ -51,13 +51,30 @@ const UsersListing = (props) => {
     const [isDeleted, setIsDeleted] = useState(false);
 
     const toggleCreateHeader = (e) => {
-        const createPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("create");
-        if (createPermission) {
-            props.toggleCreate(e);
+        // const createPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("create");
+        // if (createPermission) {
+        //     props.toggleCreate(e);
+        // } else {
+        //     setErrorMsg(responses.permissions.user.create);
+        // }
+
+        if (typeof e._id === "undefined") {
+            console.log("I am here")
+            const createPermission = (Object.keys(permissions).length) ? permissions.actions.includes("create") : false;
+            if (createPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
+                props.toggleCreate(e);
+            } else {
+                setErrorMsg(responses.permissions.group.create);
+            }
         } else {
-            setErrorMsg(responses.permissions.user.create);
+            console.log("Here I am")
+            const updatePermission = (Object.keys(permissions).length) ? permissions.actions.includes("update") : false;
+            if (updatePermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
+                props.toggleCreate(e);
+            } else {
+                setErrorMsg(responses.permissions.user.edit);
+            }
         }
-        // props.toggleCreate(e);
     };
 
     const dispatch = useDispatch();
@@ -65,7 +82,7 @@ const UsersListing = (props) => {
 
 
     const filterUsers = () => {
-        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("read");
+        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : permissions.actions.includes("read");
         if (readPermission) {
             props.toggleFilter("user");
         } else {
@@ -164,7 +181,7 @@ const UsersListing = (props) => {
      */
     const fetchUsers = async () => {
         // const readPermission = await permissions.actions.includes("read");
-        const readPermission = (Object.keys(permissions).length)?await permissions.actions.includes("read"):false;
+        const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
         const pageId = utils.getQueryVariable('page');
         const queryParams = await getQueryParams();
         console.log('queryParams', queryParams.toString())
@@ -206,14 +223,17 @@ const UsersListing = (props) => {
      * Edit user
      */
     const editUser = (user) => {
-        const updatePermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("update");
-        if (updatePermission) {
-            console.log('Edit user Id', user);
-            toggleCreateHeader(user);
-            setOption(null);
-        } else {
-            setErrorMsg(responses.permissions.user.edit);
-        }
+        console.log('Edit user Id', user);
+        toggleCreateHeader(user);
+        setOption(null);
+        // const updatePermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("update");
+        // if (updatePermission) {
+        //     console.log('Edit user Id', user);
+        //     toggleCreateHeader(user);
+        //     setOption(null);
+        // } else {
+        //     setErrorMsg(responses.permissions.user.edit);
+        // }
 
     }
 
@@ -231,7 +251,7 @@ const UsersListing = (props) => {
             )
         ) {
             try {
-                const deletePermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("delete");
+                const deletePermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : permissions.actions.includes("delete");
                 if (deletePermission === false) {
                     throw new Error(responses.permissions.user.delete);
                 }
@@ -278,7 +298,7 @@ const UsersListing = (props) => {
     const handleSearch = (event) => {
         event.preventDefault();
 
-        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("read");
+        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : permissions.actions.includes("read");
         if (readPermission) {
             utils.addQueryParameter('page', 1);
             if (keyword) {
