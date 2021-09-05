@@ -412,30 +412,33 @@ audio, video {
 }
 
 .routeMenu>ul {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   margin-top: 65px;
 }
 
 .routeMenu>ul>li {
   height: 88px;
-  display: flex;
-  align-items: stretch;
-  justify-content: stretch;
-  width: 70px;
+  width: 76px;
 }
 
 .routeMenu>ul>li>a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+  display: block;
+  text-align: center;
+  padding: 18px 0;
 }
 
 .routeMenu>ul>li>a svg {
   max-width: 28px;
+}
+
+.menuName, .leftMenuToggle .menuName.active {
+  display: block;
+  font-size: 11px;
+  color: #305671;
+  margin-top: 8px;
+  text-align: center;
+}
+.selected .menuName, .leftMenuToggle .menuName {
+  color: #ED707A;
 }
 
 #redLogoMenu .a {
@@ -624,7 +627,7 @@ input:focus + .searchIco #search-ico .a,
   top: 0;
   left: -300px;
   bottom: 0;
-  width: 294px;
+  width: 288px;
   height: 100%;
   background: #E9EFF5; 
   display: flex;
@@ -636,7 +639,7 @@ input:focus + .searchIco #search-ico .a,
   left: 0;
 }
 .openSubmenu .dashboardElComponent {
-  padding-left: 294px;
+  padding-left: 288px;
 }
 
 /* Side Menu Tray */
@@ -3517,7 +3520,9 @@ li:hover .extraDottedBtn {
   display: block;
 }
 
-.errorField input {
+.errorField input, 
+.errorField textarea, 
+.errorField select {
   border: 1px solid #c74854;
   background-color: #fff4f4;
 }
@@ -4045,14 +4050,14 @@ div button.btn-link {
   left: 0;
   bottom: 0;
   background: #fff;
-  width: 70px;
+  width: 76px;
   height: 80px;
 }
 .leftMenuToggleBtn {
   width: 28px;
   height: 26px;
-  margin-left: 21px;
-  margin-top: 20px;
+  margin-left: 25px;
+  margin-top: 15px;
   border: none;
   background: #fff url("../images/menu_expand_icon.svg") no-repeat;
   cursor: pointer;
@@ -4061,3 +4066,10 @@ div button.btn-link {
   background-image: url("../images/menu_collapse_icon.svg");
 }
 
+.tableListing li.owerInfo .userName button span {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  overflow: hidden;
+}

@@ -51,6 +51,7 @@ function LeftMenu(props) {
                 </g>
               </g>
             </svg>
+            <span className="menuName">Dashboard</span>
           </NavLink>
         </li>
         {/* <li>
@@ -107,6 +108,7 @@ function LeftMenu(props) {
                 transform="translate(-2 -3)"
               />
             </svg>
+            <span className="menuName">User & Controls</span>
           </NavLink>
         </li>
         {/* <li>
@@ -233,6 +235,7 @@ function LeftMenu(props) {
                 />
               </g>
             </svg>
+            <span className="menuName">Automation</span>
           </NavLink>
         </li>
         <li>
@@ -288,6 +291,7 @@ function LeftMenu(props) {
                 </g>
               </g>
             </svg>
+            <span className="menuName">Contacts</span>
           </NavLink>
         </li>
         {/* <li>
@@ -418,6 +422,7 @@ function LeftMenu(props) {
       </ul>
       <div className="leftMenuToggle">
         <button className={tglLeftMenuStatus ? "leftMenuToggleBtn active" : "leftMenuToggleBtn"} onClick={() => toggleLeftSubMenu()}></button>
+        <span className={tglLeftMenuStatus ? "menuName active" : "menuName"}>{tglLeftMenuStatus ? "Open" : "Close"}</span>
       </div>
       
     </div>

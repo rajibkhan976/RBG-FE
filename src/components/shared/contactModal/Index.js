@@ -190,7 +190,7 @@ const ContactModal = (props) => {
                             </button>
                         </div>
                         <Steps config={config}>
-                            <Step title="Overview" component={Overview} contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
+                            <Step title="Overview" contact={contactData} component={Overview} contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
                             <Step title="Attendance" component={Attendance} />
                         </Steps>
                         
