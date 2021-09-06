@@ -148,20 +148,20 @@ const ContactModal = (props) => {
                             </div>
                             <div className="bottomRightArea">
                                 <div className="bottomRightAreaCol firstCol">
-                                    <div className="userInfoCell">
+                                    <div className="userInfoCell jobRole">
                                         <span className="cellInfoIcon">
                                             <img src={user_icon_white} alt="" />
                                         </span>
                                         <span className="infoCellTxt">{contactData.jobRole}</span>
                                     </div>
-                                    <div className="userInfoCell">
+                                    <div className="userInfoCell prospect">
                                         <span className="cellInfoIcon">
                                             <img src={battery_icon_white} alt="" />
                                         </span>
                                         <span className="infoCellTxt">Prospect - showed</span>
                                     </div>
                                 </div>
-                                <div className="bottomRightAreaCol">
+                                <div className="bottomRightAreaCol tags">
                                     <div className="userInfoCell">
                                         <span className="cellInfoIcon">
                                             <img src={tag_icon_white} alt="" />

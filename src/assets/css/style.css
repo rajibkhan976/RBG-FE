@@ -1336,7 +1336,7 @@ li.listHeading>div.dsc::after {
   border-radius: 5px;
   box-sizing: border-box;
   color: #305671;
-  font-size: 13px;
+  font-size: 14px;
   font-family: 'Poppins', sans-serif;
 }
 .inFormField textarea {
@@ -3562,10 +3562,25 @@ li:hover .extraDottedBtn {
 .modal.contactModal .contactModalHeader.stickey {
   padding-bottom: 5px;
 }
-.modal.contactModal .contactModalHeader.stickey .bottomRightArea, 
-.modal.contactModal .contactModalHeader.stickey .bottomLeftArea .userContacts, 
-.stickey .clockinArea .logTime {
+.modal.contactModal .contactModalHeader.stickey .userInfoCell.jobRole, 
+.modal.contactModal .contactModalHeader.stickey .bottomLeftArea .userEmail, 
+.modal.contactModal .contactModalHeader.stickey .bottomRightAreaCol.tags, 
+.stickey .clockinArea, 
+.stickey .ltValue {
   display: none;
+}
+.modal.contactModal .contactModalHeader.stickey .bottomLeftArea .userPhone {
+  position: absolute;
+  top: 22px;
+  right: 314px;
+}
+.modal.contactModal .contactModalHeader.stickey .userInfoCell.prospect {
+  position: absolute;
+  top: 20px;
+  right: 110px;
+}
+.modal.contactModal .contactModalHeader.stickey .userInfoCell.prospect .infoCellTxt {
+  font-size: 15px;
 }
 
 .contactModalHeaderTopSec {
@@ -3670,6 +3685,10 @@ li:hover .extraDottedBtn {
   margin-top: 10px;
   margin-left: 32px;
 }
+.stickey .userInfoArea .userName {
+  margin-left: 23px;
+}
+
 
 .userInfoArea .editUserName {
   margin-left: 12px;
@@ -3736,11 +3755,11 @@ li:hover .extraDottedBtn {
   padding-right: 8px;
 }
 
-.stickey .clockinBtn {
+/* .stickey .clockinBtn {
   position: absolute;
   right: 325px;
   top: 10px;
-}
+} */
 
 .clockinArea .logTime {
   font-size: 10px;
