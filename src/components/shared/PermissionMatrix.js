@@ -16,6 +16,10 @@ const PermissionMatrix = (props) => {
   const [isAllSubActionGlobal, setIsAllSubActionGlobal] = useState([]);
   const [currentActionId, setCurrentActionId] = useState('');
   const [isSelectAll, setIsSelectAll] = useState(true);
+  const [actionType, setActionType] = useState({
+    id: null,
+    data: null
+  })
 
 
   useEffect(() => {
@@ -37,10 +41,12 @@ const PermissionMatrix = (props) => {
       */
      getActionTypes();
 
-  }, [props.setPermissionData, actionTypeId])
+  }, [])
 
   useEffect(() => {
+    console.log('props reset permission', props.resetPermissions)
     if (props.resetPermissions == 'yes') {
+      console.log('data to null')
       //Empty edited permission data
       setEditedPermissionData([]);
       // Reflect permission data
@@ -72,6 +78,8 @@ const PermissionMatrix = (props) => {
       });
       // Reflect permission data
       getEntities();
+      // setActionType(...actionType, actionType.id : props.setPermissionData[0].actions[0].actionTypeId)
+      getActionTypes();
     }
 
   }, [props.setPermissionData]);
@@ -82,7 +90,7 @@ const PermissionMatrix = (props) => {
   const handleActionType = (e) => {
     // console.log('Type id', e.target.value)
 
-    let actionTypes = actionTypeData.map((actionType, key) => {
+    let actionTypes = actionType.data && actionType.data.map((actionType, key) => {
       return {
         isChecked: (e.target.value === actionType._id ? true : false),
         _id: actionType._id,
@@ -90,8 +98,10 @@ const PermissionMatrix = (props) => {
         slug: actionType.slug,
       }
     });
-    setActionTypeData(actionTypes);
-    setActionTypeId(e.target.value);
+    setActionType({
+      id : e.target.value,
+      data: actionTypes
+    })
     /**
      * Update action type ID
      * for all the entities
@@ -223,22 +233,25 @@ const PermissionMatrix = (props) => {
     try {
       await PermissionServices.actionType()
         .then(result => {
-          // console.log('Permission action types', actionTypeId);
+          // console.log('Permission action types');
           if (result) {
             let actionTypes = result.actionTypes.map((actionType, key) => {
               return {
                 isChecked: Array.isArray(props.setPermissionData) && props.setPermissionData.length ? (actionType._id === props.setPermissionData[0].actions[0].actionTypeId ? true : false) : (actionType._id === result.actionTypes[0]._id ? true : false),
-                // isChecked: (actionType._id === result.actionTypes[0]._id ? true : false),
                 _id: actionType._id,
                 name: actionType.name,
                 slug: actionType.slug,
               }
             });
+            let currentActionTypeId = Array.isArray(props.setPermissionData) && props.setPermissionData.length ? props.setPermissionData[0].actions[0].actionTypeId : actionTypes[0]._id;
             //Set action type checked
-            setActionTypeData(actionTypes);
+            setActionType({
+              id : currentActionTypeId,
+              data : actionTypes
+            })
+            // setActionTypeData(actionTypes);
             console.log('Set initial action type id')
             //Set action type id 
-            setActionTypeId(Array.isArray(props.setPermissionData) && props.setPermissionData.length ? props.setPermissionData[0].actions[0].actionTypeId : actionTypes[0]._id);
           }
         })
     } catch (e) {
@@ -359,7 +372,7 @@ const PermissionMatrix = (props) => {
       actionData.map((actionEle, key) => {
         actions.push({
           actionId: actionEle._id,
-          actionTypeId: actionTypeId
+          actionTypeId: actionType.id
         })
       });
       entityData.map((entity, key) => {
@@ -406,7 +419,7 @@ const PermissionMatrix = (props) => {
         actionData.map((actionEle, key) => {
           actions.push({
             actionId: actionEle._id,
-            actionTypeId: actionTypeId
+            actionTypeId: actionType.id
           })
         });
 
@@ -606,7 +619,7 @@ const PermissionMatrix = (props) => {
                   permission.actions.push(
                     {
                       actionId: actionId,
-                      actionTypeId: actionTypeId
+                      actionTypeId: actionType.id
                     }
                   );
                 }
@@ -640,7 +653,7 @@ const PermissionMatrix = (props) => {
               console.log('push from parent enty here')
               permissions[permissionIndex].actions.push({
                 actionId: actionId,
-                actionTypeId: actionTypeId
+                actionTypeId: actionType.id
               });
             } else {
               //Get all the action ids upto delete
@@ -649,7 +662,7 @@ const PermissionMatrix = (props) => {
                 if (key == 0 || key == dataId) {
                   makeActions.push({
                     actionId: action._id,
-                    actionTypeId: actionTypeId
+                    actionTypeId: actionType.id
                   })
                   console.log('new action 2', key, dataId, action);
                 }
@@ -689,7 +702,7 @@ const PermissionMatrix = (props) => {
           if (key == 0 || key == dataId) {
             makeActions.push({
               actionId: action._id,
-              actionTypeId: actionTypeId
+              actionTypeId: actionType.id
             })
             console.log('new acsn', key, typeof dataId, dataId, action);
           }
@@ -769,7 +782,7 @@ const PermissionMatrix = (props) => {
         if (key == dataId) {
           makeActions.push({
             actionId: action._id,
-            actionTypeId: actionTypeId
+            actionTypeId: actionType.id
           })
           console.log('global func make actions set', key, typeof dataId, dataId, action);
         }
@@ -778,7 +791,7 @@ const PermissionMatrix = (props) => {
       console.log('global func else action data')
       makeActions.push({
         actionId: actionId,
-        actionTypeId: actionTypeId
+        actionTypeId: actionType.id
       })
     }
     console.log('global func Make actions set', dataId, actionId);
@@ -822,7 +835,7 @@ const PermissionMatrix = (props) => {
         {isLoader ? <Loader /> : ''}
         <p className="permissionHead clearfix">
           Manage permissions
-          {actionTypeData && actionTypeData.map((el, key) => {
+          {actionType &&  actionType.data && actionType.data.map((el, key) => {
             return (
               <React.Fragment key={key + "actionTypes"}>
                 <label className="checkCutsom">
@@ -940,7 +953,7 @@ const PermissionMatrix = (props) => {
                             pemissionIndex[0].actions.push(
                               {
                                 actionId: action._id,
-                                actionTypeId: actionTypeId
+                                actionTypeId: actionType.id
                               }
                             )
                           } else if (!pemissionIndex.length) {
@@ -952,7 +965,7 @@ const PermissionMatrix = (props) => {
                               if (key == 0 || action._id == currentActionId) {
                                 makeActions.push({
                                   actionId: action._id,
-                                  actionTypeId: actionTypeId
+                                  actionTypeId: actionType.id
                                 })
                                 console.log('new action 3', key, getIndex, action);
                               }
