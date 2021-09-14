@@ -7,6 +7,7 @@ import { InnerLeftMenuServices } from "../../services/shared/InnerLeftMenuServic
 import white_arrow_right from "../../assets/images/white_arrow_right.svg";
 import undraw_personal_settings_kihd from "../../assets/images/undraw_personal_settings_kihd.svg";
 import SidebarLogo from "../../assets/images/sidebar-logo.png";
+import SideMenuArrow from "../../assets/images/sideArrow.svg";
 
 const InnerLeftMenu = (props) => {
   const pathURL = useLocation().pathname;
@@ -170,6 +171,98 @@ const InnerLeftMenu = (props) => {
                 </span>
               </li>
             </ul>
+          </React.Fragment>
+        )
+      case "setup":
+        return (
+          <React.Fragment>
+            <div className="sidebarHeader">
+              <h4>
+                Setup
+              </h4>
+            </div>
+            <ul>
+              <li>
+                <NavLink className="leftMenuInnerLink" to="/roles">
+                  <div className="indicator"></div>
+                  <div className="linkDetails setup">
+                    <p className="linkHeading">Personal Details</p>
+                    <p className="linkAbout">Lorem ipsum dolor sit</p>
+                    <button className="btn sidemenuarrow">
+                      <img src={SideMenuArrow} alt=""/>
+                    </button>
+                  </div>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink className="leftMenuInnerLink" to="/groups">
+                  <div className="indicator"></div>
+                  <div className="linkDetails setup">
+                    <p className="linkHeading">Gym Details</p>
+                    <p className="linkAbout">Lorem ipsum dolor sit</p>
+                    <button className="btn sidemenuarrow">
+                      <img src={SideMenuArrow} alt=""/>
+                    </button>
+                  </div>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink className="leftMenuInnerLink" to="/users">
+                  <div className="indicator"></div>
+                  <div className="linkDetails setup">
+                    <p className="linkHeading">Communication Setup</p>
+                    <p className="linkAbout">Lorem ipsum dolor sit</p>
+                    <button className="btn sidemenuarrow">
+                      <img src={SideMenuArrow} alt=""/>
+                    </button>
+                  </div>
+                  <ul className="sideSubMenu">
+                    <li><a href="#">Email</a></li>
+                    <li><a href="#">SMS</a></li>
+                    <li className="active"><a href="#">Call</a></li>
+                  </ul>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink className="leftMenuInnerLink" to="/roles">
+                  <div className="indicator"></div>
+                  <div className="linkDetails setup">
+                    <p className="linkHeading">Products</p>
+                    <p className="linkAbout">Lorem ipsum dolor sit</p>
+                    <button className="btn sidemenuarrow">
+                      <img src={SideMenuArrow} alt=""/>
+                    </button>
+                  </div>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink className="leftMenuInnerLink" to="/groups">
+                  <div className="indicator"></div>
+                  <div className="linkDetails setup">
+                    <p className="linkHeading">Customizations</p>
+                    <p className="linkAbout">Lorem ipsum dolor sit</p>
+                    <button className="btn sidemenuarrow">
+                      <img src={SideMenuArrow} alt=""/>
+                    </button>
+                  </div>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink className="leftMenuInnerLink" to="/users">
+                  <div className="indicator"></div>
+                  <div className="linkDetails setup">
+                    <p className="linkHeading">Templates</p>
+                    <p className="linkAbout">Lorem ipsum dolor sit</p>
+                    <button className="btn sidemenuarrow">
+                      <img src={SideMenuArrow} alt=""/>
+                    </button>
+                  </div>
+                </NavLink>
+              </li>
+            </ul>
+            <div className="linkImg">
+              <img src={undraw_personal_settings_kihd} alt="" />
+            </div>
           </React.Fragment>
         )
       default:

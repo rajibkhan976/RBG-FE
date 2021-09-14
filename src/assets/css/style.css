@@ -493,7 +493,7 @@ audio, video {
 }
 
 .btnUserMenu {
-  margin-right: 22px;
+  margin-right: 0;
 }
 
 .btnUserMenu figure {
@@ -502,6 +502,7 @@ audio, video {
   background-position: center center;
   background-size: cover;
   border: 2px solid #fff;
+  box-shadow: 0px 5px 30px #00000027;
   border-radius: 50%;
   -webkit-border-radius: 50%;
   -moz-border-radius: 50%;
@@ -4092,3 +4093,567 @@ div button.btn-link {
   border-radius: 50px;
   overflow: hidden;
 }
+
+
+/* setup styles ================================== */
+
+.buttonHeaderIcons {
+  width: 50px;
+  padding: 12px;
+  position: relative;
+  font-size: 0;
+  margin-left: 7px;
+  background: transparent;
+  border-radius: 50%;
+}
+.buttonHeaderIcons.active {
+  background: #9BAEBC;
+}
+.buttonNotifications{
+  margin-left: 17px;
+}
+
+.menuUserDetail {
+  text-align: left;
+  padding-left: 19px;
+}
+
+.menuUserDetail span {
+  font-size: 12px;
+  color: #9BAEBC;
+  line-height: 16px;
+}
+.menuUserDetail h3 {
+  font-size: 16px;
+  color: #305671;
+  font-weight: 900;
+}
+.btnUserMenu i{
+  padding-left: 10px;
+}
+.headerCallToAction{
+  width: auto;
+  height: 44px;
+  margin: 13px 20px;
+  border: 1px solid #D3D9DE;
+  border-radius: 5px;
+  display: flex;
+  align-content: center;
+}
+.headerCallToAction .leftList{
+  width: 143px;
+  background: #F6F8FA;
+  padding: 0 7px;
+  border-radius: 5px 0 0 5px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  color: #305671;
+  font-size: 13px;
+  position: relative;
+}
+.headerCallToAction .leftList i{
+  position: absolute;
+  right: 4px;
+  top: 10px;
+}
+.headerCallToAction .rightDetails{
+  width: 75%;
+  padding: 0 10px;
+  border-left: 1px solid #D3D9DE;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: space-between;
+}
+.headerCallToAction .rightDetails p {
+  color: #305671;
+  font-size: 13px;
+  line-height: 17px;
+  font-weight: 500;
+}
+.headerCallToAction .rightDetails p span{
+  color: #9BAEBC;
+  font-size: 11px;
+  font-weight: 400;
+  display: block;
+}
+.callBtn{
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+  text-align: center;
+  margin: 2px 5px;
+  padding: 5px;
+  display: inline-block;
+  box-sizing: border-box;
+  border-radius: 50%;
+}
+.greenCall{
+  background: #36D177;
+}
+.redCall{
+  background: #ED4755;
+}
+.blueCall{
+  background: #5570C9;
+  margin-right: 5px;
+}
+.setUpPopUp{
+  background: #F6F8FA;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  width: calc(100% - 75px);
+  height: calc(100% - 68px);
+  z-index: 100;
+  padding: 35px 35px 35px 320px;
+}
+
+.setUpPopUp .headding1{
+  font-size: 26px;
+  color: #305671;
+  position: relative;
+  padding: 0 60px 0 0;
+  display: inline-block;
+  height: 50px;
+  margin-bottom: 40px;
+}
+.setUpPopUp .headding1:after{
+   content: "";
+    position: absolute;
+    right: 0;
+    width: 44px;
+    height: 2px;
+    background-color: #8d9eab;
+    top: 16px;
+}
+.setUpPopUp .listHead{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.setUpPopUp ul {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+}
+.setUpPopUp ul li{
+  display: flex;
+  width: 25%;
+  flex-wrap: wrap;
+  padding: 10px 0 80px 0;
+  align-content: flex-start;
+}
+
+.setUpPopUp .listHead i{
+  width: 50px;
+}
+.setUpPopUp .listHead > div{
+  width: calc(100% - 50px);
+}
+.setUpPopUp .listHead h3{
+  font-size: 16px;
+  line-height: 25px;
+  font-weight: 400;
+  color: #305671;
+}
+.setUpPopUp .listHead p{
+  font-size: 12px;
+  line-height: 18px;
+  color: #9BAEBC;
+}
+.setUpPopUp .secondListing{
+  margin: 10px 10px 0 50px;
+}
+.setUpPopUp .secondListing li{
+  position: relative;
+  color: #305671;
+  font-size: 13px;
+  padding: 5px 0;
+  display: list-item;
+  width: 100%;
+}
+.setUpPopUp .secondListing li::before {
+  content: "-";
+  margin-right: 5px;
+
+}
+.setUpPopUp .secondListing li a{
+  color: #305671;
+}
+.setUpPopUp .secondListing li a:hover {
+  color: #ED707A;
+}
+
+.setUpPopUp a:hover {
+  color: #ED707A;
+}
+
+/* setup page ................... */
+
+.setup .linkHeading {
+  max-width: 100%;
+}
+.sidemenuarrow{
+  position: absolute;
+  right: 6px;
+  top: 12px;
+  border: none;
+  background: none;
+}
+
+.linkDetails.setup {
+  position: relative;
+}
+.setup p+p {
+  margin-top: 5px;
+}
+.sideSubMenu{
+  margin: 10px 5px 0 30px;
+}
+.sideSubMenu li {
+  color: #305671;
+  font-size: 13px;
+  padding: 5px 0 2px 15px;
+  display: list-item;
+  width: 100%;
+  position: relative;
+}
+.sideSubMenu li:before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  left: 0;
+  width: 6px;
+  height: 1px;
+  background-color: #305671;
+}
+.sideSubMenu li a{
+  color: #305671;
+}
+.sideSubMenu li:hover a,
+.sideSubMenu li.active a{
+  color: #ED707A;
+}
+.sideSubMenu li:hover:before,
+.sideSubMenu li.active:before  {
+  background-color: #ED707A;
+}
+
+.dashInnerUI.productSteUp{
+  width: calc(100% - 470px);
+}
+.productRightSetUpPanel{
+  width: 430px;
+  background: #E9EFF5;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  padding: 60px 38px;
+  overflow: auto;
+}
+.dashboardFooter {
+  position: relative;
+  z-index: 2;
+}
+
+.productListingHeader{
+  color: #305671;
+  font-size: 16px;
+  line-height: 25px;
+  padding: 0;
+  margin: 0 0 20px 0;
+}
+.productSearchPanel{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-content: center;
+  margin: 0 0 10px 0;
+}
+.productSearchPanel input{
+  width: calc(100% - 132px);
+  height: 40px;
+  background: #FFFFFF;
+  border: 1px solid #D3D9DE;
+  border-radius: 5px;
+}
+.productSearchPanel button{
+  height: 40px;
+  background: #305671 0% 0% no-repeat padding-box;
+  border-radius: 5px;
+  padding: 0 14px;
+  color: #fff;
+  font-size: 13px;
+}
+.productSearchPanel button img{
+  margin-left: 7px;
+}
+
+.ProCategoryListing{
+  margin: 12px 0;
+}
+.ProCategoryListing li {
+  color: #305671;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 4px 8px 25px;
+  display: list-item;
+  margin: 8px 0;
+  width: 100%;
+  position: relative;
+  background-color: transparent;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.ProCategoryListing li:before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  left: 10px;
+  width: 6px;
+  height: 1px;
+  background-color: #305671;
+}
+.ProCategoryListing li a:first-child{
+  color: #305671;
+  width: calc(100% - 15px);
+}
+.ProCategoryListing li a:last-child{
+  color: #fff;
+  width: 11px;
+  display: none;
+  text-align: center;
+  flex-wrap: wrap;
+  align-content: center;
+}
+.ProCategoryListing li:hover a,
+.ProCategoryListing li.active a{
+  color: #fff;
+}
+.ProCategoryListing li:hover{
+  background-color: #9BAEBC;
+}
+.ProCategoryListing li:hover:before {
+  background-color: #fff;
+}
+.ProCategoryListing li a{
+  color: #305671;
+  height: 22px;
+  line-height: 22px;
+}
+.ProCategoryListing li:hover a:last-child{
+  display: flex;
+}
+.productListing {
+  width: 100%;
+
+}
+.productListBody{
+  overflow: auto;
+}
+.productListBody::-webkit-scrollbar {
+  width: 4px;
+}
+
+.productListBody::-webkit-scrollbar-track {
+  background-color: #DCE4EB;
+}
+
+.productListBody::-webkit-scrollbar-thumb {
+  background-color: #F1A668;
+}
+
+.productList {
+    width: 100%;
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 7px 20px 7px 7px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.productListLeft {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  width: calc(100% - 215px);
+}
+.proImage{
+  width: 90px;
+  height: 90px;
+  border-radius: 5px;
+  margin-right: 15px;
+  overflow: hidden;
+}
+.proImage img{
+  width: 90px;
+  height: auto;
+  border-radius: 5px;
+}
+.productListLeft .proInfo {
+  width: auto;
+}
+.proInfo p {
+  font-size: 13px;
+  color: #55BBC9;
+  line-height: 20px;
+  width: 250px;
+  margin: 0 0 15px 0;
+}
+.proInfo p a{
+  color: #55BBC9;
+}
+.proInfo h3 {
+  font-size: 20px;
+  color: #305671;
+  width: 90px;
+  margin: 0 0 5px 0;
+}
+.proInfo span{
+  font-size: 11px;
+  color: #9BAEBC;
+  line-height: 17px;
+  width: auto;
+  display: flex;
+  align-items: center;
+  margin: 0 0 5px 0;
+}
+.productListRight {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 215px;
+}
+.chooseSize p,
+.chooseColor p{
+  font-size: 13px;
+  color: #9BAEBC;
+  line-height: 17px;
+  margin: 0 0 23px 0;
+}
+.chooseSize button,
+.chooseColor button{
+  display: inline;
+  margin: 0 2px;
+  text-align: center;
+  width: 24px;
+  height: 24px;
+  background: #FFFFFF ;
+  border: 1px solid #fff;
+}
+.chooseSize button{
+  border: 1px solid #9BAEBC;
+  border-radius: 5px;
+  font-size: 13px;
+  color: #9BAEBC;
+  line-height: 24px;
+}
+
+.chooseSize button:hover,
+.chooseSize button.active{
+  background: #305671;
+  border: 1px solid #305671;
+  color: #fff;
+  border: 1px solid #fff;
+}
+.chooseColor button{
+  border-radius: 50%;
+}
+.chooseColor button:hover,
+.chooseColor button.active{
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 30%);
+}
+.chooseColor button.gray{
+  background-color: #797D62;
+}
+.chooseColor button.red{
+  background-color: #834140;
+}
+.chooseColor button.blue{
+  background-color: #369ED5;
+}
+
+.productViewType{
+  width: 100%;
+  text-align: right;
+  margin-bottom: 20px;
+}
+.productViewType button{
+  display: inline-block;
+}
+.userListHead.product{
+  margin-bottom: 20px;
+}
+
+.callListingTable {
+  margin-right: 0;
+}
+
+.weekDateList {
+  display: inline-block;
+}
+
+.weekDateList .weekDate {
+  width: 25px;
+  height: 25px;
+  float: left;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid #9BAEBC;
+  font-size: 13px;
+  text-align: center;
+  line-height: 24px;
+  color: #9BAEBC;
+  margin-right: 20px;
+  transition: all 0.5s ease 0s;
+}
+
+.weekDateList .weekDate.active {
+  background: #305671;
+  border-color: #305671;
+  color: #fff;
+}
+
+.weekDateList .weekDate:last-child {
+  margin-right: 0;
+}
+
+.callListingTable .userName .btn p {
+  margin-left: 0;
+}
+.callListingTable .scehTimeSlot {
+  min-width: 300px;
+}
+
+.assignedNumberArea {
+  margin-bottom: 40px;
+}
+
+.assignedNumberArea h3, 
+.callListTabHeading {
+  color: #9BAEBC;
+  font-size: 13px;
+  font-weight: normal;
+  margin-bottom: 8px;
+}
+
+.assignedNumberArea p {
+  color: #305671;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.callListTabHeading {
+  margin-bottom: 15px;
+}
+.gap_icon{
+  margin-right: 6px;
+}
+

@@ -9,6 +9,8 @@ import AutomationRoutes from "./automation/AutomationRoutes";
 import ContactRoutes from "./contact/ContactRoutes";
 import NotFound from "./shared/NotFound";
 import ContactModal from "./shared/contactModal/Index";
+import CommunicationRoutes from "./setup/communication/communicationRoute";
+import ProductRouter from "./setup/product/productRoute";
 
 const MainComponent = () => {
   const pathURL = useLocation().pathname;
@@ -56,6 +58,12 @@ const MainComponent = () => {
               </Route>
               <Route exact path="/contacts">
                 <ContactRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}/>
+              </Route>
+              <Route exact path={["/call-setup", "/sms-setup", "/email-setup"]}>
+                <CommunicationRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></CommunicationRoutes>
+              </Route>
+              <Route exact path="/products">
+                <ProductRouter toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></ProductRouter>
               </Route>
               <Route exact path="/" component={() => <Redirect to="/dashboard" />} />
               <Route exact path="*">
