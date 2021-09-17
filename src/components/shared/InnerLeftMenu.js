@@ -224,7 +224,7 @@ const InnerLeftMenu = (props) => {
                 </NavLink>
               </li>
               <li>
-                <NavLink className="leftMenuInnerLink" to="/roles">
+                <NavLink className="leftMenuInnerLink" to="/products">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Products</p>

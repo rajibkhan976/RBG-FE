@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState }from "react";
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import percentTag from "../../../../assets/images/percentage_icon.png"
 import proImg1 from "../../../../assets/images/proImg1.png";
@@ -10,11 +10,27 @@ import proImg6 from "../../../../assets/images/proImg6.png";
 import proImg7 from "../../../../assets/images/proImg7.png";
 import listView from "../../../../assets/images/listView.svg";
 import CategoryListing from "./categories";
+import { ErrorAlert, SuccessAlert } from "../../../shared/messages";
 
 const ProductListing = () => {
     document.title = "Products";
+    const messageDelay = 5000; // ms
+    const [successMsg, setSuccessMsg] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
+
+    useEffect(() => {
+        if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
+        if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
+    }, [successMsg, errorMsg]);
+
     return (
         <>
+            {successMsg &&
+                <SuccessAlert message={successMsg}></SuccessAlert>
+            }
+            {errorMsg &&
+                <ErrorAlert message={errorMsg}></ErrorAlert>
+            }
             <div className="dashInnerUI productSteUp">
                 <div class="userListHead product">
                     <div class="listInfo">
@@ -233,7 +249,10 @@ const ProductListing = () => {
                     </div>
                 </div>
             </div>
-            <CategoryListing/>
+            <CategoryListing
+            successMsg = {(msg) => setSuccessMsg(msg)}
+            errorMsg = {(msg) => setErrorMsg(msg)}
+            />
 
         </>
     );
