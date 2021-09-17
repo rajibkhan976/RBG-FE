@@ -4,7 +4,7 @@ import {Route } from "react-router-dom";
 import InnerLeftMenu from "../../shared/InnerLeftMenu";
 import HeaderDashboard from "../../shared/HeaderDashboard";
 import DashboardFooter from "../../shared/FooterDashboard";
-import ProductListing from "./productListing";
+import Products from "./products";
 
 
 const ProductRouter = (props) => {
@@ -18,7 +18,7 @@ const ProductRouter = (props) => {
             <div className="dashboardElComponent">
                 <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} />
                 <div className="dashInnerStructure">
-                <Route path="/products" component={ProductListing} />
+                <Route path="/products" component={Products} />
                 <DashboardFooter />
                 </div>
             </div>
