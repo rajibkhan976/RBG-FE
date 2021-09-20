@@ -4140,14 +4140,14 @@ div button.btn-link {
   display: flex;
   align-content: center;
 }
-.headerCallToAction .leftList{
+.headerCallToAction .leftListArea {
   width: 143px;
+  float: left;
   background: #F6F8FA;
-  padding: 0 7px;
   border-radius: 5px 0 0 5px;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
+}
+.headerCallToAction .leftList{
+  border-radius: 5px 0 0 5px;
   color: #305671;
   font-size: 13px;
   position: relative;
@@ -4157,6 +4157,44 @@ div button.btn-link {
   right: 4px;
   top: 10px;
 }
+.callToActionBtn {
+  border: none;
+  position: relative;
+  background: #F6F8FA;
+  height: 42px;
+  width: 95px;
+  border-radius: 5px 0 0 5px;
+  text-align: left;
+  transition: all 0.3s ease 0s;
+}
+.callToActionBtn::after {
+  content: "";
+  position: absolute;
+  width: 1px;
+  height: 26px;
+  top: 8px;
+  right: 0px;
+  background: #D3D9DE;
+}
+.callToActionBtn .actionName {
+  color: #305671;
+  font-size: 14px;
+  line-height: 35px;
+}
+.listDropBtn {
+  border: none;
+  background: #F6F8FA;
+  height: 42px;
+  width: 27px;
+  float: right;
+  transition: all 0.3s ease 0s;
+}
+
+.callToActionBtn:hover, 
+.listDropBtn:hover {
+  background: #e3e5e7;
+}
+
 .headerCallToAction .rightDetails{
   width: 75%;
   padding: 0 10px;
@@ -4179,23 +4217,23 @@ div button.btn-link {
   display: block;
 }
 .callBtn{
+  float: left;
   width: 32px;
   height: 32px;
   line-height: 32px;
   text-align: center;
   margin: 2px 5px;
   padding: 5px;
-  display: inline-block;
   box-sizing: border-box;
   border-radius: 50%;
 }
-.greenCall{
+.green{
   background: #36D177;
 }
-.redCall{
+.red{
   background: #ED4755;
 }
-.blueCall{
+.violet{
   background: #5570C9;
   margin-right: 5px;
 }
@@ -4388,6 +4426,7 @@ div button.btn-link {
   padding: 0 14px;
   color: #fff;
   font-size: 13px;
+  margin-left: 10px;
 }
 .productSearchPanel button img{
   margin-left: 7px;
@@ -4400,9 +4439,8 @@ div button.btn-link {
   color: #305671;
   font-size: 13px;
   font-weight: 500;
-  padding: 8px 4px 8px 25px;
-  display: list-item;
-  margin: 8px 0;
+  padding: 8px 4px 8px 20px;
+  margin: 5px 0;
   width: 100%;
   position: relative;
   background-color: transparent;
@@ -4420,11 +4458,15 @@ div button.btn-link {
   height: 1px;
   background-color: #305671;
 }
-.ProCategoryListing li a:first-child{
+.ProCategoryListing li .smallListName{
   color: #305671;
   width: calc(100% - 15px);
 }
-.ProCategoryListing li a:last-child{
+.ProCategoryListing li .bigListName{
+  color: #305671;
+  width: 100%;
+}
+.ProCategoryListing li .showList{
   color: #fff;
   width: 11px;
   display: none;
@@ -4432,23 +4474,37 @@ div button.btn-link {
   flex-wrap: wrap;
   align-content: center;
 }
-.ProCategoryListing li:hover a,
-.ProCategoryListing li.active a{
+.ProCategoryListing li:hover .smallListName,
+.ProCategoryListing li.active .smallListName,
+.ProCategoryListing li:hover .bigListName,
+.ProCategoryListing li.active .bigListName{
   color: #fff;
 }
-.ProCategoryListing li:hover{
+.ProCategoryListing li:hover, 
+.ProCategoryListing li.active{
   background-color: #9BAEBC;
 }
-.ProCategoryListing li:hover:before {
+.ProCategoryListing li:hover:before, 
+.ProCategoryListing li.active:before {
   background-color: #fff;
 }
-.ProCategoryListing li a{
+.ProCategoryListing li .smallListName,
+.ProCategoryListing li .bigListName{
   color: #305671;
   height: 22px;
   line-height: 22px;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
 }
-.ProCategoryListing li:hover a:last-child{
+.ProCategoryListing li:hover .showList, 
+.ProCategoryListing li.active .showList {
   display: flex;
+  background: transparent;
+  border: none;
+  padding: 0;
 }
 .productListing {
   width: 100%;
@@ -4538,8 +4594,8 @@ div button.btn-link {
   line-height: 17px;
   margin: 0 0 23px 0;
 }
-.chooseSize button,
-.chooseColor button{
+.chooseSize span,
+.chooseColor span{
   display: inline;
   margin: 0 2px;
   text-align: center;
@@ -4547,8 +4603,9 @@ div button.btn-link {
   height: 24px;
   background: #FFFFFF ;
   border: 1px solid #fff;
+  display: inline-block;
 }
-.chooseSize button{
+.chooseSize span{
   border: 1px solid #9BAEBC;
   border-radius: 5px;
   font-size: 13px;
@@ -4557,26 +4614,25 @@ div button.btn-link {
 }
 
 .chooseSize button:hover,
-.chooseSize button.active{
+.chooseSize span.active{
   background: #305671;
   border: 1px solid #305671;
   color: #fff;
-  border: 1px solid #fff;
 }
-.chooseColor button{
+.chooseColor span{
   border-radius: 50%;
 }
 .chooseColor button:hover,
-.chooseColor button.active{
-  box-shadow: 0 0 0 1px rgb(0 0 0 / 30%);
+.chooseColor span.active{
+  box-shadow: 0 0 0 1px rgb(48 86 113 / 90%);
 }
-.chooseColor button.gray{
+.chooseColor span.gray{
   background-color: #797D62;
 }
-.chooseColor button.red{
+.chooseColor span.red{
   background-color: #834140;
 }
-.chooseColor button.blue{
+.chooseColor span.blue{
   background-color: #369ED5;
 }
 
@@ -4656,4 +4712,181 @@ div button.btn-link {
 .gap_icon{
   margin-right: 6px;
 }
+.aplyfilteCheck{
+  margin-bottom: 20px;
+}
+.aplyfilteCheck p ,
+.applySlider p{
+  color: #305671;
+  font-size: 13px;
+  margin-bottom: 15px;
+}
+.aplyfilteCheck label {
+  color: #305671;
+  font-size: 13px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  margin-bottom: 10px;
+}
+.aplyfilteCheck .customCheckbox{
+  top: 0;
+}
+.aplyfilteCheck .chooseColor {
+  position: relative;
+  display: inline;
+  margin: 0 5px 0 0;
+  text-align: center;
+  width: 24px;
+  height: 24px;
+}
+.chooseColor input[type="checkbox"] + span {
+    display: inline;
+    margin: 0 2px;
+    text-align: center;
+    width: 24px;
+    height: 24px;
+    background: #305671 no-repeat center center / 8px auto;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    left: 0;
+    position: absolute;
+    pointer-events: none;
+}
+.chooseColor input[type="checkbox"].gray + span{
+  background-color: #797D62;
+}
+.chooseColor input[type="checkbox"].red + span{
+  background-color: #834140;
+}
+.chooseColor input[type="checkbox"].blue + span {
+  background-color: #369ED5;
+}
+.chooseColor input[type="checkbox"]  {
+    width: 19px;
+    height: 15px;
+    min-height: 17px;
+}
+.chooseColor input[type="checkbox"] + span:hover,
+.chooseColor input[type="checkbox"]:checked + span{
+  box-shadow: 0 0 0 1px rgb(48, 86, 113);
+  background-image:  url("../images/tick.svg") ;
+}
 
+.applySlider input[type="range"] {
+  --minRangePercent: 0%;
+  --maxRangePercent: 0%;
+  height: .4rem;
+}
+.applySlider .applySlider input[type="range"]:invalid {
+  box-shadow: none;
+}
+
+.applySlider input[type="range"]::-webkit-slider-thumb {
+
+}
+
+.applySlider .min-max-slider {
+  position: relative;
+  width: 200px;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.applySlider .min-max-slider::focus {
+  oultine: none;
+}
+
+.applySlider input::focus {
+  outline: none;
+}
+
+.applySlider .min-max-slider > label {
+  display: none;
+}
+
+.applySlider .min-max-slider > input {
+  cursor: pointer;
+  position: absolute;
+}
+
+/* webkit specific styling */
+.applySlider .min-max-slider > input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  outline: none !important;
+  background: transparent;
+  min-height: auto;
+  padding: 0;
+}
+.applySlider .min-max-slider > input.min {
+  background-image: linear-gradient(
+    to right,
+    silver 0%,
+    silver var(--minRangePercent),
+    orange var(--minRangePercent),
+    orange 100%
+  );
+}
+
+.applySlider .min-max-slider > input.max {
+  background-image: linear-gradient(
+    to right,
+    orange 0%,
+    orange var(--maxRangePercent),
+    silver var(--maxRangePercent),
+    silver 100%
+  );
+}
+
+.applySlider .min-max-slider > input::-webkit-slider-runnable-track,
+.applySlider .min-max-slider > input::-moz-range-track,
+.applySlider .min-max-slider > input::-ms-track {
+  box-sizing: border-box;
+  border: none;
+  height: 4px;
+  background: orange;
+  border-radius: 8px;
+  height: 10px;
+  background-color: transparent;
+  background-image: linear-gradient(orange, orange),
+    linear-gradient(orange, orange);
+  background-size: var(--sx) 10px, calc(100% - var(--sx)) 4px;
+  background-position: left center, right center;
+  background-repeat: no-repeat;
+}
+
+.applySlider .min-max-slider > input::focus {
+  outline: none;
+}
+
+.applySlider .min-max-slider > input.max::-moz-range-progress {
+  background: orange;
+  border-radius: 4px;
+}
+
+.applySlider .min-max-slider > input.min::-moz-range-progress {
+  height: 0.6em;
+  background: silver;
+  border-radius: 4px;
+}
+
+.applySlider input[type="range"]::-webkit-slider-thumb,
+.applySlider input[type="range"]::-moz-range-thumb {
+  -webkit-appearance: none; /* Override default look */
+  -moz-appearance: none;
+  appearance: none;
+  width: 20px; /* Set a specific slider handle width */
+  height: 20px; /* Slider handle height */
+  background: orange; /* Green background */
+  cursor: pointer; /* Cursor on hover */
+  border: none;
+  color: 1px solid orange;
+  border-radius: 50%;
+  /* box-shadow: -205px 0 0 200px hsl(100, 100%, 40%); */
+}
+
+.applySlider .min-max-slider > input::-webkit-slider-runnable-track {
+  cursor: pointer;
+}

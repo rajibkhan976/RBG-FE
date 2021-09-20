@@ -1,4 +1,5 @@
 import React, { useEffect, useState }from "react";
+import ProductFilter from "./productFilter";
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import percentTag from "../../../../assets/images/percentage_icon.png"
 import proImg1 from "../../../../assets/images/proImg1.png";
@@ -17,6 +18,15 @@ const ProductListing = () => {
     const messageDelay = 5000; // ms
     const [successMsg, setSuccessMsg] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
+    const [prodFilterModalStatus, setProdFilterModalStatus] = useState(false);
+
+    const openFilterModal = () => {
+        setProdFilterModalStatus(true);
+    }
+
+    const closeFilterModal = () => {
+        setProdFilterModalStatus(false);
+    }
 
     useEffect(() => {
         if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
@@ -43,8 +53,8 @@ const ProductListing = () => {
                     </div>
                 </div>
                 <div className="productViewType">
-                    <button className="btn">
-                        <img src={listView} alt="" />
+                    <button className="btn" onClick={() => openFilterModal ()}>
+                        <img src={listView} alt="filter" />
                     </button>
                 </div>
                 <div class="productListBody">
@@ -65,15 +75,15 @@ const ProductListing = () => {
                             <div className="productListRight">
                                 <div className="chooseSize">
                                     <p>Size</p>
-                                    <button className="btn">S</button>
-                                    <button className="btn">M</button>
-                                    <button className="btn">L</button>
+                                    <span className="active">S</span>
+                                    <span>M</span>
+                                    <span>L</span>
                                 </div>
                                 <div className="chooseColor">
                                     <p>Color</p>
-                                    <button className="btn gray"></button>
-                                    <button className="btn red"></button>
-                                    <button className="btn blue"></button>
+                                    <span className="gray"></span>
+                                    <span className="red"></span>
+                                    <span className="blue active"></span>
                                 </div>
                             </div>
                         </div> {/*//end list */}
@@ -93,15 +103,15 @@ const ProductListing = () => {
                             <div className="productListRight">
                                 <div className="chooseSize">
                                     <p>Size</p>
-                                    <button className="btn">S</button>
-                                    <button className="btn">M</button>
-                                    <button className="btn">L</button>
+                                    <span className="active">S</span>
+                                    <span>M</span>
+                                    <span>L</span>
                                 </div>
                                 <div className="chooseColor">
                                     <p>Color</p>
-                                    <button className="btn gray"></button>
-                                    <button className="btn red"></button>
-                                    <button className="btn blue"></button>
+                                    <span className="gray"></span>
+                                    <span className="red"></span>
+                                    <span className="blue active"></span>
                                 </div>
                             </div>
                         </div> {/*//end list */}
@@ -121,15 +131,15 @@ const ProductListing = () => {
                             <div className="productListRight">
                                 <div className="chooseSize">
                                     <p>Size</p>
-                                    <button className="btn">S</button>
-                                    <button className="btn">M</button>
-                                    <button className="btn">L</button>
+                                    <span className="active">S</span>
+                                    <span>M</span>
+                                    <span>L</span>
                                 </div>
                                 <div className="chooseColor">
                                     <p>Color</p>
-                                    <button className="btn gray"></button>
-                                    <button className="btn red"></button>
-                                    <button className="btn blue"></button>
+                                    <span className="gray"></span>
+                                    <span className="red"></span>
+                                    <span className="blue active"></span>
                                 </div>
                             </div>
                         </div> {/*//end list */}
@@ -149,15 +159,15 @@ const ProductListing = () => {
                             <div className="productListRight">
                                 <div className="chooseSize">
                                     <p>Size</p>
-                                    <button className="btn">S</button>
-                                    <button className="btn">M</button>
-                                    <button className="btn">L</button>
+                                    <span className="active">S</span>
+                                    <span>M</span>
+                                    <span>L</span>
                                 </div>
                                 <div className="chooseColor">
                                     <p>Color</p>
-                                    <button className="btn gray"></button>
-                                    <button className="btn red"></button>
-                                    <button className="btn blue"></button>
+                                    <span className="gray"></span>
+                                    <span className="red"></span>
+                                    <span className="blue active"></span>
                                 </div>
                             </div>
                         </div> {/*//end list */}
@@ -177,15 +187,15 @@ const ProductListing = () => {
                             <div className="productListRight">
                                 <div className="chooseSize">
                                     <p>Size</p>
-                                    <button className="btn">S</button>
-                                    <button className="btn">M</button>
-                                    <button className="btn">L</button>
+                                    <span className="active">S</span>
+                                    <span>M</span>
+                                    <span>L</span>
                                 </div>
                                 <div className="chooseColor">
                                     <p>Color</p>
-                                    <button className="btn gray"></button>
-                                    <button className="btn red"></button>
-                                    <button className="btn blue"></button>
+                                    <span className="gray"></span>
+                                    <span className="red"></span>
+                                    <span className="blue active"></span>
                                 </div>
                             </div>
                         </div> {/*//end list */}
@@ -205,15 +215,15 @@ const ProductListing = () => {
                             <div className="productListRight">
                                 <div className="chooseSize">
                                     <p>Size</p>
-                                    <button className="btn">S</button>
-                                    <button className="btn">M</button>
-                                    <button className="btn">L</button>
+                                    <span className="active">S</span>
+                                    <span>M</span>
+                                    <span>L</span>
                                 </div>
                                 <div className="chooseColor">
                                     <p>Color</p>
-                                    <button className="btn gray"></button>
-                                    <button className="btn red"></button>
-                                    <button className="btn blue"></button>
+                                    <span className="gray"></span>
+                                    <span className="red"></span>
+                                    <span className="blue active"></span>
                                 </div>
                             </div>
                         </div> {/*//end list */}
@@ -233,15 +243,15 @@ const ProductListing = () => {
                             <div className="productListRight">
                                 <div className="chooseSize">
                                     <p>Size</p>
-                                    <button className="btn">S</button>
-                                    <button className="btn">M</button>
-                                    <button className="btn">L</button>
+                                    <span className="active">S</span>
+                                    <span>M</span>
+                                    <span>L</span>
                                 </div>
                                 <div className="chooseColor">
                                     <p>Color</p>
-                                    <button className="btn gray"></button>
-                                    <button className="btn red"></button>
-                                    <button className="btn blue"></button>
+                                    <span className="gray"></span>
+                                    <span className="red"></span>
+                                    <span className="blue active"></span>
                                 </div>
                             </div>
                         </div> {/*//end list */}
@@ -254,6 +264,7 @@ const ProductListing = () => {
             errorMsg = {(msg) => setErrorMsg(msg)}
             />
 
+            { prodFilterModalStatus && <ProductFilter closeModal={closeFilterModal}/> }
         </>
     );
 }

@@ -6,7 +6,7 @@ import Setup from "../setup/mainPopup/setup";
 import CreateIcon from "../../assets/images/create.png";
 import NotificationIcon from "../../assets/images/notif.png";
 import UserIcon from "../../assets/images/user.png";
-import arrowDown from "../../assets/images/arrowDown.svg";
+import blueDownArrow from "../../assets/images/blueDownArrow.svg";
 import callIcon1 from "../../assets/images/callicon1.svg";
 import callIcon2 from "../../assets/images/callicon2.svg";
 import callIcon3 from "../../assets/images/callicon3.svg";
@@ -90,12 +90,18 @@ function HeaderDashboard(props) {
           </span>
         </div>
         <div className="headerCallToAction">
-          <div className="leftList">
-              <span className="callBtn blueCall">
-                <img src={callIcon3} alt="" />
-              </span>
-              call
-              <i><img src={arrowDown} alt="" /></i>
+          <div className="leftListArea">
+            <div className="leftList">
+              <button className="callToActionBtn">
+                <span className="callBtn violet">
+                  <img src={callIcon3} alt="" />
+                </span>
+                <span className="actionName">Call</span>  
+              </button>
+              <button className="listDropBtn">
+                <img src={blueDownArrow} alt="" />
+              </button>
+            </div>
           </div>
           <div className="rightDetails">
             <p>
@@ -103,10 +109,10 @@ function HeaderDashboard(props) {
               +1 234 567 8901
             </p>
             <div className="d-flex">
-              <button className="btn callBtn redCall">
+              <button className="btn callBtn red">
                 <img src={callIcon2} alt="" />
               </button>
-              <button className="btn callBtn greenCall">
+              <button className="btn callBtn green">
                 <img src={callIcon1} alt="" />
               </button>
             </div>  
@@ -181,7 +187,7 @@ function HeaderDashboard(props) {
               <span>User</span>
               <h3>Steve M.</h3>
             </div>
-            <i><img src={arrowDown} alt="" /></i>
+            <i><img src={blueDownArrow} alt="" /></i>
           </button>
         </div>
       </div>

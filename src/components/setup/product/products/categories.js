@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import arrowRightWhite from "../../../../assets/images/arrowRightWhite.svg";
 import dot3White from "../../../../assets/images/info_3dot_white.svg";
 import { ProductServices } from "../../../../services/setup/ProductServices";
@@ -10,6 +10,31 @@ const CategoryListing = (props) => {
     const [category, setCategory] = useState({
         name: ""
     });
+    
+    const optionsToggleRef = useRef();
+    const [option, setOption] = useState(null);
+    const toogleActionList = (index) => {
+        setOption(index !== option ? index : null);
+    }
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+    }, []);
+
+    /**
+     * Handle outside click
+     */
+    const handleClickOutside = (event) => {
+        if (optionsToggleRef.current.contains(event.target)) {
+            //console.log('// inside click');
+            return;
+        }
+        // console.log('// outside click');
+        setOption(null);
+    }
 
     useEffect(() => {
         fetchCategories();
@@ -76,12 +101,39 @@ const CategoryListing = (props) => {
         if (categoryData.length) {
             return (
                 <>
-                    <li><a href="#">All Category</a><a></a></li>
+                    <li><button className="bigListName">All Category</button></li>
                     {categoryData.map((cat, key) => {
                         return (
                             <React.Fragment key={key + "_category"}>
-                                <li><a href="#">{cat.name}</a>
-                                    <a href="#"><img src={dot3White} alt="" /></a></li>
+                                <li ref={optionsToggleRef} className={option === key ? "active" : ""}>
+                                    <button className="smallListName">{cat.name}</button>
+                                    <button className="showList" onClick={() => toogleActionList(key)}>
+                                        <img src={dot3White} alt=""/>
+                                    </button>
+                                    <div class={option === key ? "listOpen dropdownOptions" : "listHide dropdownOptions"}>
+                                        <button class="btn btnEdit">
+                                            <span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" class="editIcon">
+                                                    <g transform="translate(0.75 0.75)">
+                                                        <path class="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path>
+                                                        <path class="a" d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z" transform="translate(-4.384 -2)"></path>
+                                                    </g></svg>
+                                            </span>Edit
+                                        </button>
+                                        <button class="btn btnDelete">
+                                            <span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="12.347" height="13.553" viewBox="0 0 12.347 13.553" class="deleteIcon">
+                                                    <g transform="translate(0.75 0.75)">
+                                                        <path class="a" transform="translate(-3 -3.589)"></path>
+                                                        <path class="a" d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411" transform="translate(-3.795 -2)"></path>
+                                                        <line class="a" y2="3" transform="translate(4.397 6.113)"></line>
+                                                        <line class="a" y2="3" transform="translate(6.397 6.113)"></line>
+                                                    </g>
+                                                </svg>
+                                            </span>Delete
+                                        </button>
+                                    </div>
+                                </li>
                             </React.Fragment>
                         )
                     })}
