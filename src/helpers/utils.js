@@ -58,5 +58,30 @@ export const utils = {
         } catch (e) {
             throw new Error(e.message);
         }
+    },
+    /**
+     * Format time
+     * @param {*} secs 
+     * @returns 
+     */
+    formatSecondsAsTime: (secs) => {
+        var hr = Math.floor(secs / 3600);
+        var min = Math.floor((secs - (hr * 3600)) / 60);
+        var sec = Math.floor(secs - (hr * 3600) - (min * 60));
+
+        if (min < 10) {
+            min = "0" + min;
+        }
+        if (sec < 10) {
+            sec = "0" + sec;
+        }
+        if (isNaN(min)) {
+            min = "0"
+        }
+        if (isNaN(sec)) {
+            sec = "0"
+        }
+
+        return min + ':' + sec;
     }
 }

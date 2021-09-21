@@ -46,5 +46,10 @@ module.exports = {
     fetchCountryUrl: "https://nav26a5nii.execute-api.us-east-1.amazonaws.com/dev/country",
     // Product Service API
     fetchCategoryUrl: "https://r9zptnofq5.execute-api.us-east-1.amazonaws.com/dev/product/categories",
-    otherCategoryUrl: "https://r9zptnofq5.execute-api.us-east-1.amazonaws.com/dev/product/category"
+    otherCategoryUrl: "https://r9zptnofq5.execute-api.us-east-1.amazonaws.com/dev/product/category",
+    //Audio template
+    audioUploadUrl: "https://9b4395tv11.execute-api.us-east-1.amazonaws.com/dev/template/audio/upload",
+    fetchAudiossUrl: "https://i18vj5dg2l.execute-api.us-east-1.amazonaws.com/dev/audio/list",
+    audioTemplateUrl: "https://i18vj5dg2l.execute-api.us-east-1.amazonaws.com/dev/audio/"
+    // audioTemplateUrl: "http://localhost:4000/dev/audio"
 }  

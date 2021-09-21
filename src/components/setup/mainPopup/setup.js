@@ -107,7 +107,11 @@ const Setup = (props) => {
                     <ul className="secondListing">
                     <li><a href="#">Email</a></li> 
                     <li><a href="#">SMS</a></li>
-                    <li><a href="#">Audio</a></li>
+                    <li>
+                        <NavLink to="/audio-template">
+                            Audio
+                        </NavLink>
+                    </li>
                     <li><a href="#">RVM</a></li> 
                     <li><a href="#">Sales Bridge</a></li>
                     </ul>

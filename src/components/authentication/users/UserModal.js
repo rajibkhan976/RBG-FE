@@ -47,7 +47,7 @@ const UserModal = (props) => {
     const [editId, setEditId] = useState("");
     const [permissionData, setPermissionData] = useState([]);
     const [copyPermissionData, setCopyPermissionData] = useState([]);
-    const [isOrgPermission, setIsOrgPermission] = useState(false);
+    const [isOrgPermission, setIsOrgPermission] = useState(true);
     const [isModifiedPermission, setIsModifiedPermission] = useState(false);
     const [isEmailNotification, setIsEmailNotification] = useState(false);
     const [groupName, setGroupName] = useState('');
@@ -359,6 +359,7 @@ const UserModal = (props) => {
         if (!isEqual) {
             //Display group name input box
             setIsModifiedPermission(true);
+            setPermissionData(dataFromChild);
         } else {
             //Hide group name input box
             setIsModifiedPermission(false);

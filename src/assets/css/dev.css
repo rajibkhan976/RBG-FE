@@ -598,7 +598,10 @@
     line-height: 21px;
 } */
 
-.error .inFormField input, .error .inFormField textarea, .error .inFormField select {
+.error .inFormField input, 
+.error .inFormField textarea, 
+.error .inFormField select, 
+.error .cmnFieldStyle {
     border: 1px solid #ED707A;
     background-color: #FFF4F4;
 }
