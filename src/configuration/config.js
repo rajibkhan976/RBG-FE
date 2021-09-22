@@ -46,5 +46,11 @@ module.exports = {
     fetchCountryUrl: "https://nav26a5nii.execute-api.us-east-1.amazonaws.com/dev/country",
     // Product Service API
     fetchCategoryUrl: "https://r9zptnofq5.execute-api.us-east-1.amazonaws.com/dev/product/categories",
-    otherCategoryUrl: "https://r9zptnofq5.execute-api.us-east-1.amazonaws.com/dev/product/category"
+    otherCategoryUrl: "https://r9zptnofq5.execute-api.us-east-1.amazonaws.com/dev/product/category",
+    fetchProductUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product/list",
+    productImageUploadUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product/image",
+    createProductUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product/create",
+    editProductUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product",
+    deleteProductUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product",
+    colorSizeUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product/colorsize"
 }  

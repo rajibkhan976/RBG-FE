@@ -2,27 +2,34 @@ import React, { useEffect, useState, useRef } from "react";
 import arrowRightWhite from "../../../../assets/images/arrowRightWhite.svg";
 import dot3White from "../../../../assets/images/info_3dot_white.svg";
 import { ProductServices } from "../../../../services/setup/ProductServices";
+import ConfirmBox from "../../../shared/confirmBox";
 import Loader from "../../../shared/Loader";
 
 const CategoryListing = (props) => {
     const [categoryData, setCategoryData] = useState([]);
     const [isLoader, setIsLoader] = useState(false);
     const [category, setCategory] = useState({
-        name: ""
+        name: "",
+        id: null,
+        btnName: "Add Category"
     });
-    
+    const [isConfirmed, setConfirmed] = useState({
+        show: false,
+        id: null,
+    });
     const optionsToggleRef = useRef();
     const [option, setOption] = useState(null);
     const toogleActionList = (index) => {
+        // setOption(null);
         setOption(index !== option ? index : null);
     }
 
-    useEffect(() => {
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        }
-    }, []);
+    // useEffect(() => {
+    //     document.addEventListener("mousedown", handleClickOutside);
+    //     return () => {
+    //         document.removeEventListener("mousedown", handleClickOutside);
+    //     }
+    // }, []);
 
     /**
      * Handle outside click
@@ -71,21 +78,22 @@ const CategoryListing = (props) => {
         const name = e.target.value;
         const regex = /[^a-zA-Z0-9 ]/;
         if (!regex.test(name)) {
-            setCategory({ name: name });
+            setCategory({ ...category, name: name });
         }
+        if(!name.length) setCategory({name: "", id: null, btnName: "Add Category"});
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const catData = { ...category };
+            const catData = { name: category.name };
             if (!catData.name.length) {
                 props.errorMsg("Category name should not be empty");
             } else {
                 setIsLoader(true);
                 const res = await ProductServices.createCategory(catData);
                 const newData = [...categoryData];
-                newData.unshift(res);
+                newData.splice(1, 0, res);
                 setCategoryData(newData);
                 props.successMsg("Category created successfully");
                 setCategory({ name: "" });
@@ -97,66 +105,135 @@ const CategoryListing = (props) => {
         }
     }
 
-    const ListCategories = () => {
-        if (categoryData.length) {
-            return (
-                <>
-                    <li><button className="bigListName">All Category</button></li>
-                    {categoryData.map((cat, key) => {
-                        return (
-                            <React.Fragment key={key + "_category"}>
-                                <li ref={optionsToggleRef} className={option === key ? "active" : ""}>
-                                    <button className="smallListName">{cat.name}</button>
-                                    <button className="showList" onClick={() => toogleActionList(key)}>
-                                        <img src={dot3White} alt=""/>
-                                    </button>
-                                    <div class={option === key ? "listOpen dropdownOptions" : "listHide dropdownOptions"}>
-                                        <button class="btn btnEdit">
-                                            <span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" class="editIcon">
-                                                    <g transform="translate(0.75 0.75)">
-                                                        <path class="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path>
-                                                        <path class="a" d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z" transform="translate(-4.384 -2)"></path>
-                                                    </g></svg>
-                                            </span>Edit
-                                        </button>
-                                        <button class="btn btnDelete">
-                                            <span>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="12.347" height="13.553" viewBox="0 0 12.347 13.553" class="deleteIcon">
-                                                    <g transform="translate(0.75 0.75)">
-                                                        <path class="a" transform="translate(-3 -3.589)"></path>
-                                                        <path class="a" d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411" transform="translate(-3.795 -2)"></path>
-                                                        <line class="a" y2="3" transform="translate(4.397 6.113)"></line>
-                                                        <line class="a" y2="3" transform="translate(6.397 6.113)"></line>
-                                                    </g>
-                                                </svg>
-                                            </span>Delete
-                                        </button>
-                                    </div>
-                                </li>
-                            </React.Fragment>
-                        )
-                    })}
-                </>
-            );
-        } else {
-            return <><li><a href="#">All Category</a><a></a></li></>;
-        }
-
+    const editCategory = (category) => {
+        setOption(null);
+        console.log("Edit Triggered", category);
+        setCategory({name: category.name, btnName: "Update"});
     }
+
+    const deleteCategory = async (catID, isConfirmed = null) => {
+        setOption(null);
+        if(isConfirmed == null && catID) {
+            console.log("Category ID", catID);
+            setConfirmed({
+                show: true,
+                id: catID
+            });
+        } else if(isConfirmed === "cancel") {
+            setConfirmed({
+                show: false,
+                id: null
+            });
+        } else {
+            try {
+                setIsLoader(true);
+                const result = await ProductServices.deleteCategory(catID);
+                if (result) {
+                    setIsLoader(false);
+                    console.log('Category delete result', result);
+                    props.successMsg("Category deleted successfully");
+                }
+            } catch (e) {
+                props.errorMsg(e.message);
+            } finally {
+                setIsLoader(false);
+                setConfirmed({
+                    show: false,
+                    id: null
+                });
+                await fetchCategories();
+            }
+        }
+    };
+
     return (
         <>
             {isLoader ? <Loader /> : ''}
+            {isConfirmed.show ? (
+                <ConfirmBox
+                    callback={(confirmedMsg) => deleteCategory(isConfirmed.id, confirmedMsg)}
+                />
+            ) : (
+                ""
+            )}
             <div className="productRightSetUpPanel">
                 <h3 className="productListingHeader">Product Categories</h3>
                 <div className="productSearchPanel">
                     <form method="post" onSubmit={handleSubmit}>
                         <input type="text" name="catname" onChange={handleChange} value={category.name} />
-                        <button className="btn" type="submit">Add Category <img src={arrowRightWhite} alt="" /></button>
+                        <button className="btn" type="submit">Add Category<img src={arrowRightWhite} alt="" /></button>
                     </form>
                 </div>
                 <ul className="ProCategoryListing">
-                    <ListCategories />
+                    {categoryData.map((elem, key) => {
+                        return (
+                            <React.Fragment key={key + "_category"}>
+                                <li ref={optionsToggleRef} className={option === key ? "active" : ""} key={elem._id}>
+                                    <button className="smallListName">{elem.name} ({(elem.productCount) ? elem.productCount : 0})</button>
+                                    <button className="showList" onClick={() => toogleActionList(key)}>
+                                        <img src={dot3White} alt="" />
+                                    </button>
+                                    <React.Fragment key={key + "_fragment"}>
+                                        <div className={option === key ? "dropdownOptions listOpen" : "listHide"}>
+                                            <button className="btn btnEdit" onClick={() => {editCategory(elem); }}>
+                                                <span>
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 13.553 13.553"
+                                                        className="editIcon">
+                                                        <g transform="translate(0.75 0.75)">
+                                                            <path
+                                                                className="a"
+                                                                d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423"
+                                                                transform="translate(-2 -2.795)"
+                                                            />
+                                                            <path
+                                                                className="a"
+                                                                d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z"
+                                                                transform="translate(-4.384 -2)"
+                                                            />
+                                                        </g>
+                                                    </svg>
+                                                </span>
+                                                Edit
+                                            </button>
+                                            <button className="btn btnDelete" onClick={() => deleteCategory(elem._id)}>
+                                                <span>
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="12.347"
+                                                        height="13.553"
+                                                        viewBox="0 0 12.347 13.553"
+                                                        className="deleteIcon"
+                                                    >
+                                                        <g transform="translate(0.75 0.75)">
+                                                            <path className="a" transform="translate(-3 -3.589)" />
+                                                            <path
+                                                                className="a"
+                                                                d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
+                                                                transform="translate(-3.795 -2)"
+                                                            />
+                                                            <line
+                                                                className="a"
+                                                                y2="3"
+                                                                transform="translate(4.397 6.113)"
+                                                            />
+                                                            <line
+                                                                className="a"
+                                                                y2="3"
+                                                                transform="translate(6.397 6.113)"
+                                                            />
+                                                        </g>
+                                                    </svg>
+                                                </span>
+                                                Delete
+                                            </button>
+                                        </div>
+                                    </React.Fragment>
+                                </li>
+                            </React.Fragment>
+                        )
+                    })}
                 </ul>
             </div>
 
