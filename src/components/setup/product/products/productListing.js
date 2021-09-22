@@ -104,7 +104,7 @@ const ProductListing = () => {
                 <div class="userListHead product">
                     <div class="listInfo">
                         <ul class="listPath"><li>Settings  </li><li>Products</li></ul>
-                        <h2 class="inDashboardHeader">Products (126)</h2>
+                        <h2 class="inDashboardHeader">Products ({paginationData.count})</h2>
                         <p class="userListAbout">Lorem ipsum dolor sit amet. Semi headline should be here.</p>
                     </div>
                     <div class="listFeatures">
