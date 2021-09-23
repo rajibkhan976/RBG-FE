@@ -4431,6 +4431,10 @@ div button.btn-link {
   align-content: center;
   margin: 0 0 10px 0;
   position: relative;
+  width: 100%;
+}
+.productSearchPanel form{
+  width: 100%;
 }
 .productSearchPanel input{
   width: calc(100% - 132px);
@@ -4447,6 +4451,7 @@ div button.btn-link {
   color: #fff;
   font-size: 13px;
   margin-left: 10px;
+  width: 122px;
 }
 .productSearchPanel button img{
   margin-left: 7px;
@@ -4454,7 +4459,7 @@ div button.btn-link {
 .productSearchPanel .deleteIt {
   background: none;
   position: absolute;
-  right: 150px;
+  right: 145px;
   width: auto;
   top: 11px;
   height: 20px;
