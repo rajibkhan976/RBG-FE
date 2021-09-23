@@ -4784,7 +4784,7 @@ div button.btn-link {
 }
 
 .applySlider input[type="range"]::-webkit-slider-thumb {
-
+ width: 100%;
 }
 
 .applySlider .min-max-slider {
@@ -4889,4 +4889,245 @@ div button.btn-link {
 
 .applySlider .min-max-slider > input::-webkit-slider-runnable-track {
   cursor: pointer;
+}
+.modalBackdrop{
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgb(48 86 113 / 90%);
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+}
+
+.slickModalBody{
+  width: 504px;
+  margin: 10px;
+  height: auto;
+  background: #fff;
+  padding: 35px 27px;
+  max-width: calc(100% - 20px);
+}
+
+.slickModalHeader{
+  padding: 5px 10px 30px;
+  text-align: center;
+  position: relative;
+}
+.slickModalHeader h3{
+  color: #305671;
+  font-size: 20px;
+  padding: 30px 0 10px;
+  font-weight: 400;
+}
+.slickModalHeader p{
+  color: #9BAEBC;
+  font-size: 13px;
+  padding: 0px 0 10px;
+  font-weight: 400;
+}
+
+.circleForIcon{
+  border: 1px solid #9BAEBC;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background-color: #fff;
+  text-align: center;
+  line-height: 64px;
+  display: inline-block;
+}
+.circleForIcon img {
+  vertical-align: middle;
+}
+.topCross{
+  position: absolute;
+  right: -14px;
+  top: -14px;
+  background: none;
+  border: none;
+}
+
+.modalForm{
+  width: 100%;
+  padding: 0 0 0px 0;
+}
+.modalForm form{
+  width: 100%;
+}
+.modalForm .formControl {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+.formControl label {
+  color: #305671;
+  font-size: 13px;
+  padding: 18px 0 5px;
+  font-weight: 500;
+  width: 100%;
+}
+
+.formControl input,
+.formControl select{
+  height: 40px;
+  line-height: 40px;
+  background: #F6F8FA;
+  border: 1px solid #D3D9DE;
+  border-radius: 5px;
+  color: #305671;
+  font-size: 13px;
+  margin: 5px 0 0px 0;
+  width: 100%;
+}
+.formControl select{
+  background-image:  url("../images/arrowDown.svg") ;
+  background-repeat: no-repeat;
+  background-position: calc(100% - 9px) 7px;
+  line-height: 33px;
+}
+.formControl input::placeholder{
+  color: #9BAEBC
+}
+.formControl .profile {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  width: 100%;
+  padding-top: 10px;
+}
+.formControl .profile .profilePicture {
+  width: 64px;
+  height: 64px;
+  background: #E9EFF5;
+  border-radius: 50%;
+  border: 1px solid #9BAEBC;
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+}
+
+.formControl .profile .profileText {
+  color: #9BAEBC;
+  font-size: 13px;
+  width: calc(100% - 120px);
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 0 0 14px;
+  align-items: center;
+}
+.profile .profileUpload{
+  display: flex;
+  position: relative;
+  width: 50px;
+}
+.formControl .profile .profileUpload input[type="file"] {
+  height: 20px;
+  line-height: 20px;
+  background: none;
+  border: none;
+}
+.profile .profileUpload span {
+  position: absolute;
+  color: #55BBC9;
+  font-size: 13px;
+  right: 0;
+  top: 6px;
+  cursor: pointer;
+  pointer-events: none;
+  background: #fff;
+  height: 34px;
+  width: 50px;
+  text-align: right;
+  line-height: 30px;
+}
+.formControl .pickColor,
+.formControl .pickSize{
+  width: 100%;
+  padding: 5px 0 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+}
+.formControl .pickColor span,
+.formControl .pickSize .size{
+  width: 24px;
+  height: 24px;
+  background: #fff;
+  border: 1px solid #FFFFFF;
+  border-radius: 50%;
+  margin: 0 4px 0 0;
+  display: inline-block;
+}
+.formControl .pickColor span.red{
+  background-color: #834140;
+}
+.formControl .pickColor span.gray{
+  background-color: #797D62;
+}
+.formControl .pickColor span.blue{
+  background-color: #369ED5;
+}
+.pickColor .addColor{
+  width: 24px;
+  line-height: 22px;
+  height: 24px;
+  background: #FFFFFF;
+  border: 1px solid #55BBC9;
+  border-radius: 50px;
+  color: #55BBC9;
+  font-size: 15px;
+}
+
+.formControl .pickSize .size{
+   border-radius: 5px;
+    border: 1px solid #9BAEBC;
+    background-color: #fff;
+    color: #9BAEBC;
+    line-height: 22px;
+    font-size: 13px;
+}
+.formControl .pickSize .size.active{
+  border: 1px solid #305671;
+  background-color: #305671;
+  color: #fff;
+}
+.formLeft,
+.formRight{
+  width: 50%;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+
+.formControl .formRight label {
+  width: auto;
+  font-weight: 400;
+  padding: 15px 0px 0 35px;
+}
+.formLeft span {
+  padding: 7px 0 10px 0;
+  font-size: 11px;
+  color: #305671;
+}
+.modalbtnHolder {
+  padding: 20px 0;
+  text-align: center;
+}
+.modalbtnHolder .saveNnewBtn {
+  width: auto;
+  padding: 0 20px;
+  display: inline-block;
+  margin: 0 6px;
+}
+.modalbtnHolder .saveNnewBtn span{
+  margin-right: 10px;
 }

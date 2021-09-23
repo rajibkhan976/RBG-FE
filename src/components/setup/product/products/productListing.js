@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import ProductFilter from "./productFilter";
+import AddProductModal from "./addProductModal";
+
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import percentTag from "../../../../assets/images/percentage_icon.png";
 import list_board_icon from "../../../../assets/images/list_board_icon.svg";
@@ -33,6 +35,7 @@ const ProductListing = () => {
         currentPage: 1,
         limit: 10
     });
+    const [openModal, setOpenModal] = useState(false);
 
     const openFilterModal = () => {
         setProdFilterModalStatus(true);
@@ -41,7 +44,12 @@ const ProductListing = () => {
     const closeFilterModal = () => {
         setProdFilterModalStatus(false);
     }
-
+    const addProductModal = () => {
+        setOpenModal(true);
+    }
+    const closeProductModal = () => {
+        setOpenModal(false);
+    }
     useEffect(() => {
         if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
         if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
@@ -108,7 +116,9 @@ const ProductListing = () => {
                         <p class="userListAbout">Lorem ipsum dolor sit amet. Semi headline should be here.</p>
                     </div>
                     <div class="listFeatures">
-                        <button class="creatUserBtn"><img class="plusIcon" src={plus_icon} alt="" /><span>Add a Product</span></button>
+                        <button class="creatUserBtn" onClick={addProductModal}>
+                            <img class="plusIcon" src={plus_icon} alt="" /><span>Add a Product</span>
+                        </button>
                     </div>
                 </div>
                 <div className="productViewType">
@@ -167,7 +177,9 @@ const ProductListing = () => {
                 errorMsg={(msg) => setErrorMsg(msg)}
             />
 
-            {prodFilterModalStatus && <ProductFilter closeModal={closeFilterModal} />}
+            { prodFilterModalStatus && <ProductFilter closeModal={closeFilterModal}/> }
+            
+            {openModal && <AddProductModal closeAddProductModal={closeProductModal}></AddProductModal>}
         </>
     );
 }
