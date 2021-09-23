@@ -100,7 +100,7 @@ const ProductListing = () => {
         } finally {
             setIsLoader(false);
         }
-    }
+    };
 
     return (
         <>
@@ -137,7 +137,7 @@ const ProductListing = () => {
                                 <React.Fragment>
                                     <div className="productList">
                                         <div className="productListLeft">
-                                            <div className="proImage"><img src={"https://wrapperbucket.s3.us-east-1.amazonaws.com/"+elem.image}  alt="" /></div>
+                                            <div className="proImage"><img src={"https://wrapperbucket.s3.us-east-1.amazonaws.com/" + elem.image} alt="" /></div>
                                             <div className="proInfo">
                                                 <p><a href="#">{elem.name}</a></p>
                                                 <div className="d-flex">
@@ -219,14 +219,15 @@ const ProductListing = () => {
                         }
                     </div>
                 </div>
-                {<Pagination
-                paginationData={paginationData}
-                dataCount={paginationData.count}
-                callback={fetchProducts} />}
+                {paginationData.count > paginationData.limit ?<Pagination
+                    paginationData={paginationData}
+                    dataCount={paginationData.count}
+                    callback={fetchProducts} />:''}
             </div>
             <CategoryListing
                 successMsg={(msg) => setSuccessMsg(msg)}
                 errorMsg={(msg) => setErrorMsg(msg)}
+                getProduct={fetchProducts}
             />
 
             { prodFilterModalStatus && <ProductFilter closeModal={closeFilterModal}/> }

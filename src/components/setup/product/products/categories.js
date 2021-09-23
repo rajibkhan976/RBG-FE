@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import arrowRightWhite from "../../../../assets/images/arrowRightWhite.svg";
 import dot3White from "../../../../assets/images/info_3dot_white.svg";
+import { utils } from "../../../../helpers";
 import { ProductServices } from "../../../../services/setup/ProductServices";
 import ConfirmBox from "../../../shared/confirmBox";
 import Loader from "../../../shared/Loader";
@@ -81,7 +82,7 @@ const CategoryListing = (props) => {
         if (!regex.test(name)) {
             setCategory({ ...category, name: name });
         }
-        if(!name.length) setCategory({name: "", id: null, btnName: "Add Category"});
+        if (!name.length) setCategory({ name: "", id: null, btnName: "Add Category" });
     }
 
     const handleSubmit = async (e) => {
@@ -109,18 +110,18 @@ const CategoryListing = (props) => {
     const editCategory = (category) => {
         setOption(null);
         console.log("Edit Triggered", category);
-        setCategory({name: category.name, btnName: "Update"});
+        setCategory({ name: category.name, btnName: "Update" });
     }
 
     const deleteCategory = async (catID, isConfirmed = null) => {
         setOption(null);
-        if(isConfirmed == null && catID) {
+        if (isConfirmed == null && catID) {
             console.log("Category ID", catID);
             setConfirmed({
                 show: true,
                 id: catID
             });
-        } else if(isConfirmed === "cancel") {
+        } else if (isConfirmed === "cancel") {
             setConfirmed({
                 show: false,
                 id: null
@@ -147,6 +148,15 @@ const CategoryListing = (props) => {
         }
     };
 
+    const handleCategoryClick = (catID) => {
+        if(catID) {
+            utils.addQueryParameter("catID", catID);
+        } else {
+            utils.removeQueryParameter("catID");
+        }
+        props.getProduct();
+    }
+
     return (
         <>
             {isLoader ? <Loader /> : ''}
@@ -167,17 +177,22 @@ const CategoryListing = (props) => {
                     </form>
                 </div>
                 <ul className="ProCategoryListing">
+                    <li>
+                        <button className="bigListName" onClick={() => handleCategoryClick(false)}>All Categories</button>
+                    </li>
                     {categoryData.map((elem, key) => {
                         return (
                             <React.Fragment key={key + "_category"}>
                                 <li ref={optionsToggleRef} className={option === key ? "active" : ""} key={elem._id}>
-                                    <button className="smallListName">{elem.name} ({(elem.productCount) ? elem.productCount : 0})</button>
+                                    <button className={elem.slug === "uncategorized" ? "smallListName" : "bigListName"} onClick={() => handleCategoryClick(elem._id)}>{elem.name} ({(elem.productCount) ? elem.productCount : 0})</button>
+                                    {(elem.slug !== "uncategorized")?
                                     <button className="showList" onClick={() => toogleActionList(key)}>
                                         <img src={dot3White} alt="" />
                                     </button>
+                                    : ''}
                                     <React.Fragment key={key + "_fragment"}>
                                         <div className={option === key ? "dropdownOptions listOpen" : "listHide"}>
-                                            <button className="btn btnEdit" onClick={() => {editCategory(elem); }}>
+                                            <button className="btn btnEdit" onClick={() => { editCategory(elem); }}>
                                                 <span>
                                                     <svg
                                                         xmlns="http://www.w3.org/2000/svg"
