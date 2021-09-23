@@ -359,12 +359,12 @@ function LeftMenu(props) {
               </g>
             </svg>
           </NavLink>
-        </li>
+        </li> */}
         <li>
           <NavLink
             className="leftMenuLink"
             activeClassName="selected"
-            to="/page-nine"
+            to="/number-list"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -417,8 +417,9 @@ function LeftMenu(props) {
                 </g>
               </g>
             </svg>
+            <span className="menuName">Number List</span>
           </NavLink>
-        </li> */}
+        </li>
       </ul>
       <div className="leftMenuToggle">
         <button className={tglLeftMenuStatus ? "leftMenuToggleBtn active" : "leftMenuToggleBtn"} onClick={() => toggleLeftSubMenu()}></button>

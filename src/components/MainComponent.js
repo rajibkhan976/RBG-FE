@@ -11,6 +11,7 @@ import NotFound from "./shared/NotFound";
 import ContactModal from "./shared/contactModal/Index";
 import CommunicationRoutes from "./setup/communication/communicationRoute";
 import ProductRouter from "./setup/product/productRoute";
+import NumberRouting from "./numbers/NumberRoute";
 
 const MainComponent = () => {
   const pathURL = useLocation().pathname;
@@ -64,6 +65,9 @@ const MainComponent = () => {
               </Route>
               <Route exact path="/products">
                 <ProductRouter toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></ProductRouter>
+              </Route>
+              <Route exact path="/number-list">
+                <NumberRouting toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></NumberRouting>
               </Route>
               <Route exact path="/" component={() => <Redirect to="/dashboard" />} />
               <Route exact path="*">
