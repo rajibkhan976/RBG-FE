@@ -4411,6 +4411,7 @@ div button.btn-link {
   justify-content: space-between;
   align-content: center;
   margin: 0 0 10px 0;
+  position: relative;
 }
 .productSearchPanel input{
   width: calc(100% - 132px);
@@ -4431,7 +4432,20 @@ div button.btn-link {
 .productSearchPanel button img{
   margin-left: 7px;
 }
-
+.productSearchPanel .deleteIt {
+  background: none;
+  position: absolute;
+  right: 150px;
+  width: auto;
+  top: 11px;
+  height: 20px;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+.productSearchPanel .deleteIt img {
+  width: 10px;
+}
 .ProCategoryListing{
   margin: 12px 0;
 }
@@ -5057,7 +5071,7 @@ div button.btn-link {
   flex-wrap: wrap;
   align-content: center;
 }
-.formControl .pickColor span,
+.formControl .pickColor .addColor,
 .formControl .pickSize .size{
   width: 24px;
   height: 24px;
@@ -5067,25 +5081,8 @@ div button.btn-link {
   margin: 0 4px 0 0;
   display: inline-block;
 }
-.formControl .pickColor span.red{
-  background-color: #834140;
-}
-.formControl .pickColor span.gray{
-  background-color: #797D62;
-}
-.formControl .pickColor span.blue{
-  background-color: #369ED5;
-}
-.pickColor .addColor{
-  width: 24px;
-  line-height: 22px;
-  height: 24px;
-  background: #FFFFFF;
-  border: 1px solid #55BBC9;
-  border-radius: 50px;
-  color: #55BBC9;
-  font-size: 15px;
-}
+
+
 
 .formControl .pickSize .size{
    border-radius: 5px;

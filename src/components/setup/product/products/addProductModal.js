@@ -47,11 +47,9 @@ const AddProductModal = (props) => {
                       <div className="formControl">
                           <label>Available Colours</label>
                           <div className="pickColor">
-                              <span className="gray"></span>
-                              <span className="red"></span>
-                              <span className="blue"></span>
-                              <button className="addColor">+</button>
-
+                              <button className="addColor" style={{ backgroundColor: "#834140" }}></button>
+                              <button className="addColor" style={{ backgroundColor: "#369ED5" }}></button>
+                              <button className="addColor" style={{ backgroundColor: "#797D62"}}></button>
                           </div>
                       </div>
                       <div className="formControl">

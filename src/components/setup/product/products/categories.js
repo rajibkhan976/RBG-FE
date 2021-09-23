@@ -4,6 +4,7 @@ import dot3White from "../../../../assets/images/info_3dot_white.svg";
 import { ProductServices } from "../../../../services/setup/ProductServices";
 import ConfirmBox from "../../../shared/confirmBox";
 import Loader from "../../../shared/Loader";
+import cross from "../../../../assets/images/cross.svg";
 
 const CategoryListing = (props) => {
     const [categoryData, setCategoryData] = useState([]);
@@ -160,6 +161,7 @@ const CategoryListing = (props) => {
                 <h3 className="productListingHeader">Product Categories</h3>
                 <div className="productSearchPanel">
                     <form method="post" onSubmit={handleSubmit}>
+                        <button className="deleteIt"><img src={cross} alt="" /></button>
                         <input type="text" name="catname" onChange={handleChange} value={category.name} />
                         <button className="btn" type="submit">Add Category<img src={arrowRightWhite} alt="" /></button>
                     </form>
