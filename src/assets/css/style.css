@@ -4577,7 +4577,7 @@ div button.btn-link {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  width: calc(100% - 215px);
+  width: 45%;
 }
 .proImage{
   width: 90px;
@@ -4623,7 +4623,20 @@ div button.btn-link {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  width: 215px;
+  width: 55%;
+}
+.chooseSize{
+  width: 230px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.chooseColor {
+  width: 230px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    position: relative;
 }
 .chooseSize p,
 .chooseColor p{
@@ -4631,13 +4644,14 @@ div button.btn-link {
   color: #9BAEBC;
   line-height: 17px;
   margin: 0 0 23px 0;
+  width: 100%;
 }
 .chooseSize span,
 .chooseColor span{
   display: inline;
   margin: 0 2px;
   text-align: center;
-  width: 24px;
+  min-width: 24px;
   height: 24px;
   background: #FFFFFF ;
   border: 1px solid #fff;
@@ -4649,9 +4663,9 @@ div button.btn-link {
   font-size: 13px;
   color: #9BAEBC;
   line-height: 24px;
+  padding: 0 6px;
 }
 
-.chooseSize button:hover,
 .chooseSize span.active{
   background: #305671;
   border: 1px solid #305671;
@@ -4673,6 +4687,64 @@ div button.btn-link {
 .chooseColor span.blue{
   background-color: #369ED5;
 }
+
+.dropIt {
+  color: #9BAEBC;
+  background: none;
+  border: none;
+  font-size: 11px;
+  line-height: 24px;
+  height: 24px;
+}
+.chooseColor .dropIt:hover {
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+.colorpaletContainer{
+  position: relative;
+}
+.colorPalet {
+  position: absolute;
+  left: calc(50% - 75px);
+  top: 30px;
+  width: 160px;
+  padding: 10px;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0px 0px 30px #0000001a;
+  z-index: 10;
+}
+.paletHide{
+  display: none;
+}
+.colorPalet::before {
+  content: "";
+  position: absolute;
+  top: -9px;
+  left: calc(50% - 12px);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 8px 10px 8px;
+  border-color: transparent transparent #ffffff transparent;
+}
+.sideEditOption {
+  display: flex;
+  align-items: center;
+  width: 35px;
+  position: relative;
+}
+.sideEditOption .showList {
+  border: none;
+  background-color: transparent;
+}
+.sideEditOption .dropdownOptions {
+  top: 78%;
+}
+
+
+
 
 .productViewType{
   width: 100%;
@@ -5097,16 +5169,19 @@ div button.btn-link {
 }
 .formControl .pickColor .addColor,
 .formControl .pickSize .size{
-  width: 24px;
+  min-width: 24px;
   height: 24px;
   background: #fff;
   border: 1px solid #FFFFFF;
   border-radius: 50%;
   margin: 0 4px 0 0;
+  padding: 0 6px;
   display: inline-block;
 }
 
-
+.formControl .pickColor .addColor.active {
+  box-shadow: 0 0 0 1px rgb(48 86 113);
+}
 
 .formControl .pickSize .size{
    border-radius: 5px;
