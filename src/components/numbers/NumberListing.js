@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 
 import userImg from "../../assets/images/user.png";
 import plus_icon from "../../assets/images/plus_icon.svg";
 import info_3dot_icon from "../../assets/images/info_3dot_icon.svg";
+import phone_icon_small_blue from "../../assets/images/phone_icon_small_blue.svg";
+import mobile_icon_blue from "../../assets/images/mobile_icon_blue.svg";
+import image_icon_blue from "../../assets/images/image_icon_blue.svg";
+import BuyAndAssignNumber from "./buyNumberModal";
 
 
 const NumberListing = () => {
+
+  const [buyNumModalShow, setBuyNumModalShow] = useState(false);
+
+  const buyNumber = () => {
+    setBuyNumModalShow(true);
+  }
+
+  const closeBuyNumberModal = () => {
+    setBuyNumModalShow(false);
+  }
+
   return (
     <div className="dashInnerUI">
       <div className="userListHead">
@@ -20,7 +35,7 @@ const NumberListing = () => {
           </p>
         </div>
         <div className="listFeatures">
-          <button className="creatUserBtn">
+          <button className="creatUserBtn" onClick={buyNumber}>
             <img className="plusIcon" src={plus_icon} alt="" />
             <span>Buy & Assign Number</span>
           </button>
@@ -70,7 +85,17 @@ const NumberListing = () => {
                 <p>98310</p>
               </div>
               <div class="cell_xs">
-                <p>98310</p>
+                <div className="numberCapacity">
+                  <span>
+                    <img src={phone_icon_small_blue} alt="" />
+                  </span>
+                  <span>
+                    <img src={mobile_icon_blue} alt="" />
+                  </span>
+                  <span>
+                    <img src={image_icon_blue} alt="" />
+                  </span>
+                </div>
               </div>
               <div class="createDate">
                 <button class="btn">10th Sep 2021</button>
@@ -146,6 +171,9 @@ const NumberListing = () => {
           </ul>
         </div>
       </div>
+
+      { buyNumModalShow && <BuyAndAssignNumber closeModal={closeBuyNumberModal} /> }
+      
     </div>
   );
 };

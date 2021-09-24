@@ -5227,3 +5227,88 @@ div button.btn-link {
 .modalbtnHolder .saveNnewBtn span{
   margin-right: 10px;
 }
+
+.numberCapacity span {
+  padding-right: 20px;
+}
+.numberCapacity span:last-child {
+  padding-right: 0;
+}
+
+.buyNumberModal {
+  width: 674px;
+}
+
+.formSecHeading {
+  color: #305671;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 32px;
+}
+
+select.selectBox {
+  background: #F6F8FA url("../images/arrowDown.svg") no-repeat right 5px center;
+  font-size: 14px;
+}
+
+.numSearch {
+  width: 105px;
+  margin: 14px auto 0;
+}
+
+.availNumList table {
+  font-size: 14px;
+  color: #305671;
+}
+.availNumList table th {
+  font-weight: 500;
+  text-align: left;
+  height: 50px;
+}
+.availNumList table th:last-child {
+  width: 100px;
+}
+.availNumList td {
+  height: 50px;
+  background: #F0F5F1;
+  padding: 0 10px;
+}
+.availNumList table {
+  border-collapse: separate;
+  border-spacing: 0 5px;
+}
+.availNumList td:first-child {
+  border-radius: 5px 0 0 5px;
+}
+.availNumList td:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+.numSave {
+  width: 82px;
+  display: inline-block;
+  
+}
+.numSaneNnew {
+  width: 129px;
+  display: inline-block;
+  margin-left: 10px;
+}
+
+.formActBtnWrap.numList {
+  width: 223px;
+  margin: 32px auto 0;
+}
+
+.searching img {
+  animation: btn-loading infinite 1s linear;
+}
+
+@keyframes btn-loading {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(180deg);
+  }
+}
