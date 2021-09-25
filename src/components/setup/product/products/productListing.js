@@ -22,6 +22,7 @@ import Loader from "../../../shared/Loader";
 import env from "../../../../configuration/env";
 import { ProductServices } from "../../../../services/setup/ProductServices";
 import Pagination from "../../../shared/Pagination";
+import ConfirmBox from "../../../shared/confirmBox";
 
 
 const ProductListing = () => {
@@ -38,8 +39,13 @@ const ProductListing = () => {
         currentPage: 1,
         limit: 10
     });
-    const [categories, setCategories] = useState([]);
+    const [updateProduct, setUpdateProduct] = useState({});
     const [openModal, setOpenModal] = useState(false);
+    const [refetchCat, setRefetchCat] = useState("");
+    const [isConfirmed, setConfirmed] = useState({
+        show: false,
+        id: null,
+    });
 
     const openFilterModal = () => {
         setProdFilterModalStatus(true);
@@ -50,9 +56,21 @@ const ProductListing = () => {
     }
     const addProductModal = () => {
         setOpenModal(true);
+        setUpdateProduct({});
     }
-    const closeProductModal = () => {
+
+    const handleEdit = (product) => {
+        setOpenModal(true);
+        setUpdateProduct(product);
+    }
+
+    const closeProductModal = (param) => {
         setOpenModal(false);
+        if (param === "fetch") {
+            fetchProducts();
+            setRefetchCat("refetch" + Math.random() * 100);
+        }
+
     }
     useEffect(() => {
         if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
@@ -61,9 +79,7 @@ const ProductListing = () => {
 
     useEffect(() => {
         fetchProducts();
-        console.log("Categories", categories);
     }, []);
-
     /**
      * Get all query params
      */
@@ -104,6 +120,42 @@ const ProductListing = () => {
         }
     };
 
+    const deleteProduct = async (productID, isConfirmed = null) => {
+        // setOption(null);
+        if (isConfirmed == null && productID) {
+            console.log("Product ID", productID);
+            setConfirmed({
+                show: true,
+                id: productID
+            });
+        } else if (isConfirmed === "cancel") {
+            setConfirmed({
+                show: false,
+                id: null
+            });
+        } else {
+            try {
+                setIsLoader(true);
+                const result = await ProductServices.deleteProduct(productID);
+                if (result) {
+                    setSuccessMsg(result);
+                } else {
+                    setErrorMsg("Error deleting product. Please try again.");
+                }
+            } catch (e) {
+                setErrorMsg(e.message);
+            } finally {
+                // setIsLoader(false);
+                setConfirmed({
+                    show: false,
+                    id: null
+                });
+                await fetchProducts();
+                setRefetchCat("refetch" + Math.random() * 100);
+            }
+        }
+    };
+
     return (
         <>
             {isLoader ? <Loader /> : ''}
@@ -113,6 +165,13 @@ const ProductListing = () => {
             {errorMsg &&
                 <ErrorAlert message={errorMsg}></ErrorAlert>
             }
+            {isConfirmed.show ? (
+                <ConfirmBox
+                    callback={(confirmedMsg) => deleteProduct(isConfirmed.id, confirmedMsg)}
+                />
+            ) : (
+                ""
+            )}
             <div className="dashInnerUI productSteUp">
                 <div class="userListHead product">
                     <div class="listInfo">
@@ -136,7 +195,7 @@ const ProductListing = () => {
                     <div className="productListing">
                         {productData.length ? productData.map((elem, key) => {
                             return (
-                                <React.Fragment>
+                                <React.Fragment key={key + "_products"}>
                                     <div className="productList">
                                         <div className="productListLeft">
                                             <div className="proImage"><img src={"https://wrapperbucket.s3.us-east-1.amazonaws.com/" + elem.image} alt="" /></div>
@@ -152,60 +211,61 @@ const ProductListing = () => {
                                         <div className="productListRight">
                                             <div className="chooseSize">
                                                 <p>Size</p>
-                                                <span>S</span>
+                                                {/* <span>S</span> */}
                                                 {elem.size.map(s => <span>{s}</span>)}
-                                                <span>XL</span>
+                                                {/* <span>XL</span>
                                                 <span>2XL</span>
-                                                <span>3XL</span>
+                                                <span>3XL</span> */}
                                             </div>
                                             <div className="chooseColor">
                                                 <p>Color</p>
-                                                <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                {elem.colors.map(c => <span className={c}></span>)}
-                                                <div className="colorpaletContainer">
-                                                    <button className="dropIt">+12</button>
-                                                    <div className="colorPalet paletHide"> {/*//paletHide class is to be added to hide it */}
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                    </div> 
-                                                </div>
-                                                
+                                                {/* <span style={{ backgroundColor: "#ABED93" }}></span> */}
+                                                {elem.associatedColors.map(color => <span style={{ backgroundColor: color.colorcode }}></span>)}
+                                                {elem.associatedColors.length > 4 ?
+                                                    <div className="colorpaletContainer">
+                                                        <button className="dropIt">+12</button>
+                                                        <div className="colorPalet paletHide"> {/*//paletHide class is to be added to hide it */}
+                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                        </div>
+                                                    </div>
+                                                    : ""}
                                             </div>
                                             <div className="sideEditOption">
                                                 <button className="showList" >
-                                                <img src={dot3White} alt="" />
+                                                    <img src={dot3White} alt="" />
                                                 </button>
-                                                 <div class="dropdownOptions listOpen"> {/*//listHide class is to be replaced with listOpen to hide it */}
-                                                    <button class="btn btnEdit">
+                                                <div class="dropdownOptions listOpen"> {/*//listHide class is to be replaced with listOpen to hide it */}
+                                                    <button class="btn btnEdit" onClick={() => handleEdit(elem)}>
                                                         <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" class="editIcon"><g transform="translate(0.75 0.75)">
                                                             <path class="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path>
                                                             <path class="a" d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z" transform="translate(-4.384 -2)"></path></g>
-                                                             </svg>
+                                                        </svg>
                                                         </span> Edit
                                                     </button>
-                                                    <button class="btn btnDelete">
-                                                       <span>
+                                                    <button class="btn btnDelete" onClick={() => deleteProduct(elem._id)}>
+                                                        <span>
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="12.347" height="13.553" viewBox="0 0 12.347 13.553" class="deleteIcon">
-                                                            <g transform="translate(0.75 0.75)"><path class="a" transform="translate(-3 -3.589)"></path>
-                                                                <path class="a" d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411" transform="translate(-3.795 -2)"></path><line class="a" y2="3" transform="translate(4.397 6.113)"></line><line class="a" y2="3" transform="translate(6.397 6.113)">
+                                                                <g transform="translate(0.75 0.75)"><path class="a" transform="translate(-3 -3.589)"></path>
+                                                                    <path class="a" d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411" transform="translate(-3.795 -2)"></path><line class="a" y2="3" transform="translate(4.397 6.113)"></line><line class="a" y2="3" transform="translate(6.397 6.113)">
 
-                                                                </line></g></svg>
+                                                                    </line></g></svg>
                                                         </span> Delete
                                                     </button>
-                                                </div>           
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -221,21 +281,22 @@ const ProductListing = () => {
                         }
                     </div>
                 </div>
-                {paginationData.count > paginationData.limit ?<Pagination
+                {paginationData.count > paginationData.limit ? <Pagination
                     paginationData={paginationData}
                     dataCount={paginationData.count}
-                    callback={fetchProducts} />:''}
+                    callback={fetchProducts} /> : ''}
             </div>
             <CategoryListing
                 successMsg={(msg) => setSuccessMsg(msg)}
                 errorMsg={(msg) => setErrorMsg(msg)}
                 getProduct={fetchProducts}
-                categories={(data) => setCategories(data)}
+                refetchCategory={refetchCat}
             />
 
-            { prodFilterModalStatus && <ProductFilter closeModal={closeFilterModal}/> }
-            
-            {openModal && <AddProductModal closeAddProductModal={closeProductModal} categoryData={categories}></AddProductModal>}
+            {prodFilterModalStatus && <ProductFilter closeModal={closeFilterModal} />}
+
+            {openModal && <AddProductModal closeAddProductModal={(param) => closeProductModal(param)}
+                editProductItem={updateProduct}></AddProductModal>}
         </>
     );
 }

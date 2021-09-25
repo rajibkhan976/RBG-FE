@@ -49,6 +49,10 @@ const CategoryListing = (props) => {
         fetchCategories();
     }, []);
 
+    useEffect(() => {
+        fetchCategories();
+    }, [props.refetchCategory]);
+
     const fetchCategories = async () => {
         /************ PERMISSION CHECKING (FRONTEND) *******************/
         // const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;

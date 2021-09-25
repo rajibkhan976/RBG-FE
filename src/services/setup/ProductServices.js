@@ -131,4 +131,83 @@ export const ProductServices = {
                 });
         });
     },
+
+    fetchColorSizes: async (page=null, queryParams=null) => {
+        try {
+            const result = await axios.get(config.colorSizeUrl,{ headers: headers });
+            console.log('Color Sizes: ', result);
+            return result.data;
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+            
+        }
+    },
+
+    createProduct: async (payload) => {
+        // headers.Authorization = localStorage.getItem("_token");
+        try {
+            const result = await axios.post(config.createProductUrl, payload, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error creating product. Please contact support");
+            }
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    editProduct: async (payload) => {
+        // headers.Authorization = localStorage.getItem("_token");
+        try {
+            const url = config.editProductUrl + "/" + payload.id;
+            const result = await axios.put(url, payload, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error updating product. Please contact support");
+            }
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    deleteProduct: async (productID) => {
+        // headers.Authorization = localStorage.getItem("_token");
+        try {
+            const url = config.deleteProductUrl + "/" + productID;
+            const result = await axios.delete(url, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error deleting a product. Please contact support");
+            }
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    }
 };
