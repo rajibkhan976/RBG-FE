@@ -22,6 +22,7 @@ export const ProductServices = {
             
         }
     },
+
     createCategory: async (payload) => {
         // headers.Authorization = localStorage.getItem("_token");
         try {
@@ -102,5 +103,32 @@ export const ProductServices = {
             }
             
         }
+    },
+
+    imageUpload: fileData => {
+        // headers.Authorization = localStorage.getItem("_token");
+        return new Promise((resolve, reject) => {
+            console.log('Image Upload Data: ', fileData)
+            axios
+                .post(
+                    config.productImageUploadUrl,
+                    {
+                        file: fileData.file,
+                        name: fileData.name
+                    },
+                    { headers: headers }
+                )
+                .then(res => {
+                    resolve(res);
+                })
+                .catch(error => {
+                    reject(error.response.data.message);
+                    // if (error != null && error.response != null) {
+                    //     reject(error.response.data.message);
+                    // } else {
+                    //     reject(message.connectionError);
+                    // }
+                });
+        });
     },
 };

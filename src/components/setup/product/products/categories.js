@@ -13,7 +13,8 @@ const CategoryListing = (props) => {
     const [category, setCategory] = useState({
         name: "",
         id: null,
-        btnName: "Add Category"
+        btnName: "Add Category",
+        showCross: false
     });
     const [isConfirmed, setConfirmed] = useState({
         show: false,
@@ -22,7 +23,6 @@ const CategoryListing = (props) => {
     const optionsToggleRef = useRef();
     const [option, setOption] = useState(null);
     const toogleActionList = (index) => {
-        // setOption(null);
         setOption(index !== option ? index : null);
     }
 
@@ -55,7 +55,7 @@ const CategoryListing = (props) => {
         // console.log("Permission", permissions);
         /************ PERMISSION CHECKING (FRONTEND) *******************/
         try {
-            setIsLoader(true);
+            if (!isLoader) setIsLoader(true);
             /************ PERMISSION CHECKING (FRONTEND) *******************/
             // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
             //     throw new Error(responses.permissions.role.read);
@@ -78,39 +78,50 @@ const CategoryListing = (props) => {
 
     const handleChange = (e) => {
         const name = e.target.value;
-        const regex = /[^a-zA-Z0-9 ]/;
+        const regex = /[^a-zA-Z0-9- ]/;
         if (!regex.test(name)) {
-            setCategory({ ...category, name: name });
+            setCategory({ ...category, name: name, showCross: true });
         }
-        if (!name.length) setCategory({ name: "", id: null, btnName: "Add Category" });
+
+        if (!name.length && !category.id) setCategory({ name: "", id: null, btnName: "Add Category", showCross: false});
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const catData = { name: category.name };
+            let catData = { name: category.name };
             if (!catData.name.length) {
                 props.errorMsg("Category name should not be empty");
             } else {
                 setIsLoader(true);
-                const res = await ProductServices.createCategory(catData);
-                const newData = [...categoryData];
-                newData.splice(1, 0, res);
-                setCategoryData(newData);
-                props.successMsg("Category created successfully");
-                setCategory({ name: "" });
+                if(category.id) {
+                    catData = {...catData, id: category.id };
+                    const res = await ProductServices.editCategory(catData);
+                    props.successMsg("Category updated successfully");
+                } else {
+                    const res = await ProductServices.createCategory(catData);
+                    props.successMsg("Category created successfully");
+                }
+                
             }
         } catch (e) {
             props.errorMsg(e.message);
         } finally {
             setIsLoader(false);
+            setCategory({
+                name: "",
+                id: null,
+                btnName: "Add Category",
+                showCross: false
+            });
+            await fetchCategories()
         }
     }
 
     const editCategory = (category) => {
         setOption(null);
         console.log("Edit Triggered", category);
-        setCategory({ name: category.name, btnName: "Update" });
+        setCategory({ name: category.name, id: category._id, btnName: "Update", showCross: true });
     }
 
     const deleteCategory = async (catID, isConfirmed = null) => {
@@ -131,14 +142,14 @@ const CategoryListing = (props) => {
                 setIsLoader(true);
                 const result = await ProductServices.deleteCategory(catID);
                 if (result) {
-                    setIsLoader(false);
-                    console.log('Category delete result', result);
-                    props.successMsg("Category deleted successfully");
+                    props.successMsg(result);
+                } else {
+                    props.errorMsg("Error deleting category. Please try again.");
                 }
             } catch (e) {
                 props.errorMsg(e.message);
             } finally {
-                setIsLoader(false);
+                // setIsLoader(false);
                 setConfirmed({
                     show: false,
                     id: null
@@ -171,9 +182,9 @@ const CategoryListing = (props) => {
                 <h3 className="productListingHeader">Product Categories</h3>
                 <div className="productSearchPanel">
                     <form method="post" onSubmit={handleSubmit}>
-                        <button className="deleteIt"><img src={cross} alt="" /></button>
+                        {category.showCross ? <button className="deleteIt" onClick={() => setCategory({...category, name: "", id: null, btnName: "Add Category", showCross: false })}><img src={cross} alt="" /></button>: ''}
                         <input type="text" name="catname" onChange={handleChange} value={category.name} />
-                        <button className="btn" type="submit">Add Category<img src={arrowRightWhite} alt="" /></button>
+                        <button className="btn" type="submit">{category.btnName}<img src={arrowRightWhite} alt="" /></button>
                     </form>
                 </div>
                 <ul className="ProCategoryListing">

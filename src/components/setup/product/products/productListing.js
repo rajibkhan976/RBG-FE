@@ -38,11 +38,12 @@ const ProductListing = () => {
         currentPage: 1,
         limit: 10
     });
+    const [categories, setCategories] = useState([]);
     const [openModal, setOpenModal] = useState(false);
 
     const openFilterModal = () => {
         setProdFilterModalStatus(true);
-    }
+    };
 
     const closeFilterModal = () => {
         setProdFilterModalStatus(false);
@@ -60,6 +61,7 @@ const ProductListing = () => {
 
     useEffect(() => {
         fetchProducts();
+        console.log("Categories", categories);
     }, []);
 
     /**
@@ -228,11 +230,12 @@ const ProductListing = () => {
                 successMsg={(msg) => setSuccessMsg(msg)}
                 errorMsg={(msg) => setErrorMsg(msg)}
                 getProduct={fetchProducts}
+                categories={(data) => setCategories(data)}
             />
 
             { prodFilterModalStatus && <ProductFilter closeModal={closeFilterModal}/> }
             
-            {openModal && <AddProductModal closeAddProductModal={closeProductModal}></AddProductModal>}
+            {openModal && <AddProductModal closeAddProductModal={closeProductModal} categoryData={categories}></AddProductModal>}
         </>
     );
 }
