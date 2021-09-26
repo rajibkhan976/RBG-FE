@@ -52,5 +52,7 @@ module.exports = {
     createProductUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product/create",
     editProductUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product",
     deleteProductUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product",
-    colorSizeUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product/colorsize"
+    colorSizeUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product/colorsize",
+    // Number service
+    numberServiceUrl: "https://mdaifddy2k.execute-api.us-east-1.amazonaws.com/dev/number"
 }  
