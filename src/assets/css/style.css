@@ -81,16 +81,6 @@ label {
   pointer-events: none;
 }
 
-.btn-link {
-  color: #55BBC9;
-  display: inline-flex;
-  background-image: linear-gradient(to right, #55BBC9 33%, rgba(255,255,255,0) 0%);
-background-position: bottom;
-background-size: 4px 2px;
-background-repeat: repeat-x;
-  padding: 0 0 5px 0;
-}
-
 .btn img {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -4050,7 +4040,7 @@ textarea.cmnFieldStyle {
   width: 254px;
   margin: 40px auto 0;
 }
-div button.addOverviewCustomFiel {
+button.addOverviewCustomFiel {
   float: right;
   padding: 0;
   width: 40px;
@@ -4059,27 +4049,29 @@ div button.addOverviewCustomFiel {
   border-radius: 0 5px 5px 0;
 }
 
-div button.addOverviewCustomFiel img {
+button.addOverviewCustomFiel img {
   width: 21px;
 }
-div button.saveOverview {
+button.saveOverview {
   float: left;
   background: #305671;
   color: #fff;
   width: 180px;
   margin-right: 30px;
 }
-div button.saveOverview img {
+button.saveOverview img {
   max-height: unset;
   max-width: unset;
 }
-div button.btn-link {
+.btn-link {
   color: #55BBC9;
   display: inline-flex;
   background-image: linear-gradient(to right, #55BBC9 33%, rgba(255,255,255,0) 0%);
   background-position: bottom;
   background-size: 4px 2px;
   background-repeat: repeat-x;
+  background-color: transparent;
+  border: none;
   padding: 10px 0 5px 0;
   float: left;
 }
@@ -4767,9 +4759,18 @@ div button.btn-link {
 }
 
 .weekDateList .weekDate {
+  position: relative;
   width: 25px;
   height: 25px;
+  display: block;
   float: left;
+  margin-right: 20px;
+}
+
+.weekDateList .weekDate span {
+  width: 25px;
+  height: 25px;
+  display: block;
   border-radius: 50%;
   background: #fff;
   border: 1px solid #9BAEBC;
@@ -4777,11 +4778,10 @@ div button.btn-link {
   text-align: center;
   line-height: 24px;
   color: #9BAEBC;
-  margin-right: 20px;
-  transition: all 0.5s ease 0s;
+  transition: all 0.3s ease 0s;
 }
 
-.weekDateList .weekDate.active {
+.weekDateList .weekDate.active span {
   background: #305671;
   border-color: #305671;
   color: #fff;
@@ -4789,6 +4789,22 @@ div button.btn-link {
 
 .weekDateList .weekDate:last-child {
   margin-right: 0;
+}
+
+.weekDateList .weekDate input[type="checkbox"]  {
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  left: 0;
+  top: 0;
+  z-index: 5;
+  opacity: 0;
+}
+
+.weekDateList .weekDate input[type="checkbox"]:checked + span {
+  background: #305671;
+  border-color: #305671;
+  color: #fff;
 }
 
 .callListingTable .userName .btn p {
@@ -5311,4 +5327,145 @@ select.selectBox {
   100% {
     transform: rotate(180deg);
   }
+}
+
+
+.callConfigModal {
+  width: 820px;
+}
+.callConfigModal .formSecHeading {
+  margin-top: 0;
+}
+.callConfigModal .weekDateList {
+  margin-top: 5px;
+}
+
+.callConfigModal .formSecHeading {
+  font-weight: 600;
+}
+
+.cmnFieldStyle.timeInput {
+  width: 120px;
+  margin-left: 14px;
+}
+
+.cmnFormRow.scheduleRow {
+  position: relative;
+  margin-bottom: 0;
+  padding-bottom: 10px;
+}
+
+.scheduleRow + .scheduleRow {
+  padding-top: 40px;
+  border-top: 1px solid #D3D9DE;
+}
+
+.and {
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 30px;
+  background: #305671;
+  border-radius: 15px;
+  padding: 3px;
+  box-sizing: border-box;
+}
+.and img {
+  padding-left: 2px;
+}
+.and span {
+  font-size: 14px;
+  font-weight: 400;
+  color: #fff;
+  float: right;
+  line-height: 25px;
+  margin-right: 8px;
+}
+
+.addAnotherBtn {
+  width: 202px;
+  font-size: 14px;
+  float: left;
+}
+
+.timeOverlapBtn {
+  display: block;
+  float: right;
+  font-size: 14px;
+}
+
+.slotNotAbailable {
+  background: #FFF0F1;
+  padding: 10px;
+  border-radius: 5px;
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+}
+.slotNotAbailable p {
+  width: 486px;
+  font-size: 13px;
+  color: #ED707A;
+  line-height: 20px;
+  float: left;
+}
+.slotNotAbailable .btnGroup {
+  float: right;
+}
+
+.cmnBtn {
+  background: #305671;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+  height: 40px;
+  color: #fff;
+  font-size: 14px;
+  line-height: 38px;
+  padding: 0 15px;
+}
+.cmnBtn img {
+  padding-right: 9px;
+}
+.cmnBtn span + img {
+  padding-right: 0;
+  padding-left: 9px;
+}
+.cmnBtn.btn-red {
+  background: #ED707A;
+}
+.btnGroup.centered {
+  display: inline-block;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.btnGroup.right {
+  float: right;
+}
+.btnGroup .cmnBtn + .cmnBtn {
+  margin-left: 10px;
+}
+
+
+.setupForms {
+  margin-top: 41px;
+}
+
+.setupFormLists {
+  margin-top: 16px;
+}
+
+.setupFormRow {
+  padding: 20px 0 20px 20px;
+  border-top: 1px solid #D3D9DE;
+}
+
+.setupFormRowHead .fomrListHeadName {
+  font-size: 14px;
+  color: #305671;
+  padding-left: 10px;
+  font-weight: 500;
 }

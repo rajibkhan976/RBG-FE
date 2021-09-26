@@ -44,7 +44,7 @@ const BuyAndAssignNumber = (props) => {
                 </div>
               </div>
               <div className="cmnFormRow">
-                <p class="formSecHeading">Search for Available Numbers</p>
+                <h4 class="formSecHeading">Search for Available Numbers</h4>
               </div>
               <div className="cmnFormRow">
                 <div className="cmnFieldName">Select Country</div>
@@ -124,7 +124,7 @@ const BuyAndAssignNumber = (props) => {
 
               {numListLoaded ? 
               <>
-                <div class="formSecHeading">Available Numbers</div>
+                <h4 class="formSecHeading">Available Numbers</h4>
               
               <div className="availNumList">
                 <table>

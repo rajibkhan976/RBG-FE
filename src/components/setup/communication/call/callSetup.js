@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import info_3dot_icon from "../../../../assets/images/info_3dot_icon.svg";
+import CallConfiguration from "./callConfiguration";
 
 
 const CallSetup = () => {
+
+    const [configModalShow, setConfigModalShow] = useState(false);
+
+    const openConfigModal = () => {
+        setConfigModalShow(true);
+    }
+  
+    const closeConfigModal = () => {
+        setConfigModalShow(false);
+    }
+
+
     return(
         <div className="dashInnerUI">
             <div class="userListHead">
@@ -18,7 +31,7 @@ const CallSetup = () => {
                     <p class="userListAbout">Lorem ipsum dolor sit amet. Semi headline should be here.</p>
                 </div>
                 <div class="listFeatures">
-                    <button class="creatUserBtn">
+                    <button class="creatUserBtn" onClick={openConfigModal}>
                         <img class="plusIcon" src={plus_icon} alt="" />
                         <span>Add a configur</span>
                     </button>
@@ -183,6 +196,8 @@ const CallSetup = () => {
                     </ul>
                 </div>
             </div>
+
+            { configModalShow && <CallConfiguration closeModal={closeConfigModal}/> }
         </div>
     );
 }
