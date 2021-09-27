@@ -4,7 +4,7 @@ import dot3White from "../../../../assets/images/info_3dot_white.svg";
 import { utils } from "../../../../helpers";
 import { ProductServices } from "../../../../services/setup/ProductServices";
 import ConfirmBox from "../../../shared/confirmBox";
-import Loader from "../../../shared/Loader";
+import Loader2 from "../../../shared/Loader2";
 import cross from "../../../../assets/images/cross.svg";
 
 const CategoryListing = (props) => {
@@ -174,7 +174,7 @@ const CategoryListing = (props) => {
 
     return (
         <>
-            {isLoader ? <Loader /> : ''}
+            
             {isConfirmed.show ? (
                 <ConfirmBox
                     callback={(confirmedMsg) => deleteCategory(isConfirmed.id, confirmedMsg)}
@@ -183,6 +183,7 @@ const CategoryListing = (props) => {
                 ""
             )}
             <div className="productRightSetUpPanel">
+            {isLoader ? <Loader2 /> : ''}
                 <h3 className="productListingHeader">Product Categories</h3>
                 <div className="productSearchPanel">
                     <form method="post" onSubmit={handleSubmit}>

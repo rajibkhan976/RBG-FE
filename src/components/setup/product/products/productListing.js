@@ -119,7 +119,7 @@ const ProductListing = () => {
             setIsLoader(false);
         }
     };
-
+   
     const deleteProduct = async (productID, isConfirmed = null) => {
         // setOption(null);
         if (isConfirmed == null && productID) {
@@ -155,7 +155,14 @@ const ProductListing = () => {
             }
         }
     };
-
+    const [option, setOption] = useState(null);
+    const toogleActionList = (index) => {
+        setOption(index !== option ? index : null);
+    }
+    const [colorDropdown, setColorDropdown] = useState(null);
+    const toogleColorList = (index) => {
+        setColorDropdown(index !== colorDropdown ? index : null);
+    }
     return (
         <>
             {isLoader ? <Loader /> : ''}
@@ -221,10 +228,10 @@ const ProductListing = () => {
                                                 <p>Color</p>
                                                 {/* <span style={{ backgroundColor: "#ABED93" }}></span> */}
                                                 {elem.associatedColors.map(color => <span style={{ backgroundColor: color.colorcode }}></span>)}
-                                                {elem.associatedColors.length > 4 ?
+                                                {/* {elem.associatedColors.length > 4 ? */}
                                                     <div className="colorpaletContainer">
                                                         <button className="dropIt">+12</button>
-                                                        <div className="colorPalet paletHide"> {/*//paletHide class is to be added to hide it */}
+                                                        <div className="colorPalet"> {/*//paletHide class is to be added to hide it */}
                                                             <span style={{ backgroundColor: "#ABED93" }}></span>
                                                             <span style={{ backgroundColor: "#ABED93" }}></span>
                                                             <span style={{ backgroundColor: "#ABED93" }}></span>
@@ -242,13 +249,13 @@ const ProductListing = () => {
                                                             <span style={{ backgroundColor: "#ABED93" }}></span>
                                                         </div>
                                                     </div>
-                                                    : ""}
+                                                    {/* : ""} */}
                                             </div>
                                             <div className="sideEditOption">
-                                                <button className="showList" >
+                                                <button className="showList" onClick={() => toogleActionList(key)}>
                                                     <img src={dot3White} alt="" />
                                                 </button>
-                                                <div class="dropdownOptions listOpen"> {/*//listHide class is to be replaced with listOpen to hide it */}
+                                                <div className={option === key ? "dropdownOptions listOpen" : "listHide"}> {/*//listHide class is to be replaced with listOpen to hide it */}
                                                     <button class="btn btnEdit" onClick={() => handleEdit(elem)}>
                                                         <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" class="editIcon"><g transform="translate(0.75 0.75)">
                                                             <path class="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path>
