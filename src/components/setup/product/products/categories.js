@@ -8,8 +8,7 @@ import Loader2 from "../../../shared/Loader2";
 import cross from "../../../../assets/images/cross.svg";
 
 const CategoryListing = (props) => {
-    const [categoryData, setCategoryData] = useState([]);
-    const [isLoader, setIsLoader] = useState(false);
+
     const [category, setCategory] = useState({
         name: "",
         id: null,
@@ -43,42 +42,7 @@ const CategoryListing = (props) => {
         }
         // console.log('// outside click');
         setOption(null);
-    }
-
-    useEffect(() => {
-        fetchCategories();
-    }, []);
-
-    useEffect(() => {
-        fetchCategories();
-    }, [props.refetchCategory]);
-
-    const fetchCategories = async () => {
-        /************ PERMISSION CHECKING (FRONTEND) *******************/
-        // const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
-        // console.log("Permission", permissions);
-        /************ PERMISSION CHECKING (FRONTEND) *******************/
-        try {
-            if (!isLoader) setIsLoader(true);
-            /************ PERMISSION CHECKING (FRONTEND) *******************/
-            // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
-            //     throw new Error(responses.permissions.role.read);
-            // }
-            /************ PERMISSION CHECKING (FRONTEND) *******************/
-            const result = await ProductServices.fetchCategory();
-            if (result.length) {
-                setCategoryData(result);
-                console.log("CategoryData", categoryData);
-            } else {
-                // setErrorMsg("No categories found");
-                props.successMsg("No categories found");
-            }
-        } catch (e) {
-            props.errorMsg(e.message);
-        } finally {
-            setIsLoader(false);
-        }
-    }
+    };
 
     const handleChange = (e) => {
         const name = e.target.value;
@@ -87,8 +51,8 @@ const CategoryListing = (props) => {
             setCategory({ ...category, name: name, showCross: true });
         }
 
-        if (!name.length && !category.id) setCategory({ name: "", id: null, btnName: "Add Category", showCross: false});
-    }
+        if (!name.length && !category.id) setCategory({ name: "", id: null, btnName: "Add Category", showCross: false });
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -97,36 +61,36 @@ const CategoryListing = (props) => {
             if (!catData.name.length) {
                 props.errorMsg("Category name should not be empty");
             } else {
-                setIsLoader(true);
-                if(category.id) {
-                    catData = {...catData, id: category.id };
+                props.setIsLoader(true);
+                if (category.id) {
+                    catData = { ...catData, id: category.id };
                     const res = await ProductServices.editCategory(catData);
                     props.successMsg("Category updated successfully");
                 } else {
                     const res = await ProductServices.createCategory(catData);
                     props.successMsg("Category created successfully");
                 }
-                
+
             }
         } catch (e) {
             props.errorMsg(e.message);
         } finally {
-            setIsLoader(false);
+            props.setIsLoader(false);
             setCategory({
                 name: "",
                 id: null,
                 btnName: "Add Category",
                 showCross: false
             });
-            await fetchCategories()
+            props.fetchCategories()
         }
-    }
+    };
 
     const editCategory = (category) => {
         setOption(null);
         console.log("Edit Triggered", category);
         setCategory({ name: category.name, id: category._id, btnName: "Update", showCross: true });
-    }
+    };
 
     const deleteCategory = async (catID, isConfirmed = null) => {
         setOption(null);
@@ -142,8 +106,12 @@ const CategoryListing = (props) => {
                 id: null
             });
         } else {
+            setConfirmed({
+                show: false,
+                id: null
+            });
             try {
-                setIsLoader(true);
+                props.setIsLoader(true);
                 const result = await ProductServices.deleteCategory(catID);
                 if (result) {
                     props.successMsg(result);
@@ -153,28 +121,23 @@ const CategoryListing = (props) => {
             } catch (e) {
                 props.errorMsg(e.message);
             } finally {
-                // setIsLoader(false);
-                setConfirmed({
-                    show: false,
-                    id: null
-                });
-                await fetchCategories();
+                props.fetchCategories();
             }
         }
     };
 
     const handleCategoryClick = (catID) => {
-        if(catID) {
+        if (catID) {
             utils.addQueryParameter("catID", catID);
         } else {
             utils.removeQueryParameter("catID");
         }
         props.getProduct();
-    }
+    };
 
     return (
         <>
-            
+
             {isConfirmed.show ? (
                 <ConfirmBox
                     callback={(confirmedMsg) => deleteCategory(isConfirmed.id, confirmedMsg)}
@@ -183,11 +146,11 @@ const CategoryListing = (props) => {
                 ""
             )}
             <div className="productRightSetUpPanel">
-            {isLoader ? <Loader2 /> : ''}
+                {props.isLoader ? <Loader2 /> : ''}
                 <h3 className="productListingHeader">Product Categories</h3>
                 <div className="productSearchPanel">
                     <form method="post" onSubmit={handleSubmit}>
-                        {category.showCross ? <button className="deleteIt" onClick={() => setCategory({...category, name: "", id: null, btnName: "Add Category", showCross: false })}><img src={cross} alt="" /></button>: ''}
+                        {category.showCross ? <button className="deleteIt" onClick={() => setCategory({ ...category, name: "", id: null, btnName: "Add Category", showCross: false })}><img src={cross} alt="" /></button> : ''}
                         <input type="text" name="catname" onChange={handleChange} value={category.name} />
                         <button className="btn" type="submit">{category.btnName}<img src={arrowRightWhite} alt="" /></button>
                     </form>
@@ -196,16 +159,16 @@ const CategoryListing = (props) => {
                     <li>
                         <button className="bigListName" onClick={() => handleCategoryClick(false)}>All Categories</button>
                     </li>
-                    {categoryData.map((elem, key) => {
+                    {props.categoryData.map((elem, key) => {
                         return (
                             <React.Fragment key={key + "_category"}>
                                 <li ref={optionsToggleRef} className={option === key ? "active" : ""} key={elem._id}>
                                     <button className={elem.slug === "uncategorized" ? "smallListName" : "bigListName"} onClick={() => handleCategoryClick(elem._id)}>{elem.name} ({(elem.productCount) ? elem.productCount : 0})</button>
-                                    {(elem.slug !== "uncategorized")?
-                                    <button className="showList" onClick={() => toogleActionList(key)}>
-                                        <img src={dot3White} alt="" />
-                                    </button>
-                                    : ''}
+                                    {(elem.slug !== "uncategorized") ?
+                                        <button className="showList" onClick={() => toogleActionList(key)}>
+                                            <img src={dot3White} alt="" />
+                                        </button>
+                                        : ''}
                                     <React.Fragment key={key + "_fragment"}>
                                         <div className={option === key ? "dropdownOptions listOpen" : "listHide"}>
                                             <button className="btn btnEdit" onClick={() => { editCategory(elem); }}>

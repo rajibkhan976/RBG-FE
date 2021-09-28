@@ -89,7 +89,7 @@ export const ProductServices = {
         try {
             const result = await axios.get(config.fetchProductUrl +
             (page ? "/" + page : '') +
-            (queryParams ? "?" + queryParams : ''),
+            (queryParams ? "?" + decodeURI(queryParams) : ''),
             { headers: headers });
             console.log('Products From Service : ', result);
             return result.data;

@@ -79,7 +79,7 @@ const Setup = (props) => {
                     <i><img src={SetupIcon5} alt="" /></i>
                     <div>
                         <h3>
-                            <NavLink to="/Products">
+                            <NavLink to="/products">
                                 Products
                             </NavLink>
                         </h3>

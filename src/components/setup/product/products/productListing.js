@@ -1,125 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ProductFilter from "./productFilter";
-import AddProductModal from "./addProductModal";
 
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import percentTag from "../../../../assets/images/percentage_icon.png";
 import list_board_icon from "../../../../assets/images/list_board_icon.svg";
-// import proImg1 from "../../../../assets/images/proImg1.png";   
-// import proImg2 from "../../../../assets/images/proImg2.png";
-// import proImg3 from "../../../../assets/images/proImg3.png";
-// import proImg4 from "../../../../assets/images/proImg4.png";
-// import proImg5 from "../../../../assets/images/proImg5.png";
-// import proImg6 from "../../../../assets/images/proImg6.png";
-import proImg7 from "../../../../assets/images/proImg7.png";
 import listView from "../../../../assets/images/listView.svg";
 import dot3White from "../../../../assets/images/dot3gray.svg";
-
-import CategoryListing from "./categories";
-import { ErrorAlert, SuccessAlert } from "../../../shared/messages";
-import { utils } from "../../../../helpers";
-import Loader from "../../../shared/Loader";
-import env from "../../../../configuration/env";
 import { ProductServices } from "../../../../services/setup/ProductServices";
 import Pagination from "../../../shared/Pagination";
 import ConfirmBox from "../../../shared/confirmBox";
 
 
-const ProductListing = () => {
+const ProductListing = (props) => {
     document.title = "Products";
-    const messageDelay = 5000; // ms
-    const [successMsg, setSuccessMsg] = useState("");
-    const [isLoader, setIsLoader] = useState(false);
-    const [errorMsg, setErrorMsg] = useState("");
-    const [productData, setProductData] = useState([]);
     const [prodFilterModalStatus, setProdFilterModalStatus] = useState(false);
-    const [paginationData, setPaginationData] = useState({
-        count: null,
-        totalPages: null,
-        currentPage: 1,
-        limit: 10
-    });
-    const [updateProduct, setUpdateProduct] = useState({});
-    const [openModal, setOpenModal] = useState(false);
-    const [refetchCat, setRefetchCat] = useState("");
     const [isConfirmed, setConfirmed] = useState({
         show: false,
         id: null,
     });
+    const [option, setOption] = useState(null);
+    const [colorDropdown, setColorDropdown] = useState(null);
 
-    const openFilterModal = () => {
-        setProdFilterModalStatus(true);
-    };
-
-    const closeFilterModal = () => {
-        setProdFilterModalStatus(false);
-    }
-    const addProductModal = () => {
-        setOpenModal(true);
-        setUpdateProduct({});
-    }
-
+    /****************************** FUNCTIONS START **********************************/
     const handleEdit = (product) => {
-        setOpenModal(true);
-        setUpdateProduct(product);
+        setOption(null);
+        props.openProductModal(true, product);
     }
 
-    const closeProductModal = (param) => {
-        setOpenModal(false);
-        if (param === "fetch") {
-            fetchProducts();
-            setRefetchCat("refetch" + Math.random() * 100);
-        }
-
-    }
-    useEffect(() => {
-        if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
-        if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
-    }, [successMsg, errorMsg]);
-
-    useEffect(() => {
-        fetchProducts();
-    }, []);
-    /**
-     * Get all query params
-     */
-    const getQueryParams = async () => {
-        const catID = utils.getQueryVariable('catID');
-        const queryParams = new URLSearchParams();
-        if (catID && catID !== "all") {
-            queryParams.append("catID", catID);
-        }
-        return queryParams;
-    }
-
-    const fetchProducts = async () => {
-        // const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
-        // console.log("Permission", permissions)
-        const pageId = utils.getQueryVariable('page') || 1;
-        const queryParams = await getQueryParams();
-        try {
-            setIsLoader(true);
-            // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
-            //     throw new Error(responses.permissions.role.read);
-            // }
-            const result = await ProductServices.fetchProducts(pageId, queryParams);
-            if (result) {
-                console.log("Product List", result);
-                setProductData(result.products);
-                setPaginationData({
-                    ...paginationData,
-                    count: result.pagination.count,
-                    currentPage: result.pagination.currentPage,
-                    totalPages: result.pagination.totalPages
-                });
-            }
-        } catch (e) {
-            setErrorMsg(e.message);
-        } finally {
-            setIsLoader(false);
-        }
-    };
-   
     const deleteProduct = async (productID, isConfirmed = null) => {
         // setOption(null);
         if (isConfirmed == null && productID) {
@@ -135,43 +42,36 @@ const ProductListing = () => {
             });
         } else {
             try {
-                setIsLoader(true);
                 const result = await ProductServices.deleteProduct(productID);
                 if (result) {
-                    setSuccessMsg(result);
+                    props.successMsg(result);
                 } else {
-                    setErrorMsg("Error deleting product. Please try again.");
+                    props.errorMsg("Error deleting product. Please try again.");
                 }
             } catch (e) {
-                setErrorMsg(e.message);
+                props.errorMsg(e.message);
             } finally {
-                // setIsLoader(false);
                 setConfirmed({
                     show: false,
                     id: null
                 });
-                await fetchProducts();
-                setRefetchCat("refetch" + Math.random() * 100);
+                props.fetchProducts();
+                props.getCategories();
             }
         }
     };
-    const [option, setOption] = useState(null);
+    
     const toogleActionList = (index) => {
         setOption(index !== option ? index : null);
     }
-    const [colorDropdown, setColorDropdown] = useState(null);
+    
     const toogleColorList = (index) => {
         setColorDropdown(index !== colorDropdown ? index : null);
     }
+
+    /****************************** FUNCTIONS START **********************************/
     return (
         <>
-            {isLoader ? <Loader /> : ''}
-            {successMsg &&
-                <SuccessAlert message={successMsg}></SuccessAlert>
-            }
-            {errorMsg &&
-                <ErrorAlert message={errorMsg}></ErrorAlert>
-            }
             {isConfirmed.show ? (
                 <ConfirmBox
                     callback={(confirmedMsg) => deleteProduct(isConfirmed.id, confirmedMsg)}
@@ -183,24 +83,24 @@ const ProductListing = () => {
                 <div class="userListHead product">
                     <div class="listInfo">
                         <ul class="listPath"><li>Settings  </li><li>Products</li></ul>
-                        <h2 class="inDashboardHeader">Products ({paginationData.count})</h2>
+                        <h2 class="inDashboardHeader">Products ({(props.paginationData.count)?props.paginationData.count:0})</h2>
                         <p class="userListAbout">Lorem ipsum dolor sit amet. Semi headline should be here.</p>
                     </div>
                     <div class="listFeatures">
-                        <button class="creatUserBtn" onClick={addProductModal}>
+                        <button class="creatUserBtn" onClick={props.openProductModal}>
                             <img class="plusIcon" src={plus_icon} alt="" /><span>Add a Product</span>
                         </button>
                     </div>
                 </div>
                 <div className="productViewType">
-                    <button className="btn" onClick={() => openFilterModal()}>
+                    <button className="btn" onClick={() => props.openFilterModal()}>
                         <img src={listView} alt="filter" />
                     </button>
                 </div>
                 <div class="productListBody">
 
                     <div className="productListing">
-                        {productData.length ? productData.map((elem, key) => {
+                        {props.productData.length ? props.productData.map((elem, key) => {
                             return (
                                 <React.Fragment key={key + "_products"}>
                                     <div className="productList">
@@ -229,27 +129,27 @@ const ProductListing = () => {
                                                 {/* <span style={{ backgroundColor: "#ABED93" }}></span> */}
                                                 {elem.associatedColors.map(color => <span style={{ backgroundColor: color.colorcode }}></span>)}
                                                 {/* {elem.associatedColors.length > 4 ? */}
-                                                    <div className="colorpaletContainer">
-                                                        <button className="dropIt">+12</button>
-                                                        <div className="colorPalet"> {/*//paletHide class is to be added to hide it */}
-                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                            <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        </div>
+                                                <div className="colorpaletContainer">
+                                                    <button className="dropIt">+12</button>
+                                                    <div className="colorPalet"> {/*//paletHide class is to be added to hide it */}
+                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
+                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
                                                     </div>
-                                                    {/* : ""} */}
+                                                </div>
+                                                {/* : ""} */}
                                             </div>
                                             <div className="sideEditOption">
                                                 <button className="showList" onClick={() => toogleActionList(key)}>
@@ -288,22 +188,16 @@ const ProductListing = () => {
                         }
                     </div>
                 </div>
-                {paginationData.count > paginationData.limit ? <Pagination
-                    paginationData={paginationData}
-                    dataCount={paginationData.count}
-                    callback={fetchProducts} /> : ''}
+                {props.paginationData.count > props.paginationData.limit ? <Pagination
+                    paginationData={props.paginationData}
+                    dataCount={props.paginationData.count}
+                    callback={props.fetchProducts} /> : ''}
             </div>
-            <CategoryListing
-                successMsg={(msg) => setSuccessMsg(msg)}
-                errorMsg={(msg) => setErrorMsg(msg)}
-                getProduct={fetchProducts}
-                refetchCategory={refetchCat}
-            />
 
-            {prodFilterModalStatus && <ProductFilter closeModal={closeFilterModal} />}
+            {/* {prodFilterModalStatus && <ProductFilter closeModal={closeFilterModal} />} */}
 
-            {openModal && <AddProductModal closeAddProductModal={(param) => closeProductModal(param)}
-                editProductItem={updateProduct}></AddProductModal>}
+            {/* {openModal && <AddProductModal closeAddProductModal={(param) => closeProductModal(param)}
+                editProductItem={updateProduct}></AddProductModal>} */}
         </>
     );
 }

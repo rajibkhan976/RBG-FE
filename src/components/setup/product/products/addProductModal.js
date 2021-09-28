@@ -33,11 +33,12 @@ const AddProductModal = (props) => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    // setIsLoader(true);
-    fetchCategories();
     fetchColorSizes();
-    // setIsLoader(false);
   }, []);
+
+  useEffect(() => {
+    setCategories(props.categories);
+  }, [props.categories]);
 
   useEffect(() => {
     if (Object.keys(props.editProductItem).length) {
@@ -70,17 +71,6 @@ const AddProductModal = (props) => {
         colors: result.colors,
         sizes: result.sizes
       })
-    } catch (e) {
-      // props.errorMsg(e.message);
-    }
-  }
-
-  const fetchCategories = async () => {
-    try {
-      const result = await ProductServices.fetchCategory();
-      if (result.length) {
-        setCategories(result);
-      }
     } catch (e) {
       // props.errorMsg(e.message);
     }
@@ -184,6 +174,8 @@ const AddProductModal = (props) => {
           console.log("Inisde Save");
           props.closeAddProductModal("fetch");
         } else {
+          props.retriveProducts();
+          props.retrieveCategories();
           console.log("Inside save and new");
           setSuccessMsg(msg);
           setProductData({
