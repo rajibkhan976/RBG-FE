@@ -125,6 +125,7 @@ const BuyAndAssignNumber = (props) => {
     setAssignTo("");
     setRegion("");
     setAreaCode("");
+    setSaveAndNew(false);
   }
 
   /**
@@ -136,6 +137,7 @@ const BuyAndAssignNumber = (props) => {
     event.preventDefault();
     console.log("selectedNumber", selectedNumber, availableNumbers[selectedNumber])
     setProcessing(true);
+    setIsLoader(true);
 
     try {
       let numberDetails =  availableNumbers[selectedNumber];
@@ -151,6 +153,7 @@ const BuyAndAssignNumber = (props) => {
       
       if (saveAndNew) {
         resetForm();
+        fetchOrgOwners();
       } else {
         props.closeModal();
       }
@@ -158,7 +161,8 @@ const BuyAndAssignNumber = (props) => {
     } catch (e) {
       props.errorMsg(e.message);      
     } finally {
-      setProcessing(false);     
+      setProcessing(false);   
+      setIsLoader(false);  
     }
 
   }
@@ -184,7 +188,8 @@ const BuyAndAssignNumber = (props) => {
                   <select 
                     name="" 
                     className="cmnFieldStyle selectBox"
-                    onChange = { (e) => handleChange(e, "AssignTo") } >
+                    onChange = { (e) => handleChange(e, "AssignTo") }
+                    value={assignTo} >
                       <option value="">Select a Gym Owner</option>
                       { orgOwnerList ? orgOwnerList.map( (ow, key) => {
                         return (
@@ -192,7 +197,7 @@ const BuyAndAssignNumber = (props) => {
                               <option value={ow._id}>{ow.firstName + " " + ow.lastName}</option>
                           </React.Fragment>
                         );
-                      }) : ""}
+                      }) : "No record found"}
                   </select>
                 </div> 
                  {formErrors.assignTo &&
@@ -344,6 +349,11 @@ const BuyAndAssignNumber = (props) => {
                         </React.Fragment>
                       )
                     } ) }
+                    {!availableNumbers.length && 
+                      <tr>
+                        <td colSpan="3" align="center">No record found</td>
+                      </tr>
+                    }
                   </tbody>
                 </table>
               </div>
