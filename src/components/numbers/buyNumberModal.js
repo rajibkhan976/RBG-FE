@@ -151,6 +151,8 @@ const BuyAndAssignNumber = (props) => {
       let purchaseResp = await NumberServices.purchase(purchasePayload);
       props.successMsg('Number assigned successfully');   
       
+      props.prependRecord(purchaseResp);
+
       if (saveAndNew) {
         resetForm();
         fetchOrgOwners();
