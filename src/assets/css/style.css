@@ -4008,6 +4008,10 @@ textarea.cmnFieldStyle {
   border: 1px solid #D3D9DE;
   border-radius: 5px;
 }
+.cmnInputFile.error {
+  border-color: #c74854;
+  background: #FFF4F4;
+}
 .cmnInputFile input[type="file"] {
   position: absolute;
   left: 0;

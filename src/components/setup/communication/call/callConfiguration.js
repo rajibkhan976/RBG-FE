@@ -209,7 +209,7 @@ const CallConfiguration = (props) => {
                                         </div>
                                         <div class="cmnFormRow">
                                             <div className="cmnFormField">
-                                                <InputFile />
+                                                <InputFile fileType="mp3" />
                                             </div>
                                         </div>
                                         <div class="cmnFormRow">
