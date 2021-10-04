@@ -21,7 +21,8 @@ const AddProductModal = (props) => {
     image: "",
     price: "",
     size: [],
-    imageUrl: profileAvatar
+    imageUrl: profileAvatar,
+    tax: 0
   });
 
   const [categories, setCategories] = useState([]);
@@ -33,7 +34,7 @@ const AddProductModal = (props) => {
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
-    fetchColorSizes();
+    setColorSize(props.getcolorSize);
   }, []);
 
   useEffect(() => {
@@ -44,17 +45,18 @@ const AddProductModal = (props) => {
     if (Object.keys(props.editProductItem).length) {
       const updateItem = props.editProductItem;
       setProductData({
-        category: updateItem.categoryID,
+        category: updateItem.categoryID[0],
         name: updateItem.name,
         colors: updateItem.colors,
         size: updateItem.size,
         image: updateItem.image,
         price: updateItem.price,
         id: updateItem._id,
-        imageUrl: config.bucketUrl + updateItem.image
+        imageUrl: config.bucketUrl + updateItem.image,
+        tax: (updateItem.tax) ? updateItem.tax : 0
       });
       setIsEditing(true);
-    }
+    };
 
   }, [props.editProductItem])
 
@@ -62,19 +64,6 @@ const AddProductModal = (props) => {
     if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
     if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
   }, [successMsg, errorMsg]);
-
-  const fetchColorSizes = async () => {
-    try {
-      const result = await ProductServices.fetchColorSizes();
-      console.log("Color size length", result);
-      setColorSize({
-        colors: result.colors,
-        sizes: result.sizes
-      })
-    } catch (e) {
-      // props.errorMsg(e.message);
-    }
-  }
 
   const handleImageUpload = (event) => {
     setProductData({ ...productData, imageUrl: loadImg });
@@ -156,8 +145,10 @@ const AddProductModal = (props) => {
           colors: productData.colors,
           image: productData.image,
           price: productData.price.toString(),
-          size: productData.size
-        }
+          size: productData.size,
+          tax: productData.tax.toString()
+        };
+        console.log("Data to be updated or added", data);
         let msg;
         if (productData.id) {
           const updateData = {...data, id: productData.id};
@@ -185,7 +176,8 @@ const AddProductModal = (props) => {
             image: "",
             price: "",
             size: [],
-            imageUrl: profileAvatar
+            imageUrl: profileAvatar,
+            tax: 0
           });
         }
         setBtnType("");
@@ -208,6 +200,8 @@ const AddProductModal = (props) => {
     }
     return bool;
   }
+
+  const handleTaxCheck = (isChecked) => setProductData({...productData, tax: (isChecked) ? 1: 0});
 
   return (
     <>
@@ -296,7 +290,11 @@ const AddProductModal = (props) => {
                 <div className="formRight">
                   <label>
                     <div className="customCheckbox">
-                      <input type="checkbox" />
+                      <input type="checkbox" 
+                      name="saleTax"
+                      onChange={(e) => handleTaxCheck(e.target.checked)}
+                      checked={(productData.tax)?true:false}
+                      />
                       <span></span>
                     </div>
                     Add Sales Tax (10%)</label>

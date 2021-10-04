@@ -13,7 +13,7 @@ import ConfirmBox from "../../../shared/confirmBox";
 
 const ProductListing = (props) => {
     document.title = "Products";
-    const [prodFilterModalStatus, setProdFilterModalStatus] = useState(false);
+    // const [prodFilterModalStatus, setProdFilterModalStatus] = useState(false);
     const [isConfirmed, setConfirmed] = useState({
         show: false,
         id: null,
@@ -60,13 +60,34 @@ const ProductListing = (props) => {
             }
         }
     };
-    
+
     const toogleActionList = (index) => {
         setOption(index !== option ? index : null);
     }
-    
+
     const toogleColorList = (index) => {
         setColorDropdown(index !== colorDropdown ? index : null);
+    }
+
+    const ShowColors = (prop) => {
+        // let html = "<p>Color</p>";
+        let html = "";
+        prop.colors.map((color, index) => {
+            if ((index + 1) < 3) {
+                html += `<span style="background-color: ${color.colorcode}"></span>`;
+            } else {
+                if ((index + 1) === 4) {
+                    html += `<div class="colorpaletContainer">
+                    <button class="dropIt">+${(prop.colors.length - 3)}</button>
+                    <div class="colorPalet">`;
+                }
+                html += `<span style="background-color: ${color.colorcode}"></span>`;
+                if ((index + 1) === prop.colors.length) {
+                    html += `</div></div>`;
+                }
+            }
+        });
+        return <div className="chooseColor" dangerouslySetInnerHTML={{ __html: html }} />;
     }
 
     /****************************** FUNCTIONS START **********************************/
@@ -83,7 +104,7 @@ const ProductListing = (props) => {
                 <div class="userListHead product">
                     <div class="listInfo">
                         <ul class="listPath"><li>Settings  </li><li>Products</li></ul>
-                        <h2 class="inDashboardHeader">Products ({(props.paginationData.count)?props.paginationData.count:0})</h2>
+                        <h2 class="inDashboardHeader">Products ({(props.paginationData.count) ? props.paginationData.count : 0})</h2>
                         <p class="userListAbout">Lorem ipsum dolor sit amet. Semi headline should be here.</p>
                     </div>
                     <div class="listFeatures">
@@ -110,47 +131,19 @@ const ProductListing = (props) => {
                                                 <p><a href="#">{elem.name}</a></p>
                                                 <div className="d-flex">
                                                     <h3>${elem.price.toFixed(2)}</h3>
-                                                    <span><img className="gap_icon" src={percentTag} alt="" /> 10% Sales Tax Applicable</span>
+                                                    {elem.tax ?
+                                                    <span><img className="gap_icon" src={percentTag} alt="" /> {elem.taxPercent}% Sales Tax Applicable</span>
+                                                    : ""}
                                                 </div>
 
                                             </div>
                                         </div>
                                         <div className="productListRight">
                                             <div className="chooseSize">
-                                                <p>Size</p>
-                                                {/* <span>S</span> */}
+                                                {/* <p>Size</p> */}
                                                 {elem.size.map(s => <span>{s}</span>)}
-                                                {/* <span>XL</span>
-                                                <span>2XL</span>
-                                                <span>3XL</span> */}
                                             </div>
-                                            <div className="chooseColor">
-                                                <p>Color</p>
-                                                {/* <span style={{ backgroundColor: "#ABED93" }}></span> */}
-                                                {elem.associatedColors.map(color => <span style={{ backgroundColor: color.colorcode }}></span>)}
-                                                {/* {elem.associatedColors.length > 4 ? */}
-                                                <div className="colorpaletContainer">
-                                                    <button className="dropIt">+12</button>
-                                                    <div className="colorPalet"> {/*//paletHide class is to be added to hide it */}
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                        <span style={{ backgroundColor: "#ABED93" }}></span>
-                                                    </div>
-                                                </div>
-                                                {/* : ""} */}
-                                            </div>
+                                            <ShowColors colors={elem.associatedColors} />
                                             <div className="sideEditOption">
                                                 <button className="showList" onClick={() => toogleActionList(key)}>
                                                     <img src={dot3White} alt="" />

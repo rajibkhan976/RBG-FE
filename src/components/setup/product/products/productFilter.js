@@ -3,10 +3,13 @@ import React, { useState, useLayoutEffect, useEffect } from "react";
 import arrowForward from "../../../../assets/images/arrow_forward.svg";
 import { utils } from "../../../../helpers";
 import { ProductServices } from "../../../../services/setup/ProductServices";
+import Loader from "../../../shared/Loader";
+import Loader2 from "../../../shared/Loader2";
 
 
 const ProductFilter = (props) => {
     const thumbsize = 14;
+    const [isLoader, setIsLoader] = useState(false);
     const [colorSize, setColorSize] = useState({
         colors: [],
         sizes: []
@@ -21,8 +24,7 @@ const ProductFilter = (props) => {
     });
 
     useEffect(() => {
-        props.isShowLoader(true);
-        fetchColorSizes();
+        setColorSize(props.getcolorSize);
         setDefaultParams();
     }, []);
 
@@ -138,7 +140,7 @@ const ProductFilter = (props) => {
         } catch (e) {
             props.errorMsg(e.message);
         } finally {
-            props.isShowLoader(false);
+            setIsLoader(false);
         }
     }
 
@@ -227,92 +229,96 @@ const ProductFilter = (props) => {
     }
 
     return (
-        <div class="sideMenuOuter filterUserMenu">
-            <div class="sideMenuInner">
-                <button class="btn btn-closeSideMenu" onClick={props.closeModal}><span></span><span></span></button>
-                <div class="sideMenuHeader">
-                    <h3 class="liteHeading">Apply Filter</h3>
-                </div>
-                <div class="sideMenuBody">
-                    <form class="formBody" onSubmit={handleApplyFilter}>
-                        <div class="aplyfilteCheck">
-                            <p>Category</p>
-                            {props.categories.map((cat, key) => {
-                                return (
-                                    <React.Fragment key={"FilterCat_" + key}>
-                                        <label>
-                                            <div className="customCheckbox">
-                                                <input type="checkbox"
-                                                    name="categories"
-                                                    value={cat._id}
-                                                    onChange={handleCategoryCheckbox}
-                                                    defaultChecked={(filterData.categories.indexOf(cat._id) !== -1) ? true : false}
-                                                />
-                                                <span></span>
-                                            </div>
-                                            {cat.name} ({(cat.productCount ? cat.productCount : 0)})
-                                        </label>
-                                    </React.Fragment>
-                                )
-                            })}
-                        </div>
-                        <div class="aplyfilteCheck">
-                            <p>Size</p>
-                            {colorSize.sizes.map((size, key) => {
-                                return (
-                                    <React.Fragment key={"FilterSize_" + key}>
-                                        <label>
-                                            <div className="customCheckbox">
-                                                <input type="checkbox"
-                                                    name="sizes"
-                                                    value={size.size}
-                                                    onChange={handleSizeCheckbox}
-                                                    defaultChecked={(filterData.sizes.indexOf(size.size) !== -1) ? true : false}
-                                                />
-                                                <span></span>
-                                            </div>
-                                            {size.size}
-                                        </label>
-                                    </React.Fragment>
-                                )
-                            })}
-                        </div>
-                        <div class="aplyfilteCheck">
-                            <p>Color</p>
-                            {colorSize.colors.map((color, key) => {
-                                return (
-                                    <React.Fragment key={"FilterColor_" + key}>
-                                        <label>
-                                            <div className="customCheckbox">
-                                                <input type="checkbox"
-                                                    name="colors"
-                                                    value={color.label}
-                                                    onChange={handleColorCheckbox}
-                                                    defaultChecked={(filterData.colors.indexOf(color.label) !== -1) ? true : false}
-                                                />
-                                                <span></span>
-                                            </div>
-                                            {color.label.toUpperCase()}
-                                        </label>
-                                    </React.Fragment>
-                                )
-                            })}
+        <>
+            
+            <div class="sideMenuOuter filterUserMenu">
+                {isLoader ? <Loader2 /> : ''}
+                <div class="sideMenuInner">
+                    <button class="btn btn-closeSideMenu" onClick={props.closeModal}><span></span><span></span></button>
+                    <div class="sideMenuHeader">
+                        <h3 class="liteHeading">Apply Filter</h3>
+                    </div>
+                    <div class="sideMenuBody">
+                        <form class="formBody" onSubmit={handleApplyFilter}>
+                            <div class="aplyfilteCheck">
+                                <p>Category</p>
+                                {props.categories.map((cat, key) => {
+                                    return (
+                                        <React.Fragment key={"FilterCat_" + key}>
+                                            <label>
+                                                <div className="customCheckbox">
+                                                    <input type="checkbox"
+                                                        name="categories"
+                                                        value={cat._id}
+                                                        onChange={handleCategoryCheckbox}
+                                                        defaultChecked={(filterData.categories.indexOf(cat._id) !== -1) ? true : false}
+                                                    />
+                                                    <span></span>
+                                                </div>
+                                                {cat.name} ({(cat.productCount ? cat.productCount : 0)})
+                                            </label>
+                                        </React.Fragment>
+                                    )
+                                })}
+                            </div>
+                            <div class="aplyfilteCheck">
+                                <p>Size</p>
+                                {colorSize.sizes.map((size, key) => {
+                                    return (
+                                        <React.Fragment key={"FilterSize_" + key}>
+                                            <label>
+                                                <div className="customCheckbox">
+                                                    <input type="checkbox"
+                                                        name="sizes"
+                                                        value={size.size}
+                                                        onChange={handleSizeCheckbox}
+                                                        defaultChecked={(filterData.sizes.indexOf(size.size) !== -1) ? true : false}
+                                                    />
+                                                    <span></span>
+                                                </div>
+                                                {size.size}
+                                            </label>
+                                        </React.Fragment>
+                                    )
+                                })}
+                            </div>
+                            <div class="aplyfilteCheck">
+                                <p>Color</p>
+                                {colorSize.colors.map((color, key) => {
+                                    return (
+                                        <React.Fragment key={"FilterColor_" + key}>
+                                            <label>
+                                                <div className="customCheckbox">
+                                                    <input type="checkbox"
+                                                        name="colors"
+                                                        value={color.label}
+                                                        onChange={handleColorCheckbox}
+                                                        defaultChecked={(filterData.colors.indexOf(color.label) !== -1) ? true : false}
+                                                    />
+                                                    <span></span>
+                                                </div>
+                                                {color.label.toUpperCase()}
+                                            </label>
+                                        </React.Fragment>
+                                    )
+                                })}
 
-                        </div>
-                        <div className="applySlider">
-                            <p>Price</p>
+                            </div>
+                            <div className="applySlider">
+                                <p>Price</p>
 
-                            <Slider min={300} max={3000} />
-                        </div>
-                        <div class="applyFilterBtn">
-                            <button class="saveNnewBtn" type="submit"><span>Apply Filter</span><img class="" src={arrowForward} alt="" /></button>
-                            <button class="btn-link" type="button" onClick={handleResetFilter}>Clear</button>
-                        </div>
+                                <Slider min={300} max={3000} />
+                            </div>
+                            <div class="applyFilterBtn">
+                                <button class="saveNnewBtn" type="submit"><span>Apply Filter</span><img class="" src={arrowForward} alt="" /></button>
+                                <button class="btn-link" type="button" onClick={handleResetFilter}>Clear</button>
+                            </div>
 
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 }
 

@@ -30,13 +30,17 @@ const Products = () => {
     currentPage: 1,
     limit: 10
   });
-
+  const [colorSize, setColorSize] = useState({
+    colors: [],
+    sizes: []
+  });
   const [prodFilterModalStatus, setProdFilterModalStatus] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     fetchCategories();
     fetchProducts();
+    fetchColorSizes();
   }, []);
 
   useEffect(() => {
@@ -75,7 +79,7 @@ const Products = () => {
     // console.log("Permission", permissions);
     /************ PERMISSION CHECKING (FRONTEND) *******************/
     try {
-      setIsLoaderCat(true);
+      if (!isLoader) setIsLoader(true);
       /************ PERMISSION CHECKING (FRONTEND) *******************/
       // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
       //     throw new Error(responses.permissions.role.read);
@@ -102,7 +106,7 @@ const Products = () => {
     const pageId = utils.getQueryVariable('page') || 1;
     const queryParams = await getQueryParams();
     try {
-      setIsLoader(true);
+      if (!isLoader) setIsLoader(true);
       // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
       //     throw new Error(responses.permissions.role.read);
       // }
@@ -123,6 +127,24 @@ const Products = () => {
       setIsLoader(false);
     }
   };
+
+  const fetchColorSizes = async () => {
+    try {
+      if (!isLoader) setIsLoader(true);
+      const result = await ProductServices.fetchColorSizes();
+      setColorSize({
+        colors: result.colors,
+        sizes: result.sizes
+      });
+      console.log("Color Size", colorSize);
+    } catch (e) {
+      setErrorMsg(e.message);
+    } finally {
+      setIsLoader(false);
+    }
+  }
+
+
 
   // const toggleCreate = (e) => {
   //   setCreateButton(e);
@@ -200,17 +222,18 @@ const Products = () => {
           editProductItem={updateProduct}
           retriveProducts={fetchProducts}
           retrieveCategories={fetchCategories}
-          categories={categoryData} />}
+          categories={categoryData} 
+          getcolorSize={colorSize}/>}
 
       {prodFilterModalStatus &&
         <ProductFilter
-          isShowLoader={(bool) => setIsLoaderCat(bool)}
           closeModal={closeFilterModal}
-          categories={categoryData} 
+          categories={categoryData}
           getProduct={fetchProducts}
           successMsg={(msg) => setSuccessMsg(msg)}
           errorMsg={(msg) => setErrorMsg(msg)}
-          />}
+          getcolorSize={colorSize}
+        />}
     </>
   );
 };
