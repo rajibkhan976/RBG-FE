@@ -1,6 +1,7 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
 
 import arrowForward from "../../../../assets/images/arrow_forward.svg";
+import { innerLeftMenuApiUrl } from "../../../../configuration/config";
 import { utils } from "../../../../helpers";
 import { ProductServices } from "../../../../services/setup/ProductServices";
 import Loader from "../../../shared/Loader";
@@ -66,7 +67,7 @@ const ProductFilter = (props) => {
         const [minVal, setMinVal] = useState(avg);
         const [maxVal, setMaxVal] = useState(avg);
 
-        const width = 300;
+        const width = 400;
         const minWidth =
             thumbsize + ((avg - min) / (max - min)) * (width - 2 * thumbsize);
         const minPercent = ((minVal - min) / (avg - min)) * 100;
@@ -81,14 +82,21 @@ const ProductFilter = (props) => {
                 width: thumbsize + ((max - avg) / (max - min)) * (width - 2 * thumbsize),
                 left: minWidth,
                 "--maxRangePercent": `${maxPercent}%`
-            }
+            },
+            maxPos: {
+                left: (Math.floor(maxVal)/max*100 )+ "%"
+              },
+              minPos: {
+                  left: (Math.floor(minVal)/max*100 )+ "%"
+                }
         };
 
         useLayoutEffect(() => {
             setAvg((maxVal + minVal) / 2);
         }, [minVal, maxVal]);
 
-        // console.log(maxVal, avg, min, max, maxPercent);
+        console.log(maxVal, avg, min, max, maxPercent, width);
+        
 
         return (
             <div
@@ -99,7 +107,7 @@ const ProductFilter = (props) => {
                 data-thumbsize={thumbsize}
                 data-rangewidth={width}
             >
-                <label htmlFor="min">Min ${minVal}</label>
+                <label htmlFor="min" className="minValSlider" style={styles.minPos}>${Math.floor(minVal)}</label>
                 <input
                     id="min"
                     className="min"
@@ -112,7 +120,7 @@ const ProductFilter = (props) => {
                     value={minVal}
                     onChange={({ target }) => setMinVal(Number(target.value))}
                 />
-                <label htmlFor="max">Max ${maxVal}</label>
+                <label htmlFor="max" className="maxValSlider" style={styles.maxPos}>${Math.floor(maxVal)}</label>
                 <input
                     id="max"
                     className="max"
@@ -307,7 +315,7 @@ const ProductFilter = (props) => {
                             <div className="applySlider">
                                 <p>Price</p>
 
-                                <Slider min={300} max={3000} />
+                                <Slider min={0} max={1000} />
                             </div>
                             <div class="applyFilterBtn">
                                 <button class="saveNnewBtn" type="submit"><span>Apply Filter</span><img class="" src={arrowForward} alt="" /></button>
