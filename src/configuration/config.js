@@ -53,6 +53,14 @@ module.exports = {
     editProductUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product",
     deleteProductUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product",
     colorSizeUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product/colorsize",
+    // Course Service API
+    courseCategoryUrl: "https://nayaxr4np3.execute-api.us-east-1.amazonaws.com/dev/course/categories",
+    otherCourseCategoryUrl: "https://nayaxr4np3.execute-api.us-east-1.amazonaws.com/dev/course/category",
+    fetchCourseUrl: "https://fbde3pjlce.execute-api.us-east-1.amazonaws.com/dev/course/list",
+    courseImageUploadUrl: "https://fbde3pjlce.execute-api.us-east-1.amazonaws.com/dev/course/image",
+    createCourseUrl: "https://fbde3pjlce.execute-api.us-east-1.amazonaws.com/dev/course/create",
+    editCourseUrl: "https://fbde3pjlce.execute-api.us-east-1.amazonaws.com/dev/course",
+    deleteCourseUrl: "https://fbde3pjlce.execute-api.us-east-1.amazonaws.com/dev/course",
     // Number service
     // numberServiceUrl: "https://mdaifddy2k.execute-api.us-east-1.amazonaws.com/dev/number"
     numberServiceUrl: "http://localhost:3001/dev/number"

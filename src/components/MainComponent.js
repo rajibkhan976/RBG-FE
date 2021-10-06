@@ -12,6 +12,7 @@ import ContactModal from "./shared/contactModal/Index";
 import CommunicationRoutes from "./setup/communication/communicationRoute";
 import ProductRouter from "./setup/product/productRoute";
 import NumberRouting from "./numbers/NumberRoute";
+import CourseRouter from "./setup/course/courseRoute";
 
 const MainComponent = () => {
   const pathURL = useLocation().pathname;
@@ -65,6 +66,9 @@ const MainComponent = () => {
               </Route>
               <Route exact path="/products">
                 <ProductRouter toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></ProductRouter>
+              </Route>
+              <Route exact path="/courses">
+                <CourseRouter toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></CourseRouter>
               </Route>
               <Route exact path="/number-list">
                 <NumberRouting toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></NumberRouting>

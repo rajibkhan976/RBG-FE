@@ -1,18 +1,16 @@
 import React, { useState } from "react";
-import ProductFilter from "./productFilter";
-
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import percentTag from "../../../../assets/images/percentage_icon.png";
 import list_board_icon from "../../../../assets/images/list_board_icon.svg";
+import proImg1 from "../../../../assets/images/proImg1.png";
 import listView from "../../../../assets/images/listView.svg";
 import dot3White from "../../../../assets/images/dot3gray.svg";
-import { ProductServices } from "../../../../services/setup/ProductServices";
+import { CourseServices } from "../../../../services/setup/CourseServices";
 import Pagination from "../../../shared/Pagination";
 import ConfirmBox from "../../../shared/confirmBox";
 
 
-const ProductListing = (props) => {
-    document.title = "Products";
+const CourseListing = (props) => {
     // const [prodFilterModalStatus, setProdFilterModalStatus] = useState(false);
     const [isConfirmed, setConfirmed] = useState({
         show: false,
@@ -24,16 +22,16 @@ const ProductListing = (props) => {
     /****************************** FUNCTIONS START **********************************/
     const handleEdit = (product) => {
         setOption(null);
-        props.openProductModal(true, product);
+        props.openCourseModal(true, product);
     }
 
-    const deleteProduct = async (productID, isConfirmed = null) => {
+    const deleteCourse = async (courseID, isConfirmed = null) => {
         setOption(null);
-        if (isConfirmed == null && productID) {
-            console.log("Product ID", productID);
+        if (isConfirmed == null && courseID) {
+            console.log("Course ID", courseID);
             setConfirmed({
                 show: true,
-                id: productID
+                id: courseID
             });
         } else if (isConfirmed === "cancel") {
             setConfirmed({
@@ -42,7 +40,7 @@ const ProductListing = (props) => {
             });
         } else {
             try {
-                const result = await ProductServices.deleteProduct(productID);
+                const result = await CourseServices.deleteCourse(courseID);
                 if (result) {
                     props.successMsg(result);
                 } else {
@@ -55,7 +53,7 @@ const ProductListing = (props) => {
                     show: false,
                     id: null
                 });
-                props.fetchProducts();
+                props.fetchCourses();
                 props.getCategories();
             }
         }
@@ -95,7 +93,7 @@ const ProductListing = (props) => {
         <>
             {isConfirmed.show ? (
                 <ConfirmBox
-                    callback={(confirmedMsg) => deleteProduct(isConfirmed.id, confirmedMsg)}
+                    callback={(confirmedMsg) => deleteCourse(isConfirmed.id, confirmedMsg)}
                 />
             ) : (
                 ""
@@ -103,12 +101,12 @@ const ProductListing = (props) => {
             <div className="dashInnerUI productSteUp">
                 <div class="userListHead product">
                     <div class="listInfo">
-                        <ul class="listPath"><li>Settings  </li><li>Products</li></ul>
-                        <h2 class="inDashboardHeader">Products ({(props.paginationData.count) ? props.paginationData.count : 0})</h2>
+                        <ul class="listPath"><li>Settings  </li><li>Courses</li></ul>
+                        <h2 class="inDashboardHeader">Courses ({(props.paginationData.count) ? props.paginationData.count : 0})</h2>
                         <p class="userListAbout">Lorem ipsum dolor sit amet. Semi headline should be here.</p>
                     </div>
                     <div class="listFeatures">
-                        <button class="creatUserBtn" onClick={props.openProductModal}>
+                        <button class="creatUserBtn" onClick={props.openCourseModal}>
                             <img class="plusIcon" src={plus_icon} alt="" /><span>Add a Product</span>
                         </button>
                     </div>
@@ -120,17 +118,22 @@ const ProductListing = (props) => {
                 </div>
                 <div class="productListBody">
 
-                    <div className="productListing">
-                        {props.productData.length ? props.productData.map((elem, key) => {
+                    <div className="CourseListing">
+                        {props.courseData.length ? props.courseData.map((elem, key) => {
                             return (
                                 <React.Fragment key={key + "_products"}>
                                     <div className="productList">
                                         <div className="productListLeft">
-                                            <div className="proImage"><img src={"https://wrapperbucket.s3.us-east-1.amazonaws.com/" + elem.image} alt="" /></div>
+                                            <div className="proImage"> 
+                                                {/* 👇 Conditional Image populate if the image is not uploaded show dummy image */}
+                                                {elem.image ? 
+                                                <img src={"https://wrapperbucket.s3.us-east-1.amazonaws.com/" + elem.image} alt="" /> :
+                                                <img src={proImg1} alt="" />}
+                                            </div>
                                             <div className="proInfo">
-                                                <p><a href="#">{elem.name}</a></p>
+                                                <p><a href="#">{elem.name}</a> (<strong>Age Group:</strong> {elem.ageGroup})</p>
                                                 <div className="d-flex">
-                                                    <h3>${elem.price.toFixed(2)}</h3>
+                                                    <h3>${elem.fees.toFixed(2)}</h3>
                                                     {elem.tax ?
                                                     <span><img className="gap_icon" src={percentTag} alt="" /> {elem.taxPercent}% Sales Tax Applicable</span>
                                                     : ""}
@@ -140,10 +143,17 @@ const ProductListing = (props) => {
                                         </div>
                                         <div className="productListRight">
                                             <div className="chooseSize">
-                                                {/* <p>Size</p> */}
-                                                {elem.size.map(s => <span>{s}</span>)}
+                                                <p>Duration</p>
+                                                <span>{elem.duration.toUpperCase()}</span>
                                             </div>
-                                            <ShowColors colors={elem.associatedColors} />
+                                            <div className="chooseSize">
+                                                <p>Payment Type</p>
+                                                <span>{elem.payment_type.toUpperCase()}</span>
+                                            </div>
+                                            <div className="chooseSize">
+                                                <p>Billing Cycle</p>
+                                                <span class="active">{elem.billing_cycle.toUpperCase()}</span>
+                                            </div>
                                             <div className="sideEditOption">
                                                 <button className="showList" onClick={() => toogleActionList(key)}>
                                                     <img src={dot3White} alt="" />
@@ -156,7 +166,7 @@ const ProductListing = (props) => {
                                                         </svg>
                                                         </span> Edit
                                                     </button>
-                                                    <button class="btn btnDelete" onClick={() => deleteProduct(elem._id)}>
+                                                    <button class="btn btnDelete" onClick={() => deleteCourse(elem._id)}>
                                                         <span>
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="12.347" height="13.553" viewBox="0 0 12.347 13.553" class="deleteIcon">
                                                                 <g transform="translate(0.75 0.75)"><path class="a" transform="translate(-3 -3.589)"></path>
@@ -175,7 +185,7 @@ const ProductListing = (props) => {
                             <div className="createNew">
                                 <span>
                                     <img src={list_board_icon} alt="" />
-                                    <p>No products found!</p>
+                                    <p>No courses found!</p>
                                 </span>
                             </div>
                         }
@@ -184,7 +194,7 @@ const ProductListing = (props) => {
                 {props.paginationData.count > props.paginationData.limit ? <Pagination
                     paginationData={props.paginationData}
                     dataCount={props.paginationData.count}
-                    callback={props.fetchProducts} /> : ''}
+                    callback={props.fetchCourses} /> : ''}
             </div>
 
             {/* {prodFilterModalStatus && <ProductFilter closeModal={closeFilterModal} />} */}
@@ -195,4 +205,4 @@ const ProductListing = (props) => {
     );
 }
 
-export default ProductListing;
+export default CourseListing;
