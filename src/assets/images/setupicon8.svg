@@ -1,0 +1,51 @@
+<svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="22.612"
+              height="27.5"
+              viewBox="0 0 22.612 27.5"
+              id="ico-9"
+            >
+              <g transform="translate(1015.742 1216.078)">
+                <path
+                  className="a"
+                  d="M-955.937-1212.622h-5.194v-2.707h5.194Z"
+                  transform="translate(-45.902 0)"
+                />
+                <g transform="translate(-1014.992 -1212.622)">
+                  <path
+                    className="a"
+                    d="M-201.891-156.445H-223v-23.294h21.112Z"
+                    transform="translate(223.004 179.738)"
+                  />
+                  <path
+                    className="a"
+                    d="M-183.28-173.007h-13.3v-1.018h13.3Z"
+                    transform="translate(200.489 174.869)"
+                  />
+                </g>
+                <g transform="translate(-1010.368 -1206.61)">
+                  <g transform="translate(0 0)">
+                    <path
+                      className="b"
+                      d="M-4413.208-247.148h11.771"
+                      transform="translate(4413.306 251.379)"
+                    />
+                    <path
+                      className="b"
+                      d="M-4413.208-275.78h11.771"
+                      transform="translate(4413.306 275.78)"
+                    />
+                    <path
+                      className="b"
+                      d="M-4413.208-218.517h11.771"
+                      transform="translate(4413.306 226.978)"
+                    />
+                    <path
+                      className="b"
+                      d="M-4413.872-189.885h11.771"
+                      transform="translate(4413.872 202.578)"
+                    />
+                  </g>
+                </g>
+              </g>
+            </svg>

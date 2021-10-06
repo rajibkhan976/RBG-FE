@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import Notifications from "./Notifications";
 import Setup from "../setup/mainPopup/setup";
+import CallModal from "./callModal";
 
 import CreateIcon from "../../assets/images/create.png";
 import NotificationIcon from "../../assets/images/notif.png";
@@ -61,6 +62,10 @@ function HeaderDashboard(props) {
   const toggleSetup = () => {
     setSetupModalStatus(!setupModalStatus);
   }
+  const [modalMakeCall, setModalMakeCall] = useState(false);
+  const makeCallModalHandle = () =>{
+    setModalMakeCall(!modalMakeCall);
+  }
 
   return (
     <>
@@ -92,7 +97,7 @@ function HeaderDashboard(props) {
         <div className="headerCallToAction">
           <div className="leftListArea">
             <div className="leftList">
-              <button className="callToActionBtn">
+              <button className="callToActionBtn" onClick={makeCallModalHandle}>
                 <span className="callBtn violet">
                   <img src={callIcon3} alt="" />
                 </span>
@@ -222,7 +227,8 @@ function HeaderDashboard(props) {
       {/* NOTIFICATIONS SIDE MENU */}
 
       {setupModalStatus && <Setup/>}
-      
+
+      <CallModal />
     </>
   );
 }

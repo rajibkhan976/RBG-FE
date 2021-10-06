@@ -112,6 +112,19 @@ const Setup = (props) => {
                     <li><a href="#">Sales Bridge</a></li>
                     </ul>
                 </li>
+                <li>
+                    <div className="listHead">
+                    <i><img src={SetupIcon4} alt="" /></i>
+                    <div>
+                        <h3>
+                            <NavLink to="/number-list">
+                                Number List
+                            </NavLink>
+                        </h3>
+                        <p>Lorem ipsum dolor sit</p>
+                    </div>
+                    </div>
+                </li>
                 </ul>
             </div>
         </div>
