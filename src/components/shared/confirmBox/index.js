@@ -13,7 +13,7 @@ const ConfirmBox = (props) => {
                     <button className="btn btn-closeSideMenu" onClick={() => confirmed("cancel")}><span></span><span></span></button>
                 </div>
                 <div className="alertBoxBody">
-                    <p>Are you sure, you want to delete ?</p>
+                    <p>{props.message ? props.message : "Are you sure, you want to delete?"}</p>
                 </div>
                 <div className="alertBoxFooter">
                     <button className="saveNnewBtn" onClick={() => confirmed("yes")}>

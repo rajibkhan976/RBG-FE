@@ -54,5 +54,6 @@ module.exports = {
     deleteProductUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product",
     colorSizeUrl: "https://6ek1w9gsj1.execute-api.us-east-1.amazonaws.com/dev/product/colorsize",
     // Number service
-    numberServiceUrl: "https://mdaifddy2k.execute-api.us-east-1.amazonaws.com/dev/number"
+    // numberServiceUrl: "https://mdaifddy2k.execute-api.us-east-1.amazonaws.com/dev/number"
+    numberServiceUrl: "http://localhost:3001/dev/number"
 }  

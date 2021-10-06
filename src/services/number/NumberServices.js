@@ -9,12 +9,13 @@ let headers = {
 };
 
 export const NumberServices = {
-    list: async () => {
+    list: async (page = null, queryParams = null) => {
         try {
             const options = {
                 headers: headers
             };
-            const url = config.numberServiceUrl + "/list";
+            const url = config.numberServiceUrl + "/list" + (page ? "/" + page : '') +     
+            (queryParams ? "?" + queryParams : '');
             const result = await axios.get(url, options);
             if (result.status === 200) {
                 return result.data;
