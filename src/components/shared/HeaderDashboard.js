@@ -228,7 +228,7 @@ function HeaderDashboard(props) {
 
       {setupModalStatus && <Setup/>}
 
-      <CallModal />
+      {/* <CallModal /> */}
     </>
   );
 }
