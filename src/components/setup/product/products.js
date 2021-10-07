@@ -80,7 +80,7 @@ const Products = () => {
     // console.log("Permission", permissions);
     /************ PERMISSION CHECKING (FRONTEND) *******************/
     try {
-      if (!isLoader) setIsLoader(true);
+      if (!isLoader) setIsLoaderCat(true);
       /************ PERMISSION CHECKING (FRONTEND) *******************/
       // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
       //     throw new Error(responses.permissions.role.read);
