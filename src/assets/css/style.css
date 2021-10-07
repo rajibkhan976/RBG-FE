@@ -6016,6 +6016,7 @@ select.selectBox {
   color: #305671;
     font-size: 13px;
     padding: 0 0 20px 0;
+    position: relative;
 }
 .makeCallForm{
   width: 100%;
@@ -6089,7 +6090,7 @@ select.selectBox {
   border-radius: 5px;
   width: 100%;
   padding: 10px;
-  margin: 10px 0 60px 0;
+  margin: 10px 0 35px 0;
 }
 .space10{
  padding-bottom: 10px;
@@ -6106,12 +6107,15 @@ select.selectBox {
 }
 .callSugession{
   width: auto;
-  padding: 0 0 0 30px;
+  padding: 0 0 0 45px;
   display: inline-flex;
   align-content: center;
   color: #9BAEBC;
   font-size: 13px;
   font-weight: 500;
+}
+.callSugession img{
+  padding: 0 7px;
 }
 .modalMakeCallBody::-webkit-scrollbar {
   width: 6px;
@@ -6122,3 +6126,177 @@ select.selectBox {
 .modalMakeCallBody::-webkit-scrollbar-thumb {
   background-color: #F1A668;
 }
+
+.btn_empty {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+}
+.numberForCall .countryCode {
+  background: transparent;
+  border: none;
+  margin: 10px 0 0 10px;
+  width: 62px;
+}
+.numberForCall .daileCode {
+  font-size: 16px;
+  font-weight: 500;
+}
+.callSuggessionBox .profilePic {
+  width: 24px;
+  height: 24px;
+  background: #009DFF;
+  overflow: hidden;
+  border-radius: 50%;
+  font-size: 11px;
+  color: #fff;
+  display: flex;
+  margin: 0 15px 0 0;
+  justify-content: center;
+  align-items: center;
+}
+.callSuggessionBox .profilePic img{
+  max-width: 100%;
+}
+.callSuggessionBox .profileName,
+.callSuggessionBox .number{
+  color: #305671;
+  font-size: 13px;
+}
+
+.callSuggessionBox {
+  width: 100%;
+  background: #FFFFFF;
+  box-shadow: 0px 3px 15px #00000029;
+  border: 1px solid #D3D9DE;
+  border-radius: 5px;
+  position: absolute;
+  top: 0px;
+  border-radius: 5px;
+  z-index: 100;
+}
+.callSuggessionBox ul {
+  margin: 20px 12px;
+}
+.callSuggessionBox ul li{
+  width: 100%;
+  margin-bottom: 18px;
+}
+.callSuggessionBox ul li button{
+  width: 100%;
+  background: #fff;
+  border: none;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+}
+.callSuggessionBox .profileName{
+   width: calc(100% - 147px);
+   text-align: left;
+}
+
+
+.keywordBox {
+  width: 332px;
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 5;
+  top: 30px;
+  right: 0;
+  background: #fff;
+  border: 1px solid #D3D9DE;
+  border-radius: 5px;
+  box-shadow: -3px 2px 5px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+}
+.searchKeyword {
+  display: inline-block;
+  width: 100%;
+  border-bottom: 1px solid #D3D9DE;
+}
+.searchKeyword .searchKeyBox {
+  width: 290px;
+  float: left;
+}
+.searchKeyword .searchKeyBox input[type="text"] {
+  background: #fff url("../images/search_icon.svg") no-repeat left 14px center;
+  width: 100%;
+  height: 55px;
+  border: 0;
+  outline: none;
+  padding-left: 45px;
+  font-size: 14px;
+  color: var(--darkBlue);
+}
+.searchKeyword .cancelKeySearch button ,
+.callSuggessionBox .cancelKeySearch button{
+  width: 24px;
+  height: 24px;
+  background: #9BAEBC url("../images/close_icon_white.svg") no-repeat center;
+  border-radius: 50%;
+  border: 0;
+  outline: none;
+  margin: 16px 0 0 5px;
+  cursor: pointer;
+}
+.keywordList li button {
+  width: 100%;
+  background: #fff;
+  border: 0;
+  outline: none;
+  cursor: pointer;
+  text-align-last: left;
+  font-size: 14px;
+  color: var(--darkBlue);
+  width: 100%;
+  padding: 14px 20px;
+  transition: all 0.3s ease 0s;
+}
+.keywordList li button:hover {
+  background: #F6F8FA;
+}
+
+.slice .keywordBox {
+  top: 50%;
+}
+.searchCall {
+  width: 100%;
+  display: flex;
+  border-bottom: 1px solid #D3D9DE;
+  height: 60px;
+  flex-wrap: wrap;
+  padding: 0 12px;
+}
+.searchCall input {
+  width: calc(100% - 80px);
+}
+.searchCall input {
+  width: calc(100% - 54px);
+  border: none;
+  padding: 0 10px;
+  font-size: 13px;
+  color: #305671;
+}
+
+.browseKeywords {
+  border: none;
+  background: none;
+  position: absolute;
+  bottom: 58px;
+  right: 3px;
+}
+.makeCallForm .toggleBtn {
+  width: 40px!important;
+  display: inline-block;
+  margin: 0;
+  vertical-align: middle;
+}
+
+.makeCallForm label.widthAuto {
+  width: auto;
+  display: inline-block;
+  margin: 0 14px 0 0;
+}
+

@@ -64,9 +64,11 @@ function HeaderDashboard(props) {
   }
   const [modalMakeCall, setModalMakeCall] = useState(false);
   const makeCallModalHandle = () =>{
-    setModalMakeCall(!modalMakeCall);
+    setModalMakeCall(true);
   }
-
+  const callModalOffhandler = () =>{
+    setModalMakeCall(false);
+  }
   return (
     <>
       <div className="dashboardHeader">
@@ -228,7 +230,7 @@ function HeaderDashboard(props) {
 
       {setupModalStatus && <Setup/>}
 
-      {/* <CallModal /> */}
+       {modalMakeCall && <CallModal callModalOff={callModalOffhandler}/> }
     </>
   );
 }
