@@ -225,8 +225,6 @@ audio, video {
 
 /* ========================================================= */
 
-
-
 .container {
   max-width: 1140px;
   padding: 0 15px;
@@ -577,6 +575,15 @@ input:focus + .searchIco #search-ico .a,
   stroke: #ED707A;
 }
 
+.searchBar.searchbar2 .searchIcon {
+  background: transparent url("../images/search_icon.svg") no-repeat center top 9px;
+  width: 40px;
+  height: 40px;
+}
+.searchBar.searchbar2 input:focus + .searchIcon {
+  background-image: url("../images/search_icon_orange.svg");
+}
+
 /* Header */
 
 /* Dashboard Body */
@@ -813,6 +820,14 @@ input:focus + .searchIco #search-ico .a,
   border-bottom: 1px solid #DCE4EB;
 }
 
+.leftMenuInnerLink .sideSubMenu {
+ display: none;
+}
+
+.leftMenuInnerLink.active .sideSubMenu {
+  display: block;
+ }
+
 .indicator {
   width: 6px;
   height: 6px;
@@ -1039,6 +1054,13 @@ input:focus + .searchIco #search-ico .a,
   position: relative;
   border-bottom: 4px solid #f6f8fa;
   min-width: 200px;
+}
+
+.audioListing .tableListing li>div {
+  height: 56px;
+}
+.audioListing .tableListing li>div.listAction {
+  width: 56px;
 }
 
 li.listHeading>div {
@@ -1650,6 +1672,7 @@ img.dropDownIcon {
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  margin-right: 50px;
 }
 
 .createNew .creatUserBtn {
@@ -4424,7 +4447,10 @@ button.saveOverview img {
   width: 100%;
   position: relative;
 }
-.sideSubMenu li:before {
+.sideSubMenu li {
+  position: relative;
+}
+.sideSubMenu li a:before {
   content: "";
   position: absolute;
   top: 12px;
@@ -4437,11 +4463,11 @@ button.saveOverview img {
   color: var(--darkBlue);
 }
 .sideSubMenu li:hover a,
-.sideSubMenu li.active a{
+.sideSubMenu li a.active{
   color: #ED707A;
 }
-.sideSubMenu li:hover:before,
-.sideSubMenu li.active:before  {
+.sideSubMenu li a:hover:before,
+.sideSubMenu li a.active:before  {
   background-color: #ED707A;
 }
 
@@ -4840,6 +4866,10 @@ button.saveOverview img {
   transition: all 0.3s ease 0s;
 }
 
+.weekDateList .weekDate.active {
+  background: #305671;
+  border-color: #305671;
+}
 .weekDateList .weekDate.active span {
   background: var(--darkBlue);
   border-color: var(--darkBlue);
@@ -5101,6 +5131,14 @@ button.saveOverview img {
 
 .applySlider .min-max-slider > input::-webkit-slider-runnable-track {
   cursor: pointer;
+}
+
+
+.progress-bar {
+  position: relative;
+  width: 70%;
+  height: 5px;
+  background-color: #eee;
 }
 
 .modalBackdrop{
@@ -5402,6 +5440,10 @@ select.selectBox {
   width: 223px;
   margin: 32px auto 0;
 }
+.formActBtnWrap.small {
+  width: 82px;
+  margin: 32px auto 0;
+}
 
 .searching img {
   animation: btn-loading infinite 1s linear;
@@ -5650,6 +5692,118 @@ select.selectBox {
   float: left;
   margin-right: 10px;
 }
+.audioListingPage .userListHead {
+  margin-bottom: 25px;
+}
+.audioListing {
+  overflow: unset;
+}
+.audioListing .listBody {
+  width: calc(100% - 390px);
+  float: left;
+}
+.audioListing .tableListing li:not(:first-child) {
+  border-radius: 5px;
+}
+
+.audioListing .tableListing li.selectedRow {
+  background: #9BAEBC;
+}
+
+.audioListing .tableListing li.selectedRow .btn, 
+.audioListing .tableListing li.selectedRow .btn p {
+  color: #fff;
+}
+
+.audioListing .tableListing li.selectedRow .info_3dot_icon {
+  display: none;
+}
+
+.audioListingPage li.listHeading>div {
+  height: 56px;
+}
+
+.mobilePreview {
+  width: 340px;
+  float: right;
+}
+.mobileTitle {
+  font-size: 14px;
+  color: var(--darkBlue);
+  text-align: center;
+  height: 60px;
+  line-height: 60px;
+  font-weight: 500;
+}
+.mobileTitle img {
+  padding-right: 10px;
+  transform: translateY(3px);
+}
+.mobilePreview .mobile {
+  background: #fff;
+  border-radius: 35px;
+  height: 600px;
+}
+.mobileHead {
+  box-sizing: border-box;
+  padding: 0 15px 0 30px;
+  display: inline-block;
+  width: 100%;
+  height: 60px;
+}
+.mobileHead h3 {
+  float: left;
+  font-size: 14px;
+  color: var(--darkBlue);
+  font-weight: 500;
+  margin-top: 28px;
+}
+.mobileHead .moreBtn {
+  float: right;
+  margin-top: 28px;
+  position: relative;
+}
+.mobileHead .moreBtn button {
+  padding: 0 15px;
+}
+.mobileBody {
+  height: 450px;
+  box-sizing: border-box;
+  padding: 0 30px;
+}
+.mobileBody .audioBox {
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.mobileFooter {
+  box-sizing: border-box;
+  padding: 20px 30px;
+  height: 90px;
+  background: #DCE4EB;
+  border-radius: 0 0 35px 35px;
+}
+.mobileHomeButton {
+  width: 50px;
+  height: 50px;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1px solid #9BAEBC;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+/*Marquee*/
+p.trackName {
+  animation: marquee 10s linear infinite;
+}
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-300%);
+  }
+}
 
 
 .audio-player, 
@@ -5689,8 +5843,10 @@ select.selectBox {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  padding-left: 10px;
+  padding-left: 5px;
+  margin-left: 10px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 .progress-bar {
   position: relative;
@@ -5744,9 +5900,11 @@ select.selectBox {
   margin-top: 14px;
 }
 .trackName {
+  height: 16px;
   font-size: 13px;
   color: var(--darkBlue);
   margin-bottom: 5px;
+  white-space: nowrap;
 }
 .playerControl {
   float: right;
@@ -5776,7 +5934,7 @@ select.selectBox {
   display: none;
 }
 .audio-player.player .playerBody .progress {
-  width: calc(100% - 48px);
+  width: calc(100% - 58px);
 }
 
 .recordingTime {

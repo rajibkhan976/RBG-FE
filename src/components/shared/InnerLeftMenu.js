@@ -207,7 +207,7 @@ const InnerLeftMenu = (props) => {
                 </NavLink>
               </li>
               <li>
-                <NavLink className="leftMenuInnerLink" to="/users">
+                <NavLink className="leftMenuInnerLink" to="/call-setup" activeClassName="active">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Communication Setup</p>
@@ -219,12 +219,16 @@ const InnerLeftMenu = (props) => {
                   <ul className="sideSubMenu">
                     <li><a href="#">Email</a></li>
                     <li><a href="#">SMS</a></li>
-                    <li className="active"><a href="#">Call</a></li>
+                    <li>
+                      <NavLink to="/call-setup" activeClassName="active">
+                        Call  
+                      </NavLink>  
+                    </li>
                   </ul>
                 </NavLink>
               </li>
               <li>
-                <NavLink className="leftMenuInnerLink" to="/products">
+                <NavLink className="leftMenuInnerLink" to="/products" activeClassName="active">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Products</p>
@@ -260,7 +264,7 @@ const InnerLeftMenu = (props) => {
                 </NavLink>
               </li>
               <li>
-                <NavLink className="leftMenuInnerLink" to="/users">
+                <NavLink className="leftMenuInnerLink" to="/audio-template" activeClassName="active">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Templates</p>
@@ -269,6 +273,17 @@ const InnerLeftMenu = (props) => {
                       <img src={SideMenuArrow} alt=""/>
                     </button>
                   </div>
+                  <ul className="sideSubMenu">
+                    <li><a href="#">Email</a></li>
+                    <li><a href="#">SMS</a></li>
+                    <li>
+                      <NavLink to="/audio-template" activeClassName="active">
+                        Audio  
+                      </NavLink>  
+                    </li>
+                    <li><a href="#">RVM</a></li>
+                    <li><a href="#">Sales Bridge</a></li>
+                  </ul>
                 </NavLink>
               </li>
             </ul>
