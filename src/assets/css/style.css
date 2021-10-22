@@ -6263,6 +6263,10 @@ p.trackName {
   border-radius: 50%;
   border: none;
 }
+.makeAcallBtn img {
+  vertical-align: middle;
+  width: 26px;
+}
 .callSugession{
   width: auto;
   padding: 0 0 0 45px;

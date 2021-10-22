@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { ContactService } from "../../services/contact/ContactServices";
 import lineUser from "../../assets/images/lineUser.svg";
 import makeCall from "../../assets/images/makeACall.svg";
-import makeCall2 from "../../assets/images/callicon3.svg";
+import makeCall2 from "../../assets/images/calliconbig.svg";
 import whiteCross from "../../assets/images/cross_white.svg";
 import hand from "../../assets/images/hand.svg";
 import searchicon from "../../assets/images/search_icon.svg";
@@ -9,6 +10,16 @@ import iconBrowse from "../../assets/images/icon_browse_keywords.svg";
 
 
 const CallModal = (props) => {
+
+  const fetchCountry = async () => {
+    let conntryResponse = await ContactService.fetchCountry();
+    setPhoneCountryCode(conntryResponse);
+    console.log(conntryResponse, "country");
+};
+
+useEffect(() => {
+    fetchCountry();
+}, []);
 
   const [phoneCountryCode, setPhoneCountryCode] = useState([]);
   const countrycodeOpt = phoneCountryCode ? phoneCountryCode.map((el, key) => {
@@ -52,6 +63,14 @@ const [wasStat, setWasStat] = useState(false);
 const togggerBtn = () =>{
   setWasStat(!wasStat);
 }
+const [openOtherPart, setOpenOtherPart] = useState(false);
+const showNextPartHandler = () =>{
+  setOpenOtherPart(true);
+}
+const hideNextPartHandler = () =>{
+  setOpenOtherPart(false);
+}
+
  return(
     <div class="sideMenuOuter">
     <div class="sideMenuInner makeCall">
@@ -73,7 +92,7 @@ const togggerBtn = () =>{
             <div className="rightSide">
               <input type="text" placeholder="Eg. (555) 555-1234" onChange={openCallSuggestionHandler}/>
             </div>
-            {callSuggetion && 
+            {/* {callSuggetion && 
                 <div className="callSuggessionBox">
                   <div className="searchCall">
                     <img src={searchicon} alt=""/>
@@ -115,7 +134,7 @@ const togggerBtn = () =>{
                       </button></li>
                   </ul>
                 </div>
-            }
+            } */}
           </form>
         </div>
       </div>
@@ -132,7 +151,7 @@ const togggerBtn = () =>{
               <div className="radioPlace">
                 <label>
                   <div className="circleRadio">
-                      <input type="radio" name="name1"/>
+                      <input type="radio" name="name1" onChange={showNextPartHandler} defaultChecked={openOtherPart}/>
                       <span></span>
                   </div>
                   Pre-Recorded Call
@@ -141,96 +160,98 @@ const togggerBtn = () =>{
               <div className="radioPlace">
                 <label>
                   <div className="circleRadio">
-                      <input type="radio" name="name1"/>
+                      <input type="radio" name="name1" onChange={hideNextPartHandler} defaultChecked={!openOtherPart}/>
                       <span></span>
                   </div>
                   Browser Call
                 </label>
               </div>
             </div>
-            
-            <div className="slice">
-              <label>Select Record Type</label>
-              <div className="radioPlace">
-                <label>
-                  <div className="circleRadio">
-                      <input type="radio" name="name2"/>
-                      <span></span>
+              {openOtherPart && <div className="openOnChecked"> 
+                <div className="slice">
+                  <label>Select Record Type</label>
+                  <div className="radioPlace">
+                    <label>
+                      <div className="circleRadio">
+                          <input type="radio" name="name2"/>
+                          <span></span>
+                      </div>
+                      Upload Audio
+                    </label>
                   </div>
-                  Upload Audio
-                </label>
-              </div>
-              <div className="radioPlace">
-                <label>
-                  <div className="circleRadio">
-                      <input type="radio" name="name2"/>
-                      <span></span>
+                  <div className="radioPlace">
+                    <label>
+                      <div className="circleRadio">
+                          <input type="radio" name="name2"/>
+                          <span></span>
+                      </div>
+                      Select from recordings
+                    </label>
                   </div>
-                  Select from recordings
-                </label>
-              </div>
-              <div className="radioPlace">
-                <label>
-                  <div className="circleRadio">
-                      <input type="radio" name="name2"/>
-                      <span></span>
+                  <div className="radioPlace">
+                    <label>
+                      <div className="circleRadio">
+                          <input type="radio" name="name2"/>
+                          <span></span>
+                      </div>
+                      Record new
+                    </label>
                   </div>
-                  Record new
-                </label>
-              </div>
-              <div className="space20">
-                Upload Audio File
-              </div>
-              <div className="upload">
-                <input type="file" />
-                <span>Choose File</span>
-              </div>
-            </div>
-            <div className="slice">
-              <label className="widthAuto">Also Send SMS </label>
-              <label
-                className={
-                  wasStat ? "toggleBtn active" : "toggleBtn"
-                   }
-                >
-                <input
-                  type="checkbox"
-                  onChange={togggerBtn}
-                />
-                <span className="toggler"></span>
-              </label>
-              <p className="space10">Message</p>
-              <small>153/0 SMS - One message contains 153 chatracters max (SMS count can be changed if you are using keyword variable e.g. [fname])</small>  
-              <textarea></textarea>
-              <button className="browseKeywords" onClick={openKeywordSuggesionHandler}><img src={iconBrowse} alt=""/></button>
-              {keywordSuggesion && 
-                <div className="keywordBox">
-                <div className="searchKeyword">
-                    <div className="searchKeyBox">
-                        <input type="text" />
-                    </div>
-                    <div className="cancelKeySearch">
-                        <button onClick={closekeywordSuggesion}></button>
-                    </div>
-                    </div>
-                    <div className="keywordList">
-                        <ul>
-                            <li><button>First Name</button></li>
-                            <li><button>Last Name</button></li>
-                            <li><button>Address</button></li>
-                            <li><button>City</button></li>
-                            <li><button>Country</button></li>
-                        </ul>
-                    </div>
+                  <div className="space20">
+                    Upload Audio File
+                  </div>
+                  <div className="upload">
+                    <input type="file" />
+                    <span>Choose File</span>
+                  </div>
                 </div>
-              }
+                <div className="slice">
+                  <label className="widthAuto">Also Send SMS </label>
+                  <label
+                    className={
+                      wasStat ? "toggleBtn active" : "toggleBtn"
+                      }
+                    >
+                    <input
+                      type="checkbox"
+                      onChange={togggerBtn}
+                    />
+                    <span className="toggler"></span>
+                  </label>
+                  <p className="space10">Message</p>
+                  <small>153/0 SMS - One message contains 153 chatracters max (SMS count can be changed if you are using keyword variable e.g. [fname])</small>  
+                  <textarea></textarea>
+                  <button className="browseKeywords" onClick={openKeywordSuggesionHandler}><img src={iconBrowse} alt=""/></button>
+                  {keywordSuggesion && 
+                    <div className="keywordBox">
+                    <div className="searchKeyword">
+                        <div className="searchKeyBox">
+                            <input type="text" />
+                        </div>
+                        <div className="cancelKeySearch">
+                            <button onClick={closekeywordSuggesion}></button>
+                        </div>
+                        </div>
+                        <div className="keywordList">
+                            <ul>
+                                <li><button>First Name</button></li>
+                                <li><button>Last Name</button></li>
+                                <li><button>Address</button></li>
+                                <li><button>City</button></li>
+                                <li><button>Country</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                  }
+                  
+                </div>
+              </div> 
+             }
+                <div className="text-center">
+                  <button className="makeAcallBtn" ><img src={makeCall2} alt=""/></button>
+                </div>
+                <div className="text-center"><div className="callSugession">Tap <img src={hand} alt=""/> to start call</div></div>
               
-            </div>
-            <div className="text-center">
-               <button className="makeAcallBtn" ><img src={makeCall2} alt=""/></button>
-            </div>
-    
-          <div className="text-center"><div className="callSugession">Tap <img src={hand} alt=""/> to start call</div></div>
         </div>
      
       </div>
