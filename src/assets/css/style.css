@@ -3886,9 +3886,11 @@ li:hover .extraDottedBtn {
 
 .tabBarArea>div {
   background: #F2F7FC;
+  position: relative;
+  width: calc(100% - 157px);
 }
 
-.tabBarArea>div button {
+.tabBarArea>div .nNav {
   color: #46C8D3;
   font-size: 14px;
   padding: 20px;
@@ -3897,7 +3899,7 @@ li:hover .extraDottedBtn {
   border-bottom: 2px solid transparent;
 }
 
-.tabBarArea>div button.active {
+.tabBarArea>div .nNav.active {
   color: #ED707A;
   border-bottom: 2px solid #ED707A;
 }
@@ -3906,6 +3908,7 @@ li:hover .extraDottedBtn {
   background: #fff;
   height: calc(100vh - 320px);
   overflow-y: scroll;
+  width: 100%;
 }
 .contactModalTab::-webkit-scrollbar {
   width: 6px;
@@ -6170,6 +6173,9 @@ p.trackName {
   display: flex;
   justify-content: flex-end;
 }
+.linkType img{
+  margin-right: 4px;
+}
 .slice{
   color: #305671;
     font-size: 13px;
@@ -6264,8 +6270,8 @@ p.trackName {
   border: none;
 }
 .makeAcallBtn img {
-  vertical-align: middle;
   width: 26px;
+  vertical-align: middle;
 }
 .callSugession{
   width: auto;
@@ -6715,3 +6721,522 @@ p.trackName {
   height: 34px;
   min-height: 34px;
 }
+.tabBarArea>div button#transNav,
+.tabBarArea>div button#billNav {
+    position: absolute;
+    right: -49px;
+    top: 14px;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #fff;
+    border-radius: 50%;
+    background: none;
+    line-height: 32px;
+    padding: 0;
+}
+.tabBarArea>div button#billNav {
+  right: -94px;
+}
+.tabBarArea>div button#transNav.active,
+.tabBarArea>div button#billNav.active{
+  border-bottom: none;
+  border: 1px solid #497391;
+}
+.tabBarArea>div button svg .a{
+  fill: #fff;
+}
+.tabBarArea>div button#transNav.active svg .a,
+.tabBarArea>div button#billNav.active svg .a{ 
+  fill: #497391;
+}
+.tabBarArea>div.redBtnContainer .redTabBtn.visibleH{
+  visibility: hidden;
+}
+.transactionListing{
+    display: table;
+    width: 100%;
+    border-spacing: 0;
+    overflow-y: auto;
+}
+.tabBarArea .contactTabsInner {
+  background: #fff;
+    width: 100%;
+    padding: 45px 35px;
+    overflow: auto;
+    height: calc(100vh - 322px);
+}
+
+.contactTabsInner h3{
+  padding: 0px;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #305671;
+}
+.transHeader{
+    width: 100%;
+    padding: 22px  0 12px 0;
+    display: flex;
+    align-items: center;
+}
+
+.transHeader span{
+  color: #9BAEBC;
+  font-size: 13px;
+  padding: 0 12px ;
+}
+.transactionListing .row {
+  display: table-row;
+}
+.transactionListing .row .cell {
+  display: table-cell;
+  border-bottom: 5px solid #fff;
+}
+.transactionListing .row.head .cell {
+  color: #305671;
+  font-size: 13px;
+  padding: 10px ;
+  font-weight: 500;
+  vertical-align: middle;
+}
+.transactionListing .row.success .cell,
+.transactionListing .row.fail .cell {
+  background: #F0F5F1;
+  padding: 18px 10px;
+  color: #305671;
+  font-size: 13px;
+  border-bottom: 5px solid #fff;
+  vertical-align: middle;
+}
+.transactionListing .row.fail .cell{
+  background: #FFF5F6;
+}
+.transactionListing .row.success .cell:first-child,
+.transactionListing .row.fail .cell:first-child {
+  border-radius: 5px 0 0 5px;
+}
+.transactionListing .row.success .cell:last-child,
+.transactionListing .row.fail .cell:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+.transactionListing .row .cell .amount{
+  font-weight: 700;
+}
+.transactionListing .row .cell .time{
+  color: #9BAEBC;
+}
+.transactionListing .row .cell .iconCont{
+  width: 60px;
+  padding-left: 10px;
+}
+.transactionListing .row .cell .textCont{
+  width: calc(100% - 60px);
+}
+.transactionListing .row .cell .iconCont span {
+  background: #6488FF;
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  text-align: center;
+  border-radius: 50%;
+  line-height: 28px;
+}
+.transactionListing .row .cell .iconCont span.ifDependent{
+  background: #139FEA ;
+  border: 1px solid #F0F5F1;
+  position: relative;
+  top: -4px;
+}
+.transactionListing .row.success .cell .status{
+  color: #11A750;
+  font-size: 10px;
+  font-weight: 600;
+  padding-bottom: 5px;
+}
+.transactionListing .row.fail .cell .status{
+  color: #ED707A;
+  font-size: 10px;
+  font-weight: 600;
+  padding-bottom: 5px;
+}
+.transactionListing .row .cell .status ~ div span{
+  font-weight: 600;
+}
+.transactionListing .row .cell .dependent{
+  color: #139FEA;
+  font-size: 13px;
+  padding: 15px 0 5px;
+  display: flex;
+  align-items: center;
+}
+.transactionListing .row .cell .dependent img{
+  padding-right: 4px;
+}
+.transactionListing .row .cell .amount.pos span{
+  width: 30px;
+  height: 18px;
+  line-height: 20px;
+  display: inline-block;
+  background: #305671;
+  border-radius: 3px;
+  text-align: center;
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 400;
+  margin-left: 9px;
+}
+.transHeader .saveNnewBtn {
+  padding: 0 11px;
+  width: auto;
+  font-weight: normal;
+  min-width: 193px;
+}
+.tabBarArea .contactTabsInner::-webkit-scrollbar {
+  width: 4px;
+}
+
+.tabBarArea .contactTabsInner::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px #c3cfd4;
+}
+
+.tabBarArea .contactTabsInner::-webkit-scrollbar-thumb {
+  background-color: #315571;
+  outline: transparent;
+}
+
+.subheadingTabInner{
+  color: #9BAEBC;
+  font-size: 13px;
+  padding: 10px 0 20px;
+}
+
+.twoBillingCardContainer {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  padding: 10px 0;
+}
+.twoBillingCardContainer .billing_module {
+  width: calc(50% - 10px);
+}
+.billing_module .primaryMaker {
+  text-align: center;
+  padding-bottom: 14px;
+  color: #305671;
+  font-size: 13px;
+}
+
+.flipCardHolder {
+  display: flex;
+  position: relative;
+  flex-wrap: wrap;
+}
+.flipCardHolder .cardList{
+  min-height: 454px;
+  border-radius: 10px;
+  width: 100%;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+
+.flipCardHolder .cardList .header{
+  background: #305671;
+  border-radius: 10px 10px 0 0;
+  padding: 15px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  color: #FFFFFF;
+  font-size: 14px;
+}
+.flipCardHolder .cardList .body {
+  background: #F2F7FC;
+  border: 1px solid #E2EBF2;
+  border-radius: 0 0 10px 10px;
+  padding: 0px;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  height: 390px;
+  overflow: auto;
+  align-content: flex-start;
+}
+.flipCardHolder .cardList .cardAddBtn{
+  height: 36px;
+  line-height: 36px;
+  border: 1px solid #E2EBF2;
+  border-radius: 3px;
+  background: transparent;
+  color: #E2EBF2;
+  font-size: 12px;
+  padding: 0 15px;
+}
+
+.flipCardHolder .cardList .header .headerLeft {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.flipCardHolder .cardList .header .headerLeft img{
+   margin-right: 10px;
+}
+.flipCardHolder .cardList .body .list{
+  border-bottom: 1px solid #E2EBF2;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.flipCardHolder .cardList .body .list:last-child {
+  border-bottom: none;
+}
+.flipCardHolder .cardList .body .list .leftside{
+  padding: 10px;
+  width: 70px;
+  color: #305671;
+  font-size: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+}
+.flipCardHolder .cardList .body .list .leftside .circleRadio{
+  margin-bottom: 10px;
+  margin-right: 0;
+}
+.flipCardHolder .cardList .body .list .rightside{
+  padding: 20px 10px;
+  width: calc(100% - 70px);
+  position: relative;
+}
+
+.flipCardHolder .cardList .body .list .rightside p{
+   padding: 0 0 15px 0;
+   color: #305671;
+   margin: 0;
+   font-size: 18px;
+}
+.flipCardHolder .cardList .body .list .rightside p:nth-of-type(2){
+  padding: 0;
+}
+.flipCardHolder .cardList .body .list .rightside p span{
+  color: #9BAEBC;
+  font-size: 11px;
+  display: block;
+}
+.flipCardHolder .cardList .body .list .rightside p.diff {
+  font-size: 14px;
+}
+.flipCardHolder .cardList .body .list .rightside p.diff span{
+  padding: 0 0 8px 0;
+}
+.flipCardHolder .cardList .body .list.active .rightside{
+  background-color: #fff;
+}
+.flipCardHolder .cardList .body .list.active .leftside{
+  background-color: #DDEEFF;
+}
+
+.flipCardHolder .cardList .body .list .rightside .checking{
+  position: absolute;
+  bottom: 20px;
+  right: 10px;
+  color: #305671;
+  font-weight: 700;
+  font-size: 14px;
+}
+.flipCardHolder .cardList .body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.flipCardHolder .cardList .body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px #c3cfd4;
+}
+
+.flipCardHolder .cardList .body::-webkit-scrollbar-thumb {
+  background-color: #315571;
+  outline: transparent;
+}
+
+.flipCardHolder .addInList{
+    min-height: 454px;
+    background: #305671;
+    border: 1px solid #305671;
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    height: 100%;
+    position: absolute;
+    padding: 30px 25px 40px;
+}
+.addInList .header{
+  text-align: center;
+  padding: 10px;
+  width: 100%;
+}
+.addInList .header h3{
+  color: #FFFFFF;
+  font-size: 16px;
+  margin: 8px 0 14px 0;
+  font-weight: 400;
+}
+
+.noEffectBtn{
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+}
+.addInList .header .cross{
+  position: absolute;
+  right: 22px;
+  top: 25px;
+}
+.addInList .header img{
+  width: 26px;
+}
+.addInList .header .cross img{ 
+  width: 16px;
+}
+.addingForm .half{
+  width: 47%;
+}
+.addingForm .halfDivForm{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.addingForm label{
+  font-size: 13px;
+  color: #9BAEBC;
+  padding-bottom: 10px;
+  display: inline-block;
+  width: 100%;
+}
+.addingForm .activeFactor,
+.addingForm input,
+.addingForm select{
+  height: 40px;
+  background-color: #F6F8FA;
+  border-radius: 5px;
+  margin: 0 0 15px 0;
+  width: 100%;
+  display: flex;
+}
+.addingForm  input,
+.addingForm select{
+  color: #315571;
+  font-size: 13px;
+  font-family: 'Poppins', sans-serif;
+}
+.addingForm  input::placeholder{
+  color: #9BAEBC;
+}
+.addingForm .activeFactor input[type="text"]{
+  width: calc(100% - 90px);
+  border: none;
+}
+.addingForm .activeFactor .activate{
+  width: 90px;
+    background-color: #DDEEFF;
+    color: #315571;
+    align-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    height: 40px;
+    font-size: 13px;
+    justify-content: center;
+    border-radius: 0 5px 5px 0;
+}
+.addingForm .activeFactor .activate .circleRadio{
+   top: 0;
+}
+.addingForm .orangeBtn {
+  font-size: 13px;
+  color: #fff;
+  margin: 12px auto 0;
+  font-family: 'Poppins', sans-serif;
+}
+.addingForm .orangeBtn img{
+  margin-right: 10px;
+}
+
+@keyframes cardRotateBack {
+  0% {
+    transform:rotate(0);
+    opacity: 1;
+    z-index: 1;
+  }
+  100% {
+    transform:rotate3d(0,1,0, 180deg);
+    opacity: 0;
+    z-index: 0;
+  }
+}
+@keyframes cardRotateFront {
+  0% {
+    transform:rotate3d(0, 1, 0, 180deg);
+    opacity: 0;
+    z-index: 0;
+  }
+  100% {
+    transform:rotate(0); 
+    opacity: 1;
+    z-index: 1;
+  }
+}
+.cardList.show{
+  opacity: 1;
+    z-index: 1; 
+   animation-name: cardRotateFront;
+   animation-duration: 0.5s;
+   -webkit-perspective: 1000px;
+ -moz-perspective: 1000px;
+   -o-perspective: 1000px;
+      perspective: 1000px;
+}
+.addInList.hide{
+
+  opacity: 0;
+    z-index: 0; 
+   animation-duration: 0.5s;
+   animation-name: cardRotateBack;
+   -webkit-perspective: 1000px;
+ -moz-perspective: 1000px;
+   -o-perspective: 1000px;
+      perspective: 1000px;
+}
+
+.cardList.hide{
+  opacity:0;
+  z-index: 0;
+   animation-duration: 0.5s;
+   animation-name: cardRotateBack; 
+   -webkit-perspective: 1000px;
+ -moz-perspective: 1000px;
+   -o-perspective: 1000px;
+      perspective: 1000px;
+}
+.addInList.show{
+
+  opacity: 1;
+    z-index: 1; 
+
+   animation-duration: 0.5s;
+   animation-name: cardRotateFront;
+   -webkit-perspective: 1000px;
+ -moz-perspective: 1000px;
+   -o-perspective: 1000px;
+      perspective: 1000px;
+}
+
+
+
+
