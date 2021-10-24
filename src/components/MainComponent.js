@@ -39,8 +39,8 @@ const MainComponent = () => {
   };
   const fetchCapabilityToken = async () => {
     try {
-      const result = await CallSetupService.getCapabilityToken();
-      console.log(result);
+     // const result = await CallSetupService.getCapabilityToken();
+      //console.log(result);
     } catch (e) {
       console.log('error', e);
     }

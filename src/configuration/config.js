@@ -70,6 +70,6 @@ module.exports = {
     audioTemplateUrl: "https://i18vj5dg2l.execute-api.us-east-1.amazonaws.com/dev/audio/",
     // audioTemplateUrl: "http://localhost:4000/dev/audio"
 
-    callSetupUrl: "https://ltj70u1guh.execute-api.us-east-1.amazonaws.com/dev/communication/call",
+    callSetupUrl: "https://ltj70u1guh.execute-api.us-east-1.amazonaws.com/dev/communication/call/",
     callWebhookUrl: "https://memz99rc6c.execute-api.us-east-1.amazonaws.com/dev/"
 }  
