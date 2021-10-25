@@ -31,23 +31,11 @@ const ContactModal = (props) => {
             <div>
                 <button className={navigation.current == 1 ? "active nNav" : "nNav"} onClick={() => navigation.jump(1)}>Overview</button>
                 <button className={navigation.current == 2 ? "active nNav" : "nNav"} onClick={() => navigation.jump(2)}>Attendance</button>
-                <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)} id="transNav">                
-                   <svg  className="" xmlns="http://www.w3.org/2000/svg" width="11.428" height="14.148" viewBox="0 0 11.428 14.148">
-                        <g transform="translate(311.96 148.974)">
-                            <path class="a" d="M12.318,5.6a1.013,1.013,0,0,0-1.1.22L7.837,9.2a1.013,1.013,0,1,0,1.433,1.433l1.648-1.648v9.676a1.013,1.013,0,0,0,2.026,0V6.539A1.013,1.013,0,0,0,12.318,5.6Z" transform="translate(-319.5 -154.5)" />
-                            <path class="a" d="M20.134,14.568l-1.648,1.648V6.539a1.013,1.013,0,0,0-2.026,0V18.661a1.013,1.013,0,0,0,1.729.716L21.566,16a1.013,1.013,0,0,0-1.433-1.433Z" transform="translate(-322.395 -154.5)" />
-                        </g>
-                    </svg>
+                <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)} >                
+                   Transaction
                 </button>
-                <button className={navigation.current == 4 ? "active nNav" : "nNav"} onClick={() => navigation.jump(4)} id="billNav">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14.029" height="14.029" viewBox="0 0 14.029 14.029">
-                        <path class="a" d="M13.386,3.507H12.276V2.4a.649.649,0,0,0-.643-.643H10.522V.643A.649.649,0,0,0,9.879,0H.643A.649.649,0,0,0,0,.643V9.879a.649.649,0,0,0,.643.643H1.754v1.111a.649.649,0,0,0,.643.643H3.507v1.111a.649.649,0,0,0,.643.643h9.236a.649.649,0,0,0,.643-.643V4.15A.649.649,0,0,0,13.386,3.507ZM1.754,2.4V9.353H1.169V1.169H9.353v.585H2.4A.649.649,0,0,0,1.754,2.4ZM3.507,4.15v6.956H2.923V2.923h8.184v.585H4.15A.649.649,0,0,0,3.507,4.15Zm9.353,8.71H4.676V4.676H12.86Z" />
-                        <rect class="a" width="4.88" height="1.22" transform="translate(6.1 7.32)" />
-                        <rect class="a" width="4.88" height="1.22" transform="translate(6.1 6.1)" />
-                        <rect class="a" width="4.88" height="1.22" transform="translate(6.1 9.76)" />
-                        <rect class="a" width="4.88" height="1.22" transform="translate(6.1 8.54)" />
-                        <rect class="a" width="4.88" height="1.22" transform="translate(6.1 10.979)" />
-                    </svg>
+                <button className={navigation.current == 4 ? "active nNav" : "nNav"} onClick={() => navigation.jump(4)}>
+                    Billing
                 </button>
             </div>
         );
@@ -198,7 +186,7 @@ const ContactModal = (props) => {
                         
                     </div>
                     <div className="tabBarArea">
-                        <div className="redBtnContainer">
+                        {/* <div className="redBtnContainer">
                              <button className="redTabBtn visibleH">
                                  <img src={exchange_icon_white} alt="" />
                             </button>
@@ -208,7 +196,7 @@ const ContactModal = (props) => {
                             <button className="redTabBtn">
                                 <img src={note_icon_white} alt="" />
                             </button>
-                        </div>
+                        </div> */}
                         <Steps config={config}>
                             <Step title="Overview" contact={contactData} component={Overview} contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
                             <Step title="Attendance" component={Attendance} />

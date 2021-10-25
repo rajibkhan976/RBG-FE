@@ -3887,7 +3887,7 @@ li:hover .extraDottedBtn {
 .tabBarArea>div {
   background: #F2F7FC;
   position: relative;
-  width: calc(100% - 157px);
+  width: 100%;
 }
 
 .tabBarArea>div .nNav {
@@ -6846,7 +6846,7 @@ p.trackName {
   background: #139FEA ;
   border: 1px solid #F0F5F1;
   position: relative;
-  top: -4px;
+  top: -7px;
 }
 .transactionListing .row.success .cell .status{
   color: #11A750;
@@ -6866,7 +6866,7 @@ p.trackName {
 .transactionListing .row .cell .dependent{
   color: #139FEA;
   font-size: 13px;
-  padding: 15px 0 5px;
+  padding: 11px 0 5px;
   display: flex;
   align-items: center;
 }
@@ -7155,6 +7155,9 @@ p.trackName {
     justify-content: center;
     border-radius: 0 5px 5px 0;
 }
+.addingForm {
+  width: 100%;
+}
 .addingForm .activeFactor .activate .circleRadio{
    top: 0;
 }
@@ -7168,73 +7171,45 @@ p.trackName {
   margin-right: 10px;
 }
 
-@keyframes cardRotateBack {
-  0% {
-    transform:rotate(0);
-    opacity: 1;
-    z-index: 1;
-  }
-  100% {
-    transform:rotate3d(0,1,0, 180deg);
-    opacity: 0;
-    z-index: 0;
-  }
-}
-@keyframes cardRotateFront {
-  0% {
-    transform:rotate3d(0, 1, 0, 180deg);
-    opacity: 0;
-    z-index: 0;
-  }
-  100% {
-    transform:rotate(0); 
-    opacity: 1;
-    z-index: 1;
-  }
+.flipCardHolder{
+  perspective: 800px;  
 }
 .cardList.show{
   opacity: 1;
-    z-index: 1; 
-   animation-name: cardRotateFront;
-   animation-duration: 0.5s;
-   -webkit-perspective: 1000px;
- -moz-perspective: 1000px;
-   -o-perspective: 1000px;
-      perspective: 1000px;
+  z-index: 1; 
+  transform-style: preserve-3d;
+  transition: 1s;
+  transform: rotateY(0deg);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 .addInList.hide{
-
   opacity: 0;
-    z-index: 0; 
-   animation-duration: 0.5s;
-   animation-name: cardRotateBack;
-   -webkit-perspective: 1000px;
- -moz-perspective: 1000px;
-   -o-perspective: 1000px;
-      perspective: 1000px;
+  z-index: 0; 
+  transition:  1s;
+  transform-style: preserve-3d;
+  transform: rotateY(180deg);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .cardList.hide{
   opacity:0;
   z-index: 0;
-   animation-duration: 0.5s;
-   animation-name: cardRotateBack; 
-   -webkit-perspective: 1000px;
- -moz-perspective: 1000px;
-   -o-perspective: 1000px;
-      perspective: 1000px;
+  transition:  1s;
+  transform-style: preserve-3d;
+  transform: rotateY(180deg);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 .addInList.show{
-
   opacity: 1;
-    z-index: 1; 
-
-   animation-duration: 0.5s;
-   animation-name: cardRotateFront;
-   -webkit-perspective: 1000px;
- -moz-perspective: 1000px;
-   -o-perspective: 1000px;
-      perspective: 1000px;
+  z-index: 1; 
+  transition: 1s;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 
