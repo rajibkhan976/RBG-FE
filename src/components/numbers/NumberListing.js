@@ -37,7 +37,7 @@ const NumberListing = () => {
   const [isAlert, setIsAlert] = useState(
     {
       show: false,
-      id: null,
+      el: null,
     }
   );
 
@@ -89,18 +89,22 @@ const NumberListing = () => {
     setIsLoader(true);
     let pageId = utils.getQueryVariable('page') || 1;
     let queryParams = await getQueryParams();
+    
+    try {
+      let result = await NumberServices.list(pageId, queryParams);
+      setNumbers(result.numbers);
 
-    let result = await NumberServices.list(pageId, queryParams);
-    setNumbers(result.numbers);
-
-    setPaginationData({
-      ...paginationData,
-      count: result.pagination.count,
-      currentPage: result.pagination.currentPage,
-      totalPages: result.pagination.totalPages
-    });
-
-    setIsLoader(false);
+      setPaginationData({
+        ...paginationData,
+        count: result.pagination.count,
+        currentPage: result.pagination.currentPage,
+        totalPages: result.pagination.totalPages
+      });
+    } catch (e) {
+      setErrorMsg(e.message);
+    }
+    setIsLoader(false); 
+    
   }
 
   useEffect(() => {
@@ -170,17 +174,35 @@ const NumberListing = () => {
    * Release or delete a number
    * @param {string} index 
    */
-  const deleteNumber = (id, isConfirmed = null) => {
-    if (!isConfirmed && id) {
+  const deleteNumber = async (el, isConfirmed = null) => {
+    
+    if (!isConfirmed && el) {
       setIsAlert({
           show: true,
-          id: id,
+          el: el,
       });
-    } else if (id) {
+    } else if (isConfirmed == "yes" && el) {
       setIsAlert({
         show: false,
-        id: id,
-    });
+        el: el,
+      });
+      try {
+        setIsLoader(true);
+        let response = await NumberServices.release(el._id); 
+        setSuccessMsg(response);
+        numbers.splice(numbers.indexOf(el) , 1);
+        setNumbers(numbers);
+      } catch (err) {
+        setErrorMsg(err.message);
+      } finally {
+        setIsLoader(false);
+      }
+
+    } else {
+      setIsAlert({
+        show: false,
+        el: null,
+      });
     }
   }
 
@@ -214,7 +236,7 @@ const NumberListing = () => {
     <>      
       {isAlert.show &&
         <ConfirmBox
-            callback={(isConfirmed) => deleteNumber(isAlert.id, isConfirmed)}
+            callback={(isConfirmed) => deleteNumber(isAlert.el, isConfirmed)}
             message="Are you sure you want to release this number? Note: this number will be removed from the system and twilio, and you can not revert it back."
         />}
 
@@ -232,7 +254,7 @@ const NumberListing = () => {
               <li>Number Management</li>
               <li>Number Lists</li>
             </ul>
-            <h2 className="inDashboardHeader">Number Lists (0)</h2>
+            <h2 className="inDashboardHeader">Number Lists {paginationData && paginationData.count ? paginationData.count : ""}</h2>
             <p className="userListAbout">
               Lorem ipsum dolor sit amet. Semi headline should be here.
             </p>
@@ -323,7 +345,7 @@ const NumberListing = () => {
                               alt="avatar"
                             />
                           </span>
-                          <p>{el.ownerFirstName + " " + el.ownerFirstName}</p>
+                          <p>{el.ownerFirstName + " " + el.ownerLastName}</p>
                         </button>
                       </div>
                       <div className="cell_xl">
@@ -375,7 +397,7 @@ const NumberListing = () => {
                             >
                                 <button className="btn "
                                 onClick={() => {
-                                  deleteNumber(el._id);
+                                  deleteNumber(el);
                                 }}>
                                     <span>
                                         <svg
@@ -415,6 +437,11 @@ const NumberListing = () => {
                 )
               })
               }
+              {/* {!numbers.length && 
+                <li className="userName" >
+                  <div className="cell_xl">No record found</div>
+                </li>
+              }  */}
             </ul>
           </div>
         </div>

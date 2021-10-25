@@ -43,6 +43,11 @@ const BuyAndAssignNumber = (props) => {
     eval("set" + constName + "(event.target.value)");
   }
 
+  const handleAssignToChange = (event) => {
+    setAssignTo(event.target.value);
+    setAvailableNumbers("");
+  }
+
   /**
    * Validate search form
    * @returns boolean
@@ -101,10 +106,14 @@ const BuyAndAssignNumber = (props) => {
    * Fetch all org owners
    */
   const fetchOrgOwners = async () => {
-    setIsLoader(true);
-    let owners = await UserServices.fetchOwners();
-    setOrgOwnerList(owners);
-    setIsLoader(false);
+    try{
+      setIsLoader(true);
+      let owners = await UserServices.fetchOwners();
+      setOrgOwnerList(owners);
+      setIsLoader(false);
+    } catch (e) {
+      props.errorMsg(e.message); 
+    }
   }
 
   useEffect(() => {
@@ -190,13 +199,13 @@ const BuyAndAssignNumber = (props) => {
                   <select 
                     name="" 
                     className="cmnFieldStyle selectBox"
-                    onChange = { (e) => handleChange(e, "AssignTo") }
+                    onChange = { handleAssignToChange }
                     value={assignTo} >
-                      <option value="">Select a Gym Owner</option>
+                      <option value="">Select a Gym</option>
                       { orgOwnerList ? orgOwnerList.map( (ow, key) => {
                         return (
                           <React.Fragment key={key + "_ow"}>
-                              <option value={ow._id}>{ow.firstName + " " + ow.lastName}</option>
+                              <option value={ow._id}>{ow.organizationName} ({ow.firstName + " " + ow.lastName}) </option>
                           </React.Fragment>
                         );
                       }) : "No record found"}
