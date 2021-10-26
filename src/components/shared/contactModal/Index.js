@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Overview from "./pages/Overview";
 import Attendance from "./pages/Attendance";
 import Transaction from "./pages/Transaction";
+import TransactionChoose from "./pages/TransactionChoose";
+
 import Billing from "./pages/Billing";
 import { Step, Steps, NavigationComponentProps} from "react-step-builder";
 import { useDispatch } from "react-redux";
@@ -89,8 +91,11 @@ const ContactModal = (props) => {
         console.log(props.contactId);
         getContact(props.contactId);
       }, []);
-
     
+    const [goToTransactionClicked, setGoToTransactionClicked] = useState(false); 
+    const goToTransactionHandler = () =>{
+        setGoToTransactionClicked(true)
+    }
  
     return(
         <>
@@ -200,7 +205,7 @@ const ContactModal = (props) => {
                         <Steps config={config}>
                             <Step title="Overview" contact={contactData} component={Overview} contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
                             <Step title="Attendance" component={Attendance} />
-                            <Step title="Transaction" component={Transaction} />
+                            <Step title="Transaction" goToTransaction = {goToTransactionHandler} component={goToTransactionClicked ? TransactionChoose : Transaction} />
                             <Step title="Transaction" component={Billing} />
                         </Steps>
                         

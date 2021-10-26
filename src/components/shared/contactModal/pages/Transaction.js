@@ -5,14 +5,15 @@ import wwConnect from "../../../../assets/images/wwConnect.svg";
 import wwConnect2 from "../../../../assets/images/wwConnect2.svg";
 
 
-const Transaction = () => {
+const Transaction = (props) => {
 
+    
     return(
         <>
              <div className="contactTabsInner">
                <h3 className="headingTabInner">Transactions</h3> 
                <div className="transHeader">
-                   <button className="saveNnewBtn">Make a Transaction <img src={arrow_forward} alt=""/></button>
+                   <button className="saveNnewBtn" onClick={props.goToTransaction}>Make a Transaction <img src={arrow_forward} alt=""/></button>
                    <span>* Explanatory text blurb should be here.</span>
                </div>
                <div className="transactionListing">
