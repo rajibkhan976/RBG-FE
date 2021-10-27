@@ -14,6 +14,7 @@ import TemplateRoutes from "./setup/templates/templateRoutes";
 import ProductRouter from "./setup/product/productRoute";
 import NumberRouting from "./numbers/NumberRoute";
 import CourseRouter from "./setup/course/courseRoute";
+import {CallSetupService} from "../services/setup/callSetupServices";
 
 const MainComponent = () => {
   const pathURL = useLocation().pathname;
@@ -36,7 +37,17 @@ const MainComponent = () => {
   const toggleCreate = (e) => {
     setCreateButton(e);
   };
-  console.log("Main Component")
+  const fetchCapabilityToken = async () => {
+    try {
+      const result = await CallSetupService.getCapabilityToken();
+      console.log(result);
+    } catch (e) {
+      console.log('error', e);
+    }
+  }
+  useEffect(() => {
+    fetchCapabilityToken();
+  });
   return (
   <>
       <div className="mainComponent">
