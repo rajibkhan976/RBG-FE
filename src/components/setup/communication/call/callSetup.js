@@ -206,10 +206,15 @@ const CallSetup = () => {
 
     const editTrack = (element) => {
         setNowEditing(element._id);
+        setNewRingName(element.name);
     }
 
     const newTrackName = (e) => {
         setNewRingName(e.target.value);
+    }
+
+    const cancelName = () => {
+        setNowEditing("");
     }
 
     const editRingtone = async (element) => {
@@ -244,9 +249,6 @@ const CallSetup = () => {
             fetchRingtone();
             setUploadRingSlide(false);
         }
-    }
-    const cancelName = () => {
-        setNowEditing("");
     }
 
     // Check outside click for ringtone menue, close if clicked outside

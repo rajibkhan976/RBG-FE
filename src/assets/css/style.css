@@ -6609,6 +6609,10 @@ p.trackName {
   background: transparent url("../images/save_icon_small.svg") no-repeat center / 16px;
   margin-right: 14px;
 }
+.ringToneList li .toneAction button.cancelName {
+  background: transparent url("../images/undo_icon_small.svg") no-repeat center / 16px;
+  margin-right: 14px;
+}
 .ringToneList li .toneAction button.deleteTrack {
   background: transparent url("../images/delete_icon_small.svg") no-repeat center / 13px;
 }
