@@ -35,6 +35,9 @@ const CallSetup = () => {
     const [searchKeyVal, setSearchKeyVal] = useState("");
     const [ringtoneName, setRingtoneName] = useState("");
     const [newRingName, setNewRingName] = useState("");
+    const [nowPlaying, setNowPlaying] = useState();
+    const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+    const [nowEditing, setNowEditing] = useState();
 
     const ringtineListItem = useRef();
 
@@ -73,10 +76,26 @@ const CallSetup = () => {
 
     
     const playRingtone = (element) => {
-        ringtone.pause();
-        ringtone = new Audio(element.file);
-        console.log("Playing >>> " + element.file, ringtone);
-        ringtone.play();
+        if (element._id === nowPlaying) {
+            if (isAudioPlaying) {
+                ringtone.pause();
+                setIsAudioPlaying(false);
+            } else {
+                ringtone.play();
+                setIsAudioPlaying(true);
+            }
+        } else {
+            ringtone.pause();
+            ringtone = new Audio(element.file);
+            console.log("Playing >>> " + element.file, ringtone);
+            ringtone.play();
+            setNowPlaying(element._id);
+            setIsAudioPlaying(true);
+        }
+
+        ringtone.onended = () => {
+            setIsAudioPlaying(false);
+        }
     }
 
     const openConfigModal = () => {
@@ -185,6 +204,10 @@ const CallSetup = () => {
         }
     }
 
+    const editTrack = (element) => {
+        setNowEditing(element._id);
+    }
+
     const newTrackName = (e) => {
         setNewRingName(e.target.value);
     }
@@ -200,6 +223,7 @@ const CallSetup = () => {
         setRingtoneLoader(false);
         ringtoneList = ringtoneResponce.ringtones;
         setFoundTrack(ringtoneList);
+        setNowEditing("");
     };
 
     const deleteRingtone = async (element) => {
@@ -208,6 +232,7 @@ const CallSetup = () => {
         setRingtoneLoader(false);
         ringtoneList = ringtoneResponce.ringtones;
         setFoundTrack(ringtoneList);
+        setNowEditing("");
     };
 
     const ref = useRef();
@@ -219,6 +244,9 @@ const CallSetup = () => {
             fetchRingtone();
             setUploadRingSlide(false);
         }
+    }
+    const cancelName = () => {
+        setNowEditing("");
     }
 
     // Check outside click for ringtone menue, close if clicked outside
@@ -271,28 +299,60 @@ const CallSetup = () => {
                         <p>{ numberObj.prefix + "-" + numberObj.nationalNumber + " [ " + numberObj.numberAlias + " ] "}</p>
                         <div className="ringToneArea" ref={ref}>
                             <button className="addRingBtn" onClick={tglRingtoneDropdown}>
-                                <img src={orange_add_icon} alt="" /> Add Ringtone
+                                <img src={orange_add_icon} alt=""/> Ringtone Setup
                             </button>
-                            { ringtoneDropdown ?
+                            {ringtoneDropdown ?
                                 <div className="ringToneDropDown">
+                                    {ringtoneLoader && <Loader/>}
                                     <div className={uploadRingSlide ? "hide" : "ringtoneListSlide"}>
-                                        <div className={isSearching ? "ringToneDropDownHead searchign" : "ringToneDropDownHead"}>
-                                            <div className={ isSearching ? "searchRingTone searching" : "searchRingTone"}>
-                                                <input type="text" value={searchKeyVal} placeholder="Search Ringtone" onChange={filterTrack} />
+                                        <div
+                                            className={isSearching ? "ringToneDropDownHead searchign" : "ringToneDropDownHead"}>
+                                            <div
+                                                className={isSearching ? "searchRingTone searching" : "searchRingTone"}>
+                                                <input type="text" value={searchKeyVal} placeholder="Search Ringtone"
+                                                       onChange={filterTrack}/>
                                             </div>
-                                            { isSearching ? <button className="clearSearchBtn" onClick={clearTrackSearch}></button> :
-                                                <button className="addRingToneBtn" onClick={gotoUpload}></button> }
+                                            {isSearching ? <button className="clearSearchBtn"
+                                                                   onClick={clearTrackSearch}></button> :
+                                                <button className="addRingToneBtn" onClick={gotoUpload}></button>}
                                         </div>
                                         <div className="ringToneList">
-                                            <ul className={ isSearching ? "filterResult" : ""}>
+                                            <ul className={isSearching ? "filterResult" : ""}>
                                                 {foundTrack && foundTrack.length > 0 ? (
-                                                    foundTrack.map((track) => (
-                                                        <li className={track.selected ? "selected" : ""}>
-                                                            <button className="toneName">{track.name}</button>
-                                                            <div className="toneAction">
-                                                                {!track.default ? <button className="toneEdit"></button> : ""}
-                                                                <button className="tonePlay"></button>
-                                                            </div>
+                                                    foundTrack.map((element, key) => (
+                                                        <li className={element.selected ? "selected" : ""}>
+                                                            {nowEditing === element._id ?
+                                                                <>
+                                                                    <input type="text" className="toneNameEdit"
+                                                                           value={newRingName} onChange={newTrackName}/>
+                                                                    <div className="toneAction">
+                                                                        {newRingName === element.name ?
+                                                                            <button className="cancelName"
+                                                                                    onClick={() => cancelName(element)}></button>
+                                                                            :
+                                                                            <button className="saveName"
+                                                                                    onClick={() => editRingtone(element)}></button>
+                                                                        }
+
+                                                                        <button className="deleteTrack"
+                                                                                onClick={() => deleteRingtone(element)}></button>
+                                                                    </div>
+                                                                </>
+                                                                :
+                                                                <>
+                                                                    <button className="toneName">{element.name}</button>
+                                                                    <div className="toneAction">
+                                                                        {!element.default ? <button className="toneEdit"
+                                                                                                    onClick={() => editTrack(element)}></button> : ""}
+                                                                        <button
+                                                                            className={nowPlaying === element._id && isAudioPlaying ? "tonePause" : "tonePlay"}
+                                                                            ref={ringtineListItem}
+                                                                            onClick={() => playRingtone(element)}></button>
+                                                                    </div>
+                                                                </>
+                                                            }
+
+
                                                         </li>
                                                     ))
                                                 ) : (
@@ -304,47 +364,63 @@ const CallSetup = () => {
                                         <div className="ringToneDropBottom">
                                             <button className="cmnBtn updateRingTone">
                                                 <span>Update</span>
-                                                <img src={arrow_forward} alt="" />
+                                                <img src={arrow_forward} alt=""/>
                                             </button>
                                         </div>
                                     </div>
                                     <div className={uploadRingSlide ? "uploadRingSlide" : "hide"}>
                                         <div className="ringToneDropDownHead">
-                                            <button className="backToToneList" onClick={backToToneList}>Add Ringtone</button>
+                                            <button className="backToToneList" onClick={backToToneList}>Add Ringtone
+                                            </button>
                                         </div>
-                                        <div className="ringUploadPlate">
+                                        <div
+                                            className={fileUploadStatus ? "ringUploadPlate successScreen" : "ringUploadPlate"}>
                                             <h3 className={fileUploadStatus ? "success" : ""}>
                                                 <figure>
                                                     <img
                                                         src={
-                                                            uploadedFile === "" ? upload_cloud_icon_small :
+                                                            choosedFile === "" ? upload_cloud_icon_small :
                                                                 (fileUploadStatus ? file_done_icon : music_file_icon)
                                                         }
                                                         alt=""
                                                     />
                                                 </figure>
                                                 {
-                                                    uploadedFile === "" ? "Choose your ringtone" :
-                                                        (fileUploadStatus ? "Congratulations" : uploadedFile)
+                                                    choosedFile === "" ? "Choose your ringtone" :
+                                                        (fileUploadStatus ? "Congratulations" : choosedFile)
                                                 }
                                             </h3>
                                             <p className="fileUploadInfo">
                                                 {
-                                                    uploadedFilePath === "" ? "[Only MP3, WMA, AMR formats are supported] Maximum upload size is 5 MB" :
-                                                        (fileUploadStatus ? "File successfully uploaded" : uploadedFilePath )
+                                                    choosedFilePath === "" ? "[Only MP3, WMA, AMR formats are supported] Maximum upload size is 5 MB" :
+                                                        (fileUploadStatus ? "File successfully uploaded" : choosedFilePath)
                                                 }
                                             </p>
-                                            <input type="file" className="importRingtone" onChange={uploadRing} />
+                                            <input type="file" accept=".mp3, .wma, .amr" className="importRingtone"
+                                                   id="choseRingtone" onChange={fileChose}/>
                                         </div>
+                                        {!fileUploadStatus ?
+                                            <div className="ringtoneName">
+                                                <div className="cmnFormRow">
+                                                    <div className="cmnFieldName">Ringtone Name</div>
+                                                    <div className="cmnFormField">
+                                                        <input type="text" className="cmnFieldStyle"
+                                                               onChange={handelRingtoneName} value={ringtoneName}/>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            : ""}
                                         <div className="ringToneDropBottom">
-                                            <button className={ uploadedFile === "" ? "cmnBtn updateRingTone disabled" : "cmnBtn updateRingTone" } onClick={uploadRingtone} >
-                                                <span>{ fileUploadStatus ? "Done" : "Upload" }</span>
-                                                <img src={arrow_forward} alt="" />
+                                            <button
+                                                className={choosedFile === "" ? "cmnBtn updateRingTone disabled" : "cmnBtn updateRingTone"}
+                                                onClick={uploadRingtone}>
+                                                <span>{fileUploadStatus ? "Done" : "Upload"}</span>
+                                                <img src={arrow_forward} alt=""/>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                                : "" }
+                                : ""}
                         </div>
                     </div>
                     <h3 className="callListTabHeading">

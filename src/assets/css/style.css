@@ -6602,9 +6602,30 @@ p.trackName {
 .ringToneList li .toneAction button.tonePlay {
   background: transparent url("../images/play_icon_small.svg") no-repeat center;
 }
+.ringToneList li .toneAction button.tonePause {
+  background: transparent url("../images/pause_icon_small.svg") no-repeat center;
+}
+.ringToneList li .toneAction button.saveName {
+  background: transparent url("../images/save_icon_small.svg") no-repeat center / 16px;
+  margin-right: 14px;
+}
+.ringToneList li .toneAction button.deleteTrack {
+  background: transparent url("../images/delete_icon_small.svg") no-repeat center / 13px;
+}
 .ringToneList li.selected .toneName {
   color: var(--darkBlue);
   font-weight: 600;
+}
+.toneNameEdit {
+  font-size: 13px;
+  min-height: 18px;
+  height: 18px;
+  width: 135px;
+  color: var(--darkBlue);
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #849aaa;
+  padding: 0 0 5px 0;
 }
 .ringToneDropBottom {
   padding: 18px 0 0;
