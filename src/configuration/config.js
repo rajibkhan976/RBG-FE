@@ -69,7 +69,8 @@ module.exports = {
     fetchAudiossUrl: "https://i18vj5dg2l.execute-api.us-east-1.amazonaws.com/dev/audio/list",
     audioTemplateUrl: "https://i18vj5dg2l.execute-api.us-east-1.amazonaws.com/dev/audio/",
     // audioTemplateUrl: "http://localhost:4000/dev/audio"
-
     callSetupUrl: "https://ltj70u1guh.execute-api.us-east-1.amazonaws.com/dev/communication/call/",
-    callWebhookUrl: "https://memz99rc6c.execute-api.us-east-1.amazonaws.com/dev/"
+    callWebhookUrl: "https://memz99rc6c.execute-api.us-east-1.amazonaws.com/dev/",
+    // Ringtone service
+    ringtoneUrl: "https://psk3w69xqd.execute-api.us-east-1.amazonaws.com/dev/number/ringtone/"
 }  

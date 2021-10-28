@@ -6624,22 +6624,28 @@ p.trackName {
 }
 
 .ringUploadPlate {
-  height: 235px;
+  height: 170px;
   background: #F2F7FC;
   border: 1px solid #E2EBF2;
   border-radius: 12px;
   margin-top: 14px;
   position: relative;
 }
+.ringUploadPlate.successScreen {
+  height: 240px;
+}
 .ringUploadPlate h3 {
   font-size: 14px;
   color: var(--darkBlue);
   text-align: center;
-  margin-top: 45px;
+  margin-top: 14px;
 }
 .ringUploadPlate h3.success {
   font-size: 18px;
   color: #00CC51;
+}
+.ringUploadPlate.successScreen h3.success {
+  margin-top: 54px;
 }
 .ringUploadPlate h3.error {
   font-size: 18px;
@@ -6668,4 +6674,18 @@ p.trackName {
   top: 0;
   left: 0;
   opacity: 0;
+}
+.ringtoneName {
+  margin-top: 14px;
+}
+.ringtoneName .cmnFieldName {
+  font-size: 13px;
+  margin-bottom: 5px;
+}
+.ringtoneName .cmnFormRow {
+  margin-bottom: 0;
+}
+.ringtoneName .cmnFieldStyle {
+  height: 34px;
+  min-height: 34px;
 }
