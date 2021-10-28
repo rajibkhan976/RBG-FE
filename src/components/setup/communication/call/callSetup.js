@@ -71,6 +71,7 @@ const CallSetup = () => {
 
     const clearTrackSearch = () => {
         setSearchKeyVal("");
+        setFoundTrack(ringtoneList);
         setIsSearching(false);
     }
 
