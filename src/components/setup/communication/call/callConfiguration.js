@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 
 import orange_add_icon from "../../../../assets/images/orange_add_icon.svg";
 import plue_icon_white_thik from "../../../../assets/images/plue_icon_white_thik.svg";
@@ -10,9 +10,58 @@ import InputFile from "../../../shared/InputFile";
 
 
 const CallConfiguration = (props) => {
-
-
-
+    const [name, setName] = useState("");
+    const [callResponse, setCallResponse] = useState("receive_calls");
+    const [schedule, setSchedule] = useState([]);
+    const handleCheck = (val, list) => {
+        let exists = false;
+        list.some((el) => {
+            if (el.day.includes(val))
+                exists = true;
+        });
+        return exists;
+    }
+    const addAnotherTime = (e) => {
+        e.preventDefault();
+        let conf = [{
+            day: [],
+            startTime: "00:00",
+            endTime: "23:00"
+        }];
+        setSchedule([...schedule, ...conf])
+    }
+    const handleDayBox = (key, day, e) => {
+        let updateList = schedule;
+        let dayList = schedule[key].day;
+        if (e.target.checked) {
+            updateList[key].day = dayList.concat(day);
+        } else {
+            updateList[key].day = dayList.filter(item => item !== day);
+        }
+        setSchedule(updateList);
+    }
+    const handleStartTime = (key, e) => {
+        let updateList = schedule;
+        updateList[key].startTime = e.target.value;
+        setSchedule(updateList);
+    }
+    const handleEndTime = (key, e) => {
+        let updateList = schedule;
+        updateList[key].endTime = e.target.value;
+        setSchedule(updateList);
+    }
+    useEffect(() => {
+        let conf = [{
+            day: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
+            startTime: "00:00",
+            endTime: "23:00"
+        }];
+        if (props.conf.length === 0) {
+            setSchedule(conf);
+        } else {
+            setSchedule(props.conf);
+        }
+    }, []);
     return(
         <div className="sideMenuOuter">
             <div className="sideMenuInner callConfigModal">
@@ -44,122 +93,127 @@ const CallConfiguration = (props) => {
                         </div>
                         <div className="scheduleList">
                             <div className="cmnFormRow">
-                                <h4 class="formSecHeading">Schedule</h4>
+                                <h4 className="formSecHeading">Schedule</h4>
                             </div>
-                            <div className="cmnFormRow scheduleRow">
-                                <div className="cmnFormCol">
-                                    <div className="cmnFieldName">Select Day (s)</div>
-                                    <div class="cmnFormField">
-                                        <ul className="weekDateList">
-                                            <li className="weekDate">
-                                                <input type="checkbox" />
-                                                <span>S</span>
-                                            </li>
-                                            <li className="weekDate">
-                                                <input type="checkbox" />
-                                                <span>M</span>
-                                            </li>
-                                            <li className="weekDate">
-                                                <input type="checkbox" />
-                                                <span>T</span>
-                                            </li>
-                                            <li className="weekDate">
-                                                <input type="checkbox" />
-                                                <span>W</span>
-                                            </li>
-                                            <li className="weekDate">
-                                                <input type="checkbox" />
-                                                <span>T</span>
-                                            </li>
-                                            <li className="weekDate">
-                                                <input type="checkbox" />
-                                                <span>F</span>
-                                            </li>
-                                            <li className="weekDate">
-                                                <input type="checkbox" />
-                                                <span>S</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div className="cmnFormCol">
-                                    <div className="cmnFieldName">Set Time Slot</div>
-                                    <div className="cmnFormRow">
-                                        <div className="cmnFormCol">
-                                            <div class="cmnFormField">
-                                                <label className="cmnFieldName">From</label>
-                                                <input type="Time" className="cmnFieldStyle timeInput" />
+                                {
+                                    schedule.map((list, key) => {
+                                        return (
+                                            <div className="cmnFormRow scheduleRow">
+                                                <div className="cmnFormCol" key={key}>
+                                                    <div className="cmnFieldName">Select Day (s)</div>
+                                                    <div className="cmnFormField">
+                                                        <ul className="weekDateList">
+                                                            <li className="weekDate">
+                                                                <input type="checkbox" value="sun" defaultChecked={list.day.includes('sun') } onChange={(e) => handleDayBox(key, 'sun',e)}/>
+                                                                <span>S</span>
+                                                            </li>
+                                                            <li className="weekDate">
+                                                                <input type="checkbox" value="mon" defaultChecked={list.day.includes('mon') } onChange={(e) => handleDayBox(key, 'mon', e)}/>
+                                                                <span>M</span>
+                                                            </li>
+                                                            <li className="weekDate">
+                                                                <input type="checkbox" value="tue" defaultChecked={list.day.includes('tue') } onChange={(e) => handleDayBox(key, 'tue', e)}/>
+                                                                <span>T</span>
+                                                            </li>
+                                                            <li className="weekDate">
+                                                                <input type="checkbox" value="wed" defaultChecked={list.day.includes('wed') } onChange={(e) => handleDayBox(key, 'wed', e)}/>
+                                                                <span>W</span>
+                                                            </li>
+                                                            <li className="weekDate">
+                                                                <input type="checkbox" value="wed" defaultChecked={list.day.includes('thu') } onChange={(e) => handleDayBox(key, 'thu', e)}/>
+                                                                <span>T</span>
+                                                            </li>
+                                                            <li className="weekDate">
+                                                                <input type="checkbox" value="wed" defaultChecked={list.day.includes('fri') } onChange={(e) => handleDayBox(key, 'fri', e)}/>
+                                                                <span>F</span>
+                                                            </li>
+                                                            <li className="weekDate">
+                                                                <input type="checkbox" value="wed" defaultChecked={list.day.includes('sat') } onChange={(e) => handleDayBox(key, 'sat', e)}/>
+                                                                <span>S</span>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div className="cmnFormCol">
+                                                    <div className="cmnFieldName">Set Time Slot</div>
+                                                    <div className="cmnFormRow">
+                                                        <div className="cmnFormCol">
+                                                            <div className="cmnFormField">
+                                                                <label className="cmnFieldName">From</label>
+                                                                <select className="cmnFieldStyle timeInput"  defaultValue={list.startTime}  onChange={(e) => handleStartTime(key, e)}>
+                                                                    <option value="00:00">00:00</option>
+                                                                    <option value="01:00">01:00</option>
+                                                                    <option value="02:00">02:00</option>
+                                                                    <option value="03:00">03:00</option>
+                                                                    <option value="04:00">04:00</option>
+                                                                    <option value="05:00">05:00</option>
+                                                                    <option value="06:00">06:00</option>
+                                                                    <option value="07:00">07:00</option>
+                                                                    <option value="08:00">08:00</option>
+                                                                    <option value="09:00">09:00</option>
+                                                                    <option value="10:00">10:00</option>
+                                                                    <option value="11:00">11:00</option>
+                                                                    <option value="12:00">12:00</option>
+                                                                    <option value="13:00">13:00</option>
+                                                                    <option value="14:00">14:00</option>
+                                                                    <option value="15:00">15:00</option>
+                                                                    <option value="16:00">16:00</option>
+                                                                    <option value="17:00">17:00</option>
+                                                                    <option value="18:00">18:00</option>
+                                                                    <option value="19:00">19:00</option>
+                                                                    <option value="20:00">20:00</option>
+                                                                    <option value="21:00">21:00</option>
+                                                                    <option value="22:00">22:00</option>
+                                                                    <option value="23:00">23:00</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div className="cmnFormCol">
+                                                            <div className="cmnFormField">
+                                                                <label className="cmnFieldName">To</label>
+                                                                <select className="cmnFieldStyle timeInput" defaultValue={list.endTime}  onChange={(e) => handleEndTime(key, e)}>
+                                                                    <option value="00:00">00:00</option>
+                                                                    <option value="01:00">01:00</option>
+                                                                    <option value="02:00">02:00</option>
+                                                                    <option value="03:00">03:00</option>
+                                                                    <option value="04:00">04:00</option>
+                                                                    <option value="05:00">05:00</option>
+                                                                    <option value="06:00">06:00</option>
+                                                                    <option value="07:00">07:00</option>
+                                                                    <option value="08:00">08:00</option>
+                                                                    <option value="09:00">09:00</option>
+                                                                    <option value="10:00">10:00</option>
+                                                                    <option value="11:00">11:00</option>
+                                                                    <option value="12:00">12:00</option>
+                                                                    <option value="13:00">13:00</option>
+                                                                    <option value="14:00">14:00</option>
+                                                                    <option value="15:00">15:00</option>
+                                                                    <option value="16:00">16:00</option>
+                                                                    <option value="17:00">17:00</option>
+                                                                    <option value="18:00">18:00</option>
+                                                                    <option value="19:00">19:00</option>
+                                                                    <option value="20:00">20:00</option>
+                                                                    <option value="21:00">21:00</option>
+                                                                    <option value="22:00">22:00</option>
+                                                                    <option value="23:00">23:00</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                {key > 0 ? (
+                                                    <div className="and">
+                                                        <img src={orange_add_icon} alt="" />
+                                                        <span>And</span>
+                                                    </div>
+                                                ) : ""}
                                             </div>
-                                        </div>
-                                        <div className="cmnFormCol">
-                                            <div class="cmnFormField">
-                                                <label className="cmnFieldName">To</label>
-                                                <input type="Time" className="cmnFieldStyle timeInput" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="cmnFormRow scheduleRow">
-                                <div className="cmnFormCol">
-                                    <div className="cmnFieldName">Select Day (s)</div>
-                                    <div class="cmnFormField">
-                                        <ul className="weekDateList">
-                                            <li className="weekDate">
-                                                <input type="checkbox" />
-                                                <span>S</span>
-                                            </li>
-                                            <li className="weekDate">
-                                                <input type="checkbox" />
-                                                <span>M</span>
-                                            </li>
-                                            <li className="weekDate">
-                                                <input type="checkbox" />
-                                                <span>T</span>
-                                            </li>
-                                            <li className="weekDate">
-                                                <input type="checkbox" />
-                                                <span>W</span>
-                                            </li>
-                                            <li className="weekDate">
-                                                <input type="checkbox" />
-                                                <span>T</span>
-                                            </li>
-                                            <li className="weekDate">
-                                                <input type="checkbox" />
-                                                <span>F</span>
-                                            </li>
-                                            <li className="weekDate">
-                                                <input type="checkbox" />
-                                                <span>S</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div className="cmnFormCol">
-                                    <div className="cmnFieldName">Set Time Slot</div>
-                                    <div className="cmnFormRow">
-                                        <div className="cmnFormCol">
-                                            <div class="cmnFormField">
-                                                <label className="cmnFieldName">From</label>
-                                                <input type="Time" className="cmnFieldStyle timeInput" />
-                                            </div>
-                                        </div>
-                                        <div className="cmnFormCol">
-                                            <div class="cmnFormField">
-                                                <label className="cmnFieldName">To</label>
-                                                <input type="Time" className="cmnFieldStyle timeInput" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className="and">
-                                    <img src={orange_add_icon} alt="" />
-                                    <span>And</span>
-                                </div>
-                            </div>
+                                        )
+                                    })
+                                }
                             <div className="cmnFormRow">
-                                <button className="saveNnewBtn addAnotherBtn">
+                                <button className="saveNnewBtn addAnotherBtn" onClick={(event) => addAnotherTime(event)}>
                                     <img src={plue_icon_white_thik} alt="" /> Schedule Another Time
                                 </button>
                                 <button className="btn-link timeOverlapBtn">Validate Time Overlap</button>

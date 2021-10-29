@@ -39,6 +39,7 @@ const CallSetup = () => {
     const [isAudioPlaying, setIsAudioPlaying] = useState(false);
     const [nowEditing, setNowEditing] = useState();
     const [selectedRingtone, setSelectedRingtone] = useState("");
+    const [selectedConf, setSelectedConf] = useState([])
 
     const ringtineListItem = useRef();
 
@@ -500,7 +501,7 @@ const CallSetup = () => {
                     </div>
                 </div> : ""
             }
-            { configModalShow && <CallConfiguration closeModal={closeConfigModal}/> }
+            { configModalShow && <CallConfiguration closeModal={closeConfigModal} numberId={numberObj._id} conf={selectedConf}/> }
         </div>
     );
 }
