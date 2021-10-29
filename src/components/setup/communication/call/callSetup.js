@@ -38,6 +38,7 @@ const CallSetup = () => {
     const [nowPlaying, setNowPlaying] = useState();
     const [isAudioPlaying, setIsAudioPlaying] = useState(false);
     const [nowEditing, setNowEditing] = useState();
+    const [selectedRingtone, setSelectedRingtone] = useState("");
 
     const ringtineListItem = useRef();
 
@@ -110,8 +111,8 @@ const CallSetup = () => {
         setIsLoader(true);
         try {
             const result = await CallSetupService.fetchNumber();
-            console.log('dsfnjmsdjiisdjfhsdfh8')
             setNumberObj(result);
+            setSelectedRingtone(result.ringtone);
             setConfigurationList(result.config);
         } catch (e) {
             setErrorMsg('No number found. Please first buy a number then come again here.');
@@ -323,7 +324,7 @@ const CallSetup = () => {
                                             <ul className={isSearching ? "filterResult" : ""}>
                                                 {foundTrack && foundTrack.length > 0 ? (
                                                     foundTrack.map((element, key) => (
-                                                        <li className={element.selected ? "selected" : ""}>
+                                                        <li className={element._id === selectedRingtone ? "selected" : ""}>
                                                             {nowEditing === element._id ?
                                                                 <>
                                                                     <input type="text" className="toneNameEdit"

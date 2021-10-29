@@ -8,7 +8,7 @@ let headers = {
 export const CallSetupService = {
     fetchNumber: async () => {
         try {
-            const result = await axios.get(config.callSetupUrl + "call-webhook", { headers: headers });
+            const result = await axios.get(config.callSetupUrl, { headers: headers });
             return result.data;
         } catch (e) {
             if(!typeof e.data === 'undefined') {
