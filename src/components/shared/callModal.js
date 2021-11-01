@@ -22,12 +22,12 @@ useEffect(() => {
 }, []);
 
   const [phoneCountryCode, setPhoneCountryCode] = useState([]);
+  const [number, setNumber] = useState([]);
   const countrycodeOpt = phoneCountryCode ? phoneCountryCode.map((el, key) => {
-    return (
-        <option value={el.code} data-dailcode={el.prefix} key={key} >{el.code} ({el.prefix})</option>
-    )
-}
-) : '';
+      return (
+          <option value={el.code} data-dailcode={el.prefix} key={key} >{el.code} ({el.prefix})</option>
+      )
+  }) : '';
     const [basicinfoMobilePhone, setBasicinfoMobilePhone] = useState({
         countryCode: "USA",
         dailCode: "+1",
@@ -46,8 +46,9 @@ useEffect(() => {
 };
 
 const [callSuggetion, setCallSuggetion] = useState(false);
-const openCallSuggestionHandler = () =>{
-  setCallSuggetion(true)
+const openCallSuggestionHandler = (e) =>{
+  setNumber(e.target.value);
+  //setCallSuggetion(true)
 }
 const closeCallSugession = () =>{
   setCallSuggetion(false)
@@ -70,7 +71,10 @@ const showNextPartHandler = () =>{
 const hideNextPartHandler = () =>{
   setOpenOtherPart(false);
 }
-
+const makeCall = () => {
+  props.device.connect(basicinfoMobilePhone.dialCOde + number);
+  props.callModalOff();
+}
  return(
     <div class="sideMenuOuter">
     <div class="sideMenuInner makeCall">
@@ -248,7 +252,7 @@ const hideNextPartHandler = () =>{
               </div> 
              }
                 <div className="text-center">
-                  <button className="makeAcallBtn" ><img src={makeCall2} alt=""/></button>
+                  <button className="makeAcallBtn" onClick={makeCall} ><img src={makeCall2} alt=""/></button>
                 </div>
                 <div className="text-center"><div className="callSugession">Tap <img src={hand} alt=""/> to start call</div></div>
               

@@ -14,14 +14,16 @@ import callIcon3 from "../../assets/images/callicon3.svg";
 import SettingIcon from "../../assets/images/settings.svg";
 import SettingIconBlue from "../../assets/images/settings_blue.svg";
 import DownloadIcon from "../../assets/images/download.svg";
-
+import {CallSetupService} from "../../services/setup/callSetupServices";
+const { Device } = require('twilio-client');
 
 function HeaderDashboard(props) {
   const [setupModalStatus, setSetupModalStatus] = useState(false);
   const [stateNotifMenu, setStateNotifMenu] = useState(false);
   const [stateUserMenu, setStateUserMenu] = useState(false);
   const [locationLoaded, setLocationLoaded] = useState("user");
-
+  const [device, setDevice] = useState(new Device());
+  const [deviceMessage, setDeviceMessage] = useState('loading');
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
   };
@@ -46,8 +48,37 @@ function HeaderDashboard(props) {
     e.preventDefault();
     setStateNotifMenu(false);
   };
-
+  const fetchCapabilityToken = async () => {
+    try {
+      const result = await CallSetupService.getCapabilityToken();
+      console.log(result.data);
+      setDevice(device.setup(result.data));
+    } catch (e) {
+      console.log('error', e);
+    }
+  }
   useEffect(() => {
+    fetchCapabilityToken();
+    device.on('incoming', connection => {
+      // immediately accepts incoming connection
+      setDeviceMessage('Incoming Call');
+      setTimeout(() => {
+        connection.accept();  
+      }, 500);
+      
+    });
+
+    device.on('ready', device => {
+      setDeviceMessage('Ready');
+    });
+
+    device.on('connect', connection => {
+      console.log('connect');
+    });
+
+    device.on('disconnect', connection => {
+      setDeviceMessage('Ready');
+    });
     window.location.pathname === "/roles"
       ? setLocationLoaded("roles")
       : window.location.pathname === "/groups"
@@ -112,8 +143,7 @@ function HeaderDashboard(props) {
           </div>
           <div className="rightDetails">
             <p>
-              <span> Incoming Call</span> 
-              +1 234 567 8901
+              {deviceMessage}
             </p>
             <div className="d-flex">
               <button className="btn callBtn red">
@@ -230,7 +260,7 @@ function HeaderDashboard(props) {
 
       {setupModalStatus && <Setup/>}
 
-       {modalMakeCall && <CallModal callModalOff={callModalOffhandler}/> }
+       {modalMakeCall && <CallModal callModalOff={callModalOffhandler} device={device}/> }
     </>
   );
 }
