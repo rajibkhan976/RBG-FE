@@ -271,78 +271,85 @@ const AddCourseModal = (props) => {
               <div className="formControl">
                 <label>Upload Course Picture</label>
                 <div className="profile">
+                <div className="profileUpload">
+                  <input type="file" onChange={(e) => handleImageUpload(e)} />
+                    {/* <span>Upload</span> */}
+                  </div>
                   <div className="profilePicture">
                     <img src={courseData.imageUrl} alt="" />
                   </div>
                   <div className="profileText"> Course Picture</div>
-                  <div className="profileUpload">
-                    <input type="file" onChange={(e) => handleImageUpload(e)} />
-                    <span>Upload</span>
-                  </div>
+                  
                 </div>
               </div>
 
               <div className="formControl">
                 <label>Duration</label>
-                <input type="text" name="duration_num"
-                  onChange={handleChange}
-                  value={courseData.duration} />
-                <select name="duration_months" onChange={handleChange}>
-                  <option value="month" selected={(courseData.duration_months === "month") ? "selected" : ""}>Month(s)</option>
-                  <option value="year" selected={(courseData.duration_months === "year") ? "selected" : ""}>Year(s)</option>
-                </select>
-              </div>
-
-              <div className="formControl">
-                <label>Payment Type</label>
-                <select name="paymentType" onChange={handleChange}>
-                  {paymentType.map(pt => <option value={pt.toLowerCase()}
-                    selected={(courseData.payment_type.toLowerCase() === pt.toLowerCase()) ? "selected" : ""}>{pt}</option>)}
-                </select>
-              </div>
-
-              <div className="formControl">
-                <label>Billing Cycle</label>
-                <select name="billingCycle" onChange={handleChange}>
-                  <option value="monthly" selected={(courseData.billing_cycle === "monthly") ? "selected" : ""}>Monthly</option>
-                  <option value="yearly" selected={(courseData.billing_cycle === "yearly") ? "selected" : ""}>Yearly</option>
-                </select>
-              </div>
-
-              <div className="formControl">
-                <label>Select Age Group</label>
-                <select name="age_group" onChange={handleChange}>
-                  {ageGroup.map(ag => {
-                    return (
-                      <>
-                        <option value={ag} selected={(courseData.ageGroup === ag) ? "selected" : ""}>{ag}</option>
-                      </>
-                    );
-                  })}
-
-                </select>
-              </div>
-
-              <div className="formControl">
-                <label>Fees</label>
                 <div className="formLeft">
-                  <input type="text" name="fees" placeholder="Ex: 99" onChange={handleChange} value={courseData.fees} />
-                  <span>* default currency is<strong> USD</strong></span>
+                   <input type="text" name="duration_num"
+                    onChange={handleChange}
+                      value={courseData.duration} />
                 </div>
                 <div className="formRight">
-                  <label>
-                    <div className="customCheckbox">
-                      <input type="checkbox"
-                        name="saleTax"
-                        onChange={(e) => handleTaxCheck(e.target.checked)}
-                        checked={(courseData.tax) ? true : false}
-                      />
-                      <span></span>
-                    </div>
-                    Add Sales Tax (10%)</label>
+                  <select name="duration_months" onChange={handleChange}>
+                    <option value="month" selected={(courseData.duration_months === "month") ? "selected" : ""}>Month(s)</option>
+                    <option value="year" selected={(courseData.duration_months === "year") ? "selected" : ""}>Year(s)</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div className="formControl">
+                <div className="formLeft">
+                  <label>Payment Type</label>
+                  <select name="paymentType" onChange={handleChange}>
+                    {paymentType.map(pt => <option value={pt.toLowerCase()}
+                      selected={(courseData.payment_type.toLowerCase() === pt.toLowerCase()) ? "selected" : ""}>{pt}</option>)}
+                  </select>
+                </div>
+            
+
+                <div className="formRight">
+                  <label>Billing Cycle</label>
+                  <select name="billingCycle" onChange={handleChange}>
+                    <option value="monthly" selected={(courseData.billing_cycle === "monthly") ? "selected" : ""}>Monthly</option>
+                    <option value="yearly" selected={(courseData.billing_cycle === "yearly") ? "selected" : ""}>Yearly</option>
+                  </select>
                 </div>
               </div>
 
+              <div className="formControl">
+                <div className="formLeft">    
+                  <label>Select Age Group</label>
+                  <select name="age_group" onChange={handleChange}>
+                    {ageGroup.map(ag => {
+                      return (
+                        <>
+                          <option value={ag} selected={(courseData.ageGroup === ag) ? "selected" : ""}>{ag}</option>
+                        </>
+                      );
+                    })}
+
+                  </select>
+                </div>
+             
+                <div className="formRight">      
+                  <label>Fees</label>
+                    <input type="text" name="fees" placeholder="Ex: 99" onChange={handleChange} value={courseData.fees} />
+                    <span className="smallspan">* default currency is<strong> USD</strong></span>
+                </div>
+              </div>
+              <div className="formControl">
+                  <label className="labelStick2">
+                      <div className="customCheckbox">
+                        <input type="checkbox"
+                          name="saleTax"
+                          onChange={(e) => handleTaxCheck(e.target.checked)}
+                          checked={(courseData.tax) ? true : false}
+                        />
+                        <span></span>
+                      </div>
+                      Add Sales Tax (10%)</label>
+              </div>     
               <div className="modalbtnHolder">
                 <button type="submit" name="save"
                   className="saveNnewBtn"

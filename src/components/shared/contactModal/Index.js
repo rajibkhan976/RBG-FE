@@ -96,7 +96,11 @@ const ContactModal = (props) => {
     const goToTransactionHandler = () =>{
         setGoToTransactionClicked(true)
     }
- 
+    const backToTransListHandler = () =>{
+        setGoToTransactionClicked(false)
+    }
+
+    
     return(
         <>
             <div className="modal contactModal">
@@ -205,7 +209,7 @@ const ContactModal = (props) => {
                         <Steps config={config}>
                             <Step title="Overview" contact={contactData} component={Overview} contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
                             <Step title="Attendance" component={Attendance} />
-                            <Step title="Transaction" goToTransaction = {goToTransactionHandler} component={goToTransactionClicked ? TransactionChoose : Transaction} />
+                            <Step title="Transaction" backToTransList = {backToTransListHandler} goToTransaction = {goToTransactionHandler} component={goToTransactionClicked ? TransactionChoose : Transaction} />
                             <Step title="Transaction" component={Billing} />
                         </Steps>
                         

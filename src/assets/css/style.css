@@ -5146,7 +5146,7 @@ button.saveOverview img {
 
 .modalBackdrop{
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   position: fixed;
   top: 0;
   bottom: 0;
@@ -5158,6 +5158,8 @@ button.saveOverview img {
   flex-wrap: wrap;
   align-content: center;
   justify-content: center;
+  height: auto;
+  overflow: auto;
 }
 
 .slickModalBody{
@@ -5255,18 +5257,21 @@ button.saveOverview img {
   align-content: center;
   width: 100%;
   padding-top: 10px;
+  position: relative;
 }
 .formControl .profile .profilePicture {
-  width: 64px;
-  height: 64px;
-  background: #E9EFF5;
-  border-radius: 50%;
-  border: 1px solid #9BAEBC;
-  display: flex;
-  flex-wrap: wrap;
-  overflow: hidden;
-  align-items: center;
-  justify-content: center;
+     width: 64px;
+      height: 64px;
+      background: #E9EFF5;
+      border-radius: 50%;
+      border: 1px solid #9BAEBC;
+      display: flex;
+      flex-wrap: wrap;
+      overflow: hidden;
+      align-items: center;
+      position: absolute;
+      justify-content: center;
+      pointer-events: none;
 }
 
 .formControl .profile .profileText {
@@ -5277,6 +5282,7 @@ button.saveOverview img {
   flex-wrap: wrap;
   padding: 0 0 0 14px;
   align-items: center;
+  margin: 0 0 0 10px;
 }
 .profile .profileUpload{
   display: flex;
@@ -5284,10 +5290,10 @@ button.saveOverview img {
   width: 50px;
 }
 .formControl .profile .profileUpload input[type="file"] {
-  height: 20px;
-  line-height: 20px;
-  background: none;
-  border: none;
+    height: 57px;
+    line-height: 60px;
+    background: none;
+    border: none;
 }
 .profile .profileUpload span {
   position: absolute;
@@ -5345,15 +5351,23 @@ button.saveOverview img {
   width: 50%;
   display: flex;
   flex-wrap: wrap;
+  align-content: flex-start;
 }
-
-
-.formControl .formRight label {
-  width: auto;
+.formLeft{
+  padding-right: 10px;
+}
+.formRight{
+  padding-left: 10px;
+}
+.formControl .formRight label.labelStick1 {
   font-weight: 400;
-  padding: 15px 0px 0 35px;
+  padding: 15px 0px 0 15px;
 }
-.formLeft span {
+.formControl label.labelStick2 {
+  font-weight: 400;
+  padding: 0px;
+}
+.formLeft span,.smallspan {
   padding: 7px 0 10px 0;
   font-size: 11px;
   color: var(--darkBlue);
@@ -6965,7 +6979,7 @@ p.trackName {
   display: flex;
   flex-wrap: wrap;
   width: 100%;
-  height: 390px;
+  height: 382px;
   overflow: auto;
   align-content: flex-start;
 }
@@ -7220,7 +7234,7 @@ p.trackName {
   padding: 7px 0;
 }
 .transHeader.pos {
-  padding: 0 0 18px;
+  padding: 0 0 22px;
 }
 
 .posSellingForm {
@@ -7310,10 +7324,110 @@ p.trackName {
   padding-right: 80px;
 }
 
-.transaction_form .pickColor {
+.transaction_form .pickColor,
+.transaction_form .pickSize {
   padding-bottom: 16px;
 }
 
 .transaction_form label {
-  padding-bottom: 16px;
+  padding-bottom: 12px;
 }
+.transaction_form  .formControl label {
+  padding: 0 0 9px 0;
+}
+.contactTabsInner .commonHeadding{
+  margin: 0;
+  padding: 5px 0;
+  color: #315571;
+  font-size: 13px;
+  font-weight: 500;
+}
+.previewBox{
+  max-width: 260px;
+  background: #F6F8FA;
+  border: 1px solid #D5D5D5;
+  border-radius: 5px;
+  padding: 15px;
+  margin-top: 6px;
+  
+}
+.previewImgBox{
+    width: 100%;
+    height: 137px;
+    background: #FFFFFF;
+    border: 1px solid #9BAEBC;
+    border-radius: 5px;
+    margin-bottom: 21px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    position: relative;
+}
+.contactTabsInner .previewBox h3{
+  padding: 5px 4px 10px;
+  color: #315571;
+  font-size: 16px;
+  font-weight: 600;
+}
+.contactTabsInner .previewBox .category{
+  color: #9BAEBC;
+  font-size: 13px;
+  padding: 0;
+  margin: 0 0 8px 5px;
+}
+.contactTabsInner .previewBox .category img {
+  vertical-align: middle;
+  padding-right: 3px;
+}
+.contactTabsInner .previewBox h4{
+  color: #305671;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px 0 0 5px;
+}
+.previewImgBox span{ 
+  width: 100%;
+  color: #9BAEBC;
+  font-size: 13px;
+  text-align: center;
+  padding-top: 5px;
+}
+.productAvailable .saveNnewBtn{
+  width: 75px;
+    margin: 50px auto 0;
+    align-self: center;
+}
+
+.formsection .tax,
+.previewBox .tax {
+  font-size: 11px;
+  color: #9BAEBC;
+}
+.formsection .tax{
+  padding-left: 10px;
+}
+.previewImgBox .sizeTag{
+  border-radius: 5px;
+    border: 1px solid #9BAEBC;
+    background-color: #9BAEBC;
+    color: #fff;
+    line-height: 22px;
+    font-size: 13px;
+    width: 24px;
+    height: 24px;
+    margin: 0 4px 0 0;
+    padding: 0 6px;
+    display: inline-block;
+    position: absolute;
+    left: -1px;
+    top: 0px;
+}
+.active .previewImgBox .sizeTag{
+  background: #ED707A;
+  border-color: #ED707A;
+}
+.active .previewImgBox{
+  border: none;
+}
+

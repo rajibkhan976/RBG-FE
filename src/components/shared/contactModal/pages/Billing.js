@@ -125,7 +125,7 @@ const Billing = () => {
                             <label>
                                 <div class="circleRadio">
                                 <input type="radio" name="primary" onChange={changeToPrimary1} defaultChecked={!primaryChecked}/><span></span>
-                                </div><span className={!primaryChecked ? "" : "hide"}>Make Primary</span><span className={!primaryChecked ? "hide" : ""}>Primary</span>
+                                </div><span className={!primaryChecked ? "" : "hide"}> Primary</span><span className={!primaryChecked ? "hide" : ""}>Make Primary</span>
                             </label>
                         </div>
                         <div className="flipCardHolder">
@@ -210,7 +210,7 @@ const Billing = () => {
                             <label>
                                 <div class="circleRadio">
                                 <input type="radio"  name="primary" onChange={changeToPrimary2} defaultChecked={primaryChecked}/><span></span>
-                                </div><span className={primaryChecked ? "" : "hide"}>Make Primary</span><span className={primaryChecked ? "hide" : ""}>Primary</span>
+                                </div><span className={primaryChecked ? "" : "hide"}>Primary</span><span className={primaryChecked ? "hide" : ""}>Make Primary</span>
                             </label>
                         </div>
                         <div className="flipCardHolder">

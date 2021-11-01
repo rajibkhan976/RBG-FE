@@ -244,14 +244,15 @@ const AddProductModal = (props) => {
               <div className="formControl">
                 <label>Upload Product Picture</label>
                 <div className="profile">
+                  <div className="profileUpload">
+                    <input type="file" onChange={(e) => handleImageUpload(e)} />
+                    {/* <span>Upload</span> */}
+                  </div>
                   <div className="profilePicture">
                     <img src={productData.imageUrl} alt="" />
                   </div>
                   <div className="profileText"> Product Picture</div>
-                  <div className="profileUpload">
-                    <input type="file" onChange={(e) => handleImageUpload(e)} />
-                    <span>Upload</span>
-                  </div>
+                  
                 </div>
               </div>
               <div className="formControl">

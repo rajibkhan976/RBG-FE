@@ -107,7 +107,7 @@ const CourseListing = (props) => {
                     </div>
                     <div class="listFeatures">
                         <button class="creatUserBtn" onClick={props.openCourseModal}>
-                            <img class="plusIcon" src={plus_icon} alt="" /><span>Add a Product</span>
+                            <img class="plusIcon" src={plus_icon} alt="" /><span>Add a Course</span>
                         </button>
                     </div>
                 </div>
