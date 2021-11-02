@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import Notifications from "./Notifications";
 import Setup from "../setup/mainPopup/setup";
 import CallModal from "./callModal";
+import { useDispatch } from "react-redux";
+import AuthActions from "../../actions/AuthActions";
 
 import CreateIcon from "../../assets/images/create.png";
 import NotificationIcon from "../../assets/images/notif.png";
@@ -27,6 +29,12 @@ function HeaderDashboard(props) {
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
   };
+
+  const dispatch = useDispatch();
+  const logOut = () => {
+    dispatch(AuthActions.logout());
+  };
+
 
   const toggleUserMenu = () => {
     setStateUserMenu(!stateUserMenu);
@@ -212,7 +220,7 @@ function HeaderDashboard(props) {
             <img src={CreateIcon} alt="" />
           </button>
         )}
-        <div className="menuUser">
+        <div className={stateUserMenu ? "menuUser active" : "menuUser"}>
           <button className="btn btnUserMenu" onClick={toggleUserMenu}>
             <figure
               style={{
@@ -226,6 +234,7 @@ function HeaderDashboard(props) {
             </div>
             <i><img src={blueDownArrow} alt="" /></i>
           </button>
+          {stateUserMenu ? <button onClick={logOut} className="logoutButton">Logout</button> : "" }
         </div>
       </div>
 
