@@ -13,6 +13,8 @@ import blueDownArrow from "../../assets/images/blueDownArrow.svg";
 import callIcon1 from "../../assets/images/callicon1.svg";
 import callIcon2 from "../../assets/images/callicon2.svg";
 import callIcon3 from "../../assets/images/callicon3.svg";
+import sms_icon from "../../assets/images/sms_icon.svg";
+import email_icon from "../../assets/images/email_icon.svg";
 import SettingIcon from "../../assets/images/settings.svg";
 import SettingIconBlue from "../../assets/images/settings_blue.svg";
 import DownloadIcon from "../../assets/images/download.svg";
@@ -24,6 +26,7 @@ function HeaderDashboard(props) {
   const [stateNotifMenu, setStateNotifMenu] = useState(false);
   const [stateUserMenu, setStateUserMenu] = useState(false);
   const [locationLoaded, setLocationLoaded] = useState("user");
+  const [showActionState, setShowActionState] = useState(false);
   const [device, setDevice] = useState(new Device());
   const [deviceMessage, setDeviceMessage] = useState('loading');
   const toggleNotifications = (e) => {
@@ -35,6 +38,9 @@ function HeaderDashboard(props) {
     dispatch(AuthActions.logout());
   };
 
+  const tglActionList = () => {
+    setShowActionState(!showActionState);
+  };
 
   const toggleUserMenu = () => {
     setStateUserMenu(!stateUserMenu);
@@ -139,14 +145,41 @@ function HeaderDashboard(props) {
           <div className="leftListArea">
             <div className="leftList">
               <button className="callToActionBtn" onClick={makeCallModalHandle}>
-                <span className="callBtn violet">
+                <span className="callBtn green">
                   <img src={callIcon3} alt="" />
                 </span>
                 <span className="actionName">Call</span>  
               </button>
-              <button className="listDropBtn">
+              <button className="listDropBtn" onClick={tglActionList}>
                 <img src={blueDownArrow} alt="" />
               </button>
+              {showActionState ? 
+              <div className="leftBtnList">
+                <ul>
+                  <li className="active">
+                    <input type="radio" name="ces" value="call" />
+                    <span className="callBtn green">
+                      <img src={callIcon3} alt="" />
+                    </span>
+                    <span className="actionName">Call</span>
+                  </li>
+                  <li>
+                    <input type="radio" name="ces" value="sms" />
+                    <span className="callBtn violet">
+                      <img src={sms_icon} alt="" />
+                    </span>
+                    <span className="actionName">SMS</span>
+                  </li>
+                  <li>
+                    <input type="radio" name="ces" value="email" />
+                    <span className="callBtn blue">
+                      <img src={email_icon} alt="" />
+                    </span>
+                    <span className="actionName">Email</span>
+                  </li>
+                </ul>
+              </div>
+              : "" }
             </div>
           </div>
           <div className="rightDetails">

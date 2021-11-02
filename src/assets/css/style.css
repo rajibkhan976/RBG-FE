@@ -4269,10 +4269,12 @@ button.saveOverview img {
   border-radius: 5px 0 0 5px;
 }
 .headerCallToAction .leftList{
+  width: 122px;
   border-radius: 5px 0 0 5px;
   color: var(--darkBlue);
   font-size: 13px;
   position: relative;
+  background: #f6f8fa;
 }
 .headerCallToAction .leftList i{
   position: absolute;
@@ -4355,10 +4357,54 @@ button.saveOverview img {
 .red{
   background: #ED4755;
 }
+.blue{
+  background: #009DFF;
+}
 .violet{
   background: #5570C9;
   margin-right: 5px;
 }
+
+.leftBtnList {
+  position: absolute;
+  z-index: 5;
+  width: 125px;
+  margin-left: -1px;
+  background: #f6f8fa;
+  border: 1px solid #D3D9DE;
+  border-radius: 0 0 5px 5px;
+}
+.leftBtnList ul li {
+  position: relative;
+  height: 44px;
+  transition: all 0.3s ease 0s;
+}
+.leftBtnList ul li:hover, 
+.leftBtnList ul li.active {
+  background: #e3e5e7;
+}
+.leftBtnList ul li input {
+  position: absolute;
+  z-index: 5;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+.leftBtnList ul li .callBtn {
+  margin-top: 6px;
+  margin-left: 12px;
+}
+.leftBtnList ul li .callBtn img {
+  max-width: 16px;
+}
+.leftBtnList ul li .actionName {
+  display: inline-block;
+  margin-top: 15px;
+}
+
 .setUpPopUp{
   background: #F6F8FA;
   position: fixed;
