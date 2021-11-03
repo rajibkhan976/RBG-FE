@@ -63,7 +63,7 @@ module.exports = {
     deleteCourseUrl: "https://fbde3pjlce.execute-api.us-east-1.amazonaws.com/dev/course",
     // Number service
     numberServiceUrl: "https://mdaifddy2k.execute-api.us-east-1.amazonaws.com/dev/number",
-    //numberServiceUrl: "http://localhost:3001/dev/number",
+    // numberServiceUrl: "http://localhost:3001/dev/number",
     //Audio template
     audioUploadUrl: "https://9b4395tv11.execute-api.us-east-1.amazonaws.com/dev/template/audio/upload",
     fetchAudiossUrl: "https://i18vj5dg2l.execute-api.us-east-1.amazonaws.com/dev/audio/list",

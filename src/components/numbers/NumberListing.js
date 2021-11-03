@@ -25,6 +25,7 @@ const NumberListing = () => {
   const [numbers, setNumbers] = useState([]);
   const [keyword, setKeyword] = useState("");
   const [option, setOption] = useState(null);
+  const [isSuperAdmin, setIsSuperAdmin] = useState(false);
   const optionsToggleRef = useRef();
   const [paginationData, setPaginationData] = useState(
     {
@@ -93,7 +94,8 @@ const NumberListing = () => {
     try {
       let result = await NumberServices.list(pageId, queryParams);
       setNumbers(result.numbers);
-
+      let superadmin = result.userType == "superadmin" ? true : false;
+      setIsSuperAdmin(superadmin);
       setPaginationData({
         ...paginationData,
         count: result.pagination.count,
@@ -252,54 +254,56 @@ const NumberListing = () => {
           <div className="listInfo">
             <ul className="listPath">
               <li>Number Management</li>
-              <li>Number Lists</li>
+              <li>Number List</li>
             </ul>
-            <h2 className="inDashboardHeader">Number Lists {paginationData && paginationData.count ? paginationData.count : ""}</h2>
+            <h2 className="inDashboardHeader">Number List { isSuperAdmin && paginationData && paginationData.count ? "(" + paginationData.count + ")" : ""}</h2>
             <p className="userListAbout">
               Lorem ipsum dolor sit amet. Semi headline should be here.
             </p>
           </div>
-          <div className="listFeatures">
-            <div className="searchBar">
-              <form onSubmit={handleSearch}>
-                <input
-                  type="search"
-                  name=""
-                  id=""
-                  placeholder="Search groups"
-                  onChange={handleKeywordChange}
-                  autoComplete="off"
-                  value={keyword}
-                />
-                <button className="searchIcon">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="19.069"
-                    height="19"
-                    viewBox="0 0 19.069 19"
-                    id="search-ico"
-                  >
-                    <g transform="translate(-1.5 -1.5)">
-                      <path
-                        className="a"
-                        d="M9.071,2a7.071,7.071,0,1,0,7.071,7.071A7.08,7.08,0,0,0,9.071,2Zm0,12.857a5.786,5.786,0,1,1,5.786-5.786A5.792,5.792,0,0,1,9.071,14.857Z"
-                      />
-                      <path
-                        className="a"
-                        d="M26.954,26.045,23.1,22.188a.643.643,0,1,0-.909.909l3.858,3.857a.643.643,0,0,0,.909-.909Z"
-                        transform="translate(-7.142 -7.143)"
-                      />
-                    </g>
-                  </svg>
-                </button>
-              </form>
-            </div>
+          {isSuperAdmin && 
+            <div className="listFeatures">
+              <div className="searchBar">
+                <form onSubmit={handleSearch}>
+                  <input
+                    type="search"
+                    name=""
+                    id=""
+                    placeholder="Search groups"
+                    onChange={handleKeywordChange}
+                    autoComplete="off"
+                    value={keyword}
+                  />
+                  <button className="searchIcon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="19.069"
+                      height="19"
+                      viewBox="0 0 19.069 19"
+                      id="search-ico"
+                    >
+                      <g transform="translate(-1.5 -1.5)">
+                        <path
+                          className="a"
+                          d="M9.071,2a7.071,7.071,0,1,0,7.071,7.071A7.08,7.08,0,0,0,9.071,2Zm0,12.857a5.786,5.786,0,1,1,5.786-5.786A5.792,5.792,0,0,1,9.071,14.857Z"
+                        />
+                        <path
+                          className="a"
+                          d="M26.954,26.045,23.1,22.188a.643.643,0,1,0-.909.909l3.858,3.857a.643.643,0,0,0,.909-.909Z"
+                          transform="translate(-7.142 -7.143)"
+                        />
+                      </g>
+                    </svg>
+                  </button>
+                </form>
+              </div>
 
-            <button className="creatUserBtn" onClick={buyNumber}>
-              <img className="plusIcon" src={plus_icon} alt="" />
-              <span>Buy & Assign Number</span>
-            </button>
-          </div>
+              <button className="creatUserBtn" onClick={buyNumber}>
+                <img className="plusIcon" src={plus_icon} alt="" />
+                <span>Buy & Assign Number</span>
+              </button>
+            </div>
+          }
         </div>
         <div className="userListBody" ref={optionsToggleRef}>
           <div className="listBody">
@@ -376,18 +380,22 @@ const NumberListing = () => {
                           </span>
                         </div>
                       </div>
+                      
                       <div className="createDate">
                         <button className="btn">{el.createdAt}</button>
-                        <div className="info_3dot_icon">
-                            <button
-                                className="btn"
-                                onClick={() => {
-                                    toggleOptions(key);
-                                }}
-                            >
-                                <img src={info_3dot_icon} alt="" />
-                            </button>
-                        </div>
+                        {isSuperAdmin && 
+                          <div className="info_3dot_icon">
+                              <button
+                                  className="btn"
+                                  onClick={() => {
+                                      toggleOptions(key);
+                                  }}
+                              >
+                                  <img src={info_3dot_icon} alt="" />
+                              </button>
+                          </div>
+                        }
+                        
                         <React.Fragment key={key + "_fragment"}>
                             {/* {console.log('Here', option, key)} */}
                             <div
@@ -431,7 +439,9 @@ const NumberListing = () => {
                                 </button>
                             </div>
                         </React.Fragment>
+                        
                       </div>
+                      
                     </li>
                   </React.Fragment>
                 )
