@@ -107,6 +107,7 @@ const CallSetup = () => {
   
     const closeConfigModal = () => {
         setConfigModalShow(false);
+        fetchNumber();
     }
     const fetchNumber = async () => {
         setIsLoader(true);
@@ -448,9 +449,9 @@ const CallSetup = () => {
                                 </div>
                             </li>
                             {
-                                configurationList.map((list) => {
+                                configurationList.map((list, key) => {
                                     return (
-                                        <li>
+                                        <li key={key}>
                                             <div className="userName">
                                                 <button className="btn"><p>{list.name}</p></button>
                                             </div>
@@ -501,7 +502,7 @@ const CallSetup = () => {
                     </div>
                 </div> : ""
             }
-            { configModalShow && <CallConfiguration closeModal={closeConfigModal} numberId={numberObj._id} conf={selectedConf}/> }
+            { configModalShow && <CallConfiguration openModal={openConfigModal} closeModal={closeConfigModal} numberId={numberObj._id} conf={selectedConf}/> }
         </div>
     );
 }

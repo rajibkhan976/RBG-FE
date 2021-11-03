@@ -7,12 +7,16 @@ import info_3dot_icon from "../../../../assets/images/info_3dot_icon.svg";
 import speaker_icon from "../../../../assets/images/speaker_icon.svg";
 import play_icon from "../../../../assets/images/play_icon.svg";
 import InputFile from "../../../shared/InputFile";
+import {CallSetupService} from "../../../../services/setup/callSetupServices";
+import Loader from "../../../shared/Loader";
 
 
 const CallConfiguration = (props) => {
     const [name, setName] = useState("");
     const [callResponse, setCallResponse] = useState("receive_calls");
     const [schedule, setSchedule] = useState([]);
+    const [nameError, setNameError ]= useState("");
+    const [isLoader, setIsLoader] = useState(false);
     const handleCheck = (val, list) => {
         let exists = false;
         list.some((el) => {
@@ -50,6 +54,54 @@ const CallConfiguration = (props) => {
         updateList[key].endTime = e.target.value;
         setSchedule(updateList);
     }
+    const handleCallChange = (event) => {
+      setName(event.target.value);
+    }
+    const handleCallResponseChange = (event) => {
+      setCallResponse(event.target.value);
+    }
+    const saveData = async (closeModal) => {
+        let isOkay = true;
+        setNameError("");
+        if (name === "") {
+            setNameError("Please provide name.");
+            isOkay = false;
+        }
+        if (isOkay) {
+            setIsLoader(true);
+            let result = CallSetupService.saveCallConfig({
+                name: name,
+                responseType: callResponse,
+                schedules: schedule,
+                twilioNumberId: props.numberId
+            })
+            setIsLoader(false);
+            resetForm();
+            if (closeModal) {
+                props.closeModal();
+            }
+        }
+    }
+    const save = (e) => {
+        e.preventDefault();
+        saveData(false);
+    }
+    const resetForm = (e) => {
+      setName("");
+      setNameError("");
+      setCallResponse('receive_calls');
+        let conf = [{
+            day: [],
+            startTime: "00:00",
+            endTime: "23:00"
+        }];
+        setSchedule(conf);
+    }
+    const saveNew = (e) => {
+        e.preventDefault();
+        saveData(true);
+
+    }
     useEffect(() => {
         let conf = [{
             day: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
@@ -64,6 +116,7 @@ const CallConfiguration = (props) => {
     }, []);
     return(
         <div className="sideMenuOuter">
+            {isLoader ? <Loader /> : ''}
             <div className="sideMenuInner callConfigModal">
                 <button class="btn btn-closeSideMenu" onClick={props.closeModal}>
                     <span></span>
@@ -79,13 +132,16 @@ const CallConfiguration = (props) => {
                             <div className="cmnFormCol">
                                 <div className="cmnFieldName">Config Name</div>
                                 <div class="cmnFormField">
-                                    <input type="text" className="cmnFieldStyle" />
+                                    <input type="text" className="cmnFieldStyle" defaultValue={name} onChange={(e) => handleCallChange(e)}/>
+                                    {nameError !== "" &&
+                                    <span className="errorMsg">{nameError}</span>
+                                    }
                                 </div>
                             </div>
                             <div className="cmnFormCol">
                                 <div className="cmnFieldName">Call Response</div>
                                 <div class="cmnFormField">
-                                    <select className="cmnFieldStyle selectBox" >
+                                    <select className="cmnFieldStyle selectBox" defaultValue={callResponse} onChange={(e) => handleCallResponseChange(e)}>
                                         <option value="receive_calls">Receive Calls</option>
                                     </select>
                                 </div>
@@ -98,7 +154,7 @@ const CallConfiguration = (props) => {
                                 {
                                     schedule.map((list, key) => {
                                         return (
-                                            <div className="cmnFormRow scheduleRow">
+                                            <div className="cmnFormRow scheduleRow" key={key}>
                                                 <div className="cmnFormCol" key={key}>
                                                     <div className="cmnFieldName">Select Day (s)</div>
                                                     <div className="cmnFormField">
@@ -631,8 +687,8 @@ const CallConfiguration = (props) => {
                         </div>
                         <div className="cmnFormRow">
                             <div className="btnGroup centered">
-                                <button className="cmnBtn"><span>Save</span><img src={arrow_forward} alt="" /></button>
-                                <button className="cmnBtn"><span>Save & New</span><img src={arrow_forward} alt="" /></button>
+                                <button className="cmnBtn" onClick={(e) => save(e)}><span>Save</span><img src={arrow_forward} alt="" /></button>
+                                <button className="cmnBtn" onClick={(e) => saveNew(e)}><span>Save & New</span><img src={arrow_forward} alt="" /></button>
                             </div>
                         </div>
                     </form>

@@ -21,6 +21,21 @@ export const CallSetupService = {
 
         }
     },
+    saveCallConfig: async (payload) => {
+        try {
+            const result = await axios.post(config.callSetupUrl, payload,{ headers: headers });
+            return result.data;
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+
+        }
+    },
     getCapabilityToken: async (payload) => {
         try {
             const result = await axios.post(config.callWebhookUrl + "getCapabilityToken" , payload, { headers: headers });
