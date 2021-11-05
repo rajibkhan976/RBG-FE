@@ -21,10 +21,14 @@ function FinalStep(props) {
                             <img src={fileDoneIcon} alt="" />
                         </figure>
                         <h3>The selected file has been uploaded successfully.</h3>
-                        <div className="uploadFileBtn">
-                            View Records
-                            <input type="button" />
-                        </div>
+                        {
+                            custom.newData > 0 ?
+                                <div className="uploadFileBtn">
+                                    View Records
+                                    <input type="button" onClick={() => props.handleParentFun()}/>
+                                </div> : ""
+                        }
+
                     </div>
                     <div className="uploadedDataSummary">
                         <h3>Summary</h3>

@@ -74,21 +74,6 @@ export const ContactService = {
         }
     },
     fetchContact: (payload) => {
-        // try {
-        //     const url = config.getContactsUrl + "/fetch";
-        //     const options = {
-        //         headers: headers
-        //     };
-        //     const result = await axios.post(url, payload, options);
-        //     if (result.status === 200){
-        //         return result.data;
-        //     } else {
-        //         throw new Error(result.data.message);
-        //     }
-        // } catch (error) {
-        //     console.log(error);
-        //     throw new Error(error.response.data.message);
-        // }
         try {
             let configAxios = {
                 method: 'post',

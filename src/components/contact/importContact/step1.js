@@ -60,6 +60,9 @@ function Step1(props) {
     const handlePrimaryField = (event) => {
         setPrimaryField(event.target.value);
     }
+    const downLoadSample = (e) => {
+      e.preventDefault();
+    }
     const submitFirstStep = async () => {
         if (uploadedFile === '') {
             setFileUploadError(true);
@@ -158,13 +161,13 @@ function Step1(props) {
                             </figure>
                             <h3>{fileImportStatus ? fileName : "Choose the file to be imported"}</h3>
                             <p className={fileImportStatus ? "inportInfo hide" : "inportInfo"}>
-                                [Only csv format file is supported]<br />Maximum upload size is 5 MB
+                                [Only csv format file is supported]<br />Maximum upload size should be 5 MB
                             </p>
                             <div className={fileImportStatus ? "uploadFileBtn" : "uploadFileBtn fileInput"}>
                                 {fileImportStatus ? "Remove & New" : "Upload File"}
                                 <input type="file" id="uploadContactFile" onChange={uploadFileFn} accept=".csv"/>
                             </div>
-                            <a href="" className={fileImportStatus ? "hide" : "downloadSample"}>Download sample template for Import</a>
+                            <a href="https://rbg-file-upload.s3.amazonaws.com/testCsv.csv" target="_blank" className={fileImportStatus ? "hide" : "downloadSample"}>Download sample template for Import</a>
                         </div>
                     </div>
                     <div className="importNote">

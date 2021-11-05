@@ -15,7 +15,7 @@ const Contact = () => {
     // key={Math.random().toString()}
     return (
     <>
-      <ContactListing openModal={() => {openModal()}}/>
+      <ContactListing openModal={() => {openModal()}} modalStatus={isModal}/>
         { isModal &&
             <ImportContact hideModal={() => {hideModal()}} />
         }

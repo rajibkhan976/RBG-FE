@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../actions/types";
 import ContactHead from './ContactHead';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -38,7 +38,17 @@ const ContactListing = (props) => {
     const [searchModalVal, setSearchModalVal] = useState("");
     const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "contact")));
     const dispatch = useDispatch();
-
+    const modalId = useSelector((state) => state.contact.contact_modal_id);
+    useEffect(() => {
+        if (modalId === "") {
+            fetchContact();
+        }
+    }, [modalId]);
+    useEffect(() => {
+        if (!props.modalStatus) {
+            fetchContact();
+        }
+    }, [props.modalStatus]);
     const handelSize = () => {
         setTableWidth(window.innerWidth - 504);
     }
@@ -49,7 +59,6 @@ const ContactListing = (props) => {
 
 
     useEffect(() => {
-        // fetchColumns();
         (async () => {
             const localSavedCol = localStorage.getItem("storedSavedColList", []);
             const storedSavedColList = (localSavedCol === null) ? [] : JSON.parse(localSavedCol);
@@ -253,8 +262,6 @@ const ContactListing = (props) => {
     }
 
     const handleSortBy = (field) => {
-
-        console.log(field);
         // Set sort type
         let type = "asc"
         if (field == sortBy) {
@@ -274,7 +281,6 @@ const ContactListing = (props) => {
 
     const handleKeywordChange = (event) => {
         setKeyword(event.target.value ? event.target.value : '');
-        console.log('Keyword', keyword);
     }
 
     const handleSearch = (event) => {
@@ -294,7 +300,6 @@ const ContactListing = (props) => {
     }
 
     const GenerateColumns = () => {
-        console.log(savedColList);
         return (
             <li className="listHeading">
                 {savedColList.map((item, index) => {

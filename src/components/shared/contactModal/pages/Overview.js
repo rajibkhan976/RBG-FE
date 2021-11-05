@@ -8,53 +8,47 @@ import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 const Overview = (props) => {
     const [formScrollStatus, setFormScrollStatus] = useState(false);
     const [isLoader, setIsLoader] = useState(false);
-
     const [basicinfoFname, setBasicinfoFname] = useState('');
     const [basicinfoLname, setBasicinfoLname] = useState('');
     const [basicinfoDob, setBasicinfoDob] = useState('');
     const [basicinfoEmail, setBasicinfoEmail] = useState('');
-    const [basicinfoPhone, setBasicinfoPhone] = useState('');
-    const [basicinfoMobile, setBasicinfoMobile] = useState('');
     const [basicinfoCompany, setBasicinfoCompany] = useState('');
     const [basicinfoJobRole, setBasicinfoJobRole] = useState('');
     const [basicinfoMomName, setBasicinfoMomName] = useState('');
-    const [basicinfoMomPhone, setBasicinfoMomPhone] = useState('');
     const [basicinfoDadName, setBasicinfoDadName] = useState('');
-    const [basicinfoDadPnone, setBasicinfoDadPhone] = useState('');
     const [basicinfoAddress1, setBasicinfoAddress1] = useState('');
     const [basicinfoAddress2, setBasicinfoAddress2] = useState('');
     const [basicinfoCity, setBasicinfoCity] = useState('');
     const [basicinfoState, setBasicinfoState] = useState('');
     const [basicinfoZip, setBasicinfoZip] = useState('');
     const [basicinfoCountry, setBasicinfoCountry] = useState('');
-
     const [phoneCountryCode, setPhoneCountryCode] = useState([]);
+
+    const [basicinfoPhone, setBasicinfoPhone] = useState({
+        countryCode: "US",
+        dailCode: "+1",
+        number: ""
+    });
     const [basicinfoMobilePhone, setBasicinfoMobilePhone] = useState({
         countryCode: "US",
         dailCode: "+1",
-        number: "1234567890"
+        number: ""
+    });
+    const [basicinfoMomPhone, setBasicinfoMomPhone] = useState({
+        countryCode: "US",
+        dailCode: "+1",
+        number: ""
+    });
+    const [basicinfoDadPnone, setBasicinfoDadPhone] = useState({
+        countryCode: "US",
+        dailCode: "+1",
+        number: ""
     });
     const [contact, setContact] = useState('');
 
     const [formErrorMsg, setFormErrorMsg] = useState({
-        fName: "",
-        lName: "",
-        dob: "",
         email: "",
-        phone: "",
-        mobile: "",
-        company: "",
-        jobRole: "",
-        momName: "",
-        momPhone: "",
-        dadName: "",
-        dadPhone: "",
-        address1: "",
-        address2: "",
-        city: "",
-        state: "",
-        zip: "",
-        country: ""
+        phone: ""
     });
 
 
@@ -80,21 +74,36 @@ const Overview = (props) => {
             setBasicinfoLname(contact.data.contact.lastName);
             setBasicinfoDob(contact.data.contact.dob);
             setBasicinfoEmail(contact.data.contact.email);
-            setBasicinfoPhone(contact.data.contact.phone);
-            setBasicinfoMobile(contact.data.contact.mobile);
+            setBasicinfoPhone({
+                countryCode: "US",
+                dailCode: "+1",
+                number: ""
+            });
+            setBasicinfoMobilePhone({
+                countryCode: "US",
+                dailCode: "+1",
+                number: ""
+            });
+            setBasicinfoMomPhone({
+                countryCode: "US",
+                dailCode: "+1",
+                number: ""
+            });
+            setBasicinfoDadPhone({
+                countryCode: "US",
+                dailCode: "+1",
+                number: ""
+            });
             setBasicinfoCompany(contact.data.contact.company);
             setBasicinfoJobRole(contact.data.contact.jobRole);
             setBasicinfoMomName(contact.data.contact.momName);
-            setBasicinfoMomPhone(contact.data.contact.momCellPhone);
             setBasicinfoDadName(contact.data.contact.dadName);
-            setBasicinfoDadPhone(contact.data.contact.dadCellPhone);
             setBasicinfoAddress1(contact.data.contact.address1);
             setBasicinfoAddress2(contact.data.contact.address2);
             setBasicinfoCity(contact.data.contact.city);
             setBasicinfoState(contact.data.contact.state);
             setBasicinfoZip(contact.data.contact.zip);
             setBasicinfoCountry(contact.data.contact.country);
-            
         } else {
             console.log(contact.message);
         }
@@ -125,21 +134,6 @@ const Overview = (props) => {
         setBasicinfoEmail(event.target.value);
     };
 
-    const handelBasicinfoPhone = (event) => {
-        let pattern = new RegExp(/^[0-9\b]+$/);
-
-        if (!pattern.test(event.target.value)) {
-            return false;
-        } else {
-            setBasicinfoPhone(event.target.value);
-        }
-        
-    };
-
-    const handelBasicinfoMobile = (event) => {
-        setBasicinfoMobile(event.target.value);
-    };
-
     const handelBasicinfoCompany = (e) => {
         setBasicinfoCompany(e.target.value);
     }
@@ -152,18 +146,9 @@ const Overview = (props) => {
         setBasicinfoMomName(event.target.value);
     };
 
-    const handelBasicinfoMomPhone = (event) => {
-        setBasicinfoMomPhone(event.target.value);
-    };
-
     const handelBasicinfoDadName = (event) => {
         setBasicinfoDadName(event.target.value);
     };
-
-    const handelBasicinfoDadPhone = (event) => {
-        setBasicinfoDadPhone(event.target.value);
-    };
-
     const handelBasicinfoAddress1 = (event) => {
         setBasicinfoAddress1(event.target.value);
     };
@@ -189,15 +174,77 @@ const Overview = (props) => {
     };
 
 
-    const handelBasicinfoMobilePhon = (event) => {
-        const {name, value} = event.target.value;
-        if(name == "countryCode"){
+    const handelBasicinfoMobilePhone = (event) => {
+        const {name, value} = event.target;
+        if(name === "countryCode"){
             const daileCodeindex = event.target[event.target.selectedIndex];
-            let dailCode = daileCodeindex != undefined ? daileCodeindex.getAttribute("data-dailcode") : "+1";
+            let dailCode = daileCodeindex !== undefined ? daileCodeindex.getAttribute("data-dailcode") : "+1";
             setBasicinfoMobilePhone(prevState => ({...prevState, dailCode: dailCode}));
+            setBasicinfoMobilePhone(prevState => ({...prevState, countryCode: value}));
         }
-        
-        setBasicinfoMobilePhone(prevState => ({...prevState, [name]: value}));
+        if (name === "number") {
+            let pattern = new RegExp(/^[0-9\b]+$/);
+            if (!pattern.test(event.target.value)) {
+                return false;
+            } else {
+                setBasicinfoMobilePhone(prevState => ({...prevState, [name]: value}));
+            }
+        }
+    };
+
+    const handelBasicinfoPhone = (event) => {
+        const {name, value} = event.target;
+        if(name === "countryCode"){
+            const daileCodeindex = event.target[event.target.selectedIndex];
+            let dailCode = daileCodeindex !== undefined ? daileCodeindex.getAttribute("data-dailcode") : "+1";
+            setBasicinfoPhone(prevState => ({...prevState, dailCode: dailCode}));
+            setBasicinfoPhone(prevState => ({...prevState, countryCode: value}));
+        }
+        if (name === "number") {
+            let pattern = new RegExp(/^[0-9\b]+$/);
+            if (!pattern.test(event.target.value)) {
+                return false;
+            } else {
+                setBasicinfoPhone(prevState => ({...prevState, number: value}));
+            }
+        }
+    };
+
+    const handelBasicinfoMomPhone = (event) => {
+        const {name, value} = event.target;
+
+        if(name === "countryCode"){
+            const daileCodeindex = event.target[event.target.selectedIndex];
+            let dailCode = daileCodeindex !== undefined ? daileCodeindex.getAttribute("data-dailcode") : "+1";
+            setBasicinfoMomPhone(prevState => ({...prevState, dailCode: dailCode}));
+            setBasicinfoMomPhone(prevState => ({...prevState, countryCode: value}));
+        }
+        if (name === "number") {
+            let pattern = new RegExp(/^[0-9\b]+$/);
+            if (!pattern.test(event.target.value)) {
+                return false;
+            } else {
+                setBasicinfoMomPhone(prevState => ({...prevState, number: value}));
+            }
+        }
+    };
+
+    const handelBasicinfoDadPhone = (event) => {
+        const {name, value} = event.target;
+        if(name === "countryCode"){
+            const daileCodeindex = event.target[event.target.selectedIndex];
+            let dailCode = daileCodeindex !== undefined ? daileCodeindex.getAttribute("data-dailcode") : "+1";
+            setBasicinfoDadPhone(prevState => ({...prevState, dailCode: dailCode}));
+            setBasicinfoDadPhone(prevState => ({...prevState, countryCode: value}));
+        }
+        if (name === "number") {
+            let pattern = new RegExp(/^[0-9\b]+$/);
+            if (!pattern.test(event.target.value)) {
+                return false;
+            } else {
+                setBasicinfoDadPhone(prevState => ({...prevState, [name]: value}));
+            }
+        }
     };
 
     const countrycodeOpt = phoneCountryCode ? phoneCountryCode.map((el, key) => {
@@ -218,30 +265,14 @@ const Overview = (props) => {
     };
 
 
-    const onContactSubmit = async (e) => {
+    const onContactSubmit = (e) => {
         e.preventDefault();
-        
         let formErrorsCopy = formErrorMsg;
         let isError = false;
 
-        if (!basicinfoFname) {
-            isError = true;
-            formErrorsCopy.fName = "Please fillup the first name";
-        }
-
-        if (!basicinfoLname) {
-            isError = true;
-            formErrorsCopy.lName = "Please fillup the last name";
-        }
-
-        if (!basicinfoDob) {
-            isError = true;
-            formErrorsCopy.dob = "Please fillup the date of birth";
-        }
-        
         if (!basicinfoEmail) {
             isError = true;
-            formErrorsCopy.email = "Please fillup your email";
+            formErrorsCopy.email = "Please fill up your email";
         } else {
             if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(basicinfoEmail)){
                 return true;
@@ -250,75 +281,10 @@ const Overview = (props) => {
                 formErrorsCopy.email = "Please enter a valid email address";
             }
         }
-
-        if (!basicinfoPhone) {
+        let pattern = new RegExp(/^[0-9\b]+$/);
+        if (basicinfoPhone.number === "" || !pattern.test(basicinfoPhone.number)) {
             isError = true;
-            formErrorsCopy.phone = "Please fillup your phone number";
-        }
-
-        if (!basicinfoMobile) {
-            isError = true;
-            formErrorsCopy.mobile = "Please fillup your mobile number";
-        }
-
-        if (!basicinfoCompany) {
-            isError = true;
-            formErrorsCopy.company = "Please fillup the company name";
-        }
-
-        if (!basicinfoJobRole) {
-            isError = true;
-            formErrorsCopy.jobRole = "Please fillup your job role";
-        }
-
-        if (!basicinfoMomName) {
-            isError = true;
-            formErrorsCopy.momName = "Please fillup mother's name";
-        }
-
-        if (!basicinfoMomPhone) {
-            isError = true;
-            formErrorsCopy.momPhone = "Please fillup mother's phone number";
-        }
-
-        if (!basicinfoDadName) {
-            isError = true;
-            formErrorsCopy.dadName = "Please fillup father's name";
-        }
-
-        if (!basicinfoDadPnone) {
-            isError = true;
-            formErrorsCopy.dadPhone = "Please fillup father's phone number";
-        }
-
-        if (!basicinfoAddress1) {
-            isError = true;
-            formErrorsCopy.address1 = "Please fillup the address1";
-        }
-
-        if (!basicinfoAddress2) {
-            isError = true;
-            formErrorsCopy.address2 = "Please fillup the address2";
-        }
-
-        if (!basicinfoCity) {
-            isError = true;
-            formErrorsCopy.city = "Please fillup the city";
-        }
-
-        if (!basicinfoState) {
-            isError = true;
-            formErrorsCopy.state = "Please fillup the state";
-        }
-
-        if (!basicinfoZip) {
-            isError = true;
-            formErrorsCopy.zip = "Please fillup the zip code";
-        }
-
-        if (!basicinfoCountry) {
-            isError = true;
-            formErrorsCopy.country = "Please fillup the country";
+            formErrorsCopy.phone = "Please fill up your phone number";
         }
 
         if (isError) {
@@ -326,53 +292,16 @@ const Overview = (props) => {
              * Set form errors
              */
             setFormErrorMsg({
-                fName: formErrorMsg.fName,
-                lName: formErrorMsg.lName,
-                dob: formErrorMsg.dob,
                 email: formErrorMsg.email,
-                phone: formErrorMsg.phone,
-                mobile: formErrorMsg.mobile,
-                company: formErrorMsg.company,
-                jobRole: formErrorMsg.jobRole,
-                momName: formErrorMsg.momName,
-                momPhone: formErrorMsg.momPhone,
-                dadName: formErrorMsg.dadName,
-                dadPhone: formErrorMsg.dadPhone,
-                address1: formErrorMsg.address1,
-                address2: formErrorMsg.address2,
-                city: formErrorMsg.city,
-                state: formErrorMsg.state,
-                zip: formErrorMsg.zip,
-                country: formErrorMsg.country
+                phone: formErrorMsg.phone
             });
             console.log(formErrorMsg, "formErrorMsg*******************");
-            setTimeout(
-                () => setFormErrorMsg({
-                    ...formErrorMsg,
-                    fName: "",
-                    lName: "",
-                    dob: "",
+            setTimeout(() => setFormErrorMsg({
                     email: "",
-                    phone: "",
-                    mobile: "",
-                    company: "",
-                    jobRole: "",
-                    momName: "",
-                    momPhone: "",
-                    dadName: "",
-                    dadPhone: "",
-                    address1: "",
-                    address2: "",
-                    city: "",
-                    state: "",
-                    zip: "",
-                    country: ""
-                }),
-                5000
-            );
+                    phone: ""
+                }), 5000);
         }
     }
-
 
     return(
         <div className={formScrollStatus ? "contactModalTab expanded" : "contactModalTab"} onScroll={formScroll}>
@@ -401,7 +330,7 @@ const Overview = (props) => {
                     </li>
                 </ul>
             </div>
-            <form onSubmit={onContactSubmit}>
+            <form>
             <div className="overviewFormWrap">
                 <div className="overviewForm cmnForm">
                     <div className="cmnFormHead">
@@ -454,13 +383,13 @@ const Overview = (props) => {
                             </div>
                             <div className={formErrorMsg.phone ? "cmnFormField countryCodeField errorField" : "cmnFormField countryCodeField"}>
                                 <div className="countryCode cmnFieldStyle">
-                                    <div className="countryName">{basicinfoMobilePhone.countryCode}</div>
-                                    <div className="daileCode">{basicinfoMobilePhone.dailCode}</div>
-                                    <select className="selectCountry" name="countryCode" defaultValue={basicinfoMobilePhone.countryCode} onChange={handelBasicinfoMobilePhon}>
+                                    <div className="countryName">{basicinfoPhone.countryCode}</div>
+                                    <div className="daileCode">{basicinfoPhone.dailCode}</div>
+                                    <select className="selectCountry" name="countryCode" defaultValue={basicinfoPhone.countryCode} onChange={handelBasicinfoPhone}>
                                         {countrycodeOpt}
                                     </select>
                                 </div>
-                                <input type="phone" className="cmnFieldStyle" name="number" placeholder="Eg. (555) 555-1234" value={basicinfoPhone} onChange={handelBasicinfoPhone} />
+                                <input type="phone" className="cmnFieldStyle" name="number" placeholder="Eg. (555) 555-1234" value={basicinfoPhone.number} onChange={handelBasicinfoPhone} />
                                 {formErrorMsg.phone ? <p className="errorMsg">{formErrorMsg.phone}</p> : ""}
                             </div>
                         </div>
@@ -472,11 +401,11 @@ const Overview = (props) => {
                                 <div className="countryCode cmnFieldStyle">
                                     <div className="countryName">{basicinfoMobilePhone.countryCode}</div>
                                     <div className="daileCode">{basicinfoMobilePhone.dailCode}</div>
-                                    <select className="selectCountry" name="countryCode" defaultValue={basicinfoMobilePhone.countryCode} onChange={handelBasicinfoMobilePhon}>
+                                    <select className="selectCountry" name="countryCode" defaultValue={basicinfoMobilePhone.countryCode} onChange={handelBasicinfoMobilePhone}>
                                         {countrycodeOpt}
                                     </select>
                                 </div>
-                                <input type="phone" className="cmnFieldStyle" name="number" placeholder="Eg. (555) 555-1234" value={basicinfoMobile} onChange={handelBasicinfoMobile} />
+                                <input type="phone" className="cmnFieldStyle" name="number" placeholder="Eg. (555) 555-1234" value={basicinfoMobilePhone.number} onChange={handelBasicinfoMobilePhone} />
                                 {formErrorMsg.mobile ? <p className="errorMsg">{formErrorMsg.mobile}</p> : ""}
                             </div>
                         </div>
@@ -573,13 +502,13 @@ const Overview = (props) => {
                             </div>
                             <div className={formErrorMsg.momPhone ? "cmnFormField countryCodeField errorField" : "cmnFormField countryCodeField"}>
                                 <div className="countryCode cmnFieldStyle">
-                                    <div className="countryName">{basicinfoMobilePhone.countryCode}</div>
-                                    <div className="daileCode">{basicinfoMobilePhone.dailCode}</div>
-                                    <select className="selectCountry" name="countryCode" defaultValue={basicinfoMobilePhone.countryCode} onChange={handelBasicinfoMobilePhon}>
+                                    <div className="countryName">{basicinfoMomPhone.countryCode}</div>
+                                    <div className="daileCode">{basicinfoMomPhone.dailCode}</div>
+                                    <select className="selectCountry" name="countryCode" defaultValue={basicinfoMomPhone.countryCode} onChange={handelBasicinfoMomPhone}>
                                         {countrycodeOpt}
                                     </select>
                                 </div>
-                                <input type="phone" className="cmnFieldStyle" name="number" placeholder="Eg. (555) 555-1234" defaultValue={basicinfoMomPhone} onChange={handelBasicinfoMomPhone} />
+                                <input type="phone" className="cmnFieldStyle" name="number" placeholder="Eg. (555) 555-1234" defaultValue={basicinfoMomPhone.number} onChange={handelBasicinfoMomPhone} />
                                 {formErrorMsg.momPhone ? <p className="errorMsg">{formErrorMsg.momPhone}</p> : ""}
                             </div>
                         </div>
@@ -600,13 +529,13 @@ const Overview = (props) => {
                             </div>
                             <div className={formErrorMsg.dadPhone ? "cmnFormField countryCodeField errorField" : "cmnFormField countryCodeField"}>
                                 <div className="countryCode cmnFieldStyle">
-                                    <div className="countryName">{basicinfoMobilePhone.countryCode}</div>
-                                    <div className="daileCode">{basicinfoMobilePhone.dailCode}</div>
-                                    <select className="selectCountry" name="countryCode" defaultValue={basicinfoMobilePhone.countryCode} onChange={handelBasicinfoMobilePhon}>
+                                    <div className="countryName">{basicinfoDadPnone.countryCode}</div>
+                                    <div className="daileCode">{basicinfoDadPnone.dailCode}</div>
+                                    <select className="selectCountry" name="countryCode" defaultValue={basicinfoDadPnone.countryCode} onChange={handelBasicinfoDadPhone}>
                                         {countrycodeOpt}
                                     </select>
                                 </div>
-                                <input type="phone" className="cmnFieldStyle" name="number" placeholder="Eg. (555) 555-1234" defaultValue={basicinfoDadPnone} onChange={handelBasicinfoDadPhone} />
+                                <input type="phone" className="cmnFieldStyle" name="number" placeholder="Eg. (555) 555-1234" defaultValue={basicinfoDadPnone.number} onChange={handelBasicinfoDadPhone} />
                                 {formErrorMsg.dadPhone ? <p className="errorMsg">{formErrorMsg.dadPhone}</p> : ""}
                             </div>
                         </div>
@@ -739,7 +668,7 @@ const Overview = (props) => {
                     </div> */}
                     <div className="cmnFormRow">
                         <div className="formActBtnWrap">
-                            <button className="saveNnewBtn saveOverview" type="submit">Save and Update <img src={arrow_forward} alt="" /></button>
+                            <button className="saveNnewBtn saveOverview" type="button" onClick={(e) => onContactSubmit(e)}>Save and Update <img src={arrow_forward} alt="" /></button>
                             <button className="btn-link">Cancel</button>
                         </div>
                         
