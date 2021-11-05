@@ -142,17 +142,19 @@ const CourseListing = (props) => {
                                             </div>
                                         </div>
                                         <div className="productListRight">
-                                            <div className="chooseSize">
-                                                <p>Duration</p>
-                                                <span>{elem.duration.toUpperCase()}</span>
+                                            <div className="courseListing_container">
+                                                <div className="courseListingText1">
+                                                    <p>Duration : </p>
+                                                    <span> {elem.duration.toUpperCase()}</span>
+                                                </div>
+                                                <div className="courseListingText1">
+                                                    <p>Billing Cycle : </p>
+                                                    <span class="active"> {elem.billing_cycle.toUpperCase()}</span>
+                                                </div>                                                       
                                             </div>
-                                            <div className="chooseSize">
-                                                <p>Payment Type</p>
-                                                <span>{elem.payment_type.toUpperCase()}</span>
-                                            </div>
-                                            <div className="chooseSize">
-                                                <p>Billing Cycle</p>
-                                                <span class="active">{elem.billing_cycle.toUpperCase()}</span>
+                                            <div className="courseListingText1 stAlone">
+                                                <p>Payment Type : </p>
+                                                <span> {elem.payment_type.toUpperCase()}</span>
                                             </div>
                                             <div className="sideEditOption">
                                                 <button className="showList" onClick={() => toogleActionList(key)}>
