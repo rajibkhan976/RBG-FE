@@ -110,7 +110,7 @@ const NumberListing = () => {
   }
 
   useEffect(() => {
-    fetchNumberList();
+   // fetchNumberList();
   }, []);
 
   const addNewNumber = (newNumber) => {
