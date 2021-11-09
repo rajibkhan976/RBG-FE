@@ -45,6 +45,7 @@ const Roles = () => {
       <RoleCreateModal
         createButton={createButton}
         setCreateButton={setCreateButton}
+        getData={getDataFn}
       />
     </>
   );

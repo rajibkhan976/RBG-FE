@@ -36,8 +36,9 @@ const RoleModal = (props) => {
   });
   const [saveAndNew, setSaveAndNew] = useState(false);
   const messageDelay = 5000; // ms
+  const [isLoader, setIsLoader] = useState(false);
 
-  console.log("formErrors", formErrors);
+  // console.log("formErrors", formErrors);
 
   /**
    * Auto hide success or error message
@@ -45,7 +46,8 @@ const RoleModal = (props) => {
   useEffect(() => {
     if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
     if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
-  }, [successMsg, errorMsg])
+    if (formErrors.name) setTimeout(() => { setFormErrors({ name: "" }) }, messageDelay)
+  }, [successMsg, errorMsg, formErrors])
 
   useEffect(() => {
     /**
@@ -181,6 +183,8 @@ const RoleModal = (props) => {
                 setSaveAndNew(false);
                 props.setCreateButton(null);
                 props.setCreateButton('role');
+                utils.addQueryParameter('page', 1);
+                fetchRoles(1);
               } else {
                 utils.addQueryParameter('page', 1);
                 props.setCreateButton(null);
@@ -198,6 +202,33 @@ const RoleModal = (props) => {
         console.log("Error in role create", e)
         setErrorMsg(e.message);
       }
+    }
+  }
+
+  /**
+     * Send the data to group listing component
+     * @param {*} data
+     */
+  const broadcastToParent = (data) => {
+    props.getData(data);
+  };
+
+  /**
+     * Function to fetch users based on filter
+     * @returns 
+     */
+  const fetchRoles = async (pageId, queryParams = null) => {
+    try {
+      setIsLoader(true);
+      const result = await RoleServices.fetchRoles(pageId, queryParams);
+      console.log('Role listing result', result.roles);
+      if (result) {
+        broadcastToParent(result);
+      }
+    } catch (e) {
+      console.log("Error in role listing", e);
+    } finally {
+      setIsLoader(false);
     }
   }
 
