@@ -23,10 +23,16 @@ const UserModal = (props) => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [isOwner, setIsOwner] = useState(false);
+    const [isAssociateOwner, setIsAssociateOwner] = useState(false);
     const [logo, setLogo] = useState(null);
     const [logoName, setLogoName] = useState("");
     const [orgName, setOrgName] = useState("");
+    const [orgEmail, setOrgEmail] = useState("");
     const [orgDescription, setOrgDescription] = useState("");
+    const [associationName, setAssociationName] = useState("");
+    const [associationEmail, setAssociationEmail] = useState("");
+    const [associationDescription, setAssociationDescription] = useState("");
+    const [isFranchise, setIsFranchise] = useState(false);
     const [processing, setProcessing] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
@@ -36,8 +42,12 @@ const UserModal = (props) => {
         phoneNumber: "",
         email: "",
         orgName: "",
+        orgEmail: "",
         orgDescription: "",
-        groupName: ""
+        groupName: "",
+        associationName: "",
+        associationEmail: "",
+        associationDescription: "",
     });
     const [roles, setRoles] = useState(null);
     const [groups, setGroups] = useState(null);
@@ -62,6 +72,8 @@ const UserModal = (props) => {
 
     const [resetPermissions, setResetPermissions] = useState(false);
     const messageDelay = 5000; // ms
+    const [associationList, setAssociationList] = useState([]);
+    const [associationId, setAssociationId] = useState('');
 
     const fetchCountry = async () => {
         let conntryResponse = await ContactService.fetchCountry();
@@ -75,10 +87,22 @@ const UserModal = (props) => {
     useEffect(() => {
         if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
         if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
-    }, [successMsg, errorMsg])
+    }, [successMsg, errorMsg]);
+    
+    /*
+     * Fetch associaton list data
+     */
+    const fetchAssociations = async () => {
+        let associations = await UserServices.fetchAssociations();
+        if (associations) {
+            setAssociationList(associations);
+        }
+        console.log('associations', associations);
+    };
 
     useEffect(() => {
         fetchCountry();
+        fetchAssociations();
     }, []);
 
     const countrycodeOpt = phoneCountryCode ? phoneCountryCode.map((el, key) => {
@@ -128,11 +152,26 @@ const UserModal = (props) => {
             console.log("Gym owner")
             setIsOwner(true);
             setOrgName(editUser.organization.name);
+            setOrgEmail(editUser.organization.email);
             setOrgDescription(editUser.organization.description);
             setLogo(editUser.organization.logo ? (config.bucketUrl + editUser.organization.logo) : null);
             setLogoName(editUser.organization.logo);
+            setAssociationId(editUser.organization.associationId);
         } else {
             setIsOwner(false);
+        }
+
+        //association edit details
+        if (editUser.isAssociationOwner) {
+            console.log("association owner")
+            setIsAssociateOwner(true);
+            setAssociationId(editUser.association._id);
+            setAssociationName(editUser.association.name);
+            setAssociationEmail(editUser.association.email);
+            setAssociationDescription(editUser.association.description);
+            setIsFranchise(editUser.association.isFranchise);
+        } else {
+            setIsAssociateOwner(false);
         }
 
         /**
@@ -294,6 +333,33 @@ const UserModal = (props) => {
         setEmail(event.target.value);
     };
 
+    const handleUserTypeChange = (event) => {
+        console.log('event user type', event.target.value);
+        let userType = event.target.value;
+        if (userType === 'organization') {
+            setIsAssociateOwner(false);
+            setIsOwner(true);
+        } else {
+            setIsOwner(false);
+            setIsAssociateOwner(true);
+        }
+    }
+
+    /**
+     * Handle franchise type change
+     * @param {*} event 
+     */
+    const handleFranchiseTypeChange = (event) => {
+        console.log('event franchise type', event.target.value);
+        let franchiseType = event.target.value;
+        if (franchiseType === 'franchise') {
+            setIsFranchise(true)
+        } else {
+            setIsFranchise(false);
+        }
+    }
+
+
     /**
      * Handle id org owner checkbox
      * @param {*} event 
@@ -312,12 +378,59 @@ const UserModal = (props) => {
     }
 
     /**
+     * Handle org name change
+     * @param {*} event 
+     */
+    const handleOrgEmailChange = (event) => {
+        event.preventDefault();
+        setOrgEmail(event.target.value);
+    }
+
+    /**
      * Handle org description change
      * @param {*} event 
      */
     const handleOrgDescriptionChange = (event) => {
         event.preventDefault();
         setOrgDescription(event.target.value)
+    }
+
+    /**
+     * Handle associate name change
+     * @param {*} event 
+     */
+    const handleAssociateNameChange = (event) => {
+        event.preventDefault();
+        setAssociationName(event.target.value);
+    }
+
+    /**
+     * Handle associate email change
+     * @param {*} event 
+     */
+    const handleAssociateEmailChange = (event) => {
+        event.preventDefault();
+        setAssociationEmail(event.target.value);
+    }
+
+    /**
+     * Handle associate description change
+     * @param {*} event 
+     */
+    const handleAssociateDescriptionChange = (event) => {
+        event.preventDefault();
+        setAssociationDescription(event.target.value)
+    }
+
+    /**
+     * Handle role change 
+     * @param {*} event 
+     */
+     const handleAssociatonChange = (event) => {
+        event.preventDefault();
+        console.log(event.target.value);
+        setAssociationId(event.target.value);
+        console.log('Set association id');
     }
 
 
@@ -497,6 +610,33 @@ const UserModal = (props) => {
         }
 
         /**
+         * Check association name
+         */
+        if (isAssociateOwner && !associationName) {
+            isError = true;
+            formErrorsCopy.associationName = "Please fillup the name";
+
+        }
+
+        /**
+         * Check association name
+         */
+         if (isAssociateOwner && !associationEmail) {
+            isError = true;
+            formErrorsCopy.associationEmail = "Please fillup the email";
+
+        }
+
+        /**
+         * Check association description
+         */
+        if (isAssociateOwner && !associationDescription) {
+            isError = true;
+            formErrorsCopy.associationDescription = "Please fillup the description";
+
+        }
+
+        /**
          * Check new group name
          */
         if (isModifiedPermission && !groupName) {
@@ -519,7 +659,10 @@ const UserModal = (props) => {
                 email: formErrors.email,
                 orgName: formErrors.orgName,
                 orgDescription: formErrors.orgDescription,
-                groupName: formErrors.groupName
+                groupName: formErrors.groupName,
+                associationName: formErrors.associationName,
+                associationEmail: formErrors.associationEmail,
+                associationDescription: formErrors.associationDescription,
             });
             setTimeout(
                 () => setFormErrors({
@@ -528,7 +671,10 @@ const UserModal = (props) => {
                     lastName: "",
                     phoneNumber: "",
                     email: "",
-                    groupName: ""
+                    groupName: "",
+                    associationName: "",
+                    associationEmail: "",
+                    associationDescription: ""
                 }),
                 5000
             );
@@ -560,13 +706,16 @@ const UserModal = (props) => {
              * Submit organization create form 
              */
             let organizationId = null;
+            let assoId = null;
             if (isOwner) {
                 let slug = orgName.toLowerCase().replace(' ', '-');
                 let orgPayload = {
                     name: orgName,
+                    email: orgEmail,
                     slug: slug,
                     code: slug,
                     description: orgDescription,
+                    associationId: associationId,
                     logo: logoName,
                     status: "active"
                 }
@@ -586,6 +735,7 @@ const UserModal = (props) => {
                         .then(result => {
                             console.log("Org " + operationOrgMethod, result);
                             organizationId = result._id;
+                            assoId = result.associationId;
                         })
                 } catch (e) {
                     setProcessing(false);
@@ -615,7 +765,16 @@ const UserModal = (props) => {
                 groupId: newGroupId ? newGroupId : groupId,
                 image: profilePicName,
                 organizationId: organizationId,
-                isOwner: isOwner
+                isOwner: isOwner,
+                isAssociateOwner: isAssociateOwner,
+                associationId: assoId,
+                association: {
+                    name: associationName,
+                    slug: associationName.toLowerCase().replace(' ', '-'),
+                    email: associationEmail,
+                    description: associationDescription,
+                    isFranchise: isFranchise
+                }
             };
 
             /**
@@ -625,6 +784,10 @@ const UserModal = (props) => {
             if (editId) {
                 operationMethod = "editUser";
                 payload.id = editId;
+            }
+            //Attach association ID
+            if(editId && associationId){
+                payload.association.id = associationId;
             }
 
 
@@ -803,9 +966,27 @@ const UserModal = (props) => {
                                         <div className="infoField orgSection">
 
                                             {!editId && isOrgPermission && (
-                                                <div className="formField">
-                                                    <p className="">Is it organization owner?
 
+                                                <div className="cmnFormRow">
+                                                    <div className="cmnFieldName">Select Type</div>
+                                                    <div className="cmnFormField radioGroup" onChange={handleUserTypeChange}>
+                                                        <label className="cmnFormRadioLable">
+                                                            <div className="circleRadio">
+                                                                <input type="radio" value="organization" name="userType" />
+                                                                <span></span>
+                                                            </div>
+                                                            Organization
+                                                        </label>
+                                                        <label className="cmnFormRadioLable">
+                                                            <div className="circleRadio">
+                                                                <input type="radio" value="association" name="userType" />
+                                                                <span></span>
+                                                            </div>
+                                                            Association
+                                                        </label>
+                                                    </div>
+
+                                                    {/* <p className="">Is it organization owner?
                                                         <div className="customCheckbox marginLeft">
                                                             <input
                                                                 type="checkbox"
@@ -815,7 +996,7 @@ const UserModal = (props) => {
                                                             />
                                                             <span></span>
                                                         </div>
-                                                    </p>
+                                                    </p> */}
                                                 </div>
                                             )}
 
@@ -837,6 +1018,9 @@ const UserModal = (props) => {
                                                                     </label>
                                                                 </div>
                                                             </div>
+
+                                                        </li>
+                                                        <li>
                                                             <div className={formErrors.orgName ? "formField w-50 error" : "formField w-50"}>
                                                                 <p>Organization Name</p>
                                                                 <div className="inFormField">
@@ -849,6 +1033,19 @@ const UserModal = (props) => {
                                                                     />
                                                                 </div>
                                                                 {formErrors.orgName ? <span className="errorMsg">{formErrors.orgName}</span> : ''}
+                                                            </div>
+                                                            <div className={formErrors.orgName ? "formField w-50 error" : "formField w-50"}>
+                                                                <p>Organization Email</p>
+                                                                <div className="inFormField">
+                                                                    <input
+                                                                        type="text"
+                                                                        name="orgEmail"
+                                                                        placeholder="Ex. Email"
+                                                                        defaultValue={orgEmail}
+                                                                        onChange={handleOrgEmailChange}
+                                                                    />
+                                                                </div>
+                                                                {formErrors.orgEmail ? <span className="errorMsg">{formErrors.orgEmail}</span> : ''}
                                                             </div>
                                                         </li>
                                                         <li>
@@ -866,6 +1063,114 @@ const UserModal = (props) => {
                                                                 {formErrors.orgDescription ? <span className="errorMsg">{formErrors.orgDescription}</span> : ''}
                                                             </div>
                                                         </li>
+                                                        <li>
+                                                            <div className="formField w-100">
+                                                                <p>Associations</p>
+                                                                <div className="inFormField">
+                                                                    <select style={{
+                                                                        backgroundImage: "url(" + arrowDown + ")",
+                                                                    }}
+                                                                    onChange={handleAssociatonChange}
+                                                                    value={associationId ? associationId : ''}
+                                                                    >
+                                                                    <option value="">Select an association</option>
+                                                                    {associationList ? associationList.map((el, key) => {
+                                                                        return (
+                                                                            <React.Fragment key={key + "_association"}>
+                                                                                <option value={el._id}>{el.name}</option>
+                                                                            </React.Fragment>
+                                                                        );
+                                                                    }) : ''}
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            )}
+                                            {isAssociateOwner && (
+                                                <div className="infoInputs orgContent">
+                                                    <ul>
+                                                        <li>
+                                                            <div className="cmnFormRow">
+                                                                <p className="profilePicHeading">Association Information</p>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div className={formErrors.orgName ? "formField w-50 error" : "formField w-50"}>
+                                                                <p>Association Name</p>
+                                                                <div className="inFormField">
+                                                                    <input
+                                                                        type="text"
+                                                                        name="associationName"
+                                                                        placeholder="Ex. Falcon Inc."
+                                                                        defaultValue={associationName}
+                                                                        onChange={handleAssociateNameChange}
+                                                                    />
+                                                                </div>
+                                                                {formErrors.associationName ? <span className="errorMsg">{formErrors.associationName}</span> : ''}
+                                                            </div>
+                                                            <div className={formErrors.orgName ? "formField w-50 error" : "formField w-50"}>
+                                                                <p>Association Email</p>
+                                                                <div className="inFormField">
+                                                                    <input
+                                                                        type="text"
+                                                                        name="orgName"
+                                                                        placeholder="Ex. Email"
+                                                                        defaultValue={associationEmail}
+                                                                        onChange={handleAssociateEmailChange}
+                                                                    />
+                                                                </div>
+                                                                {formErrors.associationEmail ? <span className="errorMsg">{formErrors.associationEmail}</span> : ''}
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div className={formErrors.associationDescription ? "formField w-100 error" : "formField w-100"}>
+                                                                <p>Associate Description</p>
+                                                                <div className="inFormField">
+                                                                    <textarea
+                                                                        name="associationDescription"
+                                                                        placeholder="Its a great associate"
+                                                                        defaultValue={associationDescription}
+                                                                        onChange={handleAssociateDescriptionChange}
+                                                                    >
+                                                                    </textarea>
+                                                                </div>
+                                                                {formErrors.associationDescription ? <span className="errorMsg">{formErrors.associationDescription}</span> : ''}
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div className="cmnFieldName">Association Type</div>
+                                                            <div className="cmnFormField radioGroup" onChange={handleFranchiseTypeChange}>
+                                                                <label className="cmnFormRadioLable">
+                                                                    <div className="circleRadio">
+                                                                        <input type="radio" value="franchise" name="franchiseType" defaultChecked={isFranchise}/>
+                                                                        <span></span>
+                                                                    </div>
+                                                                    Franchise
+                                                                </label>
+                                                                <label className="cmnFormRadioLable">
+                                                                    <div className="circleRadio">
+                                                                        <input type="radio" value="non-franchise" name="franchiseType" defaultChecked={!isFranchise}/>
+                                                                        <span></span>
+                                                                    </div>
+                                                                    Non Franchise
+                                                                </label>
+                                                            </div>
+                                                        </li>
+                                                        {/* <li>
+                                                            <div className="formField w-100">
+                                                                <p>Organizations - Multiple</p>
+                                                                <div className="inFormField">
+                                                                    <select style={{
+                                                                        backgroundImage: "url(" + arrowDown + ")",
+                                                                    }}>
+                                                                        <option>Gym1</option>
+                                                                        <option>Gym2</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </li> */}
                                                     </ul>
                                                 </div>
                                             )}
