@@ -33,7 +33,7 @@ const ContactModal = (props) => {
             <div>
                 <button className={navigation.current == 1 ? "active nNav" : "nNav"} onClick={() => navigation.jump(1)}>Overview</button>
                 <button className={navigation.current == 2 ? "active nNav" : "nNav"} onClick={() => navigation.jump(2)}>Attendance</button>
-                <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)} >                
+                <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)} >
                    Transaction
                 </button>
                 <button className={navigation.current == 4 ? "active nNav" : "nNav"} onClick={() => navigation.jump(4)}>
@@ -45,7 +45,7 @@ const ContactModal = (props) => {
 
     const config = {
         navigation: {
-            component: Navigation, 
+            component: Navigation,
             location: "before"
         }
     };
@@ -74,25 +74,14 @@ const ContactModal = (props) => {
             id: contactId
         }
         const contact = await ContactService.fetchContact(JSON.stringify(payload));
-        if (contact.status === 200) {
-            setContactData(contact.data.contact);
-        } else {
-            setContactModalOpenError(contact.message);
-            setTimeout(() => {
-                setContactModalOpenError("");
-            }, 500);
-            console.log(contact.message);
-        }
-        
-        console.log(contact, "kjfdlsjl dlj ldlfjldfjs");
+        setContactData(contact.contact);
     }
 
     useEffect(() => {
-        console.log(props.contactId);
         getContact(props.contactId);
       }, []);
-    
-    const [goToTransactionClicked, setGoToTransactionClicked] = useState(false); 
+
+    const [goToTransactionClicked, setGoToTransactionClicked] = useState(false);
     const goToTransactionHandler = () =>{
         setGoToTransactionClicked(true)
     }
@@ -100,14 +89,14 @@ const ContactModal = (props) => {
         setGoToTransactionClicked(false)
     }
 
-    
+
     return(
         <>
             <div className="modal contactModal">
                 <div className="modalContainer">
                     <div className={stickeyHeadStatus ? "contactModalHeader stickey" : "contactModalHeader"}>
                         <div className="contactModalHeaderTopSec">
-                            
+
                             <div className="modalCtrl">
                                 <button className="minimize">
                                     <img src={minimize_icon} alt="" />
@@ -122,11 +111,11 @@ const ContactModal = (props) => {
                                         <img src={user_100X100} alt="" />
                                     </span>
                                     <button className="editUserImg">
-                                      <img src={camera_icon} alt="" />  
+                                      <img src={camera_icon} alt="" />
                                     </button>
                                 </div>
                                 <div className="userName">
-                                    {contactData.firstName + " " + contactData.lastName}
+                                    {contactData.firstName ? contactData.firstName : ""} {contactData.lastName ? contactData.lastName : ""}
                                 </div>
                                 <div className="ltValue">
                                     <header>Life Time Value :</header>
@@ -134,11 +123,11 @@ const ContactModal = (props) => {
                                 </div>
                                 {/* <div className="userContacts">
                                     <div className="userPhone">
-                                        <img src={phone_call_icon_white} alt="" /> 
+                                        <img src={phone_call_icon_white} alt="" />
                                         <span>+1-4132045887</span>
                                     </div>
                                     <div className="userEmail">
-                                        <img src={email_icon_white} alt="" /> 
+                                        <img src={email_icon_white} alt="" />
                                         <span>richardnile@gmail.com</span>
                                     </div>
                                 </div> */}
@@ -148,11 +137,12 @@ const ContactModal = (props) => {
                             <div className="bottomLeftArea">
                                 <div className="userContacts">
                                     <div className="userPhone">
-                                        <img src={phone_call_icon_white} alt="" /> 
-                                        <span>{contactData.mobile}</span>
+                                        <img src={phone_call_icon_white} alt="" />
+                                        <span>{contactData.phone && contactData.phone.dailCode && contactData.phone.number ?
+                                          contactData.phone.dailCode +"-"+contactData.phone.number : ""}</span>
                                     </div>
                                     <div className="userEmail">
-                                        <img src={email_icon_white} alt="" /> 
+                                        <img src={email_icon_white} alt="" />
                                         <span>{contactData.email}</span>
                                     </div>
                                 </div>
@@ -192,7 +182,7 @@ const ContactModal = (props) => {
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                     <div className="tabBarArea">
                         {/* <div className="redBtnContainer">
@@ -212,13 +202,13 @@ const ContactModal = (props) => {
                             <Step title="Transaction" backToTransList = {backToTransListHandler} goToTransaction = {goToTransactionHandler} component={goToTransactionClicked ? TransactionChoose : Transaction} />
                             <Step title="Transaction" component={Billing} />
                         </Steps>
-                        
+
                     </div>
 
-                    
+
                 </div>
                 <div className="modalOverlay" onClick={closeContactModal}></div>
-            </div> 
+            </div>
         </>
     );
 }
