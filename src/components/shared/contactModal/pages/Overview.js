@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { ContactService } from "../../../../services/contact/ContactServices";
 import Loader from "../../Loader";
-
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
+import {ErrorAlert, SuccessAlert} from "../../messages";
 
 const Overview = (props) => {
     const [formScrollStatus, setFormScrollStatus] = useState(false);
@@ -23,7 +23,8 @@ const Overview = (props) => {
     const [basicinfoZip, setBasicinfoZip] = useState('');
     const [basicinfoCountry, setBasicinfoCountry] = useState('');
     const [phoneCountryCode, setPhoneCountryCode] = useState([]);
-
+    const [errorMsg, setErrorMsg] = useState('');
+    const [successMsg, setSuccessMsg] = useState('');
     const [basicinfoPhone, setBasicinfoPhone] = useState({
         countryCode: "US",
         dailCode: "+1",
@@ -63,11 +64,13 @@ const Overview = (props) => {
     }, []);
 
     const getContact = async () => {
+        console.log(props.contactId)
         setIsLoader(true);
         let payload = {
-            id: props.contactId
+            //id: props.contactId,
+            id: "sadsa"
         }
-        let contact = await ContactService.fetchContact(JSON.stringify(payload));
+        let contact = await ContactService.fetchContact(payload);
         if (contact.status === 200) {
             setContact(contact.data.contact);
             setBasicinfoFname(contact.data.contact.firstName);
@@ -75,24 +78,24 @@ const Overview = (props) => {
             setBasicinfoDob(contact.data.contact.dob);
             setBasicinfoEmail(contact.data.contact.email);
             setBasicinfoPhone({
-                countryCode: "US",
-                dailCode: "+1",
-                number: ""
+                countryCode: contact.data.contact.phone.countryCode,
+                dailCode: contact.data.contact.phone.prefix,
+                number: contact.data.contact.phone.number
             });
             setBasicinfoMobilePhone({
-                countryCode: "US",
-                dailCode: "+1",
-                number: ""
+                countryCode: contact.data.contact.mobile.countryCode,
+                dailCode: contact.data.contact.mobile.prefix,
+                number: contact.data.contact.mobile.number
             });
             setBasicinfoMomPhone({
-                countryCode: "US",
-                dailCode: "+1",
-                number: ""
+                countryCode: contact.data.contact.momPhone.countryCode,
+                dailCode: contact.data.contact.momPhone.prefix,
+                number: contact.data.contact.momPhone.number
             });
             setBasicinfoDadPhone({
-                countryCode: "US",
-                dailCode: "+1",
-                number: ""
+                countryCode: contact.data.contact.dadPhone.countryCode,
+                dailCode: contact.data.contact.dadPhone.prefix,
+                number: contact.data.contact.dadPhone.number
             });
             setBasicinfoCompany(contact.data.contact.company);
             setBasicinfoJobRole(contact.data.contact.jobRole);
@@ -108,7 +111,6 @@ const Overview = (props) => {
             console.log(contact.message);
         }
         setIsLoader(false);
-        console.log(contact, "contact fetched=========");
     }
 
     useEffect(() => {
@@ -119,7 +121,6 @@ const Overview = (props) => {
     const handelBasicinfoFname = (e) => {
         e.preventDefault();
         setBasicinfoFname(e.target.value);
-        console.log(basicinfoFname, "#####=========");
     }
 
     const handelBasicinfoLname = (e) => {
@@ -265,7 +266,7 @@ const Overview = (props) => {
     };
 
 
-    const onContactSubmit = (e) => {
+    const onContactSubmit = async (e) => {
         e.preventDefault();
         let formErrorsCopy = formErrorMsg;
         let isError = false;
@@ -288,24 +289,50 @@ const Overview = (props) => {
         }
 
         if (isError) {
-            /**
-             * Set form errors
-             */
             setFormErrorMsg({
                 email: formErrorMsg.email,
                 phone: formErrorMsg.phone
             });
-            console.log(formErrorMsg, "formErrorMsg*******************");
             setTimeout(() => setFormErrorMsg({
                     email: "",
                     phone: ""
                 }), 5000);
+        } else {
+            let payload = {
+                firstName: basicinfoFname,
+                lastName: basicinfoLname,
+                dob: basicinfoDob,
+                email: basicinfoEmail,
+                phone: basicinfoPhone,
+                mobile: basicinfoMobilePhone,
+                momPhone: basicinfoMomPhone,
+                dadPhone: basicinfoDadPnone,
+                company: basicinfoCompany,
+                jobRole: basicinfoJobRole,
+                momName: basicinfoMomName,
+                dadName: basicinfoDadName,
+                address1: basicinfoAddress1,
+                address2: basicinfoAddress2,
+                city: basicinfoCity,
+                state: basicinfoState,
+                zip: basicinfoZip,
+                country: basicinfoCountry
+
+            }
+            let updateContact = await ContactService.updateContact(payload, contact._id);
+            console.log(updateContact);
         }
     }
 
     return(
         <div className={formScrollStatus ? "contactModalTab expanded" : "contactModalTab"} onScroll={formScroll}>
             {isLoader ? <Loader /> : ''}
+            {successMsg &&
+                <SuccessAlert message={successMsg}></SuccessAlert>
+            }
+            {errorMsg &&
+                <ErrorAlert message={errorMsg}></ErrorAlert>
+            }
             <div className="overviewList">
                 <ul>
                     <li>

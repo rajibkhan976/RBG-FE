@@ -73,11 +73,29 @@ export const ContactService = {
             throw new Error(e.response.data.message);
         }
     },
-    fetchContact: (payload) => {
+    fetchContact: async (payload) => {
+        try {
+            let url = config.getContactsUrl + '/fetch';
+            const result = await axios.post(url, payload, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error creating category. Please contact support");
+            }
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                throw new Error("Please contact support.");
+            }
+        }
+    },
+    updateContact: (payload, id) => {
         try {
             let configAxios = {
-                method: 'post',
-                url: config.getContactsUrl + '/fetch',
+                method: 'put',
+                url: config.getContactsUrl + '/update/' + id,
                 headers: {
                     "Content-Type": "application/json"
                 },
