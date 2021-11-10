@@ -49,7 +49,9 @@ const Overview = (props) => {
 
     const [formErrorMsg, setFormErrorMsg] = useState({
         email: "",
-        phone: ""
+        phone: "",
+        fName: "",
+        lName: ""
     });
 
 
@@ -244,7 +246,7 @@ const Overview = (props) => {
     const countrycodeOpt = phoneCountryCode ? phoneCountryCode.map((el, key) => {
         return(
             <option value={el.code} data-dailcode={el.prefix} key={key} >{el.code} ({el.prefix})</option>
-        )} 
+        )}
     ) : '';
 
     const formScroll = (event) => {
@@ -253,7 +255,7 @@ const Overview = (props) => {
         } else {
             setFormScrollStatus(false);
         }
-        
+
         props.formScroll(formScrollStatus);
         // console.log(event.target.scrollTop)
     };
@@ -263,7 +265,14 @@ const Overview = (props) => {
         e.preventDefault();
         let formErrorsCopy = formErrorMsg;
         let isError = false;
-
+        if (!basicinfoFname) {
+            isError = true;
+            formErrorsCopy.fName = "Please fill up First Name."
+        }
+        if (!basicinfoLname) {
+            isError = true;
+            formErrorsCopy.lName = "Please fill up Last Name."
+        }
         if (!basicinfoEmail && basicinfoPhone.number === "") {
             isError = true;
             formErrorsCopy.email = "Please fill up your email or phone";
@@ -283,14 +292,13 @@ const Overview = (props) => {
             }
         }
         if (isError) {
-            setFormErrorMsg({
-                email: formErrorMsg.email,
-                phone: formErrorMsg.phone
-            });
+            setFormErrorMsg(formErrorsCopy);
             setTimeout(() => setFormErrorMsg({
                     email: "",
-                    phone: ""
-                }), 5000);
+                    phone: "",
+                    fName: "",
+                    lName: ""
+                }), 10000);
         } else {
             let payload = {
                 firstName: basicinfoFname ? basicinfoFname : "",
@@ -439,7 +447,7 @@ const Overview = (props) => {
                             </div>
                         </div>
                     </div>
-                    
+
                     {/* <div className="cmnFormRow">
                         <div className="cmnFormCol">
                             <div className="cmnFieldName">
@@ -700,7 +708,7 @@ const Overview = (props) => {
                             <button className="saveNnewBtn saveOverview" type="button" onClick={(e) => onContactSubmit(e)}>Save and Update <img src={arrow_forward} alt="" /></button>
                             <button className="btn-link">Cancel</button>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>
