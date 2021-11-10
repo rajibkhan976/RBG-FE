@@ -87,7 +87,6 @@ const ContactListing = (props) => {
         setIsLoader(true);
         const pageId = utils.getQueryVariable('page');
         const queryParams = await getQueryParams();
-        // console.log('queryParams', queryParams.toString() )
         try {
             const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
             console.clear();
@@ -95,7 +94,6 @@ const ContactListing = (props) => {
             if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
                 throw new Error(responses.permissions.automation.read);
             }
-            // setIsLoader(true);
             const result = await ContactService.fetchUsers(pageId, queryParams);
             if (result) {
                 console.log("Fetch Contact", result);
@@ -126,8 +124,6 @@ const ContactListing = (props) => {
                 throw new Error("");
             }
             const result = await ContactService.fetchColumns();
-            // console.clear();
-            // console.log(result);
             if (result) {
                 setListCol(result.columns);
                 setSavedColList(result.columns);
@@ -324,12 +320,17 @@ const ContactListing = (props) => {
                             j++;
                             return (
                                 <div className={item.id === "name" ? "dataTableCell user" : "dataTableCell"}>
-                                    {(j === 1) ? <button className="extraDottedBtn" onClick={() => openContactModal(ele._id)}></button> : ""}
-                                    <button className="btn">
+                                    {(j === 1) ? <button className="extraDottedBtn" type="button"></button> : ""}
+                                    <button className="btn" onClick={() => openContactModal(ele._id)}>
                                         {(item.id === "name") ? <span className="tableCellUserImg">
                                             <img src={owner_img_1} alt="" />
                                         </span> : ""}
-                                        {ele[item.id]}
+                                        {(item.id === 'mobile' || item.id === 'phone' || item.id === 'dadPhone' || item.id === 'momPhone') ?
+                                            ((ele[item.id] && ele[item.id].dailCode &&  ele[item.id].number !== "") ?
+                                                <span className={ele[item.id].isValid ?
+                                                    "number valid" : "number invalid"}>{ele[item.id].dailCode + "-" + ele[item.id].number}</span> :
+                                                "")  :
+                                            ele[item.id]}
                                     </button>
                                 </div>
                             )

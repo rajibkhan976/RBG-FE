@@ -24,21 +24,25 @@ function Step1(props) {
     }
     const uploadFileFn = (event) => {
         let file = event.target.files[0];
-        console.log('Check file obj', file);
         if (file && (file.type === 'text/csv' || file.type === 'application/vnd.ms-excel') && file.size < 5000000) {
+            let newFileName = getRandomFileName() + '.csv';
             const config = {
                 bucketName: env.REACT_APP_BUCKET_NAME,
                 region: env.REACT_APP_REGION,
                 accessKeyId: env.REACT_APP_ACCESS_ID,
-                secretAccessKey: env.REACT_APP_ACCESS_KEY,
+                secretAccessKey: env.REACT_APP_ACCESS_KEY
             };
-            let newFileName = getRandomFileName + '.csv';
             setIsLoader(true);
+            let oldFileName = file.name;
+            Object.defineProperty(file, 'name', {
+                writable: true,
+                value: newFileName
+            });
             uploadFile(file, config)
                 .then(data => {
                     setIsLoader(false);
                     setUploadedFile(data.location)
-                    setFileName(file.name);
+                    setFileName(oldFileName);
                     setFileImportStatus(true);
                     setFileUploadError(false);
                 })

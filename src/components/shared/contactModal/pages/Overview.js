@@ -56,7 +56,6 @@ const Overview = (props) => {
     const fetchCountry = async () => {
         let conntryResponse = await ContactService.fetchCountry();
         setPhoneCountryCode(conntryResponse);
-        console.log(conntryResponse, "country");
     };
 
     useEffect(() => {
@@ -64,52 +63,46 @@ const Overview = (props) => {
     }, []);
 
     const getContact = async () => {
-        console.log(props.contactId)
         setIsLoader(true);
         let payload = {
-            //id: props.contactId,
-            id: "sadsa"
+            id: props.contactId
         }
-        let contact = await ContactService.fetchContact(payload);
-        if (contact.status === 200) {
-            setContact(contact.data.contact);
-            setBasicinfoFname(contact.data.contact.firstName);
-            setBasicinfoLname(contact.data.contact.lastName);
-            setBasicinfoDob(contact.data.contact.dob);
-            setBasicinfoEmail(contact.data.contact.email);
-            setBasicinfoPhone({
-                countryCode: contact.data.contact.phone.countryCode,
-                dailCode: contact.data.contact.phone.prefix,
-                number: contact.data.contact.phone.number
-            });
-            setBasicinfoMobilePhone({
-                countryCode: contact.data.contact.mobile.countryCode,
-                dailCode: contact.data.contact.mobile.prefix,
-                number: contact.data.contact.mobile.number
-            });
-            setBasicinfoMomPhone({
-                countryCode: contact.data.contact.momPhone.countryCode,
-                dailCode: contact.data.contact.momPhone.prefix,
-                number: contact.data.contact.momPhone.number
-            });
-            setBasicinfoDadPhone({
-                countryCode: contact.data.contact.dadPhone.countryCode,
-                dailCode: contact.data.contact.dadPhone.prefix,
-                number: contact.data.contact.dadPhone.number
-            });
-            setBasicinfoCompany(contact.data.contact.company);
-            setBasicinfoJobRole(contact.data.contact.jobRole);
-            setBasicinfoMomName(contact.data.contact.momName);
-            setBasicinfoDadName(contact.data.contact.dadName);
-            setBasicinfoAddress1(contact.data.contact.address1);
-            setBasicinfoAddress2(contact.data.contact.address2);
-            setBasicinfoCity(contact.data.contact.city);
-            setBasicinfoState(contact.data.contact.state);
-            setBasicinfoZip(contact.data.contact.zip);
-            setBasicinfoCountry(contact.data.contact.country);
-        } else {
-            console.log(contact.message);
-        }
+        let contact = await ContactService.fetchContact(JSON.stringify(payload));
+        setContact(contact.contact);
+        setBasicinfoFname(contact.contact.firstName);
+        setBasicinfoLname(contact.contact.lastName);
+        setBasicinfoDob(contact.contact.dob);
+        setBasicinfoEmail(contact.contact.email);
+        setBasicinfoPhone({
+            countryCode: contact.contact.phone ? (contact.contact.phone.countryCode ? contact.contact.phone.countryCode : "US") : "US",
+            dailCode: contact.contact.phone ? (contact.contact.phone.dailCode ? contact.contact.phone.dailCode : "+1") : "+1",
+            number: contact.contact.phone ? (contact.contact.phone.number ? contact.contact.phone.number : "") : ""
+        });
+        setBasicinfoMobilePhone({
+            countryCode: contact.contact.mobile ? (contact.contact.mobile.countryCode ? contact.contact.mobile.countryCode : "US") : "US",
+            dailCode: contact.contact.mobile ? (contact.contact.mobile.dailCode ? contact.contact.mobile.dailCode : "+1") : "+1",
+            number: contact.contact.mobile ? (contact.contact.mobile.number ? contact.contact.mobile.number : "") : ""
+        });
+        setBasicinfoMomPhone({
+            countryCode: contact.contact.momPhone ? ( contact.contact.momPhone.countryCode ? contact.contact.momPhone.countryCode : "US") : "US",
+            dailCode: contact.contact.momPhone ? (contact.contact.momPhone.dailCode ? contact.contact.momPhone.dailCode : "+1")  : "+1",
+            number: contact.contact.momPhone ? (contact.contact.momPhone.number ? contact.contact.momPhone.number : "") : ""
+        });
+        setBasicinfoDadPhone({
+            countryCode: contact.contact.dadPhone ? (contact.contact.dadPhone.countryCode ? contact.contact.dadPhone.countryCode : "US") : "US",
+            dailCode: contact.contact.dadPhone ? (contact.contact.dadPhone.dailCode ? contact.contact.dadPhone.dailCode : "+1") : "+1" ,
+            number: contact.contact.dadPhone ? (contact.contact.dadPhone.number ? contact.contact.dadPhone.number : "") : ""
+        });
+        setBasicinfoCompany(contact.contact.company);
+        setBasicinfoJobRole(contact.contact.jobRole);
+        setBasicinfoMomName(contact.contact.momName);
+        setBasicinfoDadName(contact.contact.dadName);
+        setBasicinfoAddress1(contact.contact.address1);
+        setBasicinfoAddress2(contact.contact.address2);
+        setBasicinfoCity(contact.contact.city);
+        setBasicinfoState(contact.contact.state);
+        setBasicinfoZip(contact.contact.zip);
+        setBasicinfoCountry(contact.contact.country);
         setIsLoader(false);
     }
 
@@ -271,23 +264,24 @@ const Overview = (props) => {
         let formErrorsCopy = formErrorMsg;
         let isError = false;
 
-        if (!basicinfoEmail) {
+        if (!basicinfoEmail && basicinfoPhone.number === "") {
             isError = true;
-            formErrorsCopy.email = "Please fill up your email";
+            formErrorsCopy.email = "Please fill up your email or phone";
         } else {
-            if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(basicinfoEmail)){
-                return true;
-            } else {
-                isError = true;
-                formErrorsCopy.email = "Please enter a valid email address";
+            if (basicinfoEmail) {
+                console.log((/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(basicinfoEmail)))
+                if (!(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(basicinfoEmail))) {
+                    isError = true;
+                    formErrorsCopy.email = "Please enter a valid email address";
+                }
+            } else if (basicinfoPhone.number !== "") {
+                let pattern = new RegExp(/^[0-9\b]+$/);
+                if (!basicinfoEmail && (basicinfoPhone.number === "" || !pattern.test(basicinfoPhone.number))) {
+                    isError = true;
+                    formErrorsCopy.phone = "Please fill up your phone number";
+                }
             }
         }
-        let pattern = new RegExp(/^[0-9\b]+$/);
-        if (basicinfoPhone.number === "" || !pattern.test(basicinfoPhone.number)) {
-            isError = true;
-            formErrorsCopy.phone = "Please fill up your phone number";
-        }
-
         if (isError) {
             setFormErrorMsg({
                 email: formErrorMsg.email,
@@ -299,30 +293,38 @@ const Overview = (props) => {
                 }), 5000);
         } else {
             let payload = {
-                firstName: basicinfoFname,
-                lastName: basicinfoLname,
-                dob: basicinfoDob,
-                email: basicinfoEmail,
-                phone: basicinfoPhone,
-                mobile: basicinfoMobilePhone,
-                momPhone: basicinfoMomPhone,
-                dadPhone: basicinfoDadPnone,
-                company: basicinfoCompany,
-                jobRole: basicinfoJobRole,
-                momName: basicinfoMomName,
-                dadName: basicinfoDadName,
-                address1: basicinfoAddress1,
-                address2: basicinfoAddress2,
-                city: basicinfoCity,
-                state: basicinfoState,
-                zip: basicinfoZip,
-                country: basicinfoCountry
-
+                firstName: basicinfoFname ? basicinfoFname : "",
+                lastName: basicinfoLname ? basicinfoLname : "",
+                dob: basicinfoDob ? basicinfoDob : "",
+                email: basicinfoEmail ? basicinfoEmail : "",
+                phone: basicinfoPhone ? basicinfoPhone : "",
+                mobile: basicinfoMobilePhone ? basicinfoMobilePhone : "",
+                momPhone: basicinfoMomPhone ? basicinfoMomPhone : "",
+                dadPhone: basicinfoDadPnone ? basicinfoDadPnone : "",
+                company: basicinfoCompany ? basicinfoCompany : "" ,
+                jobRole: basicinfoJobRole ? basicinfoJobRole : "",
+                momName: basicinfoMomName ? basicinfoMomName : "",
+                dadName: basicinfoDadName ? basicinfoDadName : "",
+                address1: basicinfoAddress1 ? basicinfoAddress1 : "",
+                address2: basicinfoAddress2 ? basicinfoAddress2 : "",
+                city: basicinfoCity ? basicinfoCity : "",
+                state: basicinfoState ? basicinfoState : "",
+                zip: basicinfoZip ? basicinfoZip : "",
+                country: basicinfoCountry ? basicinfoCountry : ""
             }
             let updateContact = await ContactService.updateContact(payload, contact._id);
-            console.log(updateContact);
+            if (updateContact) {
+                setSuccessMsg('Contact updated successfully.')
+            } else {
+                setErrorMsg('Something went wrong.')
+            }
         }
     }
+
+    useEffect(() => {
+        if (successMsg) setTimeout(() => { setSuccessMsg("") }, 5000)
+        if (errorMsg) setTimeout(() => { setErrorMsg("") }, 5000)
+    }, [successMsg, errorMsg]);
 
     return(
         <div className={formScrollStatus ? "contactModalTab expanded" : "contactModalTab"} onScroll={formScroll}>

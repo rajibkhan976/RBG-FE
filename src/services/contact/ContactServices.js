@@ -80,7 +80,7 @@ export const ContactService = {
             if(result.status === 200) {
                 return result.data;
             } else {
-                throw new Error("There is an error creating category. Please contact support");
+                throw new Error("There is an error while fetching contact. Please contact support");
             }
         } catch (e) {
             if(!typeof e.data === 'undefined') {
@@ -91,24 +91,22 @@ export const ContactService = {
             }
         }
     },
-    updateContact: (payload, id) => {
+    updateContact: async (payload, id) => {
         try {
-            let configAxios = {
-                method: 'put',
-                url: config.getContactsUrl + '/update/' + id,
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                data: payload
-            };
-            return axios(configAxios);
+            let url = config.getContactsUrl + '/update/' + id
+            const result = await axios.put(url, payload, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error updating contact. Please contact support");
+            }
         } catch (e) {
-            if (!typeof e.data === 'undefined') {
+            console.log('error in update contact'. e);
+            if(!typeof e.data === 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {
-                console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
+                throw new Error("Please contact support.");
             }
         }
     }
