@@ -6,7 +6,7 @@ import { InnerLeftMenuServices } from "../../services/shared/InnerLeftMenuServic
 
 import white_arrow_right from "../../assets/images/white_arrow_right.svg";
 import undraw_personal_settings_kihd from "../../assets/images/undraw_personal_settings_kihd.svg";
-import SidebarLogo from "../../assets/images/sidebar-logo.png";
+import SidebarLogo from "../../assets/images/logo_128_28.svg";
 import SideMenuArrow from "../../assets/images/sideArrow.svg";
 
 const InnerLeftMenu = (props) => {

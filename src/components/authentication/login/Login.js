@@ -3,6 +3,9 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AuthActions from "../../../actions/AuthActions";
 import Loader from "../../shared/Loader";
+import login_side_img from "../../../assets/images/login_side_img.png";
+import logo from "../../../assets/images/logo_128_28.svg";
+
 
 const Login = (props) => {
   document.title = "Login";
@@ -123,27 +126,33 @@ const Login = (props) => {
   return (
     <div className="mainComponent">
       {loader ? <Loader /> : ''}
-      <div className="authBody d-flex f-align-center f-justify-center">
-        <figure className="loginLogo">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="128"
-            height="28"
-            viewBox="0 0 128 28"
-            className="logoRBG"
-          >
-            <text className="a" transform="translate(0 21)">
-              <tspan x="0" y="0">
-                RedBelt
-              </tspan>
-              <tspan className="b" y="0">
-                Gym
-              </tspan>
-            </text>
-          </svg>
-        </figure>
+      <div className="authBody d-flex f-align-center login_outer">
+        <div className="loginRightPart">
+          <div class="login_head">
+            {/* <figure className="loginLogo">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="128"
+                height="28"
+                viewBox="0 0 128 28"
+                className="logoRBG"
+              >
+                <text className="a" transform="translate(0 21)">
+                  <tspan x="0" y="0">
+                    RedBelt
+                  </tspan>
+                  <tspan className="b" y="0">
+                    Gym
+                  </tspan>
+                </text>
+              </svg>
+            </figure> */}
+            <img src={logo} alt=""/>
+          </div>
+        
         <form className="formBody" onSubmit={handleSubmit}>
-          <h1>Login</h1>
+          <h1>Sign In</h1>
+          <p className="login_box_text">Please login below to access RedBeltGym.</p>
           {errorMessage ? (
             <div className="errorLogin text-center">{errorMessage}</div>
           ) : null}
@@ -165,6 +174,7 @@ const Login = (props) => {
           </div>
           <div className="formInputs">
             <label>Password</label>
+            <a href="#" className="login_forget_link">Forgot?</a>
             <div className={formErrors.password ? "inFormField errorField" : "inFormField"}>
               <input
                 type="password"
@@ -172,16 +182,36 @@ const Login = (props) => {
                 onChange={handlePasswordChange}
                 onBlur={() => validateField("password")}
                 placeholder="Password"
-              />
+              /> 
               {formErrors.password ? (
                 <div className="errorMsg">{formErrors.password}</div>
               ) : null}
             </div>
+
+          </div>
+          <div className="formInputs remember">
+            <label>
+              <div class="customCheckbox"><input type="checkbox" name="categories" value=""/><span></span></div>
+              Remember me
+            </label>    
           </div>
           <div className="formInputs">
-            <button className="btn btn-dBlue">Login</button>
+            <button className="btn orangeBtn">Sgn In</button>
           </div>
         </form>
+        <div className="login_footer">
+           &copy; 2021 Red Belt Gym, Inc. All rights reserved
+        </div>
+        </div>
+        <div className="loginLeftPart">
+          <img src={login_side_img} alt=""/>
+          <span className="overlay"></span>
+          <div className="login_left_text">
+            <h2>Lorem Epsom dollar sit amet</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br/> Vestibulum et ultrices diam. Nam placerat porta.</p>
+          </div>
+        </div>
+       
       </div>
     </div>
   );

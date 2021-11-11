@@ -18,6 +18,22 @@ import email_icon from "../../assets/images/email_icon.svg";
 import SettingIcon from "../../assets/images/settings.svg";
 import SettingIconBlue from "../../assets/images/settings_blue.svg";
 import DownloadIcon from "../../assets/images/download.svg";
+import cross_white from "../../assets/images/cross_white.svg";
+
+
+import userPhoto from "../../assets/images/userPhoto.png";
+import editIcon_white from "../../assets/images/edit_white2.png";
+import phone_call_icon_white from "../../assets/images/phone_call_icon_white.svg";
+import email_icon_white from "../../assets/images/email_icon_white.svg";
+import speaker_icon2 from "../../assets/images/speaker_icon2.svg";
+import help_icon from "../../assets/images/help_icon.svg";
+import headset_icon from "../../assets/images/headset_icon.svg";
+import logout_icon from "../../assets/images/logout_icon.svg";
+
+
+
+
+
 import {CallSetupService} from "../../services/setup/callSetupServices";
 const { Device } = require('twilio-client');
 
@@ -43,7 +59,10 @@ function HeaderDashboard(props) {
   };
 
   const toggleUserMenu = () => {
-    setStateUserMenu(!stateUserMenu);
+    setStateUserMenu(true);
+  };
+  const closeUserMenu = () => {
+    setStateUserMenu(false);
   };
 
   const toggleCreateHeader = () => {
@@ -253,7 +272,7 @@ function HeaderDashboard(props) {
             <img src={CreateIcon} alt="" />
           </button>
         )}
-        <div className={stateUserMenu ? "menuUser active" : "menuUser"}>
+        <div className="menuUser">
           <button className="btn btnUserMenu" onClick={toggleUserMenu}>
             <figure
               style={{
@@ -267,9 +286,65 @@ function HeaderDashboard(props) {
             </div>
             <i><img src={blueDownArrow} alt="" /></i>
           </button>
-          {stateUserMenu ? <button onClick={logOut} className="logoutButton">Logout</button> : "" }
+          {/* */}
         </div>
       </div>
+
+      {stateUserMenu && (
+      <div class="sideMenuOuter">
+          <div class="sideMenuInner userModal">
+              <div class="modal_call_header">
+                  <button class="btn btn_empty" onClick={closeUserMenu}><img src={cross_white} alt=""/></button>   
+                      <div className="user_details">
+                          <div className="user_profile">
+                              <img src={userPhoto} alt=""/>
+                          </div>
+                          <div className="userContacts">
+                              <h3>Steve Mile</h3>
+                              <div className="userPhone">
+                                  <img src={phone_call_icon_white} alt="" /> 
+                                  <span>+1-4132045887</span>
+                              </div>
+                              <div className="userEmail">
+                                  <img src={email_icon_white} alt="" /> 
+                                  <span>williamblake@gmail.com</span>
+                              </div>
+                              <div className="userPhone">
+                                  <img src={editIcon_white} alt="" /> 
+                                  <span>Edit</span>
+                              </div>
+                          </div>
+                          
+                      </div>
+               </div>
+              <div className="user_modal_body">
+                <div className="user_modal_cont">
+                  <p>Organization</p>
+                  <h3>The Wellness Society</h3>
+                  <div className="creditText">
+                     <span>Credit Balance  </span>
+                     <span className="blue">14600</span>
+                  </div>
+                  <div className="userPlan">
+                    <div>
+                       <span>Current Plan</span>
+                       <p>SILVER</p>
+                    </div>
+                    <button className="btn orangeBtn">UPGRADE</button>
+                  </div>
+                </div>
+                <div className="user_modal_menu">
+                  <p> <button> <img src={help_icon} alt=""/> Help</button></p>
+                  <p> <button><img src={headset_icon} alt=""/> Contact Support</button></p>
+                  <p> <button><img src={speaker_icon2} alt=""/> What's New </button></p>
+                  <p>{stateUserMenu ? <button onClick={logOut}><img src={logout_icon} alt=""/> Logout</button> : "" }</p>
+                </div>
+                
+              </div>
+          </div>
+      </div>
+     )}
+
 
       {/* NOTIFICATIONS SIDE MENU */}
       {stateNotifMenu && (
