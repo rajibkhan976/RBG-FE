@@ -14,6 +14,10 @@ const RoleFilter = (props) => {
         e.preventDefault();
         props.setStateFilter(null);
     };
+    const [formErrors, setFormErrors] = useState({
+        toDate: "",
+        fromDate: ""
+    });
 
     useEffect(() => {
         /**
@@ -98,10 +102,30 @@ const RoleFilter = (props) => {
     const handleDateChange = (event) => {
         event.preventDefault();
         utils.addQueryParameter(event.target.name, event.target.value);
+        let formErrorsCopy = formErrors;
         if( event.target.name === 'fromDate'){
+            //Validation before setting up from date
+            let fromDt = new Date(event.target.value) ;
+            let toDt = new Date(utils.getQueryVariable('toDate'));
+            if (toDt.getTime() > fromDt.getTime()) {
+                console.log('from date is fine');
+            } else {
+                console.log('from date is not fine');
+                formErrorsCopy.fromDate = "Invalid from date";
+            }
             setFromDate(event.target.value);
         } else {
-            setToDate(event.target.value);
+            //Validation before setting up to date
+            let fromDt = new Date(utils.getQueryVariable('fromDate'));
+            let toDt = new Date(event.target.value);
+            if (toDt.getTime() > fromDt.getTime()) {
+                console.log('to date is fine');
+                setToDate(event.target.value);
+            } else {
+                console.log('to date is not fine');
+                formErrorsCopy.toDate = "Invalid to date";
+            }
+            
         }
         console.log(event.target.name, event.target.value);
     }   
@@ -147,13 +171,13 @@ const RoleFilter = (props) => {
                                 <div className="createdDate">
                                     <p>Created on</p>
                                     <div className="createdDateFields">
-                                        <div className="formField w-50">
+                                        <div className={formErrors.fromDate ? "formField w-50 error" : "formField w-50"}>
                                             <p>From</p>
                                             <div className="inFormField">
                                                 <input type="date" name="fromDate" id="formDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} value={fromDate} />
                                             </div>
                                         </div>
-                                        <div className="formField w-50">
+                                        <div className={formErrors.toDate ? "formField w-50 error" : "formField w-50"}>
                                             <p>To</p>
                                             <div className="inFormField">
                                                 <input type="date" min name="toDate" min={fromDate} id="toDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} value={toDate}/>
