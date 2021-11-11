@@ -57,9 +57,8 @@ const RoleFilter = (props) => {
         if(fromDate && toDate){
             queryParams.append('fromDate', fromDate);
             queryParams.append('toDate', toDate);
+            fetchRoles(pageId, queryParams);
         }
-        
-        fetchRoles(pageId, queryParams);
     }
 
     /**
@@ -107,25 +106,30 @@ const RoleFilter = (props) => {
             //Validation before setting up from date
             let fromDt = new Date(event.target.value) ;
             let toDt = new Date(utils.getQueryVariable('toDate'));
-            if (toDt.getTime() > fromDt.getTime()) {
-                console.log('from date is fine');
-            } else {
-                console.log('from date is not fine');
-                formErrorsCopy.fromDate = "Invalid from date";
+            if(toDate){
+                if (toDt.getTime() >= fromDt.getTime()) {
+                    console.log('from date is fine');
+                    formErrorsCopy.fromDate = "";
+                    formErrorsCopy.toDate = "";
+                } else {
+                    console.log('from date is not fine');
+                    formErrorsCopy.fromDate = "Invalid from date";
+                }
             }
             setFromDate(event.target.value);
         } else {
             //Validation before setting up to date
             let fromDt = new Date(utils.getQueryVariable('fromDate'));
             let toDt = new Date(event.target.value);
-            if (toDt.getTime() > fromDt.getTime()) {
+            if (toDt.getTime() >= fromDt.getTime()) {
                 console.log('to date is fine');
-                setToDate(event.target.value);
+                formErrorsCopy.fromDate = "";
+                formErrorsCopy.toDate = "";
             } else {
                 console.log('to date is not fine');
                 formErrorsCopy.toDate = "Invalid to date";
             }
-            
+            setToDate(event.target.value);
         }
         console.log(event.target.name, event.target.value);
     }   
@@ -145,8 +149,9 @@ const RoleFilter = (props) => {
         if (keyword) {
             queryParams.append("search", keyword);
         }
-        
-        fetchRoles(1, queryParams);
+        if(fromDate && toDate){
+            fetchRoles(1, queryParams);
+        }
     }
 
     return (
@@ -186,7 +191,7 @@ const RoleFilter = (props) => {
                                     </div>
                                 </div>
                                 <div className="applyFilterBtn">
-                                    <button className="saveNnewBtn">
+                                    <button className="saveNnewBtn" disabled={formErrors.toDate && formErrors.fromDate ? true : false}>
                                         <span>Apply Filter</span>
                                         <img className="" src={arrow_forward} alt="" />
                                     </button>
