@@ -171,7 +171,11 @@ const RoleModal = (props) => {
           .then(result => {
             console.log("Create role result", result)
 
-            setSuccessMsg('Role created successfully');
+            let msg = 'Role create successfully';
+            if(payload.id){
+              msg = 'Role updated successfully';
+            }
+            setSuccessMsg(msg);
 
             /**
              * Reset modal
