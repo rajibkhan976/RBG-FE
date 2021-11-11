@@ -70,15 +70,31 @@ function Step2(props) {
         const custom = props.getState('custom');
         setPrimaryError(false);
         if (custom.primaryField === 'email') {
-            if (email === "") {
+            if (email === "" || firstName === "" || lastName === "") {
                 setPrimaryError(true);
-                setEmailError(true);
+                if (email === "") {
+                    setEmailError(true);
+                }
+                if (firstName === "") {
+                    setFirstNameError(true);
+                }
+                if (lastName === "") {
+                    setLastNameError(true)
+                }
                 return false;
             }
         } else {
-            if (phone === '') {
+            if (phone === '' || firstName === "" || lastName === "") {
                 setPrimaryError(true);
-                setPhoneError(true);
+                if (phone === "") {
+                    setPhoneError(true);
+                }
+                if (firstName === "") {
+                    setFirstNameError(true);
+                }
+                if (lastName === "") {
+                    setLastNameError(true)
+                }
                 return false;
             }
         }

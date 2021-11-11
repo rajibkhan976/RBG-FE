@@ -327,7 +327,7 @@ const ContactListing = (props) => {
                                         </span> : ""}
                                         {(item.id === 'mobile' || item.id === 'phone' || item.id === 'dadPhone' || item.id === 'momPhone') ?
                                             ((ele[item.id] && ele[item.id].dailCode &&  ele[item.id].number !== "") ?
-                                                <span className={ele[item.id].isValid ?
+                                                <span className={ele[item.id].is_valid ?
                                                     "number valid" : "number invalid"}>{ele[item.id].dailCode + "-" + ele[item.id].number}</span> :
                                                 "")  :
                                             ele[item.id]}

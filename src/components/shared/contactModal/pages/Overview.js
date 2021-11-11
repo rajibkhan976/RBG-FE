@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ContactService } from "../../../../services/contact/ContactServices";
 import Loader from "../../Loader";
-import plus_icon from "../../../../assets/images/plus_icon.svg";
+//import plus_icon from "../../../../assets/images/plus_icon.svg";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import {ErrorAlert, SuccessAlert} from "../../messages";
 

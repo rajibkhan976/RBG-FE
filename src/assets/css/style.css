@@ -7533,3 +7533,7 @@ p.trackName {
 .courseListingText1.stAlone{
   width: 50%;
 }
+
+.number.invalid {
+  color: #ed707a;
+}
