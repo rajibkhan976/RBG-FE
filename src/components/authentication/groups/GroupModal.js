@@ -126,6 +126,7 @@ const GroupModal = (props) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setProcessing(true);
+        console.log('user coming here');
 
         let isError = false;
 
@@ -152,12 +153,15 @@ const GroupModal = (props) => {
         /**
          * Check permission set
          */
-        if (!permissions.length) {
+        if (!permissions.length && !editGroupId) {
             isError = true;
             formErrors.permission = "Please select permissions";
         } else {
             formErrors.permission = null;
         }
+
+
+        console.log('user coming here 2', formErrors);
 
         /**
         * Check the erros flag
@@ -177,11 +181,13 @@ const GroupModal = (props) => {
                 }),
                 5000
             );
+            console.log('user coming here 3');
 
         } else {
             /**
-             * Submit role create form
+             * Submit group create form
              */
+            console.log('user coming here 4');
             let payload = {
                 name: groupName,
                 roleId: roleId,
@@ -201,6 +207,11 @@ const GroupModal = (props) => {
                 setIsLoader(true);
                 const result = await GroupServices[oprationMethod](payload)
                 if (result) {
+                    let msg = 'Group create successfully';
+                    if (payload.id) {
+                        msg = 'Group updated successfully';
+                    }
+                    setSuccessMsg(msg);
                     /**
                      * Reset modal
                      */
@@ -208,11 +219,20 @@ const GroupModal = (props) => {
                         console.log('save and new')
                         setSaveAndNew(false);
                         resetGroupForm();
-                        props.setCreateButton(null);
-                        props.setCreateButton('groups');
+                        //Open group create modal
+                        setTimeout(() => {
+                            props.setCreateButton(null);
+                            props.setCreateButton('groups');
+                        },
+                            messageDelay
+                        );
                     } else {
-                        console.log('else save and new')
-                        props.setCreateButton(null);
+                        console.log('else save and new');
+                        setTimeout(() => {
+                            props.setCreateButton(null);
+                        },
+                            messageDelay
+                        );
                     }
                     fetchGroups(1);
                     setProcessing(false);
@@ -292,6 +312,12 @@ const GroupModal = (props) => {
                         {errorMsg &&
                             <div className="popupMessage error innerDrawerMessage">
                                 <p>{errorMsg}</p>
+                            </div>
+                        }
+
+                        {formErrors.permission &&
+                            <div className="popupMessage error innerDrawerMessage">
+                                <p>{formErrors.permission}</p>
                             </div>
                         }
 
