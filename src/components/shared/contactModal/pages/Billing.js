@@ -114,6 +114,68 @@ const Billing = () => {
         setActiveBankCheck(mapped2);
     };
     
+
+    // .................. validation ................
+
+    const [cardNumberCheck, setCardNumberCheck] = useState()
+    const cardNumberCheckHandler = (e) =>{
+        let cardNumber = e.target.value;
+        var formattedCardNumber = cardNumber.replace(/[^\d]/g, "");
+        formattedCardNumber = formattedCardNumber.substring(0, 16);
+    
+        // Split the card number is groups of 4
+        var cardNumberSections = formattedCardNumber.match(/\d{1,4}/g);
+        if (cardNumberSections !== null) {
+            formattedCardNumber = cardNumberSections.join('-'); 
+        }
+    
+        console.log("'"+ cardNumber + "," + formattedCardNumber + "'");
+        setCardNumberCheck(formattedCardNumber);
+    }
+
+    const [cardNameCheck, setCardNameCheck] = useState()
+    const cardNameCheckHandler = (e) =>{
+        
+        // const re =/^[a-zA-Z]+$/;
+        const re =/^[a-zA-Z ]*$/;
+        if (e.target.value === '' || re.test(e.target.value)) {
+            setCardNameCheck(e.target.value);        
+        };
+       // console.log(cardNameCheck);
+    }
+
+    const [cardExpairyCheck, setCardExpairyCheck] = useState()
+    const cardExpairyCheckHandler = (e) =>{
+         let cardExpairy = e.target.value;
+         var formattedCardExpairy = cardExpairy.replace(/[^\d]/g, "");
+         formattedCardExpairy = formattedCardExpairy.substring(0, 6);
+
+         var cardExpairySectionsMonth = formattedCardExpairy.slice(0,2);
+         var cardExpairySectionsYear = formattedCardExpairy.slice(2,6);
+
+         if(cardExpairySectionsMonth > 0 && cardExpairySectionsYear > 0){
+            formattedCardExpairy =  cardExpairySectionsMonth + " / " + cardExpairySectionsYear;
+         }else if(formattedCardExpairy <= 2){
+            formattedCardExpairy =  cardExpairySectionsMonth 
+         }
+         setCardExpairyCheck(formattedCardExpairy);        
+         console.log(cardExpairySectionsMonth +"," + cardExpairySectionsYear);
+    }
+
+
+    
+      
+
+    
+    const [cardCvvCheck, setCardCvvCheck] = useState()
+    const cardCvvCheckHandler = (e) =>{
+        let cardCvv = e.target.value;
+        var formattedCardCvv = cardCvv.replace(/[^\d]/g, "");
+        formattedCardCvv = formattedCardCvv.substring(0, 3);    
+        setCardCvvCheck(formattedCardCvv);       
+    }
+
+
     return(
         <>
             <div className="contactTabsInner">
@@ -176,7 +238,7 @@ const Billing = () => {
                                     <form>
                                         <label>Card Number</label>
                                         <div className="activeFactor">
-                                            <input type="text" placeholder="xxxx-xxxx-xxxx-xxxx"/>
+                                            <input type="text" className="creditCardText" placeholder="xxxx-xxxx-xxxx-xxxx" onChange={cardNumberCheckHandler} value={cardNumberCheck} />
                                             <div className="activate">
                                                 <div class="circleRadio">
                                                 <input type="radio" name="credit"/><span></span>
@@ -184,15 +246,15 @@ const Billing = () => {
                                             </div>
                                         </div>
                                         <label>Card Holder Name</label>
-                                        <input type="text" placeholder="Ex. Adam Smith"/>
+                                        <input type="text" placeholder="Ex. Adam Smith" onChange={cardNameCheckHandler} value={cardNameCheck}/>
                                         <div className="halfDivForm">
                                             <div className="half">
                                                 <label>Expiry Date</label>
-                                                <input type="date" placeholder="mm/yy"/> 
+                                                <input type="text" placeholder="mm/yy" onChange={cardExpairyCheckHandler} value={cardExpairyCheck}/> 
                                             </div>
                                             <div className="half">
                                                 <label>CVV</label>
-                                                <input type="text" /> 
+                                                <input type="text" onChange={cardCvvCheckHandler} value={cardCvvCheck}/> 
                                             </div>
                                         </div>
                                         

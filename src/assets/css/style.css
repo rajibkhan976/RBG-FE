@@ -7019,7 +7019,7 @@ p.trackName {
   flex-wrap: wrap;
 }
 .flipCardHolder .cardList{
-  min-height: 454px;
+  min-height: 448px;
   border-radius: 10px;
   width: 100%;
   display: flex;
