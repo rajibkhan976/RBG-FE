@@ -28,6 +28,7 @@ const UserModal = (props) => {
     const [orgName, setOrgName] = useState("");
     const [orgDescription, setOrgDescription] = useState("");
     const [processing, setProcessing] = useState(false);
+    const [successMsg, setSuccessMsg] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const [formErrors, setFormErrors] = useState({
         firstName: "",
@@ -60,12 +61,21 @@ const UserModal = (props) => {
     });
 
     const [resetPermissions, setResetPermissions] = useState(false);
+    const messageDelay = 5000; // ms
 
     const fetchCountry = async () => {
         let conntryResponse = await ContactService.fetchCountry();
         setPhoneCountryCode(conntryResponse);
         console.log(conntryResponse, "country");
     };
+
+    /**
+     * Auto hide success or error message
+     */
+    useEffect(() => {
+        if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
+        if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
+    }, [successMsg, errorMsg])
 
     useEffect(() => {
         fetchCountry();
@@ -79,14 +89,14 @@ const UserModal = (props) => {
     ) : '';
 
     const handelBasicinfoMobilePhon = (event) => {
-        const {name, value} = event.target;
-        if(name == "countryCode"){
+        const { name, value } = event.target;
+        if (name == "countryCode") {
             const daileCodeindex = event.target[event.target.selectedIndex];
             let dailCode = daileCodeindex != undefined ? daileCodeindex.getAttribute("data-dailcode") : "+1";
-            setBasicinfoMobilePhone(prevState => ({...prevState, dailCode: dailCode}));
+            setBasicinfoMobilePhone(prevState => ({ ...prevState, dailCode: dailCode }));
         }
-        
-        setBasicinfoMobilePhone(prevState => ({...prevState, [name]: value}));
+
+        setBasicinfoMobilePhone(prevState => ({ ...prevState, [name]: value }));
     };
 
     const closeSideMenu = (e) => {
@@ -221,6 +231,33 @@ const UserModal = (props) => {
             }
         } catch (e) {
             console.log("Error in Role drop-down", JSON.stringify(e));
+        }
+    }
+
+    /**
+     * Send the data to group listing component
+     * @param {*} data
+     */
+     const broadcastToParent = (data) => {
+        props.getData(data);
+    };
+
+    /**
+     * Function to fetch users
+     * @returns 
+     */
+     const fetchUsers = async (pageId, queryParams = null) => {
+        try {
+            setIsLoader(true);
+            const result = await UserServices.fetchUsers(pageId, queryParams);
+            console.log('User listing result', result.groups);
+            if (result) {
+                broadcastToParent(result);
+            }
+        } catch (e) {
+            console.log("Error in Group listing", e);
+        } finally {
+            setIsLoader(false);
         }
     }
 
@@ -595,7 +632,17 @@ const UserModal = (props) => {
                 await UserServices[operationMethod](payload)
                     .then(result => {
                         console.log("Create user result", result)
-                        history.go(0);
+                        let msg = 'User create successfully';
+                        if (payload.id) {
+                            msg = 'User updated successfully';
+                        }
+                        setSuccessMsg(msg);
+                        setTimeout(() => {
+                            props.setCreateButton(null);
+                        },
+                            messageDelay
+                        );
+                        // history.go(0);
                     })
             } catch (e) {
                 /**
@@ -655,7 +702,11 @@ const UserModal = (props) => {
                                     </ul>
                                 </div> */}
 
-
+                                {successMsg &&
+                                    <div className="popupMessage success innerDrawerMessage">
+                                        <p>{successMsg}</p>
+                                    </div>
+                                }
                                 {errorMsg &&
                                     <div className="error errorMsg">
                                         <p>{errorMsg}</p>

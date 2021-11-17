@@ -9,12 +9,24 @@ const Users = (props) => {
   document.title = "Users";
   const [createButton, setCreateButton] = useState(null);
   const [stateFilter, setStateFilter] = useState(null);
+  const [filteredData, setFilteredData] = useState(null);
 
   const toggleCreate = (e) => {
     setCreateButton(e);
   };
   const toggleFilter = (e) => {
     setStateFilter(e);
+  };
+
+  /**
+   * Get user from pagination component
+   * @param {*} dataFromChild
+   */
+   const getDataFn = (dataFromChild) => {
+    //console.log('Filtered Data from child', dataFromChild);
+    if (dataFromChild) {
+      setFilteredData(dataFromChild);
+    }
   };
 
   // key={Math.random().toString()}
@@ -26,6 +38,7 @@ const Users = (props) => {
       <UserModal
         createButton={createButton}
         setCreateButton={setCreateButton}
+        getData={getDataFn}
       />
     </>
   );
