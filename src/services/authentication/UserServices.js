@@ -126,6 +126,8 @@ export const UserServices = {
             if(!typeof e.data === 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data) {
+                throw new Error(e.response.data);
             } else {
                 console.log(e.stack);
                 throw new Error(e.message + ". Please contact support.");

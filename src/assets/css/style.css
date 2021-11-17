@@ -974,7 +974,7 @@ input:focus + .searchIco #search-ico .a,
 .searchBar input::placeholder {
   color: #9BAEBC;
   font-size: 13px;
-  opacity: 48%;
+  opacity: 0.48;
 }
 
 .searchIcon {

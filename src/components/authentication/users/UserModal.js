@@ -41,6 +41,8 @@ const UserModal = (props) => {
         lastName: "",
         phoneNumber: "",
         email: "",
+        roleId: "",
+        groupId: "",
         orgName: "",
         orgEmail: "",
         orgDescription: "",
@@ -88,7 +90,7 @@ const UserModal = (props) => {
         if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
         if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
     }, [successMsg, errorMsg]);
-    
+
     /*
      * Fetch associaton list data
      */
@@ -277,7 +279,7 @@ const UserModal = (props) => {
      * Send the data to group listing component
      * @param {*} data
      */
-     const broadcastToParent = (data) => {
+    const broadcastToParent = (data) => {
         props.getData(data);
     };
 
@@ -285,7 +287,7 @@ const UserModal = (props) => {
      * Function to fetch users
      * @returns 
      */
-     const fetchUsers = async (pageId, queryParams = null) => {
+    const fetchUsers = async (pageId, queryParams = null) => {
         try {
             setIsLoader(true);
             const result = await UserServices.fetchUsers(pageId, queryParams);
@@ -426,7 +428,7 @@ const UserModal = (props) => {
      * Handle role change 
      * @param {*} event 
      */
-     const handleAssociatonChange = (event) => {
+    const handleAssociatonChange = (event) => {
         event.preventDefault();
         console.log(event.target.value);
         setAssociationId(event.target.value);
@@ -503,16 +505,21 @@ const UserModal = (props) => {
     const getDataFn = (dataFromChild) => {
         let clonePermissions = copyPermissionData;
         console.log('Data from permission matrix', clonePermissions, dataFromChild);
-        let isEqual = equals(clonePermissions, dataFromChild);
-        console.log('is Equal', isEqual);
-        //If pemission data not equal with original permission data
-        if (!isEqual) {
-            //Display group name input box
-            setIsModifiedPermission(true);
-            setPermissionData(dataFromChild);
+        //Don't compare if clonePermissions is empty
+        if (clonePermissions.length) {
+            let isEqual = equals(clonePermissions, dataFromChild);
+            console.log('is Equal', isEqual);
+            //If pemission data not equal with original permission data
+            if (!isEqual) {
+                //Display group name input box
+                setIsModifiedPermission(true);
+                setPermissionData(dataFromChild);
+            } else {
+                //Hide group name input box
+                setIsModifiedPermission(false);
+            }
         } else {
-            //Hide group name input box
-            setIsModifiedPermission(false);
+            setPermissionData([]);
         }
     }
 
@@ -592,13 +599,33 @@ const UserModal = (props) => {
             isError = true;
             formErrorsCopy.email = "Please fillup the email";
         }
-
+        /**
+         * Check role field
+         */
+        if (!roleId) {
+            isError = true;
+            formErrorsCopy.roleId = "Please choose a role";
+        }
+        /**
+         * Check group field
+         */
+        if (!groupId) {
+            isError = true;
+            formErrorsCopy.groupId = "Please choose a group";
+        }
         /**
          * Check org name field
          */
         if (isOwner && !orgName) {
             isError = true;
             formErrorsCopy.orgName = "Please fillup the name";
+        }
+        /**
+         * Check org email field
+         */
+         if (isOwner && !orgEmail) {
+            isError = true;
+            formErrorsCopy.orgEmail = "Please fillup the email";
         }
 
         /**
@@ -621,7 +648,7 @@ const UserModal = (props) => {
         /**
          * Check association name
          */
-         if (isAssociateOwner && !associationEmail) {
+        if (isAssociateOwner && !associationEmail) {
             isError = true;
             formErrorsCopy.associationEmail = "Please fillup the email";
 
@@ -657,7 +684,10 @@ const UserModal = (props) => {
                 lastName: formErrors.lastName,
                 phoneNumber: formErrors.phoneNumber,
                 email: formErrors.email,
+                roleId: formErrors.roleId,
+                groupId: formErrors.groupId,
                 orgName: formErrors.orgName,
+                orgEmail: formErrors.orgEmail,
                 orgDescription: formErrors.orgDescription,
                 groupName: formErrors.groupName,
                 associationName: formErrors.associationName,
@@ -671,7 +701,12 @@ const UserModal = (props) => {
                     lastName: "",
                     phoneNumber: "",
                     email: "",
+                    roleId: "",
+                    groupId: "",
                     groupName: "",
+                    orgName:"",
+                    orgEmail:"",
+                    orgDescription:"",
                     associationName: "",
                     associationEmail: "",
                     associationDescription: ""
@@ -786,7 +821,7 @@ const UserModal = (props) => {
                 payload.id = editId;
             }
             //Attach association ID
-            if(editId && associationId){
+            if (editId && associationId) {
                 payload.association.id = associationId;
             }
 
@@ -806,6 +841,7 @@ const UserModal = (props) => {
                             messageDelay
                         );
                         // history.go(0);
+                        fetchUsers(1);
                     })
             } catch (e) {
                 /**
@@ -1034,7 +1070,7 @@ const UserModal = (props) => {
                                                                 </div>
                                                                 {formErrors.orgName ? <span className="errorMsg">{formErrors.orgName}</span> : ''}
                                                             </div>
-                                                            <div className={formErrors.orgName ? "formField w-50 error" : "formField w-50"}>
+                                                            <div className={formErrors.orgEmail ? "formField w-50 error" : "formField w-50"}>
                                                                 <p>Organization Email</p>
                                                                 <div className="inFormField">
                                                                     <input
@@ -1070,17 +1106,17 @@ const UserModal = (props) => {
                                                                     <select style={{
                                                                         backgroundImage: "url(" + arrowDown + ")",
                                                                     }}
-                                                                    onChange={handleAssociatonChange}
-                                                                    value={associationId ? associationId : ''}
+                                                                        onChange={handleAssociatonChange}
+                                                                        value={associationId ? associationId : ''}
                                                                     >
-                                                                    <option value="">Select an association</option>
-                                                                    {associationList ? associationList.map((el, key) => {
-                                                                        return (
-                                                                            <React.Fragment key={key + "_association"}>
-                                                                                <option value={el._id}>{el.name}</option>
-                                                                            </React.Fragment>
-                                                                        );
-                                                                    }) : ''}
+                                                                        <option value="">Select an association</option>
+                                                                        {associationList ? associationList.map((el, key) => {
+                                                                            return (
+                                                                                <React.Fragment key={key + "_association"}>
+                                                                                    <option value={el._id}>{el.name}</option>
+                                                                                </React.Fragment>
+                                                                            );
+                                                                        }) : ''}
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -1097,7 +1133,7 @@ const UserModal = (props) => {
                                                             </div>
                                                         </li>
                                                         <li>
-                                                            <div className={formErrors.orgName ? "formField w-50 error" : "formField w-50"}>
+                                                            <div className={formErrors.associationName ? "formField w-50 error" : "formField w-50"}>
                                                                 <p>Association Name</p>
                                                                 <div className="inFormField">
                                                                     <input
@@ -1110,7 +1146,7 @@ const UserModal = (props) => {
                                                                 </div>
                                                                 {formErrors.associationName ? <span className="errorMsg">{formErrors.associationName}</span> : ''}
                                                             </div>
-                                                            <div className={formErrors.orgName ? "formField w-50 error" : "formField w-50"}>
+                                                            <div className={formErrors.associationEmail ? "formField w-50 error" : "formField w-50"}>
                                                                 <p>Association Email</p>
                                                                 <div className="inFormField">
                                                                     <input
@@ -1144,14 +1180,14 @@ const UserModal = (props) => {
                                                             <div className="cmnFormField radioGroup" onChange={handleFranchiseTypeChange}>
                                                                 <label className="cmnFormRadioLable">
                                                                     <div className="circleRadio">
-                                                                        <input type="radio" value="franchise" name="franchiseType" defaultChecked={isFranchise}/>
+                                                                        <input type="radio" value="franchise" name="franchiseType" defaultChecked={isFranchise} />
                                                                         <span></span>
                                                                     </div>
                                                                     Franchise
                                                                 </label>
                                                                 <label className="cmnFormRadioLable">
                                                                     <div className="circleRadio">
-                                                                        <input type="radio" value="non-franchise" name="franchiseType" defaultChecked={!isFranchise}/>
+                                                                        <input type="radio" value="non-franchise" name="franchiseType" defaultChecked={!isFranchise} />
                                                                         <span></span>
                                                                     </div>
                                                                     Non Franchise
@@ -1180,7 +1216,7 @@ const UserModal = (props) => {
                                             <div className="infoInputs">
                                                 <ul>
                                                     <li>
-                                                        <div className="formField w-50">
+                                                        <div className={formErrors.roleId ? "formField w-50 error" : "formField w-50"}>
                                                             <p>Default user role</p>
                                                             <div className="inFormField">
                                                                 <select
@@ -1202,7 +1238,7 @@ const UserModal = (props) => {
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <div className="formField w-50">
+                                                        <div className={formErrors.groupId ? "formField w-50 error" : "formField w-50"}>
                                                             <p>Select a group</p>
                                                             <div className="inFormField">
                                                                 <select
