@@ -2832,6 +2832,16 @@ span.userProfilePic img {
 .importModalBody {
   padding: 20px 30px;
   height: calc(100vh - 210px);
+  overflow-y: auto;
+}
+.importModalBody::-webkit-scrollbar {
+  width: 6px;
+}
+.importModalBody::-webkit-scrollbar-track {
+  background-color: #DCE4EB;
+}
+.importModalBody::-webkit-scrollbar-thumb {
+  background-color: #F1A668;
 }
 
 .importStapeList {
@@ -3024,7 +3034,7 @@ span.userProfilePic img {
   color: var(--darkBlue);
 }
 .importNote h4 {
-  font-size: 14px;
+  font-size: 13px;
   margin-bottom: 5px;
 }
 .importNote p {
@@ -3037,7 +3047,7 @@ span.userProfilePic img {
 }
 
 .importModalFooter {
-  margin-top: 20px;
+  margin-top: 16px;
 }
 
 .nextButton {
@@ -7532,8 +7542,13 @@ p.trackName {
   width: 50%;
 }
 
+.number.valid {
+  background: transparent url("../images/checked_green.svg") no-repeat right center;
+  padding-right: 25px;
+}
 .number.invalid {
-  color: #ed707a;
+  background: transparent url("../images/checked_grey.svg") no-repeat right center;
+  padding-right: 25px;
 }
 /* ... login page .... */
 
