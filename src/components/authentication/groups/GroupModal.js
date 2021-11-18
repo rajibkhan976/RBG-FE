@@ -205,7 +205,7 @@ const GroupModal = (props) => {
                 setIsLoader(true);
                 const result = await GroupServices[oprationMethod](payload)
                 if (result) {
-                    let msg = 'Group create successfully';
+                    let msg = 'Group created successfully';
                     if (payload.id) {
                         msg = 'Group updated successfully';
                     }

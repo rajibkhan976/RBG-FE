@@ -123,6 +123,7 @@ export const UserServices = {
                 throw new Error("There is an issue while creating user. Please contact support.");
             }
         } catch (e) {
+            console.log('yeah', e.response);
             if(!typeof e.data === 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);

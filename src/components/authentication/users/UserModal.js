@@ -291,12 +291,12 @@ const UserModal = (props) => {
         try {
             setIsLoader(true);
             const result = await UserServices.fetchUsers(pageId, queryParams);
-            console.log('User listing result', result.groups);
+            console.log('User listing result', result.users);
             if (result) {
                 broadcastToParent(result);
             }
         } catch (e) {
-            console.log("Error in Group listing", e);
+            console.log("Error in user listing", e);
         } finally {
             setIsLoader(false);
         }
@@ -332,6 +332,21 @@ const UserModal = (props) => {
      */
     const handleEmailChange = (event) => {
         event.preventDefault();
+        let emailAddress = event.target.value;
+        let emailValid = emailAddress.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+        if (emailValid) {
+            setProcessing(false);
+            setFormErrors({
+                ...formErrors,
+                email: ""
+            });
+        } else {
+            setProcessing(true);
+            setFormErrors({
+                ...formErrors,
+                email: "Invalid email address"
+            });
+        }
         setEmail(event.target.value);
     };
 
@@ -599,6 +614,18 @@ const UserModal = (props) => {
             isError = true;
             formErrorsCopy.email = "Please fillup the email";
         }
+
+        /**
+         * Check valid email or not
+         */
+        if (email) {
+            let isEmail = email.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+            if (!isEmail) {
+                isError = true;
+                formErrorsCopy.email = "Invalid email address";
+            }
+        }
+
         /**
          * Check role field
          */
@@ -623,7 +650,7 @@ const UserModal = (props) => {
         /**
          * Check org email field
          */
-         if (isOwner && !orgEmail) {
+        if (isOwner && !orgEmail) {
             isError = true;
             formErrorsCopy.orgEmail = "Please fillup the email";
         }
@@ -704,9 +731,9 @@ const UserModal = (props) => {
                     roleId: "",
                     groupId: "",
                     groupName: "",
-                    orgName:"",
-                    orgEmail:"",
-                    orgDescription:"",
+                    orgName: "",
+                    orgEmail: "",
+                    orgDescription: "",
                     associationName: "",
                     associationEmail: "",
                     associationDescription: ""
@@ -830,7 +857,7 @@ const UserModal = (props) => {
                 await UserServices[operationMethod](payload)
                     .then(result => {
                         console.log("Create user result", result)
-                        let msg = 'User create successfully';
+                        let msg = 'User created successfully';
                         if (payload.id) {
                             msg = 'User updated successfully';
                         }
@@ -848,12 +875,12 @@ const UserModal = (props) => {
                  * Segregate error by http status
                  */
                 setProcessing(false);
-                console.log("Error in user create", e)
+                console.log("In user create", e.message);
                 if (e.response && e.response.status == 403) {
                     setErrorMsg("You dont have permission to perform this action");
                 }
-                else if (e.response && e.response.data.message) {
-                    setErrorMsg(e.response.data.message);
+                else if (e.message) {
+                    setErrorMsg(e.message);
                 }
             } finally {
                 setIsLoader(false);
@@ -878,7 +905,7 @@ const UserModal = (props) => {
                         <div className="sideMenuHeader">
                             <h3>User</h3>
                             <p>
-                                Manage all the users' details in your organization
+                                Manage all the users details in your organization
                             </p>
                         </div>
 
@@ -907,7 +934,7 @@ const UserModal = (props) => {
                                     </div>
                                 }
                                 {errorMsg &&
-                                    <div className="error errorMsg">
+                                    <div className="popupMessage error innerDrawerMessage">
                                         <p>{errorMsg}</p>
                                     </div>
                                 }

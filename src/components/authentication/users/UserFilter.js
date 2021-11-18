@@ -36,6 +36,12 @@ const UserFilter = (props) => {
     const handleApplyFilter = (e) => {
         e.preventDefault();
         // UPDATE STORE
+        if(!group && !fromDate && !status){
+            return;
+        }
+        if(fromDate && !toDate){
+            return;
+        }
         dispatch({
             type: actionTypes.USER_FILTER,
             filter : true
@@ -129,7 +135,7 @@ const UserFilter = (props) => {
                                         <div className="formField w-50">
                                             <p>To</p>
                                             <div className="inFormField">
-                                                <input type="date" name="toDate" id="toDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} value={toDate}/>
+                                                <input type="date" name="toDate" id="toDate" min={fromDate} placeholder="dd/mm/yyyy" onChange={handleDateChange} value={toDate}/>
                                             </div>
                                         </div>
                                     </div>

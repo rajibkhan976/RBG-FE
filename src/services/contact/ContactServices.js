@@ -70,7 +70,12 @@ export const ContactService = {
                 throw new Error(result.data.message);
             }
         } catch (e) {
-            throw new Error(e.response.data.message);
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                throw new Error("Please contact support.");
+            }
         }
     },
     fetchContact: async (payload) => {

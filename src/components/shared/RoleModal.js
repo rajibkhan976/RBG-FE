@@ -171,7 +171,7 @@ const RoleModal = (props) => {
           .then(result => {
             console.log("Create role result", result)
 
-            let msg = 'Role create successfully';
+            let msg = 'Role created successfully';
             if(payload.id){
               msg = 'Role updated successfully';
             }

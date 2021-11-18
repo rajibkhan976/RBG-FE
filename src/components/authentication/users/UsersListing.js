@@ -152,9 +152,9 @@ const UsersListing = (props) => {
 
         const queryParams = new URLSearchParams();
 
-        console.log('search', search)
+        console.log('search', decodeURIComponent(search))
         if (search) {
-            queryParams.append("search", search);
+            queryParams.append("search", decodeURIComponent(search));
         }
         if (group) {
             queryParams.append("group", group);
@@ -288,8 +288,8 @@ const UsersListing = (props) => {
      * Update keyword
      */
     const handleKeywordChange = (event) => {
-        setKeyword(event.target.value ? event.target.value : '');
-        console.log('Keyword', keyword);
+        let makeKey = decodeURIComponent(event.target.value)
+        setKeyword(makeKey ? makeKey : '');
     }
 
     /**
