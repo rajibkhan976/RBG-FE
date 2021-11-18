@@ -9,34 +9,19 @@ import plus from "../../../../assets/images/plus_icon.svg";
 const Billing = () => {
     const [listCardAnnim, setListCardAnnim] = useState(true);
     const [newCardAnnim, setNewCardAnnim] = useState(false);
-
-
-    const openNewCardHandler = () =>{
-        setListCardAnnim(false);
-        setNewCardAnnim(true)
-    };
-    const hideNewCardHandler = () =>{
-        setListCardAnnim(true);
-        setNewCardAnnim(false)
-    };
     const [listBankAnnim, setListBankAnnim] = useState(true);
     const [newBankAnnim, setNewBankAnnim] = useState(false);
-    const openNewCardHandler2 = () =>{
-        setListBankAnnim(false);
-        setNewBankAnnim(true)
-    };
-    const hideNewCardHandler2 = () =>{
-        setListBankAnnim(true);
-        setNewBankAnnim(false)
-    }; 
     const [primaryChecked, setPrimaryChecked] = useState(false);
-    const changeToPrimary1 = () =>{
-      setPrimaryChecked(false);
-    };
-    const changeToPrimary2 = () =>{
-      setPrimaryChecked(true);
-    };
+    const [cardNumberCheck, setCardNumberCheck] = useState("");
+    const [cardNameCheck, setCardNameCheck] = useState("");
+    const [cardExpairyCheck, setCardExpairyCheck] = useState("");
+    const [cardExpairyMonthCheck, setCardExpairyMonthCheck] = useState("");
+    const [cardExpairyYearCheck, setCardExpairyYearCheck] = useState("");
 
+    const [cardCvvCheck, setCardCvvCheck] = useState("");
+    const [bankAccountCheck, setBankAccountCheck] = useState("");
+    const [bankNameCheck, setBankNameCheck] = useState("");
+    const [bankRoutingCheck, setBankRoutingCheck] = useState("");
     const [activeCreditCardCheck, setActiveCreditCardCheck] = useState([
         {
             cardNumber: "XXXXXXXXXXXX1234",
@@ -58,24 +43,6 @@ const Billing = () => {
             checkIt: false
         }
     ]);
-    const activeCreditCard = (creditCard) =>{
-        let mapped = activeCreditCardCheck.map((el,i) => {         
-            if (creditCard.id === el.id) {
-                return {
-                    ...el,
-                    checkIt : !el.checkIt
-                }        
-            } else {
-                return {
-                    ...el,
-                    checkIt : false
-                }   
-            }
-        });
-
-        setActiveCreditCardCheck(mapped);
-        
-    };
     const [activeBankCheck, setActiveBankCheck] = useState([
         {
             accountNumber: "XXXXXXXXXXXX1234",
@@ -97,6 +64,64 @@ const Billing = () => {
             checkIt: false
         }
     ]);
+    const [cardDataFormatting, setCardDataFormatting] = useState([
+        {
+            "contact": "618cfc610bd605dd51cbc0b7",
+            "card_number": cardNumberCheck,
+            "expiration_year": cardExpairyCheck,
+            "expiration_month": cardExpairyCheck,
+            "cvv": cardCvvCheck,
+            "cardholder_name": cardNameCheck,
+            "status":"active"
+        }
+    ]);
+
+
+    const openNewCardHandler = () =>{
+        setListCardAnnim(false);
+        setNewCardAnnim(true)
+    };
+    const hideNewCardHandler = () =>{
+        setListCardAnnim(true);
+        setNewCardAnnim(false)
+    };
+    
+    const openNewCardHandler2 = () =>{
+        setListBankAnnim(false);
+        setNewBankAnnim(true)
+    };
+    const hideNewCardHandler2 = () =>{
+        setListBankAnnim(true);
+        setNewBankAnnim(false)
+    }; 
+    
+    const changeToPrimary1 = () =>{
+      setPrimaryChecked(false);
+    };
+    const changeToPrimary2 = () =>{
+      setPrimaryChecked(true);
+    };
+
+    
+    const activeCreditCard = (creditCard) =>{
+        let mapped = activeCreditCardCheck.map((el,i) => {         
+            if (creditCard.id === el.id) {
+                return {
+                    ...el,
+                    checkIt : !el.checkIt
+                }        
+            } else {
+                return {
+                    ...el,
+                    checkIt : false
+                }   
+            }
+        });
+
+        setActiveCreditCardCheck(mapped);
+        
+    };
+    
     const activeBank = (bank) =>{
         let mapped2 = activeBankCheck.map((el,i) => {         
             if (bank.id === el.id) {
@@ -117,7 +142,8 @@ const Billing = () => {
 
     // .................. validation ................
 
-    const [cardNumberCheck, setCardNumberCheck] = useState()
+
+    
     const cardNumberCheckHandler = (e) =>{
         let cardNumber = e.target.value;
         var formattedCardNumber = cardNumber.replace(/[^\d]/g, "");
@@ -127,16 +153,14 @@ const Billing = () => {
         var cardNumberSections = formattedCardNumber.match(/\d{1,4}/g);
         if (cardNumberSections !== null) {
             formattedCardNumber = cardNumberSections.join('-'); 
+            setCardNumberCheck(formattedCardNumber);
+            //setCardDataFormatting({...cardDataFormatting, card_number: formattedCardNumber});
         }
-    
-        console.log("'"+ cardNumber + "," + formattedCardNumber + "'");
-        setCardNumberCheck(formattedCardNumber);
+        
     }
 
-    const [cardNameCheck, setCardNameCheck] = useState()
+   
     const cardNameCheckHandler = (e) =>{
-        
-        // const re =/^[a-zA-Z]+$/;
         const re =/^[a-zA-Z ]*$/;
         if (e.target.value === '' || re.test(e.target.value)) {
             setCardNameCheck(e.target.value);        
@@ -144,30 +168,49 @@ const Billing = () => {
        // console.log(cardNameCheck);
     }
 
-    const [cardExpairyCheck, setCardExpairyCheck] = useState()
-    const cardExpairyCheckHandler = (e) =>{
-         let cardExpairy = e.target.value;
-         var formattedCardExpairy = cardExpairy.replace(/[^\d]/g, "");
-         formattedCardExpairy = formattedCardExpairy.substring(0, 6);
-
-         var cardExpairySectionsMonth = formattedCardExpairy.slice(0,2);
-         var cardExpairySectionsYear = formattedCardExpairy.slice(2,6);
-
-         if(cardExpairySectionsMonth > 0 && cardExpairySectionsYear > 0){
-            formattedCardExpairy =  cardExpairySectionsMonth + " / " + cardExpairySectionsYear;
-         }else if(formattedCardExpairy <= 2){
-            formattedCardExpairy =  cardExpairySectionsMonth 
-         }
-         setCardExpairyCheck(formattedCardExpairy);        
-         console.log(cardExpairySectionsMonth +"," + cardExpairySectionsYear);
-    }
-
-
     
+     const cardExpairyCheckHandler = (e) =>{
+          let cardExpairy = e.target.value;
+          var formattedCardExpairy = cardExpairy.replace(/[^\d]/g, "");
+          formattedCardExpairy = formattedCardExpairy.substring(0, 6);
+
+          var cardExpairySectionsMonth = formattedCardExpairy.slice(0,2);
+          var cardExpairySectionsYear = formattedCardExpairy.slice(2,6);
+
+          if(cardExpairySectionsMonth > 0 && cardExpairySectionsYear > 0){
+             formattedCardExpairy =  cardExpairySectionsMonth + " / " + cardExpairySectionsYear;
+          }else if(formattedCardExpairy <= 2){
+             formattedCardExpairy =  cardExpairySectionsMonth 
+          }
+          setCardExpairyCheck(formattedCardExpairy);   
+          setCardExpairyMonthCheck(formattedCardExpairy.slice(0,2));   
+          setCardExpairyYearCheck(formattedCardExpairy.slice(2,6));      
+          console.log(cardExpairySectionsMonth +"," + cardExpairySectionsYear);
+     }
+    //const [cardExpairyMonthCheck, setCardExpairyMonthCheck] = useState("");
+   // const [cardExpairyYearCheck, setCardExpairyYearCheck] = useState("");
+
+//    const cardExpairyCheckHandler = (e) =>{
+//     let cardExpairy = e.target.value;
+//     var formattedCardExpairy = cardExpairy.replace(/[^\d]/g, "");
+//     formattedCardExpairy = formattedCardExpairy.substring(0, 6);
+
+//     // cardExpairyMonthCheck = formattedCardExpairy.slice(0,2);
+//      //cardExpairyYearCheck = formattedCardExpairy.slice(2,6);
+//      setCardExpairyMonthCheck(formattedCardExpairy.slice(0,2));   
+//     setCardExpairyYearCheck(formattedCardExpairy.slice(2,6)); 
+
+//     if(cardExpairyMonthCheck > 0 && cardExpairyYearCheck > 0){
+//        formattedCardExpairy =  cardExpairyMonthCheck + " / " + cardExpairyYearCheck;
+//     }else if(formattedCardExpairy <= 2){
+//        formattedCardExpairy =  cardExpairyMonthCheck 
+//     }
+//     setCardExpairyCheck(formattedCardExpairy);  
       
-
+//     console.log(cardExpairyMonthCheck +"," + cardExpairyYearCheck);
+// }
     
-    const [cardCvvCheck, setCardCvvCheck] = useState()
+    
     const cardCvvCheckHandler = (e) =>{
         let cardCvv = e.target.value;
         var formattedCardCvv = cardCvv.replace(/[^\d]/g, "");
@@ -176,6 +219,49 @@ const Billing = () => {
     }
 
 
+    
+    const bankAccountCheckHandler = (e) =>{
+        let accountNumber = e.target.value;
+        var formattedAccountNumber = accountNumber.replace(/[^\d]/g, "");
+        formattedAccountNumber = formattedAccountNumber.substring(0, 14);
+        setBankAccountCheck(formattedAccountNumber);
+    }
+
+    
+    const bankNameCheckHandler = (e) =>{
+        const re =/^[a-zA-Z ]*$/;
+        if (e.target.value === '' || re.test(e.target.value)) {
+            setBankNameCheck(e.target.value);        
+        };
+       // console.log(bankNameCheck);
+    }
+
+    
+    const bankRoutingCheckHandler = (e) =>{
+        let bankRouting = e.target.value;
+        var formattedBankRouting = bankRouting.replace(/[^\d]/g, "");
+        formattedBankRouting = formattedBankRouting.substring(0, 9);    
+        setBankRoutingCheck(formattedBankRouting);       
+    }
+    
+    
+    const saveCardData = (e) =>{
+        e.preventDefault();
+        
+        //  setCardDataFormatting(
+        //    {...cardDataFormatting}
+        //  );
+        setCardDataFormatting({...cardDataFormatting, card_number: cardNumberCheck,expiration_year : cardExpairyYearCheck,  expiration_month : cardExpairyMonthCheck, cvv: cardCvvCheck, cardholder_name: cardNameCheck});
+         
+        console.log(cardDataFormatting);
+        console.log(cardNumberCheck +" , " + cardExpairyCheck + " , " + cardCvvCheck + " , " + cardNameCheck )
+    }
+    // "contact": "618cfc610bd605dd51cbc0b7",
+    // "card_number": cardNumberCheck,
+    // "expiration_year": cardExpairyCheck,
+    // "expiration_month": cardExpairyCheck,
+    // "cvv": cardCvvCheck,
+    // "cardholder_name": cardNameCheck,
     return(
         <>
             <div className="contactTabsInner">
@@ -259,7 +345,7 @@ const Billing = () => {
                                         </div>
                                         
                                         <div className="text-center">
-                                            <button className="orangeBtn"><img src={plus} alt=""/> Add my Card</button>
+                                            <button className="orangeBtn" onClick={saveCardData}><img src={plus} alt=""/> Add my Card</button>
                                         </div>
                                     </form>
                                     </div>
@@ -323,21 +409,21 @@ const Billing = () => {
                                 </div>
                                 <div className="addingForm">
                                     <form>
-                                        <label>Card Number</label>
+                                        <label>Account Number</label>
                                         <div className="activeFactor">
-                                            <input type="text" placeholder="xxxx-xxxx-xxxx-xxxx"/>
+                                            <input type="text" placeholder="xxxx-xxxx-xxxx-xxxx" onChange={bankAccountCheckHandler} value={bankAccountCheck}/>
                                             <div className="activate">
                                                 <div class="circleRadio">
                                                 <input type="radio" name="credit"/><span></span>
                                                 </div> Active
                                             </div>
                                         </div>
-                                        <label>Card Holder Name</label>
-                                        <input type="text" placeholder="Ex. Adam Smith"/>
+                                        <label>Account Holder Name</label>
+                                        <input type="text" placeholder="Ex. Adam Smith" onChange={bankNameCheckHandler} value={bankNameCheck}/>
                                         <div className="halfDivForm">
                                             <div className="half">
                                                 <label>Routing #</label>
-                                                <input type="text"/> 
+                                                <input type="text" onChange={bankRoutingCheckHandler} value={bankRoutingCheck}/> 
                                             </div>
                                             <div className="half">
                                                 <label>Account Type</label>
