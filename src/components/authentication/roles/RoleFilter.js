@@ -24,7 +24,7 @@ const RoleFilter = (props) => {
          * Get page id and keyword from URL
          */
         let fromDt = utils.getQueryVariable('fromDate');
-        let toDt = utils.getQueryVariable('fromDate');
+        let toDt = utils.getQueryVariable('toDate');
         let queryParams = new URLSearchParams();
         if (fromDt) {
             setFromDate(fromDt)
@@ -32,7 +32,7 @@ const RoleFilter = (props) => {
         if (toDt) {
             setToDate(toDt);
         }
-        
+
     }, []);
 
     /**
@@ -46,15 +46,15 @@ const RoleFilter = (props) => {
         let toDate = utils.getQueryVariable('toDate');
 
         let queryParams = new URLSearchParams();
-        
+
         queryParams.append("page", pageId);
 
         utils.removeQueryParameter('page');
 
-        if(keyword) {
+        if (keyword) {
             queryParams.append("search", keyword);
         }
-        if(fromDate && toDate){
+        if (fromDate && toDate) {
             queryParams.append('fromDate', fromDate);
             queryParams.append('toDate', toDate);
             fetchRoles(pageId, queryParams);
@@ -132,7 +132,7 @@ const RoleFilter = (props) => {
             setToDate(event.target.value);
         }
         console.log(event.target.name, event.target.value);
-    }   
+    }
 
     /**
      * Handle reset filter
@@ -159,7 +159,7 @@ const RoleFilter = (props) => {
             {props.stateFilter !== null && (
                 <div className="sideMenuOuter filterUserMenu">
                     {isLoader ? <Loader /> : ''}
-                    
+
                     <div className="sideMenuInner">
                         <button
                             className="btn btn-closeSideMenu"
@@ -185,7 +185,7 @@ const RoleFilter = (props) => {
                                         <div className={formErrors.toDate ? "formField w-50 error" : "formField w-50"}>
                                             <p>To</p>
                                             <div className="inFormField">
-                                                <input type="date" min name="toDate" min={fromDate} id="toDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} value={toDate}/>
+                                                <input type="date" min name="toDate" min={fromDate} id="toDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} value={toDate} />
                                             </div>
                                         </div>
                                     </div>

@@ -49,12 +49,13 @@ const GroupFilter = (props) => {
         if (fromDate && toDate) {
             queryParams.append('fromDate', fromDate);
             queryParams.append('toDate', toDate);
+            fetchGroups(pageId, queryParams);
         }
         // if(status) {
         //     queryParams.append("status", status);
         // }
 
-        fetchGroups(pageId, queryParams);
+        
     }
 
     /**
@@ -157,7 +158,7 @@ const GroupFilter = (props) => {
                                         <div className="formField w-50">
                                             <p>To</p>
                                             <div className="inFormField">
-                                                <input type="date" name="toDate" id="toDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} value={toDate} />
+                                                <input type="date" name="toDate" id="toDate" min={fromDate} placeholder="dd/mm/yyyy" onChange={handleDateChange} value={toDate} />
                                             </div>
                                         </div>
                                     </div>

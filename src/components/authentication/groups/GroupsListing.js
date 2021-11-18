@@ -302,6 +302,10 @@ const GroupListing = (props) => {
                     console.log('Group delete result', result);
                     setIsDeleted(true);
                     setSuccessMsg("Group deleted successfully");
+                    setIsAlert({
+                        show: false,
+                        id: null,
+                    });
                 }
             } else {
                 setIsAlert({
@@ -312,11 +316,6 @@ const GroupListing = (props) => {
         } catch (e) {
             setErrorMsg(e.message);
         } finally {
-            setIsLoader(false);
-            setIsAlert({
-                show: false,
-                id: null,
-            });
             setIsLoader(false);
         }
     }

@@ -60,7 +60,8 @@ const PermissionMatrix = (props) => {
    */
   useEffect(() => {
     if (Array.isArray(props.setPermissionData) && props.setPermissionData.length) {
-      console.log('Props permission data ', props.setPermissionData);
+      console.log('Props permission data ', props.setPermissionData, 'action type id', props.setPermissionData[0].actions[0].actionTypeId);
+      let actionTyId = props.setPermissionData[0].actions[0].actionTypeId;
       //Set permissions data
       setPermissions(props.setPermissionData);
       //Empty edited permission data
@@ -73,7 +74,8 @@ const PermissionMatrix = (props) => {
         });
         editedPermissionData.push({
           entity: permission.entity,
-          actions: associatedActions
+          actions: associatedActions,
+          actionTypeId: actionTyId
         })
       });
       // Reflect permission data
@@ -233,7 +235,7 @@ const PermissionMatrix = (props) => {
     try {
       await PermissionServices.actionType()
         .then(result => {
-          // console.log('Permission action types');
+          console.log('Permission action types', editedPermissionData);
           if (result) {
             let actionTypes = result.actionTypes.map((actionType, key) => {
               return {
@@ -243,7 +245,8 @@ const PermissionMatrix = (props) => {
                 slug: actionType.slug,
               }
             });
-            let currentActionTypeId = Array.isArray(props.setPermissionData) && props.setPermissionData.length ? props.setPermissionData[0].actions[0].actionTypeId : actionTypes[0]._id;
+            // let currentActionTypeId = Array.isArray(props.setPermissionData) && props.setPermissionData.length ? props.setPermissionData[0].actions[0].actionTypeId : actionTypes[0]._id;
+            let currentActionTypeId = editedPermissionData.length ? editedPermissionData[0].actionTypeId : actionTypes[0]._id;
             //Set action type checked
             setActionType({
               id : currentActionTypeId,
