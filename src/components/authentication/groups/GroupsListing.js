@@ -90,7 +90,7 @@ const GroupListing = (props) => {
             });
         }
 
-    }, [props])
+    }, [props.getFilteredData])
 
     /**
      * Auto hide success or error message

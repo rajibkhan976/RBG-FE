@@ -115,9 +115,7 @@ const GroupModal = (props) => {
      */
     const getDataFn = (dataFromChild) => {
         console.log('Data from child', dataFromChild);
-        if (dataFromChild) {
-            setPermissions(dataFromChild);
-        }
+        setPermissions(dataFromChild);
     }
 
     /**
@@ -153,7 +151,7 @@ const GroupModal = (props) => {
         /**
          * Check permission set
          */
-        if (!permissions.length && !editGroupId) {
+        if (!permissions.length) {
             isError = true;
             formErrors.permission = "Please select permissions";
         } else {
