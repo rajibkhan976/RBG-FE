@@ -14,6 +14,7 @@ const Billing = () => {
     const [newBankAnnim, setNewBankAnnim] = useState(false);
     const [primaryChecked, setPrimaryChecked] = useState(false);
     const [cardNumberCheck, setCardNumberCheck] = useState("");
+    const [cardNumber, setCardNumber] = useState("");
     const [cardNameCheck, setCardNameCheck] = useState("");
     const [cardExpairyCheck, setCardExpairyCheck] = useState("");
     const [cardExpairyMonthCheck, setCardExpairyMonthCheck] = useState("");
@@ -176,7 +177,9 @@ const Billing = () => {
         if (cardNumberSections !== null) {
             formattedCardNumber = cardNumberSections.join('-'); 
             setCardNumberCheck(formattedCardNumber);
+            setCardNumber(e.target.value);
             //setCardDataFormatting({...cardDataFormatting, card_number: formattedCardNumber});
+            console.log(cardNumberCheck);
         }   
     }
 
@@ -199,7 +202,7 @@ const Billing = () => {
           var cardExpairySectionsYear = formattedCardExpairy.slice(2,6);
 
           if(cardExpairySectionsMonth > 0 && cardExpairySectionsYear > 0){
-             formattedCardExpairy =  cardExpairySectionsMonth + " / " + cardExpairySectionsYear;
+             formattedCardExpairy =  cardExpairySectionsMonth + "/" + cardExpairySectionsYear;
           }else if(formattedCardExpairy <= 2){
              formattedCardExpairy =  cardExpairySectionsMonth 
           }
@@ -221,7 +224,7 @@ const Billing = () => {
     const bankAccountCheckHandler = (e) =>{
         let accountNumber = e.target.value;
         var formattedAccountNumber = accountNumber.replace(/[^\d]/g, "");
-        formattedAccountNumber = formattedAccountNumber.substring(0, 14);
+        formattedAccountNumber = formattedAccountNumber.substring(0, 12);
         setBankAccountCheck(formattedAccountNumber);
     }
 
@@ -245,22 +248,43 @@ const Billing = () => {
    
     const saveCardData = (e) =>{
         e.preventDefault();
-        setCardDataFormatting({...cardDataFormatting, card_number: cardNumberCheck,expiration_year : cardExpairyYearCheck,  expiration_month : cardExpairyMonthCheck, cvv: cardCvvCheck, cardholder_name: cardNameCheck});
-        if(!cardCvvCheck){
-            setFormErrorMsg({card_cvv_Err : true});
+        setCardDataFormatting({...cardDataFormatting, card_number: cardNumber,expiration_year : cardExpairyYearCheck,  expiration_month : cardExpairyMonthCheck, cvv: cardCvvCheck, cardholder_name: cardNameCheck});
+        
+         
+        
+        if(!cardNumber){
+            setFormErrorMsg({card_num_Err : true});
+        } else {
+            setFormErrorMsg({card_num_Err : false});
         };
-        if(!cardExpairyCheck){
-            setFormErrorMsg({card_exp_Err : true});
-        };  
+        if(cardNumber.length < 16){
+            setFormErrorMsg({card_num_Err : true});
+        } else {
+            setFormErrorMsg({card_num_Err : false});
+        };
         if(!cardNameCheck){
             setFormErrorMsg({card_name_Err : true});
+        } else {
+            setFormErrorMsg({card_name_Err : false});
         };
-        if(!cardNumberCheck){
-            setFormErrorMsg({card_num_Err : true});
+        if(!cardExpairyCheck || cardExpairyCheck.length < 7){
+            setFormErrorMsg({card_exp_Err : true});
+        } else {
+            setFormErrorMsg({card_exp_Err : false});
         };
-        if(cardNumberCheck && cardNameCheck && cardExpairyCheck && cardCvvCheck){
-            setFormErrorMsg({card_cvv_Err : false ,card_exp_Err : false, card_num_Err : false, card_name_Err : false});
+        if(!cardCvvCheck || cardCvvCheck.length < 3){
+            setFormErrorMsg({card_cvv_Err : true});
+        } else {
+            setFormErrorMsg({card_cvv_Err : false});
         };
+        if(!cardNameCheck){
+            setFormErrorMsg({card_name_Err : true});
+        } else {
+            setFormErrorMsg({card_name_Err : false});
+        };
+        // if(cardNumber && cardNameCheck && cardExpairyCheck && cardCvvCheck && cardCvvCheck.length === 3){
+        //     setFormErrorMsg({card_cvv_Err : false ,card_exp_Err : false, card_num_Err : false, card_name_Err : false});
+        // };
         console.log(cardDataFormatting);
         console.log(cardNumberCheck +" , " + cardExpairyCheck + " , " + cardCvvCheck + " , " + cardNameCheck )
     }
@@ -268,16 +292,16 @@ const Billing = () => {
     const saveBankData = (e) =>{
         e.preventDefault();
         setBankDataFormatting({...bankDataFormatting, routing_number: bankRoutingCheck, account_number: bankAccountCheck, account_holder: bankNameCheck,});
-        if(!bankRoutingCheck){
+        if(!bankRoutingCheck || bankRoutingCheck.length < 9){
             setFormErrorMsg({bank_routing_err : true});
         };
         if(!bankNameCheck){
             setFormErrorMsg({bank_name_Err : true});
         };
-        if(!bankAccountCheck){
+        if(!bankAccountCheck || bankAccountCheck.length < 8 ){
             setFormErrorMsg({bank_acc_Err : true});
         };
-        if(bankAccountCheck && bankNameCheck && bankRoutingCheck){
+        if(bankAccountCheck && bankNameCheck && bankRoutingCheck && bankRoutingCheck.length === 9 ){
             setFormErrorMsg({bank_acc_Err : false, bank_name_Err : false, bank_routing_err : false});
         };
         console.log(bankDataFormatting);
