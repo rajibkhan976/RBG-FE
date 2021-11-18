@@ -196,7 +196,7 @@ const Login = (props) => {
             </label>    
           </div>
           <div className="formInputs">
-            <button className="btn orangeBtn">Sgn In</button>
+            <button className="btn orangeBtn">Sign In</button>
           </div>
         </form>
         <div className="login_footer">

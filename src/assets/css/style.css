@@ -7191,8 +7191,12 @@ p.trackName {
 .addInList .header .cross img{ 
   width: 16px;
 }
+
 .addingForm .half{
   width: 47%;
+}
+.addingForm .formModule{
+  position: relative;
 }
 .addingForm .halfDivForm{
   display: flex;
@@ -7256,7 +7260,12 @@ p.trackName {
 .addingForm .orangeBtn img{
   margin-right: 10px;
 }
-
+.addingForm .formModule .errorMsg {
+  position: relative;
+  color: #e96d48;
+  top: -5px;
+  line-height: 10px;
+}
 .flipCardHolder{
   perspective: 800px;  
 }

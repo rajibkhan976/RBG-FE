@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect }  from "react";
 import bank from "../../../../assets/images/bank.svg";
 import credit_card from "../../../../assets/images/credit_card.svg";
 import cross_white from "../../../../assets/images/cross_white.svg";
 import plus from "../../../../assets/images/plus_icon.svg";
+import {ErrorAlert, SuccessAlert} from "../../messages";
 
 
 
@@ -22,6 +23,7 @@ const Billing = () => {
     const [bankAccountCheck, setBankAccountCheck] = useState("");
     const [bankNameCheck, setBankNameCheck] = useState("");
     const [bankRoutingCheck, setBankRoutingCheck] = useState("");
+    
     const [activeCreditCardCheck, setActiveCreditCardCheck] = useState([
         {
             cardNumber: "XXXXXXXXXXXX1234",
@@ -75,7 +77,27 @@ const Billing = () => {
             "status":"active"
         }
     ]);
-
+    const [bankDataFormatting, setBankDataFormatting] = useState([
+        {
+            "contact": "618cfc610bd605dd51cbc0b7",
+            "routing_number": bankRoutingCheck,
+            "account_number": bankAccountCheck,
+            "account_holder": bankNameCheck,
+            "account_type": "checking",
+            "status": "active"
+        }    
+    ]);
+    const [formErrorMsg, setFormErrorMsg] = useState([
+        {
+            "card_num_Err" : false,
+            "card_name_Err" : false,
+            "card_exp_Err" : false,
+            "card_cvv_Err" : false,
+            "bank_routing_err" : false,
+            "bank_acc_Err" : false,
+            "bank_name_Err": false  
+        }
+    ]);
 
     const openNewCardHandler = () =>{
         setListCardAnnim(false);
@@ -155,8 +177,7 @@ const Billing = () => {
             formattedCardNumber = cardNumberSections.join('-'); 
             setCardNumberCheck(formattedCardNumber);
             //setCardDataFormatting({...cardDataFormatting, card_number: formattedCardNumber});
-        }
-        
+        }   
     }
 
    
@@ -169,7 +190,7 @@ const Billing = () => {
     }
 
     
-     const cardExpairyCheckHandler = (e) =>{
+    const cardExpairyCheckHandler = (e) =>{
           let cardExpairy = e.target.value;
           var formattedCardExpairy = cardExpairy.replace(/[^\d]/g, "");
           formattedCardExpairy = formattedCardExpairy.substring(0, 6);
@@ -183,33 +204,10 @@ const Billing = () => {
              formattedCardExpairy =  cardExpairySectionsMonth 
           }
           setCardExpairyCheck(formattedCardExpairy);   
-          setCardExpairyMonthCheck(formattedCardExpairy.slice(0,2));   
-          setCardExpairyYearCheck(formattedCardExpairy.slice(2,6));      
+          setCardExpairyMonthCheck(cardExpairySectionsMonth);   
+          setCardExpairyYearCheck(cardExpairySectionsYear);      
           console.log(cardExpairySectionsMonth +"," + cardExpairySectionsYear);
-     }
-    //const [cardExpairyMonthCheck, setCardExpairyMonthCheck] = useState("");
-   // const [cardExpairyYearCheck, setCardExpairyYearCheck] = useState("");
-
-//    const cardExpairyCheckHandler = (e) =>{
-//     let cardExpairy = e.target.value;
-//     var formattedCardExpairy = cardExpairy.replace(/[^\d]/g, "");
-//     formattedCardExpairy = formattedCardExpairy.substring(0, 6);
-
-//     // cardExpairyMonthCheck = formattedCardExpairy.slice(0,2);
-//      //cardExpairyYearCheck = formattedCardExpairy.slice(2,6);
-//      setCardExpairyMonthCheck(formattedCardExpairy.slice(0,2));   
-//     setCardExpairyYearCheck(formattedCardExpairy.slice(2,6)); 
-
-//     if(cardExpairyMonthCheck > 0 && cardExpairyYearCheck > 0){
-//        formattedCardExpairy =  cardExpairyMonthCheck + " / " + cardExpairyYearCheck;
-//     }else if(formattedCardExpairy <= 2){
-//        formattedCardExpairy =  cardExpairyMonthCheck 
-//     }
-//     setCardExpairyCheck(formattedCardExpairy);  
-      
-//     console.log(cardExpairyMonthCheck +"," + cardExpairyYearCheck);
-// }
-    
+    }
     
     const cardCvvCheckHandler = (e) =>{
         let cardCvv = e.target.value;
@@ -244,24 +242,51 @@ const Billing = () => {
         setBankRoutingCheck(formattedBankRouting);       
     }
     
-    
+   
     const saveCardData = (e) =>{
         e.preventDefault();
-        
-        //  setCardDataFormatting(
-        //    {...cardDataFormatting}
-        //  );
         setCardDataFormatting({...cardDataFormatting, card_number: cardNumberCheck,expiration_year : cardExpairyYearCheck,  expiration_month : cardExpairyMonthCheck, cvv: cardCvvCheck, cardholder_name: cardNameCheck});
-         
+        if(!cardCvvCheck){
+            setFormErrorMsg({card_cvv_Err : true});
+        };
+        if(!cardExpairyCheck){
+            setFormErrorMsg({card_exp_Err : true});
+        };  
+        if(!cardNameCheck){
+            setFormErrorMsg({card_name_Err : true});
+        };
+        if(!cardNumberCheck){
+            setFormErrorMsg({card_num_Err : true});
+        };
+        if(cardNumberCheck && cardNameCheck && cardExpairyCheck && cardCvvCheck){
+            setFormErrorMsg({card_cvv_Err : false ,card_exp_Err : false, card_num_Err : false, card_name_Err : false});
+        };
         console.log(cardDataFormatting);
         console.log(cardNumberCheck +" , " + cardExpairyCheck + " , " + cardCvvCheck + " , " + cardNameCheck )
     }
-    // "contact": "618cfc610bd605dd51cbc0b7",
-    // "card_number": cardNumberCheck,
-    // "expiration_year": cardExpairyCheck,
-    // "expiration_month": cardExpairyCheck,
-    // "cvv": cardCvvCheck,
-    // "cardholder_name": cardNameCheck,
+   
+    const saveBankData = (e) =>{
+        e.preventDefault();
+        setBankDataFormatting({...bankDataFormatting, routing_number: bankRoutingCheck, account_number: bankAccountCheck, account_holder: bankNameCheck,});
+        if(!bankRoutingCheck){
+            setFormErrorMsg({bank_routing_err : true});
+        };
+        if(!bankNameCheck){
+            setFormErrorMsg({bank_name_Err : true});
+        };
+        if(!bankAccountCheck){
+            setFormErrorMsg({bank_acc_Err : true});
+        };
+        if(bankAccountCheck && bankNameCheck && bankRoutingCheck){
+            setFormErrorMsg({bank_acc_Err : false, bank_name_Err : false, bank_routing_err : false});
+        };
+        console.log(bankDataFormatting);
+        console.log(bankRoutingCheck +" , " + bankAccountCheck + " , " + bankNameCheck  )
+    }
+
+
+
+
     return(
         <>
             <div className="contactTabsInner">
@@ -322,25 +347,36 @@ const Billing = () => {
                                 </div>
                                 <div className="addingForm">
                                     <form>
-                                        <label>Card Number</label>
-                                        <div className="activeFactor">
-                                            <input type="text" className="creditCardText" placeholder="xxxx-xxxx-xxxx-xxxx" onChange={cardNumberCheckHandler} value={cardNumberCheck} />
-                                            <div className="activate">
-                                                <div class="circleRadio">
-                                                <input type="radio" name="credit"/><span></span>
-                                                </div> Active
+                                        <div className="formModule">
+                                            <label>Card Number</label>
+                                            <div className="activeFactor">
+                                                <input type="text" className="creditCardText" placeholder="xxxx-xxxx-xxxx-xxxx" onChange={cardNumberCheckHandler} value={cardNumberCheck} />
+                                                <div className="activate">
+                                                    <div class="circleRadio">
+                                                    <input type="radio" name="credit"/><span></span>
+                                                    </div> Active
+                                                </div>
                                             </div>
+                                        
+                                            {formErrorMsg.card_num_Err ? <p className="errorMsg">Please fill up the field</p> : ""}
                                         </div>
-                                        <label>Card Holder Name</label>
-                                        <input type="text" placeholder="Ex. Adam Smith" onChange={cardNameCheckHandler} value={cardNameCheck}/>
+                                        <div className="formModule">
+                                            <label>Card Holder Name</label>
+                                            <input type="text" placeholder="Ex. Adam Smith" onChange={cardNameCheckHandler} value={cardNameCheck}/>
+                                            {formErrorMsg.card_name_Err ? <p className="errorMsg">Please fill up the field</p> : ""}
+                                        </div>
+
+                                       
                                         <div className="halfDivForm">
-                                            <div className="half">
+                                            <div className="half formModule">
                                                 <label>Expiry Date</label>
                                                 <input type="text" placeholder="mm/yy" onChange={cardExpairyCheckHandler} value={cardExpairyCheck}/> 
+                                                {formErrorMsg.card_exp_Err ? <p className="errorMsg">Please fill up the field</p> : ""}
                                             </div>
-                                            <div className="half">
+                                            <div className="half formModule">
                                                 <label>CVV</label>
                                                 <input type="text" onChange={cardCvvCheckHandler} value={cardCvvCheck}/> 
+                                                {formErrorMsg.card_cvv_Err ? <p className="errorMsg">Please fill up the field</p> : ""}
                                             </div>
                                         </div>
                                         
@@ -409,23 +445,30 @@ const Billing = () => {
                                 </div>
                                 <div className="addingForm">
                                     <form>
-                                        <label>Account Number</label>
-                                        <div className="activeFactor">
-                                            <input type="text" placeholder="xxxx-xxxx-xxxx-xxxx" onChange={bankAccountCheckHandler} value={bankAccountCheck}/>
-                                            <div className="activate">
-                                                <div class="circleRadio">
-                                                <input type="radio" name="credit"/><span></span>
-                                                </div> Active
+                                        <div className="formModule">
+                                            <label>Account Number</label>
+                                            <div className="activeFactor">
+                                                <input type="text" placeholder="xxxx-xxxx-xxxx-xxxx" onChange={bankAccountCheckHandler} value={bankAccountCheck}/>
+                                                <div className="activate">
+                                                    <div class="circleRadio">
+                                                    <input type="radio" name="credit"/><span></span>
+                                                    </div> Active
+                                                </div>
                                             </div>
+                                            {formErrorMsg.bank_acc_Err ? <p className="errorMsg">Please fill up the field</p> : ""}
                                         </div>
-                                        <label>Account Holder Name</label>
-                                        <input type="text" placeholder="Ex. Adam Smith" onChange={bankNameCheckHandler} value={bankNameCheck}/>
+                                        <div className="formModule">
+                                            <label>Account Holder Name</label>
+                                            <input type="text" placeholder="Ex. Adam Smith" onChange={bankNameCheckHandler} value={bankNameCheck}/>
+                                            {formErrorMsg.bank_name_Err ? <p className="errorMsg">Please fill up the field</p> : ""}
+                                        </div>
                                         <div className="halfDivForm">
-                                            <div className="half">
+                                            <div className="half formModule">
                                                 <label>Routing #</label>
                                                 <input type="text" onChange={bankRoutingCheckHandler} value={bankRoutingCheck}/> 
+                                                {formErrorMsg.bank_routing_err ? <p className="errorMsg">Please fill up the field</p> : ""}   
                                             </div>
-                                            <div className="half">
+                                            <div className="half formModule">
                                                 <label>Account Type</label>
                                                 <select className="selectBox">
                                                     <option>Checking</option>
@@ -434,7 +477,7 @@ const Billing = () => {
                                         </div>
                                         
                                         <div className="text-center">
-                                            <button className="orangeBtn"><img src={plus} alt=""/> Add my Bank Account</button>
+                                            <button className="orangeBtn" onClick={saveBankData}><img src={plus} alt=""/> Add my Bank Account</button>
                                         </div>
                                     </form>
                                     </div>
