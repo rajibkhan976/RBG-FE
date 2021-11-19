@@ -17,6 +17,20 @@ const CallConfiguration = (props) => {
     const [schedule, setSchedule] = useState([]);
     const [nameError, setNameError ]= useState("");
     const [isLoader, setIsLoader] = useState(false);
+    const [introAudio, setIntroAudio] = useState(false);
+    const [callForward, setCallForward] = useState(false);
+    const [callWhisper, setCallWhisper] = useState(false);
+    const [voicemailMsg, setVoicemailMsg] = useState(false);
+    const [voicemailSms, setVoicemailSms] = useState(false);
+    const [voicemailSmsNotif, setVoicemailSmsNotif] = useState(false);
+    const [voicemailEmailNotif, setVoicemailEmailNotif] = useState(false);
+    const [missedCallMsg, setMissedCallMsg] = useState(false);
+    const [isOverlapped, setIsOverlapped] = useState(false);
+  
+    const handleCheckboxChange = (event, constName) => {
+        eval("set" + constName + "(event.target.checked)");
+    }
+
     const handleCheck = (val, list) => {
         let exists = false;
         list.some((el) => {
@@ -45,14 +59,12 @@ const CallConfiguration = (props) => {
         setSchedule(updateList);
     }
     const handleStartTime = (key, e) => {
-        let updateList = schedule;
-        updateList[key].startTime = e.target.value;
-        setSchedule(updateList);
+        schedule[key].startTime = e.target.value;       
+        setSchedule([...schedule]);
     }
     const handleEndTime = (key, e) => {
-        let updateList = schedule;
-        updateList[key].endTime = e.target.value;
-        setSchedule(updateList);
+        schedule[key].endTime = e.target.value;
+        setSchedule([...schedule]);
     }
     const handleCallChange = (event) => {
       setName(event.target.value);
@@ -60,47 +72,125 @@ const CallConfiguration = (props) => {
     const handleCallResponseChange = (event) => {
       setCallResponse(event.target.value);
     }
+    const convertTimeToNumber = (time)  => {
+        const hours = Number(time.split(':')[0]);
+        const minutes = Number(time.split(':')[1]) / 60;
+        return hours + minutes;
+    }
     const saveData = async (closeModal) => {
+        setIsLoader(true);
+        let result = await CallSetupService.saveCallConfig({
+            name: name,
+            responseType: callResponse,
+            schedules: schedule,
+            twilioNumberId: props.numberId
+        })
+        setIsLoader(false);
+        resetForm();
+        if (closeModal) {
+            props.closeModal();
+        }        
+    }
+    const save = async (e) => {
+        e.preventDefault();
+
+        if (await validateForm()) {
+            let overlapCheck = await checkOverlap();
+            console.log("overlapCheck", overlapCheck);
+            setIsOverlapped(overlapCheck.isOverlapped);
+            
+            if (!overlapCheck.isOverlapped) {
+            await saveData(true);
+            } 
+            setIsLoader(false);
+        }
+        
+    }
+
+    const checkOverlap = async (removeOverlap = false) => {
+        setIsLoader(true);
+        let overlapResp = await CallSetupService.checkCallConfigOverlap({
+            schedules: schedule,
+            twilioNumberId: props.numberId,
+            removeOverlap: removeOverlap
+        })
+        if (removeOverlap) {
+            setSchedule(overlapResp.newScheduled);
+        }
+        setIsOverlapped(overlapResp.isOverlapped);
+        setIsLoader(false);
+        return overlapResp;
+    }
+
+    const validateOverlap = async (e, removeOverlap = false) => {
+        e.preventDefault();
+        
+        if (await validateForm()) {
+            let overlapCheck = await checkOverlap(removeOverlap);
+            setIsOverlapped(overlapCheck.isOverlapped);
+        }
+    }
+    const removeOverlap = async (e) => {
+        e.preventDefault();
+        validateOverlap(e, true);
+    }
+
+    const validateForm = async () => {
         let isOkay = true;
         setNameError("");
         if (name === "") {
             setNameError("Please provide name.");
             isOkay = false;
         }
-        if (isOkay) {
-            setIsLoader(true);
-            let result = CallSetupService.saveCallConfig({
-                name: name,
-                responseType: callResponse,
-                schedules: schedule,
-                twilioNumberId: props.numberId
-            })
-            setIsLoader(false);
-            resetForm();
-            if (closeModal) {
-                props.closeModal();
+        
+        for (var si = 0; si < schedule.length; si++) {
+            let stTime = convertTimeToNumber(schedule[si].startTime);
+            let endTime = convertTimeToNumber(schedule[si].endTime);
+            console.log("validation ", stTime, endTime);
+            if (!schedule[si].day.length || stTime >= endTime) {
+                isOkay = false;
+                schedule[si].error = "Please select atleast a day and time 'To' must be greater than 'From'"
+            } else {
+                schedule[si].error = "";
             }
         }
+        
+        setSchedule([...schedule]);
+        console.log("schedule 2 >", schedule);
+
+        return isOkay;
     }
-    const save = (e) => {
-        e.preventDefault();
-        saveData(false);
-    }
-    const resetForm = (e) => {
-      setName("");
-      setNameError("");
-      setCallResponse('receive_calls');
+
+    const resetForm = async (e) => {
+        console.log("reseting form");
+        setName("");
+        setNameError("");
+        setIsOverlapped(false);
+        setCallResponse('receive_calls');
         let conf = [{
-            day: [],
+            day: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
             startTime: "00:00",
             endTime: "23:00"
         }];
         setSchedule(conf);
+        
     }
-    const saveNew = (e) => {
+    const saveNew = async (e) => {
         e.preventDefault();
-        saveData(true);
 
+        if (await validateForm()) {
+            let overlapCheck = await checkOverlap();
+            setIsOverlapped(overlapCheck.isOverlapped);
+            
+            if (!overlapCheck.isOverlapped) {
+                await saveData(false);
+            } 
+        }
+    }
+
+    const removeSchedule = async (key) => {
+        schedule.splice(key, 1)
+        setSchedule([...schedule]);
     }
     useEffect(() => {
         let conf = [{
@@ -116,8 +206,8 @@ const CallConfiguration = (props) => {
     }, []);
     return(
         <div className="sideMenuOuter">
-            {isLoader ? <Loader /> : ''}
             <div className="sideMenuInner callConfigModal">
+                {isLoader ? <Loader /> : ''}
                 <button class="btn btn-closeSideMenu" onClick={props.closeModal}>
                     <span></span>
                     <span></span>
@@ -131,8 +221,8 @@ const CallConfiguration = (props) => {
                         <div className="cmnFormRow">
                             <div className="cmnFormCol">
                                 <div className="cmnFieldName">Config Name</div>
-                                <div class="cmnFormField">
-                                    <input type="text" className="cmnFieldStyle" defaultValue={name} onChange={(e) => handleCallChange(e)}/>
+                                <div class="cmnFormField"> 
+                                    <input type="text" className="cmnFieldStyle" value={name} onChange={(e) => handleCallChange(e)}/>
                                     {nameError !== "" &&
                                     <span className="errorMsg">{nameError}</span>
                                     }
@@ -155,6 +245,11 @@ const CallConfiguration = (props) => {
                                     schedule.map((list, key) => {
                                         return (
                                             <div className="cmnFormRow scheduleRow" key={key}>
+
+                                                {key !== 0 && 
+                                                    <button onClick={ () => removeSchedule(key)}>Remove</button> 
+                                                }
+
                                                 <div className="cmnFormCol" key={key}>
                                                     <div className="cmnFieldName">Select Day (s)</div>
                                                     <div className="cmnFormField">
@@ -196,7 +291,9 @@ const CallConfiguration = (props) => {
                                                         <div className="cmnFormCol">
                                                             <div className="cmnFormField">
                                                                 <label className="cmnFieldName">From</label>
-                                                                <select className="cmnFieldStyle timeInput"  defaultValue={list.startTime}  onChange={(e) => handleStartTime(key, e)}>
+                                                                <select className="cmnFieldStyle timeInput"  
+                                                                value={list.startTime}  
+                                                                onChange={(e) => handleStartTime(key, e)}>
                                                                     <option value="00:00">00:00</option>
                                                                     <option value="01:00">01:00</option>
                                                                     <option value="02:00">02:00</option>
@@ -227,7 +324,9 @@ const CallConfiguration = (props) => {
                                                         <div className="cmnFormCol">
                                                             <div className="cmnFormField">
                                                                 <label className="cmnFieldName">To</label>
-                                                                <select className="cmnFieldStyle timeInput" defaultValue={list.endTime}  onChange={(e) => handleEndTime(key, e)}>
+                                                                <select className="cmnFieldStyle timeInput" 
+                                                                    value={list.endTime}  
+                                                                    onChange={(e) => handleEndTime(key, e)}>
                                                                     <option value="00:00">00:00</option>
                                                                     <option value="01:00">01:00</option>
                                                                     <option value="02:00">02:00</option>
@@ -264,6 +363,11 @@ const CallConfiguration = (props) => {
                                                         <span>And</span>
                                                     </div>
                                                 ) : ""}
+                                                {schedule[key].error && 
+                                                    <div className="cmnFormRow">
+                                                        <span className="errorMsg">{schedule[key].error}</span>
+                                                    </div>
+                                                }
                                             </div>
                                         )
                                     })
@@ -272,31 +376,35 @@ const CallConfiguration = (props) => {
                                 <button className="saveNnewBtn addAnotherBtn" onClick={(event) => addAnotherTime(event)}>
                                     <img src={plue_icon_white_thik} alt="" /> Schedule Another Time
                                 </button>
-                                <button className="btn-link timeOverlapBtn">Validate Time Overlap</button>
+                                <button className="btn-link timeOverlapBtn" onClick={validateOverlap}>Validate Time Overlap</button>
                             </div>
+                            {isOverlapped && 
                             <div className="slotNotAbailable">
                                 <p>
-                                    Scheduled slot(s) is not valid as it conflicts with one or more configuration. Do you want to remove the same time from other configuration?
+                                    Scheduled slot(s) is not valid as it conflicts with one or more configuration. Do you want to remove the same time from this and other configurations?
                                 </p>
                                 <div className="btnGroup">
-                                    <button className="cmnBtn">Yes</button>
-                                    <button className="cmnBtn btn-red">No</button>
+                                    <button className="cmnBtn" onClick={removeOverlap}>Yes</button>
+                                    <button className="cmnBtn btn-red" >No</button>
                                 </div>
                             </div>
+                            }
                         </div>
                         <div className="cmnFormRow setupForms">
                             <h4 class="formSecHeading">Setup</h4>
                             <div className="setupFormLists">
                                 <div className="setupFormRow">
                                     <div className="setupFormRowHead">
-                                        <label>
+                                        <label> {introAudio}
                                             <div className="customCheckbox">
-                                                <input type="checkbox" />
+                                                <input type="checkbox" 
+                                                 onChange = { (e) => handleCheckboxChange(e, "IntroAudio") }/>
                                                 <span></span>
                                             </div>
                                             <span className="fomrListHeadName">Introduction Audio</span>
                                         </label>
                                     </div>
+                                    {introAudio && 
                                     <div className="setupFormRowBody">
                                         <div class="cmnFormRow">
                                             <div class="cmnFormField radioGroup">
@@ -328,17 +436,20 @@ const CallConfiguration = (props) => {
                                             </button>
                                         </div>
                                     </div>
+                                    }
                                 </div>
                                 <div className="setupFormRow">
                                     <div className="setupFormRowHead">
                                         <label>
                                             <div className="customCheckbox">
-                                                <input type="checkbox" />
+                                                <input type="checkbox" 
+                                                onChange = { (e) => handleCheckboxChange(e, "CallForward") }/>
                                                 <span></span>
                                             </div>
                                             <span className="fomrListHeadName">Call forwarding</span>
                                         </label>
                                     </div>
+                                    {callForward && 
                                     <div className="setupFormRowBody">
                                         <div class="cmnFormRow">
                                             <div class="cmnFormField">
@@ -413,17 +524,20 @@ const CallConfiguration = (props) => {
                                             </div>
                                         </div>
                                     </div>
+                                    }
                                 </div>
                                 <div className="setupFormRow">
                                     <div className="setupFormRowHead">
                                         <label>
                                             <div className="customCheckbox">
-                                                <input type="checkbox" />
+                                                <input type="checkbox" 
+                                                onChange = { (e) => handleCheckboxChange(e, "CallWhisper") }/>
                                                 <span></span>
                                             </div>
                                             <span className="fomrListHeadName">Call Whisper</span>
                                         </label>
                                     </div>
+                                    {callWhisper && 
                                     <div className="setupFormRowBody">
                                         <div className="cmnFormRow">
                                             <div className="cmnFormField">
@@ -508,17 +622,20 @@ const CallConfiguration = (props) => {
                                             </button>
                                         </div>
                                     </div>
+                                    }
                                 </div>
                                 <div className="setupFormRow">
                                     <div className="setupFormRowHead">
                                         <label>
                                             <div className="customCheckbox">
-                                                <input type="checkbox" />
+                                                <input type="checkbox" 
+                                                onChange = { (e) => handleCheckboxChange(e, "VoicemailMsg") }/>
                                                 <span></span>
                                             </div>
                                             <span className="fomrListHeadName">Voicemail message</span>
                                         </label>
                                     </div>
+                                    {voicemailMsg && 
                                     <div className="setupFormRowBody">
                                         <div className="cmnFormRow">
                                             <div className="cmnFormField">
@@ -578,17 +695,20 @@ const CallConfiguration = (props) => {
                                             </button>
                                         </div>
                                     </div>
+                                    }
                                 </div>
                                 <div className="setupFormRow">
                                     <div className="setupFormRowHead">
                                         <label>
                                             <div className="customCheckbox">
-                                                <input type="checkbox" />
+                                                <input type="checkbox" 
+                                                onChange = { (e) => handleCheckboxChange(e, "VoicemailSms") }/>
                                                 <span></span>
                                             </div>
                                             <span className="fomrListHeadName">Voicemail Message Enable/Disable</span>
                                         </label>
                                     </div>
+                                    {voicemailSms &&
                                     <div className="setupFormRowBody">
                                         <div class="cmnFormRow">
                                             <label className="cmnFieldName">Create Message</label>
@@ -606,17 +726,20 @@ const CallConfiguration = (props) => {
                                             </button>
                                         </div>
                                     </div>
+                                    }
                                 </div>
                                 <div className="setupFormRow">
                                     <div className="setupFormRowHead">
                                         <label>
                                             <div className="customCheckbox">
-                                                <input type="checkbox" />
+                                                <input type="checkbox" 
+                                                onChange = { (e) => handleCheckboxChange(e, "MissedCallMsg") }/>
                                                 <span></span>
                                             </div>
                                             <span className="fomrListHeadName">Missed Call Message</span>
                                         </label>
                                     </div>
+                                    {missedCallMsg && 
                                     <div className="setupFormRowBody">
                                         <div class="cmnFormRow">
                                             <label className="cmnFieldName">Create Message</label>
@@ -634,17 +757,20 @@ const CallConfiguration = (props) => {
                                             </button>
                                         </div>
                                     </div>
+                                    }
                                 </div>
                                 <div className="setupFormRow">
                                     <div className="setupFormRowHead">
                                         <label>
                                             <div className="customCheckbox">
-                                                <input type="checkbox" />
+                                                <input type="checkbox" 
+                                                 onChange = { (e) => handleCheckboxChange(e, "VoicemailSmsNotif") }/>
                                                 <span></span>
                                             </div>
                                             <span className="fomrListHeadName">Voice Mail SMS Notification</span>
                                         </label>
                                     </div>
+                                    {voicemailSmsNotif && 
                                     <div className="setupFormRowBody">
                                         <div class="cmnFormRow smsNotificationVM">
                                             <div class="cmnFormField countryCodeField">
@@ -662,17 +788,20 @@ const CallConfiguration = (props) => {
                                             </button>
                                         </div>
                                     </div>
+                                    }
                                 </div>
                                 <div className="setupFormRow eNotiVM">
                                     <div className="setupFormRowHead">
                                         <label>
                                             <div className="customCheckbox">
-                                                <input type="checkbox" />
+                                                <input type="checkbox" 
+                                                onChange = { (e) => handleCheckboxChange(e, "VoicemailEmailNotif") }/>
                                                 <span></span>
                                             </div>
                                             <span className="fomrListHeadName">Voice Mail Email Notification</span>
                                         </label>
                                     </div>
+                                    {voicemailEmailNotif && 
                                     <div className="setupFormRowBody">
                                         <div className="cmnFormRow emailNotificationVM">
                                             <input type="text" className="cmnFieldStyle" placeholder="Set Notification Email" />
@@ -682,6 +811,7 @@ const CallConfiguration = (props) => {
                                         </div>
                                         
                                     </div>
+                                    }
                                 </div>
                             </div>
                         </div>

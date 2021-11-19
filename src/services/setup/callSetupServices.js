@@ -6,9 +6,9 @@ let headers = {
 };
 
 export const CallSetupService = {
-    fetchNumber: async () => {
+    fetchNumber: async (queryParams) => {
         try {
-            const result = await axios.get(config.callSetupUrl, { headers: headers });
+            const result = await axios.get(config.callSetupUrl + (queryParams ? "?" + queryParams : ''), { headers: headers });
             return result.data;
         } catch (e) {
             if(!typeof e.data === 'undefined') {
@@ -36,7 +36,55 @@ export const CallSetupService = {
 
         }
     },
-    getCapabilityToken: async () => {
+    checkCallConfigOverlap: async (payload) => {
+        try {
+            const result = await axios.post(config.callSetupUrl + "/check-overlap", payload,{ headers: headers });
+            return result.data;
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+
+        }
+    },
+    deleteCallConfig: async (id) => {
+        try {
+            const result = await axios.delete(config.callSetupUrl + "/" + id, { headers: headers });
+            return result.data;
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+
+        }
+    },
+    callConfigToggleStatus: async (id) => {
+        try {
+            const result = await axios.put(config.callSetupUrl + "/status-toggle/" + id, { headers: headers });
+            return result.data;
+        } catch (e) {
+            console.log("E::", e.response, typeof e.data , typeof e.data === "string");
+            if (!typeof e.response === 'undefined' && typeof e.response.data == "string") {
+                throw new Error(e.response.data);
+            } else if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+
+        }
+    },
+    getCapabilityToken: async (payload) => {
         try {
             const result = await axios.get(config.callWebhookUrl + "token", { headers: headers });
             return result.data;
