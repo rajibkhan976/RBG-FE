@@ -7251,6 +7251,12 @@ p.trackName {
 .addingForm .activeFactor .activate .circleRadio{
    top: 0;
 }
+.addingForm .activeFactor .activate .customCheckbox {
+  top: 0;
+}
+.addingForm .activeFactor .activate .customCheckbox input[type="checkbox"] + span {
+  border-radius: 50%;
+}
 .addingForm .orangeBtn {
   font-size: 13px;
   color: #fff;
