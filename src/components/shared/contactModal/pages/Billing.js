@@ -14,11 +14,15 @@ const Billing = () => {
     const [newBankAnnim, setNewBankAnnim] = useState(false);
     const [primaryChecked, setPrimaryChecked] = useState(false);
     const [cardNumberCheck, setCardNumberCheck] = useState("");
-    const [cardNumber, setCardNumber] = useState("");
+    const [cardNumberOn, setCardNumberOn] = useState("");
     const [cardNameCheck, setCardNameCheck] = useState("");
     const [cardExpairyCheck, setCardExpairyCheck] = useState("");
     const [cardExpairyMonthCheck, setCardExpairyMonthCheck] = useState("");
     const [cardExpairyYearCheck, setCardExpairyYearCheck] = useState("");
+    const [cardActivationCheck, setCardActivationCheck] = useState(false);
+    const [cardActivationCheckText, setCardActivationCheckText] = useState("");
+    const [bankActivationCheck, setBankActivationCheck] = useState(false);
+    const [bankActivationCheckText, setBankActivationCheckText] = useState("");
 
     const [cardCvvCheck, setCardCvvCheck] = useState("");
     const [bankAccountCheck, setBankAccountCheck] = useState("");
@@ -70,12 +74,12 @@ const Billing = () => {
     const [cardDataFormatting, setCardDataFormatting] = useState([
         {
             "contact": "618cfc610bd605dd51cbc0b7",
-            "card_number": cardNumberCheck,
+            "card_number": cardNumberOn,
             "expiration_year": cardExpairyCheck,
             "expiration_month": cardExpairyCheck,
             "cvv": cardCvvCheck,
             "cardholder_name": cardNameCheck,
-            "status":"active"
+            "status": cardActivationCheckText
         }
     ]);
     const [bankDataFormatting, setBankDataFormatting] = useState([
@@ -85,7 +89,7 @@ const Billing = () => {
             "account_number": bankAccountCheck,
             "account_holder": bankNameCheck,
             "account_type": "checking",
-            "status": "active"
+            "status": bankActivationCheckText
         }    
     ]);
     const [formErrorMsg, setFormErrorMsg] = useState([
@@ -171,19 +175,22 @@ const Billing = () => {
         let cardNumber = e.target.value;
         var formattedCardNumber = cardNumber.replace(/[^\d]/g, "");
         formattedCardNumber = formattedCardNumber.substring(0, 16);
-    
-        // Split the card number is groups of 4
-        var cardNumberSections = formattedCardNumber.match(/\d{1,4}/g);
-        if (cardNumberSections !== null) {
-            formattedCardNumber = cardNumberSections.join('-'); 
-            setCardNumberCheck(formattedCardNumber);
-            setCardNumber(e.target.value);
-            //setCardDataFormatting({...cardDataFormatting, card_number: formattedCardNumber});
-            console.log(cardNumberCheck);
-        }   
+        
+            // Split the card number is groups of 4
+            var cardNumberSections = formattedCardNumber.match(/\d{1,4}/g);
+            if (formattedCardNumber.match(/\d{1,4}/g)) {
+                formattedCardNumber = cardNumberSections.join('-'); 
+                setCardNumberCheck(formattedCardNumber);
+             }
+             if(e.target.value === ""){
+                setCardNumberCheck("");
+             }
+             let cardNumberChanged = cardNumber.replace("-", 3)
+             setCardNumberOn(cardNumberChanged)
+               // setCardNumber(e.target.value);
+                console.log(e.target.value, formattedCardNumber.match(/\d{1,4}/g));     
     }
 
-   
     const cardNameCheckHandler = (e) =>{
         const re =/^[a-zA-Z ]*$/;
         if (e.target.value === '' || re.test(e.target.value)) {
@@ -218,9 +225,27 @@ const Billing = () => {
         formattedCardCvv = formattedCardCvv.substring(0, 3);    
         setCardCvvCheck(formattedCardCvv);       
     }
+    const cardActiveHandler = (e) =>{     
+        var checkActiveCard = "";
+        if(cardActivationCheck === false){
+            checkActiveCard = "Active"
+        }else{
+            checkActiveCard = "Inactive"
+        }
+        setCardActivationCheck(!cardActivationCheck);
+        setCardActivationCheckText(checkActiveCard);
+    }
 
-
-    
+    const bankActiveHandler = (e) =>{     
+        var checkActiveBank = "Inactive";
+        if(bankActivationCheck === false){
+            checkActiveBank = "Active"
+        }else{
+            checkActiveBank = "Inactive"
+        }
+        setBankActivationCheck(!bankActivationCheck);
+        setBankActivationCheckText(checkActiveBank);
+    }
     const bankAccountCheckHandler = (e) =>{
         let accountNumber = e.target.value;
         var formattedAccountNumber = accountNumber.replace(/[^\d]/g, "");
@@ -248,64 +273,60 @@ const Billing = () => {
    
     const saveCardData = (e) =>{
         e.preventDefault();
-        setCardDataFormatting({...cardDataFormatting, card_number: cardNumber,expiration_year : cardExpairyYearCheck,  expiration_month : cardExpairyMonthCheck, cvv: cardCvvCheck, cardholder_name: cardNameCheck});
+        setCardDataFormatting({...cardDataFormatting, card_number: cardNumberCheck ,expiration_year : cardExpairyYearCheck,  expiration_month : cardExpairyMonthCheck, cvv: cardCvvCheck, cardholder_name: cardNameCheck , status: cardActivationCheckText});
         
-         
+
+        if(!cardNumberCheck || cardNumberCheck.length < 19){
+            setFormErrorMsg((errorMessage) => ({...errorMessage, card_num_Err : true}));
+        } else {
+            setFormErrorMsg((errorMessage) => ({...errorMessage, card_num_Err : false}));
+        };
         
-        if(!cardNumber){
-            setFormErrorMsg({card_num_Err : true});
-        } else {
-            setFormErrorMsg({card_num_Err : false});
-        };
-        if(cardNumber.length < 16){
-            setFormErrorMsg({card_num_Err : true});
-        } else {
-            setFormErrorMsg({card_num_Err : false});
-        };
         if(!cardNameCheck){
-            setFormErrorMsg({card_name_Err : true});
+            setFormErrorMsg((errorMessage) => ({...errorMessage, card_name_Err : true}));
         } else {
-            setFormErrorMsg({card_name_Err : false});
+            setFormErrorMsg((errorMessage) => ({...errorMessage, card_name_Err : false}));
         };
         if(!cardExpairyCheck || cardExpairyCheck.length < 7){
-            setFormErrorMsg({card_exp_Err : true});
+            setFormErrorMsg((errorMessage) => ({...errorMessage, card_exp_Err : true}));
         } else {
-            setFormErrorMsg({card_exp_Err : false});
+            setFormErrorMsg((errorMessage) => ({...errorMessage, card_exp_Err : false}));
         };
         if(!cardCvvCheck || cardCvvCheck.length < 3){
-            setFormErrorMsg({card_cvv_Err : true});
+            setFormErrorMsg((errorMessage) => ({...errorMessage, card_cvv_Err : true}));
         } else {
-            setFormErrorMsg({card_cvv_Err : false});
+            setFormErrorMsg((errorMessage) => ({...errorMessage, card_cvv_Err : false}));
         };
-        if(!cardNameCheck){
-            setFormErrorMsg({card_name_Err : true});
-        } else {
-            setFormErrorMsg({card_name_Err : false});
-        };
+        
         // if(cardNumber && cardNameCheck && cardExpairyCheck && cardCvvCheck && cardCvvCheck.length === 3){
         //     setFormErrorMsg({card_cvv_Err : false ,card_exp_Err : false, card_num_Err : false, card_name_Err : false});
         // };
         console.log(cardDataFormatting);
-        console.log(cardNumberCheck +" , " + cardExpairyCheck + " , " + cardCvvCheck + " , " + cardNameCheck )
+        //console.log(formErrorMsg);
+        console.log(cardNumberCheck +" ,"+ cardNumberOn +" ,"+ cardNumberCheck.length +" , " + cardExpairyCheck + " , " + cardCvvCheck + " , " + cardNameCheck +" , " + cardActivationCheck )
     }
    
     const saveBankData = (e) =>{
         e.preventDefault();
-        setBankDataFormatting({...bankDataFormatting, routing_number: bankRoutingCheck, account_number: bankAccountCheck, account_holder: bankNameCheck,});
+        setBankDataFormatting({...bankDataFormatting, routing_number: bankRoutingCheck, account_number: bankAccountCheck, account_holder: bankNameCheck, status: bankActivationCheckText});
         if(!bankRoutingCheck || bankRoutingCheck.length < 9){
-            setFormErrorMsg({bank_routing_err : true});
+            setFormErrorMsg((errorMessage) => ({...errorMessage, bank_routing_err : true}));
+        } else {
+            setFormErrorMsg((errorMessage) => ({...errorMessage, bank_routing_err : false}));
         };
         if(!bankNameCheck){
-            setFormErrorMsg({bank_name_Err : true});
+            setFormErrorMsg((errorMessage) => ({...errorMessage, bank_name_Err : true}));
+        }else {
+            setFormErrorMsg((errorMessage) => ({...errorMessage, bank_name_Err : false}));
         };
         if(!bankAccountCheck || bankAccountCheck.length < 8 ){
-            setFormErrorMsg({bank_acc_Err : true});
+            setFormErrorMsg((errorMessage) => ({...errorMessage, bank_acc_Err : true}));
+        }else {
+            setFormErrorMsg((errorMessage) => ({...errorMessage, bank_acc_Err : false}));
         };
-        if(bankAccountCheck && bankNameCheck && bankRoutingCheck && bankRoutingCheck.length === 9 ){
-            setFormErrorMsg({bank_acc_Err : false, bank_name_Err : false, bank_routing_err : false});
-        };
+        
         console.log(bankDataFormatting);
-        console.log(bankRoutingCheck +" , " + bankAccountCheck + " , " + bankNameCheck  )
+        console.log(bankRoutingCheck +" , " + bankAccountCheck + " , " + bankNameCheck +" , " + bankActivationCheck )
     }
 
 
@@ -376,9 +397,9 @@ const Billing = () => {
                                             <div className="activeFactor">
                                                 <input type="text" className="creditCardText" placeholder="xxxx-xxxx-xxxx-xxxx" onChange={cardNumberCheckHandler} value={cardNumberCheck} />
                                                 <div className="activate">
-                                                    <div class="circleRadio">
-                                                    <input type="radio" name="credit"/><span></span>
-                                                    </div> Active
+                                                    <div class="customCheckbox">
+                                                    <input type="checkbox" name="credit" onChange={cardActiveHandler} checked={cardActivationCheck}/><span></span>
+                                                    </div> {cardActivationCheck ? "Active" : "Inactive"}
                                                 </div>
                                             </div>
                                         
@@ -474,9 +495,9 @@ const Billing = () => {
                                             <div className="activeFactor">
                                                 <input type="text" placeholder="xxxx-xxxx-xxxx-xxxx" onChange={bankAccountCheckHandler} value={bankAccountCheck}/>
                                                 <div className="activate">
-                                                    <div class="circleRadio">
-                                                    <input type="radio" name="credit"/><span></span>
-                                                    </div> Active
+                                                    <div class="customCheckbox">
+                                                    <input type="checkbox" name="credit" onChange={bankActiveHandler} checked={bankActivationCheck}/><span></span>
+                                                    </div> {bankActivationCheck ? "Active" : "Inactive"}
                                                 </div>
                                             </div>
                                             {formErrorMsg.bank_acc_Err ? <p className="errorMsg">Please fill up the field</p> : ""}
