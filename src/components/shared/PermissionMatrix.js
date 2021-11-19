@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import { PermissionServices } from "../../services/authentication/PermissionServices";
 import Loader from "./Loader";
 
@@ -21,7 +21,6 @@ const PermissionMatrix = (props) => {
     data: null
   })
 
-
   useEffect(() => {
     console.log('Global use effect call');
     /**
@@ -39,7 +38,7 @@ const PermissionMatrix = (props) => {
     /**
       * Call to get action types
       */
-     getActionTypes();
+    getActionTypes();
 
   }, [])
 
@@ -81,10 +80,21 @@ const PermissionMatrix = (props) => {
       // Reflect permission data
       getEntities();
       // setActionType(...actionType, actionType.id : props.setPermissionData[0].actions[0].actionTypeId)
-      getActionTypes();
+      // getActionTypes();
+      setTimeout(() => {
+        getActionTypes();
+        console.log('execute at last');
+      }, 2000);
     }
 
   }, [props.setPermissionData]);
+
+  /**
+   * Execute use effect at last 
+   */
+  useEffect(() => {
+
+  }, []);
 
   /**
    * Handle data type
@@ -101,7 +111,7 @@ const PermissionMatrix = (props) => {
       }
     });
     setActionType({
-      id : e.target.value,
+      id: e.target.value,
       data: actionTypes
     })
     /**
@@ -239,7 +249,7 @@ const PermissionMatrix = (props) => {
           if (result) {
             let actionTypes = result.actionTypes.map((actionType, key) => {
               return {
-                isChecked: Array.isArray(props.setPermissionData) && props.setPermissionData.length ? (actionType._id === props.setPermissionData[0].actions[0].actionTypeId ? true : false) : (actionType._id === result.actionTypes[0]._id ? true : false),
+                isChecked: editedPermissionData.length ? (editedPermissionData[0].actionTypeId === actionType._id) : (actionType.slug === 'own-data') ? true : false,
                 _id: actionType._id,
                 name: actionType.name,
                 slug: actionType.slug,
@@ -249,11 +259,11 @@ const PermissionMatrix = (props) => {
             let currentActionTypeId = editedPermissionData.length ? editedPermissionData[0].actionTypeId : actionTypes[0]._id;
             //Set action type checked
             setActionType({
-              id : currentActionTypeId,
-              data : actionTypes
+              id: currentActionTypeId,
+              data: actionTypes
             })
             // setActionTypeData(actionTypes);
-            console.log('Set initial action type id')
+            console.log('Set initial action type id', currentActionTypeId)
             //Set action type id 
           }
         })
@@ -838,7 +848,7 @@ const PermissionMatrix = (props) => {
         {isLoader ? <Loader /> : ''}
         <p className="permissionHead clearfix">
           Manage permissions
-          {actionType &&  actionType.data && actionType.data.map((el, key) => {
+          {actionType && actionType.data && actionType.data.map((el, key) => {
             return (
               <React.Fragment key={key + "actionTypes"}>
                 <label className="checkCutsom">

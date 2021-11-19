@@ -39,6 +39,7 @@ const GroupModal = (props) => {
         setGroupName(editGroup.name);
         setRoleId(editGroup.roleId);
         setPermissionData(editGroup.permissions);
+        setPermissions(editGroup.permissions);
     }, [editGroup])
 
     const closeSideMenu = (e) => {
@@ -151,7 +152,7 @@ const GroupModal = (props) => {
         /**
          * Check permission set
          */
-        if (!permissions.length) {
+        if (!permissions) {
             isError = true;
             formErrors.permission = "Please select permissions";
         } else {

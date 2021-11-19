@@ -141,6 +141,24 @@ const UsersListing = (props) => {
         }
     }, [isDeleted])
 
+    /**
+     * Set filtered data
+     */
+     useEffect(() => {
+        if (props.getFilteredData) {
+            console.log('Reached detination', props.getFilteredData);
+            setUsersData(props.getFilteredData.users);
+            setUsersCount(props.getFilteredData.pagination.count ? props.getFilteredData.pagination.count : 0);
+            //Set current page
+            setPaginationData({
+                ...paginationData,
+                currentPage: props.getFilteredData.pagination.currentPage,
+                totalPages: props.getFilteredData.pagination.totalPages
+            });
+        }
+
+    }, [props.getFilteredData])
+
     const getQueryParams = async () => {
         const search = utils.getQueryVariable('search');
         const group = utils.getQueryVariable('group');
