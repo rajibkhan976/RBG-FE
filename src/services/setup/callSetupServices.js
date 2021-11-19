@@ -36,9 +36,9 @@ export const CallSetupService = {
 
         }
     },
-    getCapabilityToken: async (payload) => {
+    getCapabilityToken: async () => {
         try {
-            const result = await axios.post(config.callWebhookUrl + "getCapabilityToken" , payload, { headers: headers });
+            const result = await axios.get(config.callWebhookUrl + "token", { headers: headers });
             return result.data;
         } catch (e) {
             if(!typeof e.data === 'undefined') {

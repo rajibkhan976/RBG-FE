@@ -72,8 +72,8 @@ const hideNextPartHandler = () =>{
   setOpenOtherPart(false);
 }
 const makeCall = () => {
-  props.device.connect(basicinfoMobilePhone.dialCOde + number);
-  props.callModalOff();
+    props.makeOutgoingCall(basicinfoMobilePhone.dailCode + number);
+    props.callModalOff();
 }
  return(
     <div class="sideMenuOuter">

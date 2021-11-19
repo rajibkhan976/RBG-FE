@@ -35,6 +35,7 @@ import logout_icon from "../../assets/images/logout_icon.svg";
 
 
 import {CallSetupService} from "../../services/setup/callSetupServices";
+import { useStopwatch } from 'react-timer-hook';
 const { Device } = require('twilio-client');
 
 function HeaderDashboard(props) {
@@ -45,6 +46,16 @@ function HeaderDashboard(props) {
   const [showActionState, setShowActionState] = useState(false);
   const [device, setDevice] = useState(new Device());
   const [deviceMessage, setDeviceMessage] = useState('loading');
+  const [connection, setConnection] = useState({});
+  const {
+    seconds,
+    minutes,
+    hours,
+    start,
+    reset,
+    pause
+  } = useStopwatch({ autoStart: false });
+
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
   };
@@ -84,33 +95,83 @@ function HeaderDashboard(props) {
   const fetchCapabilityToken = async () => {
     try {
       const result = await CallSetupService.getCapabilityToken();
-      console.log(result.data);
-      setDevice(device.setup(result.data));
+      let conf = {};
+      if (result.ringtone !== '') {
+        conf = {
+          sounds: {
+            incoming: result.ringtone
+          }
+        }
+      }
+      setDevice(device.setup(result.token, conf));
     } catch (e) {
       console.log('error', e);
     }
   }
+  const acceptConnection = () => {
+    if (Object.keys(connection).length > 0) {
+      connection.accept();
+    }
+  }
+  const hangup = () => {
+    if (Object.keys(connection).length > 0) {
+      if(connection.status() === "pending"){
+        connection.reject();
+        setDeviceMessage('Call Hangup');
+        setTimeout(function(){
+          setDeviceMessage('Ready');
+        }, 3000);
+      }else{
+        device.disconnectAll();
+        setDeviceMessage('Ready');
+      }
+      setConnection({});
+      pause();
+    } else {
+      device.disconnectAll();
+      setDeviceMessage('Ready');
+      setConnection({});
+      pause();
+    }
+  }
+  useEffect(() => {
+    if (Object.keys(connection).length) {
+      if (connection._direction === 'INCOMING') {
+        setDeviceMessage('Call Established with ' + connection.parameters.From + ' for ' + hours +":" + minutes + ":" + seconds);
+      } else {
+        setDeviceMessage('Call Established with ' + connection.parameters.To + ' for ' + hours +":" + minutes + ":" + seconds);
+      }
+    }
+  }, [hours, minutes, seconds])
   useEffect(() => {
     fetchCapabilityToken();
     device.on('incoming', connection => {
-      // immediately accepts incoming connection
-      setDeviceMessage('Incoming Call');
-      setTimeout(() => {
-        connection.accept();  
-      }, 500);
-      
+      setConnection(connection);
+      if (connection._direction === 'INCOMING') {
+        setDeviceMessage('Incoming Call from ' + connection.parameters.From);
+      } else {
+        setDeviceMessage('Outgoing Call to ' + connection.parameters.To);
+      }
     });
 
     device.on('ready', device => {
       setDeviceMessage('Ready');
+      pause();
     });
-
     device.on('connect', connection => {
-      console.log('connect');
+      reset();
+      console.log(connection)
+      if (connection._direction === 'INCOMING') {
+        console.log(hours +":" + minutes + ":" + seconds)
+        setDeviceMessage('Call Established with ' + connection.parameters.From + ' for ' + hours +":" + minutes + ":" + seconds);
+      } else {
+        setDeviceMessage('Call Established with ' + connection.message.To + 'for' + hours +":" + minutes + ":" + seconds);
+      }
     });
 
     device.on('disconnect', connection => {
       setDeviceMessage('Ready');
+      pause();
     });
     window.location.pathname === "/roles"
       ? setLocationLoaded("roles")
@@ -129,9 +190,16 @@ function HeaderDashboard(props) {
   const [modalMakeCall, setModalMakeCall] = useState(false);
   const makeCallModalHandle = () =>{
     setModalMakeCall(true);
+    setShowActionState(false);
   }
   const callModalOffhandler = () =>{
     setModalMakeCall(false);
+  }
+  const makeOutgoingCall = (to) => {
+    setDeviceMessage('Establishing Call..');
+    device.connect({
+      To: to
+    })
   }
   return (
     <>
@@ -163,7 +231,7 @@ function HeaderDashboard(props) {
         <div className="headerCallToAction">
           <div className="leftListArea">
             <div className="leftList">
-              <button className="callToActionBtn" onClick={makeCallModalHandle}>
+              <button className="callToActionBtn">
                 <span className="callBtn green">
                   <img src={callIcon3} alt="" />
                 </span>
@@ -176,7 +244,7 @@ function HeaderDashboard(props) {
               <div className="leftBtnList">
                 <ul>
                   <li className="active">
-                    <input type="radio" name="ces" value="call" />
+                    <input type="radio" name="ces" value="call" onClick={makeCallModalHandle}/>
                     <span className="callBtn green">
                       <img src={callIcon3} alt="" />
                     </span>
@@ -206,10 +274,10 @@ function HeaderDashboard(props) {
               {deviceMessage}
             </p>
             <div className="d-flex">
-              <button className="btn callBtn red">
+              <button className="btn callBtn red" onClick={hangup}>
                 <img src={callIcon2} alt="" />
               </button>
-              <button className="btn callBtn green">
+              <button className="btn callBtn green" onClick={acceptConnection}>
                 <img src={callIcon1} alt="" />
               </button>
             </div>  
@@ -377,7 +445,7 @@ function HeaderDashboard(props) {
 
       {setupModalStatus && <Setup/>}
 
-       {modalMakeCall && <CallModal callModalOff={callModalOffhandler} device={device}/> }
+       {modalMakeCall && <CallModal callModalOff={callModalOffhandler} makeOutgoingCall={makeOutgoingCall} device={device}/> }
     </>
   );
 }
