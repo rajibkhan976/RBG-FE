@@ -160,12 +160,13 @@ function HeaderDashboard(props) {
     });
     device.on('connect', connection => {
       reset();
+      start();
       console.log(connection)
       if (connection._direction === 'INCOMING') {
         console.log(hours +":" + minutes + ":" + seconds)
         setDeviceMessage('Call Established with ' + connection.parameters.From + ' for ' + hours +":" + minutes + ":" + seconds);
       } else {
-        setDeviceMessage('Call Established with ' + connection.message.To + 'for' + hours +":" + minutes + ":" + seconds);
+        setDeviceMessage('Call Established with ' + connection.message.To + ' for ' + hours +":" + minutes + ":" + seconds);
       }
     });
 
@@ -235,12 +236,12 @@ function HeaderDashboard(props) {
                 <span className="callBtn green">
                   <img src={callIcon3} alt="" />
                 </span>
-                <span className="actionName">Call</span>  
+                <span className="actionName">Call</span>
               </button>
               <button className="listDropBtn" onClick={tglActionList}>
                 <img src={blueDownArrow} alt="" />
               </button>
-              {showActionState ? 
+              {showActionState ?
               <div className="leftBtnList">
                 <ul>
                   <li className="active">
@@ -280,7 +281,7 @@ function HeaderDashboard(props) {
               <button className="btn callBtn green" onClick={acceptConnection}>
                 <img src={callIcon1} alt="" />
               </button>
-            </div>  
+            </div>
           </div>
         </div>
         <button
@@ -289,7 +290,7 @@ function HeaderDashboard(props) {
           <img src={DownloadIcon} alt="" />
         </button>
         <button
-          className={setupModalStatus ? "btn buttonHeaderIcons active" : "btn buttonHeaderIcons"} 
+          className={setupModalStatus ? "btn buttonHeaderIcons active" : "btn buttonHeaderIcons"}
           onClick={toggleSetup}
         >
           <img src={setupModalStatus ? SettingIconBlue : SettingIcon} alt="" />
@@ -362,7 +363,7 @@ function HeaderDashboard(props) {
       <div class="sideMenuOuter">
           <div class="sideMenuInner userModal">
               <div class="modal_call_header">
-                  <button class="btn btn_empty" onClick={closeUserMenu}><img src={cross_white} alt=""/></button>   
+                  <button class="btn btn_empty" onClick={closeUserMenu}><img src={cross_white} alt=""/></button>
                       <div className="user_details">
                           <div className="user_profile">
                               <img src={userPhoto} alt=""/>
@@ -370,19 +371,19 @@ function HeaderDashboard(props) {
                           <div className="userContacts">
                               <h3>Steve Mile</h3>
                               <div className="userPhone">
-                                  <img src={phone_call_icon_white} alt="" /> 
+                                  <img src={phone_call_icon_white} alt="" />
                                   <span>+1-4132045887</span>
                               </div>
                               <div className="userEmail">
-                                  <img src={email_icon_white} alt="" /> 
+                                  <img src={email_icon_white} alt="" />
                                   <span>williamblake@gmail.com</span>
                               </div>
                               <div className="userPhone">
-                                  <img src={editIcon_white} alt="" /> 
+                                  <img src={editIcon_white} alt="" />
                                   <span>Edit</span>
                               </div>
                           </div>
-                          
+
                       </div>
                </div>
               <div className="user_modal_body">
@@ -407,7 +408,7 @@ function HeaderDashboard(props) {
                   <p> <button><img src={speaker_icon2} alt=""/> What's New </button></p>
                   <p>{stateUserMenu ? <button onClick={logOut}><img src={logout_icon} alt=""/> Logout</button> : "" }</p>
                 </div>
-                
+
               </div>
           </div>
       </div>
