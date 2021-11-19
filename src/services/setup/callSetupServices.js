@@ -71,8 +71,7 @@ export const CallSetupService = {
             const result = await axios.put(config.callSetupUrl + "/status-toggle/" + id, { headers: headers });
             return result.data;
         } catch (e) {
-            console.log("E::", e.response, typeof e.data , typeof e.data === "string");
-            if (!typeof e.response === 'undefined' && typeof e.response.data == "string") {
+            if (typeof e.response == 'object' && typeof e.response.data == "string") {
                 throw new Error(e.response.data);
             } else if(!typeof e.data === 'undefined') {
                 console.log(e.response.data.message);

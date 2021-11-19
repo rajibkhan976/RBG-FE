@@ -14,6 +14,7 @@ import file_done_icon from "../../../../assets/images/file_done_icon.svg";
 import Loader from "../../../shared/Loader";
 import ConfirmBox from "../../../shared/confirmBox";
 import { utils } from "../../../../helpers";
+import moment from "moment";
 
 let ringtoneList = [];
 let ringtone = new Audio();
@@ -344,8 +345,6 @@ const CallSetup = () => {
     }
 
     const statusToogle = async (ev, id, key) => {
-        ev.preventDefault();
-        console.log("Status tog");
         try {
             configurationList[key].status =  configurationList[key].status == "active" ? "inactive" : "active";
             setConfigurationList([...configurationList]);
@@ -362,6 +361,13 @@ const CallSetup = () => {
         }
        
     }
+    const getDeleteConfigWarnningMsg = () => {
+        // Return a detail warnning msg when user is deleting last config
+        return configurationList.length == 1 ? 
+                "Are you sure, you want to delete? if you delete all the configurations "
+                    + "then system will use the system default configuration which is only call response receive call" 
+                : "Are you sure, you want to delete?"
+    }
 
     return(
         <div className="dashInnerUI">
@@ -374,10 +380,7 @@ const CallSetup = () => {
             }
             {isAlert.show &&
                 <ConfirmBox
-                    message={() => {
-                        return configurationList.length == 13 ? 
-                        "Are you sure, you want to delete? if you delete all the configurations then system will use the system default configuration which is only call response receive call" : ""
-                    }}
+                    message={getDeleteConfigWarnningMsg()}
                     callback={(isConfirmed) => deleteConfig(isAlert.el, isConfirmed)}
                 />
             }
@@ -551,6 +554,10 @@ const CallSetup = () => {
                                     onClick={() => handleSortBy("status")}>
                                     Status
                                 </div>
+                                <div
+                                    className={"createDate " + (sortBy == "createdAt" ? "sort " + sortType : "")}
+                                    onClick={() => handleSortBy("createdAt")}
+                                >Created on</div>
                             </li>
                             {
                                 configurationList.map((list, key) => {
@@ -584,11 +591,14 @@ const CallSetup = () => {
                                                     </li>
                                                 </ul>
                                             </div>
-                                            <div className="createDate">
+                                            <div>
                                                 <label className={"toggleBtn " + list.status }  >
                                                     <input type="checkbox" onChange={ (e) => { statusToogle(e, list._id, key) }}/>
                                                     <span className="toggler"></span>
                                                 </label>
+                                            </div>
+                                            <div className="createDate">
+                                                <button className="btn">{moment(list.createdAt).format("Do MMM YYYY")}</button>
                                                 <div className="info_3dot_icon">
                                                     <button className="btn"
                                                         onClick={() => {
