@@ -5,6 +5,7 @@ import cross_white from "../../../../assets/images/cross_white.svg";
 import plus from "../../../../assets/images/plus_icon.svg";
 import {ErrorAlert, SuccessAlert} from "../../messages";
 
+import {BillingServices} from "../../../../services/billing/billingServices";
 
 
 const Billing = () => {
@@ -103,7 +104,20 @@ const Billing = () => {
             "bank_name_Err": false  
         }
     ]);
+    
+    const [cardBankLoader, setCardBankLoader] = useState();
+    const [cardBankList, setCardBankList] = useState();
 
+    const fetchCardBank = async () => {
+        setCardBankLoader(true);
+        let cardBankResponce = await BillingServices.fetchCardBank();
+        setCardBankLoader(false);
+        setCardBankList(cardBankResponce);
+        console.log("cardBankList__", cardBankResponce);
+    };
+    fetchCardBank();
+
+    
     const openNewCardHandler = () =>{
         setListCardAnnim(false);
         setNewCardAnnim(true)
@@ -181,12 +195,13 @@ const Billing = () => {
             if (formattedCardNumber.match(/\d{1,4}/g)) {
                 formattedCardNumber = cardNumberSections.join('-'); 
                 setCardNumberCheck(formattedCardNumber);
+                var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");
+                setCardNumberOn(cardNumberChanged)
              }
              if(e.target.value === ""){
                 setCardNumberCheck("");
              }
-             let cardNumberChanged = cardNumber.replace("-", 3)
-             setCardNumberOn(cardNumberChanged)
+            
                // setCardNumber(e.target.value);
                 console.log(e.target.value, formattedCardNumber.match(/\d{1,4}/g));     
     }
@@ -225,25 +240,26 @@ const Billing = () => {
         formattedCardCvv = formattedCardCvv.substring(0, 3);    
         setCardCvvCheck(formattedCardCvv);       
     }
-    const cardActiveHandler = (e) =>{     
+    const cardActiveHandler = (e) =>{    
+        setCardActivationCheck(!cardActivationCheck); 
         var checkActiveCard = "";
         if(cardActivationCheck === false){
             checkActiveCard = "Active"
         }else{
             checkActiveCard = "Inactive"
         }
-        setCardActivationCheck(!cardActivationCheck);
+      
         setCardActivationCheckText(checkActiveCard);
     }
 
     const bankActiveHandler = (e) =>{     
+        setBankActivationCheck(!bankActivationCheck);
         var checkActiveBank = "Inactive";
         if(bankActivationCheck === false){
             checkActiveBank = "Active"
         }else{
             checkActiveBank = "Inactive"
         }
-        setBankActivationCheck(!bankActivationCheck);
         setBankActivationCheckText(checkActiveBank);
     }
     const bankAccountCheckHandler = (e) =>{
@@ -273,7 +289,7 @@ const Billing = () => {
    
     const saveCardData = (e) =>{
         e.preventDefault();
-        setCardDataFormatting({...cardDataFormatting, card_number: cardNumberCheck ,expiration_year : cardExpairyYearCheck,  expiration_month : cardExpairyMonthCheck, cvv: cardCvvCheck, cardholder_name: cardNameCheck , status: cardActivationCheckText});
+        setCardDataFormatting({...cardDataFormatting, card_number: cardNumberOn ,expiration_year : cardExpairyYearCheck,  expiration_month : cardExpairyMonthCheck, cvv: cardCvvCheck, cardholder_name: cardNameCheck , status: cardActivationCheckText});
         
 
         if(!cardNumberCheck || cardNumberCheck.length < 19){
@@ -399,7 +415,7 @@ const Billing = () => {
                                                 <div className="activate">
                                                     <div class="customCheckbox">
                                                     <input type="checkbox" name="credit" onChange={cardActiveHandler} checked={cardActivationCheck}/><span></span>
-                                                    </div> {cardActivationCheck ? "Active" : "Inactive"}
+                                                    </div> {cardActivationCheck ? "Inactive" : "Active"}
                                                 </div>
                                             </div>
                                         
@@ -497,7 +513,7 @@ const Billing = () => {
                                                 <div className="activate">
                                                     <div class="customCheckbox">
                                                     <input type="checkbox" name="credit" onChange={bankActiveHandler} checked={bankActivationCheck}/><span></span>
-                                                    </div> {bankActivationCheck ? "Active" : "Inactive"}
+                                                    </div> {bankActivationCheck ? "Inactive" : "Active"}
                                                 </div>
                                             </div>
                                             {formErrorMsg.bank_acc_Err ? <p className="errorMsg">Please fill up the field</p> : ""}
