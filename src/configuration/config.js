@@ -77,5 +77,8 @@ module.exports = {
     callWebhookUrl: "https://memz99rc6c.execute-api.us-east-1.amazonaws.com/dev/",
     //callWebhookUrl: "http://localhost:3006/dev/",
     // Ringtone service
-    ringtoneUrl: "https://psk3w69xqd.execute-api.us-east-1.amazonaws.com/dev/number/ringtone/"
+    ringtoneUrl: "https://psk3w69xqd.execute-api.us-east-1.amazonaws.com/dev/number/ringtone/",
+    // Billing service
+    billingUrl: "https://tt7n78ndd2.execute-api.us-east-1.amazonaws.com/dev/contact/billing/"
+
 }  
