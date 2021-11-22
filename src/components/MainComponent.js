@@ -14,7 +14,7 @@ import TemplateRoutes from "./setup/templates/templateRoutes";
 import ProductRouter from "./setup/product/productRoute";
 import NumberRouting from "./numbers/NumberRoute";
 import CourseRouter from "./setup/course/courseRoute";
-
+import HeaderDashboard from "./shared/HeaderDashboard";
 
 
 const MainComponent = () => {
@@ -55,6 +55,7 @@ const MainComponent = () => {
         >
           <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu}/>
           <div className="dashMain">
+          <HeaderDashboard toggleCreate={(e) =>toggleCreate(e)} />
             <Switch>
               <Route exact path="/dashboard">
                 <DashboardRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}/>

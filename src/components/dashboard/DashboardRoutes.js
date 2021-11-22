@@ -15,7 +15,7 @@ const DashboardRouting = (props) => {
     <React.Fragment>
       <InnerLeftMenu routeMenu="dashboard"/>
       <div className="dashboardElComponent">
-        <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} />
+       
         <div className="dashInnerStructure">
           <Dashboard/>
           <DashboardFooter />

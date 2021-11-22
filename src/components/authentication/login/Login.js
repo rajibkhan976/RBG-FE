@@ -189,12 +189,14 @@ const Login = (props) => {
             </div>
 
           </div>
-          <div className="formInputs remember">
+          {/* ......... implemented later .................... */}
+          {/* <div className="formInputs remember">
             <label>
               <div class="customCheckbox"><input type="checkbox" name="categories" value=""/><span></span></div>
               Remember me
-            </label>    
-          </div>
+            </label>     
+          </div> */}
+          {/* ;,.,.,.,.,.,.,.,.,.,*/}
           <div className="formInputs">
             <button className="btn orangeBtn">Sign In</button>
           </div>

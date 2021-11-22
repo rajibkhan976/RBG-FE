@@ -29,7 +29,7 @@ function ContactsComponent(props) {
         </ul>
       </div>
       <div className="dashboardElComponent">
-        <HeaderDashboard toggleCreate={toggleCreate} />
+        <HeaderDashboard toggleCreate={toggleCreate} /> 
         <div className="dashInnerStructure">
           <div className="dashInnerUI">
             <Switch>
