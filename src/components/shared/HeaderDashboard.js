@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-
 import Notifications from "./Notifications";
 import Setup from "../setup/mainPopup/setup";
 import CallModal from "./callModal";
 import { useDispatch } from "react-redux";
 import AuthActions from "../../actions/AuthActions";
-
 import CreateIcon from "../../assets/images/create.png";
 import NotificationIcon from "../../assets/images/notif.png";
 import UserIcon from "../../assets/images/user.png";
@@ -19,8 +17,6 @@ import SettingIcon from "../../assets/images/settings.svg";
 import SettingIconBlue from "../../assets/images/settings_blue.svg";
 import DownloadIcon from "../../assets/images/download.svg";
 import cross_white from "../../assets/images/cross_white.svg";
-
-
 import userPhoto from "../../assets/images/userPhoto.png";
 import editIcon_white from "../../assets/images/edit_white2.png";
 import phone_call_icon_white from "../../assets/images/phone_call_icon_white.svg";
@@ -29,13 +25,9 @@ import speaker_icon2 from "../../assets/images/speaker_icon2.svg";
 import help_icon from "../../assets/images/help_icon.svg";
 import headset_icon from "../../assets/images/headset_icon.svg";
 import logout_icon from "../../assets/images/logout_icon.svg";
-
-
-
-
-
 import {CallSetupService} from "../../services/setup/callSetupServices";
 import { useStopwatch } from 'react-timer-hook';
+import {ImportContactServices} from "../../services/contact/importContact";
 const { Device } = require('twilio-client');
 
 function HeaderDashboard(props) {
@@ -143,7 +135,19 @@ function HeaderDashboard(props) {
       }
     }
   }, [hours, minutes, seconds])
+  const getContactDetails = async (number) => {
+    try {
+      let payload = {
+        number: number
+      }
+      const result = await ImportContactServices.saveContact(payload);
+      console.log(result)
+    } catch (e) {
+      console.log('error', e);
+    }
+  }
   useEffect(() => {
+    //getContactDetails("+919433295537")
     fetchCapabilityToken();
     device.on('incoming', connection => {
       setConnection(connection);
@@ -159,9 +163,9 @@ function HeaderDashboard(props) {
       pause();
     });
     device.on('connect', connection => {
+      setConnection(connection);
       reset();
       start();
-      console.log(connection)
       if (connection._direction === 'INCOMING') {
         console.log(hours +":" + minutes + ":" + seconds)
         setDeviceMessage('Call Established with ' + connection.parameters.From + ' for ' + hours +":" + minutes + ":" + seconds);

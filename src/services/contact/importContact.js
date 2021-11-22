@@ -25,6 +25,18 @@ export const ImportContactServices = {
         };
 
         return await axios(configAxios);
+    },
+    saveContact: async (payload) => {
+        let configAxios = {
+            method: 'post',
+            url: config.importContactUrl + '/save-indivitual',
+            headers: {
+                "Content-Type": "text/plain"
+            },
+            data : payload
+        };
+
+        return await axios(configAxios);
     }
 
 };
