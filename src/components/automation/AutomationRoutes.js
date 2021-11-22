@@ -30,7 +30,7 @@ const AutomationRoutes = (props) => {
     <React.Fragment>
       <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} routeMenu={roleMenu} />
       <div className="dashboardElComponent">
-        <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} />
+        {/* <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} /> */}
         <div className="dashInnerStructure">
           <Switch>
             <Route exact path={["/automation-list", "/automation-builder", "/automation-details"]} component={Automation} />

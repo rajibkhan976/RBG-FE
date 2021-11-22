@@ -17,7 +17,7 @@ const CommunicationRoutes = (props) => {
     <React.Fragment>
       <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} routeMenu="setup" reRender={(id) => renderID(id)} />
       <div className="dashboardElComponent">
-        <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} />
+        {/* <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} /> */}
         <div className="dashInnerStructure">
           <Route path="/call-setup" component={CallSetup} />
           {/* <Route

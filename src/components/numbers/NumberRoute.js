@@ -10,7 +10,7 @@ const NumberRouting = (props) => {
     <React.Fragment>
       {/* <InnerLeftMenu routeMenu="dashboard"/> */}
       <div className="dashboardElComponent full">
-        <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} />
+        {/* <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} /> */}
         <div className="dashInnerStructure">
           <NumberListing/>
           <DashboardFooter />

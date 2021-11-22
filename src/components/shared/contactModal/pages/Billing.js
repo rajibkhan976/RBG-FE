@@ -105,17 +105,17 @@ const Billing = () => {
         }
     ]);
     
-    const [cardBankLoader, setCardBankLoader] = useState();
-    const [cardBankList, setCardBankList] = useState();
+    // const [cardBankLoader, setCardBankLoader] = useState();
+    // const [cardBankList, setCardBankList] = useState();
 
-    const fetchCardBank = async () => {
-        setCardBankLoader(true);
-        let cardBankResponce = await BillingServices.fetchCardBank();
-        setCardBankLoader(false);
-        setCardBankList(cardBankResponce);
-        console.log("cardBankList__", cardBankResponce);
-    };
-    fetchCardBank();
+    //  const fetchCardBank = async () => {
+    //      setCardBankLoader(true);
+    //      let cardBankResponce = await BillingServices.fetchCardBank();
+    //      setCardBankLoader(false);
+    //      setCardBankList(cardBankResponce);
+    //      console.log("cardBankList__", cardBankResponce);
+    //  };
+    //  fetchCardBank();
 
     
     const openNewCardHandler = () =>{
