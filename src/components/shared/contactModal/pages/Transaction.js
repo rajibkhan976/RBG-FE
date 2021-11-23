@@ -1,13 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import icon_trans from "../../../../assets/images/icon_trans.svg";
 import wwConnect from "../../../../assets/images/wwConnect.svg";
 import wwConnect2 from "../../../../assets/images/wwConnect2.svg";
 
+import { TransactionServices } from "../../../../services/transaction/transactionServices";
+
 
 const Transaction = (props) => {
 
+    const [transactionList, setTransactionList] = useState([]);
     
+
+    const fetchTransactionList = async () => {
+    let transactionResponce = await TransactionServices.fetchTransactionList();
+    setTransactionList(transactionResponce && transactionResponce.transList);
+    };
+    useEffect(() => {
+    transactionList.length === 0 && fetchTransactionList();
+    console.log("transactionList", transactionList);
+    }, [transactionList]);
+
+
     return(
         <>
              <div className="contactTabsInner">

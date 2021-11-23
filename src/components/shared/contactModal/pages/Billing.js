@@ -30,46 +30,46 @@ const Billing = () => {
   const [bankNameCheck, setBankNameCheck] = useState("");
   const [bankRoutingCheck, setBankRoutingCheck] = useState("");
 
-  const [activeCreditCardCheck, setActiveCreditCardCheck] = useState([
-    {
-      cardNumber: "XXXXXXXXXXXX1234",
-      expairyDate: "08/22",
-      id: 1,
-      checkIt: true,
-    },
-    {
-      cardNumber: "XXXXXXXXXXXX5678",
-      expairyDate: "07/22",
-      id: 2,
-      checkIt: false,
-    },
-    {
-      cardNumber: "XXXXXXXXXXXX9101",
-      expairyDate: "06/22",
-      id: 3,
-      checkIt: false,
-    },
-  ]);
-  const [activeBankCheck, setActiveBankCheck] = useState([
-    {
-      accountNumber: "XXXXXXXXXXXX1234",
-      routingA: "08/22",
-      id: 1,
-      checkIt: true,
-    },
-    {
-      accountNumber: "XXXXXXXXXXXX5678",
-      routingA: "07/22",
-      id: 2,
-      checkIt: false,
-    },
-    {
-      accountNumber: "XXXXXXXXXXXX9101",
-      routingA: "06/22",
-      id: 3,
-      checkIt: false,
-    },
-  ]);
+   const [activeCreditCardCheck, setActiveCreditCardCheck] = useState([
+     {
+       cardNumber: "XXXXXXXXXXXX1234",
+       expairyDate: "08/22",
+       id: 1,
+       checkIt: true,
+     },
+     {
+       cardNumber: "XXXXXXXXXXXX5678",
+       expairyDate: "07/22",
+       id: 2,
+       checkIt: false,
+     },
+     {
+       cardNumber: "XXXXXXXXXXXX9101",
+       expairyDate: "06/22",
+       id: 3,
+       checkIt: false,
+     },
+   ]);
+   const [activeBankCheck, setActiveBankCheck] = useState([
+     {
+       accountNumber: "XXXXXXXXXXXX1234",
+       routingA: "08/22",
+       id: 1,
+       checkIt: true,
+     },
+     {
+       accountNumber: "XXXXXXXXXXXX5678",
+       routingA: "07/22",
+       id: 2,
+       checkIt: false,
+     },
+     {
+       accountNumber: "XXXXXXXXXXXX9101",
+       routingA: "06/22",
+       id: 3,
+       checkIt: false,
+     },
+   ]);
   const [cardDataFormatting, setCardDataFormatting] = useState([
     {
       contact: "618cfc610bd605dd51cbc0b7",
@@ -157,7 +157,7 @@ const Billing = () => {
       }
     });
 
-    setActiveCreditCardCheck(mapped);
+    //setActiveCreditCardCheck(mapped);
   };
 
   const activeBank = (bank) => {
@@ -459,7 +459,7 @@ const Billing = () => {
                         <div
                           key={cardBankList._id}
                           className={
-                            cardBankList.status === "active"
+                            creditCard.status === "active"
                               ? "list active"
                               : "list"
                           }
@@ -633,7 +633,7 @@ const Billing = () => {
                     bankList.map((bank, i) => (
                       <div
                         key={bank.id}
-                        className={bank.checkIt ? "list active" : "list"}
+                        className={bank.status === "active" ? "list active" : "list"}
                       >
                         <label className="leftside">
                           <div class="circleRadio">
