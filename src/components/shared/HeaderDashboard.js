@@ -150,15 +150,21 @@ function HeaderDashboard(props) {
     }
   }
   useEffect(() => {
+    if (Object.keys(connection).length) {
+      connection.on('disconnect', function(conn) {
+        setDeviceMessage('Ready');
+        pause();
+      });
+    }
+  }, [connection]);
+  useEffect(() => {
    // getContactDetails("+18124051848")
     fetchCapabilityToken();
     device.on('incoming', async connection => {
       setConnection(connection);
       if (connection._direction === 'INCOMING') {
-        await getContactDetails(connection.parameters.From);
         setDeviceMessage('Incoming Call from ' + connection.parameters.From);
       } else {
-        await getContactDetails(connection.message.To);
         setDeviceMessage('Outgoing Call to ' + connection.parameters.To);
       }
     });
@@ -173,11 +179,11 @@ function HeaderDashboard(props) {
       start();
       let contactId = '';
       if (connection._direction === 'INCOMING') {
-        contactId = await getContactDetails(connection.parameters.From);
         setDeviceMessage('Call Established with ' + connection.parameters.From + ' for ' + hours + ":" + minutes + ":" + seconds);
+        contactId = await getContactDetails(connection.parameters.From);
       } else {
-        contactId = await getContactDetails(connection.message.To);
         setDeviceMessage('Call Established with ' + connection.message.To + ' for ' + hours + ":" + minutes + ":" + seconds);
+        contactId = await getContactDetails(connection.message.To);
       }
       if (contactId.success) {
         dispatch({
@@ -188,6 +194,7 @@ function HeaderDashboard(props) {
     });
 
     device.on('disconnect', connection => {
+      setConnection(connection);
       setDeviceMessage('Ready');
       pause();
     });
@@ -292,10 +299,10 @@ function HeaderDashboard(props) {
               {deviceMessage}
             </p>
             <div className="d-flex">
-              <button className="btn callBtn red" onClick={hangup}>
+              <button className="btn callBtn green" onClick={acceptConnection}>
                 <img src={callIcon2} alt="" />
               </button>
-              <button className="btn callBtn green" onClick={acceptConnection}>
+              <button className="btn callBtn red" onClick={hangup}>
                 <img src={callIcon1} alt="" />
               </button>
             </div>
