@@ -4,6 +4,7 @@ import credit_card from "../../../../assets/images/credit_card.svg";
 import cross_white from "../../../../assets/images/cross_white.svg";
 import plus from "../../../../assets/images/plus_icon.svg";
 import { ErrorAlert, SuccessAlert } from "../../messages";
+import Loader from "../../Loader";
 
 import { BillingServices } from "../../../../services/billing/billingServices";
 
@@ -102,7 +103,7 @@ const Billing = () => {
     },
   ]);
 
-  const [cardBankLoader, setCardBankLoader] = useState("Loading...");
+  //   const [cardBankLoader, setCardBankLoader] = useState();
   const [cardBankList, setCardBankList] = useState([]);
   const [bankList, setBankList] = useState([]);
 
@@ -451,49 +452,49 @@ const Billing = () => {
                   </button>
                 </div>
                 <div className="body">
-                  {cardBankList.length !== 0
-                    ? cardBankList.map((creditCard, i) => (
-                        <>
-                          {console.log("Hi", creditCard)}
-                          <div
-                            key={cardBankList._id}
-                            className={
-                              cardBankList.status === "active"
-                                ? "list active"
-                                : "list"
-                            }
-                          >
-                            <label className="leftside">
-                              <div class="circleRadio">
-                                <input
-                                  type="radio"
-                                  name="credit"
-                                  onChange={() => activeCreditCard(creditCard)}
-                                  defaultChecked={
-                                    creditCard.status === "active"
-                                      ? true
-                                      : false
-                                  }
-                                  id={i}
-                                />
-                                <span></span>
-                              </div>{" "}
-                              {creditCard.checkIt ? "Active" : ""}
-                            </label>
-                            <div className="rightside">
-                              <p>
-                                <span>Card Number</span>
-                                XXXXXXXXXXXX{creditCard.last4}{" "}
-                              </p>
-                              <p className="diff">
-                                <span>Expiry</span>
-                                {`${creditCard.expiration_month} / ${creditCard.expiration_year}`}
-                              </p>
-                            </div>
+                  {cardBankList.length !== 0 ? (
+                    cardBankList.map((creditCard, i) => (
+                      <>
+                        {console.log("Hi", creditCard)}
+                        <div
+                          key={cardBankList._id}
+                          className={
+                            cardBankList.status === "active"
+                              ? "list active"
+                              : "list"
+                          }
+                        >
+                          <label className="leftside">
+                            <div class="circleRadio">
+                              <input
+                                type="radio"
+                                name="credit"
+                                onChange={() => activeCreditCard(creditCard)}
+                                defaultChecked={
+                                  creditCard.status === "active" ? true : false
+                                }
+                                id={i}
+                              />
+                              <span></span>
+                            </div>{" "}
+                            {creditCard.checkIt ? "Active" : ""}
+                          </label>
+                          <div className="rightside">
+                            <p>
+                              <span>Card Number</span>
+                              XXXXXXXXXXXX{creditCard.last4}{" "}
+                            </p>
+                            <p className="diff">
+                              <span>Expiry</span>
+                              {`${creditCard.expiration_month} / ${creditCard.expiration_year}`}
+                            </p>
                           </div>
-                        </>
-                      ))
-                    : cardBankLoader}
+                        </div>
+                      </>
+                    ))
+                  ) : (
+                    <Loader />
+                  )}
                 </div>
               </div>
               <div
@@ -628,40 +629,42 @@ const Billing = () => {
                   </button>
                 </div>
                 <div className="body">
-                  {bankList.length !== 0
-                    ? bankList.map((bank, i) => (
-                        <div
-                          key={bank.id}
-                          className={bank.checkIt ? "list active" : "list"}
-                        >
-                          <label className="leftside">
-                            <div class="circleRadio">
-                              <input
-                                type="radio"
-                                name="bank"
-                                onChange={() => activeBank(bank)}
-                                defaultChecked={
-                                  bank.status === "active" ? true : false
-                                }
-                                id={i}
-                              />
-                              <span></span>
-                            </div>
-                          </label>
-                          <div className="rightside">
-                            <p>
-                              <span>Account Number</span>
-                              XXXXXXXXXXXX{bank.last4}
-                            </p>
-                            <p className="diff">
-                              <span>Routing #</span>
-                              {bank.routing_number}
-                            </p>
-                            <div className="checking">{bank.account_type}</div>
+                  {bankList.length !== 0 ? (
+                    bankList.map((bank, i) => (
+                      <div
+                        key={bank.id}
+                        className={bank.checkIt ? "list active" : "list"}
+                      >
+                        <label className="leftside">
+                          <div class="circleRadio">
+                            <input
+                              type="radio"
+                              name="bank"
+                              onChange={() => activeBank(bank)}
+                              defaultChecked={
+                                bank.status === "active" ? true : false
+                              }
+                              id={i}
+                            />
+                            <span></span>
                           </div>
+                        </label>
+                        <div className="rightside">
+                          <p>
+                            <span>Account Number</span>
+                            XXXXXXXXXXXX{bank.last4}
+                          </p>
+                          <p className="diff">
+                            <span>Routing #</span>
+                            {bank.routing_number}
+                          </p>
+                          <div className="checking">{bank.account_type}</div>
                         </div>
-                      ))
-                    : cardBankLoader}
+                      </div>
+                    ))
+                  ) : (
+                    <Loader />
+                  )}
                 </div>
               </div>
 
