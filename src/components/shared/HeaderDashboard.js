@@ -28,6 +28,7 @@ import logout_icon from "../../assets/images/logout_icon.svg";
 import {CallSetupService} from "../../services/setup/callSetupServices";
 import { useStopwatch } from 'react-timer-hook';
 import {ImportContactServices} from "../../services/contact/importContact";
+import * as actionTypes from "../../actions/types";
 const { Device } = require('twilio-client');
 
 function HeaderDashboard(props) {
@@ -141,19 +142,23 @@ function HeaderDashboard(props) {
         number: number
       }
       const result = await ImportContactServices.saveContact(payload);
-      console.log(result)
+      return result.data;
     } catch (e) {
-      console.log('error', e);
+      return {
+        success: false
+      };
     }
   }
   useEffect(() => {
-    //getContactDetails("+919433295537")
+   // getContactDetails("+18124051848")
     fetchCapabilityToken();
-    device.on('incoming', connection => {
+    device.on('incoming', async connection => {
       setConnection(connection);
       if (connection._direction === 'INCOMING') {
+        await getContactDetails(connection.parameters.From);
         setDeviceMessage('Incoming Call from ' + connection.parameters.From);
       } else {
+        await getContactDetails(connection.message.To);
         setDeviceMessage('Outgoing Call to ' + connection.parameters.To);
       }
     });
@@ -162,15 +167,23 @@ function HeaderDashboard(props) {
       setDeviceMessage('Ready');
       pause();
     });
-    device.on('connect', connection => {
+    device.on('connect', async connection => {
       setConnection(connection);
       reset();
       start();
+      let contactId = '';
       if (connection._direction === 'INCOMING') {
-        console.log(hours +":" + minutes + ":" + seconds)
-        setDeviceMessage('Call Established with ' + connection.parameters.From + ' for ' + hours +":" + minutes + ":" + seconds);
+        contactId = await getContactDetails(connection.parameters.From);
+        setDeviceMessage('Call Established with ' + connection.parameters.From + ' for ' + hours + ":" + minutes + ":" + seconds);
       } else {
-        setDeviceMessage('Call Established with ' + connection.message.To + ' for ' + hours +":" + minutes + ":" + seconds);
+        contactId = await getContactDetails(connection.message.To);
+        setDeviceMessage('Call Established with ' + connection.message.To + ' for ' + hours + ":" + minutes + ":" + seconds);
+      }
+      if (contactId.success) {
+        dispatch({
+          type: actionTypes.CONTACTS_MODAL_ID,
+          contact_modal_id: contactId.data,
+        });
       }
     });
 
