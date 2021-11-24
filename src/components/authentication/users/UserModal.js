@@ -884,6 +884,7 @@ const UserModal = (props) => {
                 }
             } finally {
                 setIsLoader(false);
+                setProcessing(false);
             }
 
         }

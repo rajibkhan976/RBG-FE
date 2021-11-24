@@ -17,6 +17,7 @@ import list_board_icon from "../../../assets/images/list_board_icon.svg";
 import moment from "moment";
 import responses from '../../../configuration/responses';
 import env from '../../../configuration/env';
+import ConfirmBox from "../../shared/confirmBox";
 
 const UsersListing = (props) => {
     const [dropdownPos, setDropdownPos] = useState('bottom');
@@ -40,6 +41,10 @@ const UsersListing = (props) => {
     const messageDelay = 5000; // ms
     const [tableWidth, setTableWidth] = useState(500);
     const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "user")));
+    const [isAlert, setIsAlert] = useState({
+        show: false,
+        id: null,
+    });
 
     const handelSize = () => {
         setTableWidth(window.innerWidth - 454);
@@ -258,14 +263,19 @@ const UsersListing = (props) => {
     /**
      * Delete user and organization
      */
-    const deleteUser = async (user) => {
-
-        if (
-            (user && !user.isOrganizationOwner)
+    const deleteUser = async (user, isConfirmed = null) => {
+        let userId = user._id;
+        if (!isConfirmed && userId) {
+            setIsAlert({
+                show: true,
+                id: userId,
+            });
+        } else if (
+            (user && !user.isOrganizationOwner && isConfirmed == "yes")
             || (
                 user
                 && user.isOrganizationOwner
-                && window.confirm("Are you sure! want to delete the organization and its owner?")
+                && isConfirmed == "yes"
             )
         ) {
             try {
@@ -284,19 +294,14 @@ const UsersListing = (props) => {
                  * Delete the user
                  */
                 const result = await UserServices.deleteUser(user._id)
-                // .then((result) => {
                 if (result) {
                     console.log('User delete result', result);
                     setOption(null);
                     setIsDeleted(true);
                     setSuccessMsg("User deleted successfully");
                 }
-                // })
-                // .catch((error) => {
-                //     console.log("Role delete error", error);
-                // });
             } catch (e) {
-                console.log("Error in Role delete", e);
+                console.log("Error in user delete", e);
                 setErrorMsg(e.message);
             }
         }
@@ -355,6 +360,13 @@ const UsersListing = (props) => {
     return (
         <div className="dashInnerUI">
             {isLoader ? <Loader /> : ''}
+            {isAlert.show ? (
+                <ConfirmBox
+                    callback={(isConfirmed) => deleteUser(isAlert.id, isConfirmed)}
+                />
+            ) : (
+                ""
+            )}
             <ListHead
                 toggleCreateHeader={toggleCreateHeader}
                 filterUsers={filterUsers}
