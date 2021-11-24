@@ -293,17 +293,26 @@ const UsersListing = (props) => {
                 /**
                  * Delete the user
                  */
-                const result = await UserServices.deleteUser(user._id)
+                const result = await UserServices.deleteUser(isAlert.id)
                 if (result) {
                     console.log('User delete result', result);
                     setOption(null);
                     setIsDeleted(true);
                     setSuccessMsg("User deleted successfully");
+                    setIsAlert({
+                        show: false,
+                        id: null,
+                    });
                 }
             } catch (e) {
                 console.log("Error in user delete", e);
                 setErrorMsg(e.message);
             }
+        } else {
+            setIsAlert({
+                show: false,
+                id: null,
+            });
         }
     }
 

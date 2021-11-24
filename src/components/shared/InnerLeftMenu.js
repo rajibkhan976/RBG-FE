@@ -45,7 +45,7 @@ const InnerLeftMenu = (props) => {
       }
     } catch (e) {
       console.log("Error in fetchCount", e);
-      throw new Error(e);
+      // throw new Error(e);
     }
   }
 
