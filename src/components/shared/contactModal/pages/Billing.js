@@ -5,8 +5,10 @@ import cross_white from "../../../../assets/images/cross_white.svg";
 import plus from "../../../../assets/images/plus_icon.svg";
 import { ErrorAlert, SuccessAlert } from "../../messages";
 import Loader from "../../Loader";
+import axios from "axios";
 
 import { BillingServices } from "../../../../services/billing/billingServices";
+import { billingUrl } from "../../../../configuration/config";
 
 const Billing = () => {
   const [listCardAnnim, setListCardAnnim] = useState(true);
@@ -30,46 +32,6 @@ const Billing = () => {
   const [bankNameCheck, setBankNameCheck] = useState("");
   const [bankRoutingCheck, setBankRoutingCheck] = useState("");
 
-   const [activeCreditCardCheck, setActiveCreditCardCheck] = useState([
-     {
-       cardNumber: "XXXXXXXXXXXX1234",
-       expairyDate: "08/22",
-       id: 1,
-       checkIt: true,
-     },
-     {
-       cardNumber: "XXXXXXXXXXXX5678",
-       expairyDate: "07/22",
-       id: 2,
-       checkIt: false,
-     },
-     {
-       cardNumber: "XXXXXXXXXXXX9101",
-       expairyDate: "06/22",
-       id: 3,
-       checkIt: false,
-     },
-   ]);
-   const [activeBankCheck, setActiveBankCheck] = useState([
-     {
-       accountNumber: "XXXXXXXXXXXX1234",
-       routingA: "08/22",
-       id: 1,
-       checkIt: true,
-     },
-     {
-       accountNumber: "XXXXXXXXXXXX5678",
-       routingA: "07/22",
-       id: 2,
-       checkIt: false,
-     },
-     {
-       accountNumber: "XXXXXXXXXXXX9101",
-       routingA: "06/22",
-       id: 3,
-       checkIt: false,
-     },
-   ]);
   const [cardDataFormatting, setCardDataFormatting] = useState([
     {
       contact: "618cfc610bd605dd51cbc0b7",
@@ -106,16 +68,44 @@ const Billing = () => {
   //   const [cardBankLoader, setCardBankLoader] = useState();
   const [cardBankList, setCardBankList] = useState([]);
   const [bankList, setBankList] = useState([]);
+  const [contactId, setContactId] = useState("");
+  const [primaryType, setPrimaryType] = useState("card");
 
   const fetchCardBank = async () => {
     let cardBankResponce = await BillingServices.fetchCardBank();
     setCardBankList(cardBankResponce && cardBankResponce.cards);
     setBankList(cardBankResponce && cardBankResponce.banks);
+    if (
+      cardBankResponce &&
+      cardBankResponce.card &&
+      cardBankResponce.card.length > 0
+    ) {
+      setContactId(
+        cardBankResponce.card[0].contactId && cardBankResponce.card[0].contactId
+      );
+    } else if (
+      cardBankResponce &&
+      cardBankResponce.banks &&
+      cardBankResponce.banks.length > 0
+    ) {
+      setContactId(
+        cardBankResponce.banks[0].contactId &&
+          cardBankResponce.banks[0].contactId
+      );
+    }
+    console.log("CARD/Bank LISTING data", cardBankResponce);
   };
+  //   useEffect(() => {
+  //     cardBankList.length === 0
+  //       ? fetchCardBank()
+  //       : console.log("CARD DATA", cardBankList);
+  //   }, [cardBankList, bankList]);
+
   useEffect(() => {
-    cardBankList.length === 0 && fetchCardBank();
-    console.log("cardCardList", cardBankList, "bankList", bankList);
-  }, [cardBankList, bankList]);
+    cardBankList.length === 0
+      ? fetchCardBank()
+      : console.log("CARD DATA", cardBankList);
+  }, [cardBankList]);
 
   const openNewCardHandler = () => {
     setListCardAnnim(false);
@@ -142,39 +132,34 @@ const Billing = () => {
     setPrimaryChecked(true);
   };
 
-  const activeCreditCard = (creditCard) => {
-    let mapped = activeCreditCardCheck.map((el, i) => {
-      if (creditCard.id === el.id) {
-        return {
-          ...el,
-          checkIt: !el.checkIt,
-        };
-      } else {
-        return {
-          ...el,
-          checkIt: false,
-        };
-      }
-    });
-
-    //setActiveCreditCardCheck(mapped);
+  const activeCreditCard = async (creditCard) => {
+    let cardData = {
+      contactId: creditCard && creditCard.contactId,
+      accountType: creditCard && creditCard.accountType,
+      billingID: creditCard && creditCard.contactId,
+    };
+    await BillingServices.activeCard(cardData);
+    console.log("ACTIVE CARD BILLING.JS:::", cardData);
+    // fetchCardBank();
   };
 
   const activeBank = (bank) => {
-    let mapped2 = activeBankCheck.map((el, i) => {
-      if (bank.id === el.id) {
-        return {
-          ...el,
-          checkIt: !el.checkIt,
-        };
-      } else {
-        return {
-          ...el,
-          checkIt: false,
-        };
-      }
-    });
-    setActiveBankCheck(mapped2);
+    // let mapped2 = activeBankCheck.map((el, i) => {
+    //   if (bank.id === el.id) {
+    //     return {
+    //       ...el,
+    //       checkIt: !el.checkIt,
+    //     };
+    //   } else {
+    //     return {
+    //       ...el,
+    //       checkIt: false,
+    //     };
+    //   }
+    // });
+    // setActiveBankCheck(mapped2);
+
+    console.log("ACTIVE BANK:::", bank);
   };
 
   // .................. validation ................
@@ -413,6 +398,14 @@ const Billing = () => {
     );
   };
 
+  const makePrimaryMethod = (e, value) => {
+    if (contactId && value) {
+      BillingServices.makePrimary(contactId, value);
+      setPrimaryType(value);
+    }
+    console.log("CONTACT ID::::", contactId);
+  };
+
   return (
     <>
       <div className="contactTabsInner">
@@ -428,14 +421,14 @@ const Billing = () => {
                   <input
                     type="radio"
                     name="primary"
-                    onChange={changeToPrimary1}
-                    defaultChecked={!primaryChecked}
+                    onChange={(e) => makePrimaryMethod(e, "card")}
+                    defaultChecked={primaryType === "card"}
                   />
                   <span></span>
                 </div>
-                <span className={!primaryChecked ? "" : "hide"}> Primary</span>
-                <span className={!primaryChecked ? "hide" : ""}>
-                  Make Primary
+                <span>
+                  {primaryType !== "card" && "Make "}
+                  Primary
                 </span>
               </label>
             </div>
@@ -454,43 +447,40 @@ const Billing = () => {
                 <div className="body">
                   {cardBankList.length !== 0 ? (
                     cardBankList.map((creditCard, i) => (
-                      <>
-                        {console.log("Hi", creditCard)}
-                        <div
-                          key={cardBankList._id}
-                          className={
-                            creditCard.status === "active"
-                              ? "list active"
-                              : "list"
-                          }
-                        >
-                          <label className="leftside">
-                            <div class="circleRadio">
-                              <input
-                                type="radio"
-                                name="credit"
-                                onChange={() => activeCreditCard(creditCard)}
-                                defaultChecked={
-                                  creditCard.status === "active" ? true : false
-                                }
-                                id={i}
-                              />
-                              <span></span>
-                            </div>{" "}
-                            {creditCard.checkIt ? "Active" : ""}
-                          </label>
-                          <div className="rightside">
-                            <p>
-                              <span>Card Number</span>
-                              XXXXXXXXXXXX{creditCard.last4}{" "}
-                            </p>
-                            <p className="diff">
-                              <span>Expiry</span>
-                              {`${creditCard.expiration_month} / ${creditCard.expiration_year}`}
-                            </p>
-                          </div>
+                      <div
+                        key={i}
+                        className={
+                          creditCard.status === "active"
+                            ? "list active"
+                            : "list"
+                        }
+                      >
+                        <label className="leftside">
+                          <div class="circleRadio">
+                            <input
+                              type="radio"
+                              name="credit"
+                              onChange={() => activeCreditCard(creditCard)}
+                              // defaultChecked={
+                              //   creditCard.status === "active" ? true : false
+                              // }
+                              id={i}
+                            />
+                            <span></span>
+                          </div>{" "}
+                          {creditCard.checkIt ? "Active" : ""}
+                        </label>
+                        <div className="rightside">
+                          <p>
+                            <span>Card Number</span>
+                            XXXXXXXXXXXX{creditCard.last4}{" "}
+                          </p>
+                          <p className="diff">
+                            <span>Expiry</span>
+                            {`${creditCard.expiration_month} / ${creditCard.expiration_year}`}
+                          </p>
                         </div>
-                      </>
+                      </div>
                     ))
                   ) : (
                     <Loader />
@@ -605,14 +595,14 @@ const Billing = () => {
                   <input
                     type="radio"
                     name="primary"
-                    onChange={changeToPrimary2}
-                    defaultChecked={primaryChecked}
+                    onChange={(e) => makePrimaryMethod(e, "bank")}
+                    defaultChecked={primaryType === "bank"}
                   />
                   <span></span>
                 </div>
-                <span className={primaryChecked ? "" : "hide"}>Primary</span>
-                <span className={primaryChecked ? "hide" : ""}>
-                  Make Primary
+                <span>
+                  {primaryType !== "bank" && "Make "}
+                  Primary
                 </span>
               </label>
             </div>
@@ -632,8 +622,10 @@ const Billing = () => {
                   {bankList.length !== 0 ? (
                     bankList.map((bank, i) => (
                       <div
-                        key={bank.id}
-                        className={bank.status === "active" ? "list active" : "list"}
+                        key={i}
+                        className={
+                          bank.status === "active" ? "list active" : "list"
+                        }
                       >
                         <label className="leftside">
                           <div class="circleRadio">
@@ -641,9 +633,9 @@ const Billing = () => {
                               type="radio"
                               name="bank"
                               onChange={() => activeBank(bank)}
-                              defaultChecked={
-                                bank.status === "active" ? true : false
-                              }
+                              //   defaultChecked={
+                              //     bank.status === "active" ? true : false
+                              //   }
                               id={i}
                             />
                             <span></span>
