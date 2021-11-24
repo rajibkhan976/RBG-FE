@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import CallConfiguration from "./callConfiguration";
 import { RingtoneServices } from "../../../../services/setup/RingtoneServices";
+import { Scrollbars } from 'react-custom-scrollbars-2';
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import info_3dot_icon from "../../../../assets/images/info_3dot_icon.svg";
 import {ContactService} from "../../../../services/contact/ContactServices";
@@ -41,6 +42,7 @@ const CallSetup = () => {
     const [nowPlaying, setNowPlaying] = useState();
     const [isAudioPlaying, setIsAudioPlaying] = useState(false);
     const [nowEditing, setNowEditing] = useState();
+    const [activeRingtone, setActiveRingtone] = useState("");
     const [selectedRingtone, setSelectedRingtone] = useState("");
     const [selectedConf, setSelectedConf] = useState([]);
     const [option, setOption] = useState(null);
@@ -98,6 +100,24 @@ const CallSetup = () => {
         setIsSearching(false);
     }
 
+
+    const selectRingtone = async (element) => {
+        setSelectedRingtone(element._id);
+    }
+
+    const saveSelectedRingtone = async () => {
+        setRingtoneLoader(true);
+        let ringtoneResponce = await RingtoneServices.selectRingtone(
+            {
+                ringtone: selectedRingtone
+            },
+            numberObj._id
+        );
+        setActiveRingtone(selectedRingtone);
+        setSelectedRingtone("");
+        setRingtoneLoader(false);
+    }
+
     
     const playRingtone = (element) => {
         if (element._id === nowPlaying) {
@@ -146,6 +166,7 @@ const CallSetup = () => {
             setNumberObj(result);
             setSelectedRingtone(result.ringtone);
             setConfigurationList(result.config);
+            setActiveRingtone(result.ringtone);
         } catch (e) {
             setErrorMsg('No number found. Please contact to support.');
         } finally {
@@ -429,52 +450,56 @@ const CallSetup = () => {
                                                 <button className="addRingToneBtn" onClick={gotoUpload}></button>}
                                         </div>
                                         <div className="ringToneList">
-                                            <ul className={isSearching ? "filterResult" : ""}>
-                                                {foundTrack && foundTrack.length > 0 ? (
-                                                    foundTrack.map((element, key) => (
-                                                        <li className={element._id === selectedRingtone ? "selected" : ""}>
-                                                            {nowEditing === element._id ?
-                                                                <>
-                                                                    <input type="text" className="toneNameEdit"
-                                                                           value={newRingName} onChange={newTrackName}/>
-                                                                    <div className="toneAction">
-                                                                        {newRingName === element.name ?
-                                                                            <button className="cancelName"
-                                                                                    onClick={() => cancelName(element)}></button>
-                                                                            :
-                                                                            <button className="saveName"
-                                                                                    onClick={() => editRingtone(element)}></button>
-                                                                        }
+                                            <Scrollbars 
+                                                renderThumbVertical={props => <div className="thumb-vertical"/>}
+                                                >
+                                                <ul className={isSearching ? "filterResult" : ""}>
+                                                    {foundTrack && foundTrack.length > 0 ? (
+                                                        foundTrack.map((element, key) => (
+                                                            <li className={selectedRingtone == "" && activeRingtone === element._id ? "active" : (selectedRingtone === element._id ? "selected" : "")}>
+                                                                {nowEditing === element._id ?
+                                                                    <>
+                                                                        <input type="text" className="toneNameEdit"
+                                                                            value={newRingName} onChange={newTrackName}/>
+                                                                        <div className="toneAction">
+                                                                            {newRingName === element.name ?
+                                                                                <button className="cancelName"
+                                                                                        onClick={() => cancelName(element)}></button>
+                                                                                :
+                                                                                <button className="saveName"
+                                                                                        onClick={() => editRingtone(element)}></button>
+                                                                            }
 
-                                                                        <button className="deleteTrack"
-                                                                                onClick={() => deleteRingtone(element)}></button>
-                                                                    </div>
-                                                                </>
-                                                                :
-                                                                <>
-                                                                    <button className="toneName">{element.name}</button>
-                                                                    <div className="toneAction">
-                                                                        {!element.default ? <button className="toneEdit"
-                                                                                                    onClick={() => editTrack(element)}></button> : ""}
-                                                                        <button
-                                                                            className={nowPlaying === element._id && isAudioPlaying ? "tonePause" : "tonePlay"}
-                                                                            ref={ringtineListItem}
-                                                                            onClick={() => playRingtone(element)}></button>
-                                                                    </div>
-                                                                </>
-                                                            }
+                                                                            <button className="deleteTrack"
+                                                                                    onClick={() => deleteRingtone(element)}></button>
+                                                                        </div>
+                                                                    </>
+                                                                    :
+                                                                    <>
+                                                                        <button className={nowPlaying === element._id ? "toneName playing" : "toneName"} onClick={() => selectRingtone (element)}>{element.name}</button>
+                                                                        <div className="toneAction">
+                                                                            {!element.default ? <button className="toneEdit"
+                                                                                                        onClick={() => editTrack(element)}></button> : ""}
+                                                                            <button
+                                                                                className={nowPlaying === element._id && isAudioPlaying ? "tonePause" : "tonePlay"}
+                                                                                ref={ringtineListItem}
+                                                                                onClick={() => playRingtone(element)}></button>
+                                                                        </div>
+                                                                    </>
+                                                                }
 
 
-                                                        </li>
-                                                    ))
-                                                ) : (
-                                                    <li className="noData">No results found!</li>
-                                                )
-                                                }
-                                            </ul>
+                                                            </li>
+                                                        ))
+                                                    ) : (
+                                                        <li className="noData">No results found!</li>
+                                                    )
+                                                    }
+                                                </ul>
+                                            </Scrollbars>
                                         </div>
                                         <div className="ringToneDropBottom">
-                                            <button className="cmnBtn updateRingTone">
+                                            <button className={selectedRingtone == "" || activeRingtone === selectedRingtone ? "cmnBtn updateRingTone disabled" : "cmnBtn updateRingTone"} onClick={saveSelectedRingtone}>
                                                 <span>Update</span>
                                                 <img src={arrow_forward} alt=""/>
                                             </button>
@@ -523,8 +548,8 @@ const CallSetup = () => {
                                             </div>
                                             : ""}
                                         <div className="ringToneDropBottom">
-                                            <button
-                                                className={choosedFile === "" ? "cmnBtn updateRingTone disabled" : "cmnBtn updateRingTone"}
+                                        <button
+                                                className={fileUploadStatus ? "cmnBtn updateRingTone" : (choosedFile === "" || ringtoneName === "" ? "cmnBtn updateRingTone disabled" : "cmnBtn updateRingTone")}
                                                 onClick={uploadRingtone}>
                                                 <span>{fileUploadStatus ? "Done" : "Upload"}</span>
                                                 <img src={arrow_forward} alt=""/>

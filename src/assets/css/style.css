@@ -6026,6 +6026,7 @@ p.trackName {
   opacity: 0.5;
   filter: grayscale(0.7);
   cursor: not-allowed;
+  pointer-events: none;
 }
 .playerBtn img {
   max-width: 28px;
@@ -6660,6 +6661,12 @@ p.trackName {
   height: 245px;
   overflow-y: auto;
 }
+.ringToneList .thumb-vertical {
+  position: relative;
+  background: #f1a668;
+  width: 3px;
+  right: -5px;
+}
 .ringToneList ul {
   background: #fff;
   border-radius: 5px;
@@ -6673,6 +6680,7 @@ p.trackName {
   display: inline-block;
   width: 100%;
   margin-top: 10px;
+  padding-right: 8px;
 }
 .ringToneList li.noData {
   text-align: center;
@@ -6721,9 +6729,13 @@ p.trackName {
 .ringToneList li .toneAction button.deleteTrack {
   background: transparent url("../images/delete_icon_small.svg") no-repeat center / 13px;
 }
+.ringToneList li.active .toneName, 
 .ringToneList li.selected .toneName {
   color: var(--darkBlue);
   font-weight: 600;
+}
+.ringToneList li .toneName.playing {
+  color: var(--darkBlue);
 }
 .toneNameEdit {
   font-size: 13px;
