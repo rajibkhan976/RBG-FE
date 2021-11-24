@@ -46,6 +46,7 @@ const CallSetup = () => {
     const [selectedRingtone, setSelectedRingtone] = useState("");
     const [selectedConf, setSelectedConf] = useState([]);
     const [option, setOption] = useState(null);
+    const [uploadError, setUploadError] = useState(false);
     const [isAlert, setIsAlert] = useState({
         show: false,
         el: null,
@@ -195,9 +196,9 @@ const CallSetup = () => {
     }
 
     const fileChose = (e) => {
-        //console.log((e.target.files[0].size / 1024));
+        //console.log((e.target.files[0].size / 1024) < 5120);
         let fullPath = e.target.value;
-        if (fullPath) {
+        if (fullPath && (e.target.files[0].size / 1024) < 5120) {
             let startIndex = (fullPath.indexOf('\\') >= 0 ? fullPath.lastIndexOf('\\') : fullPath.lastIndexOf('/'));
             let filename = fullPath.substring(startIndex);
             if (filename.indexOf('\\') === 0 || filename.indexOf('/') === 0) {
@@ -207,6 +208,16 @@ const CallSetup = () => {
             setChoosedFile(filename);
             setChoosedFilePath(fullPath);
             setFile(e.target.files);
+        } else {
+            setUploadError(true);
+            setRingtoneName("");
+            setChoosedFile("");
+            setChoosedFilePath("");
+            setFile({});
+
+            setTimeout(() => {
+                setUploadError(false);
+            }, 5000);
         }
     }
 
@@ -536,6 +547,11 @@ const CallSetup = () => {
                                             <input type="file" accept=".mp3, .wma, .amr" className="importRingtone"
                                                    id="choseRingtone" onChange={fileChose}/>
                                         </div>
+                                        { uploadError ? 
+                                        <div className="errorMsg">
+                                            Please chose file less than 5MB
+                                        </div>
+                                        : "" }
                                         {!fileUploadStatus ?
                                             <div className="ringtoneName">
                                                 <div className="cmnFormRow">
@@ -548,7 +564,7 @@ const CallSetup = () => {
                                             </div>
                                             : ""}
                                         <div className="ringToneDropBottom">
-                                        <button
+                                            <button
                                                 className={fileUploadStatus ? "cmnBtn updateRingTone" : (choosedFile === "" || ringtoneName === "" ? "cmnBtn updateRingTone disabled" : "cmnBtn updateRingTone")}
                                                 onClick={uploadRingtone}>
                                                 <span>{fileUploadStatus ? "Done" : "Upload"}</span>

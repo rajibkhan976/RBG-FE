@@ -6781,6 +6781,7 @@ p.trackName {
   color: var(--darkBlue);
   text-align: center;
   margin-top: 14px;
+  word-break: break-all;
 }
 .ringUploadPlate h3.success {
   font-size: 18px;
@@ -6807,6 +6808,7 @@ p.trackName {
   font-weight: 400;
   line-height: 19px;
   padding: 0 10px;
+  word-wrap: break-word;
 }
 .ringUploadPlate .importRingtone {
   position: absolute;
@@ -6830,6 +6832,9 @@ p.trackName {
 .ringtoneName .cmnFieldStyle {
   height: 34px;
   min-height: 34px;
+}
+.uploadRingSlide .errorMsg {
+  margin-bottom: -11px;
 }
 .tabBarArea>div button#transNav,
 .tabBarArea>div button#billNav {
