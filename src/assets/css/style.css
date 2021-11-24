@@ -7032,12 +7032,14 @@ p.trackName {
   font-size: 10px;
   font-weight: 600;
   padding-bottom: 5px;
+  text-transform: uppercase;
 }
 .transactionListing .row.fail .cell .status {
   color: #ed707a;
   font-size: 10px;
   font-weight: 600;
   padding-bottom: 5px;
+  text-transform: uppercase;
 }
 .transactionListing .row .cell .status ~ div span {
   font-weight: 600;
