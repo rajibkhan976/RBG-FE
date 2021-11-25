@@ -25,11 +25,11 @@ import speaker_icon2 from "../../assets/images/speaker_icon2.svg";
 import help_icon from "../../assets/images/help_icon.svg";
 import headset_icon from "../../assets/images/headset_icon.svg";
 import logout_icon from "../../assets/images/logout_icon.svg";
-import {CallSetupService} from "../../services/setup/callSetupServices";
-import { useStopwatch } from 'react-timer-hook';
-import {ImportContactServices} from "../../services/contact/importContact";
+import { CallSetupService } from "../../services/setup/callSetupServices";
+import { useStopwatch } from "react-timer-hook";
+import { ImportContactServices } from "../../services/contact/importContact";
 import * as actionTypes from "../../actions/types";
-const { Device } = require('twilio-client');
+const { Device } = require("twilio-client");
 
 function HeaderDashboard(props) {
   const [setupModalStatus, setSetupModalStatus] = useState(false);
@@ -38,16 +38,11 @@ function HeaderDashboard(props) {
   const [locationLoaded, setLocationLoaded] = useState("user");
   const [showActionState, setShowActionState] = useState(false);
   const [device, setDevice] = useState(new Device());
-  const [deviceMessage, setDeviceMessage] = useState('loading');
+  const [deviceMessage, setDeviceMessage] = useState("loading");
   const [connection, setConnection] = useState({});
-  const {
-    seconds,
-    minutes,
-    hours,
-    start,
-    reset,
-    pause
-  } = useStopwatch({ autoStart: false });
+  const { seconds, minutes, hours, start, reset, pause } = useStopwatch({
+    autoStart: false,
+  });
 
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
@@ -89,100 +84,136 @@ function HeaderDashboard(props) {
     try {
       const result = await CallSetupService.getCapabilityToken();
       let conf = {};
-      if (result.ringtone !== '') {
+      if (result.ringtone !== "") {
         conf = {
           sounds: {
-            incoming: result.ringtone
-          }
-        }
+            incoming: result.ringtone,
+          },
+        };
       }
       setDevice(device.setup(result.token, conf));
     } catch (e) {
-      console.log('error', e);
+      console.log("error", e);
     }
-  }
+  };
   const acceptConnection = () => {
     if (Object.keys(connection).length > 0) {
       connection.accept();
     }
-  }
+  };
   const hangup = () => {
     if (Object.keys(connection).length > 0) {
-      if(connection.status() === "pending"){
+      if (connection.status() === "pending") {
         connection.reject();
-        setDeviceMessage('Call Hangup');
-        setTimeout(function(){
-          setDeviceMessage('Ready');
+        setDeviceMessage("Call Hangup");
+        setTimeout(function () {
+          setDeviceMessage("Ready");
         }, 3000);
-      }else{
+      } else {
         device.disconnectAll();
-        setDeviceMessage('Ready');
+        setDeviceMessage("Ready");
       }
       setConnection({});
       pause();
     } else {
       device.disconnectAll();
-      setDeviceMessage('Ready');
+      setDeviceMessage("Ready");
       setConnection({});
       pause();
     }
-  }
+  };
   useEffect(() => {
     if (Object.keys(connection).length) {
-      if (connection._direction === 'INCOMING') {
-        setDeviceMessage('Call Established with ' + connection.parameters.From + ' for ' + hours +":" + minutes + ":" + seconds);
+      if (connection._direction === "INCOMING") {
+        setDeviceMessage(
+          "Call Established with " +
+            connection.parameters.From +
+            " for " +
+            hours +
+            ":" +
+            minutes +
+            ":" +
+            seconds
+        );
       } else {
-        setDeviceMessage('Call Established with ' + connection.parameters.To + ' for ' + hours +":" + minutes + ":" + seconds);
+        setDeviceMessage(
+          "Call Established with " +
+            connection.parameters.To +
+            " for " +
+            hours +
+            ":" +
+            minutes +
+            ":" +
+            seconds
+        );
       }
     }
-  }, [hours, minutes, seconds])
+  }, [hours, minutes, seconds]);
   const getContactDetails = async (number) => {
     try {
       let payload = {
-        number: number
-      }
+        number: number,
+      };
       const result = await ImportContactServices.saveContact(payload);
       return result.data;
     } catch (e) {
       return {
-        success: false
+        success: false,
       };
     }
-  }
+  };
   useEffect(() => {
     if (Object.keys(connection).length) {
-      connection.on('disconnect', function(conn) {
-        setDeviceMessage('Ready');
+      connection.on("disconnect", function (conn) {
+        setDeviceMessage("Ready");
         pause();
       });
     }
   }, [connection]);
   useEffect(() => {
-   // getContactDetails("+18124051848")
+    // getContactDetails("+18124051848")
     fetchCapabilityToken();
-    device.on('incoming', async connection => {
+    device.on("incoming", async (connection) => {
       setConnection(connection);
-      if (connection._direction === 'INCOMING') {
-        setDeviceMessage('Incoming Call from ' + connection.parameters.From);
+      if (connection._direction === "INCOMING") {
+        setDeviceMessage("Incoming Call from " + connection.parameters.From);
       } else {
-        setDeviceMessage('Outgoing Call to ' + connection.parameters.To);
+        setDeviceMessage("Outgoing Call to " + connection.parameters.To);
       }
     });
 
-    device.on('ready', device => {
-      setDeviceMessage('Ready');
+    device.on("ready", (device) => {
+      setDeviceMessage("Ready");
       pause();
     });
-    device.on('connect', async connection => {
+    device.on("connect", async (connection) => {
       setConnection(connection);
       reset();
       start();
-      let contactId = '';
-      if (connection._direction === 'INCOMING') {
-        setDeviceMessage('Call Established with ' + connection.parameters.From + ' for ' + hours + ":" + minutes + ":" + seconds);
+      let contactId = "";
+      if (connection._direction === "INCOMING") {
+        setDeviceMessage(
+          "Call Established with " +
+            connection.parameters.From +
+            " for " +
+            hours +
+            ":" +
+            minutes +
+            ":" +
+            seconds
+        );
         contactId = await getContactDetails(connection.parameters.From);
       } else {
-        setDeviceMessage('Call Established with ' + connection.message.To + ' for ' + hours + ":" + minutes + ":" + seconds);
+        setDeviceMessage(
+          "Call Established with " +
+            connection.message.To +
+            " for " +
+            hours +
+            ":" +
+            minutes +
+            ":" +
+            seconds
+        );
         contactId = await getContactDetails(connection.message.To);
       }
       if (contactId.success) {
@@ -193,9 +224,9 @@ function HeaderDashboard(props) {
       }
     });
 
-    device.on('disconnect', connection => {
+    device.on("disconnect", (connection) => {
       setConnection(connection);
-      setDeviceMessage('Ready');
+      setDeviceMessage("Ready");
       pause();
     });
     window.location.pathname === "/roles"
@@ -204,28 +235,29 @@ function HeaderDashboard(props) {
       ? setLocationLoaded("groups")
       : window.location.pathname === "/users"
       ? setLocationLoaded("user")
-      : window.location.pathname === ("/automation-list" || "/automation-builder")
+      : window.location.pathname ===
+        ("/automation-list" || "/automation-builder")
       ? setLocationLoaded("automation")
       : setLocationLoaded(null);
   }, []);
 
   const toggleSetup = () => {
     setSetupModalStatus(!setupModalStatus);
-  }
+  };
   const [modalMakeCall, setModalMakeCall] = useState(false);
-  const makeCallModalHandle = () =>{
+  const makeCallModalHandle = () => {
     setModalMakeCall(true);
     setShowActionState(false);
-  }
-  const callModalOffhandler = () =>{
+  };
+  const callModalOffhandler = () => {
     setModalMakeCall(false);
-  }
+  };
   const makeOutgoingCall = (to) => {
-    setDeviceMessage('Establishing Call..');
+    setDeviceMessage("Establishing Call..");
     device.connect({
-      To: to
-    })
-  }
+      To: to,
+    });
+  };
   return (
     <>
       <div className="dashboardHeader">
@@ -265,39 +297,44 @@ function HeaderDashboard(props) {
               <button className="listDropBtn" onClick={tglActionList}>
                 <img src={blueDownArrow} alt="" />
               </button>
-              {showActionState ?
-              <div className="leftBtnList">
-                <ul>
-                  <li className="active">
-                    <input type="radio" name="ces" value="call" onClick={makeCallModalHandle}/>
-                    <span className="callBtn green">
-                      <img src={callIcon3} alt="" />
-                    </span>
-                    <span className="actionName">Call</span>
-                  </li>
-                  <li>
-                    <input type="radio" name="ces" value="sms" />
-                    <span className="callBtn violet">
-                      <img src={sms_icon} alt="" />
-                    </span>
-                    <span className="actionName">SMS</span>
-                  </li>
-                  <li>
-                    <input type="radio" name="ces" value="email" />
-                    <span className="callBtn blue">
-                      <img src={email_icon} alt="" />
-                    </span>
-                    <span className="actionName">Email</span>
-                  </li>
-                </ul>
-              </div>
-              : "" }
+              {showActionState ? (
+                <div className="leftBtnList">
+                  <ul>
+                    <li className="active">
+                      <input
+                        type="radio"
+                        name="ces"
+                        value="call"
+                        onClick={makeCallModalHandle}
+                      />
+                      <span className="callBtn green">
+                        <img src={callIcon3} alt="" />
+                      </span>
+                      <span className="actionName">Call</span>
+                    </li>
+                    <li>
+                      <input type="radio" name="ces" value="sms" />
+                      <span className="callBtn violet">
+                        <img src={sms_icon} alt="" />
+                      </span>
+                      <span className="actionName">SMS</span>
+                    </li>
+                    <li>
+                      <input type="radio" name="ces" value="email" />
+                      <span className="callBtn blue">
+                        <img src={email_icon} alt="" />
+                      </span>
+                      <span className="actionName">Email</span>
+                    </li>
+                  </ul>
+                </div>
+              ) : (
+                ""
+              )}
             </div>
           </div>
           <div className="rightDetails">
-            <p>
-              {deviceMessage}
-            </p>
+            <p>{deviceMessage}</p>
             <div className="d-flex">
               <button className="btn callBtn green" onClick={acceptConnection}>
                 <img src={callIcon2} alt="" />
@@ -308,13 +345,15 @@ function HeaderDashboard(props) {
             </div>
           </div>
         </div>
-        <button
-          className="btn buttonHeaderIcons"
-        >
+        <button className="btn buttonHeaderIcons">
           <img src={DownloadIcon} alt="" />
         </button>
         <button
-          className={setupModalStatus ? "btn buttonHeaderIcons active" : "btn buttonHeaderIcons"}
+          className={
+            setupModalStatus
+              ? "btn buttonHeaderIcons active"
+              : "btn buttonHeaderIcons"
+          }
           onClick={toggleSetup}
         >
           <img src={setupModalStatus ? SettingIconBlue : SettingIcon} alt="" />
@@ -377,67 +416,92 @@ function HeaderDashboard(props) {
               <span>User</span>
               <h3>Steve M.</h3>
             </div>
-            <i><img src={blueDownArrow} alt="" /></i>
+            <i>
+              <img src={blueDownArrow} alt="" />
+            </i>
           </button>
           {/* */}
         </div>
       </div>
 
       {stateUserMenu && (
-      <div class="sideMenuOuter">
+        <div class="sideMenuOuter">
           <div class="sideMenuInner userModal">
-              <div class="modal_call_header">
-                  <button class="btn btn_empty" onClick={closeUserMenu}><img src={cross_white} alt=""/></button>
-                      <div className="user_details">
-                          <div className="user_profile">
-                              <img src={userPhoto} alt=""/>
-                          </div>
-                          <div className="userContacts">
-                              <h3>Steve Mile</h3>
-                              <div className="userPhone">
-                                  <img src={phone_call_icon_white} alt="" />
-                                  <span>+1-4132045887</span>
-                              </div>
-                              <div className="userEmail">
-                                  <img src={email_icon_white} alt="" />
-                                  <span>williamblake@gmail.com</span>
-                              </div>
-                              <div className="userPhone">
-                                  <img src={editIcon_white} alt="" />
-                                  <span>Edit</span>
-                              </div>
-                          </div>
-
-                      </div>
-               </div>
-              <div className="user_modal_body">
-                <div className="user_modal_cont">
-                  <p>Organization</p>
-                  <h3>The Wellness Society</h3>
-                  <div className="creditText">
-                     <span>Credit Balance  </span>
-                     <span className="blue">14600</span>
+            <div class="modal_call_header">
+              <button class="btn btn_empty" onClick={closeUserMenu}>
+                <img src={cross_white} alt="" />
+              </button>
+              <div className="user_details">
+                <div className="user_profile">
+                  <img src={userPhoto} alt="" />
+                </div>
+                <div className="userContacts">
+                  <h3>Steve Mile</h3>
+                  <div className="userPhone">
+                    <img src={phone_call_icon_white} alt="" />
+                    <span>+1-4132045887</span>
                   </div>
-                  <div className="userPlan">
-                    <div>
-                       <span>Current Plan</span>
-                       <p>SILVER</p>
-                    </div>
-                    <button className="btn orangeBtn">UPGRADE</button>
+                  <div className="userEmail">
+                    <img src={email_icon_white} alt="" />
+                    <span>williamblake@gmail.com</span>
+                  </div>
+                  <div className="userPhone">
+                    <img src={editIcon_white} alt="" />
+                    <span>Edit</span>
                   </div>
                 </div>
-                <div className="user_modal_menu">
-                  <p> <button> <img src={help_icon} alt=""/> Help</button></p>
-                  <p> <button><img src={headset_icon} alt=""/> Contact Support</button></p>
-                  <p> <button><img src={speaker_icon2} alt=""/> What's New </button></p>
-                  <p>{stateUserMenu ? <button onClick={logOut}><img src={logout_icon} alt=""/> Logout</button> : "" }</p>
-                </div>
-
               </div>
+            </div>
+            <div className="user_modal_body">
+              <div className="user_modal_cont">
+                <p>Organization</p>
+                <h3>The Wellness Society</h3>
+                <div className="creditText">
+                  <span>Credit Balance </span>
+                  <span className="blue">14600</span>
+                </div>
+                <div className="userPlan">
+                  <div>
+                    <span>Current Plan</span>
+                    <p>SILVER</p>
+                  </div>
+                  {/* <button className="btn orangeBtn">UPGRADE</button> */}
+                </div>
+              </div>
+              <div className="user_modal_menu">
+                <p>
+                  {" "}
+                  <button>
+                    {" "}
+                    <img src={help_icon} alt="" /> Help
+                  </button>
+                </p>
+                <p>
+                  {" "}
+                  <button>
+                    <img src={headset_icon} alt="" /> Contact Support
+                  </button>
+                </p>
+                <p>
+                  {" "}
+                  <button>
+                    <img src={speaker_icon2} alt="" /> What's New{" "}
+                  </button>
+                </p>
+                <p>
+                  {stateUserMenu ? (
+                    <button onClick={logOut}>
+                      <img src={logout_icon} alt="" /> Logout
+                    </button>
+                  ) : (
+                    ""
+                  )}
+                </p>
+              </div>
+            </div>
           </div>
-      </div>
-     )}
-
+        </div>
+      )}
 
       {/* NOTIFICATIONS SIDE MENU */}
       {stateNotifMenu && (
@@ -468,9 +532,15 @@ function HeaderDashboard(props) {
       )}
       {/* NOTIFICATIONS SIDE MENU */}
 
-      {setupModalStatus && <Setup/>}
+      {setupModalStatus && <Setup />}
 
-       {modalMakeCall && <CallModal callModalOff={callModalOffhandler} makeOutgoingCall={makeOutgoingCall} device={device}/> }
+      {modalMakeCall && (
+        <CallModal
+          callModalOff={callModalOffhandler}
+          makeOutgoingCall={makeOutgoingCall}
+          device={device}
+        />
+      )}
     </>
   );
 }

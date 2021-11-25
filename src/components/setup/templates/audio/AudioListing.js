@@ -348,183 +348,343 @@ const AudioListing = () => {
     }
 
     return (
-        <div className="dashInnerUI audioListingPage">
-            {isLoader ? <Loader /> : ''}
-            {console.log('is alert', isAlert)}
-            {isAlert.show ? (
-                <ConfirmBox
-                    callback={(isConfirmed) => deleteTemplate(isAlert.id, isConfirmed)}
+      <div className="dashInnerUI audioListingPage">
+        {isLoader ? <Loader /> : ""}
+        {console.log("is alert", isAlert)}
+        {isAlert.show ? (
+          <ConfirmBox
+            callback={(isConfirmed) => deleteTemplate(isAlert.id, isConfirmed)}
+          />
+        ) : (
+          ""
+        )}
+
+        <div className="userListHead">
+          <div className="listInfo">
+            <ul className="listPath">
+              <li>Setting</li>
+              <li>Templates</li>
+              <li>Audio Template</li>
+            </ul>
+            <h2 className="inDashboardHeader">Audio Template</h2>
+            <p className="userListAbout">Set communication templates</p>
+          </div>
+          <div className="listFeatures">
+            <div className="searchBar searchbar2">
+              <form onSubmit={handleSearch}>
+                <input
+                  type="search"
+                  name="search"
+                  placeholder="Search roles"
+                  autoComplete="off"
+                  onChange={handleKeywordChange}
                 />
-            ) : (
-                ""
-            )}
-
-            <div className="userListHead">
-                <div className="listInfo">
-                    <ul className="listPath">
-                        <li>Setting</li>
-                        <li>Templates</li>
-                        <li>Audio Template</li>
-                    </ul>
-                    <h2 className="inDashboardHeader">Audio Template</h2>
-                    <p className="userListAbout">Lorem ipsum dolor sit amet. Semi headline should be here.</p>
-                </div>
-                <div className="listFeatures">
-                    <div className="searchBar searchbar2">
-                        <form onSubmit={handleSearch}>
-                            <input
-                                type="search"
-                                name="search"
-                                placeholder="Search roles"
-                                autoComplete="off"
-                                onChange={handleKeywordChange}
-                            />
-                            <button className="searchIcon">
-                            </button>
-                        </form>
-                    </div>
-                    <button className="creatUserBtn" onClick={openModal}>
-                        <img className="plusIcon" src={plus_icon} alt="" />
-                        <span>Create an Audio Template</span>
-                    </button>
-                </div>
+                <button className="searchIcon"></button>
+              </form>
             </div>
-            {successMsg &&
-                <SuccessAlert message={successMsg}></SuccessAlert>
-            }
-            {errorMsg &&
-                <ErrorAlert message={errorMsg}></ErrorAlert>
-            }
-            {audiosCount ?
-                <React.Fragment>
-                    <div className="userListBody audioListing">
-                        <div className="listBody">
-                            <ul className="tableListing">
-                                <li className="listHeading userRole">
-                                    <div className={"userName " + (sortBy == "title" ? "sort " + sortType : "")} onClick={() => handleSortBy("title")}>Title</div>
-                                    <div className={"phoneNum assignedPeople " + (sortBy == "title" ? "sort " + sortType : "")} onClick={() => handleSortBy("description")}>Description</div>
-                                    <div className={"createDate " + (sortBy == "createdAt" ? "sort " + sortType : "")} onClick={() => handleSortBy("createdAt")}>Created on</div>
-
-                                </li>
-                                {audiosData &&
-                                    audiosData.map((elem, key) => {
-                                        return (
-                                            <React.Fragment key={key + "_audio"}>
-                                                <li className={elem._id === preview.active ? "owerInfo userRole selectedRow" : "owerInfo userRole"}>
-                                                    <div className="userName" onClick={() => loadPreview(elem)}>
-                                                        <button className="btn">
-                                                            <p>{elem.title}</p>
-                                                        </button>
-                                                    </div>
-                                                    <div className="phoneNum" onClick={() => loadPreview(elem)}>
-                                                        <button className="btn">{elem.description}</button>
-                                                    </div>
-                                                    <div className="createDate" onClick={() => loadPreview(elem)}>
-                                                        <button className="btn">{moment(elem.createdAt).format("Do MMM YYYY")}</button>
-                                                    </div>
-                                                    <div className="listAction">
-                                                        <div className="info_3dot_icon">
-                                                            <button className="btn" onClick={() => {
-                                                                toggleOptions(key);
-                                                            }}>
-                                                                <img src={info_3dot_icon} alt="" />
-                                                            </button>
-                                                        </div>
-                                                        <div className={
-                                                            option === key ? "dropdownOptions listOpen" : "listHide"
-                                                        } >
-                                                            <button className="btn btnEdit" onClick={() => {
-                                                                editTemplateRow(elem);
-                                                            }}>
-                                                                <span>
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" className="editIcon"><g transform="translate(0.75 0.75)"><path className="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path><path className="a" d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z" transform="translate(-4.384 -2)"></path></g></svg>
-                                                                </span>
-                                                                Edit
-                                                            </button>
-                                                            <button className="btn btnDelete" onClick={() => {
-                                                                deleteTemplateRow(elem._id);
-                                                            }}>
-                                                                <span>
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" width="12.347" height="13.553" viewBox="0 0 12.347 13.553" className="deleteIcon"><g transform="translate(0.75 0.75)"><path className="a" transform="translate(-3 -3.589)"></path><path className="a" d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411" transform="translate(-3.795 -2)"></path><line className="a" y2="3" transform="translate(4.397 6.113)"></line><line className="a" y2="3" transform="translate(6.397 6.113)"></line></g></svg>
-                                                                </span>
-                                                                Delete
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </React.Fragment>
-                                        );
-                                    })}
-                            </ul>
-                            {audiosCount > paginationData.limit ?
-                                <Pagination
-                                    type="audios"
-                                    paginationData={paginationData}
-                                    dataCount={audiosCount}
-                                    callback={fetchAudios} /> : ''
-                            }
-                        </div>
-                        {preview.title ?
-                            <div className="mobilePreview">
-                                <div className="mobileTitle">
-                                    <img src={music_file_icon} alt="" /> Listen Audio
-                                </div>
-                                <div className="mobile">
-                                    <div className="mobileHead">
-                                        <h3>{preview.title}</h3>
-                                        <div className="moreBtn">
-                                            <button className="btn" onClick={toggleMobileActBtn}>
-                                                <img src={info_3dot_icon} alt="" />
-                                            </button>
-                                            <div className={mobileActionOpt ? "dropdownOptions listOpen" : "listHide"}>
-                                                <button className="btn btnEdit" onClick={(e) => previewEdit(e)}>
-                                                    <span>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" className="editIcon"><g transform="translate(0.75 0.75)"><path className="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path><path className="a" d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z" transform="translate(-4.384 -2)"></path></g></svg>
-                                                    </span>
-                                                    Edit
-                                                </button>
-                                                <button className="btn btnDelete" onClick={(e) => previewDelete(e)}>
-                                                    <span>
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12.347" height="13.553" viewBox="0 0 12.347 13.553" className="deleteIcon"><g transform="translate(0.75 0.75)"><path className="a" transform="translate(-3 -3.589)"></path><path className="a" d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411" transform="translate(-3.795 -2)"></path><line className="a" y2="3" transform="translate(4.397 6.113)"></line><line className="a" y2="3" transform="translate(6.397 6.113)"></line></g></svg>
-                                                    </span>
-                                                    Delete
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="mobileBody">
-                                        <div className="audioBox">
-                                            <Player
-                                                audioElement={preview.track}
-                                                trackName={preview.title}
-                                                preview={true}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="mobileFooter">
-                                        <div className="mobileHomeButton"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            : ''}
-                    </div>
-                </React.Fragment> :
-                <React.Fragment>
-                    <div className="createNew">
-                        <span>
-                            <img src={list_board_icon} alt="list_icon" />
-                            <p>No audio template found!</p>
-                        </span>
-                    </div>
-                </React.Fragment>
-            }
-            {audioModal && <AudioTemplateModal
-                closeModal={closeModal}
-                fetchAudios={fetchAudios}
-                editData={editData}
-                isEdit={isEdit} />
-            }
+            <button className="creatUserBtn" onClick={openModal}>
+              <img className="plusIcon" src={plus_icon} alt="" />
+              <span>Create an Audio Template</span>
+            </button>
+          </div>
         </div>
+        {successMsg && <SuccessAlert message={successMsg}></SuccessAlert>}
+        {errorMsg && <ErrorAlert message={errorMsg}></ErrorAlert>}
+        {audiosCount ? (
+          <React.Fragment>
+            <div className="userListBody audioListing">
+              <div className="listBody">
+                <ul className="tableListing">
+                  <li className="listHeading userRole">
+                    <div
+                      className={
+                        "userName " +
+                        (sortBy == "title" ? "sort " + sortType : "")
+                      }
+                      onClick={() => handleSortBy("title")}
+                    >
+                      Title
+                    </div>
+                    <div
+                      className={
+                        "phoneNum assignedPeople " +
+                        (sortBy == "title" ? "sort " + sortType : "")
+                      }
+                      onClick={() => handleSortBy("description")}
+                    >
+                      Description
+                    </div>
+                    <div
+                      className={
+                        "createDate " +
+                        (sortBy == "createdAt" ? "sort " + sortType : "")
+                      }
+                      onClick={() => handleSortBy("createdAt")}
+                    >
+                      Created on
+                    </div>
+                  </li>
+                  {audiosData &&
+                    audiosData.map((elem, key) => {
+                      return (
+                        <React.Fragment key={key + "_audio"}>
+                          <li
+                            className={
+                              elem._id === preview.active
+                                ? "owerInfo userRole selectedRow"
+                                : "owerInfo userRole"
+                            }
+                          >
+                            <div
+                              className="userName"
+                              onClick={() => loadPreview(elem)}
+                            >
+                              <button className="btn">
+                                <p>{elem.title}</p>
+                              </button>
+                            </div>
+                            <div
+                              className="phoneNum"
+                              onClick={() => loadPreview(elem)}
+                            >
+                              <button className="btn">
+                                {elem.description}
+                              </button>
+                            </div>
+                            <div
+                              className="createDate"
+                              onClick={() => loadPreview(elem)}
+                            >
+                              <button className="btn">
+                                {moment(elem.createdAt).format("Do MMM YYYY")}
+                              </button>
+                            </div>
+                            <div className="listAction">
+                              <div className="info_3dot_icon">
+                                <button
+                                  className="btn"
+                                  onClick={() => {
+                                    toggleOptions(key);
+                                  }}
+                                >
+                                  <img src={info_3dot_icon} alt="" />
+                                </button>
+                              </div>
+                              <div
+                                className={
+                                  option === key
+                                    ? "dropdownOptions listOpen"
+                                    : "listHide"
+                                }
+                              >
+                                <button
+                                  className="btn btnEdit"
+                                  onClick={() => {
+                                    editTemplateRow(elem);
+                                  }}
+                                >
+                                  <span>
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 13.553 13.553"
+                                      className="editIcon"
+                                    >
+                                      <g transform="translate(0.75 0.75)">
+                                        <path
+                                          className="a"
+                                          d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423"
+                                          transform="translate(-2 -2.795)"
+                                        ></path>
+                                        <path
+                                          className="a"
+                                          d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z"
+                                          transform="translate(-4.384 -2)"
+                                        ></path>
+                                      </g>
+                                    </svg>
+                                  </span>
+                                  Edit
+                                </button>
+                                <button
+                                  className="btn btnDelete"
+                                  onClick={() => {
+                                    deleteTemplateRow(elem._id);
+                                  }}
+                                >
+                                  <span>
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="12.347"
+                                      height="13.553"
+                                      viewBox="0 0 12.347 13.553"
+                                      className="deleteIcon"
+                                    >
+                                      <g transform="translate(0.75 0.75)">
+                                        <path
+                                          className="a"
+                                          transform="translate(-3 -3.589)"
+                                        ></path>
+                                        <path
+                                          className="a"
+                                          d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
+                                          transform="translate(-3.795 -2)"
+                                        ></path>
+                                        <line
+                                          className="a"
+                                          y2="3"
+                                          transform="translate(4.397 6.113)"
+                                        ></line>
+                                        <line
+                                          className="a"
+                                          y2="3"
+                                          transform="translate(6.397 6.113)"
+                                        ></line>
+                                      </g>
+                                    </svg>
+                                  </span>
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                          </li>
+                        </React.Fragment>
+                      );
+                    })}
+                </ul>
+                {audiosCount > paginationData.limit ? (
+                  <Pagination
+                    type="audios"
+                    paginationData={paginationData}
+                    dataCount={audiosCount}
+                    callback={fetchAudios}
+                  />
+                ) : (
+                  ""
+                )}
+              </div>
+              {preview.title ? (
+                <div className="mobilePreview">
+                  <div className="mobileTitle">
+                    <img src={music_file_icon} alt="" /> Listen Audio
+                  </div>
+                  <div className="mobile">
+                    <div className="mobileHead">
+                      <h3>{preview.title}</h3>
+                      <div className="moreBtn">
+                        <button className="btn" onClick={toggleMobileActBtn}>
+                          <img src={info_3dot_icon} alt="" />
+                        </button>
+                        <div
+                          className={
+                            mobileActionOpt
+                              ? "dropdownOptions listOpen"
+                              : "listHide"
+                          }
+                        >
+                          <button
+                            className="btn btnEdit"
+                            onClick={(e) => previewEdit(e)}
+                          >
+                            <span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 13.553 13.553"
+                                className="editIcon"
+                              >
+                                <g transform="translate(0.75 0.75)">
+                                  <path
+                                    className="a"
+                                    d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423"
+                                    transform="translate(-2 -2.795)"
+                                  ></path>
+                                  <path
+                                    className="a"
+                                    d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z"
+                                    transform="translate(-4.384 -2)"
+                                  ></path>
+                                </g>
+                              </svg>
+                            </span>
+                            Edit
+                          </button>
+                          <button
+                            className="btn btnDelete"
+                            onClick={(e) => previewDelete(e)}
+                          >
+                            <span>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="12.347"
+                                height="13.553"
+                                viewBox="0 0 12.347 13.553"
+                                className="deleteIcon"
+                              >
+                                <g transform="translate(0.75 0.75)">
+                                  <path
+                                    className="a"
+                                    transform="translate(-3 -3.589)"
+                                  ></path>
+                                  <path
+                                    className="a"
+                                    d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
+                                    transform="translate(-3.795 -2)"
+                                  ></path>
+                                  <line
+                                    className="a"
+                                    y2="3"
+                                    transform="translate(4.397 6.113)"
+                                  ></line>
+                                  <line
+                                    className="a"
+                                    y2="3"
+                                    transform="translate(6.397 6.113)"
+                                  ></line>
+                                </g>
+                              </svg>
+                            </span>
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mobileBody">
+                      <div className="audioBox">
+                        <Player
+                          audioElement={preview.track}
+                          trackName={preview.title}
+                          preview={true}
+                        />
+                      </div>
+                    </div>
+                    <div className="mobileFooter">
+                      <div className="mobileHomeButton"></div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
+            </div>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <div className="createNew">
+              <span>
+                <img src={list_board_icon} alt="list_icon" />
+                <p>No audio template found!</p>
+              </span>
+            </div>
+          </React.Fragment>
+        )}
+        {audioModal && (
+          <AudioTemplateModal
+            closeModal={closeModal}
+            fetchAudios={fetchAudios}
+            editData={editData}
+            isEdit={isEdit}
+          />
+        )}
+      </div>
     );
 }
 
