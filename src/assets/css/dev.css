@@ -1603,3 +1603,7 @@
 .sideMenuOuter {
   z-index: 101;
 }
+
+.sideMenuHeader h3 .btn-link {
+  top: 0;
+}
