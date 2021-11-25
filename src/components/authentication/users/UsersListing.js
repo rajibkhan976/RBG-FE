@@ -444,7 +444,7 @@ const UsersListing = (props) => {
                                                         </button>
                                                     </div>
                                                     <div className="phoneNum">
-                                                        <button className="btn">{elem.phone}</button>
+                                                        <button className="btn">{elem.prefix + '-' +elem.phone}</button>
                                                     </div>
                                                     <div className="emailID">
                                                         <button className="btn">{elem.email}</button>

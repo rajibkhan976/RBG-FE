@@ -2,8 +2,12 @@ import React, { useState, useEffect } from "react";
 
 
 const Dashboard = () => {
-  document.title = "Red Belt Gym - Dashboard";
+  
   const [createButton, setCreateButton] = useState(null);
+  useEffect(() => {
+    document.title = "Red Belt Gym - Dashboard"
+  });
+
 
   const toggleCreate = (e) => {
     console.log("DASHBOARD STRUCTURE:::", createButton);

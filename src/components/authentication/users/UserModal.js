@@ -80,7 +80,7 @@ const UserModal = (props) => {
     const fetchCountry = async () => {
         let conntryResponse = await ContactService.fetchCountry();
         setPhoneCountryCode(conntryResponse);
-        console.log(conntryResponse, "country");
+        console.log("country");
     };
 
     /**
@@ -334,6 +334,7 @@ const UserModal = (props) => {
         event.preventDefault();
         let emailAddress = event.target.value;
         let emailValid = emailAddress.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+        if(emailAddress.length < 3) return;
         if (emailValid) {
             setProcessing(false);
             setFormErrors({
@@ -822,6 +823,7 @@ const UserModal = (props) => {
             let payload = {
                 firstName: firstName,
                 lastName: lastName,
+                prefix: basicinfoMobilePhone.dailCode,
                 phone: phoneNumber,
                 email: email,
                 groupId: newGroupId ? newGroupId : groupId,
@@ -867,8 +869,12 @@ const UserModal = (props) => {
                         },
                             messageDelay
                         );
-                        // history.go(0);
+                        // Fetch users
                         fetchUsers(1);
+                        //If creating association account
+                        if(isAssociateOwner){
+                            fetchAssociations();
+                        }
                     })
             } catch (e) {
                 /**

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Notifications from "./Notifications";
 import Setup from "../setup/mainPopup/setup";
 import CallModal from "./callModal";
@@ -26,10 +26,12 @@ import help_icon from "../../assets/images/help_icon.svg";
 import headset_icon from "../../assets/images/headset_icon.svg";
 import logout_icon from "../../assets/images/logout_icon.svg";
 import { CallSetupService } from "../../services/setup/callSetupServices";
-import { useStopwatch } from "react-timer-hook";
+import { useStopwatch } from 'react-timer-hook';
 import { ImportContactServices } from "../../services/contact/importContact";
 import * as actionTypes from "../../actions/types";
-const { Device } = require("twilio-client");
+import { UserServices } from "../../services/authentication/UserServices";
+import config from "../../configuration/config";
+const { Device } = require('twilio-client');
 
 function HeaderDashboard(props) {
   const [setupModalStatus, setSetupModalStatus] = useState(false);
@@ -40,9 +42,27 @@ function HeaderDashboard(props) {
   const [device, setDevice] = useState(new Device());
   const [deviceMessage, setDeviceMessage] = useState("loading");
   const [connection, setConnection] = useState({});
-  const { seconds, minutes, hours, start, reset, pause } = useStopwatch({
-    autoStart: false,
-  });
+  const {
+    seconds,
+    minutes,
+    hours,
+    start,
+    reset,
+    pause
+  } = useStopwatch({ autoStart: false });
+  const [loggedInUser, setLoggedInUser] = useState({
+    name: null,
+    email: null,
+    prefix: null,
+    phone: null,
+    image: null,
+    group: null,
+    isEdit: false,
+    association: null,
+    organization: null,
+    isOrganizationOwner: false,
+    isAssociationOwner: false,
+  })
 
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
@@ -68,12 +88,12 @@ function HeaderDashboard(props) {
     window.location.pathname === "/roles"
       ? props.toggleCreate("roles")
       : window.location.pathname === "/groups"
-      ? props.toggleCreate("groups")
-      : window.location.pathname === "/users"
-      ? props.toggleCreate("user")
-      : window.location.pathname === "/automation-list"
-      ? props.toggleCreate("automation")
-      : props.toggleCreate(null);
+        ? props.toggleCreate("groups")
+        : window.location.pathname === "/users"
+          ? props.toggleCreate("user")
+          : window.location.pathname === "/automation-list"
+            ? props.toggleCreate("automation")
+            : props.toggleCreate(null);
   };
 
   const closeSideMenu = (e) => {
@@ -261,6 +281,33 @@ function HeaderDashboard(props) {
 
   const clickedLink = (e) => {
     e.target && setSetupModalStatus(!setupModalStatus);
+  }
+  /*
+   * Fetch logged in user details
+   */
+  useEffect(() => {
+    fetchLoggedUserDetails();
+  }, []);
+  //Fetch user details
+  const fetchLoggedUserDetails = async () => {
+    try {
+      let userDetails = await UserServices.fetchUserDetails();
+      if (userDetails) {
+        console.log('success user details', userDetails);
+        setLoggedInUser({
+          name: userDetails.firstName + ' ' + userDetails.lastName,
+          email: userDetails.email,
+          phone: userDetails.phone ? (userDetails.prefix + '-' +userDetails.phone) : null,
+          image: userDetails.image ? (config.bucketUrl + userDetails.image) : null,
+          isOrganizationOwner: userDetails.isOrganizationOwner,
+          isAssociationOwner: userDetails.isAssociationOwner,
+          organization: userDetails.organization ? userDetails.organization.name : '',
+          group: userDetails.group ? userDetails.group.name : ''
+        })
+      }
+    } catch (e) {
+      console.log('Error in fetch current user', e);
+    }
   };
   return (
     <>
@@ -412,13 +459,13 @@ function HeaderDashboard(props) {
           <button className="btn btnUserMenu" onClick={toggleUserMenu}>
             <figure
               style={{
-                backgroundImage: "url(" + UserIcon + ")",
+                backgroundImage: "url(" + (loggedInUser.image ? loggedInUser.image : UserIcon) + ")",
               }}
             ></figure>
 
             <div className="menuUserDetail">
-              <span>User</span>
-              <h3>Steve M.</h3>
+              <span>{loggedInUser.group}</span>
+              <h3>{loggedInUser.name}</h3>
             </div>
             <i>
               <img src={blueDownArrow} alt="" />
@@ -429,86 +476,62 @@ function HeaderDashboard(props) {
       </div>
 
       {stateUserMenu && (
-        <div class="sideMenuOuter">
-          <div class="sideMenuInner userModal">
-            <div class="modal_call_header">
-              <button class="btn btn_empty" onClick={closeUserMenu}>
-                <img src={cross_white} alt="" />
-              </button>
+        <div className="sideMenuOuter">
+          <div className="sideMenuInner userModal">
+            <div className="modal_call_header">
+              <button className="btn btn_empty" onClick={closeUserMenu}><img src={cross_white} alt="" /></button>
               <div className="user_details">
                 <div className="user_profile">
-                  <img src={userPhoto} alt="" />
+                  <img src={loggedInUser.image ? loggedInUser.image : userPhoto} alt="avatar" />
                 </div>
                 <div className="userContacts">
                   <h3>
-                    Steve Mile
-                    <p>Gym Owner</p>
+                    {loggedInUser.name}
+                    <p>{loggedInUser.group}</p>
                   </h3>
-                  <div className="userPhone">
+
+                  {loggedInUser.phone ? <div className="userPhone">
                     <img src={phone_call_icon_white} alt="" />
-                    <span>+1-4132045887</span>
-                  </div>
+                    <span>{loggedInUser.phone}</span>
+                  </div> : ''}
                   <div className="userEmail">
                     <img src={email_icon_white} alt="" />
-                    <span>williamblake@gmail.com</span>
+                    <span>{loggedInUser.email}</span>
                   </div>
-                  <div className="userPhone">
+                  {loggedInUser.isEdit ? <div className="userPhone">
                     <img src={editIcon_white} alt="" />
                     <span>Edit</span>
-                  </div>
+                  </div> : ''}
                 </div>
               </div>
             </div>
             <div className="user_modal_body">
               <div className="user_modal_cont">
                 <p>Organization</p>
-                <h3>The Wellness Society</h3>
-                <div className="creditText">
-                  <span>Credit Balance </span>
+                <h3>{loggedInUser.organization}</h3>
+                {loggedInUser.isEdit ? <div className="creditText">
+                  <span>Credit Balance  </span>
                   <span className="blue">14600</span>
-                </div>
-                <div className="userPlan">
+                </div> : ''}
+                {loggedInUser.isEdit ? <div className="userPlan">
                   <div>
                     <span>Current Plan</span>
                     <p>SILVER</p>
                   </div>
-                  {/* <button className="btn orangeBtn">UPGRADE</button> */}
-                </div>
+                </div> : ''}
               </div>
               <div className="user_modal_menu">
-                <p>
-                  {" "}
-                  <button>
-                    {" "}
-                    <img src={help_icon} alt="" /> Help
-                  </button>
-                </p>
-                <p>
-                  {" "}
-                  <button>
-                    <img src={headset_icon} alt="" /> Contact Support
-                  </button>
-                </p>
-                <p>
-                  {" "}
-                  <button>
-                    <img src={speaker_icon2} alt="" /> What's New{" "}
-                  </button>
-                </p>
-                <p>
-                  {stateUserMenu ? (
-                    <button onClick={logOut}>
-                      <img src={logout_icon} alt="" /> Logout
-                    </button>
-                  ) : (
-                    ""
-                  )}
-                </p>
+                <p> <button> <img src={help_icon} alt="" /> Help</button></p>
+                <p> <button><img src={headset_icon} alt="" /> Contact Support</button></p>
+                <p> <button><img src={speaker_icon2} alt="" /> What's New </button></p>
+                <p>{stateUserMenu ? <button onClick={logOut}><img src={logout_icon} alt="" /> Logout</button> : ""}</p>
               </div>
+
             </div>
           </div>
         </div>
       )}
+
 
       {/* NOTIFICATIONS SIDE MENU */}
       {stateNotifMenu && (

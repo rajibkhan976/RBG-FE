@@ -129,7 +129,7 @@ const Login = (props) => {
       {loader ? <Loader /> : ""}
       <div className="authBody d-flex f-align-center login_outer">
         <div className="loginRightPart">
-          <div class="login_head">
+          <div className="login_head">
             {/* <figure className="loginLogo">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
