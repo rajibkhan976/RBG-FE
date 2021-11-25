@@ -6,7 +6,7 @@ import RoleFilter from "./RoleFilter";
 // import SuccessAlert from "../../shared/messages/success";
 
 const Roles = () => {
-  document.title = "Roles";
+  document.title = "Red Belt Gym - Roles";
   console.log("Render Roles")
   const [createButton, setCreateButton] = useState(null);
   const [stateFilter, setStateFilter] = useState(null);

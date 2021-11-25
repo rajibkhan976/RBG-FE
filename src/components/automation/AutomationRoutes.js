@@ -7,7 +7,7 @@ import DashboardFooter from "../shared/FooterDashboard";
 import NotFound from "../shared/NotFound";
 
 const AutomationRoutes = (props) => {
-  document.title = "Automations";
+  document.title = "Red Belt Gym - Automations";
   const location = useLocation();
   const [roleMenu, setRoleMenu] = useState("automationList");
 

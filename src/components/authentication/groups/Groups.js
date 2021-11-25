@@ -5,7 +5,7 @@ import GroupModal from "./GroupModal";
 import GroupFilter from "./GroupFilter";
 
 const Groups = (props) => {
-  document.title = "Groups";
+  document.title = "Red Belt Gym - Groups";
   const [createButton, setCreateButton] = useState(null);
   const [stateFilter, setStateFilter] = useState(null);
   const [filteredData, setFilteredData] = useState(null);

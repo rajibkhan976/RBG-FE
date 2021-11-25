@@ -12,7 +12,7 @@ import ProductListing from "./products/productListing";
 
 
 const Products = () => {
-  document.title = "Products";
+  document.title = "Red Belt Gym - Products";
   const messageDelay = 5000; // ms
   // const [createButton, setCreateButton] = useState(null);
   // const [stateFilter, setStateFilter] = useState(null);

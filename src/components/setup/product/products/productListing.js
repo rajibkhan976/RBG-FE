@@ -11,7 +11,7 @@ import Pagination from "../../../shared/Pagination";
 import ConfirmBox from "../../../shared/confirmBox";
 
 const ProductListing = (props) => {
-  document.title = "Products";
+  document.title = "Red Belt Gym - Products";
   // const [prodFilterModalStatus, setProdFilterModalStatus] = useState(false);
   const [isConfirmed, setConfirmed] = useState({
     show: false,

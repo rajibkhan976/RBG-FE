@@ -5,7 +5,7 @@ import InnerLeftMenu from "../shared/InnerLeftMenu";
 import NumberListing from "./NumberListing";
 
 const NumberRouting = (props) => {
-  document.title = "Number management";
+  document.title = "Red Belt Gym - Number management";
   return (
     <React.Fragment>
       {/* <InnerLeftMenu routeMenu="dashboard"/> */}

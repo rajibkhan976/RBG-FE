@@ -7,7 +7,7 @@ import login_side_img from "../../../assets/images/login_side_img.png";
 import logo from "../../../assets/images/logo_128_28.svg";
 
 const Login = (props) => {
-  document.title = "Login";
+  document.title = "Red Belt Gym - Login";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formErrors, setFormErrors] = useState({

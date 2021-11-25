@@ -10,7 +10,7 @@ import CourseListing from "./src/courseListing";
 
 
 const Courses = () => {
-  document.title = "Courses";
+  document.title = "Red Belt Gym - Courses";
   const messageDelay = 5000; // ms
   // const [createButton, setCreateButton] = useState(null);
   // const [stateFilter, setStateFilter] = useState(null);
