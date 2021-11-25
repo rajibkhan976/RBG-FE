@@ -1599,6 +1599,7 @@
   left: 40px;
 }
 
-.headerCallToAction {
+.headerCallToAction,
+.sideMenuOuter {
   z-index: 101;
 }
