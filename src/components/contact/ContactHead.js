@@ -8,8 +8,8 @@ const ContactHead = (props) => {
       <div class="userListHead">
         <div class="listInfo">
           <ul class="listPath">
-            <li>Users &amp; Controls</li>
-            <li>Contacts List</li>
+            <li>Contacts</li>
+            <li>My Contacts</li>
           </ul>
           <h2 class="inDashboardHeader">Contacts List ({props.totalCount})</h2>
           <p class="userListAbout">Create, import &amp; manage your contacts</p>

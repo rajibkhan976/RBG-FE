@@ -1,27 +1,32 @@
 import { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
+import LogoImg from "../../assets/images/logo_img.png";
 
 function LeftMenu(props) {
-  const pathURL = useLocation().pathname
+  const pathURL = useLocation().pathname;
 
   const [tglLeftMenuStatus, setTglLeftMenuStatus] = useState(false);
 
-  useEffect(() => {
-  },[]);
+  useEffect(() => {}, []);
 
-  const toggleLeftSubMenu = (status) => {  
-    if(tglLeftMenuStatus){
+  const toggleLeftSubMenu = (status) => {
+    if (tglLeftMenuStatus) {
       setTglLeftMenuStatus(false);
     } else {
       setTglLeftMenuStatus(true);
     }
     console.log("'status i n inner bar", tglLeftMenuStatus);
     props.toggleLeftSubMenu && props.toggleLeftSubMenu(tglLeftMenuStatus);
-  }
+  };
 
   return (
     <div className="routeMenu">
+      <div className="closedMenuLogo">
+        <NavLink to="/dashboard">
+          <img src={LogoImg} alt="Logo img" />
+        </NavLink>
+      </div>
       <ul>
         <li>
           <NavLink
@@ -93,8 +98,14 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            isActive={() => ['/roles', '/groups', '/users']}
-            activeClassName={(pathURL === "/roles" || pathURL === "/groups" || pathURL === "/users") ? "selected" : ''}
+            isActive={() => ["/roles", "/groups", "/users"]}
+            activeClassName={
+              pathURL === "/roles" ||
+              pathURL === "/groups" ||
+              pathURL === "/users"
+                ? "selected"
+                : ""
+            }
             to="/roles"
           >
             <svg
@@ -216,8 +227,14 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            isActive={() => ['/automation-list', '/automation-builder']}
-            activeClassName={(pathURL === "/automation-list" || pathURL === '/automation-builder' || pathURL === '/automation-details') ? "selected" : ""}
+            isActive={() => ["/automation-list", "/automation-builder"]}
+            activeClassName={
+              pathURL === "/automation-list" ||
+              pathURL === "/automation-builder" ||
+              pathURL === "/automation-details"
+                ? "selected"
+                : ""
+            }
             to="/automation-list"
             title="Automation"
           >
@@ -422,10 +439,16 @@ function LeftMenu(props) {
         </li> */}
       </ul>
       <div className="leftMenuToggle">
-        <button className={tglLeftMenuStatus ? "leftMenuToggleBtn active" : "leftMenuToggleBtn"} onClick={() => toggleLeftSubMenu()}></button>
-        <span className={tglLeftMenuStatus ? "menuName active" : "menuName"}>{tglLeftMenuStatus ? "Open" : "Close"}</span>
+        <button
+          className={
+            tglLeftMenuStatus ? "leftMenuToggleBtn active" : "leftMenuToggleBtn"
+          }
+          onClick={() => toggleLeftSubMenu()}
+        ></button>
+        <span className={tglLeftMenuStatus ? "menuName active" : "menuName"}>
+          {tglLeftMenuStatus ? "Open" : "Close"}
+        </span>
       </div>
-      
     </div>
   );
 }

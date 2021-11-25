@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import SetupIcon1 from "../../../assets/images/setupicon1.svg";
@@ -11,7 +11,7 @@ import SetupIcon7 from "../../../assets/images/setupicon7.svg";
 
 const Setup = (props) => {
   return (
-    <div className="">
+    <>
       <div className="setUpPopUp">
         <p className="headding1">Set Up </p>
         <ul>
@@ -49,13 +49,22 @@ const Setup = (props) => {
             </div>
             <ul className="secondListing">
               <li>
-                <NavLink to="/email-setup">Email</NavLink>
+                <NavLink
+                  to="/email-setup"
+                  onClick={(e) => props.clickedLink(e)}
+                >
+                  Email
+                </NavLink>
               </li>
               <li>
-                <NavLink to="/sms-setup">SMS</NavLink>
+                <NavLink to="/sms-setup" onClick={(e) => props.clickedLink(e)}>
+                  SMS
+                </NavLink>
               </li>
               <li>
-                <NavLink to="/call-setup">Call</NavLink>
+                <NavLink to="/call-setup" onClick={(e) => props.clickedLink(e)}>
+                  Call
+                </NavLink>
               </li>
             </ul>
           </li>
@@ -88,7 +97,9 @@ const Setup = (props) => {
               </i>
               <div>
                 <h3>
-                  <NavLink to="/products">Products</NavLink>
+                  <NavLink to="/products" onClick={(e) => props.clickedLink(e)}>
+                    Products
+                  </NavLink>
                 </h3>
                 <p>Manage your POS products</p>
               </div>
@@ -123,7 +134,12 @@ const Setup = (props) => {
                 <a href="#">SMS</a>
               </li>
               <li>
-                <NavLink to="/audio-template">Audio</NavLink>
+                <NavLink
+                  to="/audio-template"
+                  onClick={(e) => props.clickedLink(e)}
+                >
+                  Audio
+                </NavLink>
               </li>
               <li>
                 <a href="#">RVM</a>
@@ -140,7 +156,12 @@ const Setup = (props) => {
               </i>
               <div>
                 <h3>
-                  <NavLink to="/number-list">Number List</NavLink>
+                  <NavLink
+                    to="/number-list"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    Number List
+                  </NavLink>
                 </h3>
                 <p>Assign number to organization</p>
               </div>
@@ -153,7 +174,9 @@ const Setup = (props) => {
               </i>
               <div>
                 <h3>
-                  <NavLink to="/courses">Courses</NavLink>
+                  <NavLink to="/courses" onClick={(e) => props.clickedLink(e)}>
+                    Courses
+                  </NavLink>
                 </h3>
                 <p>Manage your courses</p>
               </div>
@@ -161,7 +184,7 @@ const Setup = (props) => {
           </li>
         </ul>
       </div>
-    </div>
+    </>
   );
 };
 

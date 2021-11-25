@@ -258,6 +258,10 @@ function HeaderDashboard(props) {
       To: to,
     });
   };
+
+  const clickedLink = (e) => {
+    e.target && setSetupModalStatus(!setupModalStatus);
+  };
   return (
     <>
       <div className="dashboardHeader">
@@ -535,7 +539,7 @@ function HeaderDashboard(props) {
       )}
       {/* NOTIFICATIONS SIDE MENU */}
 
-      {setupModalStatus && <Setup />}
+      {setupModalStatus && <Setup clickedLink={(e) => clickedLink(e)} />}
 
       {modalMakeCall && (
         <CallModal
