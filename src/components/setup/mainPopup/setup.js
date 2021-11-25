@@ -80,13 +80,28 @@ const Setup = (props) => {
             </div>
             <ul className="secondListing">
               <li>
-                <a href="#">Import History</a>
+                <a
+                  href="javascript:void(0)"
+                  onClick={(e) => props.clickedLink(e)}
+                >
+                  Import History
+                </a>
               </li>
               <li>
-                <a href="#">Export History</a>
+                <a
+                  href="javascript:void(0)"
+                  onClick={(e) => props.clickedLink(e)}
+                >
+                  Export History
+                </a>
               </li>
               <li>
-                <a href="#">Activity Log</a>
+                <a
+                  href="javascript:void(0)"
+                  onClick={(e) => props.clickedLink(e)}
+                >
+                  Activity Log
+                </a>
               </li>
             </ul>
           </li>
@@ -128,10 +143,20 @@ const Setup = (props) => {
             </div>
             <ul className="secondListing">
               <li>
-                <a href="#">Email</a>
+                <a
+                  href="javascript:void(0)"
+                  onClick={(e) => props.clickedLink(e)}
+                >
+                  Email
+                </a>
               </li>
               <li>
-                <a href="#">SMS</a>
+                <a
+                  href="javascript:void(0)"
+                  onClick={(e) => props.clickedLink(e)}
+                >
+                  SMS
+                </a>
               </li>
               <li>
                 <NavLink
@@ -142,10 +167,20 @@ const Setup = (props) => {
                 </NavLink>
               </li>
               <li>
-                <a href="#">RVM</a>
+                <a
+                  href="javascript:void(0)"
+                  onClick={(e) => props.clickedLink(e)}
+                >
+                  RVM
+                </a>
               </li>
               <li>
-                <a href="#">Sales Bridge</a>
+                <a
+                  href="javascript:void(0)"
+                  onClick={(e) => props.clickedLink(e)}
+                >
+                  Sales Bridge
+                </a>
               </li>
             </ul>
           </li>
