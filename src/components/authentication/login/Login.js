@@ -6,7 +6,6 @@ import Loader from "../../shared/Loader";
 import login_side_img from "../../../assets/images/login_side_img.png";
 import logo from "../../../assets/images/logo_128_28.svg";
 
-
 const Login = (props) => {
   document.title = "Login";
   const [email, setEmail] = useState("");
@@ -18,7 +17,9 @@ const Login = (props) => {
   const [loader, setLoader] = useState(false);
 
   const dispatch = useDispatch();
-  const errorMessage = useSelector((state) => state.auth.message ? state.auth.message.error : null);
+  const errorMessage = useSelector((state) =>
+    state.auth.message ? state.auth.message.error : null
+  );
 
   const handleEmailChange = (event) => {
     event.preventDefault();
@@ -81,7 +82,7 @@ const Login = (props) => {
     }
 
     /**
-     * Validation 
+     * Validation
      */
     if (formErrorsCopy.email || formErrorsCopy.password) {
       isError = true;
@@ -119,13 +120,13 @@ const Login = (props) => {
         .finally(() => {
           setLoader(false);
           // console.log('dispatch finished');
-        })
+        });
     }
   };
 
   return (
     <div className="mainComponent">
-      {loader ? <Loader /> : ''}
+      {loader ? <Loader /> : ""}
       <div className="authBody d-flex f-align-center login_outer">
         <div className="loginRightPart">
           <div class="login_head">
@@ -147,73 +148,84 @@ const Login = (props) => {
                 </text>
               </svg>
             </figure> */}
-            <img src={logo} alt=""/>
+            <img src={logo} alt="" />
           </div>
-        
-        <form className="formBody" onSubmit={handleSubmit}>
-          <h1>Sign In</h1>
-          <p className="login_box_text">Please login below to access RedBeltGym.</p>
-          {errorMessage ? (
-            <div className="errorLogin text-center">{errorMessage}</div>
-          ) : null}
-          <div className="formInputs">
-            <label>Email</label>
 
-            <div className={formErrors.email ? "inFormField errorField" : "inFormField"}>
-              <input
-                type="text"
-                name="email"
-                onChange={handleEmailChange}
-                onBlur={() => validateField("email")}
-                placeholder="Email"
-              />
-              {formErrors.email ? (
-                <div className="errorMsg">{formErrors.email}</div>
-              ) : null}
-            </div>
-          </div>
-          <div className="formInputs">
-            <label>Password</label>
-            <a href="#" className="login_forget_link">Forgot?</a>
-            <div className={formErrors.password ? "inFormField errorField" : "inFormField"}>
-              <input
-                type="password"
-                name="password"
-                onChange={handlePasswordChange}
-                onBlur={() => validateField("password")}
-                placeholder="Password"
-              /> 
-              {formErrors.password ? (
-                <div className="errorMsg">{formErrors.password}</div>
-              ) : null}
-            </div>
+          <form className="formBody" onSubmit={handleSubmit}>
+            <h1>Sign In</h1>
+            {/* <p className="login_box_text">
+              Please login below to access RedBeltGym.
+            </p> */}
+            {errorMessage ? (
+              <div className="errorLogin text-center">{errorMessage}</div>
+            ) : null}
+            <div className="formInputs">
+              <label>Email</label>
 
-          </div>
-          {/* ......... implemented later .................... */}
-          {/* <div className="formInputs remember">
+              <div
+                className={
+                  formErrors.email ? "inFormField errorField" : "inFormField"
+                }
+              >
+                <input
+                  type="text"
+                  name="email"
+                  onChange={handleEmailChange}
+                  onBlur={() => validateField("email")}
+                  placeholder="Email"
+                />
+                {formErrors.email ? (
+                  <div className="errorMsg">{formErrors.email}</div>
+                ) : null}
+              </div>
+            </div>
+            <div className="formInputs">
+              <label>Password</label>
+              {/* <a href="#" className="login_forget_link">Forgot?</a> */}
+              <div
+                className={
+                  formErrors.password ? "inFormField errorField" : "inFormField"
+                }
+              >
+                <input
+                  type="password"
+                  name="password"
+                  onChange={handlePasswordChange}
+                  onBlur={() => validateField("password")}
+                  placeholder="Password"
+                />
+                {formErrors.password ? (
+                  <div className="errorMsg">{formErrors.password}</div>
+                ) : null}
+              </div>
+            </div>
+            {/* ......... implemented later .................... */}
+            {/* <div className="formInputs remember">
             <label>
               <div class="customCheckbox"><input type="checkbox" name="categories" value=""/><span></span></div>
               Remember me
             </label>     
           </div> */}
-          {/* ;,.,.,.,.,.,.,.,.,.,*/}
-          <div className="formInputs">
-            <button className="btn orangeBtn">Sign In</button>
+            {/* ;,.,.,.,.,.,.,.,.,.,*/}
+            <div className="formInputs">
+              <button className="btn orangeBtn">Sign In</button>
+            </div>
+          </form>
+          <div className="login_footer">
+            &copy; 2021 Red Belt Gym, Inc. All rights reserved
           </div>
-        </form>
-        <div className="login_footer">
-           &copy; 2021 Red Belt Gym, Inc. All rights reserved
-        </div>
         </div>
         <div className="loginLeftPart">
-          <img src={login_side_img} alt=""/>
+          <img src={login_side_img} alt="" />
           <span className="overlay"></span>
           <div className="login_left_text">
             <h2>Lorem Epsom dollar sit amet</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br/> Vestibulum et ultrices diam. Nam placerat porta.</p>
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              <br /> Vestibulum et ultrices diam. Nam placerat porta.
+            </p>
           </div>
         </div>
-       
       </div>
     </div>
   );

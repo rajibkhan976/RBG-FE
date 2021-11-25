@@ -436,7 +436,10 @@ function HeaderDashboard(props) {
                   <img src={userPhoto} alt="" />
                 </div>
                 <div className="userContacts">
-                  <h3>Steve Mile</h3>
+                  <h3>
+                    Steve Mile
+                    <p>Gym Owner</p>
+                  </h3>
                   <div className="userPhone">
                     <img src={phone_call_icon_white} alt="" />
                     <span>+1-4132045887</span>
