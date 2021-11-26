@@ -1660,3 +1660,37 @@
 .productListBody {
   min-height: 150px;
 }
+.menuUserDetail {
+  min-width: 160px;
+}
+.menuUserDetail span, 
+.menuUserDetail h3 {
+  width: 100%;
+  height: 15px;
+  display: block;
+}
+.menuUserDetail span:empty, 
+.menuUserDetail h3:empty {
+  background-color: #f4f4f4;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: linear-gradient(to right, #fff 8%, #ddd 38%, #f4f4f4 54%);
+  background-size: 1000px 640px;
+}
+.menuUserDetail span {
+  animation-duration: 1.8s;
+}
+.menuUserDetail h3 {  
+  animation-duration: 2.2s;
+}
+
+@keyframes placeHolderShimmer{
+  0%{
+      background-position: -468px 0
+  }
+  100%{
+      background-position: 468px 0
+  }
+}
