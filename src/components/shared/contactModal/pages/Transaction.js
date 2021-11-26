@@ -8,14 +8,7 @@ import wwConnect2 from "../../../../assets/images/wwConnect2.svg";
 import { TransactionServices } from "../../../../services/transaction/transactionServices";
 import Loader from "../../Loader";
 
-import MomentUtils from '@date-io/moment';
-import {
-  DatePicker,
-  TimePicker,
-  DateTimePicker,
-  MuiPickersUtilsProvider,
-} from '@material-ui/pickers';
-import moment from 'moment';
+
 
 const Transaction = (props) => {
 
