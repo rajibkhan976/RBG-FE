@@ -1607,3 +1607,8 @@
 .sideMenuHeader h3 .btn-link {
   top: 0;
 }
+.tableListing li.owerInfo .userName button span {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+}
