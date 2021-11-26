@@ -302,7 +302,7 @@ const AddProductModal = (props) => {
                       />
                       <span></span>
                     </div>
-                    Add Sales Tax (10%)</label>
+                    Add Sales Tax</label>
                 </div>
               </div>
               <div className="modalbtnHolder">

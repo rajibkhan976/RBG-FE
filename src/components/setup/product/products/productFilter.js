@@ -1,10 +1,6 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
-
 import arrowForward from "../../../../assets/images/arrow_forward.svg";
-import { innerLeftMenuApiUrl } from "../../../../configuration/config";
 import { utils } from "../../../../helpers";
-import { ProductServices } from "../../../../services/setup/ProductServices";
-import Loader from "../../../shared/Loader";
 import Loader2 from "../../../shared/Loader2";
 
 
@@ -15,13 +11,14 @@ const ProductFilter = (props) => {
         colors: [],
         sizes: []
     });
-
+    const [minPrice, setMinPrice] = useState(0);
+    const [maxPrice, setMaxPrice] = useState(0);
     const [filterData, setFilterData] = useState({
         categories: [],
         colors: [],
         sizes: [],
-        fromPriceProduct: "",
-        toPriceProduct: ""
+        fromPriceProduct: "0",
+        toPriceProduct: "0"
     });
 
     useEffect(() => {
@@ -34,15 +31,15 @@ const ProductFilter = (props) => {
             categories: [],
             colors: [],
             sizes: [],
-            fromPriceProduct: "",
-            toPriceProduct: ""
+            fromPriceProduct: "0",
+            toPriceProduct: "0"
         };
         const catID = decodeURIComponent(utils.getQueryVariable('catID'));
         const colors = decodeURIComponent(utils.getQueryVariable('colors'));
         const sizes = decodeURIComponent(utils.getQueryVariable('sizes'));
         const fromPriceProduct = decodeURIComponent(utils.getQueryVariable('fromPriceProduct'));
         const toPriceProduct = decodeURIComponent(utils.getQueryVariable('toPriceProduct'));
-        console.log(typeof catID);
+        // console.log(typeof catID);
         if (catID && catID !== "false") {
             data.categories = catID.split(",");
         }
@@ -54,11 +51,12 @@ const ProductFilter = (props) => {
         }
         if (fromPriceProduct && fromPriceProduct !== "false") {
             data.fromPriceProduct = fromPriceProduct.toString();
+            setMinPrice(fromPriceProduct.toString());
         }
         if (toPriceProduct && toPriceProduct !== "false") {
             data.toPriceProduct = toPriceProduct.toString();
+            setMaxPrice(toPriceProduct.toString());
         }
-        // console.log("Data to be added", data);
         setFilterData(data);
     }
 
@@ -95,9 +93,14 @@ const ProductFilter = (props) => {
             setAvg((maxVal + minVal) / 2);
         }, [minVal, maxVal]);
 
-        console.log(maxVal, avg, min, max, maxPercent, width);
-        
-
+        // console.log(maxVal, avg, min, max, maxPercent, width);
+        const setMin = () => {
+            // console.log(e.target.value);
+            setMinPrice(minVal);
+        }
+        const setMax = () => {
+            setMaxPrice(Math.floor(maxVal));
+        }
         return (
             <div
                 className="min-max-slider"
@@ -119,6 +122,7 @@ const ProductFilter = (props) => {
                     max={avg}
                     value={minVal}
                     onChange={({ target }) => setMinVal(Number(target.value))}
+                    onBlur={setMin}
                 />
                 <label htmlFor="max" className="maxValSlider" style={styles.maxPos}>${Math.floor(maxVal)}</label>
                 <input
@@ -132,25 +136,11 @@ const ProductFilter = (props) => {
                     max={max}
                     value={maxVal}
                     onChange={({ target }) => setMaxVal(Number(target.value))}
+                    onBlur={setMax}
                 />
             </div>
         );
     };
-
-    const fetchColorSizes = async () => {
-        try {
-            const result = await ProductServices.fetchColorSizes();
-            setColorSize({
-                colors: result.colors,
-                sizes: result.sizes
-            });
-            console.log("Color Size", colorSize);
-        } catch (e) {
-            props.errorMsg(e.message);
-        } finally {
-            setIsLoader(false);
-        }
-    }
 
     const handleColorCheckbox = (e) => {
         e.preventDefault();
@@ -195,7 +185,7 @@ const ProductFilter = (props) => {
     const handleApplyFilter = (e) => {
         e.preventDefault();
         handleResetFilter(e, false);
-        const data = { ...filterData };
+        const data = { ...filterData, fromPriceProduct: minPrice.toString(), toPriceProduct: maxPrice.toString() };
         if (data.categories.length) {
             utils.addQueryParameter("catID", data.categories.join(",").toString());
         }
@@ -205,13 +195,13 @@ const ProductFilter = (props) => {
         if (data.sizes.length) {
             utils.addQueryParameter("sizes", data.sizes.join(",").toString());
         }
-        if (data.fromPriceProduct) {
+        if (data.fromPriceProduct !== "0" || data.fromPriceProduct !== "false") {
             utils.addQueryParameter("fromPriceProduct", data.fromPriceProduct.toString());
         }
-        if (data.toPriceProduct) {
+        if (data.toPriceProduct !== "0" || data.toPriceProduct !== "false") {
             utils.addQueryParameter("toPriceProduct", data.toPriceProduct.toString());
         }
-        // console.log(filterData);
+        // console.log(data);
         props.getProduct();
         props.closeModal();
     }
@@ -227,8 +217,8 @@ const ProductFilter = (props) => {
             categories: [],
             colors: [],
             sizes: [],
-            fromPriceProduct: "",
-            toPriceProduct: ""
+            fromPriceProduct: "0",
+            toPriceProduct: "0"
         });
         if (isFetch) {
             props.getProduct();
@@ -238,7 +228,6 @@ const ProductFilter = (props) => {
 
     return (
         <>
-            
             <div class="sideMenuOuter filterUserMenu">
                 {isLoader ? <Loader2 /> : ''}
                 <div class="sideMenuInner">
@@ -314,8 +303,9 @@ const ProductFilter = (props) => {
                             </div>
                             <div className="applySlider">
                                 <p>Price</p>
-
-                                <Slider min={0} max={500} minval={10} maxval={100}/>
+                                <Slider min={0} max={500} 
+                                minval={minPrice} 
+                                maxval={maxPrice}/>
                             </div>
                             <div class="applyFilterBtn">
                                 <button class="saveNnewBtn" type="submit"><span>Apply Filter</span><img class="" src={arrowForward} alt="" /></button>
