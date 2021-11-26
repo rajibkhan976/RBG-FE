@@ -129,7 +129,7 @@ const InnerLeftMenu = (props) => {
           <React.Fragment>
             <div className="sidebarHeader">
               <h4>
-                Automations
+                Automation
               </h4>
             </div>
             <ul>
