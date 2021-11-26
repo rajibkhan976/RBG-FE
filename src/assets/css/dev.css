@@ -1620,12 +1620,21 @@
 .setUpPopUp {
   padding-right: 0;
 }
-.setUpPopUp > div {
-  margin-right: 35px;
-}
-.setUpPopUp .thumb-vertical {
+.setUpPopUp .thumb-vertical,
+.productRightSetUpPanel .thumb-vertical {
   position: relative;
   background: #f1a668;
   width: 3px;
   right: -5px;
+}
+.productRightSetUpPanel {
+  z-index: 3;
+  padding-right: 0;
+}
+.innerCategory {
+  margin-right: 38px;
+}
+.productSearchPanel .btn {
+  vertical-align: top;
+  white-space: nowrap;
 }

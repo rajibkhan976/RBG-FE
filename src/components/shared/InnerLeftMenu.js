@@ -183,35 +183,35 @@ const InnerLeftMenu = (props) => {
             </div>
             <ul>
               <li>
-                <NavLink className="leftMenuInnerLink" to="/roles">
+                <a className="leftMenuInnerLink" href="javascript:void(0)">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Personal Details</p>
-                    <p className="linkAbout">Lorem ipsum dolor sit</p>
+                    <p className="linkAbout">Manage your personal details</p>
                     <button className="btn sidemenuarrow">
                       <img src={SideMenuArrow} alt=""/>
                     </button>
                   </div>
-                </NavLink>
+                </a>
               </li>
               <li>
-                <NavLink className="leftMenuInnerLink" to="/groups">
+                <a className="leftMenuInnerLink" href="javascript:void(0)">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Gym Details</p>
-                    <p className="linkAbout">Lorem ipsum dolor sit</p>
+                    <p className="linkAbout">Manage your Gym details</p>
                     <button className="btn sidemenuarrow">
                       <img src={SideMenuArrow} alt=""/>
                     </button>
                   </div>
-                </NavLink>
+                </a>
               </li>
               <li>
                 <NavLink className="leftMenuInnerLink" to="/call-setup" activeClassName="active">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Communication Setup</p>
-                    <p className="linkAbout">Lorem ipsum dolor sit</p>
+                    <p className="linkAbout">Set all kind of communications</p>
                     <button className="btn sidemenuarrow">
                       <img src={SideMenuArrow} alt=""/>
                     </button>
@@ -232,7 +232,7 @@ const InnerLeftMenu = (props) => {
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Products</p>
-                    <p className="linkAbout">Lorem ipsum dolor sit</p>
+                    <p className="linkAbout">Manage your POS products</p>
                     <button className="btn sidemenuarrow">
                       <img src={SideMenuArrow} alt=""/>
                     </button>
@@ -244,7 +244,7 @@ const InnerLeftMenu = (props) => {
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Courses</p>
-                    <p className="linkAbout">Lorem ipsum dolor sit</p>
+                    <p className="linkAbout">Manage your courses</p>
                     <button className="btn sidemenuarrow">
                       <img src={SideMenuArrow} alt=""/>
                     </button>
@@ -252,7 +252,7 @@ const InnerLeftMenu = (props) => {
                 </NavLink>
               </li>
               <li>
-                <NavLink className="leftMenuInnerLink" to="/groups">
+                <a className="leftMenuInnerLink" href="javascript:void(0)">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Customizations</p>
@@ -261,14 +261,14 @@ const InnerLeftMenu = (props) => {
                       <img src={SideMenuArrow} alt=""/>
                     </button>
                   </div>
-                </NavLink>
+                </a>
               </li>
               <li>
                 <NavLink className="leftMenuInnerLink" to="/audio-template" activeClassName="active">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Templates</p>
-                    <p className="linkAbout">Lorem ipsum dolor sit</p>
+                    <p className="linkAbout">Set communication templates</p>
                     <button className="btn sidemenuarrow">
                       <img src={SideMenuArrow} alt=""/>
                     </button>
