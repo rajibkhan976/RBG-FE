@@ -9,7 +9,7 @@ const ListHeader = (props) => {
         <div className="userListHead">
           <div className="listInfo">
             <ul className="listPath">
-              <li>Automations</li>
+              <li>Automation</li>
               <li>Listing</li>
             </ul>
             <h2 className="inDashboardHeader">
@@ -31,7 +31,7 @@ const ListHeader = (props) => {
         <div className="userListHead">
           <div className="listInfo">
             <ul className="listPath">
-              <li>Automations</li>
+              <li>Automation</li>
             </ul>
             <h2 className="inDashboardHeader">{props.autoName}</h2>
             <div className="automationShortInfo">
