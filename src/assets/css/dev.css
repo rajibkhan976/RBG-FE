@@ -1621,7 +1621,8 @@
   padding-right: 0;
 }
 .setUpPopUp .thumb-vertical,
-.productRightSetUpPanel .thumb-vertical {
+.productRightSetUpPanel .thumb-vertical,
+.modalForm .thumb-vertical {
   position: relative;
   background: #f1a668;
   width: 3px;
@@ -1692,5 +1693,12 @@
   }
   100%{
       background-position: 468px 0
+  }
+}
+
+@media (max-height: 767px) {
+  .modalForm form {
+    width: auto;
+    margin-right: 5px;
   }
 }
