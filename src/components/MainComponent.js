@@ -55,7 +55,7 @@ const MainComponent = () => {
           className={
             "dashboardBody d-flex " +
             (pathURL === '/automation-list' || pathURL === '/automation-builder' ? ' automationBuilderBody ' : '') +
-            (showInnerleftMenu ? "openSubmenu" : "")
+            (showInnerleftMenu ? (pathURL !== '/dashboard' ? "openSubmenu" : "") : "")
           }
         >
           <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu} clickedSetupStatus={(e) => clickedSetupStatus(e)}/>

@@ -516,22 +516,22 @@ const UsersListing = (props) => {
                                                                       >
                                                                         <g transform="translate(0.75 0.75)">
                                                                           <path
-                                                                            class="a"
+                                                                            className="a"
                                                                             d="M3,6H13.847"
                                                                             transform="translate(-3 -3.589)"
                                                                           />
                                                                           <path
-                                                                            class="a"
+                                                                            className="a"
                                                                             d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
                                                                             transform="translate(-3.795 -2)"
                                                                           />
                                                                           <line
-                                                                            class="a"
+                                                                            className="a"
                                                                             y2="3"
                                                                             transform="translate(4.397 6.113)"
                                                                           />
                                                                           <line
-                                                                            class="a"
+                                                                            className="a"
                                                                             y2="3"
                                                                             transform="translate(6.397 6.113)"
                                                                           />

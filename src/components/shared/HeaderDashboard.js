@@ -58,6 +58,7 @@ function HeaderDashboard(props) {
     image: null,
     group: null,
     isEdit: false,
+    fullName: null,
     association: null,
     organization: null,
     isOrganizationOwner: false,
@@ -295,7 +296,8 @@ function HeaderDashboard(props) {
       if (userDetails) {
         console.log('success user details', userDetails);
         setLoggedInUser({
-          name: userDetails.firstName + ' ' + userDetails.lastName,
+          name: userDetails.firstName + ' ' + (userDetails.lastName ? userDetails.lastName.substr(0, 1) + '.' : ''),
+          fullName: userDetails.firstName + ' ' + userDetails.lastName,
           email: userDetails.email,
           phone: userDetails.phone ? (userDetails.prefix + '-' +userDetails.phone) : null,
           image: userDetails.image ? (config.bucketUrl + userDetails.image) : null,
@@ -491,7 +493,7 @@ function HeaderDashboard(props) {
                 </div>
                 <div className="userContacts">
                   <h3>
-                    {loggedInUser.name}
+                    {loggedInUser.fullName}
                     <p>{loggedInUser.group}</p>
                   </h3>
 
