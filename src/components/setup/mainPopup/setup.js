@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { Scrollbars } from "react-custom-scrollbars-2";
 
 import SetupIcon1 from "../../../assets/images/setupicon1.svg";
 import SetupIcon2 from "../../../assets/images/setupicon2.svg";
@@ -13,211 +14,227 @@ const Setup = (props) => {
   return (
     <>
       <div className="setUpPopUp">
-        <p className="headding1">Set Up </p>
-        <ul>
-          <li>
-            <div className="listHead">
-              <i>
-                <img src={SetupIcon1} alt="" />
-              </i>
-              <div>
-                <h3>Personal Details</h3>
-                <p>Manage your personal details</p>
+        <Scrollbars
+          renderThumbVertical={(props) => <div className="thumb-vertical" />}
+        >
+          <p className="headding1">Set Up </p>
+          <ul>
+            <li>
+              <div className="listHead">
+                <i>
+                  <img src={SetupIcon1} alt="" />
+                </i>
+                <div>
+                  <h3>Personal Details</h3>
+                  <p>Manage your personal details</p>
+                </div>
               </div>
-            </div>
-          </li>
-          <li>
-            <div className="listHead">
-              <i>
-                <img src={SetupIcon2} alt="" />
-              </i>
-              <div>
-                <h3>Gym Details</h3>
-                <p>Manage your Gym details</p>
+            </li>
+            <li>
+              <div className="listHead">
+                <i>
+                  <img src={SetupIcon2} alt="" />
+                </i>
+                <div>
+                  <h3>Gym Details</h3>
+                  <p>Manage your Gym details</p>
+                </div>
               </div>
-            </div>
-          </li>
-          <li>
-            <div className="listHead">
-              <i>
-                <img src={SetupIcon3} alt="" />
-              </i>
-              <div>
-                <h3>Communication Setup</h3>
-                <p>Set all kind of communications</p>
+            </li>
+            <li>
+              <div className="listHead">
+                <i>
+                  <img src={SetupIcon3} alt="" />
+                </i>
+                <div>
+                  <h3>Communication Setup</h3>
+                  <p>Set all kind of communications</p>
+                </div>
               </div>
-            </div>
-            <ul className="secondListing">
-              <li>
-                <NavLink
-                  to="/email-setup"
-                  onClick={(e) => props.clickedLink(e)}
-                >
-                  Email
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/sms-setup" onClick={(e) => props.clickedLink(e)}>
-                  SMS
-                </NavLink>
-              </li>
-              <li>
-                <NavLink to="/call-setup" onClick={(e) => props.clickedLink(e)}>
-                  Call
-                </NavLink>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <div className="listHead">
-              <i>
-                <img src={SetupIcon4} alt="" />
-              </i>
-              <div>
-                <h3>Data Administration</h3>
-                <p>Lorem ipsum dolor sit</p>
-              </div>
-            </div>
-            <ul className="secondListing">
-              <li>
-                <a
-                  href="javascript:void(0)"
-                  onClick={(e) => props.clickedLink(e)}
-                >
-                  Import History
-                </a>
-              </li>
-              <li>
-                <a
-                  href="javascript:void(0)"
-                  onClick={(e) => props.clickedLink(e)}
-                >
-                  Export History
-                </a>
-              </li>
-              <li>
-                <a
-                  href="javascript:void(0)"
-                  onClick={(e) => props.clickedLink(e)}
-                >
-                  Activity Log
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <div className="listHead">
-              <i>
-                <img src={SetupIcon5} alt="" />
-              </i>
-              <div>
-                <h3>
-                  <NavLink to="/products" onClick={(e) => props.clickedLink(e)}>
-                    Products
-                  </NavLink>
-                </h3>
-                <p>Manage your POS products</p>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div className="listHead">
-              <i>
-                <img src={SetupIcon6} alt="" />
-              </i>
-              <div>
-                <h3>Customizations</h3>
-                <p>Lorem ipsum dolor sit</p>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div className="listHead">
-              <i>
-                <img src={SetupIcon7} alt="" />
-              </i>
-              <div>
-                <h3>Templates</h3>
-                <p>Set communication templates</p>
-              </div>
-            </div>
-            <ul className="secondListing">
-              <li>
-                <a
-                  href="javascript:void(0)"
-                  onClick={(e) => props.clickedLink(e)}
-                >
-                  Email
-                </a>
-              </li>
-              <li>
-                <a
-                  href="javascript:void(0)"
-                  onClick={(e) => props.clickedLink(e)}
-                >
-                  SMS
-                </a>
-              </li>
-              <li>
-                <NavLink
-                  to="/audio-template"
-                  onClick={(e) => props.clickedLink(e)}
-                >
-                  Audio
-                </NavLink>
-              </li>
-              <li>
-                <a
-                  href="javascript:void(0)"
-                  onClick={(e) => props.clickedLink(e)}
-                >
-                  RVM
-                </a>
-              </li>
-              <li>
-                <a
-                  href="javascript:void(0)"
-                  onClick={(e) => props.clickedLink(e)}
-                >
-                  Sales Bridge
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <div className="listHead">
-              <i>
-                <img src={SetupIcon4} alt="" />
-              </i>
-              <div>
-                <h3>
+              <ul className="secondListing">
+                <li>
                   <NavLink
-                    to="/number-list"
+                    to="/email-setup"
                     onClick={(e) => props.clickedLink(e)}
                   >
-                    Number List
+                    Email
                   </NavLink>
-                </h3>
-                <p>Assign number to organization</p>
-              </div>
-            </div>
-          </li>
-          <li>
-            <div className="listHead">
-              <i>
-                <img src={SetupIcon5} alt="" />
-              </i>
-              <div>
-                <h3>
-                  <NavLink to="/courses" onClick={(e) => props.clickedLink(e)}>
-                    Courses
+                </li>
+                <li>
+                  <NavLink
+                    to="/sms-setup"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    SMS
                   </NavLink>
-                </h3>
-                <p>Manage your courses</p>
+                </li>
+                <li>
+                  <NavLink
+                    to="/call-setup"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    Call
+                  </NavLink>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <div className="listHead">
+                <i>
+                  <img src={SetupIcon4} alt="" />
+                </i>
+                <div>
+                  <h3>Data Administration</h3>
+                  <p>Lorem ipsum dolor sit</p>
+                </div>
               </div>
-            </div>
-          </li>
-        </ul>
+              <ul className="secondListing">
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    Import History
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    Export History
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    Activity Log
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <div className="listHead">
+                <i>
+                  <img src={SetupIcon5} alt="" />
+                </i>
+                <div>
+                  <h3>
+                    <NavLink
+                      to="/products"
+                      onClick={(e) => props.clickedLink(e)}
+                    >
+                      Products
+                    </NavLink>
+                  </h3>
+                  <p>Manage your POS products</p>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div className="listHead">
+                <i>
+                  <img src={SetupIcon6} alt="" />
+                </i>
+                <div>
+                  <h3>Customizations</h3>
+                  <p>Lorem ipsum dolor sit</p>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div className="listHead">
+                <i>
+                  <img src={SetupIcon7} alt="" />
+                </i>
+                <div>
+                  <h3>Templates</h3>
+                  <p>Set communication templates</p>
+                </div>
+              </div>
+              <ul className="secondListing">
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    Email
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    SMS
+                  </a>
+                </li>
+                <li>
+                  <NavLink
+                    to="/audio-template"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    Audio
+                  </NavLink>
+                </li>
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    RVM
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="javascript:void(0)"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    Sales Bridge
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <div className="listHead">
+                <i>
+                  <img src={SetupIcon4} alt="" />
+                </i>
+                <div>
+                  <h3>
+                    <NavLink
+                      to="/number-list"
+                      onClick={(e) => props.clickedLink(e)}
+                    >
+                      Number List
+                    </NavLink>
+                  </h3>
+                  <p>Assign number to organization</p>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div className="listHead">
+                <i>
+                  <img src={SetupIcon5} alt="" />
+                </i>
+                <div>
+                  <h3>
+                    <NavLink
+                      to="/courses"
+                      onClick={(e) => props.clickedLink(e)}
+                    >
+                      Courses
+                    </NavLink>
+                  </h3>
+                  <p>Manage your courses</p>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </Scrollbars>
       </div>
     </>
   );

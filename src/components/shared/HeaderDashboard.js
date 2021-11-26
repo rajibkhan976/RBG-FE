@@ -262,6 +262,11 @@ function HeaderDashboard(props) {
   const clickedLink = (e) => {
     e.target && setSetupModalStatus(!setupModalStatus);
   };
+
+  useEffect(() => {
+    props.setupMenuState && setSetupModalStatus(false)
+  }, [props.setupMenuState])
+
   return (
     <>
       <div className="dashboardHeader">
