@@ -8,8 +8,6 @@ function LeftMenu(props) {
 
   const [tglLeftMenuStatus, setTglLeftMenuStatus] = useState(false);
 
-  useEffect(() => {}, []);
-
   const toggleLeftSubMenu = (status) => {
     if (tglLeftMenuStatus) {
       setTglLeftMenuStatus(false);
@@ -20,12 +18,16 @@ function LeftMenu(props) {
     props.toggleLeftSubMenu && props.toggleLeftSubMenu(tglLeftMenuStatus);
   };
 
+  // Permission Set
+  const [permissions, setPermissions] = useState(JSON.parse(localStorage.getItem("permissions")));
+  console.log('Having permission', permissions);
+
   return (
     <div className="routeMenu"
     >
       <div className="closedMenuLogo">
         <NavLink to="/dashboard"
-      onClick={(e)=>props.clickedSetupStatus(e)}>
+          onClick={(e) => props.clickedSetupStatus(e)}>
           <img src={LogoImg} alt="Logo img" />
         </NavLink>
       </div>
@@ -35,7 +37,7 @@ function LeftMenu(props) {
             className="leftMenuLink"
             activeClassName="selected"
             to="/dashboard"
-            onClick={(e)=>props.clickedSetupStatus(e)}
+            onClick={(e) => props.clickedSetupStatus(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -98,19 +100,20 @@ function LeftMenu(props) {
             </svg>
           </NavLink>
         </li> */}
+        {permissions && permissions.findIndex(p => p.entity === "authentication") >= 0 ?
         <li>
           <NavLink
             className="leftMenuLink"
             isActive={() => ["/roles", "/groups", "/users"]}
             activeClassName={
               pathURL === "/roles" ||
-              pathURL === "/groups" ||
-              pathURL === "/users"
+                pathURL === "/groups" ||
+                pathURL === "/users"
                 ? "selected"
                 : ""
             }
             to="/roles"
-            onClick={(e)=>props.clickedSetupStatus(e)}
+            onClick={(e) => props.clickedSetupStatus(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -125,7 +128,7 @@ function LeftMenu(props) {
             </svg>
             <span className="menuName">User & Controls</span>
           </NavLink>
-        </li>
+        </li> : ''}
         {/* <li>
           <NavLink
             className="leftMenuLink"
@@ -228,20 +231,21 @@ function LeftMenu(props) {
             </svg>
           </NavLink>
         </li> */}
+        {permissions && permissions.findIndex(p => p.entity === "automation") >= 0 ?
         <li>
           <NavLink
             className="leftMenuLink"
             isActive={() => ["/automation-list", "/automation-builder"]}
             activeClassName={
               pathURL === "/automation-list" ||
-              pathURL === "/automation-builder" ||
-              pathURL === "/automation-details"
+                pathURL === "/automation-builder" ||
+                pathURL === "/automation-details"
                 ? "selected"
                 : ""
             }
             to="/automation-list"
             title="Automation"
-            onClick={(e)=>props.clickedSetupStatus(e)}
+            onClick={(e) => props.clickedSetupStatus(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -259,13 +263,14 @@ function LeftMenu(props) {
             </svg>
             <span className="menuName">Automation</span>
           </NavLink>
-        </li>
+        </li> : ""}
+        {permissions && permissions.findIndex(p => p.entity === "contact") >= 0 ?
         <li>
           <NavLink
             className="leftMenuLink"
             activeClassName="selected"
             to="/contacts"
-            onClick={(e)=>props.clickedSetupStatus(e)}
+            onClick={(e) => props.clickedSetupStatus(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -316,7 +321,7 @@ function LeftMenu(props) {
             </svg>
             <span className="menuName">Contacts</span>
           </NavLink>
-        </li>
+        </li> : ''}
         {/* <li>
           <NavLink
             className="leftMenuLink"
@@ -445,15 +450,19 @@ function LeftMenu(props) {
         </li> */}
       </ul>
       <div className="leftMenuToggle">
-        <button
-          className={
-            tglLeftMenuStatus ? "leftMenuToggleBtn active" : "leftMenuToggleBtn"
-          }
-          onClick={() => toggleLeftSubMenu()}
-        ></button>
-        <span className={tglLeftMenuStatus ? "menuName active" : "menuName"}>
-          {tglLeftMenuStatus ? "Open" : "Close"}
-        </span>
+        {pathURL !== "/dashboard" ?
+          <>
+            <button
+              className={
+                tglLeftMenuStatus ? "leftMenuToggleBtn active" : "leftMenuToggleBtn"
+              }
+              onClick={() => toggleLeftSubMenu()}
+            ></button>
+            <span className={tglLeftMenuStatus ? "menuName active" : "menuName"}>
+              {tglLeftMenuStatus ? "Open" : "Close"}
+            </span>
+          </>
+          : ''}
       </div>
     </div>
   );

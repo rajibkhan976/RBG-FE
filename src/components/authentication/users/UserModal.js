@@ -105,7 +105,28 @@ const UserModal = (props) => {
     useEffect(() => {
         fetchCountry();
         fetchAssociations();
+        fetchLoggedUserDetails();
     }, []);
+
+    /**
+     * LoggedIn user details
+     */
+    const [loggedInUser, setLoggedInUser] = useState({
+        isOrganizationAssociationOwner: false,
+    })
+    const fetchLoggedUserDetails = async () => {
+        try {
+            let userDetails = await UserServices.fetchUserDetails();
+            if (userDetails) {
+                console.log('logged in user details', userDetails.isOrganizationOwner, userDetails.isAssociationOwner);
+                setLoggedInUser({
+                    isOrganizationAssociationOwner: (!userDetails.isOrganizationOwner && !userDetails.isAssociationOwner)
+                })
+            }
+        } catch (e) {
+            console.log('Error in fetch current user', e);
+        }
+    };
 
     const countrycodeOpt = phoneCountryCode ? phoneCountryCode.map((el, key) => {
         return (
@@ -138,6 +159,12 @@ const UserModal = (props) => {
         setEditId(editUser._id);
         setFirstName(editUser.firstName);
         setLastName(editUser.lastName);
+        if (editUser.prefix) {
+            console.log('phone country code', phoneCountryCode);
+            let countyCode = phoneCountryCode && phoneCountryCode.filter(el => { return el.prefix === editUser.prefix });
+            let editCountryCode = countyCode[0].code ? (editUser.prefix === '+1' ? "US" : countyCode[0].code) : 'US';
+            setBasicinfoMobilePhone(prevState => ({ ...prevState, dailCode: editUser.prefix, countryCode: editCountryCode }));
+        }
         setPhoneNumber(editUser.phone);
         setEmail(editUser.email);
         if (editUser && editUser.role && editUser.group) {
@@ -180,11 +207,28 @@ const UserModal = (props) => {
          * Reset permissions
          */
         if (!editUser) {
-            console.log('Reset permissions');
+            console.log('Reset permissions', basicinfoMobilePhone);
             setRoleId('');
             setGroupId('');
             setPermissionData([]);
             setIsModifiedPermission(false);
+            setBasicinfoMobilePhone({
+                countryCode: "US",
+                dailCode: "+1",
+                number: "1234567890"
+            });
+            //Reset org data
+            setOrgName("");
+            setOrgEmail("");
+            setOrgDescription("");
+            setLogo("");
+            setLogoName("");
+            setAssociationId("");
+            //Reset association data
+            setAssociationId("");
+            setAssociationName("");
+            setAssociationEmail("");
+            setAssociationDescription("");
         }
 
     }, [editUser]);
@@ -334,7 +378,7 @@ const UserModal = (props) => {
         event.preventDefault();
         let emailAddress = event.target.value;
         let emailValid = emailAddress.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-        if(emailAddress.length < 3) return;
+        if (emailAddress.length < 3) return;
         if (emailValid) {
             setProcessing(false);
             setFormErrors({
@@ -872,7 +916,7 @@ const UserModal = (props) => {
                         // Fetch users
                         fetchUsers(1);
                         //If creating association account
-                        if(isAssociateOwner){
+                        if (isAssociateOwner) {
                             fetchAssociations();
                         }
                     })
@@ -1034,8 +1078,7 @@ const UserModal = (props) => {
                                             </div>
                                         </div>
                                         <div className="infoField orgSection">
-
-                                            {!editId && isOrgPermission && (
+                                            {loggedInUser.isOrganizationAssociationOwner &&  !editId && isOrgPermission && (
 
                                                 <div className="cmnFormRow">
                                                     <div className="cmnFieldName">Select Type</div>
