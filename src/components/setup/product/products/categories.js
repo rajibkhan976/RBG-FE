@@ -6,6 +6,8 @@ import { ProductServices } from "../../../../services/setup/ProductServices";
 import ConfirmBox from "../../../shared/confirmBox";
 import Loader2 from "../../../shared/Loader2";
 import cross from "../../../../assets/images/cross.svg";
+import { Scrollbars } from "react-custom-scrollbars-2";
+
 
 const CategoryListing = (props) => {
 
@@ -146,7 +148,12 @@ const CategoryListing = (props) => {
                 ""
             )}
             <div className="productRightSetUpPanel">
+                
+                <Scrollbars
+                  renderThumbVertical={(props) => <div className="thumb-vertical" />}
+                >
                 {props.isLoader ? <Loader2 /> : ''}
+          <div className="innerScroll">
                 <h3 className="productListingHeader">Product Categories</h3>
                 <div className="productSearchPanel">
                     <form method="post" onSubmit={handleSubmit}>
@@ -194,34 +201,38 @@ const CategoryListing = (props) => {
                                                 Edit
                                             </button>
                                             <button className="btn btnDelete" onClick={() => deleteCategory(elem._id)}>
-                                                <span>
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        width="12.347"
-                                                        height="13.553"
-                                                        viewBox="0 0 12.347 13.553"
-                                                        className="deleteIcon"
-                                                    >
-                                                        <g transform="translate(0.75 0.75)">
-                                                            <path className="a" transform="translate(-3 -3.589)" />
-                                                            <path
-                                                                className="a"
-                                                                d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
-                                                                transform="translate(-3.795 -2)"
-                                                            />
-                                                            <line
-                                                                className="a"
-                                                                y2="3"
-                                                                transform="translate(4.397 6.113)"
-                                                            />
-                                                            <line
-                                                                className="a"
-                                                                y2="3"
-                                                                transform="translate(6.397 6.113)"
-                                                            />
-                                                        </g>
-                                                    </svg>
-                                                </span>
+                                <span>
+                                  <svg
+                                    className="deleteIcon"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="12.347"
+                                    height="13.553"
+                                    viewBox="0 0 12.347 13.553"
+                                  >
+                                    <g transform="translate(0.75 0.75)">
+                                      <path
+                                        class="a"
+                                        d="M3,6H13.847"
+                                        transform="translate(-3 -3.589)"
+                                      />
+                                      <path
+                                        class="a"
+                                        d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
+                                        transform="translate(-3.795 -2)"
+                                      />
+                                      <line
+                                        class="a"
+                                        y2="3"
+                                        transform="translate(4.397 6.113)"
+                                      />
+                                      <line
+                                        class="a"
+                                        y2="3"
+                                        transform="translate(6.397 6.113)"
+                                      />
+                                    </g>
+                                  </svg>
+                                </span>
                                                 Delete
                                             </button>
                                         </div>
@@ -230,7 +241,7 @@ const CategoryListing = (props) => {
                             </React.Fragment>
                         )
                     })}
-                </ul>
+                </ul></div></Scrollbars>
             </div>
 
         </>

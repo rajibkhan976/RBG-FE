@@ -8,6 +8,7 @@ import { ProductServices } from "../../../../services/setup/ProductServices";
 import Loader from "../../../shared/Loader";
 import { ErrorAlert, SuccessAlert } from "../../../shared/messages";
 import config from "../../../../configuration/config";
+import { Scrollbars } from "react-custom-scrollbars-2";
 
 const AddProductModal = (props) => {
   const messageDelay = 5000;
@@ -221,6 +222,9 @@ const AddProductModal = (props) => {
             <p>Choose a category to add a new product below</p>
           </div>
           <div className="modalForm">
+        <Scrollbars
+          renderThumbVertical={(props) => <div className="thumb-vertical" />}
+        >
             <form method="post" onSubmit={handleSubmit}>
               <div className="formControl">
                 <label>Select Category</label>
@@ -310,6 +314,7 @@ const AddProductModal = (props) => {
                 onClick={() => setBtnType("SaveNew")}><span>{(isEditing)?"Update":"Save"} &amp; New</span><img src={arrow_forward} alt="" /></button>
               </div>
             </form>
+            </Scrollbars>
           </div>
 
         </div>

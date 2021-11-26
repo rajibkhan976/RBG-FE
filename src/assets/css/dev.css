@@ -1631,10 +1631,32 @@
   z-index: 3;
   padding-right: 0;
 }
-.innerCategory {
+.innerScroll {
   margin-right: 38px;
 }
 .productSearchPanel .btn {
   vertical-align: top;
   white-space: nowrap;
+}
+.user_profile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.user_profile img {
+  width: inherit;
+}
+.headerCallToAction .rightDetails p {
+  max-width: 165px;
+}
+.modalBackdrop {
+  z-index: 101;
+}
+.slickModalBody .modalForm {
+  height: 100vh;
+  max-height: 40vh;
+  overflow: auto;
+}
+.productListBody {
+  min-height: 150px;
 }
