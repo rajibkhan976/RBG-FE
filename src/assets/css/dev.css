@@ -1664,13 +1664,13 @@
 .menuUserDetail {
   min-width: 160px;
 }
-.menuUserDetail span, 
+.menuUserDetail span,
 .menuUserDetail h3 {
   width: 100%;
   height: 15px;
   display: block;
 }
-.menuUserDetail span:empty, 
+.menuUserDetail span:empty,
 .menuUserDetail h3:empty {
   background-color: #f4f4f4;
   animation-fill-mode: forwards;
@@ -1683,36 +1683,80 @@
 .menuUserDetail span {
   animation-duration: 1.8s;
 }
-.menuUserDetail h3 {  
+.menuUserDetail h3 {
   animation-duration: 2.2s;
 }
 
-.dashboardBody .selected:after, .dashboardBody .selected:before {
-  content: '';
+.dashboardBody .leftMenuLink {
+  position: relative;
+}
+.dashboardBody .selected {
+  background: #e9eff5;
+}
+.dashboardBody .leftMenuLink:after,
+.dashboardBody .leftMenuLink:before {
+  content: "";
   position: absolute;
   width: 100%;
   height: 15px;
   background: #fff;
   z-index: 9;
   pointer-events: none;
+  transition: all ease-in-out 0.4s;
+  -webkit-transition: all ease-in-out 0.4s;
+  -moz-transition: all ease-in-out 0.4s;
+  -ms-transition: all ease-in-out 0.4s;
+  -o-transition: all ease-in-out 0.4s;
+  opacity: 0;
+  left: 0;
+  z-index: -1;
+}
+.dashboardBody .leftMenuLink:before {
+  top: -10px;
+}
+.dashboardBody .leftMenuLink:before {
+  bottom: -10px;
 }
 .dashboardBody .selected:after {
-  bottom: -6px;
+  top: auto;
+  bottom: -3px;
   left: 0;
   border-radius: 0 8px 0 0;
+  transform: none;
+  -webkit-transform: none;
+  -moz-transform: none;
+  -ms-transform: none;
+  -o-transform: none;
+  -webkit-border-radius: 0 8px 0 0;
+  -moz-border-radius: 0 8px 0 0;
+  -ms-border-radius: 0 8px 0 0;
+  -o-border-radius: 0 8px 0 0;
+  opacity: 1;
+  z-index: 1;
 }
 .dashboardBody .selected:before {
-  top: -6px;
+  top: -3px;
   left: 0px;
   border-radius: 0 0 8px 0;
+  transform: none;
+  -webkit-border-radius: 0 0 8px 0;
+  -moz-border-radius: 0 0 8px 0;
+  -ms-border-radius: 0 0 8px 0;
+  -o-border-radius: 0 0 8px 0;
+  -webkit-transform: none;
+  -moz-transform: none;
+  -ms-transform: none;
+  -o-transform: none;
+  opacity: 1;
+  z-index: 1;
 }
 
-@keyframes placeHolderShimmer{
-  0%{
-      background-position: -468px 0
+@keyframes placeHolderShimmer {
+  0% {
+    background-position: -468px 0;
   }
-  100%{
-      background-position: 468px 0
+  100% {
+    background-position: 468px 0;
   }
 }
 
