@@ -21,6 +21,7 @@ const MainComponent = () => {
   const pathURL = useLocation().pathname;
   const [showInnerleftMenu, setshowInnerleftMenu] = useState(true);
   const [createButton, setCreateButton] = useState(null);
+  const [setupMenuState, setSetupMenuState] = useState(false)
 
 
   const toggleLeftSubMenu = (status) => {
@@ -39,9 +40,13 @@ const MainComponent = () => {
   const toggleCreate = (e) => {
     setCreateButton(e);
   };
+
+  const clickedSetupStatus = (e) => {
+    e.target && setSetupMenuState(true)
+  };
   
   useEffect(() => {
-    
+    setSetupMenuState(false)
   });
   return (
   <>
@@ -53,9 +58,9 @@ const MainComponent = () => {
             (showInnerleftMenu ? "openSubmenu" : "")
           }
         >
-          <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu}/>
+          <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu} clickedSetupStatus={(e) => clickedSetupStatus(e)}/>
           <div className="dashMain">
-          <HeaderDashboard toggleCreate={(e) =>toggleCreate(e)} />
+          <HeaderDashboard toggleCreate={(e) =>toggleCreate(e)} setupMenuState={setupMenuState} />
             <Switch>
               <Route exact path="/dashboard">
                 <DashboardRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}/>

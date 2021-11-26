@@ -309,6 +309,11 @@ function HeaderDashboard(props) {
       console.log('Error in fetch current user', e);
     }
   };
+
+  useEffect(() => {
+    props.setupMenuState && setSetupModalStatus(false)
+  }, [props.setupMenuState])
+
   return (
     <>
       <div className="dashboardHeader">

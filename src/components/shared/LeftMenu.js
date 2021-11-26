@@ -21,9 +21,11 @@ function LeftMenu(props) {
   };
 
   return (
-    <div className="routeMenu">
+    <div className="routeMenu"
+    >
       <div className="closedMenuLogo">
-        <NavLink to="/dashboard">
+        <NavLink to="/dashboard"
+      onClick={(e)=>props.clickedSetupStatus(e)}>
           <img src={LogoImg} alt="Logo img" />
         </NavLink>
       </div>
@@ -33,6 +35,7 @@ function LeftMenu(props) {
             className="leftMenuLink"
             activeClassName="selected"
             to="/dashboard"
+            onClick={(e)=>props.clickedSetupStatus(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -107,6 +110,7 @@ function LeftMenu(props) {
                 : ""
             }
             to="/roles"
+            onClick={(e)=>props.clickedSetupStatus(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -237,6 +241,7 @@ function LeftMenu(props) {
             }
             to="/automation-list"
             title="Automation"
+            onClick={(e)=>props.clickedSetupStatus(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -260,6 +265,7 @@ function LeftMenu(props) {
             className="leftMenuLink"
             activeClassName="selected"
             to="/contacts"
+            onClick={(e)=>props.clickedSetupStatus(e)}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
