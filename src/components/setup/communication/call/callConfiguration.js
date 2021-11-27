@@ -179,9 +179,22 @@ const CallConfiguration = (props) => {
         const minutes = Number(time.split(':')[1]) / 60;
         return hours + minutes;
     }
+
+    // Add time number
+    const scheduleOverite = async () => {
+      for (let i = 0; i < schedule.length; i++) {
+        if (!schedule[i].startTimeNumber) {
+          schedule[i].startTimeNumber = convertTimeToNumber(schedule[i].startTime);
+          schedule[i].endTimeNumber = convertTimeToNumber(schedule[i].endTime);
+        }
+      }
+      setSchedule([...schedule]);
+    }
     const saveData = async (closeModal) => {
       try {
         setIsLoader(true);
+        await scheduleOverite();
+
         let payload = {
           name: name,
           responseType: callResponse,
