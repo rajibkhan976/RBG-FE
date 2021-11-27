@@ -105,7 +105,7 @@ const CallConfiguration = (props) => {
         setCallForward(props.editConfig.callForward);
         setInstCallForward(props.editConfig.instantCallForward);
         setCallForwardNumbers(props.editConfig.callForwardNumbers || []);
-        console.log("props.editConfig.schedules", props.editConfig.schedules, schedule)
+        console.log("props.editConfig.schedules", props.editConfig)
       } else {
         let conf = [{
           day: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
@@ -660,6 +660,7 @@ const CallConfiguration = (props) => {
                       </div>
                     )}
                   </div>
+                  
                   <div className="setupFormRow">
                     <div className="setupFormRowHead">
                       <label>
@@ -802,6 +803,7 @@ const CallConfiguration = (props) => {
                         <div className="customCheckbox">
                           <input
                             type="checkbox"
+                            disabled
                             onChange={(e) =>
                               handleCheckboxChange(e, "CallWhisper")
                             }
@@ -915,6 +917,7 @@ const CallConfiguration = (props) => {
                         <div className="customCheckbox">
                           <input
                             type="checkbox"
+                            disabled
                             onChange={(e) =>
                               handleCheckboxChange(e, "VoicemailMsg")
                             }
@@ -998,6 +1001,7 @@ const CallConfiguration = (props) => {
                         <div className="customCheckbox">
                           <input
                             type="checkbox"
+                            disabled
                             onChange={(e) =>
                               handleCheckboxChange(e, "VoicemailSms")
                             }
@@ -1041,6 +1045,7 @@ const CallConfiguration = (props) => {
                         <div className="customCheckbox">
                           <input
                             type="checkbox"
+                            disabled
                             onChange={(e) =>
                               handleCheckboxChange(e, "MissedCallMsg")
                             }
@@ -1084,6 +1089,7 @@ const CallConfiguration = (props) => {
                         <div className="customCheckbox">
                           <input
                             type="checkbox"
+                            disabled
                             onChange={(e) =>
                               handleCheckboxChange(e, "VoicemailSmsNotif")
                             }
@@ -1126,6 +1132,7 @@ const CallConfiguration = (props) => {
                         <div className="customCheckbox">
                           <input
                             type="checkbox"
+                            disabled
                             onChange={(e) =>
                               handleCheckboxChange(e, "VoicemailEmailNotif")
                             }
