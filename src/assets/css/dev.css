@@ -1765,6 +1765,21 @@
 }
 /* Tab loader */
 
+.sideMenuInner .user_profile {
+  border-radius: 50%;
+  overflow: hidden;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.sideMenuInner .user_profile img {
+  border-radius: 0;
+  width: auto;
+  height: auto;
+  max-height: 100%;
+  max-width: 100%;
+}
+
 @keyframes placeHolderShimmer {
   0% {
     background-position: -468px 0;
