@@ -21,41 +21,27 @@ export const BillingServices = {
       }
     }
   },
-  activeCard: async (card = {}) => {
-    console.log("ACTIVE CARD BILLINGSERVICES.JS", card);
-    var payload = {
-      method: "put",
-      url: config.billingUrl + "makeactive",
-      data: card,
-    };
-    axios(payload)
-      .then(function (response) {
-        console.log("RESPONSE ACTIVE CARD", response);
-      })
-      .catch(function (error) {
-        console.log("ERROR ACTIVE CARD", error);
-      });
-    // try {
-    //   console.log("card : ", card);
-    //   const url = config.billingUrl + "makeactive";
-    //   const result = await axios.put(url, card, { headers: headers });
-    //   console.log("result : ", result);
-    //   if (result.status === 200) {
-    //     console.log("result : ", result);
-    //     // return result.data;
-    //   } else {
-    //     throw new Error(
-    //       "There is an error updating category. Please contact support"
-    //     );
-    //   }
-    //   if (result.status === 200) {
-    //     return result.data;
-    //   } else {
-    //     throw new Error(result.data.message);
-    //   }
-    // } catch (e) {
-    //   throw new Error(e.response.data.message);
-    // }
+  activeCard: async (payload) => {
+    console.log('====================================');
+    console.log('payload', payload);
+    console.log('====================================');
+    try {
+        const url = config.billingUrl + "makeactive";
+        const result = await axios.put(url, payload, { headers: headers });
+        if(result.status === 200) {
+            return result.data;
+        } else {
+            throw new Error("There is an error updating product. Please contact support");
+        }
+    } catch (e) {
+        if(!typeof e.data === 'undefined') {
+            console.log(e.response.data.message);
+            throw new Error(e.response.data.message);
+        } else {
+            console.log(e.stack);
+            throw new Error(e.message + ". Please contact support.");
+        }
+    }
   },
   makePrimary: async (payload) => {
     try {
@@ -71,46 +57,6 @@ export const BillingServices = {
         throw new Error(e.message + ". Please contact support.");
       }
     }
-    // return new Promise((resolve, reject) => {
-    //   axios
-    //     .put(
-    //       "https://tt7n78ndd2.execute-api.us-east-1.amazonaws.com/dev/contact/billing/makeprimary",
-    //       {
-    //         contactID: id,
-    //         accountType: type,
-    //       },
-    //       headers
-    //     )
-    //     .then((res) => {
-    //       console.log("res :::", res);
-    //       resolve(res);
-    //     })
-    //     .catch((err) => {
-    //       console.log("err::::", err);
-    //       reject(err);
-    //     });
-    // });
-    // try {
-    //   console.log("card : ", primaryPayload);
-    //   const url = config.billingUrl + "makeprimary";
-    //   const result = await axios.put(url, primaryPayload, { headers: headers });
-    //   console.log("result : ", result);
-    //   if (result.status === 200) {
-    //     //   console.log("result : ", result);
-    //     return result.data;
-    //   } else {
-    //     throw new Error(
-    //       "There is an error updating category. Please contact support"
-    //     );
-    //   }
-    //   //   if (result.status === 200) {
-    //   //     return result.data;
-    //   //   } else {
-    //   //     throw new Error(result.data.message);
-    //   //   }
-    // } catch (e) {
-    //   throw new Error(e.response.data.message);
-    // }
   },
 
   //   editRole: async (payload) => {

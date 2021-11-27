@@ -111,14 +111,17 @@ const Billing = (props) => {
     setPrimaryChecked(true);
   };
 
-  const activeCreditCard = async (creditCard) => {
+  const activeCreditCard = async (cardBank) => {
+    console.log('====================================');
+    console.log('cardBank', cardBank);
+    console.log('====================================');
     let cardData = {
-      contactId: creditCard && creditCard.contactId,
-      accountType: creditCard && creditCard.accountType,
-      billingID: creditCard && creditCard.contactId,
+      billingID: cardBank && cardBank._id,
+      contactID: cardBank && props.contactId,
+      accountType: cardBank && cardBank.accountType,
     };
     await BillingServices.activeCard(cardData);
-    console.log("ACTIVE CARD BILLING.JS:::", cardData);
+    fetchCardBank()
   };
 
   const activeBank = (bank) => {
@@ -426,9 +429,7 @@ const Billing = (props) => {
                               type="radio"
                               name="credit"
                               onChange={() => activeCreditCard(creditCard)}
-                              defaultChecked={
-                                creditCard.status === "active" ? true : false
-                              }
+                              defaultChecked={creditCard.status === "active" ? true : false}
                               id={i}
                             />
                             <span></span>
@@ -594,10 +595,8 @@ const Billing = (props) => {
                             <input
                               type="radio"
                               name="bank"
-                              onChange={() => activeBank(bank)}
-                                defaultChecked={
-                                  bank.status === "active" ? true : false
-                                }
+                              onChange={() => activeCreditCard(bank)}
+                              defaultChecked={bank.status === "active" ? true : false}
                               id={i}
                             />
                             <span></span>
