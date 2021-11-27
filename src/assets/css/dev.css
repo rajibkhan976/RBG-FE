@@ -1751,6 +1751,20 @@
   z-index: 1;
 }
 
+/* Tab loader */
+.contactTabsInner {
+  position: relative;
+}
+.contactTabsInner .loaderOuter {
+  position: absolute;
+  top: 63px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+}
+/* Tab loader */
+
 @keyframes placeHolderShimmer {
   0% {
     background-position: -468px 0;

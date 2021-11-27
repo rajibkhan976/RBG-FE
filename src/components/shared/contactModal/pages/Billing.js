@@ -10,7 +10,7 @@ import axios from "axios";
 import { BillingServices } from "../../../../services/billing/billingServices";
 import { billingUrl } from "../../../../configuration/config";
 
-const Billing = () => {
+const Billing = (props) => {
   const [listCardAnnim, setListCardAnnim] = useState(true);
   const [newCardAnnim, setNewCardAnnim] = useState(false);
   const [listBankAnnim, setListBankAnnim] = useState(true);
@@ -26,6 +26,7 @@ const Billing = () => {
   const [cardActivationCheckText, setCardActivationCheckText] = useState("");
   const [bankActivationCheck, setBankActivationCheck] = useState(false);
   const [bankActivationCheckText, setBankActivationCheckText] = useState("");
+  const [isLoader, setIsLoader] = useState(false);
 
   const [cardCvvCheck, setCardCvvCheck] = useState("");
   const [bankAccountCheck, setBankAccountCheck] = useState("");
@@ -72,40 +73,18 @@ const Billing = () => {
   const [primaryType, setPrimaryType] = useState("card");
 
   const fetchCardBank = async () => {
-    let cardBankResponce = await BillingServices.fetchCardBank();
-    setCardBankList(cardBankResponce && cardBankResponce.cards);
-    setBankList(cardBankResponce && cardBankResponce.banks);
-    if (
-      cardBankResponce &&
-      cardBankResponce.card &&
-      cardBankResponce.card.length > 0
-    ) {
-      setContactId(
-        cardBankResponce.card[0].contactId && cardBankResponce.card[0].contactId
-      );
-    } else if (
-      cardBankResponce &&
-      cardBankResponce.banks &&
-      cardBankResponce.banks.length > 0
-    ) {
-      setContactId(
-        cardBankResponce.banks[0].contactId &&
-          cardBankResponce.banks[0].contactId
-      );
+    setIsLoader(true);
+    let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
+    if (cardBankResponce) {
+      setCardBankList(cardBankResponce.cards);
+      setBankList(cardBankResponce.banks);
+      setIsLoader(false);
     }
     console.log("CARD/Bank LISTING data", cardBankResponce);
   };
-  //   useEffect(() => {
-  //     cardBankList.length === 0
-  //       ? fetchCardBank()
-  //       : console.log("CARD DATA", cardBankList);
-  //   }, [cardBankList, bankList]);
-
   useEffect(() => {
-    cardBankList.length === 0
-      ? fetchCardBank()
-      : console.log("CARD DATA", cardBankList);
-  }, [cardBankList]);
+    fetchCardBank();
+  }, []);
 
   const openNewCardHandler = () => {
     setListCardAnnim(false);
@@ -140,25 +119,9 @@ const Billing = () => {
     };
     await BillingServices.activeCard(cardData);
     console.log("ACTIVE CARD BILLING.JS:::", cardData);
-    // fetchCardBank();
   };
 
   const activeBank = (bank) => {
-    // let mapped2 = activeBankCheck.map((el, i) => {
-    //   if (bank.id === el.id) {
-    //     return {
-    //       ...el,
-    //       checkIt: !el.checkIt,
-    //     };
-    //   } else {
-    //     return {
-    //       ...el,
-    //       checkIt: false,
-    //     };
-    //   }
-    // });
-    // setActiveBankCheck(mapped2);
-
     console.log("ACTIVE BANK:::", bank);
   };
 
@@ -181,7 +144,6 @@ const Billing = () => {
       setCardNumberCheck("");
     }
 
-    // setCardNumber(e.target.value);
     console.log(e.target.value, formattedCardNumber.match(/\d{1,4}/g));
   };
 
@@ -190,7 +152,6 @@ const Billing = () => {
     if (e.target.value === "" || re.test(e.target.value)) {
       setCardNameCheck(e.target.value);
     }
-    // console.log(cardNameCheck);
   };
 
   const cardExpairyCheckHandler = (e) => {
@@ -399,16 +360,20 @@ const Billing = () => {
   };
 
   const makePrimaryMethod = (e, value) => {
-    if (contactId && value) {
-      BillingServices.makePrimary(contactId, value);
+    let payload = {
+      "contactID": props.contactId,
+      "accountType": value
+    }
+    if (props.contactId && value) {
+      BillingServices.makePrimary(payload);
       setPrimaryType(value);
     }
-    console.log("CONTACT ID::::", contactId);
   };
 
   return (
     <>
       <div className="contactTabsInner">
+        {isLoader ? <Loader /> : ""}
         <h3 className="headingTabInner">Billing Info</h3>
         <p className="subheadingTabInner">
           Explanatory text blurb should be here.
@@ -445,7 +410,7 @@ const Billing = () => {
                   </button>
                 </div>
                 <div className="body">
-                  {cardBankList.length !== 0 ? (
+                  {cardBankList &&
                     cardBankList.map((creditCard, i) => (
                       <div
                         key={i}
@@ -461,9 +426,9 @@ const Billing = () => {
                               type="radio"
                               name="credit"
                               onChange={() => activeCreditCard(creditCard)}
-                              // defaultChecked={
-                              //   creditCard.status === "active" ? true : false
-                              // }
+                              defaultChecked={
+                                creditCard.status === "active" ? true : false
+                              }
                               id={i}
                             />
                             <span></span>
@@ -481,10 +446,7 @@ const Billing = () => {
                           </p>
                         </div>
                       </div>
-                    ))
-                  ) : (
-                    <Loader />
-                  )}
+                    ))}
                 </div>
               </div>
               <div
@@ -619,7 +581,7 @@ const Billing = () => {
                   </button>
                 </div>
                 <div className="body">
-                  {bankList.length !== 0 ? (
+                  {bankList &&
                     bankList.map((bank, i) => (
                       <div
                         key={i}
@@ -633,9 +595,9 @@ const Billing = () => {
                               type="radio"
                               name="bank"
                               onChange={() => activeBank(bank)}
-                              //   defaultChecked={
-                              //     bank.status === "active" ? true : false
-                              //   }
+                                defaultChecked={
+                                  bank.status === "active" ? true : false
+                                }
                               id={i}
                             />
                             <span></span>
@@ -653,10 +615,7 @@ const Billing = () => {
                           <div className="checking">{bank.account_type}</div>
                         </div>
                       </div>
-                    ))
-                  ) : (
-                    <Loader />
-                  )}
+                    ))}
                 </div>
               </div>
 

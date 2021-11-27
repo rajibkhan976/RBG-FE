@@ -6,11 +6,10 @@ let headers = {
 };
 
 export const BillingServices = {
-  fetchCardBank: async () => {
+  fetchCardBank: async (contactId = null) => {
     try {
-      const url = config.billingUrl + "list/618cfc610bd605dd51cbc0b7";
+      const url = config.billingUrl + "list/" + contactId;
       const result = await axios.get(url, { headers: headers });
-      //   console.log("Billing Service : ", result);
       return result.data;
     } catch (e) {
       if (!typeof e.data === "undefined") {
@@ -58,26 +57,39 @@ export const BillingServices = {
     //   throw new Error(e.response.data.message);
     // }
   },
-  makePrimary: (id, type) => {
-    return new Promise((resolve, reject) => {
-      axios
-        .put(
-          "https://tt7n78ndd2.execute-api.us-east-1.amazonaws.com/dev/contact/billing/makeprimary",
-          {
-            contactID: id,
-            accountType: type,
-          },
-          headers
-        )
-        .then((res) => {
-          console.log("res :::", res);
-          resolve(res);
-        })
-        .catch((err) => {
-          console.log("err::::", err);
-          reject(err);
-        });
-    });
+  makePrimary: async (payload) => {
+    try {
+      const url = config.billingUrl + "makeprimary";
+      const result = await axios.put(url, payload, { headers: headers });
+      return result.data;
+    } catch (e) {
+      if (!typeof e.data === "undefined") {
+        console.log(e.response.data.message);
+        throw new Error(e.response.data.message);
+      } else {
+        console.log(e.stack);
+        throw new Error(e.message + ". Please contact support.");
+      }
+    }
+    // return new Promise((resolve, reject) => {
+    //   axios
+    //     .put(
+    //       "https://tt7n78ndd2.execute-api.us-east-1.amazonaws.com/dev/contact/billing/makeprimary",
+    //       {
+    //         contactID: id,
+    //         accountType: type,
+    //       },
+    //       headers
+    //     )
+    //     .then((res) => {
+    //       console.log("res :::", res);
+    //       resolve(res);
+    //     })
+    //     .catch((err) => {
+    //       console.log("err::::", err);
+    //       reject(err);
+    //     });
+    // });
     // try {
     //   console.log("card : ", primaryPayload);
     //   const url = config.billingUrl + "makeprimary";

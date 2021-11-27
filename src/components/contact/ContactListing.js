@@ -311,10 +311,10 @@ const ContactListing = (props) => {
     }
 
     const GenerateContacts = () => {
-        return contactList.map(ele => {
+        return contactList.map((ele, i) => {
             let j = 0;
             return (
-                <li>
+                <li key={'contact_'+i}>
                     {savedColList.map((item) => {
                         if (item.status) {
                             j++;
