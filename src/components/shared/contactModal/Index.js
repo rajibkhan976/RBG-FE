@@ -200,7 +200,7 @@ const ContactModal = (props) => {
                             <Step title="Overview" contact={contactData} component={Overview} contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
                             <Step title="Attendance" component={Attendance} />
                             <Step title="Transaction" backToTransList = {backToTransListHandler} goToTransaction = {goToTransactionHandler} component={goToTransactionClicked ? TransactionChoose : Transaction} />
-                            <Step title="Transaction" component={Billing} />
+                            <Step title="Transaction" component={Billing} contactId={props.contactId} />
                         </Steps>
 
                     </div>
