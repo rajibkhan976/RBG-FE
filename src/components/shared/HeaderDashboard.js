@@ -61,6 +61,7 @@ function HeaderDashboard(props) {
     fullName: null,
     association: null,
     organization: null,
+    isShowPlan: false,
     isOrganizationOwner: false,
     isAssociationOwner: false,
   })
@@ -304,7 +305,8 @@ function HeaderDashboard(props) {
           isOrganizationOwner: userDetails.isOrganizationOwner,
           isAssociationOwner: userDetails.isAssociationOwner,
           organization: userDetails.organization ? userDetails.organization.name : '',
-          group: userDetails.group ? userDetails.group.name : ''
+          group: userDetails.group ? userDetails.group.name : '',
+          isShowPlan: userDetails.organization ? userDetails.organization.parentId !== 0 ? true : false : false
         })
       }
     } catch (e) {
@@ -518,11 +520,11 @@ function HeaderDashboard(props) {
               <div className="user_modal_cont">
                 <p>Organization</p>
                 <h3>{loggedInUser.organization}</h3>
-                {loggedInUser.isEdit ? <div className="creditText">
+                {loggedInUser.isShowPlan ? <div className="creditText">
                   <span>Credit Balance  </span>
-                  <span className="blue">14600</span>
+                  <span className="blue">0</span>
                 </div> : ''}
-                {loggedInUser.isEdit ? <div className="userPlan">
+                {loggedInUser.isShowPlan ? <div className="userPlan">
                   <div>
                     <span>Current Plan</span>
                     <p>SILVER</p>

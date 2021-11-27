@@ -76,6 +76,7 @@ const UserModal = (props) => {
     const messageDelay = 5000; // ms
     const [associationList, setAssociationList] = useState([]);
     const [associationId, setAssociationId] = useState('');
+    const [saveAndNew, setSaveAndNew] = useState(false);
 
     const fetchCountry = async () => {
         let conntryResponse = await ContactService.fetchCountry();
@@ -908,17 +909,35 @@ const UserModal = (props) => {
                             msg = 'User updated successfully';
                         }
                         setSuccessMsg(msg);
-                        setTimeout(() => {
-                            props.setCreateButton(null);
-                        },
-                            messageDelay
-                        );
+                        if (saveAndNew) {
+                            console.log('save and new')
+                            setSaveAndNew(false);
+                            // resetUserForm();
+                            //Open group create modal
+                            setTimeout(() => {
+                                props.setCreateButton(null);
+                                props.setCreateButton('users');
+                            },
+                                messageDelay
+                            );
+
+                        } else {
+                            console.log('else save and new');
+                            setTimeout(() => {
+                                props.setCreateButton(null);
+                            },
+                                messageDelay
+                            );
+                        }
                         // Fetch users
                         fetchUsers(1);
                         //If creating association account
                         if (isAssociateOwner) {
                             fetchAssociations();
                         }
+
+
+
                     })
             } catch (e) {
                 /**
@@ -939,6 +958,10 @@ const UserModal = (props) => {
 
         }
     };
+
+    const handleSaveAndNew = () => {
+        setSaveAndNew(true);
+    }
 
     return (
         <>
@@ -1078,7 +1101,7 @@ const UserModal = (props) => {
                                             </div>
                                         </div>
                                         <div className="infoField orgSection">
-                                            {loggedInUser.isOrganizationAssociationOwner &&  !editId && isOrgPermission && (
+                                            {loggedInUser.isOrganizationAssociationOwner && !editId && isOrgPermission && (
 
                                                 <div className="cmnFormRow">
                                                     <div className="cmnFieldName">Select Type</div>
@@ -1378,7 +1401,7 @@ const UserModal = (props) => {
                                             <img className="plusIcon" src={plus_icon} alt="" />
                                             <span>Create an user</span>
                                         </button>}
-                                        <button className="saveNnewBtn" disabled={processing}>
+                                        <button className="saveNnewBtn" disabled={processing} onClick={handleSaveAndNew}>
                                             <span>{editId ? "Update user" : "Save & New"}</span>
                                             <img className="" src={arrow_forward} alt="" />
                                         </button>

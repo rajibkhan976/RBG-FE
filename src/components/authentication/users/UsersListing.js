@@ -143,6 +143,7 @@ const UsersListing = (props) => {
         if (isDeleted) {
             console.log('delete state changed', isDeleted);
             fetchUsers();
+            setIsDeleted(false);
         }
     }, [isDeleted])
 
@@ -154,6 +155,10 @@ const UsersListing = (props) => {
             console.log('Reached detination', props.getFilteredData);
             setUsersData(props.getFilteredData.users);
             setUsersCount(props.getFilteredData.pagination.count ? props.getFilteredData.pagination.count : 0);
+            dispatch({
+                type: actionTypes.USER_COUNT,
+                count: props.getFilteredData.pagination.count,
+            });
             //Set current page
             setPaginationData({
                 ...paginationData,
@@ -330,6 +335,15 @@ const UsersListing = (props) => {
         let makeKey = decodeURIComponent(event.target.value)
         setKeyword(makeKey ? makeKey : '');
     }
+
+    /**
+     * Trigger search when keyword is empty
+     */
+    useEffect(() => {
+        if (keyword == "") {
+            handleSearch({ preventDefault: () => { } });
+        }
+    }, [keyword]);
 
     /**
      * Handle search functionality
