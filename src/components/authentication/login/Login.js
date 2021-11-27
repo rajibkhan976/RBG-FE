@@ -218,13 +218,12 @@ const Login = (props) => {
         <div className="loginLeftPart">
           <img src={login_side_img} alt="" />
           <span className="overlay"></span>
-          <div className="login_left_text">
-            <h2>Lorem Epsom dollar sit amet</h2>
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              <br /> Vestibulum et ultrices diam. Nam placerat porta.
-            </p>
-          </div>
+          <div class="login_left_text">
+            <h2>Black Friday 2021 🎉</h2>
+            <p>Enjoy 30% off our Premium Plans for a limited time only<br/>
+            <button className="link_btn">Get This Deal NOW</button></p>
+            </div>
+
         </div>
       </div>
     </div>

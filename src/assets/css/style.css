@@ -7266,7 +7266,7 @@ p.trackName {
 .addInList .header h3 {
   color: #ffffff;
   font-size: 16px;
-  margin: 8px 0 14px 0;
+  margin: 8px 0 8px 0;
   font-weight: 400;
 }
 
@@ -7775,6 +7775,15 @@ p.trackName {
   color: #ffffff;
   font-size: 16px;
   line-height: 26px;
+}
+.loginLeftPart .login_left_text .link_btn {
+  background: transparent;
+  color: #fff;
+  font-weight: bold;
+  box-shadow: none;
+  border: none;
+  padding: 7px 0;
+  
 }
 .authBody.login_outer .login_head img {
   height: 50px;
