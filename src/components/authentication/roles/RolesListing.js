@@ -13,6 +13,8 @@ import { utils } from "../../../helpers";
 import ConfirmBox from "../../shared/confirmBox";
 import responses from "../../../configuration/responses";
 import env from "../../../configuration/env";
+import list_board_icon from "../../../assets/images/list_board_icon.svg";
+
 
 const RolesListing = (props) => {
   const messageDelay = 5000; // ms
@@ -230,7 +232,7 @@ const RolesListing = (props) => {
    */
   useEffect(() => {
     if (keyword == "") {
-      handleSearch({ preventDefault: () => {} });
+      handleSearch({ preventDefault: () => { } });
     }
   }, [keyword]);
 
@@ -266,9 +268,9 @@ const RolesListing = (props) => {
   };
 
   useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
+    // document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      // document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -378,162 +380,169 @@ const RolesListing = (props) => {
       />
       {successMsg && <SuccessAlert message={successMsg}></SuccessAlert>}
       {errorMsg && <ErrorAlert message={errorMsg}></ErrorAlert>}
-      <div className="userListBody">
-        <div className="listBody" ref={optionsToggleRef}>
-          <ul className="tableListing">
-            <li className="listHeading userRole">
-              <div
-                className={
-                  "userName " + (sortBy == "name" ? "sort " + sortType : "")
-                }
-                onClick={() => handleSortBy("name")}
-              >
-                Role Name
-              </div>
-              <div
-                className={
-                  "phoneNum assignedPeople " +
-                  (sortBy == "people" ? "sort " + sortType : "")
-                }
-                onClick={() => handleSortBy("people")}
-              >
-                No. of people assigned
-              </div>
-              <div
-                className={
-                  "createDate " +
-                  (sortBy == "createdAt" ? "sort " + sortType : "")
-                }
-                onClick={() => handleSortBy("createdAt")}
-              >
-                Created on
-              </div>
-            </li>
-            {rolesData
-              ? rolesData.map((elem, key) => {
-                  return (
-                    <React.Fragment key={key + "_role"}>
-                      <li className="owerInfo userRole" key={elem._id}>
-                        <div className="userName">
-                          <button className="btn">
-                            <p>{elem.name}</p>
-                          </button>
-                        </div>
-                        <div className="phoneNum">
-                          <button className="btn">{elem.userCount}</button>
-                        </div>
-                        <div className="createDate">
-                          <button className="btn">
-                            {moment(elem.createdAt).format("Do MMM YYYY")}
-                          </button>
-                          <div className="info_3dot_icon">
-                            <button
-                              className="btn"
-                              onClick={() => {
-                                toggleOptions(key);
-                              }}
-                            >
-                              <img src={info_3dot_icon} alt="" />
+      {rolesCount ?
+        <>
+          <div className="userListBody">
+            <div className="listBody" ref={optionsToggleRef}>
+              <ul className="tableListing">
+                <li className="listHeading userRole">
+                  <div
+                    className={
+                      "userName " + (sortBy == "name" ? "sort " + sortType : "")
+                    }
+                    onClick={() => handleSortBy("name")}
+                  >
+                    Role Name
+                  </div>
+                  <div
+                    className={
+                      "phoneNum assignedPeople " +
+                      (sortBy == "people" ? "sort " + sortType : "")
+                    }
+                    onClick={() => handleSortBy("people")}
+                  >
+                    No. of people assigned
+                  </div>
+                  <div
+                    className={
+                      "createDate " +
+                      (sortBy == "createdAt" ? "sort " + sortType : "")
+                    }
+                    onClick={() => handleSortBy("createdAt")}
+                  >
+                    Created on
+                  </div>
+                </li>
+                {rolesData
+                  ? rolesData.map((elem, key) => {
+                    return (
+                      <React.Fragment key={key + "_role"}>
+                        <li className="owerInfo userRole" key={elem._id}>
+                          <div className="userName">
+                            <button className="btn">
+                              <p>{elem.name}</p>
                             </button>
                           </div>
-                          <React.Fragment key={key + "_fragment"}>
-                            {/* {console.log('Here', option, key)} */}
-                            <div
-                              className={
-                                option === key
-                                  ? "dropdownOptions listOpen"
-                                  : "listHide"
-                              }
-                            >
+                          <div className="phoneNum">
+                            <button className="btn">{elem.userCount}</button>
+                          </div>
+                          <div className="createDate">
+                            <button className="btn">
+                              {moment(elem.createdAt).format("Do MMM YYYY")}
+                            </button>
+                            <div className="info_3dot_icon">
                               <button
-                                className="btn btnEdit"
+                                className="btn"
                                 onClick={() => {
-                                  editRole(elem);
+                                  toggleOptions(key);
                                 }}
                               >
-                                <span>
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    viewBox="0 0 13.553 13.553"
-                                    className="editIcon"
-                                  >
-                                    <g transform="translate(0.75 0.75)">
-                                      <path
-                                        className="a"
-                                        d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423"
-                                        transform="translate(-2 -2.795)"
-                                      />
-                                      <path
-                                        className="a"
-                                        d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z"
-                                        transform="translate(-4.384 -2)"
-                                      />
-                                    </g>
-                                  </svg>
-                                </span>
-                                Edit
-                              </button>
-                              <button
-                                className="btn btnDelete"
-                                onClick={() => {
-                                  deleteRole(elem._id);
-                                }}
-                              >
-                                <span>
-                                  <svg
-                                    className="deleteIcon"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="12.347"
-                                    height="13.553"
-                                    viewBox="0 0 12.347 13.553"
-                                  >
-                                    <g transform="translate(0.75 0.75)">
-                                      <path
-                                        className="a"
-                                        d="M3,6H13.847"
-                                        transform="translate(-3 -3.589)"
-                                      />
-                                      <path
-                                        className="a"
-                                        d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
-                                        transform="translate(-3.795 -2)"
-                                      />
-                                      <line
-                                        className="a"
-                                        y2="3"
-                                        transform="translate(4.397 6.113)"
-                                      />
-                                      <line
-                                        className="a"
-                                        y2="3"
-                                        transform="translate(6.397 6.113)"
-                                      />
-                                    </g>
-                                  </svg>
-                                </span>
-                                Delete
+                                <img src={info_3dot_icon} alt="" />
                               </button>
                             </div>
-                          </React.Fragment>
-                        </div>
-                      </li>
-                    </React.Fragment>
-                  );
-                })
-              : ""}
-          </ul>
+                            <React.Fragment key={key + "_fragment"}>
+                              {/* {console.log('Here', option, key)} */}
+                              <div
+                                className={
+                                  option === key
+                                    ? "dropdownOptions listOpen"
+                                    : "listHide"
+                                }
+                              >
+                                <button
+                                  className="btn btnEdit"
+                                  onClick={() => {
+                                    editRole(elem);
+                                  }}
+                                >
+                                  <span>
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      viewBox="0 0 13.553 13.553"
+                                      className="editIcon"
+                                    >
+                                      <g transform="translate(0.75 0.75)">
+                                        <path
+                                          className="a"
+                                          d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423"
+                                          transform="translate(-2 -2.795)"
+                                        />
+                                        <path
+                                          className="a"
+                                          d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z"
+                                          transform="translate(-4.384 -2)"
+                                        />
+                                      </g>
+                                    </svg>
+                                  </span>
+                                  Edit
+                                </button>
+                                <button
+                                  className="btn btnDelete"
+                                  onClick={() => {
+                                    deleteRole(elem._id);
+                                  }}
+                                >
+                                  <span>
+                                    <svg
+                                      className="deleteIcon"
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      width="12.347"
+                                      height="13.553"
+                                      viewBox="0 0 12.347 13.553"
+                                    >
+                                      <g transform="translate(0.75 0.75)">
+                                        <path
+                                          className="a"
+                                          d="M3,6H13.847"
+                                          transform="translate(-3 -3.589)"
+                                        />
+                                        <path
+                                          className="a"
+                                          d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
+                                          transform="translate(-3.795 -2)"
+                                        />
+                                        <line
+                                          className="a"
+                                          y2="3"
+                                          transform="translate(4.397 6.113)"
+                                        />
+                                        <line
+                                          className="a"
+                                          y2="3"
+                                          transform="translate(6.397 6.113)"
+                                        />
+                                      </g>
+                                    </svg>
+                                  </span>
+                                  Delete
+                                </button>
+                              </div>
+                            </React.Fragment>
+                          </div>
+                        </li>
+                      </React.Fragment>
+                    );
+                  })
+                  : ""}
+              </ul>
+            </div>
+          </div>
+          {rolesCount > paginationData.limit ? (
+            <Pagination
+              type="role"
+              paginationData={paginationData}
+              dataCount={rolesCount}
+              callback={paginationCallbackHandle}
+            />) : ''}
+        </> :
+        <div className="createNew">
+          <span>
+            <img src={list_board_icon} alt="" />
+            <p>No roles found!</p>
+          </span>
         </div>
-      </div>
-      {rolesCount > paginationData.limit ? (
-        <Pagination
-          type="role"
-          paginationData={paginationData}
-          dataCount={rolesCount}
-          callback={paginationCallbackHandle}
-        />
-      ) : (
-        ""
-      )}
+      }
     </div>
   );
 };

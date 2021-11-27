@@ -113,7 +113,7 @@ const UserFilter = (props) => {
                         </div>
                         <div className="sideMenuBody">
                             <form className="formBody" onSubmit={handleApplyFilter}>
-                                <div className="formField">
+                                {false ? <div className="formField">
                                     <p>Select Group</p>
                                     <div className="inFormField">
                                         <select style={{ backgroundImage: "url(" + arrowDown + ")" }} onChange={handleGroupChange} value={group}>
@@ -122,7 +122,7 @@ const UserFilter = (props) => {
                                             <option value="group-4">Group4</option>
                                         </select>
                                     </div>
-                                </div>
+                                </div> : ''}
                                 <div className="createdDate">
                                     <p>Created on</p>
                                     <div className="createdDateFields">
