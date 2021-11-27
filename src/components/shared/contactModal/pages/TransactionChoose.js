@@ -5,6 +5,8 @@ import tick from "../../../../assets/images/tick.svg";
 import camera from "../../../../assets/images/camera.svg";
 import categoryTag from "../../../../assets/images/categoryTag.svg";
 import product from "../../../../assets/images/proImg4.png";
+import { CourseServices } from "../../../../services/setup/CourseServices";
+import Loader from "../../Loader";
 
   
 
@@ -13,6 +15,15 @@ const TransactionChoose = (props) => {
 
     const [choosePOS, setChoosetPOS] = useState(false);
     const [chooseCourse, setChooseCourse] = useState(false);
+    const [courseCategory, setCourseCategory] = useState([]);
+    const [courseList, setCourseList] = useState([]);
+    const [courseFees, setCourseFees] = useState(0);
+    const [courseName, setCourseName] = useState("Course not selected");
+    const [catName, setCatName] = useState("Category not selected");
+    const [courseSelected, setCourseSelected] = useState(false);
+    const [courseImg, setCourseImg] = useState("");
+    const [courseDuration, setCourseDuration] = useState("");
+    const [showLoader, setShowLoader] = useState(false);
     
     const chooseTransctionTypePOS = () => {
         setChoosetPOS(!choosePOS);
@@ -20,7 +31,8 @@ const TransactionChoose = (props) => {
     }
     const chooseTransctionTypeCourse = () => {
         setChoosetPOS(false);
-        setChooseCourse(!chooseCourse)
+        setChooseCourse(!chooseCourse);
+        fetchCourseCategories();
     }
 
     const [addActive, setAddActive] = useState(false);
@@ -33,6 +45,39 @@ const TransactionChoose = (props) => {
         event. preventDefault();
         setAddActive2(!addActive2);
     };
+
+    const fetchCourseCategories = async () => {
+        setShowLoader(true);
+        let result = await CourseServices.fetchCategory();
+        setShowLoader(false);
+        setCourseCategory(result);
+        console.log(result);
+    }
+
+    const choseCatHandel = (e) => {
+        let catID = e.target.value;
+        console.log("This is cat ID -> " + catID);
+        fetchCourses(catID);
+        setCourseFees("");
+        setCatName(e.target[e.target.selectedIndex].getAttribute("data-name"));
+    }
+    
+    const fetchCourses = async (catID) => {
+        setShowLoader(true);
+        let result = await CourseServices.fetchCourseList(catID);
+        setShowLoader(false);
+        console.log("Courses -> " + result.courses);
+        setCourseList(result.courses);
+    }
+
+    const getCourseFees = (e) => {
+        let courseFees = e.target.value;
+        setCourseFees(courseFees);
+        setCourseName(e.target[e.target.selectedIndex].getAttribute("data-name"));
+        setCourseImg(e.target[e.target.selectedIndex].getAttribute("data-img"));
+        setCourseDuration(e.target[e.target.selectedIndex].getAttribute("data-duration"));
+        setCourseSelected(true);
+    }
 
     return(
         <>
@@ -70,9 +115,9 @@ const TransactionChoose = (props) => {
                     <form>
                         <div className="transaction_form">
                             <div className="formsection gap">
-                                <label>Select Catagory</label>
+                                <label>Select Category</label>
                                 <select className="selectBox">
-                                    <option>Select Catagory</option>
+                                    <option>Select Category</option>
                                 </select>
                             </div>
                             <div className="formsection gap">
@@ -135,43 +180,49 @@ const TransactionChoose = (props) => {
                 </div>
                }
                 { chooseCourse && <div className="posSellingForm">
+                { showLoader && <Loader /> }
                 <form>
                         <div className="transaction_form">
                             <div className="formsection gap">
-                                <label>Select Catagory</label>
-                                <select className="selectBox">
-                                    <option>Select Catagory</option>
+                                <label>Select Category</label>
+                                <select className="selectBox" onChange={choseCatHandel}>
+                                    { courseCategory.map((item, key) => (
+                                        <option key={"category_" + key} value={item._id} data-name={ item.name }>{ item.name }</option>
+                                    ))}
                                 </select>
                             </div>
                             <div className="formsection gap">
                                 <label>Select Course</label>
-                                <select className="selectBox">
-                                    <option>Select Course</option>
+                                <select className="selectBox" onChange={getCourseFees} value={courseFees ? courseFees : ''}>
+                                    { courseList.length > 0 ? <option value="">Select a course</option> : ""}
+                                    { courseList.length > 0 ? courseList.map((item, key) => {
+                                        return (<option key={"course_" + key} value={item.fees} data-name={item.name} data-img={item.image} data-duration={item.duration}>{ item.name }</option>)
+                                        }) : <option>No courses available</option>}
                                 </select>
                             </div>
                             
                             <div className="formsection">
                                 <label>Price</label>
-                                <input type="text" placeholder="Ex: 99" className="editableInput"/> <span className="tax"> * 10% tax will be applicable</span>
+                                <div className="cmnFieldStyle editableInput">{ courseFees }</div>
                                 <p>* default currency is <strong>USD</strong></p>
                             </div>
                         </div>
                         <div className="productAvailable active">
                             <h3 className="commonHeadding">Preview Windows</h3>
                             <div className="previewBox">
-                                <div className="previewImgBox">
-                                    <span className="sizeTag">S</span>
-                                    <img src={product} alt="" />
+                                <div className="previewImgBox course">
+                                    <span className="sizeTag duration">{courseDuration}</span>
+                                    <img src={"https://wrapperbucket.s3.us-east-1.amazonaws.com/" + courseImg} alt="" />
                                  
                                 </div>
-                                <h3>Easy Entry Course</h3>
-                                <p className="category"> <img src={categoryTag} alt="" /> Jim and Training</p>
+                                <h3>{ courseName }</h3>
+                                <p className="category"> <img src={categoryTag} alt="" /> { catName }</p>
                                    
-                                <h4>$ 100</h4>
+                                <h4>$ { courseFees }</h4>
                                 <span className="tax"> * Amount showing including taxes </span>
                             </div>
 
-                            <button class="saveNnewBtn">Buy <img src={aaroww} alt=""/></button>
+                            <button class={courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"}>Buy <img src={aaroww} alt=""/></button>
                         </div>
                     </form>
                 </div>

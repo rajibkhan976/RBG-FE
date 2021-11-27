@@ -105,6 +105,25 @@ export const CourseServices = {
         }
     },
 
+    fetchCourseList: async (catID) => {
+        try {
+            const url = config.fetchCourseUrl + "/1?catID=" + catID;
+            const result = await axios.get(url, 
+            { headers: headers });
+            console.log('Course List Service : ', result);
+            return result.data;
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+            
+        }
+    },
+
     imageUpload: fileData => {
         // headers.Authorization = localStorage.getItem("_token");
         return new Promise((resolve, reject) => {

@@ -83,6 +83,8 @@ module.exports = {
     // Billing service
     billingUrl: "https://tt7n78ndd2.execute-api.us-east-1.amazonaws.com/dev/contact/billing/",
     // Transaction Service
-    transactionUrl: "https://tt7n78ndd2.execute-api.us-east-1.amazonaws.com/dev/contact/transactions/"
+    transactionUrl: "https://tt7n78ndd2.execute-api.us-east-1.amazonaws.com/dev/contact/transactions/",
+    // Course Service
+    courseUrl: "https://nayaxr4np3.execute-api.us-east-1.amazonaws.com/dev/course/",
 
 }  
