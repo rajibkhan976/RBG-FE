@@ -42,7 +42,7 @@ export const NumberServices = {
             const url = config.ec2ApiBaseURl + "/number/search";
             const result = await axios.post(url, payload, options);
             if (result.status === 200) {
-                return result.data;
+                return result.data.body;
             } else {
                 throw new Error("There is an issue while searching phone numbers. Please contact support.");
             }
@@ -66,7 +66,7 @@ export const NumberServices = {
             const url = config.ec2ApiBaseURl + "/number/purchase";
             const result = await axios.post(url, payload, options);
             if (result.status === 200) {
-                return result.data;
+                return result.data.body;
             } else {
                 throw new Error("There is an issue while purchasing phone numbers. Please contact support.");
             }
@@ -91,7 +91,7 @@ export const NumberServices = {
             const url = config.ec2ApiBaseURl + "/number/release/" + id;
             const result = await axios.delete(url, options);
             if (result.status === 200) {
-                return result.data;
+                return result.data.body;
             } else {
                 throw new Error("There is an issue while purchasing phone numbers. Please contact support.");
             }
