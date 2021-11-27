@@ -11,7 +11,7 @@ const roleReducer = (state = initialState, action) => {
         newState.count = action.count;
         break;
       default:
-        newState.count = 0;
+        // newState.count = 0;
         break;  
     }
     return newState;

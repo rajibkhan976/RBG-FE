@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import React, { useEffect, useState } from "react";
 import { NavLink, useLocation, Redirect } from "react-router-dom";
 import BuilderSidebar from "../automation/automationcanvas/BuilderSidebar";
@@ -8,17 +8,21 @@ import white_arrow_right from "../../assets/images/white_arrow_right.svg";
 import undraw_personal_settings_kihd from "../../assets/images/undraw_personal_settings_kihd.svg";
 import SidebarLogo from "../../assets/images/logo_128_28.svg";
 import SideMenuArrow from "../../assets/images/sideArrow.svg";
+import * as actionTypes from "../../actions/types";
 
 const InnerLeftMenu = (props) => {
   const pathURL = useLocation().pathname;
   const [automationObject, setAutomationObject] = useState({});
-  // const rolesCount = useSelector((state) => state.role.count);
-  // const groupsCount = useSelector((state) => state.group.count);
+  const rolesStoreCount = useSelector((state) => state.role.count);
+  const groupsStoreCount = useSelector((state) => state.group.count);
+  const usersStoreCount = useSelector((state) => state.user.count);
   const [rolesCount, setRolesCount] = useState(0);
   const [groupsCount, setGroupsCount] = useState(0);
   const [usersCount, setUsersCount] = useState(0);
   const automationCount = useSelector((state) => state.automation.count);
   const contactCount = useSelector((state) => state.contact.count);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     if (props.automationListItem) {
       setAutomationObject(props.automationListItem)
@@ -39,9 +43,24 @@ const InnerLeftMenu = (props) => {
       const result = await InnerLeftMenuServices.fetchCounts();
       console.log("fetchCount function result", result)
       if (result) {
-        setRolesCount(result.roles);
-        setGroupsCount(result.groups);
-        setUsersCount(result.users);
+        // setRolesCount(result.roles);
+        // UPDATE STORE
+        dispatch({
+          type: actionTypes.ROLE_COUNT,
+          count: result.roles,
+        });
+        // setGroupsCount(result.groups);
+        // UPDATE STORE
+        dispatch({
+          type: actionTypes.GROUP_COUNT,
+          count: result.groups,
+        });
+        // setUsersCount(result.users);
+        // UPDATE STORE
+        dispatch({
+          type: actionTypes.USER_COUNT,
+          count: result.users,
+        });
       }
     } catch (e) {
       console.log("Error in fetchCount", e);
@@ -66,7 +85,7 @@ const InnerLeftMenu = (props) => {
                   <div className="indicator"></div>
                   <div className="linkDetails">
                     <p className="linkHeading">Roles</p>
-                    <span className="notificationNumber">{rolesCount}</span>
+                    <span className="notificationNumber">{rolesStoreCount}</span>
                     <br />
                     <p className="linkAbout">Manage user roles</p>
                   </div>
@@ -77,7 +96,7 @@ const InnerLeftMenu = (props) => {
                   <div className="indicator"></div>
                   <div className="linkDetails">
                     <p className="linkHeading">Groups</p>
-                    <span className="notificationNumber">{groupsCount}</span>
+                    <span className="notificationNumber">{groupsStoreCount}</span>
                     <br />
                     <p className="linkAbout">Manage user groups</p>
                   </div>
@@ -88,7 +107,7 @@ const InnerLeftMenu = (props) => {
                   <div className="indicator"></div>
                   <div className="linkDetails">
                     <p className="linkHeading">Users</p>
-                    <span className="notificationNumber">{usersCount}</span>
+                    <span className="notificationNumber">{usersStoreCount}</span>
                     <br />
                     <p className="linkAbout">Manage users & sub-users</p>
                   </div>

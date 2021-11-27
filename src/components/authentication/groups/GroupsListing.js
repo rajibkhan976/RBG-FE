@@ -341,6 +341,10 @@ const GroupListing = (props) => {
       }
     } catch (e) {
       setErrorMsg(e.message);
+      setIsAlert({
+        show: false,
+        id: null,
+      });
     } finally {
       setIsLoader(false);
     }
