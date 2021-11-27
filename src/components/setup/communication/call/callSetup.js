@@ -149,7 +149,7 @@ const CallSetup = () => {
     const closeConfigModal = () => {
         setConfigModalShow(false);
         setEditConfig(false);
-        fetchNumber();
+        // fetchNumber();
     }
     const fetchNumber = async () => {
         setIsLoader(true);

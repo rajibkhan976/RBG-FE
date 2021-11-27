@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 
 import orange_add_icon from "../../../../assets/images/orange_add_icon.svg";
 import plue_icon_white_thik from "../../../../assets/images/plue_icon_white_thik.svg";
@@ -9,6 +9,7 @@ import play_icon from "../../../../assets/images/play_icon.svg";
 import InputFile from "../../../shared/InputFile";
 import {CallSetupService} from "../../../../services/setup/callSetupServices";
 import Loader from "../../../shared/Loader";
+import { ContactService } from "../../../../services/contact/ContactServices";
 
 
 const CallConfiguration = (props) => {
@@ -26,10 +27,111 @@ const CallConfiguration = (props) => {
     const [voicemailEmailNotif, setVoicemailEmailNotif] = useState(false);
     const [missedCallMsg, setMissedCallMsg] = useState(false);
     const [isOverlapped, setIsOverlapped] = useState(false);
+    const [instCallForward, setInstCallForward] = useState(false);
+    const [newCallForwardPrefix, setNewCallForwardPrefix] = useState("US_1");
+    const [newCallForwardNumber, setNewCallForwardNumber] = useState("");
+    const [phoneCountryCode, setPhoneCountryCode] = useState([]);
+    const [callForwardNumbers, setCallForwardNumbers] = useState([])
+    const [callForwardErr, setCallForwardErr] = useState(false);
+    const [callForwardOption, setCallForwardOption] = useState(false);
+    const [id, setId] = useState(false);
   
     const handleCheckboxChange = (event, constName) => {
         eval("set" + constName + "(event.target.checked)");
     }
+    const handleInputChange = (event, constName) => {
+      console.log(event.target.value)
+      eval("set" + constName + "(event.target.value)");
+    }
+
+    const handleCallForwardNumChange = (e) => {
+      const re = /^[0-9\b]+$/;
+        
+      if ((e.target.value === '' || re.test(e.target.value)) && e.target.value.length < 16) {
+        setNewCallForwardNumber(e.target.value)
+      }
+    }
+
+    const handleCallForwardOption = (e, index) => {
+      e.preventDefault();
+
+      if (index === callForwardOption ){
+        setCallForwardOption(false)
+      } else {
+        setCallForwardOption(index)
+      }
+      
+    }
+
+    const addCallForwardNumber = (e) => {
+      e.preventDefault();
+
+      if (!newCallForwardNumber) {
+        setCallForwardErr("Please provide a number");
+      } else if (newCallForwardNumber.length < 4) {
+        setCallForwardErr("Number must be greater than 3 digits");
+      } else {
+        setCallForwardErr("");
+        callForwardNumbers.push({
+          country: newCallForwardPrefix.split("_")[0],
+          prefix: newCallForwardPrefix.split("_")[1],
+          number: newCallForwardNumber
+        })
+        setCallForwardNumbers([...callForwardNumbers]);
+        setNewCallForwardNumber("");
+      }
+    }
+
+    const removeCallForwardNumber = (e, index) => {
+      e.preventDefault();
+      callForwardNumbers.splice(index, 1);
+      setCallForwardNumbers([...callForwardNumbers]);
+      setCallForwardOption(false);
+    }
+
+    const fetchCountry = async () => {
+      let conntryResponse = await ContactService.fetchCountry();
+      setPhoneCountryCode(conntryResponse);
+      console.log("country");
+    };
+
+    useEffect(() => {
+      // Set states for edit
+      if (props.editConfig) {
+        setId(props.editConfig._id);
+        setName(props.editConfig.name);
+        setCallResponse(props.editConfig.responseType);
+        setSchedule(props.editConfig.schedules);
+        setCallForward(props.editConfig.callForward);
+        setInstCallForward(props.editConfig.instantCallForward);
+        setCallForwardNumbers(props.editConfig.callForwardNumbers || []);
+        console.log("props.editConfig.schedules", props.editConfig.schedules, schedule)
+      } else {
+        let conf = [{
+          day: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
+          startTime: "00:00",
+          endTime: "23:00"
+        }];
+        setSchedule(conf);
+      }      
+      fetchCountry();
+    },[])
+
+    // Check outside click for callforward menue, close if clicked outside
+    useEffect(() => {
+      // const checkClickOutsideMenu = (e) => {
+      //     if(callForwardOption && props.ref && !props.ref.contains(e.target)) {
+      //         setCallForwardOption(false);
+      //     } else {
+      //       console.log("outclick", callForwardOption)
+      //     }
+      // }
+
+      // document.addEventListener("click", checkClickOutsideMenu);
+      // return () => {
+      //     document.removeEventListener("click", checkClickOutsideMenu);
+      // };
+  },[]);
 
     const handleCheck = (val, list) => {
         let exists = false;
@@ -78,18 +180,38 @@ const CallConfiguration = (props) => {
         return hours + minutes;
     }
     const saveData = async (closeModal) => {
+      try {
         setIsLoader(true);
-        let result = await CallSetupService.saveCallConfig({
-            name: name,
-            responseType: callResponse,
-            schedules: schedule,
-            twilioNumberId: props.numberId
-        })
+        let payload = {
+          name: name,
+          responseType: callResponse,
+          schedules: schedule,
+          twilioNumberId: props.numberId,
+          callForward: callForward,
+          instantCallForward: instCallForward,
+          callForwardNumbers: callForwardNumbers 
+        };
+
+        // Create
+        if (!id) {
+          await CallSetupService.saveCallConfig(payload)
+          props.setSuccessMsg("Configuration has been created successfully")
+        } else {
+          // Update
+          payload.id = id;
+          await CallSetupService.updateCallConfig(payload);
+          props.setSuccessMsg("Configuration has been updated successfully")
+        }
+        
         setIsLoader(false);
         resetForm();
         if (closeModal) {
             props.closeModal();
         }        
+      } catch (e) {
+        setIsLoader(false);
+        props.setErrorMsg(e.message)
+      }
     }
     const save = async (e) => {
         e.preventDefault();
@@ -109,11 +231,13 @@ const CallConfiguration = (props) => {
 
     const checkOverlap = async (removeOverlap = false) => {
         setIsLoader(true);
-        let overlapResp = await CallSetupService.checkCallConfigOverlap({
-            schedules: schedule,
-            twilioNumberId: props.numberId,
-            removeOverlap: removeOverlap
-        })
+        let payload = {
+          schedules: schedule,
+          twilioNumberId: props.numberId,
+          removeOverlap: removeOverlap
+        }
+        if (id) payload.id = id;
+        let overlapResp = await CallSetupService.checkCallConfigOverlap(payload)
         if (removeOverlap) {
             setSchedule(overlapResp.newScheduled);
         }
@@ -191,18 +315,7 @@ const CallConfiguration = (props) => {
         schedule.splice(key, 1)
         setSchedule([...schedule]);
     }
-    useEffect(() => {
-        let conf = [{
-            day: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
-            startTime: "00:00",
-            endTime: "23:00"
-        }];
-        if (props.conf.length === 0) {
-            setSchedule(conf);
-        } else {
-            setSchedule(props.conf);
-        }
-    }, []);
+
     return (
       <div className="sideMenuOuter">
         <div className="sideMenuInner callConfigModal">
@@ -247,7 +360,7 @@ const CallConfiguration = (props) => {
               </div>
               <div className="scheduleList">
                 <div className="cmnFormRow">
-                  <h4 className="formSecHeading">Schedule</h4>
+                  <h4 className="formSecHeading">Schedule {schedule.length}</h4>
                 </div>
                 {schedule.map((list, key) => {
                   return (
@@ -293,7 +406,7 @@ const CallConfiguration = (props) => {
                         </div>
                       )}
 
-                      <div className="cmnFormCol" key={key}>
+                      <div className="cmnFormCol">
                         <div className="cmnFieldName">Select Day (s)</div>
                         <div className="cmnFormField">
                           <ul className="weekDateList">
@@ -482,7 +595,7 @@ const CallConfiguration = (props) => {
                       <button className="cmnBtn" onClick={removeOverlap}>
                         Yes
                       </button>
-                      <button className="cmnBtn btn-red">No</button>
+                      <button className="cmnBtn btn-red" onClick={() => setIsOverlapped(false)}>No</button>
                     </div>
                   </div>
                 )}
@@ -553,6 +666,7 @@ const CallConfiguration = (props) => {
                         <div className="customCheckbox">
                           <input
                             type="checkbox"
+                            defaultChecked={callForward}
                             onChange={(e) =>
                               handleCheckboxChange(e, "CallForward")
                             }
@@ -571,8 +685,8 @@ const CallConfiguration = (props) => {
                             <label className="cmnFieldName">
                               Instant Call Forward
                             </label>
-                            <div className="toggleBtn active">
-                              <input type="checkbox" />
+                            <div className={"toggleBtn " + (instCallForward ? "active" : "")}>
+                              <input type="checkbox" defaultChecked={instCallForward} onChange={(e) => handleCheckboxChange(e, "InstCallForward")} />
                               <span className="toggler"></span>
                             </div>
                           </div>
@@ -585,122 +699,98 @@ const CallConfiguration = (props) => {
                             <div className="cmnFormRow">
                               <div className="cmnFormField countryCodeField">
                                 <div className="countryCode cmnFieldStyle">
-                                  <div className="countryName">US</div>
-                                  <div className="daileCode">+1</div>
-                                  <select className="selectCountry">
-                                    <option value="">US (+1)</option>
+                                  <div className="countryName">{newCallForwardPrefix.split("_")[0]}</div>
+                                  <div className="daileCode">+{newCallForwardPrefix.split("_")[1]}</div>
+                                  <select className="selectCountry"
+                                    onChange={(e) => handleInputChange(e, "NewCallForwardPrefix")}>
+                                    {phoneCountryCode.length > 0 && phoneCountryCode.map((country, cIndex) => (
+                                      <option 
+                                        value={country.code + "_" + (country.prefix.replace("+",""))}
+                                        key={"cnt-"+cIndex}>
+                                          {country.code} ({country.prefix})
+                                      </option>
+                                    ))}
                                   </select>
                                 </div>
                                 <input
                                   type="text"
                                   className="cmnFieldStyle"
-                                  placeholder="Eg. (555) 555-1234"
+                                  placeholder="Eg. 5143654785"
+                                  value={newCallForwardNumber}
+                                  onChange={handleCallForwardNumChange}
                                 />
                               </div>
-                              <button className="cmnBtn">
-                                <span>Abb</span>
+                              <button className="cmnBtn" onClick={addCallForwardNumber}>
+                                <span>Add</span>
                                 <img src={arrow_forward} alt="" />
                               </button>
                             </div>
-                            <div className="cmnFormRow">
-                              <div className="numberListHead">
-                                Numbers Added
+
+                            {callForwardErr && 
+                              <span className="errorMsg">{callForwardErr}</span>
+                            }
+
+                            {callForwardNumbers.length > 0  && 
+                              <div className="cmnFormRow">
+                                <div className="numberListHead">
+                                  Numbers Added
+                                </div>
+                                <ul className="numberLisr">
+                                  {callForwardNumbers.map((phone, pIndex) => (
+                                    <li key={"phn-" + pIndex}>
+                                      <span>+{phone.prefix}-{phone.number}</span>
+                                      <div className="numberListAction">
+                                        <div className="info_3dot_icon">
+                                          <button className="btn" onClick={(e) => handleCallForwardOption(e, pIndex)}>
+                                            <img src={info_3dot_icon} alt="More" />
+                                          </button>
+                                        </div>
+                                        <div 
+                                          className={
+                                            ( callForwardOption === pIndex ? " listShow " : " listHide " ) 
+                                            + " dropdownOptions"
+                                          }>
+                                          <button className="btn btnDelete" onClick={(e) => removeCallForwardNumber(e, pIndex)}>
+                                            <span>
+                                              <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                width="12.347"
+                                                height="13.553"
+                                                viewBox="0 0 12.347 13.553"
+                                                className="deleteIcon"
+                                              >
+                                                <g transform="translate(0.75 0.75)">
+                                                  <path
+                                                    className="a"
+                                                    transform="translate(-3 -3.589)"
+                                                  ></path>
+                                                  <path
+                                                    className="a"
+                                                    d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
+                                                    transform="translate(-3.795 -2)"
+                                                  ></path>
+                                                  <line
+                                                    className="a"
+                                                    y2="3"
+                                                    transform="translate(4.397 6.113)"
+                                                  ></line>
+                                                  <line
+                                                    className="a"
+                                                    y2="3"
+                                                    transform="translate(6.397 6.113)"
+                                                  ></line>
+                                                </g>
+                                              </svg>
+                                            </span>
+                                            Delete
+                                          </button>
+                                        </div>
+                                      </div>
+                                    </li>
+                                  ))}
+                                </ul>
                               </div>
-                              <ul className="numberLisr">
-                                <li>
-                                  <span>+91-9874056105</span>
-                                  <div className="numberListAction">
-                                    <div className="info_3dot_icon">
-                                      <button className="btn">
-                                        <img src={info_3dot_icon} alt="More" />
-                                      </button>
-                                    </div>
-                                    <div className="dropdownOptions listHide">
-                                      <button className="btn btnDelete">
-                                        <span>
-                                          <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="12.347"
-                                            height="13.553"
-                                            viewBox="0 0 12.347 13.553"
-                                            className="deleteIcon"
-                                          >
-                                            <g transform="translate(0.75 0.75)">
-                                              <path
-                                                className="a"
-                                                transform="translate(-3 -3.589)"
-                                              ></path>
-                                              <path
-                                                className="a"
-                                                d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
-                                                transform="translate(-3.795 -2)"
-                                              ></path>
-                                              <line
-                                                className="a"
-                                                y2="3"
-                                                transform="translate(4.397 6.113)"
-                                              ></line>
-                                              <line
-                                                className="a"
-                                                y2="3"
-                                                transform="translate(6.397 6.113)"
-                                              ></line>
-                                            </g>
-                                          </svg>
-                                        </span>
-                                        Delete
-                                      </button>
-                                    </div>
-                                  </div>
-                                </li>
-                                <li>
-                                  <span>+91-9874056105</span>
-                                  <div className="numberListAction">
-                                    <div className="info_3dot_icon">
-                                      <button className="btn">
-                                        <img src={info_3dot_icon} alt="More" />
-                                      </button>
-                                    </div>
-                                    <div className="dropdownOptions">
-                                      <button className="btn btnDelete">
-                                        <span>
-                                          <svg
-                                            xmlns="http://www.w3.org/2000/svg"
-                                            width="12.347"
-                                            height="13.553"
-                                            viewBox="0 0 12.347 13.553"
-                                            className="deleteIcon"
-                                          >
-                                            <g transform="translate(0.75 0.75)">
-                                              <path
-                                                className="a"
-                                                transform="translate(-3 -3.589)"
-                                              ></path>
-                                              <path
-                                                className="a"
-                                                d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
-                                                transform="translate(-3.795 -2)"
-                                              ></path>
-                                              <line
-                                                className="a"
-                                                y2="3"
-                                                transform="translate(4.397 6.113)"
-                                              ></line>
-                                              <line
-                                                className="a"
-                                                y2="3"
-                                                transform="translate(6.397 6.113)"
-                                              ></line>
-                                            </g>
-                                          </svg>
-                                        </span>
-                                        Delete
-                                      </button>
-                                    </div>
-                                  </div>
-                                </li>
-                              </ul>
-                            </div>
+                            }
                           </div>
                         </div>
                       </div>
@@ -1068,13 +1158,15 @@ const CallConfiguration = (props) => {
               <div className="cmnFormRow">
                 <div className="btnGroup centered">
                   <button className="cmnBtn" onClick={(e) => save(e)}>
-                    <span>Save</span>
+                    <span>{id ? "Update" : "Save"}</span>
                     <img src={arrow_forward} alt="" />
                   </button>
-                  <button className="cmnBtn" onClick={(e) => saveNew(e)}>
-                    <span>Save & New</span>
-                    <img src={arrow_forward} alt="" />
-                  </button>
+                  {!id && 
+                    <button className="cmnBtn" onClick={(e) => saveNew(e)}>
+                      <span>Save & New</span>
+                      <img src={arrow_forward} alt="" />
+                    </button>
+                  }
                 </div>
               </div>
             </form>

@@ -66,17 +66,18 @@ module.exports = {
     editCourseUrl: "https://fbde3pjlce.execute-api.us-east-1.amazonaws.com/dev/course",
     deleteCourseUrl: "https://fbde3pjlce.execute-api.us-east-1.amazonaws.com/dev/course",
     // Number service
-    // numberServiceUrl: "https://mdaifddy2k.execute-api.us-east-1.amazonaws.com/dev/number",
-    numberServiceUrl: "https://api.redbeltgym.com/number",
+    numberServiceUrl: "https://mdaifddy2k.execute-api.us-east-1.amazonaws.com/dev/number",
+    // numberServiceUrl: "https://api.redbeltgym.com/number",
     //Audio template
     audioUploadUrl: "https://9b4395tv11.execute-api.us-east-1.amazonaws.com/dev/template/audio/upload",
     fetchAudiossUrl: "https://i18vj5dg2l.execute-api.us-east-1.amazonaws.com/dev/audio/list",
     audioTemplateUrl: "https://i18vj5dg2l.execute-api.us-east-1.amazonaws.com/dev/audio/",
     // audioTemplateUrl: "http://localhost:4000/dev/audio"
-    // callSetupUrl: "https://ltj70u1guh.execute-api.us-east-1.amazonaws.com/dev/communication/call",
-    callSetupUrl: "http://localhost:3001/dev/communication/call",
+    callSetupUrl: "https://ltj70u1guh.execute-api.us-east-1.amazonaws.com/dev/communication/call",
+    // callSetupUrl: "http://localhost:3001/dev/communication/call",
     //callWebhookUrl: "https://memz99rc6c.execute-api.us-east-1.amazonaws.com/dev/",
     callWebhookUrl: "https://api.redbeltgym.com/call/",
+    ec2ApiBaseURl: "https://api.redbeltgym.com",
     // Ringtone service
     ringtoneUrl: "https://psk3w69xqd.execute-api.us-east-1.amazonaws.com/dev/number/ringtone/",
     // Billing service

@@ -39,7 +39,7 @@ export const NumberServices = {
             const options = {
                 headers: headers
             };
-            const url = config.numberServiceUrl + "/search";
+            const url = config.ec2ApiBaseURl + "/number/search";
             const result = await axios.post(url, payload, options);
             if (result.status === 200) {
                 return result.data;
@@ -63,7 +63,7 @@ export const NumberServices = {
             const options = {
                 headers: headers
             };
-            const url = config.numberServiceUrl + "/purchase";
+            const url = config.ec2ApiBaseURl + "/number/purchase";
             const result = await axios.post(url, payload, options);
             if (result.status === 200) {
                 return result.data;
@@ -88,7 +88,7 @@ export const NumberServices = {
             const options = {
                 headers: headers
             };
-            const url = config.numberServiceUrl + "/release/" + id;
+            const url = config.ec2ApiBaseURl + "/number/release/" + id;
             const result = await axios.delete(url, options);
             if (result.status === 200) {
                 return result.data;
