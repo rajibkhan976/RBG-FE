@@ -7622,18 +7622,14 @@ p.trackName {
 }
 .active .previewImgBox {
     border: 1px solid #9BAEBC;
-    background-color: #9BAEBC;
+    background-color: #d7e1e9;
     color: #fff;
     line-height: 22px;
     font-size: 13px;
-    width: 24px;
-    height: 24px;
+    width: 228px;
+    height: 137px;
     margin: 0 4px 0 0;
-    padding: 0 6px;
     display: inline-block;
-    position: absolute;
-    left: 0;
-    top: 0px;
 }
 .previewImgBox .sizeTag.duration {
   width: auto;

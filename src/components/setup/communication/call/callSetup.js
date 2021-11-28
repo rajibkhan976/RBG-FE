@@ -433,7 +433,7 @@ const CallSetup = () => {
                         <li>Call</li>
                     </ul>
                     <h2 className="inDashboardHeader">Call Setup</h2>
-                    <p className="userListAbout">Lorem ipsum dolor sit amet. Semi headline should be here.</p>
+                    <p className="userListAbout">Manage Ringtone & call configuration</p>
                 </div>
                 { Object.keys(numberObj).length ?
                     <div className="listFeatures">
