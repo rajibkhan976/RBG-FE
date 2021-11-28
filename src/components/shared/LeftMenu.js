@@ -231,7 +231,7 @@ function LeftMenu(props) {
             </svg>
           </NavLink>
         </li> */}
-        {permissions && permissions.findIndex(p => p.entity === "automation") >= 0 ?
+        {false && permissions && permissions.findIndex(p => p.entity === "automation") >= 0 ?
         <li>
           <NavLink
             className="leftMenuLink"

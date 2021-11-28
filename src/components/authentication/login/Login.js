@@ -218,7 +218,7 @@ const Login = (props) => {
         <div className="loginLeftPart">
           <img src={login_side_img} alt="" />
           <span className="overlay"></span>
-          <div class="login_left_text">
+          <div className="login_left_text">
             <h2>Black Friday 2021 🎉</h2>
             <p>Enjoy 30% off our Premium Plans for a limited time only<br/>
             <button className="link_btn">Get This Deal NOW</button></p>
