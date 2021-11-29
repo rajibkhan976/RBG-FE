@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, Link } from "react-router-dom";
 
 import LogoImg from "../../assets/images/logo_img.png";
 
 function LeftMenu(props) {
   const pathURL = useLocation().pathname;
+  console.log('is in left menu', props.loggedInUser ? props.loggedInUser.isAssociationOwner : false)
+  let isAssociationOwner = props.loggedInUser ? props.loggedInUser.isAssociationOwner : false;
 
   const [tglLeftMenuStatus, setTglLeftMenuStatus] = useState(false);
 
@@ -101,34 +103,34 @@ function LeftMenu(props) {
           </NavLink>
         </li> */}
         {permissions && permissions.findIndex(p => p.entity === "authentication") >= 0 ?
-        <li>
-          <NavLink
-            className="leftMenuLink"
-            isActive={() => ["/roles", "/groups", "/users"]}
-            activeClassName={
-              pathURL === "/roles" ||
-                pathURL === "/groups" ||
-                pathURL === "/users"
-                ? "selected"
-                : ""
-            }
-            to="/roles"
-            onClick={(e) => props.clickedSetupStatus(e)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 28 27"
-              id="ico-3"
+          <li>
+            <NavLink
+              className="leftMenuLink"
+              isActive={() => ["/roles", "/groups", "/users"]}
+              activeClassName={
+                pathURL === "/roles" ||
+                  pathURL === "/groups" ||
+                  pathURL === "/users"
+                  ? "selected"
+                  : ""
+              }
+              to="/roles"
+              onClick={(e) => props.clickedSetupStatus(e)}
             >
-              <path
-                className="a"
-                d="M21.947,16.332a8.017,8.017,0,1,0-1.714,1.444A11.978,11.978,0,0,1,27.959,28H4.042A12.006,12.006,0,0,1,8.12,19.949a1,1,0,1,0-1.314-1.508A14,14,0,0,0,2,29a1,1,0,0,0,1,1H29a1,1,0,0,0,1-1A13.975,13.975,0,0,0,21.947,16.332ZM10,11a6,6,0,1,1,6,6A6.006,6.006,0,0,1,10,11Z"
-                transform="translate(-2 -3)"
-              />
-            </svg>
-            <span className="menuName">User & Controls</span>
-          </NavLink>
-        </li> : ''}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 28 27"
+                id="ico-3"
+              >
+                <path
+                  className="a"
+                  d="M21.947,16.332a8.017,8.017,0,1,0-1.714,1.444A11.978,11.978,0,0,1,27.959,28H4.042A12.006,12.006,0,0,1,8.12,19.949a1,1,0,1,0-1.314-1.508A14,14,0,0,0,2,29a1,1,0,0,0,1,1H29a1,1,0,0,0,1-1A13.975,13.975,0,0,0,21.947,16.332ZM10,11a6,6,0,1,1,6,6A6.006,6.006,0,0,1,10,11Z"
+                  transform="translate(-2 -3)"
+                />
+              </svg>
+              <span className="menuName">User & Controls</span>
+            </NavLink>
+          </li> : ''}
         {/* <li>
           <NavLink
             className="leftMenuLink"
@@ -231,98 +233,120 @@ function LeftMenu(props) {
             </svg>
           </NavLink>
         </li> */}
+        {!isAssociationOwner && permissions && permissions.findIndex(p => p.entity === "automation") >= 0 ?
+          <li>
+              <Link to={{ pathname: "https://xd.adobe.com/view/c9a94693-8d3c-4ffb-9a8b-6b07f07ef79c-9cfa/?fullscreen" }}
+                target="_blank">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20.438"
+                height="28.033"
+                viewBox="0 0 20.438 28.033"
+                id="ico-6"
+              >
+                <g transform="translate(-15.28 -10.11)">
+                  <path
+                    className="a"
+                    d="M31.375,11.11l-15.1,13.3h8.55L18.992,37.143l15.726-16.12H26.288Z"
+                  />
+                </g>
+              </svg>
+              <span className="menuName">Automation</span>
+              <div className="prototypeBatch">Prototype</div>
+            </Link>
+          </li> : ""}
         {false && permissions && permissions.findIndex(p => p.entity === "automation") >= 0 ?
-        <li>
-          <NavLink
-            className="leftMenuLink"
-            isActive={() => ["/automation-list", "/automation-builder"]}
-            activeClassName={
-              pathURL === "/automation-list" ||
-                pathURL === "/automation-builder" ||
-                pathURL === "/automation-details"
-                ? "selected"
-                : ""
-            }
-            to="/automation-list"
-            title="Automation"
-            onClick={(e) => props.clickedSetupStatus(e)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20.438"
-              height="28.033"
-              viewBox="0 0 20.438 28.033"
-              id="ico-6"
+          <li>
+            <NavLink
+              className="leftMenuLink"
+              isActive={() => ["/automation-list", "/automation-builder"]}
+              activeClassName={
+                pathURL === "/automation-list" ||
+                  pathURL === "/automation-builder" ||
+                  pathURL === "/automation-details"
+                  ? "selected"
+                  : ""
+              }
+              to="/automation-list"
+              title="Automation"
+              onClick={(e) => props.clickedSetupStatus(e)}
             >
-              <g transform="translate(-15.28 -10.11)">
-                <path
-                  className="a"
-                  d="M31.375,11.11l-15.1,13.3h8.55L18.992,37.143l15.726-16.12H26.288Z"
-                />
-              </g>
-            </svg>
-            <span className="menuName">Automation</span>
-          </NavLink>
-        </li> : ""}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20.438"
+                height="28.033"
+                viewBox="0 0 20.438 28.033"
+                id="ico-6"
+              >
+                <g transform="translate(-15.28 -10.11)">
+                  <path
+                    className="a"
+                    d="M31.375,11.11l-15.1,13.3h8.55L18.992,37.143l15.726-16.12H26.288Z"
+                  />
+                </g>
+              </svg>
+              <span className="menuName">Automation</span>
+            </NavLink>
+          </li> : ""}
         {permissions && permissions.findIndex(p => p.entity === "contact") >= 0 ?
-        <li>
-          <NavLink
-            className="leftMenuLink"
-            activeClassName="selected"
-            to="/contacts"
-            onClick={(e) => props.clickedSetupStatus(e)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="28"
-              height="28"
-              viewBox="0 0 28 28"
-              id="ico-7"
+          <li>
+            <NavLink
+              className="leftMenuLink"
+              activeClassName="selected"
+              to="/contacts"
+              onClick={(e) => props.clickedSetupStatus(e)}
             >
-              <g transform="translate(-21 -693)">
-                <g className="a" transform="translate(21 693)">
-                  <rect className="c" width="28" height="28" rx="3" />
-                  <rect
-                    className="d"
-                    x="1"
-                    y="1"
-                    width="26"
-                    height="26"
-                    rx="2"
-                  />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="28"
+                height="28"
+                viewBox="0 0 28 28"
+                id="ico-7"
+              >
+                <g transform="translate(-21 -693)">
+                  <g className="a" transform="translate(21 693)">
+                    <rect className="c" width="28" height="28" rx="3" />
+                    <rect
+                      className="d"
+                      x="1"
+                      y="1"
+                      width="26"
+                      height="26"
+                      rx="2"
+                    />
+                  </g>
+                  <g transform="translate(17.662 687.707)">
+                    <circle
+                      className="b"
+                      cx="2.438"
+                      cy="2.438"
+                      r="2.438"
+                      transform="translate(17.86 15.113)"
+                    />
+                    <path
+                      className="b"
+                      d="M26.5,40.1c0-3.365,2.184-6.1,4.877-6.1s4.877,2.731,4.877,6.1Z"
+                      transform="translate(-11.078 -14.011)"
+                    />
+                    <circle
+                      className="b"
+                      cx="2.454"
+                      cy="2.454"
+                      r="2.454"
+                      transform="translate(11.603 12.5)"
+                    />
+                    <path
+                      className="b"
+                      d="M15.756,32.6H9.5c0-3.365,2.184-6.1,4.877-6.1A4.74,4.74,0,0,1,18.5,29.332"
+                      transform="translate(0 -9.123)"
+                    />
+                  </g>
                 </g>
-                <g transform="translate(17.662 687.707)">
-                  <circle
-                    className="b"
-                    cx="2.438"
-                    cy="2.438"
-                    r="2.438"
-                    transform="translate(17.86 15.113)"
-                  />
-                  <path
-                    className="b"
-                    d="M26.5,40.1c0-3.365,2.184-6.1,4.877-6.1s4.877,2.731,4.877,6.1Z"
-                    transform="translate(-11.078 -14.011)"
-                  />
-                  <circle
-                    className="b"
-                    cx="2.454"
-                    cy="2.454"
-                    r="2.454"
-                    transform="translate(11.603 12.5)"
-                  />
-                  <path
-                    className="b"
-                    d="M15.756,32.6H9.5c0-3.365,2.184-6.1,4.877-6.1A4.74,4.74,0,0,1,18.5,29.332"
-                    transform="translate(0 -9.123)"
-                  />
-                </g>
-              </g>
-            </svg>
-            <span className="menuName">Contacts</span>
-          </NavLink>
-        </li> : ''}
-        {/* <li>
+              </svg>
+              <span className="menuName">Contacts</span>
+            </NavLink>
+          </li> : ''}
+         <li>
           <NavLink
             className="leftMenuLink"
             activeClassName="selected"
@@ -387,13 +411,10 @@ function LeftMenu(props) {
               </g>
             </svg>
           </NavLink>
-        </li> */}
-        {/* <li>
-          <NavLink
-            className="leftMenuLink"
-            activeClassName="selected"
-            to="/number-list"
-          >
+        </li> 
+        {isAssociationOwner ? <li>
+        <Link to={{ pathname: "https://xd.adobe.com/view/1a813aee-7ec1-42ca-9093-051ac3823496-4fd2/screen/b9e30ce7-1846-4d55-aedd-1639f29e7f28/?fullscreen" }}
+                target="_blank">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="22.612"
@@ -445,9 +466,10 @@ function LeftMenu(props) {
                 </g>
               </g>
             </svg>
-            <span className="menuName">Number List</span>
-          </NavLink>
-        </li> */}
+            <span className="menuName">Report</span>
+            <div className="prototypeBatch">Prototype</div>
+          </Link>
+        </li> : ''}
       </ul>
       <div className="leftMenuToggle">
         {pathURL !== "/dashboard" ?

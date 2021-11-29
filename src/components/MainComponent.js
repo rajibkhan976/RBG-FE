@@ -15,6 +15,8 @@ import ProductRouter from "./setup/product/productRoute";
 import NumberRouting from "./numbers/NumberRoute";
 import CourseRouter from "./setup/course/courseRoute";
 import HeaderDashboard from "./shared/HeaderDashboard";
+import { UserServices } from "../services/authentication/UserServices";
+import config from "../configuration/config";
 
 
 const MainComponent = () => {
@@ -44,12 +46,57 @@ const MainComponent = () => {
   const clickedSetupStatus = (e) => {
     e.target && setSetupMenuState(true)
   };
-  
+
   useEffect(() => {
     setSetupMenuState(false)
   });
+  const [loggedInUser, setLoggedInUser] = useState({
+    name: null,
+    email: null,
+    prefix: null,
+    phone: null,
+    image: null,
+    group: null,
+    isEdit: false,
+    fullName: null,
+    association: null,
+    organization: null,
+    isShowPlan: false,
+    isOrganizationOwner: false,
+    isAssociationOwner: false,
+  });
+
+  /*
+   * Fetch logged in user details
+   */
+  useEffect(() => {
+    fetchLoggedUserDetails();
+  }, []);
+  //Fetch user details
+  const fetchLoggedUserDetails = async () => {
+    try {
+      let userDetails = await UserServices.fetchUserDetails();
+      if (userDetails) {
+        console.log('success user details', userDetails);
+        setLoggedInUser({
+          name: userDetails.firstName + ' ' + (userDetails.lastName ? userDetails.lastName.substr(0, 1) + '.' : ''),
+          fullName: userDetails.firstName + ' ' + userDetails.lastName,
+          email: userDetails.email,
+          phone: userDetails.phone ? (userDetails.prefix + '-' + userDetails.phone) : null,
+          image: userDetails.image ? (config.bucketUrl + userDetails.image) : null,
+          isOrganizationOwner: userDetails.isOrganizationOwner,
+          isAssociationOwner: userDetails.isAssociationOwner,
+          organization: userDetails.organization ? userDetails.organization.name : '',
+          group: userDetails.group ? userDetails.group.name : '',
+          isShowPlan: userDetails.organization ? userDetails.organization.parentId !== 0 ? true : false : false
+        })
+      }
+    } catch (e) {
+      console.log('Error in fetch current user', e);
+    }
+  };
   return (
-  <>
+    <>
       <div className="mainComponent">
         <div
           className={
@@ -58,21 +105,21 @@ const MainComponent = () => {
             (showInnerleftMenu ? (pathURL !== '/dashboard' ? "openSubmenu" : "") : "")
           }
         >
-          <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu} clickedSetupStatus={(e) => clickedSetupStatus(e)}/>
+          <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu} clickedSetupStatus={(e) => clickedSetupStatus(e)} loggedInUser={loggedInUser} />
           <div className="dashMain">
-          <HeaderDashboard toggleCreate={(e) =>toggleCreate(e)} setupMenuState={setupMenuState} />
+            <HeaderDashboard toggleCreate={(e) => toggleCreate(e)} setupMenuState={setupMenuState} loggedInUser={loggedInUser}/>
             <Switch>
               <Route exact path="/dashboard">
-                <DashboardRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}/>
+                <DashboardRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
               </Route>
               <Route exact path={["/roles", "/groups", "/users"]}>
-                <AuthRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}/>
+                <AuthRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
               </Route>
               <Route exact path={["/automation-list", "/automation-builder"]}>
-                <AutomationRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}/>
+                <AutomationRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
               </Route>
               <Route exact path="/contacts">
-                <ContactRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}/>
+                <ContactRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
               </Route>
               <Route exact path={["/call-setup", "/sms-setup", "/email-setup"]}>
                 <CommunicationRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></CommunicationRoutes>
@@ -91,14 +138,14 @@ const MainComponent = () => {
               </Route>
               <Route exact path="/" component={() => <Redirect to="/dashboard" />} />
               <Route exact path="*">
-                <NotFound toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}/>
+                <NotFound toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
               </Route>
             </Switch>
           </div>
         </div>
       </div>
-      { isShowContact && <ContactModal contactId={modalId}/>}
-      
+      {isShowContact && <ContactModal contactId={modalId} />}
+
     </>
   );
 };

@@ -29,8 +29,6 @@ import { CallSetupService } from "../../services/setup/callSetupServices";
 import { useStopwatch } from 'react-timer-hook';
 import { ImportContactServices } from "../../services/contact/importContact";
 import * as actionTypes from "../../actions/types";
-import { UserServices } from "../../services/authentication/UserServices";
-import config from "../../configuration/config";
 const { Device } = require('twilio-client');
 
 function HeaderDashboard(props) {
@@ -50,21 +48,7 @@ function HeaderDashboard(props) {
     reset,
     pause
   } = useStopwatch({ autoStart: false });
-  const [loggedInUser, setLoggedInUser] = useState({
-    name: null,
-    email: null,
-    prefix: null,
-    phone: null,
-    image: null,
-    group: null,
-    isEdit: false,
-    fullName: null,
-    association: null,
-    organization: null,
-    isShowPlan: false,
-    isOrganizationOwner: false,
-    isAssociationOwner: false,
-  })
+  
 
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
@@ -284,35 +268,6 @@ function HeaderDashboard(props) {
   const clickedLink = (e) => {
     e.target && setSetupModalStatus(!setupModalStatus);
   }
-  /*
-   * Fetch logged in user details
-   */
-  useEffect(() => {
-    fetchLoggedUserDetails();
-  }, []);
-  //Fetch user details
-  const fetchLoggedUserDetails = async () => {
-    try {
-      let userDetails = await UserServices.fetchUserDetails();
-      if (userDetails) {
-        console.log('success user details', userDetails);
-        setLoggedInUser({
-          name: userDetails.firstName + ' ' + (userDetails.lastName ? userDetails.lastName.substr(0, 1) + '.' : ''),
-          fullName: userDetails.firstName + ' ' + userDetails.lastName,
-          email: userDetails.email,
-          phone: userDetails.phone ? (userDetails.prefix + '-' +userDetails.phone) : null,
-          image: userDetails.image ? (config.bucketUrl + userDetails.image) : null,
-          isOrganizationOwner: userDetails.isOrganizationOwner,
-          isAssociationOwner: userDetails.isAssociationOwner,
-          organization: userDetails.organization ? userDetails.organization.name : '',
-          group: userDetails.group ? userDetails.group.name : '',
-          isShowPlan: userDetails.organization ? userDetails.organization.parentId !== 0 ? true : false : false
-        })
-      }
-    } catch (e) {
-      console.log('Error in fetch current user', e);
-    }
-  };
 
   useEffect(() => {
     props.setupMenuState && setSetupModalStatus(false)
@@ -468,13 +423,13 @@ function HeaderDashboard(props) {
           <button className="btn btnUserMenu" onClick={toggleUserMenu}>
             <figure
               style={{
-                backgroundImage: "url(" + (loggedInUser.image ? loggedInUser.image : UserIcon) + ")",
+                backgroundImage: "url(" + (props.loggedInUser.image ? props.loggedInUser.image : UserIcon) + ")",
               }}
             ></figure>
 
             <div className="menuUserDetail">
-              <span>{loggedInUser.group}</span>
-              <h3>{loggedInUser.name}</h3>
+              <span>{props.loggedInUser.group}</span>
+              <h3>{props.loggedInUser.name}</h3>
             </div>
             <i>
               <img src={blueDownArrow} alt="" />
@@ -491,25 +446,25 @@ function HeaderDashboard(props) {
               <button className="btn btn_empty" onClick={closeUserMenu}><img src={cross_white} alt="" /></button>
               <div className="user_details">
                 <div className="user_profile" style={{
-                  backgroundImage: `url(${loggedInUser.image ? loggedInUser.image : userPhoto})`
+                  backgroundImage: `url(${props.loggedInUser.image ? props.loggedInUser.image : userPhoto})`
                 }}>
                   {/* <img src={loggedInUser.image ? loggedInUser.image : userPhoto} alt="avatar" /> */}
                 </div>
                 <div className="userContacts">
                   <h3>
-                    {loggedInUser.fullName}
-                    <p>{loggedInUser.group}</p>
+                    {props.loggedInUser.fullName}
+                    <p>{props.loggedInUser.group}</p>
                   </h3>
 
-                  {loggedInUser.phone ? <div className="userPhone">
+                  {props.loggedInUser.phone ? <div className="userPhone">
                     <img src={phone_call_icon_white} alt="" />
-                    <span>{loggedInUser.phone}</span>
+                    <span>{props.loggedInUser.phone}</span>
                   </div> : ''}
                   <div className="userEmail">
                     <img src={email_icon_white} alt="" />
-                    <span>{loggedInUser.email}</span>
+                    <span>{props.loggedInUser.email}</span>
                   </div>
-                  {loggedInUser.isEdit ? <div className="userPhone">
+                  {props.loggedInUser.isEdit ? <div className="userPhone">
                     <img src={editIcon_white} alt="" />
                     <span>Edit</span>
                   </div> : ''}
@@ -519,12 +474,12 @@ function HeaderDashboard(props) {
             <div className="user_modal_body">
               <div className="user_modal_cont">
                 <p>Organization</p>
-                <h3>{loggedInUser.organization}</h3>
-                {loggedInUser.isShowPlan ? <div className="creditText">
+                <h3>{props.loggedInUser.organization}</h3>
+                {props.loggedInUser.isShowPlan ? <div className="creditText">
                   <span>Credit Balance  </span>
                   <span className="blue">0</span>
                 </div> : ''}
-                {loggedInUser.isShowPlan ? <div className="userPlan">
+                {props.loggedInUser.isShowPlan ? <div className="userPlan">
                   <div>
                     <span>Current Plan</span>
                     <p>SILVER</p>

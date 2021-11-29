@@ -7926,3 +7926,13 @@ p.trackName {
 .user_modal_menu button:hover {
   color: #333;
 }
+
+.prototypeBatch {
+  background: linear-gradient(268deg, #f1a768 0%, #ed707a 100%) 0% 0% no-repeat padding-box;
+  display: inline-block;
+  font-size: 10px;
+  color: #fff;
+  padding: 3px 6px;
+  border-radius: 3px;
+  margin-bottom: 10px;
+}
