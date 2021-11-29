@@ -10,6 +10,7 @@ import InputFile from "../../../shared/InputFile";
 import {CallSetupService} from "../../../../services/setup/callSetupServices";
 import Loader from "../../../shared/Loader";
 import { ContactService } from "../../../../services/contact/ContactServices";
+import { MESSAGE_DELAY } from "../../../../configuration/env";
 
 
 const CallConfiguration = (props) => {
@@ -27,6 +28,7 @@ const CallConfiguration = (props) => {
     const [voicemailEmailNotif, setVoicemailEmailNotif] = useState(false);
     const [missedCallMsg, setMissedCallMsg] = useState(false);
     const [isOverlapped, setIsOverlapped] = useState(false);
+    const [overlappValidated, setOverlappValidated] = useState("");
     const [instCallForward, setInstCallForward] = useState(false);
     const [newCallForwardPrefix, setNewCallForwardPrefix] = useState("US_1");
     const [newCallForwardNumber, setNewCallForwardNumber] = useState("");
@@ -34,6 +36,7 @@ const CallConfiguration = (props) => {
     const [callForwardNumbers, setCallForwardNumbers] = useState([])
     const [callForwardErr, setCallForwardErr] = useState(false);
     const [callForwardOption, setCallForwardOption] = useState(false);
+    const [scheduleErr, setScheduleErr] = useState(false);
     const [id, setId] = useState(false);
   
     const handleCheckboxChange = (event, constName) => {
@@ -110,7 +113,7 @@ const CallConfiguration = (props) => {
         let conf = [{
           day: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
           startTime: "00:00",
-          endTime: "23:00"
+          endTime: "24:00"
         }];
         setSchedule(conf);
       }      
@@ -146,7 +149,7 @@ const CallConfiguration = (props) => {
         let conf = [{
             day: [],
             startTime: "00:00",
-            endTime: "23:00"
+            endTime: "24:00"
         }];
         setSchedule([...schedule, ...conf])
     }
@@ -265,8 +268,20 @@ const CallConfiguration = (props) => {
         if (await validateForm()) {
             let overlapCheck = await checkOverlap(removeOverlap);
             setIsOverlapped(overlapCheck.isOverlapped);
+
+            if (!overlapCheck.isOverlapped) {
+              setOverlappValidated(true)
+            }
         }
     }
+
+    useEffect(()=>{
+      if (overlappValidated) {
+        setTimeout(()=> {
+          setOverlappValidated(false)
+        },MESSAGE_DELAY)
+      }
+    });
     const removeOverlap = async (e) => {
         e.preventDefault();
         validateOverlap(e, true);
@@ -279,20 +294,27 @@ const CallConfiguration = (props) => {
             setNameError("Please provide name.");
             isOkay = false;
         }
+
         
         for (var si = 0; si < schedule.length; si++) {
             let stTime = convertTimeToNumber(schedule[si].startTime);
             let endTime = convertTimeToNumber(schedule[si].endTime);
             if (!schedule[si].day.length || stTime >= endTime) {
                 isOkay = false;
-                schedule[si].error = "Please select atleast a day and time 'To' must be greater than 'From'"
+                schedule[si].error = "Please select at least a day and time 'To' must be greater than 'From'"
             } else {
                 schedule[si].error = "";
             }
         }
+
+        if (!schedule.length) {
+          isOkay = false;
+          setScheduleErr("Configuration must have at least one schedule");
+        } else {
+          setScheduleErr(false);
+        }
         
         setSchedule([...schedule]);
-        console.log("schedule 2 >", schedule);
 
         return isOkay;
     }
@@ -306,7 +328,7 @@ const CallConfiguration = (props) => {
         let conf = [{
             day: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
             startTime: "00:00",
-            endTime: "23:00"
+            endTime: "24:00"
         }];
         setSchedule(conf);
         
@@ -373,7 +395,7 @@ const CallConfiguration = (props) => {
               </div>
               <div className="scheduleList">
                 <div className="cmnFormRow">
-                  <h4 className="formSecHeading">Schedule {schedule.length}</h4>
+                  <h4 className="formSecHeading">Schedule</h4>
                 </div>
                 {schedule.map((list, key) => {
                   return (
@@ -524,6 +546,7 @@ const CallConfiguration = (props) => {
                                 <option value="21:00">21:00</option>
                                 <option value="22:00">22:00</option>
                                 <option value="23:00">23:00</option>
+                                <option value="24:00">24:00</option>
                               </select>
                             </div>
                           </div>
@@ -559,6 +582,7 @@ const CallConfiguration = (props) => {
                                 <option value="21:00">21:00</option>
                                 <option value="22:00">22:00</option>
                                 <option value="23:00">23:00</option>
+                                <option value="24:00">24:00</option>
                               </select>
                             </div>
                           </div>
@@ -612,6 +636,17 @@ const CallConfiguration = (props) => {
                     </div>
                   </div>
                 )}
+                {overlappValidated && 
+                  <div className="">
+                    <span className="success">Schedule slot(s) is validated</span>
+                  </div>
+                }
+
+                {scheduleErr && 
+                  <div className="errorMsg">
+                    <p>{scheduleErr}</p>
+                  </div>
+                }
               </div>
               <div className="cmnFormRow setupForms">
                 <h4 className="formSecHeading">Setup</h4>
