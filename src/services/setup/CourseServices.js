@@ -211,5 +211,23 @@ export const CourseServices = {
                 throw new Error(e.message + ". Please contact support.");
             }
         }
+    },
+
+    initCoursePurchase: async (payload) => {
+        try {
+            const url = config.courseBuyUrl;
+            const result = await axios.post(url, payload, { headers: headers });
+            // console.log('Transaction Services : ', result);
+            return result.data;
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+            
+        }
     }
 };

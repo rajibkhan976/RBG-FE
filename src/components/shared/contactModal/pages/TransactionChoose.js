@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import aaroww from "../../../../assets/images/arrow_forward.svg";
 import arrow_forward from "../../../../assets/images/backIcon.svg";
 import tick from "../../../../assets/images/tick.svg";
 import camera from "../../../../assets/images/camera.svg";
 import categoryTag from "../../../../assets/images/categoryTag.svg";
-import product from "../../../../assets/images/proImg4.png";
 import { CourseServices } from "../../../../services/setup/CourseServices";
 import Loader from "../../Loader";
 
@@ -12,6 +11,7 @@ import Loader from "../../Loader";
 
 const TransactionChoose = (props) => {
 
+    const messageDelay = 10000;
 
     const [choosePOS, setChoosetPOS] = useState(false);
     const [chooseCourse, setChooseCourse] = useState(false);
@@ -19,11 +19,21 @@ const TransactionChoose = (props) => {
     const [courseList, setCourseList] = useState([]);
     const [courseFees, setCourseFees] = useState(0);
     const [courseName, setCourseName] = useState("Course not selected");
+    const [courseId, setCourseId] = useState("");
     const [catName, setCatName] = useState("Category not selected");
     const [courseSelected, setCourseSelected] = useState(false);
     const [courseImg, setCourseImg] = useState("");
     const [courseDuration, setCourseDuration] = useState("");
     const [showLoader, setShowLoader] = useState(false);
+    const [successMsg, setSuccessMsg] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
+    
+
+    useEffect(() => {
+        if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
+        if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
+    }, [successMsg, errorMsg]);
+
     
     const chooseTransctionTypePOS = () => {
         setChoosetPOS(!choosePOS);
@@ -74,10 +84,32 @@ const TransactionChoose = (props) => {
         let courseFees = e.target.value;
         setCourseFees(courseFees);
         setCourseName(e.target[e.target.selectedIndex].getAttribute("data-name"));
+        setCourseId(e.target[e.target.selectedIndex].getAttribute("data-courseId"));
         setCourseImg(e.target[e.target.selectedIndex].getAttribute("data-img"));
         setCourseDuration(e.target[e.target.selectedIndex].getAttribute("data-duration"));
         setCourseSelected(true);
     }
+    
+    const buyCourse = async (e) => {
+        e.preventDefault();
+        try {
+            let payload = {
+            contact: props.contactId,
+            courseID: courseId
+            }
+            setShowLoader(true);
+            let result = await CourseServices.initCoursePurchase(payload);
+            setSuccessMsg(result);
+            
+            console.log("Buy course response- " + result);
+        } catch (e) {
+            setErrorMsg(e.message);
+        } finally {
+            setShowLoader(false);
+        }
+        
+    }
+
 
     return(
         <>
@@ -181,6 +213,12 @@ const TransactionChoose = (props) => {
                }
                 { chooseCourse && <div className="posSellingForm">
                 { showLoader && <Loader /> }
+                {successMsg &&
+                    <div className="formMsg success">{successMsg}</div>
+                    }
+                    {errorMsg &&
+                    <div className="formMsg error">{errorMsg}</div>
+                }
                 <form>
                         <div className="transaction_form">
                             <div className="formsection gap">
@@ -196,7 +234,7 @@ const TransactionChoose = (props) => {
                                 <select className="selectBox" onChange={getCourseFees} value={courseFees ? courseFees : ''}>
                                     { courseList.length > 0 ? <option value="">Select a course</option> : ""}
                                     { courseList.length > 0 ? courseList.map((item, key) => {
-                                        return (<option key={"course_" + key} value={item.fees} data-name={item.name} data-img={item.image} data-duration={item.duration}>{ item.name }</option>)
+                                        return (<option key={"course_" + key} value={item.fees} data-name={item.name} data-img={item.image} data-duration={item.duration} data-courseId={item._id}>{ item.name }</option>)
                                         }) : <option>No courses available</option>}
                                 </select>
                             </div>
@@ -222,7 +260,7 @@ const TransactionChoose = (props) => {
                                 <span className="tax"> * Amount showing including taxes </span>
                             </div>
 
-                            <button class={courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"}>Buy <img src={aaroww} alt=""/></button>
+                            <button class={courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={buyCourse}>Buy <img src={aaroww} alt=""/></button>
                         </div>
                     </form>
                 </div>

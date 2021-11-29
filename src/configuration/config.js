@@ -86,5 +86,7 @@ module.exports = {
     transactionUrl: "https://tt7n78ndd2.execute-api.us-east-1.amazonaws.com/dev/contact/transactions/",
     // Course Service
     courseUrl: "https://nayaxr4np3.execute-api.us-east-1.amazonaws.com/dev/course/",
+    // Buy Course Link
+    courseBuyUrl: "https://bulitnj4tg.execute-api.us-east-1.amazonaws.com/dev/contact/registration/course"
 
 }  
