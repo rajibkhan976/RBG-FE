@@ -6,9 +6,9 @@ let headers = {
 };
 
 export const TransactionServices = {
-    fetchTransactionList: async () => {
+    fetchTransactionList: async (contactId) => {
         try {
-            const url = config.transactionUrl + "list/618cfc610bd605dd51cbc0b7";
+            const url = config.transactionUrl + "list/" + contactId;
             const result = await axios.get(url, { headers: headers });
             console.log('Transaction Services : ', result);
             return result.data;

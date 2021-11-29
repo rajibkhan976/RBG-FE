@@ -16,7 +16,7 @@ const Transaction = (props) => {
     
 
      const fetchTransactionList = async () => {
-     let transactionResponce = await TransactionServices.fetchTransactionList();
+     let transactionResponce = await TransactionServices.fetchTransactionList(props.contactId);
      setTransactionList(transactionResponce );
      };
      console.log("transactionList", transactionList);
