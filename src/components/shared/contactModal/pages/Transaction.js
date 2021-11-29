@@ -20,10 +20,15 @@ const Transaction = (props) => {
      setTransactionList(transactionResponce );
      };
      console.log("transactionList", transactionList);
-     useEffect(() => {
-     transactionList.length === 0 && fetchTransactionList();
-     //console.log("transactionList", transactionList);
-     }, [transactionList]);
+     
+    //  useEffect(() => {
+    //  transactionList.length === 0 && fetchTransactionList();
+    //  //console.log("transactionList", transactionList);
+    //  }, [transactionList]);
+
+    useEffect(() => {
+        fetchTransactionList();
+    }, []);
 
 
     const [dt, setDt] = useState(new Date().toLocaleString());
