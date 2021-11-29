@@ -528,7 +528,7 @@ const CallSetup = () => {
                                                         ></button>
                                                     ) : (
                                                         <button
-                                                        className="saveName"
+                                                        className={element.organizationId == 0 ? "hide" : "saveName" }
                                                         onClick={() => editRingtone(element)}
                                                         ></button>
                                                     )}
@@ -554,7 +554,7 @@ const CallSetup = () => {
                                                     <div className="toneAction">
                                                     {!element.default ? (
                                                         <button
-                                                        className="toneEdit"
+                                                        className={element.organizationId == 0 ? "hide" : "toneEdit"}
                                                         onClick={() => editTrack(element)}
                                                         ></button>
                                                     ) : (
