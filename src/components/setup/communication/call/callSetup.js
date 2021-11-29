@@ -719,117 +719,229 @@ const CallSetup = () => {
                             {
                                 configurationList.map((list, key) => {
                                     return (
-                                        <li key={key}>
-                                            <div className="userName">
-                                                <button className="btn"><p>{list.name}</p></button>
+                                      <li key={key}>
+                                        <div className="userName">
+                                          <button className="btn">
+                                            <p>{list.name}</p>
+                                          </button>
+                                        </div>
+                                        <div>
+                                          <ul className="weekDateList">
+                                            <li
+                                              className={
+                                                handleCheck(
+                                                  "sun",
+                                                  list.schedules
+                                                )
+                                                  ? "weekDate active"
+                                                  : "weekDate"
+                                              }
+                                            >
+                                              <span>S</span>
+                                            </li>
+                                            <li
+                                              className={
+                                                handleCheck(
+                                                  "mon",
+                                                  list.schedules
+                                                )
+                                                  ? "weekDate active"
+                                                  : "weekDate"
+                                              }
+                                            >
+                                              <span>M</span>
+                                            </li>
+                                            <li
+                                              className={
+                                                handleCheck(
+                                                  "tue",
+                                                  list.schedules
+                                                )
+                                                  ? "weekDate active"
+                                                  : "weekDate"
+                                              }
+                                            >
+                                              <span>T</span>
+                                            </li>
+                                            <li
+                                              className={
+                                                handleCheck(
+                                                  "wed",
+                                                  list.schedules
+                                                )
+                                                  ? "weekDate active"
+                                                  : "weekDate"
+                                              }
+                                            >
+                                              <span>W</span>
+                                            </li>
+                                            <li
+                                              className={
+                                                handleCheck(
+                                                  "thu",
+                                                  list.schedules
+                                                )
+                                                  ? "weekDate active"
+                                                  : "weekDate"
+                                              }
+                                            >
+                                              <span>T</span>
+                                            </li>
+                                            <li
+                                              className={
+                                                handleCheck(
+                                                  "fri",
+                                                  list.schedules
+                                                )
+                                                  ? "weekDate active"
+                                                  : "weekDate"
+                                              }
+                                            >
+                                              <span>F</span>
+                                            </li>
+                                            <li
+                                              className={
+                                                handleCheck(
+                                                  "sat",
+                                                  list.schedules
+                                                )
+                                                  ? "weekDate active"
+                                                  : "weekDate"
+                                              }
+                                            >
+                                              <span>S</span>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                        <div>
+                                          <label
+                                            className={
+                                              "toggleBtn " + list.status
+                                            }
+                                          >
+                                            <input
+                                              type="checkbox"
+                                              onChange={(e) => {
+                                                statusToogle(e, list._id, key);
+                                              }}
+                                            />
+                                            <span className="toggler"></span>
+                                          </label>
+                                        </div>
+                                        <div className="createDate">
+                                          <button className="btn">
+                                            {moment(list.createdAt).format(
+                                              "Do MMM YYYY"
+                                            )}
+                                          </button>
+                                          <div className="info_3dot_icon">
+                                            <button
+                                              className="btn"
+                                              onClick={() => {
+                                                toggleOptions(key);
+                                              }}
+                                            >
+                                              <img
+                                                src={info_3dot_icon}
+                                                alt=""
+                                              />
+                                            </button>
+                                          </div>
+                                          <React.Fragment
+                                            key={key + "_fragment"}
+                                          >
+                                            <div
+                                              className={
+                                                option === key
+                                                  ? "dropdownOptions listOpen"
+                                                  : "listHide"
+                                              }
+                                            >
+                                              <button
+                                                className="btn btnEdit"
+                                                onClick={(e) =>
+                                                  editConfigHandle(list)
+                                                }
+                                              >
+                                                <span>
+                                                  <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 13.553 13.553"
+                                                    className="editIcon"
+                                                  >
+                                                    <g transform="translate(0.75 0.75)">
+                                                      <path
+                                                        className="a"
+                                                        d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423"
+                                                        transform="translate(-2 -2.795)"
+                                                      />
+                                                      <path
+                                                        className="a"
+                                                        d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z"
+                                                        transform="translate(-4.384 -2)"
+                                                      />
+                                                    </g>
+                                                  </svg>
+                                                </span>
+                                                Edit
+                                              </button>
+                                              <button
+                                                className="btn btnDelete"
+                                                onClick={() =>
+                                                  deleteConfig(list)
+                                                }
+                                              >
+                                                <span>
+                                                  <svg
+                                                    className="deleteIcon"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="12.347"
+                                                    height="13.553"
+                                                    viewBox="0 0 12.347 13.553"
+                                                  >
+                                                    <g transform="translate(0.75 0.75)">
+                                                      <path
+                                                        className="a"
+                                                        d="M3,6H13.847"
+                                                        transform="translate(-3 -3.589)"
+                                                        style={{
+                                                          stroke: "#9baebc",
+                                                        }}
+                                                      />
+                                                      <path
+                                                        className="a"
+                                                        d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
+                                                        transform="translate(-3.795 -2)"
+                                                        style={{
+                                                          stroke: "#9baebc",
+                                                        }}
+                                                      />
+                                                      <line
+                                                        className="a"
+                                                        y2="3"
+                                                        transform="translate(4.397 6.113)"
+                                                        style={{
+                                                          stroke: "#9baebc",
+                                                        }}
+                                                      />
+                                                      <line
+                                                        className="a"
+                                                        y2="3"
+                                                        transform="translate(6.397 6.113)"
+                                                        style={{
+                                                          stroke: "#9baebc",
+                                                        }}
+                                                      />
+                                                    </g>
+                                                  </svg>
+                                                </span>
+                                                Delete
+                                              </button>
                                             </div>
-                                            <div>
-                                                <ul className="weekDateList">
-                                                    <li className={ handleCheck('sun', list.schedules) ? "weekDate active" : "weekDate"}>
-                                                        <span>S</span>
-                                                    </li>
-                                                    <li className={ handleCheck('mon', list.schedules) ? "weekDate active" : "weekDate"}>
-                                                        <span>M</span>
-                                                    </li>
-                                                    <li className={ handleCheck('tue', list.schedules) ? "weekDate active" : "weekDate"}>
-                                                        <span>T</span>
-                                                    </li>
-                                                    <li className={ handleCheck('wed', list.schedules) ? "weekDate active" : "weekDate"}>
-                                                        <span>W</span>
-                                                    </li>
-                                                    <li className={ handleCheck('thu', list.schedules) ? "weekDate active" : "weekDate"}>
-                                                        <span>T</span>
-                                                    </li>
-                                                    <li className={ handleCheck('fri', list.schedules) ? "weekDate active" : "weekDate"}>
-                                                        <span>F</span>
-                                                    </li>
-                                                    <li className={ handleCheck('sat', list.schedules) ? "weekDate active" : "weekDate"}>
-                                                        <span>S</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                            <div>
-                                                <label className={"toggleBtn " + list.status }  >
-                                                    <input type="checkbox" onChange={ (e) => { statusToogle(e, list._id, key) }}/>
-                                                    <span className="toggler"></span>
-                                                </label>
-                                            </div>
-                                            <div className="createDate">
-                                                <button className="btn">{moment(list.createdAt).format("Do MMM YYYY")}</button>
-                                                <div className="info_3dot_icon">
-                                                    <button className="btn"
-                                                        onClick={() => {
-                                                            toggleOptions(key);
-                                                        }}>
-                                                        <img src={info_3dot_icon} alt=""/>
-                                                    </button>
-                                                </div>
-                                                <React.Fragment key={key + "_fragment"}>
-                                                    <div
-                                                        className={
-                                                            option === key ? "dropdownOptions listOpen" : "listHide"
-                                                        }
-                                                    >
-                                                        <button className="btn btnEdit" onClick={(e) => editConfigHandle(list)}>
-                                                            <span>
-                                                                <svg
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    viewBox="0 0 13.553 13.553"
-                                                                    className="editIcon"
-                                                                >
-                                                                    <g transform="translate(0.75 0.75)">
-                                                                        <path
-                                                                            className="a"
-                                                                            d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423"
-                                                                            transform="translate(-2 -2.795)"
-                                                                        />
-                                                                        <path
-                                                                            className="a"
-                                                                            d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z"
-                                                                            transform="translate(-4.384 -2)"
-                                                                        />
-                                                                    </g>
-                                                                </svg>
-                                                            </span>
-                                                            Edit
-                                                        </button>
-                                                        <button className="btn btnDelete"
-                                                           onClick={() => deleteConfig(list)}>
-                                                            <span>
-                                                                <svg
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    width="12.347"
-                                                                    height="13.553"
-                                                                    viewBox="0 0 12.347 13.553"
-                                                                    className="deleteIcon"
-                                                                >
-                                                                    <g transform="translate(0.75 0.75)">
-                                                                        <path className="a" transform="translate(-3 -3.589)" />
-                                                                        <path
-                                                                            className="a"
-                                                                            d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
-                                                                            transform="translate(-3.795 -2)"
-                                                                        />
-                                                                        <line
-                                                                            className="a"
-                                                                            y2="3"
-                                                                            transform="translate(4.397 6.113)"
-                                                                        />
-                                                                        <line
-                                                                            className="a"
-                                                                            y2="3"
-                                                                            transform="translate(6.397 6.113)"
-                                                                        />
-                                                                    </g>
-                                                                </svg>
-                                                            </span>
-                                                            Delete
-                                                        </button>
-                                                    </div>
-                                                </React.Fragment>
-                                            </div>
-                                        </li>
-                                    )
+                                          </React.Fragment>
+                                        </div>
+                                      </li>
+                                    );
                                 })
                             }
                         </ul>
