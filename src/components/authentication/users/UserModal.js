@@ -13,6 +13,7 @@ import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import plus_icon from "../../../assets/images/plus_icon.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
 import { GroupServices } from '../../../services/authentication/GroupServices';
+import AudioHelper from 'twilio-client/es5/twilio/audiohelper';
 
 
 const UserModal = (props) => {
@@ -815,9 +816,10 @@ const UserModal = (props) => {
              */
             let organizationId = null;
             let assoId = null;
+            let orgPayload = null;
             if (isOwner) {
-                let slug = orgName.toLowerCase().replace(' ', '-');
-                let orgPayload = {
+                let slug = orgName.replace(/\s+/g, '-').toLowerCase();
+                orgPayload = {
                     name: orgName,
                     email: orgEmail,
                     slug: slug,
@@ -935,9 +937,19 @@ const UserModal = (props) => {
                         if (isAssociateOwner) {
                             fetchAssociations();
                         }
-
-
-
+                        //if creating organization account
+                        if (isOwner) {
+                            console.log('updating org account with owner id');
+                            orgPayload.id = organizationId;
+                            orgPayload.ownerId = result._id;
+                            OrganizationServices['update'](orgPayload)
+                                .then(result => {
+                                    console.log(" upOrg " + result);
+                                })
+                                .catch(error => {
+                                    console.log(" upOrg " + error);
+                                })
+                        }
                     })
             } catch (e) {
                 /**
