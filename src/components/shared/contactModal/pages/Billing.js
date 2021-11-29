@@ -23,9 +23,11 @@ const Billing = (props) => {
   const [cardExpairyMonthCheck, setCardExpairyMonthCheck] = useState("");
   const [cardExpairyYearCheck, setCardExpairyYearCheck] = useState("");
   const [cardActivationCheck, setCardActivationCheck] = useState(false);
-  const [cardActivationCheckText, setCardActivationCheckText] = useState("");
+  const [cardActivationCheckText, setCardActivationCheckText] =
+    useState("inactive");
   const [bankActivationCheck, setBankActivationCheck] = useState(false);
-  const [bankActivationCheckText, setBankActivationCheckText] = useState("");
+  const [bankActivationCheckText, setBankActivationCheckText] =
+    useState("inactive");
   const [isLoader, setIsLoader] = useState(false);
 
   const [cardCvvCheck, setCardCvvCheck] = useState("");
@@ -33,27 +35,23 @@ const Billing = (props) => {
   const [bankNameCheck, setBankNameCheck] = useState("");
   const [bankRoutingCheck, setBankRoutingCheck] = useState("");
 
-  const [cardDataFormatting, setCardDataFormatting] = useState([
-    {
-      contact: "618cfc610bd605dd51cbc0b7",
-      card_number: cardNumberOn,
-      expiration_year: cardExpairyCheck,
-      expiration_month: cardExpairyCheck,
-      cvv: cardCvvCheck,
-      cardholder_name: cardNameCheck,
-      status: cardActivationCheckText,
-    },
-  ]);
-  const [bankDataFormatting, setBankDataFormatting] = useState([
-    {
-      contact: "618cfc610bd605dd51cbc0b7",
-      routing_number: bankRoutingCheck,
-      account_number: bankAccountCheck,
-      account_holder: bankNameCheck,
-      account_type: "checking",
-      status: bankActivationCheckText,
-    },
-  ]);
+  const [cardDataFormatting, setCardDataFormatting] = useState({
+    contact: props.contactId,
+    card_number: cardNumberOn,
+    expiration_year: cardExpairyCheck,
+    expiration_month: cardExpairyCheck,
+    cvv: cardCvvCheck,
+    cardholder_name: cardNameCheck,
+    status: cardActivationCheckText,
+  });
+  const [bankDataFormatting, setBankDataFormatting] = useState({
+    contact: props.contactId,
+    routing_number: bankRoutingCheck,
+    account_number: bankAccountCheck,
+    account_holder: bankNameCheck,
+    account_type: "checking",
+    status: bankActivationCheckText,
+  });
   const [formErrorMsg, setFormErrorMsg] = useState([
     {
       card_num_Err: false,
@@ -80,7 +78,7 @@ const Billing = (props) => {
       setBankList(cardBankResponce.banks);
       setIsLoader(false);
     }
-    console.log("CARD/Bank LISTING data", cardBankResponce);
+    console.log("CARD LISTING data", cardBankResponce.cards);
   };
   useEffect(() => {
     fetchCardBank();
@@ -112,16 +110,13 @@ const Billing = (props) => {
   };
 
   const activeCreditCard = async (cardBank) => {
-    console.log('====================================');
-    console.log('cardBank', cardBank);
-    console.log('====================================');
     let cardData = {
       billingID: cardBank && cardBank._id,
       contactID: cardBank && props.contactId,
       accountType: cardBank && cardBank.accountType,
     };
     await BillingServices.activeCard(cardData);
-    fetchCardBank()
+    fetchCardBank();
   };
 
   const activeBank = (bank) => {
@@ -146,8 +141,7 @@ const Billing = (props) => {
     if (e.target.value === "") {
       setCardNumberCheck("");
     }
-
-    console.log(e.target.value, formattedCardNumber.match(/\d{1,4}/g));
+    // console.log(e.target.value, formattedCardNumber.match(/\d{1,4}/g));
   };
 
   const cardNameCheckHandler = (e) => {
@@ -158,6 +152,8 @@ const Billing = (props) => {
   };
 
   const cardExpairyCheckHandler = (e) => {
+    var currentTime = new Date();
+    var currentYear = currentTime.getFullYear();
     let cardExpairy = e.target.value;
     var formattedCardExpairy = cardExpairy.replace(/[^\d]/g, "");
     formattedCardExpairy = formattedCardExpairy.substring(0, 6);
@@ -227,17 +223,8 @@ const Billing = (props) => {
     setBankRoutingCheck(formattedBankRouting);
   };
 
-  const saveCardData = (e) => {
+  const saveCardData = async (e) => {
     e.preventDefault();
-    setCardDataFormatting({
-      ...cardDataFormatting,
-      card_number: cardNumberOn,
-      expiration_year: cardExpairyYearCheck,
-      expiration_month: cardExpairyMonthCheck,
-      cvv: cardCvvCheck,
-      cardholder_name: cardNameCheck,
-      status: cardActivationCheckText,
-    });
 
     if (!cardNumberCheck || cardNumberCheck.length < 19) {
       setFormErrorMsg((errorMessage) => ({
@@ -284,38 +271,47 @@ const Billing = (props) => {
         card_cvv_Err: false,
       }));
     }
+    setCardDataFormatting({
+      ...cardDataFormatting,
+      contact: props.contactId,
+      card_number: cardNumberOn,
+      expiration_year: cardExpairyYearCheck,
+      expiration_month: cardExpairyMonthCheck,
+      cvv: cardCvvCheck,
+      cardholder_name: cardNameCheck,
+      status: cardActivationCheckText,
+    });
 
-    // if(cardNumber && cardNameCheck && cardExpairyCheck && cardCvvCheck && cardCvvCheck.length === 3){
-    //     setFormErrorMsg({card_cvv_Err : false ,card_exp_Err : false, card_num_Err : false, card_name_Err : false});
-    // };
-    console.log(cardDataFormatting);
-    //console.log(formErrorMsg);
-    console.log(
-      cardNumberCheck +
-        " ," +
-        cardNumberOn +
-        " ," +
-        cardNumberCheck.length +
-        " , " +
-        cardExpairyCheck +
-        " , " +
-        cardCvvCheck +
-        " , " +
-        cardNameCheck +
-        " , " +
-        cardActivationCheck
-    );
+    let cardPayload = {
+      contact: props.contactId,
+      card_number: cardNumberOn.trim() !== "" && cardNumberOn,
+      expiration_year:
+        cardExpairyYearCheck.trim() !== "" && cardExpairyYearCheck,
+      expiration_month:
+        cardExpairyMonthCheck.trim() !== "" && cardExpairyMonthCheck,
+      cvv: cardCvvCheck.trim() !== "" && cardCvvCheck,
+      cardholder_name: cardNameCheck.trim() !== "" && cardNameCheck,
+      status: cardActivationCheckText,
+    };
+
+    console.log(cardPayload);
+
+    if (
+      cardNumberOn.trim() !== "" &&
+      cardExpairyYearCheck.trim() !== "" &&
+      cardExpairyMonthCheck.trim() !== "" &&
+      cardCvvCheck.trim() !== "" &&
+      cardNameCheck.trim() !== ""
+    ) {
+      await BillingServices.addCard(cardPayload);
+
+      hideNewCardHandler();
+      fetchCardBank();
+    }
   };
 
-  const saveBankData = (e) => {
+  const saveBankData = async (e) => {
     e.preventDefault();
-    setBankDataFormatting({
-      ...bankDataFormatting,
-      routing_number: bankRoutingCheck,
-      account_number: bankAccountCheck,
-      account_holder: bankNameCheck,
-      status: bankActivationCheckText,
-    });
     if (!bankRoutingCheck || bankRoutingCheck.length < 9) {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
@@ -350,7 +346,6 @@ const Billing = (props) => {
       }));
     }
 
-    console.log(bankDataFormatting);
     console.log(
       bankRoutingCheck +
         " , " +
@@ -358,15 +353,44 @@ const Billing = (props) => {
         " , " +
         bankNameCheck +
         " , " +
-        bankActivationCheck
+        bankActivationCheckText
     );
+    setBankDataFormatting({
+      ...bankDataFormatting,
+      contact: props.contactId,
+      routing_number: bankRoutingCheck,
+      account_number: bankAccountCheck,
+      account_holder: bankNameCheck,
+      status: bankActivationCheckText,
+    });
+
+    let bankPayload = {
+      contact: props.contactId,
+      routing_number: bankRoutingCheck,
+      account_number: bankAccountCheck,
+      account_holder: bankNameCheck,
+      account_type: "checking",
+      status: bankActivationCheckText,
+    };
+
+    if (
+      bankRoutingCheck.trim() !== "" &&
+      bankAccountCheck.trim() !== "" &&
+      bankNameCheck.trim() !== "" &&
+      bankActivationCheckText.trim() !== ""
+    ) {
+      await BillingServices.addBank(bankPayload);
+
+      hideNewCardHandler2();
+      fetchCardBank();
+    }
   };
 
   const makePrimaryMethod = (e, value) => {
     let payload = {
-      "contactID": props.contactId,
-      "accountType": value
-    }
+      contactID: props.contactId,
+      accountType: value,
+    };
     if (props.contactId && value) {
       BillingServices.makePrimary(payload);
       setPrimaryType(value);
@@ -429,7 +453,9 @@ const Billing = (props) => {
                               type="radio"
                               name="credit"
                               onChange={() => activeCreditCard(creditCard)}
-                              defaultChecked={creditCard.status === "active" ? true : false}
+                              defaultChecked={
+                                creditCard.status === "active" ? true : false
+                              }
                               id={i}
                             />
                             <span></span>
@@ -480,12 +506,16 @@ const Billing = (props) => {
                             <input
                               type="checkbox"
                               name="credit"
-                              onChange={cardActiveHandler}
-                              checked={cardActivationCheck}
+                              onChange={(e) =>
+                                e.target.checked
+                                  ? setCardActivationCheckText("active")
+                                  : setCardActivationCheckText("inactive")
+                              }
+                              // checked={cardActivationCheck}
                             />
                             <span></span>
                           </div>{" "}
-                          {cardActivationCheck ? "Inactive" : "Active"}
+                          Active
                         </div>
                       </div>
 
@@ -596,7 +626,9 @@ const Billing = (props) => {
                               type="radio"
                               name="bank"
                               onChange={() => activeCreditCard(bank)}
-                              defaultChecked={bank.status === "active" ? true : false}
+                              defaultChecked={
+                                bank.status === "active" ? true : false
+                              }
                               id={i}
                             />
                             <span></span>
@@ -647,8 +679,12 @@ const Billing = (props) => {
                             <input
                               type="checkbox"
                               name="credit"
-                              onChange={bankActiveHandler}
-                              checked={bankActivationCheck}
+                              onChange={(e) =>
+                                e.target.checked
+                                  ? setBankActivationCheckText("active")
+                                  : setBankActivationCheckText("inactive")
+                              }
+                              // checked={bankActivationCheck}
                             />
                             <span></span>
                           </div>{" "}

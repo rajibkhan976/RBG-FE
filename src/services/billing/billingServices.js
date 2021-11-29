@@ -22,25 +22,27 @@ export const BillingServices = {
     }
   },
   activeCard: async (payload) => {
-    console.log('====================================');
-    console.log('payload', payload);
-    console.log('====================================');
+    console.log("====================================");
+    console.log("payload", payload);
+    console.log("====================================");
     try {
-        const url = config.billingUrl + "makeactive";
-        const result = await axios.put(url, payload, { headers: headers });
-        if(result.status === 200) {
-            return result.data;
-        } else {
-            throw new Error("There is an error updating product. Please contact support");
-        }
+      const url = config.billingUrl + "makeactive";
+      const result = await axios.put(url, payload, { headers: headers });
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error(
+          "There is an error updating product. Please contact support"
+        );
+      }
     } catch (e) {
-        if(!typeof e.data === 'undefined') {
-            console.log(e.response.data.message);
-            throw new Error(e.response.data.message);
-        } else {
-            console.log(e.stack);
-            throw new Error(e.message + ". Please contact support.");
-        }
+      if (!typeof e.data === "undefined") {
+        console.log(e.response.data.message);
+        throw new Error(e.response.data.message);
+      } else {
+        console.log(e.stack);
+        throw new Error(e.message + ". Please contact support.");
+      }
     }
   },
   makePrimary: async (payload) => {
@@ -58,7 +60,48 @@ export const BillingServices = {
       }
     }
   },
-
+  addCard: async (payload) => {
+    try {
+      const url = config.billingUrl + "card";
+      const result = await axios.post(url, payload, { headers: headers });
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error(
+          "There is an error updating Ringtone. Please contact support"
+        );
+      }
+    } catch (e) {
+      if (!typeof e.data === "undefined") {
+        console.log(e.response.data.message);
+        throw new Error(e.response.data.message);
+      } else {
+        console.log(e.stack);
+        throw new Error(e.message + ". Please contact support.");
+      }
+    }
+  },
+  addBank: async (payload) => {
+    try {
+      const url = config.billingUrl + "bank";
+      const result = await axios.post(url, payload, { headers: headers });
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error(
+          "There is an error updating Ringtone. Please contact support"
+        );
+      }
+    } catch (e) {
+      if (!typeof e.data === "undefined") {
+        console.log(e.response.data.message);
+        throw new Error(e.response.data.message);
+      } else {
+        console.log(e.stack);
+        throw new Error(e.message + ". Please contact support.");
+      }
+    }
+  },
   //   editRole: async (payload) => {
   //     try {
   //       const url = config.roleUrl + "/" + payload.id;
