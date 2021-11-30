@@ -9,7 +9,7 @@ const InputFile = (props) => {
     }
 
     const fileTypesName = {
-        mp3: ".pm3",
+        mp3: ".mp3",
         png: ".png"
     }
 
