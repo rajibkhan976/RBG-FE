@@ -48,7 +48,7 @@ function HeaderDashboard(props) {
     reset,
     pause
   } = useStopwatch({ autoStart: false });
-  
+
 
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
@@ -133,24 +133,24 @@ function HeaderDashboard(props) {
       if (connection._direction === "INCOMING") {
         setDeviceMessage(
           "Call Established with " +
-            connection.parameters.From +
-            " for " +
-            hours +
-            ":" +
-            minutes +
-            ":" +
-            seconds
+          connection.parameters.From +
+          " for " +
+          hours +
+          ":" +
+          minutes +
+          ":" +
+          seconds
         );
       } else {
         setDeviceMessage(
           "Call Established with " +
-            connection.parameters.To +
-            " for " +
-            hours +
-            ":" +
-            minutes +
-            ":" +
-            seconds
+          connection.parameters.To +
+          " for " +
+          hours +
+          ":" +
+          minutes +
+          ":" +
+          seconds
         );
       }
     }
@@ -200,25 +200,25 @@ function HeaderDashboard(props) {
       if (connection._direction === "INCOMING") {
         setDeviceMessage(
           "Call Established with " +
-            connection.parameters.From +
-            " for " +
-            hours +
-            ":" +
-            minutes +
-            ":" +
-            seconds
+          connection.parameters.From +
+          " for " +
+          hours +
+          ":" +
+          minutes +
+          ":" +
+          seconds
         );
         contactId = await getContactDetails(connection.parameters.From);
       } else {
         setDeviceMessage(
           "Call Established with " +
-            connection.message.To +
-            " for " +
-            hours +
-            ":" +
-            minutes +
-            ":" +
-            seconds
+          connection.message.To +
+          " for " +
+          hours +
+          ":" +
+          minutes +
+          ":" +
+          seconds
         );
         contactId = await getContactDetails(connection.message.To);
       }
@@ -238,13 +238,13 @@ function HeaderDashboard(props) {
     window.location.pathname === "/roles"
       ? setLocationLoaded("roles")
       : window.location.pathname === "/groups"
-      ? setLocationLoaded("groups")
-      : window.location.pathname === "/users"
-      ? setLocationLoaded("user")
-      : window.location.pathname ===
-        ("/automation-list" || "/automation-builder")
-      ? setLocationLoaded("automation")
-      : setLocationLoaded(null);
+        ? setLocationLoaded("groups")
+        : window.location.pathname === "/users"
+          ? setLocationLoaded("user")
+          : window.location.pathname ===
+            ("/automation-list" || "/automation-builder")
+            ? setLocationLoaded("automation")
+            : setLocationLoaded(null);
   }, []);
 
   const toggleSetup = () => {
@@ -360,9 +360,11 @@ function HeaderDashboard(props) {
             </div>
           </div>
         </div>
-        <button className="btn buttonHeaderIcons">
-          <img src={DownloadIcon} alt="" />
-        </button>
+        <a href="https://xd.adobe.com/view/f428f5e1-01d0-4d64-a79c-482c686b1e38-a17b/screen/438f7332-a65e-4dd8-937b-b10284d5c189?fullscreen" target="_blank">
+          <button className="btn buttonHeaderIcons">
+            <img src={DownloadIcon} alt="" />
+          </button>
+        </a>
         <button
           className={
             setupModalStatus

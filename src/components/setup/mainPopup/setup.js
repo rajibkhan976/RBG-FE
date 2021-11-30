@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { Scrollbars } from "react-custom-scrollbars-2";
 
 import SetupIcon1 from "../../../assets/images/setupicon1.svg";
@@ -230,6 +230,21 @@ const Setup = (props) => {
                     </NavLink>
                   </h3>
                   <p>Manage your courses</p>
+                </div>
+              </div>
+            </li>
+            <li>
+              <div className="listHead">
+                <i>
+                  <img src={SetupIcon4} alt="" />
+                </i>
+                <div>
+                  <div className="prototypeBatch">Prototype</div>
+                  <h3>
+                    <Link to={{ pathname: "https://xd.adobe.com/view/2825ba92-a435-4be1-8c5d-4f0bc82450c3-7d76/?fullscreen" }}
+                      target="_blank">Setup</Link>
+                  </h3>
+                  <p>Setup details</p>
                 </div>
               </div>
             </li>
