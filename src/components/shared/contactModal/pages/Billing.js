@@ -575,7 +575,7 @@ const Billing = (props) => {
                         <label>Expiry Date</label>
                         <input
                           type="text"
-                          placeholder="mm/yy"
+                          placeholder="mm/yyyy"
                           onChange={cardExpairyCheckHandler}
                           value={cardExpairyCheck}
                         />
@@ -700,7 +700,7 @@ const Billing = (props) => {
                       <div className="activeFactor">
                         <input
                           type="text"
-                          placeholder="xxxx-xxxx-xxxx-xxxx"
+                          placeholder="xxxxxxxxx"
                           onChange={bankAccountCheckHandler}
                           value={bankAccountCheck}
                         />
