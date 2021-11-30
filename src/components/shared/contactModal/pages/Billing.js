@@ -10,6 +10,10 @@ import axios from "axios";
 import { BillingServices } from "../../../../services/billing/billingServices";
 import { billingUrl } from "../../../../configuration/config";
 
+let currentTime = new Date();
+let currentYear = currentTime.getFullYear();
+let currentMonth = currentTime.getMonth() + 1;
+
 const Billing = (props) => {
   const [listCardAnnim, setListCardAnnim] = useState(true);
   const [newCardAnnim, setNewCardAnnim] = useState(false);
@@ -119,10 +123,6 @@ const Billing = (props) => {
     fetchCardBank();
   };
 
-  const activeBank = (bank) => {
-    console.log("ACTIVE BANK:::", bank);
-  };
-
   // .................. validation ................
 
   const cardNumberCheckHandler = (e) => {
@@ -141,7 +141,6 @@ const Billing = (props) => {
     if (e.target.value === "") {
       setCardNumberCheck("");
     }
-    // console.log(e.target.value, formattedCardNumber.match(/\d{1,4}/g));
   };
 
   const cardNameCheckHandler = (e) => {
@@ -154,6 +153,7 @@ const Billing = (props) => {
   const cardExpairyCheckHandler = (e) => {
     var currentTime = new Date();
     var currentYear = currentTime.getFullYear();
+
     let cardExpairy = e.target.value;
     var formattedCardExpairy = cardExpairy.replace(/[^\d]/g, "");
     formattedCardExpairy = formattedCardExpairy.substring(0, 6);
@@ -179,28 +179,15 @@ const Billing = (props) => {
     formattedCardCvv = formattedCardCvv.substring(0, 3);
     setCardCvvCheck(formattedCardCvv);
   };
-  const cardActiveHandler = (e) => {
-    setCardActivationCheck(!cardActivationCheck);
-    var checkActiveCard = "";
-    if (cardActivationCheck === false) {
-      checkActiveCard = "Active";
-    } else {
-      checkActiveCard = "Inactive";
-    }
+  useEffect(() => {}, [
+    cardCvvCheck,
+    cardExpairyMonthCheck,
+    cardExpairyYearCheck,
+    cardExpairyCheck,
+    cardNameCheck,
+    cardNumberCheck,
+  ]);
 
-    setCardActivationCheckText(checkActiveCard);
-  };
-
-  const bankActiveHandler = (e) => {
-    setBankActivationCheck(!bankActivationCheck);
-    var checkActiveBank = "Inactive";
-    if (bankActivationCheck === false) {
-      checkActiveBank = "Active";
-    } else {
-      checkActiveBank = "Inactive";
-    }
-    setBankActivationCheckText(checkActiveBank);
-  };
   const bankAccountCheckHandler = (e) => {
     let accountNumber = e.target.value;
     var formattedAccountNumber = accountNumber.replace(/[^\d]/g, "");
@@ -213,7 +200,6 @@ const Billing = (props) => {
     if (e.target.value === "" || re.test(e.target.value)) {
       setBankNameCheck(e.target.value);
     }
-    // console.log(bankNameCheck);
   };
 
   const bankRoutingCheckHandler = (e) => {
@@ -271,6 +257,7 @@ const Billing = (props) => {
         card_cvv_Err: false,
       }));
     }
+
     setCardDataFormatting({
       ...cardDataFormatting,
       contact: props.contactId,
@@ -282,13 +269,51 @@ const Billing = (props) => {
       status: cardActivationCheckText,
     });
 
+    const cardExpairyYearCheckFn = (year) => {
+      let inputYear = year;
+      if (inputYear > currentYear) {
+        return inputYear;
+      } else if (inputYear == currentYear) {
+        if (cardExpairyMonthCheck > currentMonth) {
+          return inputYear;
+        } else {
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            card_exp_Err: true,
+          }));
+          return false;
+        }
+      }
+    };
+
+    const cardExpairyMonthCheckFn = (month) => {
+      let inputMonth = month;
+
+      if (inputMonth > currentMonth) {
+        return inputMonth;
+      } else if (inputMonth > currentMonth) {
+        setFormErrorMsg((errorMessage) => ({
+          ...errorMessage,
+          card_exp_Err: true,
+        }));
+        return false;
+      }
+    };
+
+    console.log(
+      cardExpairyYearCheckFn(cardExpairyYearCheck),
+      cardExpairyMonthCheckFn(cardExpairyMonthCheck)
+    );
+
     let cardPayload = {
       contact: props.contactId,
       card_number: cardNumberOn.trim() !== "" && cardNumberOn,
       expiration_year:
-        cardExpairyYearCheck.trim() !== "" && cardExpairyYearCheck,
+        cardExpairyYearCheckFn(cardExpairyYearCheck) !== undefined &&
+        cardExpairyYearCheckFn(cardExpairyYearCheck),
       expiration_month:
-        cardExpairyMonthCheck.trim() !== "" && cardExpairyMonthCheck,
+        cardExpairyMonthCheckFn(cardExpairyMonthCheck) !== undefined &&
+        cardExpairyMonthCheckFn(cardExpairyMonthCheck),
       cvv: cardCvvCheck.trim() !== "" && cardCvvCheck,
       cardholder_name: cardNameCheck.trim() !== "" && cardNameCheck,
       status: cardActivationCheckText,
@@ -297,11 +322,8 @@ const Billing = (props) => {
     console.log(cardPayload);
 
     if (
-      cardNumberOn.trim() !== "" &&
-      cardExpairyYearCheck.trim() !== "" &&
-      cardExpairyMonthCheck.trim() !== "" &&
-      cardCvvCheck.trim() !== "" &&
-      cardNameCheck.trim() !== ""
+      cardPayload.expiration_year !== false &&
+      cardPayload.expiration_month !== false
     ) {
       await BillingServices.addCard(cardPayload);
 
