@@ -151,9 +151,6 @@ const Billing = (props) => {
   };
 
   const cardExpairyCheckHandler = (e) => {
-    var currentTime = new Date();
-    var currentYear = currentTime.getFullYear();
-
     let cardExpairy = e.target.value;
     var formattedCardExpairy = cardExpairy.replace(/[^\d]/g, "");
     formattedCardExpairy = formattedCardExpairy.substring(0, 6);
@@ -287,11 +284,22 @@ const Billing = (props) => {
     };
 
     const cardExpairyMonthCheckFn = (month) => {
+      console.log("MONTH:::", month);
       let inputMonth = month;
 
       if (inputMonth > currentMonth) {
         return inputMonth;
-      } else if (inputMonth > currentMonth) {
+      } else if (inputMonth <= currentMonth) {
+        if (cardExpairyYearCheck > currentYear) {
+          return inputMonth;
+        } else {
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            card_exp_Err: true,
+          }));
+          return false;
+        }
+      } else {
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
           card_exp_Err: true,
