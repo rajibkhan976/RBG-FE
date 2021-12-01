@@ -155,18 +155,18 @@ const CourseListing = (props) => {
                           </p>
                           <div className="d-flex">
                             <h3>${elem.fees.toFixed(2)}</h3>
-                            {elem.tax ? (
+                            {/* {elem.tax ? (
                               <span>
                                 <img
                                   className="gap_icon"
                                   src={percentTag}
                                   alt=""
-                                />{" "}
+                                />
                                 {elem.taxPercent}% Sales Tax Applicable
                               </span>
                             ) : (
                               ""
-                            )}
+                            )} */}
                           </div>
                         </div>
                       </div>

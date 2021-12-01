@@ -9,6 +9,7 @@ import cross from "../../../../assets/images/cross.svg";
 import { Scrollbars } from "react-custom-scrollbars-2";
 
 const CategoryListing = (props) => {
+  const [defaultCatID, setDefaultCatID] = useState(null);
   const [category, setCategory] = useState({
     name: "",
     id: null,
@@ -25,12 +26,17 @@ const CategoryListing = (props) => {
     setOption(index !== option ? index : null);
   };
 
+  useEffect(() => {
+    const catID = utils.getQueryVariable('catID');
+    setDefaultCatID(catID);
+  });
+
   // useEffect(() => {
   //     document.addEventListener("mousedown", handleClickOutside);
   //     return () => {
   //         document.removeEventListener("mousedown", handleClickOutside);
   //     }
-  // }, []);
+  // },[]);
 
   /**
    * Handle outside click
@@ -188,6 +194,7 @@ const CategoryListing = (props) => {
                   name="catname"
                   onChange={handleChange}
                   value={category.name}
+                  placeholder="Enter a course category"
                 />
                 <button className="btn" type="submit">
                   {category.btnName}
@@ -196,7 +203,8 @@ const CategoryListing = (props) => {
               </form>
             </div>
             <ul className="ProCategoryListing">
-              <li>
+              <li
+              className={(defaultCatID) ? "" : "active"}>
                 <button
                   className="bigListName"
                   onClick={() => handleCategoryClick(false)}
@@ -209,7 +217,8 @@ const CategoryListing = (props) => {
                   <React.Fragment key={key + "_category"}>
                     <li
                       ref={optionsToggleRef}
-                      className={option === key ? "active" : ""}
+                      // className={option === key ? "active" : ""}
+                      className={defaultCatID === elem._id ? "active" : ""}
                       key={elem._id}
                     >
                       <button

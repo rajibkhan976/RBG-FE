@@ -27,7 +27,8 @@ const AddCourseModal = (props) => {
     fees: "",
     ageGroup: "Adults",
     imageUrl: profileAvatar,
-    tax: 0
+    tax: 0,
+    disabledCycle: true
   });
   const [ageGroup, setAgeGroup] = useState([
     "Adults",
@@ -67,7 +68,8 @@ const AddCourseModal = (props) => {
         ageGroup: updateItem.ageGroup,
         id: updateItem._id,
         imageUrl: (updateItem.image) ? config.bucketUrl + updateItem.image : profileAvatar,
-        tax: (updateItem.tax) ? updateItem.tax : 0
+        tax: 0,
+        disabledCycle: (updateItem.payment_type === "onetime") ? true : false
       });
       setIsEditing(true);
     };
@@ -136,7 +138,7 @@ const AddCourseModal = (props) => {
         setCourseData({ ...courseData, duration_months: elemValue });
         break;
       case "paymentType":
-        setCourseData({ ...courseData, payment_type: elemValue });
+        setCourseData({ ...courseData, payment_type: elemValue, disabledCycle: (elemValue === "onetime") ? true : false });
         break;
       case "billingCycle":
         setCourseData({ ...courseData, billing_cycle: elemValue });
@@ -149,8 +151,6 @@ const AddCourseModal = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.clear();
-    console.log("Course Data", courseData);
     try {
       if (createValidation()) {
         const data = {
@@ -163,7 +163,7 @@ const AddCourseModal = (props) => {
           billing_cycle: courseData.billing_cycle,
           fees: courseData.fees.toString(),
           ageGroup: courseData.ageGroup,
-          tax: courseData.tax.toString(),
+          tax: "0"
         };
         console.log("Data to be updated or added", data);
         let msg;
@@ -202,8 +202,6 @@ const AddCourseModal = (props) => {
           });
         }
         setBtnType("");
-      } else {
-        setErrorMsg("Course name is mandatory and fees should be grater than 0");
       }
     } catch (e) {
       setErrorMsg(e.message);
@@ -211,12 +209,20 @@ const AddCourseModal = (props) => {
   }
 
   const createValidation = () => {
-    let bool = false;
-    if (courseData.name !== ""
-      && courseData.fees !== "" && courseData.fees !== "0") {
-      bool = true;
+    try {
+      if (courseData.name === "") {
+        throw new Error("Course name should not be empty");
+      } else if (courseData.fees === "" || courseData.fees === 0) {
+        throw new Error("Course fees should not be 0 or empty");
+      } else if (courseData.duration === "0") {
+        throw new Error("Course duration should never be 0")
+      } else if (courseData.duration == 1 && courseData.duration_months === "month" && courseData.payment_type === "recurring") {
+        throw new Error("Recurring course duration should be more than 1 month atleast")
+      }
+      return true;
+    } catch (e) {
+      throw new Error(e.message);
     }
-    return bool;
   }
 
   const handleTaxCheck = (isChecked) => setCourseData({ ...courseData, tax: (isChecked) ? 1 : 0 });
@@ -239,130 +245,130 @@ const AddCourseModal = (props) => {
             <p>Choose a category to add a new course below</p>
           </div>
           <div className="modalForm">
-        <Scrollbars
-          renderThumbVertical={(props) => <div className="thumb-vertical" />}
-        >
-            <form method="post" onSubmit={handleSubmit}>
-              <div className="formControl">
-                <label>Select Category</label>
-                <select name="category" onChange={handleChange}>
-                  {categories.map(cat => {
-                    return (
-                      <>
-                        <option value={cat._id} selected={(courseData.category === cat._id) ? "selected" : ""}>{cat.name}</option>
-                      </>
-                    );
-                  })}
-
-                </select>
-              </div>
-
-              <div className="formControl">
-                <label>Enter Course Name</label>
-                <input type="text" placeholder="Ex: v-shape gym vest" name="courseName"
-                  onChange={handleChange}
-                  value={courseData.name} />
-              </div>
-
-              <div className="formControl">
-                <label>Enter Course Description</label>
-                {/* <textarea name="productDesc" onChange={handleChange}>{courseData.desc}</textarea> */}
-                <input type="text" placeholder="Small description here" name="productDesc"
-                  onChange={handleChange}
-                  value={courseData.desc} />
-              </div>
-
-              <div className="formControl">
-                <label>Upload Course Picture</label>
-                <div className="profile">
-                <div className="profileUpload">
-                  <input type="file" onChange={(e) => handleImageUpload(e)} />
-                    {/* <span>Upload</span> */}
-                  </div>
-                  <div className="profilePicture">
-                    <img src={courseData.imageUrl} alt="" />
-                  </div>
-                  <div className="profileText"> Course Picture</div>
-                  
-                </div>
-              </div>
-
-              <div className="formControl">
-                <label>Duration</label>
-                <div className="formLeft">
-                   <input type="text" name="duration_num"
-                    onChange={handleChange}
-                      value={courseData.duration} />
-                </div>
-                <div className="formRight">
-                  <select name="duration_months" onChange={handleChange}>
-                    <option value="month" selected={(courseData.duration_months === "month") ? "selected" : ""}>Month(s)</option>
-                    <option value="year" selected={(courseData.duration_months === "year") ? "selected" : ""}>Year(s)</option>
-                  </select>
-                </div>
-              </div>
-              
-              <div className="formControl">
-                <div className="formLeft">
-                  <label>Payment Type</label>
-                  <select name="paymentType" onChange={handleChange}>
-                    {paymentType.map(pt => <option value={pt.toLowerCase()}
-                      selected={(courseData.payment_type.toLowerCase() === pt.toLowerCase()) ? "selected" : ""}>{pt}</option>)}
-                  </select>
-                </div>
-            
-
-                <div className="formRight">
-                  <label>Billing Cycle</label>
-                  <select name="billingCycle" onChange={handleChange}>
-                    <option value="monthly" selected={(courseData.billing_cycle === "monthly") ? "selected" : ""}>Monthly</option>
-                    <option value="yearly" selected={(courseData.billing_cycle === "yearly") ? "selected" : ""}>Yearly</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="formControl">
-                <div className="formLeft">    
-                  <label>Select Age Group</label>
-                  <select name="age_group" onChange={handleChange}>
-                    {ageGroup.map(ag => {
+            <Scrollbars
+              renderThumbVertical={(props) => <div className="thumb-vertical" />}
+            >
+              <form method="post" onSubmit={handleSubmit}>
+                <div className="formControl">
+                  <label>Select Category</label>
+                  <select name="category" onChange={handleChange}>
+                    {categories.map(cat => {
                       return (
                         <>
-                          <option value={ag} selected={(courseData.ageGroup === ag) ? "selected" : ""}>{ag}</option>
+                          <option value={cat._id} selected={(courseData.category === cat._id) ? "selected" : ""}>{cat.name}</option>
                         </>
                       );
                     })}
 
                   </select>
                 </div>
-             
-                <div className="formRight">      
-                  <label>Fees</label>
+
+                <div className="formControl">
+                  <label>Enter Course Name</label>
+                  <input type="text" placeholder="Ex: v-shape gym vest" name="courseName"
+                    onChange={handleChange}
+                    value={courseData.name} />
+                </div>
+
+                <div className="formControl">
+                  <label>Enter Course Description</label>
+                  {/* <textarea name="productDesc" onChange={handleChange}>{courseData.desc}</textarea> */}
+                  <input type="text" placeholder="Small description here" name="productDesc"
+                    onChange={handleChange}
+                    value={courseData.desc} />
+                </div>
+
+                <div className="formControl">
+                  <label>Upload Course Picture</label>
+                  <div className="profile">
+                    <div className="profileUpload">
+                      <input type="file" onChange={(e) => handleImageUpload(e)} />
+                      {/* <span>Upload</span> */}
+                    </div>
+                    <div className="profilePicture">
+                      <img src={courseData.imageUrl} alt="" />
+                    </div>
+                    <div className="profileText"> Course Picture</div>
+
+                  </div>
+                </div>
+
+                <div className="formControl">
+                  <label>Duration</label>
+                  <div className="formLeft">
+                    <input type="text" name="duration_num"
+                      onChange={handleChange}
+                      value={courseData.duration} />
+                  </div>
+                  <div className="formRight">
+                    <select name="duration_months" onChange={handleChange}>
+                      <option value="month" selected={(courseData.duration_months === "month") ? "selected" : ""}>Month(s)</option>
+                      <option value="year" selected={(courseData.duration_months === "year") ? "selected" : ""}>Year(s)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="formControl">
+                  <div className="formLeft">
+                    <label>Payment Type</label>
+                    <select name="paymentType" onChange={handleChange}>
+                      {paymentType.map(pt => <option value={pt.toLowerCase()}
+                        selected={(courseData.payment_type.toLowerCase() === pt.toLowerCase()) ? "selected" : ""}>{pt}</option>)}
+                    </select>
+                  </div>
+
+
+                  <div className="formRight">
+                    <label>Billing Cycle</label>
+                    <select name="billingCycle" onChange={handleChange} disabled={courseData.disabledCycle}>
+                      <option value="monthly" selected={(courseData.billing_cycle === "monthly") ? "selected" : ""}>Monthly</option>
+                      <option value="yearly" selected={(courseData.billing_cycle === "yearly") ? "selected" : ""}>Yearly</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="formControl">
+                  <div className="formLeft">
+                    <label>Select Age Group</label>
+                    <select name="age_group" onChange={handleChange}>
+                      {ageGroup.map(ag => {
+                        return (
+                          <>
+                            <option value={ag} selected={(courseData.ageGroup === ag) ? "selected" : ""}>{ag}</option>
+                          </>
+                        );
+                      })}
+
+                    </select>
+                  </div>
+
+                  <div className="formRight">
+                    <label>Fees</label>
                     <input type="text" name="fees" placeholder="Ex: 99" onChange={handleChange} value={courseData.fees} />
                     <span className="smallspan">* default currency is<strong> USD</strong></span>
+                  </div>
                 </div>
-              </div>
-              <div className="formControl">
+                {/* <div className="formControl">
                   <label className="labelStick2">
-                      <div className="customCheckbox">
-                        <input type="checkbox"
-                          name="saleTax"
-                          onChange={(e) => handleTaxCheck(e.target.checked)}
-                          checked={(courseData.tax) ? true : false}
-                        />
-                        <span></span>
-                      </div>
-                      Add Sales Tax (10%)</label>
-              </div>     
-              <div className="modalbtnHolder">
-                <button type="submit" name="save"
-                  className="saveNnewBtn"
-                  onClick={() => setBtnType("Save")}><span>{(isEditing) ? "Update" : "Save"}</span><img src={arrow_forward} alt="" /></button>
-                <button type="submit" name="saveNew"
-                  className="saveNnewBtn"
-                  onClick={() => setBtnType("SaveNew")}><span>{(isEditing) ? "Update" : "Save"} &amp; New</span><img src={arrow_forward} alt="" /></button>
-              </div>
-            </form>
+                    <div className="customCheckbox">
+                      <input type="checkbox"
+                        name="saleTax"
+                        onChange={(e) => handleTaxCheck(e.target.checked)}
+                        checked={(courseData.tax) ? true : false}
+                      />
+                      <span></span>
+                    </div>
+                    Add Sales Tax (10%)</label>
+                </div> */}
+                <div className="modalbtnHolder">
+                  <button type="submit" name="save"
+                    className="saveNnewBtn"
+                    onClick={() => setBtnType("Save")}><span>{(isEditing) ? "Update" : "Save"}</span><img src={arrow_forward} alt="" /></button>
+                  <button type="submit" name="saveNew"
+                    className="saveNnewBtn"
+                    onClick={() => setBtnType("SaveNew")}><span>{(isEditing) ? "Update" : "Save"} &amp; New</span><img src={arrow_forward} alt="" /></button>
+                </div>
+              </form>
             </Scrollbars>
           </div>
 
