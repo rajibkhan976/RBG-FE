@@ -161,32 +161,34 @@ const Billing = (props) => {
 
   const cardNumberCheckHandler = (e) => {
     let cardNumber = e.target.value;
-    var formattedCardNumber = cardNumber.replace(/[^\d]/g, "");
-    let cardType = testCardTypeFn(formattedCardNumber);
+    if (cardNumber.length <= 19) {
+      var formattedCardNumber = cardNumber.replace(/[^\d]/g, "");
+      let cardType = testCardTypeFn(formattedCardNumber);
 
-    switch (cardType) {
-      case "isAmex":
-        console.log("IF IN CARD - AMEX");
-        // AMEX-specific logic goes here
-        formattedCardNumber = formattedCardNumber.substring(0, 15);
-        break;
+      switch (cardType) {
+        case "isAmex":
+          console.log("IF IN CARD - AMEX");
+          // AMEX-specific logic goes here
+          formattedCardNumber = formattedCardNumber.substring(0, 15);
+          break;
 
-      default:
-        console.log("IF IN CARD - ELSE");
-        formattedCardNumber = formattedCardNumber.substring(0, 16);
-        break;
-    }
+        default:
+          console.log("IF IN CARD - ELSE");
+          formattedCardNumber = formattedCardNumber.substring(0, 16);
+          break;
+      }
 
-    // Split the card number is groups of 4
-    var cardNumberSections = formattedCardNumber.match(/\d{1,4}/g);
-    if (formattedCardNumber.match(/\d{1,4}/g)) {
-      formattedCardNumber = cardNumberSections.join("-");
-      setCardNumberCheck(formattedCardNumber);
-      var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");
-      setCardNumberOn(cardNumberChanged);
-    }
-    if (e.target.value === "") {
-      setCardNumberCheck("");
+      // Split the card number is groups of 4
+      var cardNumberSections = formattedCardNumber.match(/\d{1,4}/g);
+      if (formattedCardNumber.match(/\d{1,4}/g)) {
+        formattedCardNumber = cardNumberSections.join("-");
+        setCardNumberCheck(formattedCardNumber);
+        var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");
+        setCardNumberOn(cardNumberChanged);
+      }
+      if (e.target.value === "") {
+        setCardNumberCheck("");
+      }
     }
   };
 
