@@ -76,10 +76,10 @@ const makeCall = () => {
     props.callModalOff();
 }
  return(
-    <div class="sideMenuOuter">
-    <div class="sideMenuInner makeCall">
+    <div className="sideMenuOuter">
+    <div className="sideMenuInner makeCall">
       <div className="modal_call_header">
-       <button class="btn btn_empty" onClick={props.callModalOff}><img src={whiteCross} alt=""/></button>
+       <button className="btn btn_empty" onClick={props.callModalOff}><img src={whiteCross} alt=""/></button>
         <h3>Make a call</h3>
         <p>Enter number to Call</p>
         <div className="numberForCall">
@@ -94,7 +94,7 @@ const makeCall = () => {
                 </div>
             </div>
             <div className="rightSide">
-              <input type="text" placeholder="Eg. (555) 555-1234" onChange={openCallSuggestionHandler}/>
+              <input type="text" placeholder="Eg. 5555551234" onChange={openCallSuggestionHandler}/>
             </div>
             {/* {callSuggetion && 
                 <div className="callSuggessionBox">

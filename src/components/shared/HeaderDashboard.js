@@ -129,7 +129,9 @@ function HeaderDashboard(props) {
     }
   };
   useEffect(() => {
+    console.log("connection._direction", connection._direction);
     if (Object.keys(connection).length) {
+      
       if (connection._direction === "INCOMING") {
         setDeviceMessage(
           "Call Established with " +
@@ -144,7 +146,7 @@ function HeaderDashboard(props) {
       } else {
         setDeviceMessage(
           "Call Established with " +
-          connection.parameters.To +
+          connection.message.To +
           " for " +
           hours +
           ":" +
@@ -169,21 +171,32 @@ function HeaderDashboard(props) {
     }
   };
   useEffect(() => {
+    
     if (Object.keys(connection).length) {
       connection.on("disconnect", function (conn) {
         setDeviceMessage("Ready");
         pause();
       });
+
+      connection.on("cancel", function (conn) {
+        console.log("call cancel")
+        setDeviceMessage("Ready");
+        pause();
+      });
+
     }
+    
   }, [connection]);
   useEffect(() => {
     // getContactDetails("+18124051848")
     fetchCapabilityToken();
     device.on("incoming", async (connection) => {
+      
       setConnection(connection);
       if (connection._direction === "INCOMING") {
         setDeviceMessage("Incoming Call from " + connection.parameters.From);
       } else {
+        console.log("Outgoing call", connection.parameters.To);
         setDeviceMessage("Outgoing Call to " + connection.parameters.To);
       }
     });
@@ -231,6 +244,7 @@ function HeaderDashboard(props) {
     });
 
     device.on("disconnect", (connection) => {
+      console.log("device disconnect");
       setConnection(connection);
       setDeviceMessage("Ready");
       pause();
@@ -303,11 +317,13 @@ function HeaderDashboard(props) {
         <div className="headerCallToAction">
           <div className="leftListArea">
             <div className="leftList">
-              <button className="callToActionBtn">
+              <button className="callToActionBtn" onClick={makeCallModalHandle}>
                 <span className="callBtn green">
                   <img src={callIcon3} alt="" />
                 </span>
-                <span className="actionName">Call</span>
+                <span 
+                  className="actionName"
+                  >Call</span>
               </button>
               <button className="listDropBtn" onClick={tglActionList}>
                 <img src={blueDownArrow} alt="" />
@@ -350,6 +366,7 @@ function HeaderDashboard(props) {
           </div>
           <div className="rightDetails">
             <p>{deviceMessage}</p>
+            
             <div className="d-flex">
               <button className="btn callBtn green" onClick={acceptConnection}>
                 <img src={callIcon2} alt="" />
