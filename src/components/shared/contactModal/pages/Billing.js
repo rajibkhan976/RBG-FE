@@ -420,6 +420,7 @@ const Billing = (props) => {
     ) {
       try {
         await BillingServices.addCard(cardPayload);
+        cardBankList.length == 0 && makePrimaryMethod(e, "card");
         hideNewCardHandler();
         fetchCardBank();
       } catch (error) {
@@ -507,10 +508,23 @@ const Billing = (props) => {
       bankNameCheck.trim() !== "" &&
       bankActivationCheckText.trim() !== ""
     ) {
-      await BillingServices.addBank(bankPayload);
-
-      hideNewCardHandler2();
-      fetchCardBank();
+      try {
+        await BillingServices.addBank(bankPayload);
+        cardBankList.length == 0 && makePrimaryMethod(e, "bank");
+        hideNewCardHandler2();
+        fetchCardBank();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        bankPayload = {
+          contact: props.contactId,
+          routing_number: "",
+          account_number: "",
+          account_holder: "",
+          account_type: "checking",
+          status: "inactive",
+        };
+      }
     }
   };
 
@@ -542,7 +556,9 @@ const Billing = (props) => {
                     type="radio"
                     name="primary"
                     onChange={(e) => makePrimaryMethod(e, "card")}
-                    defaultChecked={primaryType === "card"}
+                    defaultChecked={
+                      cardBankList.length > 0 && primaryType === "card"
+                    }
                   />
                   <span></span>
                 </div>
@@ -717,7 +733,9 @@ const Billing = (props) => {
                     type="radio"
                     name="primary"
                     onChange={(e) => makePrimaryMethod(e, "bank")}
-                    defaultChecked={primaryType === "bank"}
+                    defaultChecked={
+                      cardBankList.length > 0 && primaryType === "bank"
+                    }
                   />
                   <span></span>
                 </div>
