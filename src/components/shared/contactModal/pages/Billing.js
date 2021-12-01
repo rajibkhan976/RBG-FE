@@ -19,14 +19,12 @@ const Billing = (props) => {
   const [newCardAnnim, setNewCardAnnim] = useState(false);
   const [listBankAnnim, setListBankAnnim] = useState(true);
   const [newBankAnnim, setNewBankAnnim] = useState(false);
-  const [primaryChecked, setPrimaryChecked] = useState(false);
   const [cardNumberCheck, setCardNumberCheck] = useState("");
   const [cardNumberOn, setCardNumberOn] = useState("");
   const [cardNameCheck, setCardNameCheck] = useState("");
   const [cardExpairyCheck, setCardExpairyCheck] = useState("");
   const [cardExpairyMonthCheck, setCardExpairyMonthCheck] = useState("");
   const [cardExpairyYearCheck, setCardExpairyYearCheck] = useState("");
-  const [cardActivationCheck, setCardActivationCheck] = useState(false);
   const [cardActivationCheckText, setCardActivationCheckText] =
     useState("inactive");
   const [bankActivationCheck, setBankActivationCheck] = useState(false);
@@ -71,7 +69,6 @@ const Billing = (props) => {
   //   const [cardBankLoader, setCardBankLoader] = useState();
   const [cardBankList, setCardBankList] = useState([]);
   const [bankList, setBankList] = useState([]);
-  const [contactId, setContactId] = useState("");
   const [primaryType, setPrimaryType] = useState("card");
 
   const fetchCardBank = async () => {
@@ -92,6 +89,7 @@ const Billing = (props) => {
     setListCardAnnim(false);
     setNewCardAnnim(true);
   };
+
   const hideNewCardHandler = () => {
     setListCardAnnim(true);
     setNewCardAnnim(false);
@@ -106,13 +104,6 @@ const Billing = (props) => {
     setNewBankAnnim(false);
   };
 
-  const changeToPrimary1 = () => {
-    setPrimaryChecked(false);
-  };
-  const changeToPrimary2 = () => {
-    setPrimaryChecked(true);
-  };
-
   const activeCreditCard = async (cardBank) => {
     let cardData = {
       billingID: cardBank && cardBank._id,
@@ -125,10 +116,65 @@ const Billing = (props) => {
 
   // .................. validation ................
 
+  const testCardTypeFn = (cardNum) => {
+    let visaPattern = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
+    let mastPattern = /^(?:5[1-5][0-9]{14})$/;
+    let amexPattern = /^(?:3[47][0-9]{13})$/;
+    let discPattern = /^(?:6(?:011|5[0-9][0-9])[0-9]{12})$/;
+
+    let isAmex = amexPattern.test(cardNum) === true;
+    let isVisa = visaPattern.test(cardNum) === true;
+    let isMast = mastPattern.test(cardNum) === true;
+    let isDisc = discPattern.test(cardNum) === true;
+
+    let cardString;
+
+    if (isAmex || isVisa || isMast || isDisc) {
+      // console.log("IF IN CARD");
+      if (isAmex) {
+        // console.log("IF IN CARD - AMEX");
+        // AMEX-specific logic goes here
+        cardString = "isAmex";
+        setFormErrorMsg((errorMessage) => ({
+          ...errorMessage,
+          card_num_Err: false,
+        }));
+        return cardString;
+      } else {
+        // console.log("IF IN CARD - ELSE");
+        cardString = "isOther";
+        setFormErrorMsg((errorMessage) => ({
+          ...errorMessage,
+          card_num_Err: false,
+        }));
+        return cardString;
+      }
+    } else {
+      // console.log("IF NOT CARD");
+      setFormErrorMsg((errorMessage) => ({
+        ...errorMessage,
+        card_num_Err: true,
+      }));
+    }
+  };
+
   const cardNumberCheckHandler = (e) => {
     let cardNumber = e.target.value;
     var formattedCardNumber = cardNumber.replace(/[^\d]/g, "");
-    formattedCardNumber = formattedCardNumber.substring(0, 16);
+    let cardType = testCardTypeFn(formattedCardNumber);
+
+    switch (cardType) {
+      case "isAmex":
+        console.log("IF IN CARD - AMEX");
+        // AMEX-specific logic goes here
+        formattedCardNumber = formattedCardNumber.substring(0, 15);
+        break;
+
+      default:
+        console.log("IF IN CARD - ELSE");
+        formattedCardNumber = formattedCardNumber.substring(0, 16);
+        break;
+    }
 
     // Split the card number is groups of 4
     var cardNumberSections = formattedCardNumber.match(/\d{1,4}/g);
@@ -209,7 +255,7 @@ const Billing = (props) => {
   const saveCardData = async (e) => {
     e.preventDefault();
 
-    if (!cardNumberCheck || cardNumberCheck.length < 19) {
+    if (!cardNumberCheck) {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
         card_num_Err: true,
@@ -284,7 +330,6 @@ const Billing = (props) => {
     };
 
     const cardExpairyMonthCheckFn = (month) => {
-      console.log("MONTH:::", month);
       let inputMonth = month;
 
       if (inputMonth > currentMonth) {
@@ -327,14 +372,11 @@ const Billing = (props) => {
       status: cardActivationCheckText,
     };
 
-    console.log(cardPayload);
-
     if (
       cardPayload.expiration_year !== false &&
       cardPayload.expiration_month !== false
     ) {
       await BillingServices.addCard(cardPayload);
-
       hideNewCardHandler();
       fetchCardBank();
     }
@@ -520,7 +562,7 @@ const Billing = (props) => {
                   <h3>Add a credit Card</h3>
                 </div>
                 <div className="addingForm">
-                  <form>
+                  <form id="addCardForm">
                     <div className="formModule">
                       <label>Card Number</label>
                       <div className="activeFactor">
