@@ -7,6 +7,7 @@ function LeftMenu(props) {
   const pathURL = useLocation().pathname;
   console.log('is in left menu', props.loggedInUser ? props.loggedInUser.isAssociationOwner : false)
   let isAssociationOwner = props.loggedInUser ? props.loggedInUser.isAssociationOwner : false;
+  let isOrganizationOwner = props.loggedInUser ? props.loggedInUser.isOrganizationOwner : false;
 
   const [tglLeftMenuStatus, setTglLeftMenuStatus] = useState(false);
 
@@ -117,7 +118,7 @@ function LeftMenu(props) {
             </svg>
           </NavLink>
         </li> */}
-        {permissions && permissions.findIndex(p => p.entity === "authentication") >= 0 ?
+        {permissions && permissions.findIndex(p => p.entity === "authentication" || 'roles' || 'groups' || 'users') >= 0 ?
           <li>
             <NavLink
               className="leftMenuLink"
@@ -427,7 +428,7 @@ function LeftMenu(props) {
             </svg>
           </NavLink>
         </li>  */}
-        {isAssociationOwner ? <li className="prototypeLink">
+        {isOrganizationOwner ? <li className="prototypeLink">
           <Link to={{ pathname: "https://xd.adobe.com/view/1a813aee-7ec1-42ca-9093-051ac3823496-4fd2/screen/b9e30ce7-1846-4d55-aedd-1639f29e7f28/?fullscreen" }}
             target="_blank">
             <div className="prototypeBatch">Prototype</div>
