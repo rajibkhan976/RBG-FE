@@ -218,6 +218,13 @@ const AddCourseModal = (props) => {
         throw new Error("Course duration should never be 0")
       } else if (courseData.duration == 1 && courseData.duration_months === "month" && courseData.payment_type === "recurring") {
         throw new Error("Recurring course duration should be more than 1 month atleast")
+      } else if(courseData.duration_months === "month" && courseData.billing_cycle === "yearly" && courseData.payment_type === "recurring") {
+        throw new Error("Recurring yearly billing cycle should have more than a year duration")
+      } else if (courseData.duration == 1 
+        && courseData.duration_months === "year" 
+        && courseData.payment_type === "recurring"
+        && courseData.billing_cycle === "yearly") {
+        throw new Error("Recurring course duration should be more than 1 year atleast for year billing cycle");
       }
       return true;
     } catch (e) {

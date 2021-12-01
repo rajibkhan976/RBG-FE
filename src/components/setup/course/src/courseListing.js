@@ -121,11 +121,11 @@ const CourseListing = (props) => {
             </button>
           </div>
         </div>
-        <div className="productViewType">
+        {/* <div className="productViewType">
           <button className="btn" onClick={() => props.openFilterModal()}>
             <img src={listView} alt="filter" />
           </button>
-        </div>
+        </div> */}
         <div class="productListBody">
           <div className="CourseListing">
             {props.courseData.length ? (
