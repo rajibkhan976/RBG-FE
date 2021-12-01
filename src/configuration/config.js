@@ -19,6 +19,7 @@ module.exports = {
     //Auth - User
     userUrl: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user",
     fetchUsersUrl: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user/list",
+    // fetchUsersUrl: "http://localhost:3001/dev/user/list",
     imageUpload: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user/image/upload",
     deleteUserUrl: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/user/",
     fetchGroups: "https://z13yjte40m.execute-api.us-east-1.amazonaws.com/dev/role/groups/",
