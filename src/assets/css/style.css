@@ -6942,6 +6942,7 @@ p.trackName {
   padding: 45px 35px;
   overflow: auto;
   height: calc(100vh - 322px);
+  position: relative;
 }
 
 .contactTabsInner h3 {
