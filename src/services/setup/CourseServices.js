@@ -203,13 +203,7 @@ export const CourseServices = {
                 throw new Error("There is an error deleting a product. Please contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
-                console.log(e.response.data.message);
-                throw new Error(e.response.data.message);
-            } else {
-                console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
-            }
+            throw new Error(e.response.data);
         }
     },
 
