@@ -350,7 +350,7 @@ const Billing = (props) => {
           setDateError("Month has to be within or equals to 12");
           return false;
         }
-      } else if (inputMonth <= currentMonth) {
+      } else if (inputMonth <= currentMonth && inputMonth.length > 0) {
         if (cardExpairyYearCheck > currentYear) {
           setFormErrorMsg((errorMessage) => ({
             ...errorMessage,
@@ -365,14 +365,22 @@ const Billing = (props) => {
           setDateError("Expiry year should be greater than current year.");
           return false;
         }
-      } 
-      else if (inputMonth == '00' || inputMonth === 0) {
-        setFormErrorMsg((errorMessage) => ({
-          ...errorMessage,
-          card_exp_Err: true,
-        }));
+      } else if (inputMonth == "00" || inputMonth === 0) {
+        if (inputMonth.length > 0) {
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            card_exp_Err: true,
+          }));
           setDateError("Month has to be within or equals to 12");
-        return false;
+          return false;
+        } else {
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            card_exp_Err: true,
+          }));
+          setDateError("Month cannot be empty!");
+          return false;
+        }
       } else {
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
@@ -402,13 +410,31 @@ const Billing = (props) => {
       status: cardActivationCheckText,
     };
 
+    console.log(cardPayload);
+
     if (
+      cardPayload.cvv !== false &&
+      cardPayload.expiration_month !== "00" &&
       cardPayload.expiration_year !== false &&
       cardPayload.expiration_month !== false
     ) {
-      await BillingServices.addCard(cardPayload);
-      hideNewCardHandler();
-      fetchCardBank();
+      try {
+        await BillingServices.addCard(cardPayload);
+        hideNewCardHandler();
+        fetchCardBank();
+      } catch (error) {
+        console.log(error);
+      } finally {
+        cardPayload = {
+          contact: props.contactId,
+          card_number: "",
+          expiration_year: "",
+          expiration_month: "",
+          cvv: "",
+          cardholder_name: "",
+          status: "inactive",
+        };
+      }
     }
   };
 
