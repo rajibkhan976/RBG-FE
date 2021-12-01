@@ -224,12 +224,13 @@ const TransactionChoose = (props) => {
                             <div className="formsection gap">
                                 <label>Select Category</label>
                                 <select className="selectBox" onChange={choseCatHandel}>
+                                    <option value="">Select category</option>
                                     { courseCategory.map((item, key) => (
                                         <option key={"category_" + key} value={item._id} data-name={ item.name }>{ item.name }</option>
                                     ))}
                                 </select>
                             </div>
-                            <div className="formsection gap">
+                            <div className={courseList.length > 0 ? "formsection gap" : "formsection gap disabled"}>
                                 <label>Select Course</label>
                                 <select className="selectBox" onChange={getCourseFees} value={courseFees ? courseFees : ''}>
                                     { courseList.length > 0 ? <option value="">Select a course</option> : ""}
@@ -239,7 +240,7 @@ const TransactionChoose = (props) => {
                                 </select>
                             </div>
                             
-                            <div className="formsection">
+                            <div className={courseFees ? "formsection" : "formsection disabled" }>
                                 <label>Price</label>
                                 <div className="cmnFieldStyle editableInput">{ courseFees }</div>
                                 <p>* default currency is <strong>USD</strong></p>
