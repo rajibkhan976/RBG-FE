@@ -70,6 +70,7 @@ const Billing = (props) => {
   const [cardBankList, setCardBankList] = useState([]);
   const [bankList, setBankList] = useState([]);
   const [primaryType, setPrimaryType] = useState("card");
+  const [dateError, setDateError] = useState("Please fill up the field");
 
   const fetchCardBank = async () => {
     setIsLoader(true);
@@ -324,6 +325,7 @@ const Billing = (props) => {
             ...errorMessage,
             card_exp_Err: true,
           }));
+          setDateError("Expiry month should be greater than current month.");
           return false;
         }
       }
@@ -333,22 +335,50 @@ const Billing = (props) => {
       let inputMonth = month;
 
       if (inputMonth > currentMonth) {
-        return inputMonth;
-      } else if (inputMonth <= currentMonth) {
-        if (cardExpairyYearCheck > currentYear) {
+        console.log(inputMonth);
+        if (inputMonth <= 12) {
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            card_exp_Err: false,
+          }));
           return inputMonth;
         } else {
           setFormErrorMsg((errorMessage) => ({
             ...errorMessage,
             card_exp_Err: true,
           }));
+          setDateError("Month has to be within or equals to 12");
           return false;
         }
+      } else if (inputMonth <= currentMonth) {
+        if (cardExpairyYearCheck > currentYear) {
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            card_exp_Err: false,
+          }));
+          return inputMonth;
+        } else {
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            card_exp_Err: true,
+          }));
+          setDateError("Expiry year should be greater than current year.");
+          return false;
+        }
+      } 
+      else if (inputMonth == '00' || inputMonth === 0) {
+        setFormErrorMsg((errorMessage) => ({
+          ...errorMessage,
+          card_exp_Err: true,
+        }));
+          setDateError("Month has to be within or equals to 12");
+        return false;
       } else {
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
           card_exp_Err: true,
         }));
+        setDateError("Please fill up the field");
         return false;
       }
     };
@@ -622,7 +652,7 @@ const Billing = (props) => {
                           value={cardExpairyCheck}
                         />
                         {formErrorMsg.card_exp_Err ? (
-                          <p className="errorMsg">Please fill up the field</p>
+                          <p className="errorMsg">{dateError}</p>
                         ) : (
                           ""
                         )}
