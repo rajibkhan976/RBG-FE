@@ -28,7 +28,7 @@ const Recoder = (props) => {
 
   //Timer
   useEffect(() => {
-    const MAX_RECORDER_TIME = 5;
+    let MAX_RECORDER_TIME = 5;
     let recordingInterval = null;
 
     if (recorderState.initRecording)
@@ -64,6 +64,14 @@ const Recoder = (props) => {
     return () => clearInterval(recordingInterval);
   });
 
+  // Stop recording on limit exceed
+  useEffect(()=>{    
+    let currentRecordedTime = (recorderState.recordingMinutes * 60) + recorderState.recordingSeconds;
+    if (props.maxRecordingSec && currentRecordedTime >= props.maxRecordingSec) {
+      recorderState.mediaRecorder.stop();
+    } 
+  }, [recorderState.recordingSeconds])
+
   //Recoder events
   useEffect(() => {
     if (recorderState.mediaRecorder && recorderState.mediaRecorder.state === 'inactive') {
@@ -90,6 +98,8 @@ const Recoder = (props) => {
         let audioURL = window.URL.createObjectURL(blob);
         // let audioURL = 'https://file-examples-com.github.io/uploads/2017/11/file_example_WAV_1MG.wav';
         let audioElement = new Audio(audioURL);
+        audioElement.currentTime = 24*60*60;
+        console.log("audioElement", audioElement)
         // console.log('audio blob', blob);
         //Update audio blob url
         setRecorderState({
@@ -99,6 +109,7 @@ const Recoder = (props) => {
           audioURL: audioURL,
           audioElement: audioElement,
         });
+        
         //Send blob to audio create modal
         broadcastToParent(blob);
       };
@@ -309,7 +320,6 @@ const Recoder = (props) => {
               <p>{successMsg}</p>
             </div>
           )}
-          {console.log("rec state", recorderState)}
           <div className="playerBody">
             <div className="recordingTime">
               <span className="time">
