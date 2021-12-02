@@ -3,12 +3,12 @@ import bank from "../../../../assets/images/bank.svg";
 import credit_card from "../../../../assets/images/credit_card.svg";
 import cross_white from "../../../../assets/images/cross_white.svg";
 import plus from "../../../../assets/images/plus_icon.svg";
-import { ErrorAlert, SuccessAlert } from "../../messages";
+//import { ErrorAlert, SuccessAlert } from "../../messages";
 import Loader from "../../Loader";
-import axios from "axios";
+//import axios from "axios";
 
 import { BillingServices } from "../../../../services/billing/billingServices";
-import { billingUrl } from "../../../../configuration/config";
+//import { billingUrl } from "../../../../configuration/config";
 
 let currentTime = new Date();
 let currentYear = currentTime.getFullYear();
@@ -27,7 +27,7 @@ const Billing = (props) => {
   const [cardExpairyYearCheck, setCardExpairyYearCheck] = useState("");
   const [cardActivationCheckText, setCardActivationCheckText] =
     useState("inactive");
-  const [bankActivationCheck, setBankActivationCheck] = useState(false);
+  //const [bankActivationCheck, setBankActivationCheck] = useState(false);
   const [bankActivationCheckText, setBankActivationCheckText] =
     useState("inactive");
   const [isLoader, setIsLoader] = useState(false);
@@ -169,13 +169,13 @@ const Billing = (props) => {
 
       switch (cardType) {
         case "isAmex":
-          console.log("IF IN CARD - AMEX");
+          // console.log("IF IN CARD - AMEX");
           // AMEX-specific logic goes here
           formattedCardNumber = formattedCardNumber.substring(0, 15);
           break;
 
         default:
-          console.log("IF IN CARD - ELSE");
+           // console.log("IF IN CARD - ELSE");
           formattedCardNumber = formattedCardNumber.substring(0, 16);
           break;
       }
@@ -218,7 +218,7 @@ const Billing = (props) => {
     setCardExpairyCheck(formattedCardExpairy);
     setCardExpairyMonthCheck(cardExpairySectionsMonth);
     setCardExpairyYearCheck(cardExpairySectionsYear);
-    console.log(cardExpairySectionsMonth + "," + cardExpairySectionsYear);
+    //console.log(cardExpairySectionsMonth + "," + cardExpairySectionsYear);
   };
 
   const cardCvvCheckHandler = (e) => {
@@ -339,7 +339,7 @@ const Billing = (props) => {
       let inputMonth = month;
 
       if (inputMonth > currentMonth) {
-        console.log(inputMonth);
+        //console.log(inputMonth);
         if (inputMonth <= 12) {
           setFormErrorMsg((errorMessage) => ({
             ...errorMessage,
@@ -395,10 +395,10 @@ const Billing = (props) => {
       }
     };
 
-    console.log(
-      cardExpairyYearCheckFn(cardExpairyYearCheck),
-      cardExpairyMonthCheckFn(cardExpairyMonthCheck)
-    );
+    // console.log(
+    //   cardExpairyYearCheckFn(cardExpairyYearCheck),
+    //   cardExpairyMonthCheckFn(cardExpairyMonthCheck)
+    // );
 
     let cardPayload = {
       contact: props.contactId,
@@ -414,7 +414,7 @@ const Billing = (props) => {
       status: cardActivationCheckText,
     };
 
-    console.log(cardPayload);
+    //console.log(cardPayload);
 
     if (
       cardPayload.cvv !== false &&
@@ -428,7 +428,7 @@ const Billing = (props) => {
         hideNewCardHandler();
         fetchCardBank();
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       } finally {
         cardPayload = {
           contact: props.contactId,
@@ -479,15 +479,15 @@ const Billing = (props) => {
       }));
     }
 
-    console.log(
-      bankRoutingCheck +
-        " , " +
-        bankAccountCheck +
-        " , " +
-        bankNameCheck +
-        " , " +
-        bankActivationCheckText
-    );
+    // console.log(
+    //   bankRoutingCheck +
+    //     " , " +
+    //     bankAccountCheck +
+    //     " , " +
+    //     bankNameCheck +
+    //     " , " +
+    //     bankActivationCheckText
+    // );
     setBankDataFormatting({
       ...bankDataFormatting,
       contact: props.contactId,
@@ -518,7 +518,7 @@ const Billing = (props) => {
         hideNewCardHandler2();
         fetchCardBank();
       } catch (error) {
-        console.log(error);
+        //console.log(error);
       } finally {
         bankPayload = {
           contact: props.contactId,
@@ -838,7 +838,7 @@ const Billing = (props) => {
                             />
                             <span></span>
                           </div>{" "}
-                          {bankActivationCheck ? "Inactive" : "Active"}
+                          Active
                         </div>
                       </div>
                       {formErrorMsg.bank_acc_Err ? (

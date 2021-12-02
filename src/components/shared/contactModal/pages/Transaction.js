@@ -16,12 +16,9 @@ const Transaction = (props) => {
     );
     setTransactionList(transactionResponce);
   };
-  console.log("transactionList", transactionList);
+  //console.log("transactionList", transactionList);
 
-  //  useEffect(() => {
-  //  transactionList.length === 0 && fetchTransactionList();
-  //  //console.log("transactionList", transactionList);
-  //  }, [transactionList]);
+
 
   useEffect(() => {
     fetchTransactionList();
@@ -38,53 +35,51 @@ const Transaction = (props) => {
   }, []);
 
   const dateCalculationFunction = (transdate) => {
-    console.log("transdate :  ", transdate);
-    console.log("dt :  ", new Date());
+    //console.log("transdate :  ", transdate);
+    //console.log("dt :  ", new Date());
     const dt = new Date();
     var d1 = new Date(transdate);
     // var d2 = new Date(dt);
-    console.log("d1 : ", d1);
+    //console.log("d1 : ", d1);
     // console.log("d2: ", d2);
     var diff = dt - d1.getTime();
-    console.log("diff :: ", diff);
+    
+    //console.log("diff :: ", diff);
+    // var yearCalc =  dt.getFullYear();
+    // if(yearCalc % 4 === 0 || yearCalc % 400 === 0 ){
+    //   var yeardiff = diff / (1000 * 60 * 60 * 24 * 366);
+    // }else{
+    //   var yeardiff = diff / (1000 * 60 * 60 * 24 * 365);
+    // }
+    //console.log("yearDiff :: ", yeardiff);
     var daydiff = diff / (1000 * 60 * 60 * 24);
-    console.log("diff :: ", daydiff);
+    //console.log("diff :: ", daydiff);
 
     var modVal = diff % (1000 * 60 * 60 * 24);
     var hours = modVal / (1000 * 60 * 60);
     modVal = modVal % (1000 * 60 * 60);
     var min = modVal / (1000 * 60);
     modVal = modVal % (1000 * 60);
-    var sec = modVal / 1000;
-    //modVal = modVal%(1000)
-    // var mili = modVal
-    // console.log(
-    //   Math.floor(daydiff) +
-    //     " , " +
-    //     Math.floor(hours) +
-    //     " , " +
-    //     Math.floor(min) +
-    //     " , " +
-    //     Math.floor(sec)
-    // ); //+ " , " + Math.floor(mili));
+    //var sec = modVal / 1000;
+    
     var showTime;
+    // if (yeardiff >= 1) {
+    //   showTime = Math.floor(yeardiff) + (Math.floor(yeardiff) == 1 ? " year ago" : " years ago");
+    // } else 
     if (daydiff >= 1) {
-      showTime =
-        Math.floor(daydiff) +
-        (Math.floor(daydiff) == 1 ? " day ago" : " days ago");
+      showTime = Math.floor(daydiff) + (Math.floor(daydiff) == 1 ? " day ago" : " days ago");
     } else if (Math.floor(hours) > 0) {
-      showTime = Math.floor(hours) + " hr ago";
+      showTime = Math.floor(hours) + ( Math.floor(hours) == 1 ? " hr ago" : " hrs ago");
     } else if (Math.floor(min) >= 1) {
-      showTime = Math.floor(daydiff) + " mins ago";
+      showTime = Math.floor(min) + ( Math.floor(min) == 1 ? " min ago" : " mins ago");
     } else {
       // showTime = Math.floor(min) +  "mins ago";
       showTime = "0 mins ago";
     }
-    console.log(transdate, showTime);
+    //console.log(transdate, showTime);
     return showTime;
   };
-  //var showTimeDIff = dateCalculationFunction("2021-11-25 16:20:04");
-  //console.log(showTimeDIff);
+
   return (
     <>
       <div className="contactTabsInner">
