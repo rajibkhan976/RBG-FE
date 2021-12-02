@@ -3424,6 +3424,10 @@ span.userProfilePic img {
   text-align: center;
 }
 
+.popupMessage.coursePopupMsg {
+  top: 90px;
+}
+
 .popupMessage p {
   padding: 5px 0 5px 36px;
   font-size: 14px;

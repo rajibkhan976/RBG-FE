@@ -238,10 +238,10 @@ const AddCourseModal = (props) => {
     <>
       {isLoader ? <Loader /> : ''}
       {successMsg &&
-        <SuccessAlert message={successMsg}></SuccessAlert>
+        <SuccessAlert message={successMsg} extraClass="coursePopupMsg"></SuccessAlert>
       }
       {errorMsg &&
-        <ErrorAlert message={errorMsg}></ErrorAlert>
+        <ErrorAlert message={errorMsg} extraClass="coursePopupMsg"></ErrorAlert>
       }
       <div className="modalBackdrop">
         <div className="slickModalBody">

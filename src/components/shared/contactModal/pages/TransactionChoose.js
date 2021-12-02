@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import * as actionTypes from "../../../../actions/types";
 import aaroww from "../../../../assets/images/arrow_forward.svg";
 import arrow_forward from "../../../../assets/images/backIcon.svg";
 import tick from "../../../../assets/images/tick.svg";
@@ -28,6 +30,7 @@ const TransactionChoose = (props) => {
     const [successMsg, setSuccessMsg] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
@@ -106,7 +109,15 @@ const TransactionChoose = (props) => {
             setErrorMsg(e.message);
         } finally {
             setShowLoader(false);
+            setTimeout(() => {
+               dispatch({
+                    type: actionTypes.CONTACTS_MODAL_ID,
+                    contact_modal_id: '',
+                })
+            }, 10000);
         }
+
+        
         
     }
 

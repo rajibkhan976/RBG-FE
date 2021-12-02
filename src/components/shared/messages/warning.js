@@ -1,9 +1,9 @@
 import react from 'react';
 
 
-const WarningAlert = () => {
+const WarningAlert = (props) => {
     return(
-        <div className="popupMessage warning">
+        <div className={props.extraClass ? "popupMessage warning " + props.extraClass + "" : "popupMessage warning"}>
             <p>Message will go here</p>
         </div>
     )
