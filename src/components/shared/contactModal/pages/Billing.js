@@ -69,7 +69,7 @@ const Billing = (props) => {
   //   const [cardBankLoader, setCardBankLoader] = useState();
   const [cardBankList, setCardBankList] = useState([]);
   const [bankList, setBankList] = useState([]);
-  const [primaryType, setPrimaryType] = useState("card");
+  const [primaryType, setPrimaryType] = useState(null);
   const [dateError, setDateError] = useState("Please fill up the field");
 
   const fetchCardBank = async () => {
@@ -78,9 +78,11 @@ const Billing = (props) => {
     if (cardBankResponce) {
       setCardBankList(cardBankResponce.cards);
       setBankList(cardBankResponce.banks);
+      setPrimaryType(cardBankResponce.primary);
       setIsLoader(false);
     }
-    console.log("CARD LISTING data", cardBankResponce.cards);
+    // console.log("CARD LISTING data", cardBankResponce.cards);
+    // console.log(cardBankResponce.primary);
   };
   useEffect(() => {
     fetchCardBank();
@@ -559,7 +561,7 @@ const Billing = (props) => {
                     name="primary"
                     onChange={(e) => makePrimaryMethod(e, "card")}
                     defaultChecked={
-                      cardBankList.length > 0 && primaryType === "card"
+                      primaryType === "card"
                     }
                   />
                   <span></span>
@@ -736,7 +738,7 @@ const Billing = (props) => {
                     name="primary"
                     onChange={(e) => makePrimaryMethod(e, "bank")}
                     defaultChecked={
-                      cardBankList.length > 0 && primaryType === "bank"
+                      primaryType === "bank"
                     }
                   />
                   <span></span>
