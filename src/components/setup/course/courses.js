@@ -98,13 +98,13 @@ const Courses = () => {
     }
   };
 
-  const fetchCourses = async () => {
+  const fetchCourses = async (showLoader = true) => {
     // const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
     // console.log("Permission", permissions)
     const pageId = utils.getQueryVariable('page') || 1;
     const queryParams = await getQueryParams();
     try {
-      if (!isLoader) setIsLoader(true);
+      if (showLoader) setIsLoader(true);
       // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
       //     throw new Error(responses.permissions.role.read);
       // }
@@ -160,6 +160,22 @@ const Courses = () => {
   //       setFilteredData(dataFromChild);
   //     }
   //   };
+  const deleteCourse = async(courseID) => {
+    try {
+      setIsLoader(true);
+      const result = await CourseServices.deleteCourse(courseID);
+      if (result) {
+        setSuccessMsg(result);
+        fetchCourses();
+      } else {
+        setErrorMsg("Error deleting course. Please try again.");
+      }
+    } catch (e) {
+      setErrorMsg(e.message);
+    } finally {
+      setIsLoader(false);
+    }
+  }
 
   return (
     <>
@@ -173,7 +189,8 @@ const Courses = () => {
       <CourseListing
         openFilterModal={openFilterModal}
         courseData={courseData}
-        fetchCourses={fetchCourses}
+        fetchCourses={(showLoader) => fetchCourses(showLoader)}
+        deleteCourse={(courseID) => deleteCourse(courseID)}
         getCategories={fetchCategories}
         paginationData={paginationData}
         openCourseModal={(bool, updateObj) => openCourseModal(bool, updateObj)}
@@ -187,13 +204,13 @@ const Courses = () => {
         fetchCategories={fetchCategories}
         successMsg={(msg) => setSuccessMsg(msg)}
         errorMsg={(msg) => setErrorMsg(msg)}
-        getProduct={fetchCourses} />
+        getProduct={(showLoader) => fetchCourses(showLoader)} />
 
       {openModal &&
         <AddCourseModal
           closeCourseModal={(param) => closeAddCourseModal(param)}
           editCourseItem={updateProduct}
-          retriveCourses={fetchCourses}
+          retriveCourses={(showLoader) => fetchCourses(showLoader)}
           retrieveCategories={fetchCategories}
           categories={categoryData}/>}
 

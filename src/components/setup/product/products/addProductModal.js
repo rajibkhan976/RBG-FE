@@ -138,6 +138,7 @@ const AddProductModal = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoader(true);
     try {
       if (createValidation()) {
         const data = {
@@ -152,8 +153,10 @@ const AddProductModal = (props) => {
         console.log("Data to be updated or added", data);
         let msg;
         if (productData.id) {
-          const updateData = {...data, id: productData.id};
+          const updateData = { ...data, id: productData.id };
           msg = await ProductServices.editProduct(updateData);
+          console.clear();
+          console.log(msg)
         } else {
           const res = await ProductServices.createProduct(data);
           if (!res._id) {
@@ -162,11 +165,14 @@ const AddProductModal = (props) => {
             msg = "Product added successfully";
           }
         }
-        if(btnType !== "SaveNew") {
+        if (btnType !== "SaveNew") {
           console.log("Inisde Save");
-          props.closeAddProductModal("fetch");
+          setSuccessMsg(msg);
+          setTimeout(function () {
+            props.closeAddProductModal("fetch");
+          }, messageDelay);
         } else {
-          props.retriveProducts();
+          props.retriveProducts(false);
           props.retrieveCategories();
           console.log("Inside save and new");
           setSuccessMsg(msg);
@@ -187,6 +193,8 @@ const AddProductModal = (props) => {
       }
     } catch (e) {
       setErrorMsg(e.message);
+    } finally {
+      setIsLoader(false);
     }
   }
 
@@ -202,11 +210,10 @@ const AddProductModal = (props) => {
     return bool;
   }
 
-  const handleTaxCheck = (isChecked) => setProductData({...productData, tax: (isChecked) ? 1: 0});
+  const handleTaxCheck = (isChecked) => setProductData({ ...productData, tax: (isChecked) ? 1 : 0 });
 
   return (
     <>
-      {isLoader ? <Loader /> : ''}
       {successMsg &&
         <SuccessAlert message={successMsg}></SuccessAlert>
       }
@@ -214,6 +221,7 @@ const AddProductModal = (props) => {
         <ErrorAlert message={errorMsg}></ErrorAlert>
       }
       <div className="modalBackdrop">
+        {isLoader ? <Loader /> : ''}
         <div className="slickModalBody">
           <div className="slickModalHeader">
             <button className="topCross" onClick={props.closeAddProductModal}><img src={crossTop} alt="" /></button>
@@ -222,98 +230,96 @@ const AddProductModal = (props) => {
             <p>Choose a category to add a new product below</p>
           </div>
           <div className="modalForm">
-        <Scrollbars
-          renderThumbVertical={(props) => <div className="thumb-vertical" />}
-        >
-            <form method="post" onSubmit={handleSubmit}>
-              <div className="formControl">
-                <label>Select Category</label>
-                <select name="category" onChange={handleChange}>
-                  {categories.map(cat => {
-                    return (
-                      <>
-                        <option value={cat._id} selected={(productData.category === cat._id) ? "selected" : ""}>{cat.name}</option>
-                      </>
-                    );
-                  })}
+            <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />}>
+              <form method="post" onSubmit={handleSubmit}>
+                <div className="formControl">
+                  <label>Select Category</label>
+                  <select name="category" onChange={handleChange}>
+                    {categories.map(cat => {
+                      return (
+                        <>
+                          <option value={cat._id} selected={(productData.category === cat._id) ? "selected" : ""}>{cat.name}</option>
+                        </>
+                      );
+                    })}
 
-                </select>
-              </div>
-              <div className="formControl">
-                <label>Enter Product Name</label>
-                <input type="text" placeholder="Ex: v-shape gym vest" name="productName"
-                  onChange={handleChange}
-                  value={productData.name} />
-              </div>
-              <div className="formControl">
-                <label>Upload Product Picture</label>
-                <div className="profile">
-                  <div className="profileUpload">
-                    <input type="file" onChange={(e) => handleImageUpload(e)} />
-                    {/* <span>Upload</span> */}
-                  </div>
-                  <div className="profilePicture">
-                    <img src={productData.imageUrl} alt="" />
-                  </div>
-                  <div className="profileText"> Product Picture</div>
-                  
+                  </select>
                 </div>
-              </div>
-              <div className="formControl">
-                <label>Available Colours</label>
-                <div className="pickColor">
-                  {/* <button className="addColor active" style={{ backgroundColor: "#834140" }}></button>
+                <div className="formControl">
+                  <label>Enter Product Name</label>
+                  <input type="text" placeholder="Ex: v-shape gym vest" name="productName"
+                    onChange={handleChange}
+                    value={productData.name} />
+                </div>
+                <div className="formControl">
+                  <label>Upload Product Picture</label>
+                  <div className="profile">
+                    <div className="profileUpload">
+                      <input type="file" onChange={(e) => handleImageUpload(e)} />
+                      {/* <span>Upload</span> */}
+                    </div>
+                    <div className="profilePicture">
+                      <img src={productData.imageUrl} alt="" />
+                    </div>
+                    <div className="profileText"> Product Picture</div>
+
+                  </div>
+                </div>
+                <div className="formControl">
+                  <label>Available Colours</label>
+                  <div className="pickColor">
+                    {/* <button className="addColor active" style={{ backgroundColor: "#834140" }}></button>
                   <button className="addColor" style={{ backgroundColor: "#369ED5" }}></button>
                   <button className="addColor" style={{ backgroundColor: "#797D62" }}></button> */}
-                  {colorSize.colors.map(color => {
-                    if (color.type === "single") {
-                      return <button className={(productData.colors.indexOf(color.label) != -1) ? "addColor active" : "addColor"}
-                        style={{ backgroundColor: color.colorcode }}
-                        onClick={(event) => handleColor(event, color.label)}></button>
-                    }
-                  })}
+                    {colorSize.colors.map(color => {
+                      if (color.type === "single") {
+                        return <button className={(productData.colors.indexOf(color.label) != -1) ? "addColor active" : "addColor"}
+                          style={{ backgroundColor: color.colorcode }}
+                          onClick={(event) => handleColor(event, color.label)}></button>
+                      }
+                    })}
+                  </div>
                 </div>
-              </div>
-              <div className="formControl">
-                <label>Available Sizes</label>
-                <div className="pickSize">
-                  {/* <button className="size active">S</button>
+                <div className="formControl">
+                  <label>Available Sizes</label>
+                  <div className="pickSize">
+                    {/* <button className="size active">S</button>
                   <button className="size active">M</button>
                   <button className="size">L</button> */}
-                  {colorSize.sizes.map(size => {
-                    return <button className={(productData.size.indexOf(size.size) != -1) ? "size active" : "size"}
-                      onClick={(event) => handleSize(event, size.size)}>{size.size}</button>
-                  })}
+                    {colorSize.sizes.map(size => {
+                      return <button className={(productData.size.indexOf(size.size) != -1) ? "size active" : "size"}
+                        onClick={(event) => handleSize(event, size.size)}>{size.size}</button>
+                    })}
+                  </div>
                 </div>
-              </div>
-              <div className="formControl">
-                <label>Price</label>
-                <div className="formLeft">
-                  <input type="text" name="price" placeholder="Ex: 99" onChange={handleChange} value={productData.price} />
-                  <span>* default currency is<strong> USD</strong></span>
+                <div className="formControl">
+                  <label>Price</label>
+                  <div className="formLeft">
+                    <input type="text" name="price" placeholder="Ex: 99" onChange={handleChange} value={productData.price} />
+                    <span>* default currency is<strong> USD</strong></span>
+                  </div>
+                  <div className="formRight">
+                    <label>
+                      <div className="customCheckbox">
+                        <input type="checkbox"
+                          name="saleTax"
+                          onChange={(e) => handleTaxCheck(e.target.checked)}
+                          checked={(productData.tax) ? true : false}
+                        />
+                        <span></span>
+                      </div>
+                      Add Sales Tax</label>
+                  </div>
                 </div>
-                <div className="formRight">
-                  <label>
-                    <div className="customCheckbox">
-                      <input type="checkbox" 
-                      name="saleTax"
-                      onChange={(e) => handleTaxCheck(e.target.checked)}
-                      checked={(productData.tax)?true:false}
-                      />
-                      <span></span>
-                    </div>
-                    Add Sales Tax</label>
+                <div className="modalbtnHolder">
+                  <button type="submit" name="save"
+                    className="saveNnewBtn"
+                    onClick={() => setBtnType("Save")}><span>{(isEditing) ? "Update" : "Save"}</span><img src={arrow_forward} alt="" /></button>
+                  <button type="submit" name="saveNew"
+                    className="saveNnewBtn"
+                    onClick={() => setBtnType("SaveNew")}><span>{(isEditing) ? "Update" : "Save"} &amp; New</span><img src={arrow_forward} alt="" /></button>
                 </div>
-              </div>
-              <div className="modalbtnHolder">
-                <button type="submit" name="save" 
-                className="saveNnewBtn"
-                onClick={() => setBtnType("Save")}><span>{(isEditing)?"Update":"Save"}</span><img src={arrow_forward} alt="" /></button>
-                <button type="submit" name="saveNew" 
-                className="saveNnewBtn"
-                onClick={() => setBtnType("SaveNew")}><span>{(isEditing)?"Update":"Save"} &amp; New</span><img src={arrow_forward} alt="" /></button>
-              </div>
-            </form>
+              </form>
             </Scrollbars>
           </div>
 

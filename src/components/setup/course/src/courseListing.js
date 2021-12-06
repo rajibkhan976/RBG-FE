@@ -38,23 +38,11 @@ const CourseListing = (props) => {
         id: null,
       });
     } else {
-      try {
-        const result = await CourseServices.deleteCourse(courseID);
-        if (result) {
-          props.successMsg(result);
-        } else {
-          props.errorMsg("Error deleting product. Please try again.");
-        }
-      } catch (e) {
-        props.errorMsg(e.message);
-      } finally {
-        setConfirmed({
-          show: false,
-          id: null,
-        });
-        props.fetchCourses();
-        props.getCategories();
-      }
+      setConfirmed({
+        show: false,
+        id: null,
+      });
+      props.deleteCourse(courseID);
     }
   };
 

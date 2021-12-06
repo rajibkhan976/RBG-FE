@@ -9,10 +9,11 @@ import dot3White from "../../../../assets/images/dot3gray.svg";
 import { ProductServices } from "../../../../services/setup/ProductServices";
 import Pagination from "../../../shared/Pagination";
 import ConfirmBox from "../../../shared/confirmBox";
+import Loader from "../../../shared/Loader";
 
 const ProductListing = (props) => {
   document.title = "Red Belt Gym - Products";
-  // const [prodFilterModalStatus, setProdFilterModalStatus] = useState(false);
+  const [isLoader, setIsLoader] = useState(false);
   const [isConfirmed, setConfirmed] = useState({
     show: false,
     id: null,
@@ -40,23 +41,11 @@ const ProductListing = (props) => {
         id: null,
       });
     } else {
-      try {
-        const result = await ProductServices.deleteProduct(productID);
-        if (result) {
-          props.successMsg(result);
-        } else {
-          props.errorMsg("Error deleting product. Please try again.");
-        }
-      } catch (e) {
-        props.errorMsg(e.message);
-      } finally {
-        setConfirmed({
-          show: false,
-          id: null,
-        });
-        props.fetchProducts();
-        props.getCategories();
-      }
+      setConfirmed({
+        show: false,
+        id: null,
+      });
+      props.deleteProduct(productID);
     }
   };
 
@@ -94,6 +83,7 @@ const ProductListing = (props) => {
   /****************************** FUNCTIONS START **********************************/
   return (
     <>
+      {isLoader ? <Loader /> : ''}
       {isConfirmed.show ? (
         <ConfirmBox
           callback={(confirmedMsg) =>
@@ -220,38 +210,38 @@ const ProductListing = (props) => {
                               class="btn btnDelete"
                               onClick={() => deleteProduct(elem._id)}
                             >
-                            <span>
-                              <svg
-                                className="deleteIcon"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="12.347"
-                                height="13.553"
-                                viewBox="0 0 12.347 13.553"
-                              >
-                                <g transform="translate(0.75 0.75)">
-                                  <path
-                                    class="a"
-                                    d="M3,6H13.847"
-                                    transform="translate(-3 -3.589)"
-                                  />
-                                  <path
-                                    class="a"
-                                    d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
-                                    transform="translate(-3.795 -2)"
-                                  />
-                                  <line
-                                    class="a"
-                                    y2="3"
-                                    transform="translate(4.397 6.113)"
-                                  />
-                                  <line
-                                    class="a"
-                                    y2="3"
-                                    transform="translate(6.397 6.113)"
-                                  />
-                                </g>
-                              </svg>
-                            </span>
+                              <span>
+                                <svg
+                                  className="deleteIcon"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="12.347"
+                                  height="13.553"
+                                  viewBox="0 0 12.347 13.553"
+                                >
+                                  <g transform="translate(0.75 0.75)">
+                                    <path
+                                      class="a"
+                                      d="M3,6H13.847"
+                                      transform="translate(-3 -3.589)"
+                                    />
+                                    <path
+                                      class="a"
+                                      d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
+                                      transform="translate(-3.795 -2)"
+                                    />
+                                    <line
+                                      class="a"
+                                      y2="3"
+                                      transform="translate(4.397 6.113)"
+                                    />
+                                    <line
+                                      class="a"
+                                      y2="3"
+                                      transform="translate(6.397 6.113)"
+                                    />
+                                  </g>
+                                </svg>
+                              </span>
                               Delete
                             </button>
                           </div>

@@ -151,6 +151,7 @@ const AddCourseModal = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoader(true);
     try {
       if (createValidation()) {
         const data = {
@@ -180,9 +181,12 @@ const AddCourseModal = (props) => {
         }
         if (btnType !== "SaveNew") {
           console.log("Inisde Save");
-          props.closeCourseModal("fetch");
+          setSuccessMsg(msg);
+          setTimeout(function () {
+            props.closeCourseModal("fetch");
+          }, messageDelay);
         } else {
-          props.retriveCourses();
+          props.retriveCourses(false);
           props.retrieveCategories();
           console.log("Inside save and new");
           setSuccessMsg(msg);
@@ -205,6 +209,8 @@ const AddCourseModal = (props) => {
       }
     } catch (e) {
       setErrorMsg(e.message);
+    } finally {
+      setIsLoader(false);
     }
   }
 
@@ -218,10 +224,10 @@ const AddCourseModal = (props) => {
         throw new Error("Course duration should never be 0")
       } else if (courseData.duration == 1 && courseData.duration_months === "month" && courseData.payment_type === "recurring") {
         throw new Error("Recurring course duration should be more than 1 month atleast")
-      } else if(courseData.duration_months === "month" && courseData.billing_cycle === "yearly" && courseData.payment_type === "recurring") {
+      } else if (courseData.duration_months === "month" && courseData.billing_cycle === "yearly" && courseData.payment_type === "recurring") {
         throw new Error("Recurring yearly billing cycle should have more than a year duration")
-      } else if (courseData.duration == 1 
-        && courseData.duration_months === "year" 
+      } else if (courseData.duration == 1
+        && courseData.duration_months === "year"
         && courseData.payment_type === "recurring"
         && courseData.billing_cycle === "yearly") {
         throw new Error("Recurring course duration should be more than 1 year atleast for year billing cycle");
@@ -236,7 +242,6 @@ const AddCourseModal = (props) => {
 
   return (
     <>
-      {isLoader ? <Loader /> : ''}
       {successMsg &&
         <SuccessAlert message={successMsg} extraClass="coursePopupMsg"></SuccessAlert>
       }
@@ -244,6 +249,7 @@ const AddCourseModal = (props) => {
         <ErrorAlert message={errorMsg} extraClass="coursePopupMsg"></ErrorAlert>
       }
       <div className="modalBackdrop">
+        {isLoader ? <Loader /> : ''}
         <div className="slickModalBody">
           <div className="slickModalHeader">
             <button className="topCross" onClick={props.closeCourseModal}><img src={crossTop} alt="" /></button>

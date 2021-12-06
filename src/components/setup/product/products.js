@@ -39,9 +39,9 @@ const Products = () => {
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
-      fetchCategories();
-      fetchProducts();
-      fetchColorSizes();
+    fetchCategories();
+    fetchProducts();
+    fetchColorSizes();
   }, []);
 
   useEffect(() => {
@@ -101,13 +101,13 @@ const Products = () => {
     }
   };
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (showLoader = true) => {
     // const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
     // console.log("Permission", permissions)
     const pageId = utils.getQueryVariable('page') || 1;
     const queryParams = await getQueryParams();
     try {
-      // if (!isLoader) setIsLoader(true);
+      if (showLoader) setIsLoader(true);
       // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
       //     throw new Error(responses.permissions.role.read);
       // }
@@ -189,6 +189,23 @@ const Products = () => {
   //     }
   //   };
 
+  const deleteProduct = async (productID) => {
+    try {
+      setIsLoader(true);
+      const result = await ProductServices.deleteProduct(productID);
+      if (result) {
+        setSuccessMsg(result);
+        fetchProducts();
+      } else {
+        setErrorMsg("Error deleting product. Please try again.");
+      }
+    } catch (e) {
+      setErrorMsg(e.message);
+    } finally {
+      setIsLoader(false);
+    }
+  }
+
   return (
     <>
       {isLoader ? <Loader /> : ''}
@@ -205,6 +222,7 @@ const Products = () => {
         getCategories={fetchCategories}
         paginationData={paginationData}
         openProductModal={(bool, updateObj) => addProductModal(bool, updateObj)}
+        deleteProduct={(productID) => deleteProduct(productID)}
         successMsg={(msg) => setSuccessMsg(msg)}
         errorMsg={(msg) => setErrorMsg(msg)}
       />
@@ -215,22 +233,22 @@ const Products = () => {
         fetchCategories={fetchCategories}
         successMsg={(msg) => setSuccessMsg(msg)}
         errorMsg={(msg) => setErrorMsg(msg)}
-        getProduct={fetchProducts} />
+        getProduct={(showLoader) => fetchProducts(showLoader)} />
 
       {openModal &&
         <AddProductModal
           closeAddProductModal={(param) => closeProductModal(param)}
           editProductItem={updateProduct}
-          retriveProducts={fetchProducts}
+          retriveProducts={(showLoader) => fetchProducts(showLoader)}
           retrieveCategories={fetchCategories}
-          categories={categoryData} 
-          getcolorSize={colorSize}/>}
+          categories={categoryData}
+          getcolorSize={colorSize} />}
 
       {prodFilterModalStatus &&
         <ProductFilter
           closeModal={closeFilterModal}
           categories={categoryData}
-          getProduct={fetchProducts}
+          getProduct={(showLoader) => fetchProducts(showLoader)}
           successMsg={(msg) => setSuccessMsg(msg)}
           errorMsg={(msg) => setErrorMsg(msg)}
           getcolorSize={colorSize}
