@@ -7726,6 +7726,17 @@ p.trackName {
   position: relative;
   margin-bottom: 25px;
 }
+.authBody.login_outer p {
+  color:#9BAEBC;
+  font-size: 13px;
+  position: relative;
+}
+
+.authBody.login_outer h1.slim{
+  font-weight: 400;
+  margin-bottom: 15px;
+  margin-top: 10px;
+}
 .authBody.login_outer .login_box_text {
   color: #9baebc;
   font-size: 13px;
@@ -7748,6 +7759,8 @@ p.trackName {
   position: absolute;
   right: 0;
   top: 3px;
+  background: transparent;
+  border: none;
 }
 
 .authBody.login_outer .formInputs.remember {
@@ -7944,4 +7957,193 @@ p.trackName {
 
 .routeMenu > ul > li.prototypeLink {
   height: 95px;
+}
+
+.link_to_login{
+  font-size: 13px;
+  line-height: 19px;
+  color: #55BBC9;
+  text-align: center;
+  padding: 49px 0 0 0;
+  background: transparent;
+  border: none;
+  display: inline-block;
+}
+
+.bottomGap{
+  margin-bottom: 45px;
+}
+.authBody.login_outer .loginRightPart.reset{
+ width: 100%;
+}
+
+.addConfirmation {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  min-height: 339px;
+  flex-direction: column;
+  padding: 77px 0 0 0;
+}
+
+.confirmThumbsUp{
+  width: 104px;
+  height: 104px;
+  background: #FFFFFF;
+  border: 2px solid #00E778;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  border-radius: 50%;
+  padding-bottom: 10px;
+}
+ .addConfirmation h2{
+  font-style: normal;
+  font-weight: 500;
+  font-size: 27px;
+  line-height: 40px;
+  width: 100%;
+  text-align: center;
+  padding: 20px 0 9px;
+  color:  #00E778;
+}
+.addConfirmation p{
+  font-size: 15px;
+  line-height: 22px;
+  text-align: center;
+  color: #9BAEBC;
+}
+.validationParam{
+  font-size: 13px;
+  line-height: 21px;
+  color: #9BAEBC;
+  padding: 23px 0 0 0px;
+}
+.validationParam li{
+  padding: 0 0 12px 27px;
+  position: relative;
+
+}
+
+.validationParam li span {
+  width: 14px;
+  height: 14px;
+  background: #9BAEBC;
+  position: absolute;
+  display: inline-block;
+  border-radius: 50%;
+  left: 0;
+  top: 4px;
+  line-height: 11px;
+  text-align-last: center;
+}
+.validationParam li.done {
+  color: #18B456;
+}
+.validationParam li.done span{
+  background: #18B456;
+}
+.validationParam li.notdone{
+  color: #FD0000
+}
+.validationParam li.notdone span{
+  border: 1px solid #FD0000;
+  background-color: #fff;
+  color: #FD0000;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 14px;
+}
+.validationParam li.done  span.tick,
+.validationParam li.normal  span.tick,
+.validationParam li.notdone  span.exClam{ 
+  display: inline-block;
+}
+.validationParam li.done  span.exClam,
+.validationParam li.normal  span.exClam,
+.validationParam li.notdone  span.tick{ 
+  display: none;
+}
+
+.passwordProgressor{
+  background: #EFEFEF;
+  border-radius: 2px;
+  width: 100%;
+  height: 3px;
+  margin: 20px 0 0;
+  position: relative;
+}
+
+.passwordProgressor .pass_indicator{
+  border-radius: 2px;
+  width: auto;
+  height: 3px;
+}
+.passwordProgressor .pass_indicator ~ span{
+  color: #777;
+  position: absolute;
+  font-size: 14px;
+  line-height: 21px;
+  top: 5px;
+  left: 0%;
+}
+
+.passwordProgressor .pass_indicator.started{
+  background: #FD0000;
+  width: 8%;
+}
+.passwordProgressor .pass_indicator.weak{
+  background: #FD0000;
+  width: 30%;
+}
+.passwordProgressor .pass_indicator.medium{
+  background: #ffcc00;
+  width: 60%;
+}
+.passwordProgressor .pass_indicator.strong{
+  background: #18B456;
+  width: 100%;
+}
+.passwordProgressor .pass_indicator.started ~ span{
+  color: #FD0000;
+  position: absolute;
+  font-size: 14px;
+  line-height: 21px;
+  top: 5px;
+  left: 6%;
+}
+
+.passwordProgressor .pass_indicator.weak ~ span{
+  color: #FD0000;
+  position: absolute;
+  font-size: 14px;
+  line-height: 21px;
+  top: 5px;
+  left: 28%;
+}
+.passwordProgressor .pass_indicator.medium ~ span{
+  color: #ffcc00;
+  position: absolute;
+  font-size: 14px;
+  line-height: 21px;
+  top: 5px;
+  left: 58%;
+}
+.passwordProgressor .pass_indicator.strong ~ span{
+  color: #18B456;
+  position: absolute;
+  font-size: 14px;
+  line-height: 21px;
+  top: 5px;
+  left: 98%;
+}
+
+.formBody.forgotPassword .popupMessage.error {
+  min-width: calc(100% - 40px);
+  margin: 10px 10px;
+}
+
+.authBody .formBody.forgotPassword .popupMessage.error p {
+  color: #c55757;
 }

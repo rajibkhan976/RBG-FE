@@ -87,6 +87,8 @@ module.exports = {
     // Course Service
     courseUrl: "https://nayaxr4np3.execute-api.us-east-1.amazonaws.com/dev/course/",
     // Buy Course Link
-    courseBuyUrl: "https://bulitnj4tg.execute-api.us-east-1.amazonaws.com/dev/contact/registration/course"
-
+    courseBuyUrl: "https://bulitnj4tg.execute-api.us-east-1.amazonaws.com/dev/contact/registration/course",
+    //Reset Password
+    resetPasswordEmailUrl: "https://61ayvg0p7g.execute-api.us-east-1.amazonaws.com/dev/user/reset-password-email",
+    resetPasswordUrl: "https://61ayvg0p7g.execute-api.us-east-1.amazonaws.com/dev/user/reset-password"
 }  

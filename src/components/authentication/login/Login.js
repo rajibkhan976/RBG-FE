@@ -5,9 +5,15 @@ import AuthActions from "../../../actions/AuthActions";
 import Loader from "../../shared/Loader";
 import login_side_img from "../../../assets/images/login_side_img.png";
 import logo from "../../../assets/images/logo_128_28.svg";
+import {
+  NavLink
+} from "react-router-dom";
+
+
 
 const Login = (props) => {
   document.title = "Red Belt Gym - Login";
+ 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formErrors, setFormErrors] = useState({
@@ -123,7 +129,7 @@ const Login = (props) => {
         });
     }
   };
-
+ 
   return (
     <div className="mainComponent">
       {loader ? <Loader /> : ""}
@@ -168,7 +174,7 @@ const Login = (props) => {
                 }
               >
                 <input
-                  type="text"
+                  type="email"
                   name="email"
                   onChange={handleEmailChange}
                   onBlur={() => validateField("email")}
@@ -181,7 +187,7 @@ const Login = (props) => {
             </div>
             <div className="formInputs">
               <label>Password</label>
-              {/* <a href="#" className="login_forget_link">Forgot?</a> */}
+               <NavLink className="login_forget_link" to="/forgot-password">Forgot?</NavLink> 
               <div
                 className={
                   formErrors.password ? "inFormField errorField" : "inFormField"

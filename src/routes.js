@@ -7,6 +7,8 @@ import { isLoggedIn } from "./services/authentication/AuthServices";
 import MainComponent from './components/MainComponent'
 
 import Login from "./components/authentication/login/Login";
+import ForgetPassword from "./components/authentication/resetPassword/ForgetPassword";
+import ResetPassword from "./components/authentication/resetPassword/ResetPassword";
 import AuthActions from "./actions/AuthActions";
 
 const Routes = () => {
@@ -34,6 +36,22 @@ const Routes = () => {
           component={() => {
             console.log("Login CALLLL ");
             return <Login />;
+          }}
+        />
+        <UnProtectedRoute
+          exact
+          path="/forgot-password"
+          component={() => {
+            console.log("Forget Password call");
+            return <ForgetPassword />;
+          }}
+        />
+        <UnProtectedRoute
+          exact
+          path="/reset-password/*"
+          component={() => {
+            console.log("Reset Password call");
+            return <ResetPassword />;
           }}
         />
         <ProtectedRoute
