@@ -7,6 +7,7 @@ import tick from "../../../../assets/images/tick.svg";
 import camera from "../../../../assets/images/camera.svg";
 import categoryTag from "../../../../assets/images/categoryTag.svg";
 import { CourseServices } from "../../../../services/setup/CourseServices";
+import { ProductServices } from "../../../../services/setup/ProductServices";
 import Loader from "../../Loader";
 
   
@@ -29,6 +30,16 @@ const TransactionChoose = (props) => {
     const [showLoader, setShowLoader] = useState(false);
     const [successMsg, setSuccessMsg] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
+    const [productCatList, setProductCatList] = useState([]);
+    const [productList, setProductList] = useState([]);
+    const [posSelectedCat, setPosSelectedCat] = useState();
+    const [posSelectedProductIndex, setPosSelectedProductIndex] = useState();
+    const [choosedColor, setChoosedColor] = useState();
+    const [choosedSize, setChoosedSize] = useState();
+    const [productPrice, setProductPrice] = useState();
+    const [colors, setColors] = useState([]);
+    const [size, setSize] = useState([]);
+
     
     const dispatch = useDispatch();
 
@@ -36,11 +47,11 @@ const TransactionChoose = (props) => {
         if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
         if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
     }, [successMsg, errorMsg]);
-
     
     const chooseTransctionTypePOS = () => {
         setChoosetPOS(!choosePOS);
-        setChooseCourse(false)
+        setChooseCourse(false);
+        fetchProductCategory();
     }
     const chooseTransctionTypeCourse = () => {
         setChoosetPOS(false);
@@ -115,10 +126,33 @@ const TransactionChoose = (props) => {
                     contact_modal_id: '',
                 })
             }, 10000);
-        }
+        } 
+    }
 
-        
-        
+
+    /* POS transaction functions */
+
+    const fetchProductCategory = async () => {
+        let relult = await ProductServices.fetchCategory();
+        setProductCatList(relult);
+    }
+
+    const fetchProductList = async (catID) => {
+        let relult = await ProductServices.fetchProducts(catID);
+        setProductList(relult.products);
+        console.log(relult);
+    }
+
+    const chosePosCatHandel = (e) => {
+        setPosSelectedCat(e.target.value);
+        fetchProductList(e.target.value);
+    }
+
+    const chosePosProductHandel = (e) => {
+        setPosSelectedProductIndex(e.target.value);
+        console.log(e.target.value);
+        setColors(productList[e.target.value].colors);
+        setSize(productList[e.target.value].size);
     }
 
 
@@ -159,41 +193,40 @@ const TransactionChoose = (props) => {
                         <div className="transaction_form">
                             <div className="formsection gap">
                                 <label>Select Category</label>
-                                <select className="selectBox">
-                                    <option>Select Category</option>
+                                <select className="selectBox" onChange={chosePosCatHandel}>
+                                    <option value="" >Select Category</option>
+                                    { productCatList.map((item, key) => (
+                                        <option key={"productCat_" + key} value={item._id}>{item.name}</option>
+                                    ))}
                                 </select>
                             </div>
-                            <div className="formsection gap">
+                            <div className={posSelectedCat ? "formsection gap" : "formsection gap disabled"}>
                                 <label>Select Product</label>
-                                <select className="selectBox">
+                                <select className="selectBox" onChange={chosePosProductHandel}>
                                     <option>Select Product</option>
+                                    { productList.map((item, key) => (
+                                        <option key={"productKey_" + key} value={key}>{item.name}</option>
+                                    ))}
                                 </select>
                             </div>
-                            <div class="formControl">
+                            <div class={posSelectedProductIndex ? "formControl" : "formControl disabled"}>
                                 <label>Available Colours</label>
                                 <div class="pickColor">
-                                    <button className={addActive ? "addColor active" :  "addColor"} style={{ backgroundColor: "#834140" }} onClick={activeClassHandler}>
+                                    {/* <button className={addActive ? "addColor active" :  "addColor"} style={{ backgroundColor: "#834140" }} onClick={activeClassHandler}>
                                          <img src={addActive ? tick : ""} alt=""/>
-                                    </button>
-                                    {/* <button className={addActive ? "addColor active" :  "addColor"} style={{ backgroundColor: "#369ED5" }} onClick={activeClassHandler}>
-                                        <img src={addActive ? tick : ""} alt=""/>
-                                    </button>
-                                    <button className={addActive ? "addColor active" :  "addColor"} style={{ backgroundColor: "#797D62" }} onClick={activeClassHandler}>
-                                        <img src={addActive ? tick : ""} alt=""/>
                                     </button> */}
-                                    <button className="addColor" style={{ backgroundColor: "#369ED5" }}></button>
-                                    <button className="addColor"  style={{ backgroundColor: "#797D62" }}></button>
+                                    { colors.map((item, key) => (
+                                        <button className={"addColor " + item}></button>
+                                    ))}
                                 </div>
                             </div>
                             <div class="formControl">
                                 <label>Available Sizes</label>
                                 <div class="pickSize">
-                                    <button className={addActive2 ? "size active" :  "size"}  onClick={activeClassHandler2}>S</button>
-                                    {/* <button className={addActive ? "size active" :  "size"}  onClick={activeClassHandler}>M</button>
-                                    <button className={addActive ? "size active" :  "size"}  onClick={activeClassHandler}>L</button>
-                                    <button className={addActive ? "size active" :  "size"}  onClick={activeClassHandler}>XL</button> */}
-                                    <button className="size">M</button>
-                                    <button className="size">L</button>
+                                    {/* <button className={addActive2 ? "size active" :  "size"}  onClick={activeClassHandler2}>S</button> */}
+                                    { size.map((item, key) => (
+                                        <button className="size">{item}</button>
+                                    ))}
                                 </div>
                             </div>
                             <div className="formsection">
@@ -213,11 +246,11 @@ const TransactionChoose = (props) => {
                                 <h3>Product Name</h3>
                                 <p className="category"> <img src={categoryTag} alt="" /> Category</p>
                                    
-                                <h4>$ 000</h4>
+                                <h4>{productPrice ? "$ " + productPrice :  "$ 000"}</h4>
                                 <span className="tax"> * Amount showing including taxes </span>
                             </div>
 
-                            <button class="saveNnewBtn">Buy <img src={aaroww} alt=""/></button>
+                            <button class={productPrice ? "saveNnewBtn" : "saveNnewBtn disabled"}>Buy <img src={aaroww} alt=""/></button>
                         </div>
                     </form>
                 </div>

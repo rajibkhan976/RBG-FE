@@ -5484,6 +5484,19 @@ button.saveOverview img {
   box-shadow: 0 0 0 1px rgb(48 86 113);
 }
 
+.formControl .pickColor .addColor.black {
+  background: #000;
+}
+.formControl .pickColor .addColor.gray {
+  background: #797d62;
+}
+.formControl .pickColor .addColor.blue {
+  background: #369ed5;
+}
+.formControl .pickColor .addColor.red {
+  background: #834140;
+}
+
 .formControl .pickSize .size {
   border-radius: 5px;
   border: 1px solid #9baebc;
