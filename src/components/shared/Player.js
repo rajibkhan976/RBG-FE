@@ -9,7 +9,7 @@ import delete_icon_grey from "../../assets/images/delete_icon_grey.svg";
 
 const initialState = {
     isPaused: false,
-    currentTime: 0,
+    currentTime: 24*60*60,
     duration: 0,
     volume: 1,
     muted: false,

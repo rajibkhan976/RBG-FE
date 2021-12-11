@@ -23,7 +23,8 @@ const Recoder = (props) => {
 
   let chunks = [];
   let blob = null;
-  let options = { mimeType: "audio/wav" };
+  let initOptions = { mimeType: "audio/wav1" };
+  const [options, setOptions] = useState(initOptions);
   let audioExtension = ".wav";
 
   //Timer
@@ -91,7 +92,7 @@ const Recoder = (props) => {
 
       recorderState.mediaRecorder.onstop = function () {
         console.log("Stopped  & state = " + recorderState.mediaRecorder.state);
-
+        console.log("mim", options.mimeType)
         blob = new Blob(chunks, { type: options.mimeType });
         chunks = [];
 
@@ -154,6 +155,10 @@ const Recoder = (props) => {
     );
   };
 
+  const getMimType = () => {
+
+  }
+
   //Recoder call back
   const startRecordingCallback = (stream) => {
     // let options, audioExtension;
@@ -165,27 +170,32 @@ const Recoder = (props) => {
 
     if (typeof MediaRecorder.isTypeSupported === "function") {
       if (MediaRecorder.isTypeSupported("audio/wav")) {
-        options = { mimeType: "audio/wav" };
+        options.mimeType = "audio/wav";;
         audioExtension = ".wav";
       } else if (MediaRecorder.isTypeSupported("audio/mp3")) {
-        options = { mimeType: "audio/mp3" };
+        options.mimeType =  "audio/mp3" ;
         audioExtension = ".mp3";
       } else if (MediaRecorder.isTypeSupported("audio/mp4")) {
-        options = { mimeType: "audio/mp4" };
+        options.mimeType = "audio/mp4";
         audioExtension = ".mp4";
       } else if (MediaRecorder.isTypeSupported("audio/mpeg")) {
-        options = { mimeType: "audio/mpeg" };
+        options.mimeType = "audio/mpeg";
         audioExtension = ".mpg";
       } else if (MediaRecorder.isTypeSupported("audio/aac")) {
-        options = { mimeType: "audio/aac" };
+        options.mimeType = "audio/aac";
         audioExtension = ".aac";
       } else if (MediaRecorder.isTypeSupported("audio/webm")) {
-        options = { mimeType: "audio/webm" };
+        options.mimeType = "audio/webm";
         audioExtension = ".webm";
       } else if (MediaRecorder.isTypeSupported("audio/ogg")) {
-        options = { mimeType: "audio/ogg" };
+        options.mimeType = "audio/ogg";
         audioExtension = ".ogg";
       }
+      setOptions((prevState) => {
+        return {
+          ...options
+        }
+      });
       console.log("Using " + options.mimeType);
       setRecorderState((prevState) => {
         return {
@@ -214,6 +224,7 @@ const Recoder = (props) => {
 
   const pauseResumeRecording = (e) => {
     e.preventDefault();
+    console.log("mim on pause", options)
     if (recorderState.initRecording) {
       recorderState.mediaRecorder.pause();
       console.log("Pause recording", recorderState.initRecording);
@@ -228,6 +239,7 @@ const Recoder = (props) => {
       recordingSeconds: recorderState.recordingSeconds,
       mediaRecorder: recorderState.mediaRecorder,
     });
+    console.log("recorderState.mediaRecorder", recorderState.mediaRecorder)
   };
 
   const stopRecording = (e) => {
