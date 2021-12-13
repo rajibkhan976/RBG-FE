@@ -3,7 +3,6 @@ import { useDispatch } from "react-redux";
 import * as actionTypes from "../../../../actions/types";
 import aaroww from "../../../../assets/images/arrow_forward.svg";
 import arrow_forward from "../../../../assets/images/backIcon.svg";
-import tick from "../../../../assets/images/tick.svg";
 import camera from "../../../../assets/images/camera.svg";
 import categoryTag from "../../../../assets/images/categoryTag.svg";
 import { CourseServices } from "../../../../services/setup/CourseServices";
@@ -21,9 +20,9 @@ const TransactionChoose = (props) => {
     const [courseCategory, setCourseCategory] = useState([]);
     const [courseList, setCourseList] = useState([]);
     const [courseFees, setCourseFees] = useState(0);
-    const [courseName, setCourseName] = useState("Course not selected");
+    const [courseName, setCourseName] = useState("Course name");
     const [courseId, setCourseId] = useState("");
-    const [catName, setCatName] = useState("Category not selected");
+    const [catName, setCatName] = useState("Category name");
     const [courseSelected, setCourseSelected] = useState(false);
     const [courseImg, setCourseImg] = useState("");
     const [courseDuration, setCourseDuration] = useState("");
@@ -34,11 +33,19 @@ const TransactionChoose = (props) => {
     const [productList, setProductList] = useState([]);
     const [posSelectedCat, setPosSelectedCat] = useState();
     const [posSelectedProductIndex, setPosSelectedProductIndex] = useState();
-    const [choosedColor, setChoosedColor] = useState();
-    const [choosedSize, setChoosedSize] = useState();
-    const [productPrice, setProductPrice] = useState();
+    const [productPrice, setProductPrice] = useState(0);
+    const [productPriceTax, setProductPriceTax] = useState(0);
+    const [productImg, setProductImg] = useState(camera);
+    const [productImgName, setProductImgName] = useState("");
+    const [productCatName, setProductCatName] = useState("Category name");
+    const [productName, setProductName] = useState("Product name");
     const [colors, setColors] = useState([]);
     const [size, setSize] = useState([]);
+    const [chosedColor, setChosedColor] = useState("");
+    const [chosedSize, setChosedSize] = useState("");
+    const [tax, setTax] = useState(0);
+    const [colorIndex, setColorIndex] = useState();
+    const [sizeIndex, setSizeIndex] = useState();
 
     
     const dispatch = useDispatch();
@@ -59,16 +66,6 @@ const TransactionChoose = (props) => {
         fetchCourseCategories();
     }
 
-    const [addActive, setAddActive] = useState(false);
-    const activeClassHandler = (event) => {
-        event. preventDefault();
-        setAddActive(!addActive);
-    };
-    const [addActive2, setAddActive2] = useState(false);
-    const activeClassHandler2 = (event) => {
-        event. preventDefault();
-        setAddActive2(!addActive2);
-    };
 
     const fetchCourseCategories = async () => {
         setShowLoader(true);
@@ -132,20 +129,56 @@ const TransactionChoose = (props) => {
 
     /* POS transaction functions */
 
+    const productPriceHandel = (e) => {
+        let inputVal = e.target.value;
+        let val = inputVal.replace(/[^\d]/g, "");
+        let price;
+        
+        if (val.length > 0 && val !== NaN) {
+            console.log(parseFloat(val));
+            price = parseFloat(val);
+            let taxAmmount = (price * tax) / 100;
+            setProductPrice(price);
+            setProductPriceTax(price + taxAmmount);
+        } else {
+            price = null;
+            setProductPrice("");
+            setProductPriceTax(0);
+        }
+    }
+
     const fetchProductCategory = async () => {
+        setShowLoader(true);
         let relult = await ProductServices.fetchCategory();
         setProductCatList(relult);
+        setShowLoader(false);
     }
 
     const fetchProductList = async (catID) => {
+        setShowLoader(true);
         let relult = await ProductServices.fetchProducts(catID);
         setProductList(relult.products);
         console.log(relult);
+        setShowLoader(false);
     }
 
     const chosePosCatHandel = (e) => {
         setPosSelectedCat(e.target.value);
         fetchProductList(e.target.value);
+        setProductCatName(e.target[e.target.selectedIndex].getAttribute("data-name"));
+        resetProductHandel();
+    }
+
+    const choseSizeHandel = (e, key) => {
+        e.preventDefault();
+        setChosedSize(e.target.value);
+        setSizeIndex(key);
+    }
+
+    const choseColorHandel = (e, key) => {
+        setChosedColor(e.target.value);
+        setColorIndex(key);
+        
     }
 
     const chosePosProductHandel = (e) => {
@@ -153,7 +186,51 @@ const TransactionChoose = (props) => {
         console.log(e.target.value);
         setColors(productList[e.target.value].colors);
         setSize(productList[e.target.value].size);
+        setProductImg("https://wrapperbucket.s3.us-east-1.amazonaws.com/" + productList[e.target.value].image);
+        setProductImgName(productList[e.target.value].image);
+
+        let price = parseFloat(productList[e.target.value].price);
+        let taxPercent =  parseFloat(e.target[e.target.selectedIndex].getAttribute("data-tax"));
+        let taxAmmount = (price * taxPercent) / 100;
+        setProductPrice(price);
+        setProductPriceTax(price + taxAmmount);
+
+        setProductName(productList[e.target.value].name);
+        setTax(taxPercent);
+        resetProductHandel();
+        
     }
+
+    const resetProductHandel = () => {
+        setChosedColor("");
+        setChosedSize("");
+        setColorIndex();
+        setSizeIndex();
+    }
+
+    const buyProduct = async (e) => {
+        e.preventDefault();
+        try {
+            let payload = {
+                "contact": props.contactId,
+                "category": posSelectedCat,
+                "categoryName": productCatName,
+                "productName": productName,
+                "colors": [chosedColor],
+                "image": productImgName,
+                "price": productPriceTax,
+                "size": [chosedSize],
+                "taxPercent": tax
+            }
+            setShowLoader(true);
+            const result = await ProductServices.buyProduct(payload);
+            setSuccessMsg("POS transaction registered successfully");
+        } catch (e) {
+            setErrorMsg(e.message);
+        } finally {
+            setShowLoader(false);
+        }
+     }
 
 
     return(
@@ -189,6 +266,13 @@ const TransactionChoose = (props) => {
                     </label>
                 </div>
                { choosePOS && <div className="posSellingForm">
+               { showLoader && <Loader /> }
+                    {successMsg &&
+                        <div className="formMsg success">{successMsg}</div>
+                    }
+                    {errorMsg &&
+                        <div className="formMsg error">{errorMsg}</div>
+                    }
                     <form>
                         <div className="transaction_form">
                             <div className="formsection gap">
@@ -196,7 +280,7 @@ const TransactionChoose = (props) => {
                                 <select className="selectBox" onChange={chosePosCatHandel}>
                                     <option value="" >Select Category</option>
                                     { productCatList.map((item, key) => (
-                                        <option key={"productCat_" + key} value={item._id}>{item.name}</option>
+                                        <option key={"productCat_" + key} value={item._id} data-name={item.name}>{item.name}</option>
                                     ))}
                                 </select>
                             </div>
@@ -205,33 +289,40 @@ const TransactionChoose = (props) => {
                                 <select className="selectBox" onChange={chosePosProductHandel}>
                                     <option>Select Product</option>
                                     { productList.map((item, key) => (
-                                        <option key={"productKey_" + key} value={key}>{item.name}</option>
+                                        <option key={"productKey_" + key} value={key} data-tax={item.taxPercent} >{item.name}</option>
                                     ))}
                                 </select>
                             </div>
-                            <div class={posSelectedProductIndex ? "formControl" : "formControl disabled"}>
+                            <div class={posSelectedProductIndex ? "formControl" : "formControl hide"}>
                                 <label>Available Colours</label>
                                 <div class="pickColor">
                                     {/* <button className={addActive ? "addColor active" :  "addColor"} style={{ backgroundColor: "#834140" }} onClick={activeClassHandler}>
                                          <img src={addActive ? tick : ""} alt=""/>
                                     </button> */}
                                     { colors.map((item, key) => (
-                                        <button className={"addColor " + item}></button>
+                                        <button type="button" className={colorIndex === key ? "addColor active " + item :  "addColor " + item} 
+                                        onClick={(event) => {
+                                            choseColorHandel(event, key)
+                                        }} 
+                                          value={item} 
+                                          key={key} >
+                                            
+                                        </button>
                                     ))}
                                 </div>
                             </div>
-                            <div class="formControl">
+                            <div class={posSelectedProductIndex ? "formControl" : "formControl hide"}>
                                 <label>Available Sizes</label>
                                 <div class="pickSize">
                                     {/* <button className={addActive2 ? "size active" :  "size"}  onClick={activeClassHandler2}>S</button> */}
                                     { size.map((item, key) => (
-                                        <button className="size">{item}</button>
+                                        <button type="button" className={sizeIndex === key ? "size active" : "size"} onClick={(e) => choseSizeHandel(e, key)} value={item} >{item}</button>
                                     ))}
                                 </div>
                             </div>
                             <div className="formsection">
                                 <label>Price</label>
-                                <input type="text" placeholder="Ex: 99" className="editableInput"/> <span className="tax"> * 10% tax will be applicable</span>
+                                <input type="text" placeholder="Ex: 99" className="editableInput" value={productPrice} onChange={productPriceHandel} /> <span className="tax"> * 10% tax will be applicable</span>
                                 <p>* default currency is <strong>USD</strong></p>
                             </div>
                         </div>
@@ -239,18 +330,17 @@ const TransactionChoose = (props) => {
                             <h3 className="commonHeadding">Preview Windows</h3>
                             <div className="previewBox">
                                 <div className="previewImgBox">
-                                    <span className="sizeTag">S</span>
-                                    <img src={camera} alt="" />
-                                   <span> Preview image</span>
+                                    <span className={chosedColor ? "sizeTag " + chosedColor : "sizeTag"}>{chosedSize}</span>
+                                    <img src={productImg} alt="" />
                                 </div>
-                                <h3>Product Name</h3>
-                                <p className="category"> <img src={categoryTag} alt="" /> Category</p>
+                                <h3>{productName}</h3>
+                                <p className="category"> <img src={categoryTag} alt="" /> {productCatName}</p>
                                    
-                                <h4>{productPrice ? "$ " + productPrice :  "$ 000"}</h4>
+                                <h4>$ {productPriceTax}</h4>
                                 <span className="tax"> * Amount showing including taxes </span>
                             </div>
 
-                            <button class={productPrice ? "saveNnewBtn" : "saveNnewBtn disabled"}>Buy <img src={aaroww} alt=""/></button>
+                            <button class={chosedColor && chosedSize && productPrice  ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={buyProduct}>Buy <img src={aaroww} alt=""/></button>
                         </div>
                     </form>
                 </div>
@@ -259,8 +349,8 @@ const TransactionChoose = (props) => {
                 { showLoader && <Loader /> }
                 {successMsg &&
                     <div className="formMsg success">{successMsg}</div>
-                    }
-                    {errorMsg &&
+                }
+                {errorMsg &&
                     <div className="formMsg error">{errorMsg}</div>
                 }
                 <form>

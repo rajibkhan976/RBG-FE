@@ -5472,7 +5472,9 @@ button.saveOverview img {
 .formControl .pickSize .size {
   min-width: 24px;
   height: 24px;
-  background: #fff;
+  background-color: #fff;
+  background-repeat: no-repeat;
+  background-position: center;
   border: 1px solid #ffffff;
   border-radius: 50%;
   margin: 0 4px 0 0;
@@ -5482,19 +5484,20 @@ button.saveOverview img {
 
 .formControl .pickColor .addColor.active {
   box-shadow: 0 0 0 1px rgb(48 86 113);
+  background-image: url("../images/tick.svg");
 }
 
 .formControl .pickColor .addColor.black {
-  background: #000;
+  background-color: #000;
 }
 .formControl .pickColor .addColor.gray {
-  background: #797d62;
+  background-color: #797d62;
 }
 .formControl .pickColor .addColor.blue {
-  background: #369ed5;
+  background-color: #369ed5;
 }
 .formControl .pickColor .addColor.red {
-  background: #834140;
+  background-color: #834140;
 }
 
 .formControl .pickSize .size {
@@ -7520,6 +7523,8 @@ p.trackName {
   line-height: 38px;
   box-sizing: border-box;
   padding: 0 10px;
+  font-size: 14px;
+  color: var(--darkBlue);
 }
 .transaction_form .formsection p {
   margin: 0;
@@ -7634,6 +7639,19 @@ p.trackName {
   left: -1px;
   top: 0px;
 }
+.previewImgBox .sizeTag.black {
+  background-color: #000;
+}
+.previewImgBox .sizeTag.gray {
+  background-color: #797d62;
+}
+.previewImgBox .sizeTag.blue {
+  background-color: #369ed5;
+}
+.previewImgBox .sizeTag.red {
+  background-color: #834140;
+}
+
 .active .previewImgBox .sizeTag {
   background: #ed707a;
   border-color: #ed707a;

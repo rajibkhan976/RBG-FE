@@ -209,5 +209,15 @@ export const ProductServices = {
                 throw new Error(e.message + ". Please contact support.");
             }
         }
+    },
+
+    buyProduct: async (payload) => {
+        try {
+            const url = config.buyProductUrl;
+            const result = await axios.post(url, payload, { headers: headers });
+            return result.data;
+        } catch (e) {
+            throw new Error(e.response.data.message);
+        }
     }
 };
