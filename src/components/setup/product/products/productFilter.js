@@ -5,7 +5,7 @@ import Loader2 from "../../../shared/Loader2";
 
 
 const ProductFilter = (props) => {
-    const thumbsize = 14;
+    const thumbsize = 2;
     const [isLoader, setIsLoader] = useState(false);
     const [colorSize, setColorSize] = useState({
         colors: [],

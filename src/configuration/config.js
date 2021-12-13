@@ -100,6 +100,8 @@ module.exports = {
     resetPasswordEmailUrl: "https://61ayvg0p7g.execute-api.us-east-1.amazonaws.com/dev/user/reset-password-email",
     resetPasswordUrl: "https://61ayvg0p7g.execute-api.us-east-1.amazonaws.com/dev/user/reset-password",
     // Buy Product Link
-    buyProductUrl: "https://bulitnj4tg.execute-api.us-east-1.amazonaws.com/dev/contact/registration/product"
+    buyProductUrl: "https://bulitnj4tg.execute-api.us-east-1.amazonaws.com/dev/contact/registration/product",
 
+    //Customization
+    customizationUrl: "https://smtis62b0e.execute-api.us-east-1.amazonaws.com/dev/customization/",
 }  

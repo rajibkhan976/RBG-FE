@@ -139,7 +139,13 @@ const Setup = (props) => {
                   <img src={SetupIcon6} alt="" />
                 </i>
                 <div>
-                  <h3>Customizations</h3>
+                  <h3>
+                    <NavLink
+                     to="/customizations"
+                     onClick={(e) => props.clickedLink(e)}
+                    >Customizations
+                    </NavLink>
+                  </h3>
                   <p>Lorem ipsum dolor sit</p>
                 </div>
               </div>

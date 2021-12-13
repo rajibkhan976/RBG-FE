@@ -303,7 +303,7 @@ const InnerLeftMenu = (props) => {
                 </NavLink>
               </li>
               <li>
-                <a className="leftMenuInnerLink" href="javascript:void(0)">
+                <NavLink className="leftMenuInnerLink" to="/customizations"> 
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Customizations</p>
@@ -312,7 +312,7 @@ const InnerLeftMenu = (props) => {
                       <img src={SideMenuArrow} alt="" />
                     </button>
                   </div>
-                </a>
+                </NavLink>
               </li>
               <li>
                 <NavLink className="leftMenuInnerLink" to="/audio-template" activeClassName="active">

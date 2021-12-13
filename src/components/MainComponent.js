@@ -13,6 +13,8 @@ import TemplateRoutes from "./setup/templates/templateRoutes";
 import ProductRouter from "./setup/product/productRoute";
 import NumberRouting from "./numbers/NumberRoute";
 import CourseRouter from "./setup/course/courseRoute";
+import CustomizationRouter from "./setup/customization/customizationsRoute";
+
 import HeaderDashboard from "./shared/HeaderDashboard";
 import { UserServices } from "../services/authentication/UserServices";
 import config from "../configuration/config";
@@ -192,6 +194,9 @@ const MainComponent = () => {
               </Route>
               <Route exact path="/number-list">
                 <NumberRouting toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></NumberRouting>
+              </Route>
+              <Route exact path="/customizations">
+                <CustomizationRouter toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></CustomizationRouter>
               </Route>
               <Route exact path="/" component={() => <Redirect to="/dashboard" />} />
               <Route exact path="*">
