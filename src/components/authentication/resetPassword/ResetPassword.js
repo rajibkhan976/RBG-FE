@@ -18,9 +18,9 @@ const ResetPassword = (props) => {
     passwordError: "",
     confirmPasswordError: "",
   });
-  const [charCount, setCharCount] = useState();
-  const [charType, setCharType] = useState();
-  const [matchPassword, setMatchPassword] = useState();
+  const [charCount, setCharCount] = useState("");
+  const [charType, setCharType] = useState("");
+  const [matchPassword, setMatchPassword] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const messageDelay = 5000; // ms
@@ -83,6 +83,14 @@ const ResetPassword = (props) => {
     } else {
       setMatchPassword(false);
       console.log("e", confirmPasswordReset, "f", passwordReset)
+    }
+
+    //if both the password not present
+    if(!passwordReset.length && !confirmPasswordReset.length) {
+      console.log('both the pass not present');
+      setCharCount("");
+      setCharType("");
+      setMatchPassword("");
     }
 
 

@@ -438,6 +438,12 @@ const UsersListing = (props) => {
                                         onClick={() => handleSortBy("group")}
                                     >Assigned Group</div>
                                     <div
+                                        className="assignedGroup"
+                                    >Organization</div>
+                                    <div
+                                        className="assignedGroup"
+                                    >Association</div>
+                                    <div
                                         className={"status " + (sortBy == "status" ? "sort " + sortType : "")}
                                         onClick={() => handleSortBy("status")}
                                     >Status</div>
@@ -475,6 +481,12 @@ const UsersListing = (props) => {
                                                     </div>
                                                     <div className="assignedGroup">
                                                         <button className="btn">{elem.group[0] ? elem.group[0].name : ''}</button>
+                                                    </div>
+                                                    <div className="assignedGroup">
+                                                        <button className="btn">{elem.organization && elem.isOrganizationOwner ? elem.organization.name : 'N/A'}</button>
+                                                    </div>
+                                                    <div className="assignedGroup">
+                                                        <button className="btn">{elem.isAssociationOwner && elem.association ? elem.association.name : 'N/A'}</button>
                                                     </div>
                                                     <div className="status">
                                                         <button className="btn">{elem.status}</button>

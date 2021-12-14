@@ -62,7 +62,7 @@ const ForgetPassword = (props) => {
      */
     if (!resetEmail) {
       isError = true;
-      formErrorsCopy.resetEmail = "Please enter your registered email";
+      formErrorsCopy.resetEmail = "Please enter email address";
     } else {
       isError = false;
       formErrorsCopy.resetEmail = "";

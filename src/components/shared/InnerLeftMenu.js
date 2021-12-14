@@ -113,6 +113,28 @@ const InnerLeftMenu = (props) => {
                   </div>
                 </NavLink>
               </li>
+              <li>
+                <NavLink className="leftMenuInnerLink" to="/organizations">
+                  <div className="indicator"></div>
+                  <div className="linkDetails">
+                    <p className="linkHeading">Organizations</p>
+                    <span className="notificationNumber">0</span>
+                    <br />
+                    <p className="linkAbout">Manage Organizations</p>
+                  </div>
+                </NavLink>
+              </li>
+              <li>
+                <NavLink className="leftMenuInnerLink" to="/associations">
+                  <div className="indicator"></div>
+                  <div className="linkDetails">
+                    <p className="linkHeading">Associations</p>
+                    <span className="notificationNumber">0</span>
+                    <br />
+                    <p className="linkAbout">Manage Associations</p>
+                  </div>
+                </NavLink>
+              </li>
             </ul>
             <div className="linkImg">
               <img src={undraw_personal_settings_kihd} alt="" />

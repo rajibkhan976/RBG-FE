@@ -6,6 +6,9 @@ import Users from "./users/Users";
 import InnerLeftMenu from "../shared/InnerLeftMenu";
 import HeaderDashboard from "../shared/HeaderDashboard";
 import DashboardFooter from "../shared/FooterDashboard";
+import Organizations from "./organizations/Organizations";
+import Associations from "./associations/Associations";
+
 
 const AuthRoutes = (props) => {
   const [randomID, setRandomID] = useState(Math.random().toString());
@@ -25,6 +28,8 @@ const AuthRoutes = (props) => {
           /> */}
           <Route path="/groups" component={Groups} />
           <Route path="/users" component={Users} />
+          <Route path="/organizations" component={Organizations} />
+          <Route path="/associations" component={Associations} />
           <DashboardFooter />
         </div>
       </div>

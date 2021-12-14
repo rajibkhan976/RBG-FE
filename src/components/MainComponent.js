@@ -112,7 +112,7 @@ const MainComponent = () => {
               <Route exact path="/dashboard">
                 <DashboardRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
               </Route>
-              <Route exact path={["/roles", "/groups", "/users"]}>
+              <Route exact path={["/roles", "/groups", "/users", '/organizations', '/associations']}>
                 <AuthRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
               </Route>
               <Route exact path={["/automation-list", "/automation-builder"]}>
