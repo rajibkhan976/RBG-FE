@@ -17,6 +17,7 @@ import CourseRouter from "./setup/course/courseRoute";
 import HeaderDashboard from "./shared/HeaderDashboard";
 import { UserServices } from "../services/authentication/UserServices";
 import config from "../configuration/config";
+import UpdateNotification from "./shared/updateNotifications/UpdateNotification";
 
 
 const MainComponent = () => {
@@ -145,7 +146,8 @@ const MainComponent = () => {
         </div>
       </div>
       {isShowContact && <ContactModal contactId={modalId} />}
-
+          
+      <UpdateNotification version="2.10.1" hide={false} />
     </>
   );
 };

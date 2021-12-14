@@ -44,6 +44,7 @@ function ContactsComponent(props) {
           <DashboardFooter />
         </div>
       </div>
+      
     </>
   );
 }
