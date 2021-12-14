@@ -26,6 +26,8 @@ const ProductFilter = (props) => {
         setDefaultParams();
     }, []);
 
+    
+
     const setDefaultParams = () => {
         const data = {
             categories: [],
@@ -62,8 +64,8 @@ const ProductFilter = (props) => {
 
     const Slider = ({ min, max, minval, maxval }) => {
         const [avg, setAvg] = useState((min + max) / 2);
-        const [minVal, setMinVal] = useState(minval);
-        const [maxVal, setMaxVal] = useState(maxval);
+        const [minVal, setMinVal] = useState(parseInt(minval));
+        const [maxVal, setMaxVal] = useState(parseInt(maxval));
 
         const width = 400;
         const minWidth =

@@ -5180,6 +5180,7 @@ button.saveOverview img {
   font-size: 13px;
   position: absolute;
   top: 10px;
+  transform: translateX(-50%);
 }
 
 .applySlider .min-max-slider > input {
