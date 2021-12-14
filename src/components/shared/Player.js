@@ -46,8 +46,8 @@ const Player = (props) => {
                 // console.log('event', event);
                 const currentTime = Math.floor(props.audioElement.currentTime).toString();
                 const duration = Math.floor(props.audioElement.duration).toString();
-                  
-                // console.log('curr', formatSecondsAsTime(currentTime), 'du', formatSecondsAsTime(duration))
+
+
                 setPlayerState((prevState) => {
                     let progress = props.audioElement.currentTime / props.audioElement.duration.toFixed(3) * 100;
                     let ct = currentTime;
@@ -66,6 +66,32 @@ const Player = (props) => {
                     };
                 });
             }, false);
+            
+            /**
+             * If reinitializing player with same object
+             * and event listent already bound 
+             */
+            if (!playerState.duration && props.audioElement.duration > 0) {
+                setPlayerState((prevState) => {
+                    
+                    let progress = props.audioElement.currentTime / props.audioElement.duration.toFixed(3) * 100;
+                    let duration = props.audioElement.duration.toFixed(3);
+                    let ct = Math.floor(props.audioElement.currentTime);
+                    
+                    // Magic code
+                    if (progress == 100) {
+                        progress = 0;
+                        ct = 0;
+                    }
+                    
+                    return {
+                        ...prevState,
+                        currentTime: utils.formatSecondsAsTime(ct),
+                        duration: utils.formatSecondsAsTime(duration),
+                        progressBar: progress
+                    };
+                });
+            }
         }
     }, [props.audioElement])
 
@@ -85,7 +111,7 @@ const Player = (props) => {
 
     //Display delete use effect
     useEffect(() => {
-        console.log('TT', props.trackName)
+        console.log('TT', props.audioElement.duration)
         if(props.trackName){
             setPlayerState((prevState) => {
                 return {
@@ -190,13 +216,6 @@ const Player = (props) => {
         console.log('delete recording blob');
         //Send data to recorder component
         props.audioElement.pause();
-        // setPlayerState((prevState) => {
-        //     return {
-        //         ...prevState,
-        //         isPaused: !prevState.isPaused
-        //     };
-        // });
-        
         broadcastToRecoder(true);
     }
 
@@ -233,7 +252,7 @@ const Player = (props) => {
                             <div className="now" onClick={(e) => onProgressClick(e)} style={{ width: playerState.progressBar + '%' }}></div>
                         </div>
                         <div className="audioDuration">
-                            <span className="start">{playerState.currentTime}</span>
+                            <span className="start">{playerState.currentTime > 50000 ? "00:00" : playerState.currentTime}</span>
                             <span className="end">{playerState.duration}</span>
                         </div>
                     </div>
