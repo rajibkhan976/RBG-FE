@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, createRef } from "react";
 import { useDispatch } from "react-redux";
 import moment from "moment";
 import * as actionTypes from "../../../actions/types";
@@ -33,7 +33,7 @@ const RolesListing = (props) => {
   });
   const [keyword, setKeyword] = useState(null);
   const [option, setOption] = useState(null);
-  const optionsToggleRef = useRef();
+  const optionsToggleRefs = useRef([]);
   const dispatch = useDispatch();
   const [isLoader, setIsLoader] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
@@ -170,6 +170,7 @@ const RolesListing = (props) => {
       const result = await RoleServices.fetchRoles(pageId, queryParams);
       console.log("Data", result.roles);
       if (result) {
+        optionsToggleRefs.current = (result.roles.map(() => createRef()));
         setRolesData(result.roles);
         setRolesCount(result.pagination.count);
         // UPDATE STORE
@@ -262,29 +263,34 @@ const RolesListing = (props) => {
    * Handle options toggle
    */
   const toggleOptions = (index) => {
-    // console.log("Index",index);
-    // setOption(index !== null ? (option !== null ? null : index) : null);
+    console.log("Index", index);
     setOption(index !== option ? index : null);
   };
 
   useEffect(() => {
-    // document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      // document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  /**
-   * Handle outside click
-   */
-  const handleClickOutside = (event) => {
-    if (optionsToggleRef.current.contains(event.target)) {
-      //console.log('// inside click');
-      return;
+    /**
+     * Handle outside click
+     */
+    let handleClickOutside = (event) => {
+      let count = 0;
+      Array.isArray(optionsToggleRefs.current) &&
+        optionsToggleRefs.current.map((el, key) => {
+          // console.log('handle Outside click', key, el.current.contains(event.target));
+          if (el.current && !el.current.contains(event.target)) {
+            count++;
+          }
+        });
+      if (rolesData && (count === rolesData.length)) {
+        // console.log('set to null');
+        setOption(null);
+      }
     }
-    // console.log('// outside click');
-    setOption(null);
-  };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [option]);
+
 
   /**
    * Function to edit role
@@ -383,7 +389,7 @@ const RolesListing = (props) => {
       {rolesCount ?
         <>
           <div className="userListBody">
-            <div className="listBody" ref={optionsToggleRef}>
+            <div className="listBody">
               <ul className="tableListing">
                 <li className="listHeading userRole">
                   <div
@@ -426,10 +432,11 @@ const RolesListing = (props) => {
                           <div className="phoneNum">
                             <button className="btn">{elem.userCount}</button>
                           </div>
-                          <div className="createDate">
+                          <div className="createDate" ref={optionsToggleRefs.current[key]}>
                             <button className="btn">
                               {moment(elem.createdAt).format("Do MMM YYYY")}
                             </button>
+
                             <div className="info_3dot_icon">
                               <button
                                 className="btn"
