@@ -774,8 +774,8 @@ const CallConfiguration = (props) => {
                   </div>
                 )}
                 {overlappValidated && 
-                  <div className="">
-                    <span className="success">Schedule slot(s) is validated</span>
+                  <div className="text-center">
+                    <span className="formMsg success">Schedule slot(s) is validated</span>
                   </div>
                 }
 

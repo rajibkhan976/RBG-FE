@@ -5995,6 +5995,7 @@ p.trackName {
   border-radius: 5px;
   height: 70px;
   box-sizing: border-box;
+  width: 300px;
 }
 
 .volume,
