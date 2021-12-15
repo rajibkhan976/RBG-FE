@@ -76,8 +76,8 @@ module.exports = {
     // audioTemplateUrl: "http://localhost:4000/dev/audio"
     callSetupUrl: "https://ltj70u1guh.execute-api.us-east-1.amazonaws.com/dev/communication/call",
     // callSetupUrl: "http://localhost:3001/dev/communication/call",
-    callWebhookUrl: "https://memz99rc6c.execute-api.us-east-1.amazonaws.com/dev/",
-    // callWebhookUrl: "https://api.redbeltgym.com/call/",
+    // callWebhookUrl: "https://memz99rc6c.execute-api.us-east-1.amazonaws.com/dev/",
+    callWebhookUrl: "https://api.redbeltgym.com/call/",
     ec2ApiBaseURl: "https://api.redbeltgym.com",
     // Ringtone service
     ringtoneUrl: "https://psk3w69xqd.execute-api.us-east-1.amazonaws.com/dev/number/ringtone/",
