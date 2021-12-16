@@ -13,7 +13,7 @@ import {
 
 const Login = (props) => {
   document.title = "Red Belt Gym - Login";
- 
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [formErrors, setFormErrors] = useState({
@@ -21,7 +21,7 @@ const Login = (props) => {
     password: "",
   });
   const [loader, setLoader] = useState(false);
-  const [hidePss, setHidePass]= useState(true);
+  const [hidePss, setHidePass] = useState(true);
 
   const togglePass = () => {
     setHidePass(!hidePss);
@@ -29,7 +29,8 @@ const Login = (props) => {
 
   const dispatch = useDispatch();
   const errorMessage = useSelector((state) =>
-    state.auth.message ? state.auth.message.error : null
+    // console.log('auth store', state.auth)
+    state.auth.message ? state.auth.message : null
   );
 
   const handleEmailChange = (event) => {
@@ -134,7 +135,7 @@ const Login = (props) => {
         });
     }
   };
- 
+
   return (
     <div className="mainComponent">
       {loader ? <Loader /> : ""}
@@ -192,7 +193,7 @@ const Login = (props) => {
             </div>
             <div className="formInputs">
               <label>Password</label>
-               <NavLink className="login_forget_link" to="/forgot-password">Forgot?</NavLink> 
+              <NavLink className="login_forget_link" to="/forgot-password">Forgot?</NavLink>
               <div
                 className={
                   formErrors.password ? "inFormField errorField" : "inFormField"
@@ -233,9 +234,9 @@ const Login = (props) => {
           <span className="overlay"></span>
           <div className="login_left_text">
             <h2>Black Friday 2021 🎉</h2>
-            <p>Enjoy 30% off our Premium Plans for a limited time only<br/>
-            <button className="link_btn">Get This Deal NOW</button></p>
-            </div>
+            <p>Enjoy 30% off our Premium Plans for a limited time only<br />
+              <button className="link_btn">Get This Deal NOW</button></p>
+          </div>
 
         </div>
       </div>

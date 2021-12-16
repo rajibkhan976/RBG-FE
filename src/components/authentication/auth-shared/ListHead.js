@@ -164,7 +164,31 @@ const ListHead = (props) => {
           </button>
         </div>
       </div>
-      : ''
+      : pathURL === '/organizations' ?
+      <div className="userListHead">
+        <div className="listInfo">
+          <ul className="listPath">
+            <li>Users & Controls</li>
+            <li>Organizations</li>
+          </ul>
+          <h2 className="inDashboardHeader">Organizations ({props.organizationsCount})</h2>
+          <p className="userListAbout">
+            Manage Organizations
+          </p>
+        </div>
+      </div> :  pathURL === '/associations' ?
+      <div className="userListHead">
+        <div className="listInfo">
+          <ul className="listPath">
+            <li>Users & Controls</li>
+            <li>Associations</li>
+          </ul>
+          <h2 className="inDashboardHeader">Associations (0)</h2>
+          <p className="userListAbout">
+            Manage Associations
+          </p>
+        </div>
+      </div> : ''
       )
   );
 };

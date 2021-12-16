@@ -8,6 +8,8 @@ export const ROLE_COUNT = "ROLE_COUNT";
 export const GROUP_COUNT = "GROUP_COUNT";
 // User
 export const USER_COUNT = "USER_COUNT";
+//Organization
+export const ORGANIZATION_COUNT = "ORGANIZATION_COUNT";
 // Automation
 export const AUTOMATION_COUNT = "AUTOMATION_COUNT";
 //User

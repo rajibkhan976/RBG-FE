@@ -18,6 +18,12 @@ module.exports = {
             edit: "You do not have edit user permission",
             delete: "You do not have delete permission"
         },
+        organization: {
+            read: "You do not have permission",
+            create: "You do not have create user permission",
+            edit: "You do not have edit user permission",
+            delete: "You do not have delete permission"
+        },
         automation: {
             read: "You do not have permission",
             create: "You do not have create automation permission",

@@ -16,9 +16,7 @@ const InnerLeftMenu = (props) => {
   const rolesStoreCount = useSelector((state) => state.role.count);
   const groupsStoreCount = useSelector((state) => state.group.count);
   const usersStoreCount = useSelector((state) => state.user.count);
-  const [rolesCount, setRolesCount] = useState(0);
-  const [groupsCount, setGroupsCount] = useState(0);
-  const [usersCount, setUsersCount] = useState(0);
+  const organizationsStoreCount = useSelector((state) => state.organization.count);
   const automationCount = useSelector((state) => state.automation.count);
   const contactCount = useSelector((state) => state.contact.count);
   const dispatch = useDispatch();
@@ -60,6 +58,11 @@ const InnerLeftMenu = (props) => {
         dispatch({
           type: actionTypes.USER_COUNT,
           count: result.users,
+        });
+        // UPDATE STORE
+        dispatch({
+          type: actionTypes.ORGANIZATION_COUNT,
+          count: result.organizations,
         });
       }
     } catch (e) {
@@ -118,7 +121,7 @@ const InnerLeftMenu = (props) => {
                   <div className="indicator"></div>
                   <div className="linkDetails">
                     <p className="linkHeading">Organizations</p>
-                    <span className="notificationNumber">0</span>
+                    <span className="notificationNumber">{organizationsStoreCount}</span>
                     <br />
                     <p className="linkAbout">Manage Organizations</p>
                   </div>
