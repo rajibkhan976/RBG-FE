@@ -5,7 +5,7 @@ import Transaction from "./pages/Transaction";
 import TransactionChoose from "./pages/TransactionChoose";
 
 import Billing from "./pages/Billing";
-import { Step, Steps, NavigationComponentProps} from "react-step-builder";
+import { Step, Steps, NavigationComponentProps } from "react-step-builder";
 import { useDispatch } from "react-redux";
 import * as actionTypes from "../../../actions/types";
 import { ContactService } from "../../../services/contact/ContactServices";
@@ -34,7 +34,7 @@ const ContactModal = (props) => {
                 <button className={navigation.current == 1 ? "active nNav" : "nNav"} onClick={() => navigation.jump(1)}>Overview</button>
                 <button className={navigation.current == 2 ? "active nNav" : "nNav"} onClick={() => navigation.jump(2)}>Attendance</button>
                 <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)} >
-                   Transaction
+                    Transaction
                 </button>
                 <button className={navigation.current == 4 ? "active nNav" : "nNav"} onClick={() => navigation.jump(4)}>
                     Billing
@@ -79,18 +79,17 @@ const ContactModal = (props) => {
 
     useEffect(() => {
         getContact(props.contactId);
-      }, []);
+    }, []);
 
     const [goToTransactionClicked, setGoToTransactionClicked] = useState(false);
-    const goToTransactionHandler = () =>{
+    const goToTransactionHandler = () => {
         setGoToTransactionClicked(true)
     }
-    const backToTransListHandler = () =>{
+    const backToTransListHandler = () => {
         setGoToTransactionClicked(false)
     }
 
-
-    return(
+    return (
         <>
             <div className="modal contactModal">
                 <div className="modalContainer">
@@ -102,7 +101,7 @@ const ContactModal = (props) => {
                                     <img src={minimize_icon} alt="" />
                                 </button>
                                 <button className="closeModal" onClick={() => closeContactModal()} >
-                                    <img src={cross_white} alt=""/>
+                                    <img src={cross_white} alt="" />
                                 </button>
                             </div>
                             <div className="userInfoArea">
@@ -111,7 +110,7 @@ const ContactModal = (props) => {
                                         <img src={user_100X100} alt="" />
                                     </span>
                                     <button className="editUserImg">
-                                      <img src={camera_icon} alt="" />
+                                        <img src={camera_icon} alt="" />
                                     </button>
                                 </div>
                                 <div className="userName">
@@ -119,7 +118,7 @@ const ContactModal = (props) => {
                                 </div>
                                 <div className="ltValue">
                                     <header>Life Time Value :</header>
-                                    <span>USD 32,546</span>
+                                    <span>USD {(contactData.ltv + contactData.ltvPOS).toLocaleString("en-US")}</span>
                                 </div>
                                 {/* <div className="userContacts">
                                     <div className="userPhone">
@@ -139,7 +138,7 @@ const ContactModal = (props) => {
                                     <div className="userPhone">
                                         <img src={phone_call_icon_white} alt="" />
                                         <span>{contactData.phone && contactData.phone.dailCode && contactData.phone.number ?
-                                          contactData.phone.dailCode +"-"+contactData.phone.number : ""}</span>
+                                            contactData.phone.dailCode + "-" + contactData.phone.number : ""}</span>
                                     </div>
                                     <div className="userEmail">
                                         <img src={email_icon_white} alt="" />
@@ -199,7 +198,7 @@ const ContactModal = (props) => {
                         <Steps config={config}>
                             <Step title="Overview" contact={contactData} component={Overview} contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
                             <Step title="Attendance" component={Attendance} />
-                            <Step title="Transaction" contactId={props.contactId} backToTransList = {backToTransListHandler} goToTransaction = {goToTransactionHandler} component={goToTransactionClicked ? TransactionChoose : Transaction} />
+                            <Step title="Transaction" contactId={props.contactId} backToTransList={backToTransListHandler} goToTransaction={goToTransactionHandler} component={goToTransactionClicked ? TransactionChoose : Transaction} />
                             <Step title="Transaction" component={Billing} contactId={props.contactId} />
                         </Steps>
 
