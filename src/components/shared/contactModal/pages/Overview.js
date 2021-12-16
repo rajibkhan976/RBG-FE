@@ -94,66 +94,66 @@ const Overview = (props) => {
         let payload = {
             id: props.contactId
         }
-        // let contact = await ContactService.fetchContact(JSON.stringify(payload));
-        setContact(props.contact);
-        setBasicinfoFname(contact.firstName);
-        setBasicinfoLname(contact.lastName);
-        setBasicinfoDob(contact.dob);
-        setBasicinfoEmail(contact.email);
+        let contact = await ContactService.fetchContact(JSON.stringify(payload));
+        setContact(contact.contact);
+        setBasicinfoFname(contact.contact.firstName);
+        setBasicinfoLname(contact.contact.lastName);
+        setBasicinfoDob(contact.contact.dob);
+        setBasicinfoEmail(contact.contact.email);
         setBasicinfoPhone({
-            countryCode: contact.phone ? (contact.phone.countryCode ? contact.phone.countryCode : "US") : "US",
-            dailCode: contact.phone ? (contact.phone.dailCode ? contact.phone.dailCode : "+1") : "+1",
-            number: contact.phone ? (contact.phone.number ? contact.phone.number : "") : "",
-            full_number: contact.phone ? (contact.phone.full_number ? contact.phone.full_number : "") : "",
-            location: contact.phone ? (contact.phone.location ? contact.phone.location : "None") : "None",
-            country: contact.phone ? (contact.phone.country ? contact.phone.country : "") : "",
-            carrier: contact.phone ? (contact.phone.carrier ? contact.phone.carrier : "None") : "None",
-            timezone: contact.phone ? (contact.phone.timezone ? contact.phone.timezone : "America/New_York") : "America/New_York",
-            is_valid: contact.phone ? (contact.phone.is_valid ? contact.phone.is_valid : false) : false,
+            countryCode: contact.contact.phone ? (contact.contact.phone.countryCode ? contact.contact.phone.countryCode : "US") : "US",
+            dailCode: contact.contact.phone ? (contact.contact.phone.dailCode ? contact.contact.phone.dailCode : "+1") : "+1",
+            number: contact.contact.phone ? (contact.contact.phone.number ? contact.contact.phone.number : "") : "",
+            full_number: contact.contact.phone ? (contact.contact.phone.full_number ? contact.contact.phone.full_number : "") : "",
+            location: contact.contact.phone ? (contact.contact.phone.location ? contact.contact.phone.location : "None") : "None",
+            country: contact.contact.phone ? (contact.contact.phone.country ? contact.contact.phone.country : "") : "",
+            carrier: contact.contact.phone ? (contact.contact.phone.carrier ? contact.contact.phone.carrier : "None") : "None",
+            timezone: contact.contact.phone ? (contact.contact.phone.timezone ? contact.contact.phone.timezone : "America/New_York") : "America/New_York",
+            is_valid: contact.contact.phone ? (contact.contact.phone.is_valid ? contact.contact.phone.is_valid : false) : false,
         });
         setBasicinfoMobilePhone({
-            countryCode: contact.mobile ? (contact.mobile.countryCode ? contact.mobile.countryCode : "US") : "US",
-            dailCode: contact.mobile ? (contact.mobile.dailCode ? contact.mobile.dailCode : "+1") : "+1",
-            number: contact.mobile ? (contact.mobile.number ? contact.mobile.number : "") : "",
-            full_number: contact.mobile ? (contact.mobile.full_number ? contact.mobile.full_number : "") : "",
-            location: contact.mobile ? (contact.mobile.location ? contact.mobile.location : "None") : "None",
-            country: contact.mobile ? (contact.mobile.country ? contact.mobile.country : "") : "",
-            carrier: contact.mobile ? (contact.mobile.carrier ? contact.mobile.carrier : "None") : "None",
-            timezone: contact.mobile ? (contact.mobile.timezone ? contact.mobile.timezone : "America/New_York") : "America/New_York",
-            is_valid: contact.mobile ? (contact.mobile.is_valid ? contact.mobile.is_valid : false) : false,
+            countryCode: contact.contact.mobile ? (contact.contact.mobile.countryCode ? contact.contact.mobile.countryCode : "US") : "US",
+            dailCode: contact.contact.mobile ? (contact.contact.mobile.dailCode ? contact.contact.mobile.dailCode : "+1") : "+1",
+            number: contact.contact.mobile ? (contact.contact.mobile.number ? contact.contact.mobile.number : "") : "",
+            full_number: contact.contact.mobile ? (contact.contact.mobile.full_number ? contact.contact.mobile.full_number : "") : "",
+            location: contact.contact.mobile ? (contact.contact.mobile.location ? contact.contact.mobile.location : "None") : "None",
+            country: contact.contact.mobile ? (contact.contact.mobile.country ? contact.contact.mobile.country : "") : "",
+            carrier: contact.contact.mobile ? (contact.contact.mobile.carrier ? contact.contact.mobile.carrier : "None") : "None",
+            timezone: contact.contact.mobile ? (contact.contact.mobile.timezone ? contact.contact.mobile.timezone : "America/New_York") : "America/New_York",
+            is_valid: contact.contact.mobile ? (contact.contact.mobile.is_valid ? contact.contact.mobile.is_valid : false) : false,
         });
         setBasicinfoMomPhone({
-            countryCode: contact.momPhone ? ( contact.momPhone.countryCode ? contact.momPhone.countryCode : "US") : "US",
-            dailCode: contact.momPhone ? (contact.momPhone.dailCode ? contact.momPhone.dailCode : "+1")  : "+1",
-            number: contact.momPhone ? (contact.momPhone.number ? contact.momPhone.number : "") : "",
-            full_number: contact.momPhone ? (contact.momPhone.full_number ? contact.momPhone.full_number : "") : "",
-            location: contact.momPhone ? (contact.momPhone.location ? contact.momPhone.location : "None") : "None",
-            country: contact.momPhone ? (contact.momPhone.country ? contact.momPhone.country : "") : "",
-            carrier: contact.momPhone ? (contact.momPhone.carrier ? contact.momPhone.carrier : "None") : "None",
-            timezone: contact.momPhone ? (contact.momPhone.timezone ? contact.momPhone.timezone : "America/New_York") : "America/New_York",
-            is_valid: contact.momPhone ? (contact.momPhone.is_valid ? contact.momPhone.is_valid : false) : false,
+            countryCode: contact.contact.momPhone ? ( contact.contact.momPhone.countryCode ? contact.contact.momPhone.countryCode : "US") : "US",
+            dailCode: contact.contact.momPhone ? (contact.contact.momPhone.dailCode ? contact.contact.momPhone.dailCode : "+1")  : "+1",
+            number: contact.contact.momPhone ? (contact.contact.momPhone.number ? contact.contact.momPhone.number : "") : "",
+            full_number: contact.contact.momPhone ? (contact.contact.momPhone.full_number ? contact.contact.momPhone.full_number : "") : "",
+            location: contact.contact.momPhone ? (contact.contact.momPhone.location ? contact.contact.momPhone.location : "None") : "None",
+            country: contact.contact.momPhone ? (contact.contact.momPhone.country ? contact.contact.momPhone.country : "") : "",
+            carrier: contact.contact.momPhone ? (contact.contact.momPhone.carrier ? contact.contact.momPhone.carrier : "None") : "None",
+            timezone: contact.contact.momPhone ? (contact.contact.momPhone.timezone ? contact.contact.momPhone.timezone : "America/New_York") : "America/New_York",
+            is_valid: contact.contact.momPhone ? (contact.contact.momPhone.is_valid ? contact.contact.momPhone.is_valid : false) : false,
         });
         setBasicinfoDadPhone({
-            countryCode: contact.dadPhone ? (contact.dadPhone.countryCode ? contact.dadPhone.countryCode : "US") : "US",
-            dailCode: contact.dadPhone ? (contact.dadPhone.dailCode ? contact.dadPhone.dailCode : "+1") : "+1" ,
-            number: contact.dadPhone ? (contact.dadPhone.number ? contact.dadPhone.number : "") : "",
-            full_number: contact.dadPhone ? (contact.dadPhone.full_number ? contact.dadPhone.full_number : "") : "",
-            location: contact.dadPhone ? (contact.dadPhone.location ? contact.dadPhone.location : "None") : "None",
-            country: contact.dadPhone ? (contact.dadPhone.country ? contact.dadPhone.country : "") : "",
-            carrier: contact.dadPhone ? (contact.dadPhone.carrier ? contact.dadPhone.carrier : "None") : "None",
-            timezone: contact.dadPhone ? (contact.dadPhone.timezone ? contact.dadPhone.timezone : "America/New_York") : "America/New_York",
-            is_valid: contact.dadPhone ? (contact.dadPhone.is_valid ? contact.dadPhone.is_valid : false) : false,
+            countryCode: contact.contact.dadPhone ? (contact.contact.dadPhone.countryCode ? contact.contact.dadPhone.countryCode : "US") : "US",
+            dailCode: contact.contact.dadPhone ? (contact.contact.dadPhone.dailCode ? contact.contact.dadPhone.dailCode : "+1") : "+1" ,
+            number: contact.contact.dadPhone ? (contact.contact.dadPhone.number ? contact.contact.dadPhone.number : "") : "",
+            full_number: contact.contact.dadPhone ? (contact.contact.dadPhone.full_number ? contact.contact.dadPhone.full_number : "") : "",
+            location: contact.contact.dadPhone ? (contact.contact.dadPhone.location ? contact.contact.dadPhone.location : "None") : "None",
+            country: contact.contact.dadPhone ? (contact.contact.dadPhone.country ? contact.contact.dadPhone.country : "") : "",
+            carrier: contact.contact.dadPhone ? (contact.contact.dadPhone.carrier ? contact.contact.dadPhone.carrier : "None") : "None",
+            timezone: contact.contact.dadPhone ? (contact.contact.dadPhone.timezone ? contact.contact.dadPhone.timezone : "America/New_York") : "America/New_York",
+            is_valid: contact.contact.dadPhone ? (contact.contact.dadPhone.is_valid ? contact.contact.dadPhone.is_valid : false) : false,
         });
-        setBasicinfoCompany(contact.company);
-        setBasicinfoJobRole(contact.jobRole);
-        setBasicinfoMomName(contact.momName);
-        setBasicinfoDadName(contact.dadName);
-        setBasicinfoAddress1(contact.address1);
-        setBasicinfoAddress2(contact.address2);
-        setBasicinfoCity(contact.city);
-        setBasicinfoState(contact.state);
-        setBasicinfoZip(contact.zip);
-        setBasicinfoCountry(contact.country);
+        setBasicinfoCompany(contact.contact.company);
+        setBasicinfoJobRole(contact.contact.jobRole);
+        setBasicinfoMomName(contact.contact.momName);
+        setBasicinfoDadName(contact.contact.dadName);
+        setBasicinfoAddress1(contact.contact.address1);
+        setBasicinfoAddress2(contact.contact.address2);
+        setBasicinfoCity(contact.contact.city);
+        setBasicinfoState(contact.contact.state);
+        setBasicinfoZip(contact.contact.zip);
+        setBasicinfoCountry(contact.contact.country);
         setIsLoader(false);
     }
 
