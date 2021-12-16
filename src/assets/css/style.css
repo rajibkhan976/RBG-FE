@@ -1440,6 +1440,7 @@ li.listHeading > div.dsc::after {
 
 .inFormField {
   width: 100%;
+  position: relative;
 }
 
 .inFormField input,
@@ -5180,7 +5181,6 @@ button.saveOverview img {
   font-size: 13px;
   position: absolute;
   top: 10px;
-  transform: translateX(-50%);
 }
 
 .applySlider .min-max-slider > input {
@@ -5473,9 +5473,7 @@ button.saveOverview img {
 .formControl .pickSize .size {
   min-width: 24px;
   height: 24px;
-  background-color: #fff;
-  background-repeat: no-repeat;
-  background-position: center;
+  background: #fff;
   border: 1px solid #ffffff;
   border-radius: 50%;
   margin: 0 4px 0 0;
@@ -5485,20 +5483,6 @@ button.saveOverview img {
 
 .formControl .pickColor .addColor.active {
   box-shadow: 0 0 0 1px rgb(48 86 113);
-  background-image: url("../images/tick.svg");
-}
-
-.formControl .pickColor .addColor.black {
-  background-color: #000;
-}
-.formControl .pickColor .addColor.gray {
-  background-color: #797d62;
-}
-.formControl .pickColor .addColor.blue {
-  background-color: #369ed5;
-}
-.formControl .pickColor .addColor.red {
-  background-color: #834140;
 }
 
 .formControl .pickSize .size {
@@ -5995,7 +5979,6 @@ p.trackName {
   border-radius: 5px;
   height: 70px;
   box-sizing: border-box;
-  width: 300px;
 }
 
 .volume,
@@ -7525,8 +7508,6 @@ p.trackName {
   line-height: 38px;
   box-sizing: border-box;
   padding: 0 10px;
-  font-size: 14px;
-  color: var(--darkBlue);
 }
 .transaction_form .formsection p {
   margin: 0;
@@ -7641,19 +7622,6 @@ p.trackName {
   left: -1px;
   top: 0px;
 }
-.previewImgBox .sizeTag.black {
-  background-color: #000;
-}
-.previewImgBox .sizeTag.gray {
-  background-color: #797d62;
-}
-.previewImgBox .sizeTag.blue {
-  background-color: #369ed5;
-}
-.previewImgBox .sizeTag.red {
-  background-color: #834140;
-}
-
 .active .previewImgBox .sizeTag {
   background: #ed707a;
   border-color: #ed707a;
@@ -8181,60 +8149,148 @@ p.trackName {
   color: #c55757;
 }
 
-.updateNotiAlert {
-  width: 440px;
-  height: 95px;
-  position: fixed;
-  z-index: 999;
-  right: 39px;
-  bottom: 84px;
-  background: #fff;
-  border-radius: 5px;
-  padding: 28px 20px 24px;
-  box-sizing: border-box;
-  box-shadow: 0 5px 14px rgb(0 0 0 / 16%);
+/* customization........................................ */
+.dashInnerUI.customization {
+  width: 430px;
+  padding: 0 40px 0 0;
 }
-.circleArrow {
-  width: 42px;
-  height: 42px;
-  float: left;
-  border-radius: 50%;
-  background: #319340 url("../images/upgrade_icon.svg") no-repeat center;
-}
-.notiAlertBody {
-  width: 225px;
-  float: left;
-  color: var(--darkBlue);
-  margin: 3px 0 0 18px;
-}
-.notiAlertBody h2 {
-  font-size: 16px;
-}
-.notiAlertBody p {
-  font-size: 13px;
-  margin-top: 3px;
-}
-.updateAcceptBtn {
-  background: linear-gradient(268deg, #f1a768 0%, #ed707a 100%) 0% 0% no-repeat padding-box;
-  float: right;
-  width: 93px;
-  height: 30px;
-  font-size: 13px;
-  color: #fff;
-  cursor: pointer;
-  outline: none;
-  border: none;
-  border-radius: 3px;
-  margin-top: 8px;
-}
-.closeUpdateNoti {
-  width: 10px;
-  height: 10px;
+.customFieldListing{
+  width: calc(100% - 470px);
+  background: #E9EFF5;
   position: absolute;
-  right: 12px;
-  top: 12px;
-  background: transparent url("../images/cross_icon.svg") no-repeat center / 10px;
-  cursor: pointer;
-  outline: none;
-  border: none;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  padding: 60px 38px;
+  overflow: auto;
 }
+.taxSetup{
+  width: 100%;
+  padding: 0px 0 0 0;
+}
+
+.taxSetup h3{
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #305671;
+  padding: 0 0 6px 0;
+  margin: 0 ;
+}
+.taxSetup label{
+  font-size: 13px;
+  line-height: 19px;
+  color: #305671;
+  padding: 10px 0 7px 0;
+  width: 100%;
+  display: inline-block;
+}
+
+.taxSetup input{
+  height: 40px;
+    background: #ffffff;
+    border: 1px solid #d3d9de;
+    border-radius: 5px;
+    font-size: 14px;
+    color: #315571;
+    width: calc(100% - 20px);
+}
+
+.taxSetup button{
+   height: 40px;
+    background: var(--darkBlue) 0% 0% no-repeat padding-box;
+    border-radius: 5px;
+    padding: 0 14px;
+    color: #fff;
+    font-size: 13px;
+    margin: 15px 0 0 ;
+    width: auto;
+}
+.taxSetup button img{
+  padding: 0 0 0 10px;
+}
+
+.customFields{
+  padding: 100px 0 15px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+.customFields h3{
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  margin: 0px 0 15px 0;
+  color: #315571;
+}
+.customFieldListing  li.listHeading {
+  position: sticky;
+  background: transparent;
+}
+
+.customFieldListing .userListBody{
+  margin: 0px;
+}
+li.listHeading > div.vacent:after{
+  display: none;
+}
+
+.customtableListing li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  background-color: #fff;
+  border-radius: 5px;
+  margin-bottom: 5px;
+  align-items: center;
+}
+.customtableListing li > div {
+  font-size: 13px;
+  color: var(--darkBlue);
+  padding: 14px 16px;
+  position: relative;
+  display: flex;
+  min-height: 60px;
+  min-width: 160px;
+  align-items: center;
+}
+.customtableListing li.listHeading > div {
+  font-size: 13px;
+  color: var(--darkBlue);
+  padding: 13px 16px;
+  min-height: 40px;
+  cursor: pointer;
+  position: relative;
+}
+
+.customtableListing .toggleBtn {
+  margin-top: 0;
+}
+
+.customtableListing .dropdownOptions {
+  top: 70%;
+}
+
+.loginPassField {
+  padding-right: 40px;
+}
+.hidePass {
+  position: absolute;
+  width: 22px;
+  height: 20px;
+  top: 10px;
+  right: 10px;
+  background: transparent url("../images/eye.svg") no-repeat center;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  transition: none;
+}
+.hidePass.show {
+  background-image: url("../images/noEye.svg");
+}
+
+
+
+

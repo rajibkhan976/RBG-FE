@@ -21,6 +21,11 @@ const Login = (props) => {
     password: "",
   });
   const [loader, setLoader] = useState(false);
+  const [hidePss, setHidePass]= useState(true);
+
+  const togglePass = () => {
+    setHidePass(!hidePss);
+  };
 
   const dispatch = useDispatch();
   const errorMessage = useSelector((state) =>
@@ -194,12 +199,14 @@ const Login = (props) => {
                 }
               >
                 <input
-                  type="password"
+                  type={hidePss ? "password" : "text"}
                   name="password"
                   onChange={handlePasswordChange}
                   onBlur={() => validateField("password")}
                   placeholder="Password"
+                  className="loginPassField"
                 />
+                <button type="button" className={hidePss ? "hidePass" : "hidePass show"} onClick={togglePass}></button>
                 {formErrors.password ? (
                   <div className="errorMsg">{formErrors.password}</div>
                 ) : null}
