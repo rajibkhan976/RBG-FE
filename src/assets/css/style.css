@@ -8292,5 +8292,63 @@ li.listHeading > div.vacent:after{
 }
 
 
+.updateNotiAlert {
+  width: 440px;
+  height: 95px;
+  position: fixed;
+  z-index: 999;
+  right: 39px;
+  bottom: 84px;
+  background: #fff;
+  border-radius: 5px;
+  padding: 28px 20px 24px;
+  box-sizing: border-box;
+  box-shadow: 0 5px 14px rgb(0 0 0 / 16%);
+}
+.circleArrow {
+  width: 42px;
+  height: 42px;
+  float: left;
+  border-radius: 50%;
+  background: #319340 url("../images/upgrade_icon.svg") no-repeat center;
+}
+.notiAlertBody {
+  width: 225px;
+  float: left;
+  color: var(--darkBlue);
+  margin: 3px 0 0 18px;
+}
+.notiAlertBody h2 {
+  font-size: 16px;
+}
+.notiAlertBody p {
+  font-size: 13px;
+  margin-top: 3px;
+}
+.updateAcceptBtn {
+  background: linear-gradient(268deg, #f1a768 0%, #ed707a 100%) 0% 0% no-repeat padding-box;
+  float: right;
+  width: 93px;
+  height: 30px;
+  font-size: 13px;
+  color: #fff;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  border-radius: 3px;
+  margin-top: 8px;
+}
+.closeUpdateNoti {
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  background: transparent url("../images/cross_icon.svg") no-repeat center / 10px;
+  cursor: pointer;
+  outline: none;
+  border: none;
+}
+
 
 
