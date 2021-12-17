@@ -18,6 +18,7 @@ import HeaderDashboard from "./shared/HeaderDashboard";
 import { UserServices } from "../services/authentication/UserServices";
 import config from "../configuration/config";
 import UpdateNotification from "./shared/updateNotifications/UpdateNotification";
+import { io } from "socket.io-client";
 
 
 const MainComponent = () => {
@@ -32,6 +33,21 @@ const MainComponent = () => {
   };
   const [showLeftSubMenu, setShowLeftSubMenu] = useState(true);
   const [isShowContact, setIsShowContact] = useState(false);
+
+  // For socket io connection
+  const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlLocal;
+  const socket = io(socketUrl, {
+    transports: ["websocket"],
+    origins: "*"
+  });
+
+  // client-side
+  socket.on("connect", () => {  
+    console.log("socket id", socket.id); // x8WIv7-mJelg7on_ALbx
+
+  });
+
+
   const modalId = useSelector((state) => state.contact.contact_modal_id);
   useEffect(() => {
     if (modalId !== '') {
@@ -147,7 +163,7 @@ const MainComponent = () => {
       </div>
       {isShowContact && <ContactModal contactId={modalId} />}
           
-      <UpdateNotification version="2.10.1" hide={false} />
+      <UpdateNotification version="2.10.1" hide={true} />
     </>
   );
 };

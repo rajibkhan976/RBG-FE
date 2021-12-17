@@ -2,6 +2,8 @@ module.exports = {
     apiUrl: "http://api.rbg.local/",
     hostUrl: "http://rbg.local/",
     baseUrl: "rbg.local",
+    socketUrlLocal: "http://localhost:8200",
+    socketUrlProd: "https://ien.redbeltgym.com",
     jwtSecrete: "Tier54321",
     REACT_APP_BUCKET_NAME: 'rbg-file-upload',
     REACT_APP_REGION: 'us-east-1',
