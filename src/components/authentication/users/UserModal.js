@@ -97,11 +97,15 @@ const UserModal = (props) => {
      * Fetch associaton list data
      */
     const fetchAssociations = async () => {
-        let associations = await UserServices.fetchAssociations();
-        if (associations) {
-            setAssociationList(associations);
+        try {
+            let associations = await UserServices.fetchAssociations();
+            if (associations) {
+                setAssociationList(associations);
+            }
+            console.log('associations', associations);
+        } catch (e) {
+            console.log('Error in fetch associations', e);
         }
-        console.log('associations', associations);
     };
 
     useEffect(() => {

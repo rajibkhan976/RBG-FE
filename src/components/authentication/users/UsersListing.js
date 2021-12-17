@@ -41,6 +41,7 @@ const UsersListing = (props) => {
     const messageDelay = 5000; // ms
     const [tableWidth, setTableWidth] = useState(500);
     const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "user")));
+    console.log('user permission', permissions);
     const [isAlert, setIsAlert] = useState({
         show: false,
         id: null,
@@ -87,7 +88,7 @@ const UsersListing = (props) => {
 
 
     const filterUsers = () => {
-        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : permissions.actions.includes("read");
+        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : ((Object.keys(permissions).length) ? permissions.actions.includes("read") : false);
         if (readPermission) {
             props.toggleFilter("user");
         } else {
@@ -351,7 +352,7 @@ const UsersListing = (props) => {
     const handleSearch = (event) => {
         event.preventDefault();
 
-        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : permissions.actions.includes("read");
+        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : ((Object.keys(permissions).length) ? permissions.actions.includes("read") : false);
         if (readPermission) {
             utils.addQueryParameter('page', 1);
             if (keyword) {
