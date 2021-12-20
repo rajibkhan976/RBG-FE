@@ -3,11 +3,12 @@ import React, { useState } from "react";
 
 const UpdateNotification = (props) => {
 
-    const [hidePopup, setHidePopup] = useState(props.hide);
+    const [hidePopup, setHidePopup] = useState(false);
 
     
     const closePopup = () => {
-        setHidePopup(true);
+        // setHidePopup(true);
+        props.closeNotification();
     }
 
     const upgrade = () => {
