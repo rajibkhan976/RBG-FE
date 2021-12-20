@@ -144,7 +144,6 @@ const MainComponent = () => {
   return (
     <>
       <div className="mainComponent">
-      {isNewFeaturesAvailable + " just above update notication component"}
         <div
           className={
             "dashboardBody d-flex " +
