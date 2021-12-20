@@ -33,19 +33,48 @@ const MainComponent = () => {
   };
   const [showLeftSubMenu, setShowLeftSubMenu] = useState(true);
   const [isShowContact, setIsShowContact] = useState(false);
+  const [isNewFeaturesAvailable, setIsNewFeaturesAvailable] = useState(false);
 
   // For socket io connection
   const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlLocal;
-  const socket = io(socketUrl, {
-    transports: ["websocket"],
-    origins: "*"
-  });
+  // const socket = io(socketUrl, {
+  //   transports: ["websocket"],
+  //   origins: "*"
+  // });
 
-  // client-side
-  socket.on("connect", () => {  
-    console.log("socket id", socket.id); // x8WIv7-mJelg7on_ALbx
+  const closeNotification = () => {
+    setIsNewFeaturesAvailable(false);
+  }
 
-  });
+  useEffect(() => {
+    const socket = io(socketUrl, {
+      transports: ["websocket"],
+      origins: "*"
+    });
+    // client-side
+    socket.on("connect", () => {  
+      console.log("socket id", socket.id); // x8WIv7-mJelg7on_ALbx
+
+    });
+    console.log("isNewFeaturesAvailable before", isNewFeaturesAvailable);
+    // listing to an emit event setFeatureUpdateNotification
+    socket.on("setFeatureUpdateNotification", (data) => {
+      console.log("Receiving relese updates", data);
+      
+      setIsNewFeaturesAvailable(true);
+      // setIsNewFeaturesAvailable((prevState) => {
+      //   return true;
+      // })
+      console.log("isNewFeaturesAvailable after", isNewFeaturesAvailable);
+    });
+
+    
+    
+
+    socket.emit("getFeatureUpdateNotification");
+  }, [socketUrl]);
+
+
 
 
   const modalId = useSelector((state) => state.contact.contact_modal_id);
@@ -115,6 +144,7 @@ const MainComponent = () => {
   return (
     <>
       <div className="mainComponent">
+      {isNewFeaturesAvailable + " just above update notication component"}
         <div
           className={
             "dashboardBody d-flex " +
@@ -163,7 +193,8 @@ const MainComponent = () => {
       </div>
       {isShowContact && <ContactModal contactId={modalId} />}
           
-      <UpdateNotification version="2.10.1" hide={true} />
+      {isNewFeaturesAvailable && <UpdateNotification version="2.10.1" closeNotification={closeNotification} /> }     
+      
     </>
   );
 };
