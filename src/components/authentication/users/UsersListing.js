@@ -484,10 +484,10 @@ const UsersListing = (props) => {
                                                         <button className="btn">{elem.group[0] ? elem.group[0].name : ''}</button>
                                                     </div>
                                                     <div className="assignedGroup">
-                                                        <button className="btn">{elem.organization && elem.isOrganizationOwner ? elem.organization.name : 'N/A'}</button>
+                                                        <button className="btn">{elem.organization ? elem.organization.name : 'N/A'}</button>
                                                     </div>
                                                     <div className="assignedGroup">
-                                                        <button className="btn">{elem.isAssociationOwner && elem.association ? elem.association.name : 'N/A'}</button>
+                                                        <button className="btn">{elem.association ? elem.association.name : 'N/A'}</button>
                                                     </div>
                                                     <div className="status">
                                                         <button className="btn">{elem.status}</button>
