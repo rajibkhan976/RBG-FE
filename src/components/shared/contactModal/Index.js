@@ -57,6 +57,7 @@ const ContactModal = (props) => {
         firstName: "",
         lastName: ""
     });
+    const [ltv, setLtv] = useState("Calculating...");
     const dispatch = useDispatch();
     const closeContactModal = () => {
         dispatch({
@@ -75,6 +76,8 @@ const ContactModal = (props) => {
         }
         const contact = await ContactService.fetchContact(JSON.stringify(payload));
         setContactData(contact.contact);
+        const ltvVal = (contact.contact.ltv + contact.contact.ltvPOS).toLocaleString("en-US");
+        setLtv("USD "+ltvVal);
     }
 
     useEffect(() => {
@@ -118,7 +121,7 @@ const ContactModal = (props) => {
                                 </div>
                                 <div className="ltValue">
                                     <header>Life Time Value :</header>
-                                    <span>USD {(contactData.ltv + contactData.ltvPOS).toLocaleString("en-US")}</span>
+                                    <span>{ltv}</span>
                                 </div>
                                 {/* <div className="userContacts">
                                     <div className="userPhone">
@@ -198,8 +201,13 @@ const ContactModal = (props) => {
                         <Steps config={config}>
                             <Step title="Overview" contact={contactData} component={Overview} contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
                             <Step title="Attendance" component={Attendance} />
-                            <Step title="Transaction" contactId={props.contactId} backToTransList={backToTransListHandler} goToTransaction={goToTransactionHandler} component={goToTransactionClicked ? TransactionChoose : Transaction} />
-                            <Step title="Transaction" component={Billing} contactId={props.contactId} />
+                            <Step title="Transaction" 
+                            contactId={props.contactId} 
+                            backToTransList={backToTransListHandler} 
+                            goToTransaction={goToTransactionHandler} 
+                            component={goToTransactionClicked ? TransactionChoose : Transaction} 
+                            refetchContact={() => getContact(props.contactId)}/>
+                            <Step title="Billing" component={Billing} contactId={props.contactId} />
                         </Steps>
 
                     </div>

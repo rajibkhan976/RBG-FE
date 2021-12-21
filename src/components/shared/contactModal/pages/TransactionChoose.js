@@ -228,6 +228,7 @@ const TransactionChoose = (props) => {
         } catch (e) {
             setErrorMsg(e.message);
         } finally {
+            props.refetchContact();
             setShowLoader(false);
         }
      }
