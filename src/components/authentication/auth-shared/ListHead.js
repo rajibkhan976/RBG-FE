@@ -183,7 +183,7 @@ const ListHead = (props) => {
             <li>Users & Controls</li>
             <li>Associations</li>
           </ul>
-          <h2 className="inDashboardHeader">Associations (0)</h2>
+          <h2 className="inDashboardHeader">Associations ({props.associationsCount})</h2>
           <p className="userListAbout">
             Manage Associations
           </p>

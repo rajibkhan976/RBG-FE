@@ -17,6 +17,7 @@ const InnerLeftMenu = (props) => {
   const groupsStoreCount = useSelector((state) => state.group.count);
   const usersStoreCount = useSelector((state) => state.user.count);
   const organizationsStoreCount = useSelector((state) => state.organization.count);
+  const associationsStoreCount = useSelector((state) => state.association.count);
   const automationCount = useSelector((state) => state.automation.count);
   const contactCount = useSelector((state) => state.contact.count);
   const dispatch = useDispatch();
@@ -63,6 +64,11 @@ const InnerLeftMenu = (props) => {
         dispatch({
           type: actionTypes.ORGANIZATION_COUNT,
           count: result.organizations,
+        });
+        // UPDATE STORE
+        dispatch({
+          type: actionTypes.ASSOCIATION_COUNT,
+          count: result.associations,
         });
       }
     } catch (e) {
@@ -116,7 +122,7 @@ const InnerLeftMenu = (props) => {
                   </div>
                 </NavLink>
               </li>
-              <li>
+              {props.loggedInUser && props.loggedInUser.organization && props.loggedInUser.organizationCode === 'RBG' ? <li>
                 <NavLink className="leftMenuInnerLink" to="/organizations">
                   <div className="indicator"></div>
                   <div className="linkDetails">
@@ -126,18 +132,18 @@ const InnerLeftMenu = (props) => {
                     <p className="linkAbout">Manage Organizations</p>
                   </div>
                 </NavLink>
-              </li>
-              <li>
+              </li> : ''}
+              {props.loggedInUser && props.loggedInUser.organization && props.loggedInUser.organizationCode === 'RBG' ? <li>
                 <NavLink className="leftMenuInnerLink" to="/associations">
                   <div className="indicator"></div>
                   <div className="linkDetails">
                     <p className="linkHeading">Associations</p>
-                    <span className="notificationNumber">0</span>
+                    <span className="notificationNumber">{associationsStoreCount}</span>
                     <br />
                     <p className="linkAbout">Manage Associations</p>
                   </div>
                 </NavLink>
-              </li>
+              </li> : ''}
             </ul>
             <div className="linkImg">
               <img src={undraw_personal_settings_kihd} alt="" />
@@ -233,7 +239,7 @@ const InnerLeftMenu = (props) => {
                     <p className="linkHeading">Personal Details</p>
                     <p className="linkAbout">Manage your personal details</p>
                     <button className="btn sidemenuarrow">
-                      <img src={SideMenuArrow} alt=""/>
+                      <img src={SideMenuArrow} alt="" />
                     </button>
                   </div>
                 </a>
@@ -245,7 +251,7 @@ const InnerLeftMenu = (props) => {
                     <p className="linkHeading">Gym Details</p>
                     <p className="linkAbout">Manage your Gym details</p>
                     <button className="btn sidemenuarrow">
-                      <img src={SideMenuArrow} alt=""/>
+                      <img src={SideMenuArrow} alt="" />
                     </button>
                   </div>
                 </a>
@@ -257,7 +263,7 @@ const InnerLeftMenu = (props) => {
                     <p className="linkHeading">Communication Setup</p>
                     <p className="linkAbout">Set all kind of communications</p>
                     <button className="btn sidemenuarrow">
-                      <img src={SideMenuArrow} alt=""/>
+                      <img src={SideMenuArrow} alt="" />
                     </button>
                   </div>
                   <ul className="sideSubMenu">
@@ -265,8 +271,8 @@ const InnerLeftMenu = (props) => {
                     <li><a href="#">SMS</a></li>
                     <li>
                       <NavLink to="/call-setup" activeClassName="active">
-                        Call  
-                      </NavLink>  
+                        Call
+                      </NavLink>
                     </li>
                   </ul>
                 </NavLink>
@@ -278,7 +284,7 @@ const InnerLeftMenu = (props) => {
                     <p className="linkHeading">Products</p>
                     <p className="linkAbout">Manage your POS products</p>
                     <button className="btn sidemenuarrow">
-                      <img src={SideMenuArrow} alt=""/>
+                      <img src={SideMenuArrow} alt="" />
                     </button>
                   </div>
                 </NavLink>
@@ -290,7 +296,7 @@ const InnerLeftMenu = (props) => {
                     <p className="linkHeading">Courses</p>
                     <p className="linkAbout">Manage your courses</p>
                     <button className="btn sidemenuarrow">
-                      <img src={SideMenuArrow} alt=""/>
+                      <img src={SideMenuArrow} alt="" />
                     </button>
                   </div>
                 </NavLink>
@@ -302,7 +308,7 @@ const InnerLeftMenu = (props) => {
                     <p className="linkHeading">Customizations</p>
                     <p className="linkAbout">Lorem ipsum dolor sit</p>
                     <button className="btn sidemenuarrow">
-                      <img src={SideMenuArrow} alt=""/>
+                      <img src={SideMenuArrow} alt="" />
                     </button>
                   </div>
                 </a>
@@ -314,7 +320,7 @@ const InnerLeftMenu = (props) => {
                     <p className="linkHeading">Templates</p>
                     <p className="linkAbout">Set communication templates</p>
                     <button className="btn sidemenuarrow">
-                      <img src={SideMenuArrow} alt=""/>
+                      <img src={SideMenuArrow} alt="" />
                     </button>
                   </div>
                   <ul className="sideSubMenu">
@@ -322,8 +328,8 @@ const InnerLeftMenu = (props) => {
                     <li><a href="#">SMS</a></li>
                     <li>
                       <NavLink to="/audio-template" activeClassName="active">
-                        Audio  
-                      </NavLink>  
+                        Audio
+                      </NavLink>
                     </li>
                     <li><a href="#">RVM</a></li>
                     <li><a href="#">Sales Bridge</a></li>

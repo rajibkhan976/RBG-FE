@@ -8351,4 +8351,7 @@ li.listHeading > div.vacent:after{
 }
 
 
-
+/*Hide sorting icons*/
+li.listHeading > div.sortOff:after {
+  display: none;
+} 

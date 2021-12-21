@@ -8,6 +8,7 @@ import logo from "../../../assets/images/logo_128_28.svg";
 import {
   NavLink
 } from "react-router-dom";
+import { ErrorAlert } from "../../shared/messages";
 
 
 
@@ -163,14 +164,13 @@ const Login = (props) => {
             <img src={logo} alt="" />
           </div>
 
-          <form className="formBody" onSubmit={handleSubmit}>
+          <form className="formBody forgotPassword" onSubmit={handleSubmit}>
             <h1>Sign In</h1>
             {/* <p className="login_box_text">
               Please login below to access RedBeltGym.
             </p> */}
-            {errorMessage ? (
-              <div className="errorLogin text-center">{errorMessage}</div>
-            ) : null}
+            
+            {errorMessage && <ErrorAlert message={errorMessage} extraClass="innerDrawerMessage "></ErrorAlert>}
             <div className="formInputs">
               <label>Email</label>
 

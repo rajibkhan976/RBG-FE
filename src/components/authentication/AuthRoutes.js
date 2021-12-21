@@ -17,7 +17,7 @@ const AuthRoutes = (props) => {
   }
   return (
     <React.Fragment>
-      <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} routeMenu="auth" reRender={(id) => renderID(id)} />
+      <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} loggedInUser={props.loggedInUser} routeMenu="auth" reRender={(id) => renderID(id)} />
       <div className="dashboardElComponent">
         {/* <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} /> */}
         <div className="dashInnerStructure">

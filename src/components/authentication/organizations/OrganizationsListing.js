@@ -217,7 +217,7 @@ const OrganizationListing = () => {
                                     >
                                         No. of people
                                     </div>
-                                    <div>
+                                    <div className="sortOff">
                                         Status
                                     </div>
                                     <div

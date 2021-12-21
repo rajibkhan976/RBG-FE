@@ -32,6 +32,9 @@ module.exports = {
     // Auth - org
     orgUrl: "https://2tm7g6mwof.execute-api.us-east-1.amazonaws.com/dev/organization",
 
+    // Auth - Association
+    associationUrl: "https://vfx68urm30.execute-api.us-east-1.amazonaws.com/dev/association",
+
     //Bucket
     bucketUrl : "https://wrapperbucket.s3.amazonaws.com/",
 

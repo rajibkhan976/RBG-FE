@@ -1,4 +1,4 @@
-import React, { useState, lazy, useEffect } from "react";
+import React, { useState, lazy, useEffect, useLayoutEffect } from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router-dom";
 // import { useDispatch } from "react-redux";
 import { useSelector } from 'react-redux';
@@ -115,7 +115,7 @@ const MainComponent = () => {
   /*
    * Fetch logged in user details
    */
-  useEffect(() => {
+  useLayoutEffect(() => {
     fetchLoggedUserDetails();
   }, []);
   //Fetch user details
@@ -133,6 +133,7 @@ const MainComponent = () => {
           isOrganizationOwner: userDetails.isOrganizationOwner,
           isAssociationOwner: userDetails.isAssociationOwner,
           organization: userDetails.organization ? userDetails.organization.name : '',
+          organizationCode: userDetails.organization ? userDetails.organization.code : '',
           group: userDetails.group ? userDetails.group.name : '',
           isShowPlan: userDetails.organization ? userDetails.organization.parentId !== 0 ? true : false : false
         })
@@ -159,7 +160,7 @@ const MainComponent = () => {
                 <DashboardRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
               </Route>
               <Route exact path={["/roles", "/groups", "/users", '/organizations', '/associations']}>
-                <AuthRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
+                <AuthRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} loggedInUser={loggedInUser}/>
               </Route>
               <Route exact path={["/automation-list", "/automation-builder"]}>
                 <AutomationRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />

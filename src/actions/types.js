@@ -10,6 +10,8 @@ export const GROUP_COUNT = "GROUP_COUNT";
 export const USER_COUNT = "USER_COUNT";
 //Organization
 export const ORGANIZATION_COUNT = "ORGANIZATION_COUNT";
+//Association
+export const ASSOCIATION_COUNT = "ASSOCIATION_COUNT";
 // Automation
 export const AUTOMATION_COUNT = "AUTOMATION_COUNT";
 //User
