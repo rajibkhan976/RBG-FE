@@ -62,7 +62,7 @@ const ForgetPassword = (props) => {
      */
     if (!resetEmail) {
       isError = true;
-      formErrorsCopy.resetEmail = "Please enter email address";
+      formErrorsCopy.resetEmail = "Please enter an email address";
     } else {
       isError = false;
       formErrorsCopy.resetEmail = "";
@@ -73,7 +73,7 @@ const ForgetPassword = (props) => {
      */
     if (resetEmail && !emailValidation()) {
       isError = true;
-      formErrorsCopy.resetEmail = "Invalid email address";
+      formErrorsCopy.resetEmail = "Invalid email format";
     }
 
     /**
@@ -146,7 +146,7 @@ const ForgetPassword = (props) => {
 
                   <div className={formErrors.resetEmail ? "inFormField errorField" : "inFormField"}>
                     <input
-                      type="email"
+                      type="text"
                       name="email"
                       onChange={handleforgetEmailChange}
                       placeholder="Email"

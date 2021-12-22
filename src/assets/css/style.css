@@ -7975,7 +7975,10 @@ p.trackName {
   margin-bottom: 45px;
 }
 .authBody.login_outer .loginRightPart.reset{
- width: 100%;
+  width: 100%; 
+  height: 700px; 
+  overflow: auto; 
+  flex-direction: row;
 }
 
 .addConfirmation {
