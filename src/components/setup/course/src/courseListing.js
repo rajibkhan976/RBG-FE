@@ -168,7 +168,7 @@ const CourseListing = (props) => {
                             <p>Billing Cycle : </p>
                             <span class="active">
                               {" "}
-                              {elem.billing_cycle.toUpperCase()}
+                              {(elem.payment_type.toLowerCase() === "recurring") ? elem.billing_cycle.toUpperCase() : 'NA'}
                             </span>
                           </div>
                         </div>

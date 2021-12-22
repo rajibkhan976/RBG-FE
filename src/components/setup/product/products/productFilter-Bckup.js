@@ -6,61 +6,23 @@ import Loader2 from "../../../shared/Loader2";
 
 const ProductFilter = (props) => {
     const thumbsize = 14;
-    const [isLoader, setIsLoader] = useState(false);
     const [colorSize, setColorSize] = useState({
         colors: [],
         sizes: []
     });
+    const [categories, setCategories] = useState([]);
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(0);
-    const [filterData, setFilterData] = useState({
-        categories: [],
-        colors: [],
-        sizes: [],
-        fromPriceProduct: "0",
-        toPriceProduct: "0"
-    });
 
     useEffect(() => {
-        setColorSize(props.getcolorSize);
-        setDefaultParams();
+        // setColorSize(props.getcolorSize);
+        const { colors, sizes } = props.getcolorSize;
+        const newColor = Object.assign(...colors.map(c => ({ [c.label]: false })));
+        const newSize = Object.assign(...sizes.map(s => ({ [s.size]: false })));
+        console.log(newColor);
+        console.log(newSize);
+        setCategories(props.categories);
     }, []);
-
-    
-
-    const setDefaultParams = () => {
-        const data = {
-            categories: [],
-            colors: [],
-            sizes: [],
-            fromPriceProduct: "0",
-            toPriceProduct: "0"
-        };
-        const catID = decodeURIComponent(utils.getQueryVariable('catID'));
-        const colors = decodeURIComponent(utils.getQueryVariable('colors'));
-        const sizes = decodeURIComponent(utils.getQueryVariable('sizes'));
-        const fromPriceProduct = decodeURIComponent(utils.getQueryVariable('fromPriceProduct'));
-        const toPriceProduct = decodeURIComponent(utils.getQueryVariable('toPriceProduct'));
-        // console.log(typeof catID);
-        if (catID && catID !== "false") {
-            data.categories = catID.split(",");
-        }
-        if (colors && colors !== "false") {
-            data.colors = colors.split(",");
-        }
-        if (sizes && sizes !== "false") {
-            data.sizes = sizes.split(",");
-        }
-        if (fromPriceProduct && fromPriceProduct !== "false") {
-            data.fromPriceProduct = fromPriceProduct.toString();
-            setMinPrice(fromPriceProduct.toString());
-        }
-        if (toPriceProduct && toPriceProduct !== "false") {
-            data.toPriceProduct = toPriceProduct.toString();
-            setMaxPrice(toPriceProduct.toString());
-        }
-        setFilterData(data);
-    }
 
     const Slider = ({ min, max, minval, maxval }) => {
         const [avg, setAvg] = useState((min + max) / 2);
@@ -84,11 +46,11 @@ const ProductFilter = (props) => {
                 "--maxRangePercent": `${maxPercent}%`
             },
             maxPos: {
-                left: (Math.floor(maxVal)/max*100 )+ "%"
-              },
-              minPos: {
-                  left: (Math.floor(minVal)/max*100 )+ "%"
-                }
+                left: (Math.floor(maxVal) / max * 100) + "%"
+            },
+            minPos: {
+                left: (Math.floor(minVal) / max * 100) + "%"
+            }
         };
 
         useLayoutEffect(() => {
@@ -144,92 +106,18 @@ const ProductFilter = (props) => {
         );
     };
 
-    const handleColorCheckbox = (e) => {
-        // e.preventDefault();
-        // console.log("In handle Checkbox", filterData);
-        const colorName = e.target.value;
-        let choosenColors = [...filterData.colors];
-        if (choosenColors.indexOf(colorName) === -1) {
-            choosenColors.push(colorName);
-        } else {
-            choosenColors = choosenColors.filter(colorlabel => colorlabel !== colorName);
-        }
-        console.log(choosenColors);
-        setFilterData({ ...filterData, colors: choosenColors });
+    const handleApplyFilter = (e) => {
+
     };
 
-    const handleSizeCheckbox = (e) => {
-        // e.preventDefault();
-        const sizeLabel = e.target.value;
-        let choosenSizes = [...filterData.sizes];
-        if (choosenSizes.indexOf(sizeLabel) === -1) {
-            choosenSizes.push(sizeLabel);
-        } else {
-            choosenSizes = choosenSizes.filter(sizeName => sizeName !== sizeLabel);
-        }
-        console.log("Choosen Sizes", choosenSizes);
-        setFilterData({ ...filterData, sizes: choosenSizes });
-        console.log("Sizes", filterData);
+    const handleResetFilter = (e) => {
+
     }
 
-    const handleCategoryCheckbox = (e) => {
-        // e.preventDefault();
-        const catID = e.target.value;
-        let choosenCategories = [...filterData.categories];
-        if (choosenCategories.indexOf(catID) === -1) {
-            choosenCategories.push(catID);
-        } else {
-            choosenCategories = choosenCategories.filter(categoryID => categoryID !== catID);
-        }
-        setFilterData({ ...filterData, categories: choosenCategories });
-    }
-
-    const handleApplyFilter = (e) => {
-        e.preventDefault();
-        // handleResetFilter(e, false);
-        const data = { ...filterData, fromPriceProduct: minPrice.toString(), toPriceProduct: maxPrice.toString() };
-        if (data.categories.length) {
-            utils.addQueryParameter("catID", data.categories.join(",").toString());
-        }
-        if (data.colors.length) {
-            utils.addQueryParameter("colors", data.colors.join(",").toString());
-        }
-        if (data.sizes.length) {
-            utils.addQueryParameter("sizes", data.sizes.join(",").toString());
-        }
-        if (data.fromPriceProduct !== "0" || data.fromPriceProduct !== "false") {
-            utils.addQueryParameter("fromPriceProduct", data.fromPriceProduct.toString());
-        }
-        if (data.toPriceProduct !== "0" || data.toPriceProduct !== "false") {
-            utils.addQueryParameter("toPriceProduct", data.toPriceProduct.toString());
-        }
-        // console.log(data);
-        props.getProduct();
-        // props.closeModal();
-    }
-
-    const handleResetFilter = (event) => {
-        // event.preventDefault();
-        utils.removeQueryParameter('catID');
-        utils.removeQueryParameter('colors');
-        utils.removeQueryParameter('sizes');
-        utils.removeQueryParameter('fromPriceProduct');
-        utils.removeQueryParameter('toPriceProduct');
-        setFilterData({
-            categories: [],
-            colors: [],
-            sizes: [],
-            fromPriceProduct: "0",
-            toPriceProduct: "0"
-        });
-        props.getProduct();
-        props.closeModal();
-    }
 
     return (
         <>
             <div class="sideMenuOuter filterUserMenu">
-                {isLoader ? <Loader2 /> : ''}
                 <div class="sideMenuInner">
                     <button class="btn btn-closeSideMenu" onClick={props.closeModal}><span></span><span></span></button>
                     <div class="sideMenuHeader">
@@ -239,7 +127,7 @@ const ProductFilter = (props) => {
                         <form class="formBody" onSubmit={handleApplyFilter}>
                             <div class="aplyfilteCheck">
                                 <p>Category</p>
-                                {props.categories.map((cat, key) => {
+                                {categories.map((cat, key) => {
                                     return (
                                         <React.Fragment>
                                             <label>
@@ -247,8 +135,6 @@ const ProductFilter = (props) => {
                                                     <input type="checkbox"
                                                         name="categories"
                                                         value={cat._id}
-                                                        onChange={handleCategoryCheckbox}
-                                                        defaultChecked={filterData.categories.includes(cat._id)}
                                                     />
                                                     <span></span>
                                                 </div>
@@ -268,8 +154,6 @@ const ProductFilter = (props) => {
                                                     <input type="checkbox"
                                                         name="sizes"
                                                         value={size.size}
-                                                        onChange={handleSizeCheckbox}
-                                                        defaultChecked={filterData.sizes.includes(size.size)}
                                                     />
                                                     <span></span>
                                                 </div>
@@ -289,8 +173,6 @@ const ProductFilter = (props) => {
                                                     <input type="checkbox"
                                                         name="colors"
                                                         value={color.label}
-                                                        onChange={handleColorCheckbox}
-                                                        checked={filterData.colors.includes(color.label)}
                                                     />
                                                     <span></span>
                                                 </div>
@@ -303,9 +185,9 @@ const ProductFilter = (props) => {
                             </div>
                             <div className="applySlider">
                                 <p>Price</p>
-                                <Slider min={0} max={500} 
-                                minval={minPrice} 
-                                maxval={maxPrice}/>
+                                <Slider min={0} max={500}
+                                    minval={minPrice}
+                                    maxval={maxPrice} />
                             </div>
                             <div class="applyFilterBtn">
                                 <button class="saveNnewBtn" type="submit"><span>Apply Filter</span><img class="" src={arrowForward} alt="" /></button>
