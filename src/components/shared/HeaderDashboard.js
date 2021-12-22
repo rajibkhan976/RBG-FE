@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Notifications from "./Notifications";
 import Setup from "../setup/mainPopup/setup";
 import CallModal from "./callModal";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AuthActions from "../../actions/AuthActions";
 import CreateIcon from "../../assets/images/create.png";
 import NotificationIcon from "../../assets/images/notif.png";
@@ -48,6 +48,9 @@ function HeaderDashboard(props) {
     reset,
     pause
   } = useStopwatch({ autoStart: false });
+
+  const loggedInUser = useSelector((state) => state.user.data);
+
 
 
   const toggleNotifications = (e) => {
@@ -442,13 +445,13 @@ function HeaderDashboard(props) {
           <button className="btn btnUserMenu" onClick={toggleUserMenu}>
             <figure
               style={{
-                backgroundImage: "url(" + (props.loggedInUser.image ? props.loggedInUser.image : UserIcon) + ")",
+                backgroundImage: "url(" + (loggedInUser && loggedInUser.image ? loggedInUser.image : UserIcon) + ")",
               }}
             ></figure>
 
             <div className="menuUserDetail">
-              <span>{props.loggedInUser.group}</span>
-              <h3>{props.loggedInUser.name}</h3>
+              <span>{loggedInUser && loggedInUser.group}</span>
+              <h3>{loggedInUser && loggedInUser.name}</h3>
             </div>
             <i>
               <img src={blueDownArrow} alt="" />
@@ -465,25 +468,25 @@ function HeaderDashboard(props) {
               <button className="btn btn_empty" onClick={closeUserMenu}><img src={cross_white} alt="" /></button>
               <div className="user_details">
                 <div className="user_profile" style={{
-                  backgroundImage: `url(${props.loggedInUser.image ? props.loggedInUser.image : userPhoto})`
+                  backgroundImage: `url(${loggedInUser && loggedInUser.image ? loggedInUser.image : userPhoto})`
                 }}>
                   {/* <img src={loggedInUser.image ? loggedInUser.image : userPhoto} alt="avatar" /> */}
                 </div>
                 <div className="userContacts">
                   <h3>
-                    {props.loggedInUser.fullName}
-                    <p>{props.loggedInUser.group}</p>
+                    {loggedInUser && loggedInUser.fullName}
+                    <p>{loggedInUser && loggedInUser.group}</p>
                   </h3>
 
-                  {props.loggedInUser.phone ? <div className="userPhone">
+                  {loggedInUser && loggedInUser.phone ? <div className="userPhone">
                     <img src={phone_call_icon_white} alt="" />
-                    <span>{props.loggedInUser.phone}</span>
+                    <span>{loggedInUser.phone}</span>
                   </div> : ''}
                   <div className="userEmail">
                     <img src={email_icon_white} alt="" />
-                    <span>{props.loggedInUser.email}</span>
+                    <span>{loggedInUser && loggedInUser.email}</span>
                   </div>
-                  {props.loggedInUser.isEdit ? <div className="userPhone">
+                  {loggedInUser && loggedInUser.isEdit ? <div className="userPhone">
                     <img src={editIcon_white} alt="" />
                     <span>Edit</span>
                   </div> : ''}
@@ -493,12 +496,12 @@ function HeaderDashboard(props) {
             <div className="user_modal_body">
               <div className="user_modal_cont">
                 <p>Organization</p>
-                <h3>{props.loggedInUser.organization}</h3>
-                {props.loggedInUser.isShowPlan ? <div className="creditText">
+                <h3>{loggedInUser && loggedInUser.organization}</h3>
+                {loggedInUser && loggedInUser.isShowPlan ? <div className="creditText">
                   <span>Credit Balance  </span>
                   <span className="blue">0</span>
                 </div> : ''}
-                {props.loggedInUser.isShowPlan ? <div className="userPlan">
+                {loggedInUser && loggedInUser.isShowPlan ? <div className="userPlan">
                   <div>
                     <span>Current Plan</span>
                     <p>SILVER</p>

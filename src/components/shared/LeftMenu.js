@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
+import { useSelector } from 'react-redux';
 import { NavLink, useLocation, Link } from "react-router-dom";
-
 import LogoImg from "../../assets/images/logo_img.png";
 
 function LeftMenu(props) {
   const pathURL = useLocation().pathname;
-  console.log('is in left menu', props.loggedInUser ? props.loggedInUser.isAssociationOwner : false)
-  let isAssociationOwner = props.loggedInUser ? props.loggedInUser.isAssociationOwner : false;
-  let isOrganizationOwner = props.loggedInUser ? props.loggedInUser.isOrganizationOwner : false;
+  const loggedInUser = useSelector((state) => state.user.data);
+  console.log('is in left menu', loggedInUser)
+  let isAssociationOwner = loggedInUser ? loggedInUser.isAssociationOwner : false;
+  let isOrganizationOwner = loggedInUser ? loggedInUser.isOrganizationOwner : false;
 
   const [tglLeftMenuStatus, setTglLeftMenuStatus] = useState(false);
 

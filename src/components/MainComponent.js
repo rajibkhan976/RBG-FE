@@ -1,7 +1,6 @@
 import React, { useState, lazy, useEffect, useLayoutEffect } from "react";
 import { Redirect, Route, Switch, useLocation } from "react-router-dom";
-// import { useDispatch } from "react-redux";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import LeftMenu from "./shared/LeftMenu";
 import DashboardRoutes from "./dashboard/DashboardRoutes"
 import AuthRoutes from "./authentication/AuthRoutes";
@@ -19,13 +18,15 @@ import { UserServices } from "../services/authentication/UserServices";
 import config from "../configuration/config";
 import UpdateNotification from "./shared/updateNotifications/UpdateNotification";
 import { io } from "socket.io-client";
+import * as actionTypes from "../actions/types";
 
 
 const MainComponent = () => {
   const pathURL = useLocation().pathname;
   const [showInnerleftMenu, setshowInnerleftMenu] = useState(true);
   const [createButton, setCreateButton] = useState(null);
-  const [setupMenuState, setSetupMenuState] = useState(false)
+  const [setupMenuState, setSetupMenuState] = useState(false);
+  const dispatch = useDispatch();
 
 
   const toggleLeftSubMenu = (status) => {
@@ -116,6 +117,10 @@ const MainComponent = () => {
    * Fetch logged in user details
    */
   useLayoutEffect(() => {
+    dispatch({
+      type: actionTypes.USER_DATA,
+      data: null
+    });
     fetchLoggedUserDetails();
   }, []);
   //Fetch user details
@@ -124,7 +129,7 @@ const MainComponent = () => {
       let userDetails = await UserServices.fetchUserDetails();
       if (userDetails) {
         console.log('success user details', userDetails);
-        setLoggedInUser({
+        let data = {
           name: userDetails.firstName + ' ' + (userDetails.lastName ? userDetails.lastName.substr(0, 1) + '.' : ''),
           fullName: userDetails.firstName + ' ' + userDetails.lastName,
           email: userDetails.email,
@@ -136,7 +141,12 @@ const MainComponent = () => {
           organizationCode: userDetails.organization ? userDetails.organization.code : '',
           group: userDetails.group ? userDetails.group.name : '',
           isShowPlan: userDetails.organization ? userDetails.organization.parentId !== 0 ? true : false : false
-        })
+        };
+        dispatch({
+          type: actionTypes.USER_DATA,
+          data: data
+        });
+        // setLoggedInUser(data);
       }
     } catch (e) {
       console.log('Error in fetch current user', e);
@@ -152,15 +162,15 @@ const MainComponent = () => {
             (showInnerleftMenu ? (pathURL !== '/dashboard' ? "openSubmenu" : "") : "")
           }
         >
-          <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu} clickedSetupStatus={(e) => clickedSetupStatus(e)} loggedInUser={loggedInUser} />
+          <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu} clickedSetupStatus={(e) => clickedSetupStatus(e)} />
           <div className="dashMain">
-            <HeaderDashboard toggleCreate={(e) => toggleCreate(e)} setupMenuState={setupMenuState} loggedInUser={loggedInUser}/>
+            <HeaderDashboard toggleCreate={(e) => toggleCreate(e)} setupMenuState={setupMenuState} />
             <Switch>
               <Route exact path="/dashboard">
                 <DashboardRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
               </Route>
               <Route exact path={["/roles", "/groups", "/users", '/organizations', '/associations']}>
-                <AuthRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} loggedInUser={loggedInUser}/>
+                <AuthRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
               </Route>
               <Route exact path={["/automation-list", "/automation-builder"]}>
                 <AutomationRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />

@@ -2,7 +2,8 @@ import * as actionTypes from "../actions/types";
 
 const initialState = {
   filter: false,
-  count: 0
+  count: 0,
+  data: null
 }
 
 const userReducer = (state = initialState, action) => {
@@ -13,6 +14,9 @@ const userReducer = (state = initialState, action) => {
       break;
     case actionTypes.USER_COUNT:
       newState.count = action.count;
+      break;
+    case actionTypes.USER_DATA:
+      newState.data = action.data;
       break;
     default:
       newState.filter = false;

@@ -8,6 +8,7 @@ export const ROLE_COUNT = "ROLE_COUNT";
 export const GROUP_COUNT = "GROUP_COUNT";
 // User
 export const USER_COUNT = "USER_COUNT";
+export const USER_DATA = "USER_DATA";
 //Organization
 export const ORGANIZATION_COUNT = "ORGANIZATION_COUNT";
 //Association

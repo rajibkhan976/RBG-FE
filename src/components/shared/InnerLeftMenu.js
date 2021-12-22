@@ -21,6 +21,7 @@ const InnerLeftMenu = (props) => {
   const automationCount = useSelector((state) => state.automation.count);
   const contactCount = useSelector((state) => state.contact.count);
   const dispatch = useDispatch();
+  const loggedInUser = useSelector((state) => state.user.data);
 
   useEffect(() => {
     if (props.automationListItem) {
@@ -122,7 +123,7 @@ const InnerLeftMenu = (props) => {
                   </div>
                 </NavLink>
               </li>
-              {props.loggedInUser && props.loggedInUser.organization && props.loggedInUser.organizationCode === 'RBG' ? <li>
+              {loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'RBG' ? <li>
                 <NavLink className="leftMenuInnerLink" to="/organizations">
                   <div className="indicator"></div>
                   <div className="linkDetails">
@@ -133,7 +134,7 @@ const InnerLeftMenu = (props) => {
                   </div>
                 </NavLink>
               </li> : ''}
-              {props.loggedInUser && props.loggedInUser.organization && props.loggedInUser.organizationCode === 'RBG' ? <li>
+              {loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'RBG' ? <li>
                 <NavLink className="leftMenuInnerLink" to="/associations">
                   <div className="indicator"></div>
                   <div className="linkDetails">

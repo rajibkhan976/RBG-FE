@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { useSelector } from 'react-redux';
 
 
 const Dashboard = () => {
 
   const [createButton, setCreateButton] = useState(null);
+  const loggedInUser = useSelector((state) => state.user.data);
+  
   useEffect(() => {
     document.title = "Red Belt Gym - Dashboard"
   });
@@ -21,6 +24,24 @@ const Dashboard = () => {
         <span className="prototypeBatch">Prototype</span>
         <h1>Dashboard</h1>
       </a>
+      {loggedInUser && loggedInUser.isAssociationOwner ? <div className="userListBody">
+        <div className="listBody">
+          <ul className="tableListing">
+            <li class="listHeading userRole">
+              <div class="userName ">Organization Name</div>
+              <div class="phoneNum assignedPeople ">Active Member</div>
+            </li>
+            <li className="owerInfo userRole">
+              <div class="userName">
+                <button class="btn"><p>Tier5 martial arts</p></button>
+              </div>
+              <div class="phoneNum">
+                <button class="btn">2</button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div> : ''}
     </>
   );
 };
