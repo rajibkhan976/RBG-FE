@@ -14,7 +14,7 @@ import { MESSAGE_DELAY } from "../../../../configuration/env";
 import Recoder from "../../../shared/Recoder";
 import Player from "../../../shared/Player";
 import { utils } from "../../../../helpers";
-
+import config from "../../../../configuration/config";
 
 const CallConfiguration = (props) => {
     const [name, setName] = useState("");
@@ -124,7 +124,7 @@ const CallConfiguration = (props) => {
         
         if (props.editConfig.introAudioUrl) {
           setIntroAudio(props.editConfig.introAudio);
-          let oldIntro = new Audio(props.editConfig.introAudioUrl);
+          let oldIntro = new Audio(config.bucketUrl + props.editConfig.introAudioKey);
           setOldIntroAudio(oldIntro);
           setOldIntroAudioKey(props.editConfig.introAudioKey)
         }
