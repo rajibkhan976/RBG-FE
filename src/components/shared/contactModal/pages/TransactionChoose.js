@@ -131,19 +131,16 @@ const TransactionChoose = (props) => {
 
     const productPriceHandel = (e) => {
         let inputVal = e.target.value;
-        let val = inputVal.replace(/[^\d]/g, "");
+        const regexFloat = /^[+-]?\d*(?:[.,]\d*)?$/;
+        // let val = inputVal.replace(/[^\d]/g, "");
         let price;
         
-        if (val.length > 0 && val !== NaN) {
-            console.log(parseFloat(val));
-            price = parseFloat(val);
+        if (regexFloat.test(inputVal)) {
+            // console.log(parseFloat(inputVal));
+            price = parseFloat(inputVal);
             let taxAmmount = (price * tax) / 100;
-            setProductPrice(price);
-            setProductPriceTax(price + taxAmmount);
-        } else {
-            price = null;
-            setProductPrice("");
-            setProductPriceTax(0);
+            setProductPrice(inputVal);
+            setProductPriceTax((price + taxAmmount).toFixed(2));
         }
     }
 
@@ -158,7 +155,6 @@ const TransactionChoose = (props) => {
         setShowLoader(true);
         let relult = await ProductServices.fetchProducts(catID);
         setProductList(relult.products);
-        console.log(relult);
         setShowLoader(false);
     }
 
@@ -178,13 +174,14 @@ const TransactionChoose = (props) => {
     const choseColorHandel = (e, key) => {
         setChosedColor(e.target.value);
         setColorIndex(key);
-        
+        console.log(e.target.value);
+        console.log(key);
     }
 
     const chosePosProductHandel = (e) => {
         setPosSelectedProductIndex(e.target.value);
         console.log(e.target.value);
-        setColors(productList[e.target.value].colors);
+        setColors(productList[e.target.value].associatedColors);
         setSize(productList[e.target.value].size);
         setProductImg("https://wrapperbucket.s3.us-east-1.amazonaws.com/" + productList[e.target.value].image);
         setProductImgName(productList[e.target.value].image);
@@ -223,7 +220,7 @@ const TransactionChoose = (props) => {
                 "taxPercent": tax
             }
             setShowLoader(true);
-            const result = await ProductServices.buyProduct(payload);
+            await ProductServices.buyProduct(payload);
             setSuccessMsg("POS transaction registered successfully");
         } catch (e) {
             setErrorMsg(e.message);
@@ -297,15 +294,16 @@ const TransactionChoose = (props) => {
                             <div class={posSelectedProductIndex ? "formControl" : "formControl hide"}>
                                 <label>Available Colours</label>
                                 <div class="pickColor">
-                                    {/* <button className={addActive ? "addColor active" :  "addColor"} style={{ backgroundColor: "#834140" }} onClick={activeClassHandler}>
+                                    {/* <button className={"addColor"} style={{ backgroundColor: "#834140" }}>
                                          <img src={addActive ? tick : ""} alt=""/>
                                     </button> */}
                                     { colors.map((item, key) => (
                                         <button type="button" className={colorIndex === key ? "addColor active " + item :  "addColor " + item} 
+                                        style={{ backgroundColor: item.colorcode}}
                                         onClick={(event) => {
                                             choseColorHandel(event, key)
                                         }} 
-                                          value={item} 
+                                          value={item.label} 
                                           key={key} >
                                             
                                         </button>
@@ -323,7 +321,10 @@ const TransactionChoose = (props) => {
                             </div>
                             <div className="formsection">
                                 <label>Price</label>
-                                <input type="text" placeholder="Ex: 99" className="editableInput" value={productPrice} onChange={productPriceHandel} /> <span className="tax"> * 10% tax will be applicable</span>
+                                <input type="text" placeholder="Ex: 99" className="editableInput" 
+                                value={productPrice}
+                                onChange={productPriceHandel} /> 
+                                {(tax !== 0) ? <span className="tax"> X {tax}% tax will be applicable</span> : ''}
                                 <p>* default currency is <strong>USD</strong></p>
                             </div>
                         </div>
