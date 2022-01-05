@@ -14,6 +14,7 @@ import ProductRouter from "./setup/product/productRoute";
 import NumberRouting from "./numbers/NumberRoute";
 import CourseRouter from "./setup/course/courseRoute";
 import CustomizationRouter from "./setup/customization/customizationsRoute";
+import GymDetailsRouter from "./setup/gymDetail/gymDetailsRoute";
 
 import HeaderDashboard from "./shared/HeaderDashboard";
 import { UserServices } from "../services/authentication/UserServices";
@@ -197,6 +198,9 @@ const MainComponent = () => {
               </Route>
               <Route exact path="/customizations">
                 <CustomizationRouter toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></CustomizationRouter>
+              </Route>
+              <Route exact path="/gym-details">
+                <GymDetailsRouter toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></GymDetailsRouter>
               </Route>
               <Route exact path="/" component={() => <Redirect to="/dashboard" />} />
               <Route exact path="*">

@@ -8360,6 +8360,347 @@ li.listHeading > div.sortOff:after {
 } 
 
 
+.dashInnerUI.phases {
+  width: calc(100% - 470px);
+}
+
+.phasesRightSetUpPanel {
+  width: 430px;
+  background: #e9eff5;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  padding: 60px 38px;
+  overflow: auto;
+}
+.phases li .listHeading {
+  position: sticky;
+  background: transparent;
+}
+.phases .userListBody {
+  padding: 0;
+  margin: 0 20px 0 0;
+}
+
+.phases li .bigspace{
+  width: 400px;
+}
+.phases li .colorFade{
+  color: #9BAEBC;
+  line-height: 22px;
+}
+
+.userListHead.phases {
+  padding-right: 20px;
+}
+.customtableListing li.listHeading{
+  background-color: transparent;
+}
+
+.slickModalBody .modalForm.heightAddjust {
+  max-height: 51vh;
+}
+
+.addStatsPopMsg.popupMessage{
+  top: 55px;
+}
+
+.gymDetails{
+  width: 100%;
+  padding: 0px 150px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  overflow: auto;
+}
+.gymDetails .gymdetails_left{
+  background-color: transparent;
+  width: calc(50% - 50px);
+  padding: 0 50px 0 0;
+  margin: 0 50px 0 0;
+  overflow: auto;
+  /* height: 770px; */
+}
+
+.gymDetails .gymdetails_right{
+  width: 50%;
+  background-color: #fff;
+  padding: 35px 32px;
+  border-radius: 10px;
+  /* height: 730px; */
+}
+.gymdetails_left .formControl {
+  margin: 0 0 24px 0;
+}
+
+.gymdetails_left .formControl label{
+    font-size: 13px;
+    line-height: 19px;
+    color: var(--darkBlue);
+    width: 100%;
+    display: block;
+    padding: 0px 0 8px 0;
+}
+.gymdetails_left .formControl input{
+  background: #fff;
+  color: var(--darkBlue);
+}
+.common_blue_button {
+  height: 40px;
+  background: var(--darkBlue) 0% 0% no-repeat padding-box;
+  border-radius: 5px;
+  padding: 0 14px;
+  color: #fff;
+  font-size: 13px;
+  width: auto;
+  border: none;
+}
+.common_blue_button img{
+  padding: 0 0 0 6px;
+}
+.gymdetails_left .formControl.breaktime input{
+  width: 140px;
+}
+.gymdetails_left .formControl.breaktime span{
+  padding: 0 0 0 10px;
+  color: var(--darkBlue);
+  font-size: 13px;
+  line-height: 19px;
+}
+.gymdetails_left .formControl.phone .cmnFormField{
+  display: flex;
+  width: 100%;
+}
+.gymdetails_left .formControl.phone input{
+  width: calc(100% - 80px);
+}
+.gymdetails_left .formControl.phone .cmnFormField .countryCode{
+  margin-top: 5px;
+  background: #fff;
+}
+
+
+.holidayListHeader{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 0 20px 0;
+  width: 100%;
+}
+.holidayListHeader h3{
+  color: var(--darkBlue);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.holidayListHeader p{
+  font-size: 13px;
+  line-height: 19px;
+  color: #9BAEBC;
+}
+.gymdetails_right .emptyList{
+  display: flex;
+  flex-wrap: wrap;
+  align-content: stretch;
+  height: 80%;
+}
+.gymdetails_right .addInEmptySpace{
+  width: 100%;
+  height: calc(100% - 100px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  line-height: 19px;
+  color: #9BAEBC;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+.gymdetails_right .addInEmptySpace div{
+  padding: 20px 0;
+  width: 100%;
+  text-align: center;
+}
+
+.holidayList{
+  width: 100%;
+}
+.gymHolidayList {
+  width: 100%;
+  background-color: #F0F5F1;
+  border-radius: 5px;
+  padding: 2px  7px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 5px;
+}
+.gymHolidayList .cell {
+  width: 27%;
+  font-size: 13px;
+  padding: 14px 15px;
+  color: var(--darkBlue);
+}
+.gymHolidayList .cell:last-child {
+  width: 44%;
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 0 14px 15px;
+  align-items: center;
+}
+.gymHolidayList.header{
+  background-color: transparent;
+}
+.gymHolidayList.header .cell {
+  padding: 10px 15px 5px;
+  font-weight: 500;
+}
+.gymHolidayList .cell:last-child .sideEditOption{
+  width: 20px;
+}
+.gymHolidayList .cell:last-child .sideEditOption button{
+  border: none;
+  background: transparent;
+}
+
+.gymHolidayList.header .cell:first-child{
+  padding-left: 0;
+}
+.showing_gym_data .gymName {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  align-items: flex-start;
+}
+.showing_gym_data .gymName button{
+  background: transparent;
+  border: none;
+  color: #55BBC9;
+  font-size: 13px;
+  height: auto;
+  margin-top: 10px;
+}
+.showing_gym_data .gymName > div {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  width: calc(100% - 90px)
+}
+.showing_gym_data .gymName > div span{
+  width: calc(100% - 90px);
+  padding-left: 20px;
+}
+.showing_gym_data .gymInfo{
+  margin-top: 20px;
+}
+.showing_gym_data .gymInfo.full{
+  width: 100%;
+}
+.showing_gym_data .gymInfo.half{
+  width: 50%;
+}
+.showing_gym_data .gymInfo .textType1{
+  font-size: 13px;
+  line-height: 19px;
+  color: #9BAEBC;
+}
+.showing_gym_data .gymInfo .textType2{
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 30px;
+  color: var(--darkBlue);
+}
+.showing_gym_data .gymInfo .textType3{
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--darkBlue);
+}
+.showing_gym_data .gymInfo .textType4{
+  font-size: 16px;
+  line-height: 24px;
+  color: #55BBC9;
+}
+.showing_gym_data .gymInfo p + p{
+  margin: 7px 0 5px 0;
+}
+
+.showing_gym_data .gymBreak{
+  border-top: 1px solid #D3D9DE;
+  border-bottom: 1px solid #D3D9DE;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #9BAEBC;
+  font-size: 13px;
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+.showing_gym_data .gymBreak h3{
+  font-size: 16px;
+  line-height: 24px;
+  color: var(--darkBlue);
+  font-weight: 400;
+  padding-top: 5px;
+}
+.showing_gym_data .gymBreak img{
+  margin-right: 20px;
+}
+.formControl.timezone.gymInfo select,
+.formControl.timezone select{
+  background-color: #fff ;
+  margin-top: 10px;
+}
+.holiday .formControl.half{
+  width: 48%;
+}
+.justified-space-between {
+  justify-content: space-between;
+}
+.slickModalBody .modalForm.auto{
+  height: auto;
+}
+.w-100{
+  width: 100%;
+}
+.hideStylefile{
+  width: 65px;
+  position: relative;
+  display: inline-block;
+}
+
+.hideStylefile:after{
+  position: absolute;
+  content: "";
+  background: #f6f8fa;
+  width: 65px;
+  height: 100%;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+}
+.hideStylefile span{
+  width: 100%;
+  position: absolute;
+  color: #55BBC9;
+  left: 0;
+  padding: 0 0 0 5px;
+  top: 0;
+  pointer-events: none;
+  z-index: 2;
+  font-size: 13px;
+  line-height: 40px;
+}
+.hideStylefile input{ 
+  background: none;
+  border: none;
+  width: 65px;
+}
+
 
 
 

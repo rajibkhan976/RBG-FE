@@ -36,7 +36,14 @@ const Setup = (props) => {
                   <img src={SetupIcon2} alt="" />
                 </i>
                 <div>
-                  <h3>Gym Details</h3>
+                  <h3>
+                  <NavLink
+                      to="/gym-details"
+                      onClick={(e) => props.clickedLink(e)}
+                    >
+                       Gym Details
+                    </NavLink>
+                   </h3>
                   <p>Manage your Gym details</p>
                 </div>
               </div>

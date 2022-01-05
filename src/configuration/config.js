@@ -107,4 +107,9 @@ module.exports = {
 
     //Saletax
     saleTaxUrl: "https://5wb0khlhj0.execute-api.us-east-1.amazonaws.com/dev/customization/",
+    
+    //Gym Details
+    gymDetailsUrl: "https://tkdm8gb41d.execute-api.us-east-1.amazonaws.com/dev/gym",
+    gym_Logo_upload: "https://tkdm8gb41d.execute-api.us-east-1.amazonaws.com/dev/gym/image",
+    gym_detail_update: "https://tkdm8gb41d.execute-api.us-east-1.amazonaws.com/dev/gym/detail"
 }  
