@@ -14,6 +14,8 @@ import ProductRouter from "./setup/product/productRoute";
 import NumberRouting from "./numbers/NumberRoute";
 import CourseRouter from "./setup/course/courseRoute";
 import CustomizationRouter from "./setup/customization/customizationsRoute";
+
+import StatusPhasesRouter from "./setup/status_phase/status_phasesRoute";
 import GymDetailsRouter from "./setup/gymDetail/gymDetailsRoute";
 
 import HeaderDashboard from "./shared/HeaderDashboard";
@@ -198,6 +200,9 @@ const MainComponent = () => {
               </Route>
               <Route exact path="/customizations">
                 <CustomizationRouter toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></CustomizationRouter>
+              </Route>
+              <Route exact path="/phases-status">
+                <StatusPhasesRouter toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></StatusPhasesRouter>
               </Route>
               <Route exact path="/gym-details">
                 <GymDetailsRouter toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></GymDetailsRouter>
