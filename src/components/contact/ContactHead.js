@@ -1,8 +1,17 @@
 import React from "react";
+import {useDispatch, useSelector} from "react-redux";
+import * as actionTypes from "../../actions/types";
 import download_icon from "../../../src/assets/images/download_icon.svg";
 import uparrow_icon_grey from "../../../src/assets/images/uparrow_icon_grey.svg";
 
 const ContactHead = (props) => {
+  const dispatch = useDispatch();
+  const createIndivitualContact = () => {
+    dispatch({
+        type: actionTypes.CONTACTS_MODAL_ID,
+        contact_modal_id: 0,
+    });
+  }
   return (
     <div className="contactHead">
       <div class="userListHead">
@@ -55,7 +64,7 @@ const ContactHead = (props) => {
               alt=""
             />
           </button>
-          <button class="creatUserBtn" disabled="disabled">
+          <button class="creatUserBtn" onClick={() => createIndivitualContact()}>
             <img
               class="plusIcon"
               src="/static/media/plus_icon.200ad5cb.svg"

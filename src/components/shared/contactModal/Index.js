@@ -32,11 +32,11 @@ const ContactModal = (props) => {
         return (
             <div>
                 <button className={navigation.current == 1 ? "active nNav" : "nNav"} onClick={() => navigation.jump(1)}>Overview</button>
-                <button className={navigation.current == 2 ? "active nNav" : "nNav"} onClick={() => navigation.jump(2)}>Attendance</button>
-                <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)} >
+                <button className={navigation.current == 2 ? "active nNav" : "nNav"} onClick={() => navigation.jump(2)} disabled={props.contactId ? false : true}>Attendance</button>
+                <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)} disabled={props.contactId ? false : true}>
                     Transaction
                 </button>
-                <button className={navigation.current == 4 ? "active nNav" : "nNav"} onClick={() => navigation.jump(4)}>
+                <button className={navigation.current == 4 ? "active nNav" : "nNav"} onClick={() => navigation.jump(4)} disabled={props.contactId ? false : true}>
                     Billing
                 </button>
             </div>
@@ -71,6 +71,7 @@ const ContactModal = (props) => {
     };
 
     const getContact = async (contactId) => {
+      if (contactId !== 0) {
         let payload = {
             id: contactId
         }
@@ -78,6 +79,7 @@ const ContactModal = (props) => {
         setContactData(contact.contact);
         const ltvVal = (contact.contact.ltv + contact.contact.ltvPOS).toLocaleString("en-US");
         setLtv("USD "+ltvVal);
+      }
     }
 
     useEffect(() => {
@@ -107,84 +109,87 @@ const ContactModal = (props) => {
                                     <img src={cross_white} alt="" />
                                 </button>
                             </div>
-                            <div className="userInfoArea">
-                                <div className="userImageWrap">
-                                    <span className="userImage">
-                                        <img src={user_100X100} alt="" />
-                                    </span>
-                                    <button className="editUserImg">
-                                        <img src={camera_icon} alt="" />
-                                    </button>
-                                </div>
-                                <div className="userName">
-                                    {contactData.firstName ? contactData.firstName : ""} {contactData.lastName ? contactData.lastName : ""}
-                                </div>
-                                <div className="ltValue">
-                                    <header>Life Time Value :</header>
-                                    <span>{ltv}</span>
-                                </div>
-                                {/* <div className="userContacts">
-                                    <div className="userPhone">
-                                        <img src={phone_call_icon_white} alt="" />
-                                        <span>+1-4132045887</span>
-                                    </div>
-                                    <div className="userEmail">
-                                        <img src={email_icon_white} alt="" />
-                                        <span>richardnile@gmail.com</span>
-                                    </div>
-                                </div> */}
-                            </div>
+                            { props.contactId !== 0 &&
+                              <div className="userInfoArea">
+                                  <div className="userImageWrap">
+                                      <span className="userImage">
+                                          <img src={user_100X100} alt="" />
+                                      </span>
+                                      <button className="editUserImg">
+                                          <img src={camera_icon} alt="" />
+                                      </button>
+                                  </div>
+                                  <div className="userName">
+                                      {contactData.firstName ? contactData.firstName : ""} {contactData.lastName ? contactData.lastName : ""}
+                                  </div>
+                                  <div className="ltValue">
+                                      <header>Life Time Value :</header>
+                                      <span>{ltv}</span>
+                                  </div>
+                                  {/* <div className="userContacts">
+                                      <div className="userPhone">
+                                          <img src={phone_call_icon_white} alt="" />
+                                          <span>+1-4132045887</span>
+                                      </div>
+                                      <div className="userEmail">
+                                          <img src={email_icon_white} alt="" />
+                                          <span>richardnile@gmail.com</span>
+                                      </div>
+                                  </div> */}
+                              </div>
+                            }
                         </div>
-                        <div className="contactModalHeaderBottomSec">
-                            <div className="bottomLeftArea">
-                                <div className="userContacts">
-                                    <div className="userPhone">
-                                        <img src={phone_call_icon_white} alt="" />
-                                        <span>{contactData.phone && contactData.phone.dailCode && contactData.phone.number ?
-                                            contactData.phone.dailCode + "-" + contactData.phone.number : ""}</span>
-                                    </div>
-                                    <div className="userEmail">
-                                        <img src={email_icon_white} alt="" />
-                                        <span>{contactData.email}</span>
-                                    </div>
-                                </div>
-                                <div className="clockinArea">
-                                    <button className="clockinBtn orangeBtn">
-                                        <img src={histroy_icon_white} alt="" /> Check-in
-                                    </button>
-                                    <p className="logTime">Last attended 19 hrs ago</p>
-                                </div>
-                            </div>
-                            <div className="bottomRightArea">
-                                <div className="bottomRightAreaCol firstCol">
-                                    <div className="userInfoCell jobRole">
-                                        <span className="cellInfoIcon">
-                                            <img src={user_icon_white} alt="" />
-                                        </span>
-                                        <span className="infoCellTxt">{contactData.jobRole}</span>
-                                    </div>
-                                    <div className="userInfoCell prospect">
-                                        <span className="cellInfoIcon">
-                                            <img src={battery_icon_white} alt="" />
-                                        </span>
-                                        <span className="infoCellTxt">Prospect - showed</span>
-                                    </div>
-                                </div>
-                                <div className="bottomRightAreaCol tags">
-                                    <div className="userInfoCell">
-                                        <span className="cellInfoIcon">
-                                            <img src={tag_icon_white} alt="" />
-                                        </span>
-                                        <span className="infoCellTxt">Tag One, Tag Two, Tag Three</span>
-                                        <span className="extraTagNumber">+5</span>
-                                    </div>
-                                    <div className="userInfoCell">
-                                        <button className="addNewTag">+ Add Tag</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
+                        {props.contactId !== 0 &&
+                          <div className="contactModalHeaderBottomSec">
+                              <div className="bottomLeftArea">
+                                  <div className="userContacts">
+                                      <div className="userPhone">
+                                          <img src={phone_call_icon_white} alt="" />
+                                          <span>{contactData.phone && contactData.phone.dailCode && contactData.phone.number ?
+                                              contactData.phone.dailCode + "-" + contactData.phone.number : ""}</span>
+                                      </div>
+                                      <div className="userEmail">
+                                          <img src={email_icon_white} alt="" />
+                                          <span>{contactData.email}</span>
+                                      </div>
+                                  </div>
+                                  <div className="clockinArea">
+                                      <button className="clockinBtn orangeBtn">
+                                          <img src={histroy_icon_white} alt="" /> Check-in
+                                      </button>
+                                      <p className="logTime">Last attended 19 hrs ago</p>
+                                  </div>
+                              </div>
+                              <div className="bottomRightArea">
+                                  <div className="bottomRightAreaCol firstCol">
+                                      <div className="userInfoCell jobRole">
+                                          <span className="cellInfoIcon">
+                                              <img src={user_icon_white} alt="" />
+                                          </span>
+                                          <span className="infoCellTxt">{contactData.jobRole}</span>
+                                      </div>
+                                      <div className="userInfoCell prospect">
+                                          <span className="cellInfoIcon">
+                                              <img src={battery_icon_white} alt="" />
+                                          </span>
+                                          <span className="infoCellTxt">Prospect - showed</span>
+                                      </div>
+                                  </div>
+                                  <div className="bottomRightAreaCol tags">
+                                      <div className="userInfoCell">
+                                          <span className="cellInfoIcon">
+                                              <img src={tag_icon_white} alt="" />
+                                          </span>
+                                          <span className="infoCellTxt">Tag One, Tag Two, Tag Three</span>
+                                          <span className="extraTagNumber">+5</span>
+                                      </div>
+                                      <div className="userInfoCell">
+                                          <button className="addNewTag">+ Add Tag</button>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                        }
                     </div>
                     <div className="tabBarArea">
                         {/* <div className="redBtnContainer">
@@ -201,11 +206,11 @@ const ContactModal = (props) => {
                         <Steps config={config}>
                             <Step title="Overview" contact={contactData} component={Overview} contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
                             <Step title="Attendance" component={Attendance} />
-                            <Step title="Transaction" 
-                            contactId={props.contactId} 
-                            backToTransList={backToTransListHandler} 
-                            goToTransaction={goToTransactionHandler} 
-                            component={goToTransactionClicked ? TransactionChoose : Transaction} 
+                            <Step title="Transaction"
+                            contactId={props.contactId}
+                            backToTransList={backToTransListHandler}
+                            goToTransaction={goToTransactionHandler}
+                            component={goToTransactionClicked ? TransactionChoose : Transaction}
                             refetchContact={() => getContact(props.contactId)}/>
                             <Step title="Billing" component={Billing} contactId={props.contactId} />
                         </Steps>
