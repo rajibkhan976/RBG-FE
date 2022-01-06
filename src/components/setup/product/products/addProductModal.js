@@ -215,10 +215,10 @@ const AddProductModal = (props) => {
   return (
     <>
       {successMsg &&
-        <SuccessAlert message={successMsg}></SuccessAlert>
+        <SuccessAlert message={successMsg} extraClass="productPopupMsg"></SuccessAlert>
       }
       {errorMsg &&
-        <ErrorAlert message={errorMsg}></ErrorAlert>
+        <ErrorAlert message={errorMsg} extraClass="productPopupMsg"></ErrorAlert>
       }
       <div className="modalBackdrop">
         {isLoader ? <Loader /> : ''}

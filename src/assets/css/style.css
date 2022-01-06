@@ -3425,9 +3425,11 @@ span.userProfilePic img {
   text-align: center;
 }
 
-.popupMessage.coursePopupMsg {
+.popupMessage.coursePopupMsg,
+  .popupMessage.productPopupMsg {
   top: 90px;
 }
+
 
 .popupMessage p {
   padding: 5px 0 5px 36px;
@@ -4835,6 +4837,7 @@ button.saveOverview img {
   line-height: 20px;
   width: 250px;
   margin: 0 0 15px 0;
+  padding-right: 10px;
 }
 .proInfo p a {
   color: #55bbc9;
@@ -4861,13 +4864,14 @@ button.saveOverview img {
   width: 55%;
 }
 .chooseSize {
-  width: 230px;
+  width: 180px;
   display: flex;
+  padding-left: 10px;
   flex-wrap: wrap;
   align-items: center;
 }
 .chooseColor {
-  width: 230px;
+  width: 180px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -5093,6 +5097,9 @@ button.saveOverview img {
   font-size: 13px;
   margin-bottom: 15px;
 }
+.applySlider p {
+  margin-bottom: 35px;
+}
 .aplyfilteCheck label {
   color: var(--darkBlue);
   font-size: 13px;
@@ -5161,7 +5168,7 @@ button.saveOverview img {
 
 .applySlider .min-max-slider {
   position: relative;
-  width: 100%;
+  width: 96%;
   text-align: center;
   margin-bottom: 80px;
 }
@@ -5180,7 +5187,7 @@ button.saveOverview img {
   color: #305671;
   font-size: 13px;
   position: absolute;
-  top: 10px;
+  top: -20px;
 }
 
 .applySlider .min-max-slider > input {
@@ -8518,6 +8525,7 @@ li.listHeading > div.sortOff:after {
   color: #9BAEBC;
   flex-direction: column;
   flex-wrap: wrap;
+  min-height: 200px;
 }
 .gymdetails_right .addInEmptySpace div{
   padding: 20px 0;
@@ -8700,7 +8708,10 @@ li.listHeading > div.sortOff:after {
   border: none;
   width: 65px;
 }
-
+.common_blue_button:disabled {
+  filter: blur(1px);
+  cursor: no-drop;
+}
 
 
 
