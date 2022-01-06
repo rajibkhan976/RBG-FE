@@ -50,12 +50,11 @@ export const GymDetailsServices = {
                 });
         });
     },
+
     gymDetailUpdate: async (payload) => {
-        // headers.Authorization = localStorage.getItem("_token");
         try {
             const url = config.gym_detail_update ;
             const result = await axios.put(url, payload, { headers: headers });
-            console.log("gymmmmmmmm",result);
             if(result.status === 200) {
                 return result.data;
             } else {

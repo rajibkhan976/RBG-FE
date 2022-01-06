@@ -16,186 +16,54 @@ import { GymDetailsServices } from "../../../services/gymDetails/GymDetailsServi
 
 const GymDetails = (props) => {
   document.title = "Red Belt Gym - Gym Details";
-
-
-  
-  const [gymData, setGymData] = useState([]);
-
-  const fetchGymDetails = async () => {
-    try {
-      const gymData = await GymDetailsServices.fetchGymDetail();
-      // console.log("Gym Details", gymData);
-      setGymData(gymData);
-    } catch (e) {
-      console.log(e.message);
-      // Show error message from here
-    }
-  }
-   useEffect(() => {
-    fetchGymDetails();
-   }, []);
-  
-   
-
-
   const [option, setOption] = useState(null);
   const [openModal, setOpenModal] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
 
-  const [showEdtiForm, setShowEdtiForm] = useState(false);
-
-  const [gymName, setGymName] = useState("");
-  const [gymContact, setGymContact] = useState("");
-  const [gymEmail, setGymEmail] = useState("");
+  // START - Variable set while development --- Jit
+  const [isLoader, setIsLoader] = useState(false);
+  const [gymData, setGymData] = useState([]);
+  const [holidayData, setHolidayData] = useState([]);
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const [logo, setLogo] = useState({
     image: "",
     imageUrl: ""
   });
-  const [gymTimeZone, setGymTimeZone] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [picture, setPicture] = useState("");
-  const [imgData, setImgData] = useState("");
-  const [popMsgerror, setPopMsgerror] = useState(false);
-  const [popMsgsuccess, setPopMsgsuccess] = useState(false);
-  const [emailError, setEmailError] = useState(false);
-  const [gymImageUpload, setGymImageUpload] = useState("");
-  const [image, setImage] = useState(null);
-  const [gymProfilePicName, setGymProfilePicName] = useState(null);
-
-  const [holidayData, setHolidayData] = useState([
-    {
-      date1: "15/08/2022",
-      date2: "15/08/2022",
-      day: "Sun",
-      holiday: "Independence Day"
-    },
-    {
-      date1: "15/08/2022",
-      date2: "15/08/2022",
-      day: "Sat",
-      holiday: "Netaji Birthday"
-    },
-    {
-      date1: "26/01/2022",
-      date2: "26/01/2022",
-      day: "Mon",
-      holiday: "Republic Day"
-    },
-    {
-      date1: "15/08/2022",
-      date2: "17/08/2022",
-      day: "Tue",
-      holiday: "Gandhi Birthday"
+  const [validateMsg, setValidateMsg] = useState({
+    name: "",
+    contactPerson: "",
+    phone: "",
+    contactEmail: "",
+    timezone: "",
+    disabled: false,
+    disabledAccess: false
+  })
+  // END - Variable set while development --- Jit
+  const fetchGymDetails = async () => {
+    try {
+      setIsLoader(true);
+      const gymData = await GymDetailsServices.fetchGymDetail();
+      console.log("Gym Details", gymData);
+      setGymData(gymData.gymDetails);
+      setHolidayData(gymData?.holidays);
+      setValidateMsg({ ...validateMsg, disabledAccess: !gymData.editAccess })
+    } catch (e) {
+      console.log(e.message);
+      // Show error message from here
+    } finally {
+      setIsLoader(false);
     }
-  ]);
-  const [productData, setProductData] = useState({
-    profile:"", 
-    gymName: "", 
-    gymContact:"", 
-    countryCode:"",
-     number:"", 
-     email:"", 
-     gymTime:""
-  });
-  const [basicinfoPhone, setBasicinfoPhone] = useState({
-    countryCode: "US",
-    dailCode: "+1",
-    number: "",
-    full_number: "",
-    location: "None",
-    country: "",
-    carrier: "None",
-    timezone: "America/New_York",
-    is_valid: false
-  });
-  const [phoneCountryCode, setPhoneCountryCode] = useState([]);
-  const countrycodeOpt = phoneCountryCode ? phoneCountryCode.map((el, key) => {
-    return (
-      <option value={el.code} data-dailcode={el.prefix} key={key} >{el.code} ({el.prefix})</option>
-    )
   }
-  ) : '';
+  useEffect(() => {
+    fetchGymDetails();
+  }, []);
 
-  const onChangePicture = e => {
-    if (e.target.files[0]) {
-      console.log("picture: ", e.target.files);
-      setPicture(e.target.files[0]);
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        setImgData(reader.result);
-      });
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  };
-  const handelBasicinfoPhone = (event) => {
-    const { name, value } = event.target;
-    if (name === "countryCode") {
-      const daileCodeindex = event.target[event.target.selectedIndex];
-      let dailCode = daileCodeindex !== undefined ? daileCodeindex.getAttribute("data-dailcode") : "+1";
-      setBasicinfoPhone(prevState => ({ ...prevState, dailCode: dailCode }));
-      setBasicinfoPhone(prevState => ({ ...prevState, countryCode: value }));
-    }
-    if (name === "number") {
-      let pattern = new RegExp(/^[0-9\b]+$/);
-      if (!pattern.test(event.target.value)) {
-        return false;
-      } else {
-        setBasicinfoPhone(prevState => ({ ...prevState, number: value }));
-      }
-    }
-  };
+  useEffect(() => {
+    if (successMsg) setTimeout(() => { setSuccessMsg("") }, 5000);
+    if (errorMsg) setTimeout(() => { setErrorMsg("") }, 5000);
+  }, [errorMsg, successMsg]);
 
-
-  const gymNamehandler = (e) => {
-    setGymName(e.target.value);
-  };
-  const gymContacthandler = (e) => {
-    setGymContact(e.target.value);
-  };
-  const handlePhoneNumberChange = (e) => {
-    e.preventDefault();
-    setPhoneNumber(e.target.value);
-  };
-  
-  const gymEmailhandler = (e) => {
-    setGymEmail(e.target.value);
-    let emailValid;
-    emailValid = gymEmail.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-    if (!emailValid) {
-      setEmailError(true);
-    } else {
-      setEmailError(false);
-    }
-  };
-  const gymTimeZonehandler = (e) => {
-    setGymTimeZone(e.target.value);
-  };
-
-  const editGymDetailsHandler = (event) => {
-    event.preventDefault();
-    setShowEdtiForm(true);
-  }
-  // const validateField = (type = null) => {
-  //   // let emailValid;
-  //   // emailValid = gymEmail.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
-  //   // if(!emailValid){
-  //   //   console.log("jio kaka")
-  //   // }
-  // };
-  const updateGymDetailHandler = (event) => {
-    event.preventDefault();
-
-    if (imgData !== "" && gymName !== "" && gymContact !== "" && gymEmail !== "" && gymTimeZone !== "") {
-      // console.log("a",statusName,"b", statusDesc,"c", statusType);
-      setPopMsgsuccess(true);
-      setTimeout(() => {
-        setShowEdtiForm(false);
-      }, 2000);
-    } else {
-      //console.log("failed aslkjlsh");
-      setPopMsgerror(true)
-    };
-
-  }
   const toggleOptions = (index) => {
     setOption(index !== option ? index : null);
   };
@@ -207,66 +75,9 @@ const GymDetails = (props) => {
     setOpenModal(false);
   };
 
-  useEffect(() => {
-    if (popMsgsuccess) setTimeout(() => { setPopMsgsuccess("") }, 2000);
-    if (popMsgerror) setTimeout(() => { setPopMsgerror("") }, 2000);
-
-  }, [popMsgerror, popMsgsuccess]);
-
-
-  const gymImageUploadHandler = (event) => {
-
-    setGymImageUpload(event.target.files);
-    console.log(event.target.files[0]);
-  }
-  const changeGymLogoHandler = (event) => {
-    console.log("kuguhu")
-    const files = event.target.files;
-    if (files && files.length) {
-      const reader = new FileReader();
-      reader.onload = (read) => {
-        // setLogo(read.target.result);
-        GymDetailsServices.imageupload({
-          file: read.target.result,
-          name: files[0].name
-        }).then((result) => {
-          const avatar = result.data.publicUrl;
-          //setCourseData({ ...courseData, image: result.data.originalKey, imageUrl: result.data.publicUrl });
-          console.log(avatar);
-        }).catch(err => {
-          console.log('Profile pic error', err);
-          
-        });
-      };
-      reader.readAsDataURL(files[0]);
-    }
-    // let files = gymImageUpload;
-    //     if (files && files.length) {
-
-    //         let reader = new FileReader();
-    //         reader.onload = async (r) => {
-    //             setImage(r.target.result);
-    //             /**
-    //              * Make axios call
-    //              */
-    //              let logoUploadResponce = await GymDetailsServices.imageupload({
-    //                 file: r.target.result,
-    //                 name: files[0].name
-    //             })
-    //                 // .then((result) => {
-    //                 //     console.log('Profile pic: ', result);
-    //                 //     let avatar = config.bucketUrl + result.data.originalKey;
-    //                 //     setImage(avatar);
-    //                 //     setGymProfilePicName(result.data.originalKey);
-    //                 // })
-    //                 // .catch(err => {
-    //                 //     console.log('Profile pic error', err);
-    //                 // });
-                 
-    //               console.log(logoUploadResponce);
-    //         };
-    //         reader.readAsDataURL(files[0]);
-    //     }
+  const editGymDetailsHandler = (event) => {
+    event.preventDefault();
+    setShowEditForm(true);
   }
 
   const handleImageUpload = (event) => {
@@ -279,7 +90,8 @@ const GymDetails = (props) => {
           name: files[0].name
         }).then((result) => {
           const avatar = result.data.publicUrl;
-          setLogo({image: result.data.originalKey, imageUrl: result.data.publicUrl });
+          // setLogo({ image: result.data.originalKey, imageUrl: result.data.publicUrl });
+          setGymData({ ...gymData, logo: result.data.originalKey })
           console.log(avatar);
         }).catch(err => {
           console.log('Profile pic error', err);
@@ -288,12 +100,96 @@ const GymDetails = (props) => {
       reader.readAsDataURL(files[0]);
     }
   }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Gym Data", gymData);
+    try {
+      const isValid = validateField(e, true);
+      if(isValid) {
+        setIsLoader(true);
+        const payload = {
+          "orgName": gymData.name,
+          "contactPerson": gymData.contactPerson,
+          "phone": gymData.phone,
+          "countryCode": gymData.countryCode,
+          "logo": gymData.logo,
+          "contactEmail": gymData.contactEmail,
+          "timeZone": gymData.timezone
+      }
+        const updatedData = await GymDetailsServices.gymDetailUpdate(payload);
+        setGymData(updatedData);
+        console.log("Updated Data", updatedData);
+        setSuccessMsg("Gym details updated successfully");
+      }
+    } catch (e) {
+      setErrorMsg(e.message);
+    } finally {
+      setIsLoader(false);
+    }
+  }
+
+  const validateField = (e, validateViaSubmit = false) => {
+    const alphaRegex = /^[a-z A-Z]+$/;
+    const phoneRegex = /^[0-9]{10}$/;
+    const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    if (!validateViaSubmit) {
+      e.preventDefault();
+      const name = e.target.name;
+      const value = e.target.value;
+
+      if (name === "name" && value.length === 0) {
+        setValidateMsg({ ...validateMsg, disabled: true, name: "Gym name should not be left empty" });
+      } else if (name === "contactPerson" && !alphaRegex.test(value)) {
+        setValidateMsg({ ...validateMsg, disabled: true, contactPerson: "Please enter a valid contact person name" });
+      } else if (name === "phone" && !phoneRegex.test(value)) {
+        setValidateMsg({ ...validateMsg, disabled: true, phone: "Please enter a valid 10 digit phone number" });
+      } else if (name === "contactEmail" && !emailRegex.test(value)) {
+        setValidateMsg({ ...validateMsg, disabled: true, contactEmail: "Please enter a valid email address" });
+      } else if (name === "timezone" && value.length === 0) {
+        setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select a timezone" });
+      } else {
+        setValidateMsg({
+          name: "",
+          contactPerson: "",
+          phone: "",
+          contactEmail: "",
+          timezone: "",
+          disabled: false
+        });
+      }
+      setGymData({ ...gymData, [name]: value });
+    } else {
+      let bool = false;
+      if (gymData.name.length === 0) {
+        setValidateMsg({ ...validateMsg, disabled: true, name: "Gym name should not be left empty" });
+      } else if (!alphaRegex.test(gymData.contactPerson)) {
+        setValidateMsg({ ...validateMsg, disabled: true, contactPerson: "Please enter a valid contact person name" });
+      } else if (!phoneRegex.test(gymData.phone)) {
+        setValidateMsg({ ...validateMsg, disabled: true, phone: "Please enter a valid 10 digit phone number" });
+      } else if (!emailRegex.test(gymData.contactEmail)) {
+        setValidateMsg({ ...validateMsg, disabled: true, contactEmail: "Please enter a valid email address" });
+      } else if (gymData.timezone.length === 0) {
+        setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select a timezone" });
+      } else {
+        setValidateMsg({
+          name: "",
+          contactPerson: "",
+          phone: "",
+          contactEmail: "",
+          timezone: "",
+          disabled: false
+        });
+        bool = true; 
+      }
+      return bool;
+    }
+
   }
 
   return (
     <>
+      {(isLoader) ? <Loader /> : ''}
       <div className="dashInnerUI">
         <div class="userListHead">
           <div class="listInfo">
@@ -309,38 +205,29 @@ const GymDetails = (props) => {
         </div>
         <div className="gymDetails">
           <div className="gymdetails_left">
-            {!showEdtiForm &&
+            {!showEditForm &&
               <div className="showing_gym_data">
                 <div className="gymName">
-                  <div>
-                    {/* <img src={(gymData?.gymDetails?.logo) ? "https://wrapperbucket.s3.us-east-1.amazonaws.com/"+ gymData?.gymDetails?.logo : gymLogo} alt=""/> */}
-                    {logo.image ? <img src={logo.imageUrl} alt="" />
-                        : <img src={profileAvatar} alt="" />}
-                    <span>{(gymData?.gymDetails?.name) ? gymData?.gymDetails?.name : "-"}</span> 
-                    {/* <div class="w-100">
-                      {gymImageUpload === ""? 
-                       <div className="hideStylefile">
-                         <input type="file" onChange={(e) => handleImageUpload(e)} /> <span>Change</span>
-                       </div> :
-                       <button onClick={changeGymLogoHandler}>Upload</button>
-                      }
-                    </div> */}
+                  <div className="profilePicture">
+                    {(gymData?.logo) ? <img src={(gymData?.logo) ? "https://wrapperbucket.s3.us-east-1.amazonaws.com/" + gymData?.logo : gymLogo} alt="" />
+                      : <img src={profileAvatar} alt="" />}
+                    <span>{(gymData?.name) ? gymData?.name : "-"}</span>
                   </div>
-                  <button onClick={editGymDetailsHandler}><img src={edit_gym} alt="" /></button>
+                  <button><img src={edit_gym} alt="" onClick={editGymDetailsHandler} /></button>
                 </div>
                 <div className="gymInfo full">
                   <p className="textType1">Contact Person</p>
-                 
-                  <p className="textType2">{(gymData?.gymDetails?.contactPerson) ? gymData?.gymDetails?.contactPerson : "-"}</p>
+
+                  <p className="textType2">{(gymData?.contactPerson) ? gymData?.contactPerson : "-"}</p>
                 </div>
                 <div className="d-flex">
                   <div className="gymInfo half">
-                    <p className="textType1">Contact No.</p>                    
-                    <p className="textType3">{(gymData?.gymDetails?.phone) ? gymData?.gymDetails?.phone : "-"}</p>
+                    <p className="textType1">Contact No.</p>
+                    <p className="textType3">{(gymData?.phone) ? gymData?.phone : "-"}</p>
                   </div>
                   <div className="gymInfo half">
-                    <p className="textType1">Contact Email</p>                   
-                    <p className="textType4">{(gymData?.gymDetails?.contactEmail) ? gymData?.gymDetails?.contactEmail : "-"}</p>
+                    <p className="textType1">Contact Email</p>
+                    <p className="textType4">{(gymData?.contactEmail) ? gymData?.contactEmail : "-"}</p>
                   </div>
                 </div>
                 {/* <div className="gymBreak">
@@ -353,27 +240,21 @@ const GymDetails = (props) => {
                 <div className="formControl timezone gymInfo">
                   <p className="textType1">Timezone</p>
                   <select disabled>
-                    <option>{(gymData?.gymDetails?.timezone) ? gymData?.gymDetails?.timezone : "-"}</option>
+                    <option>{(gymData?.timezone) ? gymData?.timezone : "-"}</option>
                   </select>
                 </div>
               </div>
             }
             {/* form section.................... */}
-            {showEdtiForm &&
+            {showEditForm &&
               <form method="post" onSubmit={handleSubmit}>
                 <div className="formControl">
-
                   <div className="profile">
                     <div className="profileUpload">
                       <input type="file" onChange={(e) => handleImageUpload(e)} />
-                      {/* <input type="file" 
-                         name="profile" 
-                         onChange={onChangePicture} 
-                         defaultValue={productData.profile}
-                      /> */}
                     </div>
                     <div className="profilePicture">
-                      {logo.image ? <img src={logo.imageUrl} alt="" />
+                      {(gymData?.logo) ? <img src={(gymData?.logo) ? "https://wrapperbucket.s3.us-east-1.amazonaws.com/" + gymData?.logo : gymLogo} alt="" />
                         : <img src={profileAvatar} alt="" />}
                     </div>
                     <div className="profileText"> Gym Logo</div>
@@ -381,47 +262,50 @@ const GymDetails = (props) => {
                 </div>
                 <div className="formControl">
                   <label>Gym/Organization Name</label>
-                  <input 
-                    type="text" 
-                    placeholder="Ex. Fitbit" 
-                    name="gymName" 
-                    onChange={gymNamehandler}
-                    defaultValue={productData.gymName}
+                  <input
+                    type="text"
+                    placeholder="Ex. Fitbit"
+                    name="name"
+                    value={gymData?.name}
+                    onChange={validateField}
                   />
+                  <div className="errorMsg">{validateMsg.name}</div>
                 </div>
                 <div className="formControl">
                   <label>Contact Person</label>
-                  <input 
-                    type="text" 
-                    placeholder="Ex. Jon Doe" 
-                    name="gymContact" 
-                    onChange={gymContacthandler} 
-                    defaultValue={productData.gymContact}
+                  <input
+                    type="text"
+                    placeholder="Ex. Jon Doe"
+                    name="contactPerson"
+                    value={gymData?.contactPerson}
+                    onChange={validateField}
                   />
+                  <div className="errorMsg">{validateMsg.contactPerson}</div>
                 </div>
                 <div className="formControl phone">
                   <label>Phone No</label>
                   <div className="cmnFormField">
                     <div className="countryCode cmnFieldStyle">
-                      <div className="countryName">{basicinfoPhone.countryCode}</div>
-                      <div className="daileCode">{basicinfoPhone.dailCode}</div>
-                      <select className="selectCountry" name="countryCode" defaultValue={basicinfoPhone.countryCode} onChange={handelBasicinfoPhone}>
-                        {countrycodeOpt}
+                      <div className="countryName">US</div>
+                      <div className="daileCode">+1</div>
+                      <select className="selectCountry" name="countryCode"
+                        onChange={validateField}>
+                        <option value="+1">+1</option>
+                        <option value="+2">+2</option>
                       </select>
                     </div>
-                    <input type="phone" className="" name="number" placeholder="Eg. (555) 555-1234" 
-                    defaultValue={productData.number} onChange={handlePhoneNumberChange} />
-
+                    <input type="phone" className="" name="phone" placeholder="Eg. 5552234454"
+                      value={gymData?.phone}
+                      onChange={validateField} />
                   </div>
+                  <div className="errorMsg">{validateMsg.phone}</div>
                 </div>
                 <div className="formControl">
                   <label>Contact Email</label>
-                  <input type="text" placeholder="Ex. admin@fitbit.come" name="email"
-                    onChange={gymEmailhandler}
-                    defaultValue={productData.email}
-                  //onKeyUp={() => validateField()}
-                  />
-                  {emailError && <div className="errorMsg">Please Provide a proper Email address</div>}
+                  <input type="text" placeholder="Ex. admin@fitbit.come" name="contactEmail"
+                    value={gymData?.contactEmail}
+                    onChange={validateField} />
+                  <div className="errorMsg">{validateMsg.contactEmail}</div>
                 </div>
                 {/* <div className="formControl breaktime">
                       <label>Break Time</label>
@@ -429,16 +313,16 @@ const GymDetails = (props) => {
                   </div> */}
                 <div className="formControl timezone">
                   <label>Timezone</label>
-                  <select onChange={gymTimeZonehandler} name="gymTime" defaultValue={productData.gymTime}>
-                    <option>Select Timezone</option>
-                    <option>IST - Asia/Kolkata (GMT+5:30)</option>
-                    <option>GST -London</option>
+                  <select name="timezone"
+                    onChange={validateField}>
+                    <option value="Asia/Kolkata">IST - Asia/Kolkata (GMT+5:30)</option>
+                    <option value="Europe/London">GST -London</option>
                   </select>
+                  <div className="errorMsg">{validateMsg.timezone}</div>
                 </div>
-                {(popMsgerror === true) && <ErrorAlert message="Fill Up all the field" extraClass="addStatsPopMsg" />}
 
-                {(popMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraClass="addStatsPopMsg" />}
-                <button className="common_blue_button" onClick={updateGymDetailHandler} type="submit">
+                <button className="common_blue_button" type="submit"
+                  disabled={(validateMsg.disabled === true || validateMsg.disabledAccess === true) ? true : false}>
                   Save <img alt="" src={arrowRightWhite} />
                 </button>
 
@@ -485,9 +369,9 @@ const GymDetails = (props) => {
                 {holidayData.map((elem, key) => {
                   return (
                     <div className="gymHolidayList">
-                      <div className="cell">{elem.date1}</div>
-                      <div className="cell">{elem.date2}</div>
-                      <div className="cell">{elem.holiday}
+                      <div className="cell">{elem.fromDate}</div>
+                      <div className="cell">{elem.toDate}</div>
+                      <div className="cell">{elem.name}
                         <div className="sideEditOption">
                           <button onClick={() => {
                             toggleOptions(key);
