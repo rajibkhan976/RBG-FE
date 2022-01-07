@@ -8712,7 +8712,16 @@ li.listHeading > div.sortOff:after {
   filter: blur(1px);
   cursor: no-drop;
 }
-
+.showing_gym_data .gymName .logo_profile {
+  width: 80px;
+  height: 80px;
+  background: #fff;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
 
 

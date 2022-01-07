@@ -70,5 +70,62 @@ export const GymDetailsServices = {
             }
         }
     },
-   
+  
+   gymHolidayUpdate: async (payload) => {
+    try {
+        const url = config.gym_holiday ;
+        const result = await axios.put(url, payload, { headers: headers });
+        if(result.status === 200) {
+            return result.data;
+        } else {
+            throw new Error("There is an error updating Holiday. Please contact support");
+        }
+    } catch (e) {
+        if(!typeof e.data === 'undefined') {
+            console.log(e.response.data.message);
+            throw new Error(e.response.data.message);
+        } else {
+            console.log(e.stack);
+            throw new Error(e.message + ". Please contact support.");
+        }
+    }
+},
+gymHolidayCreate: async (payload) => {
+    try {
+        const url = config.gym_holiday ;
+        const result = await axios.post(url, payload, { headers: headers });
+        if(result.status === 200) {
+            return result.data;
+        } else {
+            throw new Error("There is an error Creating Holiday. Please contact support");
+        }
+    } catch (e) {
+        if(!typeof e.data === 'undefined') {
+            console.log(e.response.data.message);
+            throw new Error(e.response.data.message);
+        } else {
+            console.log(e.stack);
+            throw new Error(e.message + ". Please contact support.");
+        }
+    }
+},
+gymHolidayDelete: async (payload) => {
+    try {
+        const url = config.gym_holiday + payload ;
+        const result = await axios.delete(url, { headers: headers });
+        if(result.status === 200) {
+            return result.data;
+        } else {
+            throw new Error("There is an error Deleting Holiday. Please contact support");
+        }
+    } catch (e) {
+        if(!typeof e.data === 'undefined') {
+            console.log(e.response.data.message);
+            throw new Error(e.response.data.message);
+        } else {
+            console.log(e.stack);
+            throw new Error(e.message + ". Please contact support.");
+        }
+    }
+},
 };

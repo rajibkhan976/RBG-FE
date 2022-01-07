@@ -6,6 +6,7 @@ import arrowRightWhite from "../../../assets/images/arrowRightWhite.svg";
 import crossTop from "../../../assets/images/cross.svg";
 import modalholidayIcon from "../../../assets/images/modalholidayIcon.svg";
 
+import { GymDetailsServices } from "../../../services/gymDetails/GymDetailsServices";
 
 
 const AddHolidayModal = (props) => {
@@ -16,8 +17,7 @@ const AddHolidayModal = (props) => {
   const [holiday , setHoliday] = useState("");
   const [holidayStart , setHolidayStart] = useState("");
   const [holidayEnd , setHolidayEnd] = useState("");
-
-
+    
   const holidayhandler = (e) =>{
     setHoliday(e.target.value);
   };
@@ -27,14 +27,24 @@ const AddHolidayModal = (props) => {
   const holidayEndhandler = (e) =>{
     setHolidayEnd(e.target.value);
   };
-  const handleStatusSubmit =(e) =>{
+  const createHoliday = async () =>{
+    let payload = {
+      "name": holiday,
+      "fromDate": holidayStart,
+      "toDate": holidayEnd
+  }
+    let result = await GymDetailsServices.gymHolidayCreate(payload);
+    console.log(result);
+  }
+   const handleStatusSubmit = async (e) =>{
     e.preventDefault();
      if(holiday !== "" && holidayStart !== "" && holidayEnd !== "" ){
-        // console.log("a",statusName,"b", statusDesc,"c", statusType);
+         createHoliday();
         setModalPopMsgsuccess(true);
          setTimeout(() => {
-          props.closeAddHolidayModal()
+          props.closeAddHolidayModal();       
         }, 2000);
+  
      }else{
          //console.log("failed aslkjlsh");
          setModalPopMsgerror(true)
@@ -45,6 +55,7 @@ const handleStatusSubmitNew =(e) =>{
     e.preventDefault();
     if(holiday !== "" && holidayStart !== "" && holidayEnd !== "" ){
         //console.log("a",statusName,"b", statusDesc,"c", statusType);
+        createHoliday();
         setModalPopMsgsuccess(true);
         setHoliday("");
         setHolidayStart("");
