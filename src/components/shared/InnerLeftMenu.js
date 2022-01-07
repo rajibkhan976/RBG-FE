@@ -234,7 +234,7 @@ const InnerLeftMenu = (props) => {
             </div>
             <ul>
               <li>
-                <a className="leftMenuInnerLink" href="javascript:void(0)">
+                <NavLink className="leftMenuInnerLink" to="/personal-details">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Personal Details</p>
@@ -243,7 +243,7 @@ const InnerLeftMenu = (props) => {
                       <img src={SideMenuArrow} alt="" />
                     </button>
                   </div>
-                </a>
+                </NavLink>
               </li>
               <li>
                 <NavLink className="leftMenuInnerLink" to="/gym-details">
