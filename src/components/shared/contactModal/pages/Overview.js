@@ -381,7 +381,7 @@ const Overview = (props) => {
             let contactIdNew = contact ? contact._id : 0;
             let updateContact = await ContactService.updateContact(payload, contactIdNew);
             if (updateContact) {
-              console.log('here', contactIdNew)
+              console.log('here', updateContact.data.insertedId)
                 if (contactIdNew == 0) {
                   setSuccessMsg('Contact saved successfully.');
                   dispatch({
@@ -391,7 +391,7 @@ const Overview = (props) => {
                   setTimeout(() => {
                     dispatch({
                         type: actionTypes.CONTACTS_MODAL_ID,
-                        contact_modal_id: updateContact.insertedId,
+                        contact_modal_id: updateContact.data.insertedId,
                     });
                   },300);
                 } else {
