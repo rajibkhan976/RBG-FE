@@ -69,7 +69,6 @@ const GymDetails = (props) => {
   };
   const openAddHolidayModal = (holiday) => {
     setOpenModal(true, holiday);
-
   }
   const closeHolidayModal = () => {
     setOpenModal(false);
@@ -79,7 +78,7 @@ const GymDetails = (props) => {
     event.preventDefault();
     setShowEditForm(true);
   }
-
+ 
   const handleImageUpload = (event) => {
     const files = event.target.files;
     if (files && files.length) {
@@ -188,11 +187,32 @@ const GymDetails = (props) => {
     }
   }
   const deleteHolidayHandler = async (e) =>{
-    
     let holidayId = e.target.getAttribute("data-id");
     let result = await GymDetailsServices.gymHolidayDelete(holidayId);
     console.log("Delete result " + result);
+    setOption(false);
+    setSuccessMsg("Holiday deleted successfully");
   }
+ let holidayVal = [
+    {holidayIdEdit : ""}, 
+    {holidayStartDay : ""}, 
+    {holidayEndDay :  ""},
+    {holidayName : ""}
+ ];
+  const editHolidayHandler = (e, holiday) => {
+     holidayVal = [{
+       ...holidayVal,
+        holidayIdEdit : e.target.getAttribute("data-id-edit"),
+        holidayStartDay : e.target.getAttribute("data-start-date"),
+        holidayEndDay : e.target.getAttribute("data-end-date"),
+        holidayName : e.target.getAttribute("data-holidayname") 
+     }];
+     console.log(holidayVal)
+    setOpenModal(true, holiday);
+    setOption(false);
+  }
+ 
+ 
   return (
     <>
       {(isLoader) ? <Loader /> : ''}
@@ -398,7 +418,13 @@ const GymDetails = (props) => {
                               ? "dropdownOptions listOpen"
                               : "listHide"
                           }>
-                            <button class="btn btnEdit" onClick={(elem) => openAddHolidayModal (elem)}>
+                            <button class="btn btnEdit" 
+                              data-id-edit={elem._id} 
+                              data-start-date={elem.fromDate} 
+                              data-end-date={elem.toDate} 
+                              data-holidayname={elem.name}
+                              onClick={(elem) => editHolidayHandler (elem)}
+                            >
                               <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" class="editIcon"><g transform="translate(0.75 0.75)"><path class="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path><path class="a" d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z" transform="translate(-4.384 -2)"></path></g></svg>
                               </span>
@@ -424,7 +450,7 @@ const GymDetails = (props) => {
         </div>
       </div>
       {openModal && <AddHolidayModal closeAddHolidayModal={closeHolidayModal} 
-        //holidayVal={}
+        holidayValue={holidayVal}
       />}
     </>
   );

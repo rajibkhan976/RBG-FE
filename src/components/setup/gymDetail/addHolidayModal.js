@@ -32,7 +32,7 @@ const AddHolidayModal = (props) => {
       "name": holiday,
       "fromDate": holidayStart,
       "toDate": holidayEnd
-  }
+    }
     let result = await GymDetailsServices.gymHolidayCreate(payload);
     console.log(result);
   }
@@ -40,11 +40,11 @@ const AddHolidayModal = (props) => {
     e.preventDefault();
      if(holiday !== "" && holidayStart !== "" && holidayEnd !== "" ){
          createHoliday();
-        setModalPopMsgsuccess(true);
+         setModalPopMsgsuccess(true);
          setTimeout(() => {
           props.closeAddHolidayModal();       
         }, 2000);
-  
+        
      }else{
          //console.log("failed aslkjlsh");
          setModalPopMsgerror(true)
@@ -83,7 +83,8 @@ useEffect(() => {
             <p>Select the holiday name and date below</p>
           </div>
           <div className="modalForm auto">
-            <form>
+            <form >    
+             <p>{props.holidayValue}</p>   
               <div class="formControl">
                 <label>Holiday Name</label>
                 <input type="text" placeholder="Eg. Republic Day" name="" value={holiday}  onChange={holidayhandler}/>
