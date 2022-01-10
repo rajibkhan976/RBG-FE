@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import {useDispatch, useSelector} from "react-redux";
+import * as actionTypes from "../../../../actions/types";
 import { ContactService } from "../../../../services/contact/ContactServices";
 import Loader from "../../Loader";
 //import plus_icon from "../../../../assets/images/plus_icon.svg";
@@ -26,7 +28,7 @@ const Overview = (props) => {
     const [phoneCountryCode, setPhoneCountryCode] = useState([]);
     const [errorMsg, setErrorMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
-
+    const dispatch = useDispatch();
     const [basicinfoPhone, setBasicinfoPhone] = useState({
         countryCode: "US",
         dailCode: "+1",
@@ -376,9 +378,25 @@ const Overview = (props) => {
                 country: basicinfoCountry ? basicinfoCountry : "",
                 gender: basicinfoGender ? basicinfoGender : ""
             }
-            let updateContact = await ContactService.updateContact(payload, contact._id);
+            let contactIdNew = contact ? contact._id : 0;
+            let updateContact = await ContactService.updateContact(payload, contactIdNew);
             if (updateContact) {
-                setSuccessMsg('Contact updated successfully.')
+              console.log('here', contactIdNew)
+                if (contactIdNew == 0) {
+                  setSuccessMsg('Contact saved successfully.');
+                  dispatch({
+                      type: actionTypes.CONTACTS_MODAL_ID,
+                      contact_modal_id: '',
+                  });
+                  setTimeout(() => {
+                    dispatch({
+                        type: actionTypes.CONTACTS_MODAL_ID,
+                        contact_modal_id: updateContact.insertedId,
+                    });
+                  },300);
+                } else {
+                  setSuccessMsg('Contact updated successfully.');
+                }
             } else {
                 setErrorMsg('Something went wrong.')
             }
