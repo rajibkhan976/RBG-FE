@@ -12,70 +12,135 @@ import { GymDetailsServices } from "../../../services/gymDetails/GymDetailsServi
 const AddHolidayModal = (props) => {
 
   const [option, setOption] = useState(null);
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const [modalPopMsgerror, setModalPopMsgerror] = useState(false);
   const [modalPopMsgsuccess, setModalPopMsgsuccess] = useState(false);
-  const [holiday , setHoliday] = useState("");
-  const [holidayStart , setHolidayStart] = useState("");
-  const [holidayEnd , setHolidayEnd] = useState("");
-    
+  const [holiday , setHoliday] = useState(props.holiday);
+  // const [holidayStart , setHolidayStart] = useState(props.holiday.fromDate);
+  // const [holidayEnd , setHolidayEnd] = useState(props.holiday.toDate);
+  // const [holidayId, setHolidayId] = useState(props.holiday._id);
+  const [editHoliday, setEditHoliday] = useState(props.editHoliday);
+  const [loader, setLoader] = useState(false);
+  console.log("Edit status=== " + editHoliday);
+  // if (!editHoliday) {
+  //   console.log("Holiday reset===");
+  //   setHoliday("");
+  //   setHolidayStart("");
+  //   setHolidayEnd("");
+  //   setHolidayId("");
+  // }
+
   const holidayhandler = (e) =>{
-    setHoliday(e.target.value);
+    setHoliday({
+        ...holiday,
+        name: e.target.value
+      });
   };
   const holidayStarthandler = (e) =>{
-    setHolidayStart(e.target.value);
+    setHoliday({
+      ...holiday,
+      fromDate: e.target.value
+    });
   };
   const holidayEndhandler = (e) =>{
-    setHolidayEnd(e.target.value);
+    setHoliday({
+      ...holiday,
+      toDate: e.target.value
+    });
   };
+
+  useEffect(() => {
+    if (successMsg) setTimeout(() => { setSuccessMsg("") }, 5000);
+    if (errorMsg) setTimeout(() => { setErrorMsg("") }, 5000);
+  }, [errorMsg, successMsg]);
+
   const createHoliday = async () =>{
-    let payload = {
-      "name": holiday,
-      "fromDate": holidayStart,
-      "toDate": holidayEnd
-    }
-    let result = await GymDetailsServices.gymHolidayCreate(payload);
-    console.log(result);
-  }
+   
+      try {
+        setLoader(true);
+        if(editHoliday){
+          let result = await GymDetailsServices.gymHolidayUpdate(holiday);
+          setSuccessMsg(result.message);
+        } else {
+          let result = await GymDetailsServices.gymHolidayCreate(holiday);
+          setSuccessMsg(result.message);
+        }
+        
+      } catch (e) {
+        setErrorMsg(e.message);
+      } finally {
+        setLoader(false);
+        props.fetchGymDetails();
+      }
+  };
+
    const handleStatusSubmit = async (e) =>{
     e.preventDefault();
-     if(holiday !== "" && holidayStart !== "" && holidayEnd !== "" ){
+
+    let fromDate = new Date(holiday.fromDate);
+    let ftoDate = new Date(holiday.toDate);
+
+    console.log(Math.ceil(ftoDate - fromDate));
+    
+     if(holiday.name !== "" && holiday.fromDate !== "" && holiday.toDate !== "" ){
+       if (Math.ceil(ftoDate - fromDate) < 0) {
+         setErrorMsg("Please chose End-Date on or after Start-Date");
+       } else {
          createHoliday();
          setModalPopMsgsuccess(true);
          setTimeout(() => {
           props.closeAddHolidayModal();       
-        }, 2000);
-        
+        }, 5000);
+       }
      }else{
          //console.log("failed aslkjlsh");
-         setModalPopMsgerror(true)
+         setErrorMsg("Please fill up the fields properly!");
      };
      
 };
 const handleStatusSubmitNew =(e) =>{
     e.preventDefault();
-    if(holiday !== "" && holidayStart !== "" && holidayEnd !== "" ){
+
+    let fromDate = new Date(holiday.fromDate);
+    let ftoDate = new Date(holiday.toDate);
+
+    if(holiday.name !== "" && holiday.fromDate !== "" && holiday.toDate !== "" ){
         //console.log("a",statusName,"b", statusDesc,"c", statusType);
-        createHoliday();
-        setModalPopMsgsuccess(true);
-        setHoliday("");
-        setHolidayStart("");
-        setHolidayEnd("");
-    }else{
-        //console.log("failed aslkjlsh");
-        setModalPopMsgerror(true)
+        if (Math.ceil(ftoDate - fromDate) < 0) {
+          setErrorMsg("Please chose End-Date on or after Start-Date");
+        } else {
+          createHoliday();
+          setModalPopMsgsuccess(true);
+          setEditHoliday(false);
+          setHoliday({
+            ...holiday,
+            _id : "",
+            name: "",
+            fromDate : "",
+            toDate :  ""
+          });
+        }
+        
+    } else {
+      setErrorMsg("Please fill up the fields properly!");
     };    
 };
-useEffect(() => {
-    if (modalPopMsgerror) setTimeout(() => { setModalPopMsgerror("") }, 2000);
-    if (modalPopMsgsuccess) setTimeout(() => { setModalPopMsgsuccess("") }, 2000);
 
-}, [modalPopMsgerror,modalPopMsgsuccess]);
 
   return (
     <>
      
       <div className="modalBackdrop holiday">  
+      { loader && <Loader /> }
+      {successMsg &&
+        <SuccessAlert message={successMsg} extraClass="addStatsPopMsg"></SuccessAlert>
+      }
+      {errorMsg &&
+        <ErrorAlert message={errorMsg} extraClass="addStatsPopMsg"></ErrorAlert>
+      }
         <div className="slickModalBody">
+        
           <div className="slickModalHeader">
             <button className="topCross" onClick={props.closeAddHolidayModal}><img src={crossTop} alt="" /></button>
             <div className="circleForIcon"><img src={modalholidayIcon} alt="" /></div>
@@ -87,21 +152,21 @@ useEffect(() => {
              <p>{props.holidayValue}</p>   
               <div class="formControl">
                 <label>Holiday Name</label>
-                <input type="text" placeholder="Eg. Republic Day" name="" value={holiday}  onChange={holidayhandler}/>
+                <input type="text" placeholder="Eg. Republic Day" name="" value={holiday.name}  onChange={holidayhandler}/>
               </div>
               
               <div className="d-flex justified-space-between">
                 <div class="formControl half">
                 <label>Choose a date</label>
-                <input type="date"  name="" value={holidayStart} onChange={holidayStarthandler}/>
+                <input type="date"  name="" value={holiday.fromDate} onChange={holidayStarthandler}/>
               </div>
               <div class="formControl half">
                 <label>&nbsp;</label> 
-                <input type="date"  name="" value={holidayEnd} onChange={holidayEndhandler}/>
+                <input type="date"  name="" value={holiday.toDate} onChange={holidayEndhandler}/>
               </div>
               </div>
-              {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraClass="addStatsPopMsg"/> }
-              { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraClass="addStatsPopMsg"/>}
+              {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraClass="addStatsPopMsg"/> }
+              { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraClass="addStatsPopMsg"/>} */}
 
               <div className="modalbtnHolder">
                   <button type="submit"

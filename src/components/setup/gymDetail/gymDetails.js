@@ -10,6 +10,7 @@ import edit_gym from "../../../assets/images/edit_gym.svg";
 import gymLogo from "../../../assets/images/gymLogo.svg";
 import AddHolidayModal from "./addHolidayModal";
 import config from "../../../configuration/config";
+import ConfirmBox from "../../shared/confirmBox";
 
 import { GymDetailsServices } from "../../../services/gymDetails/GymDetailsServices";
 
@@ -19,6 +20,14 @@ const GymDetails = (props) => {
   const [option, setOption] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
+  const [deletedId, setDeletedId] = useState("");
+  const [editHoliday, setEditHoliday] = useState(false);
+  const [holidayVal, setHolidayVal] = useState({
+    id : "",
+    startDay : "",
+    endDay :  "",
+    name : ""
+  });
 
   // START - Variable set while development --- Jit
   const [isLoader, setIsLoader] = useState(false);
@@ -26,6 +35,7 @@ const GymDetails = (props) => {
   const [holidayData, setHolidayData] = useState([]);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [deleteConfirmBox, setDeleteConfirmBox] = useState(false);
   const [logo, setLogo] = useState({
     image: "",
     imageUrl: ""
@@ -38,7 +48,7 @@ const GymDetails = (props) => {
     timezone: "",
     disabled: false,
     disabledAccess: false
-  })
+  });
   // END - Variable set while development --- Jit
   const fetchGymDetails = async () => {
     try {
@@ -72,6 +82,16 @@ const GymDetails = (props) => {
   }
   const closeHolidayModal = () => {
     setOpenModal(false);
+    //setEditHoliday(false);
+    setHolidayVal(
+      {
+        ...holidayVal,
+        _id : "",
+        name: "",
+        fromDate : "",
+        toDate :  ""
+      }
+    );
   };
 
   const editGymDetailsHandler = (event) => {
@@ -185,36 +205,50 @@ const GymDetails = (props) => {
       }
       return bool;
     }
-  }
-  const deleteHolidayHandler = async (e) =>{
-    let holidayId = e.target.getAttribute("data-id");
-    let result = await GymDetailsServices.gymHolidayDelete(holidayId);
-    console.log("Delete result " + result);
-    setOption(false);
-    setSuccessMsg("Holiday deleted successfully");
-  }
- let holidayVal = [
-    {holidayIdEdit : ""}, 
-    {holidayStartDay : ""}, 
-    {holidayEndDay :  ""},
-    {holidayName : ""}
- ];
-  const editHolidayHandler = (e, holiday) => {
-     holidayVal = [{
-       ...holidayVal,
-        holidayIdEdit : e.target.getAttribute("data-id-edit"),
-        holidayStartDay : e.target.getAttribute("data-start-date"),
-        holidayEndDay : e.target.getAttribute("data-end-date"),
-        holidayName : e.target.getAttribute("data-holidayname") 
-     }];
+  };
+
+  const deleteHoliday = async () => {
+    try {
+      setIsLoader(true);
+      let result = await GymDetailsServices.gymHolidayDelete(deletedId);
+    } catch (e) {
+      setErrorMsg(e.message);
+    } finally {
+      setIsLoader(false);
+      setOption(false);
+      setDeleteConfirmBox(false);
+      setSuccessMsg("Holiday deleted successfully");
+    }
+  };
+
+  const deleteHolidayHandler = (e) => {
+    setDeleteConfirmBox(true);
+    setDeletedId(e.target.getAttribute("data-id"));
+  };
+
+  const deleteConfirm = (response) => {
+    if(response === "yes") {
+      console.log(response);
+      deleteHoliday();
+    } else {
+      setDeleteConfirmBox(false);
+    }
+  };
+
+  const editHolidayHandler = (elem) => {
+    setEditHoliday(true);
+     setHolidayVal(elem);
      console.log(holidayVal)
-    setOpenModal(true, holiday);
+    setOpenModal(true);
     setOption(false);
-  }
+  };
+
+  
  
  
   return (
     <>
+    
       {(isLoader) ? <Loader /> : ''}
       {successMsg &&
         <SuccessAlert message={successMsg} extraClass=""></SuccessAlert>
@@ -222,6 +256,9 @@ const GymDetails = (props) => {
       {errorMsg &&
         <ErrorAlert message={errorMsg} extraClass=""></ErrorAlert>
       }
+
+      {deleteConfirmBox && <ConfirmBox message="Are you sure, you want to delete this holiday?" callback={deleteConfirm} />}
+
       <div className="dashInnerUI">
         <div class="userListHead">
           <div class="listInfo">
@@ -401,7 +438,7 @@ const GymDetails = (props) => {
                   <div className="cell">End Date</div>
                   <div className="cell">Holiday</div>
                 </div>
-                {holidayData.map((elem, key) => {
+                {holidayData.filter(item => item._id !== deletedId).map((elem, key) => {
                   return (
                     <div className="gymHolidayList">
                       <div className="cell">{elem.fromDate}</div>
@@ -419,11 +456,7 @@ const GymDetails = (props) => {
                               : "listHide"
                           }>
                             <button class="btn btnEdit" 
-                              data-id-edit={elem._id} 
-                              data-start-date={elem.fromDate} 
-                              data-end-date={elem.toDate} 
-                              data-holidayname={elem.name}
-                              onClick={(elem) => editHolidayHandler (elem)}
+                              onClick={() => editHolidayHandler (elem)}
                             >
                               <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" class="editIcon"><g transform="translate(0.75 0.75)"><path class="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path><path class="a" d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z" transform="translate(-4.384 -2)"></path></g></svg>
@@ -450,7 +483,9 @@ const GymDetails = (props) => {
         </div>
       </div>
       {openModal && <AddHolidayModal closeAddHolidayModal={closeHolidayModal} 
-        holidayValue={holidayVal}
+       holiday={holidayVal} 
+       editHoliday={editHoliday} 
+       fetchGymDetails={fetchGymDetails}
       />}
     </>
   );

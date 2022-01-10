@@ -3408,7 +3408,6 @@ span.userProfilePic img {
   background-color: transparent;
   border: none;
   float: right;
-  margin-top: 14px;
 }
 
 .popupMessage {
@@ -5311,7 +5310,7 @@ button.saveOverview img {
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  z-index: 999999;
   background: rgb(48 86 113 / 90%);
   display: flex;
   flex-wrap: wrap;

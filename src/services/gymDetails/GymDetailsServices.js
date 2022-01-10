@@ -73,7 +73,7 @@ export const GymDetailsServices = {
   
    gymHolidayUpdate: async (payload) => {
     try {
-        const url = config.gym_holiday ;
+        const url = config.gym_holiday + payload._id;
         const result = await axios.put(url, payload, { headers: headers });
         if(result.status === 200) {
             return result.data;
