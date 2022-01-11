@@ -113,5 +113,7 @@ module.exports = {
     gymDetailsUrl: "https://tkdm8gb41d.execute-api.us-east-1.amazonaws.com/dev/gym",
     gym_Logo_upload: "https://tkdm8gb41d.execute-api.us-east-1.amazonaws.com/dev/gym/image",
     gym_detail_update: "https://tkdm8gb41d.execute-api.us-east-1.amazonaws.com/dev/gym/detail",
-    gym_holiday: "https://tkdm8gb41d.execute-api.us-east-1.amazonaws.com/dev/gym/holidays/"
+    gym_holiday: "https://tkdm8gb41d.execute-api.us-east-1.amazonaws.com/dev/gym/holidays/",
+    timezoneListURL: 'https://vip.timezonedb.com/v2.1/list-time-zone?key=QH5NO9YQKP30&format=json',
+    timezoneLatLngUrl: 'https://vip.timezonedb.com/v2.1/get-time-zone?key=QH5NO9YQKP30&by=position'
 }  

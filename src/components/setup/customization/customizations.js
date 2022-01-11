@@ -147,7 +147,7 @@ const Customizations = (props) => {
               onChange={taxAmountHandle}
               value={taxData.tax}
               disabled={(taxData.editAccess) ? false : true} />
-            <button class="btn" type="submit"
+            <button class="common_blue_button" type="submit"
               disabled={(disableBtn || taxData.editAccess === false) ? true : false}>Save
               <img src={arrowRightWhite} alt="" /></button>
           </form>

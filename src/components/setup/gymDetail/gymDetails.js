@@ -23,10 +23,10 @@ const GymDetails = (props) => {
   const [deletedId, setDeletedId] = useState("");
   const [editHoliday, setEditHoliday] = useState(false);
   const [holidayVal, setHolidayVal] = useState({
-    id : "",
-    startDay : "",
-    endDay :  "",
-    name : ""
+    id: "",
+    startDay: "",
+    endDay: "",
+    name: ""
   });
 
   // START - Variable set while development --- Jit
@@ -36,10 +36,6 @@ const GymDetails = (props) => {
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [deleteConfirmBox, setDeleteConfirmBox] = useState(false);
-  const [logo, setLogo] = useState({
-    image: "",
-    imageUrl: ""
-  });
   const [validateMsg, setValidateMsg] = useState({
     name: "",
     contactPerson: "",
@@ -48,6 +44,26 @@ const GymDetails = (props) => {
     timezone: "",
     disabled: false,
     disabledAccess: false
+  });
+  const [timezoneData, setTimezoneData] = useState([]);
+  const [detectedTimezone, setDetectedTimezone] = useState({});
+  const [phoneCountryCode, setPhoneCountryCode] = useState([
+    {
+      "code": "US",
+      "name": "United States",
+      "prefix": "+1"
+    }
+  ]);
+  const [basicinfoPhone, setBasicinfoPhone] = useState({
+    countryCode: "US",
+    dailCode: "+1",
+    number: "",
+    full_number: "",
+    location: "None",
+    country: "",
+    carrier: "None",
+    timezone: "America/New_York",
+    is_valid: false
   });
   // END - Variable set while development --- Jit
   const fetchGymDetails = async () => {
@@ -60,13 +76,56 @@ const GymDetails = (props) => {
       setValidateMsg({ ...validateMsg, disabledAccess: !gymData.editAccess })
     } catch (e) {
       console.log(e.message);
+      setErrorMsg(e.message);
       // Show error message from here
     } finally {
       setIsLoader(false);
     }
-  }
+  };
+
+  const getTimeZoneList = async () => {
+    try {
+      const timezoneList = await GymDetailsServices.fetchTimeZoneList();
+      console.log("Timezone List --", timezoneList);
+      setTimezoneData(timezoneList.zones);
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
+
+  const detectTimezone = async (lat, lng) => {
+    try {
+      const currentTimezoneData = await GymDetailsServices.fetchTimeZoneLatLng(lat, lng);
+      console.log("Detected Timezone", currentTimezoneData);
+      setDetectedTimezone(currentTimezoneData);
+    } catch (e) {
+      console.log(e.message);
+    }
+  };
+
+  const fetchCountry = async () => {
+    try {
+      const codeData = await GymDetailsServices.fetchCountry();
+      console.log(codeData);
+      setPhoneCountryCode(codeData);
+    } catch (e) {
+      setErrorMsg(e.message);
+      console.log(e.message);
+    }
+  };
+
   useEffect(() => {
-    fetchGymDetails();
+    fetchCountry();
+    (async () => {
+      console.clear();
+      await fetchGymDetails();
+      await getTimeZoneList();
+      // navigator.geolocation.getCurrentPosition(async function (position) {
+      //   await detectTimezone(position.coords.latitude, position.coords.longitude);
+      //   await getTimeZoneList();
+      // });
+
+    })();
   }, []);
 
   useEffect(() => {
@@ -86,10 +145,10 @@ const GymDetails = (props) => {
     setHolidayVal(
       {
         ...holidayVal,
-        _id : "",
+        _id: "",
         name: "",
-        fromDate : "",
-        toDate :  ""
+        fromDate: "",
+        toDate: ""
       }
     );
   };
@@ -98,7 +157,7 @@ const GymDetails = (props) => {
     event.preventDefault();
     setShowEditForm(true);
   }
- 
+
   const handleImageUpload = (event) => {
     const files = event.target.files;
     if (files && files.length) {
@@ -125,23 +184,25 @@ const GymDetails = (props) => {
     console.log("Gym Data", gymData);
     try {
       const isValid = validateField(e, true);
-      if(isValid) {
+      if (isValid) {
         setIsLoader(true);
         const payload = {
           "orgName": gymData.name,
           "contactPerson": gymData.contactPerson,
           "phone": gymData.phone,
-          "countryCode": gymData.countryCode,
+          "countryCode": (gymData.countryCode) ? gymData.countryCode : "+1",
+          "country": (gymData.country) ? gymData.country : "US",
           "logo": gymData.logo,
           "contactEmail": gymData.contactEmail,
-          "timeZone": gymData.timezone
-      }
+          "timeZone": gymData.timezone,
+          "gmtOffset": (gymData.gmtOffset) ? gymData.gmtOffset : ''
+        };
+        console.log(payload);
         const updatedData = await GymDetailsServices.gymDetailUpdate(payload);
         setGymData(updatedData);
         console.log("Updated Data", updatedData);
         setSuccessMsg("Gym details updated successfully");
-        setTimeout(() => {setShowEditForm(false)}, 5000);
-      
+        setTimeout(() => { setShowEditForm(false) }, 5000);
       }
     } catch (e) {
       setErrorMsg(e.message);
@@ -158,7 +219,6 @@ const GymDetails = (props) => {
       e.preventDefault();
       const name = e.target.name;
       const value = e.target.value;
-
       if (name === "name" && value.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, name: "Gym name should not be left empty" });
       } else if (name === "contactPerson" && !alphaRegex.test(value)) {
@@ -169,6 +229,8 @@ const GymDetails = (props) => {
         setValidateMsg({ ...validateMsg, disabled: true, contactEmail: "Please enter a valid email address" });
       } else if (name === "timezone" && value.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select a timezone" });
+      } else if (name === "countryCode" && value.length === 0) {
+        setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select country code" });
       } else {
         setValidateMsg({
           name: "",
@@ -179,7 +241,19 @@ const GymDetails = (props) => {
           disabled: false
         });
       }
-      setGymData({ ...gymData, [name]: value });
+      if(name === "countryCode" && value.length) {
+        const countryIndex = e.target[e.target.selectedIndex];
+        const country = countryIndex !== undefined ? countryIndex.getAttribute("data-country") : "US";
+        setGymData({ ...gymData, [name]: value, country:  country});
+      } else if(name === "timezone" && value.length) {
+        console.log("Timezone Offset", value);
+        const timeZoneIndex = e.target[e.target.selectedIndex];
+        const timezone = timeZoneIndex !== undefined ? timeZoneIndex.getAttribute("data-timezone") : "";
+        setGymData({ ...gymData, [name]: timezone, gmtOffset:  value});
+      } else {
+        setGymData({ ...gymData, [name]: value });
+      }
+      
     } else {
       let bool = false;
       if (gymData.name.length === 0) {
@@ -190,8 +264,10 @@ const GymDetails = (props) => {
         setValidateMsg({ ...validateMsg, disabled: true, phone: "Please enter a valid 10 digit phone number" });
       } else if (!emailRegex.test(gymData.contactEmail)) {
         setValidateMsg({ ...validateMsg, disabled: true, contactEmail: "Please enter a valid email address" });
-      } else if (gymData.timezone.length === 0) {
+      } else if (typeof gymData.gmtOffset === 'undefined' || gymData.gmtOffset.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select a timezone" });
+      } else if (gymData.countryCode.length === 0) {
+        setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select country code" });
       } else {
         setValidateMsg({
           name: "",
@@ -201,7 +277,7 @@ const GymDetails = (props) => {
           timezone: "",
           disabled: false
         });
-        bool = true; 
+        bool = true;
       }
       return bool;
     }
@@ -227,7 +303,7 @@ const GymDetails = (props) => {
   };
 
   const deleteConfirm = (response) => {
-    if(response === "yes") {
+    if (response === "yes") {
       console.log(response);
       deleteHoliday();
     } else {
@@ -237,18 +313,18 @@ const GymDetails = (props) => {
 
   const editHolidayHandler = (elem) => {
     setEditHoliday(true);
-     setHolidayVal(elem);
-     console.log(holidayVal)
+    setHolidayVal(elem);
+    console.log(holidayVal)
     setOpenModal(true);
     setOption(false);
   };
 
-  
- 
- 
+
+
+
   return (
     <>
-    
+
       {(isLoader) ? <Loader /> : ''}
       {successMsg &&
         <SuccessAlert message={successMsg} extraClass=""></SuccessAlert>
@@ -280,9 +356,9 @@ const GymDetails = (props) => {
                   <div className="profilePicture">
                     <div className="logo_profile">
                       {(gymData?.logo) ? <img src={(gymData?.logo) ? "https://wrapperbucket.s3.us-east-1.amazonaws.com/" + gymData?.logo : gymLogo} alt="" />
-                      : <img src={profileAvatar} alt="" />}
+                        : <img src={profileAvatar} alt="" />}
                     </div>
-      
+
                     <span>{(gymData?.name) ? gymData?.name : "-"}</span>
                   </div>
                   <button><img src={edit_gym} alt="" onClick={editGymDetailsHandler} /></button>
@@ -358,12 +434,17 @@ const GymDetails = (props) => {
                   <label>Phone No</label>
                   <div className="cmnFormField">
                     <div className="countryCode cmnFieldStyle">
-                      <div className="countryName">US</div>
-                      <div className="daileCode">+1</div>
+                      <div className="countryName">{(gymData.country) ? gymData.country : "US"}</div>
+                      <div className="daileCode">{gymData.countryCode}</div>
                       <select className="selectCountry" name="countryCode"
-                        onChange={validateField}>
-                        <option value="+1">+1</option>
-                        <option value="+2">+2</option>
+                        onChange={validateField}
+                        defaultValue={gymData.countryCode}>
+                        {phoneCountryCode ? phoneCountryCode.map((el, key) => {
+                          return (
+                            <option value={el.prefix} data-country={el.code} key={key} >{el.code} ({el.prefix})</option>
+                          )
+                        }
+                        ) : ''}
                       </select>
                     </div>
                     <input type="phone" className="" name="phone" placeholder="Eg. 5552234454"
@@ -387,8 +468,15 @@ const GymDetails = (props) => {
                   <label>Timezone</label>
                   <select name="timezone"
                     onChange={validateField}>
-                    <option value="Asia/Kolkata">IST - Asia/Kolkata (GMT+5:30)</option>
-                    <option value="Europe/London">GST -London</option>
+                      <option value="">-</option>
+                    {timezoneData ? timezoneData.map(zone => {
+                      return (<option
+                        value={zone.gmtOffset}
+                        data-timezone={zone.zoneName}
+                        selected={(zone.zoneName === gymData?.timezone) ? true : false }
+                        // selected={(parseInt(zone.gmtOffset) === detectedTimezone.gmtOffset) ? true : ""}
+                      >{zone.countryCode} - {zone.zoneName}</option>);
+                    }) : ''}
                   </select>
                   <div className="errorMsg">{validateMsg.timezone}</div>
                 </div>
@@ -455,8 +543,8 @@ const GymDetails = (props) => {
                               ? "dropdownOptions listOpen"
                               : "listHide"
                           }>
-                            <button class="btn btnEdit" 
-                              onClick={() => editHolidayHandler (elem)}
+                            <button class="btn btnEdit"
+                              onClick={() => editHolidayHandler(elem)}
                             >
                               <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" class="editIcon"><g transform="translate(0.75 0.75)"><path class="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path><path class="a" d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z" transform="translate(-4.384 -2)"></path></g></svg>
@@ -482,10 +570,10 @@ const GymDetails = (props) => {
           </div>
         </div>
       </div>
-      {openModal && <AddHolidayModal closeAddHolidayModal={closeHolidayModal} 
-       holiday={holidayVal} 
-       editHoliday={editHoliday} 
-       fetchGymDetails={fetchGymDetails}
+      {openModal && <AddHolidayModal closeAddHolidayModal={closeHolidayModal}
+        holiday={holidayVal}
+        editHoliday={editHoliday}
+        fetchGymDetails={fetchGymDetails}
       />}
     </>
   );

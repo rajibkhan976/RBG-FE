@@ -81,7 +81,11 @@ const MainComponent = () => {
   }, [socketUrl]);
 
 
-
+  // useEffect(() => {
+  //   navigator.permissions.query({name:'geolocation'}).then(function(result) {
+  //     console.log("Permission", result);
+  //   });
+  // }, [])
 
   const modalId = useSelector((state) => state.contact.contact_modal_id);
   useEffect(() => {
