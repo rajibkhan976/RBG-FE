@@ -8734,3 +8734,13 @@ li.listHeading > div.sortOff:after {
   align-items: center;
   justify-content: center;
 }
+
+.dataTableCell .extraDottedBtn ~ .btn {
+  width: calc(100% - 60px);
+  word-wrap: break-word;
+  text-align: left;
+  display: inline-block;
+}
+.dataTableCell .btn{
+  text-align: left;
+}
