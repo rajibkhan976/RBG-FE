@@ -432,8 +432,11 @@ function LeftMenu(props) {
           </NavLink>
         </li>  */}
         {isOrganizationOwner ? <li className="prototypeLink">
-          <Link to={{ pathname: "https://xd.adobe.com/view/1a813aee-7ec1-42ca-9093-051ac3823496-4fd2/screen/b9e30ce7-1846-4d55-aedd-1639f29e7f28/?fullscreen" }}
-            target="_blank">
+          <Link to="/appointment"
+
+          // {{ pathname: "https://xd.adobe.com/view/1a813aee-7ec1-42ca-9093-051ac3823496-4fd2/screen/b9e30ce7-1846-4d55-aedd-1639f29e7f28/?fullscreen" }}
+          //   
+          target="_blank">
             <div className="prototypeBatch">Prototype</div>
             <svg
               xmlns="http://www.w3.org/2000/svg"

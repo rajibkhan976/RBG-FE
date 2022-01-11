@@ -224,6 +224,35 @@ const InnerLeftMenu = (props) => {
             </ul>
           </React.Fragment>
         )
+        case "report":
+        return (
+          <React.Fragment>
+            <div className="sidebarHeader">
+              <h4>
+                Report
+              </h4>
+            </div>
+            <ul>
+              <li>
+                <NavLink className="leftMenuInnerLink" to="/appointment">
+                  <div className="indicator"></div>
+                  <div className="linkDetails setup">
+                    <p className="linkHeading">Appointment</p>
+                    <p className="linkAbout">Lorem ipsum dolor sit</p>
+                    <button className="btn sidemenuarrow">
+                      <img src={SideMenuArrow} alt="" />
+                    </button>
+                  </div>
+                </NavLink>
+              </li>
+              
+           
+            </ul>
+            <div className="linkImg">
+              <img src={undraw_personal_settings_kihd} alt="" />
+            </div>
+          </React.Fragment>
+          )
       case "setup":
         return (
           <React.Fragment>

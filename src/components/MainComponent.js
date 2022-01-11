@@ -20,6 +20,8 @@ import GymDetailsRouter from "./setup/gymDetail/gymDetailsRoute";
 
 import PersonalDetailsRouter from "./setup/personalDetails/personalDetailsRoute";
 
+import AppointmentRouter from "./report/AppointmentRoutes";
+
 import HeaderDashboard from "./shared/HeaderDashboard";
 import { UserServices } from "../services/authentication/UserServices";
 import config from "../configuration/config";
@@ -217,6 +219,9 @@ const MainComponent = () => {
               </Route>
               <Route exact path="/personal-details">
                 <PersonalDetailsRouter toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></PersonalDetailsRouter>
+              </Route>
+              <Route exact path="/appointment">
+                <AppointmentRouter toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></AppointmentRouter>
               </Route>
               <Route exact path="/" component={() => <Redirect to="/dashboard" />} />
               <Route exact path="*">
