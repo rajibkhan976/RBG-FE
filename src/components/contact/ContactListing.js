@@ -55,6 +55,12 @@ const ContactListing = (props) => {
 
     useEffect(() => {
         handelSize();
+        const search = utils.getQueryVariable('search');
+        const srtBy = utils.getQueryVariable('sortBy');
+        const srtType = utils.getQueryVariable('sortType');
+        setKeyword(search);
+        setSortBy(srtBy);
+        setSortType(srtType);
     }, []);
 
 
@@ -72,7 +78,6 @@ const ContactListing = (props) => {
                 // fetchContact();
             }
             handleCheckedColListHead();
-            console.log("Stored Saved Column", storedSavedColList);
         })();
     }, []);
 
@@ -89,14 +94,11 @@ const ContactListing = (props) => {
         const queryParams = await getQueryParams();
         try {
             const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
-            console.clear();
-            console.log(readPermission);
             if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
                 throw new Error(responses.permissions.automation.read);
             }
             const result = await ContactService.fetchUsers(pageId, queryParams);
             if (result) {
-                console.log("Fetch Contact", result);
                 setContactList(result.contacts);
                 setContactCount(result.pagination.count);
                 setPaginationData({
@@ -147,7 +149,6 @@ const ContactListing = (props) => {
 
         const queryParams = new URLSearchParams();
 
-        console.log('search', search)
         if (search) {
             queryParams.append("search", search);
         }
@@ -177,7 +178,6 @@ const ContactListing = (props) => {
             dataList = dataList.concat(listColData[i].id)
         }
         setCheckedColListHead(dataList);
-        console.log(dataList);
     }
 
     // a little function to help us with reordering the result
@@ -191,7 +191,6 @@ const ContactListing = (props) => {
     };
 
     const onDragEnd = (result) => {
-        // dropped outside the list
         if (!result.destination) {
             return;
         }
@@ -200,22 +199,16 @@ const ContactListing = (props) => {
             result.source.index,
             result.destination.index
         );
-
-        // unsavedColList = item;
-        // console.log("unsavedColList", unsavedColList);
     }
 
     const handleCheckCol = (e, id) => {
-        console.log(e, id);
         let data = JSON.parse(JSON.stringify(listCol));
         let index = data.findIndex(element => element.id == id);
-        console.log(id, index);
 
         if (index >= 0) {
             data[index].status = e;
             setListCol([]);
             setTimeout(() => setListCol(data), 1);
-            console.log(data);
         }
     }
 
