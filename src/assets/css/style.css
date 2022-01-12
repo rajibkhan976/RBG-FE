@@ -8724,7 +8724,6 @@ li.listHeading > div.sortOff:after {
   filter: blur(1px);
   cursor: no-drop;
 }
-<<<<<<< HEAD
 .showing_gym_data .gymName .logo_profile {
   width: 80px;
   height: 80px;
@@ -8735,8 +8734,3 @@ li.listHeading > div.sortOff:after {
   align-items: center;
   justify-content: center;
 }
-
-
-
-=======
->>>>>>> Fixed Contact issues
