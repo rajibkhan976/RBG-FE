@@ -24,6 +24,7 @@ import config from "../configuration/config";
 import UpdateNotification from "./shared/updateNotifications/UpdateNotification";
 import { io } from "socket.io-client";
 import * as actionTypes from "../actions/types";
+import GetPositionMiddleware from "../actions/GetPosition.middleware";
 
 
 const MainComponent = () => {
@@ -81,11 +82,12 @@ const MainComponent = () => {
   }, [socketUrl]);
 
 
-  // useEffect(() => {
-  //   navigator.permissions.query({name:'geolocation'}).then(function(result) {
-  //     console.log("Permission", result);
-  //   });
-  // }, [])
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(function (position) {
+      // await detectTimezone(position.coords.latitude, position.coords.longitude);
+      dispatch(GetPositionMiddleware.getPosition(position.coords.latitude, position.coords.longitude));
+    });
+  }, [])
 
   const modalId = useSelector((state) => state.contact.contact_modal_id);
   useEffect(() => {

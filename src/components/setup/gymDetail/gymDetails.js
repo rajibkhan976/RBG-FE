@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { utils } from "../../../helpers";
+import { useSelector } from "react-redux";
 import Loader from "../../shared/Loader";
 import { ErrorAlert, SuccessAlert } from "../../shared/messages";
 import profileAvatar from "../../../assets/images/camera.svg";
@@ -46,7 +46,9 @@ const GymDetails = (props) => {
     disabledAccess: false
   });
   const [timezoneData, setTimezoneData] = useState([]);
-  const [detectedTimezone, setDetectedTimezone] = useState({});
+  const [detectedTimezone, setDetectedTimezone] = useState(useSelector(state => {
+    return state.organization.location;
+  }));
   const [phoneCountryCode, setPhoneCountryCode] = useState([
     {
       "code": "US",
@@ -54,26 +56,23 @@ const GymDetails = (props) => {
       "prefix": "+1"
     }
   ]);
-  const [basicinfoPhone, setBasicinfoPhone] = useState({
-    countryCode: "US",
-    dailCode: "+1",
-    number: "",
-    full_number: "",
-    location: "None",
-    country: "",
-    carrier: "None",
-    timezone: "America/New_York",
-    is_valid: false
-  });
   // END - Variable set while development --- Jit
   const fetchGymDetails = async () => {
     try {
       setIsLoader(true);
       const gymData = await GymDetailsServices.fetchGymDetail();
       console.log("Gym Details", gymData);
+      // gymData.gymDetails.timezone = (gymData?.timezone) ? gymData?.timezone : detectedTimezone?.zoneName;
+      // gymData.gymDetails.gmtOffset = (gymData?.gmtOffset) ? gymData?.gmtOffset : detectedTimezone?.gmtOffset;
       setGymData(gymData.gymDetails);
+      if(!gymData.gymDetails?.timezone) {
+        setGymData(prevState => ({...prevState, 
+          timezone: detectedTimezone?.zoneName, 
+          gmtOffset: detectedTimezone?.gmtOffset}));
+      }
       setHolidayData(gymData?.holidays);
-      setValidateMsg({ ...validateMsg, disabledAccess: !gymData.editAccess })
+      setValidateMsg({ ...validateMsg, disabledAccess: !gymData.editAccess });
+      if(!gymData?.gymDetails.timezone && detectedTimezone?.zoneName) setSuccessMsg(`Timezone auto detected as (${detectedTimezone.countryName} - ${detectedTimezone.zoneName}), but the data is not saved yet.`);
     } catch (e) {
       console.log(e.message);
       setErrorMsg(e.message);
@@ -93,20 +92,10 @@ const GymDetails = (props) => {
     }
   };
 
-  const detectTimezone = async (lat, lng) => {
-    try {
-      const currentTimezoneData = await GymDetailsServices.fetchTimeZoneLatLng(lat, lng);
-      console.log("Detected Timezone", currentTimezoneData);
-      setDetectedTimezone(currentTimezoneData);
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
-
   const fetchCountry = async () => {
     try {
       const codeData = await GymDetailsServices.fetchCountry();
-      console.log(codeData);
+      // console.log(codeData);
       setPhoneCountryCode(codeData);
     } catch (e) {
       setErrorMsg(e.message);
@@ -116,16 +105,8 @@ const GymDetails = (props) => {
 
   useEffect(() => {
     fetchCountry();
-    (async () => {
-      console.clear();
-      await fetchGymDetails();
-      await getTimeZoneList();
-      // navigator.geolocation.getCurrentPosition(async function (position) {
-      //   await detectTimezone(position.coords.latitude, position.coords.longitude);
-      //   await getTimeZoneList();
-      // });
-
-    })();
+    fetchGymDetails();
+    getTimeZoneList();
   }, []);
 
   useEffect(() => {
@@ -438,7 +419,7 @@ const GymDetails = (props) => {
                       <div className="daileCode">{gymData.countryCode}</div>
                       <select className="selectCountry" name="countryCode"
                         onChange={validateField}
-                        defaultValue={gymData.countryCode}>
+                        defaultValue={gymData?.countryCode}>
                         {phoneCountryCode ? phoneCountryCode.map((el, key) => {
                           return (
                             <option value={el.prefix} data-country={el.code} key={key} >{el.code} ({el.prefix})</option>

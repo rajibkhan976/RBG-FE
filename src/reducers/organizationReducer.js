@@ -1,7 +1,8 @@
 import * as actionTypes from "../actions/types";
 
 const initialState = {
-    count: 0
+    count: 0,
+    location: {}
 }
 
 const organizationReducer = (state = initialState, action) => {
@@ -9,6 +10,9 @@ const organizationReducer = (state = initialState, action) => {
     switch (action.type) {
         case actionTypes.ORGANIZATION_COUNT:
             newState.count = action.count;
+            break;
+        case actionTypes.GET_LAT_LNG:
+            newState.location = action.location;
             break;
         default:
             break;

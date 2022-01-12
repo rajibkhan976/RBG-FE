@@ -11,6 +11,7 @@ export const USER_COUNT = "USER_COUNT";
 export const USER_DATA = "USER_DATA";
 //Organization
 export const ORGANIZATION_COUNT = "ORGANIZATION_COUNT";
+export const GET_LAT_LNG = "GET_LAT_LNG";
 //Association
 export const ASSOCIATION_COUNT = "ASSOCIATION_COUNT";
 // Automation
