@@ -5,6 +5,7 @@ import Transaction from "./pages/Transaction";
 import TransactionChoose from "./pages/TransactionChoose";
 import Loader from "../Loader";
 import Billing from "./pages/Billing";
+import Dependents from "./pages/Dependents";
 import { Step, Steps, NavigationComponentProps } from "react-step-builder";
 import { useDispatch } from "react-redux";
 import * as actionTypes from "../../../actions/types";
@@ -38,6 +39,7 @@ const ContactModal = (props) => {
                 <button className={navigation.current == 4 ? "active nNav" : "nNav"} onClick={() => navigation.jump(4)} disabled={props.contactId ? false : true}>
                     Billing
                 </button>
+                <button className={navigation.current == 5 ? "active nNav" : "nNav"} onClick={() => navigation.jump(5)}>Dependents</button>
             </div>
         );
     }
@@ -223,6 +225,7 @@ const ContactModal = (props) => {
                             component={goToTransactionClicked ? TransactionChoose : Transaction}
                             refetchContact={() => getContactDetails(props.contactId)}/>
                             <Step title="Billing" component={Billing} contactId={props.contactId} />
+                            <Step title="Dependents" component={Dependents} contactId={props.contactId} />
                         </Steps>
                     </div>
                 </div>

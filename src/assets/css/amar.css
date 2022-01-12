@@ -1,0 +1,268 @@
+.contactModalHeader.stickey + .tabBarArea .contactTabsInner {
+  height: calc(100vh - 126px);
+}
+
+.f-column {
+  flex-direction: column;
+}
+.f-1 {
+  flex: 1 1 auto;
+}
+.f-justify-between {
+  justify-content: space-between;
+}
+.dependentsListing {
+  display: table;
+  width: 100%;
+  border-spacing: 0;
+  overflow-y: auto;
+}
+.dependentsListing .row {
+  display: table-row;
+  position: relative;
+}
+.dependentsListing .row:not(.head):not(.archivedDependent) {
+  background-color: #f2f7fc;
+}
+.dependentsListing .row.head .cell {
+  color: #305671;
+  font-size: 13px;
+  padding: 10px;
+  font-weight: 500;
+  vertical-align: middle;
+}
+.dependentsListing .row .cell {
+  display: table-cell;
+  border-bottom: 5px solid #fff;
+  padding: 18px 10px;
+  position: relative;
+}
+.dependentsListing .row:not(.head) .cell:first-child {
+  padding-left: 20px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.dependentsListing .row:not(.head) .cell:last-child {
+  padding-right: 35px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.dependentsListing .iconCont {
+  background: #139fea;
+  border-radius: 50%;
+  flex: 0 0 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+}
+
+.dependentsListing .textCont h4 {
+  color: #305671;
+  margin-bottom: 3px;
+}
+.dependentsListing .textCont span,
+.dependentLast,
+.dependentCourse,
+.dependentDob {
+  font-size: 13px;
+  line-height: 20px;
+  color: #305671;
+}
+.dependentsListing .textCont .dependentDoj {
+  font-size: 12px;
+  line-height: 18px;
+  color: #9baebc;
+  margin-top: 5px;
+}
+.mailCont {
+  margin-left: 5px;
+  text-decoration: underline;
+}
+.optionDependent {
+  position: absolute;
+  right: 25px;
+  width: 10px;
+  display: inline-flex;
+  justify-content: center;
+}
+.archivedDependent:after {
+  position: absolute;
+  content: "Archived";
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 5px;
+  background: rgb(155 174 188 / 90%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 16px;
+  line-height: 24px;
+  z-index: 1;
+  font-weight: normal;
+}
+.dependentsListing .createNew {
+  flex-direction: column;
+}
+.dependentsListing .createNew p {
+  font-size: 14px;
+  line-height: 21px;
+  color: #9baebc;
+  margin-bottom: 27px;
+}
+.dependentsListing .saveNnewBtn {
+  padding-left: 16px;
+  padding-right: 14px;
+  width: auto;
+}
+.dependentsListing .saveNnewBtn img {
+  margin-left: 10px;
+}
+.tabBarArea .modalDependent {
+  position: fixed;
+  background: rgb(48 86 113 / 90%);
+}
+.w-row {
+  margin-inline: -15px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.w-row > *[class^="w-"],
+.w-row > *[class*=" w-"] {
+  padding: 0 15px;
+}
+.modalDependent .modalForm form {
+  overflow: hidden;
+}
+.modalDependent .radioGroup label:first-child {
+  margin-left: 0;
+}
+
+.inFormFieldHeader {
+  position: relative;
+  margin-bottom: 20px;
+}
+.inFormFieldHeader label {
+  margin-top: 0;
+}
+.inFormFieldHeader h5 {
+  background: #fff;
+  position: relative;
+  z-index: 1;
+  padding-right: 10px;
+  color: #305671;
+}
+.inFormFieldHeader:after {
+  position: absolute;
+  content: "";
+  height: 1px;
+  width: calc(100% - 50px);
+  left: 0;
+  background: #d3d9de;
+  top: 9px;
+}
+.noteForm {
+  padding: 23px;
+  text-align: center;
+  border-radius: 5px;
+}
+.checkDNC {
+  background: #ffeaeb;
+  margin-bottom: 19px;
+  margin-top: 45px;
+}
+.checkDNC label {
+  display: block;
+  text-align: center;
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 19px;
+  color: #305671;
+}
+.checkDNC input:not(:checked) + span {
+  background-color: #fff;
+}
+.modalDependent .modalbtnHolder {
+  padding: 0;
+}
+.modalDependent input[type="date" i]::-webkit-calendar-picker-indicator {
+  background-image: url("../images/calendar.png");
+}
+.cmnFieldName button {
+  font-size: 13px;
+  line-height: 19px;
+  color: #46c8d3;
+}
+.modalDependent .modalForm {
+    height: 421px;
+}
+.modalDependent .cmnFormRow,
+.modalDependent .cmnFormField {
+  position: relative;
+}
+.contactListItems {
+  position: absolute;
+  top: 40px;
+  width: 100%;
+  z-index: 2;
+  background: #f6f8fa;
+  border: 1px solid #d3d9de;
+  border-top: none;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  height: 196px;
+  display: flex;
+  flex-direction: column;
+}
+.cmnFormField.listActive .cmnFieldStyle {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none;
+}
+.contactListItems ul {
+  flex: 1 1 auto;
+  overflow: auto;
+}
+.contactListItems .btn {
+  background: #ffffff;
+  flex: 0 0 44px;
+  color: #55bbc9;
+  font-size: 13px;
+  line-height: 19px;
+}
+.contactListItems li {
+  font-size: 13px;
+  line-height: 19px;
+  color: #305671;
+  padding: 0 10px;
+  cursor: pointer;
+}
+.contactListItems li:hover {
+    color: #f1a668;
+}
+.contactListItems li + li {
+  margin-top: 12px;
+}
+.contactListItems ul::-webkit-scrollbar {
+  width: 4px;
+}
+
+.contactListItems ul::-webkit-scrollbar-track {
+  background-color: #dce4eb;
+}
+
+.contactListItems ul::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
+}
+.cmnFormField.listActive .cmnFieldStyle {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+    background-position: right 15px center;
+    background-repeat: no-repeat;
+    padding-right: 35px;
+}
