@@ -3425,8 +3425,9 @@ span.userProfilePic img {
 }
 
 .popupMessage.coursePopupMsg,
-  .popupMessage.productPopupMsg {
+.popupMessage.productPopupMsg {
   top: 90px;
+  z-index: 1000000;
 }
 
 
