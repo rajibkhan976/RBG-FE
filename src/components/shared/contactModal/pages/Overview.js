@@ -92,11 +92,11 @@ const Overview = (props) => {
         fetchCountry();
     }, []);
 
-    const getContact = async () => {
+    const getContact = async (contactId) => {
         setIsLoader(true);
-        if (props.contactId !== 0) {
+        if (contactId !== 0) {
           let payload = {
-              id: props.contactId
+              id: contactId
           }
           let contact = await ContactService.fetchContact(JSON.stringify(payload));
           setContact(contact.contact);
@@ -164,7 +164,7 @@ const Overview = (props) => {
     }
 
     useEffect(() => {
-        getContact();
+        getContact(props.contactId);
     }, []);
 
 
@@ -320,6 +320,7 @@ const Overview = (props) => {
 
     const onContactSubmit = async (e) => {
         e.preventDefault();
+        setIsLoader(true);
         let formErrorsCopy = formErrorMsg;
         let isError = false;
         if (!basicinfoFname) {
@@ -355,7 +356,7 @@ const Overview = (props) => {
                     phone: "",
                     fName: "",
                     lName: ""
-                }), 10000);
+                }), 50000);
         } else {
             let payload = {
                 firstName: basicinfoFname ? basicinfoFname : "",
@@ -380,8 +381,8 @@ const Overview = (props) => {
             }
             let contactIdNew = contact ? contact._id : 0;
             let updateContact = await ContactService.updateContact(payload, contactIdNew);
+            setIsLoader(false);
             if (updateContact) {
-              console.log('here', updateContact.data.insertedId)
                 if (contactIdNew == 0) {
                   setSuccessMsg('Contact saved successfully.');
                   dispatch({
@@ -396,13 +397,24 @@ const Overview = (props) => {
                   },300);
                 } else {
                   setSuccessMsg('Contact updated successfully.');
+                  props.getContactDetails(contactIdNew);
+                  getContact(contactIdNew);
+                  /*dispatch({
+                      type: actionTypes.CONTACTS_MODAL_ID,
+                      contact_modal_id: '',
+                  });
+                  setTimeout(() => {
+                    dispatch({
+                        type: actionTypes.CONTACTS_MODAL_ID,
+                        contact_modal_id: contactIdNew,
+                    });
+                  },300);*/
                 }
             } else {
                 setErrorMsg('Something went wrong.')
             }
         }
     }
-
     useEffect(() => {
         if (successMsg) setTimeout(() => { setSuccessMsg("") }, 5000)
         if (errorMsg) setTimeout(() => { setErrorMsg("") }, 5000)
@@ -410,7 +422,6 @@ const Overview = (props) => {
 
     return(
         <div className={formScrollStatus ? "contactModalTab expanded" : "contactModalTab"} onScroll={formScroll}>
-            {isLoader ? <Loader /> : ''}
             {successMsg &&
                 <SuccessAlert message={successMsg}></SuccessAlert>
             }
@@ -445,6 +456,7 @@ const Overview = (props) => {
             }
             <form>
             <div className="overviewFormWrap">
+              {isLoader ? <Loader /> : ""}
                 <div className="overviewForm cmnForm">
                     <div className="cmnFormHead">
                         <h3>Basic Info</h3>

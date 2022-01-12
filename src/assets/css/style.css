@@ -3572,6 +3572,7 @@ li:hover .extraDottedBtn {
   background: url("../images/configCol_icon.svg") no-repeat center;
   border: none;
   margin-top: 5px;
+  position: fixed;
 }
 
 .configColModal {
@@ -7441,6 +7442,18 @@ p.trackName {
 .posSellingForm .loaderOuter {
   position: absolute;
 }
+.overviewFormWrap .loaderOuter {
+  position: fixed;
+  width: 820px;
+  height: 100%;
+  top:0;
+  right:0;
+  left: unset;
+  bottom: unset;
+}
+.overviewForm .formActBtnWrap {
+  width: 284px;
+}
 .posSellingForm form{
   width: 100%;
   display: flex;
@@ -7838,7 +7851,7 @@ p.trackName {
   box-shadow: none;
   border: none;
   padding: 7px 0;
-  
+
 }
 .authBody.login_outer .login_head img {
   height: 50px;
@@ -7981,9 +7994,9 @@ p.trackName {
   margin-bottom: 45px;
 }
 .authBody.login_outer .loginRightPart.reset{
-  width: 100%; 
-  height: 700px; 
-  overflow: auto; 
+  width: 100%;
+  height: 700px;
+  overflow: auto;
   flex-direction: row;
 }
 
@@ -8067,12 +8080,12 @@ p.trackName {
 }
 .validationParam li.done  span.tick,
 .validationParam li.normal  span.tick,
-.validationParam li.notdone  span.exClam{ 
+.validationParam li.notdone  span.exClam{
   display: inline-block;
 }
 .validationParam li.done  span.exClam,
 .validationParam li.normal  span.exClam,
-.validationParam li.notdone  span.tick{ 
+.validationParam li.notdone  span.tick{
   display: none;
 }
 
@@ -8363,7 +8376,7 @@ li.listHeading > div.vacent:after{
 /*Hide sorting icons*/
 li.listHeading > div.sortOff:after {
   display: none;
-} 
+}
 
 
 .dashInnerUI.phases {
@@ -8702,7 +8715,7 @@ li.listHeading > div.sortOff:after {
   font-size: 13px;
   line-height: 40px;
 }
-.hideStylefile input{ 
+.hideStylefile input{
   background: none;
   border: none;
   width: 65px;
@@ -8711,6 +8724,7 @@ li.listHeading > div.sortOff:after {
   filter: blur(1px);
   cursor: no-drop;
 }
+<<<<<<< HEAD
 .showing_gym_data .gymName .logo_profile {
   width: 80px;
   height: 80px;
@@ -8724,3 +8738,5 @@ li.listHeading > div.sortOff:after {
 
 
 
+=======
+>>>>>>> Fixed Contact issues

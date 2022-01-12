@@ -3,13 +3,12 @@ import Overview from "./pages/Overview";
 import Attendance from "./pages/Attendance";
 import Transaction from "./pages/Transaction";
 import TransactionChoose from "./pages/TransactionChoose";
-
+import Loader from "../Loader";
 import Billing from "./pages/Billing";
 import { Step, Steps, NavigationComponentProps } from "react-step-builder";
 import { useDispatch } from "react-redux";
 import * as actionTypes from "../../../actions/types";
 import { ContactService } from "../../../services/contact/ContactServices";
-
 import minimize_icon from "../../../assets/images/minimize_icon.svg";
 import cross_white from "../../../assets/images/cross_white.svg";
 import user_100X100 from "../../../assets/images/user_100X100.png";
@@ -53,6 +52,7 @@ const ContactModal = (props) => {
     const [stickeyHeadStatus, setStickeyHeadStatus] = useState(false);
     const [contactModalOpenStatus, setContactModalOpenStatus] = useState(true);
     const [contactModalOpenError, setContactModalOpenError] = useState("");
+    const [contactName,  setContactName] = useState("");
     const [contactData, setContactData] = useState({
         firstName: "",
         lastName: ""
@@ -70,20 +70,23 @@ const ContactModal = (props) => {
         setStickeyHeadStatus(formScrollStatus);
     };
 
-    const getContact = async (contactId) => {
+    const getContactDetails = async (contactId) => {
       if (contactId !== 0) {
         let payload = {
             id: contactId
         }
         const contact = await ContactService.fetchContact(JSON.stringify(payload));
         setContactData(contact.contact);
+        let firstName = contact.contact.firstName ? contact.contact.firstName : "";
+        let lastName =  contact.contact.lastName ? contact.contact.lastName : ""
+        setContactName(firstName + " "  + lastName);
         const ltvVal = (contact.contact.ltv + contact.contact.ltvPOS).toLocaleString("en-US");
         setLtv("USD "+ltvVal);
       }
     }
 
     useEffect(() => {
-        getContact(props.contactId);
+        getContactDetails(props.contactId);
     }, []);
 
     const [goToTransactionClicked, setGoToTransactionClicked] = useState(false);
@@ -119,8 +122,8 @@ const ContactModal = (props) => {
                                           <img src={camera_icon} alt="" />
                                       </button>
                                   </div>
-                                  <div className="userName">
-                                      {contactData.firstName ? contactData.firstName : ""} {contactData.lastName ? contactData.lastName : ""}
+                                  <div className="userName" title={contactName}>
+                                      { contactName.length > 20 ? contactName.substring(0, 20) + "..." : contactName }
                                   </div>
                                   <div className="ltValue">
                                       <header>Life Time Value :</header>
@@ -143,15 +146,19 @@ const ContactModal = (props) => {
                           <div className="contactModalHeaderBottomSec">
                               <div className="bottomLeftArea">
                                   <div className="userContacts">
-                                      <div className="userPhone">
-                                          <img src={phone_call_icon_white} alt="" />
-                                          <span>{contactData.phone && contactData.phone.dailCode && contactData.phone.number ?
-                                              contactData.phone.dailCode + "-" + contactData.phone.number : ""}</span>
-                                      </div>
-                                      <div className="userEmail">
-                                          <img src={email_icon_white} alt="" />
-                                          <span>{contactData.email}</span>
-                                      </div>
+                                      {(contactData.phone && contactData.phone.number) &&
+                                        <div className="userPhone">
+                                            <img src={phone_call_icon_white} alt="" />
+                                            <span>{contactData.phone && contactData.phone.dailCode && contactData.phone.number ?
+                                                contactData.phone.dailCode + "-" + contactData.phone.number : ""}</span>
+                                        </div>
+                                      }
+                                      {contactData.email &&
+                                        <div className="userEmail">
+                                            <img src={email_icon_white} alt="" />
+                                            <span>{contactData.email}</span>
+                                        </div>
+                                      }
                                   </div>
                                   <div className="clockinArea">
                                       <button className="clockinBtn orangeBtn">
@@ -162,12 +169,14 @@ const ContactModal = (props) => {
                               </div>
                               <div className="bottomRightArea">
                                   <div className="bottomRightAreaCol firstCol">
-                                      <div className="userInfoCell jobRole">
-                                          <span className="cellInfoIcon">
-                                              <img src={user_icon_white} alt="" />
-                                          </span>
-                                          <span className="infoCellTxt">{contactData.jobRole}</span>
-                                      </div>
+                                      {contactData.jobRole &&
+                                        <div className="userInfoCell jobRole">
+                                            <span className="cellInfoIcon">
+                                                <img src={user_icon_white} alt="" />
+                                            </span>
+                                            <span className="infoCellTxt">{contactData.jobRole}</span>
+                                        </div>
+                                      }
                                       <div className="userInfoCell prospect">
                                           <span className="cellInfoIcon">
                                               <img src={battery_icon_white} alt="" />
@@ -204,20 +213,18 @@ const ContactModal = (props) => {
                             </button>
                         </div> */}
                         <Steps config={config}>
-                            <Step title="Overview" contact={contactData} component={Overview} contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
+                            <Step title="Overview" contact={contactData} component={Overview}
+                            getContactDetails={(id) => getContactDetails(id)}  contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
                             <Step title="Attendance" component={Attendance} />
                             <Step title="Transaction"
                             contactId={props.contactId}
                             backToTransList={backToTransListHandler}
                             goToTransaction={goToTransactionHandler}
                             component={goToTransactionClicked ? TransactionChoose : Transaction}
-                            refetchContact={() => getContact(props.contactId)}/>
+                            refetchContact={() => getContactDetails(props.contactId)}/>
                             <Step title="Billing" component={Billing} contactId={props.contactId} />
                         </Steps>
-
                     </div>
-
-
                 </div>
                 <div className="modalOverlay" onClick={closeContactModal}></div>
             </div>

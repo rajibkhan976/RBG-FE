@@ -17,7 +17,6 @@ const Transaction = (props) => {
       setIsLoader(true);
       const transactionRes = await TransactionServices.fetchTransactionList(contactID);
       setTransactionList(transactionRes);
-      console.log("List", transactionRes)
     } catch (e) {
 
     } finally {
@@ -73,7 +72,7 @@ const Transaction = (props) => {
     var showTime;
     // if (yeardiff >= 1) {
     //   showTime = Math.floor(yeardiff) + (Math.floor(yeardiff) == 1 ? " year ago" : " years ago");
-    // } else 
+    // } else
     if (daydiff >= 1) {
       showTime = Math.floor(daydiff) + (Math.floor(daydiff) == 1 ? " day ago" : " days ago");
     } else if (Math.floor(hours) > 0) {
