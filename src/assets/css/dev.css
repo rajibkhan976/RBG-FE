@@ -1954,3 +1954,83 @@ h3.leftSectionHeader {
 .userListHead.detailsPage {
   margin-bottom: 27px;
 }
+
+
+/*Appointment Page css*/
+
+.searchBar.appointments.formControl {
+    width: 117px;
+    border: none;
+}
+
+.searchBar.appointments.formControl select {
+    margin: 0;
+    background-color: #fff;
+    padding-left: 32px
+}
+
+button.saveNnewBtn.appExport.expContactBtn {
+    width: 92px;
+    margin-left: 5px;
+}
+
+button.saveNnewBtn.appFilter.expContactBtn {
+    margin-left: 20px;
+    width: 82px;
+}
+
+.importModalBody .infoInputs.appModal {
+  margin-top: 5px;
+}
+
+p.dateRange {
+    color: #305671;
+    font-size: 13px;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.formField.w-50.appflex {
+    display: flex;
+    align-items: center;
+} 
+
+.formField.w-50.appflex label {
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.blockLi {
+  display: block!important;
+}
+
+.formField.w-100.appModals.formControl:last-child {
+  margin-bottom: 90px;
+}
+
+span.clearFilter {
+    cursor: pointer;
+    margin-left: auto;
+    margin-top: 5px;
+    color: #55BBC9;
+    font-size: 13px;
+    border-bottom: 1px dotted;
+}
+
+.contactListingTable .tableListing.appointment li:first-child > div:first-child {
+    padding-left: 15px;
+}
+
+li.listHeading.appointment > div:after {
+  background-image: none!important;
+}
+
+.dataTableCell.email {
+    width: 490px;
+}
+
+.dataTableCell.count .btn {
+    color: #0099FF;
+    cursor: pointer;
+    padding-left: 5px;
+}

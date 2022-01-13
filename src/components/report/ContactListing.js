@@ -6,6 +6,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { ErrorAlert, SuccessAlert } from '../shared/messages';
 import owner_img_1 from '../../../src/assets/images/owner_img_1.png';
 import arrow_forward from '../../../src/assets/images/arrow_forward.svg';
+// import user_icons from '../../../src/assets/images/list_img2.svg';
 import { ContactService } from "../../services/contact/ContactServices";
 import { utils } from "../../helpers";
 import Loader from "../shared/Loader";
@@ -410,31 +411,113 @@ const ContactListing = (props) => {
                 <ErrorAlert message={errorMsg}></ErrorAlert>
             }
             <div className="userListBody">
-                <div className="listBody contactListingTable" style={{ 'width': tableWidth }}>
-                    <div className="tableDataConfigArea">
-                        <div className="configColArea">
-                            <button className="configColBtn" onClick={() => setColModalStatus(!colModalStatus)}></button>
-                            {colModalStatus ?
-                                <div className="configColModal">
-                                    <div className="configColModalHead">
-                                        <input type="search" placeholder="Search"
-                                            onChange={(event) => setSearchModalVal(event.target.value)}
-                                            value={searchModalVal} />
-                                    </div>
-                                    <div className="configColModalBody">
-                                        <GenerateColumnDraggableModal searchData={searchModalVal} />
-                                    </div>
-                                    <div className="configColModalfooter">
-                                        <button className="saveNnewBtn" onClick={() => handleSave()}>Save <img src={arrow_forward} alt="" /></button>
-                                        <button className="btn-link" onClick={() => handleClear()}>Clear</button>
-                                    </div>
-                                </div>
-                                : ""}
-                        </div>
-                    </div>
-                    <ul className="tableListing">
-                        <GenerateColumns />
-                        <GenerateContacts />
+                <div className="listBody contactListingTable" style={{ 'width': '100%' }}>
+                    
+                    <ul className="tableListing appointment">
+                    	   <li className="listHeading">
+      <div className="dataTableCell">Contacts</div>
+      <div className="dataTableCell">Email</div>
+      <div className="dataTableCell">Counts</div>
+      <div className="dataTableCell">Latest Date</div>
+      <div className="dataTableCell">Status</div>
+      
+   </li>
+
+
+   <li>
+      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
+      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+      <div className="dataTableCell count"><button className="btn">09</button></div>
+      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
+      <div className="dataTableCell status"><button className="btn">Pending</button></div>
+      
+   </li>
+
+
+
+<li>
+      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
+      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+      <div className="dataTableCell count"><button className="btn">09</button></div>
+      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
+      <div className="dataTableCell status"><button className="btn">Pending</button></div>
+      
+   </li>
+
+   <li>
+      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
+      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+      <div className="dataTableCell count"><button className="btn">09</button></div>
+      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
+      <div className="dataTableCell status"><button className="btn">Pending</button></div>
+      
+   </li>
+
+   <li>
+      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
+      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+      <div className="dataTableCell count"><button className="btn">09</button></div>
+      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
+      <div className="dataTableCell status"><button className="btn">Pending</button></div>
+      
+   </li>
+
+   <li>
+      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
+      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+      <div className="dataTableCell count"><button className="btn">09</button></div>
+      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
+      <div className="dataTableCell status"><button className="btn">Pending</button></div>
+      
+   </li>
+
+   <li>
+      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
+      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+      <div className="dataTableCell count"><button className="btn">09</button></div>
+      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
+      <div className="dataTableCell status"><button className="btn">Pending</button></div>
+      
+   </li>
+
+   <li>
+      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
+      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+      <div className="dataTableCell count"><button className="btn">09</button></div>
+      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
+      <div className="dataTableCell status"><button className="btn">Pending</button></div>
+      
+   </li>
+
+   <li>
+      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
+      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+      <div className="dataTableCell count"><button className="btn">09</button></div>
+      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
+      <div className="dataTableCell status"><button className="btn">Pending</button></div>
+      
+   </li>
+
+   <li>
+      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
+      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+      <div className="dataTableCell count"><button className="btn">09</button></div>
+      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
+      <div className="dataTableCell status"><button className="btn">Pending</button></div>
+      
+   </li>
+
+   <li>
+      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
+      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+      <div className="dataTableCell count"><button className="btn">09</button></div>
+      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
+      <div className="dataTableCell status"><button className="btn">Pending</button></div>
+      
+   </li>
+
+
+
                     </ul>
                 </div>
             </div>

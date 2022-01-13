@@ -1,9 +1,10 @@
 import React, {useState} from "react";
 
 import { Steps, Step } from "react-step-builder";
-import Step1 from "./step1";
-import Step2 from "./step2";
-import FinalStep from "./step3";
+import arrowDown from "../../../assets/images/arrowDown.svg";
+import arrowRightWhite from "../../../assets/images/arrowRightWhite.svg";
+
+
 
 function ImportContact(props) {
     const closeModal = () => {
@@ -14,15 +15,80 @@ function ImportContact(props) {
             <div className="sideMenuOuter" id="import_Modal">
                 <div className="sideMenuInner importModalContainer">
                     <div className="sideMenuHeader">
-                        <h3>Import Contacts</h3>
-                        <p>Upload contacts in your organization</p>
+                        <h3>Apply Filter</h3>
+                        
                         <button className="btn btn-closeSideMenu" onClick={() => closeModal()}><span></span><span></span></button>
                     </div>
-                    <Steps>
-                        <Step component={Step1} />
-                        <Step component={Step2} />
-                        <Step component={FinalStep} handleParentFun={()=>{closeModal();}}/>
-                    </Steps>
+
+
+                    <div className="importModalBody">
+
+                        <div id="step_1" className="">
+                            <div className="infoInputs appModal">
+                            <p className="dateRange">Date Range</p>
+                                <ul>
+                                    <li>
+                                        <div className="formField w-50 appflex">
+                                            <label>From</label>
+                                            <div className="inFormField">
+                                                <input type="text" placeholder="dd/mm/yyyy" name="" />
+                                            </div>
+                                        </div>
+                                        <div className="formField w-50 appflex">
+                                            <label>To</label>
+                                            <div className="inFormField">
+                                                <input type="text" placeholder="dd/mm/yyyy" name="" />
+                                            </div>
+                                        </div>
+
+                                        </li>
+                                        <li className="blockLi">
+
+                                        <div className="formField w-100 appModals formControl">
+                                            <label>Choose Filter Option</label>
+                                            <select
+                                                style={{
+                                                    backgroundImage: "url(" + arrowDown + ")",
+                                                }}>
+                                                <option value="">Status</option>                       
+                                            </select>
+                                        </div>
+                                        <div className="formField w-100 appModals formControl">
+                                            <label>Contains</label>
+                                            <select
+                                                style={{
+                                                    backgroundImage: "url(" + arrowDown + ")",
+                                                }}>
+                                                <option value="">Equal to</option>                        
+                                            </select>
+                                        </div>
+                                        <div className="formField w-100 appModals formControl">
+                                            <label>Timezone</label>
+                                            <input type="text" placeholder="Scheduled" name="" />
+                                           
+                                        </div>
+
+                                    </li>
+
+                                    <li className="lastLiApp">
+                                        <div className="formField formControl w-50 appflex">                                           
+                                            <button type="submit" className="saveNnewBtn"><span>Apply Filter</span><img src={arrowRightWhite} alt="" /></button>
+                                        </div>
+                                        <div className="formField w-50 appflex">
+                                            <span className="clearFilter">Clear</span>
+                                        </div>
+
+                                        </li>
+                                    
+                                </ul>
+                                
+                            </div>
+                                
+                            </div>
+
+</div>
+
+                    
                 </div>
             </div>
         </>
