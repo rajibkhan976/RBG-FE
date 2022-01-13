@@ -8745,3 +8745,14 @@ li.listHeading > div.sortOff:after {
 .dataTableCell .btn{
   text-align: left;
 }
+
+.createNew {
+  background-color: #fff;
+  height: 150px;
+  display: table-cell;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 10px;
+}

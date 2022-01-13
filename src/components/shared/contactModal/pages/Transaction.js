@@ -176,7 +176,7 @@ const Transaction = (props) => {
         </div>
         <div className="cell">
           <span className="amount pos">
-            {transData.transaction_data.price}<span>POS</span>
+            ${transData.transaction_data.price}<span>POS</span>
           </span>
         </div>
         <div className="cell">
