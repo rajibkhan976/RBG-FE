@@ -131,12 +131,14 @@ const TransactionChoose = (props) => {
             setErrorMsg(e.message);
         } finally {
             setShowLoader(false);
-            setTimeout(() => {
-                dispatch({
-                    type: actionTypes.CONTACTS_MODAL_ID,
-                    contact_modal_id: '',
-                })
-            }, 10000);
+            setCourseCategory("");
+            setCourseList("");
+            setCourseName("");
+            setCourseSelected(false);
+            setCourseId("");
+            setCourseFees("");
+            setCourseImg("");
+            setCourseDuration("");
         }
     }
 
