@@ -56,11 +56,9 @@ const ContactListing = (props) => {
     useEffect(() => {
         handelSize();
         const search = utils.getQueryVariable('search');
-        const srtBy = utils.getQueryVariable('sortBy');
-        const srtType = utils.getQueryVariable('sortType');
-        setKeyword(search);
-        setSortBy(srtBy);
-        setSortType(srtType);
+        if (search) {
+          setKeyword(search);
+        }
     }, []);
 
 

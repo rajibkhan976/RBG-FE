@@ -432,23 +432,23 @@ const Overview = (props) => {
               <div className="overviewList">
                   <ul>
                       <li>
-                          <div className="val">999</div>
+                          <div className="val">0</div>
                           <p className="label">Touch Points</p>
                       </li>
                       <li>
-                          <div className="val">999</div>
+                          <div className="val">0</div>
                           <p className="label">Calls</p>
                       </li>
                       <li>
-                          <div className="val">999</div>
+                          <div className="val">0</div>
                           <p className="label">SMS</p>
                       </li>
                       <li>
-                          <div className="val">999</div>
+                          <div className="val">0</div>
                           <p className="label">Emails</p>
                       </li>
                       <li>
-                          <div className="val">999</div>
+                          <div className="val">0</div>
                           <p className="label">Classes attended</p>
                       </li>
                   </ul>
