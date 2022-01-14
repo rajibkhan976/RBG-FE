@@ -13,6 +13,7 @@ import config from "../../../configuration/config";
 import ConfirmBox from "../../shared/confirmBox";
 
 import { GymDetailsServices } from "../../../services/gymDetails/GymDetailsServices";
+import Scrollbars from "react-custom-scrollbars-2";
 
 
 const GymDetails = (props) => {
@@ -507,45 +508,47 @@ const GymDetails = (props) => {
                   <div className="cell">End Date</div>
                   <div className="cell">Holiday</div>
                 </div>
+                <div className="holidayListWrap">
                 {holidayData.filter(item => item._id !== deletedId).map((elem, key) => {
                   return (
-                    <div className="gymHolidayList">
-                      <div className="cell">{elem.fromDate}</div>
-                      <div className="cell">{elem.toDate}</div>
-                      <div className="cell">{elem.name}
-                        <div className="sideEditOption">
-                          <button onClick={() => {
-                            toggleOptions(key);
-                          }}>
-                            <img src={dot3gray} alt="" />
+                      
+                  <div className="gymHolidayList">
+                    <div className="cell">{elem.fromDate}</div>
+                    <div className="cell">{elem.toDate}</div>
+                    <div className="cell">{elem.name}
+                      <div className="sideEditOption">
+                        <button onClick={() => {
+                          toggleOptions(key);
+                        }}>
+                          <img src={dot3gray} alt="" />
+                        </button>
+                        <div className={
+                          option === key
+                            ? "dropdownOptions listOpen"
+                            : "listHide"
+                        }>
+                          <button class="btn btnEdit"
+                            onClick={() => editHolidayHandler(elem)}
+                          >
+                            <span>
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" class="editIcon"><g transform="translate(0.75 0.75)"><path class="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path><path class="a" d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z" transform="translate(-4.384 -2)"></path></g></svg>
+                            </span>
+                            Edit
                           </button>
-                          <div className={
-                            option === key
-                              ? "dropdownOptions listOpen"
-                              : "listHide"
-                          }>
-                            <button class="btn btnEdit"
-                              onClick={() => editHolidayHandler(elem)}
-                            >
-                              <span>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" class="editIcon"><g transform="translate(0.75 0.75)"><path class="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path><path class="a" d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z" transform="translate(-4.384 -2)"></path></g></svg>
-                              </span>
-                              Edit
-                            </button>
-                            <button class="btn btnDelete" data-id={elem._id} onClick={deleteHolidayHandler}>
-                              <span>
-                                <svg class="deleteIcon" xmlns="http://www.w3.org/2000/svg" width="12.347" height="13.553" viewBox="0 0 12.347 13.553"><g transform="translate(0.75 0.75)"><path class="a" d="M3,6H13.847" transform="translate(-3 -3.589)"></path><path class="a" d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411" transform="translate(-3.795 -2)"></path><line class="a" y2="3" transform="translate(4.397 6.113)"></line><line class="a" y2="3" transform="translate(6.397 6.113)"></line></g></svg>
-                              </span>
-                              Delete
-                            </button>
-                          </div>
+                          <button class="btn btnDelete" data-id={elem._id} onClick={deleteHolidayHandler}>
+                            <span>
+                              <svg class="deleteIcon" xmlns="http://www.w3.org/2000/svg" width="12.347" height="13.553" viewBox="0 0 12.347 13.553"><g transform="translate(0.75 0.75)"><path class="a" d="M3,6H13.847" transform="translate(-3 -3.589)"></path><path class="a" d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411" transform="translate(-3.795 -2)"></path><line class="a" y2="3" transform="translate(4.397 6.113)"></line><line class="a" y2="3" transform="translate(6.397 6.113)"></line></g></svg>
+                            </span>
+                            Delete
+                          </button>
                         </div>
                       </div>
                     </div>
+                  </div>
                   )
                 }
                 )}
-
+                </div>
               </div>
             }
           </div>

@@ -81,7 +81,7 @@ const ContactModal = (props) => {
         let lastName =  contact.contact.lastName ? contact.contact.lastName : ""
         setContactName(firstName + " "  + lastName);
         const ltvVal = (contact.contact.ltv + contact.contact.ltvPOS).toLocaleString("en-US");
-        setLtv("USD "+ltvVal);
+        setLtv(ltvVal);
       }
     }
 
@@ -127,7 +127,7 @@ const ContactModal = (props) => {
                                   </div>
                                   <div className="ltValue">
                                       <header>Life Time Value :</header>
-                                      <span>{ltv}</span>
+                                      <span>USD {Number(ltv).toFixed(2)}</span>
                                   </div>
                                   {/* <div className="userContacts">
                                       <div className="userPhone">

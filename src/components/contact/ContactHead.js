@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../actions/types";
 import download_icon from "../../../src/assets/images/download_icon.svg";
@@ -6,6 +6,9 @@ import uparrow_icon_grey from "../../../src/assets/images/uparrow_icon_grey.svg"
 
 const ContactHead = (props) => {
   const dispatch = useDispatch();
+
+  const [searchKeyword, setSearchKeyword] = useState();
+
   const createIndivitualContact = () => {
     dispatch({
         type: actionTypes.CONTACTS_MODAL_ID,

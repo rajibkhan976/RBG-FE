@@ -148,7 +148,7 @@ const Customizations = (props) => {
               value={taxData.tax}
               disabled={(taxData.editAccess) ? false : true} />
             <button class="common_blue_button" type="submit"
-              disabled={(disableBtn || taxData.editAccess === false) ? true : false}>Save
+              disabled={(disableBtn || taxData.editAccess === false) ? true : false}>Update
               <img src={arrowRightWhite} alt="" /></button>
           </form>
         </div>

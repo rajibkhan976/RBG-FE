@@ -203,7 +203,7 @@ const Transaction = (props) => {
           </button>
           <span>* Explanatory text blurb should be here.</span>
         </div>
-        <div className="transactionListing">
+        <div className={transactionList?.pagination?.count > 0 ? "transactionListing" : "hide"}>
           {isLoader ? <Loader /> : ''}
           <div className="row head">
             <div className="cell">Particulars</div>
@@ -215,17 +215,24 @@ const Transaction = (props) => {
             {
               transactionList?.pagination?.count > 0 ? transactionList?.transactions?.map((transaction, key) => {
                 return (!transaction.is_pos) ? <CourseTransaction list={transaction} key={key} /> : <PosTransaction list={transaction} key={key} />;
-              }) : (
-                <div className="createNew">
-                  <span>
-                    <img src={list_board_icon} alt="" />
-                    <p>No transaction found!</p>
-                  </span>
-                </div>
-              )}
+              }) : ""}
 
           </>
+          
+                {/* <div className="noDataFound">
+                  <span>
+                    <img src={list_board_icon} alt="" />
+                    <span>No transaction found!</span>
+                  </span>
+                </div> */}
+              
         </div>
+        {transactionList?.pagination?.count == 0 ? 
+          <div className="noDataFound">
+            <img src={list_board_icon} alt="" />
+            <span>No transaction found!</span>
+          </div> 
+        : "" }
       </div>
     </>
   );

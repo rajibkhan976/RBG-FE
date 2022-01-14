@@ -127,8 +127,6 @@ const TransactionChoose = (props) => {
             setShowLoader(true);
             let result = await CourseServices.initCoursePurchase(payload);
             setSuccessMsg(result);
-
-            console.log("Buy course response- " + result);
         } catch (e) {
             setErrorMsg(e.message);
         } finally {
@@ -243,6 +241,19 @@ const TransactionChoose = (props) => {
         } finally {
             props.refetchContact();
             setShowLoader(false);
+
+            setPosSelectedCat("");
+            setPosSelectedProductIndex(0);
+            setProductList("");
+            setProductCatName("Category name");
+            setProductName("Product name");
+            setChosedColor("");
+            setColorIndex("");
+            setSizeIndex("");
+            setChosedSize("");
+            setProductImgName();
+            setProductPrice(0);
+            setProductPriceTax(0);
         }
     }
 
@@ -402,14 +413,14 @@ const TransactionChoose = (props) => {
                             <h3 className="commonHeadding">Preview Windows</h3>
                             <div className="previewBox">
                                 <div className="previewImgBox course">
-                                    <span className="sizeTag duration">{courseDuration}</span>
+                                    <span className="sizeTag duration">{courseDuration ? courseDuration + "(s)" : ""}</span>
                                     <img src={"https://wrapperbucket.s3.us-east-1.amazonaws.com/" + courseImg} alt="" />
 
                                 </div>
-                                <h3>{courseName}</h3>
-                                <p className="category"> <img src={categoryTag} alt="" /> {catName}</p>
-
-                                <h4>$ {courseFees}</h4>
+                                <h3>{ courseName }</h3>
+                                <p className="category"> <img src={categoryTag} alt="" /> { catName }</p>
+                                   
+                                <h4>$ { Number(courseFees).toFixed(2) }</h4>
                                 <span className="tax"> * Amount showing including taxes </span>
                             </div>
 
