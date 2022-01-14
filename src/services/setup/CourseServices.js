@@ -12,14 +12,12 @@ export const CourseServices = {
             console.log('Categories From Service : ', result);
             return result.data;
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(typeof e.response.data.message !== 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {
-                console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
+                throw new Error(e.response.data);
             }
-            
         }
     },
 
@@ -33,12 +31,11 @@ export const CourseServices = {
                 throw new Error("There is an error creating category. Please contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(typeof e.response.data.message !== 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {
-                console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
+                throw new Error(e.response.data);
             }
         }
     },
@@ -54,12 +51,11 @@ export const CourseServices = {
                 throw new Error("There is an error updating category. Please contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(typeof e.response.data.message !== 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {
-                console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
+                throw new Error(e.response.data);
             }
         }
     },
@@ -75,12 +71,11 @@ export const CourseServices = {
                 throw new Error("There is an error deleting a category. Please contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(typeof e.response.data.message !== 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {
-                console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
+                throw new Error(e.response.data);
             }
         }
     },
@@ -94,12 +89,11 @@ export const CourseServices = {
             console.log('Products From Service : ', result);
             return result.data;
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(typeof e.response.data.message !== 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {
-                console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
+                throw new Error(e.response.data);
             }
             
         }
@@ -113,12 +107,11 @@ export const CourseServices = {
             console.log('Course List Service : ', result);
             return result.data;
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(typeof e.response.data.message !== 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {
-                console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
+                throw new Error(e.response.data);
             }
             
         }
@@ -161,12 +154,11 @@ export const CourseServices = {
                 throw new Error("There is an error creating product. Please contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(typeof e.response.data.message !== 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {
-                console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
+                throw new Error(e.response.data);
             }
         }
     },
@@ -182,12 +174,11 @@ export const CourseServices = {
                 throw new Error("There is an error updating product. Please contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(typeof e.response.data.message !== 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {
-                console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
+                throw new Error(e.response.data);
             }
         }
     },
@@ -203,7 +194,12 @@ export const CourseServices = {
                 throw new Error("There is an error deleting a product. Please contact support");
             }
         } catch (e) {
-            throw new Error(e.response.data);
+            if(typeof e.response.data.message !== 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                throw new Error(e.response.data);
+            }
         }
     },
 
@@ -214,12 +210,11 @@ export const CourseServices = {
             // console.log('Transaction Services : ', result);
             return result.data;
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(typeof e.response.data.message !== 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {
-                console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
+                throw new Error(e.response.data);
             }
             
         }
