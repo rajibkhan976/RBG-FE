@@ -1923,7 +1923,7 @@ h3.leftSectionHeader {
   line-height: 1;
 }
 .gymDetails.personalPage .gymdetails_right .holidayListHeader {
-  padding-bottom: 5px;
+  padding-bottom: 1px;
 }
 
 .detailsForm {
@@ -1935,7 +1935,7 @@ h3.leftSectionHeader {
   color: #305671;
   font-weight: 400;
   float: left;
-  padding-top: 16px;
+  padding-top: 22px;
 }
 
 .detailsForm .formControl {
@@ -1943,12 +1943,12 @@ h3.leftSectionHeader {
 }
 
 .holidayListHeader.passwordSection {
-  margin-top: 30px;
+  margin-top: 45px;
 }
 
 .detailsForm .formControl .saveNnewBtn {
   width: 82px;
-  margin-top: 16px;
+  margin-top: 30px;
 }
 
 .userListHead.detailsPage {

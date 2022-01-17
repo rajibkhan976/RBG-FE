@@ -6,7 +6,7 @@ import arrowRightWhite from "../../../assets/images/arrowRightWhite.svg";
 
 
 
-function ImportContact(props) {
+function ImportFilter(props) {
     const closeModal = () => {
         props.hideModal();
     }
@@ -31,13 +31,13 @@ function ImportContact(props) {
                                         <div className="formField w-50 appflex">
                                             <label>From</label>
                                             <div className="inFormField">
-                                                <input type="text" placeholder="dd/mm/yyyy" name="" />
+                                                <input type="date" placeholder="dd/mm/yyyy" name="" />
                                             </div>
                                         </div>
                                         <div className="formField w-50 appflex">
                                             <label>To</label>
                                             <div className="inFormField">
-                                                <input type="text" placeholder="dd/mm/yyyy" name="" />
+                                                <input type="date" placeholder="dd/mm/yyyy" name="" />
                                             </div>
                                         </div>
 
@@ -63,7 +63,7 @@ function ImportContact(props) {
                                             </select>
                                         </div>
                                         <div className="formField w-100 appModals formControl">
-                                            <label>Timezone</label>
+                                            <label>Search</label>
                                             <input type="text" placeholder="Scheduled" name="" />
                                            
                                         </div>
@@ -96,4 +96,4 @@ function ImportContact(props) {
     );
 }
 
-export default ImportContact;
+export default ImportFilter;

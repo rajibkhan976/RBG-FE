@@ -121,16 +121,16 @@ const PersonalDetails = (props) => {
               <div className="detailsForm">
                 <form>
                   <div class="formControl">
-                    <label>Timezone</label>
-                   <input type="text" placeholder="Eg. Republic Day" name="" />
+                    <label>Current Password</label>
+                   <input type="text" name="" />
                   </div>
                   <div class="formControl">
-                    <label>Country</label>
-                    <input type="text" placeholder="Eg. Republic Day" name="" />
+                    <label>New Password</label>
+                    <input type="text" name="" />
                   </div>
                   <div class="formControl">
-                    <label>Default Number</label>
-                    <input type="text" placeholder="Eg. Republic Day" name="" />
+                    <label>Confirm New Password</label>
+                    <input type="text" name="" />
                   </div>
                   <div class="formControl">
                   <button type="submit" className="saveNnewBtn"><span>Save</span><img src={arrowRightWhite} alt="" /></button>

@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import ContactListing from "./ContactListing";
 
-import ImportContact from "./importContact";
+import ImportFilter from "./importFilter";
 
 const Appointment = () => {
   document.title = "Red Belt Gym - Contacts";
@@ -17,7 +17,7 @@ const Appointment = () => {
     <>
       <ContactListing openModal={() => {openModal()}} modalStatus={isModal}/>
         { isModal &&
-            <ImportContact hideModal={() => {hideModal()}} />
+            <ImportFilter hideModal={() => {hideModal()}} />
         }
     </>
     );
