@@ -8702,8 +8702,9 @@ li.listHeading > div.sortOff:after {
   border: none;
   width: 65px;
 }
-/* .common_blue_button:disabled {
-  filter: blur(1px);
+.common_blue_button:disabled {
+  /* filter: blur(1px); */
+  background-color: #ddd;
   cursor: no-drop;
 } */
 .showing_gym_data .gymName .logo_profile {
