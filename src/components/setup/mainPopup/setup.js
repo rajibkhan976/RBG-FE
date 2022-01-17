@@ -25,7 +25,10 @@ const Setup = (props) => {
                   <img src={SetupIcon1} alt="" />
                 </i>
                 <div>
-                  <h3>Personal Details</h3>
+                  <h3>
+                    <NavLink
+                      to="/personal-details"onClick={(e) => props.clickedLink(e)}> Personal Details
+                    </NavLink></h3>
                   <p>Manage your personal details</p>
                 </div>
               </div>
@@ -38,10 +41,7 @@ const Setup = (props) => {
                 <div>
                   <h3>
                   <NavLink
-                      to="/gym-details"
-                      onClick={(e) => props.clickedLink(e)}
-                    >
-                       Gym Details
+                      to="/gym-details"onClick={(e) => props.clickedLink(e)}> Gym Details
                     </NavLink>
                    </h3>
                   <p>Manage your Gym details</p>

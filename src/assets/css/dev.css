@@ -1799,3 +1799,272 @@
     margin-right: 5px;
   }
 }
+
+
+
+/* Kallol Css 10.01.2022 */
+
+/* Personal Details Page */
+
+
+.gymDetails.personalPage {
+  padding-left: 0;
+}
+
+.gymDetails.personalPage .gymdetails_left {
+  padding-top: 40px;
+}
+
+img.profileImage {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+
+
+.gymDetails.personalPage .gymdetails_left .showing_gym_data {
+  padding-left: 20px;
+}
+
+.gymDetails.personalPage .gymdetails_left .showing_gym_data .gymName {
+  padding-bottom: 30px;
+  border-bottom: 1px solid #D3D9DE;
+  margin-bottom: 20px;
+  padding-right: 15px;
+}
+
+
+.gymDetails.personalPage .gymdetails_left .showing_gym_data .gymInfo.full {
+  margin:10px 0 0px 0;
+  float: left;
+}
+
+.gymDetails.personalPage .gymdetails_left .showing_gym_data .gymInfo.full.d-flex {
+  align-items: center;
+}
+
+.gymDetails.personalPage .gymdetails_left .showing_gym_data .gymInfo.full:last-child { 
+  padding-bottom: 30px;
+  border-bottom: 1px solid #D3D9DE;
+  margin-top: 15px;
+}
+
+.gymInfo.half.textRight {
+  text-align: right;
+  padding-right: 15px;
+}
+
+
+.gymDetails.personalPage .gymdetails_left .showing_gym_data .gymName .profilePicture span {
+  font-size: 16px;
+  color: #305671;
+
+}
+
+.gymDetails.personalPage .gymdetails_left .showing_gym_data .gymInfo .textType1 {
+  color: #305671;
+  width: 45px;
+  float: left;
+  margin-right: 10px;
+}
+
+.gymDetails.personalPage .gymdetails_left .showing_gym_data .gymInfo .textType1 span {
+  float: right;
+}
+
+
+.gymDetails.personalPage .gymdetails_left .showing_gym_data .gymInfo .textType4 {
+  float: left;
+  line-height: 5px;
+  font-size: 13px;
+}
+
+
+.gymDetails.personalPage .gymdetails_left .showing_gym_data .gymInfo .textType3 {
+  width: calc(100% - 45px);
+  float: left;
+  line-height: 5px;
+  font-size: 13px;
+}
+
+
+span.profileImgSection {
+  width: 64px!important;
+  padding: 0!important;
+}
+
+span.profileImgSection span {
+  padding-left: 0!important;
+  padding-top: 5px;
+  width: 100%!important;
+  font-size: 13px!important;
+  text-align: center;
+  cursor: pointer;
+  color: #55BBC9!important;
+  float: left;
+  width: 100%;
+}
+
+span.profileName {
+  margin-top: -20px;
+}
+
+
+h3.leftSectionHeader {
+  font-weight: 500;
+  color: #305671;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  margin-bottom: 25px;
+}
+
+
+.gymDetails.personalPage .gymdetails_right .holidayListHeader h3 {
+  line-height: 1;
+}
+.gymDetails.personalPage .gymdetails_right .holidayListHeader {
+  padding-bottom: 1px;
+}
+
+.detailsForm {
+  width: 100%;
+  padding: 0;
+}
+
+.detailsForm .formControl label {
+  color: #305671;
+  font-weight: 400;
+  float: left;
+  padding-top: 22px;
+}
+
+.detailsForm .formControl {
+  position: relative;
+}
+
+.holidayListHeader.passwordSection {
+  margin-top: 45px;
+}
+
+.detailsForm .formControl .saveNnewBtn {
+  width: 82px;
+  margin-top: 30px;
+}
+
+.userListHead.detailsPage {
+  margin-bottom: 27px;
+}
+
+
+/*Customize scrollbar start*/
+
+.gymDetails.personalPage::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  transition: all 0.3s ease 0s;
+}
+
+.gymDetails.personalPage::-webkit-scrollbar-track {
+  background-color: #dce4eb;
+}
+
+.gymDetails.personalPage::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
+}
+
+/*Customize scrollbar end*/
+
+
+/*Appointment Page css*/
+
+.searchBar.appointments.formControl {
+    width: 120px;
+    border: none;
+    position: relative;
+}
+
+.searchBar.appointments.formControl select {
+    margin: 0;
+    background-color: #fff;
+    padding-left: 32px
+}
+
+button.saveNnewBtn.appExport.expContactBtn {
+    width: 92px;
+    margin-left: 5px;
+}
+
+button.saveNnewBtn.appFilter.expContactBtn {
+    margin-left: 20px;
+    width: 82px;
+}
+
+.importModalBody .infoInputs.appModal {
+  margin-top: 5px;
+}
+
+p.dateRange {
+    color: #305671;
+    font-size: 13px;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+.formField.w-50.appflex {
+    display: flex;
+    align-items: center;
+} 
+
+.formField.w-50.appflex label {
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+.blockLi {
+  display: block!important;
+}
+
+.formField.w-100.appModals.formControl:last-child {
+  margin-bottom: 90px;
+}
+
+span.clearFilter {
+    cursor: pointer;
+    margin-left: auto;
+    margin-top: 5px;
+    color: #55BBC9;
+    font-size: 13px;
+    border-bottom: 1px dotted;
+}
+
+.contactListingTable .tableListing.appointment li:first-child > div:first-child {
+    padding-left: 15px;
+}
+
+li.listHeading.appointment > div:after {
+  background-image: none!important;
+}
+
+.dataTableCell.email {
+    width: 490px;
+}
+
+.dataTableCell.count .btn {
+    color: #0099FF;
+    cursor: pointer;
+    padding-left: 5px;
+}
+
+button.saveNnewBtn.appExport.expContactBtn img {
+  transform: rotate(180deg);
+    margin-top: 2px;
+}
+
+img.monthIcons {
+    position: absolute;
+    left: 8px;
+    top: 11px;
+}
+button.saveNnewBtn.appFilter.expContactBtn {
+    background: #FFF!important;
+}
