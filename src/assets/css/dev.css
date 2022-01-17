@@ -1956,6 +1956,25 @@ h3.leftSectionHeader {
 }
 
 
+/*Customize scrollbar start*/
+
+.gymDetails.personalPage::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+  transition: all 0.3s ease 0s;
+}
+
+.gymDetails.personalPage::-webkit-scrollbar-track {
+  background-color: #dce4eb;
+}
+
+.gymDetails.personalPage::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
+}
+
+/*Customize scrollbar end*/
+
+
 /*Appointment Page css*/
 
 .searchBar.appointments.formControl {
