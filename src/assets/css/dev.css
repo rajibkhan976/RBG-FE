@@ -1978,8 +1978,9 @@ h3.leftSectionHeader {
 /*Appointment Page css*/
 
 .searchBar.appointments.formControl {
-    width: 117px;
+    width: 120px;
     border: none;
+    position: relative;
 }
 
 .searchBar.appointments.formControl select {
@@ -2052,4 +2053,18 @@ li.listHeading.appointment > div:after {
     color: #0099FF;
     cursor: pointer;
     padding-left: 5px;
+}
+
+button.saveNnewBtn.appExport.expContactBtn img {
+  transform: rotate(180deg);
+    margin-top: 2px;
+}
+
+img.monthIcons {
+    position: absolute;
+    left: 8px;
+    top: 11px;
+}
+button.saveNnewBtn.appFilter.expContactBtn {
+    background: #FFF!important;
 }

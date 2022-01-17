@@ -2,6 +2,7 @@ import React from "react";
 import download_icon from "../../../src/assets/images/download_icon.svg";
 import uparrow_icon_grey from "../../../src/assets/images/uparrow_icon_grey.svg";
 import arrowDown from "../../assets/images/arrowDown.svg";
+import monthIcon from "../../assets/images/month.svg";
 import filter from "../../assets/images/filter.svg";
 
 const ContactHead = (props) => {
@@ -18,6 +19,7 @@ const ContactHead = (props) => {
         </div>
         <div className="listFeatures">
           <div className="searchBar appointments formControl">
+           <img className="monthIcons" src={monthIcon} alt="" /> 
             <select
               style={{
                   backgroundImage: "url(" + arrowDown + ")",
