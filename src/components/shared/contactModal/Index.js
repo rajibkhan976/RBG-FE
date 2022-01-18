@@ -6,6 +6,7 @@ import TransactionChoose from "./pages/TransactionChoose";
 import Loader from "../Loader";
 import Billing from "./pages/Billing";
 import Dependents from "./pages/Dependents";
+import Appointment from "./pages/Appointment";
 import { Step, Steps, NavigationComponentProps } from "react-step-builder";
 import { useDispatch } from "react-redux";
 import * as actionTypes from "../../../actions/types";
@@ -33,13 +34,15 @@ const ContactModal = (props) => {
             <div>
                 <button className={navigation.current == 1 ? "active nNav" : "nNav"} onClick={() => navigation.jump(1)}>Overview</button>
                 <button className={navigation.current == 2 ? "active nNav" : "nNav"} onClick={() => navigation.jump(2)} disabled={props.contactId ? false : true}>Attendance</button>
-                <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)} disabled={props.contactId ? false : true}>
+                <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)} disabled={props.contactId ? false : true}>Appointment</button>
+                <button className={navigation.current == 4 ? "active nNav" : "nNav"} onClick={() => navigation.jump(4)} disabled={props.contactId ? false : true}>
                     Transaction
                 </button>
-                <button className={navigation.current == 4 ? "active nNav" : "nNav"} onClick={() => navigation.jump(4)} disabled={props.contactId ? false : true}>
+                <button className={navigation.current == 5 ? "active nNav" : "nNav"} onClick={() => navigation.jump(5)} disabled={props.contactId ? false : true}>
                     Billing
                 </button>
-                <button className={navigation.current == 5 ? "active nNav" : "nNav"} onClick={() => navigation.jump(5)}>Dependents</button>
+                <button className={navigation.current == 6 ? "active nNav" : "nNav"} onClick={() => navigation.jump(6)}>Dependents</button>
+               
             </div>
         );
     }
@@ -214,10 +217,14 @@ const ContactModal = (props) => {
                                 <img src={note_icon_white} alt="" />
                             </button>
                         </div> */}
+
+
+
                         <Steps config={config}>
                             <Step title="Overview" contact={contactData} component={Overview}
                             getContactDetails={(id) => getContactDetails(id)}  contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
                             <Step title="Attendance" component={Attendance} />
+                            <Step title="Appointment" component={Appointment} contactId={props.contactId} />
                             <Step title="Transaction"
                             contactId={props.contactId}
                             backToTransList={backToTransListHandler}

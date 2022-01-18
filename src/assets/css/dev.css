@@ -2068,3 +2068,17 @@ img.monthIcons {
 button.saveNnewBtn.appFilter.expContactBtn {
     background: #FFF!important;
 }
+
+
+/* Appointment Tab in contact page listing Modal */
+
+
+.noDataFound.appointmentTab {
+  width: 100%;
+  margin-top: 188px;
+}
+
+/* .modalForm.appointmentForm {
+  height: auto!important;
+  overflow: visible!important;
+} */
