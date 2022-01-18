@@ -16,6 +16,7 @@ import Scrollbars from "react-custom-scrollbars-2";
 const Dependents = (props) => {
   const [isLoader, setIsLoader] = useState(false);
   const [phoneCountryCode, setPhoneCountryCode] = useState([]);
+  const [addManually, setAddManually] = useState(false)
   const [dependentList, setDependentList] = useState([
     {
       name: "Santanu Singha",
@@ -56,13 +57,13 @@ const Dependents = (props) => {
   };
 
   const toggleContactListFn = (e) => {
-    e.preventDefault();
+    e.preventDefault();;
 
     let contactListOp = toggleContactList;
 
     setToggleContactList({
       ...toggleContactList,
-      status: !toggleContactList.status,
+      status: e.target.value.trim() === "" ? false : true,
     });
   };
 
@@ -189,14 +190,16 @@ const Dependents = (props) => {
                   <div className="cmnFormRow">
                     <div className="cmnFieldName d-flex f-justify-between">
                       Name
+                      {addManually && 
                       <button
                         className="inlinle-btn"
-                        onClick={(e) => toggleContactListFn(e)}
+                        onClick={(e)=>{
+                          e.preventDefault()
+                          setAddManually(false)
+                        }}
                       >
-                        {toggleContactList.status
-                          ? "Close Contact list"
-                          : "Select from Contacts"}
-                      </button>
+                        Select from Contacts
+                      </button>}
                     </div>
                     <div
                       className={
@@ -209,56 +212,66 @@ const Dependents = (props) => {
                         className="cmnFieldStyle"
                         type="text"
                         placeholder="Eg. Steve Martyns"
+                        onChange={(e)=>toggleContactListFn(e)}
                         style={{
                           backgroundImage: toggleContactList.status
                             ? `url(${updown})`
                             : "",
                         }}
                       />
-                      <span className="errorMsg">Please provide name.</span>
+                      {/* <span className="errorMsg">Please provide name.</span> */}
                       {toggleContactList.status && (
                         <>
                           <div className="contactListItems">
                             <ul>
                               <li>Abhisek Bose1</li>
                             </ul>
-                            <button className="btn">+ Add Manually</button>
+                            <button 
+                              className="btn"
+                              onClick={(e)=>{
+                                e.preventDefault()
+                                setAddManually(true)
+                                toggleContactListFn(e)
+                              }}
+                            >+ Add Manually</button>
                           </div>
                         </>
                       )}
                     </div>
                   </div>
-                  <div className="cmnFormRow">
-                    <div className="cmnFormCol">
-                      <div className="cmnFieldName">Birthday</div>
-                      <div className="cmnFormField">
-                        <input
-                          className="cmnFieldStyle"
-                          type="date"
-                          placeholder="dd/mm/yyyy"
-                        />
+                  {addManually &&
+                    <div className="cmnFormRow">
+                      <div className="cmnFormCol">
+                        <div className="cmnFieldName">Birthday</div>
+                        <div className="cmnFormField">
+                          <input
+                            className="cmnFieldStyle"
+                            type="date"
+                            placeholder="dd/mm/yyyy"
+                          />
+                        </div>
+                      </div>
+                      <div className="cmnFormCol">
+                        <div className="cmnFieldName">Gender</div>
+                        <div className="cmnFormField radioGroup">
+                          <label className="cmnFormRadioLable">
+                            <div className="circleRadio">
+                              <input type="radio" name="gender-dep" />
+                              <span></span>
+                            </div>
+                            Male
+                          </label>
+                          <label className="cmnFormRadioLable">
+                            <div className="circleRadio">
+                              <input type="radio" name="gender-dep" />
+                              <span></span>
+                            </div>
+                            Female
+                          </label>
+                        </div>
                       </div>
                     </div>
-                    <div className="cmnFormCol">
-                      <div className="cmnFieldName">Gender</div>
-                      <div className="cmnFormField radioGroup">
-                        <label className="cmnFormRadioLable">
-                          <div className="circleRadio">
-                            <input type="radio" name="gender-dep" />
-                            <span></span>
-                          </div>
-                          Male
-                        </label>
-                        <label className="cmnFormRadioLable">
-                          <div className="circleRadio">
-                            <input type="radio" name="gender-dep" />
-                            <span></span>
-                          </div>
-                          Female
-                        </label>
-                      </div>
-                    </div>
-                  </div>
+                  }
                   <div className="inFormFieldHeader d-flex w-100 f-align-center f-justify-between">
                     <h5>Communication</h5>
                     <label

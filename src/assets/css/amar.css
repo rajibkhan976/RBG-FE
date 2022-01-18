@@ -145,6 +145,7 @@
 .inFormFieldHeader {
   position: relative;
   margin-bottom: 20px;
+  margin-top: 20px;
 }
 .inFormFieldHeader label {
   margin-top: 0;
