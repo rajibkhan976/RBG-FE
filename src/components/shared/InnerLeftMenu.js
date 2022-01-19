@@ -297,8 +297,16 @@ const InnerLeftMenu = (props) => {
                     </button>
                   </div>
                   <ul className="sideSubMenu">
-                    <li><a href="#">Email</a></li>
-                    <li><a href="#">SMS</a></li>
+                    <li>
+                      <NavLink to="/email-setup" activeClassName="active">
+                        Email
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/sms-setup" activeClassName="active">
+                        SMS
+                      </NavLink>
+                    </li>
                     <li>
                       <NavLink to="/call-setup" activeClassName="active">
                         Call
@@ -354,8 +362,16 @@ const InnerLeftMenu = (props) => {
                     </button>
                   </div>
                   <ul className="sideSubMenu">
-                    <li><a href="#">Email</a></li>
-                    <li><a href="#">SMS</a></li>
+                    <li>
+                      <NavLink to="/email-template" activeClassName="active">
+                         Email
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/sms-template" activeClassName="active">
+                         SMS
+                      </NavLink>
+                    </li>
                     <li>
                       <NavLink to="/audio-template" activeClassName="active">
                         Audio

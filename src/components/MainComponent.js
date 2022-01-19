@@ -196,9 +196,10 @@ const MainComponent = () => {
               <Route exact path={["/call-setup", "/sms-setup", "/email-setup"]}>
                 <CommunicationRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></CommunicationRoutes>
               </Route>
-              <Route exact path={["/audio-template"]}>
+              <Route exact path={["/email-template","/sms-template","/audio-template"]}>
                 <TemplateRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></TemplateRoutes>
               </Route>
+              
               <Route exact path="/products">
                 <ProductRouter toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></ProductRouter>
               </Route>

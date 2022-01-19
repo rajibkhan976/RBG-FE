@@ -8775,3 +8775,104 @@ li.listHeading > div.sortOff:after {
   display: flex;
   align-items: center;
 }
+
+.inDashboardHeader.lighter{
+  font-weight: 400;
+}
+.setupRightPart {
+  width: calc(100% - 470px);
+  background: #E9EFF5;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  padding: 60px 69px;
+  overflow: auto;
+}
+
+.tabsection{
+  width: 100%;
+  margin-top: 20px;
+}
+.tabsectio .tabBtnGroup{
+  width: 100%;
+  margin: 0 0;
+}
+.tabsection .tabBtnGroup li{
+  display: inline-block;
+  padding-right: 10px;
+}
+
+.tabsection .tabBtnGroup li button{ 
+  background: #fff;
+  padding: 16px 30px 10px 30px;
+  height: 40px;
+  border-radius: 10px 10px 0 0;
+  color: #9BAEBC;
+  font-size: 13px;
+  border: none;
+}
+.tabsection .tabBtnGroup li button.active{ 
+  color: var(--darkBlue);
+  font-weight: 500;
+}
+.tabsection .tabContent{
+  background: #fff;
+  border-radius: 0px 20px 20px 10px;
+  min-height: 300px;
+  padding: 30px;
+  max-height: 625px;
+  overflow: auto;
+}
+.tabsection .tabContent::-webkit-scrollbar {
+  width: 5px;
+}
+
+.tabsection .tabContent::-webkit-scrollbar-track {
+  background-color: #ebebeb;
+}
+
+.tabsection .tabContent::-webkit-scrollbar-thumb {
+  background-color: #9baebc;
+}
+.configSideList h3{
+  font-size: 13px;
+  font-weight: 400;
+  color: #9BAEBC;
+  padding: 10px 0; 
+}
+.configSideList ul{
+  width: 100%;
+  padding: 10px 0; 
+}
+.configSideList li{
+  width: 100%;
+  padding: 20px 10px 20px 0; 
+  display: flex;
+  align-content: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #D3D9DE;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--darkBlue);
+}
+
+.configSideList .toggleBtn{
+  margin-top: 0;
+}
+.cmnFieldName1 {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+.tabContent h3{
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--darkBlue);
+  line-height: 30px;
+  padding-bottom: 20px;
+}
+
+.mt-2{
+  margin-top: 40px;
+}
