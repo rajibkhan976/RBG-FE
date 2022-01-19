@@ -2082,3 +2082,85 @@ button.saveNnewBtn.appFilter.expContactBtn {
   height: auto!important;
   overflow: visible!important;
 } */
+
+
+span.inputTagArea {
+    width: 100%;
+    float: left;
+    position: relative;
+}
+
+input.cmnFieldStyle.createAppointment {
+  width: calc(100% - 41px);
+  float: left;
+  border-right: none;
+  border-radius: 5px 0 0 5px;
+}
+.tagSection {
+  background: #E7EAED;
+  border:1px solid #d3d9de;
+  border-radius: 0 5px 5px 0;
+  height: 40px;
+  width: 41px;
+  float: right;
+  cursor: pointer;
+}
+
+.tagSection img {
+  padding: 11px 12px;
+}
+
+span.tagLists {
+    width: 208px;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background:#E7EAED;
+    border-radius: 0 5px 5px 5px;
+    border:1px solid #d3d9de;
+    border-top: none;
+    z-index: 9;
+}
+span.tagLists ul li {
+  color: #305671;
+  font-size: 13px;
+  margin: 0px 10px 0 0;
+  cursor: pointer;
+  width: 100%;
+}
+span.tagLists ul li span {
+  float:right;
+}
+
+.cmnFormColquater {
+    width: calc(25% - 1px);
+    float: left;
+    margin-left: 7px;
+}
+
+.indTags {
+  background: #9BAEBC;
+  padding: 8px 10px 6px 10px;
+  border-radius: 5px;
+  margin: 8px 8px 2px 0;
+  color: #fff;
+  font-size: 13px;
+  float: left;
+  width: auto;
+}
+.indTags span.closeTag {
+  float: right;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.tagLi.sellected {
+  background:#9BAEBC;
+}
+
+.tagLi {
+  padding: 5px 15px;
+}
+span.tagLists ul li:hover {
+  background:#9BAEBC;
+}

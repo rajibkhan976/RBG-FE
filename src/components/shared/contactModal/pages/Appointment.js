@@ -8,6 +8,9 @@ import updown from "../../../../assets/images/updown.png";
 import icon_trans from "../../../../assets/images/icon_trans.svg";
 import icon_dependent from "../../../../assets/images/dependent.svg";
 import appointmentImg from "../../../../assets/images/appointments.svg";
+import tags from "../../../../assets/images/tags.svg";
+import crossWhite from "../../../../assets/images/cross_w.svg";
+import successApp from "../../../../assets/images/successApp.svg";
 import dot3gray from "../../../../assets/images/dot3gray.svg";
 import cross from "../../../../assets/images/cross.svg";
 import setupIcon from "../../../../assets/images/setupicon8.svg";
@@ -23,6 +26,11 @@ const Appointment = (props) => {
   const [toggleContactList, setToggleContactList] = useState({
     status: false,
     listContent: [],
+  });
+
+  const [toggleTagList, setToggleTagList] = useState({
+    status: false,
+    listTagContent: [],
   });
 
   const fetchCountry = async () => {
@@ -44,6 +52,20 @@ const Appointment = (props) => {
       status: !toggleContactList.status,
     });
   };
+
+
+
+const toggleTagListFn = (e) => {
+    e.preventDefault();
+
+    let contactTagOp = toggleTagList;
+
+    setToggleTagList({
+      ...toggleTagList,
+      status: !toggleTagList.status,
+    });
+  };
+
 
   const closeModal = () => {
     setAddDependentModal(false);
@@ -89,23 +111,16 @@ const Appointment = (props) => {
               <h3>Set an Appointment</h3>
             </div>
             <div className="modalForm appointmentForm">
-              {/* <Scrollbars
+               <Scrollbars
                 renderThumbVertical={(props) => (
                   <div className="thumb-vertical" />
                 )}
-              > */}
+              > 
                 <form method="post">
                   <div className="cmnFormRow">
                     <div className="cmnFieldName d-flex f-justify-between">
-                      Name
-                      <button
-                        className="inlinle-btn"
-                        onClick={(e) => toggleContactListFn(e)}
-                      >
-                        {toggleContactList.status
-                          ? "Close Contact list"
-                          : "Select from Contacts"}
-                      </button>
+                      Agenda
+                      
                     </div>
                     <div
                       className={
@@ -114,32 +129,39 @@ const Appointment = (props) => {
                           : "cmnFormField"
                       }
                     >
-                      <input
-                        className="cmnFieldStyle"
-                        type="text"
-                        placeholder="Eg. Steve Martyns"
-                        style={{
-                          backgroundImage: toggleContactList.status
-                            ? `url(${updown})`
-                            : "",
-                        }}
-                      />
-                      <span className="errorMsg">Please provide name.</span>
+
+                    <span className="inputTagArea">
+                      <input className="cmnFieldStyle createAppointment" type="text" placeholder="Eg. Martial Art Course Demo"/>
+                      <span className="tagSection" onClick={(e) => toggleContactListFn(e)} ><img src={tags} alt="" /></span>
                       {toggleContactList.status && (
-                        <>
-                          <div className="contactListItems">
-                            <ul>
-                              <li>Abhisek Bose1</li>
-                            </ul>
-                            <button className="btn">+ Add Manually</button>
-                          </div>
-                        </>
+                      	<>
+                      <span className="tagLists">
+                      	<ul className="">
+                      		<li className={
+                        toggleTagList.status
+                          ? "tagLi sellected"
+                          : "tagLi"
+                      } onClick={(e) => toggleTagListFn(e)}>Demonstration <span>+</span></li>
+                      		<li className="tagLi">New Prospect <span>+</span></li>
+							<li className="tagLi">Hot Lead <span>+</span></li>
+							<li className="tagLi">Closing Stage <span>+</span></li>
+							<li className="tagLi">Gym Member <span>+</span></li>
+							<li className="tagLi">Interested in Jiu Jitsu <span>+</span></li>
+                      	</ul>
+                      </span>
+                      </>
                       )}
+                      </span>
+					{toggleTagList.status && (
+                      	<>
+                      <span className="indTags">Hot Leads <span className="closeTag" onClick={(e) => toggleTagListFn(e)}><img src={crossWhite} alt="" /></span></span>
+                     </>
+                      )}  
                     </div>
                   </div>
                   <div className="cmnFormRow">
                     <div className="cmnFormCol">
-                      <div className="cmnFieldName">Birthday</div>
+                      <div className="cmnFieldName">Choose a date</div>
                       <div className="cmnFormField">
                         <input
                           className="cmnFieldStyle"
@@ -148,45 +170,33 @@ const Appointment = (props) => {
                         />
                       </div>
                     </div>
-                    <div className="cmnFormCol">
-                      <div className="cmnFieldName">Gender</div>
-                      <div className="cmnFormField radioGroup">
-                        <label className="cmnFormRadioLable">
-                          <div className="circleRadio">
-                            <input type="radio" name="gender-dep" />
-                            <span></span>
-                          </div>
-                          Male
-                        </label>
-                        <label className="cmnFormRadioLable">
-                          <div className="circleRadio">
-                            <input type="radio" name="gender-dep" />
-                            <span></span>
-                          </div>
-                          Female
-                        </label>
-                      </div>
+                    <div className="cmnFormColquater">
+                      <div className="cmnFieldName">From</div>
+	                      <div className="cmnFormField">
+	                        <input
+	                          className="cmnFieldStyle"
+	                          type="time"
+	                          placeholder="Select"/>
+	                      </div>
+                    </div>
+                    <div className="cmnFormColquater">
+                      <div className="cmnFieldName">To</div>
+	                      <div className="cmnFormField">
+	                        <input
+	                          className="cmnFieldStyle"
+	                          type="time"
+	                          placeholder="Select"/>
+	                      </div>
                     </div>
                   </div>
-                  <div className="inFormFieldHeader d-flex w-100 f-align-center f-justify-between">
-                    <h5>Communication</h5>
-                    <label
-                      className={
-                        communication ? "toggleBtn active" : "toggleBtn"
-                      }
-                    >
-                      <input
-                        type="checkbox"
-                        name="check-communication"
-                        onChange={(e) =>
-                          e.target.checked
-                            ? setCommunication(true)
-                            : setCommunication(false)
-                        }
-                      />
-                      <span className="toggler"></span>
-                    </label>
+
+                   <div className="modalbtnHolder w-100">
+                    <button className="saveDependent saveNnewBtn">
+                      Set Appointment <img src={arrow_forward} alt="" />
+                    </button>
                   </div>
+
+                 
                   {communication && (
                     <>
                       <div className="cmnFormRow">
@@ -232,23 +242,11 @@ const Appointment = (props) => {
                     </>
                   )}
 
-                  <div className="cmnFormRow noteForm checkDNC">
-                    <label>
-                      <div className="customCheckbox">
-                        <input type="checkbox" name="" id="" />
-                        <span></span>
-                      </div>
-                      Activate DNC (Do Not Contact) for this dependent
-                    </label>
-                  </div>
+                  
 
-                  <div className="modalbtnHolder w-100">
-                    <button className="saveDependent saveNnewBtn">
-                      Add Appointment <img src={arrow_forward} alt="" />
-                    </button>
-                  </div>
+                 
                 </form>
-              {/* </Scrollbars> */}
+               </Scrollbars> 
             </div>
           </div>
         </div>
