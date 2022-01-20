@@ -33,6 +33,11 @@ const Appointment = (props) => {
     listTagContent: [],
   });
 
+  const [toggleTagSuccess, setToggleTagSuccess] = useState({
+    status: false,
+    listTagSuccess: [],
+  });
+
   const fetchCountry = async () => {
     let conntryResponse = await ContactService.fetchCountry();
     setPhoneCountryCode(conntryResponse);
@@ -63,6 +68,18 @@ const toggleTagListFn = (e) => {
     setToggleTagList({
       ...toggleTagList,
       status: !toggleTagList.status,
+    });
+  };
+
+
+  const toggleTagSuccessFn = (e) => {
+    e.preventDefault();
+
+    let contactTagSuccessOp = toggleTagSuccess;
+
+    setToggleTagSuccess({
+      ...toggleTagSuccess,
+      status: !toggleTagSuccess.status,
     });
   };
 
@@ -101,22 +118,37 @@ const toggleTagListFn = (e) => {
         <div className="modalDependent modalBackdrop">
           {isLoader ? <Loader /> : ""}
           <div className="slickModalBody">
-            <div className="slickModalHeader">
-              <button className="topCross" onClick={() => closeModal(false)}>
-                <img src={cross} alt="" />
-              </button>
-              <div className="circleForIcon">
-                <img src={appointmentImg} alt="" />
-              </div>
-              <h3>Set an Appointment</h3>
-            </div>
-            <div className="modalForm appointmentForm">
+
+
+          
+            
+            <div className={
+                        toggleTagSuccess.status
+                          ? "modalForm appointmentForm setappointment successApp"
+                          : "modalForm appointmentForm setappointment"
+                      }
+                      >
                <Scrollbars
                 renderThumbVertical={(props) => (
-                  <div className="thumb-vertical" />
+                  <div className="thumb-vertical appModalScroll" />
                 )}
               > 
-                <form method="post">
+                <form method="post" className={
+                        toggleTagSuccess.status
+                          ? "dsiplay none"
+                          : "dsiplay"
+                      }
+                    >
+                    <div className="slickModalHeader">
+		              <button className="topCross setApp" onClick={() => closeModal(false)}>
+		                <img src={cross} alt="" />
+		              </button>
+		              <div className="circleForIcon">
+		                <img src={appointmentImg} alt="" />
+		              </div>
+		              <h3>Set an Appointment</h3>
+		            </div>
+
                   <div className="cmnFormRow">
                     <div className="cmnFieldName d-flex f-justify-between">
                       Agenda
@@ -191,61 +223,42 @@ const toggleTagListFn = (e) => {
                   </div>
 
                    <div className="modalbtnHolder w-100">
-                    <button className="saveDependent saveNnewBtn">
+                    <button onClick={(e) => toggleTagSuccessFn(e)} className="saveDependent saveNnewBtn">
                       Set Appointment <img src={arrow_forward} alt="" />
                     </button>
                   </div>
+</form>
+
+
+<div>
+
+                    </div>
+
+
+
+
+                    {toggleTagSuccess.status && (
+                      	<>
+	                      <div className="slickModalHeader appSuccess">
+				              <button className="topCross setApp" onClick={() => closeModal(false)}>
+				                <img src={cross} alt="" />
+				              </button>
+				              <div className="circleForIcon">
+				                <img src={successApp} alt="" />
+				              </div>
+				              <h3 className="appSuccessH">Great</h3>
+				              <p className="appSuccessP">Appointment created successfully</p>
+			              </div>
+	                    </>
+                    )}  
 
                  
-                  {communication && (
-                    <>
-                      <div className="cmnFormRow">
-                        <div className="cmnFieldName">Enter Phone No</div>
-                        <div className="cmnFormField countryCodeField">
-                          <div className="countryCode cmnFieldStyle">
-                            <div className="countryName">USA</div>
-                            <div className="daileCode">+1</div>
-                            <select className="selectCountry">
-                              {phoneCountryCode.length > 0 &&
-                                phoneCountryCode.map((country, cIndex) => (
-                                  <option
-                                    value={
-                                      country.code +
-                                      "_" +
-                                      country.prefix.replace("+", "")
-                                    }
-                                    key={"cnt-" + cIndex}
-                                  >
-                                    {country.code} ({country.prefix})
-                                  </option>
-                                ))}
-                            </select>
-                          </div>
-                          <input
-                            type="text"
-                            className="cmnFieldStyle"
-                            placeholder="Eg. 5143654785"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="cmnFormRow">
-                        <div className="cmnFieldName">Enter Email Address</div>
-                        <div className="cmnFormField">
-                          <input
-                            placeholder="Eg. jon.doe@gmail.com"
-                            className="cmnFieldStyle"
-                            type="email"
-                          />
-                        </div>
-                      </div>
-                    </>
-                  )}
+                  
 
                   
 
                  
-                </form>
+                
                </Scrollbars> 
             </div>
           </div>

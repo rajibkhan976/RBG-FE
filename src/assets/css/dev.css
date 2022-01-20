@@ -2164,3 +2164,28 @@ span.tagLists ul li span {
 span.tagLists ul li:hover {
   background:#9BAEBC;
 }
+
+form.dsiplay.none {
+  display: none;
+}
+
+.modalDependent .modalForm.appointmentForm.setappointment {
+    max-height: 550px;
+        min-height: 440px;
+}
+
+.topCross.setApp {
+  right: -6px;
+    top: 2px;
+    z-index: 9;
+}
+
+.modalForm.appointmentForm.setappointment.successApp {
+      max-height: 194px;
+    overflow: hidden;
+        min-height: 194px!important;
+}
+
+.slickModalHeader.appSuccess {
+  overflow: hidden;
+}
