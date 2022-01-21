@@ -248,15 +248,18 @@
 .contactListItems li + li {
   margin-top: 12px;
 }
-.contactListItems ul::-webkit-scrollbar {
+.contactListItems ul::-webkit-scrollbar,
+.userListBody.smsListing .listBody::-webkit-scrollbar {
   width: 4px;
 }
 
-.contactListItems ul::-webkit-scrollbar-track {
+.contactListItems ul::-webkit-scrollbar-track,
+.userListBody.smsListing .listBody::-webkit-scrollbar-track {
   background-color: #dce4eb;
 }
 
-.contactListItems ul::-webkit-scrollbar-thumb {
+.contactListItems ul::-webkit-scrollbar-thumb,
+.userListBody.smsListing .listBody::-webkit-scrollbar-thumb {
   background-color: #f1a668;
 }
 .cmnFormField.listActive .cmnFieldStyle {
@@ -275,6 +278,10 @@
 .smsListing .tableListing .messageTitle {
   width: 315px;
 }
+.userListBody.smsListing .listBody {
+  overflow: auto;
+}
+
 .smsListing .listBody {
   flex: 1 1 auto;
   max-width: 1077px;
@@ -285,10 +292,13 @@
 .previewSpaceTemplate {
   flex: 0 0 auto;
   margin-left: auto;
+  display: flex;
+    flex-direction: column;
 }
 .templateOuter {
   width: 339px;
-  height: 716px;
+  flex: 1 1 723px;
+  height: 723px;
   border-radius: 30px;
   overflow: hidden;
   background-color: #fff;
@@ -313,4 +323,23 @@
 }
 .templateBody {
   flex: 1 1 auto;
+}
+.smsListing .messageTitle, .smsListing .messageDeet, .smsListing li div > button {
+  font-size: 13px;
+  line-height: 19px;
+  color: #305671;
+}
+.previewSpaceTemplate header {
+  font-size: 13px;
+  line-height: 19px;
+  color: #305671;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+.previewSpaceTemplate figure {
+  margin-right: 15px;
+  width: 22px;
+}
+.smsListing li {
+  cursor: pointer;
 }
