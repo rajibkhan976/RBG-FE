@@ -105,8 +105,7 @@
   display: inline-flex;
   justify-content: center;
 }
-
-.archivedDependent:after {
+/* .archivedDependent:after {
   position: absolute;
   content: "Archived";
   left: 0;
@@ -123,10 +122,10 @@
   line-height: 24px;
   z-index: 1;
   font-weight: normal;
-}
-
+} */
 .dependentsListing .createNew {
   flex-direction: column;
+  text-align: center;
 }
 
 .dependentsListing .createNew p {
@@ -140,6 +139,7 @@
   padding-left: 16px;
   padding-right: 14px;
   width: auto;
+  margin-inline: auto;
 }
 
 .dependentsListing .saveNnewBtn img {
@@ -797,3 +797,197 @@
   padding-right: 0 !important;
 }
 /* Text editor */
+.slickModalHeader .popupMessage p {
+  padding: 5px 0 5px 36px;
+  font-size: 14px;
+  color: #929292;
+}
+.slickModalHeader .popupMessage {
+  position: static;
+  transform: none;
+}
+.slickModalHeader .popupMessage.success {
+  background: #e8ffec;
+  border: 1px solid #c2e4c8;
+}
+.slickModalHeader .popupMessage.success p {
+  color: #48a357;
+  background: url("../images/msg_success_icon.svg") no-repeat left center / 27px
+    auto;
+}
+.slickModalHeader .popupMessage.warning {
+  background: #ffe6c8;
+  border: 1px solid #dcc5aa;
+}
+.slickModalHeader .popupMessage.popupMessage.warning p {
+  color: #c76007;
+  background: url("../images/msg_warning_icon.svg") no-repeat left center / 25px
+    auto;
+}
+
+.slickModalHeader .popupMessage.error {
+  background: #ffe8e8;
+  border: 1px solid #f7c0c0;
+}
+.slickModalHeader .popupMessage.error p {
+  color: #c55757;
+  background: url("../images/msg_error_icon.svg") no-repeat left center / 25px
+    auto;
+}
+
+.cmnFieldStyle.loading {
+  background: url("../images/loading.gif") no-repeat right center;
+}
+
+/* Dependent toggle menu */
+.dependentsListing .row:not(.head):last-child .dropdownOptions {
+  top: auto;
+  bottom: 100%;
+}
+.cmnFormField .crossDependent {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 41px;
+  height: 100%;
+}
+.modalDependent .cmnFormRow:first-child .cmnFieldStyle {
+  padding-right: 45px;
+}
+.modalDependent .selectCountry:disabled {
+  opacity: 0;
+}
+:disabled {
+  opacity: 1;
+  filter: none;
+}
+.modalDependent input[type="date" i]::-webkit-calendar-picker-indicator {
+  visibility: visible !important;
+}
+.dependentsListing {
+  border-spacing: 0 5px;
+}
+.contactModal .innerDrawerMessage {
+  position: absolute;
+  top: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: calc(100% - 30px);
+}
+.cmnFormField .crossDependent:after {
+  position: absolute;
+  content: '';
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 15px;
+  height: 2px;
+  background: var(--darkBlue);
+  opacity: 0;
+  visibility: hidden;
+  transition: all ease-in-out 0.2s;
+}
+.cmnFormField .crossDependent:hover:after {
+  opacity: 1;
+  visibility: visible;
+}
+.cmnFormField .crossDependent:hover img {
+  visibility: hidden;
+  opacity: 0;
+}
+.archivedDependent .cell {
+  position: static !important;
+}
+.archivedDependent .archivedMessage {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  border-radius: 5px;
+  background: rgb(155 174 188 / 95%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 16px;
+  line-height: 24px;
+  z-index: 1;
+  font-weight: normal;
+}
+.buttonsArchived {
+  margin-left: 20px;
+}
+.buttonsArchived .btn {
+  background: #fff;
+  padding: 0 15px;
+  height: 30px;
+  margin-left: 10px;
+  font-size: 13px;
+  color: #305671;
+}
+.buttonsArchived .btn:hover {
+  background: #305671;
+  color: #fff;
+}
+.dndCheckbox {
+  display: inline-flex;
+  vertical-align: middle;
+  margin-left: 5px;
+  height: 22px;
+  align-items: center;
+}
+.dependentsListing .dndCheckbox span {
+  line-height: 100%;
+  order: 3;
+  margin: 0 5px;
+  cursor: pointer;
+}
+.dependentsListing .textCont h4:hover .dndCheckbox span:not(.active) {
+  position: static;
+  opacity: 1;
+}
+.dependentsListing .textCont h4:hover .dndCheckbox:hover span:not(:hover) {
+  opacity: 0.5 !important;
+}
+.dependentsListing .dndCheckbox span.active {
+  order: 2;
+}
+.dependentsListing > .row:not(.archivedDependent) .textCont h4:hover .dndCheckbox {
+  background: #fff;
+  border-radius: 30px;
+}
+.dependentsListing > .row:not(.archivedDependent) .textCont h4:hover .dndCheckbox  span {
+  padding: 2px 3px;
+}
+.dependentsListing .textCont h4 {
+  position: relative;
+}
+.userDependents {
+  margin-bottom: 5px;
+  z-index: 2;
+  position: relative;
+  cursor: pointer;
+}
+.userDependents img {
+  width: 16px;
+  height: auto;
+  margin-right: 14px;
+}
+.userDependents span {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  color: #9BAEBC;
+  max-width: calc(100% - 30px);
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: text-top;
+}
+.userDependents span:hover {
+  color: #f1a668;
+}
+/* Dependent toggle menu */

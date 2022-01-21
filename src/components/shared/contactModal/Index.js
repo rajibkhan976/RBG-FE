@@ -8,7 +8,7 @@ import Billing from "./pages/Billing";
 import Dependents from "./pages/Dependents";
 import Appointment from "./pages/Appointment";
 import { Step, Steps, NavigationComponentProps } from "react-step-builder";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as actionTypes from "../../../actions/types";
 import { ContactService } from "../../../services/contact/ContactServices";
 import minimize_icon from "../../../assets/images/minimize_icon.svg";
@@ -28,6 +28,7 @@ import pager_icon_white from "../../../assets/images/pager_icon_white.svg";
 import note_icon_white from "../../../assets/images/note_icon_white.svg";
 import {UserServices} from "../../../services/authentication/UserServices";
 import config from "../../../configuration/config";
+import dependent_white from "../../../assets/images/dependent.svg"
 
 
 const ContactModal = (props) => {
@@ -38,14 +39,17 @@ const ContactModal = (props) => {
                 <button className={navigation.current == 1 ? "active nNav" : "nNav"} onClick={() => navigation.jump(1)}>Overview</button>
                 <button className={navigation.current == 2 ? "active nNav" : "nNav"} onClick={() => navigation.jump(2)} disabled={props.contactId ? false : true}>Attendance</button>
                 <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)} disabled={props.contactId ? false : true}>Appointment</button>
-                <button className={navigation.current == 4 ? "active nNav" : "nNav"} onClick={() => navigation.jump(4)} disabled={props.contactId ? false : true}>
-                    Transaction
-                </button>
-                <button className={navigation.current == 5 ? "active nNav" : "nNav"} onClick={() => navigation.jump(5)} disabled={props.contactId ? false : true}>
-                    Billing
-                </button>
-                <button className={navigation.current == 6 ? "active nNav" : "nNav"} onClick={() => navigation.jump(6)}>Dependents</button>
-               
+                {contactData && !contactData.isDependent ?
+                    <>
+                        <button className={navigation.current == 4 ? "active nNav" : "nNav"} onClick={() => navigation.jump(4)} disabled={props.contactId ? false : true}>
+                            Transaction
+                        </button>
+                        <button className={navigation.current == 5 ? "active nNav" : "nNav"} onClick={() => navigation.jump(5)} disabled={props.contactId ? false : true}>
+                            Billing
+                        </button>
+                        <button className={navigation.current == 6 ? "active nNav" : "nNav"} onClick={() => navigation.jump(6)} disabled={props.contactId ? false : true}>Dependents</button>
+                    </>
+                    : ''}
             </div>
         );
     }
@@ -60,6 +64,8 @@ const ContactModal = (props) => {
     const [stickeyHeadStatus, setStickeyHeadStatus] = useState(false);
     const [contactName,  setContactName] = useState("");
     const [isLoader, setIsLoader] = useState(false);
+    const [contactModalOpenStatus, setContactModalOpenStatus] = useState(true);
+    const [contactModalOpenError, setContactModalOpenError] = useState("");
     const [contactData, setContactData] = useState({
         firstName: "",
         lastName: ""
@@ -131,6 +137,21 @@ const ContactModal = (props) => {
             reader.readAsDataURL(files[0]);
         }
     }
+    //Open guardian contact modal
+    const openGuardianContactModal = (id) => {
+        console.log('Open guardian contact modal', id);
+        dispatch({
+            type: actionTypes.CONTACTS_MODAL_ID,
+            contact_modal_id: '',
+        });
+        setTimeout(() => {
+          dispatch({
+              type: actionTypes.CONTACTS_MODAL_ID,
+              contact_modal_id: id,
+          });
+        },300);
+    }
+
     return (
         <>
             <div className="modal contactModal">
@@ -175,65 +196,72 @@ const ContactModal = (props) => {
                                           <span>richardnile@gmail.com</span>
                                       </div>
                                   </div> */}
-                              </div>
+                                </div>
                             }
                         </div>
                         {props.contactId !== 0 &&
-                          <div className="contactModalHeaderBottomSec">
-                              <div className="bottomLeftArea">
-                                  <div className="userContacts">
-                                      {(contactData.phone && contactData.phone.number) &&
-                                        <div className="userPhone">
-                                            <img src={phone_call_icon_white} alt="" />
-                                            <span>{contactData.phone && contactData.phone.dailCode && contactData.phone.number ?
-                                                contactData.phone.dailCode + "-" + contactData.phone.number : ""}</span>
-                                        </div>
-                                      }
-                                      {contactData.email &&
-                                        <div className="userEmail">
-                                            <img src={email_icon_white} alt="" />
-                                            <span>{contactData.email}</span>
-                                        </div>
-                                      }
-                                  </div>
-                                  <div className="clockinArea">
-                                      <button className="clockinBtn orangeBtn">
-                                          <img src={histroy_icon_white} alt="" /> Check-in
-                                      </button>
-                                      <p className="logTime">Last attended 19 hrs ago</p>
-                                  </div>
-                              </div>
-                              <div className="bottomRightArea">
-                                  <div className="bottomRightAreaCol firstCol">
-                                      {contactData.jobRole &&
-                                        <div className="userInfoCell jobRole">
-                                            <span className="cellInfoIcon">
-                                                <img src={user_icon_white} alt="" />
+                            <div className="contactModalHeaderBottomSec">
+                                <div className="bottomLeftArea">
+                                    {contactData && contactData.isDependent && contactData.guardianInfo ?
+                                        <div className="userDependents" onClick={() => openGuardianContactModal(contactData.guardianInfo._id)}>
+                                            <img src={dependent_white} alt="" />
+                                            <span>
+                                                {contactData.guardianInfo.firstName + ' ' + contactData.guardianInfo.lastName}
                                             </span>
-                                            <span className="infoCellTxt">{contactData.jobRole}</span>
+                                        </div> : ''}
+                                    <div className="userContacts">
+                                        {(contactData.phone && contactData.phone.number) &&
+                                            <div className="userPhone">
+                                                <img src={phone_call_icon_white} alt="" />
+                                                <span>{contactData.phone && contactData.phone.dailCode && contactData.phone.number ?
+                                                    contactData.phone.dailCode + "-" + contactData.phone.number : ""}</span>
+                                            </div>
+                                        }
+                                        {contactData.email &&
+                                            <div className="userEmail">
+                                                <img src={email_icon_white} alt="" />
+                                                <span>{contactData.email}</span>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div className="clockinArea">
+                                        <button className="clockinBtn orangeBtn">
+                                            <img src={histroy_icon_white} alt="" /> Check-in
+                                        </button>
+                                        <p className="logTime">Last attended 19 hrs ago</p>
+                                    </div>
+                                </div>
+                                <div className="bottomRightArea">
+                                    <div className="bottomRightAreaCol firstCol">
+                                        {contactData.jobRole &&
+                                            <div className="userInfoCell jobRole">
+                                                <span className="cellInfoIcon">
+                                                    <img src={user_icon_white} alt="" />
+                                                </span>
+                                                <span className="infoCellTxt">{contactData.jobRole}</span>
+                                            </div>
+                                        }
+                                        <div className="userInfoCell prospect">
+                                            <span className="cellInfoIcon">
+                                                <img src={battery_icon_white} alt="" />
+                                            </span>
+                                            <span className="infoCellTxt">Prospect - showed</span>
                                         </div>
-                                      }
-                                      <div className="userInfoCell prospect">
-                                          <span className="cellInfoIcon">
-                                              <img src={battery_icon_white} alt="" />
-                                          </span>
-                                          <span className="infoCellTxt">Prospect - showed</span>
-                                      </div>
-                                  </div>
-                                  <div className="bottomRightAreaCol tags">
-                                      <div className="userInfoCell">
-                                          <span className="cellInfoIcon">
-                                              <img src={tag_icon_white} alt="" />
-                                          </span>
-                                          <span className="infoCellTxt">Tag One, Tag Two, Tag Three</span>
-                                          <span className="extraTagNumber">+5</span>
-                                      </div>
-                                      <div className="userInfoCell">
-                                          <button className="addNewTag">+ Add Tag</button>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
+                                    </div>
+                                    <div className="bottomRightAreaCol tags">
+                                        <div className="userInfoCell">
+                                            <span className="cellInfoIcon">
+                                                <img src={tag_icon_white} alt="" />
+                                            </span>
+                                            <span className="infoCellTxt">Tag One, Tag Two, Tag Three</span>
+                                            <span className="extraTagNumber">+5</span>
+                                        </div>
+                                        <div className="userInfoCell">
+                                            <button className="addNewTag">+ Add Tag</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         }
                     </div>
                     <div className="tabBarArea">
