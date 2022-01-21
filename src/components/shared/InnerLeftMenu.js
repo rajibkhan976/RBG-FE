@@ -352,7 +352,7 @@ const InnerLeftMenu = (props) => {
                 </NavLink>
               </li>
               <li>
-                <NavLink className="leftMenuInnerLink" to="/audio-template" activeClassName="active">
+                <NavLink className={isActive =>"leftMenuInnerLink" + (!isActive ? "  active" : "")} to="/email-template" activeClassName="active">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Templates</p>
@@ -381,6 +381,7 @@ const InnerLeftMenu = (props) => {
                     <li><a href="#">Sales Bridge</a></li>
                   </ul>
                 </NavLink>
+
               </li>
               <li>
                 <NavLink className="leftMenuInnerLink" to="/phases-status"> 

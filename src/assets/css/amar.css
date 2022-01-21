@@ -267,3 +267,50 @@
     background-repeat: no-repeat;
     padding-right: 35px;
 }
+
+/* Templates */
+.smsListing .tableListing .messageDeet {
+  width: auto;
+}
+.smsListing .tableListing .messageTitle {
+  width: 315px;
+}
+.smsListing .listBody {
+  flex: 1 1 auto;
+  max-width: 1077px;
+}
+.userListBody.smsListing {
+  padding-right: 0;
+}
+.previewSpaceTemplate {
+  flex: 0 0 auto;
+  margin-left: auto;
+}
+.templateOuter {
+  width: 339px;
+  height: 716px;
+  border-radius: 30px;
+  overflow: hidden;
+  background-color: #fff;
+  flex-direction: column;
+}
+.templateFooter {
+  flex: 0 0 95px;
+  background-color: #DCE4EB;
+  display: flex;
+  position: relative;
+}
+.templateFooter:after {
+  position: absolute;
+  content: '';
+  border-radius: 50%;
+  width: 52px;
+  height: 52px;
+  background-color: #fff;
+  top: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.templateBody {
+  flex: 1 1 auto;
+}
