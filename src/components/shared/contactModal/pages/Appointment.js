@@ -30,8 +30,22 @@ const Appointment = (props) => {
 
   const [toggleTagList, setToggleTagList] = useState({
     status: false,
-    listTagContent: [],
   });
+
+  const [toggleTagList1, setToggleTagList1] = useState({
+    status: false,
+  });
+
+  const [toggleTagList2, setToggleTagList2] = useState({
+    status: false,
+  });
+
+    const [toggleTagList3, setToggleTagList3] = useState({
+    status: false,
+  });
+
+
+
 
   const [toggleTagSuccess, setToggleTagSuccess] = useState({
     status: false,
@@ -70,6 +84,45 @@ const toggleTagListFn = (e) => {
       status: !toggleTagList.status,
     });
   };
+
+
+
+  const toggleTagList1Fn = (e) => {
+    e.preventDefault();
+
+    let contactTagOp = toggleTagList1;
+
+    setToggleTagList1({
+      ...toggleTagList1,
+      status: !toggleTagList1.status,
+    });
+  };
+
+
+  const toggleTagList2Fn = (e) => {
+    e.preventDefault();
+
+    let contactTagOp = toggleTagList2;
+
+    setToggleTagList2({
+      ...toggleTagList2,
+      status: !toggleTagList2.status,
+    });
+  };
+
+
+
+  const toggleTagList3Fn = (e) => {
+    e.preventDefault();
+
+    let contactTagOp = toggleTagList3;
+
+    setToggleTagList3({
+      ...toggleTagList3,
+      status: !toggleTagList3.status,
+    });
+  };
+
 
 
   const toggleTagSuccessFn = (e) => {
@@ -173,22 +226,55 @@ const toggleTagListFn = (e) => {
                         toggleTagList.status
                           ? "tagLi sellected"
                           : "tagLi"
-                      } onClick={(e) => toggleTagListFn(e)}>Demonstration <span>+</span></li>
-                      		<li className="tagLi">New Prospect <span>+</span></li>
-							<li className="tagLi">Hot Lead <span>+</span></li>
-							<li className="tagLi">Closing Stage <span>+</span></li>
-							<li className="tagLi">Gym Member <span>+</span></li>
-							<li className="tagLi">Interested in Jiu Jitsu <span>+</span></li>
+                      } onClick={(e) => toggleTagListFn(e)}>Hot Lead <span>+</span></li>
+
+                      			<li className={
+                        toggleTagList1.status
+                          ? "tagLi sellected"
+                          : "tagLi"
+                      } onClick={(e) => toggleTagList1Fn(e)}>New Active <span>+</span></li>
+								<li className={
+                        toggleTagList2.status
+                          ? "tagLi sellected"
+                          : "tagLi"
+                      } onClick={(e) => toggleTagList2Fn(e)}>Cold Lead <span>+</span></li>
+								<li className={
+                        toggleTagList3.status
+                          ? "tagLi sellected"
+                          : "tagLi"
+                      } onClick={(e) => toggleTagList3Fn(e)}>In Stage <span>+</span></li>
+							
+                      
                       	</ul>
                       </span>
                       </>
                       )}
                       </span>
-					{toggleTagList.status && (
+					            {toggleTagList.status && (
                       	<>
-                      <span className="indTags">Hot Leads <span className="closeTag" onClick={(e) => toggleTagListFn(e)}><img src={crossWhite} alt="" /></span></span>
-                     </>
+                          <span className="indTags">Hot Leads <span className="closeTag" onClick={(e) => toggleTagListFn(e)}><img src={crossWhite} alt="" /></span></span>
+                        </>
                       )}  
+
+                      {toggleTagList1.status && (
+                      	<>
+                          <span className="indTags">New Active <span className="closeTag" onClick={(e) => toggleTagList1Fn(e)}><img src={crossWhite} alt="" /></span></span>
+                        </>
+                      )}  
+
+                      {toggleTagList2.status && (
+                      	<>
+                          <span className="indTags">Cold Leads <span className="closeTag" onClick={(e) => toggleTagList2Fn(e)}><img src={crossWhite} alt="" /></span></span>
+                        </>
+                      )}  
+
+                      {toggleTagList3.status && (
+                      	<>
+                          <span className="indTags">In Stage <span className="closeTag" onClick={(e) => toggleTagList3Fn(e)}><img src={crossWhite} alt="" /></span></span>
+                        </>
+                      )}  
+
+                      
                     </div>
                   </div>
                   <div className="cmnFormRow">
