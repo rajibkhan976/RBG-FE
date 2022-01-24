@@ -2189,3 +2189,55 @@ form.dsiplay.none {
 .slickModalHeader.appSuccess {
   overflow: hidden;
 }
+
+.appointmentDataListing {
+  color: #9baebc;
+  font-size: 13px;
+  text-align: center;
+  margin-top: 48px;
+  width: 100%;
+}
+
+.gymHolidayList.appointmentListing .cell {
+  width: 18%;
+  text-align: left;
+}
+
+.gymHolidayList.appointmentListing .cell:last-child {
+  width: 5%;
+  text-align: left;
+}
+
+.gymHolidayList.appointmentListing .cell.rescheduledCell {
+  width: 27%;
+  text-align: left;
+}
+
+.gymHolidayList.appointmentListing .cell.setCell {
+  width: 32%;
+  text-align: left;
+}
+
+.gymHolidayList.appointmentListing.results .cell:first-child {
+  padding-left: 10px;
+}
+
+.gymHolidayList.appointmentListing.results .cell.statusCell {
+  padding-left: 24px;
+}
+
+.sideEditOption {
+  cursor: pointer;
+}
+
+.gymHolidayList.appointmentListing.header .cell:first-child {
+  padding-left: 6px;
+}
+
+.dropdownOptions.appLists {
+  display: none;
+}
+
+.dropdownOptions.appLists.listOpen {
+  display:block
+}
