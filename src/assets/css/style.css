@@ -8876,3 +8876,68 @@ li.listHeading > div.sortOff:after {
 .mt-2{
   margin-top: 40px;
 }
+
+.cmnFormRow.full_width{
+  width: 100%;
+}
+
+.cmnFormRow.full_width .cmnFormField.countryCodeField {
+    display: inline-block;
+    margin-right: 15px;
+    width: calc(100% - 100px);
+}
+.cmnFormRow.full_width .cmnFormField.countryCodeField.full_width input{
+  width: 100%;
+} 
+
+.formHeadText{
+  font-size: 13px;
+  color: var(--darkBlue);
+  font-weight: 500;
+}
+.autoresponderRow{
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+  align-items: center;
+}
+.autoresponderRow .checking{
+ width: 30px;
+}
+.autoresponderRow .autoresponderBody,
+.autoresponderRow .autoresponderHeader{
+  width: calc(100% - 30px);
+  color: var(--darkBlue);
+  font-size: 13px;
+  display: flex;
+  flex-wrap: wrap;
+ }
+ .autoresponderRow .autoresponderHeader{
+   background-color: transparent;
+   padding: 10px 0 10px;
+   font-weight: 500;
+ }
+ .autoresponderRow .autoresponderBody{
+  background: #F0F5F1;
+  padding: 20px 0;
+  font-weight: 400;
+  border-radius: 6px;
+ }
+ .autoresponderRow .autoresponderBody > div:first-child,
+ .autoresponderRow .autoresponderHeader > div:first-child{
+   width: 40%;
+   padding: 0 10px;
+ }
+ .autoresponderRow .autoresponderBody > div:last-child,
+ .autoresponderRow .autoresponderHeader > div:last-child{
+   width: 60%;
+   padding: 0 10px;
+   display: flex;
+   justify-content: space-between;
+ }
+ .autoresponderRow .autoresponderBody > div:last-child button{ 
+   width: 30px;
+ }
+ .sms .setupFormRow:last-child {
+  border-bottom: 1px solid #d3d9de;
+}
