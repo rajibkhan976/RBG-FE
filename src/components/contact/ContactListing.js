@@ -144,9 +144,13 @@ const ContactListing = (props) => {
         const status = utils.getQueryVariable('status');
         const srtBy = utils.getQueryVariable('sortBy');
         const srtType = utils.getQueryVariable('sortType');
+        const cache = utils.getQueryVariable('cache');
 
         const queryParams = new URLSearchParams();
 
+        if (cache) {
+            queryParams.append("cache", cache);
+        }
         if (search) {
             queryParams.append("search", search);
         }

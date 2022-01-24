@@ -52,7 +52,7 @@ module.exports = {
     //importContactUrl: 'http://localhost:3006/dev/contact',
     // Contact Service API service
     getContactsUrl: "https://rn7zcog7n8.execute-api.us-east-1.amazonaws.com/dev/contact",
-    //getContactsUrl: "http://localhost:3006/dev/contact",
+    // getContactsUrl: "http://localhost:3001/dev/contact",
     setColumnUrl: "https://g2s7gtsx35.execute-api.us-east-1.amazonaws.com/dev/contact/order",
     getColumnUrl: "https://g2s7gtsx35.execute-api.us-east-1.amazonaws.com/dev/contact/order",
     fetchCountryUrl: "https://nav26a5nii.execute-api.us-east-1.amazonaws.com/dev/country",
