@@ -2335,3 +2335,19 @@ span.listDisplayBtns span {
   padding-top: 20px;
   padding-bottom: 20px;
 }
+
+.modalForm form {
+  padding-right: 10px;
+}
+
+button.fc-prev-button.fc-button.fc-button-primary, button.fc-next-button.fc-button.fc-button-primary {
+    border: none;
+    background: transparent;
+}
+
+.fc .fc-button-primary:not(:disabled):active:focus, .fc .fc-button-primary:not(:disabled).fc-button-active:focus {
+  box-shadow: none;
+}
+.fc .fc-button-primary:not(:disabled):active, .fc .fc-button-primary:not(:disabled).fc-button-active {
+  background:transparent;
+}
