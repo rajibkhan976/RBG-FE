@@ -2186,8 +2186,22 @@ form.dsiplay.none {
         min-height: 194px!important;
 }
 
-.slickModalHeader.appSuccess {
+.innerModalHeader.appSuccess {
   overflow: hidden;
+}
+
+.innerModalHeader h3 {
+    color: var(--darkBlue);
+    font-size: 20px;
+    padding: 30px 0 10px;
+    font-weight: 400;
+}
+
+.innerModalHeader p {
+    color: #9baebc;
+    font-size: 13px;
+    padding: 0px 0 10px;
+    font-weight: 400;
 }
 
 .appointmentDataListing {
@@ -2253,4 +2267,71 @@ span.listDisplayBtns span {
 
 .appointmentDataListing.display {
   display: block;
+}
+.transHeader .dropdownOptions .btn span { padding: 0; }
+
+.appointmentDataListing {
+      max-height: 390px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.appointmentDataListing::-webkit-scrollbar {
+  width: 4px;
+}
+
+.appointmentDataListing::-webkit-scrollbar-track {
+  background-color: #dce4eb;
+}
+
+.appointmentDataListing::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
+}
+
+.contactTabsInner.appointmentPage {
+  padding-bottom: 10px;
+  height: calc(100vh - 305px);
+}
+
+.innerModalHeader {
+      padding: 5px 10px 30px;
+    text-align: center;
+    position: relative;
+}
+
+.slickModalHeader.appointmentModalHeads {
+  padding: 0;
+  height: 20px;
+  overflow: hidden;
+  width: 100%;
+  float: left;
+}
+
+.innerAppointmentModalBody {
+  width: 100%;
+  float: left;
+  height: 255px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.innerAppointmentModalBody::-webkit-scrollbar {
+  width: 4px;
+}
+
+.innerAppointmentModalBody::-webkit-scrollbar-track {
+  background-color: #dce4eb;
+}
+
+.innerAppointmentModalBody::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
+}
+
+.modalForm.appointmentForm.setappointment {
+  overflow: hidden;
+}
+
+.slickModalBody.setAppointment {
+  padding-top: 20px;
+  padding-bottom: 20px;
 }

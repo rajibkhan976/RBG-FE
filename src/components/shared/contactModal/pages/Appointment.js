@@ -200,7 +200,7 @@ const toggleTagListFn = (e) => {
 
   return (
     <>
-     <div className="contactTabsInner">
+     <div className="contactTabsInner appointmentPage">
         <h3 className="headingTabInner">Appointment</h3>
         
           <div className="transHeader">
@@ -342,7 +342,7 @@ const toggleTagListFn = (e) => {
       {addDependentModal && (
         <div className="modalDependent modalBackdrop">
           {isLoader ? <Loader /> : ""}
-          <div className="slickModalBody">
+          <div className="slickModalBody setAppointment">
 
 
           
@@ -353,6 +353,11 @@ const toggleTagListFn = (e) => {
                           : "modalForm appointmentForm setappointment"
                       }
                       >
+                       <div className="slickModalHeader appointmentModalHeads">
+                          <button className="topCross setApp" onClick={() => closeModal(false)}>
+                            <img src={cross} alt="" />
+                          </button>
+                      </div>
                <Scrollbars
                 renderThumbVertical={(props) => (
                   <div className="thumb-vertical appModalScroll" />
@@ -364,15 +369,16 @@ const toggleTagListFn = (e) => {
                           : "dsiplay"
                       }
                     >
-                    <div className="slickModalHeader">
-		              <button className="topCross setApp" onClick={() => closeModal(false)}>
-		                <img src={cross} alt="" />
-		              </button>
+                    <div className="innerModalHeader">
+		              
 		              <div className="circleForIcon">
 		                <img src={appointmentImg} alt="" />
 		              </div>
 		              <h3>Set an Appointment</h3>
 		            </div>
+
+
+                <div className="innerAppointmentModalBody">
 
                   <div className="cmnFormRow">
                     <div className="cmnFieldName d-flex f-justify-between">
@@ -485,6 +491,8 @@ const toggleTagListFn = (e) => {
                       Set Appointment <img src={arrow_forward} alt="" />
                     </button>
                   </div>
+
+                  </div>
 </form>
 
 
@@ -497,10 +505,8 @@ const toggleTagListFn = (e) => {
 
                     {toggleTagSuccess.status && (
                       	<>
-	                      <div className="slickModalHeader appSuccess">
-				              <button className="topCross setApp" onClick={() => closeModal(false)}>
-				                <img src={cross} alt="" />
-				              </button>
+	                      <div className="innerModalHeader appSuccess">
+				             
 				              <div className="circleForIcon">
 				                <img src={successApp} alt="" />
 				              </div>
