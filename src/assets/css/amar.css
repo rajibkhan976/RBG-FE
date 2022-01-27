@@ -1,29 +1,35 @@
-.contactModalHeader.stickey + .tabBarArea .contactTabsInner {
+.contactModalHeader.stickey+.tabBarArea .contactTabsInner {
   height: calc(100vh - 126px);
 }
 
 .f-column {
   flex-direction: column;
 }
+
 .f-1 {
   flex: 1 1 auto;
 }
+
 .f-justify-between {
   justify-content: space-between;
 }
+
 .dependentsListing {
   display: table;
   width: 100%;
   border-spacing: 0;
   overflow-y: auto;
 }
+
 .dependentsListing .row {
   display: table-row;
   position: relative;
 }
+
 .dependentsListing .row:not(.head):not(.archivedDependent) {
   background-color: #f2f7fc;
 }
+
 .dependentsListing .row.head .cell {
   color: #305671;
   font-size: 13px;
@@ -31,22 +37,26 @@
   font-weight: 500;
   vertical-align: middle;
 }
+
 .dependentsListing .row .cell {
   display: table-cell;
   border-bottom: 5px solid #fff;
   padding: 18px 10px;
   position: relative;
 }
+
 .dependentsListing .row:not(.head) .cell:first-child {
   padding-left: 20px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
+
 .dependentsListing .row:not(.head) .cell:last-child {
   padding-right: 35px;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
 }
+
 .dependentsListing .iconCont {
   background: #139fea;
   border-radius: 50%;
@@ -62,6 +72,7 @@
   color: #305671;
   margin-bottom: 3px;
 }
+
 .dependentsListing .textCont span,
 .dependentLast,
 .dependentCourse,
@@ -70,16 +81,19 @@
   line-height: 20px;
   color: #305671;
 }
+
 .dependentsListing .textCont .dependentDoj {
   font-size: 12px;
   line-height: 18px;
   color: #9baebc;
   margin-top: 5px;
 }
+
 .mailCont {
   margin-left: 5px;
   text-decoration: underline;
 }
+
 .optionDependent {
   position: absolute;
   right: 25px;
@@ -87,6 +101,7 @@
   display: inline-flex;
   justify-content: center;
 }
+
 .archivedDependent:after {
   position: absolute;
   content: "Archived";
@@ -105,39 +120,48 @@
   z-index: 1;
   font-weight: normal;
 }
+
 .dependentsListing .createNew {
   flex-direction: column;
 }
+
 .dependentsListing .createNew p {
   font-size: 14px;
   line-height: 21px;
   color: #9baebc;
   margin-bottom: 27px;
 }
+
 .dependentsListing .saveNnewBtn {
   padding-left: 16px;
   padding-right: 14px;
   width: auto;
 }
+
 .dependentsListing .saveNnewBtn img {
   margin-left: 10px;
 }
+
 .tabBarArea .modalDependent {
   position: fixed;
   background: rgb(48 86 113 / 90%);
 }
+
 .w-row {
   margin-inline: -15px;
   display: flex;
   flex-wrap: wrap;
 }
-.w-row > *[class^="w-"],
-.w-row > *[class*=" w-"] {
+
+.w-row>*[class^="w-"],
+.w-row>*[class*=" w-"] {
   padding: 0 15px;
 }
+
 .modalDependent .modalForm form {
   overflow: hidden;
 }
+
 .modalDependent .radioGroup label:first-child {
   margin-left: 0;
 }
@@ -147,9 +171,11 @@
   margin-bottom: 20px;
   margin-top: 20px;
 }
+
 .inFormFieldHeader label {
   margin-top: 0;
 }
+
 .inFormFieldHeader h5 {
   background: #fff;
   position: relative;
@@ -157,6 +183,7 @@
   padding-right: 10px;
   color: #305671;
 }
+
 .inFormFieldHeader:after {
   position: absolute;
   content: "";
@@ -166,16 +193,19 @@
   background: #d3d9de;
   top: 9px;
 }
+
 .noteForm {
   padding: 23px;
   text-align: center;
   border-radius: 5px;
 }
+
 .checkDNC {
   background: #ffeaeb;
   margin-bottom: 19px;
   margin-top: 45px;
 }
+
 .checkDNC label {
   display: block;
   text-align: center;
@@ -184,27 +214,34 @@
   line-height: 19px;
   color: #305671;
 }
-.checkDNC input:not(:checked) + span {
+
+.checkDNC input:not(:checked)+span {
   background-color: #fff;
 }
+
 .modalDependent .modalbtnHolder {
   padding: 0;
 }
-.modalDependent input[type="date" i]::-webkit-calendar-picker-indicator {
+
+.modalDependent input[type="date"i]::-webkit-calendar-picker-indicator {
   background-image: url("../images/calendar.png");
 }
+
 .cmnFieldName button {
   font-size: 13px;
   line-height: 19px;
   color: #46c8d3;
 }
+
 .modalDependent .modalForm {
-    height: 421px;
+  height: 421px;
 }
+
 .modalDependent .cmnFormRow,
 .modalDependent .cmnFormField {
   position: relative;
 }
+
 .contactListItems {
   position: absolute;
   top: 40px;
@@ -219,15 +256,18 @@
   display: flex;
   flex-direction: column;
 }
+
 .cmnFormField.listActive .cmnFieldStyle {
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom: none;
 }
+
 .contactListItems ul {
   flex: 1 1 auto;
   overflow: auto;
 }
+
 .contactListItems .btn {
   background: #ffffff;
   flex: 0 0 44px;
@@ -235,6 +275,7 @@
   font-size: 13px;
   line-height: 19px;
 }
+
 .contactListItems li {
   font-size: 13px;
   line-height: 19px;
@@ -242,42 +283,55 @@
   padding: 0 10px;
   cursor: pointer;
 }
+
 .contactListItems li:hover {
-    color: #f1a668;
+  color: #f1a668;
 }
-.contactListItems li + li {
+
+.contactListItems li+li {
   margin-top: 12px;
 }
+
 .contactListItems ul::-webkit-scrollbar,
-.userListBody.smsListing .listBody::-webkit-scrollbar {
+.userListBody.smsListing .listBody::-webkit-scrollbar,
+.bodyEditTemplate .keywordBox .keywordList::-webkit-scrollbar {
   width: 4px;
 }
 
 .contactListItems ul::-webkit-scrollbar-track,
-.userListBody.smsListing .listBody::-webkit-scrollbar-track {
+.userListBody.smsListing .listBody::-webkit-scrollbar-track,
+.bodyEditTemplate .keywordBox .keywordList::-webkit-scrollbar-track {
   background-color: #dce4eb;
 }
 
 .contactListItems ul::-webkit-scrollbar-thumb,
-.userListBody.smsListing .listBody::-webkit-scrollbar-thumb {
+.userListBody.smsListing .listBody::-webkit-scrollbar-thumb,
+.bodyEditTemplate .keywordBox .keywordList::-webkit-scrollbar-thumb {
   background-color: #f1a668;
 }
+
 .cmnFormField.listActive .cmnFieldStyle {
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
-    border-bottom: none;
-    background-position: right 15px center;
-    background-repeat: no-repeat;
-    padding-right: 35px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: none;
+  background-position: right 15px center;
+  background-repeat: no-repeat;
+  padding-right: 35px;
 }
 
 /* Templates */
 .smsListing .tableListing .messageDeet {
   width: auto;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
+
 .smsListing .tableListing .messageTitle {
   width: 315px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
+
 .userListBody.smsListing .listBody {
   overflow: auto;
 }
@@ -286,15 +340,18 @@
   flex: 1 1 auto;
   max-width: 1077px;
 }
+
 .userListBody.smsListing {
   padding-right: 0;
 }
+
 .previewSpaceTemplate {
   flex: 0 0 auto;
   margin-left: auto;
   display: flex;
-    flex-direction: column;
+  flex-direction: column;
 }
+
 .templateOuter {
   width: 339px;
   flex: 1 1 723px;
@@ -304,12 +361,14 @@
   background-color: #fff;
   flex-direction: column;
 }
+
 .templateFooter {
   flex: 0 0 95px;
   background-color: #DCE4EB;
   display: flex;
   position: relative;
 }
+
 .templateFooter:after {
   position: absolute;
   content: '';
@@ -321,25 +380,164 @@
   left: 50%;
   transform: translateX(-50%);
 }
+
 .templateBody {
   flex: 1 1 auto;
 }
-.smsListing .messageTitle, .smsListing .messageDeet, .smsListing li div > button {
+
+.smsListing .messageTitle,
+.smsListing .messageDeet,
+.smsListing li div>button {
   font-size: 13px;
   line-height: 19px;
   color: #305671;
 }
-.previewSpaceTemplate header {
+
+.headspaceTemplate {
   font-size: 13px;
   line-height: 19px;
   color: #305671;
   justify-content: center;
   margin-bottom: 15px;
 }
+
 .previewSpaceTemplate figure {
   margin-right: 15px;
   width: 22px;
 }
+
 .smsListing li {
   cursor: pointer;
+  user-select: none;
+}
+
+.templateInner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+
+.bodyEditTemplate {
+  flex: 1 1 auto;
+    overflow: auto;
+    padding: 0 25px 0 43px;
+    font-size: 13px;
+    line-height: 19px;
+    text-align: justify;
+    color: #305671;
+}
+.bodyEditTemplate textarea,
+.textView {
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 19px;
+  text-align: justify;
+  color: #305671;
+  padding-right: 36px;
+}
+
+.templateHeader {
+  margin-top: 29px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0;
+  padding: 0 25px 0 43px;
+  margin-bottom: 30px;
+  font-size: 13px;
+  line-height: 19px;
+  color: #305671;
+}
+.templateHeader input {
+  flex: 1 1 auto;
+  border: none;
+  padding: 0;
+  height: auto;
+  min-height: 20px;
+  font-size: 13px;
+  line-height: 19px;
+  color: #305671;
+}
+
+.editPageFooter {
+  height: 39px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  background: #9BAEBC;
+  color: #fff;
+  font-size: 13px;
+  line-height: 19px;
+}
+
+.editPageFooter span {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.editPageFooter .btn {
+  padding: 0 10px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.editPageFooter .btn:last-child {
+  margin-left: auto;
+}
+
+.editPageFooter .btn:first-child {
+  margin-right: auto;
+}
+
+.smsListing ul.tableListing {
+  border-spacing: 0 4px;
+}
+
+.smsListing ul.tableListing li>div {
+  border: none;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.smsListing li.active>div {
+  background: #9BAEBC;
+  color: #fff;
+}
+
+.bodyEditTemplate textarea::-webkit-scrollbar {
+  width: 3px;
+}
+
+.bodyEditTemplate textarea::-webkit-scrollbar-track {
+  background-color: #E9EFF5;
+}
+
+.bodyEditTemplate textarea::-webkit-scrollbar-thumb {
+  background-color: #305671;
+}
+.editPageFooter .browseKeywords {
+  position: static;
+}
+.bodyEditTemplate .keywordBox {
+  bottom: 0;
+  top: auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.bodyEditTemplate .keywordBox .searchKeyword {
+  order: 2;
+  border-bottom: none;
+  border-top: 1px solid #d3d9de;
+}
+.bodyEditTemplate .keywordBox .keywordList {
+  max-height: 20vh;
+  overflow: auto;
 }

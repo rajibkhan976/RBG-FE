@@ -225,7 +225,7 @@ const makeCall = () => {
                   <p className="space10">Message</p>
                   <small>153/0 SMS - One message contains 153 chatracters max (SMS count can be changed if you are using keyword variable e.g. [fname])</small>  
                   <textarea></textarea>
-                  <button className="browseKeywords" onClick={openKeywordSuggesionHandler}><img src={iconBrowse} alt=""/></button>
+                  <button className="browseKeywords" onClick={setKeywordSuggesion}><img src={iconBrowse} alt=""/></button>
                   {keywordSuggesion && 
                     <div className="keywordBox">
                     <div className="searchKeyword">
