@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 
+import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import right_icon from '../../../../assets/images/right.svg'
 import browse_keywords from "../../../../assets/images/icon_browse_keywords.svg"
 import info_3dot_icon from "../../../../assets/images/info_3dot_icon.svg";
+import cross from "../../../../assets/images/cross.svg";
+import sms_template from "../../../../assets/images/sms-template.svg"
 import { utils } from "../../../../helpers";
 // import moment from "moment";
 import Pagination from "../../../shared/Pagination";
@@ -12,6 +15,8 @@ import Loader from "../../../shared/Loader";
 // import { bucketUrl } from "../../../../configuration/config";
 import { ErrorAlert, SuccessAlert } from "../../../shared/messages";
 // import ConfirmBox from "../../../shared/confirmBox";
+import Scrollbars from "react-custom-scrollbars-2";
+
 
 const SmsTemplate = () => {
   const [isLoader, setIsLoader] = useState(false);
@@ -283,6 +288,10 @@ const SmsTemplate = () => {
 
   useEffect(()=>{},[editMsgObj])
 
+  const closeModal = () => {
+    setSMSModal(false);
+  };
+
   const paginationCallbackHandle = () => {};
 
   return (
@@ -506,6 +515,73 @@ const SmsTemplate = () => {
           </div>
         </div>
       </div>
+
+      {smsModal && (
+        <div className="modalDependent modalBackdrop">
+          {isLoader ? <Loader /> : ""}
+          <div className="slickModalBody">
+            <div className="slickModalHeader">
+              <button className="topCross" onClick={() => closeModal(false)}>
+                <img src={cross} alt="" />
+              </button>
+              <div className="circleForIcon">
+                <img src={sms_template} alt="" />
+              </div>
+              <h3>Add an SMS Template</h3>
+              <p>Fill out below details to create a new SMS Template</p>
+            </div>
+            <div className="modalForm">
+              <Scrollbars
+                renderThumbVertical={(props) => (
+                  <div className="thumb-vertical" />
+                )}
+              >
+              <form method="post">
+                  <div className="cmnFormRow">
+                    <label className="cmnFieldName d-flex f-justify-between">
+                      Enter Template Title
+                    </label>
+                    <div className="cmnFormField">
+                      <input className="cmnFieldStyle" placeholder="Title..." />
+                    </div>
+                      {/* <span className="errorMsg">Please provide name.</span> */}
+                  </div>
+                  <div className="cmnFormRow">
+                    <label className="cmnFieldName d-flex f-justify-between">
+                      Enter Template Title
+                    </label>
+                    <div className="cmnFormField">
+                      <textarea className="cmnFieldStyle" placeholder="Message" ></textarea>
+                    </div>
+                      {/* <span className="errorMsg">Please provide name.</span> */}
+                      <div className="smsTagsTemplate">
+                        <span>fname</span>
+                        <span>lname</span>
+                        <span>name</span>
+                        <span>company_name</span>
+                        <span>website</span>
+                        <span>phone</span>
+                        <span>facebook_link</span>
+                        <span>twitter_link</span>
+                        <span>email_id</span>
+                        <span>address</span>
+                      </div>
+                  </div>
+
+                  <div className="modalbtnHolder w-100">
+                    <button className=" saveNnewBtn">
+                      Save <img src={arrow_forward} alt="" />
+                    </button>
+                    <button className=" saveNnewBtn">
+                    Save & New <img src={arrow_forward} alt="" />
+                    </button>
+                  </div>
+              </form>
+              </Scrollbars>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* <Pagination
               type="sms-template"
