@@ -8824,17 +8824,7 @@ li.listHeading > div.sortOff:after {
   max-height: 625px;
   overflow: auto;
 }
-.tabsection .tabContent::-webkit-scrollbar {
-  width: 5px;
-}
 
-.tabsection .tabContent::-webkit-scrollbar-track {
-  background-color: #ebebeb;
-}
-
-.tabsection .tabContent::-webkit-scrollbar-thumb {
-  background-color: #9baebc;
-}
 .configSideList h3{
   font-size: 13px;
   font-weight: 400;
@@ -8862,8 +8852,24 @@ li.listHeading > div.sortOff:after {
 }
 .cmnFieldName1 {
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 514;
   margin-bottom: 10px;
+}
+.tabContent form {
+  overflow: auto;
+  height: 580px;
+  padding: 0 7px 0 0;
+}
+.tabsection .tabContent form::-webkit-scrollbar {
+  width: 5px;
+}
+
+.tabsection .tabContent form::-webkit-scrollbar-track {
+  background-color: #ebebeb;
+}
+
+.tabsection .tabContent form::-webkit-scrollbar-thumb {
+  background-color: #9baebc;
 }
 .tabContent h3{
   font-size: 20px;
@@ -8940,4 +8946,16 @@ li.listHeading > div.sortOff:after {
  }
  .sms .setupFormRow:last-child {
   border-bottom: 1px solid #d3d9de;
+}
+.toggleBtn input[type="radio"] {
+  margin: 0;
+  cursor: pointer;
+  position: absolute;
+  left: -2px;
+  top: -2px;
+  z-index: 10;
+  min-height: 20px;
+  width: 40px;
+  height: 20px;
+  opacity: 0;
 }

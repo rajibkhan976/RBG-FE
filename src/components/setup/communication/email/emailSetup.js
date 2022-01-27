@@ -6,6 +6,12 @@ const EmailSetup = () => {
 
     const types = ['SMTP Configuration', 'Postmark Setup'];
     const [active, setActive] = useState(types[0]);
+    const [radioCheck , setRadioCheck] = useState(false);
+
+    const toggleRadioChange = () =>{
+        setRadioCheck(!radioCheck);
+    }
+
     return(
         <>
       
@@ -39,15 +45,24 @@ const EmailSetup = () => {
                     <ul>
                         <li>
                             <span>SMTP Configuration</span> 
-                            <label class="toggleBtn active"><input type="checkbox"/><span class="toggler"></span></label>
+                            <label class={radioCheck ? "toggleBtn active" : "toggleBtn"}>
+                                <input type="radio" name="selectType" onChange={toggleRadioChange}/>
+                                <span class="toggler"></span>
+                            </label>
                         </li>
                         <li>
                             <span>Postmark Setup</span> 
-                            <label class="toggleBtn active"><input type="checkbox"/><span class="toggler"></span></label>
+                            <label class={radioCheck ? "toggleBtn active" : "toggleBtn"}>
+                                <input type="radio" name="selectType" onChange={toggleRadioChange}/>
+                                <span class="toggler"></span>
+                            </label>
                         </li>
                         <li>
                             <span>Amazon Simple Email Service</span> 
-                            <label class="toggleBtn "><input type="checkbox"/><span class="toggler"></span></label>
+                            <label class={radioCheck ? "toggleBtn active" : "toggleBtn"}>
+                                <input type="radio" name="selectType" onChange={toggleRadioChange}/>
+                                <span class="toggler"></span>
+                            </label>
                         </li>
                     </ul>
                 </div>
