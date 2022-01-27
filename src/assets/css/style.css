@@ -3398,7 +3398,8 @@ span.userProfilePic img {
 }
 
 .popupMessage.coursePopupMsg,
-.popupMessage.productPopupMsg {
+.popupMessage.productPopupMsg, 
+.popupMessage.pullUp {
   top: 90px;
   z-index: 1000000;
 }
@@ -8893,6 +8894,10 @@ li.listHeading > div.sortOff:after {
   margin-top: 40px;
 }
 
+.smallLoader {
+  width: 32px;
+  margin-left: 10px;
+}
 .cmnFormRow.full_width{
   width: 100%;
 }

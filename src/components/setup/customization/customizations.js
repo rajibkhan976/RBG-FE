@@ -7,6 +7,8 @@ import info_3dot_icon from "../../../../src/assets/images/info_3dot_icon.svg";
 import CustomizationsAddField from "./customizationsAddField";
 import { CustomizationServices } from "../../../services/setup/CustomizationServices";
 import { ErrorAlert, SuccessAlert } from "../../shared/messages";
+import smallLoaderImg from "../../../../src/assets/images/loader.gif";
+import ConfirmBox from "../../shared/confirmBox";
 
 const Customizations = (props) => {
   document.title = "Red Belt Gym - Customization";
@@ -15,16 +17,25 @@ const Customizations = (props) => {
   const [isLoader, setIsLoader] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [option, setOption] = useState(null);
+  const [toggleIndex, setToggleIndex] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [taxData, setTaxData] = useState({
     tax: "",
     editAccess: false
   });
   const [disableBtn, setDisableBtn] = useState(false);
+  const [customFieldList, setCustomFieldList] = useState([]);
+  const [smallLoader, setSmallLoader] = useState(false);
+  const [deleteFieldId, setDeleteFieldId] = useState();
+  const [deletedFieldId, setDeletedFieldId] = useState();
+  const [deleteConfirmBox, setDeleteConfirmBox] = useState(false);
+  const [editedEle, setEditedEle] = useState();
+  const [isEditing, setIsEditing] = useState(false);
 
 
   useEffect(() => {
     fetchSaleTax();
+    fetchCustomFields();
   }, []);
 
   useEffect(() => {
@@ -45,43 +56,37 @@ const Customizations = (props) => {
     }
   }
 
+  const fetchCustomFields = async (e) => {
+    try {
+      setIsLoader(true)
+      const result = await CustomizationServices.fetchCustomFields();
+      setCustomFieldList(result.customFields);
+      
+    } catch (e) {
+      setErrorMsg(e.message);
+    } finally {
+      setIsLoader(false);
+      setTimeout(() => {
+        console.log("Custom Fields ===== " + JSON.stringify(customFieldList));
+      }, 3000)
+      
+    }
+  };
+
   const toggleOptions = (index) => {
     // console.log("Index",index);
     // setOption(index !== null ? (option !== null ? null : index) : null);
     setOption(index !== option ? index : null);
   };
-  const [customFieldData, setCustomFieldData] = useState([
-    {
-      field_Name: "Street Number",
-      field_Alias_Name: "street_number",
-      field_Type: "text",
-      default_Value: "",
-      toogle: false
-    },
-    {
-      field_Name: "Road Name",
-      field_Alias_Name: "road_name",
-      field_Type: "text",
-      default_Value: "something",
-      toogle: true
-    },
-    {
-      field_Name: "PO Box",
-      field_Alias_Name: "po_box",
-      field_Type: "text",
-      default_Value: "",
-      toogle: false
-    },
-  ]);
 
-  const statusToogle = (key, e) => {
-    setCustomFieldData(!customFieldData.toogle);
-  }
   const openAddCusomFieldHandler = (event) => {
     setOpenModal(true);
   }
-  const closeCustomModal = () => {
+  const closeCustomModal = (param) => {
     setOpenModal(false);
+    if(param){
+      fetchCustomFields();
+    }
   }
 
   const taxAmountHandle = (event) => {
@@ -114,6 +119,62 @@ const Customizations = (props) => {
     }
   }
 
+  const deleteHandel = (id) => {
+    setDeleteFieldId(id);
+    setDeleteConfirmBox(true);
+  }
+
+  const deleteField = async () => {
+    try {
+      setIsLoader(true);
+      const res = await CustomizationServices.deleteCustomField(deleteFieldId);
+      setDeletedFieldId(deleteFieldId);
+      setSuccessMsg(res.message);
+    } catch (e) {
+      setErrorMsg(e.message);
+    } finally {
+      setIsLoader(false);
+      setDeleteConfirmBox(false);
+    }
+  };
+
+  const deleteConfirm = (response) => {
+    if (response === "yes") {
+      deleteField();
+    } else {
+      setDeleteConfirmBox(false);
+    }
+  };
+
+  const toggleActive = async (elem, index) => {
+    try {
+      setToggleIndex(index);
+      setSmallLoader(true);
+      const payload = {
+        name: elem.fieldName,
+        type: elem.fieldType,
+        defaultValue: elem.fieldDefault,
+        alias: elem.alias,
+        status: !elem.status
+      };
+      const res = await CustomizationServices.editCustomField(elem._id, payload);
+      customFieldList[index].status = !elem.status;
+      setSuccessMsg(res.message);
+    } catch (e) {
+      setErrorMsg(e.message);
+    } finally {
+      setToggleIndex(null);
+      setSmallLoader(false);
+      console.log(customFieldList);
+    }
+  }
+
+  const editHandel = (elem) => {
+    setIsEditing(true)
+    setOpenModal(true);
+    setEditedEle(elem);
+  }
+
 
 
   return (
@@ -136,6 +197,7 @@ const Customizations = (props) => {
             {errorMsg &&
               <ErrorAlert message={errorMsg}></ErrorAlert>
             }
+            {deleteConfirmBox && <ConfirmBox message="Are you sure, you want to delete this Custom Field?" callback={deleteConfirm} />}
           </div>
         </div>
         <div className="taxSetup">
@@ -171,20 +233,22 @@ const Customizations = (props) => {
               <div className="space">Default Value</div>
               <div class="vacent"></div>
             </li>
-            {customFieldData.map((elem, key) => {
+            {customFieldList.filter(item => item._id !== deletedFieldId).map((elem, key) => {
               return (
                 <li>
-                  <div>{elem.field_Name}</div>
+                  {/* <div>{elem.field_Name}</div>
                   <div>{elem.field_Alias_Name}</div>
                   <div>{elem.field_Type}</div>
-                  <div> {elem.default_Value}</div>
+                  <div> {elem.default_Value}</div> */}
+                  <div>{elem.fieldName}</div>
+                  <div>{elem.alias}</div>
+                  <div>{elem.fieldType}</div>
+                  <div> {elem.fieldDefault}</div>
                   <div>
-                    <label class={elem.toogle ? "toggleBtn active" : "toggleBtn"}>
-                      <input type="checkbox"
-                        onChange={(e) => {
-                          statusToogle(e, key);
-                        }} /><span class="toggler"></span>
+                    <label class={elem.status ? "toggleBtn active" : "toggleBtn"}>
+                      <input type="checkbox" checked={elem.status} onClick={() => toggleActive (elem, key)} /><span class="toggler"></span>
                     </label>
+                    {toggleIndex === key && smallLoader ? <img src={smallLoaderImg} alt="loading" className="smallLoader" /> : ""}
                     <div class="info_3dot_icon">
                       <button class="btn"
                         onClick={() => {
@@ -198,13 +262,13 @@ const Customizations = (props) => {
                         ? "dropdownOptions listOpen"
                         : "listHide"
                     }>
-                      <button class="btn btnEdit">
+                      <button class="btn btnEdit" onClick={() => editHandel (elem)}>
                         <span>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" class="editIcon"><g transform="translate(0.75 0.75)"><path class="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path><path class="a" d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z" transform="translate(-4.384 -2)"></path></g></svg>
                         </span>
                         Edit
                       </button>
-                      <button class="btn btnDelete">
+                      <button class="btn btnDelete" data-id={elem._id} onClick={() => deleteHandel (elem._id)}>
                         <span>
                           <svg class="deleteIcon" xmlns="http://www.w3.org/2000/svg" width="12.347" height="13.553" viewBox="0 0 12.347 13.553"><g transform="translate(0.75 0.75)"><path class="a" d="M3,6H13.847" transform="translate(-3 -3.589)"></path><path class="a" d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411" transform="translate(-3.795 -2)"></path><line class="a" y2="3" transform="translate(4.397 6.113)"></line><line class="a" y2="3" transform="translate(6.397 6.113)"></line></g></svg>
                         </span>
@@ -222,7 +286,9 @@ const Customizations = (props) => {
       </div>
       {openModal &&
         <CustomizationsAddField
-          closeAddCustomModal={(param) => closeCustomModal(param)}
+          closeAddCustomModal={(param) => closeCustomModal(param)} 
+          ele={editedEle} 
+          editStatus={isEditing}
         />
       }
     </>
