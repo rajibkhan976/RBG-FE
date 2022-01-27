@@ -19,13 +19,10 @@ import cross from "../../../../assets/images/cross.svg";
 import setupIcon from "../../../../assets/images/setupicon8.svg";
 import status1 from "../../../../assets/images/status1.svg";
 import status2 from "../../../../assets/images/status2.svg";
-<<<<<<< HEAD
-=======
 
 import listsView from "../../../../assets/images/lists.svg";
 import calenderView from "../../../../assets/images/calemderList.svg";
 
->>>>>>> d7bc13d1200cc9cee06c0f86928eb06f2c4fb3db
 import Scrollbars from "react-custom-scrollbars-2";
 
 const Appointment = (props) => {
@@ -67,14 +64,11 @@ const Appointment = (props) => {
   });
 
 
-<<<<<<< HEAD
-=======
   const [toggleAppView, setToggleAppView] = useState({
     status: false,
   });
 
 
->>>>>>> d7bc13d1200cc9cee06c0f86928eb06f2c4fb3db
 
   const [toggleTagSuccess, setToggleTagSuccess] = useState({
     status: false,
@@ -173,8 +167,6 @@ const toggleTagListFn = (e) => {
   };
 
 
-<<<<<<< HEAD
-=======
   const toggleAppViewFn = (e) => {
     e.preventDefault();
 
@@ -184,7 +176,6 @@ const toggleTagListFn = (e) => {
     });
   };
 
->>>>>>> d7bc13d1200cc9cee06c0f86928eb06f2c4fb3db
 
   const toggleTagSuccessFn = (e) => {
     e.preventDefault();
@@ -340,94 +331,6 @@ const toggleTagListFn = (e) => {
             />
             </div>
 
-<<<<<<< HEAD
-            <div className="appointmentDataListing">
-                <div className="gymHolidayList appointmentListing header">
-                  <div className="cell">Date &amp; Time</div>
-                  <div className="cell statusCell">Status</div>
-                  <div className="cell setCell">Set by</div>
-                  <div className="cell rescheduledCell">No. Of Time Rescheduled</div>
-                  <div className="cell"></div>
-                </div>
-
-                <div className="holidayListWrap appLists">     
-                  <div className="gymHolidayList appointmentListing results">
-                    <div className="cell">05/18/2021. 14:10</div>
-                    <div className="cell statusCell"><img src={status1} alt="" /></div>
-                    <div className="cell setCell">Santanu Singha</div>
-                    <div className="cell rescheduledCell">4</div>
-                    <div className="cell">
-                      <div className="sideEditOption">
-                        <button onClick={(e) => toggleEditListFn(e)}>
-                          <img src={dot3gray} alt="" />
-                        </button>
-
-                        <div       
-                        className={
-                          toggleEditList.status
-                            ? "dropdownOptions appLists listOpen"
-                            : "dropdownOptions appLists"
-                        }>
-                          <button class="btn btnEdit">
-                            <span>
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" class="editIcon"><g transform="translate(0.75 0.75)"><path class="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path><path class="a" d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z" transform="translate(-4.384 -2)"></path></g></svg>
-                            </span>
-                            Edit
-                          </button>
-                          <button class="btn btnDelete">
-                            <span>
-                              <svg class="deleteIcon" xmlns="http://www.w3.org/2000/svg" width="12.347" height="13.553" viewBox="0 0 12.347 13.553"><g transform="translate(0.75 0.75)"><path class="a" d="M3,6H13.847" transform="translate(-3 -3.589)"></path><path class="a" d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411" transform="translate(-3.795 -2)"></path><line class="a" y2="3" transform="translate(4.397 6.113)"></line><line class="a" y2="3" transform="translate(6.397 6.113)"></line></g></svg>
-                            </span>
-                            Delete
-                          </button>
-                        </div>
-                                                
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="holidayListWrap appLists">     
-                  <div className="gymHolidayList appointmentListing results">
-                    <div className="cell">05/12/2021. 14:10</div>
-                    <div className="cell statusCell"><img src={status2} alt="" /></div>
-                    <div className="cell setCell">Jit Talukdar</div>
-                    <div className="cell rescheduledCell">2</div>
-                    <div className="cell">
-                      <div className="sideEditOption">
-                        <button onClick={(e) => toggleEditList2Fn(e)}>
-                          <img src={dot3gray} alt="" />
-                        </button>
-
-                        <div       
-                        className={
-                          toggleEditList2.status
-                            ? "dropdownOptions appLists listOpen"
-                            : "dropdownOptions appLists"
-                        }>
-                          <button class="btn btnEdit">
-                            <span>
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" class="editIcon"><g transform="translate(0.75 0.75)"><path class="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path><path class="a" d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z" transform="translate(-4.384 -2)"></path></g></svg>
-                            </span>
-                            Edit
-                          </button>
-                          <button class="btn btnDelete">
-                            <span>
-                              <svg class="deleteIcon" xmlns="http://www.w3.org/2000/svg" width="12.347" height="13.553" viewBox="0 0 12.347 13.553"><g transform="translate(0.75 0.75)"><path class="a" d="M3,6H13.847" transform="translate(-3 -3.589)"></path><path class="a" d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411" transform="translate(-3.795 -2)"></path><line class="a" y2="3" transform="translate(4.397 6.113)"></line><line class="a" y2="3" transform="translate(6.397 6.113)"></line></g></svg>
-                            </span>
-                            Delete
-                          </button>
-                        </div>
-                        
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              
-            </div>
-
-=======
->>>>>>> d7bc13d1200cc9cee06c0f86928eb06f2c4fb3db
 
 
 
@@ -526,7 +429,6 @@ const toggleTagListFn = (e) => {
                       )}  
 
                       {toggleTagList1.status && (
-<<<<<<< HEAD
                       	<>
                           <span className="indTags">New Active <span className="closeTag" onClick={(e) => toggleTagList1Fn(e)}><img src={crossWhite} alt="" /></span></span>
                         </>
@@ -544,25 +446,6 @@ const toggleTagListFn = (e) => {
                         </>
                       )}  
 
-=======
-                      	<>
-                          <span className="indTags">New Active <span className="closeTag" onClick={(e) => toggleTagList1Fn(e)}><img src={crossWhite} alt="" /></span></span>
-                        </>
-                      )}  
-
-                      {toggleTagList2.status && (
-                      	<>
-                          <span className="indTags">Cold Leads <span className="closeTag" onClick={(e) => toggleTagList2Fn(e)}><img src={crossWhite} alt="" /></span></span>
-                        </>
-                      )}  
-
-                      {toggleTagList3.status && (
-                      	<>
-                          <span className="indTags">In Stage <span className="closeTag" onClick={(e) => toggleTagList3Fn(e)}><img src={crossWhite} alt="" /></span></span>
-                        </>
-                      )}  
-
->>>>>>> d7bc13d1200cc9cee06c0f86928eb06f2c4fb3db
                       
                     </div>
                   </div>
