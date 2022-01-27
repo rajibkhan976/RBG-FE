@@ -2196,6 +2196,7 @@ form.dsiplay.none {
   text-align: center;
   margin-top: 48px;
   width: 100%;
+  display: none;
 }
 
 .gymHolidayList.appointmentListing .cell {
@@ -2240,4 +2241,16 @@ form.dsiplay.none {
 
 .dropdownOptions.appLists.listOpen {
   display:block
+}
+
+span.listDisplayBtns {
+  margin-left: auto;
+}
+
+span.listDisplayBtns span {
+  cursor: pointer;
+}
+
+.appointmentDataListing.display {
+  display: block;
 }

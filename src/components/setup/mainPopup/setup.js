@@ -9,6 +9,8 @@ import SetupIcon4 from "../../../assets/images/setupicon4.svg";
 import SetupIcon5 from "../../../assets/images/setupicon5.svg";
 import SetupIcon6 from "../../../assets/images/setupicon6.svg";
 import SetupIcon7 from "../../../assets/images/setupicon7.svg";
+import SetupIcon8 from "../../../assets/images/courses.svg";
+import SetupIcon9 from "../../../assets/images/nn.svg"
 
 const Setup = (props) => {
   return (
@@ -213,7 +215,7 @@ const Setup = (props) => {
             <li>
               <div className="listHead">
                 <i>
-                  <img src={SetupIcon4} alt="" />
+                  <img src={SetupIcon9} alt="" />
                 </i>
                 <div>
                   <h3>
@@ -231,7 +233,7 @@ const Setup = (props) => {
             <li>
               <div className="listHead">
                 <i>
-                  <img src={SetupIcon5} alt="" />
+                  <img src={SetupIcon8} alt="" />
                 </i>
                 <div>
                   <h3>
