@@ -352,7 +352,11 @@ const InnerLeftMenu = (props) => {
                 </NavLink>
               </li>
               <li>
-                <NavLink className={isActive =>"leftMenuInnerLink" + (!isActive ? "  active" : "")} to="/email-template" activeClassName="active">
+                {console.log(pathURL === "/email-template" || pathURL === "/sms-template" || pathURL === "/audio-template")}
+                <NavLink 
+                  className={(pathURL === "/email-template" || pathURL === "/sms-template" || pathURL === "/audio-template") ? "leftMenuInnerLink active" : "leftMenuInnerLink"} 
+                  to="/email-template" 
+                  activeClassName="active">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Templates</p>

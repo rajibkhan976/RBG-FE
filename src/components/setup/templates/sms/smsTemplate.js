@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import plus_icon from "../../../../assets/images/plus_icon.svg";
-import right_icon from '../../../../assets/images/right.svg'
-import browse_keywords from "../../../../assets/images/icon_browse_keywords.svg"
+import right_icon from "../../../../assets/images/right.svg";
+import browse_keywords from "../../../../assets/images/icon_browse_keywords.svg";
 import info_3dot_icon from "../../../../assets/images/info_3dot_icon.svg";
 import cross from "../../../../assets/images/cross.svg";
-import sms_template from "../../../../assets/images/sms-template.svg"
+import sms_template from "../../../../assets/images/sms-template.svg";
 import { utils } from "../../../../helpers";
 // import moment from "moment";
 import Pagination from "../../../shared/Pagination";
@@ -16,7 +16,6 @@ import Loader from "../../../shared/Loader";
 import { ErrorAlert, SuccessAlert } from "../../../shared/messages";
 // import ConfirmBox from "../../../shared/confirmBox";
 import Scrollbars from "react-custom-scrollbars-2";
-
 
 const SmsTemplate = () => {
   const [isLoader, setIsLoader] = useState(false);
@@ -40,64 +39,53 @@ const SmsTemplate = () => {
       title: "Welcome Message",
       message:
         "Hello, [fname] [lname] This is a welcome message from Red Belt Gym.",
-      
     },
     {
       title: "Onboarding Message",
       message:
         "Hello [fname] [lname], Welcome onboard. We hope you will get an amazing experience and fine…",
-      
     },
     {
       title: "Prospect Offer",
       message:
         "Hello, [fname] [lname] Don’t miss out the additional 15% discount on Admission this week.",
-      
     },
     {
       title: "Hot Leads 50% Offer",
       message:
         "Hello, [fname] [lname] Here we would like to offer you 50% discount since you have requested to…",
-      
     },
     {
       title: "Auto Unsubscribe",
       message:
         "Hello, [fname] [lname] If you do not wish to get any SMS from us in future please click here [link] to…",
-      
     },
     {
       title: "General Support Message",
       message:
         "Hello, [fname] [lname] Got a question? Don’t worry we are right here to help you out. Call us at…",
-      
     },
     {
       title: "Support Message for Premium Members",
       message:
         "Hello, [fname] [lname] Thanks for being a valuable member of FitBit. We have appointed [d_supp…",
-      
     },
     {
       title: "Non-paying members message",
       message:
         "Hello, [fname] [lname] We have noticed that you have failed to make your monthly Gym FEE on…",
-      
     },
     {
       title: "Dependent Message",
       message: "Hello, [fname] [lname] Message body",
-      
     },
     {
       title: "New Product Launch Message",
       message: "Hello, [fname] [lname] another message body",
-      
     },
     {
       title: "Intro Message - General",
       message: "Hello, [fname] [lname] another new Message body",
-      
     },
   ]);
 
@@ -105,9 +93,13 @@ const SmsTemplate = () => {
   const [editState, setEditstate] = useState(false);
   const [keywordSuggesion, setKeywordSuggesion] = useState(false);
   const [editMsgObj, setEditMsgObj] = useState({
-    title: '',
-    message: ''
-  })
+    title: "",
+    message: "",
+  });
+  const [addMsgObj, setAddMsgObj] = useState({
+    title: "",
+    message: "",
+  });
 
   const getQueryParams = async () => {
     const keyword = utils.getQueryVariable("search");
@@ -194,103 +186,258 @@ const SmsTemplate = () => {
   };
 
   const getThisMessage = (message, i) => {
-    setActiveMessage(activeMessage === null ? i : activeMessage === i ? null : i)
+    setActiveMessage(
+      activeMessage === null ? i : activeMessage === i ? null : i
+    );
     setEditMsgObj({
       title: smsTemplates[i].title,
-      message: smsTemplates[i].message
-    })
-    setEditstate(false)
+      message: smsTemplates[i].message,
+    });
+    setEditstate(false);
   };
 
   useEffect(() => {}, [smsTemplates]);
 
+  // ADD Keyword to Edit SMS template
   const addKeywordEdit = (e) => {
-    e.preventDefault()
-    let bodyTemplateParent = e.target.closest('.bodyEditTemplate');
-    let textBox = bodyTemplateParent.querySelector('#messageTextbox');
+    e.preventDefault();
+    let bodyTemplateParent = e.target.closest(".bodyEditTemplate");
+    let textBox = bodyTemplateParent.querySelector("#messageTextbox");
     let cursorStart = textBox.selectionStart;
     let cursorEnd = textBox.selectionEnd;
-    let textValue = textBox.value
+    let textValue = textBox.value;
 
-    if(textBox === document.activeElement && (cursorStart || cursorStart  == '0')){
-      console.log('VIA CURSOR');
-      var startToText = "";
-      console.log(textBox.selectionStart);
-      textBox.value = textBox.value.substring(0, cursorStart)+" ["+e.target.textContent+"] "+textBox.value.substring(cursorEnd, textValue.length);
+    try {
+      if (
+        textBox === document.activeElement &&
+        (cursorStart || cursorStart == "0")
+      ) {
+        console.log("VIA CURSOR");
+        var startToText = "";
+        console.log(textBox.selectionStart);
+        textBox.value =
+          textBox.value.substring(0, cursorStart) +
+          " [" +
+          e.target.textContent +
+          "] " +
+          textBox.value.substring(cursorEnd, textValue.length);
 
-      setEditMsgObj({
-        ...editMsgObj,
-        message: textBox.value
-      })
+        setEditMsgObj({
+          ...editMsgObj,
+          message: textBox.value,
+        });
 
-      console.log("editMsgObj", editMsgObj, textBox.value);
+        console.log("editMsgObj", editMsgObj, textBox.value);
 
-      startToText = textBox.value.substring(0, cursorStart)+"["+e.target.textContent+"]";
-      textBox.focus();
-      textBox.setSelectionRange(startToText.length+1, startToText.length+1)
-      console.log(startToText.length);
+        startToText =
+          textBox.value.substring(0, cursorStart) +
+          "[" +
+          e.target.textContent +
+          "]";
+        textBox.focus();
+        textBox.setSelectionRange(
+          startToText.length + 1,
+          startToText.length + 1
+        );
+        console.log(startToText.length);
+      } else {
+        console.log("VIA END POINT");
+
+        textBox.value = textBox.value + " [" + e.target.textContent + "] ";
+        setEditMsgObj({
+          ...editMsgObj,
+          message: textBox.value,
+        });
+        textBox.focus();
+      }
+    } catch (err) {
+      console.log(err);
     }
-    else {
-      console.log('VIA END POINT');
+  };
 
-      textBox.value = textBox.value +" ["+e.target.textContent+"] "
-      setEditMsgObj({
-        ...editMsgObj,
-        message: textBox.value
-      })
-      textBox.focus();
-    }
-  }
-
+  // Add edit template message onchange
   const editTemplateMessage = (e) => {
     console.log("e.target.value.trim()", e.target.value.trim().length !== 0);
-    e.target.value.trim().length !== 0 && setEditMsgObj({
-      ...editMsgObj,
-      message: e.target.value
-    })
+    e.target.value.trim().length !== 0 &&
+      setEditMsgObj({
+        ...editMsgObj,
+        message: e.target.value,
+      });
 
     console.log("editMsgObj", editMsgObj);
-  }
-  useEffect(()=>{},[editMsgObj])
+  };
 
-
-  const editTemplateTitle = (e) =>{
+  // Add edit template title onchange
+  const editTemplateTitle = (e) => {
     console.log("e.target.value.trim()", e.target.value.trim().length !== 0);
-    e.target.value.trim().length !== 0 && setEditMsgObj({
-      ...editMsgObj,
-      title:  e.target.value
-    })
+    e.target.value.trim().length !== 0 &&
+      setEditMsgObj({
+        ...editMsgObj,
+        title: e.target.value,
+      });
     console.log(editMsgObj);
-  }
+  };
 
-  useEffect(()=>{},[editMsgObj])
-
-
+  // Save edit template
   const saveEditstate = (e) => {
     e.preventDefault();
     let copyTemplate = smsTemplates;
-    
+
     copyTemplate[activeMessage] = editMsgObj;
 
-    console.log("editMsgObj...",editMsgObj);
-    
-    setSMSTemplates(copyTemplate)
-    
-    setEditstate(false)
+    console.log("editMsgObj...", editMsgObj);
+
+    setSMSTemplates(copyTemplate);
+
+    setEditstate(false);
 
     setEditMsgObj({
       title: smsTemplates[activeMessage].title,
-      message: smsTemplates[activeMessage].message
-    })
+      message: smsTemplates[activeMessage].message,
+    });
 
-    setKeywordSuggesion(false)
-  }
-
-  useEffect(()=>{},[editMsgObj])
+    setKeywordSuggesion(false);
+  };
 
   const closeModal = () => {
     setSMSModal(false);
   };
+
+  // ADD Keyword to New SMS template
+  const addThisTag = (e) => {
+    console.log(e);
+    let formParent = e.target.closest(".cmnFormRow");
+    let addTextarea = formParent.querySelector("#newTemplateMessage");
+    let cursorStart = addTextarea.selectionStart;
+    let cursorEnd = addTextarea.selectionEnd;
+    let textValue = addTextarea.value;
+
+    try {
+      if (cursorStart || cursorStart == "0") {
+        var startToText = "";
+
+        addTextarea.value =
+          addTextarea.value.substring(0, cursorStart) +
+          " [" +
+          e.target.textContent +
+          "] " +
+          addTextarea.value.substring(cursorEnd, textValue.length);
+
+        setAddMsgObj({
+          ...addMsgObj,
+          message: addTextarea.value,
+        });
+
+        startToText =
+          addTextarea.value.substring(0, cursorStart) +
+          "[" +
+          e.target.textContent +
+          "]";
+        addTextarea.focus();
+        addTextarea.setSelectionRange(
+          startToText.length + 1,
+          startToText.length + 1
+        );
+      } else {
+        addTextarea.value =
+          addTextarea.value + " [" + e.target.textContent + "] ";
+        setAddMsgObj({
+          ...addMsgObj,
+          message: addTextarea.value,
+        });
+        addTextarea.focus();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // Add new template message onchange
+  const addTemplateMessage = (e) => {
+    console.log("e.target.value.trim()", e.target.value.trim().length !== 0);
+    e.target.value.trim().length !== 0 &&
+      setAddMsgObj({
+        ...addMsgObj,
+        message: e.target.value,
+      });
+  };
+
+  // Add new template title onchange
+  const addTemplateTitle = (e) => {
+    console.log("e.target.value.trim()", e.target.value.trim().length !== 0);
+    e.target.value.trim().length !== 0 &&
+      setAddMsgObj({
+        ...addMsgObj,
+        title: e.target.value,
+      });
+  };
+
+  // Save new template function
+  const saveMessage = (e) => {
+    console.log("save message", e, "NEW MESSAGE:::", addMsgObj);
+    let copyTemplate = smsTemplates;
+    copyTemplate = [...copyTemplate, addMsgObj]
+
+    setSMSTemplates(copyTemplate);
+        
+    setAddMsgObj({
+      title: "",
+      message: "",
+    })
+  };
+
+  // Save new template and close modal
+  const saveandNew = (e) => {
+    e.preventDefault();
+    try {
+      if (
+        addMsgObj.title.trim().length !== 0 &&
+        addMsgObj.message.trim().length !== 0
+      ) {
+        saveMessage(e.target);
+        e.target.closest("form").reset();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+        
+    setAddMsgObj({
+      title: "",
+      message: "",
+    })
+  };
+
+  // Save new template and reset form
+  const saveSMSTemplate = (e) => {
+    e.preventDefault();
+    try {
+      if (
+        addMsgObj.title.trim().length !== 0 &&
+        addMsgObj.message.trim().length !== 0
+      ) {
+        console.log(addMsgObj.title.trim().length, addMsgObj.message.trim().length, addMsgObj);
+        saveMessage(e.target);
+        e.target.closest("form").reset();
+        setSuccessMsg("SMS template saved!")
+        closeModal(false);
+        setTimeout(() => {
+          setSuccessMsg("")
+        }, 5000);
+      }
+    } catch (err) {
+      setErrorMsg(err);
+      setTimeout(() => {
+        setErrorMsg("")
+      }, 5000);
+    }
+        
+    setAddMsgObj({
+      title: "",
+      message: "",
+    })
+  };
+
+  useEffect(() => {}, [addMsgObj]);
 
   const paginationCallbackHandle = () => {};
 
@@ -410,106 +557,188 @@ const SmsTemplate = () => {
               }}
             >
               {activeMessage === null && (
-                  <p
-                    style={{
-                      width:
-                        "191px",
-                      fontSize:
-                        "13px",
-                      lineHeight:
-                        "19px",
-                      textAlign:
-                        "center",
-                      color:
-                        "#9BAEBC",
-                    }}
-                  >
-                    Please select an SMS Template to view the preview
-                  </p>
-                )}
+                <p
+                  style={{
+                    width: "191px",
+                    fontSize: "13px",
+                    lineHeight: "19px",
+                    textAlign: "center",
+                    color: "#9BAEBC",
+                  }}
+                >
+                  Please select an SMS Template to view the preview
+                </p>
+              )}
 
-              {activeMessage !== null && 
-              <div className="templateInner">
-                <header className="templateHeader">
-                {!editState && smsTemplates[activeMessage].title} 
-                  {editState && <input 
-                    readOnly={editState === true ? false : true} 
-                    defaultValue={smsTemplates[activeMessage].title} 
-                    onChange={(e)=>editTemplateTitle(e)}
-                    id="templateTitle"
-                  />}
+              {activeMessage !== null && (
+                <div className="templateInner">
+                  <header className="templateHeader">
+                    {!editState && smsTemplates[activeMessage].title}
+                    {editState && (
+                      <input
+                        readOnly={editState === true ? false : true}
+                        defaultValue={smsTemplates[activeMessage].title}
+                        onChange={(e) => editTemplateTitle(e)}
+                        id="templateTitle"
+                      />
+                    )}
 
-                  {!editState && <button className="btn"
-                    onClick={()=>setEditstate(!editState)}
-                  >
-                  <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M11.7938 9.10271V12.3207C11.7938 12.6403 11.6668 12.9468 11.4408 13.1728C11.2149 13.3988 10.9084 13.5257 10.5888 13.5257H2.15178C1.83219 13.5257 1.52569 13.3988 1.29971 13.1728C1.07373 12.9468 0.946777 12.6403 0.946777 12.3207V3.88371C0.946777 3.56413 1.07373 3.25763 1.29971 3.03165C1.52569 2.80567 1.83219 2.67871 2.15178 2.67871H5.36978" stroke="#9BAEBC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M10.5888 1.47363L12.9998 3.88463L6.97381 9.91063H4.56281V7.49963L10.5888 1.47363Z" stroke="#9BAEBC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg> 
-                  </button>}
+                    {!editState && (
+                      <button
+                        className="btn"
+                        onClick={() => setEditstate(!editState)}
+                      >
+                        <svg
+                          width="14"
+                          height="15"
+                          viewBox="0 0 14 15"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M11.7938 9.10271V12.3207C11.7938 12.6403 11.6668 12.9468 11.4408 13.1728C11.2149 13.3988 10.9084 13.5257 10.5888 13.5257H2.15178C1.83219 13.5257 1.52569 13.3988 1.29971 13.1728C1.07373 12.9468 0.946777 12.6403 0.946777 12.3207V3.88371C0.946777 3.56413 1.07373 3.25763 1.29971 3.03165C1.52569 2.80567 1.83219 2.67871 2.15178 2.67871H5.36978"
+                            stroke="#9BAEBC"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                          <path
+                            d="M10.5888 1.47363L12.9998 3.88463L6.97381 9.91063H4.56281V7.49963L10.5888 1.47363Z"
+                            stroke="#9BAEBC"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </button>
+                    )}
 
-                  {editState && <button className="btn"
-                    onClick={(e)=>saveEditstate(e)}
-                  >
-                  <svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M14.5 16H1.5C1.36739 16 1.24021 15.9473 1.14645 15.8536C1.05268 15.7598 1 15.6326 1 15.5V1.50001C1 1.3674 1.05268 1.24022 1.14645 1.14645C1.24021 1.05269 1.36739 1.00001 1.5 1.00001H11.5C11.5658 0.999628 11.631 1.01224 11.692 1.03712C11.7529 1.06201 11.8083 1.09867 11.855 1.14501L14.855 4.14501C14.9013 4.19173 14.938 4.24714 14.9629 4.30806C14.9878 4.36897 15.0004 4.43421 15 4.50001V15.5C15 15.6326 14.9473 15.7598 14.8536 15.8536C14.7598 15.9473 14.6326 16 14.5 16ZM2 15H14V4.70001L11.3 2.00001H2V15Z" fill="#305671" stroke="#305671" strokeWidth="0.5"/>
-                    <path d="M10.1521 4.84172H4.88806C4.8219 4.84521 4.7557 4.83552 4.69331 4.81321C4.63092 4.7909 4.57359 4.75641 4.52465 4.71175C4.47571 4.66709 4.43613 4.61314 4.40822 4.55305C4.38031 4.49296 4.36462 4.42793 4.36206 4.36172V1.47972C4.36462 1.41351 4.38031 1.34847 4.40822 1.28838C4.43613 1.22829 4.47571 1.17435 4.52465 1.12969C4.57359 1.08503 4.63092 1.05054 4.69331 1.02823C4.7557 1.00591 4.8219 0.996225 4.88806 0.999719H10.1521C10.2182 0.996225 10.2844 1.00591 10.3468 1.02823C10.4092 1.05054 10.4665 1.08503 10.5155 1.12969C10.5644 1.17435 10.604 1.22829 10.6319 1.28838C10.6598 1.34847 10.6755 1.41351 10.6781 1.47972V4.36172C10.6755 4.42793 10.6598 4.49296 10.6319 4.55305C10.604 4.61314 10.5644 4.66709 10.5155 4.71175C10.4665 4.75641 10.4092 4.7909 10.3468 4.81321C10.2844 4.83552 10.2182 4.84521 10.1521 4.84172ZM5.41506 3.88172H9.62606V1.95972H5.41506V3.88172Z" fill="#305671" stroke="#305671" strokeWidth="0.5"/>
-                    <path d="M11.6031 12.9205H4.3961C4.26415 12.9245 4.13595 12.8762 4.03947 12.7861C3.94299 12.696 3.88606 12.5714 3.8811 12.4395V7.63946C3.8858 7.50736 3.94261 7.3825 4.03912 7.29217C4.13563 7.20185 4.26398 7.15341 4.3961 7.15746H11.6041C11.7359 7.15341 11.8639 7.20157 11.9604 7.29146C12.0569 7.38136 12.1139 7.50572 12.1191 7.63746V12.4375C12.1147 12.5699 12.0578 12.6952 11.9611 12.7858C11.8643 12.8763 11.7356 12.9248 11.6031 12.9205ZM4.9111 11.9575H11.0891V8.11746H4.9111V11.9575Z" fill="#305671" stroke="#305671" strokeWidth="0.5"/>
-                  </svg>
-                  </button>}
-                </header>
-                <div className="bodyEditTemplate">
-                {editState === false ? <div className="textView">{smsTemplates[activeMessage].message}</div> : 
-                  <textarea 
-                    readOnly={editState === true ? false : true}
-                    defaultValue={smsTemplates[activeMessage].message} 
-                    onChange={(e)=>editTemplateMessage(e)} 
-                    id="messageTextbox"
-                  ></textarea>}
-                  {keywordSuggesion && 
-                    <div className="keywordBox">
-                    <div className="searchKeyword">
-                        <div className="searchKeyBox">
+                    {editState && (
+                      <button className="btn" onClick={(e) => saveEditstate(e)}>
+                        <svg
+                          width="16"
+                          height="17"
+                          viewBox="0 0 16 17"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M14.5 16H1.5C1.36739 16 1.24021 15.9473 1.14645 15.8536C1.05268 15.7598 1 15.6326 1 15.5V1.50001C1 1.3674 1.05268 1.24022 1.14645 1.14645C1.24021 1.05269 1.36739 1.00001 1.5 1.00001H11.5C11.5658 0.999628 11.631 1.01224 11.692 1.03712C11.7529 1.06201 11.8083 1.09867 11.855 1.14501L14.855 4.14501C14.9013 4.19173 14.938 4.24714 14.9629 4.30806C14.9878 4.36897 15.0004 4.43421 15 4.50001V15.5C15 15.6326 14.9473 15.7598 14.8536 15.8536C14.7598 15.9473 14.6326 16 14.5 16ZM2 15H14V4.70001L11.3 2.00001H2V15Z"
+                            fill="#305671"
+                            stroke="#305671"
+                            strokeWidth="0.5"
+                          />
+                          <path
+                            d="M10.1521 4.84172H4.88806C4.8219 4.84521 4.7557 4.83552 4.69331 4.81321C4.63092 4.7909 4.57359 4.75641 4.52465 4.71175C4.47571 4.66709 4.43613 4.61314 4.40822 4.55305C4.38031 4.49296 4.36462 4.42793 4.36206 4.36172V1.47972C4.36462 1.41351 4.38031 1.34847 4.40822 1.28838C4.43613 1.22829 4.47571 1.17435 4.52465 1.12969C4.57359 1.08503 4.63092 1.05054 4.69331 1.02823C4.7557 1.00591 4.8219 0.996225 4.88806 0.999719H10.1521C10.2182 0.996225 10.2844 1.00591 10.3468 1.02823C10.4092 1.05054 10.4665 1.08503 10.5155 1.12969C10.5644 1.17435 10.604 1.22829 10.6319 1.28838C10.6598 1.34847 10.6755 1.41351 10.6781 1.47972V4.36172C10.6755 4.42793 10.6598 4.49296 10.6319 4.55305C10.604 4.61314 10.5644 4.66709 10.5155 4.71175C10.4665 4.75641 10.4092 4.7909 10.3468 4.81321C10.2844 4.83552 10.2182 4.84521 10.1521 4.84172ZM5.41506 3.88172H9.62606V1.95972H5.41506V3.88172Z"
+                            fill="#305671"
+                            stroke="#305671"
+                            strokeWidth="0.5"
+                          />
+                          <path
+                            d="M11.6031 12.9205H4.3961C4.26415 12.9245 4.13595 12.8762 4.03947 12.7861C3.94299 12.696 3.88606 12.5714 3.8811 12.4395V7.63946C3.8858 7.50736 3.94261 7.3825 4.03912 7.29217C4.13563 7.20185 4.26398 7.15341 4.3961 7.15746H11.6041C11.7359 7.15341 11.8639 7.20157 11.9604 7.29146C12.0569 7.38136 12.1139 7.50572 12.1191 7.63746V12.4375C12.1147 12.5699 12.0578 12.6952 11.9611 12.7858C11.8643 12.8763 11.7356 12.9248 11.6031 12.9205ZM4.9111 11.9575H11.0891V8.11746H4.9111V11.9575Z"
+                            fill="#305671"
+                            stroke="#305671"
+                            strokeWidth="0.5"
+                          />
+                        </svg>
+                      </button>
+                    )}
+                  </header>
+                  <div className="bodyEditTemplate">
+                    {editState === false ? (
+                      <div className="textView">
+                        {smsTemplates[activeMessage].message}
+                      </div>
+                    ) : (
+                      <textarea
+                        readOnly={editState === true ? false : true}
+                        defaultValue={smsTemplates[activeMessage].message}
+                        onChange={(e) => editTemplateMessage(e)}
+                        id="messageTextbox"
+                      ></textarea>
+                    )}
+                    {keywordSuggesion && (
+                      <div className="keywordBox">
+                        <div className="searchKeyword">
+                          <div className="searchKeyBox">
                             <input type="text" />
-                        </div>
-                        <div className="cancelKeySearch">
-                            <button onClick={()=> setKeywordSuggesion(false)}></button>
-                        </div>
+                          </div>
+                          <div className="cancelKeySearch">
+                            <button
+                              onClick={() => setKeywordSuggesion(false)}
+                            ></button>
+                          </div>
                         </div>
                         <div className="keywordList">
-                            <ul>
-                                <li><button onClick={(e)=>addKeywordEdit(e)}>First Name</button></li>
-                                <li><button onClick={(e)=>addKeywordEdit(e)}>Last Name</button></li>
-                                <li><button onClick={(e)=>addKeywordEdit(e)}>Address</button></li>
-                                <li><button onClick={(e)=>addKeywordEdit(e)}>City</button></li>
-                                <li><button onClick={(e)=>addKeywordEdit(e)}>Country</button></li>
-                            </ul>
+                          <ul>
+                            <li>
+                              <button onClick={(e) => addKeywordEdit(e)}>
+                                First Name
+                              </button>
+                            </li>
+                            <li>
+                              <button onClick={(e) => addKeywordEdit(e)}>
+                                Last Name
+                              </button>
+                            </li>
+                            <li>
+                              <button onClick={(e) => addKeywordEdit(e)}>
+                                Address
+                              </button>
+                            </li>
+                            <li>
+                              <button onClick={(e) => addKeywordEdit(e)}>
+                                City
+                              </button>
+                            </li>
+                            <li>
+                              <button onClick={(e) => addKeywordEdit(e)}>
+                                Country
+                              </button>
+                            </li>
+                          </ul>
                         </div>
-                    </div>
-                  }
-                </div>
-                  <footer className="editPageFooter d-flex" style={{
-                    backgroundColor: editState && "#fff"
-                  }}>
-                   <button className="btn">
-                      <img src={right_icon} alt="next" style={{
-                        transform: "scaleX(-1)"
-                      }} />
-                    </button>
-                    {!editState && <><span>Page 1 of 2</span>
-                    <button className="btn">
-                      <img src={right_icon} alt="next" />
-                    </button></>}
-                    {editState && <button className="btn browseKeywords" style={{
-                      marginRight: "0",
-                      padding: "0"
+                      </div>
+                    )}
+                  </div>
+                  <footer
+                    className="editPageFooter d-flex"
+                    style={{
+                      backgroundColor: editState && "#fff",
                     }}
-                      onClick={()=>setKeywordSuggesion(true)}
-                    >
-                      <img src={browse_keywords} alt="keywords" />
-                    </button>}
+                  >
+                    <button className="btn">
+                      <img
+                        src={right_icon}
+                        alt="next"
+                        style={{
+                          transform: "scaleX(-1)",
+                        }}
+                      />
+                    </button>
+                    {!editState && (
+                      <>
+                        <span>Page 1 of 2</span>
+                        <button className="btn">
+                          <img src={right_icon} alt="next" />
+                        </button>
+                      </>
+                    )}
+                    {editState && (
+                      <button
+                        className="btn browseKeywords"
+                        style={{
+                          marginRight: "0",
+                          padding: "0",
+                        }}
+                        onClick={() => setKeywordSuggesion(true)}
+                      >
+                        <img src={browse_keywords} alt="keywords" />
+                      </button>
+                    )}
                   </footer>
-              </div>}
+                </div>
+              )}
             </div>
             <div className="templateFooter"></div>
           </div>
@@ -536,47 +765,63 @@ const SmsTemplate = () => {
                   <div className="thumb-vertical" />
                 )}
               >
-              <form method="post">
+                <form method="post">
                   <div className="cmnFormRow">
                     <label className="cmnFieldName d-flex f-justify-between">
                       Enter Template Title
                     </label>
                     <div className="cmnFormField">
-                      <input className="cmnFieldStyle" placeholder="Title..." />
+                      <input
+                        className="cmnFieldStyle"
+                        placeholder="Title..."
+                        id="newTemplateTitle"
+                        onChange={(e) => addTemplateMessage(e)}
+                      />
                     </div>
-                      {/* <span className="errorMsg">Please provide name.</span> */}
+                    {/* <span className="errorMsg">Please provide name.</span> */}
                   </div>
                   <div className="cmnFormRow">
                     <label className="cmnFieldName d-flex f-justify-between">
                       Enter Template Title
                     </label>
                     <div className="cmnFormField">
-                      <textarea className="cmnFieldStyle" placeholder="Message" ></textarea>
+                      <textarea
+                        className="cmnFieldStyle"
+                        placeholder="Message"
+                        id="newTemplateMessage"
+                        onChange={(e) => addTemplateTitle(e)}
+                      ></textarea>
                     </div>
-                      {/* <span className="errorMsg">Please provide name.</span> */}
-                      <div className="smsTagsTemplate">
-                        <span>fname</span>
-                        <span>lname</span>
-                        <span>name</span>
-                        <span>company_name</span>
-                        <span>website</span>
-                        <span>phone</span>
-                        <span>facebook_link</span>
-                        <span>twitter_link</span>
-                        <span>email_id</span>
-                        <span>address</span>
-                      </div>
+                    {/* <span className="errorMsg">Please provide name.</span> */}
+                    <div className="smsTagsTemplate">
+                      <span onClick={(e) => addThisTag(e)}>fname</span>
+                      <span onClick={(e) => addThisTag(e)}>lname</span>
+                      <span onClick={(e) => addThisTag(e)}>name</span>
+                      <span onClick={(e) => addThisTag(e)}>company_name</span>
+                      <span onClick={(e) => addThisTag(e)}>website</span>
+                      <span onClick={(e) => addThisTag(e)}>phone</span>
+                      <span onClick={(e) => addThisTag(e)}>facebook_link</span>
+                      <span onClick={(e) => addThisTag(e)}>twitter_link</span>
+                      <span onClick={(e) => addThisTag(e)}>email_id</span>
+                      <span onClick={(e) => addThisTag(e)}>address</span>
+                    </div>
                   </div>
 
                   <div className="modalbtnHolder w-100">
-                    <button className=" saveNnewBtn">
+                    <button
+                      className=" saveNnewBtn"
+                      onClick={(e) => saveSMSTemplate(e)}
+                    >
                       Save <img src={arrow_forward} alt="" />
                     </button>
-                    <button className=" saveNnewBtn">
-                    Save & New <img src={arrow_forward} alt="" />
+                    <button
+                      className=" saveNnewBtn"
+                      onClick={(e) => saveandNew(e)}
+                    >
+                      Save & New <img src={arrow_forward} alt="" />
                     </button>
                   </div>
-              </form>
+                </form>
               </Scrollbars>
             </div>
           </div>

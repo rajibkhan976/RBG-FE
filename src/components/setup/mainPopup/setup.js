@@ -171,20 +171,20 @@ const Setup = (props) => {
               </div>
               <ul className="secondListing">
                 <li>
-                  <a
-                    href="javascript:void(0)"
+                  <NavLink
+                    to="/email-template"
                     onClick={(e) => props.clickedLink(e)}
                   >
                     Email
-                  </a>
+                  </NavLink>
                 </li>
                 <li>
-                  <a
-                    href="javascript:void(0)"
+                  <NavLink
+                    to="/sms-template"
                     onClick={(e) => props.clickedLink(e)}
                   >
                     SMS
-                  </a>
+                  </NavLink>
                 </li>
                 <li>
                   <NavLink

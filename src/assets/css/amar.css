@@ -320,13 +320,13 @@
 }
 
 /* Templates */
-.smsListing .tableListing .messageDeet {
+.messageDeet {
   width: auto;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
 }
 
-.smsListing .tableListing .messageTitle {
+.messageTitle {
   width: 315px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
@@ -385,9 +385,10 @@
   flex: 1 1 auto;
 }
 
-.smsListing .messageTitle,
-.smsListing .messageDeet,
-.smsListing li div>button {
+.messageTitle,
+.messageDeet,
+.smsListing li div>button,
+.emailListing li div>button {
   font-size: 13px;
   line-height: 19px;
   color: #305671;
@@ -406,7 +407,8 @@
   width: 22px;
 }
 
-.smsListing li {
+.smsListing li,
+.emailListing li {
   cursor: pointer;
   user-select: none;
 }
@@ -541,3 +543,41 @@
   max-height: 20vh;
   overflow: auto;
 }
+.smsTagsTemplate {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 15px;
+}
+.smsTagsTemplate span {
+  padding: 0 6px;
+  height: 30px;
+  font-size: 13px;
+  line-height: 19px;
+  color: #FFFFFF;
+  background: #9BAEBC;
+  margin-right: 5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 5px;
+  border-radius: 3px;
+}
+.smsTagsTemplate span:hover {
+  background-color: transparent;
+  color: #9BAEBC;
+}
+/* SMS Listing page */
+
+/* Email listing page */
+.emailListing {
+  padding: 0;
+}
+.emailListingPage .listBody {
+  flex: 1 1 auto;
+  max-width: 736px;
+}
+.emailListingPage .templateOuter {
+  width: 690px;
+  border-radius: 5px;
+}
+
