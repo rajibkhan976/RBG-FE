@@ -39,16 +39,20 @@ const ContactListing = (props) => {
     const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "contact")));
     const dispatch = useDispatch();
     const modalId = useSelector((state) => state.contact.contact_modal_id);
-    useEffect(() => {
-        if (modalId === "") {
-            fetchContact();
-        }
-    }, [modalId]);
-    useEffect(() => {
-        if (!props.modalStatus) {
-            fetchContact();
-        }
-    }, [props.modalStatus]);
+    
+    // useEffect(() => {
+    //     console.log("modalId", modalId)
+    //     if (modalId === "") {
+    //         fetchContact();
+    //     }      
+    // }, [modalId]);
+    // useEffect(() => {
+    //     console.log("props.modalStatus ", props.modalStatus)
+    //     if (!props.modalStatus) {
+    //         fetchContact();
+    //     }
+    // }, [props.modalStatus]);
+
     const handelSize = () => {
         setTableWidth(window.innerWidth - 504);
     }
