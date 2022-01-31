@@ -8,26 +8,14 @@ const EmailSetup = () => {
     const [active, setActive] = useState(types[0]);
     const [radioCheck , setRadioCheck] = useState(false);
 
-    const toggleRadioChange = () =>{
-        setRadioCheck(!radioCheck);
+    const toggleRadioChange = (event) =>{
+        const value = event.target.value;
+        setRadioCheck(value);
     }
 
     return(
         <>
-      
-            {/* {isLoader ? <Loader /> : ''}
-            {successMsg &&
-            <SuccessAlert message={successMsg}></SuccessAlert>
-            }
-            {errorMsg &&
-            <ErrorAlert message={errorMsg}></ErrorAlert>
-            }
-            {isAlert.show &&
-                <ConfirmBox
-                    message={getDeleteConfigWarnningMsg()}
-                    callback={(isConfirmed) => deleteConfig(isAlert.el, isConfirmed)}
-                /> 
-            }*/}
+
             <div class="dashInnerUI customization">
                 <div className="userListHead">
                     <div className="listInfo">
@@ -45,22 +33,34 @@ const EmailSetup = () => {
                     <ul>
                         <li>
                             <span>SMTP Configuration</span> 
-                            <label class={radioCheck ? "toggleBtn active" : "toggleBtn"}>
-                                <input type="radio" name="selectType" onChange={toggleRadioChange}/>
+                            <label class={radioCheck === "SMTP Configuration" ? "toggleBtn active" : "toggleBtn"}>
+                                <input type="radio" 
+                                name="selectType" 
+                                value="SMTP Configuration"
+                                defaultChecked={radioCheck === "SMTP Configuration"}
+                                onChange={event => toggleRadioChange(event)}/>
                                 <span class="toggler"></span>
                             </label>
                         </li>
-                        <li>
+                         <li>
                             <span>Postmark Setup</span> 
-                            <label class={radioCheck ? "toggleBtn active" : "toggleBtn"}>
-                                <input type="radio" name="selectType" onChange={toggleRadioChange}/>
+                            <label class={radioCheck === "Postmark Setup" ? "toggleBtn active" : "toggleBtn"}>
+                            <input type="radio" 
+                                name="selectType" 
+                                value="Postmark Setup"
+                                defaultChecked={radioCheck === "Postmark Setup"}
+                                onChange={event => toggleRadioChange(event)}/>
                                 <span class="toggler"></span>
                             </label>
                         </li>
                         <li>
                             <span>Amazon Simple Email Service</span> 
-                            <label class={radioCheck ? "toggleBtn active" : "toggleBtn"}>
-                                <input type="radio" name="selectType" onChange={toggleRadioChange}/>
+                            <label class={radioCheck === "Amazon Simple Email Service" ? "toggleBtn active" : "toggleBtn"}>
+                            <input type="radio" 
+                                name="selectType" 
+                                value="Amazon Simple Email Service"
+                                defaultChecked={radioCheck === "Amazon Simple Email Service"}
+                                onChange={event => toggleRadioChange(event)}/>
                                 <span class="toggler"></span>
                             </label>
                         </li>

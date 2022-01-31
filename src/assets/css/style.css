@@ -8852,12 +8852,13 @@ li.listHeading > div.sortOff:after {
 }
 .cmnFieldName1 {
   font-size: 13px;
-  font-weight: 514;
+  font-weight: 500;
   margin-bottom: 10px;
+  color: var(--darkBlue);
 }
 .tabContent form {
   overflow: auto;
-  height: 580px;
+  height: 515px;
   padding: 0 7px 0 0;
 }
 .tabsection .tabContent form::-webkit-scrollbar {
