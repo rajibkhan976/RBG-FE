@@ -383,6 +383,7 @@
 
 .templateBody {
   flex: 1 1 auto;
+  overflow: hidden;
 }
 
 .messageTitle,
@@ -579,5 +580,19 @@
 .emailListingPage .templateOuter {
   width: 690px;
   border-radius: 5px;
+  padding: 20px 33px;
+}
+.emailListing .templateHeader {
+  margin: 0;
+  padding: 0;
+  justify-content: end;
 }
 
+/* Text editor */
+.emailListing  .tox-tinymce {
+  border: none;
+}
+.tox .tox-statusbar {
+  display: none;
+}
+/* Text editor */

@@ -7,6 +7,7 @@ import { utils } from "../../../../helpers";
 import Pagination from "../../../shared/Pagination";
 import Loader from "../../../shared/Loader";
 import { ErrorAlert, SuccessAlert } from "../../../shared/messages";
+import EditorComponent from "./editor/Editor";
 
 const EmailTemplate = () => {
   const [isLoader, setIsLoader] = useState(false);
@@ -205,7 +206,13 @@ const EmailTemplate = () => {
             <span>Email Preview</span>
           </div>
           <div className="templateOuter d-flex">
+            <div className="templateHeader">
+              <button className="btn btnActionMore">
+                <img src={info_3dot_icon} alt="" />
+              </button>
+            </div>
             <div className="templateBody">
+              <EditorComponent />
             </div>
           </div>
         </div>
