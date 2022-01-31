@@ -289,7 +289,7 @@ const TransactionChoose = (props) => {
                                 name="transactionType"
                                 onChange={chooseTransctionTypeCourse}
                             /><span></span>
-                        </div> Course
+                        </div> Program
                     </label>
                 </div>
                 {choosePOS && <div className="posSellingForm">
@@ -303,9 +303,9 @@ const TransactionChoose = (props) => {
                     <form>
                         <div className="transaction_form">
                             <div className="formsection gap">
-                                <label>Select Category</label>
+                                <label>Select Program</label>
                                 <select className="selectBox" onChange={chosePosCatHandel}>
-                                    <option value="" >Select Category</option>
+                                    <option value="" >Select Pogram</option>
                                     {productCatList.map((item, key) => (
                                         <option key={"productCat_" + key} value={item._id} data-name={item.name}>{item.name}</option>
                                     ))}
@@ -396,12 +396,12 @@ const TransactionChoose = (props) => {
                                 </select>
                             </div>
                             <div className={courseList.length > 0 ? "formsection gap" : "formsection gap disabled"}>
-                                <label>Select Course</label>
+                                <label>Select program</label>
                                 <select className="selectBox" onChange={getCourseFees} value={courseFees ? courseFees : ''}>
                                     {courseList.length > 0 ? <option value="">Select a course</option> : ""}
                                     {courseList.length > 0 ? courseList.map((item, key) => {
                                         return (<option key={"course_" + key} value={item.fees} data-name={item.name} data-img={item.image} data-duration={item.duration} data-courseId={item._id}>{item.name}</option>)
-                                    }) : <option>No courses available</option>}
+                                    }) : <option>No programs available</option>}
                                 </select>
                             </div>
 
