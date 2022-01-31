@@ -4,13 +4,9 @@ import React, { useState, useEffect } from "react";
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import info_3dot_icon from "../../../../assets/images/info_3dot_icon.svg";
 import { utils } from "../../../../helpers";
-// import moment from "moment";
 import Pagination from "../../../shared/Pagination";
 import Loader from "../../../shared/Loader";
-// import list_board_icon from "../../../../assets/images/list_board_icon.svg";
-// import { bucketUrl } from "../../../../configuration/config";
 import { ErrorAlert, SuccessAlert } from "../../../shared/messages";
-// import ConfirmBox from "../../../shared/confirmBox";
 
 const EmailTemplate = () => {
   const [isLoader, setIsLoader] = useState(false);
@@ -209,8 +205,8 @@ const EmailTemplate = () => {
             <span>Email Preview</span>
           </div>
           <div className="templateOuter d-flex">
-                <div className="templateBody"></div>
-                <div className="templateFooter"></div>
+            <div className="templateBody">
+            </div>
           </div>
         </div>
       </div>

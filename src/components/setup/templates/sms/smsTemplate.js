@@ -207,10 +207,10 @@ const SmsTemplate = () => {
     let cursorEnd = textBox.selectionEnd;
     let textValue = textBox.value;
 
+    console.log();
+
     try {
-      if (
-        textBox === document.activeElement &&
-        (cursorStart || cursorStart == "0")
+      if (cursorStart || cursorStart == "0"
       ) {
         console.log("VIA CURSOR");
         var startToText = "";
