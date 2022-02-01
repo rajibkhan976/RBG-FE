@@ -20,7 +20,8 @@ const EmailTemplate = () => {
   const [emailModal, setEmailModal] = useState(false);
   const [initialData, setInitialData] = useState([
     {
-      title: "Making online payment is not hard anymore. Find how!",
+      title: "Product Teaser",
+      header: "Making online payment is not hard anymore. Find how!",
       message: `<p>Hey,</p>
           <p>Greetings from Team RBG.</p>
           <p>We present our quick and easy way to pay all your bills digitally to ensure avoiding physical contacts during this Covid-19 spread up.</p>
@@ -116,10 +117,14 @@ const EmailTemplate = () => {
   };
 
   const stringToHTML = (str) => {
-    console.log("str", str);
     var parser = new DOMParser();
     var doc = parser.parseFromString(str, 'text/html');
-    return doc.body.innerHTML;
+    var dataHTML = "";
+
+    for(var i = 0; i < doc.body.childNodes.length; i++){
+      dataHTML += doc.body.childNodes[i].textContent
+    }
+    return dataHTML;
   };
 
   return (
@@ -187,7 +192,12 @@ const EmailTemplate = () => {
               initialData.map((emailData, i) => (
                 <li key={i}>
                   <div className="messageTitle">{emailData.title}</div>
-                  <div className="messageDeet" dangerouslySetInnerHTML={{__html: stringToHTML(emailData.message)}}/>
+                  <div className="messageDeet">
+                    <p className="messageHeader">
+                      {emailData.header}
+                    </p>
+                    <div className="dataMessageEmail" dangerouslySetInnerHTML={{__html: stringToHTML(emailData.message)}} />
+                  </div>
                 </li>
               ))}
           </ul>
