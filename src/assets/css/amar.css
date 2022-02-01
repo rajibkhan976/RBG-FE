@@ -618,4 +618,11 @@
 .emailListing .tox-editor-container .tox-sidebar-wrap {
   padding-bottom: 40px;
 }
+.messageDeet .messageHeader {
+  margin-bottom: 9px;
+}
+.emailListing li .messageTitle, .emailListing li .messageDeet {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
 /* Text editor */

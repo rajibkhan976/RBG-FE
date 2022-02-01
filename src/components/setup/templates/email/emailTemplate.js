@@ -18,6 +18,7 @@ const EmailTemplate = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [sortType, setSortType] = useState("asc");
   const [emailModal, setEmailModal] = useState(false);
+  const [activeEmail, setActiveEmail] = useState(null);
   const [initialData, setInitialData] = useState([
     {
       title: "Product Teaser",
@@ -31,6 +32,12 @@ const EmailTemplate = () => {
           <p><span style="color: #55bbc9;"><a style="color: #55bbc9; text-decoration: underline;" title="You wont believe this" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener">Click</a></span><span style="color: #55bbc9;"><a style="color: #55bbc9; text-decoration: underline;" title="You wont believe this" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener"> </a><a style="color: #55bbc9; text-decoration: underline;" title="You wont believe this" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener">here</a></span> to unsubscribe from campaign</p>`,
     },
   ]);
+
+  const [editEmailObj, setEditEmailObj] = useState({
+    title: "",
+    header: "",
+    message: ""
+  })
 
   const getQueryParams = async () => {
     const keyword = utils.getQueryVariable("search");
@@ -124,8 +131,20 @@ const EmailTemplate = () => {
     for(var i = 0; i < doc.body.childNodes.length; i++){
       dataHTML += doc.body.childNodes[i].textContent
     }
-    return dataHTML;
+    return (dataHTML.length < 100 ? dataHTML : dataHTML.substring(0, 100)+"...");
   };
+
+  const getThisEmail = (email, i) => {
+    setActiveEmail(
+      activeEmail === null ? i : activeEmail === i ? null : i
+    );
+    setEditEmailObj({
+      title: initialData[i].title,
+      header: initialData[i].header,
+      message: initialData[i].message
+    })
+    console.log(email);
+  }
 
   return (
     <div className="dashInnerUI emailListingPage">
@@ -190,7 +209,11 @@ const EmailTemplate = () => {
             {initialData &&
               initialData.length > 0 &&
               initialData.map((emailData, i) => (
-                <li key={i}>
+                <li 
+                  key={i}
+                  onClick={(e)=>getThisEmail(emailData, i)}
+                  className={activeEmail === i && "active"}
+                >
                   <div className="messageTitle">{emailData.title}</div>
                   <div className="messageDeet">
                     <p className="messageHeader">
@@ -232,16 +255,36 @@ const EmailTemplate = () => {
             <span>Email Preview</span>
           </div>
           <div className="templateOuter d-flex">
-            <div className="templateHeader">
-              <button className="btn btnActionMore">
-                <img src={info_3dot_icon} alt="" />
-              </button>
-            </div>
-            <div className="templateBody">
-              <EditorComponent
-                initialData={initialData}
-                setInitialData={setInitialData}
-              />
+            {activeEmail !== null &&
+              <div className="templateHeader">
+                <button className="btn btnActionMore">
+                  <img src={info_3dot_icon} alt="" />
+                </button>
+              </div>
+            }
+            <div 
+              className="templateBody"
+              style={{
+                display: activeEmail === null && "flex",
+                alignItems: activeEmail === null && "center",
+                justifyContent: activeEmail === null && "center"
+              }}
+            >
+              {activeEmail === null ? 
+                <p
+                  style={{
+                    width: "211px",
+                    fontSize: "13px",
+                    lineHeight: "19px",
+                    textAlign: "center",
+                    color: "rgb(155, 174, 188)"
+                  }}
+                >Please select an Email Template to view the preview</p>:
+                <EditorComponent
+                  initialData={initialData}
+                  setInitialData={setInitialData}
+                />
+              }
             </div>
           </div>
         </div>

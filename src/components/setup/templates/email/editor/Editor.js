@@ -2,9 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
 
 const EditorComponent = (props) => {
-  let initialValue = "<p>This is dummy initial value</p>";
-  const [value, setValue] = useState(initialValue ?? "");
+  let initialValue = props.initialData ? props.initialData : "Type here...";
+  const [value, setValue] = useState("");
   const editorRef = useRef(null);
+
   const log = () => {
     if (editorRef.current) {
       console.log(editorRef.current.getContent());
@@ -35,7 +36,7 @@ const EditorComponent = (props) => {
             height: "100%",
             menubar: false,
             plugins: [
-              "advlist autolink lists link image imagetools charmap print preview anchor",
+              "advlist autolink lists link image charmap print preview anchor",
               "searchreplace visualblocks code fullscreen",
               "insertdatetime media table paste code help wordcount save autosave",
             ],
