@@ -10,6 +10,10 @@
   flex: 1 1 auto;
 }
 
+.h-100 {
+  height: 100%;
+}
+
 .f-justify-between {
   justify-content: space-between;
 }
@@ -593,6 +597,25 @@
   border: none;
 }
 .tox .tox-statusbar {
-  display: none;
+  display: none !important;
+}
+.emailListing .tox-toolbar-overlord .tox-toolbar:last-child {
+  position: absolute;
+  bottom: 1px;
+  left: 1px;
+  right: 1px;
+  background-image: none;
+  display: flex;
+  justify-content: space-between;
+}
+.emailListing .tox-editor-container {
+  border: 1px solid #efefef;
+}
+.emailListing .tox-toolbar-overlord,
+.emailListing .tox-toolbar {
+  background-color: #fafafa !important;
+}
+.emailListing .tox-editor-container .tox-sidebar-wrap {
+  padding-bottom: 40px;
 }
 /* Text editor */
