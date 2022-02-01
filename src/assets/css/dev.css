@@ -2171,7 +2171,7 @@ form.dsiplay.none {
 
 .modalDependent .modalForm.appointmentForm.setappointment {
     max-height: 550px;
-        min-height: 440px;
+        min-height: 455px;
 }
 
 .topCross.setApp {
@@ -2270,7 +2270,7 @@ span.listDisplayBtns span {
 }
 .transHeader .dropdownOptions .btn span { padding: 0; }
 
-.appointmentDataListing {
+.appointmentDataListing.calenderViewOnly {
       max-height: 390px;
     overflow-y: auto;
     padding-right: 10px;
@@ -2310,9 +2310,10 @@ span.listDisplayBtns span {
 .innerAppointmentModalBody {
   width: 100%;
   float: left;
-  height: 255px;
+  height: 245px;
   overflow-y: auto;
   padding-right: 8px;
+  padding-bottom: 2px
 }
 
 .innerAppointmentModalBody::-webkit-scrollbar {
@@ -2350,4 +2351,42 @@ button.fc-prev-button.fc-button.fc-button-primary, button.fc-next-button.fc-butt
 }
 .fc .fc-button-primary:not(:disabled):active, .fc .fc-button-primary:not(:disabled).fc-button-active {
   background:transparent;
+}
+
+.indTags:hover {
+  background: #83919b;
+}
+
+.holidayListWrap.appListsWrap {
+    width: 100%;
+    float: left;
+    height: 345px;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+
+
+
+.holidayListWrap.appListsWrap::-webkit-scrollbar {
+  width: 4px;
+}
+
+.holidayListWrap.appListsWrap::-webkit-scrollbar-track {
+  background-color: #dce4eb;
+}
+
+.holidayListWrap.appListsWrap::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
+}
+
+span.tagLists ul li span.delTag {
+  display: none;
+}
+
+span.tagLists ul li.tagLi.sellected span.delTag {
+  display: block;
+}
+
+span.tagLists ul li.tagLi.sellected span.addTag {
+  display: none;
 }
