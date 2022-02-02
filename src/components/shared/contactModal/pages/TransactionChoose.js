@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import * as actionTypes from "../../../../actions/types";
 import aaroww from "../../../../assets/images/arrow_forward.svg";
 import arrow_forward from "../../../../assets/images/backIcon.svg";
+import info_icon from "../../../../assets/images/infos.svg";
 import camera from "../../../../assets/images/camera.svg";
 import categoryTag from "../../../../assets/images/categoryTag.svg";
 import { BillingServices } from "../../../../services/billing/billingServices";
@@ -385,9 +386,15 @@ const TransactionChoose = (props) => {
                         <div className="formMsg error">{errorMsg}</div>
                     }
                     <form>
-                        <div className="transaction_form">
+                        <div className="transaction_form products">
                             <div className="formsection gap">
-                                <label>Select Category</label>
+                                <span className="labelWithInfo">
+                                    <label>Select Category</label>
+                                    <span className="infoSpan">
+                                        <img src={info_icon} alt="" />
+                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                    </span>
+                                </span>
                                 <select className="selectBox" onChange={choseCatHandel}>
                                     <option value="">Select category</option>
                                     {courseCategory.map((item, key) => (
@@ -395,6 +402,67 @@ const TransactionChoose = (props) => {
                                     ))}
                                 </select>
                             </div>
+
+                            <div className="formsection gap">
+                                <span className="labelWithInfo">
+                                    <label>Duration</label>
+                                    <span className="infoSpan">
+                                        <img src={info_icon} alt="" />
+                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                    </span>
+                                </span>
+                                <span className="leftSecTransaction">
+                                    <input type="text" placeholder="12" class="editableInput" value="12" />
+                                </span>
+                                <span className="rightSecTransaction">
+                                    <select className="selectBox">
+                                        <option value="">Month(s)</option>
+                                    </select>
+                                </span>
+                            </div>
+
+
+                            <div className="formsection gap">
+                                
+                                <span className="leftSecTransaction">
+
+                                    <span className="labelWithInfo">
+                                        <label>Payment Type</label>
+                                        <span className="infoSpan">
+                                            <img src={info_icon} alt="" />
+                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                        </span>
+                                    </span>
+                                    <select className="selectBox">
+                                        <option value="">Recurring</option>
+                                    </select>
+                                </span>
+                                <span className="rightSecTransaction">
+
+                                <span className="labelWithInfo">
+                                    <label>Billing Cycle</label>
+                                    <span className="infoSpan">
+                                        <img src={info_icon} alt="" />
+                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                    </span>
+                                </span>
+                                    <select className="selectBox">
+                                        <option value="">Monthly</option>
+                                    </select>
+                                </span>
+                            </div>
+
+                            <div className="formsection gap">
+                                <span className="labelWithInfo">
+                                    <label>Tuition Amount</label>
+                                    <span className="infoSpan">
+                                        <img src={info_icon} alt="" />
+                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                    </span>
+                                </span>
+                                <input type="number" placeholder="149" class="editableInput numberType" value="149"/>
+                            </div>
+
                             <div className={courseList.length > 0 ? "formsection gap" : "formsection gap disabled"}>
                                 <label>Select program</label>
                                 <select className="selectBox" onChange={getCourseFees} value={courseFees ? courseFees : ''}>
