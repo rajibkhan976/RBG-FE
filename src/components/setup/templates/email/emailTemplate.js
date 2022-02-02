@@ -31,6 +31,12 @@ const EmailTemplate = () => {
           <p>Brian</p>
           <p><span style="color: #55bbc9;"><a style="color: #55bbc9; text-decoration: underline;" title="You wont believe this" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener">Click</a></span><span style="color: #55bbc9;"><a style="color: #55bbc9; text-decoration: underline;" title="You wont believe this" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener"> </a><a style="color: #55bbc9; text-decoration: underline;" title="You wont believe this" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener">here</a></span> to unsubscribe from campaign</p>`,
     },
+    {
+      title: "Rocketman",
+      header: "This is mission control",
+      message: `<h1>This is Rocketman!</h1>
+                <p><span style="color: #e03e2d;"><strong><span style="font-family: impact, sans-serif;">...an you're it!</span></strong></span></p>`
+    }
   ]);
 
   const [editEmailObj, setEditEmailObj] = useState({
@@ -145,6 +151,30 @@ const EmailTemplate = () => {
     })
     console.log(email);
   }
+
+  useEffect(()=>{},[editEmailObj])
+
+  const editedEmailTemplate = (email, headerMessage) => {
+    console.log('UPDATED EMAIL', email);
+    let copyEmailTemplates = initialData;
+    let currentTemplate = initialData[activeEmail];
+
+    currentTemplate = {
+      title: currentTemplate.title,
+      header: headerMessage,
+      message: email
+    }
+
+    copyEmailTemplates[activeEmail] = currentTemplate;
+
+    console.log("copyEmailTemplates", copyEmailTemplates);
+
+    setInitialData(copyEmailTemplates)
+  }
+
+  useEffect(()=>{},[initialData])
+
+  console.log("updated initialData", initialData);
 
   return (
     <div className="dashInnerUI emailListingPage">
@@ -280,10 +310,13 @@ const EmailTemplate = () => {
                     color: "rgb(155, 174, 188)"
                   }}
                 >Please select an Email Template to view the preview</p>:
-                <EditorComponent
-                  initialData={initialData}
-                  setInitialData={setInitialData}
-                />
+                <>
+                  <EditorComponent
+                    initialData={initialData[activeEmail]}
+                    editedEmailTemplate={editedEmailTemplate}
+                    setActiveEmail={setActiveEmail}
+                  />
+                </>
               }
             </div>
           </div>

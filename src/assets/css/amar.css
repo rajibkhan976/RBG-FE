@@ -511,7 +511,8 @@
   padding-bottom: 5px;
 }
 
-.smsListing li.active>div {
+.smsListing li.active>div,
+.emailListing li.active>div {
   background: #9BAEBC;
   color: #fff;
 }
@@ -624,5 +625,40 @@
 .emailListing li .messageTitle, .emailListing li .messageDeet {
   padding-top: 20px;
   padding-bottom: 20px;
+}
+.emailListingPage .templateHeader {
+  margin-bottom: 15px;
+}
+.emailListing li.active .messageHeader {
+  color: #fff;
+}
+.btnSave svg {
+  width: 24px;
+  height: auto;
+}
+.emailListing .templateBody .btnSave {
+  position: absolute;
+  bottom: 8px;
+  z-index: 2;
+  right: 50px;
+}
+.headerEmail {
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 19px;
+  color: #305671;
+  padding-bottom: 12px;
+  border: none;
+  border-bottom: 1px solid #E9EFF5;
+  margin-bottom: 15px;
+}
+.emailListingPage .templateBody {
+  display: flex;
+  flex-direction: column;
+}
+#formEditor {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
 }
 /* Text editor */
