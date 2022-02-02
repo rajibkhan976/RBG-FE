@@ -2390,3 +2390,98 @@ span.tagLists ul li.tagLi.sellected span.delTag {
 span.tagLists ul li.tagLi.sellected span.addTag {
   display: none;
 }
+
+
+
+/*Transaction section*/
+
+
+.infoSpan {
+  position: relative;
+  display: inline-block;
+  width: 22px;
+}
+
+.infoSpan .tooltiptextInfo {
+  visibility: hidden;
+  width: 200px;
+  background-color: #FFFFFF;
+  color: #9BAEBC;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 150%;
+  left: 50%;
+  margin-left: -105px;
+  font-size: 12px;
+  box-shadow: -3px 3px 17px -2px rgba(99,97,97,0.92);
+-webkit-box-shadow: -3px 3px 17px -2px rgba(99,97,97,0.92);
+-moz-box-shadow: -3px 3px 17px -2px rgba(99,97,97,0.92);
+}
+
+.infoSpan .tooltiptextInfo::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #fff transparent transparent transparent;
+}
+
+.infoSpan:hover .tooltiptextInfo {
+  visibility: visible;
+}
+
+span.labelWithInfo {
+  width: 100%;
+  float: left;
+}
+
+span.labelWithInfo label {
+  width: auto;
+  margin-right: 10px;
+}
+
+span.leftSecTransaction {
+    width: 50%;
+    float: left;
+    padding-right: 10px;
+}
+
+span.leftSecTransaction input.editableInput {
+    width: 100%!important;
+}
+
+span.rightSecTransaction {
+    width: 50%;
+    float: right;
+    padding-left: 10px;
+}
+
+span.rightSecTransaction select {
+  width: 100%;
+}
+
+.transaction_form.products .formsection.gap {
+  float: left;
+  width: 100%;
+}
+
+.transaction_form.products .formsection.gap .editableInput.numberType {
+  width: 100%!important;
+}
+
+input.editableInput.numberType::-webkit-outer-spin-button,
+input.editableInput.numberType::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input.editableInput.numberType[type=number] {
+  -moz-appearance: textfield;
+}
