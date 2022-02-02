@@ -2,11 +2,16 @@ import React, { useState, useEffect } from "react";
 
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import info_3dot_icon from "../../../../assets/images/info_3dot_icon.svg";
+import arrow_forward from "../../../../assets/images/arrow_forward.svg";
+import cross from "../../../../assets/images/cross.svg";
+import email_template from "../../../../assets/images/email_template.svg"
+import browse_keywords from "../../../../assets/images/icon_browse_keywords.svg";
 import { utils } from "../../../../helpers";
 import Pagination from "../../../shared/Pagination";
 import Loader from "../../../shared/Loader";
 import { ErrorAlert, SuccessAlert } from "../../../shared/messages";
 import EditorComponent from "./editor/Editor";
+import Scrollbars from "react-custom-scrollbars-2";
 
 const EmailTemplate = () => {
   const [isLoader, setIsLoader] = useState(false);
@@ -19,6 +24,7 @@ const EmailTemplate = () => {
   const [sortType, setSortType] = useState("asc");
   const [emailModal, setEmailModal] = useState(false);
   const [activeEmail, setActiveEmail] = useState(null);
+  const [keywordSuggesion, setKeywordSuggesion] = useState(false);
   const [initialData, setInitialData] = useState([
     {
       title: "Product Teaser",
@@ -174,7 +180,27 @@ const EmailTemplate = () => {
 
   useEffect(()=>{},[initialData])
 
-  console.log("updated initialData", initialData);
+  const addKeywordEmail = (e) => {
+    console.log(e);
+  }
+
+  const saveEmailTemplate = (e) => {
+    e.preventDefault()
+    setEmailModal(false);
+  }
+
+  const saveAndNewEmailTemplate = (e) => {
+    e.preventDefault();
+    try {
+      e.target.closest("form").reset();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  const closeModal = () => {
+    setEmailModal(false);
+  };
 
   return (
     <div className="dashInnerUI emailListingPage">
@@ -203,7 +229,10 @@ const EmailTemplate = () => {
               <button className="searchIcon"></button>
             </form>
           </div>
-          <button className="creatUserBtn" onClick={openModal}>
+          <button 
+            className="creatUserBtn" 
+            onClick={openModal}
+          >
             <img className="plusIcon" src={plus_icon} alt="" />
             <span>Create a Email Template</span>
           </button>
@@ -312,6 +341,7 @@ const EmailTemplate = () => {
                 >Please select an Email Template to view the preview</p>:
                 <>
                   <EditorComponent
+                    createNew={false}
                     initialData={initialData[activeEmail]}
                     editedEmailTemplate={editedEmailTemplate}
                     setActiveEmail={setActiveEmail}
@@ -321,6 +351,141 @@ const EmailTemplate = () => {
             </div>
           </div>
         </div>
+      {emailModal &&  (
+        <div className="modalAddEmail modalBackdrop">
+          {isLoader ? <Loader /> : ""}
+          <div className="slickModalBody">
+            <div className="slickModalHeader">
+              <button className="topCross" onClick={() => closeModal(false)}>
+                <img src={cross} alt="" />
+              </button>
+              <div className="circleForIcon">
+                <img src={email_template} alt="" />
+              </div>
+              <h3>Add an Email Template</h3>
+              <p>Fill out below details to create a new Email Template</p>
+            </div>
+            <div className="modalForm">
+              <Scrollbars
+                renderThumbVertical={(props) => (
+                  <div className="thumb-vertical" />
+                )}
+              >
+                <form method="post">
+                  <div className="cmnFormRow">
+                    <label className="cmnFieldName d-flex f-justify-between">
+                      Title
+                    </label>
+                    <div className="cmnFormField">
+                      <input
+                        className="cmnFieldStyle"
+                        placeholder="Title..."
+                        id="newEmailTemplateTitle"
+                        
+                      />
+                    </div>
+                    {/* <span className="errorMsg">Please provide name.</span> */}
+                  </div>
+                  <div className="cmnFormRow">
+                    <label className="cmnFieldName d-flex f-justify-between">
+                      Subject
+                    </label>
+                    <div className="cmnFormField">
+                      <input
+                        className="cmnFieldStyle"
+                        placeholder="Title..."
+                        id="newEmailTemplateTitle"
+                        
+                      />
+                      <button
+                        className="btn browseKeywords"
+                        style={{
+                          marginRight: "0",
+                          padding: "0",
+                        }}
+                        onClick={(e) => 
+                          {setKeywordSuggesion(true)
+                          e.preventDefault()}
+                        }
+                      >
+                        <img src={browse_keywords} alt="keywords" />
+                      </button>
+                      {keywordSuggesion &&  <div className="keywordBox">
+                        <div className="searchKeyword">
+                          <div className="searchKeyBox">
+                            <input type="text" />
+                          </div>
+                          <div className="cancelKeySearch">
+                            <button
+                              onClick={() => setKeywordSuggesion(false)}
+                            ></button>
+                          </div>
+                        </div>
+                        <div className="keywordList">
+                          <ul>
+                            <li>
+                              <button onClick={(e) => addKeywordEmail(e)}>
+                                First Name
+                              </button>
+                            </li>
+                            <li>
+                              <button onClick={(e) => addKeywordEmail(e)}>
+                                Last Name
+                              </button>
+                            </li>
+                            <li>
+                              <button onClick={(e) => addKeywordEmail(e)}>
+                                Address
+                              </button>
+                            </li>
+                            <li>
+                              <button onClick={(e) => addKeywordEmail(e)}>
+                                City
+                              </button>
+                            </li>
+                            <li>
+                              <button onClick={(e) => addKeywordEmail(e)}>
+                                Country
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>}
+                    </div>
+                    {/* <span className="errorMsg">Please provide name.</span> */}
+                  </div>
+                  <div className="cmnFormRow">
+                    <label className="cmnFieldName d-flex f-justify-between">
+                      Subject
+                    </label>
+                    <div className="cmnFormField createNewEmailField">
+                      <EditorComponent
+                        createNew={true}
+                        initialData="Write here..."
+                      />
+                    </div>
+                  </div>
+
+                  <div className="modalbtnHolder w-100">
+                    <button
+                      className=" saveNnewBtn"
+                      onClick={(e) => saveEmailTemplate(e)}
+                    >
+                      Save <img src={arrow_forward} alt="" />
+                    </button>
+                    <button
+                      className=" saveNnewBtn"
+                      onClick={(e) => saveAndNewEmailTemplate(e)}
+                    >
+                      Save & New <img src={arrow_forward} alt="" />
+                    </button>
+                  </div>
+                </form>
+              </Scrollbars>
+            </div>
+          </div>
+        </div>
+      )}
       </div>
     </div>
   );

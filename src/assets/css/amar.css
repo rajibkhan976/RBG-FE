@@ -661,4 +661,15 @@
   display: flex;
   flex-direction: column;
 }
+.modalAddEmail .cmnFormField {
+  position: relative;
+}
+.modalAddEmail .browseKeywords {
+  right: 10px;
+  top: 10px;
+  bottom: auto;
+}
+.createNewEmailField {
+  height: 318px;
+}
 /* Text editor */

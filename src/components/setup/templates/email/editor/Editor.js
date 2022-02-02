@@ -5,9 +5,10 @@ const EditorComponent = (props) => {
   const [dirty, setDirty] = useState(false)
   const [emailHeader, setEmailHeader] = useState("")
 
-  let initialValue = props.initialData ? props.initialData.message : "Type here...";
+  let initialValue = (props.initialData ? props.initialData.message : "Type here...");
   const [value, setValue] = useState("");
   const editorRef = useRef(null);
+  const editorCreateRef = useRef(null);
 
   const log = () => {
     if (editorRef.current) {
@@ -30,12 +31,37 @@ const EditorComponent = (props) => {
     props.setActiveEmail(null)
   }
 
+  console.log("createNew", props.createNew);
+
   useEffect(()=>{
     setEmailHeader(props.initialData.header)
   }, [props.initialData.header])
 
   return (
-    <>
+    <>{props.createNew ? <>
+        <Editor
+            apiKey="91qkaw0vhg0xwousdvvdhjztavstam75oa7th9v5rkrbd31v"
+            onInit={(evt, editor) => (editorCreateRef.current = editor)}
+            onDirty={() => setDirty(true)}
+            theme="advanced"
+            init={{
+              height: "100%",
+              menubar: false,
+              plugins: [
+                "advlist autolink lists link image charmap print preview anchor",
+                "searchreplace visualblocks code fullscreen",
+                "insertdatetime media table paste code help wordcount save autosave",
+              ],
+              relative_urls: false,
+              toolbar: [
+                "fontselect fontsizeselect h1 forecolor | bold italic underline | alignleft aligncenter alignright alignjustify | numlist bullist | image | link | table | code",
+                "undo redo | help",
+              ],
+              autosave_interval: "10s",
+              save_enablewhendirty: true,
+            }}
+        />
+      </> :
       <form
         style={{
           position: "relative",
@@ -49,10 +75,10 @@ const EditorComponent = (props) => {
         <Editor
           apiKey="91qkaw0vhg0xwousdvvdhjztavstam75oa7th9v5rkrbd31v"
           onInit={(evt, editor) => (editorRef.current = editor)}
-          initialValue={initialValue}
-          theme="advanced"
-          onEditorChange={(newText) => editedEmail(newText)}
           onDirty={() => setDirty(true)}
+          theme="advanced"
+          initialValue={initialValue}
+          onEditorChange={(newText) => editedEmail(newText)}
           init={{
             height: "100%",
             menubar: false,
@@ -102,7 +128,7 @@ const EditorComponent = (props) => {
             />
           </svg>
         </button>
-      </form>
+      </form>}
     </>
   );
 };
