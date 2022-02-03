@@ -5,6 +5,8 @@ import aaroww from "../../../../assets/images/arrow_forward.svg";
 import arrow_forward from "../../../../assets/images/backIcon.svg";
 import info_icon from "../../../../assets/images/infos.svg";
 import camera from "../../../../assets/images/camera.svg";
+import bell from "../../../../assets/images/bell.svg";
+import downpayment from "../../../../assets/images/downpayment.svg";
 import categoryTag from "../../../../assets/images/categoryTag.svg";
 import { BillingServices } from "../../../../services/billing/billingServices";
 import { CourseServices } from "../../../../services/setup/CourseServices";
@@ -463,7 +465,51 @@ const TransactionChoose = (props) => {
                                 <input type="number" placeholder="149" class="editableInput numberType" value="149"/>
                             </div>
 
-                            <div className={courseList.length > 0 ? "formsection gap" : "formsection gap disabled"}>
+                            <div className="formsection gap">
+                                
+                                <span className="leftSecTransaction">
+
+                                    <span className="labelWithInfo">
+                                        <label>First Billing Date</label>
+                                        <span className="infoSpan">
+                                            <img src={info_icon} alt="" />
+                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                        </span>
+                                    </span>
+                                    <input type="date" placeholder="mm/dd/yyyy" class="editableInput" value="02/02/2222" />
+                                </span>
+                                <span className="rightSecTransaction">
+
+                                <span className="labelWithInfo">
+                                    <label>Program Start Date</label>
+                                    <span className="infoSpan">
+                                        <img src={info_icon} alt="" />
+                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                    </span>
+                                </span>
+                                  <input type="date" placeholder="mm/dd/yyyy" class="editableInput" value="02/02/2222" />
+                                </span>
+                            </div>
+
+
+                            <div className="formsection gap autoRenew">
+                              <span className="labelWithInfo">
+                                <label><div class="customCheckbox"><input type="checkbox" name="" id="" /><span></span></div>Auto Renewal</label>
+                                <span className="infoSpan">
+                                  <img src={info_icon} alt="" />
+                                  <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                </span>
+                              </span>
+                            </div>
+
+                            <div className="formsection gap autoRenew">
+                                <div className="autoRenewDate">
+                                  <img src={bell} alt="" />
+                                  <p>Next Payment Due Date <span className="renewDate">03 / 01 / 2022</span></p>
+                                </div>
+                            </div>
+
+                            {/* <div className={courseList.length > 0 ? "formsection gap" : "formsection gap disabled"}>
                                 <label>Select program</label>
                                 <select className="selectBox" onChange={getCourseFees} value={courseFees ? courseFees : ''}>
                                     {courseList.length > 0 ? <option value="">Select a course</option> : ""}
@@ -477,14 +523,13 @@ const TransactionChoose = (props) => {
                                 <label>Price</label>
                                 <div className="cmnFieldStyle editableInput">{courseFees}</div>
                                 <p>* default currency is <strong>USD</strong></p>
-                            </div>
+                            </div> */}
                         </div>
                         <div className="productAvailable active">
                             <h3 className="commonHeadding">Preview Windows</h3>
                             <div className="previewBox">
                                 <div className="previewImgBox course">
-                                    <span className="sizeTag duration">{courseDuration ? courseDuration + "(s)" : ""}</span>
-                                    <img src={"https://wrapperbucket.s3.us-east-1.amazonaws.com/" + courseImg} alt="" />
+                                    <img src={downpayment} alt="" />
 
                                 </div>
                                 <h3>{ courseName }</h3>

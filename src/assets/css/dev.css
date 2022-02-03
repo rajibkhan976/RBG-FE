@@ -2352,6 +2352,13 @@ button.fc-prev-button.fc-button.fc-button-primary, button.fc-next-button.fc-butt
 .fc .fc-button-primary:not(:disabled):active, .fc .fc-button-primary:not(:disabled).fc-button-active {
   background:transparent;
 }
+.fc .fc-button-primary {
+  border-color: transparent!important;
+}
+
+.fc .fc-button-primary:not(:disabled):active, .fc .fc-button-primary:not(:disabled).fc-button-active {
+  border-color: transparent!important;
+}
 
 .indTags:hover {
   background: #83919b;
@@ -2452,7 +2459,7 @@ span.leftSecTransaction {
     padding-right: 10px;
 }
 
-span.leftSecTransaction input.editableInput {
+span.leftSecTransaction input.editableInput, span.rightSecTransaction input.editableInput {
     width: 100%!important;
 }
 
@@ -2484,4 +2491,32 @@ input.editableInput.numberType::-webkit-inner-spin-button {
 /* Firefox */
 input.editableInput.numberType[type=number] {
   -moz-appearance: textfield;
+}
+
+.formsection.gap.autoRenew {
+  padding-top: 10px;
+}
+
+.autoRenewDate {
+  background-color: #FFF5ED;
+  padding:11px 44px;
+}
+
+.autoRenewDate {
+  display: flex;
+  align-items: center;
+}
+.autoRenewDate img {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.autoRenewDate p {
+  color: #F1A768!important;
+  font-size: 13px!important;
+}
+
+span.renewDate {
+  font-weight: 600;
+  margin-left: 5px;
 }

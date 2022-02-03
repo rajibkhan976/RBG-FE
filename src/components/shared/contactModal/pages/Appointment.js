@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect,useRef, useState } from "react";
 
 import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
@@ -32,10 +32,9 @@ const Appointment = (props) => {
   const [isEditing, setIsEditing] = useState(false);
   const [communication, setCommunication] = useState(false);
   const [addDependentModal, setAddDependentModal] = useState(false);
-  const [toggleContactList, setToggleContactList] = useState({
-    status: false,
-    listContent: [],
-  });
+  const [toggleContactList, setToggleContactList] = useState(false);
+
+  const ref = useRef();
 
   const [toggleTagList, setToggleTagList] = useState({
     status: false,
@@ -107,11 +106,10 @@ const Appointment = (props) => {
 
     let contactListOp = toggleContactList;
 
-    setToggleContactList({
-      ...toggleContactList,
-      status: !toggleContactList.status,
-    });
+
+    setToggleContactList(toggleContactList => !toggleContactList);
   };
+
 
 
 
@@ -250,11 +248,40 @@ const toggleTagListFn = (e) => {
   const closeModal = () => {
     setAddDependentModal(false);
     setCommunication(false);
+    setToggleTagList(false);
+    setToggleTagList1(false);
+    setToggleTagList2(false);
+    setToggleTagList3(false);
+    setToggleTagSuccess(false);
   };
 
   useEffect(() => {
     fetchCountry();
   }, [phoneCountryCode]);
+
+
+
+  useEffect(() => {
+    // console.log(' Working here ....');
+    console.log(toggleContactList)
+    const checkIfClickedOutside = (e) => {
+      // If the menu is open and the clicked target is not within the menu,
+      // then close the menu
+      // console.log(' Working here Done....')
+      if (toggleContactList && ref.current && !ref.current.contains(e.target)) {
+        // setIsMenuOpen(false);
+        setToggleContactList(false)
+      }
+    };
+
+    document.addEventListener("mousedown", checkIfClickedOutside);
+
+    return () => {
+      // Cleanup the event listener
+      document.removeEventListener("mousedown", checkIfClickedOutside);
+    };
+    
+  }, [toggleContactList]);
 
   return (
     <>
@@ -596,53 +623,48 @@ const toggleTagListFn = (e) => {
                 <div className="innerAppointmentModalBody">
 
                   <div className="cmnFormRow">
-                    <div className="cmnFieldName d-flex f-justify-between">
-                      Agenda
-                      
-                    </div>
+                  <div className="cmnFieldName">Agenda</div>
                     <div
                       className={
-                        toggleContactList.status
+                        toggleContactList
                           ? "cmnFormField listActive"
                           : "cmnFormField"
                       }
                     >
 
-                    <span className="inputTagArea">
+                    <span className="inputTagArea" ref={ref} vv='yu'>
                       <input className="cmnFieldStyle createAppointment" type="text" placeholder="Eg. Martial Art Course Demo"/>
                       <span className="tagSection" onClick={(e) => toggleContactListFn(e)} ><img src={tags} alt="" /></span>
-                      {toggleContactList.status && (
+                      {toggleContactList && (
                       	<>
                       <span className="tagLists">
                       	<ul className="">
-                      		<li className={
-                        toggleTagList.status
-                          ? "tagLi sellected"
-                          : "tagLi"
-                      } onClick={(e) => toggleTagListFn(e)}>Hot Lead <span className="addTag">+</span><span className="delTag">-</span></li>
+                      		<li className={toggleTagList.status ? "tagLi sellected" : "tagLi"} onClick={(e) => toggleTagListFn(e)}>Hot Lead 
+                            <span className="addTag">+</span><span className="delTag">-</span>
+                          </li>
 
-                      			<li className={
-                        toggleTagList1.status
-                          ? "tagLi sellected"
-                          : "tagLi"
-                      } onClick={(e) => toggleTagList1Fn(e)}>New Active <span className="addTag">+</span><span className="delTag">-</span></li>
-								<li className={
-                        toggleTagList2.status
-                          ? "tagLi sellected"
-                          : "tagLi"
-                      } onClick={(e) => toggleTagList2Fn(e)}>Cold Lead <span className="addTag">+</span><span className="delTag">-</span></li>
-								<li className={
-                        toggleTagList3.status
-                          ? "tagLi sellected"
-                          : "tagLi"
-                      } onClick={(e) => toggleTagList3Fn(e)}>In Stage <span className="addTag">+</span><span className="delTag">-</span></li>
-							
-                      
+                      		<li className={ toggleTagList1.status ? "tagLi sellected" : "tagLi"} onClick={(e) => toggleTagList1Fn(e)}>New Active 
+                              <span className="addTag">+</span><span className="delTag">-</span>
+                          </li>
+                          <li className={
+                                    toggleTagList2.status
+                                      ? "tagLi sellected"
+                                      : "tagLi"
+                                  } onClick={(e) => toggleTagList2Fn(e)}>Cold Lead <span className="addTag">+</span><span className="delTag">-</span>
+                          </li>
+                          <li className={
+                                    toggleTagList3.status
+                                      ? "tagLi sellected"
+                                      : "tagLi"
+                                  } onClick={(e) => toggleTagList3Fn(e)}>In Stage <span className="addTag">+</span><span className="delTag">-</span>
+                          </li>
+                          
+                                  
                       	</ul>
                       </span>
                       </>
                       )}
-                      </span>
+                    </span>
 					            {toggleTagList.status && (
                       	<>
                           <span className="indTags">Hot Leads <span className="closeTag" onClick={(e) => toggleTagListFn(e)}><img src={crossWhite} alt="" /></span></span>
@@ -669,6 +691,7 @@ const toggleTagListFn = (e) => {
 
                       
                     </div>
+                    
                   </div>
                   <div className="cmnFormRow">
                     <div className="cmnFormCol">
@@ -706,9 +729,9 @@ const toggleTagListFn = (e) => {
                       Set Appointment <img src={arrow_forward} alt="" />
                     </button>
                   </div>
-
                   </div>
-</form>
+
+    </form>
 
 
 <div>
