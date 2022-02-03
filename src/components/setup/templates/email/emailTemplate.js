@@ -51,6 +51,12 @@ const EmailTemplate = () => {
     message: ""
   })
 
+  const [newMail, setNewMail] = useState({
+    title: "",
+    header: "",
+    message: ""
+  })
+
   const getQueryParams = async () => {
     const keyword = utils.getQueryVariable("search");
     const srtBy = utils.getQueryVariable("sortBy");
@@ -117,6 +123,7 @@ const EmailTemplate = () => {
   const openModal = () => {
     setIsEdit(false);
     setEmailModal(true);
+    setActiveEmail(null)
   };
 
   const handleSortBy = (field) => {
@@ -178,10 +185,64 @@ const EmailTemplate = () => {
     setInitialData(copyEmailTemplates)
   }
 
+  const createdEmailTemplate = (email) => {
+    console.log("Created Mail:::", email);
+  }
+
   useEffect(()=>{},[initialData])
 
   const addKeywordEmail = (e) => {
-    console.log(e);
+    e.preventDefault()
+    let subjectInput = document.getElementById("newEmailTemplateSubject");
+    let cursorStart = subjectInput.selectionStart;
+    let cursorEnd = subjectInput.selectionEnd;
+    let textValue = subjectInput.value;
+
+    try {
+        if (cursorStart || cursorStart == "0"
+        ) {
+            var startToText = "";
+            subjectInput.value =
+            subjectInput.value.substring(0, cursorStart) +
+            " [" +
+            e.target.textContent +
+            "] " +
+            subjectInput.value.substring(cursorEnd, textValue.length);
+
+            setNewMail({
+              ...newMail,
+              header: subjectInput.value
+            })
+
+            startToText =
+            subjectInput.value.substring(0, cursorStart) +
+              "[" +
+              e.target.textContent +
+              "]";
+
+            subjectInput.focus();
+            subjectInput.setSelectionRange(
+              startToText.length + 1,
+              startToText.length + 1
+            );
+
+            console.log(subjectInput, cursorStart, cursorEnd, textValue);
+        }
+        else {
+          subjectInput.value = subjectInput.value + " [" + e.target.textContent + "] ";
+
+          setNewMail({
+            ...newMail,
+            header: subjectInput.value
+          })
+          subjectInput.focus();
+        }
+    } catch(err) {
+      setErrorMsg(err)
+      setTimeout(() => {
+        setErrorMsg("")
+      }, 5000);
+    }
   }
 
   const saveEmailTemplate = (e) => {
@@ -314,13 +375,6 @@ const EmailTemplate = () => {
             <span>Email Preview</span>
           </div>
           <div className="templateOuter d-flex">
-            {activeEmail !== null &&
-              <div className="templateHeader">
-                <button className="btn btnActionMore">
-                  <img src={info_3dot_icon} alt="" />
-                </button>
-              </div>
-            }
             <div 
               className="templateBody"
               style={{
@@ -392,9 +446,9 @@ const EmailTemplate = () => {
                     </label>
                     <div className="cmnFormField">
                       <input
-                        className="cmnFieldStyle"
+                        className="cmnFieldStyle btnPadding"
                         placeholder="Title..."
-                        id="newEmailTemplateTitle"
+                        id="newEmailTemplateSubject"
                         
                       />
                       <button
@@ -459,10 +513,11 @@ const EmailTemplate = () => {
                       Subject
                     </label>
                     <div className="cmnFormField createNewEmailField">
-                      <EditorComponent
-                        createNew={true}
-                        initialData="Write here..."
-                      />
+                        <EditorComponent
+                          createNew={true}
+                          createdEmailTemplate={createdEmailTemplate}
+                          initialData="Write here..."
+                        />
                     </div>
                   </div>
 

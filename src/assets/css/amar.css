@@ -633,12 +633,12 @@
   color: #fff;
 }
 .btnSave svg {
-  width: 24px;
+  width: 20px;
   height: auto;
 }
 .emailListing .templateBody .btnSave {
   position: absolute;
-  bottom: 8px;
+  bottom: 10px;
   z-index: 2;
   right: 50px;
 }
@@ -651,6 +651,9 @@
   border: none;
   border-bottom: 1px solid #E9EFF5;
   margin-bottom: 15px;
+  height: auto;
+  background: transparent;
+  border-radius: 0;
 }
 .emailListingPage .templateBody {
   display: flex;
@@ -664,12 +667,111 @@
 .modalAddEmail .cmnFormField {
   position: relative;
 }
-.modalAddEmail .browseKeywords {
+.modalAddEmail .browseKeywords,
+.emailListing .cmnFormField .browseKeywords {
   right: 10px;
   top: 10px;
   bottom: auto;
 }
 .createNewEmailField {
   height: 318px;
+}
+.tox.tox-silver-sink.tox-tinymce-aux {
+  z-index: 999999;
+}
+.modalAddEmail .keywordList button {
+  font-size: 13px;
+  padding: 8px 15px;
+}
+.modalAddEmail .keywordBox {
+  width: 250px;
+}
+.modalAddEmail .searchKeyBox {
+  width: 210px;
+}
+.editorEmailShell {
+  width: 435px;
+  height: 318px;
+  position: absolute;
+  will-change: auto;
+  transform-origin: 50% 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  transition: all ease-in-out 0.4s;
+}
+.createEmailButtons {
+  position: relative;
+}
+.createEmailButtons .browseKeywords {
+  position: static;
+}
+.createEmailButtons  {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  margin-top: 6px;
+}
+.createEmailButtons .inlinle-btn {
+  margin-left: 20px;
+}
+.editorEmailShell.maximize {
+  padding: 24px 20px;
+  background: #fff;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  will-change: auto;
+  width: 64vw;
+  height: 90vh;
+  position: fixed;
+}
+
+.editorEmailShell h6 {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 19px;
+  color: #305671;
+  margin-bottom: 10px;
+}
+.editorEmailShell.maximize .createEmailButtons {
+  position: absolute;
+  bottom: 35px;
+  right: 70px;
+  z-index: 1;
+}
+.createEmailButtons .keywordBox {
+  bottom: 100%;
+  top: auto;
+  margin-bottom: 6px;
+  margin-right: 6px;
+  transition: all ease-in-out 0.4s;
+}
+.editorEmailShell.maximize .keywordBox {
+  margin-right: 0;
+  margin-bottom: 10px;
+  right: -45px;
+}
+.createNewEmailField .popupMessage {
+  top: 38px;
+}
+.btnPadding {
+  padding-right: 40px;
+}
+.emailListingPage .cmnFormRow {
+  margin-bottom: 0;
+}
+.emailListing .cmnFormField {
+  position: relative;
+}
+.emailListing .templateBody .cmnFormRow {
+  margin: 0;
+}
+.emailListing .templateBody .keywordList {
+  max-height: 28vh;
+  overflow: auto;
 }
 /* Text editor */
