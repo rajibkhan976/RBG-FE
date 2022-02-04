@@ -138,7 +138,17 @@ const EditorComponent = (props) => {
     let win = doc.defaultView || doc.parentWindow;
     let sel, range, preCaretRange, caretOffset = 0;
 
-    console.log("editKeywordTextEmail", win.getSelection());
+    if (win.getSelection) {
+        sel = win.getSelection();
+        if (sel.rangeCount) {
+            range = sel.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(document.createTextNode(" [" +e.target.textContent +"] "));
+        }
+    } else if (document.selection && document.selection.createRange) {
+        range = document.selection.createRange();
+        range.text = " [" +e.target.textContent +"] ";
+    }
   }
 
   useEffect(()=>{
@@ -177,6 +187,64 @@ const EditorComponent = (props) => {
               }}
           />
           <div className="createEmailButtons">
+            <button
+                className="inlinle-btn browseKeywords createBrowseKeywords"
+                style={{
+                  marginRight: "0",
+                  padding: "0",
+                }}
+                onClick={(e) => 
+                  {
+                    setKeywordSuggesion(false)
+                    setKeywordTextSuggesion(!keywordTextSuggesion)
+                    e.preventDefault()
+                  }
+                }
+              >
+                <img src={browse_keywords} alt="keywords" />
+              </button>
+
+              {keywordTextSuggesion &&  <div className="keywordBox keywordsCreateText">
+                <div className="searchKeyword">
+                  <div className="searchKeyBox">
+                    <input type="text" />
+                  </div>
+                  <div className="cancelKeySearch">
+                    <button
+                      onClick={() => setKeywordTextSuggesion(false)}
+                    ></button>
+                  </div>
+                </div>
+                <div className="keywordList">
+                  <ul>
+                    <li>
+                      <button onClick={(e) => editKeywordTextEmail(e)}>
+                        First Name
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={(e) => editKeywordTextEmail(e)}>
+                        Last Name
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={(e) => editKeywordTextEmail(e)}>
+                        Address
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={(e) => editKeywordTextEmail(e)}>
+                        City
+                      </button>
+                    </li>
+                    <li>
+                      <button onClick={(e) => editKeywordTextEmail(e)}>
+                        Country
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>}
             <button 
               className="inlinle-btn btnSave"
               onClick={(e)=>createSave(e)}
@@ -247,8 +315,11 @@ const EditorComponent = (props) => {
                 padding: "0",
               }}
               onClick={(e) => 
-                {setKeywordSuggesion(true)
-                e.preventDefault()}
+                {
+                  setKeywordSuggesion(true)
+                  setKeywordTextSuggesion(false)
+                  e.preventDefault()
+                }
               }
             >
               <img src={browse_keywords} alt="keywords" />
@@ -331,6 +402,7 @@ const EditorComponent = (props) => {
               }}
               onClick={(e) => 
                 {
+                  setKeywordSuggesion(false)
                   setKeywordTextSuggesion(!keywordTextSuggesion)
                   e.preventDefault()
                 }
