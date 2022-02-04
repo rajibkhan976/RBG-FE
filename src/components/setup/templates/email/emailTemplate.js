@@ -265,7 +265,7 @@ const EmailTemplate = () => {
             setSuccessMsg("Email template created!")
             setTimeout(() => {
               setSuccessMsg("")
-            }, 5000);
+            }, 500000);
             
             e.target.getAttribute("id") === "saveNewEmailTemplate" ? setEmailModal(false) : e.target.closest("form").reset();;
             
@@ -283,7 +283,7 @@ const EmailTemplate = () => {
       setErrorMsg("Please enter some text / value!")
       setTimeout(() => {
         setErrorMsg("")
-      }, 5000);
+      }, 500000);
     }
     
   }
