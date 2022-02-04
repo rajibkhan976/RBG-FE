@@ -25,20 +25,19 @@ const EditorComponent = (props) => {
 
   const log = () => {
     if (editorRef.current) {
-      console.log(editorRef.current.getContent());
+      // console.log(editorRef.current.getContent());
     }
   };
 
   const editedEmail = (mailValue) => {
-    console.log("edit on Change:::", mailValue);
+    // console.log("edit on Change:::", mailValue);
     setValue(mailValue)
-    console.log("editedvalue:::", value);
+    // console.log("editedvalue:::", value);
   }
 
   const createEmail = (createValue) => {
-    console.log("create on Change:::", createValue);
-    setCreatedValue(createValue);
-    console.log("createdValue:::", createdValue);
+    setCreatedValue(createValue.trim() !== "" && createValue);
+    props.createdEmailTemplate(createValue)
   }
 
   useEffect(()=>{}, [value])
@@ -130,13 +129,35 @@ const EditorComponent = (props) => {
   }
 
   const editKeywordTextEmail = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     let iframeEdit = document.querySelector("#editTextArea iframe");
     let iframeEditBody = (iframeEdit.contentDocument || iframeEdit.contentWindow.document).body;
 
     let doc = iframeEditBody.ownerDocument || iframeEditBody.document;
     let win = doc.defaultView || doc.parentWindow;
-    let sel, range, preCaretRange, caretOffset = 0;
+    let sel, range;
+
+    if (win.getSelection) {
+        sel = win.getSelection();
+        if (sel.rangeCount) {
+            range = sel.getRangeAt(0);
+            range.deleteContents();
+            range.insertNode(document.createTextNode(" [" +e.target.textContent +"] "));
+        }
+    } else if (document.selection && document.selection.createRange) {
+        range = document.selection.createRange();
+        range.text = " [" +e.target.textContent +"] ";
+    }
+  }
+
+  const createKeywordTextEmail = (e) => {
+    e.preventDefault();
+    let iframeEdit = document.querySelector("#createTextArea iframe");
+    let iframeEditBody = (iframeEdit.contentDocument || iframeEdit.contentWindow.document).body;
+
+    let doc = iframeEditBody.ownerDocument || iframeEditBody.document;
+    let win = doc.defaultView || doc.parentWindow;
+    let sel, range;
 
     if (win.getSelection) {
         sel = win.getSelection();
@@ -161,7 +182,7 @@ const EditorComponent = (props) => {
     {errorMsg && <ErrorAlert message={errorMsg}></ErrorAlert>}
 
     {props.createNew ? <>
-      <div className={max ? "editorEmailShell h-100 maximize" : "editorEmailShell h-100"}>
+      <div className={max ? "editorEmailShell h-100 maximize" : "editorEmailShell h-100"} id="createTextArea">
         {max && <h6>Email Body</h6>}
           <Editor
               apiKey="91qkaw0vhg0xwousdvvdhjztavstam75oa7th9v5rkrbd31v"
@@ -218,34 +239,34 @@ const EditorComponent = (props) => {
                 <div className="keywordList">
                   <ul>
                     <li>
-                      <button onClick={(e) => editKeywordTextEmail(e)}>
+                      <button onClick={(e) => createKeywordTextEmail(e)}>
                         First Name
                       </button>
                     </li>
                     <li>
-                      <button onClick={(e) => editKeywordTextEmail(e)}>
+                      <button onClick={(e) => createKeywordTextEmail(e)}>
                         Last Name
                       </button>
                     </li>
                     <li>
-                      <button onClick={(e) => editKeywordTextEmail(e)}>
+                      <button onClick={(e) => createKeywordTextEmail(e)}>
                         Address
                       </button>
                     </li>
                     <li>
-                      <button onClick={(e) => editKeywordTextEmail(e)}>
+                      <button onClick={(e) => createKeywordTextEmail(e)}>
                         City
                       </button>
                     </li>
                     <li>
-                      <button onClick={(e) => editKeywordTextEmail(e)}>
+                      <button onClick={(e) => createKeywordTextEmail(e)}>
                         Country
                       </button>
                     </li>
                   </ul>
                 </div>
               </div>}
-            <button 
+            {/* <button 
               className="inlinle-btn btnSave"
               onClick={(e)=>createSave(e)}
             >
@@ -275,7 +296,7 @@ const EditorComponent = (props) => {
                   strokeWidth="0.5"
                 />
               </svg>
-            </button>
+            </button> */}
             <button
               className="inlinle-btn btnMaximize"
               onClick={(e)=>{
@@ -304,7 +325,7 @@ const EditorComponent = (props) => {
         id="formEditor"
       >
         <div className="cmnFormRow">
-        {console.log("props.initialData.header", props.initialData.header)}
+        {/* {console.log("props.initialData.header", props.initialData.header)} */}
           <div className="cmnFormField">
             <input className="headerEmail  btnPadding cmnFieldStyle" defaultValue={props.initialData.header === emailHeader ? props.initialData.header : emailHeader} id="editTemplateHeader" />
 

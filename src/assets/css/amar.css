@@ -781,4 +781,8 @@
   top: auto;
   right: 15px;
 }
+.emailListingPage .popupMessage {
+  z-index: 9999999;
+  top: 240px;
+}
 /* Text editor */

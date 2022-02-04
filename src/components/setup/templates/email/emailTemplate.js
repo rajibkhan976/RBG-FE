@@ -86,7 +86,6 @@ const EmailTemplate = () => {
    * Update keyword
    */
   const handleKeywordChange = (event) => {
-    console.log(event.target.value);
     setKeyword(event.target.value);
   };
 
@@ -190,8 +189,12 @@ const EmailTemplate = () => {
     setInitialData(copyEmailTemplates)
   }
 
+  // set new email message
   const createdEmailTemplate = (email) => {
-    console.log("Created Mail:::", email);
+    setNewMail({
+      ...newMail,
+      message: email !== "" && email
+    })
   }
 
   useEffect(()=>{},[initialData])
@@ -251,17 +254,38 @@ const EmailTemplate = () => {
   }
 
   const saveEmailTemplate = (e) => {
-    e.preventDefault()
-    setEmailModal(false);
-  }
-
-  const saveAndNewEmailTemplate = (e) => {
     e.preventDefault();
-    try {
-      e.target.closest("form").reset();
-    } catch (err) {
-      console.log(err);
+    console.log("newMail", newMail);
+    if(newMail.title !== "" && newMail.header !== "" && newMail.message !== "") {
+      try {
+        let copyTemplates = initialData;
+            copyTemplates = [...copyTemplates, newMail];
+            setInitialData(copyTemplates)
+
+            setSuccessMsg("Email template created!")
+            setTimeout(() => {
+              setSuccessMsg("")
+            }, 5000);
+            
+            e.target.getAttribute("id") === "saveNewEmailTemplate" ? setEmailModal(false) : e.target.closest("form").reset();;
+            
+            setNewMail({
+              title: "",
+              header: "",
+              message: ""
+            })
+      } catch (error) {
+        console.log(error);
+      }
     }
+    else {
+      console.log(newMail);
+      setErrorMsg("Please enter some text / value!")
+      setTimeout(() => {
+        setErrorMsg("")
+      }, 5000);
+    }
+    
   }
 
   const closeModal = () => {
@@ -307,6 +331,7 @@ const EmailTemplate = () => {
 
       {successMsg && <SuccessAlert message={successMsg}></SuccessAlert>}
       {errorMsg && <ErrorAlert message={errorMsg}></ErrorAlert>}
+      {console.log(errorMsg && errorMsg)}
 
       <div className="userListBody emailListing d-flex">
         <div className="listBody">
@@ -440,7 +465,12 @@ const EmailTemplate = () => {
                         className="cmnFieldStyle"
                         placeholder="Title..."
                         id="newEmailTemplateTitle"
-                        
+                        onChange={(e)=> {
+                          setNewMail({
+                            ...newMail,
+                            title: e.target.value
+                          })
+                        }}
                       />
                     </div>
                     {/* <span className="errorMsg">Please provide name.</span> */}
@@ -452,9 +482,14 @@ const EmailTemplate = () => {
                     <div className="cmnFormField">
                       <input
                         className="cmnFieldStyle btnPadding"
-                        placeholder="Title..."
+                        placeholder="Header..."
                         id="newEmailTemplateSubject"
-                        
+                        onChange={(e)=> {
+                          setNewMail({
+                            ...newMail,
+                            header: e.target.value
+                          })
+                        }}
                       />
                       <button
                         className="btn browseKeywords"
@@ -529,13 +564,15 @@ const EmailTemplate = () => {
                   <div className="modalbtnHolder w-100">
                     <button
                       className=" saveNnewBtn"
+                      id="saveNewEmailTemplate"
                       onClick={(e) => saveEmailTemplate(e)}
                     >
                       Save <img src={arrow_forward} alt="" />
                     </button>
                     <button
                       className=" saveNnewBtn"
-                      onClick={(e) => saveAndNewEmailTemplate(e)}
+                      onClick={(e) => saveEmailTemplate(e)}
+                      id="saveandCloseEmailTemplate"
                     >
                       Save & New <img src={arrow_forward} alt="" />
                     </button>
