@@ -124,6 +124,9 @@ const EmailTemplate = () => {
     setIsEdit(false);
     setEmailModal(true);
     setActiveEmail(null)
+
+    setKeyword(null)
+    setKeywordSuggesion(false)
   };
 
   const handleSortBy = (field) => {
@@ -162,6 +165,8 @@ const EmailTemplate = () => {
       header: initialData[i].header,
       message: initialData[i].message
     })
+    setKeyword(null)
+    setKeywordSuggesion(false)
     console.log(email);
   }
 

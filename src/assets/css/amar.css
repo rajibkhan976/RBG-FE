@@ -580,7 +580,7 @@
 }
 .emailListingPage .listBody {
   flex: 1 1 auto;
-  max-width: 736px;
+  max-width: calc(100% - 725px);
 }
 .emailListingPage .templateOuter {
   width: 690px;
@@ -761,9 +761,6 @@
 .btnPadding {
   padding-right: 40px;
 }
-.emailListingPage .cmnFormRow {
-  margin-bottom: 0;
-}
 .emailListing .cmnFormField {
   position: relative;
 }
@@ -773,5 +770,15 @@
 .emailListing .templateBody .keywordList {
   max-height: 28vh;
   overflow: auto;
+}
+.editBrowseKeywords {
+  bottom: 12px;
+  z-index: 1;
+  right: 89px;
+}
+.keywordsEditText {
+  bottom: 41px;
+  top: auto;
+  right: 15px;
 }
 /* Text editor */

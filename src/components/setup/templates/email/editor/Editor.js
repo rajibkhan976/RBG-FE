@@ -10,6 +10,7 @@ const EditorComponent = (props) => {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [keywordSuggesion, setKeywordSuggesion] = useState(false);
+  const [keywordTextSuggesion, setKeywordTextSuggesion] = useState(false);
   const [editMail, setEditMail] = useState({
     title: "",
     header: "",
@@ -29,11 +30,15 @@ const EditorComponent = (props) => {
   };
 
   const editedEmail = (mailValue) => {
+    console.log("edit on Change:::", mailValue);
     setValue(mailValue)
+    console.log("editedvalue:::", value);
   }
 
   const createEmail = (createValue) => {
-    setCreatedValue(createValue)
+    console.log("create on Change:::", createValue);
+    setCreatedValue(createValue);
+    console.log("createdValue:::", createdValue);
   }
 
   useEffect(()=>{}, [value])
@@ -71,7 +76,7 @@ const EditorComponent = (props) => {
 
   const editKeywordEmail = (e) => {
     e.preventDefault()
-    console.log(e.target);
+    // console.log(e.target);
     let subjectEditInput = document.getElementById("editTemplateHeader");
     let cursorStart = subjectEditInput.selectionStart;
     let cursorEnd = subjectEditInput.selectionEnd;
@@ -105,7 +110,7 @@ const EditorComponent = (props) => {
               startToText.length + 1
             );
 
-            console.log(subjectEditInput, cursorStart, cursorEnd, textValue);
+            // console.log(subjectEditInput, cursorStart, cursorEnd, textValue);
         }
         else {
           subjectEditInput.value = subjectEditInput.value + " [" + e.target.textContent + "] ";
@@ -122,6 +127,18 @@ const EditorComponent = (props) => {
         setErrorMsg("")
       }, 5000);
     }
+  }
+
+  const editKeywordTextEmail = (e) => {
+    e.preventDefault()
+    let iframeEdit = document.querySelector("#editTextArea iframe");
+    let iframeEditBody = (iframeEdit.contentDocument || iframeEdit.contentWindow.document).body;
+
+    let doc = iframeEditBody.ownerDocument || iframeEditBody.document;
+    let win = doc.defaultView || doc.parentWindow;
+    let sel, range, preCaretRange, caretOffset = 0;
+
+    console.log("editKeywordTextEmail", win.getSelection());
   }
 
   useEffect(()=>{
@@ -207,63 +224,6 @@ const EditorComponent = (props) => {
               </svg>
               }
             </button>
-            <button
-              className="inlinle-btn browseKeywords"
-              style={{
-                marginRight: "0",
-                padding: "0",
-              }}
-              onClick={(e) => 
-                {
-                  setKeywordSuggesion(true)
-                  e.preventDefault()
-                }
-              }
-            >
-              <img src={browse_keywords} alt="keywords" />
-            </button>
-
-            {keywordSuggesion &&  <div className="keywordBox">
-                        <div className="searchKeyword">
-                          <div className="searchKeyBox">
-                            <input type="text" />
-                          </div>
-                          <div className="cancelKeySearch">
-                            <button
-                              onClick={() => setKeywordSuggesion(false)}
-                            ></button>
-                          </div>
-                        </div>
-                        <div className="keywordList">
-                          <ul>
-                            <li>
-                              <button onClick={(e) => createKeywordEmail(e)}>
-                                First Name
-                              </button>
-                            </li>
-                            <li>
-                              <button onClick={(e) => createKeywordEmail(e)}>
-                                Last Name
-                              </button>
-                            </li>
-                            <li>
-                              <button onClick={(e) => createKeywordEmail(e)}>
-                                Address
-                              </button>
-                            </li>
-                            <li>
-                              <button onClick={(e) => createKeywordEmail(e)}>
-                                City
-                              </button>
-                            </li>
-                            <li>
-                              <button onClick={(e) => createKeywordEmail(e)}>
-                                Country
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>}
           </div>
         </div>
       </> :
@@ -336,7 +296,7 @@ const EditorComponent = (props) => {
             </div>}
           </div>
         </div>
-        <div className="cmnFormRow f-1">
+        <div className="cmnFormRow f-1" id="editTextArea">
           <Editor
             apiKey="91qkaw0vhg0xwousdvvdhjztavstam75oa7th9v5rkrbd31v"
             onInit={(evt, editor) => (editorRef.current = editor)}
@@ -361,6 +321,66 @@ const EditorComponent = (props) => {
               save_enablewhendirty: true,
             }}
           />
+
+
+            <button
+              className="inlinle-btn browseKeywords editBrowseKeywords"
+              style={{
+                marginRight: "0",
+                padding: "0",
+              }}
+              onClick={(e) => 
+                {
+                  setKeywordTextSuggesion(!keywordTextSuggesion)
+                  e.preventDefault()
+                }
+              }
+            >
+              <img src={browse_keywords} alt="keywords" />
+            </button>
+
+            {keywordTextSuggesion &&  <div className="keywordBox keywordsEditText">
+              <div className="searchKeyword">
+                <div className="searchKeyBox">
+                  <input type="text" />
+                </div>
+                <div className="cancelKeySearch">
+                  <button
+                    onClick={() => setKeywordTextSuggesion(false)}
+                  ></button>
+                </div>
+              </div>
+              <div className="keywordList">
+                <ul>
+                  <li>
+                    <button onClick={(e) => editKeywordTextEmail(e)}>
+                      First Name
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={(e) => editKeywordTextEmail(e)}>
+                      Last Name
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={(e) => editKeywordTextEmail(e)}>
+                      Address
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={(e) => editKeywordTextEmail(e)}>
+                      City
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={(e) => editKeywordTextEmail(e)}>
+                      Country
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>}
+
 
           <button 
             className="btn btnSave"
