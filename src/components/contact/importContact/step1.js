@@ -15,6 +15,7 @@ function Step1(props) {
     const [fileImportStatus, setFileImportStatus] = useState(false);
     const [duplicate, setDuplicate] = useState('');
     const [primaryField, setPrimaryField] = useState('');
+    const [importType, setImportType] = useState('data');
     const [uploadedFile, setUploadedFile] = useState('');
     const [isLoader, setIsLoader] = useState(false);
     const getRandomFileName = () => {
@@ -64,6 +65,9 @@ function Step1(props) {
     const handlePrimaryField = (event) => {
         setPrimaryField(event.target.value);
     }
+    const handleImportType = (event) => {
+        setImportType(event.target.value);
+    }
     const downLoadSample = (e) => {
       e.preventDefault();
     }
@@ -87,7 +91,8 @@ function Step1(props) {
                     headers: headers,
                     totalRecords: totalRecord,
                     duplicate: duplicate,
-                    primaryField: primaryField
+                    primaryField: primaryField,
+                    importType: importType
                 }
                 props.setState('custom', object);
                 props.next();
@@ -119,8 +124,9 @@ function Step1(props) {
                                 <div className="formField w-50">
                                     <label>Import data for</label>
                                     <div className="inFormField">
-                                        <select name="" id="" style={{backgroundImage: "url(" + arrowDown + ")",}} disabled={true}>
-                                            <option value="">Contacts</option>
+                                        <select name="" id=""  value={importType} onChange={handleImportType} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                            <option value="leads">Leads</option>
+                                            <option value="contacts">Contacts</option>
                                         </select>
                                     </div>
                                 </div>

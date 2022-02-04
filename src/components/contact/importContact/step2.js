@@ -12,6 +12,9 @@ function Step2(props) {
     const [openWorkInfo, setOpenWorkInfo] = useState(false);
     const [openPersonalInfo, setOpenPersonalInfo] = useState(false);
     const [openOtherInfo, setOpenOtherInfo] = useState(false);
+    const [openCustomFields, setOpenCustomFields] = useState(false);
+    const [openPayment, setOpenPayment] = useState(false);
+    const [openCourse, setOpenCourse] = useState(false);
     const [openAddressInfo, setOpenAddressInfo] = useState(false);
     const [firstName, setFirstName] = useState('');
     const [firstNameError, setFirstNameError] = useState(false);
@@ -66,6 +69,48 @@ function Step2(props) {
     const [clickCount, setClickCount] = useState(0);
     const [uploadedKey, setUploadedKey] = useState({});
     const [isLoader, setIsLoader] = useState(false);
+    const [importType, setImportType] = useState(false);
+    const [cardNumber, setCardNumber] = useState('');
+    const [cardNumberError, setCardNumberError] = useState(false);
+    const [cardExpire, setCardExpire] = useState('');
+    const [cardExpireError, setCardExpireError] = useState(false);
+    const [cardName, setCardName] = useState('');
+    const [cardNameError, setCardNameError] = useState(false);
+    const [bankName, setBankName] = useState('');
+    const [bankNameError, setBankNameError] = useState(false);
+    const [bankRouting, setBankRouting] = useState('');
+    const [bankRoutingError, setBankRoutingError] = useState(false);
+    const [accountNumber, setAccountNumber] = useState('');
+    const [accountNumberError, setAccountNumberError] = useState(false);
+    const [accountType, setAccountType] = useState('');
+    const [accountTypeError, setAccountTypeError] = useState(false);
+    const [paymentMethod, setPaymentMethod] = useState('');
+    const [paymentMethodError, setPaymentMethodError] = useState(false);
+    const [courseName, setCourseName] = useState('');
+    const [courseNameError, setCourseNameError] = useState(false);
+    const [startDate, setStartDate] = useState('');
+    const [startDateError, setStartDateError] = useState(false);
+    const [endDate, setEndDate] = useState('');
+    const [endDateError, setEndDateError] = useState(false);
+    const [contractAmount, setContractAmount] = useState('');
+    const [contractAmountError, setContractAmountError] = useState(false);
+    const [downPayment, setDownPayment] = useState('');
+    const [downPaymentError, setDownPaymentError] = useState(false);
+    const [firstPaymentDue, setFirstPaymentDue] = useState('');
+    const [firstPaymentDueError, setFirstPaymentDueError] = useState(false);
+    const [lastPaymentDate, setLastPaymentDate] = useState('');
+    const [lastPaymentDateError, setLastPaymentDateError] = useState(false);
+    const [nextPaymentDue, setNextPaymentDue] = useState('');
+    const [nextPaymentDueError, setNextPaymentDueError] = useState(false);
+    const [paymentFrequency, setPaymentFrequency] = useState('');
+    const [paymentFrequencyError, setPaymentFrequencyError] = useState(false);
+    const [tuitionAmount, setTuitionAmount] = useState('');
+    const [tuitionAmountError, setTuitionAmountError] = useState(false);
+    const [customFields, setCustomFields] = useState([]);
+    const fetchCustomFields = async () => {
+        //Custom
+    }
+
     const handleSetp2Submit = async () => {
         const custom = props.getState('custom');
         setPrimaryError(false);
@@ -245,6 +290,114 @@ function Step2(props) {
             } else {
                 key['gender'] = gender;
             }
+            if (cardNumber === "") {
+                setCardNumberError(true);
+                errorHere++;
+            } else {
+                key['cardNumber'] = cardNumber;
+            }
+            if (cardExpire === "") {
+                setCardExpireError(true);
+                errorHere++;
+            } else {
+                key['cardExpire'] = cardExpire;
+            }
+            if (cardName === "") {
+                setCardNameError(true);
+                errorHere++;
+            } else {
+                key['cardName'] = cardName;
+            }
+            if (bankName === "") {
+                setBankNameError(true);
+                errorHere++;
+            } else {
+                key['bankName'] = bankName;
+            }
+            if (bankRouting === "") {
+                setBankRoutingError(true);
+                errorHere++;
+            } else {
+                key['bankRouting'] = bankRouting;
+            }
+            if (accountNumber === "") {
+                setAccountNumberError(true);
+                errorHere++;
+            } else {
+                key['accountNumber'] = accountNumber;
+            }
+            if (accountType === "") {
+                setAccountTypeError(true);
+                errorHere++;
+            } else {
+                key['accountType'] = accountType;
+            }
+            if (paymentMethod === "") {
+                setPaymentMethodError(true);
+                errorHere++;
+            } else {
+                key['paymentMethod'] = paymentMethod;
+            }
+            if (courseName === "") {
+                setCourseNameError(true);
+                errorHere++;
+            } else {
+                key['courseName'] = courseName;
+            }
+            if (startDate === "") {
+                setStartDateError(true);
+                errorHere++;
+            } else {
+                key['startDate'] = startDate;
+            }
+            if (endDate === "") {
+                setEndDateError(true);
+                errorHere++;
+            } else {
+                key['endDate'] = endDate;
+            }
+            if (contractAmount === "") {
+                setContractAmountError(true);
+                errorHere++;
+            } else {
+                key['contractAmount'] = contractAmount;
+            }
+            if (downPayment === "") {
+                setDownPaymentError(true);
+                errorHere++;
+            } else {
+                key['downPayment'] = downPayment;
+            }
+            if (firstPaymentDue === "") {
+                setFirstPaymentDueError(true);
+                errorHere++;
+            } else {
+                key['firstPaymentDue'] = firstPaymentDue;
+            }
+            if (lastPaymentDate === "") {
+                setLastPaymentDateError(true);
+                errorHere++;
+            } else {
+                key['lastPaymentDate'] = lastPaymentDate;
+            }
+            if (nextPaymentDue === "") {
+                setNextPaymentDueError(true);
+                errorHere++;
+            } else {
+                key['nextPaymentDue'] = nextPaymentDue;
+            }
+            if (paymentFrequency === "") {
+                setPaymentFrequencyError(true);
+                errorHere++;
+            } else {
+                key['paymentFrequency'] = paymentFrequency;
+            }
+            if (tuitionAmount === "") {
+                setTuitionAmountError(true);
+                errorHere++;
+            } else {
+                key['tuitionAmount'] = tuitionAmount;
+            }
             setUploadedKey(key);
             setError(errorHere);
             if (errorHere === 0) {
@@ -257,7 +410,6 @@ function Step2(props) {
                 setIsLoader(true);
                 let importResponse = await ImportContactServices.importContact(JSON.stringify(payload));
                 setIsLoader(false);
-                console.log(importResponse)
                 if (importResponse.data.success) {
                     let errors = importResponse.data.errorCount;
                     let newData = importResponse.data.newDataLength;
@@ -279,6 +431,9 @@ function Step2(props) {
                 setOpenPersonalInfo(true);
                 setOpenAddressInfo(true);
                 setOpenOtherInfo(true);
+                setOpenCustomFields(true);
+                setOpenCourse(true);
+                setOpenPayment(true);
             }
         } else {
             if (!primaryError) {
@@ -325,6 +480,15 @@ function Step2(props) {
     }
     const toggleOtherInfo = () => {
         setOpenOtherInfo(!openOtherInfo);
+    }
+    const toggleCustomField = () => {
+        setOpenCustomFields(!openCustomFields);
+    }
+    const togglePayment = () => {
+        setOpenPayment(!openPayment);
+    }
+    const toggleCourse = () => {
+        setOpenCourse(!openCourse);
     }
     const handlerFirstNameChange = (event) => {
         setFirstName(event.target.value);
@@ -422,10 +586,83 @@ function Step2(props) {
         setGender(event.target.value);
         setGenderError(false);
     }
+    const handlerCardNumberChange = (event) => {
+        setCardNumber(event.target.value);
+        setCardNumberError(false);
+    }
+    const handlerCardExpireChange = (event) => {
+        setCardExpire(event.target.value);
+        setCardExpireError(false);
+    }
+    const handlerCardNameChange = (event) => {
+        setCardName(event.target.value);
+        setCardNameError(false);
+    }
+    const handlerBankNameChange = (event) => {
+        setBankName(event.target.value);
+        setBankNameError(false);
+    }
+    const handlerBankRoutingChange = (event) => {
+        setBankRouting(event.target.value);
+        setBankRoutingError(false);
+    }
+    const handlerAccountNumberChange = (event) => {
+        setAccountNumber(event.target.value);
+        setAccountNumberError(false);
+    }
+    const handlerAccountTypeChange = (event) => {
+        setAccountType(event.target.value);
+        setAccountTypeError(false);
+    }
+    const handlerPaymentMethodChange = (event) => {
+        setPaymentMethod(event.target.value);
+        setPaymentMethodError(false);
+    }
+    const handlerCourseNameChange = (event) => {
+        setCourseName(event.target.value);
+        setCourseNameError(false);
+    }
+    const handlerStartDateChange = (event) => {
+        setStartDate(event.target.value);
+        setStartDateError(false);
+    }
+    const handlerEndDateChange = (event) => {
+        setEndDate(event.target.value);
+        setEndDateError(false);
+    }
+    const handlerContractAmountChange = (event) => {
+        setContractAmount(event.target.value);
+        setContractAmountError(false);
+    }
+    const handlerDownPaymentChange = (event) => {
+        setDownPayment(event.target.value);
+        setDownPaymentError(false);
+    }
+    const handlerFirstPaymentDueChange = (event) => {
+        setFirstPaymentDue(event.target.value);
+        setFirstPaymentDueError(false);
+    }
+    const handlerNextPaymentDueChange = (event) => {
+        setNextPaymentDue(event.target.value);
+        setNextPaymentDueError(false);
+    }
+    const handlerLastPaymentDateChange = (event) => {
+        setLastPaymentDate(event.target.value);
+        setLastPaymentDateError(false);
+    }
+    const handlerPaymentFrequencyChange = (event) => {
+        setPaymentFrequency(event.target.value);
+        setPaymentFrequencyError(false);
+    }
+    const handlerTuitionAmountChange = (event) => {
+        setTuitionAmount(event.target.value);
+        setTuitionAmountError(false);
+    }
     useEffect(() => {
         const custom = props.getState('custom');
         setExcelHeaders(custom.headers);
         setTotalRecord(custom.totalRecords);
+        setImportType(custom.importType);
     }, []);
     return (
         <>
@@ -811,6 +1048,297 @@ function Step2(props) {
                                 </div>
                             }
                         </div>
+                        <div className={"accoRow " + (!openCustomFields ? 'collapse' : '')}>
+                            <div className="accoRowHead">
+                                <span className="accoHeadName">Custom Fields</span>
+                                <button className="accoToggler" onClick={toggleCustomField}></button>
+                            </div>
+                            {
+                                openCustomFields &&
+                                <div className="accoRowBody">
+                                    <div className="infoInputs">
+                                        <ul>
+                                            <li>
+                                                <div className={"formField w-50 " + (contactTypeError ? 'error' : '') }>
+                                                    <label>Contact Type</label>
+                                                    <div className="inFormField">
+                                                        <select name="contactType" value={contactType} onChange={handlerContactTypeChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                            <option value="">Select a header</option>
+                                                            {excelHeaders.map(header =>
+                                                                <option value={header}>{header}</option>
+                                                            )};
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div className={"formField w-50 " + (ageGroupError ? 'error' : '') }>
+                                                    <label>Age Group</label>
+                                                    <div className="inFormField">
+                                                        <select name="ageGroup" value={ageGroup} onChange={handlerAgeGroupChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                            <option value="">Select a header</option>
+                                                            {excelHeaders.map(header =>
+                                                                <option value={header}>{header}</option>
+                                                            )};
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        {
+                            importType === 'contacts' &&
+                                <>
+                                    <div className={"accoRow " + (!openPayment ? 'collapse' : '')}>
+                                        <div className="accoRowHead">
+                                            <span className="accoHeadName">Payment</span>
+                                            <button className="accoToggler" onClick={togglePayment}></button>
+                                        </div>
+                                        {
+                                            openPayment &&
+                                            <div className="accoRowBody">
+                                                <div className="infoInputs">
+                                                    <ul>
+                                                        <li>
+                                                            <div className={"formField w-50 " + (cardNumberError ? 'error' : '') }>
+                                                                <label>Credit card number</label>
+                                                                <div className="inFormField">
+                                                                    <select name="cardNumber" value={cardNumber} onChange={handlerCardNumberChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div className={"formField w-50 " + (cardExpireError ? 'error' : '') }>
+                                                                <label>Card Expire Date</label>
+                                                                <div className="inFormField">
+                                                                    <select name="cardExpire" value={cardExpire} onChange={handlerCardExpireChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div className={"formField w-50 " + (cardNameError ? 'error' : '') }>
+                                                                <label>Name on Card</label>
+                                                                <div className="inFormField">
+                                                                    <select name="cardName" value={cardName} onChange={handlerCardNameChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div className={"formField w-50 " + (bankNameError ? 'error' : '') }>
+                                                                <label>Bank name</label>
+                                                                <div className="inFormField">
+                                                                    <select name="bankName" value={bankName} onChange={handlerBankNameChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div className={"formField w-50 " + (bankRoutingError ? 'error' : '') }>
+                                                                <label>Bank Routing</label>
+                                                                <div className="inFormField">
+                                                                    <select name="bankRouting" value={bankRouting} onChange={handlerBankRoutingChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div className={"formField w-50 " + (accountNumberError ? 'error' : '') }>
+                                                                <label>Account Number</label>
+                                                                <div className="inFormField">
+                                                                    <select name="accountNumber" value={accountNumber} onChange={handlerAccountNumberChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div className={"formField w-50 " + (accountTypeError ? 'error' : '') }>
+                                                                <label>Account Type</label>
+                                                                <div className="inFormField">
+                                                                    <select name="accountType" value={accountType} onChange={handlerAccountTypeChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div className={"formField w-50 " + (paymentMethodError ? 'error' : '') }>
+                                                                <label>Payment Method</label>
+                                                                <div className="inFormField">
+                                                                    <select name="paymentMethod" value={paymentMethod} onChange={handlerPaymentMethodChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div className={"accoRow " + (!openCourse ? 'collapse' : '')}>
+                                        <div className="accoRowHead">
+                                            <span className="accoHeadName">Course</span>
+                                            <button className="accoToggler" onClick={toggleCourse}></button>
+                                        </div>
+                                        {
+                                            openCourse &&
+                                            <div className="accoRowBody">
+                                                <div className="infoInputs">
+                                                    <ul>
+                                                        <li>
+                                                            <div className={"formField w-50 " + (courseNameError ? 'error' : '') }>
+                                                                <label>Course Name</label>
+                                                                <div className="inFormField">
+                                                                    <select name="courseName" value={courseName} onChange={handlerCourseNameChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div className={"formField w-50 " + (startDateError ? 'error' : '') }>
+                                                                <label>Course Start Date</label>
+                                                                <div className="inFormField">
+                                                                    <select name="startDate" value={startDate} onChange={handlerStartDateChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div className={"formField w-50 " + (endDateError ? 'error' : '') }>
+                                                                <label>Course End Date</label>
+                                                                <div className="inFormField">
+                                                                    <select name="endDate" value={endDate} onChange={handlerEndDateChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div className={"formField w-50 " + (contractAmountError ? 'error' : '') }>
+                                                                <label>Total Contract Amount</label>
+                                                                <div className="inFormField">
+                                                                    <select name="contractAmount" value={contractAmount} onChange={handlerContractAmountChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div className={"formField w-50 " + (downPaymentError ? 'error' : '') }>
+                                                                <label>Down Payment</label>
+                                                                <div className="inFormField">
+                                                                    <select name="downPayment" value={downPayment} onChange={handlerDownPaymentChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div className={"formField w-50 " + (firstPaymentDueError ? 'error' : '') }>
+                                                                <label>First Payment Due Date</label>
+                                                                <div className="inFormField">
+                                                                    <select name="firstPaymentDue" value={firstPaymentDue} onChange={handlerFirstPaymentDueChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div className={"formField w-50 " + (nextPaymentDueError ? 'error' : '') }>
+                                                                <label>Next Payment Due</label>
+                                                                <div className="inFormField">
+                                                                    <select name="nextPaymentDue" value={nextPaymentDue} onChange={handlerNextPaymentDueChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div className={"formField w-50 " + (lastPaymentDateError ? 'error' : '') }>
+                                                                <label>Last Payment Date</label>
+                                                                <div className="inFormField">
+                                                                    <select name="lastPaymentDate" value={lastPaymentDate} onChange={handlerLastPaymentDateChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div className={"formField w-50 " + (paymentFrequencyError ? 'error' : '') }>
+                                                                <label>Payment Frequency</label>
+                                                                <div className="inFormField">
+                                                                    <select name="paymentFrequency" value={paymentFrequency} onChange={handlerPaymentFrequencyChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div className={"formField w-50 " + (tuitionAmountError ? 'error' : '') }>
+                                                                <label>Tuition Amount</label>
+                                                                <div className="inFormField">
+                                                                    <select name="tuitionAmount" value={tuitionAmount} onChange={handlerTuitionAmountChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </>
+                        }
+
                     </div>
                 </div>
             </div>
