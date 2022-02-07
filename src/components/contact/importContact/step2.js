@@ -104,11 +104,23 @@ function Step2(props) {
     const [nextPaymentDueError, setNextPaymentDueError] = useState(false);
     const [paymentFrequency, setPaymentFrequency] = useState('');
     const [paymentFrequencyError, setPaymentFrequencyError] = useState(false);
+    const [paymentRemaining, setPaymentRemaining] = useState('');
+    const [paymentRemainingError, setPaymentRemainingError] = useState(false);
     const [tuitionAmount, setTuitionAmount] = useState('');
     const [tuitionAmountError, setTuitionAmountError] = useState(false);
     const [customFields, setCustomFields] = useState([]);
     const fetchCustomFields = async () => {
-        //Custom
+        let cFileds = await ImportContactServices.fetchCustomFields();
+        if (cFileds.customFields.length > 0) {
+            const rows = cFileds.customFields.reduce(function (rows, key, index) {
+                return (index % 2 == 0 ? rows.push([key])
+                    : rows[rows.length-1].push(key)) && rows;
+            }, []);
+            console.log(rows)
+            setCustomFields(rows);
+        } else {
+            setCustomFields([]);
+        }
     }
 
     const handleSetp2Submit = async () => {
@@ -392,6 +404,12 @@ function Step2(props) {
             } else {
                 key['paymentFrequency'] = paymentFrequency;
             }
+            if (paymentRemaining === "") {
+                setPaymentRemainingError(true);
+                errorHere++;
+            } else {
+                key['paymentRemaining'] = paymentRemaining;
+            }
             if (tuitionAmount === "") {
                 setTuitionAmountError(true);
                 errorHere++;
@@ -654,6 +672,10 @@ function Step2(props) {
         setPaymentFrequency(event.target.value);
         setPaymentFrequencyError(false);
     }
+    const handlerPaymentRemainingChange = (event) => {
+        setPaymentRemaining(event.target.value);
+        setPaymentRemainingError(false);
+    }
     const handlerTuitionAmountChange = (event) => {
         setTuitionAmount(event.target.value);
         setTuitionAmountError(false);
@@ -663,6 +685,7 @@ function Step2(props) {
         setExcelHeaders(custom.headers);
         setTotalRecord(custom.totalRecords);
         setImportType(custom.importType);
+        fetchCustomFields();
     }, []);
     return (
         <>
@@ -1048,45 +1071,44 @@ function Step2(props) {
                                 </div>
                             }
                         </div>
-                        <div className={"accoRow " + (!openCustomFields ? 'collapse' : '')}>
-                            <div className="accoRowHead">
-                                <span className="accoHeadName">Custom Fields</span>
-                                <button className="accoToggler" onClick={toggleCustomField}></button>
-                            </div>
-                            {
-                                openCustomFields &&
-                                <div className="accoRowBody">
-                                    <div className="infoInputs">
-                                        <ul>
-                                            <li>
-                                                <div className={"formField w-50 " + (contactTypeError ? 'error' : '') }>
-                                                    <label>Contact Type</label>
-                                                    <div className="inFormField">
-                                                        <select name="contactType" value={contactType} onChange={handlerContactTypeChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                            <option value="">Select a header</option>
-                                                            {excelHeaders.map(header =>
-                                                                <option value={header}>{header}</option>
-                                                            )};
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div className={"formField w-50 " + (ageGroupError ? 'error' : '') }>
-                                                    <label>Age Group</label>
-                                                    <div className="inFormField">
-                                                        <select name="ageGroup" value={ageGroup} onChange={handlerAgeGroupChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                            <option value="">Select a header</option>
-                                                            {excelHeaders.map(header =>
-                                                                <option value={header}>{header}</option>
-                                                            )};
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
+                        {customFields.length ?
+                            <div className={"accoRow " + (!openCustomFields ? 'collapse' : '')}>
+                                <div className="accoRowHead">
+                                    <span className="accoHeadName">Custom Fields</span>
+                                    <button className="accoToggler" onClick={toggleCustomField}></button>
                                 </div>
-                            }
-                        </div>
+                                {
+                                    openCustomFields &&
+                                    <div className="accoRowBody">
+                                        <div className="infoInputs">
+                                            <ul>
+                                                {
+                                                    customFields.map(row => (
+                                                        <li>
+                                                            { row.map(col => (
+                                                                <div className={"formField w-50 " + (contactTypeError ? 'error' : '')}>
+                                                                    <label>{col.fieldName}</label>
+                                                                    <div className="inFormField">
+                                                                        <select name={col.alias} value={contactType}
+                                                                                onChange={handlerContactTypeChange}
+                                                                                style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                            <option value="">Select a header</option>
+                                                                            {excelHeaders.map(header =>
+                                                                                <option value={header}>{header}</option>
+                                                                            )};
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            )) }
+                                                        </li>
+                                                    ))
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                }
+                            </div> : ""
+                        }
                         {
                             importType === 'contacts' &&
                                 <>
@@ -1323,6 +1345,19 @@ function Step2(props) {
                                                                 <label>Tuition Amount</label>
                                                                 <div className="inFormField">
                                                                     <select name="tuitionAmount" value={tuitionAmount} onChange={handlerTuitionAmountChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                        <option value="">Select a header</option>
+                                                                        {excelHeaders.map(header =>
+                                                                            <option value={header}>{header}</option>
+                                                                        )};
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div className={"formField w-50 " + (paymentRemainingError ? 'error' : '') }>
+                                                                <label>Payments Remaining</label>
+                                                                <div className="inFormField">
+                                                                    <select name="paymentFrequency" value={paymentRemaining} onChange={handlerPaymentRemainingChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
                                                                         <option value="">Select a header</option>
                                                                         {excelHeaders.map(header =>
                                                                             <option value={header}>{header}</option>

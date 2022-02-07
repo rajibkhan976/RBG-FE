@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Overview from "./pages/Overview";
 import Attendance from "./pages/Attendance";
 import Transaction from "./pages/Transaction";
@@ -16,6 +16,7 @@ import cross_white from "../../../assets/images/cross_white.svg";
 import user_100X100 from "../../../assets/images/user_100X100.png";
 import camera_icon from "../../../assets/images/camera_icon.svg";
 import editIcon_white from "../../../assets/images/editIcon_white.svg";
+import owner_img_1 from '../../../assets/images/owner_img_1.png';
 import phone_call_icon_white from "../../../assets/images/phone_call_icon_white.svg";
 import email_icon_white from "../../../assets/images/email_icon_white.svg";
 import histroy_icon_white from "../../../assets/images/histroy_icon_white.svg";
@@ -25,6 +26,8 @@ import battery_icon_white from "../../../assets/images/battery_icon_white.svg";
 import exchange_icon_white from "../../../assets/images/exchange_icon_white.svg";
 import pager_icon_white from "../../../assets/images/pager_icon_white.svg";
 import note_icon_white from "../../../assets/images/note_icon_white.svg";
+import {UserServices} from "../../../services/authentication/UserServices";
+import config from "../../../configuration/config";
 
 
 const ContactModal = (props) => {
@@ -55,14 +58,15 @@ const ContactModal = (props) => {
     };
 
     const [stickeyHeadStatus, setStickeyHeadStatus] = useState(false);
-    const [contactModalOpenStatus, setContactModalOpenStatus] = useState(true);
-    const [contactModalOpenError, setContactModalOpenError] = useState("");
     const [contactName,  setContactName] = useState("");
+    const [isLoader, setIsLoader] = useState(false);
     const [contactData, setContactData] = useState({
         firstName: "",
         lastName: ""
     });
     const [ltv, setLtv] = useState("Calculating...");
+    const [image, setImage] = useState("");
+    const inputFile = useRef(null)
     const dispatch = useDispatch();
     const closeContactModal = () => {
         dispatch({
@@ -75,24 +79,19 @@ const ContactModal = (props) => {
         setStickeyHeadStatus(formScrollStatus);
     };
 
-    const getContactDetails = async (contactId) => {
-      if (contactId !== 0) {
-        let payload = {
-            id: contactId
-        }
-        const contact = await ContactService.fetchContact(JSON.stringify(payload));
+    const getContactDetails = (contact) => {
         setContactData(contact.contact);
         let firstName = contact.contact.firstName ? contact.contact.firstName : "";
         let lastName =  contact.contact.lastName ? contact.contact.lastName : ""
         setContactName(firstName + " "  + lastName);
+        if (contact.contact.profilePic) {
+            setImage(contact.contact.profilePic);
+        } else {
+            setImage(owner_img_1);
+        }
         const ltvVal = (contact.contact.ltv + contact.contact.ltvPOS).toLocaleString("en-US");
         setLtv(ltvVal);
-      }
     }
-
-    useEffect(() => {
-        getContactDetails(props.contactId);
-    }, []);
 
     const [goToTransactionClicked, setGoToTransactionClicked] = useState(false);
     const goToTransactionHandler = () => {
@@ -102,9 +101,40 @@ const ContactModal = (props) => {
         setGoToTransactionClicked(false)
     }
 
+    /**
+     * Upload profile picture
+     * @param {*} event
+     */
+    const handelChangeContactImage = (event) => {
+        inputFile.current.click();
+    }
+    const uploadImage = (event) => {
+        setIsLoader(true);
+        let files = event.target.files;
+        if (files && files.length) {
+            let reader = new FileReader();
+            reader.onload = r => {
+                ContactService.uploadProfilePic({
+                    file: r.target.result,
+                    name: files[0].name,
+                    contactId: props.contactId
+                }).then((result) => {
+                    setIsLoader(false);
+                    console.log(result)
+                    //setImage(r.target.result);
+                }).catch(err => {
+                    setIsLoader(false);
+                    console.log('Profile pic error', err);
+                });
+
+            };
+            reader.readAsDataURL(files[0]);
+        }
+    }
     return (
         <>
             <div className="modal contactModal">
+                {isLoader ? <Loader /> : ""}
                 <div className="modalContainer">
                     <div className={stickeyHeadStatus ? "contactModalHeader stickey" : "contactModalHeader"}>
                         <div className="contactModalHeaderTopSec">
@@ -121,9 +151,10 @@ const ContactModal = (props) => {
                               <div className="userInfoArea">
                                   <div className="userImageWrap">
                                       <span className="userImage">
-                                          <img src={user_100X100} alt="" />
+                                          <img src={image} alt="" />
                                       </span>
-                                      <button className="editUserImg">
+                                      <input type='file' id='file' ref={inputFile} onChange={uploadImage} style={{display: 'none'}}/>
+                                      <button className="editUserImg" onClick={handelChangeContactImage}>
                                           <img src={camera_icon} alt="" />
                                       </button>
                                   </div>
@@ -221,16 +252,15 @@ const ContactModal = (props) => {
 
 
                         <Steps config={config}>
-                            <Step title="Overview" contact={contactData} component={Overview}
-                            getContactDetails={(id) => getContactDetails(id)}  contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
+                            <Step title="Overview"  component={Overview} getContactDetails={getContactDetails}
+                            contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
                             <Step title="Attendance" component={Attendance} />
                             <Step title="Appointment" component={Appointment} contactId={props.contactId} />
                             <Step title="Transaction"
                             contactId={props.contactId}
                             backToTransList={backToTransListHandler}
                             goToTransaction={goToTransactionHandler}
-                            component={goToTransactionClicked ? TransactionChoose : Transaction}
-                            refetchContact={() => getContactDetails(props.contactId)}/>
+                            component={goToTransactionClicked ? TransactionChoose : Transaction}/>
                             <Step title="Billing" component={Billing} contactId={props.contactId} />
                             <Step title="Dependents" component={Dependents} contactId={props.contactId} />
                         </Steps>

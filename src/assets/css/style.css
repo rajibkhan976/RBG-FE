@@ -3498,6 +3498,12 @@ li:hover .extraDottedBtn {
   height: 40px;
   border-radius: 50%;
   margin-right: 14px;
+  overflow: hidden;
+}
+
+.tableCellUserImg img {
+  height: 100%;
+  width: 100%;
 }
 
 .tableListing li > div.firstCell {
@@ -3776,7 +3782,10 @@ li:hover .extraDottedBtn {
   border-radius: 50%;
   overflow: hidden;
 }
-
+.userImageWrap .userImage img {
+  height: 100%;
+  width: 100%;
+}
 .userImageWrap .editUserImg {
   width: 26px;
   height: 26px;

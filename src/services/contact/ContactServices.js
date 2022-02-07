@@ -1,5 +1,7 @@
 import axios from "axios";
 import config from "../../configuration/config";
+import {isLoggedIn} from "../authentication/AuthServices";
+import {message} from "../../helpers";
 
 let headers = {
     "Content-Type": "application/json"
@@ -105,6 +107,40 @@ export const ContactService = {
             } else {
                 throw new Error("There is an error updating contact. Please contact support");
             }
+        } catch (e) {
+            console.log('error in update contact'. e);
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                throw new Error("Please contact support.");
+            }
+        }
+    },
+    uploadProfilePic: fileData => {
+        try {
+            return new Promise((resolve, reject) => {
+                axios
+                    .put(
+                        config.getContactsUrl + '/uploadImage',
+                        {
+                            file: fileData.file,
+                            name: fileData.name,
+                            contactId: fileData.contactId
+                        },
+                        { headers: headers }
+                    )
+                    .then(res => {
+                        resolve(res);
+                    })
+                    .catch(error => {
+                        if (error != null && error.response != null) {
+                            reject(error.response.data.error);
+                        } else {
+                            reject(message.connectionError);
+                        }
+                    });
+            });
         } catch (e) {
             console.log('error in update contact'. e);
             if(!typeof e.data === 'undefined') {

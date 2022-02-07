@@ -322,7 +322,7 @@ const ContactListing = (props) => {
                                     {(j === 1) ? <button className="extraDottedBtn" type="button"></button> : ""}
                                     <button className="btn" onClick={() => openContactModal(ele._id)}>
                                         {(item.id === "name") ? <span className="tableCellUserImg">
-                                            <img src={owner_img_1} alt="" />
+                                            <img src={ele.profilePic !== undefined ? ele.profilePic : owner_img_1} alt={ele.profilePic} />
                                         </span> : ""}
                                         {(item.id === 'mobile' || item.id === 'phone' || item.id === 'dadPhone' || item.id === 'momPhone') ?
                                             ((ele[item.id] && ele[item.id].dailCode &&  ele[item.id].number !== "") ?

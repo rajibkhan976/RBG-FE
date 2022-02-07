@@ -99,6 +99,7 @@ const Overview = (props) => {
               id: contactId
           }
           let contact = await ContactService.fetchContact(JSON.stringify(payload));
+          props.getContactDetails(contact);
           setContact(contact.contact);
           setBasicinfoFname(contact.contact.firstName);
           setBasicinfoLname(contact.contact.lastName);
