@@ -22,6 +22,7 @@ const TransactionChoose = (props) => {
 
     const [choosePOS, setChoosetPOS] = useState(false);
     const [chooseCourse, setChooseCourse] = useState(false);
+    const [paymentDate, setPaymentDate] = useState("");    
     const [courseCategory, setCourseCategory] = useState([]);
     const [courseList, setCourseList] = useState([]);
     const [courseFees, setCourseFees] = useState(0);
@@ -263,6 +264,12 @@ const TransactionChoose = (props) => {
             setProductPriceTax(0);
         }
     }
+
+    const paymentDateHandel = (e) => {
+      setPaymentDate(e.target.value);
+      console.log(paymentDate);
+    }
+    
 
 
     return (
@@ -672,7 +679,7 @@ const TransactionChoose = (props) => {
                                                     <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
                                             </span>
-                                              <input type="date" placeholder="mm/dd/yyyy" class="editableInput" value="02/02/2222" />
+                                              <input type="date" placeholder="mm/dd/yyyy" onChange={paymentDateHandel} class="editableInput" value={paymentDate} />
                                             </span>
                                         </div>
                                         <div className="formsection gap">
