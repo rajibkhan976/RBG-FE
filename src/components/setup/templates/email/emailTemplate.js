@@ -9,12 +9,13 @@ import browse_keywords from "../../../../assets/images/icon_browse_keywords.svg"
 import { utils } from "../../../../helpers";
 import Pagination from "../../../shared/Pagination";
 import Loader from "../../../shared/Loader";
-import { ErrorAlert, SuccessAlert } from "../../../shared/messages";
+import { ErrorAlert, SuccessAlert, WarningAlert } from "../../../shared/messages";
 import EditorComponent from "./editor/Editor";
 import Scrollbars from "react-custom-scrollbars-2";
 
 const EmailTemplate = () => {
   const [isLoader, setIsLoader] = useState(false);
+  const [warningMsg, setWarningMsg] = useState("")
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [keyword, setKeyword] = useState(null);
@@ -119,6 +120,7 @@ const EmailTemplate = () => {
     }
   };
 
+  // open create email template modal
   const openModal = () => {
     setIsEdit(false);
     setEmailModal(true);
@@ -127,6 +129,7 @@ const EmailTemplate = () => {
     setKeyword(null)
     setKeywordSuggesion(false)
   };
+  // open create email template modal
 
   const handleSortBy = (field) => {
     // Set sort type
@@ -144,6 +147,7 @@ const EmailTemplate = () => {
     utils.addQueryParameter("sortType", type);
   };
 
+  // Streamline and Show Email body
   const stringToHTML = (str) => {
     var parser = new DOMParser();
     var doc = parser.parseFromString(str, 'text/html');
@@ -153,8 +157,10 @@ const EmailTemplate = () => {
       dataHTML += doc.body.childNodes[i].textContent
     }
     return (dataHTML.length < 100 ? dataHTML : dataHTML.substring(0, 100)+"...");
-  };
+  }
+  // Streamline and Show Email body
 
+  // select message to edit
   const getThisEmail = (email, i) => {
     setActiveEmail(
       activeEmail === null ? i : activeEmail === i ? null : i
@@ -166,28 +172,47 @@ const EmailTemplate = () => {
     })
     setKeyword(null)
     setKeywordSuggesion(false)
-    console.log(email);
   }
 
   useEffect(()=>{},[editEmailObj])
+  // select message to edit
 
+
+  // set Edited mail template
   const editedEmailTemplate = (email, headerMessage) => {
-    console.log('UPDATED EMAIL', email);
     let copyEmailTemplates = initialData;
     let currentTemplate = initialData[activeEmail];
 
-    currentTemplate = {
-      title: currentTemplate.title,
-      header: headerMessage,
-      message: email
+    if(initialData[activeEmail].header === headerMessage && initialData[activeEmail].message === email) {
+      setWarningMsg(`No change detected!`);
+      setTimeout(() => {
+        setWarningMsg("")
+      }, 5000)
     }
+    else if(initialData[activeEmail].header.length === 0){
+        setWarningMsg("Header cannot be empty!")
+        setTimeout(() => {
+          setWarningMsg("")
+        }, 5000)
+    }
+    else {
+      currentTemplate = {
+        title: currentTemplate.title,
+        header: headerMessage,
+        message: email
+      }
+  
+      copyEmailTemplates[activeEmail] = currentTemplate;
+  
+      setInitialData(copyEmailTemplates)
 
-    copyEmailTemplates[activeEmail] = currentTemplate;
-
-    console.log("copyEmailTemplates", copyEmailTemplates);
-
-    setInitialData(copyEmailTemplates)
+      setSuccessMsg("Mesage Successfully edited!");
+      setTimeout(() => {
+       setSuccessMsg("")
+      }, 5000)
+    }
   }
+  // set Edited mail template
 
   // set new email message
   const createdEmailTemplate = (email) => {
@@ -196,9 +221,11 @@ const EmailTemplate = () => {
       message: email !== "" && email
     })
   }
+  // set new email message
 
   useEffect(()=>{},[initialData])
 
+  // add keyword for new email template header
   const addKeywordEmail = (e) => {
     e.preventDefault()
     let subjectInput = document.getElementById("newEmailTemplateSubject");
@@ -252,10 +279,12 @@ const EmailTemplate = () => {
       }, 5000);
     }
   }
+  // add keyword for new email template header
 
+// Save new email template  
   const saveEmailTemplate = (e) => {
     e.preventDefault();
-    console.log("newMail", newMail);
+    
     if(newMail.title !== "" && newMail.header !== "" && newMail.message !== "") {
       try {
         let copyTemplates = initialData;
@@ -285,12 +314,14 @@ const EmailTemplate = () => {
         setErrorMsg("")
       }, 5000);
     }
-    
   }
+  // Save new email template
 
+  // close create new email modal
   const closeModal = () => {
     setEmailModal(false);
   };
+  // close create new email modal
 
   return (
     <div className="dashInnerUI emailListingPage">
@@ -331,7 +362,7 @@ const EmailTemplate = () => {
 
       {successMsg && <SuccessAlert message={successMsg}></SuccessAlert>}
       {errorMsg && <ErrorAlert message={errorMsg}></ErrorAlert>}
-      {console.log(errorMsg && errorMsg)}
+      {warningMsg && <WarningAlert message={warningMsg} />}
 
       <div className="userListBody emailListing d-flex">
         <div className="listBody">

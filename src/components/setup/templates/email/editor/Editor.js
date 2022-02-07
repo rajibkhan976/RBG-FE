@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import { ErrorAlert, SuccessAlert } from "../../../../shared/messages";
+import { ErrorAlert, SuccessAlert, WarningAlert } from "../../../../shared/messages";
 import browse_keywords from "../../../../../assets/images/icon_browse_keywords.svg";
 
 const EditorComponent = (props) => {
   const [dirty, setDirty] = useState(false)
   const [emailHeader, setEmailHeader] = useState("")
   const [max, setMax] = useState(false)
+  const [warningMsg, setWarningMsg] = useState("")
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [keywordSuggesion, setKeywordSuggesion] = useState(false);
@@ -25,54 +26,54 @@ const EditorComponent = (props) => {
 
   const log = () => {
     if (editorRef.current) {
-      // console.log(editorRef.current.getContent());
     }
   };
 
+  // save edited data as email content
   const editedEmail = (mailValue) => {
-    // console.log("edit on Change:::", mailValue);
     setValue(mailValue)
-    // console.log("editedvalue:::", value);
   }
+  // save edited data as email content
 
+  // save new data as email content
   const createEmail = (createValue) => {
     setCreatedValue(createValue.trim() !== "" && createValue);
     props.createdEmailTemplate(createValue)
   }
+  // save new data as email content
 
-  useEffect(()=>{}, [value])
+  useEffect(()=>{}, [value, createdValue])
 
-  const saveTemplate = () => {
-    let headerInput = document.getElementById("editTemplateHeader").value;
-
-    props.editedEmailTemplate(value.trim() !== "" ? value : props.initialData.message, headerInput.trim() !== "" ? headerInput : props.initialData.header)
-    editorRef.current.setDirty(false);
-    setDirty(false)
-    props.setActiveEmail(null)
-  }
-
-  const createSave = (e) => {
+  // save edited email template
+  const saveTemplate = (e) => {
     e.preventDefault()
-    if (createdValue.trim() !== "") {
-      props.createdEmailTemplate(createdValue)
-      setSuccessMsg("Email template captured!")
-      setTimeout(() => {
-        setSuccessMsg("")
-      }, 5000);
+    let headerInput = document.getElementById("editTemplateHeader").value;
+    
+    if(headerInput.length  !== 0 && value.trim().length !== 0) {
+      console.log(props.initialData.header === headerInput, headerInput.trim().length === 0, props.initialData.message.length === 0)
+      props.editedEmailTemplate(value.trim() !== "" ? value : props.initialData.message, headerInput.trim() !== "" ? headerInput : props.initialData.header)
+      editorRef.current.setDirty(false);
+      setDirty(false)
+      props.setActiveEmail(null)
     }
     else {
-      setErrorMsg("Please enter some text / value!")
-      setTimeout(() => {
-        setErrorMsg("")
-      }, 5000);
+      if(headerInput.length === 0) {
+        setErrorMsg("Header cannot remain empty!")
+        setTimeout(() => {
+          setErrorMsg("")
+        }, 5000);
+      }
+      else if(value.trim().length === 0) {
+        setErrorMsg("Email body cannot remain empty!")
+        setTimeout(() => {
+          setErrorMsg("")
+        }, 5000);
+      }
     }
   }
+  // save edited email template
 
-  const createKeywordEmail = (e) => {
-    e.preventDefault()
-    console.log(e);
-  }
-
+  // add keywords to edit email header
   const editKeywordEmail = (e) => {
     e.preventDefault()
     // console.log(e.target);
@@ -127,7 +128,10 @@ const EditorComponent = (props) => {
       }, 5000);
     }
   }
+  // add keywords to edit email header
 
+
+  // add keywords to edit email template
   const editKeywordTextEmail = (e) => {
     e.preventDefault();
     let iframeEdit = document.querySelector("#editTextArea iframe");
@@ -149,7 +153,9 @@ const EditorComponent = (props) => {
         range.text = " [" +e.target.textContent +"] ";
     }
   }
+  // add keywords to edit email template
 
+  // add keywords to create email template  
   const createKeywordTextEmail = (e) => {
     e.preventDefault();
     let iframeEdit = document.querySelector("#createTextArea iframe");
@@ -171,6 +177,7 @@ const EditorComponent = (props) => {
         range.text = " [" +e.target.textContent +"] ";
     }
   }
+  // add keywords to create email template
 
   useEffect(()=>{
     setEmailHeader(props.initialData.header)
@@ -180,6 +187,7 @@ const EditorComponent = (props) => {
     <>
     {successMsg && <SuccessAlert message={successMsg}></SuccessAlert>}
     {errorMsg && <ErrorAlert message={errorMsg}></ErrorAlert>}
+    {warningMsg && <WarningAlert message={warningMsg}></WarningAlert>}
 
     {props.createNew ? <>
       <div className={max ? "editorEmailShell h-100 maximize" : "editorEmailShell h-100"} id="createTextArea">
@@ -477,7 +485,7 @@ const EditorComponent = (props) => {
 
           <button 
             className="btn btnSave"
-            onClick={saveTemplate}
+            onClick={(e)=>saveTemplate(e)}
           >
             <svg
               width="16"

@@ -785,4 +785,8 @@
   z-index: 9999999;
   top: 330px;
 }
+.emailListingPage > .popupMessage,
+.emailListingPage .templateBody .popupMessage  {
+  top: 170px;
+}
 /* Text editor */
