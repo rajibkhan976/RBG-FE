@@ -60,6 +60,14 @@ const EmailTemplate = () => {
     message: ""
   })
 
+  const [hasError, setHasError] = useState(false)
+
+  const [errorState, setErrorState] = useState({
+    title: "",
+    header: "",
+    message: ""
+  })
+
   const getQueryParams = async () => {
     const keyword = utils.getQueryVariable("search");
     const srtBy = utils.getQueryVariable("sortBy");
@@ -287,7 +295,7 @@ const EmailTemplate = () => {
             setTimeout(() => {
               setSuccessMsg("")
             }, 5000);
-            
+            console.log(e.target.getAttribute("id"));
             e.target.getAttribute("id") === "saveNewEmailTemplate" ? setEmailModal(false) : createModalRef.current.reset();;
             
             setNewMail({
@@ -300,20 +308,48 @@ const EmailTemplate = () => {
       }
     }
     else {
-      console.log(newMail);
-      setErrorMsg("Please enter some text / value!")
-      setTimeout(() => {
-        setErrorMsg("")
-      }, 5000);
+      setHasError(true)
+      
+      setErrorState({
+        title: newMail.title === "" ? "Please enter some Title!" : "",
+        header:newMail.header === "" ? "Please add some Header!" : "",
+        message: newMail.message === "" ? "Please Email content!" : "" 
+      })
     }
   }
+  useEffect(()=>{
+    console.log("errorState", errorState, hasError);
+  },[errorState, hasError])
   // Save new email template
 
   // close create new email modal
   const closeModal = () => {
     setEmailModal(false);
+    setIsEdit(false);
+    setActiveEmail(null)
+
+    setKeyword(null)
+    setKeywordSuggesion(false)
+
+    setHasError(false)
+    
+    setErrorState({
+      title:"",
+      header: "",
+      message:"" 
+    })
   };
   // close create new email modal
+
+  useEffect(() =>{
+    setHasError(false)
+    
+    setErrorState({
+      title:"",
+      header: "",
+      message:"" 
+    })
+  }, [activeEmail])
 
   return (
     <div className="dashInnerUI emailListingPage">
@@ -479,7 +515,7 @@ const EmailTemplate = () => {
                 )}
               >
                 <form method="post" ref={createModalRef}>
-                  <div className="cmnFormRow">
+                  <div className={hasError && errorState.title ? "cmnFormRow error" : "cmnFormRow"}>
                     <label className="cmnFieldName d-flex f-justify-between">
                       Title
                     </label>
@@ -496,9 +532,9 @@ const EmailTemplate = () => {
                         }}
                       />
                     </div>
-                    {/* <span className="errorMsg">Please provide name.</span> */}
+                    {hasError && errorState.title && <span className="errorMsg">{errorState.title}</span>}
                   </div>
-                  <div className="cmnFormRow">
+                  <div className={hasError && errorState.header ? "cmnFormRow error" : "cmnFormRow"} >
                     <label className="cmnFieldName d-flex f-justify-between">
                       Subject
                     </label>
@@ -570,9 +606,9 @@ const EmailTemplate = () => {
                         </div>
                       </div>}
                     </div>
-                    {/* <span className="errorMsg">Please provide name.</span> */}
+                    {hasError && errorState.header && <span className="errorMsg">{errorState.header}</span>}
                   </div>
-                  <div className="cmnFormRow">
+                  <div className={hasError && errorState.message ? "cmnFormRow error" : "cmnFormRow"}>
                     <label className="cmnFieldName d-flex f-justify-between">
                       Subject
                     </label>
@@ -583,6 +619,7 @@ const EmailTemplate = () => {
                           initialData="Write here..."
                         />
                     </div>
+                    {hasError && errorState.message && <span className="errorMsg">{errorState.message}</span>}
                   </div>
 
                   <div className="modalbtnHolder w-100">

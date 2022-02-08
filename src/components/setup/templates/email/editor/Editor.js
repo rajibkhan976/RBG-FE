@@ -24,6 +24,11 @@ const EditorComponent = (props) => {
   const editorRef = useRef(null);
   const editorCreateRef = useRef(null);
   const createTextArea = useRef(null)
+  const [editHasError, setEditHasError] = useState(false);
+  const [editErrorState, setEditErrorState] = useState({
+    header: "",
+    message: ""
+  })
 
   const log = () => {
     if (editorRef.current) {
@@ -62,16 +67,21 @@ const EditorComponent = (props) => {
         editorRef.current.setDirty(false);
         setDirty(false)
         props.setActiveEmail(null)
+
+        setEditHasError(false)
+        
+        setEditErrorState({
+          header: "",
+          message: "" 
+        })
       }
       else if(dirty && value.length === 0) {
+        setEditHasError(true)
         
-        console.log("value:::", value);
-        console.log("hi", headerInput.length);
-
-        setErrorMsg("Please provide a proper Email Content!")
-        setTimeout(() => {
-          setErrorMsg("")
-        }, 5000);
+        setEditErrorState({
+          header: "",
+          message: dirty && value.length === 0 ? "Please provide a proper Email Content!" : "" 
+        })
       }
       else {
         props.editedEmailTemplate(props.initialData.message, headerInput.trim() !== "" && headerInput)
@@ -84,21 +94,22 @@ const EditorComponent = (props) => {
         editorRef.current.setDirty(false);
         setDirty(false)
         props.setActiveEmail(null)
+
+        setEditHasError(false)
+        
+        setEditErrorState({
+          header: "",
+          message: "" 
+        })
       }
     }
     else {
-      if(dirty && value.length === 0) {
-        setErrorMsg("Please provide a proper Email Content and Header!")
-        setTimeout(() => {
-          setErrorMsg("")
-        }, 5000);
-      }
-      else {
-        setErrorMsg("Please provide a proper Email Header!")
-        setTimeout(() => {
-          setErrorMsg("")
-        }, 5000);
-      }
+      setEditHasError(true)
+      
+      setEditErrorState({
+        header: "Please provide a proper Email Content and Header!",
+        message: dirty && value.length === 0 ? "Please provide a proper Email Content and Header!" : "" 
+      })
     }
   }
   // save edited email template
@@ -347,8 +358,7 @@ const EditorComponent = (props) => {
         id="formEditor"
       >
         <div className="cmnFormRow">
-        {/* {console.log("props.initialData.header", props.initialData.header)} */}
-          <div className="cmnFormField">
+          <div className={editHasError && editErrorState.header ? "cmnFormField error" : "cmnFormField"}>
             <input className="headerEmail  btnPadding cmnFieldStyle" defaultValue={props.initialData.header === emailHeader ? props.initialData.header : emailHeader} id="editTemplateHeader" ref={editHeaderRef} />
 
             <button
@@ -410,7 +420,7 @@ const EditorComponent = (props) => {
             </div>}
           </div>
         </div>
-        <div className="cmnFormRow f-1" id="editTextArea">
+        <div className={editHasError && editErrorState.message ? "cmnFormRow f-1 error" : "cmnFormRow f-1"} id="editTextArea">
           <Editor
             apiKey="91qkaw0vhg0xwousdvvdhjztavstam75oa7th9v5rkrbd31v"
             onInit={(evt, editor) => (editorRef.current = editor)}

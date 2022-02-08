@@ -405,6 +405,7 @@ const SmsTemplate = (props) => {
         message: "",
       })
     } else {
+      console.log(addMsgObj);
       setErrorMsg("Some information missing!");
       setTimeout(() => {
         setErrorMsg("")
