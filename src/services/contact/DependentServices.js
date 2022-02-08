@@ -111,4 +111,31 @@ export const DependentServices = {
             }
         }
     },
+    toggleDnc: async (dependentId) => {
+        try {
+            if (isLoggedIn() === false) {
+                throw new Error(message.loginFailed);
+            }
+            const options = {
+                headers: headers
+            };
+            const result = await axios.put(config.dependentUrl + dependentId, options);
+            if (result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an issue in dnc status toggle. Please contact support.");
+            }
+        } catch (e) {
+            console.log('yeah', e.response);
+            if (!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if (e.response && e.response.data) {
+                throw new Error(e.response.data);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
 };

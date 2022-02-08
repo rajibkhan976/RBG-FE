@@ -26,11 +26,11 @@ import battery_icon_white from "../../../assets/images/battery_icon_white.svg";
 import exchange_icon_white from "../../../assets/images/exchange_icon_white.svg";
 import pager_icon_white from "../../../assets/images/pager_icon_white.svg";
 import note_icon_white from "../../../assets/images/note_icon_white.svg";
-import {UserServices} from "../../../services/authentication/UserServices";
+import { UserServices } from "../../../services/authentication/UserServices";
 import config from "../../../configuration/config";
 import dependent_white from "../../../assets/images/dependent.svg"
 import env from "../../../configuration/env";
-import {uploadFile} from "react-s3";
+import { uploadFile } from "react-s3";
 
 
 
@@ -65,7 +65,7 @@ const ContactModal = (props) => {
     };
 
     const [stickeyHeadStatus, setStickeyHeadStatus] = useState(false);
-    const [contactName,  setContactName] = useState("");
+    const [contactName, setContactName] = useState("");
     const [isLoader, setIsLoader] = useState(false);
     const [contactModalOpenStatus, setContactModalOpenStatus] = useState(true);
     const [contactModalOpenError, setContactModalOpenError] = useState("");
@@ -91,8 +91,8 @@ const ContactModal = (props) => {
     const getContactDetails = (contact) => {
         setContactData(contact.contact);
         let firstName = contact.contact.firstName ? contact.contact.firstName : "";
-        let lastName =  contact.contact.lastName ? contact.contact.lastName : ""
-        setContactName(firstName + " "  + lastName);
+        let lastName = contact.contact.lastName ? contact.contact.lastName : ""
+        setContactName(firstName + " " + lastName);
         if (contact.contact.profilePic) {
             setImage(contact.contact.profilePic);
         } else {
@@ -118,16 +118,16 @@ const ContactModal = (props) => {
         inputFile.current.click();
     }
     const getRandomFileName = () => {
-        let timestamp = new Date().toISOString().replace(/[-:.]/g,"");
+        let timestamp = new Date().toISOString().replace(/[-:.]/g, "");
         let random = ("" + Math.random()).substring(2, 8);
         return timestamp + random;
     }
     const uploadImage = (event) => {
         let file = event.target.files[0];
-        let allowedExtension = ['image/jpeg', 'image/jpg', 'image/png','image/gif','image/bmp'];
-        let extension = file.name.substring(file.name.lastIndexOf('.')+1);
+        let allowedExtension = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/bmp'];
+        let extension = file.name.substring(file.name.lastIndexOf('.') + 1);
         console.log(extension)
-        if (file && (allowedExtension.indexOf(file.type)>-1) && file.size < 5000000) {
+        if (file && (allowedExtension.indexOf(file.type) > -1) && file.size < 5000000) {
             let newFileName = getRandomFileName() + '.' + extension;
             const config = {
                 bucketName: env.REACT_APP_BUCKET_NAME,
@@ -153,7 +153,7 @@ const ContactModal = (props) => {
     }
     useEffect(() => {
         saveImageLocation(image);
-    },[image])
+    }, [image])
     const saveImageLocation = async (imageLocation) => {
         if (imageLocation !== "") {
             await ContactService.uploadProfilePic({
@@ -170,11 +170,11 @@ const ContactModal = (props) => {
             contact_modal_id: '',
         });
         setTimeout(() => {
-          dispatch({
-              type: actionTypes.CONTACTS_MODAL_ID,
-              contact_modal_id: id,
-          });
-        },300);
+            dispatch({
+                type: actionTypes.CONTACTS_MODAL_ID,
+                contact_modal_id: id,
+            });
+        }, 300);
     }
 
     return (
@@ -193,25 +193,25 @@ const ContactModal = (props) => {
                                     <img src={cross_white} alt="" />
                                 </button>
                             </div>
-                            { props.contactId !== 0 &&
-                              <div className="userInfoArea">
-                                  <div className="userImageWrap">
-                                      <span className="userImage">
-                                          <img src={image} alt="" />
-                                      </span>
-                                      <input type='file' id='file' ref={inputFile} onChange={uploadImage} style={{display: 'none'}}/>
-                                      <button className="editUserImg" onClick={handelChangeContactImage}>
-                                          <img src={camera_icon} alt="" />
-                                      </button>
-                                  </div>
-                                  <div className="userName" title={contactName}>
-                                      { contactName.length > 20 ? contactName.substring(0, 20) + "..." : contactName }
-                                  </div>
-                                  <div className="ltValue">
-                                      <header>Life Time Value :</header>
-                                      <span>USD {Number(ltv).toFixed(2)}</span>
-                                  </div>
-                                  {/* <div className="userContacts">
+                            {props.contactId !== 0 &&
+                                <div className="userInfoArea">
+                                    <div className="userImageWrap">
+                                        <span className="userImage">
+                                            <img src={image} alt="" />
+                                        </span>
+                                        <input type='file' id='file' ref={inputFile} onChange={uploadImage} style={{ display: 'none' }} />
+                                        <button className="editUserImg" onClick={handelChangeContactImage}>
+                                            <img src={camera_icon} alt="" />
+                                        </button>
+                                    </div>
+                                    <div className="userName" title={contactName}>
+                                        {contactName.length > 20 ? contactName.substring(0, 20) + "..." : contactName}
+                                    </div>
+                                    <div className="ltValue">
+                                        <header>Life Time Value :</header>
+                                        <span>USD {Number(ltv).toFixed(2)}</span>
+                                    </div>
+                                    {/* <div className="userContacts">
                                       <div className="userPhone">
                                           <img src={phone_call_icon_white} alt="" />
                                           <span>+1-4132045887</span>
@@ -231,7 +231,7 @@ const ContactModal = (props) => {
                                         <div className="userDependents" onClick={() => openGuardianContactModal(contactData.guardianInfo._id)}>
                                             <img src={dependent_white} alt="" />
                                             <span>
-                                                {contactData.guardianInfo.firstName + ' ' + contactData.guardianInfo.lastName}
+                                                Guardian - {contactData.guardianInfo.firstName + ' ' + contactData.guardianInfo.lastName}
                                             </span>
                                         </div> : ''}
                                     <div className="userContacts">
@@ -305,15 +305,15 @@ const ContactModal = (props) => {
 
 
                         <Steps config={config}>
-                            <Step title="Overview"  component={Overview} getContactDetails={getContactDetails}
-                            contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
+                            <Step title="Overview" component={Overview} getContactDetails={getContactDetails}
+                                contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
                             <Step title="Attendance" component={Attendance} />
                             <Step title="Appointment" component={Appointment} contactId={props.contactId} />
                             <Step title="Transaction"
-                            contactId={props.contactId}
-                            backToTransList={backToTransListHandler}
-                            goToTransaction={goToTransactionHandler}
-                            component={goToTransactionClicked ? TransactionChoose : Transaction}/>
+                                contactId={props.contactId}
+                                backToTransList={backToTransListHandler}
+                                goToTransaction={goToTransactionHandler}
+                                component={goToTransactionClicked ? TransactionChoose : Transaction} />
                             <Step title="Billing" component={Billing} contactId={props.contactId} />
                             <Step title="Dependents" component={Dependents} contactId={props.contactId} />
                         </Steps>

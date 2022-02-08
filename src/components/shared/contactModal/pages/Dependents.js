@@ -494,9 +494,22 @@ const Dependents = (props) => {
     }
   }
 
-  const chageDND = (e) => {
-    setNotifStatus(e.target.checked);
-    document.activeElement.blur()
+  /**
+   * Toggle do not contact status for dependent
+   */
+  const toggleDncStatus = async (dependentId, key) => {
+    console.log('toggle DNC status', dependentId, key);
+    try {
+      dependentList[key].dnc = !dependentList[key].dnc;
+      const result = await DependentServices.toggleDnc(dependentId)
+      if (result) {
+        console.log('Dependent dnc result', result);
+        setSuccessMsg("DNC status updated successfully");
+      }
+    } catch (e) {
+      console.log("Error in dnc status update", e);
+      setErrorMsg(e.message);
+    }
   }
 
   return (
@@ -560,21 +573,9 @@ const Dependents = (props) => {
                           <h4>
                             <em>{dependent.name ? dependent.name : ((dependent.firstName ? dependent.firstName : '') + ' ' + (dependent.lastName ? dependent.lastName : ''))}</em>
                             <div className="dndCheckbox">
-                              {!dependent.dnc && <span onClick={(e) => {
-                                setNotifStatus(true)
-                                e.target.blur()
-                              }
-                              }>
-                                <img src={dnd} alt="Do not send notifications" />
-                              </span>}
-                              {dependent.dnc &&
-                                <span onClick={(e) => {
-                                  setNotifStatus(false)
-                                  e.target.blur()
-                                }}>
-                                  <img src={dndFalse} alt="Do not send notifications" />
-                                </span>
-                              }
+                              <span onClick={(e) => toggleDncStatus(dependent._id, i)}>
+                                <img src={dependent.dnc ? dnd : dndFalse} alt={dependent.dnc ? "Send notifications" : "Do not send notifications"} />
+                              </span>
                             </div>
                           </h4>
                           <span className="d-flex">
@@ -664,7 +665,7 @@ const Dependents = (props) => {
 
 
                       {isAlert.show && (isAlert.id === dependent._id) && <div className="archivedMessage">
-                        Are you sure you want to archive this Dependents? <div className="buttonsArchived"><button className="btn" onClick={() => archiveDependent( dependent,"yes")}>Yes</button><button className="btn" onClick={() => archiveDependent(dependent,"cancel")}>No</button></div></div>}
+                        Are you sure you want to archive this Dependents? <div className="buttonsArchived"><button className="btn" onClick={() => archiveDependent(dependent, "yes")}>Yes</button><button className="btn" onClick={() => archiveDependent(dependent, "cancel")}>No</button></div></div>}
                     </div>
                   </div>
                 </>
