@@ -16,12 +16,6 @@ const CustomizationsAddField = (props) => {
   const [errorMsg, setErrorMsg] = useState("");
   const [customField, setCustomField] = useState(props.ele);
 
-//   const [errorMsg, setErrorMsg] = useState({
-//       name: "Please fill up the field name",
-//       type: "Please select the field type",
-//       defaultVal: "Please enter default value",
-//       alias: "Please enter alias name"
-//   });
   useEffect(() =>{
     console.log('PPPPP', props)
   });
@@ -88,10 +82,10 @@ const CustomizationsAddField = (props) => {
     try {
       setIsLoader(true);
       const result = await CustomizationServices.addCustomField(customField);
-      setSuccessMsg("Custom field added successfully");
+      props.successMessage(result.message);
       setCustomField({...customField, name: "", type: "", defaultValue: "", alias: "", status: "", _id: ""});
     } catch (e) {
-      setErrorMsg(e.message);
+      props.errorMessage(e.message);
     } finally {
       setIsLoader(false);
     }
@@ -119,14 +113,6 @@ const CustomizationsAddField = (props) => {
   }
 
   const closeModal = () => {
-   /* setCustomField(previousState => ({
-      ...previousState,
-      name: "",
-     // type: "",
-      //defaultValue: "",
-      //alias: "",
-      //status: ""
-    }));*/
 
     props.closeAddCustomModal(false);
   }

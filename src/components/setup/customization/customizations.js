@@ -148,6 +148,7 @@ const Customizations = (props) => {
       const res = await CustomizationServices.deleteCustomField(deleteFieldId);
       setDeletedFieldId(deleteFieldId);
       setSuccessMsg(res.message);
+      setOption(null);
     } catch (e) {
       setErrorMsg(e.message);
     } finally {
@@ -207,6 +208,14 @@ const Customizations = (props) => {
       status: elem.status,
       _id: elem._id
     });
+  }
+
+  const createSuccess = (msg) => {
+    setSuccessMsg(msg);
+  }
+
+  const createError= (msg) => {
+    setErrorMsg(msg);
   }
 
 
@@ -323,7 +332,9 @@ const Customizations = (props) => {
           closeAddCustomModal={(param) => closeCustomModal(param)} 
           ele={editedEle} 
           editStatus={isEditing}
-          savedNew={() => fetchCustomFields ()}
+          savedNew={() => fetchCustomFields ()} 
+          successMessage={(msg) => createSuccess (msg)} 
+          errorMessage={(msg) => createError (msg)}
         />
       }
     </>
