@@ -215,6 +215,8 @@ const Dependents = (props) => {
         isCommunication: (filteredContact[0].email || filteredContact[0].phone.number ? true : false),
         email: filteredContact[0].email ? filteredContact[0].email : '',
         phone: filteredContact[0].phone.number ? filteredContact[0].phone.number : '',
+        dailCode: filteredContact[0].phone.dailCode ? filteredContact[0].phone.dailCode : '',
+        countryCode: filteredContact[0].phone.countryCode ? filteredContact[0].phone.countryCode : '',
       })
       setToggleContactList({ ...toggleContactList, status: false, isCross: true });
       console.log('Filter contact', filteredContact);
@@ -868,6 +870,7 @@ const Dependents = (props) => {
                             type="email"
                             onChange={(e) => handleEmailChange(e)}
                             onBlur={() => validateEmailField()}
+                            value={dependant.email}
                             disabled={dependant.email && toggleContactList.isCross}
                           />
                           {formErrors.email ? (
