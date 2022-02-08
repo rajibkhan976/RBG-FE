@@ -262,8 +262,7 @@ const SmsTemplate = (props) => {
 
   // Add edit template message onchange
   const editTemplateMessage = (e) => {
-    console.log("e.target.value.trim()", e.target.value.trim().length !== 0);
-    e.target.value.trim().length !== 0 &&
+    messageTextbox.current.value.trim().length !== 0 &&
       setEditMsgObj({
         ...editMsgObj,
         message: e.target.value,

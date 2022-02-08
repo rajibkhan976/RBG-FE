@@ -164,7 +164,7 @@ const EditorComponent = (props) => {
   // add keywords to edit email template
   const editKeywordTextEmail = (e) => {
     e.preventDefault();
-    let iframeEdit = document.querySelector("#editTextArea iframe");
+    let iframeEdit = editorRef.current;
     let iframeEditBody = (iframeEdit.contentDocument || iframeEdit.contentWindow.document).body;
 
     let doc = iframeEditBody.ownerDocument || iframeEditBody.document;
