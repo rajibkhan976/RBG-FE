@@ -62,16 +62,20 @@ const Dependents = (props) => {
 
   const [isDisabled, setIsDisabled] = useState(false);
   const [processing, setProcessing] = useState(false);
+  const [successMsgPopup, setSuccessMsgPopup] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsgPopup, setErrorMsgPopup] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const messageDelay = 5000; // ms
   /**
    * Auto hide success or error message
    */
   useEffect(() => {
+    if (successMsgPopup) setTimeout(() => { setSuccessMsgPopup("") }, messageDelay)
     if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
+    if (errorMsgPopup) setTimeout(() => { setErrorMsgPopup("") }, messageDelay)
     if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
-  }, [successMsg, errorMsg]);
+  }, [successMsg, errorMsg, successMsgPopup, errorMsgPopup]);
 
   const fetchCountry = async () => {
     try {
@@ -419,7 +423,7 @@ const Dependents = (props) => {
           .then(result => {
             console.log("Create dependent result", result)
             let msg = 'Dependent created successfully';
-            setSuccessMsg(msg);
+            setSuccessMsgPopup(msg);
             //Close dependent create modal
             setTimeout(() => {
               closeModal();
@@ -581,8 +585,8 @@ const Dependents = (props) => {
                             </div>
                           </h4>
                           <span className="d-flex">
-                            {dependent.isCommunication && dependent.phone ? dependent.phone.dailCode + dependent.phone.number : ''}
-                            {dependent.phone && dependent.email ? " | " : ''}
+                            {dependent.isCommunication && dependent.phone && dependent.phone.dailCode && dependent.phone.number ? dependent.phone.dailCode + dependent.phone.number : ''}
+                            {dependent.phone && dependent.phone.dailCode && dependent.phone.number && dependent.email ? " | " : ''}
                             <a
                               className="mailCont"
                               href={dependent.isCommunication && dependent.email ? "mailto:" + dependent.email : ""}
@@ -700,11 +704,11 @@ const Dependents = (props) => {
                 <img src={icon_dependent_dark} alt="" />
               </div>
               <h3>{isEditing ? "Edit " : "Add a "}Dependent</h3>
-              {successMsg && <div className="popupMessage success">
-                <p>{successMsg}</p>
+              {successMsgPopup && <div className="popupMessage success">
+                <p>{successMsgPopup}</p>
               </div>}
-              {errorMsg && <div className="popupMessage error">
-                <p>{errorMsg}</p>
+              {errorMsgPopup && <div className="popupMessage error">
+                <p>{errorMsgPopup}</p>
               </div>}
             </div>
             <div className="modalForm">
