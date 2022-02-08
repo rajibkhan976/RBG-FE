@@ -2644,3 +2644,48 @@ button.delNewDownpayment {
   border-radius: 10px 10px 0px 0px;
   cursor: pointer;
 }
+
+.transaction_form .formsection .editableInput {
+  font-size: 13px!important;
+  padding: 0 5px;
+}
+
+.infoSpan span.tooltiptextInfo.amount {
+  margin-left: -75px;
+}
+
+.infoSpan span.tooltiptextInfo.amount::after {
+  margin-left: -35px;
+}
+
+.infoSpan span.tooltiptextInfo.paymentDate {
+  margin-left: -160px;
+}
+
+.infoSpan span.tooltiptextInfo.paymentDate::after {
+  margin-left: 50px;
+}
+
+.infoSpan span.tooltiptextInfo.paymentType {
+  margin-left: -105px;
+}
+
+.infoSpan span.tooltiptextInfo.paymentStatus {
+  margin-left: -172px;
+}
+
+.infoSpan span.tooltiptextInfo.paymentStatus::after {
+  margin-left: 62px;
+}
+
+.user_modal_cont h3 {
+  word-break: break-word;
+}
+
+.cmnFormField.programsTransaction.listActive {
+  position: relative;
+}
+
+.cmnFormField.programsTransaction.listActive .contactListItems {
+  top: 73px;
+}

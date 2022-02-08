@@ -7,6 +7,7 @@ import info_icon from "../../../../assets/images/infos.svg";
 import camera from "../../../../assets/images/camera.svg";
 import deleteBtn from "../../../../assets/images/deleteBtn.svg";
 import bell from "../../../../assets/images/bell.svg";
+import updown from "../../../../assets/images/updown.png";
 import downpayment from "../../../../assets/images/downpayment.svg";
 import categoryTag from "../../../../assets/images/categoryTag.svg";
 import { BillingServices } from "../../../../services/billing/billingServices";
@@ -23,6 +24,8 @@ const TransactionChoose = (props) => {
     const [choosePOS, setChoosetPOS] = useState(false);
     const [chooseCourse, setChooseCourse] = useState(false);
     const [paymentDate, setPaymentDate] = useState("");    
+    const [addDownpayment, setAddDownpayment] = useState(false);
+    const [addManually, setAddManually] = useState(false)
     const [courseCategory, setCourseCategory] = useState([]);
     const [courseList, setCourseList] = useState([]);
     const [courseFees, setCourseFees] = useState(0);
@@ -53,6 +56,10 @@ const TransactionChoose = (props) => {
     const [colorIndex, setColorIndex] = useState();
     const [sizeIndex, setSizeIndex] = useState();
     const [communication, setCommunication] = useState(false);
+    const [toggleContactList, setToggleContactList] = useState({
+      status: false,
+      listContent: [],
+    });
 
 
     const dispatch = useDispatch();
@@ -270,7 +277,27 @@ const TransactionChoose = (props) => {
       console.log(paymentDate);
     }
     
+    const addDownpaymentFn = (e) => {
+      e.preventDefault();
+      setAddDownpayment(true);
+    };
 
+    const delDownpaymentFn = (e) => {
+      e.preventDefault();
+      setAddDownpayment(false);
+    }
+
+
+    const toggleContactListFn = (e) => {
+      e.preventDefault();;
+  
+      let contactListOp = toggleContactList;
+  
+      setToggleContactList({
+        ...toggleContactList,
+        status: e.target.value.trim() === "" ? false : true,
+      });
+    };
 
     return (
         <>
@@ -313,7 +340,7 @@ const TransactionChoose = (props) => {
                         <div className="formMsg error">{errorMsg}</div>
                     }
                     <form>
-                        <div className="transaction_form">
+                        <div className="transaction_form">                        
                             <div className="formsection gap">
                                 <label>Select Program</label>
                                 <select className="selectBox" onChange={chosePosCatHandel}>
@@ -398,6 +425,113 @@ const TransactionChoose = (props) => {
                     }
                     <form>
                         <div className="transaction_form products forProducts">
+
+
+
+                          {/* Custom Select Box with inbuild Button starts */}
+
+                          <div className="formsection gap">
+
+                              <div className="cmnFormRow">
+                                <span className="labelWithInfo">
+                                      <label>Select Category</label>
+                                      <span className="infoSpan">
+                                          <img src={info_icon} alt="" />
+                                          <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                      </span>
+                                </span>
+                                {/* <div className="cmnFieldName d-flex f-justify-between">
+                                  Name
+                                  {addManually && 
+                                  <button
+                                    className="inlinle-btn"
+                                    onClick={(e)=>{
+                                      e.preventDefault()
+                                      setAddManually(false)
+                                    }}
+                                  >
+                                    Select from Contacts
+                                  </button>}
+                                </div> */}
+                                <div
+                                  className={
+                                    toggleContactList.status
+                                      ? "cmnFormField programsTransaction listActive"
+                                      : "cmnFormField programsTransaction"
+                                  }
+                                >
+                                  <input
+                                    className="cmnFieldStyle"
+                                    type="text"
+                                    placeholder="Eg. Steve Martyns"
+                                    onChange={(e)=>toggleContactListFn(e)}
+                                    style={{
+                                      backgroundImage: toggleContactList.status
+                                        ? `url(${updown})`
+                                        : "",
+                                    }}
+                                  />
+                                  {/* <span className="errorMsg">Please provide name.</span> */}
+                                  {toggleContactList.status && (
+                                    <>
+                                      <div className="contactListItems">
+                                        <button 
+                                          className="btn"
+                                          onClick={(e)=>{
+                                            e.preventDefault()
+                                            setAddManually(true)
+                                            toggleContactListFn(e)
+                                          }}
+                                        >+ Add Manually</button>
+                                        <ul>
+                                          <li>Abhisek Bose1</li>
+                                        </ul>          
+                                      </div>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                              {addManually &&
+                                <div className="cmnFormRow">
+                                  <div className="cmnFormCol">
+                                    <div className="cmnFieldName">Birthday</div>
+                                    <div className="cmnFormField">
+                                      <input
+                                        className="cmnFieldStyle"
+                                        type="date"
+                                        placeholder="dd/mm/yyyy"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="cmnFormCol">
+                                    <div className="cmnFieldName">Gender</div>
+                                    <div className="cmnFormField radioGroup">
+                                      <label className="cmnFormRadioLable">
+                                        <div className="circleRadio">
+                                          <input type="radio" name="gender-dep" />
+                                          <span></span>
+                                        </div>
+                                        Male
+                                      </label>
+                                      <label className="cmnFormRadioLable">
+                                        <div className="circleRadio">
+                                          <input type="radio" name="gender-dep" />
+                                          <span></span>
+                                        </div>
+                                        Female
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              }
+
+
+                              </div>
+
+                              {/* Custom Select Box with inbuild Button ends */}
+
+
+
                             <div className="formsection gap">
                                 <span className="labelWithInfo">
                                     <label>Select Category</label>
@@ -406,11 +540,8 @@ const TransactionChoose = (props) => {
                                         <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                     </span>
                                 </span>
-                                <select className="selectBox" onChange={choseCatHandel}>
+                                <select className="selectBox">
                                     <option value="">Select category</option>
-                                    {courseCategory.map((item, key) => (
-                                        <option key={"category_" + key} value={item._id} data-name={item.name}>{item.name}</option>
-                                    ))}
                                 </select>
                             </div>
 
@@ -566,7 +697,7 @@ const TransactionChoose = (props) => {
                                 }>
                                    <div className="NewDownpayment">
                                     <form>
-                                      <button className="addNewDownpayment">+ Add</button>
+                                      <button className="addNewDownpayment" onClick={addDownpaymentFn}>+ Add</button>
                                       <div className="transaction_form products forDownpayment">
                                         <div className="formsection gap">
                                             <span className="labelWithInfo">
@@ -576,11 +707,8 @@ const TransactionChoose = (props) => {
                                                     <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
                                             </span>
-                                            <select className="selectBox" onChange={choseCatHandel}>
+                                            <select className="selectBox">
                                                 <option value="">Select category</option>
-                                                {courseCategory.map((item, key) => (
-                                                    <option key={"category_" + key} value={item._id} data-name={item.name}>{item.name}</option>
-                                                ))}
                                             </select>
                                         </div>
                                         <div className="formsection gap">                                
@@ -589,7 +717,7 @@ const TransactionChoose = (props) => {
                                                     <label>Amount</label>
                                                     <span className="infoSpan">
                                                         <img src={info_icon} alt="" />
-                                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                        <span class="tooltiptextInfo amount">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                     </span>
                                                 </span>
                                                 <input type="number" placeholder="149" class="editableInput numberType" value="149"/>
@@ -600,7 +728,7 @@ const TransactionChoose = (props) => {
                                                 <label>Payment Date</label>
                                                 <span className="infoSpan">
                                                     <img src={info_icon} alt="" />
-                                                    <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                    <span class="tooltiptextInfo paymentDate">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
                                             </span>
                                               <input type="date" placeholder="mm/dd/yyyy" class="editableInput" value="02/02/2222" />
@@ -613,7 +741,7 @@ const TransactionChoose = (props) => {
                                                   <label>Payment Type</label>
                                                   <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
-                                                      <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                      <span class="tooltiptextInfo paymentType">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                   </span>
                                               </span>
                                               <select className="selectBox">
@@ -626,23 +754,23 @@ const TransactionChoose = (props) => {
                                               <label>Payment Status</label>
                                               <span className="infoSpan">
                                                   <img src={info_icon} alt="" />
-                                                  <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                  <span class="tooltiptextInfo paymentStatus">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                               </span>
                                           </span>
                                               <select className="selectBox">
                                                   <option value="">Unpaid</option>
                                               </select>
                                           </span>
-                                      </div>
+                                        </div>
                                       </div>
                                      </form>
                                    </div>
 
 
-
+                                  {addDownpayment && (
                                    <div className="NewDownpayment">
                                     <form>
-                                      <button className="delNewDownpayment"><img src={deleteBtn} alt="" /> Delete</button>
+                                      <button className="delNewDownpayment" onClick={delDownpaymentFn}><img src={deleteBtn} alt="" /> Delete</button>
                                       <div className="transaction_form products forDownpayment">
                                         <div className="formsection gap">
                                             <span className="labelWithInfo">
@@ -654,9 +782,6 @@ const TransactionChoose = (props) => {
                                             </span>
                                             <select className="selectBox" onChange={choseCatHandel}>
                                                 <option value="">Select category</option>
-                                                {courseCategory.map((item, key) => (
-                                                    <option key={"category_" + key} value={item._id} data-name={item.name}>{item.name}</option>
-                                                ))}
                                             </select>
                                         </div>
                                         <div className="formsection gap">                                
@@ -665,7 +790,7 @@ const TransactionChoose = (props) => {
                                                     <label>Amount</label>
                                                     <span className="infoSpan">
                                                         <img src={info_icon} alt="" />
-                                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                        <span class="tooltiptextInfo amount">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                     </span>
                                                 </span>
                                                 <input type="number" placeholder="149" class="editableInput numberType" value="149"/>
@@ -676,7 +801,7 @@ const TransactionChoose = (props) => {
                                                 <label>Payment Date</label>
                                                 <span className="infoSpan">
                                                     <img src={info_icon} alt="" />
-                                                    <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                    <span class="tooltiptextInfo paymentDate">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
                                             </span>
                                               <input type="date" placeholder="mm/dd/yyyy" onChange={paymentDateHandel} class="editableInput" value={paymentDate} />
@@ -689,7 +814,7 @@ const TransactionChoose = (props) => {
                                                   <label>Payment Type</label>
                                                   <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
-                                                      <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                      <span class="tooltiptextInfo paymentType">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                   </span>
                                               </span>
                                               <select className="selectBox">
@@ -702,18 +827,18 @@ const TransactionChoose = (props) => {
                                               <label>Payment Status</label>
                                               <span className="infoSpan">
                                                   <img src={info_icon} alt="" />
-                                                  <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                  <span class="tooltiptextInfo paymentStatus">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                               </span>
                                           </span>
                                               <select className="selectBox">
                                                   <option value="">Unpaid</option>
                                               </select>
                                           </span>
-                                      </div>
+                                        </div>
                                       </div>
                                      </form>
                                    </div>
-
+                                  )}
 
                                 </div>
                                 {/* <h3>{ courseName }</h3>
