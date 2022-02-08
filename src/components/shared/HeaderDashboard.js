@@ -132,9 +132,7 @@ function HeaderDashboard(props) {
     }
   };
   useEffect(() => {
-    console.log("connection._direction", connection._direction);
     if (Object.keys(connection).length) {
-      
       if (connection._direction === "INCOMING") {
         setDeviceMessage(
           "Call Established with " +

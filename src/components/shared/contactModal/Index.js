@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, {useState, useEffect, useRef} from "react";
 import Overview from "./pages/Overview";
 import Attendance from "./pages/Attendance";
 import Transaction from "./pages/Transaction";
@@ -7,10 +7,10 @@ import Loader from "../Loader";
 import Billing from "./pages/Billing";
 import Dependents from "./pages/Dependents";
 import Appointment from "./pages/Appointment";
-import { Step, Steps, NavigationComponentProps } from "react-step-builder";
-import { useDispatch, useSelector } from "react-redux";
+import {Step, Steps, NavigationComponentProps} from "react-step-builder";
+import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../../actions/types";
-import { ContactService } from "../../../services/contact/ContactServices";
+import {ContactService} from "../../../services/contact/ContactServices";
 import minimize_icon from "../../../assets/images/minimize_icon.svg";
 import cross_white from "../../../assets/images/cross_white.svg";
 import user_100X100 from "../../../assets/images/user_100X100.png";
@@ -32,25 +32,32 @@ import dependent_white from "../../../assets/images/dependent.svg"
 import env from "../../../configuration/env";
 import { uploadFile } from "react-s3";
 
-
-
 const ContactModal = (props) => {
-
     const Navigation = (navigation) => {
         return (
             <div>
-                <button className={navigation.current == 1 ? "active nNav" : "nNav"} onClick={() => navigation.jump(1)}>Overview</button>
-                <button className={navigation.current == 2 ? "active nNav" : "nNav"} onClick={() => navigation.jump(2)} disabled={props.contactId ? false : true}>Attendance</button>
-                <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)} disabled={props.contactId ? false : true}>Appointment</button>
+                <button className={navigation.current == 1 ? "active nNav" : "nNav"}
+                        onClick={() => navigation.jump(1)}>Overview
+                </button>
+                <button className={navigation.current == 2 ? "active nNav" : "nNav"} onClick={() => navigation.jump(2)}
+                        disabled={props.contactId ? false : true}>Attendance
+                </button>
+                <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)}
+                        disabled={props.contactId ? false : true}>Appointment
+                </button>
                 {contactData && !contactData.isDependent ?
                     <>
-                        <button className={navigation.current == 4 ? "active nNav" : "nNav"} onClick={() => navigation.jump(4)} disabled={props.contactId ? false : true}>
+                        <button className={navigation.current == 4 ? "active nNav" : "nNav"}
+                                onClick={() => navigation.jump(4)} disabled={props.contactId ? false : true}>
                             Transaction
                         </button>
-                        <button className={navigation.current == 5 ? "active nNav" : "nNav"} onClick={() => navigation.jump(5)} disabled={props.contactId ? false : true}>
+                        <button className={navigation.current == 5 ? "active nNav" : "nNav"}
+                                onClick={() => navigation.jump(5)} disabled={props.contactId ? false : true}>
                             Billing
                         </button>
-                        <button className={navigation.current == 6 ? "active nNav" : "nNav"} onClick={() => navigation.jump(6)} disabled={props.contactId ? false : true}>Dependents</button>
+                        <button className={navigation.current == 6 ? "active nNav" : "nNav"}
+                                onClick={() => navigation.jump(6)} disabled={props.contactId ? false : true}>Dependents
+                        </button>
                     </>
                     : ''}
             </div>
@@ -67,8 +74,6 @@ const ContactModal = (props) => {
     const [stickeyHeadStatus, setStickeyHeadStatus] = useState(false);
     const [contactName, setContactName] = useState("");
     const [isLoader, setIsLoader] = useState(false);
-    const [contactModalOpenStatus, setContactModalOpenStatus] = useState(true);
-    const [contactModalOpenError, setContactModalOpenError] = useState("");
     const [contactData, setContactData] = useState({
         firstName: "",
         lastName: ""
@@ -89,19 +94,21 @@ const ContactModal = (props) => {
     };
 
     const getContactDetails = (contact) => {
-        setContactData(contact.contact);
-        let firstName = contact.contact.firstName ? contact.contact.firstName : "";
-        let lastName = contact.contact.lastName ? contact.contact.lastName : ""
-        setContactName(firstName + " " + lastName);
-        if (contact.contact.profilePic) {
-            setImage(contact.contact.profilePic);
-        } else {
-            setImage(owner_img_1);
-        }
-        const ltvVal = (contact.contact.ltv + contact.contact.ltvPOS).toLocaleString("en-US");
-        setLtv(ltvVal);
-    }
+        if (contact && contact.contact) {
+            setContactData(contact.contact);
+            let firstName = contact.contact.firstName ? contact.contact.firstName : "";
+            let lastName = contact.contact.lastName ? contact.contact.lastName : ""
+            setContactName(firstName + " " + lastName);
+            if (contact.contact.profilePic) {
 
+                setImage(contact.contact.profilePic);
+            } else {
+                setImage(owner_img_1);
+            }
+            const ltvVal = (contact.contact.ltv + contact.contact.ltvPOS).toLocaleString("en-US");
+            setLtv(ltvVal);
+        }
+    }
     const [goToTransactionClicked, setGoToTransactionClicked] = useState(false);
     const goToTransactionHandler = () => {
         setGoToTransactionClicked(true)
@@ -126,7 +133,6 @@ const ContactModal = (props) => {
         let file = event.target.files[0];
         let allowedExtension = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/bmp'];
         let extension = file.name.substring(file.name.lastIndexOf('.') + 1);
-        console.log(extension)
         if (file && (allowedExtension.indexOf(file.type) > -1) && file.size < 5000000) {
             let newFileName = getRandomFileName() + '.' + extension;
             const config = {
@@ -142,8 +148,12 @@ const ContactModal = (props) => {
                 value: newFileName
             });
             uploadFile(file, config)
-                .then(data => {
+                .then(async data => {
                     setIsLoader(false);
+                    await ContactService.uploadProfilePic({
+                        contactId: props.contactId,
+                        file: data.location
+                    });
                     setImage(data.location);
                 })
                 .catch(err => {
@@ -164,7 +174,6 @@ const ContactModal = (props) => {
     }
     //Open guardian contact modal
     const openGuardianContactModal = (id) => {
-        console.log('Open guardian contact modal', id);
         dispatch({
             type: actionTypes.CONTACTS_MODAL_ID,
             contact_modal_id: '',
@@ -180,28 +189,29 @@ const ContactModal = (props) => {
     return (
         <>
             <div className="modal contactModal">
-                {isLoader ? <Loader /> : ""}
+                {isLoader ? <Loader/> : ""}
                 <div className="modalContainer">
                     <div className={stickeyHeadStatus ? "contactModalHeader stickey" : "contactModalHeader"}>
                         <div className="contactModalHeaderTopSec">
 
                             <div className="modalCtrl">
                                 <button className="minimize">
-                                    <img src={minimize_icon} alt="" />
+                                    <img src={minimize_icon} alt=""/>
                                 </button>
-                                <button className="closeModal" onClick={() => closeContactModal()} >
-                                    <img src={cross_white} alt="" />
+                                <button className="closeModal" onClick={() => closeContactModal()}>
+                                    <img src={cross_white} alt=""/>
                                 </button>
                             </div>
                             {props.contactId !== 0 &&
                                 <div className="userInfoArea">
                                     <div className="userImageWrap">
-                                        <span className="userImage">
-                                            <img src={image} alt="" />
-                                        </span>
-                                        <input type='file' id='file' ref={inputFile} onChange={uploadImage} style={{ display: 'none' }} />
+                                      <span className="userImage">
+                                          <img src={image} alt=""/>
+                                      </span>
+                                        <input type='file' id='file' ref={inputFile} onChange={uploadImage}
+                                               style={{display: 'none'}}/>
                                         <button className="editUserImg" onClick={handelChangeContactImage}>
-                                            <img src={camera_icon} alt="" />
+                                            <img src={camera_icon} alt=""/>
                                         </button>
                                     </div>
                                     <div className="userName" title={contactName}>
@@ -211,16 +221,6 @@ const ContactModal = (props) => {
                                         <header>Life Time Value :</header>
                                         <span>USD {Number(ltv).toFixed(2)}</span>
                                     </div>
-                                    {/* <div className="userContacts">
-                                      <div className="userPhone">
-                                          <img src={phone_call_icon_white} alt="" />
-                                          <span>+1-4132045887</span>
-                                      </div>
-                                      <div className="userEmail">
-                                          <img src={email_icon_white} alt="" />
-                                          <span>richardnile@gmail.com</span>
-                                      </div>
-                                  </div> */}
                                 </div>
                             }
                         </div>
@@ -228,55 +228,58 @@ const ContactModal = (props) => {
                             <div className="contactModalHeaderBottomSec">
                                 <div className="bottomLeftArea">
                                     {contactData && contactData.isDependent && contactData.guardianInfo ?
-                                        <div className="userDependents" onClick={() => openGuardianContactModal(contactData.guardianInfo._id)}>
-                                            <img src={dependent_white} alt="" />
+                                        <div className="userDependents"
+                                             onClick={() => openGuardianContactModal(contactData.guardianInfo._id)}>
+                                            <img src={dependent_white} alt=""/>
                                             <span>
                                                 Guardian - {contactData.guardianInfo.firstName + ' ' + contactData.guardianInfo.lastName}
                                             </span>
                                         </div> : ''}
                                     <div className="userContacts">
-                                        {(contactData.phone && contactData.phone.number) &&
+                                        {(contactData && contactData.phone && contactData.phone.number) &&
                                             <div className="userPhone">
-                                                <img src={phone_call_icon_white} alt="" />
+                                                <img src={phone_call_icon_white} alt=""/>
                                                 <span>{contactData.phone && contactData.phone.dailCode && contactData.phone.number ?
                                                     contactData.phone.dailCode + "-" + contactData.phone.number : ""}</span>
                                             </div>
                                         }
-                                        {contactData.email &&
-                                            <div className="userEmail">
-                                                <img src={email_icon_white} alt="" />
+                                        {(contactData && contactData.email) &&
+                                            <div className="userEmail overviewModal">
+                                                <img src={email_icon_white} alt=""/>
                                                 <span>{contactData.email}</span>
                                             </div>
                                         }
                                     </div>
                                     <div className="clockinArea">
                                         <button className="clockinBtn orangeBtn">
-                                            <img src={histroy_icon_white} alt="" /> Check-in
+                                            <img src={histroy_icon_white} alt=""/> Check-in
                                         </button>
                                         <p className="logTime">Last attended 19 hrs ago</p>
                                     </div>
                                 </div>
                                 <div className="bottomRightArea">
                                     <div className="bottomRightAreaCol firstCol">
-                                        {contactData.jobRole &&
+                                        {(contactData && contactData.jobRole) &&
                                             <div className="userInfoCell jobRole">
                                                 <span className="cellInfoIcon">
-                                                    <img src={user_icon_white} alt="" />
+                                                    <img src={user_icon_white} alt=""/>
                                                 </span>
                                                 <span className="infoCellTxt">{contactData.jobRole}</span>
                                             </div>
                                         }
-                                        <div className="userInfoCell prospect">
+                                        {(contactData && contactData.contactType) &&
+                                            <div className="userInfoCell prospect">
                                             <span className="cellInfoIcon">
-                                                <img src={battery_icon_white} alt="" />
+                                                <img src={battery_icon_white} alt=""/>
                                             </span>
-                                            <span className="infoCellTxt">Prospect - showed</span>
-                                        </div>
+                                                <span className="infoCellTxt">{ contactData.contactType }</span>
+                                            </div>
+                                        }
                                     </div>
                                     <div className="bottomRightAreaCol tags">
                                         <div className="userInfoCell">
                                             <span className="cellInfoIcon">
-                                                <img src={tag_icon_white} alt="" />
+                                                <img src={tag_icon_white} alt=""/>
                                             </span>
                                             <span className="infoCellTxt">Tag One, Tag Two, Tag Three</span>
                                             <span className="extraTagNumber">+5</span>
@@ -290,20 +293,6 @@ const ContactModal = (props) => {
                         }
                     </div>
                     <div className="tabBarArea">
-                        {/* <div className="redBtnContainer">
-                             <button className="redTabBtn visibleH">
-                                 <img src={exchange_icon_white} alt="" />
-                            </button>
-                            <button className="redTabBtn visibleH">
-                                <img src={pager_icon_white} alt="" />
-                            </button>
-                            <button className="redTabBtn">
-                                <img src={note_icon_white} alt="" />
-                            </button>
-                        </div> */}
-
-
-
                         <Steps config={config}>
                             <Step title="Overview" component={Overview} getContactDetails={getContactDetails}
                                 contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />

@@ -67,16 +67,8 @@ const MainComponent = () => {
       console.log("socket id", socket.id); // x8WIv7-mJelg7on_ALbx
 
     });
-    console.log("isNewFeaturesAvailable before", isNewFeaturesAvailable);
-    // listing to an emit event setFeatureUpdateNotification
     socket.on("setFeatureUpdateNotification", (data) => {
-      console.log("Receiving relese updates", data);
-      
       setIsNewFeaturesAvailable(true);
-      // setIsNewFeaturesAvailable((prevState) => {
-      //   return true;
-      // })
-      console.log("isNewFeaturesAvailable after", isNewFeaturesAvailable);
     });
 
     

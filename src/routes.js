@@ -17,7 +17,6 @@ const Routes = () => {
   if (!isLoggedIn()) {
     // dispatch(AuthActions.logout());
   }
-  console.log("Log State", logState);
   return (
     <React.Suspense fallback={<div />}>
       <Switch>

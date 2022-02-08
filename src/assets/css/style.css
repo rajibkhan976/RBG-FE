@@ -8974,3 +8974,36 @@ li.listHeading > div.sortOff:after {
   height: 20px;
   opacity: 0;
 }
+
+.contactOverview .popupMessage.error {
+  transform: translateX(100%);
+}
+
+.contactOverview .popupMessage.success {
+  transform: translateX(100%);
+}
+
+.userContacts .userEmail.overviewModal {
+  width: 100%;
+  float: left;
+}
+
+.userContacts .userEmail.overviewModal img {
+  float: left;
+  padding-top: 3px;
+  margin-right: 7px;
+}
+
+.userContacts .userEmail.overviewModal span {
+  white-space: nowrap;
+  float: left;
+  width: 236px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.configColModal.contactPage {
+  position: fixed;
+  left: 21.7%;
+  top: 31.5%;
+}

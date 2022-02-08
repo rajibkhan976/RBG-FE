@@ -116,7 +116,6 @@ function Step2(props) {
                 return (index % 2 == 0 ? rows.push([key])
                     : rows[rows.length-1].push(key)) && rows;
             }, []);
-            console.log(rows)
             setCustomFields(rows);
         } else {
             setCustomFields([]);
@@ -706,7 +705,9 @@ function Step2(props) {
                             <p><span>{ totalRecord }</span> Records found</p>
                         </div>
                     }
-                    { error > 0 && <div className="formMsg error">Following fields are not mapped.</div>}
+                    { error > 0 &&
+                        <div className="formMsg error">Following fields are not mapped but still you can process.
+                        </div>}
                     { primaryError && <div className="formMsg error">Primary Field is not Selected.</div>}
                     <div className="formAccordion">
                         <div className={"accoRow " + (!openBasicInfo ? 'collapse' : '')}>
@@ -1225,7 +1226,7 @@ function Step2(props) {
                                     </div>
                                     <div className={"accoRow " + (!openCourse ? 'collapse' : '')}>
                                         <div className="accoRowHead">
-                                            <span className="accoHeadName">Course</span>
+                                            <span className="accoHeadName">Program</span>
                                             <button className="accoToggler" onClick={toggleCourse}></button>
                                         </div>
                                         {
@@ -1235,7 +1236,7 @@ function Step2(props) {
                                                     <ul>
                                                         <li>
                                                             <div className={"formField w-50 " + (courseNameError ? 'error' : '') }>
-                                                                <label>Course Name</label>
+                                                                <label>Program Name</label>
                                                                 <div className="inFormField">
                                                                     <select name="courseName" value={courseName} onChange={handlerCourseNameChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
                                                                         <option value="">Select a header</option>
@@ -1246,7 +1247,7 @@ function Step2(props) {
                                                                 </div>
                                                             </div>
                                                             <div className={"formField w-50 " + (startDateError ? 'error' : '') }>
-                                                                <label>Course Start Date</label>
+                                                                <label>Program Start Date</label>
                                                                 <div className="inFormField">
                                                                     <select name="startDate" value={startDate} onChange={handlerStartDateChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
                                                                         <option value="">Select a header</option>
@@ -1259,7 +1260,7 @@ function Step2(props) {
                                                         </li>
                                                         <li>
                                                             <div className={"formField w-50 " + (endDateError ? 'error' : '') }>
-                                                                <label>Course End Date</label>
+                                                                <label>Program End Date</label>
                                                                 <div className="inFormField">
                                                                     <select name="endDate" value={endDate} onChange={handlerEndDateChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
                                                                         <option value="">Select a header</option>

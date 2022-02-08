@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, forwardRef, useRef, useImperativeHandle } from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import * as actionTypes from "../../actions/types";
@@ -16,7 +16,7 @@ import env from '../../configuration/env';
 import config from "../../configuration/config";
 
 
-const ContactListing = (props) => {
+const ContactListing = forwardRef((props, ref) => {
     const [tableWidth, setTableWidth] = useState(500);
     const messageDelay = 5000; // ms
     const [contactList, setContactList] = useState([]);
@@ -41,19 +41,11 @@ const ContactListing = (props) => {
     const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "contact")));
     const dispatch = useDispatch();
     const modalId = useSelector((state) => state.contact.contact_modal_id);
-    
-    /*useEffect(() => {
-        console.log("modalId", modalId)
-        if (modalId === "") {
+    useEffect(() => {
+        if (modalId === '') {
             fetchContact();
         }
     }, [modalId]);
-    useEffect(() => {
-        console.log("props.modalStatus ", props.modalStatus)
-        if (!props.modalStatus) {
-            fetchContact();
-        }
-    }, [props.modalStatus]);*/
 
     const handelSize = () => {
         setTableWidth(window.innerWidth - 504);
@@ -65,9 +57,20 @@ const ContactListing = (props) => {
         if (search) {
           setKeyword(search);
         }
+        const sortByNew = utils.getQueryVariable('sortBy');
+        if (sortByNew) {
+            setSortBy(sortByNew);
+        }
+        const sortTypeNew = utils.getQueryVariable('sortType');
+        if (sortTypeNew) {
+            setSortType(sortTypeNew);
+        }
     }, []);
-
-
+    useImperativeHandle(ref, () => ({
+        fetchContactForImportContactModalClose() {
+            fetchContact();
+        },
+    }))
     useEffect(() => {
         (async () => {
             const localSavedCol = localStorage.getItem("storedSavedColList", []);
@@ -79,7 +82,6 @@ const ContactListing = (props) => {
                 setListCol(storedSavedColList);
                 setSavedColList(storedSavedColList);
                 await fetchContact();
-                // fetchContact();
             }
             handleCheckedColListHead();
         })();
@@ -422,7 +424,7 @@ const ContactListing = (props) => {
                         <div className="configColArea">
                             <button className="configColBtn" onClick={() => setColModalStatus(!colModalStatus)}></button>
                             {colModalStatus ?
-                                <div className="configColModal">
+                                <div className="configColModal contactPage">
                                     <div className="configColModalHead">
                                         <input type="search" placeholder="Search"
                                             onChange={(event) => setSearchModalVal(event.target.value)}
@@ -450,12 +452,11 @@ const ContactListing = (props) => {
                 paginationData={paginationData}
                 dataCount={contactCount}
                 callback={fetchContact} /> : ''}
-
         </div>
     );
 
 
 
-}
+})
 
 export default ContactListing;
