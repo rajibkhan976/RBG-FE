@@ -70,7 +70,7 @@ export const CustomizationServices = {
                 throw new Error("There is an error on add custom field. Please contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(!typeof e.response != undefined) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {

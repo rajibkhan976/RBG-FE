@@ -58,17 +58,14 @@ const CustomizationsAddField = (props) => {
   };
 
   const addCustomField = async (status) => {
-    console.log(customField);
     if(customField.name !== "" && customField.type !== "" && customField.defaultValue !== "" && customField.defaultValue !== "") {
       if (props.editStatus) {
         editField();
       } else {
         if (status) {
-          console.log(status);
           createField();
           props.savedNew();
         } else {
-          console.log(status);
           await createField();
           props.closeAddCustomModal(true);
         }
@@ -92,13 +89,11 @@ const CustomizationsAddField = (props) => {
       setIsLoader(true);
       const result = await CustomizationServices.addCustomField(customField);
       setSuccessMsg("Custom field added successfully");
+      setCustomField({...customField, name: "", type: "", defaultValue: "", alias: "", status: "", _id: ""});
     } catch (e) {
       setErrorMsg(e.message);
-        console.log(e.message);
     } finally {
       setIsLoader(false);
-      setCustomField({...customField, name: "", type: "", defaultValue: "", alias: "", status: ""});
-      
     }
   }
 
@@ -110,7 +105,7 @@ const CustomizationsAddField = (props) => {
         type: customField.type,
         defaultValue: customField.defaultValue,
         alias: customField.alias,
-        status: customField.status.toString()
+        status: customField.status
       };
       console.log("al bal chal", props.ele);
       const res = await CustomizationServices.editCustomField(props.ele._id, payload);
@@ -132,6 +127,7 @@ const CustomizationsAddField = (props) => {
       //alias: "",
       //status: ""
     }));*/
+
     props.closeAddCustomModal(false);
   }
   
@@ -162,7 +158,7 @@ const CustomizationsAddField = (props) => {
                     
                     <div className="formControl">
                         <label>Field Type</label>
-                        <select name="category" onChange={fieldTypeHandel} defaultValue={customField.type}>
+                        <select name="category" onChange={fieldTypeHandel} value={customField.type}>
                             <option value="">Select field type</option>
                             <option value="text">Text</option>
                             <option value="number">Phone</option>
