@@ -702,6 +702,7 @@
   display: flex;
   flex-direction: column;
   transition: all ease-in-out 0.4s;
+  border: 1px solid transparent;
 }
 .createEmailButtons {
   position: relative;
@@ -796,8 +797,12 @@
 .modalBackdrop {
   padding-right: 0 !important;
 }
-/* Text editor */
-.slickModalHeader .popupMessage p {
+.error .editorEmailShell,
+#editTextArea.error .tox-tinymce {
+  border: 1px solid #ed707a;
+  background-color: #fff4f4;
+}
+/* Text editor */.slickModalHeader .popupMessage p {
   padding: 5px 0 5px 36px;
   font-size: 14px;
   color: #929292;
