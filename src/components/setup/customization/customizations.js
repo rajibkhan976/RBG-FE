@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Loader from "../../shared/Loader";
 //import { ErrorAlert, SuccessAlert } from "../../shared/messages";
 import arrowRightWhite from "../../../../src/assets/images/arrowRightWhite.svg";
@@ -32,8 +32,24 @@ const Customizations = (props) => {
   const [editedEle, setEditedEle] = useState();
   const [isEditing, setIsEditing] = useState(false);
 
+  const ref = useRef();
 
   useEffect(() => {
+    const checkClickOutside = (e) => {
+      
+      if(typeof option != "object" && ref.current && !ref.current.contains(e.target)) {
+          setOption(null);
+      }  
+  }
+
+  document.addEventListener("click", checkClickOutside);
+  return () => {
+      document.removeEventListener("click", checkClickOutside);
+  };
+  });
+
+  useEffect(() => {
+
     fetchSaleTax();
     fetchCustomFields();
   }, []);
@@ -80,6 +96,7 @@ const Customizations = (props) => {
   };
 
   const openAddCusomFieldHandler = (event) => {
+    setEditedEle({});
     setOpenModal(true);
   }
   const closeCustomModal = (param) => {
@@ -87,6 +104,7 @@ const Customizations = (props) => {
     if(param){
       fetchCustomFields();
     }
+    setIsEditing(false);
   }
 
   const taxAmountHandle = (event) => {
@@ -135,6 +153,7 @@ const Customizations = (props) => {
     } finally {
       setIsLoader(false);
       setDeleteConfirmBox(false);
+      fetchCustomFields();
     }
   };
 
@@ -158,7 +177,15 @@ const Customizations = (props) => {
         status: !elem.status
       };
       const res = await CustomizationServices.editCustomField(elem._id, payload);
-      customFieldList[index].status = !elem.status;
+      setCustomFieldList((elms) =>
+        elms.map((el) => {
+          if (el._id === elem._id) {
+            el.status = !elem.status;
+          }
+          return { ...el };
+        })
+      );
+      //customFieldList[index].status = !elem.status;
       setSuccessMsg(res.message);
     } catch (e) {
       setErrorMsg(e.message);
@@ -172,7 +199,13 @@ const Customizations = (props) => {
   const editHandel = (elem) => {
     setIsEditing(true)
     setOpenModal(true);
-    setEditedEle(elem);
+    setEditedEle({
+      name: elem.fieldName,
+      type: elem.fieldType,
+      defaultValue: elem.fieldDefault,
+      alias: elem.alias,
+      status: elem.status
+    });
   }
 
 
@@ -233,7 +266,7 @@ const Customizations = (props) => {
               <div className="space">Default Value</div>
               <div class="vacent"></div>
             </li>
-            {customFieldList.filter(item => item._id !== deletedFieldId).map((elem, key) => {
+            {customFieldList.map((elem, key) => {
               return (
                 <li>
                   {/* <div>{elem.field_Name}</div>
@@ -249,7 +282,7 @@ const Customizations = (props) => {
                       <input type="checkbox" checked={elem.status} onClick={() => toggleActive (elem, key)} /><span class="toggler"></span>
                     </label>
                     {toggleIndex === key && smallLoader ? <img src={smallLoaderImg} alt="loading" className="smallLoader" /> : ""}
-                    <div class="info_3dot_icon">
+                    <div class="info_3dot_icon" ref={ref}>
                       <button class="btn"
                         onClick={() => {
                           toggleOptions(key);
@@ -289,6 +322,7 @@ const Customizations = (props) => {
           closeAddCustomModal={(param) => closeCustomModal(param)} 
           ele={editedEle} 
           editStatus={isEditing}
+          savedNew={() => fetchCustomFields ()}
         />
       }
     </>

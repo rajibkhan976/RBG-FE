@@ -14,13 +14,7 @@ const CustomizationsAddField = (props) => {
   const [isLoader, setIsLoader] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const [customField, setCustomField] = useState({
-    name: props.ele ? props.ele.fieldName : "",
-    type: props.ele ? props.ele.fieldType : "",
-    defaultValue: props.ele ? props.ele.fieldDefault : "",
-    alias: props.ele ? props.ele.alias : "",
-    status: props.ele ? props.ele.status : ""
-  });
+  const [customField, setCustomField] = useState(props.ele);
 
 //   const [errorMsg, setErrorMsg] = useState({
 //       name: "Please fill up the field name",
@@ -28,7 +22,9 @@ const CustomizationsAddField = (props) => {
 //       defaultVal: "Please enter default value",
 //       alias: "Please enter alias name"
 //   });
-
+  useEffect(() =>{
+    console.log('PPPPP', props)
+  });
 
   useEffect(() => {
     if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
@@ -61,23 +57,22 @@ const CustomizationsAddField = (props) => {
     console.log(customField);
   };
 
-  const addCustomField = async (e) => {
+  const addCustomField = async (status) => {
     console.log(customField);
     if(customField.name !== "" && customField.type !== "" && customField.defaultValue !== "" && customField.defaultValue !== "") {
       if (props.editStatus) {
         editField();
       } else {
-        try {
-          setIsLoader(true);
-          const result = await CustomizationServices.addCustomField(customField);
-          setSuccessMsg("Custom field added successfully");
-        } catch (e) {
-          setErrorMsg(e.message);
-            console.log(e.message);
-        } finally {
-          setIsLoader(false);
+        if (status) {
+          console.log(status);
+          createField();
+          props.savedNew();
+        } else {
+          console.log(status);
+          await createField();
           props.closeAddCustomModal(true);
-        }  
+        }
+        
       }
       
     } else {
@@ -90,6 +85,21 @@ const CustomizationsAddField = (props) => {
     //   setErrorMsg("Please fill up the fields properly");
     // }
       
+  }
+
+  const createField = async (e) => {
+    try {
+      setIsLoader(true);
+      const result = await CustomizationServices.addCustomField(customField);
+      setSuccessMsg("Custom field added successfully");
+    } catch (e) {
+      setErrorMsg(e.message);
+        console.log(e.message);
+    } finally {
+      setIsLoader(false);
+      setCustomField({...customField, name: "", type: "", defaultValue: "", alias: "", status: ""});
+      
+    }
   }
 
   const editField = async () => {
@@ -113,13 +123,14 @@ const CustomizationsAddField = (props) => {
   }
 
   const closeModal = () => {
-    setCustomField({
+   /* setCustomField(previousState => ({
+      ...previousState,
       name: "",
-      type: "",
-      defaultValue: "",
-      alias: "",
-      status: ""
-    });
+     // type: "",
+      //defaultValue: "",
+      //alias: "",
+      //status: ""
+    }));*/
     props.closeAddCustomModal(false);
   }
   
@@ -150,10 +161,10 @@ const CustomizationsAddField = (props) => {
                     
                     <div className="formControl">
                         <label>Field Type</label>
-                        <select name="category" onChange={fieldTypeHandel} defaultValue={props.ele ? props.ele.fieldType : ""}>
+                        <select name="category" onChange={fieldTypeHandel} defaultValue={customField.type}>
                             <option value="">Select field type</option>
                             <option value="text">Text</option>
-                            <option value="phone">Phone</option>
+                            <option value="number">Phone</option>
                             <option value="email">Email</option>
                             <option value="textarea">Textarea</option>
                         </select>
@@ -168,11 +179,13 @@ const CustomizationsAddField = (props) => {
                     </div>
                     <div className="modalbtnHolder">
                         <button type="button" name="save"
-                        className="saveNnewBtn" onClick={addCustomField}>
+                        className="saveNnewBtn" onClick={() => addCustomField (false)}>
                         <span>Save</span><img src={arrow_forward} alt="" /></button>
+                        {props.editStatus ? "" : 
                         <button type="button" name="save"
-                        className="saveNnewBtn" onClick={addCustomField}>
+                        className="saveNnewBtn" onClick={() => addCustomField (true)}>
                         <span>Save &amp; New</span><img src={arrow_forward} alt="" /></button>
+                        }
                     </div>
                     </form>
                 </Scrollbars>
