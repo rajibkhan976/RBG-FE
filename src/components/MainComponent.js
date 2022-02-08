@@ -143,7 +143,6 @@ const MainComponent = () => {
     try {
       let userDetails = await UserServices.fetchUserDetails();
       if (userDetails) {
-        console.log('success user details', userDetails);
         let data = {
           name: userDetails.firstName + ' ' + (userDetails.lastName ? userDetails.lastName.substr(0, 1) + '.' : ''),
           fullName: userDetails.firstName + ' ' + userDetails.lastName,

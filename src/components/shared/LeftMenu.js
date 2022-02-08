@@ -6,7 +6,6 @@ import LogoImg from "../../assets/images/logo_img.png";
 function LeftMenu(props) {
   const pathURL = useLocation().pathname;
   const loggedInUser = useSelector((state) => state.user.data);
-  console.log('is in left menu', loggedInUser)
   let isAssociationOwner = loggedInUser ? loggedInUser.isAssociationOwner : false;
   let isOrganizationOwner = loggedInUser ? loggedInUser.isOrganizationOwner : false;
 
@@ -18,13 +17,11 @@ function LeftMenu(props) {
     } else {
       setTglLeftMenuStatus(true);
     }
-    console.log("'status i n inner bar", tglLeftMenuStatus);
     props.toggleLeftSubMenu && props.toggleLeftSubMenu(tglLeftMenuStatus);
   };
 
   // Permission Set
   const [permissions, setPermissions] = useState(JSON.parse(localStorage.getItem("permissions")));
-  console.log('Having permission', permissions);
 
   return (
     <div className="routeMenu"

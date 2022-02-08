@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {useDispatch, useSelector} from "react-redux";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 import * as actionTypes from "../../actions/types";
 import ContactHead from './ContactHead';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -12,6 +13,7 @@ import Loader from "../shared/Loader";
 import Pagination from '../shared/Pagination';
 import responses from '../../configuration/responses';
 import env from '../../configuration/env';
+import config from "../../configuration/config";
 
 
 const ContactListing = (props) => {
@@ -40,18 +42,18 @@ const ContactListing = (props) => {
     const dispatch = useDispatch();
     const modalId = useSelector((state) => state.contact.contact_modal_id);
     
-    // useEffect(() => {
-    //     console.log("modalId", modalId)
-    //     if (modalId === "") {
-    //         fetchContact();
-    //     }      
-    // }, [modalId]);
-    // useEffect(() => {
-    //     console.log("props.modalStatus ", props.modalStatus)
-    //     if (!props.modalStatus) {
-    //         fetchContact();
-    //     }
-    // }, [props.modalStatus]);
+    /*useEffect(() => {
+        console.log("modalId", modalId)
+        if (modalId === "") {
+            fetchContact();
+        }
+    }, [modalId]);
+    useEffect(() => {
+        console.log("props.modalStatus ", props.modalStatus)
+        if (!props.modalStatus) {
+            fetchContact();
+        }
+    }, [props.modalStatus]);*/
 
     const handelSize = () => {
         setTableWidth(window.innerWidth - 504);
@@ -300,7 +302,7 @@ const ContactListing = (props) => {
                 {savedColList.map((item, index) => {
                     return (
                         <>
-                            {item.status ? <div className="dataTableCell"
+                            {item.status ? <div key={index} className={"dataTableCell " + (item.id === sortBy ? (sortType === 'asc' ? 'asc' : "dsc") : "")}
                                 onClick={() => handleSortBy(item.id)}>{item.name}</div> : ""}
                         </>
                     )
@@ -314,15 +316,21 @@ const ContactListing = (props) => {
             let j = 0;
             return (
                 <li key={'contact_'+i}>
-                    {savedColList.map((item) => {
+                    {savedColList.map((item, pp) => {
                         if (item.status) {
                             j++;
                             return (
-                                <div className={item.id === "name" ? "dataTableCell user" : "dataTableCell"}>
+                                <div className={item.id === "name" ? "dataTableCell user" : "dataTableCell"} key={pp}>
                                     {(j === 1) ? <button className="extraDottedBtn" type="button"></button> : ""}
                                     <button className="btn" onClick={() => openContactModal(ele._id)}>
                                         {(item.id === "name") ? <span className="tableCellUserImg">
-                                            <img src={ele.profilePic !== undefined ? ele.profilePic : owner_img_1} alt={ele.profilePic} />
+                                            <LazyLoadImage
+                                                className="thumbImg"
+                                                src={ele.profilePic !== undefined ? ele.profilePic : owner_img_1}
+                                                alt="avatar"
+                                                effect="blur"
+                                                placeholderSrc={owner_img_1}
+                                            />
                                         </span> : ""}
                                         {(item.id === 'mobile' || item.id === 'phone' || item.id === 'dadPhone' || item.id === 'momPhone') ?
                                             ((ele[item.id] && ele[item.id].dailCode &&  ele[item.id].number !== "") ?

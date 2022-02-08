@@ -41,7 +41,6 @@ const InnerLeftMenu = (props) => {
   const fetchCounts = async () => {
     try {
       const result = await InnerLeftMenuServices.fetchCounts();
-      console.log("fetchCount function result", result)
       if (result) {
         // setRolesCount(result.roles);
         // UPDATE STORE

@@ -3501,7 +3501,7 @@ li:hover .extraDottedBtn {
   overflow: hidden;
 }
 
-.tableCellUserImg img {
+.lazy-load-image-background.blur.lazy-load-image-loaded {
   height: 100%;
   width: 100%;
 }

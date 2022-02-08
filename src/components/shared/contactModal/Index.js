@@ -29,6 +29,9 @@ import note_icon_white from "../../../assets/images/note_icon_white.svg";
 import {UserServices} from "../../../services/authentication/UserServices";
 import config from "../../../configuration/config";
 import dependent_white from "../../../assets/images/dependent.svg"
+import env from "../../../configuration/env";
+import {uploadFile} from "react-s3";
+
 
 
 const ContactModal = (props) => {
@@ -114,27 +117,49 @@ const ContactModal = (props) => {
     const handelChangeContactImage = (event) => {
         inputFile.current.click();
     }
+    const getRandomFileName = () => {
+        let timestamp = new Date().toISOString().replace(/[-:.]/g,"");
+        let random = ("" + Math.random()).substring(2, 8);
+        return timestamp + random;
+    }
     const uploadImage = (event) => {
-        setIsLoader(true);
-        let files = event.target.files;
-        if (files && files.length) {
-            let reader = new FileReader();
-            reader.onload = r => {
-                ContactService.uploadProfilePic({
-                    file: r.target.result,
-                    name: files[0].name,
-                    contactId: props.contactId
-                }).then((result) => {
-                    setIsLoader(false);
-                    console.log(result)
-                    //setImage(r.target.result);
-                }).catch(err => {
-                    setIsLoader(false);
-                    console.log('Profile pic error', err);
-                });
-
+        let file = event.target.files[0];
+        let allowedExtension = ['image/jpeg', 'image/jpg', 'image/png','image/gif','image/bmp'];
+        let extension = file.name.substring(file.name.lastIndexOf('.')+1);
+        console.log(extension)
+        if (file && (allowedExtension.indexOf(file.type)>-1) && file.size < 5000000) {
+            let newFileName = getRandomFileName() + '.' + extension;
+            const config = {
+                bucketName: env.REACT_APP_BUCKET_NAME,
+                region: env.REACT_APP_REGION,
+                accessKeyId: env.REACT_APP_ACCESS_ID,
+                secretAccessKey: env.REACT_APP_ACCESS_KEY
             };
-            reader.readAsDataURL(files[0]);
+            setIsLoader(true);
+            let oldFileName = file.name;
+            Object.defineProperty(file, 'name', {
+                writable: true,
+                value: newFileName
+            });
+            uploadFile(file, config)
+                .then(data => {
+                    setIsLoader(false);
+                    setImage(data.location);
+                })
+                .catch(err => {
+                    setIsLoader(false);
+                })
+        }
+    }
+    useEffect(() => {
+        saveImageLocation(image);
+    },[image])
+    const saveImageLocation = async (imageLocation) => {
+        if (imageLocation !== "") {
+            await ContactService.uploadProfilePic({
+                contactId: props.contactId,
+                file: imageLocation
+            });
         }
     }
     //Open guardian contact modal

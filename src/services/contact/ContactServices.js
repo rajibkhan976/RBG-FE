@@ -117,34 +117,18 @@ export const ContactService = {
             }
         }
     },
-    uploadProfilePic: fileData => {
+    uploadProfilePic: async (payload) => {
         try {
-            return new Promise((resolve, reject) => {
-                axios
-                    .put(
-                        config.getContactsUrl + '/uploadImage',
-                        {
-                            file: fileData.file,
-                            name: fileData.name,
-                            contactId: fileData.contactId
-                        },
-                        { headers: headers }
-                    )
-                    .then(res => {
-                        resolve(res);
-                    })
-                    .catch(error => {
-                        if (error != null && error.response != null) {
-                            reject(error.response.data.error);
-                        } else {
-                            reject(message.connectionError);
-                        }
-                    });
-            });
+            let url = config.getContactsUrl + '/uploadImage'
+            const result = await axios.put(url, payload, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error upload contact picture. Please contact support");
+            }
         } catch (e) {
-            console.log('error in update contact'. e);
+            console.log('error in upload contact pic', e);
             if(!typeof e.data === 'undefined') {
-                console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {
                 throw new Error("Please contact support.");

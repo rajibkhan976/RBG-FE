@@ -11,7 +11,6 @@ export const InnerLeftMenuServices = {
         headers.Authorization = localStorage.getItem("_token");
         try {
             const result = await axios.get(config.innerLeftMenuApiUrl, { headers: headers });
-            console.log("fetchCounts() Service result", result);
             return result.data;
         } catch (e) {
             console.log("fetchCounts() service error result", e);
