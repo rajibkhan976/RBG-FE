@@ -304,7 +304,7 @@ const EmailTemplate = () => {
       setErrorMsg("Please enter some text / value!")
       setTimeout(() => {
         setErrorMsg("")
-      }, 500000);
+      }, 5000);
     }
   }
   // Save new email template
