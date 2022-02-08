@@ -110,8 +110,9 @@ const CustomizationsAddField = (props) => {
         type: customField.type,
         defaultValue: customField.defaultValue,
         alias: customField.alias,
-        status: customField.status
+        status: customField.status.toString()
       };
+      console.log("al bal chal", props.ele);
       const res = await CustomizationServices.editCustomField(props.ele._id, payload);
       setSuccessMsg(res.message);
     } catch (e) {

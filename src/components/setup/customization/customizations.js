@@ -204,7 +204,8 @@ const Customizations = (props) => {
       type: elem.fieldType,
       defaultValue: elem.fieldDefault,
       alias: elem.alias,
-      status: elem.status
+      status: elem.status,
+      _id: elem._id
     });
   }
 
