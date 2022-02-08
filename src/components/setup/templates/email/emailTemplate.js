@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import info_3dot_icon from "../../../../assets/images/info_3dot_icon.svg";
@@ -26,6 +26,8 @@ const EmailTemplate = () => {
   const [emailModal, setEmailModal] = useState(false);
   const [activeEmail, setActiveEmail] = useState(null);
   const [keywordSuggesion, setKeywordSuggesion] = useState(false);
+  const newEmailTemplateSubject = useRef(null)
+  const createModalRef = useRef(null);
   const [initialData, setInitialData] = useState([
     {
       title: "Product Teaser",
@@ -182,34 +184,22 @@ const EmailTemplate = () => {
   const editedEmailTemplate = (email, headerMessage) => {
     let copyEmailTemplates = initialData;
     let currentTemplate = initialData[activeEmail];
-
-    if(initialData[activeEmail].header === headerMessage && initialData[activeEmail].message === email) {
-      setWarningMsg(`No change detected!`);
-      setTimeout(() => {
-        setWarningMsg("")
-      }, 5000)
-    }
-    else if(initialData[activeEmail].header.length === 0){
-        setWarningMsg("Header cannot be empty!")
-        setTimeout(() => {
-          setWarningMsg("")
-        }, 5000)
-    }
-    else {
+    
+    if(email.length !== 0) {
       currentTemplate = {
         title: currentTemplate.title,
         header: headerMessage,
-        message: email
+        message: email && email
       }
-  
+
       copyEmailTemplates[activeEmail] = currentTemplate;
-  
+
       setInitialData(copyEmailTemplates)
 
-      setSuccessMsg("Mesage Successfully edited!");
+      setSuccessMsg("Email template edited!")
       setTimeout(() => {
-       setSuccessMsg("")
-      }, 5000)
+        setSuccessMsg("")
+      }, 5000);
     }
   }
   // set Edited mail template
@@ -220,7 +210,10 @@ const EmailTemplate = () => {
       ...newMail,
       message: email !== "" && email
     })
+
+    console.log("createdEmailTemplate", email);
   }
+  useEffect(()=>{},[newMail])
   // set new email message
 
   useEffect(()=>{},[initialData])
@@ -228,7 +221,7 @@ const EmailTemplate = () => {
   // add keyword for new email template header
   const addKeywordEmail = (e) => {
     e.preventDefault()
-    let subjectInput = document.getElementById("newEmailTemplateSubject");
+    let subjectInput = newEmailTemplateSubject.current;
     let cursorStart = subjectInput.selectionStart;
     let cursorEnd = subjectInput.selectionEnd;
     let textValue = subjectInput.value;
@@ -284,19 +277,18 @@ const EmailTemplate = () => {
 // Save new email template  
   const saveEmailTemplate = (e) => {
     e.preventDefault();
-    
+
     if(newMail.title !== "" && newMail.header !== "" && newMail.message !== "") {
       try {
         let copyTemplates = initialData;
             copyTemplates = [...copyTemplates, newMail];
             setInitialData(copyTemplates)
-
             setSuccessMsg("Email template created!")
             setTimeout(() => {
               setSuccessMsg("")
             }, 5000);
             
-            e.target.getAttribute("id") === "saveNewEmailTemplate" ? setEmailModal(false) : e.target.closest("form").reset();;
+            e.target.getAttribute("id") === "saveNewEmailTemplate" ? setEmailModal(false) : createModalRef.current.reset();;
             
             setNewMail({
               title: "",
@@ -312,7 +304,7 @@ const EmailTemplate = () => {
       setErrorMsg("Please enter some text / value!")
       setTimeout(() => {
         setErrorMsg("")
-      }, 5000);
+      }, 500000);
     }
   }
   // Save new email template
@@ -393,7 +385,7 @@ const EmailTemplate = () => {
                 <li 
                   key={i}
                   onClick={(e)=>getThisEmail(emailData, i)}
-                  className={activeEmail === i && "active"}
+                  className={activeEmail === i ? "active" : ""}
                 >
                   <div className="messageTitle">{emailData.title}</div>
                   <div className="messageDeet">
@@ -486,7 +478,7 @@ const EmailTemplate = () => {
                   <div className="thumb-vertical" />
                 )}
               >
-                <form method="post">
+                <form method="post" ref={createModalRef}>
                   <div className="cmnFormRow">
                     <label className="cmnFieldName d-flex f-justify-between">
                       Title
@@ -515,6 +507,7 @@ const EmailTemplate = () => {
                         className="cmnFieldStyle btnPadding"
                         placeholder="Header..."
                         id="newEmailTemplateSubject"
+                        ref={newEmailTemplateSubject}
                         onChange={(e)=> {
                           setNewMail({
                             ...newMail,

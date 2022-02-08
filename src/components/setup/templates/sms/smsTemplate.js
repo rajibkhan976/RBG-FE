@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import plus_icon from "../../../../assets/images/plus_icon.svg";
@@ -13,14 +13,15 @@ import Pagination from "../../../shared/Pagination";
 import Loader from "../../../shared/Loader";
 // import list_board_icon from "../../../../assets/images/list_board_icon.svg";
 // import { bucketUrl } from "../../../../configuration/config";
-import { ErrorAlert, SuccessAlert } from "../../../shared/messages";
+import { ErrorAlert, SuccessAlert, WarningAlert } from "../../../shared/messages";
 // import ConfirmBox from "../../../shared/confirmBox";
 import Scrollbars from "react-custom-scrollbars-2";
 
-const SmsTemplate = () => {
+const SmsTemplate = (props) => {
   const [isLoader, setIsLoader] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
+  const [warningMsg, setWarningMsg] = useState("");
   const [keyword, setKeyword] = useState(null);
   const [option, setOption] = useState(null);
   const [sortBy, setSortBy] = useState("");
@@ -100,6 +101,11 @@ const SmsTemplate = () => {
     title: "",
     message: "",
   });
+  const createTemplateTitle = useRef(null);
+  const createTemplateMessage = useRef(null);
+  const createTemplateForm = useRef(null)
+  const messageTextbox = useRef(null)
+  const templateTitle = useRef(null)
 
   const getQueryParams = async () => {
     const keyword = utils.getQueryVariable("search");
@@ -201,8 +207,7 @@ const SmsTemplate = () => {
   // ADD Keyword to Edit SMS template
   const addKeywordEdit = (e) => {
     e.preventDefault();
-    let bodyTemplateParent = e.target.closest(".bodyEditTemplate");
-    let textBox = bodyTemplateParent.querySelector("#messageTextbox");
+    let textBox = messageTextbox.current;
     let cursorStart = textBox.selectionStart;
     let cursorEnd = textBox.selectionEnd;
     let textValue = textBox.value;
@@ -269,34 +274,54 @@ const SmsTemplate = () => {
 
   // Add edit template title onchange
   const editTemplateTitle = (e) => {
-    console.log("e.target.value.trim()", e.target.value.trim().length !== 0);
-    e.target.value.trim().length !== 0 &&
+    templateTitle.current.value.trim().length !== 0 &&
       setEditMsgObj({
         ...editMsgObj,
         title: e.target.value,
       });
-    console.log(editMsgObj);
   };
 
   // Save edit template
   const saveEditstate = (e) => {
     e.preventDefault();
-    let copyTemplate = smsTemplates;
+    if(templateTitle.current.value.trim().length !== 0 && messageTextbox.current.value.trim().length !== 0) {
+      let copyTemplate = smsTemplates;
 
-    copyTemplate[activeMessage] = editMsgObj;
+      copyTemplate[activeMessage] = editMsgObj;
 
-    console.log("editMsgObj...", editMsgObj);
+      console.log("editMsgObj...", editMsgObj);
 
-    setSMSTemplates(copyTemplate);
+      setSMSTemplates(copyTemplate);
 
-    setEditstate(false);
+      setEditstate(false);
 
-    setEditMsgObj({
-      title: smsTemplates[activeMessage].title,
-      message: smsTemplates[activeMessage].message,
-    });
+      setEditMsgObj({
+        title: smsTemplates[activeMessage].title,
+        message: smsTemplates[activeMessage].message,
+      });
 
-    setKeywordSuggesion(false);
+      setKeywordSuggesion(false);
+    }
+    else {
+      if(templateTitle.current.value.trim().length === 0) {
+        setErrorMsg("Title cannot be blank!");
+        setTimeout(() => {
+          setErrorMsg("")
+        }, 5000);
+      }
+      if(messageTextbox.current.value.trim().length === 0) {
+        setErrorMsg("Message cannot be blank!");
+        setTimeout(() => {
+          setErrorMsg("")
+        }, 5000);
+      }
+      if(messageTextbox.current.value.trim().length === 0 && templateTitle.current.value.trim().length === 0) {
+        setErrorMsg("Message and Title cannot be blank!");
+        setTimeout(() => {
+          setErrorMsg("")
+        }, 5000);
+      }
+    }
   };
 
   const closeModal = () => {
@@ -305,9 +330,7 @@ const SmsTemplate = () => {
 
   // ADD Keyword to New SMS template
   const addThisTag = (e) => {
-    console.log(e);
-    let formParent = e.target.closest(".cmnFormRow");
-    let addTextarea = formParent.querySelector("#newTemplateMessage");
+    let addTextarea = createTemplateMessage.current;
     let cursorStart = addTextarea.selectionStart;
     let cursorEnd = addTextarea.selectionEnd;
     let textValue = addTextarea.value;
@@ -353,37 +376,41 @@ const SmsTemplate = () => {
   };
 
   // Add new template message onchange
-  const addTemplateMessage = (e) => {
-    console.log("e.target.value.trim()", e.target.value.trim().length !== 0);
-    e.target.value.trim().length !== 0 &&
+  const addTemplateTitle = (e) => {
+    createTemplateTitle.current.value.trim().length !== 0 &&
+      setAddMsgObj({
+        ...addMsgObj,
+        title: createTemplateTitle.current.value,
+      })
+  };
+
+  // Add new template title onchange
+  const addTemplateMessage = (e) => {    
+    createTemplateMessage.current.value.trim().length !== 0 &&
       setAddMsgObj({
         ...addMsgObj,
         message: e.target.value,
       });
   };
 
-  // Add new template title onchange
-  const addTemplateTitle = (e) => {
-    console.log("e.target.value.trim()", e.target.value.trim().length !== 0);
-    e.target.value.trim().length !== 0 &&
-      setAddMsgObj({
-        ...addMsgObj,
-        title: e.target.value,
-      });
-  };
-
   // Save new template function
   const saveMessage = (e) => {
-    console.log("save message", e, "NEW MESSAGE:::", addMsgObj);
     let copyTemplate = smsTemplates;
-    copyTemplate = [...copyTemplate, addMsgObj]
+    if(createTemplateTitle.current.value.trim().length !== 0 && createTemplateMessage.current.value.trim().length !== 0) {
+      copyTemplate = [...copyTemplate, addMsgObj]
 
-    setSMSTemplates(copyTemplate);
-        
-    setAddMsgObj({
-      title: "",
-      message: "",
-    })
+      setSMSTemplates(copyTemplate);
+          
+      setAddMsgObj({
+        title: "",
+        message: "",
+      })
+    } else {
+      setErrorMsg("Some information missing!");
+      setTimeout(() => {
+        setErrorMsg("")
+      }, 5000);
+    }
   };
 
   // Save new template and close modal
@@ -395,7 +422,7 @@ const SmsTemplate = () => {
         addMsgObj.message.trim().length !== 0
       ) {
         saveMessage(e.target);
-        e.target.closest("form").reset();
+        createTemplateForm.current.reset();
       }
     } catch (err) {
       console.log(err);
@@ -415,14 +442,33 @@ const SmsTemplate = () => {
         addMsgObj.title.trim().length !== 0 &&
         addMsgObj.message.trim().length !== 0
       ) {
-        console.log(addMsgObj.title.trim().length, addMsgObj.message.trim().length, addMsgObj);
         saveMessage(e.target);
-        e.target.closest("form").reset();
+        createTemplateForm.current.reset();
         setSuccessMsg("SMS template saved!")
         closeModal(false);
         setTimeout(() => {
           setSuccessMsg("")
         }, 5000);
+      }
+      else {
+        if(addMsgObj.title.trim().length === 0) {
+          setErrorMsg("Please give Message title!");
+          setTimeout(() => {
+            setErrorMsg("")
+          }, 5000);
+        }
+        if(addMsgObj.message.trim().length === 0) {
+          setErrorMsg("Please give Message content!");
+          setTimeout(() => {
+            setErrorMsg("")
+          }, 5000);
+        }
+        if(addMsgObj.title.trim().length === 0 && addMsgObj.message.trim().length === 0) {
+          setErrorMsg("Please provide some content!");
+          setTimeout(() => {
+            setErrorMsg("")
+          }, 5000);
+        }
       }
     } catch (err) {
       setErrorMsg(err);
@@ -476,6 +522,7 @@ const SmsTemplate = () => {
       </div>
       {successMsg && <SuccessAlert message={successMsg}></SuccessAlert>}
       {errorMsg && <ErrorAlert message={errorMsg}></ErrorAlert>}
+      {warningMsg && <WarningAlert message={warningMsg}></WarningAlert>}
 
       <div className="userListBody smsListing d-flex">
         <div className="listBody">
@@ -580,6 +627,7 @@ const SmsTemplate = () => {
                         defaultValue={smsTemplates[activeMessage].title}
                         onChange={(e) => editTemplateTitle(e)}
                         id="templateTitle"
+                        ref={templateTitle}
                       />
                     )}
 
@@ -655,6 +703,7 @@ const SmsTemplate = () => {
                         defaultValue={smsTemplates[activeMessage].message}
                         onChange={(e) => editTemplateMessage(e)}
                         id="messageTextbox"
+                        ref={messageTextbox}
                       ></textarea>
                     )}
                     {keywordSuggesion && (
@@ -765,7 +814,7 @@ const SmsTemplate = () => {
                   <div className="thumb-vertical" />
                 )}
               >
-                <form method="post">
+                <form method="post" ref={createTemplateForm}>
                   <div className="cmnFormRow">
                     <label className="cmnFieldName d-flex f-justify-between">
                       Enter Template Title
@@ -775,21 +824,23 @@ const SmsTemplate = () => {
                         className="cmnFieldStyle"
                         placeholder="Title..."
                         id="newTemplateTitle"
-                        onChange={(e) => addTemplateMessage(e)}
+                        ref={createTemplateTitle}
+                        onChange={(e) => addTemplateTitle(e)}
                       />
                     </div>
                     {/* <span className="errorMsg">Please provide name.</span> */}
                   </div>
                   <div className="cmnFormRow">
                     <label className="cmnFieldName d-flex f-justify-between">
-                      Enter Template Title
+                      Message
                     </label>
                     <div className="cmnFormField">
                       <textarea
                         className="cmnFieldStyle"
                         placeholder="Message"
                         id="newTemplateMessage"
-                        onChange={(e) => addTemplateTitle(e)}
+                        ref={createTemplateMessage}
+                        onChange={(e) => addTemplateMessage(e)}
                       ></textarea>
                     </div>
                     {/* <span className="errorMsg">Please provide name.</span> */}

@@ -786,7 +786,14 @@
   top: 330px;
 }
 .emailListingPage > .popupMessage,
-.emailListingPage .templateBody .popupMessage  {
-  top: 170px;
+.emailListingPage .templateBody .popupMessage,
+.smsListingPage .popupMessage  {
+  top: 45px;
+}
+.popupMessage {
+  z-index: 9999999;
+}
+.modalBackdrop {
+  padding-right: 0 !important;
 }
 /* Text editor */
