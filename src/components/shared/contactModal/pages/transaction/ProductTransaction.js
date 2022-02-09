@@ -1,4 +1,6 @@
 import React from 'react';
+import aaroww from "../../../../../assets/images/arrow_forward.svg";
+import categoryTag from "../../../../../assets/images/categoryTag.svg";
 
 const ProductTransaction = (props) => {
     return (
@@ -67,13 +69,13 @@ const ProductTransaction = (props) => {
                         <img src={props.productImg} alt="" />
                     </div>
                     <h3>{props.productName}</h3>
-                    <p className="category"> <img src={props.categoryTag} alt="" /> {props.productCatName}</p>
+                    <p className="category"> <img src={categoryTag} alt="" /> {props.productCatName}</p>
 
                     <h4>$ {props.productPriceTax}</h4>
                     <span className="tax"> * Amount showing including taxes </span>
                 </div>
 
-                <button class={props.chosedColor && props.chosedSize && props.productPrice ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={props.buyProduct}>Buy <img src={props.aaroww} alt="" /></button>
+                <button class={props.chosedColor && props.chosedSize && props.productPrice ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={props.buyProduct}>Buy <img src={aaroww} alt="" /></button>
             </div>
         </form>
     );

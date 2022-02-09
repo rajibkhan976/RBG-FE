@@ -1,4 +1,10 @@
 import React from 'react';
+import aaroww from "../../../../../assets/images/arrow_forward.svg";
+import info_icon from "../../../../../assets/images/infos.svg";
+import bell from "../../../../../assets/images/bell.svg";
+import updown from "../../../../../assets/images/updown.png";
+import deleteBtn from "../../../../../assets/images/deleteBtn.svg";
+import downpayment from "../../../../../assets/images/downpayment.svg";
 
 const ProgramTransaction = (props) => {
     return (
@@ -15,7 +21,7 @@ const ProgramTransaction = (props) => {
                                 <span className="labelWithInfo">
                                       <label>Select Category</label>
                                       <span className="infoSpan">
-                                          <img src={props.info_icon} alt="" />
+                                          <img src={info_icon} alt="" />
                                           <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                       </span>
                                 </span>
@@ -45,7 +51,7 @@ const ProgramTransaction = (props) => {
                                     onChange={(e)=>props.toggleContactListFn(e)}
                                     style={{
                                       backgroundImage: props.toggleContactList.status
-                                        ? `url(${props.updown})`
+                                        ? `url(${updown})`
                                         : "",
                                     }}
                                   />
@@ -222,7 +228,7 @@ const ProgramTransaction = (props) => {
 
                             <div className="formsection gap autoRenew">
                                 <div className="autoRenewDate">
-                                  <img src={props.bell} alt="" />
+                                  <img src={bell} alt="" />
                                   <p>Next Payment Due Date <span className="renewDate">03 / 01 / 2022</span></p>
                                 </div>
                             </div>
@@ -265,7 +271,7 @@ const ProgramTransaction = (props) => {
                             <div className="previewBox">
                                 <div className={props.communication ? "previewImgBox course" : "previewImgBox course display"
                                 }>
-                                    <img src={props.downpayment} alt="" />
+                                    <img src={downpayment} alt="" />
 
                                 </div>
                                 <div className={props.communication ? "previewDownpaymentBox display" : "previewDownpaymentBox"
@@ -345,7 +351,7 @@ const ProgramTransaction = (props) => {
                                   {props.addDownpayment && (
                                    <div className="NewDownpayment">
                                     <form>
-                                      <button className="delNewDownpayment" onClick={props.delDownpaymentFn}><img src={props.deleteBtn} alt="" /> Delete</button>
+                                      <button className="delNewDownpayment" onClick={props.delDownpaymentFn}><img src={deleteBtn} alt="" /> Delete</button>
                                       <div className="transaction_form products forDownpayment">
                                         <div className="formsection gap">
                                             <span className="labelWithInfo">
@@ -423,7 +429,7 @@ const ProgramTransaction = (props) => {
                                 <span className="tax"> * Amount showing including taxes </span> */}
                             </div>
 
-                            <button class={props.courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={props.buyCourse}>Buy <img src={props.aaroww} alt="" /></button>
+                            <button class={props.courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={props.buyCourse}>Buy <img src={aaroww} alt="" /></button>
                         </div>
                     </form>
     );
