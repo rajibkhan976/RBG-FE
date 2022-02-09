@@ -6980,7 +6980,8 @@ p.trackName {
   vertical-align: middle;
 }
 .transactionListing .row.success .cell,
-.transactionListing .row.fail .cell {
+.transactionListing .row.fail .cell, 
+.transactionListing .row.due .cell {
   background: #f0f5f1;
   padding: 18px 10px;
   color: #305671;
@@ -6991,12 +6992,18 @@ p.trackName {
 .transactionListing .row.fail .cell {
   background: #fff5f6;
 }
+.transactionListing .row.due .cell {
+  background: #FFF5ED;
+  ;
+}
 .transactionListing .row.success .cell:first-child,
-.transactionListing .row.fail .cell:first-child {
+.transactionListing .row.fail .cell:first-child, 
+.transactionListing .row.due .cell:first-child {
   border-radius: 5px 0 0 5px;
 }
 .transactionListing .row.success .cell:last-child,
-.transactionListing .row.fail .cell:last-child {
+.transactionListing .row.fail .cell:last-child, 
+.transactionListing .row.due .cell:last-child  {
   border-radius: 0 5px 5px 0;
 }
 
@@ -7035,12 +7042,16 @@ p.trackName {
   padding-bottom: 5px;
   text-transform: uppercase;
 }
-.transactionListing .row.fail .cell .status {
+.transactionListing .row.fail .cell .status, 
+.transactionListing .row.due .cell .status {
   color: #ed707a;
   font-size: 10px;
   font-weight: 600;
   padding-bottom: 5px;
   text-transform: uppercase;
+}
+.transactionListing .row.due .cell .status {
+  color: #F1A768;
 }
 .transactionListing .row .cell .status ~ div span {
   font-weight: 600;
@@ -9281,4 +9292,35 @@ button.addOverviewCustomFiel {
 
 .holidayListWrap::-webkit-scrollbar-thumb {
   background-color: #9baebc;
+}
+
+/* ------------------ Transaction tab css ------------------- */
+
+.tabHead {
+  background: #F2F7FC;
+  height: 50px;
+  display: inline-block;
+  width: 100%;
+  margin: 5px 0 10px;
+}
+.tabHead li {
+  float: left;
+}
+.tabHead li button {
+  display: block;
+  color: #9BAEBC;
+  font-size: 14px;
+  font-weight: 500;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  height: 50px;
+  padding: 0 20px;
+  border-bottom: 2px solid transparent;
+  transition: all 0.5s ease 0s;
+}
+
+.tabHead li button.active {
+  color: var(--darkBlue);
+  border-color: #ED707A;
 }

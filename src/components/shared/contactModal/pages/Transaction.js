@@ -11,6 +11,12 @@ import Loader from "../../Loader";
 const Transaction = (props) => {
   const [transactionList, setTransactionList] = useState([]);
   const [isLoader, setIsLoader] = useState(false);
+  const [activeTab, setActiveTab] = useState(0);
+
+  const changeTab = (e) => {
+    setActiveTab(e.target.value);
+  }
+
   const fetchTransactionList = async (contactID) => {
     try {
       setIsLoader(true);
@@ -196,55 +202,166 @@ const Transaction = (props) => {
     <>
       <div className={props.contact.is_course_setup_remaining ? "contactTabsInner d-flex f-column" : "contactTabsInner" }>
         <h3 className="headingTabInner">Transactions</h3>
-        {(!props.contact.is_course_setup_remaining) ?
-            <>
-              {props.contact && props.contact.course_error !== undefined &&
-                  <div className="importCourseError d-flex f-align-center f-justify-center">
-                    <p>{props.contact.course_error}</p>
+        <div className="transHeader">
+          <button className="saveNnewBtn" onClick={props.goToTransaction}>
+            Make a Transaction <img src={arrow_forward} alt="" />
+          </button>
+          <span>* Explanatory text blurb should be here.</span>
+        </div>
+        <div className={transactionList?.pagination?.count > 0 ? "transactionListing" : "hide"}>
+          {isLoader ? <Loader /> : ''}
+          <div className="row head">
+            <div className="cell">Particulars</div>
+            <div className="cell">Amount</div>
+            <div className="cell">Transaction ID</div>
+            <div className="cell">&nbsp;</div>
+          </div>
+          <>
+            {
+              transactionList?.pagination?.count > 0 ? transactionList?.transactions?.map((transaction, key) => {
+                return (!transaction.is_pos) ? <CourseTransaction list={transaction} key={key} /> : <PosTransaction list={transaction} key={key} />;
+              }) : ""}
+
+          </>
+          
+        </div>
+        {/* {transactionList?.pagination?.count == 0 ? 
+          <div className="noDataFound">
+            <img src={list_board_icon} alt="" />
+            <span>No transaction found!</span>
+          </div> 
+        : "" } */}
+
+
+        <div className="tabHead">
+          <ul>
+            <li><button type="button" value="0" onClick={changeTab} className={activeTab == 0 ? "active" : ""}>Upcoming Transactions</button></li>
+            <li><button type="button" value="1" onClick={changeTab} className={activeTab == 1 ? "active" : ""}>Old Transactions</button></li>
+            <li><button type="button" value="2" onClick={changeTab} className={activeTab == 2 ? "active" : ""}>Contract Transactions</button></li>
+          </ul>
+        </div>
+
+
+        <div className="transactionListing">
+          <div className="row head">
+            <div className="cell">Particulars</div>
+            <div className="cell">Amount</div>
+            <div className="cell">Transaction ID</div>
+            <div className="cell">&nbsp;</div>
+          </div>
+          <div className="row success">
+            <div className="cell">
+              <div className="d-flex">
+                <div className="iconCont">
+                  <span>
+                    <img src={icon_trans} alt="" />
+                  </span>
+                    <span className="ifDependent">
+                      <img src={wwConnect} alt="" />
+                    </span>
+                </div>
+                <div className="textCont">
+                  <div className="status">
+                    success
                   </div>
-              }
-              <div className="transHeader">
-                <button className="saveNnewBtn" onClick={props.goToTransaction}>
-                  Make a Transaction <img src={arrow_forward} alt="" />
-                </button>
-                <span>* Explanatory text blurb should be here.</span>
-              </div>
-              <div className={transactionList?.pagination?.count > 0 ? "transactionListing" : "hide"}>
-                {isLoader ? <Loader /> : ''}
-                <div className="row head">
-                  <div className="cell">Particulars</div>
-                  <div className="cell">Amount</div>
-                  <div className="cell">Transaction ID</div>
-                  <div className="cell">&nbsp;</div>
+                  <div>
+                    <span>Course:</span> “Sample course name”
+                  </div>
+                    <a href="" className="dependent">
+                      <span>
+                        <img src={wwConnect2} alt="" />
+                      </span>
+                      Emily Martyns
+                    </a>
                 </div>
-                <>
-                  {
-                    transactionList?.pagination?.count > 0 ? transactionList?.transactions?.map((transaction, key) => {
-                      return (!transaction.is_pos) ? <CourseTransaction list={transaction} key={key} /> : <PosTransaction list={transaction} key={key} />;
-                    }) : ""}
-
-                </>
-
-                      {/* <div className="noDataFound">
-                        <span>
-                          <img src={list_board_icon} alt="" />
-                          <span>No transaction found!</span>
-                        </span>
-                      </div> */}
-
               </div>
-              {transactionList?.pagination?.count == 0 ?
-                <div className="noDataFound">
-                  <img src={list_board_icon} alt="" />
-                  <span>No transaction found!</span>
-                </div>
-              : "" }
-            </> :
-            <div className="importTransactionError f-1 d-flex f-column f-align-center f-justify-center">
-              <p>Program data is importing; <br/>Please try again after some time.</p>
             </div>
-
-        }
+            <div className="cell">
+              <span className="amount" >
+                $100
+              </span>
+            </div>
+            <div className="cell">
+              <span className="transID">
+                dfg41456df1567sdtfg24g
+              </span>
+            </div>
+            <div className="cell">
+              <span className="time">
+                18 m ago
+              </span>
+            </div>
+          </div>
+          <div className="row fail">
+            <div className="cell">
+              <div className="d-flex">
+                <div className="iconCont">
+                  <span>
+                    <img src={icon_trans} alt="" />
+                  </span>
+                </div>
+                <div className="textCont">
+                  <div className="status">
+                    Fail
+                  </div>
+                  <div>
+                    <span>Course:</span> “Sample course name”
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="cell">
+              <span className="amount" >
+                $100
+              </span>
+            </div>
+            <div className="cell">
+              <span className="transID">
+                dfg41456df1567sdtfg24g
+              </span>
+            </div>
+            <div className="cell">
+              <span className="time">
+                18 m ago
+              </span>
+            </div>
+          </div>
+          <div className="row due">
+            <div className="cell">
+              <div className="d-flex">
+                <div className="iconCont">
+                  <span>
+                    <img src={icon_trans} alt="" />
+                  </span>
+                </div>
+                <div className="textCont">
+                  <div className="status">
+                    Due
+                  </div>
+                  <div>
+                    <span>Course:</span> “Sample course name”
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="cell">
+              <span className="amount" >
+                $100
+              </span>
+            </div>
+            <div className="cell">
+              <span className="transID">
+                dfg41456df1567sdtfg24g
+              </span>
+            </div>
+            <div className="cell">
+              <span className="time">
+                18 m ago
+              </span>
+            </div>
+          </div>
+        </div>
+        
       </div>
     </>
   );
