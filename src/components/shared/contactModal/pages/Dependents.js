@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 import Loader from "../../Loader";
 import { ContactService } from "../../../../services/contact/ContactServices";
 import { DependentServices } from "../../../../services/contact/DependentServices";
 import { utils } from "../../../../helpers";
-
+import * as actionTypes from "../../../../actions/types";
 import dndFalse from "../../../../assets/images/dnd_grey.svg"
 import dnd from "../../../../assets/images/dnd_color.svg"
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
@@ -67,6 +68,7 @@ const Dependents = (props) => {
   const [errorMsgPopup, setErrorMsgPopup] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const messageDelay = 5000; // ms
+  const dispatch = useDispatch();
   /**
    * Auto hide success or error message
    */
@@ -424,6 +426,7 @@ const Dependents = (props) => {
             console.log("Create dependent result", result)
             let msg = 'Dependent created successfully';
             setSuccessMsgPopup(msg);
+
             //Close dependent create modal
             setTimeout(() => {
               closeModal();
@@ -440,10 +443,10 @@ const Dependents = (props) => {
         setProcessing(false);
         console.log("In dependent create", e.message);
         if (e.response && e.response.status == 403) {
-          setErrorMsg("You dont have permission to perform this action");
+          setErrorMsgPopup("You dont have permission to perform this action");
         }
         else if (e.message) {
-          setErrorMsg(e.message);
+          setErrorMsgPopup(e.message);
         }
       } finally {
         setIsLoader(false);
@@ -518,6 +521,23 @@ const Dependents = (props) => {
     }
   }
 
+  /**
+   * Open dependent contact modal
+   */
+  const OpenDependentContactModal = async (dependentId) => {
+    // console.log('open dependendt ', dependentId);
+    dispatch({
+      type: actionTypes.CONTACTS_MODAL_ID,
+      contact_modal_id: '',
+    });
+    setTimeout(() => {
+      dispatch({
+        type: actionTypes.CONTACTS_MODAL_ID,
+        contact_modal_id: dependentId,
+      });
+    }, 300);
+  }
+
   return (
     <>
       <div className="contactTabsInner">
@@ -577,7 +597,7 @@ const Dependents = (props) => {
                         </div>
                         <div className="textCont">
                           <h4>
-                            <em>{dependent.name ? dependent.name : ((dependent.firstName ? dependent.firstName : '') + ' ' + (dependent.lastName ? dependent.lastName : ''))}</em>
+                            <em onClick={() => OpenDependentContactModal(dependent._id)}>{dependent.name ? dependent.name : ((dependent.firstName ? dependent.firstName : '') + ' ' + (dependent.lastName ? dependent.lastName : ''))}</em>
                             <div className="dndCheckbox">
                               <span onClick={(e) => toggleDncStatus(dependent._id, i)}>
                                 <img src={dependent.dnc ? dnd : dndFalse} alt={dependent.dnc ? "Send notifications" : "Do not send notifications"} />
