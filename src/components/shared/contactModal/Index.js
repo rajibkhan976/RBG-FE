@@ -161,17 +161,6 @@ const ContactModal = (props) => {
                 })
         }
     }
-    useEffect(() => {
-        saveImageLocation(image);
-    }, [image])
-    const saveImageLocation = async (imageLocation) => {
-        if (imageLocation !== "") {
-            await ContactService.uploadProfilePic({
-                contactId: props.contactId,
-                file: imageLocation
-            });
-        }
-    }
     //Open guardian contact modal
     const openGuardianContactModal = (id) => {
         dispatch({
