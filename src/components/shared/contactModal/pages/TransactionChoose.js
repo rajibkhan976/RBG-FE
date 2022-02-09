@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import * as actionTypes from "../../../../actions/types";
-import aaroww from "../../../../assets/images/arrow_forward.svg";
 import arrow_forward from "../../../../assets/images/backIcon.svg";
-import info_icon from "../../../../assets/images/infos.svg";
 import camera from "../../../../assets/images/camera.svg";
-import deleteBtn from "../../../../assets/images/deleteBtn.svg";
-import bell from "../../../../assets/images/bell.svg";
-import updown from "../../../../assets/images/updown.png";
-import downpayment from "../../../../assets/images/downpayment.svg";
-import categoryTag from "../../../../assets/images/categoryTag.svg";
 import { BillingServices } from "../../../../services/billing/billingServices";
 import { CourseServices } from "../../../../services/setup/CourseServices";
 import { ProductServices } from "../../../../services/setup/ProductServices";
@@ -361,12 +354,10 @@ const TransactionChoose = (props) => {
                         chosedColor={chosedColor}
                         chosedSize={chosedSize}
                         productName={productName}
-                        categoryTag={categoryTag}
                         productCatName={productCatName}
                         productPriceTax={productPriceTax}
                         productPrice={productPrice}
                         buyProduct={buyProduct}
-                        aaroww={aaroww}
                     />
                 </div>
                 }
@@ -380,25 +371,19 @@ const TransactionChoose = (props) => {
                         <div className="formMsg error">{errorMsg}</div>
                     }
                     <ProgramTransaction
-                        info_icon={info_icon}
                         toggleContactList={toggleContactList}
                         toggleContactListFn={toggleContactListFn}
-                        updown={updown}
                         setAddManually={setAddManually}
                         addManually={addManually}
-                        bell={bell}
                         communication={communication}
-                        downpayment={downpayment}
                         addDownpaymentFn={addDownpaymentFn}
                         addDownpayment={addDownpayment}
                         delDownpaymentFn={delDownpaymentFn}
-                        deleteBtn={deleteBtn}
                         choseCatHandel={choseCatHandel}
                         paymentDateHandel={paymentDateHandel}
                         paymentDate={paymentDate}
                         courseSelected={courseSelected}
                         buyCourse={buyCourse}
-                        aaroww={aaroww}
                         setCommunication={setCommunication}
                     />
                 </div>
