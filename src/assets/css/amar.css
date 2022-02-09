@@ -1015,3 +1015,7 @@
   border: 1px solid #ed707a;
   background-color: #fff4f4;
 }
+
+.dependent-name {
+  cursor: pointer;
+}

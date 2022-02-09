@@ -597,7 +597,7 @@ const Dependents = (props) => {
                         </div>
                         <div className="textCont">
                           <h4>
-                            <em onClick={() => OpenDependentContactModal(dependent._id)}>{dependent.name ? dependent.name : ((dependent.firstName ? dependent.firstName : '') + ' ' + (dependent.lastName ? dependent.lastName : ''))}</em>
+                            <em onClick={() => OpenDependentContactModal(dependent._id)} className="dependent-name">{dependent.name ? dependent.name : ((dependent.firstName ? dependent.firstName : '') + ' ' + (dependent.lastName ? dependent.lastName : ''))}</em>
                             <div className="dndCheckbox">
                               <span onClick={(e) => toggleDncStatus(dependent._id, i)}>
                                 <img src={dependent.dnc ? dnd : dndFalse} alt={dependent.dnc ? "Send notifications" : "Do not send notifications"} />
