@@ -8784,6 +8784,7 @@ li.listHeading > div.sortOff:after {
   height: 80px;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .inDashboardHeader.lighter{
