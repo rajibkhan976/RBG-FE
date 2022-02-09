@@ -353,6 +353,18 @@ const SmsTemplate = (props) => {
 
   const closeModal = () => {
     setSMSModal(false);
+    
+    setActiveMessage(null);
+    setEditMsgObj({
+      title: "",
+      message: "",
+    });
+
+    setHasError(false);
+    setErrorState({
+      title: "",
+      message: ""
+    })
   };
 
   // ADD Keyword to New SMS template
