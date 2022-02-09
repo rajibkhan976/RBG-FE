@@ -18,7 +18,10 @@ const TransactionChoose = (props) => {
 
     const [choosePOS, setChoosetPOS] = useState(false);
     const [chooseCourse, setChooseCourse] = useState(false);
-    const [paymentDate, setPaymentDate] = useState("");    
+    const [paymentDate, setPaymentDate] = useState("");   
+    const [paymentDate1, setPaymentDate1] = useState("");
+    const [firstBillingDate, setFirstBillingDate] = useState(""); 
+    const [programStartDate, setProgramStartDate] = useState("");
     const [addDownpayment, setAddDownpayment] = useState(false);
     const [addManually, setAddManually] = useState(false)
     const [courseCategory, setCourseCategory] = useState([]);
@@ -267,6 +270,21 @@ const TransactionChoose = (props) => {
         }
     }
 
+    const firstBillingDateHandel = (e) => {
+      setFirstBillingDate(e.target.value);
+      console.log(firstBillingDate);
+    }
+
+    const programStartDateHandel = (e) => {
+      setProgramStartDate(e.target.value);
+      console.log(programStartDate);
+    }
+
+    const paymentDateHandel1 = (e) => {
+      setPaymentDate1(e.target.value);
+      console.log(paymentDate1);
+    }
+
     const paymentDateHandel = (e) => {
       setPaymentDate(e.target.value);
       console.log(paymentDate);
@@ -380,8 +398,14 @@ const TransactionChoose = (props) => {
                         addDownpayment={addDownpayment}
                         delDownpaymentFn={delDownpaymentFn}
                         choseCatHandel={choseCatHandel}
+                        firstBillingDateHandel={firstBillingDateHandel}
+                        firstBillingDate={firstBillingDate}
+                        programStartDateHandel={programStartDateHandel}
+                        programStartDate={programStartDate}
                         paymentDateHandel={paymentDateHandel}
                         paymentDate={paymentDate}
+                        paymentDateHandel1={paymentDateHandel1}
+                        paymentDate1={paymentDate1}
                         courseSelected={courseSelected}
                         buyCourse={buyCourse}
                         setCommunication={setCommunication}
