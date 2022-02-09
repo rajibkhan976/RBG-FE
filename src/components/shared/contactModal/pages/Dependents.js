@@ -5,8 +5,8 @@ import { ContactService } from "../../../../services/contact/ContactServices";
 import { DependentServices } from "../../../../services/contact/DependentServices";
 import { utils } from "../../../../helpers";
 
-import dndFalse from "../../../../assets/images/dnd_false.png"
-import dnd from "../../../../assets/images/dnd_true.png"
+import dndFalse from "../../../../assets/images/dnd_grey.svg"
+import dnd from "../../../../assets/images/dnd_color.svg"
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import updown from "../../../../assets/images/updown.png";
 import icon_dependent from "../../../../assets/images/dependent.svg";

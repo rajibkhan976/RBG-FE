@@ -939,32 +939,29 @@
 .dndCheckbox {
   display: inline-flex;
   vertical-align: middle;
-  margin-left: 5px;
-  height: 22px;
+  height: 30px;
+  width: 30px;
   align-items: center;
+  position: relative;
 }
 .dependentsListing .dndCheckbox span {
   line-height: 100%;
   order: 3;
   margin: 0 5px;
   cursor: pointer;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.dependentsListing .textCont h4:hover .dndCheckbox span:not(.active) {
-  position: static;
-  opacity: 1;
-}
-.dependentsListing .textCont h4:hover .dndCheckbox:hover span:not(:hover) {
-  opacity: 0.5 !important;
-}
-.dependentsListing .dndCheckbox span.active {
-  order: 2;
-}
-.dependentsListing > .row:not(.archivedDependent) .textCont h4:hover .dndCheckbox {
-  background: #fff;
-  border-radius: 30px;
-}
-.dependentsListing > .row:not(.archivedDependent) .textCont h4:hover .dndCheckbox  span {
-  padding: 2px 3px;
+.dependentsListing .dndCheckbox span img {
+  position: relative;
+  z-index: 2;
 }
 .dependentsListing .textCont h4 {
   position: relative;
@@ -974,6 +971,20 @@
   z-index: 2;
   position: relative;
   cursor: pointer;
+}
+.dependentsListing .textCont h4:hover .dndCheckbox span:after {
+  position: absolute;
+  content: '';
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  z-index: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0 0 15px rgba(0,0,0,0.22));
 }
 .userDependents img {
   width: 16px;
