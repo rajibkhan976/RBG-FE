@@ -127,6 +127,13 @@ const SmsTemplate = (props) => {
     return queryParams;
   };
 
+  const [hasError, setHasError] = useState(false)
+
+  const [errorState, setErrorState] = useState({
+    header: "",
+    message: ""
+  })
+
   useEffect(() => {
     setSortBy(utils.getQueryVariable("sortBy"));
     setSortType(utils.getQueryVariable("sortType"));
@@ -173,6 +180,18 @@ const SmsTemplate = (props) => {
   const openModal = () => {
     setIsEdit(false);
     setSMSModal(true);
+    
+    setActiveMessage(null);
+    setEditMsgObj({
+      title: "",
+      message: "",
+    });
+
+    setHasError(false);
+    setErrorState({
+      title: "",
+      message: ""
+    })
   };
 
   const handleSortBy = (field) => {
@@ -300,25 +319,34 @@ const SmsTemplate = (props) => {
       });
 
       setKeywordSuggesion(false);
+
+      setHasError(false);
+      setErrorState({
+        title: "",
+        message: ""
+      })
     }
     else {
       if(templateTitle.current.value.trim().length === 0) {
-        setErrorMsg("Title cannot be blank!");
-        setTimeout(() => {
-          setErrorMsg("")
-        }, 5000);
+        setHasError(true);
+        setErrorState({
+          ...errorState,
+          title: "Title cannot be blank!"
+        })
       }
       if(messageTextbox.current.value.trim().length === 0) {
-        setErrorMsg("Message cannot be blank!");
-        setTimeout(() => {
-          setErrorMsg("")
-        }, 5000);
+        setHasError(true);
+        setErrorState({
+          ...errorState,
+          message: "Message cannot be blank!"
+        })
       }
       if(messageTextbox.current.value.trim().length === 0 && templateTitle.current.value.trim().length === 0) {
-        setErrorMsg("Message and Title cannot be blank!");
-        setTimeout(() => {
-          setErrorMsg("")
-        }, 5000);
+        setHasError(true);
+        setErrorState({
+          title: "Title cannot be blank!",
+          message: "Message cannot be blank!"
+        })
       }
     }
   };
@@ -442,6 +470,7 @@ const SmsTemplate = (props) => {
         addMsgObj.title.trim().length !== 0 &&
         addMsgObj.message.trim().length !== 0
       ) {
+        setIsLoader(true);
         saveMessage(e.target);
         createTemplateForm.current.reset();
         setSuccessMsg("SMS template saved!")
@@ -449,25 +478,41 @@ const SmsTemplate = (props) => {
         setTimeout(() => {
           setSuccessMsg("")
         }, 5000);
+
+        setIsLoader(false);
+
+        setHasError(false);
+        setErrorState({
+          title: "",
+          message: ""
+        })
       }
       else {
         if(addMsgObj.title.trim().length === 0) {
-          setErrorMsg("Please give Message title!");
-          setTimeout(() => {
-            setErrorMsg("")
-          }, 5000);
+          console.log(addMsgObj);
+          setHasError(true);
+          setErrorState({
+            ...errorState,
+            title: "Title cannot be blank!",
+            message: ""
+          })
         }
         if(addMsgObj.message.trim().length === 0) {
-          setErrorMsg("Please give Message content!");
-          setTimeout(() => {
-            setErrorMsg("")
-          }, 5000);
+          console.log(addMsgObj);
+          setHasError(true);
+          setErrorState({
+            ...errorState,
+            title:"",
+            message: "Message cannot be blank!"
+          })
         }
         if(addMsgObj.title.trim().length === 0 && addMsgObj.message.trim().length === 0) {
-          setErrorMsg("Please provide some content!");
-          setTimeout(() => {
-            setErrorMsg("")
-          }, 5000);
+          console.log(addMsgObj);
+          setHasError(true);
+          setErrorState({
+            title: "Title cannot be blank!",
+            message: "Message cannot be blank!"
+          })
         }
       }
     } catch (err) {
@@ -476,14 +521,15 @@ const SmsTemplate = (props) => {
         setErrorMsg("")
       }, 5000);
     }
-        
-    setAddMsgObj({
-      title: "",
-      message: "",
-    })
+    finally{        
+      setAddMsgObj({
+        title: "",
+        message: "",
+      })
+    }
   };
 
-  useEffect(() => {}, [addMsgObj]);
+  useEffect(() => {}, [addMsgObj, errorState, hasError]);
 
   const paginationCallbackHandle = () => {};
 
@@ -619,7 +665,7 @@ const SmsTemplate = (props) => {
 
               {activeMessage !== null && (
                 <div className="templateInner">
-                  <header className="templateHeader">
+                  <header className={hasError && errorState.title !== "" ? "templateHeader error" : "templateHeader"}>
                     {!editState && smsTemplates[activeMessage].title}
                     {editState && (
                       <input
@@ -692,7 +738,7 @@ const SmsTemplate = (props) => {
                       </button>
                     )}
                   </header>
-                  <div className="bodyEditTemplate">
+                  <div className={hasError && errorState.message !== "" ? "bodyEditTemplate error": "bodyEditTemplate"}>
                     {editState === false ? (
                       <div className="textView">
                         {smsTemplates[activeMessage].message}
@@ -815,7 +861,7 @@ const SmsTemplate = (props) => {
                 )}
               >
                 <form method="post" ref={createTemplateForm}>
-                  <div className="cmnFormRow">
+                  <div className={hasError && errorState.title !== "" ? "cmnFormRow error" : "cmnFormRow"}>
                     <label className="cmnFieldName d-flex f-justify-between">
                       Enter Template Title
                     </label>
@@ -828,9 +874,9 @@ const SmsTemplate = (props) => {
                         onChange={(e) => addTemplateTitle(e)}
                       />
                     </div>
-                    {/* <span className="errorMsg">Please provide name.</span> */}
+                    {hasError && errorState.title !== "" && <span className="errorMsg">Please provide some message title!</span>}
                   </div>
-                  <div className="cmnFormRow">
+                  <div className={hasError && errorState.message !== "" ? "cmnFormRow error" : "cmnFormRow"}>
                     <label className="cmnFieldName d-flex f-justify-between">
                       Message
                     </label>
@@ -843,7 +889,7 @@ const SmsTemplate = (props) => {
                         onChange={(e) => addTemplateMessage(e)}
                       ></textarea>
                     </div>
-                    {/* <span className="errorMsg">Please provide name.</span> */}
+                    {hasError && errorState.message !== "" && <span className="errorMsg">Please provide some message content!</span>}
                     <div className="smsTagsTemplate">
                       <span onClick={(e) => addThisTag(e)}>fname</span>
                       <span onClick={(e) => addThisTag(e)}>lname</span>

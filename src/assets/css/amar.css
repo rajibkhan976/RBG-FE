@@ -996,3 +996,11 @@
   color: #f1a668;
 }
 /* Dependent toggle menu */
+.templateHeader {
+  border: 1px solid transparent;
+}
+.templateHeader.error input,
+.bodyEditTemplate.error textarea {
+  border: 1px solid #ed707a;
+  background-color: #fff4f4;
+}
