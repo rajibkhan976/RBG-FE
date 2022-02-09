@@ -182,13 +182,6 @@ const TransactionChoose = (props) => {
         setShowLoader(false);
     }
 
-    const chosePosCatHandel = (e) => {
-        setPosSelectedCat(e.target.value);
-        fetchProductList(e.target.value);
-        setProductCatName(e.target[e.target.selectedIndex].getAttribute("data-name"));
-        resetProductHandel();
-    }
-
     const choseSizeHandel = (e, key) => {
         e.preventDefault();
         setChosedSize(e.target.value);
@@ -335,29 +328,26 @@ const TransactionChoose = (props) => {
                     {errorMsg &&
                         <div className="formMsg error">{errorMsg}</div>
                     }
+                    {/* posSelectedCat={posSelectedCat}
+                    chosePosProductHandel={chosePosProductHandel}
+                    productList={productList}
+                    posSelectedProductIndex={posSelectedProductIndex}
+                    colors={colors}
+                    colorIndex={colorIndex}
+                    choseColorHandel={choseColorHandel}
+                    size={size}
+                    sizeIndex={sizeIndex}
+                    choseSizeHandel={choseSizeHandel}
+                    productPrice={productPrice}
+                    productPriceHandel={productPriceHandel}
+                    tax={tax}
+                    chosedColor={chosedColor}
+                    chosedSize={chosedSize}
+                    productName={productName}
+                    productCatName={productCatName}
+                    productPriceTax={productPriceTax}
+                    buyProduct={buyProduct} */}
                     <ProductTransaction
-                        chosePosCatHandel={chosePosCatHandel}
-                        productCatList={productCatList}
-                        posSelectedCat={posSelectedCat}
-                        chosePosProductHandel={chosePosProductHandel}
-                        productList={productList}
-                        posSelectedProductIndex={posSelectedProductIndex}
-                        colors={colors}
-                        colorIndex={colorIndex}
-                        choseColorHandel={choseColorHandel}
-                        size={size}
-                        sizeIndex={sizeIndex}
-                        choseSizeHandel={choseSizeHandel}
-                        productPrice={productPrice}
-                        productPriceHandel={productPriceHandel}
-                        tax={tax}
-                        chosedColor={chosedColor}
-                        chosedSize={chosedSize}
-                        productName={productName}
-                        productCatName={productCatName}
-                        productPriceTax={productPriceTax}
-                        productPrice={productPrice}
-                        buyProduct={buyProduct}
                     />
                 </div>
                 }
