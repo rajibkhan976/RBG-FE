@@ -139,6 +139,10 @@ const GymDetails = (props) => {
     event.preventDefault();
     setShowEditForm(true);
   }
+  const closeGymDetailsHandler = (event) => {
+    event.preventDefault();
+    setShowEditForm(false);
+  }
 
   const handleImageUpload = (event) => {
     const files = event.target.files;
@@ -462,12 +466,14 @@ const GymDetails = (props) => {
                   </select>
                   <div className="errorMsg">{validateMsg.timezone}</div>
                 </div>
-
-                <button className="common_blue_button" type="submit"
-                  disabled={(validateMsg.disabled === true || validateMsg.disabledAccess === true) ? true : false}>
-                  Save <img alt="" src={arrowRightWhite} />
-                </button>
-
+                <div className="btn-group">
+                  <button className="common_blue_button" type="submit"
+                    disabled={(validateMsg.disabled === true || validateMsg.disabledAccess === true) ? true : false}>
+                    Save <img alt="" src={arrowRightWhite} />
+                  </button>
+                  <button class="btn-link" onClick={closeGymDetailsHandler}>Cancel</button>
+                </div>    
+                
               </form>
 
             }
@@ -515,7 +521,8 @@ const GymDetails = (props) => {
                   <div className="gymHolidayList">
                     <div className="cell">{elem.fromDate}</div>
                     <div className="cell">{elem.toDate}</div>
-                    <div className="cell">{elem.name}
+                    <div className="cell">
+                      <span>{elem.name}</span>
                       <div className="sideEditOption">
                         <button onClick={() => {
                           toggleOptions(key);

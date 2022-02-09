@@ -157,11 +157,11 @@ const handleStatusSubmitNew =(e) =>{
               
               <div className="d-flex justified-space-between">
                 <div class="formControl half">
-                <label>Choose a date</label>
+                <label>Start date</label>
                 <input type="date"  name="" value={holiday.fromDate} onChange={holidayStarthandler}/>
               </div>
               <div class="formControl half">
-                <label>&nbsp;</label> 
+                <label>End date</label> 
                 <input type="date"  name="" value={holiday.toDate} onChange={holidayEndhandler}/>
               </div>
               </div>

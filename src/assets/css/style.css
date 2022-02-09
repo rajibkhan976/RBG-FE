@@ -9007,3 +9007,22 @@ li.listHeading > div.sortOff:after {
   left: 21.7%;
   top: 31.5%;
 }
+
+/* .....................gym details fixes...................... */
+
+.btn-group{
+  width: 100%;
+}
+.btn-group .btn-link{
+  float: right;
+}
+.gymHolidayList .cell:last-child span{
+  display: inline-block;
+  width: calc(100% - 30px);
+  word-wrap: break-word;
+}
+.showing_gym_data .gymName > div span {
+  word-wrap: break-word;
+  text-overflow: ellipsis;
+  color: #305671;
+}
