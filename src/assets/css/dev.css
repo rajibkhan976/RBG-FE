@@ -2443,34 +2443,39 @@ span.tagLists ul li.tagLi.sellected span.addTag {
   visibility: visible;
 }
 
-span.labelWithInfo {
+.labelWithInfo {
   width: 100%;
   float: left;
 }
 
-span.labelWithInfo label {
+.labelWithInfo span.labelHeading {
   width: auto;
   margin-right: 10px;
+  /* padding-bottom: 12px; */
+  display: inline-block;
+  color: #315571;
+  font-size: 13px;
+  font-weight: 500;
 }
 
-span.leftSecTransaction {
+.leftSecTransaction {
     width: 50%;
     float: left;
     padding-right: 8px;
 }
 
-span.leftSecTransaction input.editableInput, span.rightSecTransaction input.editableInput {
+.leftSecTransaction input.editableInput, .rightSecTransaction input.editableInput {
 
     width: 100%!important;
 }
 
-span.rightSecTransaction {
+.rightSecTransaction {
     width: 50%;
     float: right;
     padding-left: 8px;
 }
 
-span.rightSecTransaction select {
+.rightSecTransaction select {
   width: 100%;
 }
 
@@ -2650,31 +2655,31 @@ button.delNewDownpayment {
   padding: 0 5px;
 }
 
-.infoSpan span.tooltiptextInfo.amount {
+.infoSpan .tooltiptextInfo.amount {
   margin-left: -75px;
 }
 
-.infoSpan span.tooltiptextInfo.amount::after {
+.infoSpan .tooltiptextInfo.amount::after {
   margin-left: -35px;
 }
 
-.infoSpan span.tooltiptextInfo.paymentDate {
+.infoSpan .tooltiptextInfo.paymentDate {
   margin-left: -160px;
 }
 
-.infoSpan span.tooltiptextInfo.paymentDate::after {
+.infoSpan .tooltiptextInfo.paymentDate::after {
   margin-left: 50px;
 }
 
-.infoSpan span.tooltiptextInfo.paymentType {
+.infoSpan .tooltiptextInfo.paymentType {
   margin-left: -105px;
 }
 
-.infoSpan span.tooltiptextInfo.paymentStatus {
+.infoSpan .tooltiptextInfo.paymentStatus {
   margin-left: -172px;
 }
 
-.infoSpan span.tooltiptextInfo.paymentStatus::after {
+.infoSpan .tooltiptextInfo.paymentStatus::after {
   margin-left: 62px;
 }
 
@@ -2687,7 +2692,7 @@ button.delNewDownpayment {
 }
 
 .cmnFormField.programsTransaction.listActive .contactListItems {
-  top: 73px;
+  top: 68px;
 }
 
 .transaction_form.products.forProducts .formsection.gap .cmnFormRow .cmnFormField.programsTransaction .cmnFieldStyle {
@@ -2703,5 +2708,73 @@ button.delNewDownpayment {
 }
 
 .modalDependent.modalAddCourses.modalBackdrop .slickModalBody  {
-  height: 87%;
+  height: 88%;
+}
+
+.contactTabsInner h3.courseModalHeading {
+  margin-top: 22px;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+p.courseModalPara {
+  padding-bottom: 0;
+}
+
+.slickModalHeader.coursesModalHeader {
+  padding-bottom: 14px;
+}
+
+.modalbtnHolder.saveCourses .saveNnewBtn {
+  width: auto;
+  margin: 30px 5px 0;
+}
+.profile .profileUpload span.uploadText {
+  top: 27px;
+  cursor: pointer;
+}
+
+.profile.uploads .profileUpload {
+  position: initial;
+}
+
+.modalDependent .modalbtnHolder.saveCourses {
+  width: 100%;
+}
+
+
+.modalForm.pograms .formControl span {
+  padding:0;
+}
+
+.modalForm.pograms .formControl span.infoSpan .tooltiptextInfo {
+  padding:5px;
+}
+
+
+.transaction_form.products.forProducts .formsection.gap.autoRenew .labelWithInfo {
+  display: flex;
+}
+
+.transaction_form.products.forProducts .formsection.gap.autoRenew .labelWithInfo label {
+  width: auto;
+  margin-right: 10px;
+}
+
+.transaction_form.products.forProducts .formsection.gap.autoRenew .labelWithInfo .infoSpan .tooltiptextInfo {
+  bottom: 125%;
+}
+
+.continueBuy {
+  width: 100%;
+  text-align: center;
+}
+
+.continueBuy button.saveNnewBtn {
+  margin:28px auto 0;
+  width: 160px;
+}
+
+.continueBuy button.saveNnewBtn img {
+  margin-left: 10px;
 }

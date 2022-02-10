@@ -16,6 +16,7 @@ import { Scrollbars } from "react-custom-scrollbars-2";
 const ProgramTransaction = (props) => {
   const [isLoader, setIsLoader] = useState(false);
   const [addPogramModal, setAddPogramModal] = useState(false);
+  const [contractOverview, setContractOverview] = useState(false);
   const addPogramModalFn = () => {
     setAddPogramModal(true);
   };
@@ -23,6 +24,11 @@ const ProgramTransaction = (props) => {
 
   const closePogramModal = () => {
     setAddPogramModal(false);
+  };
+
+  const contractOverviewFn = (e) => {
+    e.preventDefault();
+    setContractOverview(true);
   };
 
 
@@ -40,13 +46,13 @@ const ProgramTransaction = (props) => {
                           <div className="formsection gap">
 
                               <div className="cmnFormRow">
-                                <span className="labelWithInfo">
-                                      <label>Select Category</label>
+                                <label className="labelWithInfo">
+                                      <span className="labelHeading">Select Category</span>
                                       <span className="infoSpan">
                                           <img src={info_icon} alt="" />
                                           <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                       </span>
-                                </span>
+                                </label>
                                 
                                 <div
                                   className={props.toggleContactList.status
@@ -74,7 +80,10 @@ const ProgramTransaction = (props) => {
                                           }}
                                         >+ Add Manually</button>
                                         <ul>
-                                          <li>Abhisek Bose1</li>
+                                          <li>Unlimitted 1 year contract</li>
+                                          <li>Junior martial arts</li>
+                                          <li>Fitness kickboxing</li>
+                                          <li>Little dragons</li>
                                         </ul>          
                                       </div>
                                     </>
@@ -90,7 +99,7 @@ const ProgramTransaction = (props) => {
 
 
 
-                            <div className="formsection gap">
+                            {/* <div className="formsection gap">
                                 <span className="labelWithInfo">
                                     <label>Select Category</label>
                                     <span className="infoSpan">
@@ -101,16 +110,16 @@ const ProgramTransaction = (props) => {
                                 <select className="selectBox">
                                     <option value="">Select category</option>
                                 </select>
-                            </div>
+                            </div> */}
 
                             <div className="formsection gap">
-                                <span className="labelWithInfo">
-                                    <label>Duration</label>
+                                <label className="labelWithInfo">
+                                    <span className="labelHeading">Duration</span>
                                     <span className="infoSpan">
                                         <img src={info_icon} alt="" />
                                         <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                     </span>
-                                </span>
+                                </label>
                                 <span className="leftSecTransaction">
                                     <input type="text" placeholder="12" class="editableInput" value="12" />
                                 </span>
@@ -126,26 +135,33 @@ const ProgramTransaction = (props) => {
                                 
                                 <span className="leftSecTransaction">
 
-                                    <span className="labelWithInfo">
-                                        <label>Payment Type</label>
+                                    <label className="labelWithInfo">
+                                      <span className="labelHeading">Payment Type</span>
                                         <span className="infoSpan">
-                                            <img src={props.info_icon} alt="" />
+                                            <img src={info_icon} alt="" />
                                             <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                         </span>
-                                    </span>
+                                    </label>
                                     <select className="selectBox">
                                         <option value="">Recurring</option>
                                     </select>
                                 </span>
                                 <span className="rightSecTransaction">
 
-                                <span className="labelWithInfo">
-                                    <label>Billing Cycle</label>
+                                {/* <span className="labelWithInfo">
+                                  <span className="labelHeading">Billing Cycle</span>
                                     <span className="infoSpan">
                                         <img src={info_icon} alt="" />
                                         <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                     </span>
-                                </span>
+                                </span> */}
+                                <label className="labelWithInfo">
+                                      <span className="labelHeading">Billing Cycle</span>
+                                        <span className="infoSpan">
+                                            <img src={props.info_icon} alt="" />
+                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                        </span>
+                                    </label>
                                     <select className="selectBox">
                                         <option value="">Monthly</option>
                                     </select>
@@ -153,40 +169,46 @@ const ProgramTransaction = (props) => {
                             </div>
 
                             <div className="formsection gap">
-                                <span className="labelWithInfo">
+                                {/* <span className="labelWithInfo">
                                     <label>Tuition Amount</label>
                                     <span className="infoSpan">
                                         <img src={props.info_icon} alt="" />
                                         <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                     </span>
-                                </span>
+                                </span> */}
+                                <label className="labelWithInfo">
+                                      <span className="labelHeading">Tution Amount</span>
+                                        <span className="infoSpan">
+                                            <img src={info_icon} alt="" />
+                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                        </span>
+                                    </label>
                                 <input type="number" placeholder="149" class="editableInput numberType" value="149"/>
                             </div>
 
                             <div className="formsection gap">
                                 
-                                <span className="leftSecTransaction">
+                                <div className="leftSecTransaction">
+                                    <label className="labelWithInfo">
+                                      <span className="labelHeading">First Billing Date</span>
+                                        <span className="infoSpan">
+                                            <img src={props.info_icon} alt="" />
+                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                        </span>
+                                    </label>
+                                    <input type="date" placeholder="mm/dd/yyyy" onChange={props.firstBillingDateHandel}  class="editableInput" value={props.firstBillingDate} />
+                                </div>
+                                <div className="rightSecTransaction">
 
-                                    <span className="labelWithInfo">
-                                        <label>First Billing Date</label>
+                                <label className="labelWithInfo">
+                                      <span className="labelHeading">Program Start Date</span>
                                         <span className="infoSpan">
                                             <img src={info_icon} alt="" />
                                             <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                         </span>
-                                    </span>
-                                    <input type="date" placeholder="mm/dd/yyyy" onChange={props.firstBillingDateHandel}  class="editableInput" value={props.firstBillingDate} />
-                                </span>
-                                <span className="rightSecTransaction">
-
-                                <span className="labelWithInfo">
-                                    <label>Program Start Date</label>
-                                    <span className="infoSpan">
-                                        <img src={info_icon} alt="" />
-                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                    </span>
-                                </span>
+                                    </label>
                                 <input type="date" placeholder="mm/dd/yyyy" onChange={props.programStartDateHandel}  class="editableInput" value={props.programStartDate} />
-                                </span>
+                                </div>
                             </div>
 
 
@@ -199,6 +221,8 @@ const ProgramTransaction = (props) => {
                                 </span>
                               </span>
                             </div>
+
+                           
 
                             <div className="formsection gap autoRenew">
                                 <div className="autoRenewDate">
@@ -255,68 +279,68 @@ const ProgramTransaction = (props) => {
                                       <button className="addNewDownpayment" onClick={props.addDownpaymentFn}>+ Add</button>
                                       <div className="transaction_form products forDownpayment">
                                         <div className="formsection gap">
-                                            <span className="labelWithInfo">
-                                                <label>Select Category</label>
-                                                <span className="infoSpan">
-                                                    <img src={info_icon} alt="" />
-                                                    <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                                </span>
-                                            </span>
+                                        <label className="labelWithInfo">
+                                            <span className="labelHeading">Select Category</span>
+                                              <span className="infoSpan">
+                                                  <img src={info_icon} alt="" />
+                                                  <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                              </span>
+                                         </label>
                                             <select className="selectBox">
                                                 <option value="">Select category</option>
                                             </select>
                                         </div>
                                         <div className="formsection gap">                                
-                                            <span className="leftSecTransaction">
-                                                <span className="labelWithInfo">
-                                                    <label>Amount</label>
-                                                    <span className="infoSpan">
-                                                        <img src={info_icon} alt="" />
-                                                        <span class="tooltiptextInfo amount">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                                    </span>
-                                                </span>
+                                            <div className="leftSecTransaction">
+                                            <label className="labelWithInfo">
+                                                <span className="labelHeading">Amount</span>
+                                                  <span className="infoSpan">
+                                                      <img src={info_icon} alt="" />
+                                                      <span class="tooltiptextInfo amount">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                  </span>
+                                            </label>
                                                 <input type="number" placeholder="149" class="editableInput numberType" value="149"/>
-                                            </span>
-                                            <span className="rightSecTransaction">
+                                            </div>
+                                            <div className="rightSecTransaction">
 
-                                            <span className="labelWithInfo">
-                                                <label>Payment Date</label>
-                                                <span className="infoSpan">
-                                                    <img src={props.info_icon} alt="" />
-                                                    <span class="tooltiptextInfo paymentDate">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                            <label className="labelWithInfo">
+                                                <span className="labelHeading">Payment Date</span>
+                                                  <span className="infoSpan">
+                                                      <img src={info_icon} alt="" />
+                                                      <span class="tooltiptextInfo paymentDate">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
-                                            </span>
+                                            </label>
                                               <input type="date" placeholder="mm/dd/yyyy" onChange={props.paymentDateHandel1}  class="editableInput" value={props.paymentDate1} />
 
-                                            </span>
+                                            </div>
                                         </div>
                                         <div className="formsection gap">
                                 
-                                          <span className="leftSecTransaction">
-                                              <span className="labelWithInfo">
-                                                  <label>Payment Type</label>
+                                          <div className="leftSecTransaction">
+                                            <label className="labelWithInfo">
+                                                <span className="labelHeading">Payment Type</span>
                                                   <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
                                                       <span class="tooltiptextInfo paymentType">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                                  </span>
-                                              </span>
+                                                </span>
+                                            </label>
                                               <select className="selectBox">
                                                   <option value="">Recurring</option>
                                               </select>
-                                          </span>
-                                          <span className="rightSecTransaction">
+                                          </div>
+                                          <div className="rightSecTransaction">
 
-                                          <span className="labelWithInfo">
-                                              <label>Payment Status</label>
-                                              <span className="infoSpan">
-                                                  <img src={info_icon} alt="" />
-                                                  <span class="tooltiptextInfo paymentStatus">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                              </span>
-                                          </span>
+                                          <label className="labelWithInfo">
+                                                <span className="labelHeading">Payment Status</span>
+                                                  <span className="infoSpan">
+                                                      <img src={info_icon} alt="" />
+                                                      <span class="tooltiptextInfo paymentStatus">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                </span>
+                                            </label>
                                               <select className="selectBox">
                                                   <option value="">Unpaid</option>
                                               </select>
-                                          </span>
+                                          </div>
                                         </div>
                                       </div>
                                      </form>
@@ -329,67 +353,67 @@ const ProgramTransaction = (props) => {
                                       <button className="delNewDownpayment" onClick={props.delDownpaymentFn}><img src={deleteBtn} alt="" /> Delete</button>
                                       <div className="transaction_form products forDownpayment">
                                         <div className="formsection gap">
-                                            <span className="labelWithInfo">
-                                                <label>Select Category</label>
-                                                <span className="infoSpan">
-                                                    <img src={info_icon} alt="" />
-                                                    <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                        <label className="labelWithInfo">
+                                                <span className="labelHeading">Select Category</span>
+                                                  <span className="infoSpan">
+                                                      <img src={info_icon} alt="" />
+                                                      <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
-                                            </span>
+                                            </label>
                                             <select className="selectBox" onChange={props.choseCatHandel}>
                                                 <option value="">Select category</option>
                                             </select>
                                         </div>
                                         <div className="formsection gap">                                
-                                            <span className="leftSecTransaction">
-                                                <span className="labelWithInfo">
-                                                    <label>Amount</label>
-                                                    <span className="infoSpan">
-                                                        <img src={info_icon} alt="" />
-                                                        <span class="tooltiptextInfo amount">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                                    </span>
+                                            <div className="leftSecTransaction">
+                                            <label className="labelWithInfo">
+                                                <span className="labelHeading">Amount</span>
+                                                  <span className="infoSpan">
+                                                      <img src={info_icon} alt="" />
+                                                      <span class="tooltiptextInfo amount">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
+                                            </label>
                                                 <input type="number" placeholder="149" class="editableInput numberType" value="149"/>
-                                            </span>
-                                            <span className="rightSecTransaction">
+                                            </div>
+                                            <div className="rightSecTransaction">
 
-                                            <span className="labelWithInfo">
-                                                <label>Payment Date</label>
-                                                <span className="infoSpan">
-                                                    <img src={info_icon} alt="" />
-                                                    <span class="tooltiptextInfo paymentDate">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                            <label className="labelWithInfo">
+                                                <span className="labelHeading">Payment Date</span>
+                                                  <span className="infoSpan">
+                                                      <img src={info_icon} alt="" />
+                                                      <span class="tooltiptextInfo paymentDate">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
-                                            </span>
+                                            </label>
                                               <input type="date" placeholder="mm/dd/yyyy" onChange={props.paymentDateHandel} class="editableInput" value={props.paymentDate} />
-                                            </span>
+                                            </div>
                                         </div>
                                         <div className="formsection gap">
                                 
-                                          <span className="leftSecTransaction">
-                                              <span className="labelWithInfo">
-                                                  <label>Payment Type</label>
+                                          <div className="leftSecTransaction">
+                                          <label className="labelWithInfo">
+                                                <span className="labelHeading">Payment Type</span>
                                                   <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
                                                       <span class="tooltiptextInfo paymentType">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                                  </span>
-                                              </span>
+                                                </span>
+                                            </label>
                                               <select className="selectBox">
                                                   <option value="">Recurring</option>
                                               </select>
-                                          </span>
-                                          <span className="rightSecTransaction">
+                                          </div>
+                                          <div className="rightSecTransaction">
 
-                                          <span className="labelWithInfo">
-                                              <label>Payment Status</label>
-                                              <span className="infoSpan">
-                                                  <img src={info_icon} alt="" />
-                                                  <span class="tooltiptextInfo paymentStatus">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                              </span>
-                                          </span>
+                                          <label className="labelWithInfo">
+                                                <span className="labelHeading">Payment Status</span>
+                                                  <span className="infoSpan">
+                                                      <img src={info_icon} alt="" />
+                                                      <span class="tooltiptextInfo paymentStatus">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                </span>
+                                            </label>
                                               <select className="selectBox">
                                                   <option value="">Unpaid</option>
                                               </select>
-                                          </span>
+                                          </div>
                                         </div>
                                       </div>
                                      </form>
@@ -409,13 +433,13 @@ const ProgramTransaction = (props) => {
                                   <div className="modalDependent modalAddCourses modalBackdrop">
                                     {isLoader ? <Loader /> : ''}
                                         <div className="slickModalBody">
-                                          <div className="slickModalHeader">
+                                          <div className="slickModalHeader coursesModalHeader">
                                             <button className="topCross" onClick={props.closeCourseModal}><img src={crossTop} alt="" /></button>
                                             <div className="circleForIcon"><img src={modalTopIcon} alt="" /></div>
-                                            <h3>Add a Course</h3>
-                                            <p>Choose a category to add a new course below</p>
+                                            <h3 className="courseModalHeading">Add a Program</h3>
+                                            <p className="courseModalPara">Choose a category to add a new program below</p>
                                           </div>
-                                          <div className="modalForm">
+                                          <div className="modalForm pograms">
                                             <Scrollbars>
                                               <form method="post">
                                                 <div className="formControl">
@@ -426,20 +450,21 @@ const ProgramTransaction = (props) => {
                                                 </div>
 
                                                 <div className="formControl">
-                                                  <label>Enter Course Name</label>
+                                                  <label>Enter Program Name</label>
                                                   <input type="text" placeholder="Ex: v-shape gym vest" name="courseName" />
                                                 </div>
 
                                                 <div className="formControl">
-                                                  <label>Enter Course Description</label>
+                                                  <label>Enter Program Description</label>
                                                   <input type="text" placeholder="Small description here" name="productDesc"/>
                                                 </div>
 
                                                 <div className="formControl">
-                                                  <label>Upload Course Picture</label>
-                                                  <div className="profile">
+                                                  <label>Upload Program Picture</label>
+                                                  <div className="profile uploads">
                                                     <div className="profileUpload">
                                                       <input type="file"  />
+                                                      <span className="uploadText">Upload</span>
                                                     </div>
                                                     <div className="profilePicture">
                                                       <img src={chooseImg} alt="" />
@@ -450,7 +475,14 @@ const ProgramTransaction = (props) => {
                                                 </div>
 
                                                 <div className="formControl">
-                                                  <label>Duration</label>
+                                                  <label className="labelWithInfo">
+                                                    <span className="labelHeading">Duration</span>
+                                                      <span className="infoSpan">
+                                                          <img src={info_icon} alt="" />
+                                                          <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                      </span>
+                                                  </label>
+                                                  {/* <label>Duration</label> */}
                                                   <div className="formLeft">
                                                     <input type="text" name="duration_num" />
                                                   </div>
@@ -464,7 +496,14 @@ const ProgramTransaction = (props) => {
 
                                                 <div className="formControl">
                                                   <div className="formLeft">
-                                                    <label>Payment Type</label>
+                                                  <label className="labelWithInfo">
+                                                    <span className="labelHeading">Payment Type</span>
+                                                      <span className="infoSpan">
+                                                          <img src={info_icon} alt="" />
+                                                          <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                      </span>
+                                                  </label>
+                                                    {/* <label>Payment Type</label> */}
                                                     <select name="paymentType">
                                                       <option>Cash</option>
                                                     </select>
@@ -472,7 +511,14 @@ const ProgramTransaction = (props) => {
 
 
                                                   <div className="formRight">
-                                                    <label>Billing Cycle</label>
+                                                  <label className="labelWithInfo">
+                                                    <span className="labelHeading">Billing Cycle</span>
+                                                      <span className="infoSpan">
+                                                          <img src={info_icon} alt="" />
+                                                          <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                      </span>
+                                                  </label>
+                                                    {/* <label>Billing Cycle</label> */}
                                                     <select name="billingCycle">
                                                       <option value="monthly">Monthly</option>
                                                       <option value="yearly">Yearly</option>
@@ -503,7 +549,7 @@ const ProgramTransaction = (props) => {
                                                     </div>
                                                     Add Sales Tax (10%)</label>
                                                 </div> */}
-                                                <div className="modalbtnHolder">
+                                                <div className="modalbtnHolder saveCourses">
                                                   <button type="submit" name="save"
                                                     className="saveNnewBtn"><span>Update</span><img src={arrow_forward} alt="" /></button>
                                                   <button type="submit" name="saveNew"
@@ -518,7 +564,10 @@ const ProgramTransaction = (props) => {
                                 )}
 
 
-                            <button class={props.courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={props.buyCourse}>Buy <img src={aaroww} alt="" /></button>
+                            {/* <button class={props.courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={props.buyCourse}>Buy <img src={aaroww} alt="" /></button> */}
+                        </div>
+                        <div className="continueBuy">
+                          <button class="saveNnewBtn">Continue to Buy <img src={aaroww} alt="" /></button>
                         </div>
                     </form>
     );

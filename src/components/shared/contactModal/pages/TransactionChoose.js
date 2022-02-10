@@ -312,6 +312,13 @@ const TransactionChoose = (props) => {
       });
     };
 
+
+
+    // const toggleContactListFn = (e) => {
+    //   e.preventDefault();
+    //   setToggleContactList(true);
+    // }
+
     return (
         <>
             <div className="contactTabsInner">
@@ -335,7 +342,7 @@ const TransactionChoose = (props) => {
                             /><span></span>
                         </div> Product
                     </label>
-                    <label>
+                    <label> 
                         <div class="circleRadio">
                             <input type="radio"
                                 name="transactionType"
@@ -351,7 +358,7 @@ const TransactionChoose = (props) => {
                         <div className="formMsg success">{successMsg}</div>
                     }
                     {errorMsg &&
-                        <div className="formMsg error">{errorMsg}</div>
+                       {/*  <div className="formMsg error">{errorMsg}</div>*/}
                     }
                     <ProductTransaction
                         chosePosCatHandel={chosePosCatHandel}
@@ -386,7 +393,7 @@ const TransactionChoose = (props) => {
                         <div className="formMsg success">{successMsg}</div>
                     }
                     {errorMsg &&
-                        <div className="formMsg error">{errorMsg}</div>
+                        <div className=""></div>
                     }
                     <ProgramTransaction
                         toggleContactList={toggleContactList}
