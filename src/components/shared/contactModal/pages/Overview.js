@@ -413,6 +413,8 @@ const Overview = (props) => {
         if (isError) {
             setIsLoader(false);
             setFormErrorMsg(formErrorsCopy);
+            const body = document.querySelector('#scrollDiv');
+            body.scrollTo(0,0)
             setTimeout(() => setFormErrorMsg({
                 email: "",
                 phone: "",
@@ -577,7 +579,7 @@ const Overview = (props) => {
     }, [successMsg, errorMsg]);
 
     return (
-        <div className={formScrollStatus ? "contactModalTab expanded" : "contactModalTab"} onScroll={formScroll}>
+        <div className={formScrollStatus ? "contactModalTab expanded" : "contactModalTab"} id="scrollDiv" onScroll={formScroll}>
             {successMsg &&
                 <div className="contactOverview">
                 <SuccessAlert message={successMsg}></SuccessAlert>
