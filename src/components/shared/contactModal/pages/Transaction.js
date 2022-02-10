@@ -241,127 +241,175 @@ const Transaction = (props) => {
           </ul>
         </div>
 
-
-        <div className="transactionListing">
-          <div className="row head">
-            <div className="cell">Particulars</div>
-            <div className="cell">Amount</div>
-            <div className="cell">Transaction ID</div>
-            <div className="cell">&nbsp;</div>
-          </div>
-          <div className="row success">
-            <div className="cell">
-              <div className="d-flex">
-                <div className="iconCont">
-                  <span>
-                    <img src={icon_trans} alt="" />
-                  </span>
-                    <span className="ifDependent">
-                      <img src={wwConnect} alt="" />
+        <div className={activeTab == 0 ? "listTab active" : "listTab"}>
+          <div className="transactionListing">
+            <div className="row head">
+              <div className="cell">Particulars</div>
+              <div className="cell">Amount</div>
+              <div className="cell">Transaction ID</div>
+              <div className="cell">&nbsp;</div>
+              <div className="cell">&nbsp;</div>
+            </div>
+            <div className="row due">
+              <div className="cell">
+                <div className="d-flex">
+                  <div className="iconCont">
+                    <span>
+                      <img src={icon_trans} alt="" />
                     </span>
-                </div>
-                <div className="textCont">
-                  <div className="status">
-                    success
                   </div>
-                  <div>
-                    <span>Course:</span> “Sample course name”
-                  </div>
-                    <a href="" className="dependent">
-                      <span>
-                        <img src={wwConnect2} alt="" />
-                      </span>
-                      Emily Martyns
-                    </a>
-                </div>
-              </div>
-            </div>
-            <div className="cell">
-              <span className="amount" >
-                $100
-              </span>
-            </div>
-            <div className="cell">
-              <span className="transID">
-                dfg41456df1567sdtfg24g
-              </span>
-            </div>
-            <div className="cell">
-              <span className="time">
-                18 m ago
-              </span>
-            </div>
-          </div>
-          <div className="row fail">
-            <div className="cell">
-              <div className="d-flex">
-                <div className="iconCont">
-                  <span>
-                    <img src={icon_trans} alt="" />
-                  </span>
-                </div>
-                <div className="textCont">
-                  <div className="status">
-                    Fail
-                  </div>
-                  <div>
-                    <span>Course:</span> “Sample course name”
+                  <div className="textCont">
+                    <div className="status">
+                      Due
+                    </div>
+                    <div>
+                      <span>Course:</span> “Sample course name”
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="cell">
-              <span className="amount" >
-                $100
-              </span>
-            </div>
-            <div className="cell">
-              <span className="transID">
-                dfg41456df1567sdtfg24g
-              </span>
-            </div>
-            <div className="cell">
-              <span className="time">
-                18 m ago
-              </span>
-            </div>
-          </div>
-          <div className="row due">
-            <div className="cell">
-              <div className="d-flex">
-                <div className="iconCont">
-                  <span>
-                    <img src={icon_trans} alt="" />
-                  </span>
-                </div>
-                <div className="textCont">
-                  <div className="status">
-                    Due
-                  </div>
-                  <div>
-                    <span>Course:</span> “Sample course name”
-                  </div>
+              <div className="cell">
+                <span className="amount" >
+                  $100
+                </span>
+              </div>
+              <div className="cell">
+                <span className="transID">
+                  dfg41456df1567sdtfg24g
+                </span>
+              </div>
+              <div className="cell">
+                <span className="time">
+                  18 m ago
+                </span>
+              </div>
+              <div className="cell">
+                <div className="moreOpt">
+                  <button type="button" className="moreOptBtn"></button>
+                  <div className="optDropdown">
+                    <button type="button" className="complete">Complete Transactions</button>  
+                    <button type="button" className="history">History</button>
+                  </div>  
                 </div>
               </div>
-            </div>
-            <div className="cell">
-              <span className="amount" >
-                $100
-              </span>
-            </div>
-            <div className="cell">
-              <span className="transID">
-                dfg41456df1567sdtfg24g
-              </span>
-            </div>
-            <div className="cell">
-              <span className="time">
-                18 m ago
-              </span>
             </div>
           </div>
         </div>
-        
+        <div className={activeTab == 1 ? "listTab active" : "listTab"}>
+          <div className="transactionListing">
+            <div className="row head">
+              <div className="cell">Particulars</div>
+              <div className="cell">Amount</div>
+              <div className="cell">Transaction ID</div>
+              <div className="cell">&nbsp;</div>
+            </div>
+            <div className="row fail">
+              <div className="cell">
+                <div className="d-flex">
+                  <div className="iconCont">
+                    <span>
+                      <img src={icon_trans} alt="" />
+                    </span>
+                  </div>
+                  <div className="textCont">
+                    <div className="status">
+                      Fail
+                    </div>
+                    <div>
+                      <span>Course:</span> “Sample course name”
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="cell">
+                <span className="amount" >
+                  $100
+                </span>
+              </div>
+              <div className="cell">
+                <span className="transID">
+                  dfg41456df1567sdtfg24g
+                </span>
+              </div>
+              <div className="cell">
+                <span className="time">
+                  18 m ago
+                </span>
+              </div>
+              <div className="cell">
+                <div className="moreOpt">
+                  <button type="button" className="moreOptBtn"></button>
+                  <div className="optDropdown">
+                    <button type="button" className="retry">Retry</button>  
+                    <button type="button" className="history">History</button>
+                  </div>  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className={activeTab == 2 ? "listTab active" : "listTab"}>
+          <div className="transactionListing">
+            <div className="row head">
+              <div className="cell">Particulars</div>
+              <div className="cell">Amount</div>
+              <div className="cell">Transaction ID</div>
+              <div className="cell">&nbsp;</div>
+            </div>
+            <div className="row success">
+              <div className="cell">
+                <div className="d-flex">
+                  <div className="iconCont">
+                    <span>
+                      <img src={icon_trans} alt="" />
+                    </span>
+                      <span className="ifDependent">
+                        <img src={wwConnect} alt="" />
+                      </span>
+                  </div>
+                  <div className="textCont">
+                    <div className="status">
+                      success
+                    </div>
+                    <div>
+                      <span>Course:</span> “Sample course name”
+                    </div>
+                      <a href="" className="dependent">
+                        <span>
+                          <img src={wwConnect2} alt="" />
+                        </span>
+                        Emily Martyns
+                      </a>
+                  </div>
+                </div>
+              </div>
+              <div className="cell">
+                <span className="amount" >
+                  $100
+                </span>
+              </div>
+              <div className="cell">
+                <span className="transID">
+                  dfg41456df1567sdtfg24g
+                </span>
+              </div>
+              <div className="cell">
+                <span className="time">
+                  18 m ago
+                </span>
+              </div>
+              <div className="cell">
+                <div className="moreOpt">
+                  <button type="button" className="moreOptBtn"></button>
+                  <div className="optDropdown">
+                    <button type="button" className="cancelPayment">Cancel</button>
+                  </div>  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </>
   );

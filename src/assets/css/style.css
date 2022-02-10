@@ -9324,3 +9324,80 @@ button.addOverviewCustomFiel {
   color: var(--darkBlue);
   border-color: #ED707A;
 }
+
+.listTab {
+  display: none;
+}
+.listTab.active {
+  display: block;
+}
+
+.moreOpt {
+  position: relative;
+}
+.moreOptBtn {
+  width: 20px;
+  height: 20px;
+  background: transparent url("../images/info_3dot_icon_blue.svg") no-repeat center;
+  border: none;
+  cursor: pointer;
+}
+.optDropdown {
+  background: #fff;
+  border-radius: 5px;
+  position: absolute;
+  top: 26px;
+  right: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+.optDropdown button {
+  width: 100%;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: #9BAEBC;
+  height: 35px;
+  padding: 0 15px 0 38px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: left 13px center;
+}
+.optDropdown button:first-child {
+  border-radius: 5px 5px 0 0;
+}
+.optDropdown button:last-child {
+  border-radius: 0 0 5px 5px;
+}
+.optDropdown button:hover {
+  background-color: #E2E7EB;
+  color: var(--darkBlue);
+}
+.optDropdown button.complete {
+  width: 207px;
+  background-image: url("../images/makePayment_icon.svg");
+  text-align: left;
+}
+.optDropdown button.complete:hover {
+  background-image: url("../images/makePayment_icon_dark.svg");
+}
+.optDropdown button.history {
+  background-image: url("../images/history_icon.svg");
+  text-align: left;
+}
+.optDropdown button.history:hover {
+  background-image: url("../images/history_icon_dark.svg");
+}
+.optDropdown button.retry {
+  background-image: url("../images/retry_icon.svg");
+  text-align: left;
+}
+.optDropdown button.retry:hover {
+  background-image: url("../images/retry_icon_dark.svg");
+}
+.optDropdown button.cancelPayment {
+  background-image: url("../images/cancelPayment_icon.svg");
+  text-align: left;
+}
+.optDropdown button.cancelPayment:hover {
+  background-image: url("../images/cancelPayment_icon_dark.svg");
+}
