@@ -9009,6 +9009,33 @@ li.listHeading > div.sortOff:after {
   top: 31.5%;
 }
 
+.accoRowHead.customFieldDetails {
+  display: flex;
+  align-content: center;
+  padding-top: 5px;
+}
+
+/*.accoRowHead.customFieldDetails .accoToggler {*/
+/*  margin-left: auto;*/
+/*}*/
+
+.accoRowHead.customFieldDetails .creatUserBtn {
+  margin-left: auto;
+  margin-right: 10px;
+  padding: 0 8px 0 5px;
+  height: 33px;
+}
+
+.accoRowHead.customFieldDetails .creatUserBtn span {
+  font-size: 12px;
+}
+
+.accoRowHead.customFieldDetails .creatUserBtn .plusIcon {
+  margin-right: 5px;
+}
+.accoToggler.closedCustomFields {
+  margin-left: auto;
+}
 /* .....................gym details fixes...................... */
 
 .btn-group{

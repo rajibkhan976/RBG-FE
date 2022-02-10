@@ -82,7 +82,6 @@ const Overview = (props) => {
         lName: ""
     });
 
-
     const fetchCountry = async () => {
         let conntryResponse = await ContactService.fetchCountry();
         setPhoneCountryCode(conntryResponse);
@@ -172,10 +171,12 @@ const Overview = (props) => {
     const handelBasicinfoFname = (e) => {
         e.preventDefault();
         setBasicinfoFname(e.target.value);
+        setFormErrorMsg(prevState => ({...prevState, fName: false}));
     }
 
     const handelBasicinfoLname = (e) => {
         setBasicinfoLname(e.target.value);
+        setFormErrorMsg(prevState => ({...prevState, lName: false}));
     }
 
     const handelBasicinfoDob = (e) => {
@@ -184,6 +185,7 @@ const Overview = (props) => {
 
     const handelBasicinfoEmail = (event) => {
         setBasicinfoEmail(event.target.value);
+        setFormErrorMsg(prevState => ({...prevState, email: false}));
     };
 
     const handelBasicinfoCompany = (e) => {
@@ -237,12 +239,14 @@ const Overview = (props) => {
             setBasicinfoMobilePhone(prevState => ({...prevState, countryCode: value}));
         }
         if (name === "number") {
+            setFormErrorMsg(prevState => ({...prevState, mobile: false}));
             let pattern = new RegExp(/^[0-9\b]+$/);
             if (!pattern.test(event.target.value)) {
                 setBasicinfoMobilePhone(prevState => ({...prevState, [name]: ""}));
                 return false;
             } else {
                 setBasicinfoMobilePhone(prevState => ({...prevState, [name]: value}));
+                setBasicinfoMobilePhone(prevState => ({...prevState, full_number: basicinfoMobilePhone.dailCode + value}));
             }
         }
     };
@@ -256,12 +260,14 @@ const Overview = (props) => {
             setBasicinfoPhone(prevState => ({...prevState, countryCode: value}));
         }
         if (name === "number") {
+            setFormErrorMsg(prevState => ({...prevState, phone: ''}));
             let pattern = new RegExp(/^[0-9\b]+$/);
             if (!pattern.test(event.target.value)) {
                 setBasicinfoPhone(prevState => ({...prevState, number: ""}));
                 return false;
             } else {
                 setBasicinfoPhone(prevState => ({...prevState, number: value}));
+                setBasicinfoPhone(prevState => ({...prevState, full_number: basicinfoPhone.dailCode + value}));
             }
         }
     };
@@ -276,12 +282,14 @@ const Overview = (props) => {
             setBasicinfoMomPhone(prevState => ({...prevState, countryCode: value}));
         }
         if (name === "number") {
+            setFormErrorMsg(prevState => ({...prevState, momPhone: ''}));
             let pattern = new RegExp(/^[0-9\b]+$/);
             if (!pattern.test(event.target.value)) {
                 setBasicinfoDadPhone(prevState => ({...prevState, number: ""}));
                 return false;
             } else {
                 setBasicinfoMomPhone(prevState => ({...prevState, number: value}));
+                setBasicinfoMomPhone(prevState => ({...prevState, full_number: basicinfoMomPhone.dailCode + value}));
             }
         }
     };
@@ -295,12 +303,14 @@ const Overview = (props) => {
             setBasicinfoDadPhone(prevState => ({...prevState, countryCode: value}));
         }
         if (name === "number") {
+            setFormErrorMsg(prevState => ({...prevState, dadPhone: ''}));
             let pattern = new RegExp(/^[0-9\b]+$/);
             if (!pattern.test(event.target.value)) {
                 setBasicinfoDadPhone(prevState => ({...prevState, number: ""}));
                 return false;
             } else {
                 setBasicinfoDadPhone(prevState => ({...prevState, [name]: value}));
+                setBasicinfoDadPhone(prevState => ({...prevState, full_number: basicinfoDadPnone.dailCode + value}));
             }
         }
     };
@@ -355,6 +365,7 @@ const Overview = (props) => {
             }
         }
         if (isError) {
+            setIsLoader(false);
             setFormErrorMsg(formErrorsCopy);
             setTimeout(() => setFormErrorMsg({
                 email: "",
@@ -385,30 +396,120 @@ const Overview = (props) => {
                 gender: basicinfoGender ? basicinfoGender : ""
             }
             let contactIdNew = contact ? contact._id : 0;
-            let updateContact = await ContactService.updateContact(payload, contactIdNew);
-            setIsLoader(false);
-            if (updateContact) {
-                if (contactIdNew == 0) {
-                    setSuccessMsg('Contact saved successfully.');
-                    dispatch({
-                        type: actionTypes.CONTACTS_MODAL_ID,
-                        contact_modal_id: '',
-                    });
-                    setTimeout(() => {
+            try {
+                let updateContact = await ContactService.updateContact(payload, contactIdNew);
+                console.log(updateContact)
+                if (updateContact) {
+                    if (contactIdNew == 0) {
+                        setSuccessMsg('Contact saved successfully.');
                         dispatch({
                             type: actionTypes.CONTACTS_MODAL_ID,
-                            contact_modal_id: updateContact.data.insertedId,
+                            contact_modal_id: '',
                         });
-                    }, 300);
+                        setTimeout(() => {
+                            dispatch({
+                                type: actionTypes.CONTACTS_MODAL_ID,
+                                contact_modal_id: updateContact.data.insertedId,
+                            });
+                        }, 300);
+                    } else {
+                        setSuccessMsg('Contact updated successfully.');
+                        props.getContactDetails(contactIdNew);
+                        getContact(contactIdNew);
+                    }
                 } else {
-                    setSuccessMsg('Contact updated successfully.');
-                    props.getContactDetails(contactIdNew);
-                    getContact(contactIdNew);
+                    setErrorMsg('Something went wrong.')
                 }
-            } else {
-                setErrorMsg('Something went wrong.')
+            } catch (e) {
+                setErrorMsg(e.message);
             }
+            setIsLoader(false);
         }
+    }
+    const verify = async (number) => {
+        setIsLoader(true);
+        let verification =  await ContactService.verifyNumber(number);
+        setIsLoader(false);
+        return verification;
+    }
+    const verifyNumber = async (e,field) => {
+      e.preventDefault();
+      switch (field) {
+          case 'phone':
+              if (basicinfoPhone.number) {
+                  let payload = {
+                      isPrefixGiven: true,
+                      prefix: basicinfoPhone.dailCode,
+                      number: basicinfoPhone.number
+                  }
+                  let result = await verify(payload);
+                  if (result.success) {
+                      setBasicinfoPhone(result.data);
+                      setSuccessMsg(result.message);
+                  } else {
+                      setFormErrorMsg(prevState => ({...prevState, phone: result.message}));
+                  }
+              } else {
+                  setFormErrorMsg(prevState => ({...prevState, phone: 'Number not given.'}));
+              }
+              break;
+          case 'mobile':
+              if (basicinfoMobilePhone.number) {
+                  let payload = {
+                      isPrefixGiven: true,
+                      prefix: basicinfoMobilePhone.dailCode,
+                      number: basicinfoMobilePhone.number
+                  }
+                  let result = await verify(payload);
+                  if (result.success) {
+                      setBasicinfoMobilePhone(result.data);
+                      setSuccessMsg(result.message);
+                  } else {
+                      setFormErrorMsg(prevState => ({...prevState, mobile: result.message}));
+                  }
+              } else {
+                  setFormErrorMsg(prevState => ({...prevState, mobile: 'Number not given.'}));
+              }
+              break;
+          case 'momPhone':
+              if (basicinfoMomPhone.number) {
+                  let payload = {
+                      isPrefixGiven: true,
+                      prefix: basicinfoMomPhone.dailCode,
+                      number: basicinfoMomPhone.number
+                  }
+                  let result = await verify(payload);
+                  if (result.success) {
+                      setBasicinfoMomPhone(result.data);
+                      setSuccessMsg(result.message);
+                  } else {
+                      setFormErrorMsg(prevState => ({...prevState, momPhone: result.message}));
+                  }
+              } else {
+                  setFormErrorMsg(prevState => ({...prevState, momPhone: 'Number not given.'}));
+              }
+              break;
+          case 'dadPhone':
+              if (basicinfoDadPnone.number) {
+                  let payload = {
+                      isPrefixGiven: true,
+                      prefix: basicinfoDadPnone.dailCode,
+                      number: basicinfoDadPnone.number
+                  }
+                  let result = await verify(payload);
+                  if (result.success) {
+                      setBasicinfoDadPhone(result.data);
+                      setSuccessMsg(result.message);
+                  } else {
+                      setFormErrorMsg(prevState => ({...prevState, dadPhone: result.message}));
+                  }
+              } else {
+                  setFormErrorMsg(prevState => ({...prevState, dadPhone: 'Number not given.'}));
+              }
+              break;
+          default:
+              break;
+      }
     }
     useEffect(() => {
         if (successMsg) setTimeout(() => {
@@ -527,6 +628,7 @@ const Overview = (props) => {
                                     <input type="phone" className="cmnFieldStyle" name="number"
                                            placeholder="Eg. (555) 555-1234" value={basicinfoPhone.number}
                                            onChange={handelBasicinfoPhone}/>
+                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'phone')}>Verify</button>
                                     {formErrorMsg.phone ? <p className="errorMsg">{formErrorMsg.phone}</p> : ""}
                                 </div>
                             </div>
@@ -548,6 +650,7 @@ const Overview = (props) => {
                                     <input type="phone" className="cmnFieldStyle" name="number"
                                            placeholder="Eg. (555) 555-1234" value={basicinfoMobilePhone.number}
                                            onChange={handelBasicinfoMobilePhone}/>
+                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'mobile')}>Verify</button>
                                     {formErrorMsg.mobile ? <p className="errorMsg">{formErrorMsg.mobile}</p> : ""}
                                 </div>
                             </div>
@@ -659,6 +762,7 @@ const Overview = (props) => {
                                     <input type="phone" className="cmnFieldStyle" name="number"
                                            placeholder="Eg. (555) 555-1234" defaultValue={basicinfoMomPhone.number}
                                            onChange={handelBasicinfoMomPhone}/>
+                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'momPhone')}>Verify</button>
                                     {formErrorMsg.momPhone ? <p className="errorMsg">{formErrorMsg.momPhone}</p> : ""}
                                 </div>
                             </div>
@@ -692,6 +796,7 @@ const Overview = (props) => {
                                     <input type="phone" className="cmnFieldStyle" name="number"
                                            placeholder="Eg. (555) 555-1234" defaultValue={basicinfoDadPnone.number}
                                            onChange={handelBasicinfoDadPhone}/>
+                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'dadPhone')}>Verify</button>
                                     {formErrorMsg.dadPhone ? <p className="errorMsg">{formErrorMsg.dadPhone}</p> : ""}
                                 </div>
                             </div>
@@ -809,35 +914,6 @@ const Overview = (props) => {
                         </div>
                     </div>
                     <div className="overviewForm cmnForm">
-                        {/* <div className="cmnFormHead">
-                        <h3>Custom Fields</h3>
-                    </div>
-                    <div className="cmnFormRow">
-                        <div className="cmnFormCol-3">
-                            <div className="overviewCustomFieldBox cmnFieldStyle">
-                                <span>Secondary Address</span>
-                                <button className="addOverviewCustomFiel">
-                                    <img src={plus_icon} alt="" />
-                                </button>
-                            </div>
-                        </div>
-                        <div className="cmnFormCol-3">
-                            <div className="overviewCustomFieldBox cmnFieldStyle">
-                                <span>Business Reg. No.</span>
-                                <button className="addOverviewCustomFiel">
-                                    <img src={plus_icon} alt="" />
-                                </button>
-                            </div>
-                        </div>
-                        <div className="cmnFormCol-3">
-                            <div className="overviewCustomFieldBox cmnFieldStyle">
-                                <span>Custom Field 3</span>
-                                <button className="addOverviewCustomFiel">
-                                    <img src={plus_icon} alt="" />
-                                </button>
-                            </div>
-                        </div>
-                    </div> */}
                         <div className="cmnFormRow">
                             <div className="formActBtnWrap">
                                 <button className="saveNnewBtn saveOverview" type="button"

@@ -117,5 +117,8 @@ module.exports = {
     timezoneLatLngUrl: 'https://vip.timezonedb.com/v2.1/get-time-zone?key=QH5NO9YQKP30&by=position',
 
     //Dependents
-    dependentUrl: "https://6raxjy89xi.execute-api.us-east-1.amazonaws.com/dev/contact/dependent/"
+    dependentUrl: "https://6raxjy89xi.execute-api.us-east-1.amazonaws.com/dev/contact/dependent/",
+
+    //numberVerifyUrl
+    numberVerifyUrl: "https://04w6eb9h7e.execute-api.us-east-1.amazonaws.com/dev/contact/validate-number"
 }  

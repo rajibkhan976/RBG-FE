@@ -90,8 +90,7 @@ export const ContactService = {
                 throw new Error("There is an error while fetching contact. Please contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
-                console.log(e.response.data.message);
+            if(!typeof e.data === undefined) {
                 throw new Error(e.response.data.message);
             } else {
                 throw new Error("Please contact support.");
@@ -108,10 +107,8 @@ export const ContactService = {
                 throw new Error("There is an error updating contact. Please contact support");
             }
         } catch (e) {
-            console.log('error in update contact'. e);
-            if(!typeof e.data === 'undefined') {
-                console.log(e.response.data.message);
-                throw new Error(e.response.data.message);
+            if(e.response && e.response.data !== undefined) {
+                throw new Error(e.response.data);
             } else {
                 throw new Error("Please contact support.");
             }
@@ -128,6 +125,23 @@ export const ContactService = {
             }
         } catch (e) {
             console.log('error in upload contact pic', e);
+            if(!typeof e.data === 'undefined') {
+                throw new Error(e.response.data.message);
+            } else {
+                throw new Error("Please contact support.");
+            }
+        }
+    },
+    verifyNumber: async (payload) => {
+        try {
+            let url = config.numberVerifyUrl
+            const result = await axios.post(url, payload, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error in verify number. Please contact support");
+            }
+        } catch (e) {
             if(!typeof e.data === 'undefined') {
                 throw new Error(e.response.data.message);
             } else {

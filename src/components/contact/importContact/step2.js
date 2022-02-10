@@ -4,11 +4,15 @@ import arrowDown from "../../../assets/images/arrowDown.svg";
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import {ImportContactServices} from "../../../services/contact/importContact";
 import Loader from "../../shared/Loader";
+import plus_icon from "../../../assets/images/plus_icon.svg";
+import CustomizationsAddField from "../../setup/customization/customizationsAddField";
+import {ErrorAlert, SuccessAlert} from "../../shared/messages";
 
 function Step2(props) {
     const [totalRecord, setTotalRecord] = useState(0);
     const [excelHeaders, setExcelHeaders] = useState([]);
     const [openBasicInfo, setOpenBasicInfo] = useState(true);
+    const [customFieldOpenModal, setCustomFieldOpenModal] = useState(false);
     const [openWorkInfo, setOpenWorkInfo] = useState(false);
     const [openPersonalInfo, setOpenPersonalInfo] = useState(false);
     const [openOtherInfo, setOpenOtherInfo] = useState(false);
@@ -109,9 +113,24 @@ function Step2(props) {
     const [tuitionAmount, setTuitionAmount] = useState('');
     const [tuitionAmountError, setTuitionAmountError] = useState(false);
     const [customFields, setCustomFields] = useState([]);
+    const [editedEle, setEditedEle] = useState({});
+    const [successMsg, setSuccessMsg] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
+    const [customFieldsList, setCustomFieldsList] = useState({});
+    const [customFieldsError, setCustomFieldsError] = useState({});
+    const messageDelay = 5000;
     const fetchCustomFields = async () => {
         let cFileds = await ImportContactServices.fetchCustomFields();
         if (cFileds.customFields.length > 0) {
+            let customObjects = {};
+            let customErrorObjects = {};
+            cFileds.customFields.map((custom) => {
+                customObjects[custom.alias] = "";
+                customErrorObjects[custom.alias] = false;
+            })
+            setCustomFieldsList(customObjects);
+            setCustomFieldsError(customErrorObjects);
+            setClickCount(0)
             const rows = cFileds.customFields.reduce(function (rows, key, index) {
                 return (index % 2 == 0 ? rows.push([key])
                     : rows[rows.length-1].push(key)) && rows;
@@ -121,7 +140,6 @@ function Step2(props) {
             setCustomFields([]);
         }
     }
-
     const handleSetp2Submit = async () => {
         const custom = props.getState('custom');
         setPrimaryError(false);
@@ -415,6 +433,14 @@ function Step2(props) {
             } else {
                 key['tuitionAmount'] = tuitionAmount;
             }
+            Object.keys(customFieldsList).map((value) => {
+                if (customFieldsList[value] === "") {
+                    setCustomFieldsError(prevState => ({...prevState, [value]: true}));
+                    errorHere++;
+                } else {
+                    key[value] = customFieldsList[value];
+                }
+            });
             setUploadedKey(key);
             setError(errorHere);
             if (errorHere === 0) {
@@ -422,7 +448,8 @@ function Step2(props) {
                     file: custom.file,
                     duplicate: custom.duplicate,
                     primaryField: custom.primaryField,
-                    key: uploadedKey
+                    key: uploadedKey,
+                    importType: importType
                 }
                 setIsLoader(true);
                 let importResponse = await ImportContactServices.importContact(JSON.stringify(payload));
@@ -458,7 +485,8 @@ function Step2(props) {
                     file: custom.file,
                     duplicate: custom.duplicate,
                     primaryField: custom.primaryField,
-                    key: uploadedKey
+                    key: uploadedKey,
+                    importType: importType
                 }
                 setIsLoader(true);
                 let importResponse = await ImportContactServices.importContact(JSON.stringify(payload));
@@ -679,6 +707,27 @@ function Step2(props) {
         setTuitionAmount(event.target.value);
         setTuitionAmountError(false);
     }
+    const handlerCustomFieldChange = (event) => {
+        const {name, value} = event.target;
+        setCustomFieldsList(prevState => ({...prevState, [name]: value}));
+        setCustomFieldsError(prevState => ({...prevState, [name]: false}));
+    }
+    const createCustomFields = () => {
+        setCustomFieldOpenModal(true);
+    }
+    const closeCustomModal = (param) => {
+        setCustomFieldOpenModal(false);
+        if(param) {
+            fetchCustomFields();
+        }
+    }
+    const createSuccess = (msg) => {
+        setSuccessMsg(msg);
+    }
+
+    const createError= (msg) => {
+        setErrorMsg(msg);
+    }
     useEffect(() => {
         const custom = props.getState('custom');
         setExcelHeaders(custom.headers);
@@ -686,9 +735,19 @@ function Step2(props) {
         setImportType(custom.importType);
         fetchCustomFields();
     }, []);
+    useEffect(() => {
+        if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
+        if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
+    }, [successMsg, errorMsg]);
     return (
         <>
             {isLoader ? <Loader /> : ""}
+            {successMsg &&
+                <SuccessAlert message={successMsg}></SuccessAlert>
+            }
+            {errorMsg &&
+                <ErrorAlert message={errorMsg}></ErrorAlert>
+            }
             <div className="importModalBody">
                 <div className="importStapeList">
                     <ul>
@@ -1072,44 +1131,6 @@ function Step2(props) {
                                 </div>
                             }
                         </div>
-                        {customFields.length ?
-                            <div className={"accoRow " + (!openCustomFields ? 'collapse' : '')}>
-                                <div className="accoRowHead">
-                                    <span className="accoHeadName">Custom Fields</span>
-                                    <button className="accoToggler" onClick={toggleCustomField}></button>
-                                </div>
-                                {
-                                    openCustomFields &&
-                                    <div className="accoRowBody">
-                                        <div className="infoInputs">
-                                            <ul>
-                                                {
-                                                    customFields.map(row => (
-                                                        <li>
-                                                            { row.map(col => (
-                                                                <div className={"formField w-50 " + (contactTypeError ? 'error' : '')}>
-                                                                    <label>{col.fieldName}</label>
-                                                                    <div className="inFormField">
-                                                                        <select name={col.alias} value={contactType}
-                                                                                onChange={handlerContactTypeChange}
-                                                                                style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                                            <option value="">Select a header</option>
-                                                                            {excelHeaders.map(header =>
-                                                                                <option value={header}>{header}</option>
-                                                                            )};
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                            )) }
-                                                        </li>
-                                                    ))
-                                                }
-                                            </ul>
-                                        </div>
-                                    </div>
-                                }
-                            </div> : ""
-                        }
                         {
                             importType === 'contacts' &&
                                 <>
@@ -1374,7 +1395,52 @@ function Step2(props) {
                                     </div>
                                 </>
                         }
-
+                        {customFields.length ?
+                            <div className={"accoRow " + (!openCustomFields ? 'collapse' : '')}>
+                                <div className="accoRowHead customFieldDetails">
+                                    <span className="accoHeadName">Custom Fields</span>
+                                    {openCustomFields &&
+                                        <>
+                                            <button className="creatUserBtn" onClick={createCustomFields}>
+                                                <img className="plusIcon" src={plus_icon} alt=""/>
+                                                <span>Create Custom Field</span>
+                                            </button>
+                                        </>
+                                    }
+                                    <button className={openCustomFields ? "accoToggler openCustomFields": "accoToggler closedCustomFields"} onClick={toggleCustomField}></button>
+                                </div>
+                                {
+                                    openCustomFields &&
+                                    <div className="accoRowBody">
+                                        <div className="infoInputs">
+                                            <ul>
+                                                {
+                                                    customFields.map(row => (
+                                                        <li>
+                                                            { row.map(col => (
+                                                                <div className={"formField w-50 " + (customFieldsError[col.alias] ? 'error' : '')}>
+                                                                    <label>{col.fieldName}</label>
+                                                                    <div className="inFormField">
+                                                                        <select name={col.alias} value={customFieldsList[col.alias]}
+                                                                                onChange={handlerCustomFieldChange}
+                                                                                style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                            <option value="">Select a header</option>
+                                                                            {excelHeaders.map(header =>
+                                                                                <option value={header}>{header}</option>
+                                                                            )};
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            )) }
+                                                        </li>
+                                                    ))
+                                                }
+                                            </ul>
+                                        </div>
+                                    </div>
+                                }
+                            </div> : ""
+                        }
                     </div>
                 </div>
             </div>
@@ -1384,6 +1450,16 @@ function Step2(props) {
                 </button>
                 <p className="stapeIndicator">Step: {props.current} of 3</p>
             </div>
+            {customFieldOpenModal &&
+                <CustomizationsAddField
+                    closeAddCustomModal={(param) => closeCustomModal(param)}
+                    ele={editedEle}
+                    editStatus={false}
+                    savedNew={() => fetchCustomFields ()}
+                    successMessage={(msg) => createSuccess (msg)}
+                    errorMessage={(msg) => createError (msg)}
+                />
+            }
         </>
     );
 }
