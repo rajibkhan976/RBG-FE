@@ -4085,7 +4085,7 @@ li:hover .extraDottedBtn {
 }
 .cmnFormCol-3 {
   float: left;
-  width: 238px;
+  width: 236px;
   margin-right: 18px;
 }
 .cmnFormCol-3:last-child {
@@ -9036,7 +9036,82 @@ li.listHeading > div.sortOff:after {
 .accoToggler.closedCustomFields {
   margin-left: auto;
 }
-/* .....................gym details fixes...................... */
+
+.phoneNumberField.countryCodeField input {
+  width: calc(100% - 171px);
+  border-radius: 5px 0 0 5px;
+}
+
+.verifyNumberButton {
+  box-shadow: none;
+  color: #fff;
+  background: #305671;
+  border: 1px solid #d3d9de;
+  padding: 9.8px 12px;
+  border-radius: 0 5px 5px 0;
+  border-right-width: 0px;
+}
+
+.verifyNumberButton img {
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+button.addOverviewCustomFiel img.plusIcon {
+  width: 15px;
+  padding: 0;
+  margin: 0;
+  vertical-align: middle;
+}
+
+button.addOverviewCustomFiel img.crossIcon {
+  width: 13px;
+  padding: 0;
+  margin: 0;
+  vertical-align: middle;
+}
+.overviewCustomFieldBox.cmnFieldStyle.toggleActive button.addOverviewCustomFiel {
+  border-radius: 0 5px 0 0;
+}
+button.addOverviewCustomFiel {
+  text-align: center;
+  border: none;
+  height: 39.5px;
+}
+
+.extraCustonbox {
+  width: 100%;
+  float: left;
+  background: #fff;
+  border-top: 1px solid #d3d9de;
+  padding: 9px;
+  border-radius: 0 0 5px 5px;
+}
+
+.extraCustonbox input {
+  width: 100%;
+  background: #f6f8fa;
+  border-radius: 5px;
+  border: 1px solid #d3d9de;
+}
+
+.overviewCustomFieldBox.cmnFieldStyle.toggleActive {
+  border-radius: 5px 5px 0 0;
+}
+
+.overviewCustomFieldBox.cmnFieldStyle.toggleInactive {
+  border: none;
+  border-radius: 5px;
+}
+
+.cmnFormCol-3 {
+  border: 1px solid #d3d9de;
+  border-radius: 5px;
+}
+
+.overviewCustomFieldBox.cmnFieldStyle.toggleActive {
+  border: none;
+}/* .....................gym details fixes...................... */
 
 .btn-group{
   width: 100%;

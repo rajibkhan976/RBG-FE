@@ -283,7 +283,7 @@ const ContactModal = (props) => {
                     </div>
                     <div className="tabBarArea">
                         <Steps config={config}>
-                            <Step title="Overview" component={Overview} getContactDetails={getContactDetails}
+                            <Step title="Overview" component={Overview} getContactDetails={getContactDetails} closeContactModal={closeContactModal}
                                 contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
                             <Step title="Attendance" component={Attendance} />
                             <Step title="Appointment" component={Appointment} contactId={props.contactId} />

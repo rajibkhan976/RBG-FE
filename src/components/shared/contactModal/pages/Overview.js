@@ -6,6 +6,11 @@ import Loader from "../../Loader";
 //import plus_icon from "../../../../assets/images/plus_icon.svg";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import {ErrorAlert, SuccessAlert} from "../../messages";
+import plus_icon from "../../../../assets/images/plus_icon.svg";
+import cross_icon from "../../../../assets/images/cross_white.svg";
+import verify_icon from "../../../../assets/images/verifyIcon.svg";
+import {ImportContactServices} from "../../../../services/contact/importContact";
+import arrowDown from "../../../../assets/images/arrowDown.svg";
 
 const Overview = (props) => {
     const [formScrollStatus, setFormScrollStatus] = useState(false);
@@ -29,6 +34,11 @@ const Overview = (props) => {
     const [errorMsg, setErrorMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
     const dispatch = useDispatch();
+    const [customFieldsList, setCustomFieldsList] = useState({});
+    const [customFieldsListNew, setCustomFieldsListNew] = useState({});
+    const [customFieldsError, setCustomFieldsError] = useState({});
+    const [customFields, setCustomFields] = useState([]);
+    const [toggleCustom, setToggleCustom] = useState([]);
     const [basicinfoPhone, setBasicinfoPhone] = useState({
         countryCode: "US",
         dailCode: "+1",
@@ -38,7 +48,8 @@ const Overview = (props) => {
         country: "",
         carrier: "None",
         timezone: "America/New_York",
-        is_valid: false
+        is_valid: false,
+        is_mobile: false
     });
     const [basicinfoMobilePhone, setBasicinfoMobilePhone] = useState({
         countryCode: "US",
@@ -49,7 +60,8 @@ const Overview = (props) => {
         country: "",
         carrier: "None",
         timezone: "America/New_York",
-        is_valid: false
+        is_valid: false,
+        is_mobile: false
     });
     const [basicinfoMomPhone, setBasicinfoMomPhone] = useState({
         countryCode: "US",
@@ -60,7 +72,8 @@ const Overview = (props) => {
         country: "",
         carrier: "None",
         timezone: "America/New_York",
-        is_valid: false
+        is_valid: false,
+        is_mobile: false
     });
     const [basicinfoDadPnone, setBasicinfoDadPhone] = useState({
         countryCode: "US",
@@ -71,7 +84,8 @@ const Overview = (props) => {
         country: "",
         carrier: "None",
         timezone: "America/New_York",
-        is_valid: false
+        is_valid: false,
+        is_mobile: false
     });
     const [contact, setContact] = useState('');
 
@@ -88,9 +102,41 @@ const Overview = (props) => {
     };
 
     useEffect(() => {
+        fetchCustomFields();
         fetchCountry();
     }, []);
-
+    const fetchCustomFields = async () => {
+        let cFileds = await ImportContactServices.fetchCustomFields();
+        if (cFileds.customFields.length > 0) {
+            let customObjects = {};
+            let customErrorObjects = {};
+            let newToggleCustom = {};
+            cFileds.customFields.map((custom) => {
+                customObjects[custom.alias] = "";
+                customErrorObjects[custom.alias] = false;
+                newToggleCustom[custom.alias] = false;
+            });
+            setCustomFieldsList(customObjects);
+            setCustomFieldsListNew(customObjects);
+            setCustomFieldsError(customErrorObjects);
+            setToggleCustom(newToggleCustom);
+            const rows = cFileds.customFields.reduce(function (rows, key, index) {
+                return (index % 2 == 0 ? rows.push([key])
+                    : rows[rows.length-1].push(key)) && rows;
+            }, []);
+            setCustomFields(rows);
+        } else {
+            setCustomFields([]);
+        }
+        return true;
+    }
+    useEffect(() => {
+        Object.keys(customFieldsList).map((value) => {
+            if (contact[value] !== undefined) {
+                setCustomFieldsList(prevState => ({...prevState, [value]: contact[value]}));
+            }
+        });
+    }, [customFieldsListNew]);
     const getContact = async (contactId) => {
         setIsLoader(true);
         if (contactId !== 0) {
@@ -395,10 +441,11 @@ const Overview = (props) => {
                 country: basicinfoCountry ? basicinfoCountry : "",
                 gender: basicinfoGender ? basicinfoGender : ""
             }
+            let newPayload = Object.assign(payload, customFieldsList);
+            console.log(customFieldsList)
             let contactIdNew = contact ? contact._id : 0;
             try {
-                let updateContact = await ContactService.updateContact(payload, contactIdNew);
-                console.log(updateContact)
+                let updateContact = await ContactService.updateContact(newPayload, contactIdNew);
                 if (updateContact) {
                     if (contactIdNew == 0) {
                         setSuccessMsg('Contact saved successfully.');
@@ -511,6 +558,15 @@ const Overview = (props) => {
               break;
       }
     }
+    const toggleCustomField = (e, field, value) => {
+        e.preventDefault();
+        setToggleCustom(prevState => ({...prevState, [field]: !value}));
+    }
+    const handlerCustomFieldChange = (event) => {
+        const {name, value} = event.target;
+        setCustomFieldsList(prevState => ({...prevState, [name]: value}));
+        setCustomFieldsError(prevState => ({...prevState, [name]: false}));
+    }
     useEffect(() => {
         if (successMsg) setTimeout(() => {
             setSuccessMsg("")
@@ -615,7 +671,7 @@ const Overview = (props) => {
                                     Phone
                                 </div>
                                 <div
-                                    className={formErrorMsg.phone ? "cmnFormField countryCodeField errorField" : "cmnFormField countryCodeField"}>
+                                    className={formErrorMsg.phone ? "cmnFormField countryCodeField phoneNumberField errorField" : "cmnFormField phoneNumberField countryCodeField"}>
                                     <div className="countryCode cmnFieldStyle">
                                         <div className="countryName">{basicinfoPhone.countryCode}</div>
                                         <div className="daileCode">{basicinfoPhone.dailCode}</div>
@@ -628,7 +684,9 @@ const Overview = (props) => {
                                     <input type="phone" className="cmnFieldStyle" name="number"
                                            placeholder="Eg. (555) 555-1234" value={basicinfoPhone.number}
                                            onChange={handelBasicinfoPhone}/>
-                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'phone')}>Verify</button>
+                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'phone')}>
+                                        <img src={verify_icon} alt=""/> Verify
+                                    </button>
                                     {formErrorMsg.phone ? <p className="errorMsg">{formErrorMsg.phone}</p> : ""}
                                 </div>
                             </div>
@@ -637,7 +695,7 @@ const Overview = (props) => {
                                     Mobile
                                 </div>
                                 <div
-                                    className={formErrorMsg.mobile ? "cmnFormField countryCodeField errorField" : "cmnFormField countryCodeField"}>
+                                    className={formErrorMsg.mobile ? "cmnFormField countryCodeField phoneNumberField errorField" : "cmnFormField phoneNumberField countryCodeField"}>
                                     <div className="countryCode cmnFieldStyle">
                                         <div className="countryName">{basicinfoMobilePhone.countryCode}</div>
                                         <div className="daileCode">{basicinfoMobilePhone.dailCode}</div>
@@ -650,7 +708,9 @@ const Overview = (props) => {
                                     <input type="phone" className="cmnFieldStyle" name="number"
                                            placeholder="Eg. (555) 555-1234" value={basicinfoMobilePhone.number}
                                            onChange={handelBasicinfoMobilePhone}/>
-                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'mobile')}>Verify</button>
+                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'mobile')}>
+                                        <img src={verify_icon} alt=""/> Verify
+                                    </button>
                                     {formErrorMsg.mobile ? <p className="errorMsg">{formErrorMsg.mobile}</p> : ""}
                                 </div>
                             </div>
@@ -749,7 +809,7 @@ const Overview = (props) => {
                                     Mother's Phone Number
                                 </div>
                                 <div
-                                    className={formErrorMsg.momPhone ? "cmnFormField countryCodeField errorField" : "cmnFormField countryCodeField"}>
+                                    className={formErrorMsg.momPhone ? "cmnFormField countryCodeField phoneNumberField errorField" : "cmnFormField phoneNumberField countryCodeField"}>
                                     <div className="countryCode cmnFieldStyle">
                                         <div className="countryName">{basicinfoMomPhone.countryCode}</div>
                                         <div className="daileCode">{basicinfoMomPhone.dailCode}</div>
@@ -762,7 +822,9 @@ const Overview = (props) => {
                                     <input type="phone" className="cmnFieldStyle" name="number"
                                            placeholder="Eg. (555) 555-1234" defaultValue={basicinfoMomPhone.number}
                                            onChange={handelBasicinfoMomPhone}/>
-                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'momPhone')}>Verify</button>
+                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'momPhone')}>
+                                        <img src={verify_icon} alt=""/> Verify
+                                    </button>
                                     {formErrorMsg.momPhone ? <p className="errorMsg">{formErrorMsg.momPhone}</p> : ""}
                                 </div>
                             </div>
@@ -783,7 +845,7 @@ const Overview = (props) => {
                                     Father's Phone Number
                                 </div>
                                 <div
-                                    className={formErrorMsg.dadPhone ? "cmnFormField countryCodeField errorField" : "cmnFormField countryCodeField"}>
+                                    className={formErrorMsg.dadPhone ? "cmnFormField countryCodeField phoneNumberField errorField" : "cmnFormField phoneNumberField countryCodeField"}>
                                     <div className="countryCode cmnFieldStyle">
                                         <div className="countryName">{basicinfoDadPnone.countryCode}</div>
                                         <div className="daileCode">{basicinfoDadPnone.dailCode}</div>
@@ -796,7 +858,9 @@ const Overview = (props) => {
                                     <input type="phone" className="cmnFieldStyle" name="number"
                                            placeholder="Eg. (555) 555-1234" defaultValue={basicinfoDadPnone.number}
                                            onChange={handelBasicinfoDadPhone}/>
-                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'dadPhone')}>Verify</button>
+                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'dadPhone')}>
+                                        <img src={verify_icon} alt=""/> Verify
+                                    </button>
                                     {formErrorMsg.dadPhone ? <p className="errorMsg">{formErrorMsg.dadPhone}</p> : ""}
                                 </div>
                             </div>
@@ -914,14 +978,75 @@ const Overview = (props) => {
                         </div>
                     </div>
                     <div className="overviewForm cmnForm">
+                        {
+                            customFields.length > 0 &&
+                            <>
+                                <div className="cmnFormHead">
+                                    <h3>Custom Fields</h3>
+                                </div>
+                                {
+                                    customFields.map((row, index) => (
+                                        <div className="cmnFormRow" key={index}>
+                                            { row.map((col, index2) => (
+                                                <div className="cmnFormCol" key={index2}>
+                                                    <div className="cmnFieldName">
+                                                        {col.fieldName}
+                                                    </div>
+                                                    <div className={formErrorMsg.zip ? "cmnFormField errorField" : "cmnFormField"}>
+                                                        {(() => {
+                                                            switch (col.fieldType) {
+                                                                case 'text':
+                                                                    return <input type="text" className="cmnFieldStyle" name={col.alias} placeholder={col.fieldName} pattern={col.fieldRegex}
+                                                                                  defaultValue={contact ? contact[col.alias] : ""} onChange={handlerCustomFieldChange}/>;
+                                                                case 'number':
+                                                                    return <input type="number" className="cmnFieldStyle" name={col.alias} placeholder={col.fieldName} pattern={col.fieldRegex}
+                                                                                  defaultValue={contact ? contact[col.alias] : ""} onChange={handlerCustomFieldChange}/>;
+                                                                case 'email':
+                                                                    return <input type="email" className="cmnFieldStyle" name={col.alias} placeholder={col.fieldName} pattern={col.fieldRegex}
+                                                                                  defaultValue={contact ? contact[col.alias] : ""} onChange={handlerCustomFieldChange}/>;
+                                                                case 'textarea':
+                                                                    return <textarea className="cmnFieldStyle"
+                                                                                     placeholder={col.fieldName}
+                                                                                     name={col.alias}
+                                                                                     defaultValue={contact ? contact[col.alias] : ""} pattern={col.fieldRegex}
+                                                                                     onChange={handlerCustomFieldChange}></textarea>;
+                                                                default:
+                                                                    return <input type="text" className="cmnFieldStyle" name={col.alias} placeholder={col.fieldName} pattern={col.fieldRegex}
+                                                                                  defaultValue={contact ? contact[col.alias] : ""} onChange={handlerCustomFieldChange}/>;
+                                                            }
+                                                        })()}
+
+                                                        {customFieldsError[col.alias] ? <p className="errorMsg">Please give a valid input.</p> : ""}
+                                                    </div>
+                                                </div>
+                                                /*<div className="cmnFormCol-3" key={index2}>
+                                                    <div className={"overviewCustomFieldBox cmnFieldStyle " + (customFieldsError[col.alias] ? 'error' : '') + (toggleCustom[col.alias] ? 'toggleActive' : 'toggleInactive' )}>
+                                                        <span>{col.fieldName}</span>
+                                                        <button className="addOverviewCustomFiel" onClick={(e) => toggleCustomField(e,col.alias, toggleCustom[col.alias])}>
+                                                            {
+                                                                toggleCustom[col.alias] ? <img className="crossIcon" src={cross_icon} alt="" /> : <img className="plusIcon" src={plus_icon} alt="" />
+                                                            }
+                                                        </button>
+                                                        { toggleCustom[col.alias] &&
+                                                            <div className="extraCustonbox">
+                                                                <input type="text" name={col.alias} value={customFieldsList[col.alias]} onChange={handlerCustomFieldChange}/>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                </div>*/
+                                            )) }
+                                        </div>
+                                    ))
+                                }
+                            </>
+                        }
                         <div className="cmnFormRow">
                             <div className="formActBtnWrap">
                                 <button className="saveNnewBtn saveOverview" type="button"
-                                        onClick={(e) => onContactSubmit(e)}> Update <img src={arrow_forward}
+                                        onClick={(e) => onContactSubmit(e)}> {props.contactId === 0 ? 'Save' : 'Update'} <img src={arrow_forward}
                                                                                                  alt=""/></button>
-                                <button className="btn-link">Cancel</button>
+                                <button className="btn-link" onClick={props.closeContactModal}>Cancel</button>
                             </div>
-
                         </div>
                     </div>
                 </div>
