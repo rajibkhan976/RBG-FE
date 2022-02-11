@@ -2,11 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import aaroww from "../../../../../assets/images/arrow_forward.svg";
 import categoryTag from "../../../../../assets/images/categoryTag.svg";
 import productImgPlaceholder from "../../../../../assets/images/proImg1.png"
-import arrow_forward from "../../../../../assets/images/backIcon.svg";
+import arrow_forward from "../../../../../assets/images/arrow_forward.svg";
 import info_icon from "../../../../../assets/images/infos.svg";
+import plus_icon from "../../../../../assets/images/plus_icon.svg"
+import Loader from '../../../Loader';
+import cart_icon from "../../../../../assets/images/cart.svg"
 
 const ProductTransaction = (props) => {
     const productRef = useRef(null);
+    const [showLoader, setShowLoader] = useState(false);
+    const [errorMsg, setErrorMsg] = useState("");
 
     const [productItemsList, setProductItemsList] = useState([
         {
@@ -26,27 +31,68 @@ const ProductTransaction = (props) => {
     ])
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [showProductList, setShowProductList] = useState(false);
+    const [cartState, setCartState] = useState([])
+    const priceInput = useRef(null)
 
     const selectedColor = (e) => {
-        setSelectedProduct({
-            ...selectedProduct,
-            selectedColor: e
-        })
+        try {
+            setShowLoader(true);
+            setSelectedProduct({
+                ...selectedProduct,
+                selectedColor: e
+            })
+        } catch(err) {
+            setErrorMsg(err);
+        }
+        finally{
+            setShowLoader(false);
+        }
+    }
+
+    const selectedSize = (e) => {
+        try {
+            setShowLoader(true);
+            setSelectedProduct({
+                ...selectedProduct,
+                selectedSize: e
+            })
+        } catch(err) {
+            setErrorMsg(err);
+        }
+        finally{
+            setShowLoader(false);
+        }
     }
 
     const selectProductToAdd = (item, index) => {
         setSelectedProduct(item)
         setShowProductList(false)
     }
+    useEffect(()=>{
+        console.log("selectedProduct", selectedProduct);
+    },[selectedProduct])
 
     const addProduct = (e) => {
         e.preventDefault()
         setShowProductList(!showProductList)
     }
 
-    useEffect(()=>{
-        console.log("selectedProduct", selectedProduct);
-    },[selectedProduct])
+    const getCartItems = () => {
+        return cartState && cartState.length
+    }
+    useEffect(() =>{},[cartState])
+
+    const addThisProduct = (e) => {
+        e.preventDefault()
+        const thisProduct = selectedProduct;
+        let customizedProduct = {};
+
+        console.log("thisProduct", 
+            (thisProduct.selectedColor === undefined || thisProduct.selectedColor === null) ? 
+            thisProduct.colors[0] : thisProduct.selectedColor, 
+            (thisProduct.selectedSize === undefined || thisProduct.selectedSize === null) ? 
+            thisProduct.sizes[0] : thisProduct.selectedSize)
+    }
 
     return (
         <form className="productTransaction">
@@ -114,85 +160,200 @@ const ProductTransaction = (props) => {
                 <header className='informHeader'>
                     <h5>Select Product</h5>
                 </header>
-                <div className='cmnFormRow'>
-                    <span className='labelWithInfo'>
-                        <label>Select Product</label>
-                        <span className="infoSpan">
-                            <img src={info_icon} alt="" />
-                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                <div className='bodytransactionForm'>
+                    <div className='cmnFormRow'>
+                        <span className='labelWithInfo'>
+                            <label>Select Product</label>
+                            <span className="infoSpan">
+                                <img src={info_icon} alt="" />
+                                <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                            </span>
                         </span>
-                    </span>
-                    <div className="cmnFormField">
-                        <div className='cmnFormSelect'>
-                            <button className='btn btnSelect cmnFieldStyle' onClick={(e)=>addProduct(e)}>
-                                <span>{selectedProduct === null ? "Select" : selectedProduct.name}</span>
-                            </button>
-                            {showProductList && 
-                                <div className='cmnFormSelectBody'>
-                                    <button
-                                    className="btn addManuallyBtn"
-                                    onClick={(e) => {
-                                        e.preventDefault()
-                                    }}
-                                    >+  Add New Product</button>
+                        <div className="cmnFormField">
+                            <div className='cmnFormSelect addProductFormField'>
+                                <button className='btn btnSelect cmnFieldStyle' onClick={(e)=>addProduct(e)}>
+                                    <span>{selectedProduct === null ? "Select" : selectedProduct.name}</span>
+                                </button>
+                                {showProductList && 
+                                    <div className='cmnFormSelectBody'>
+                                        <button
+                                        className="btn addManuallyBtn"
+                                        onClick={(e) => {
+                                            e.preventDefault()
+                                        }}
+                                        >+  Add New Product</button>
 
-                                    <ul>
-                                        {productItemsList.map((productItem, i) => (
-                                            <li key={i} onClick={()=>selectProductToAdd(productItem, i)}>
-                                                <figure
-                                                    style={{
-                                                        backgroundImage: "url("+productItem.picture+")"
-                                                    }}
-                                                ></figure>
-                                                <span>{productItem.name}</span>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            }
+                                        <ul>
+                                            {productItemsList.map((productItem, i) => (
+                                                <li key={i} onClick={()=>selectProductToAdd(productItem, i)}>
+                                                    <figure
+                                                        style={{
+                                                            backgroundImage: "url("+productItem.picture+")"
+                                                        }}
+                                                    ></figure>
+                                                    <span>{productItem.name}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div className='cmnFormRow'>
-                    <label>Select Product</label>
-                    <div className='cmnFormField'>
-                        <div className='colorChoiceProduct'>
-                        {selectedProduct === null ? 
-                            <>
-                                <label className='colorChoiceItem'>
-                                    <input type="radio" name="select-product-color" disabled />
-                                    <span></span>
-                                </label>
-                                <label className='colorChoiceItem'>
-                                    <input type="radio" name="select-product-color" disabled />
-                                    <span></span>
-                                </label>
-                                <label className='colorChoiceItem'>
-                                    <input type="radio" name="select-product-color" disabled />
-                                    <span></span>
-                                </label>
-                                <label className='colorChoiceItem'>
-                                    <input type="radio" name="select-product-color" disabled />
-                                    <span></span>
-                                </label>
-                            </> :
-                            <>
-                                {selectedProduct.colors.map((color, i) => (
-                                    <label className='colorChoiceItem' key={"colorProduct"+i}>
-                                        <input type="radio" name="select-product-color" onChange={()=>selectedColor(color)} />
-                                        <span style={{
-                                            backgroundColor: color
-                                        }}></span>
+                    <div className='cmnFormRow'>
+                        <label>Color</label>
+                        <div className='cmnFormField'>
+                            <div className='colorChoiceProduct'>
+                            {selectedProduct === null ? 
+                                <>
+                                    <label className='colorChoiceItem'>
+                                        <input type="radio" name="select-product-color" disabled />
+                                        <span></span>
                                     </label>
-                                ))}
-                            </>
-                        }
+                                    <label className='colorChoiceItem'>
+                                        <input type="radio" name="select-product-color" disabled />
+                                        <span></span>
+                                    </label>
+                                    <label className='colorChoiceItem'>
+                                        <input type="radio" name="select-product-color" disabled />
+                                        <span></span>
+                                    </label>
+                                    <label className='colorChoiceItem'>
+                                        <input type="radio" name="select-product-color" disabled />
+                                        <span></span>
+                                    </label>
+                                </> :
+                                <>
+                                    {selectedProduct.colors.map((color, i) => (
+                                        <label className='colorChoiceItem' key={"colorProduct"+i}>
+                                            <input 
+                                                type="radio" 
+                                                name="select-product-color" 
+                                                onChange={()=>selectedColor(color)}
+                                                defaultChecked={i === 0}
+                                            />
+                                            <span style={{
+                                                backgroundColor: color
+                                            }}></span>
+                                        </label>
+                                    ))}
+                                </>
+                            }
+                            </div>
                         </div>
+                    </div>
+                    <div className='cmnFormRow'>
+                        <label>Available Sizes</label>
+                        <div className='cmnFormField'>
+                            <div className='sizeChoiceProduct'>
+                            {selectedProduct === null ? 
+                                <>
+                                    <label className='sizeChoiceItem'>
+                                        <input type="radio" name="select-product-size" disabled />
+                                        <span></span>
+                                    </label>
+                                    <label className='sizeChoiceItem'>
+                                        <input type="radio" name="select-product-size" disabled />
+                                        <span></span>
+                                    </label>
+                                    <label className='sizeChoiceItem'>
+                                        <input type="radio" name="select-product-size" disabled />
+                                        <span></span>
+                                    </label>
+                                </> :
+                                <>
+                                    {selectedProduct.sizes.map((size, i) => (
+                                        <label className='sizeChoiceItem' key={"colorProduct"+i}>
+                                            <input 
+                                                type="radio" 
+                                                name="select-product-size" 
+                                                onChange={()=>selectedSize(size)}
+                                                defaultChecked={i === 0} 
+                                            />
+                                            <span>{size}</span>
+                                        </label>
+                                    ))}
+                                </>
+                            }
+                            </div>
+                        </div>
+                    </div>
+                    <div className='cmnFormRow'>
+                        <div className='cmnFormCol'>
+                            <label className='labelWithInfo'>
+                                <span>Price</span>
+                                <span className="infoSpan">
+                                    <img src={info_icon} alt="" />
+                                    <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                </span>
+                            </label>
+                            <div className='cmnFormField preField'>
+                                <div className='unitAmount'>
+                                    $
+                                </div>
+                                <input type="number" className='cmnFieldStyle' placeholder='0' disabled={selectedProduct === null} ref={priceInput} />
+                            </div>
+                        </div>
+                        <div className='cmnFormCol'>
+                            <label className='labelWithInfo'>
+                                <span>Quantity</span>
+                                <span className="infoSpan">
+                                    <img src={info_icon} alt="" />
+                                    <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                </span>
+                            </label>
+                            
+                            <div className='cmnFormField'>
+                                <select className='selectBox' disabled={selectedProduct === null}>
+                                    <option value="">Quantity</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
+                        </div>
+                        <sub className='footnoteInfo'>* 10% Tax will be applicable</sub>
+                    </div>
+                    <div className='cmnFormRow'>
+                        <button 
+                            className='addToCart orangeBtn' 
+                            disabled={selectedProduct === null}
+                            onClick={addThisProduct}
+                        >
+                            <img src={plus_icon} alt="Add Product" />
+                            <span>Add Product</span>
+                        </button>
                     </div>
                 </div>
             </div>
-            <div className="productAvailable">
+            <div className="cartProduct">
+                <div className='cartProductInner'>
+                    <header className='informHeader'>
+                        <h5>Cart <span className='cartCount'>{getCartItems()}</span></h5>
+                    </header>
+                    <div className={cartState && cartState.length < 1 ? 'bodytransactionForm d-flex f-column f-align-center f-justify-center text-center' : 'bodytransactionForm'}>
+                        {cartState && cartState.length > 0 ? cartState.map((cartItem, i) => {
 
+                        }): 
+                            <>
+                                <figure className='noProduct'>
+                                    <img src={cart_icon} alt="No product added" />
+                                    <figcaption>havn’t add any Product</figcaption>
+                                </figure>
+                            </>
+                        }
+                    </div>
+                </div>
+                <footer className='cartTotal'>
+                    <label>
+                        Total item Price
+                    </label>
+                    <div className='cartPrice'>
+                        <h4>$ 00.00</h4>
+                    </div>
+                </footer>
             </div>
 
             <div className="createNew">
