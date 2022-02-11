@@ -13,8 +13,14 @@ import arrow_forward from "../../../../../assets/images/arrow_forward.svg";
 import Loader from "../../../../shared/Loader";
 import { Scrollbars } from "react-custom-scrollbars-2";
 
-const ProgramTransaction = (props) => {
+
+
+const ContractOverviewTransaction = (props) => {
+  
+  const [contractOverview, setContractOverview] = useState(false);
+
   const [isLoader, setIsLoader] = useState(false);
+
   const [addPogramModal, setAddPogramModal] = useState(false);
   
   const addPogramModalFn = () => {
@@ -25,224 +31,29 @@ const ProgramTransaction = (props) => {
   const closePogramModal = () => {
     setAddPogramModal(false);
   };
+  
+  const contractOverviewFn = (e) => {
+    e.preventDefault();
+    setContractOverview(true);
+  };
 
 
  
 
 
     return (
-        <form>
-                        <div className="transaction_form products forProducts">
+      <div className="posSellingForm contractOverview">
+                    {props.showLoader && <Loader />}
+                    {props.successMsg &&
+                        <div className="formMsg success"></div>
+                    }
+                    {props.errorMsg &&
+                        <div className=""></div>
+                    }
 
 
 
-                          {/* Custom Select Box with inbuild Button starts */}
-
-                          <div className="formsection gap">
-
-                              <div className="cmnFormRow">
-                                <label className="labelWithInfo">
-                                      <span className="labelHeading">Select Category</span>
-                                      <span className="infoSpan">
-                                          <img src={info_icon} alt="" />
-                                          <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                      </span>
-                                </label>
-                                
-                                <div
-                                  className={props.toggleContactList.status
-                                      ? "cmnFormField programsTransaction listActive"
-                                      : "cmnFormField programsTransaction"
-                                  }
-                                >
-                                  <input
-                                    className="cmnFieldStyle"
-                                    type="text"
-                                    placeholder="Eg. Steve Martyns"
-                                    onChange={(e)=>props.toggleContactListFn(e)}
-                                  />
-                                  
-                                  {props.toggleContactList.status && (
-                                    <>
-                                      <div className="contactListItems">
-                                        <button 
-                                          className="btn"
-                                          onClick={(e)=>{
-                                            e.preventDefault()
-                                            props.setAddManually(true)
-                                            props.toggleContactListFn(e)
-                                            addPogramModalFn()
-                                          }}
-                                        >+ Add Manually</button>
-                                        <ul>
-                                          <li>Unlimitted 1 year contract</li>
-                                          <li>Junior martial arts</li>
-                                          <li>Fitness kickboxing</li>
-                                          <li>Little dragons</li>
-                                        </ul>          
-                                      </div>
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                              
-
-
-                              </div>
-
-                              {/* Custom Select Box with inbuild Button ends */}
-
-
-
-                            {/* <div className="formsection gap">
-                                <span className="labelWithInfo">
-                                    <label>Select Category</label>
-                                    <span className="infoSpan">
-                                        <img src={info_icon} alt="" />
-                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                    </span>
-                                </span>
-                                <select className="selectBox">
-                                    <option value="">Select category</option>
-                                </select>
-                            </div> */}
-
-                            <div className="formsection gap">
-                                <label className="labelWithInfo">
-                                    <span className="labelHeading">Duration</span>
-                                    <span className="infoSpan">
-                                        <img src={info_icon} alt="" />
-                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                    </span>
-                                </label>
-                                <span className="leftSecTransaction">
-                                    <input type="text" placeholder="12" class="editableInput" value="12" />
-                                </span>
-                                <span className="rightSecTransaction">
-                                    <select className="selectBox">
-                                        <option value="">Month(s)</option>
-                                    </select>
-                                </span>
-                            </div>
-
-
-                            <div className="formsection gap">
-                                
-                                <span className="leftSecTransaction">
-
-                                    <label className="labelWithInfo">
-                                      <span className="labelHeading">Payment Type</span>
-                                        <span className="infoSpan">
-                                            <img src={info_icon} alt="" />
-                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                        </span>
-                                    </label>
-                                    <select className="selectBox">
-                                        <option value="">Recurring</option>
-                                    </select>
-                                </span>
-                                <span className="rightSecTransaction">
-
-                                {/* <span className="labelWithInfo">
-                                  <span className="labelHeading">Billing Cycle</span>
-                                    <span className="infoSpan">
-                                        <img src={info_icon} alt="" />
-                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                    </span>
-                                </span> */}
-                                <label className="labelWithInfo">
-                                      <span className="labelHeading">Billing Cycle</span>
-                                        <span className="infoSpan">
-                                            <img src={props.info_icon} alt="" />
-                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                        </span>
-                                    </label>
-                                    <select className="selectBox">
-                                        <option value="">Monthly</option>
-                                    </select>
-                                </span>
-                            </div>
-
-                            <div className="formsection gap">
-                                {/* <span className="labelWithInfo">
-                                    <label>Tuition Amount</label>
-                                    <span className="infoSpan">
-                                        <img src={props.info_icon} alt="" />
-                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                    </span>
-                                </span> */}
-                                <label className="labelWithInfo">
-                                      <span className="labelHeading">Tution Amount</span>
-                                        <span className="infoSpan">
-                                            <img src={info_icon} alt="" />
-                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                        </span>
-                                    </label>
-                                <input type="number" placeholder="149" class="editableInput numberType" value="149"/>
-                            </div>
-
-                            <div className="formsection gap">
-                                
-                                <div className="leftSecTransaction">
-                                    <label className="labelWithInfo">
-                                      <span className="labelHeading">First Billing Date</span>
-                                        <span className="infoSpan">
-                                            <img src={props.info_icon} alt="" />
-                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                        </span>
-                                    </label>
-                                    <input type="date" placeholder="mm/dd/yyyy" onChange={props.firstBillingDateHandel}  class="editableInput" value={props.firstBillingDate} />
-                                </div>
-                                <div className="rightSecTransaction">
-
-                                <label className="labelWithInfo">
-                                      <span className="labelHeading">Program Start Date</span>
-                                        <span className="infoSpan">
-                                            <img src={info_icon} alt="" />
-                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                        </span>
-                                    </label>
-                                <input type="date" placeholder="mm/dd/yyyy" onChange={props.programStartDateHandel}  class="editableInput" value={props.programStartDate} />
-                                </div>
-                            </div>
-
-
-                            <div className="formsection gap autoRenew">
-                              <span className="labelWithInfo">
-                                <label><div class="customCheckbox"><input type="checkbox" name="" id="" /><span></span></div>Auto Renewal</label>
-                                <span className="infoSpan">
-                                  <img src={info_icon} alt="" />
-                                  <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                </span>
-                              </span>
-                            </div>
-
-                           
-
-                            <div className="formsection gap autoRenew">
-                                <div className="autoRenewDate">
-                                  <img src={bell} alt="" />
-                                  <p>Next Payment Due Date <span className="renewDate">03 / 01 / 2022</span></p>
-                                </div>
-                            </div>
-
-                            {/* <div className={courseList.length > 0 ? "formsection gap" : "formsection gap disabled"}>
-                                <label>Select program</label>
-                                <select className="selectBox" onChange={getCourseFees} value={courseFees ? courseFees : ''}>
-                                    {courseList.length > 0 ? <option value="">Select a course</option> : ""}
-                                    {courseList.length > 0 ? courseList.map((item, key) => {
-                                        return (<option key={"course_" + key} value={item.fees} data-name={item.name} data-img={item.image} data-duration={item.duration} data-courseId={item._id}>{item.name}</option>)
-                                    }) : <option>No programs available</option>}
-                                </select>
-                            </div>
-
-                            <div className={courseFees ? "formsection" : "formsection disabled"}>
-                                <label>Price</label>
-                                <div className="cmnFieldStyle editableInput">{courseFees}</div>
-                                <p>* default currency is <strong>USD</strong></p>
-                            </div> */}
-                        </div>
-                        <div className="productAvailable downpayment active">
+<div className="productAvailable downpayment active">
                           <div className="downPaymentToogle">
                           <h3 className="commonHeadding">Down Payment <span className="downPaymentsCount">2 </span></h3>
                             <label
@@ -561,12 +372,12 @@ const ProgramTransaction = (props) => {
 
 
                             {/* <button class={props.courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={props.buyCourse}>Buy <img src={aaroww} alt="" /></button> */}
-                        </div>
-                        <div className="continueBuy">
-                          <button class="saveNnewBtn" onClick={props.contractOverviewFn}>Continue to Buy <img src={aaroww} alt="" /></button>
-                        </div>
-                    </form>
+                        </div>                    
+
+<div className="transaction_form products forProducts"></div>
+
+      </div>
     );
 };
 
-export default ProgramTransaction;
+export default ContractOverviewTransaction;

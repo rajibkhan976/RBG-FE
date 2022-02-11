@@ -10,6 +10,7 @@ import Loader from "../../Loader";
 
 import ProductTransaction from "./transaction/ProductTransaction";
 import ProgramTransaction from "./transaction/ProgramTransaction";
+import ContractOverviewTransaction from "./transaction/ContractOverviewTransaction";
 
 
 const TransactionChoose = (props) => {
@@ -58,6 +59,8 @@ const TransactionChoose = (props) => {
       status: false,
       listContent: [],
     });
+
+    const [contractOverview, setContractOverview] = useState(false);
 
 
     const dispatch = useDispatch();
@@ -313,6 +316,13 @@ const TransactionChoose = (props) => {
     };
 
 
+    const contractOverviewFn = (e) => {
+      e.preventDefault();
+      setContractOverview(true);
+    };
+  
+
+
 
     // const toggleContactListFn = (e) => {
     //   e.preventDefault();
@@ -324,16 +334,22 @@ const TransactionChoose = (props) => {
             <div className="contactTabsInner">
 
                 <div className="transHeader pos">
-                    <div class="backToTransction">
+                    <div className={contractOverview ? "backToTransction transactionPage" : "backToTransction transactionPage display"
+                                }>
                         <button className="backBtn" onClick={props.backToTransList}><img src={arrow_forward} alt="" /></button>
                     </div>
                     <div>
-                        <h3 className="headingTabInner">Make a Transaction {/* <span className="posTag">POS</span> */} </h3>
-                        <span>* Explanatory text blurb should be here.</span>
+                        <h3 className="headingTabInner">{contractOverview ? "Contract Overview" : "Make a Transaction"}</h3>
+                        <span>{contractOverview ? "* Explanatory contract text blurb should be here." : "* Explanatory text blurb should be here."}</span>
                     </div>
 
                 </div>
-                <div className="chooseTransactionType">
+
+              <div className={contractOverview ? "chooseTransactionWraper transactionPage" : "chooseTransactionWraper transactionPage display"
+                                }>
+
+                <div className="chooseTransactionType" >
+                
                     <label>
                         <div class="circleRadio">
                             <input type="radio"
@@ -416,9 +432,25 @@ const TransactionChoose = (props) => {
                         courseSelected={courseSelected}
                         buyCourse={buyCourse}
                         setCommunication={setCommunication}
+
+                        contractOverview={contractOverview}
+                        setContractOverview={setContractOverview}
+                        contractOverviewFn={contractOverviewFn}
                     />
                 </div>
                 }
+              </div>
+
+                {contractOverview &&
+                  <ContractOverviewTransaction
+                    communication={communication}
+                    setCommunication={setCommunication}
+                    addDownpaymentFn={addDownpaymentFn}
+                    addDownpayment={addDownpayment}
+                    delDownpaymentFn={delDownpaymentFn}
+                  />
+                }
+
             </div>
         </>
     );

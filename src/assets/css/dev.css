@@ -2552,11 +2552,19 @@ span.renewDate {
 
 .productAvailable.downpayment.active {
   width: 50%;
+  background-color: #F6F8FA;
+  border: 1px solid #d5d5d5;
+  border-radius: 5px;
 }
 
 .productAvailable.downpayment.active .previewBox {
   max-width: 100%;
-  background-color: #F6F8FA;
+  background: #f6f8fa;
+  border: none;
+  border-top: 1px solid #d5d5d5;
+  border-radius: 0;
+  padding: 15px;
+  margin-top: 0;
 }
 
 .transaction_form.products.forProducts .formsection.gap {
@@ -2777,4 +2785,34 @@ p.courseModalPara {
 
 .continueBuy button.saveNnewBtn img {
   margin-left: 10px;
+}
+
+.chooseTransactionWraper.transactionPage.display {
+  display: block;
+}
+
+.chooseTransactionWraper.transactionPage {
+  display: none;
+}
+
+
+.backToTransction.transactionPage.display {
+  display: block;
+}
+
+.backToTransction.transactionPage {
+  display: none;
+}
+
+.posSellingForm.contractOverview {
+  padding-top: 10px;
+}
+
+.posSellingForm.contractOverview .productAvailable.downpayment.active .previewBox .previewImgBox {
+  padding-top: 85px;
+  padding-bottom: 85px;
+}
+
+.posSellingForm.contractOverview > .previewDownpaymentBox.display {
+  height: 365px;
 }
