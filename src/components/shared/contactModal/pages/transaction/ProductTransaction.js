@@ -7,6 +7,7 @@ import info_icon from "../../../../../assets/images/infos.svg";
 import plus_icon from "../../../../../assets/images/plus_icon.svg"
 import Loader from '../../../Loader';
 import cart_icon from "../../../../../assets/images/cart.svg"
+import { ErrorAlert } from '../../../messages';
 
 const ProductTransaction = (props) => {
     const productRef = useRef(null);
@@ -33,6 +34,7 @@ const ProductTransaction = (props) => {
     const [showProductList, setShowProductList] = useState(false);
     const [cartState, setCartState] = useState([])
     const priceInput = useRef(null)
+    const quantityInput = useRef(null)
 
     const selectedColor = (e) => {
         try {
@@ -68,9 +70,6 @@ const ProductTransaction = (props) => {
         setSelectedProduct(item)
         setShowProductList(false)
     }
-    useEffect(()=>{
-        console.log("selectedProduct", selectedProduct);
-    },[selectedProduct])
 
     const addProduct = (e) => {
         e.preventDefault()
@@ -85,17 +84,25 @@ const ProductTransaction = (props) => {
     const addThisProduct = (e) => {
         e.preventDefault()
         const thisProduct = selectedProduct;
-        let customizedProduct = {};
-
-        console.log("thisProduct", 
-            (thisProduct.selectedColor === undefined || thisProduct.selectedColor === null) ? 
-            thisProduct.colors[0] : thisProduct.selectedColor, 
-            (thisProduct.selectedSize === undefined || thisProduct.selectedSize === null) ? 
-            thisProduct.sizes[0] : thisProduct.selectedSize)
+        
+        try {
+            console.log("thisProduct", thisProduct);
+        } catch (error) {
+            setErrorMsg(error)
+        } finally {
+            setErrorMsg("")
+        }
+        console.log("selectedProduct", priceInput.current.value === "", quantityInput.current.selectedIndex === 0);
     }
+
+    useEffect(()=>{
+        console.log("selectedProduct", selectedProduct);
+    },[selectedProduct, productItemsList])
 
     return (
         <form className="productTransaction">
+            {errorMsg && <ErrorAlert message={errorMsg}></ErrorAlert>}
+
             {/* <div className="transaction_form">      
                 <div className={props.posSelectedCat ? "formsection gap" : "formsection gap disabled"}>
                     <label>Select Product</label>
@@ -230,7 +237,6 @@ const ProductTransaction = (props) => {
                                                 type="radio" 
                                                 name="select-product-color" 
                                                 onChange={()=>selectedColor(color)}
-                                                defaultChecked={i === 0}
                                             />
                                             <span style={{
                                                 backgroundColor: color
@@ -268,7 +274,6 @@ const ProductTransaction = (props) => {
                                                 type="radio" 
                                                 name="select-product-size" 
                                                 onChange={()=>selectedSize(size)}
-                                                defaultChecked={i === 0} 
                                             />
                                             <span>{size}</span>
                                         </label>
@@ -291,7 +296,14 @@ const ProductTransaction = (props) => {
                                 <div className='unitAmount'>
                                     $
                                 </div>
-                                <input type="number" className='cmnFieldStyle' placeholder='0' disabled={selectedProduct === null} ref={priceInput} />
+                                <input 
+                                    type="number" 
+                                    className='cmnFieldStyle' 
+                                    placeholder='0' 
+                                    disabled={selectedProduct === null} 
+                                    ref={priceInput}
+                                    defaultValue={selectedProduct && selectedProduct.price}
+                                />
                             </div>
                         </div>
                         <div className='cmnFormCol'>
@@ -304,8 +316,12 @@ const ProductTransaction = (props) => {
                             </label>
                             
                             <div className='cmnFormField'>
-                                <select className='selectBox' disabled={selectedProduct === null}>
-                                    <option value="">Quantity</option>
+                                <select 
+                                    className='selectBox' 
+                                    disabled={selectedProduct === null} 
+                                    ref={quantityInput}
+                                >
+                                    <option value="null">Quantity</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
