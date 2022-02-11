@@ -2443,34 +2443,39 @@ span.tagLists ul li.tagLi.sellected span.addTag {
   visibility: visible;
 }
 
-span.labelWithInfo {
+.labelWithInfo {
   width: 100%;
   float: left;
 }
 
-span.labelWithInfo label {
+.labelWithInfo span.labelHeading {
   width: auto;
   margin-right: 10px;
+  /* padding-bottom: 12px; */
+  display: inline-block;
+  color: #315571;
+  font-size: 13px;
+  font-weight: 500;
 }
 
-span.leftSecTransaction {
+.leftSecTransaction {
     width: 50%;
     float: left;
-    padding-right: 10px;
+    padding-right: 8px;
 }
 
-span.leftSecTransaction input.editableInput, span.rightSecTransaction input.editableInput {
+.leftSecTransaction input.editableInput, .rightSecTransaction input.editableInput {
 
     width: 100%!important;
 }
 
-span.rightSecTransaction {
+.rightSecTransaction {
     width: 50%;
     float: right;
-    padding-left: 10px;
+    padding-left: 8px;
 }
 
-span.rightSecTransaction select {
+.rightSecTransaction select {
   width: 100%;
 }
 
@@ -2547,15 +2552,23 @@ span.renewDate {
 
 .productAvailable.downpayment.active {
   width: 50%;
+  background-color: #F6F8FA;
+  border: 1px solid #d5d5d5;
+  border-radius: 5px;
 }
 
 .productAvailable.downpayment.active .previewBox {
   max-width: 100%;
-  background-color: #F6F8FA;
+  background: #f6f8fa;
+  border: none;
+  border-top: 1px solid #d5d5d5;
+  border-radius: 0;
+  padding: 15px;
+  margin-top: 0;
 }
 
 .transaction_form.products.forProducts .formsection.gap {
-  padding-right: 35px;
+  padding-right: 20px;
 }
 
 .productAvailable.downpayment.active .previewBox .previewImgBox {
@@ -2646,35 +2659,35 @@ button.delNewDownpayment {
 }
 
 .transaction_form .formsection .editableInput {
-  font-size: 13px!important;
+  font-size: 12.5px!important;
   padding: 0 5px;
 }
 
-.infoSpan span.tooltiptextInfo.amount {
+.infoSpan .tooltiptextInfo.amount {
   margin-left: -75px;
 }
 
-.infoSpan span.tooltiptextInfo.amount::after {
+.infoSpan .tooltiptextInfo.amount::after {
   margin-left: -35px;
 }
 
-.infoSpan span.tooltiptextInfo.paymentDate {
+.infoSpan .tooltiptextInfo.paymentDate {
   margin-left: -160px;
 }
 
-.infoSpan span.tooltiptextInfo.paymentDate::after {
+.infoSpan .tooltiptextInfo.paymentDate::after {
   margin-left: 50px;
 }
 
-.infoSpan span.tooltiptextInfo.paymentType {
+.infoSpan .tooltiptextInfo.paymentType {
   margin-left: -105px;
 }
 
-.infoSpan span.tooltiptextInfo.paymentStatus {
+.infoSpan .tooltiptextInfo.paymentStatus {
   margin-left: -172px;
 }
 
-.infoSpan span.tooltiptextInfo.paymentStatus::after {
+.infoSpan .tooltiptextInfo.paymentStatus::after {
   margin-left: 62px;
 }
 
@@ -2687,5 +2700,123 @@ button.delNewDownpayment {
 }
 
 .cmnFormField.programsTransaction.listActive .contactListItems {
-  top: 73px;
+  top: 68px;
+}
+
+.transaction_form.products.forProducts .formsection.gap .cmnFormRow .cmnFormField.programsTransaction .cmnFieldStyle {
+  background-image: url("../images/arrowDown.svg");
+  background-position: right 15px center;
+  background-repeat: no-repeat;
+}
+
+
+.modalDependent.modalAddCourses.modalBackdrop .modalForm  {
+  max-height: 610px;
+  height: 100%;
+}
+
+.modalDependent.modalAddCourses.modalBackdrop .slickModalBody  {
+  height: 88%;
+}
+
+.contactTabsInner h3.courseModalHeading {
+  margin-top: 22px;
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+p.courseModalPara {
+  padding-bottom: 0;
+}
+
+.slickModalHeader.coursesModalHeader {
+  padding-bottom: 14px;
+}
+
+.modalbtnHolder.saveCourses .saveNnewBtn {
+  width: auto;
+  margin: 30px 5px 0;
+}
+.profile .profileUpload span.uploadText {
+  top: 27px;
+  cursor: pointer;
+}
+
+.profile.uploads .profileUpload {
+  position: initial;
+}
+
+.modalDependent .modalbtnHolder.saveCourses {
+  width: 100%;
+}
+
+
+.modalForm.pograms .formControl span {
+  padding:0;
+}
+
+.modalForm.pograms .formControl span.infoSpan .tooltiptextInfo {
+  padding:5px;
+}
+
+
+.transaction_form.products.forProducts .formsection.gap.autoRenew .labelWithInfo {
+  display: flex;
+}
+
+.transaction_form.products.forProducts .formsection.gap.autoRenew .labelWithInfo label {
+  width: auto;
+  margin-right: 10px;
+}
+
+.transaction_form.products.forProducts .formsection.gap.autoRenew .labelWithInfo .infoSpan .tooltiptextInfo {
+  bottom: 125%;
+}
+
+.continueBuy {
+  width: 100%;
+  text-align: center;
+}
+
+.continueBuy button.saveNnewBtn {
+  margin:28px auto 0;
+  width: 160px;
+}
+
+.continueBuy button.saveNnewBtn img {
+  margin-left: 10px;
+}
+
+.chooseTransactionWraper.transactionPage.display {
+  display: block;
+}
+
+.chooseTransactionWraper.transactionPage {
+  display: none;
+}
+
+
+.backToTransction.transactionPage.display {
+  display: block;
+}
+
+.backToTransction.transactionPage {
+  display: none;
+}
+
+.posSellingForm.contractOverview {
+  padding-top: 10px;
+}
+
+.posSellingForm.contractOverview .productAvailable.downpayment.active .previewBox .previewImgBox {
+  padding-top: 85px;
+  padding-bottom: 85px;
+}
+
+.posSellingForm.contractOverview > .previewDownpaymentBox.display {
+  height: 365px;
+}
+
+.transaction_form.products.forProducts .formsection.gap .cmnFormRow {
+  margin-bottom: 0;
 }
