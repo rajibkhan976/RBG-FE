@@ -35,6 +35,12 @@ const ProductTransaction = (props) => {
     const [cartState, setCartState] = useState([])
     const priceInput = useRef(null)
     const quantityInput = useRef(null)
+    const [hasError, sethasError] = useState({
+        color: "",
+        sizes: "",
+        price: "",
+        quantity: ""
+    })
 
     const selectedColor = (e) => {
         try {
@@ -84,9 +90,54 @@ const ProductTransaction = (props) => {
     const addThisProduct = (e) => {
         e.preventDefault()
         const thisProduct = selectedProduct;
+
+        console.log(quantityInput.current.value, priceInput.current.value, selectedProduct.selectedColor, selectedProduct.selectedSize);
         
         try {
-            console.log("thisProduct", thisProduct);
+            // sethasError
+            if(
+                (quantityInput.current.value !== null && quantityInput.current.value !== undefined) && 
+                (priceInput.current.value !== null && quantityInput.current.value !== undefined) && 
+                (selectedProduct.selectedColor !== null && quantityInput.current.value !== undefined) &&
+                (selectedProduct.selectedSize !== null && quantityInput.current.value !== undefined)
+            ) {
+                sethasError({
+                    color: "",
+                    sizes: "",
+                    price: "",
+                    quantity: ""
+                })
+                setCartState([
+                    ...cartState,
+                    selectedProduct
+                ])
+            }
+            else {
+                if(quantityInput.current.value !== null || quantityInput.current.value !== undefined) {
+                    sethasError({
+                        ...hasError,
+                        quantity: "Please set some quantity!"
+                    })
+                }
+                if(priceInput.current.value !== null || quantityInput.current.value !== undefined) {
+                    sethasError({
+                        ...hasError,
+                        price: "Please set proper price!"
+                    })
+                }
+                if(selectedProduct.selectedColor !== null || quantityInput.current.value !== undefined) {
+                    sethasError({
+                        ...hasError,
+                        color: "Please select a color!"
+                    })
+                }
+                if(selectedProduct.selectedSize !== null || quantityInput.current.value !== undefined) {
+                    sethasError({
+                        ...hasError,
+                        sizes: "Please select a size!"
+                    })
+                }
+            }
         } catch (error) {
             setErrorMsg(error)
         } finally {
