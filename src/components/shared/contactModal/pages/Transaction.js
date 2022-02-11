@@ -4,6 +4,7 @@ import icon_trans from "../../../../assets/images/icon_trans.svg";
 import wwConnect from "../../../../assets/images/wwConnect.svg";
 import wwConnect2 from "../../../../assets/images/wwConnect2.svg";
 import list_board_icon from "../../../../assets/images/list_board_icon.svg";
+import CompleteTransactionModal from "./transaction/CompleteTransactionModal";
 
 import { TransactionServices } from "../../../../services/transaction/transactionServices";
 import Loader from "../../Loader";
@@ -12,10 +13,16 @@ const Transaction = (props) => {
   const [transactionList, setTransactionList] = useState([]);
   const [isLoader, setIsLoader] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
+  const [refundModal, setRefundModal] = useState(false);
+
+
+  const openCloseRefundModal = (param) => {
+    setRefundModal(param);
+  };
 
   const changeTab = (e) => {
     setActiveTab(e.target.value);
-  }
+  };
 
   const fetchTransactionList = async (contactID) => {
     try {
@@ -346,6 +353,49 @@ const Transaction = (props) => {
                 </div>
               </div>
             </div>
+            <div className="row success">
+              <div className="cell">
+                <div className="d-flex">
+                  <div className="iconCont">
+                    <span>
+                      <img src={icon_trans} alt="" />
+                    </span>
+                  </div>
+                  <div className="textCont">
+                    <div className="status">
+                      Success
+                    </div>
+                    <div>
+                      <span>Course:</span> “Sample course name”
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="cell">
+                <span className="amount" >
+                  $100
+                </span>
+              </div>
+              <div className="cell">
+                <span className="transID">
+                  dfg41456df1567sdtfg24g
+                </span>
+              </div>
+              <div className="cell">
+                <span className="time">
+                  18 m ago
+                </span>
+              </div>
+              <div className="cell">
+                <div className="moreOpt">
+                  <button type="button" className="moreOptBtn"></button>
+                  <div className="optDropdown">
+                    <button type="button" className="refund" onClick={() => openCloseRefundModal (true)}>Refund</button>  
+                    <button type="button" className="history">History</button>
+                  </div>  
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         <div className={activeTab == 2 ? "listTab active" : "listTab"}>
@@ -411,6 +461,7 @@ const Transaction = (props) => {
         </div>
 
       </div>
+      { refundModal && <CompleteTransactionModal closeModal={(param) => openCloseRefundModal (param)} /> }
     </>
   );
 };

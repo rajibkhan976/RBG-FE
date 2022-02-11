@@ -3656,6 +3656,8 @@ li:hover .extraDottedBtn {
 }
 
 .modal {
+  background: transparent !important;
+  width: unset !important;
 }
 
 .modalContainer {
@@ -4095,6 +4097,11 @@ li:hover .extraDottedBtn {
   font-size: 14px;
   color: var(--darkBlue);
   margin-bottom: 10px;
+  display: inline-block;
+}
+.cmnFieldName .mandatory {
+  color: #ed707a;
+  font-weight: 500;
 }
 .cmnFieldStyle {
   width: 100%;
@@ -9346,6 +9353,7 @@ button.addOverviewCustomFiel {
   background: #fff;
   border-radius: 5px;
   position: absolute;
+  z-index: 9;
   top: 26px;
   right: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -9394,10 +9402,40 @@ button.addOverviewCustomFiel {
 .optDropdown button.retry:hover {
   background-image: url("../images/retry_icon_dark.svg");
 }
+.optDropdown button.refund {
+  background-image: url("../images/refund_icon.svg");
+  text-align: left;
+}
+.optDropdown button.refund:hover {
+  background-image: url("../images/refund_icon_dark.svg");
+}
 .optDropdown button.cancelPayment {
   background-image: url("../images/cancelPayment_icon.svg");
   text-align: left;
 }
 .optDropdown button.cancelPayment:hover {
   background-image: url("../images/cancelPayment_icon_dark.svg");
+}
+
+.tabBarArea > div.transactionModal {
+  background: rgb(48 86 113 / 90%);
+  position: fixed;
+}
+.transactionModal .circleForIcon img {
+  width: 30px;
+}
+.transactionModal .cmnFieldName {
+  font-size: 13px;
+}
+.transactionModal .cmnFieldStyle {
+  font-size: 13px;
+}
+.transactionModal .cmnFieldStyle::placeholder {
+  font-size: 13px;
+}
+.transactionModal textarea {
+  height: 78px;
+}
+.transactionModal .cashReceived {
+  color: #9BAEBC;
 }
