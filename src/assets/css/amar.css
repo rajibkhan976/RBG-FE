@@ -1023,10 +1023,14 @@
 .productTransaction .transaction_form {
   flex: 0 0 335px;
   overflow: hidden;
+  background-color: #F6F8FA;
+  border-radius: 5px;
 }
 .productTransaction .productAvailable {
-  flex: 0 0 410px;
+  flex: 1 1 auto;
   margin-left: auto;
+  background-color: #F6F8FA;
+  border-radius: 5px;
 }
 .btnSelect {
   justify-content: start;
@@ -1121,5 +1125,27 @@
   height: 100%;
   background: #9BAEBC;
   border-radius: 50%;
+}
+.productTransaction .createNew {
+  flex: 1 1 100%;
+  display: flex;
+  height: auto;
+}
+.informHeader {
+  height: 40px;
+  padding: 0 20px;
+  border-bottom: 1px solid #E9EFF5;
+  display: flex;
+  align-items: center;
+}
+.informHeader h5 {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+  color: #305671;
+}
+.posSellingForm form {
+    row-gap: 20px;
+    column-gap: 20px;
 }
 /* Transaction */

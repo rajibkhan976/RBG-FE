@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import aaroww from "../../../../../assets/images/arrow_forward.svg";
 import categoryTag from "../../../../../assets/images/categoryTag.svg";
 import productImgPlaceholder from "../../../../../assets/images/proImg1.png"
+import arrow_forward from "../../../../../assets/images/backIcon.svg";
 import info_icon from "../../../../../assets/images/infos.svg";
 
 const ProductTransaction = (props) => {
@@ -110,6 +111,9 @@ const ProductTransaction = (props) => {
             </div> */}
 
             <div className="transaction_form">
+                <header className='informHeader'>
+                    <h5>Select Product</h5>
+                </header>
                 <div className='cmnFormRow'>
                     <span className='labelWithInfo'>
                         <label>Select Product</label>
@@ -189,6 +193,15 @@ const ProductTransaction = (props) => {
             </div>
             <div className="productAvailable">
 
+            </div>
+
+            <div className="createNew">
+              <button
+                className="saveNnewBtn"
+              >
+                <span>Continue to Buy</span>
+                <img className="" src={arrow_forward} alt="" />
+              </button>
             </div>
         </form>
     );
