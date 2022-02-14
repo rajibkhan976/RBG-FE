@@ -4,7 +4,7 @@ import info_icon from "../../../../../assets/images/infos.svg";
 import bell from "../../../../../assets/images/bell.svg";
 import updown from "../../../../../assets/images/updown.png";
 import deleteBtn from "../../../../../assets/images/deleteBtn.svg";
-import downpayment from "../../../../../assets/images/downpayment.svg";
+import downpayment from "../../../../../assets/images/no_downpayment.svg";
 import modalTopIcon from "../../../../../assets/images/setupicon5.svg";
 import crossTop from "../../../../../assets/images/cross.svg";
 import profileAvatar from "../../../../../assets/images/camera.svg";
@@ -212,7 +212,7 @@ const ProgramTransaction = (props) => {
                                 <label><div class="customCheckbox"><input type="checkbox" name="" id="" /><span></span></div>Auto Renewal</label>
                                 <span className="infoSpan">
                                   <img src={info_icon} alt="" />
-                                  <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                  <span class="tooltiptextInfo">Recurring payment will continue irrespective of duration of the program until it's cancelled.</span>
                                 </span>
                               </span>
                             </div>
@@ -244,7 +244,7 @@ const ProgramTransaction = (props) => {
                         </div>
                         <div className="productAvailable downpayment active">
                           <div className="downPaymentToogle">
-                          <h3 className="commonHeadding">Down Payment <span className="downPaymentsCount">2 </span></h3>
+                          <header class="informHeader"><h5>Down Payment <span class="cartCount">0</span></h5></header>
                             <label
                                 className={props.communication ? "toggleBtn active" : "toggleBtn"
                                 }
@@ -265,8 +265,10 @@ const ProgramTransaction = (props) => {
                             <div className="previewBox">
                                 <div className={props.communication ? "previewImgBox course" : "previewImgBox course display"
                                 }>
+                                  <div className="nodownpaymentInfos">
                                     <img src={downpayment} alt="" />
-
+                                    <p className="noDownpaymentText">Down Payment is Disabled</p>
+                                  </div>
                                 </div>
                                 <div className={props.communication ? "previewDownpaymentBox display" : "previewDownpaymentBox"
                                 }>
@@ -299,15 +301,34 @@ const ProgramTransaction = (props) => {
                                             </div>
                                             <div className="rightSecTransaction">
 
-                                            <label className="labelWithInfo">
-                                                <span className="labelHeading">Payment Date</span>
-                                                  <span className="infoSpan">
+                                            <label className="labelWithInfo paymentTime">
+                                                <span className="labelHeading">I want to Pay Later</span>
+                                                  {/* <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
                                                       <span class="tooltiptextInfo paymentDate">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                                </span>
+                                                </span> */}
+                                                <label
+                                                  className={props.communicationDownpayment ? "toggleBtn active" : "toggleBtn"
+                                                  }
+                                                >
+                                                  <input
+                                                    type="checkbox"
+                                                    name="check-communication"
+                                                    onChange={(e) =>
+                                                      e.target.checked
+                                                        ? props.setCommunicationDownpayment(true)
+                                                        : props.setCommunicationDownpayment(false)
+                                                    }
+                                                  />
+                                                  <span className="toggler"></span>
+                                                </label>
                                             </label>
+                                            <div className={props.communicationDownpayment ? "paymentNow" : "paymentNow display"} >
+                                              <p>Payment date <span>Now</span></p>
+                                            </div>
+                                            <div className={props.communicationDownpayment ? "paymentNow display" : "paymentNow"} >
                                               <input type="date" placeholder="mm/dd/yyyy" onChange={props.paymentDateHandel1}  class="editableInput" value={props.paymentDate1} />
-
+                                            </div>
                                             </div>
                                         </div>
                                         <div className="formsection gap">
@@ -371,16 +392,38 @@ const ProgramTransaction = (props) => {
                                             </label>
                                                 <input type="number" placeholder="149" class="editableInput numberType" value="149"/>
                                             </div>
+
+
                                             <div className="rightSecTransaction">
 
-                                            <label className="labelWithInfo">
-                                                <span className="labelHeading">Payment Date</span>
-                                                  <span className="infoSpan">
+                                            <label className="labelWithInfo paymentTime">
+                                                <span className="labelHeading">I want to Pay Later</span>
+                                                  {/* <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
                                                       <span class="tooltiptextInfo paymentDate">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                                </span>
+                                                </span> */}
+                                                <label
+                                                  className={props.communicationDownpayment ? "toggleBtn active" : "toggleBtn"
+                                                  }
+                                                >
+                                                  <input
+                                                    type="checkbox"
+                                                    name="check-communication"
+                                                    onChange={(e) =>
+                                                      e.target.checked
+                                                        ? props.setCommunicationDownpayment(true)
+                                                        : props.setCommunicationDownpayment(false)
+                                                    }
+                                                  />
+                                                  <span className="toggler"></span>
+                                                </label>
                                             </label>
-                                              <input type="date" placeholder="mm/dd/yyyy" onChange={props.paymentDateHandel} class="editableInput" value={props.paymentDate} />
+                                            <div className={props.communicationDownpayment ? "paymentNow" : "paymentNow display"} >
+                                              <p>Payment date <span>Now</span></p>
+                                            </div>
+                                            <div className={props.communicationDownpayment ? "paymentNow display" : "paymentNow"} >
+                                            <input type="date" placeholder="mm/dd/yyyy" onChange={props.paymentDateHandel} class="editableInput" value={props.paymentDate} />
+                                            </div>
                                             </div>
                                         </div>
                                         <div className="formsection gap">

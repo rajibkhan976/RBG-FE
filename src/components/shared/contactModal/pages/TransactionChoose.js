@@ -55,6 +55,7 @@ const TransactionChoose = (props) => {
     const [colorIndex, setColorIndex] = useState();
     const [sizeIndex, setSizeIndex] = useState();
     const [communication, setCommunication] = useState(false);
+    const [communicationDownpayment, setCommunicationDownpayment] = useState(false);
     const [toggleContactList, setToggleContactList] = useState({
       status: false,
       listContent: [],
@@ -406,6 +407,7 @@ const TransactionChoose = (props) => {
                         setAddManually={setAddManually}
                         addManually={addManually}
                         communication={communication}
+                        communicationDownpayment={communicationDownpayment}
                         addDownpaymentFn={addDownpaymentFn}
                         addDownpayment={addDownpayment}
                         delDownpaymentFn={delDownpaymentFn}
@@ -421,6 +423,7 @@ const TransactionChoose = (props) => {
                         courseSelected={courseSelected}
                         buyCourse={buyCourse}
                         setCommunication={setCommunication}
+                        setCommunicationDownpayment={setCommunicationDownpayment}
 
                         contractOverview={contractOverview}
                         setContractOverview={setContractOverview}

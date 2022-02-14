@@ -2450,7 +2450,7 @@ span.tagLists ul li.tagLi.sellected span.addTag {
 
 .labelWithInfo span.labelHeading {
   width: auto;
-  margin-right: 10px;
+  margin-right: 0px;
   /* padding-bottom: 12px; */
   display: inline-block;
   color: #315571;
@@ -2546,16 +2546,16 @@ span.renewDate {
   margin-top: 0;
 }
 
-.transaction_form.products.forProducts {
+/* .transaction_form.products.forProducts {
   width: 50%;
-}
+} */
 
-.productAvailable.downpayment.active {
+/* .productAvailable.downpayment.active {
   width: 50%;
   background-color: #F6F8FA;
   border: 1px solid #d5d5d5;
   border-radius: 5px;
-}
+} */
 
 .productAvailable.downpayment.active .previewBox {
   max-width: 100%;
@@ -2565,6 +2565,8 @@ span.renewDate {
   border-radius: 0;
   padding: 15px;
   margin-top: 0;
+  height: 100%;
+  overflow: hidden;
 }
 
 .transaction_form.products.forProducts .formsection.gap {
@@ -2576,9 +2578,11 @@ span.renewDate {
   background: transparent;
   display: none;
   height: auto;
-  padding-top: 192px;
+  /* padding-top: 192px; */
+  height: 100%;
   text-align: center;
-  padding-bottom: 192px;
+  position: relative;
+  /* padding-bottom: 192px; */
 }
 
 .productAvailable.downpayment.active .previewBox .previewImgBox.display {
@@ -2586,8 +2590,28 @@ span.renewDate {
 }
 
 
-.productAvailable.downpayment.active .previewBox .previewImgBox img {
-  width: 60%;;
+/* .productAvailable.downpayment.active .previewBox .previewImgBox img {
+  width: 60%;
+} */
+
+.productAvailable.downpayment.active .previewBox .previewImgBox .nodownpaymentInfos img {
+  width: 82px;
+  margin-bottom: 0px;
+}
+
+.productAvailable.downpayment.active .previewBox .previewImgBox .nodownpaymentInfos p.noDownpaymentText {
+ color: #9BAEBC;
+ font-size: 13px;
+ text-align: center;
+}
+.nodownpaymentInfos {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  text-align: center;
+  width: auto;
+  transform: translate(-50%, -50%);
+  width: 180px;
 }
 
 .previewDownpaymentBox {
@@ -2595,8 +2619,8 @@ span.renewDate {
   width: 100%;
   background: transparent;
   height: auto;
-  padding:15px 10px 15px 0;
-  height: 519px;
+  padding:15px 7px 15px 5px;
+  height: 488px;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -2820,3 +2844,86 @@ p.courseModalPara {
 .transaction_form.products.forProducts .formsection.gap .cmnFormRow {
   margin-bottom: 0;
 }
+
+.transaction_form.products.forProducts {
+  flex: 1 1 auto;
+  max-width: calc(50% - 10px);
+  display: flex;
+  flex-direction: column;
+}
+
+.productAvailable.downpayment.active {
+  background-color: #F6F8FA;
+  border: 1px solid #d5d5d5;
+  border-radius: 5px;
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  max-width: calc(50% - 10px);
+  height: 560px;
+}
+
+.downPaymentToogle .toggleBtn {
+  margin-top: 0;
+  margin-left: auto;
+  margin-right: 20px;
+}
+
+.transaction_form.products.forDownpayment .formsection.gap .leftSecTransaction {
+  width: 42%;
+  padding-right: 5px;
+}
+
+.transaction_form.products.forDownpayment .formsection.gap .labelWithInfo span.labelHeading {
+  font-size: 12px;
+}
+
+.transaction_form.products.forDownpayment .formsection.gap .rightSecTransaction {
+  width: 58%;
+  padding-right: 5px;
+}
+
+.paymentNow {
+  display: none;
+}
+.paymentNow.display {
+  display: block;
+}
+
+.transaction_form.products.forDownpayment .formsection.gap .rightSecTransaction label.toggleBtn {
+  width: 40px;
+  margin-top: 0;
+  margin-left: auto;
+}
+
+.labelWithInfo.paymentTime {
+  display: flex;
+  align-items: center;
+  padding-bottom: 7px;
+}
+
+.paymentNow.display {
+  width: 100%;
+  float: left;
+}
+
+.paymentNow.display p {
+  height: 40px;
+    background: #f6f8fa 0% 0% no-repeat padding-box;
+    border: 1px solid #d3d9de;
+    color: var(--darkBlue);
+    border-radius: 5px;
+    line-height: 38px;
+    box-sizing: border-box;    
+    padding: 0 10px;
+    font-size: 13px;
+    width: 100%;
+}
+
+.paymentNow.display p span {
+  float: right;
+  font-weight: 700;
+  color:#F09070;
+}
+
