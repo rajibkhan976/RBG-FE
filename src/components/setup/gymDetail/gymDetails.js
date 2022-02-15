@@ -141,6 +141,7 @@ const GymDetails = (props) => {
   }
   const closeGymDetailsHandler = (event) => {
     event.preventDefault();
+    window.location.reload(false);
     setShowEditForm(false);
   }
 
@@ -471,13 +472,13 @@ const GymDetails = (props) => {
                     disabled={(validateMsg.disabled === true || validateMsg.disabledAccess === true) ? true : false}>
                     Save <img alt="" src={arrowRightWhite} />
                   </button>
-                  <button class="btn-link" onClick={closeGymDetailsHandler}>Cancel</button>
-                </div>    
+                  <button type="text" class="btn-link" onClick={closeGymDetailsHandler}>Cancel</button>
+                </div>      
                 
               </form>
 
             }
-          </div>
+          </div> 
           <div className="gymdetails_right">
             {(holidayData.length === 0) &&
               <div className="emptyList">
