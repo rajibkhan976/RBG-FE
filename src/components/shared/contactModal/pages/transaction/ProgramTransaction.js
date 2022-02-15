@@ -16,6 +16,12 @@ import { Scrollbars } from "react-custom-scrollbars-2";
 const ProgramTransaction = (props) => {
   const [isLoader, setIsLoader] = useState(false);
   const [addPogramModal, setAddPogramModal] = useState(false);
+
+  const [chooseCategory, setChooseCategory] = useState(false);
+
+  const chooseCategoryFn = () => {
+    setChooseCategory(true);
+  };
   
   const addPogramModalFn = () => {
     setAddPogramModal(true);
@@ -50,7 +56,7 @@ const ProgramTransaction = (props) => {
                                 </label>
                                 
                                 <div
-                                  className={props.toggleContactList.status
+                                  className={chooseCategory
                                       ? "cmnFormField programsTransaction listActive"
                                       : "cmnFormField programsTransaction"
                                   }
@@ -59,10 +65,11 @@ const ProgramTransaction = (props) => {
                                     className="cmnFieldStyle"
                                     type="text"
                                     placeholder="Eg. Steve Martyns"
-                                    onChange={(e)=>props.toggleContactListFn(e)}
+                                    //onChange={(e)=>props.toggleContactListFn(e)}
+                                    onClick={chooseCategoryFn}
                                   />
-                                  
-                                  {props.toggleContactList.status && (
+                                  {chooseCategory && (
+                                  // {props.toggleContactList.status && (
                                     <>
                                       <div className="contactListItems">
                                         <button 
@@ -272,8 +279,8 @@ const ProgramTransaction = (props) => {
                                 </div>
                                 <div className={props.communication ? "previewDownpaymentBox display" : "previewDownpaymentBox"
                                 }>
-                                   <div className="NewDownpayment">
-                                    <form>
+                                   <div className="newDownpayment">
+                                    
                                       <button className="addNewDownpayment" onClick={props.addDownpaymentFn}>+ Add</button>
                                       <div className="transaction_form products forDownpayment">
                                         <div className="formsection gap">
@@ -360,13 +367,13 @@ const ProgramTransaction = (props) => {
                                           </div>
                                         </div>
                                       </div>
-                                     </form>
+                                     
                                    </div>
 
 
                                   {props.addDownpayment && (
-                                   <div className="NewDownpayment">
-                                    <form>
+                                   <div className="newDownpayment">
+                                    
                                       <button className="delNewDownpayment" onClick={props.delDownpaymentFn}><img src={deleteBtn} alt="" /> Delete</button>
                                       <div className="transaction_form products forDownpayment">
                                         <div className="formsection gap">
@@ -455,7 +462,7 @@ const ProgramTransaction = (props) => {
                                           </div>
                                         </div>
                                       </div>
-                                     </form>
+                                    
                                    </div>
                                   )}
 
@@ -590,9 +597,9 @@ const ProgramTransaction = (props) => {
                                                 </div> */}
                                                 <div className="modalbtnHolder saveCourses">
                                                   <button type="submit" name="save"
-                                                    className="saveNnewBtn"><span>Update</span><img src={arrow_forward} alt="" /></button>
+                                                    className="saveNnewBtn programModal"><span>Update</span><img src={arrow_forward} alt="" /></button>
                                                   <button type="submit" name="saveNew"
-                                                    className="saveNnewBtn"><span>Save &amp; New</span><img src={arrow_forward} alt="" /></button>
+                                                    className="saveNnewBtn programModal"><span>Save &amp; New</span><img src={arrow_forward} alt="" /></button>
                                                 </div>
                                               </form>
                                             </Scrollbars>

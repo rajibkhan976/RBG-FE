@@ -2646,12 +2646,13 @@ span.renewDate {
   padding-bottom: 10px;
 }
 
-.NewDownpayment {
+.newDownpayment {
   width: 100%;
   background: #FFFFFF;
   box-shadow: 0px 1px 6px rgb(0 0 0 / 10%);
   border-radius: 10px;
   margin-bottom: 15px;
+  display: flow-root;
 }
 
 button.addNewDownpayment {
@@ -2731,20 +2732,22 @@ button.delNewDownpayment {
   background-image: url("../images/arrowDown.svg");
   background-position: right 15px center;
   background-repeat: no-repeat;
+  cursor: pointer;
 }
 
 
 .modalDependent.modalAddCourses.modalBackdrop .modalForm  {
-  max-height: 610px;
+  max-height: 640px;
   height: 100%;
 }
 
 .modalDependent.modalAddCourses.modalBackdrop .slickModalBody  {
-  height: 88%;
+  height: 90%;
+  padding: 30px 25px;
 }
 
 .contactTabsInner h3.courseModalHeading {
-  margin-top: 22px;
+  margin-top: 15px;
   font-size: 20px;
   margin-bottom: 10px;
 }
@@ -2754,13 +2757,14 @@ p.courseModalPara {
 }
 
 .slickModalHeader.coursesModalHeader {
-  padding-bottom: 14px;
+  padding-bottom: 20px;
 }
 
 .modalbtnHolder.saveCourses .saveNnewBtn {
   width: auto;
   margin: 30px 5px 0;
 }
+
 .profile .profileUpload span.uploadText {
   top: 27px;
   cursor: pointer;
@@ -2830,6 +2834,9 @@ p.courseModalPara {
 
 .posSellingForm.contractOverview {
   padding-top: 10px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .posSellingForm.contractOverview .productAvailable.downpayment.active .previewBox .previewImgBox {
@@ -2926,4 +2933,101 @@ p.courseModalPara {
   font-weight: 700;
   color:#F09070;
 }
+.modalForm .formControl label {
+  padding-top: 5px;
+}
 
+.modalbtnHolder.saveCourses .saveNnewBtn.programModal {
+  margin: 20px 5px 0;
+}
+
+
+.productAvailable.contractdetails.active {
+    flex: 1 1 auto;
+    max-width: calc(50% - 10px);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #d5d5d5;
+    border-radius: 5px;
+}
+
+.productAvailable.paymentDetails.active {
+    border: 1px solid #d5d5d5;
+    border-radius: 5px;
+    margin-left: auto;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    max-width: calc(50% - 10px);
+}
+
+.programOverview {
+  width: 100%;
+  background-color: #F6F8FA;
+}
+
+.bodytransactionForm {
+  width: 100%;
+  padding: 15px;
+}
+
+.detailsOfPrograms {
+  width: 100%;
+  padding: 15px;
+}
+
+.programDetailsInfos {
+  width: 100%;
+  background: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  display: flex;
+}
+
+.programListImage {
+  flex: 0 0 100px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+.programListImage img {
+  width: 100%;
+  height: 100%;
+}
+
+.programInfos {
+  flex: 1 1 auto;
+    margin-left: 20px;
+}
+
+h6.programHeading {
+  color: #305671;
+  font-weight: 500;
+  font-size: 14px;
+  margin-right: 15%;
+  margin-bottom: 25px;
+}
+
+ul.programInfosUl {
+  width: 100%;
+}
+
+ul.programInfosUl li {
+  display: flow-root;
+  margin-bottom: 12px;
+}
+
+ul.programInfosUl li:last-child {
+  margin-bottom: 0;
+}
+
+.labelSpan {
+  font-size: 12px;
+  float: left;
+  color: #9BAEBC;
+}
+
+.informationSpan {
+  font-size: 12px;
+  float: right;
+  color: #305671;
+}
