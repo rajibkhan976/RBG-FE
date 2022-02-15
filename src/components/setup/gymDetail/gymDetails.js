@@ -487,7 +487,9 @@ const GymDetails = (props) => {
                   </button>
                   <button type="text" class="btn-link" onClick={closeGymDetailsHandler}>Cancel</button>
                 </div>      
-              </form> 
+                
+              </form>
+
             }
           </div> 
           <div className="gymdetails_right">
