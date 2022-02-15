@@ -11,7 +11,6 @@ import Loader from "../../Loader";
 const Transaction = (props) => {
   const [transactionList, setTransactionList] = useState([]);
   const [isLoader, setIsLoader] = useState(false);
-
   const fetchTransactionList = async (contactID) => {
     try {
       setIsLoader(true);
@@ -195,44 +194,57 @@ const Transaction = (props) => {
 
   return (
     <>
-      <div className="contactTabsInner">
+      <div className={props.contact.is_course_setup_remaining ? "contactTabsInner d-flex f-column" : "contactTabsInner" }>
         <h3 className="headingTabInner">Transactions</h3>
-        <div className="transHeader">
-          <button className="saveNnewBtn" onClick={props.goToTransaction}>
-            Make a Transaction <img src={arrow_forward} alt="" />
-          </button>
-          <span>* Explanatory text blurb should be here.</span>
-        </div>
-        <div className={transactionList?.pagination?.count > 0 ? "transactionListing" : "hide"}>
-          {isLoader ? <Loader /> : ''}
-          <div className="row head">
-            <div className="cell">Particulars</div>
-            <div className="cell">Amount</div>
-            <div className="cell">Transaction ID</div>
-            <div className="cell">&nbsp;</div>
-          </div>
-          <>
-            {
-              transactionList?.pagination?.count > 0 ? transactionList?.transactions?.map((transaction, key) => {
-                return (!transaction.is_pos) ? <CourseTransaction list={transaction} key={key} /> : <PosTransaction list={transaction} key={key} />;
-              }) : ""}
+        {(!props.contact.is_course_setup_remaining) ?
+            <>
+              {props.contact && props.contact.course_error !== undefined &&
+                  <div className="importCourseError d-flex f-align-center f-justify-center">
+                    <p>{props.contact.course_error}</p>
+                  </div>
+              }
+              <div className="transHeader">
+                <button className="saveNnewBtn" onClick={props.goToTransaction}>
+                  Make a Transaction <img src={arrow_forward} alt="" />
+                </button>
+                <span>* Explanatory text blurb should be here.</span>
+              </div>
+              <div className={transactionList?.pagination?.count > 0 ? "transactionListing" : "hide"}>
+                {isLoader ? <Loader /> : ''}
+                <div className="row head">
+                  <div className="cell">Particulars</div>
+                  <div className="cell">Amount</div>
+                  <div className="cell">Transaction ID</div>
+                  <div className="cell">&nbsp;</div>
+                </div>
+                <>
+                  {
+                    transactionList?.pagination?.count > 0 ? transactionList?.transactions?.map((transaction, key) => {
+                      return (!transaction.is_pos) ? <CourseTransaction list={transaction} key={key} /> : <PosTransaction list={transaction} key={key} />;
+                    }) : ""}
 
-          </>
-          
-                {/* <div className="noDataFound">
-                  <span>
-                    <img src={list_board_icon} alt="" />
-                    <span>No transaction found!</span>
-                  </span>
-                </div> */}
-              
-        </div>
-        {transactionList?.pagination?.count == 0 ? 
-          <div className="noDataFound">
-            <img src={list_board_icon} alt="" />
-            <span>No transaction found!</span>
-          </div> 
-        : "" }
+                </>
+
+                      {/* <div className="noDataFound">
+                        <span>
+                          <img src={list_board_icon} alt="" />
+                          <span>No transaction found!</span>
+                        </span>
+                      </div> */}
+
+              </div>
+              {transactionList?.pagination?.count == 0 ?
+                <div className="noDataFound">
+                  <img src={list_board_icon} alt="" />
+                  <span>No transaction found!</span>
+                </div>
+              : "" }
+            </> :
+            <div className="importTransactionError f-1 d-flex f-column f-align-center f-justify-center">
+              <p>Program data is importing; <br/>Please try again after some time.</p>
+            </div>
+
+        }
       </div>
     </>
   );

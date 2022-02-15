@@ -545,355 +545,368 @@ const Billing = (props) => {
 
   return (
     <>
-      <div className="contactTabsInner">
+      <div className={props.contact.is_payment_setup_remaining ? "contactTabsInner d-flex f-column" : "contactTabsInner"}>
         {isLoader ? <Loader /> : ""}
         <h3 className="headingTabInner">Billing Info</h3>
         <p className="subheadingTabInner">
           Explanatory text blurb should be here.
         </p>
-        <div className="twoBillingCardContainer">
-          <div className="billing_module">
-            <div className="primaryMaker">
-              <label>
-                <div class="circleRadio">
-                  <input
-                    type="radio"
-                    name="primary"
-                    onChange={(e) => makePrimaryMethod(e, "card")}
-                    defaultChecked={
-                      primaryType === "card"
-                    }
-                  />
-                  <span></span>
-                </div>
-                <span>
+        {(!props.contact.is_payment_setup_remaining) ?
+            <div className="twoBillingCardContainer">
+              {props.contact && props.contact.payment_error !== undefined &&
+                  <div className="importCPaymentError d-flex f-align-center f-justify-center">
+                    <p>{props.contact.payment_error}</p>
+                  </div>
+              }
+              <div className="billing_module">
+                <div className="primaryMaker">
+                  <label>
+                    <div class="circleRadio">
+                      <input
+                          type="radio"
+                          name="primary"
+                          onChange={(e) => makePrimaryMethod(e, "card")}
+                          defaultChecked={
+                              primaryType === "card"
+                          }
+                      />
+                      <span></span>
+                    </div>
+                    <span>
                   {primaryType !== "card" && "Make "}
-                  Primary
+                      Primary
                 </span>
-              </label>
-            </div>
-            <div className="flipCardHolder">
-              <div
-                className={listCardAnnim ? "cardList show" : "cardList hide"}
-              >
-                <div className="header">
-                  <div className="headerLeft">
-                    <img src={credit_card} alt="" /> Credit Cards
-                  </div>
-                  <button className="cardAddBtn" onClick={openNewCardHandler}>
-                    Add a Card
-                  </button>
+                  </label>
                 </div>
-                <div className="body">
-                  {cardBankList &&
-                    cardBankList.map((creditCard, i) => (
-                      <div
-                        key={i}
-                        className={
-                          creditCard.status === "active"
-                            ? "list active"
-                            : "list"
-                        }
-                      >
-                        <label className="leftside">
-                          <div class="circleRadio">
-                            <input
-                              type="radio"
-                              name="credit"
-                              onChange={() => activeCreditCard(creditCard)}
-                              defaultChecked={
-                                creditCard.status === "active" ? true : false
-                              }
-                              id={i}
-                            />
-                            <span></span>
-                          </div>{" "}
-                          {creditCard.checkIt ? "Active" : ""}
-                        </label>
-                        <div className="rightside">
-                          <p>
-                            <span>Card Number</span>
-                            XXXXXXXXXXXX{creditCard.last4}{" "}
-                          </p>
-                          <p className="diff">
-                            <span>Expiry</span>
-                            {`${creditCard.expiration_month} / ${creditCard.expiration_year}`}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              </div>
-              <div
-                className={newCardAnnim ? "addInList show" : "addInList hide"}
-              >
-                <div className="header">
-                  <button
-                    className="noEffectBtn cross"
-                    onClick={hideNewCardHandler}
+                <div className="flipCardHolder">
+                  <div
+                      className={listCardAnnim ? "cardList show" : "cardList hide"}
                   >
-                    <img src={cross_white} alt="" />
-                  </button>
-                  <img src={credit_card} alt="" />
-                  <h3>Add a credit Card</h3>
-                </div>
-                <div className="addingForm">
-                  <form id="addCardForm">
-                    <div className="formModule">
-                      <label>Card Number</label>
-                      <div className="activeFactor">
-                        <input
-                          type="text"
-                          className="creditCardText"
-                          placeholder="xxxx-xxxx-xxxx-xxxx"
-                          onChange={cardNumberCheckHandler}
-                          value={cardNumberCheck}
-                        />
-                        <div className="activate">
-                          <div class="customCheckbox">
-                            <input
-                              type="checkbox"
-                              name="credit"
-                              onChange={(e) =>
-                                e.target.checked
-                                  ? setCardActivationCheckText("active")
-                                  : setCardActivationCheckText("inactive")
-                              }
-                              // checked={cardActivationCheck}
-                            />
-                            <span></span>
-                          </div>{" "}
-                          Active
-                        </div>
+                    <div className="header">
+                      <div className="headerLeft">
+                        <img src={credit_card} alt=""/> Credit Cards
                       </div>
-
-                      {formErrorMsg.card_num_Err ? (
-                        <p className="errorMsg">Please fill up the field</p>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                    <div className="formModule">
-                      <label>Card Holder Name</label>
-                      <input
-                        type="text"
-                        placeholder="Ex. Adam Smith"
-                        onChange={cardNameCheckHandler}
-                        value={cardNameCheck}
-                      />
-                      {formErrorMsg.card_name_Err ? (
-                        <p className="errorMsg">Please fill up the field</p>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-
-                    <div className="halfDivForm">
-                      <div className="half formModule">
-                        <label>Expiry Date</label>
-                        <input
-                          type="text"
-                          placeholder="mm/yyyy"
-                          onChange={cardExpairyCheckHandler}
-                          value={cardExpairyCheck}
-                        />
-                        {formErrorMsg.card_exp_Err ? (
-                          <p className="errorMsg">{dateError}</p>
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                      <div className="half formModule">
-                        <label>CVV</label>
-                        <input
-                          type="text"
-                          onChange={cardCvvCheckHandler}
-                          value={cardCvvCheck}
-                        />
-                        {formErrorMsg.card_cvv_Err ? (
-                          <p className="errorMsg">Please fill up the field</p>
-                        ) : (
-                          ""
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="text-center">
-                      <button className="orangeBtn" onClick={saveCardData}>
-                        <img src={plus} alt="" /> Add my Card
+                      <button className="cardAddBtn" onClick={openNewCardHandler}>
+                        Add a Card
                       </button>
                     </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* ............................. */}
-          <div className="billing_module">
-            <div className="primaryMaker">
-              <label>
-                <div class="circleRadio">
-                  <input
-                    type="radio"
-                    name="primary"
-                    onChange={(e) => makePrimaryMethod(e, "bank")}
-                    defaultChecked={
-                      primaryType === "bank"
-                    }
-                  />
-                  <span></span>
-                </div>
-                <span>
-                  {primaryType !== "bank" && "Make "}
-                  Primary
-                </span>
-              </label>
-            </div>
-            <div className="flipCardHolder">
-              <div
-                className={listBankAnnim ? "cardList show" : "cardList hide"}
-              >
-                <div className="header">
-                  <div className="headerLeft">
-                    <img src={bank} alt="" /> Bank Accounts
+                    <div className="body">
+                      {cardBankList &&
+                          cardBankList.map((creditCard, i) => (
+                              <div
+                                  key={i}
+                                  className={
+                                    creditCard.status === "active"
+                                        ? "list active"
+                                        : "list"
+                                  }
+                              >
+                                <label className="leftside">
+                                  <div class="circleRadio">
+                                    <input
+                                        type="radio"
+                                        name="credit"
+                                        onChange={() => activeCreditCard(creditCard)}
+                                        defaultChecked={
+                                          creditCard.status === "active" ? true : false
+                                        }
+                                        id={i}
+                                    />
+                                    <span></span>
+                                  </div>
+                                  {" "}
+                                  {creditCard.checkIt ? "Active" : ""}
+                                </label>
+                                <div className="rightside">
+                                  <p>
+                                    <span>Card Number</span>
+                                    XXXXXXXXXXXX{creditCard.last4}{" "}
+                                  </p>
+                                  <p className="diff">
+                                    <span>Expiry</span>
+                                    {`${creditCard.expiration_month} / ${creditCard.expiration_year}`}
+                                  </p>
+                                </div>
+                              </div>
+                          ))}
+                    </div>
                   </div>
-                  <button className="cardAddBtn" onClick={openNewCardHandler2}>
-                    Add an Account
-                  </button>
-                </div>
-                <div className="body">
-                  {bankList &&
-                    bankList.map((bank, i) => (
-                      <div
-                        key={i}
-                        className={
-                          bank.status === "active" ? "list active" : "list"
-                        }
+                  <div
+                      className={newCardAnnim ? "addInList show" : "addInList hide"}
+                  >
+                    <div className="header">
+                      <button
+                          className="noEffectBtn cross"
+                          onClick={hideNewCardHandler}
                       >
-                        <label className="leftside">
-                          <div class="circleRadio">
+                        <img src={cross_white} alt=""/>
+                      </button>
+                      <img src={credit_card} alt=""/>
+                      <h3>Add a credit Card</h3>
+                    </div>
+                    <div className="addingForm">
+                      <form id="addCardForm">
+                        <div className="formModule">
+                          <label>Card Number</label>
+                          <div className="activeFactor">
                             <input
-                              type="radio"
-                              name="bank"
-                              onChange={() => activeCreditCard(bank)}
-                              defaultChecked={
-                                bank.status === "active" ? true : false
-                              }
-                              id={i}
+                                type="text"
+                                className="creditCardText"
+                                placeholder="xxxx-xxxx-xxxx-xxxx"
+                                onChange={cardNumberCheckHandler}
+                                value={cardNumberCheck}
                             />
-                            <span></span>
+                            <div className="activate">
+                              <div class="customCheckbox">
+                                <input
+                                    type="checkbox"
+                                    name="credit"
+                                    onChange={(e) =>
+                                        e.target.checked
+                                            ? setCardActivationCheckText("active")
+                                            : setCardActivationCheckText("inactive")
+                                    }
+                                    // checked={cardActivationCheck}
+                                />
+                                <span></span>
+                              </div>
+                              {" "}
+                              Active
+                            </div>
                           </div>
-                        </label>
-                        <div className="rightside">
-                          <p>
-                            <span>Account Number</span>
-                            XXXXXXXXXXXX{bank.last4}
-                          </p>
-                          <p className="diff">
-                            <span>Routing #</span>
-                            {bank.routing_number}
-                          </p>
-                          <div className="checking">{bank.account_type}</div>
+
+                          {formErrorMsg.card_num_Err ? (
+                              <p className="errorMsg">Please fill up the field</p>
+                          ) : (
+                              ""
+                          )}
                         </div>
-                      </div>
-                    ))}
+                        <div className="formModule">
+                          <label>Card Holder Name</label>
+                          <input
+                              type="text"
+                              placeholder="Ex. Adam Smith"
+                              onChange={cardNameCheckHandler}
+                              value={cardNameCheck}
+                          />
+                          {formErrorMsg.card_name_Err ? (
+                              <p className="errorMsg">Please fill up the field</p>
+                          ) : (
+                              ""
+                          )}
+                        </div>
+
+                        <div className="halfDivForm">
+                          <div className="half formModule">
+                            <label>Expiry Date</label>
+                            <input
+                                type="text"
+                                placeholder="mm/yyyy"
+                                onChange={cardExpairyCheckHandler}
+                                value={cardExpairyCheck}
+                            />
+                            {formErrorMsg.card_exp_Err ? (
+                                <p className="errorMsg">{dateError}</p>
+                            ) : (
+                                ""
+                            )}
+                          </div>
+                          <div className="half formModule">
+                            <label>CVV</label>
+                            <input
+                                type="text"
+                                onChange={cardCvvCheckHandler}
+                                value={cardCvvCheck}
+                            />
+                            {formErrorMsg.card_cvv_Err ? (
+                                <p className="errorMsg">Please fill up the field</p>
+                            ) : (
+                                ""
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="text-center">
+                          <button className="orangeBtn" onClick={saveCardData}>
+                            <img src={plus} alt=""/> Add my Card
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              <div
-                className={newBankAnnim ? "addInList show" : "addInList hide"}
-              >
-                <div className="header">
-                  <button
-                    className="noEffectBtn cross"
-                    onClick={hideNewCardHandler2}
-                  >
-                    <img src={cross_white} alt="" />
-                  </button>
-                  <img src={bank} alt="" />
-                  <h3>Add a Bank Account</h3>
-                </div>
-                <div className="addingForm">
-                  <form>
-                    <div className="formModule">
-                      <label>Account Number</label>
-                      <div className="activeFactor">
-                        <input
-                          type="text"
-                          placeholder="xxxxxxxxx"
-                          onChange={bankAccountCheckHandler}
-                          value={bankAccountCheck}
-                        />
-                        <div className="activate">
-                          <div class="customCheckbox">
-                            <input
-                              type="checkbox"
-                              name="credit"
-                              onChange={(e) =>
-                                e.target.checked
-                                  ? setBankActivationCheckText("active")
-                                  : setBankActivationCheckText("inactive")
-                              }
-                              // checked={bankActivationCheck}
-                            />
-                            <span></span>
-                          </div>{" "}
-                          Active
-                        </div>
-                      </div>
-                      {formErrorMsg.bank_acc_Err ? (
-                        <p className="errorMsg">Please fill up the field</p>
-                      ) : (
-                        ""
-                      )}
-                    </div>
-                    <div className="formModule">
-                      <label>Account Holder Name</label>
+              {/* ............................. */}
+              <div className="billing_module">
+                <div className="primaryMaker">
+                  <label>
+                    <div class="circleRadio">
                       <input
-                        type="text"
-                        placeholder="Ex. Adam Smith"
-                        onChange={bankNameCheckHandler}
-                        value={bankNameCheck}
+                          type="radio"
+                          name="primary"
+                          onChange={(e) => makePrimaryMethod(e, "bank")}
+                          defaultChecked={
+                              primaryType === "bank"
+                          }
                       />
-                      {formErrorMsg.bank_name_Err ? (
-                        <p className="errorMsg">Please fill up the field</p>
-                      ) : (
-                        ""
-                      )}
+                      <span></span>
                     </div>
-                    <div className="halfDivForm">
-                      <div className="half formModule">
-                        <label>Routing #</label>
-                        <input
-                          type="text"
-                          onChange={bankRoutingCheckHandler}
-                          value={bankRoutingCheck}
-                        />
-                        {formErrorMsg.bank_routing_err ? (
-                          <p className="errorMsg">Please fill up the field</p>
-                        ) : (
-                          ""
-                        )}
+                    <span>
+                  {primaryType !== "bank" && "Make "}
+                      Primary
+                </span>
+                  </label>
+                </div>
+                <div className="flipCardHolder">
+                  <div
+                      className={listBankAnnim ? "cardList show" : "cardList hide"}
+                  >
+                    <div className="header">
+                      <div className="headerLeft">
+                        <img src={bank} alt=""/> Bank Accounts
                       </div>
-                      <div className="half formModule">
-                        <label>Account Type</label>
-                        <select className="selectBox">
-                          <option>Checking</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div className="text-center">
-                      <button className="orangeBtn" onClick={saveBankData}>
-                        <img src={plus} alt="" /> Add my Bank Account
+                      <button className="cardAddBtn" onClick={openNewCardHandler2}>
+                        Add an Account
                       </button>
                     </div>
-                  </form>
+                    <div className="body">
+                      {bankList &&
+                          bankList.map((bank, i) => (
+                              <div
+                                  key={i}
+                                  className={
+                                    bank.status === "active" ? "list active" : "list"
+                                  }
+                              >
+                                <label className="leftside">
+                                  <div class="circleRadio">
+                                    <input
+                                        type="radio"
+                                        name="bank"
+                                        onChange={() => activeCreditCard(bank)}
+                                        defaultChecked={
+                                          bank.status === "active" ? true : false
+                                        }
+                                        id={i}
+                                    />
+                                    <span></span>
+                                  </div>
+                                </label>
+                                <div className="rightside">
+                                  <p>
+                                    <span>Account Number</span>
+                                    XXXXXXXXXXXX{bank.last4}
+                                  </p>
+                                  <p className="diff">
+                                    <span>Routing #</span>
+                                    {bank.routing_number}
+                                  </p>
+                                  <div className="checking">{bank.account_type}</div>
+                                </div>
+                              </div>
+                          ))}
+                    </div>
+                  </div>
+
+                  <div
+                      className={newBankAnnim ? "addInList show" : "addInList hide"}
+                  >
+                    <div className="header">
+                      <button
+                          className="noEffectBtn cross"
+                          onClick={hideNewCardHandler2}
+                      >
+                        <img src={cross_white} alt=""/>
+                      </button>
+                      <img src={bank} alt=""/>
+                      <h3>Add a Bank Account</h3>
+                    </div>
+                    <div className="addingForm">
+                      <form>
+                        <div className="formModule">
+                          <label>Account Number</label>
+                          <div className="activeFactor">
+                            <input
+                                type="text"
+                                placeholder="xxxxxxxxx"
+                                onChange={bankAccountCheckHandler}
+                                value={bankAccountCheck}
+                            />
+                            <div className="activate">
+                              <div class="customCheckbox">
+                                <input
+                                    type="checkbox"
+                                    name="credit"
+                                    onChange={(e) =>
+                                        e.target.checked
+                                            ? setBankActivationCheckText("active")
+                                            : setBankActivationCheckText("inactive")
+                                    }
+                                    // checked={bankActivationCheck}
+                                />
+                                <span></span>
+                              </div>
+                              {" "}
+                              Active
+                            </div>
+                          </div>
+                          {formErrorMsg.bank_acc_Err ? (
+                              <p className="errorMsg">Please fill up the field</p>
+                          ) : (
+                              ""
+                          )}
+                        </div>
+                        <div className="formModule">
+                          <label>Account Holder Name</label>
+                          <input
+                              type="text"
+                              placeholder="Ex. Adam Smith"
+                              onChange={bankNameCheckHandler}
+                              value={bankNameCheck}
+                          />
+                          {formErrorMsg.bank_name_Err ? (
+                              <p className="errorMsg">Please fill up the field</p>
+                          ) : (
+                              ""
+                          )}
+                        </div>
+                        <div className="halfDivForm">
+                          <div className="half formModule">
+                            <label>Routing #</label>
+                            <input
+                                type="text"
+                                onChange={bankRoutingCheckHandler}
+                                value={bankRoutingCheck}
+                            />
+                            {formErrorMsg.bank_routing_err ? (
+                                <p className="errorMsg">Please fill up the field</p>
+                            ) : (
+                                ""
+                            )}
+                          </div>
+                          <div className="half formModule">
+                            <label>Account Type</label>
+                            <select className="selectBox">
+                              <option>Checking</option>
+                            </select>
+                          </div>
+                        </div>
+
+                        <div className="text-center">
+                          <button className="orangeBtn" onClick={saveBankData}>
+                            <img src={plus} alt=""/> Add my Bank Account
+                          </button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+            : <div className="importBillingError f-1 d-flex f-column f-align-center f-justify-center">
+              <p>Billing details is importing; <br/>Please try again after some time.</p>
+            </div>
+        }
       </div>
     </>
   );

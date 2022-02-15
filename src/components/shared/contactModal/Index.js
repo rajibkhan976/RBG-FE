@@ -288,11 +288,11 @@ const ContactModal = (props) => {
                             <Step title="Attendance" component={Attendance} />
                             <Step title="Appointment" component={Appointment} contactId={props.contactId} />
                             <Step title="Transaction"
-                                contactId={props.contactId}
+                                contactId={props.contactId} contact={contactData}
                                 backToTransList={backToTransListHandler}
                                 goToTransaction={goToTransactionHandler}
                                 component={goToTransactionClicked ? TransactionChoose : Transaction} />
-                            <Step title="Billing" component={Billing} contactId={props.contactId} />
+                            <Step title="Billing" component={Billing} contact={contactData} contactId={props.contactId} />
                             <Step title="Dependents" component={Dependents} contactId={props.contactId} />
                         </Steps>
                     </div>

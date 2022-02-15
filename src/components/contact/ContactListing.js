@@ -7,6 +7,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { ErrorAlert, SuccessAlert } from '../shared/messages';
 import owner_img_1 from '../../../src/assets/images/owner_img_1.png';
 import arrow_forward from '../../../src/assets/images/arrow_forward.svg';
+import warning_bell from "../../../src/assets/images/bell.svg"
 import { ContactService } from "../../services/contact/ContactServices";
 import { utils } from "../../helpers";
 import Loader from "../shared/Loader";
@@ -324,6 +325,10 @@ const ContactListing = forwardRef((props, ref) => {
                             return (
                                 <div className={item.id === "name" ? "dataTableCell user" : "dataTableCell"} key={pp}>
                                     {(j === 1) ? <button className="extraDottedBtn" type="button"></button> : ""}
+                                    {(j === 1) ? ((ele.payment_error != undefined || ele.course_error != undefined) ? <span className="infoWarning warningSpace"
+                                        data-title={(ele.payment_error != undefined ? ele.payment_error : "" ) + ' ' + (ele.course_error != undefined ? ele.course_error : "")}>
+                                        <img src={warning_bell} alt="warning" />
+                        </span> : <span className="warningSpace"></span>) : ""}
                                     <button className="btn" onClick={() => openContactModal(ele._id)}>
                                         {(item.id === "name") ? <span className="tableCellUserImg">
                                             <LazyLoadImage
