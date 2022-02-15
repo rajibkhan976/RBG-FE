@@ -425,12 +425,14 @@ const Dependents = (props) => {
           .then(result => {
             console.log("Create dependent result", result)
             let msg = 'Dependent created successfully';
+            setIsDisabled(true);
             setSuccessMsgPopup(msg);
 
             //Close dependent create modal
             setTimeout(() => {
               closeModal();
               fetchContactDependents();
+              setIsDisabled(false);
             },
               messageDelay
             );
@@ -600,7 +602,7 @@ const Dependents = (props) => {
                             <em onClick={() => OpenDependentContactModal(dependent._id)} className="dependent-name">{dependent.name ? dependent.name : ((dependent.firstName ? dependent.firstName : '') + ' ' + (dependent.lastName ? dependent.lastName : ''))}</em>
                             <div className="dndCheckbox">
                               <span onClick={(e) => toggleDncStatus(dependent._id, i)}>
-                                <img src={dependent.dnc ? dnd : dndFalse} alt={dependent.dnc ? "Send notifications" : "Do not send notifications"} />
+                                <img src={dependent.dnc ? dndFalse : dnd} alt={dependent.dnc ? "Do not send notifications" : "Send notifications"} />
                               </span>
                             </div>
                           </h4>
