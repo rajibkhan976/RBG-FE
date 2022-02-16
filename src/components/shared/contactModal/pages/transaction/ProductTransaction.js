@@ -7,6 +7,7 @@ import info_icon from "../../../../../assets/images/infos.svg";
 import plus_icon from "../../../../../assets/images/plus_icon.svg"
 import Loader from '../../../Loader';
 import cart_icon from "../../../../../assets/images/cart.svg"
+import delete_icon from "../../../../../assets/images/delete_icon_grey.svg"
 import { ErrorAlert } from '../../../messages';
 
 const ProductTransaction = (props) => {
@@ -26,7 +27,7 @@ const ProductTransaction = (props) => {
             sizes: [
                 "S", "M", "L"
             ],
-            price: 99,
+            price: 99.00,
             tax: false
         }
     ])
@@ -35,19 +36,28 @@ const ProductTransaction = (props) => {
     const [cartState, setCartState] = useState([])
     const priceInput = useRef(null)
     const quantityInput = useRef(null)
-    const [hasError, sethasError] = useState({
+    const productTransaction = useRef(null)
+
+    const [hasError, setHasError] = useState(false)
+
+    const [errorState, setErrorState] = useState({
         color: "",
         sizes: "",
         price: "",
         quantity: ""
     })
-
+    const [totalAmt, setTotalAmt] = useState(0)
     const selectedColor = (e) => {
         try {
             setShowLoader(true);
             setSelectedProduct({
                 ...selectedProduct,
                 selectedColor: e
+            })
+            setHasError(true);
+            setErrorState({
+                ...hasError,
+                color: ""
             })
         } catch(err) {
             setErrorMsg(err);
@@ -63,6 +73,11 @@ const ProductTransaction = (props) => {
             setSelectedProduct({
                 ...selectedProduct,
                 selectedSize: e
+            })
+            setHasError(true);
+            setErrorState({
+                ...hasError,
+                sizes: ""
             })
         } catch(err) {
             setErrorMsg(err);
@@ -87,71 +102,121 @@ const ProductTransaction = (props) => {
     }
     useEffect(() =>{},[cartState])
 
+    const priceChangeProduct = () => {
+        let priceChange = priceInput.current.value;
+        let resultSplit = priceChange.split(".")
+        
+        setSelectedProduct({
+            ...selectedProduct,
+            price: (resultSplit.length == 1 || resultSplit[1].length < 3) ? parseInt(priceChange).toFixed(2): parseInt(priceChange)+".00"
+        })
+    }
+
+    const setQuantity = () => {
+        let quantity = quantityInput.current.value;
+        console.log("quantity", quantity);
+        setSelectedProduct({
+            ...selectedProduct,
+            quantity: (quantity != "null") && parseInt(quantity)
+        })
+    }
+
+    const decreaseQuantity = (e, cartItem, i) => {
+        e.preventDefault()
+        console.log(cartItem, i);
+    }
+
+    const increaseQuantity = (e, cartItem, i) => {
+        e.preventDefault()
+        console.log(cartItem, i);
+    }
+
+    useEffect(()=>{
+        console.log("selectedProduct", selectedProduct);
+    },[selectedProduct, hasError])
+
     const addThisProduct = (e) => {
         e.preventDefault()
-        const thisProduct = selectedProduct;
 
-        console.log(quantityInput.current.value, priceInput.current.value, selectedProduct.selectedColor, selectedProduct.selectedSize);
-        
+
         try {
-            // sethasError
-            if(
-                (quantityInput.current.value !== null && quantityInput.current.value !== undefined) && 
-                (priceInput.current.value !== null && quantityInput.current.value !== undefined) && 
-                (selectedProduct.selectedColor !== null && quantityInput.current.value !== undefined) &&
-                (selectedProduct.selectedSize !== null && quantityInput.current.value !== undefined)
-            ) {
-                sethasError({
+
+            if(selectedProduct.quantity === undefined) {
+                console.log("selectedProduct.quantity", selectedProduct.quantity);
+                setHasError(true);
+                setErrorState({
+                    ...hasError,
+                    quantity: "Please set some quantity!"
+                })
+            }
+            if(priceInput.current.value.trim().length === 0) {
+                setHasError(true);
+                setErrorState({
+                    ...hasError,
+                    price: "Please set proper price!"
+                })
+            }
+            if(selectedProduct.selectedColor === undefined) {
+                setHasError(true);
+                setErrorState({
+                    ...hasError,
+                    color: "Please select a color!"
+                })
+            }
+            if(selectedProduct.selectedSize === undefined) {
+                console.log(hasError);
+                setHasError(true);
+                setErrorState({
+                    ...hasError,
+                    sizes: "Please select a size!"
+                })
+            }
+            else if(selectedProduct.quantity && selectedProduct.price && selectedProduct.selectedColor && selectedProduct.selectedSize) {
+                console.log("here")
+                setCartState([
+                    ...cartState,
+                    selectedProduct
+                ])
+                setHasError(false);
+                setErrorState({
                     color: "",
                     sizes: "",
                     price: "",
                     quantity: ""
                 })
-                setCartState([
-                    ...cartState,
-                    selectedProduct
-                ])
-            }
-            else {
-                if(quantityInput.current.value !== null || quantityInput.current.value !== undefined) {
-                    sethasError({
-                        ...hasError,
-                        quantity: "Please set some quantity!"
-                    })
-                }
-                if(priceInput.current.value !== null || quantityInput.current.value !== undefined) {
-                    sethasError({
-                        ...hasError,
-                        price: "Please set proper price!"
-                    })
-                }
-                if(selectedProduct.selectedColor !== null || quantityInput.current.value !== undefined) {
-                    sethasError({
-                        ...hasError,
-                        color: "Please select a color!"
-                    })
-                }
-                if(selectedProduct.selectedSize !== null || quantityInput.current.value !== undefined) {
-                    sethasError({
-                        ...hasError,
-                        sizes: "Please select a size!"
-                    })
-                }
+                getTotalCart()
+                resetAddProduct()
             }
         } catch (error) {
             setErrorMsg(error)
         } finally {
             setErrorMsg("")
         }
-        console.log("selectedProduct", priceInput.current.value === "", quantityInput.current.selectedIndex === 0);
     }
 
+    const resetAddProduct = () => {
+        productTransaction.current.reset()
+        setSelectedProduct(null)
+    }
+
+    const getTotalCart = () => {
+        console.log("Sum now");
+        setTotalAmt(totalAmt+(selectedProduct.price*selectedProduct.quantity))
+    }
     useEffect(()=>{
-        console.log("selectedProduct", selectedProduct);
-    },[selectedProduct, productItemsList])
+        console.log(totalAmt);
+    },[totalAmt])
+
+    useEffect(()=>{
+        console.log("hasError UPDATED:::", hasError);
+    },[hasError])
+
+    useEffect(()=>{
+        
+    },[])
 
     return (
-        <form className="productTransaction">
+        <form className="productTransaction" ref={productTransaction}>
             {errorMsg && <ErrorAlert message={errorMsg}></ErrorAlert>}
 
             {/* <div className="transaction_form">      
@@ -219,18 +284,19 @@ const ProductTransaction = (props) => {
                     <h5>Select Product</h5>
                 </header>
                 <div className='bodytransactionForm'>
+                    <div className='bodytransaction'>
                     <div className='cmnFormRow'>
-                        <span className='labelWithInfo'>
-                            <label>Select Product</label>
+                        <label className='labelWithInfo'>
+                            <span>Select Product</span>
                             <span className="infoSpan">
                                 <img src={info_icon} alt="" />
                                 <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                             </span>
-                        </span>
+                        </label>
                         <div className="cmnFormField">
                             <div className='cmnFormSelect addProductFormField'>
                                 <button className='btn btnSelect cmnFieldStyle' onClick={(e)=>addProduct(e)}>
-                                    <span>{selectedProduct === null ? "Select" : selectedProduct.name}</span>
+                                    <span>{!selectedProduct || selectedProduct === undefined || selectedProduct === null ? "Select" : selectedProduct.name}</span>
                                 </button>
                                 {showProductList && 
                                     <div className='cmnFormSelectBody'>
@@ -249,7 +315,10 @@ const ProductTransaction = (props) => {
                                                             backgroundImage: "url("+productItem.picture+")"
                                                         }}
                                                     ></figure>
-                                                    <span>{productItem.name}</span>
+                                                    <div className='productItemShorts'>
+                                                        <span>{productItem.name}</span>
+                                                        <strong>Price: {productItem.price}</strong>
+                                                    </div>
                                                 </li>
                                             ))}
                                         </ul>
@@ -258,11 +327,11 @@ const ProductTransaction = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div className='cmnFormRow'>
+                    <div className={hasError.color ? 'cmnFormRow error' : 'cmnFormRow'}>
                         <label>Color</label>
                         <div className='cmnFormField'>
                             <div className='colorChoiceProduct'>
-                            {selectedProduct === null ? 
+                            {!selectedProduct || selectedProduct === undefined || selectedProduct === null ? 
                                 <>
                                     <label className='colorChoiceItem'>
                                         <input type="radio" name="select-product-color" disabled />
@@ -299,11 +368,11 @@ const ProductTransaction = (props) => {
                             </div>
                         </div>
                     </div>
-                    <div className='cmnFormRow'>
+                    <div className={hasError.sizes ? 'cmnFormRow error' : 'cmnFormRow'}>
                         <label>Available Sizes</label>
                         <div className='cmnFormField'>
                             <div className='sizeChoiceProduct'>
-                            {selectedProduct === null ? 
+                            {!selectedProduct || selectedProduct === undefined || selectedProduct === null ? 
                                 <>
                                     <label className='sizeChoiceItem'>
                                         <input type="radio" name="select-product-size" disabled />
@@ -335,7 +404,7 @@ const ProductTransaction = (props) => {
                         </div>
                     </div>
                     <div className='cmnFormRow'>
-                        <div className='cmnFormCol'>
+                        <div className={hasError.price ? 'cmnFormCol error' : 'cmnFormCol'}>
                             <label className='labelWithInfo'>
                                 <span>Price</span>
                                 <span className="infoSpan">
@@ -351,13 +420,15 @@ const ProductTransaction = (props) => {
                                     type="number" 
                                     className='cmnFieldStyle' 
                                     placeholder='0' 
-                                    disabled={selectedProduct === null} 
+                                    disabled={!selectedProduct || selectedProduct === undefined || selectedProduct === null} 
                                     ref={priceInput}
-                                    defaultValue={selectedProduct && selectedProduct.price}
+                                    defaultValue={selectedProduct && parseFloat(selectedProduct.price).toFixed(2)}
+                                    onChange={priceChangeProduct}
+                                    step="0.01"
                                 />
                             </div>
                         </div>
-                        <div className='cmnFormCol'>
+                        <div className={hasError.quantity ? 'cmnFormCol error' : 'cmnFormCol'}>
                             <label className='labelWithInfo'>
                                 <span>Quantity</span>
                                 <span className="infoSpan">
@@ -369,8 +440,9 @@ const ProductTransaction = (props) => {
                             <div className='cmnFormField'>
                                 <select 
                                     className='selectBox' 
-                                    disabled={selectedProduct === null} 
+                                    disabled={!selectedProduct || selectedProduct === undefined || selectedProduct === null} 
                                     ref={quantityInput}
+                                    onChange={setQuantity}
                                 >
                                     <option value="null">Quantity</option>
                                     <option value="1">1</option>
@@ -386,12 +458,13 @@ const ProductTransaction = (props) => {
                     <div className='cmnFormRow'>
                         <button 
                             className='addToCart orangeBtn' 
-                            disabled={selectedProduct === null}
+                            disabled={!selectedProduct || selectedProduct === undefined || selectedProduct === null}
                             onClick={addThisProduct}
                         >
                             <img src={plus_icon} alt="Add Product" />
                             <span>Add Product</span>
                         </button>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -400,17 +473,83 @@ const ProductTransaction = (props) => {
                     <header className='informHeader'>
                         <h5>Cart <span className='cartCount'>{getCartItems()}</span></h5>
                     </header>
-                    <div className={cartState && cartState.length < 1 ? 'bodytransactionForm d-flex f-column f-align-center f-justify-center text-center' : 'bodytransactionForm'}>
-                        {cartState && cartState.length > 0 ? cartState.map((cartItem, i) => {
-
-                        }): 
+                    <div className={cartState && cartState.length < 1 ? 'bodytransactionForm d-flex f-column f-align-center f-justify-center text-center' : 'bodytransactionForm d-flex f-column'}>
+                        <div className='bodytransaction'>
+                            {console.log("CART:::", cartState)}
+                        {cartState && cartState.length > 0 ? 
+                            cartState.map((cartItem, i) => 
+                            <div className='cartItem' key={i}>
+                                <div className='upperCart d-flex'>
+                                    <figure className='productImg' style={{
+                                        backgroundImage: "url("+cartItem.picture+")"
+                                    }}></figure>
+                                    <div className='choiceOpt f1'>
+                                        <header className='d-flex'>
+                                            <h6>
+                                                {cartItem.name}
+                                            </h6>
+                                            <button className='btn'>
+                                                <img src={delete_icon} alt="Delete Item" />
+                                            </button>
+                                        </header>
+                                        <div className='customizedItemDeet'>
+                                            <div className='colorItem'>
+                                                <label>
+                                                    Color
+                                                </label>
+                                                <figure className='colorFig' style={{
+                                                    backgroundColor: cartItem.selectedColor
+                                                }}></figure>
+                                            </div>
+                                            <div className='customizedItemSize'>
+                                                <label>
+                                                    Size
+                                                </label>
+                                                <figure className='sizeItem'>
+                                                    {cartItem.selectedSize}
+                                                </figure>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <footer className='d-flex f-justify-between f-align-center'>
+                                    <div className='counterItem'>
+                                        <button className='btn' onClick={(e)=>decreaseQuantity(e, cartItem, i)}>
+                                            <svg width="12" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M11.25 1.75H0.75V0.25H11.25V1.75Z" fill="#9BAEBC"/>
+                                            </svg>
+                                        </button>
+                                        <span>{cartItem.quantity}</span>
+                                        <button className='btn' onClick={(e)=>increaseQuantity(e, cartItem, i)}>
+                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M11.25 6.75H6.75V11.25H5.25V6.75H0.75V5.25H5.25V0.75H6.75V5.25H11.25V6.75Z" fill="#9BAEBC"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div className='countPrice'>
+                                        $ {cartItem.price}x{cartItem.quantity}
+                                    </div>
+                                    <div className='cartAmount'>
+                                        {cartItem.price * cartItem.quantity}
+                                        {cartState &&
+                                            <div className='cartTax'>
+                                                +Tax
+                                            </div>
+                                        }
+                                    </div>
+                                </footer>
+                            </div>
+                                
+                            )
+                            : 
                             <>
                                 <figure className='noProduct'>
                                     <img src={cart_icon} alt="No product added" />
                                     <figcaption>havn’t add any Product</figcaption>
                                 </figure>
                             </>
-                        }
+                            }
+                        </div>
                     </div>
                 </div>
                 <footer className='cartTotal'>
@@ -418,7 +557,7 @@ const ProductTransaction = (props) => {
                         Total item Price
                     </label>
                     <div className='cartPrice'>
-                        <h4>$ 00.00</h4>
+                        <h4>$ {totalAmt}</h4>
                     </div>
                 </footer>
             </div>
