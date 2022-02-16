@@ -11,6 +11,10 @@ import profileAvatar from "../../../../../assets/images/camera.svg";
 import chooseImg from "../../../../../assets/images/chooseImg.svg";
 import arrow_forward from "../../../../../assets/images/arrow_forward.svg";
 import program from "../../../../../assets/images/program.png";
+import card from "../../../../../assets/images/card.svg";
+import cardActive from "../../../../../assets/images/cardActive.svg";
+import banks from "../../../../../assets/images/banks.svg";
+import bankActive from "../../../../../assets/images/bankActive.svg";
 import Loader from "../../../../shared/Loader";
 import { Scrollbars } from "react-custom-scrollbars-2";
 
@@ -79,7 +83,81 @@ const ContractOverviewTransaction = (props) => {
                 </div>
                 </div>
               </div>
-          </div>        
+          </div>    
+
+          <div class="programOverview"> 
+              <header className='informHeader paymentAdd'>
+                    <h5>Billing Overview <span class="addPaymentInfo">+ Add</span></h5>
+              </header>
+              <div className="bodytransactionForm">
+                <p className="paymentTypes">Cards</p>
+
+                <div className="chooseTransactionType paymentTypes" >
+                
+                    <label>
+                        <div class="circleRadio">
+                            <input type="radio" name="transactionTypeCard"/><span></span>
+                        </div> 
+                        <div className="cardImage">
+                          <img src={card} alt=""/>
+                        </div>
+                        <div class="paymentModuleInfos">
+                          <span className="accNumber">Credit Card ending with <b>1234</b></span>
+                          <span className="accinfod">Expires  07 / 25</span>
+                        </div>
+                        
+                    </label>
+                    <label> 
+                        <div class="circleRadio">
+                            <input type="radio"
+                                name="transactionTypeCard"/><span></span>
+                        </div> 
+                        <div className="cardImage">
+                          <img src={card} alt=""/>
+                        </div>
+                        <div class="paymentModuleInfos">
+                          <span className="accNumber">Debit Card ending with <b>7890</b></span>
+                          <span className="accinfod">Expires  05 / 28</span>
+                        </div>
+                    </label>
+                </div>
+
+                <p className="paymentTypes bank">Bank</p>
+
+                <div className="chooseTransactionType paymentTypes" >
+                
+                    <label>
+                        <div class="circleRadio">
+                            <input type="radio" name="transactionTypeBank"/><span></span>
+                        </div> 
+                        <div className="cardImage">
+                          <img src={banks} alt=""/>
+                        </div>
+                        <div class="paymentModuleInfos">
+                          <span className="accNumber">Bank account ending with <b>1234</b></span>
+                          <span className="accinfod">Routing Number  10000100</span>
+                        </div>
+                        
+                    </label>
+                    <label> 
+                        <div class="circleRadio">
+                            <input type="radio"
+                                name="transactionTypeBank"/><span></span>
+                        </div> 
+                        <div className="cardImage">
+                          <img src={banks} alt=""/>
+                        </div>
+                        <div class="paymentModuleInfos">
+                          <span className="accNumber">Bank account ending with <b>7890</b></span>
+                          <span className="accinfod">Routing Number  10000200</span>
+                        </div>
+                    </label>
+                </div>
+
+
+              </div>
+          </div> 
+
         </div>                    
 
         <div className="productAvailable paymentDetails active">
