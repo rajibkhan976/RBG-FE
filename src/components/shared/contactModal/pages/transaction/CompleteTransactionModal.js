@@ -7,13 +7,43 @@ import arrowForwardImg from "../../../../../../src/assets/images/arrow_forward.s
 
 const CompleteTransactionModal = (props) => {
 
-    const [refundReason, setRefundReason] = useState("");
+    const [refundFormData, setRefundFormData] = useState({
+        amount: "",
+        reason: "",
+        otherReason: "",
+        confirmRefund: false
+    });
 
 
+    const refundAmountHandel = (e) => {
+        // setRefundFormData({...refundFormData, amount: e.target.value});
+        let val = e.target.value;
+        const re = new RegExp(/^\d*\.?\d{0,2}$/);
+
+        if (re.test(val)) {
+            setRefundFormData({...refundFormData, amount: e.target.value});
+        }
+         
+    };
 
     const refundReasonHandel = (e) => {
-        setRefundReason(e.target.value);
+        setRefundFormData({...refundFormData, reason: e.target.value});
     };
+
+    const otherReasonHandel = (e) => {
+        setRefundFormData({...refundFormData, otherReason: e.target.value})
+    };
+
+    const confirmRefundHandel = (e) => {
+        setRefundFormData({...refundFormData, confirmRefund: e.target.checked})
+    };
+
+    const refundSubmit = () => {
+        console.log(refundFormData);
+    };
+
+    
+    
     
 
     return (
@@ -28,8 +58,8 @@ const CompleteTransactionModal = (props) => {
                 <div className="cmnForm">
                     <form>
                         <div className="cmnFormRow">
-                            <label className="cmnFieldName">Refund Amount</label>
-                            <input type="text" className="cmnFieldStyle" />
+                            <label className="cmnFieldName">Refund Amount {refundFormData.amount}</label>
+                            <input type="text" className="cmnFieldStyle" onChange={refundAmountHandel} value={refundFormData.amount}/>
                         </div>
                         <div className="cmnFormRow">
                             <label className="cmnFieldName">Select Refund Reason</label>
@@ -41,16 +71,16 @@ const CompleteTransactionModal = (props) => {
                                 <option value="others">Others</option>
                             </select>
                         </div>
-                        { refundReason == "others" ? 
+                        { refundFormData.reason == "others" ? 
                         <div className="cmnFormRow">
                             <label className="cmnFieldName">Add Refund Reason <span className="mandatory">*</span></label>
-                            <textarea className="cmnFieldStyle" placeholder="Add the Refund Reason (Mandatory)"></textarea>
+                            <textarea className="cmnFieldStyle" placeholder="Add the Refund Reason (Mandatory)" onChange={otherReasonHandel}></textarea>
                         </div>
                         : "" }
                         <div className="cmnFormRow">
                             <label className="cmnFieldName cashReceived">
                                 <div className="customCheckbox">
-                                    <input type="checkbox" />
+                                    <input type="checkbox" onChange={confirmRefundHandel} />
                                     <span></span>
                                 </div> 
                                 I confirm that I have refunded the amount by cash 
@@ -58,7 +88,7 @@ const CompleteTransactionModal = (props) => {
                         </div>
                         <div className="cmnFormRow">
                             <div className="btnGroup centered">
-                                <button className="cmnBtn">
+                                <button type="button" className="cmnBtn" onClick={refundSubmit}>
                                     <span>Refund</span>
                                     <img src={arrowForwardImg} alt="" />
                                 </button>
