@@ -1447,8 +1447,8 @@ input::-webkit-inner-spin-button {
   box-sizing: border-box;
   border-radius: 2px;
   display: inline-flex;
-  width: 26px;
-  height: 24px;
+  flex: 1 1 auto;
+  height: 100%;
   align-items: center;
   justify-content: center;
   font-weight: 500;
@@ -1458,6 +1458,28 @@ input::-webkit-inner-spin-button {
   color: #305671;
   margin: 0 2px;
   vertical-align: middle;
+}
+.counterItem .btn {
+  width: 24px;
+  height: 22px;
+  background: #F6F8FA;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+.counterItem .btn:hover {
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.counterItem.cmnFieldStyle {
+  border: none;
+  background: transparent;
+}
+.cmnFormField .counterItem span {
+  flex: 1 1 auto;
+}
+.cmnFormField .counterItem .btn {
+  width: 38px;
+  height: 100%;
+  background-color: #fff;
 }
 .countPrice {
   font-weight: 500;

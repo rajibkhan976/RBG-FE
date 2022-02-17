@@ -8,7 +8,10 @@ import plus_icon from "../../../../../assets/images/plus_icon.svg"
 import Loader from '../../../Loader';
 import cart_icon from "../../../../../assets/images/cart.svg"
 import delete_icon from "../../../../../assets/images/delete_icon_grey.svg"
+import cross from "../../../../../assets/images/cross.svg";
+import product_icon from "../../../../../assets/images/product_icon.svg"
 import { ErrorAlert } from '../../../messages';
+import Scrollbars from "react-custom-scrollbars-2";
 
 const ProductTransaction = (props) => {
     const productRef = useRef(null);
@@ -33,6 +36,7 @@ const ProductTransaction = (props) => {
     ])
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [showProductList, setShowProductList] = useState(false);
+    const [addProductModal, setAddProductModal] = useState(false)
     const [cartState, setCartState] = useState([])
     const priceInput = useRef(null)
     const quantityInput = useRef(null)
@@ -104,11 +108,11 @@ const ProductTransaction = (props) => {
 
     const priceChangeProduct = () => {
         let priceChange = priceInput.current.value;
-        let resultSplit = priceChange.split(".")
+        // let resultSplit = priceChange.split(".")
         
         setSelectedProduct({
             ...selectedProduct,
-            price: (resultSplit.length == 1 || resultSplit[1].length < 3) ? parseInt(priceChange).toFixed(2): parseInt(priceChange)+".00"
+            price: priceChange
         })
     }
 
@@ -129,6 +133,10 @@ const ProductTransaction = (props) => {
     const increaseQuantity = (e, cartItem, i) => {
         e.preventDefault()
         console.log(cartItem, i);
+    }
+
+    const handleAddProductSubmit = () => {
+        console.log("hi");
     }
 
     useEffect(()=>{
@@ -207,6 +215,28 @@ const ProductTransaction = (props) => {
         console.log(totalAmt);
     },[totalAmt])
 
+    const deleteCartItem = (e, cartItem, i) => {
+        e.preventDefault();
+
+        try {
+            setShowLoader(true)
+
+            setCartState(cartState.filter((item, index) => index !== i))
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setShowLoader(false)
+        }
+    }
+
+    const showAddProduct = (e) => {
+        setAddProductModal(!addProductModal)
+    }
+
+    const closeModal = () => {
+        setAddProductModal(false);
+    };
+
     useEffect(()=>{
         console.log("hasError UPDATED:::", hasError);
     },[hasError])
@@ -216,6 +246,7 @@ const ProductTransaction = (props) => {
     },[])
 
     return (
+        <>
         <form className="productTransaction" ref={productTransaction}>
             {errorMsg && <ErrorAlert message={errorMsg}></ErrorAlert>}
 
@@ -438,7 +469,7 @@ const ProductTransaction = (props) => {
                             </label>
                             
                             <div className='cmnFormField'>
-                                <select 
+                                {/* <select 
                                     className='selectBox' 
                                     disabled={!selectedProduct || selectedProduct === undefined || selectedProduct === null} 
                                     ref={quantityInput}
@@ -450,7 +481,20 @@ const ProductTransaction = (props) => {
                                     <option value="3">3</option>
                                     <option value="4">4</option>
                                     <option value="5">5</option>
-                                </select>
+                                </select> */}
+                                <div className='counterItem cmnFieldStyle d-flex'>
+                                    <button className='btn' onClick={(e)=>decreaseQuantity(e)} disabled={!selectedProduct || selectedProduct === undefined || selectedProduct === null}>
+                                        <svg width="12" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11.25 1.75H0.75V0.25H11.25V1.75Z" fill="#9BAEBC"/>
+                                        </svg>
+                                    </button>
+                                    <span>{(selectedProduct && selectedProduct.quantity) ? selectedProduct.quantity : 0}</span>
+                                    <button className='btn' onClick={(e)=>increaseQuantity(e)} disabled={!selectedProduct || selectedProduct === undefined || selectedProduct === null}>
+                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11.25 6.75H6.75V11.25H5.25V6.75H0.75V5.25H5.25V0.75H6.75V5.25H11.25V6.75Z" fill="#9BAEBC"/>
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <sub className='footnoteInfo'>* 10% Tax will be applicable</sub>
@@ -488,7 +532,7 @@ const ProductTransaction = (props) => {
                                             <h6>
                                                 {cartItem.name}
                                             </h6>
-                                            <button className='btn'>
+                                            <button className='btn' onClick={(e)=>deleteCartItem(e, cartItem, i)}>
                                                 <img src={delete_icon} alt="Delete Item" />
                                             </button>
                                         </header>
@@ -531,7 +575,7 @@ const ProductTransaction = (props) => {
                                     </div>
                                     <div className='cartAmount'>
                                         {cartItem.price * cartItem.quantity}
-                                        {cartState &&
+                                        {cartState.tax &&
                                             <div className='cartTax'>
                                                 +Tax
                                             </div>
@@ -565,12 +609,43 @@ const ProductTransaction = (props) => {
             <div className="createNew">
               <button
                 className="saveNnewBtn"
+                onClick={(e)=>showAddProduct(e)}
               >
                 <span>Continue to Buy</span>
                 <img className="" src={arrow_forward} alt="" />
               </button>
             </div>
         </form>
+
+        {addProductModal && 
+            <div className="modalDependent modalBackdrop">
+            {showLoader ? <Loader /> : ""}
+
+            <div className="slickModalBody">
+                <div className="slickModalHeader">
+                    <button className="topCross" onClick={() => closeModal(false)}>
+                        <img src={cross} alt="" />
+                    </button>
+                    <div className="circleForIcon">
+                        <img src={product_icon} alt="" />
+                    </div>
+                    <h3>Add a Product</h3>
+                </div>
+                <div className="modalForm">
+                    <Scrollbars
+                        renderThumbVertical={(props) => (
+                        <div className="thumb-vertical" />
+                        )}
+                    >
+                        <form method="post" onSubmit={handleAddProductSubmit}>
+
+                        </form>
+                    </Scrollbars>
+                </div>
+            </div>
+            </div>
+        }
+        </>
     );
 };
 
