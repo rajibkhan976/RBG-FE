@@ -83,5 +83,13 @@ export const utils = {
         }
 
         return min + ':' + sec;
+    },
+    /**
+     * Generate excerpt
+     * @param {*} str 
+     * @returns 
+     */
+    generateExcerpt: (str) => {
+        return (str.length > 12) ? str.substr(0, 12) + '...' : str;
     }
 }

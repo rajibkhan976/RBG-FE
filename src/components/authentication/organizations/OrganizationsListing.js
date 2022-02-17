@@ -253,7 +253,7 @@ const OrganizationListing = () => {
                                                                 effect="blur"
                                                                 placeholderSrc={owner_img_1}
                                                             />
-                                                            <p>{elem.name}</p>
+                                                            <p>{utils.generateExcerpt(elem.name)}</p>
                                                         </button>
                                                     </div>
                                                     <div className="phoneNum">

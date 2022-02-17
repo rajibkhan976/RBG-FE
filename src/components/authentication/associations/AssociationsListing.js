@@ -216,7 +216,7 @@ const AssociationsListing = () => {
                                                         <button className="btn">{(elem.owner ? elem.owner.firstName + ' ' + elem.owner.lastName : '')}</button>
                                                     </div>
                                                     <div className="phoneNum">
-                                                        <button className="btn">{(elem.organization ? elem.organization.name : 'N/A')}</button>
+                                                        <button className="btn">{(elem.organization ? utils.generateExcerpt(elem.organization.name) : 'N/A')}</button>
                                                     </div>
                                                     <div className="createDate">
                                                         <button className="btn">

@@ -70,7 +70,7 @@ const UsersListing = (props) => {
             if (createPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
                 props.toggleCreate(e);
             } else {
-                setErrorMsg(responses.permissions.group.create);
+                setErrorMsg(responses.permissions.user.create);
             }
         } else {
             console.log("Here I am")
@@ -484,7 +484,7 @@ const UsersListing = (props) => {
                                                         <button className="btn">{elem.group[0] ? elem.group[0].name : ''}</button>
                                                     </div>
                                                     <div className="assignedGroup">
-                                                        <button className="btn">{elem.organization ? elem.organization.name : 'N/A'}</button>
+                                                        <button className="btn">{elem.organization ? utils.generateExcerpt(elem.organization.name) : 'N/A'}</button>
                                                     </div>
                                                     <div className="assignedGroup">
                                                         <button className="btn">{elem.association ? elem.association.name : 'N/A'}</button>
