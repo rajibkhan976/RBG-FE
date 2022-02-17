@@ -3108,3 +3108,203 @@ span.accinfod {
 p.paymentTypes.bank {
   margin-top: 10px;
 }
+
+.downPaymentToogle .informHeader, .programOverview .informHeader {
+    flex: 0 0 195px;
+    padding: 10px 20px;
+}
+
+.cmnFormField.preField {
+  position: relative;
+}
+
+.transaction_form.products.forProducts .cmnFormField.preField .unitAmount {
+  position: absolute;
+  top: 27px;
+  left: 0;
+  bottom: 0;
+  width: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 19px;
+  color: #9BAEBC;
+}
+
+ul.programInfosUl.paymentOverviews li .informationSpan .infoSpan .tooltiptextInfo {
+  width:160px;
+  margin-left: -83px;
+}
+
+ul.programInfosUl.paymentOverviews li .informationSpan .infoSpan .tooltiptextInfo::after {
+  top: 100%;
+  bottom: 0;
+  transform: scaleY(1);
+}
+ul.programInfosUl.paymentOverviews {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #E9EFF5;
+  margin-bottom: 10px;
+}
+
+ul.totalPaymentUl li {
+  color: #305671;
+  font-size: 14px;
+  display: inline-block;
+  font-weight: 600;
+}
+
+ul.totalPaymentUl li:first-child {
+  float: left;
+}
+
+ul.totalPaymentUl li:last-child {
+  float: right;
+}
+
+.outstandingOverview {
+  width: 100%;
+  background-color: #FFF5E2;
+  border: 1px solid #FFECC7;
+  border-radius: 5px;
+}
+
+.outstandingDownpayment .downpaymentsDetails .cardImage {
+  background: #fff;
+}
+
+.outstandingDownpayment {
+  width: 100%;
+  float: left;
+  padding: 12px 18px;
+  border-bottom: 1px solid #FFECC7;
+}
+
+.downpaymentsDetails {
+  width: 70%;
+  float: left;
+}
+
+.downpaymentsPayDetails {
+  width: 30%;
+  float: right;
+}
+
+.paymentStatus {
+  float: right;
+  text-align: right;
+  color: #fff;
+  font-size: 10px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.due {
+  background: #F1A768;
+}
+
+.payDate {
+  width: 100%;
+  display: flex;
+  color: #9BAEBC;
+  font-size: 12px;
+  text-align: right;
+  align-items: center;
+  margin-top: 5px;
+  float: left;
+}
+
+.payDate img {
+  float: left;
+  margin-right: 8px;
+}
+.downpaymentsDetails .cardImage img {
+  width: 26px;
+}
+
+.downpaymentsDetails .paymentModuleInfos span.accNumber {
+  color: #9BAEBC;
+  font-size: 12px;
+  font-weight: 400;
+  margin-top: 3px;
+  margin-bottom: 7px;
+}
+
+.downpaymentsDetails .paymentModuleInfos span.accinfod {
+  font-size: 12px;
+  color: #9BAEBC;
+}
+
+.downpaymentsDetails .paymentModuleInfos span.accinfod b {
+  font-size: 14px;
+  color: #305671;
+}
+
+.outstandingDownpayment.tutuionSubscriptions .downpaymentsDetails {
+  width: 55%;
+}
+
+.outstandingDownpayment.tutuionSubscriptions .downpaymentsPayDetails {
+  width: 45%;
+}
+
+.payDate.instalments {
+  display: block;
+}
+.payDate.instalmentDate {
+  display: block;
+  float: right;
+}
+
+.payDate.instalmentDate img {
+  vertical-align: middle;
+  float: none;
+  margin-right: 6px;
+}
+
+ul.totalPaymentUl.outstandings {
+  padding: 12px 18px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+ul.totalPaymentUl.outstandings li:last-child {
+  font-size: 18px;
+  margin-left: auto;
+}
+
+.dottedBorder {
+  width: 100%;
+  display: block;
+  border: 1px dashed #9BAEBC;
+  margin: 14px 0;
+}
+
+.productAvailable.paymentDetails.active .programOverview {
+  margin-bottom: 14px;
+}
+
+.currentPaymentOverview {
+  width: 100%;
+  background-color: #F6F8FA;
+  border: 1px solid #d5d5d5;
+  border-radius: 5px;
+}
+
+.currentPaymentOverview .outstandingDownpayment {
+  border-bottom: 1px solid #E9EFF5;
+}
+
+.payDate.currentPayment {
+  margin-top: 22px;
+}
+
+label.receivedCash {
+  width: 100%;
+  float: left;
+  margin-top: 20px;
+}

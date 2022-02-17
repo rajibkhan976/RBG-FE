@@ -14,7 +14,11 @@ import program from "../../../../../assets/images/program.png";
 import card from "../../../../../assets/images/card.svg";
 import cardActive from "../../../../../assets/images/cardActive.svg";
 import banks from "../../../../../assets/images/banks.svg";
+import outstandingCard from "../../../../../assets/images/outstandingCard.svg";
+import outstandingCash from "../../../../../assets/images/outstandingCash.svg";
+import help from "../../../../../assets/images/help.svg";
 import bankActive from "../../../../../assets/images/bankActive.svg";
+import payDate from "../../../../../assets/images/payDate.svg";
 import Loader from "../../../../shared/Loader";
 import { Scrollbars } from "react-custom-scrollbars-2";
 
@@ -166,9 +170,91 @@ const ContractOverviewTransaction = (props) => {
                     <h5>Payment Overview</h5>
               </header>
               <div className="bodytransactionForm">
-                
+              <ul className="programInfosUl paymentOverviews">
+                    <li>
+                      <div className="labelSpan">Total Down Payment Amount</div>
+                      <div className="informationSpan">$499.00</div>
+                    </li>
+                    <li>
+                      <div className="labelSpan">Total Tuition Amount</div>
+                      <div className="informationSpan">
+                        <span className="infoSpan">
+                            <img src={help} alt="" />
+                            <span class="tooltiptextInfo">$149 x 12 Months</span>
+                        </span>&nbsp;&nbsp;$1788.00</div>
+                    </li>
+                  </ul>
+                  <ul className="totalPaymentUl">
+                    <li>Total</li>
+                    <li>$2287.00</li>
+                  </ul>
               </div>
           </div> 
+
+          <div className="outstandingOverview">
+            <div className="outstandingDownpayment">
+              <div className="downpaymentsDetails">
+                <div className="cardImage">
+                  <img src={outstandingCash} alt=""/>
+                </div>
+                <div class="paymentModuleInfos">
+                  <span className="accNumber">Down Payment 2</span>
+                  <span className="accinfod"><b>$ 299.00</b></span>
+                </div>
+              </div>
+              <div className="downpaymentsPayDetails">
+                <div className="paymentStatus due">Due</div>
+                <div className="payDate">
+                  <img src={payDate} alt=""/> 02/04/2022
+                </div>
+              </div>
+            </div>
+            <div className="outstandingDownpayment tutuionSubscriptions">
+              <div className="downpaymentsDetails">
+                <div className="cardImage">
+                  <img src={outstandingCard} alt=""/>
+                </div>
+                <div class="paymentModuleInfos">
+                  <span className="accNumber">Tuition Amount</span>
+                  <span className="accinfod"><b>$ 149.00</b> / Month</span>
+                </div>
+              </div>
+              <div className="downpaymentsPayDetails">
+              <div className="payDate instalments">Payment Remaing ... <b>11</b></div>
+                <div className="payDate instalmentDate">
+                  <img src={payDate} alt=""/> 02/04/2022
+                </div>
+              </div>
+            </div>
+
+            <ul className="totalPaymentUl outstandings">
+                    <li>Outstanding</li>
+                    <li>$1938.00</li>
+                  </ul>
+          </div>
+
+          <div className="dottedBorder"></div>
+
+          <div className="currentPaymentOverview">
+            <div className="outstandingDownpayment">
+              <div className="downpaymentsDetails">
+                <div className="cardImage">
+                  <img src={outstandingCash} alt=""/>
+                </div>
+                <div class="paymentModuleInfos">
+                  <span className="accNumber">Down Payment 1</span>
+                  <span className="accinfod"><b>$ 299.00</b></span>
+                </div>
+                <label className="receivedCash"><div class="customCheckbox"><input type="checkbox" name="" id="" /><span></span></div>I have received the amount by Cash</label>
+              </div>
+              <div className="downpaymentsPayDetails">
+                <div className="payDate currentPayment">
+                  <img src={payDate} alt=""/> 02/04/2022
+                </div>
+              </div>
+            </div>
+          </div>
+          
         </div>
 
       </div>
