@@ -1340,7 +1340,7 @@ input::-webkit-inner-spin-button {
 .infoSpan .tooltiptextInfo {
   z-index: 3;
 }
-.infoSpan .tooltiptextInfo::after {
+.bodytransactionForm .cmnFormRow:first-child .tooltiptextInfo::after {
   top: auto;
   bottom: 100%;
   transform: scaleY(-1);
@@ -1441,16 +1441,14 @@ input::-webkit-inner-spin-button {
   border-radius: 2px;
   vertical-align: middle;
 }
+.counterItem input,
 .counterItem span {
   background: #E8FCFF;
   border: 1px solid #BBF6FF;
   box-sizing: border-box;
   border-radius: 2px;
-  display: inline-flex;
-  flex: 1 1 auto;
-  height: 100%;
-  align-items: center;
-  justify-content: center;
+  width: 26px;
+  height: 24px;
   font-weight: 500;
   font-size: 12px;
   line-height: 18px;
@@ -1458,6 +1456,17 @@ input::-webkit-inner-spin-button {
   color: #305671;
   margin: 0 2px;
   vertical-align: middle;
+  padding: 0;
+  min-height: 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.cmnFormField .counterItem input {
+  flex: 1 1 auto;
+  height: 100%;
+  display: inline-flex;
+  padding: 0 15px;
 }
 .counterItem .btn {
   width: 24px;
@@ -1473,11 +1482,12 @@ input::-webkit-inner-spin-button {
   border: none;
   background: transparent;
 }
-.cmnFormField .counterItem span {
-  flex: 1 1 auto;
+.cmnFormField .counterItem input {
+  flex: 0 0 calc(100% - 76px);
+  max-width: calc(100% - 80px);
 }
 .cmnFormField .counterItem .btn {
-  width: 38px;
+  flex: 0 0 38px;
   height: 100%;
   background-color: #fff;
 }
