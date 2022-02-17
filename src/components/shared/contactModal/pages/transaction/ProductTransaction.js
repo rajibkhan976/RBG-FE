@@ -41,6 +41,9 @@ const ProductTransaction = (props) => {
     const priceInput = useRef(null)
     const quantityInput = useRef(null)
     const productTransaction = useRef(null)
+    const increaseQuantityBtn = useRef(null)
+    const decreaseQuantityBtn = useRef(null)
+    const productQuantity = useRef(null)
 
     const [hasError, setHasError] = useState(false)
 
@@ -116,13 +119,22 @@ const ProductTransaction = (props) => {
         })
     }
 
-    const setQuantity = () => {
-        let quantity = quantityInput.current.value;
-        console.log("quantity", quantity);
-        setSelectedProduct({
-            ...selectedProduct,
-            quantity: (quantity != "null") && parseInt(quantity)
-        })
+    const setQuantity = (e) => {
+        e.preventDefault()
+        // let quantity = quantityInput.current.value;
+        // console.log("quantity", quantity);
+        
+        console.log(e.target ===decreaseQuantityBtn.current);
+
+        e.target === increaseQuantityBtn.current ? 
+        // setSelectedProduct({
+        //     ...selectedProduct,
+        //     quantity: (quantity != "null") && parseInt(quantity)
+        // }) :
+        // setSelectedProduct({
+        //     ...selectedProduct,
+        //     quantity: (quantity != "null") && parseInt(quantity)
+        // })
     }
 
     const decreaseQuantity = (e, cartItem, i) => {
@@ -483,13 +495,25 @@ const ProductTransaction = (props) => {
                                     <option value="5">5</option>
                                 </select> */}
                                 <div className='counterItem cmnFieldStyle d-flex'>
-                                    <button className='btn' onClick={(e)=>decreaseQuantity(e)} disabled={!selectedProduct || selectedProduct === undefined || selectedProduct === null}>
+                                    <button 
+                                        className='btn' 
+                                        // onClick={(e)=>decreaseQuantity(e)} 
+                                        disabled={!selectedProduct || selectedProduct === undefined || selectedProduct === null}
+                                        ref={decreaseQuantityBtn}
+                                        onClick={(e)=>setQuantity(e)}
+                                    >
                                         <svg width="12" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M11.25 1.75H0.75V0.25H11.25V1.75Z" fill="#9BAEBC"/>
                                         </svg>
                                     </button>
-                                    <span>{(selectedProduct && selectedProduct.quantity) ? selectedProduct.quantity : 0}</span>
-                                    <button className='btn' onClick={(e)=>increaseQuantity(e)} disabled={!selectedProduct || selectedProduct === undefined || selectedProduct === null}>
+                                    <span ref={productQuantity}>{(selectedProduct && selectedProduct.quantity) ? selectedProduct.quantity : 0}</span>
+                                    <button 
+                                        className='btn' 
+                                        // onClick={(e)=>increaseQuantity(e)} 
+                                        disabled={!selectedProduct || selectedProduct === undefined || selectedProduct === null}
+                                        ref={increaseQuantityBtn}
+                                        onClick={(e)=>setQuantity(e)}
+                                    >
                                         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M11.25 6.75H6.75V11.25H5.25V6.75H0.75V5.25H5.25V0.75H6.75V5.25H11.25V6.75Z" fill="#9BAEBC"/>
                                         </svg>
