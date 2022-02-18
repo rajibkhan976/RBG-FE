@@ -374,10 +374,15 @@ const UserModal = (props) => {
      */
     const handlePhoneNumberChange = (event) => {
         event.preventDefault();
-        setPhoneNumber(event.target.value);
+        let pattern = new RegExp(/^[0-9\b]+$/);
+        if(!pattern.test(event.target.value)) {
+            setPhoneNumber("");
+        } else {
+            setPhoneNumber(event.target.value);
+        }
     };
     /**
-     * Handle phone number change
+     * Handle email address change
      * @param {*} event 
      */
     const handleEmailChange = (event) => {
@@ -1092,7 +1097,7 @@ const UserModal = (props) => {
                                                                     type="text"
                                                                     name="phoneNumber"
                                                                     placeholder="Eg. (555) 555-1234"
-                                                                    defaultValue={phoneNumber}
+                                                                    value={phoneNumber}
                                                                     onChange={handlePhoneNumberChange}
                                                                     className="cmnFieldStyle"
                                                                 />
