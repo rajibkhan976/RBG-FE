@@ -104,6 +104,7 @@ module.exports = {
 
     //Customization
     customizationUrl: "https://smtis62b0e.execute-api.us-east-1.amazonaws.com/dev/customization/",
+    //customizationUrl: "http://localhost:4000/dev/customization/",
 
     //Saletax
     saleTaxUrl: "https://5wb0khlhj0.execute-api.us-east-1.amazonaws.com/dev/customization/",

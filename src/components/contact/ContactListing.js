@@ -56,7 +56,7 @@ const ContactListing = forwardRef((props, ref) => {
         handelSize();
         const search = utils.getQueryVariable('search');
         if (search) {
-          setKeyword(search);
+          setKeyword(decodeURIComponent(search));
         }
         const sortByNew = utils.getQueryVariable('sortBy');
         if (sortByNew) {
@@ -156,12 +156,12 @@ const ContactListing = forwardRef((props, ref) => {
         const cache = utils.getQueryVariable('cache');
 
         const queryParams = new URLSearchParams();
-
         if (cache) {
             queryParams.append("cache", cache);
         }
         if (search) {
-            queryParams.append("search", search);
+            let searchDecoded = decodeURIComponent(search).replace(/\+/g, " ");
+            queryParams.append("search", searchDecoded);
         }
         if (group) {
             queryParams.append("group", group);

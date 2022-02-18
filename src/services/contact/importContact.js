@@ -44,7 +44,7 @@ export const ImportContactServices = {
     },
     fetchCustomFields: async () => {
         try {
-            const url = config.customizationUrl + "list";
+            const url = config.customizationUrl + "list-all-active";
             const result = await axios.get(url, { headers: headers });
             return result.data;
         } catch (e) {
