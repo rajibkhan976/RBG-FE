@@ -19,7 +19,6 @@ const CompleteTransactionModal = (props) => {
         otherReason: "",
         confirmRefund: ""
     });
-    const [formError, setFormError] = useState(false);
 
 
     const refundAmountHandel = (e) => {
@@ -34,19 +33,16 @@ const CompleteTransactionModal = (props) => {
     const refundReasonHandel = (e) => {
         let val = e.target.value;
         fieldErrorCheck.checkReason(val);
-        // setRefundFormData({...refundFormData, reason: e.target.value});
     };
 
     const otherReasonHandel = (e) => {
         let val = e.target.value;
         fieldErrorCheck.checkOtherReason(val);
-        // setRefundFormData({...refundFormData, otherReason: e.target.value});
     };
 
     const confirmRefundHandel = (e) => {
         let val = e.target.checked;
         fieldErrorCheck.checkConfirmation(val);
-        // setRefundFormData({...refundFormData, confirmRefund: e.target.checked});
     };
 
     const fieldErrorCheck = {
@@ -55,10 +51,8 @@ const CompleteTransactionModal = (props) => {
             setRefundFormData({...refundFormData, amount: val});
             if (!val) {
                 setFormErrorMsg(prevState => ({...prevState, amount: "Please enter refund amount"}));
-                // setFormError(true);
             } else {
                 setFormErrorMsg(prevState => ({...prevState, amount: ""}));
-                // setFormError(false);
             }
         },
 
@@ -66,10 +60,8 @@ const CompleteTransactionModal = (props) => {
             setRefundFormData({...refundFormData, reason: val});
             if (!val) {
                 setFormErrorMsg(prevState => ({...prevState, reason: "Please enter refund reason"}));
-                // setFormError(true);
             } else {
                 setFormErrorMsg(prevState => ({...prevState, reason: ""}));
-                // setFormError(false);
             }
         },
 
@@ -77,10 +69,8 @@ const CompleteTransactionModal = (props) => {
             setRefundFormData({...refundFormData, otherReason: val});
             if (!val && refundFormData.reason == "others") {
                 setFormErrorMsg(prevState => ({...prevState, otherReason: "Please write the reason for refund"}));
-                // setFormError(true);
             } else {
                 setFormErrorMsg(prevState => ({...prevState, otherReason: ""}));
-                // setFormError(false);
             }
         },
 
@@ -88,42 +78,11 @@ const CompleteTransactionModal = (props) => {
             setRefundFormData({...refundFormData, confirmRefund: val});
             if (!val) {
                 setFormErrorMsg(prevState => ({...prevState, confirmRefund: "Please check the checkbox for confirmation"}));
-                // setFormError(true);
             } else {
                 setFormErrorMsg(prevState => ({...prevState, confirmRefund: ""}));
-                // setFormError(false);
             }
         }
 
-        // if (!refundFormData.amount) {
-        //     setFormError(prevState => ({...prevState, amount: "Pelase enter refund amount"}));
-        //     console.log(formError);
-        //    // isError = true;
-        // } else {
-        //     setFormError(prevState => ({...prevState, amount: ""}));
-        // }
-
-        // if (!refundFormData.reason) {
-        //     setFormError(prevState => ({...prevState, reason: "Pelase enter refund amount"}));
-        //     console.log(formError);
-        //    // isError = true;
-        // } else {
-        //     setFormError(prevState => ({...prevState, reason: ""}));
-        // }
-
-        // if (!refundFormData.otherReason && refundFormData.reason == "others") {
-        //     setFormError(prevState => ({...prevState, otherReason: "Please write the reason for refund"}));
-        //    // isError = true;
-        // } else {
-        //     setFormError(prevState => ({...prevState, otherReason: ""}));
-        // }
-        
-        // if (!refundFormData.confirmRefund) {
-        //     setFormError(prevState => ({...prevState, confirmRefund: "Please check the checkbox for confirmation"}));
-        //    // isError = true;
-        // } else {
-        //     setFormError(prevState => ({...prevState, confirmRefund: ""}));
-        // }
     };
 
     const refundSubmit = () => {
@@ -133,7 +92,9 @@ const CompleteTransactionModal = (props) => {
         fieldErrorCheck.checkOtherReason(refundFormData.otherReason);
         fieldErrorCheck.checkConfirmation(refundFormData.confirmRefund);
 
-        console.log("form data: ", refundFormData, formError);
+        if(refundFormData.amount && refundFormData.reason && refundFormData.otherReason && refundFormData.confirmRefund) {
+            console.log("Submit");
+        }
 
     };
 
