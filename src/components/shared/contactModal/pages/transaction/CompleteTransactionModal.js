@@ -92,9 +92,19 @@ const CompleteTransactionModal = (props) => {
         fieldErrorCheck.checkOtherReason(refundFormData.otherReason);
         fieldErrorCheck.checkConfirmation(refundFormData.confirmRefund);
 
-        if(refundFormData.amount && refundFormData.reason && refundFormData.otherReason && refundFormData.confirmRefund) {
-            console.log("Submit");
+        if(refundFormData.reason && refundFormData.reason !== "others") {
+            if(refundFormData.amount && refundFormData.confirmRefund) {
+                console.log("Submit");
+            }
+        } else if (refundFormData.reason === "others") {
+            if (refundFormData.amount && refundFormData.otherReason && refundFormData.confirmRefund) {
+                console.log("Submit");
+            }
         }
+
+        // if(refundFormData.amount && refundFormData.reason && refundFormData.otherReason && refundFormData.confirmRefund) {
+        //     console.log("Submit");
+        // }
 
     };
 

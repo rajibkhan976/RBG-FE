@@ -15,6 +15,7 @@ const Transaction = (props) => {
   const [activeTab, setActiveTab] = useState(0);
   const [refundModal, setRefundModal] = useState(false);
   const [oldTransactionList, setOldTransactionList] = useState({});
+  const [upcomingTransaction, setUpcomingTransaction] = useState({});
 
 
   const openCloseRefundModal = (param) => {
@@ -51,11 +52,25 @@ const Transaction = (props) => {
     }
   };
 
+  const fetchUpcomingTransactions = async () => {
+    try {
+      setIsLoader(true);
+      const response = await TransactionServices.fetchUpcomingTransactions();
+      setUpcomingTransaction(response.transactions);
+      console.log("Upcoming transaction response ", response);
+    } catch (e) {
+
+    } finally {
+      setIsLoader(false);
+    }
+  };
+
 
 
   useEffect(() => {
     fetchTransactionList(props.contactId);
     fetchOldTransactions(props.contactId);
+    fetchUpcomingTransactions();
   }, []);
 
   const [dt, setDt] = useState(new Date().toLocaleString());
