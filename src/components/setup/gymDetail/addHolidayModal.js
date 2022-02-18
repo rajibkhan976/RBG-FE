@@ -14,7 +14,10 @@ const AddHolidayModal = (props) => {
   const [option, setOption] = useState(null);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const [modalPopMsgerror, setModalPopMsgerror] = useState(false);
+  const [modalPopMsgerror1, setModalPopMsgerror1] = useState(false);
+  const [modalPopMsgerror2, setModalPopMsgerror2] = useState(false);
+  const [modalPopMsgerror3, setModalPopMsgerror3] = useState(false);
+
   const [modalPopMsgsuccess, setModalPopMsgsuccess] = useState(false);
   const [holiday , setHoliday] = useState(props.holiday);
   // const [holidayStart , setHolidayStart] = useState(props.holiday.fromDate);
@@ -85,7 +88,7 @@ const AddHolidayModal = (props) => {
     
      if(holiday.name !== "" && holiday.fromDate !== "" && holiday.toDate !== "" ){
        if (Math.ceil(ftoDate - fromDate) < 0) {
-         setErrorMsg("Please chose End-Date on or after Start-Date");
+         setErrorMsg("Please choose End-Date on or after Start-Date");
        } else {
          createHoliday();
          setModalPopMsgsuccess(true);
@@ -93,9 +96,19 @@ const AddHolidayModal = (props) => {
           props.closeAddHolidayModal();       
         }, 5000);
        }
+       setModalPopMsgerror1(false);
+       setModalPopMsgerror2(false);
+       setModalPopMsgerror3(false);
      }else{
          //console.log("failed aslkjlsh");
-         setErrorMsg("Please fill up the fields properly!");
+         if(holiday.name === ""){
+          setModalPopMsgerror1(true);
+        }else if (holiday.fromDate === ""){
+          setModalPopMsgerror2(true);
+        }else if(holiday.toDate === ""){
+          setModalPopMsgerror3(true);
+        }
+        //setErrorMsg("Please fill up the fields properly!");
      };
      
 };
@@ -123,7 +136,14 @@ const handleStatusSubmitNew =(e) =>{
         }
         
     } else {
-      setErrorMsg("Please fill up the fields properly!");
+      if(holiday.name === ""){
+        setModalPopMsgerror1(true);
+      }else if (holiday.fromDate === ""){
+        setModalPopMsgerror2(true);
+      }else if(holiday.toDate === ""){
+        setModalPopMsgerror3(true);
+      }
+      //setErrorMsg("Please fill up the fields properly!");
     };    
 };
 
@@ -153,16 +173,19 @@ const handleStatusSubmitNew =(e) =>{
               <div class="formControl">
                 <label>Holiday Name</label>
                 <input type="text" placeholder="Eg. Republic Day" name="" value={holiday.name}  onChange={holidayhandler}/>
+                {modalPopMsgerror1 && <div className="errorMsg">Please fill up the holiday name field</div>}
               </div>
               
               <div className="d-flex justified-space-between">
                 <div class="formControl half">
-                <label>Start date</label>
+                <label>Start date</label> 
                 <input type="date"  name="" value={holiday.fromDate} onChange={holidayStarthandler}/>
+                {modalPopMsgerror2 && <div className="errorMsg">Please fill up the start date</div>}
               </div>
               <div class="formControl half">
                 <label>End date</label> 
                 <input type="date"  name="" value={holiday.toDate} onChange={holidayEndhandler}/>
+                {modalPopMsgerror3 &&  <div className="errorMsg">Please fill up the end date</div>}
               </div>
               </div>
               {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraClass="addStatsPopMsg"/> }
@@ -172,7 +195,7 @@ const handleStatusSubmitNew =(e) =>{
                   <button type="submit"
                      onClick={handleStatusSubmit}
                     className="saveNnewBtn"><span>Save</span><img src={arrowRightWhite} alt="" 
-                    /></button>
+                  /></button>
                   <button type="reset"
                    onClick={handleStatusSubmitNew}
                     className="saveNnewBtn"><span>Save &amp; New</span><img src={arrowRightWhite} alt="" /></button>

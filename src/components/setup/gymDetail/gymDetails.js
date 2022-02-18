@@ -37,6 +37,7 @@ const GymDetails = (props) => {
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [deleteConfirmBox, setDeleteConfirmBox] = useState(false);
+  const [confirmChange, setConfirmChange] = useState(false);
   const [validateMsg, setValidateMsg] = useState({
     name: "",
     contactPerson: "",
@@ -169,6 +170,8 @@ const GymDetails = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Gym Data", gymData);
+    console.log("validateMsg Data", validateMsg);
+    
     try {
       const isValid = validateField(e, true);
       if (isValid) {
@@ -196,6 +199,7 @@ const GymDetails = (props) => {
     } finally {
       setIsLoader(false);
     }
+    setConfirmChange(false);
   }
 
   const validateField = (e, validateViaSubmit = false) => {
@@ -208,6 +212,7 @@ const GymDetails = (props) => {
       const value = e.target.value;
       if (name === "name" && value.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, name: "Gym name should not be left empty" });
+        
       } else if (name === "contactPerson" && !alphaRegex.test(value)) {
         setValidateMsg({ ...validateMsg, disabled: true, contactPerson: "Please enter a valid contact person name" });
       } else if (name === "phone" && !phoneRegex.test(value)) {
@@ -227,6 +232,7 @@ const GymDetails = (props) => {
           timezone: "",
           disabled: false
         });
+        setConfirmChange(true);
       }
       if(name === "countryCode" && value.length) {
         const countryIndex = e.target[e.target.selectedIndex];
@@ -469,14 +475,12 @@ const GymDetails = (props) => {
                 </div>
                 <div className="btn-group">
                   <button className="common_blue_button" type="submit"
-                    disabled={(validateMsg.disabled === true || validateMsg.disabledAccess === true) ? true : false}>
+                    disabled={(validateMsg.disabled === true || validateMsg.disabledAccess === true || confirmChange === false )  ? true : false}>
                     Save <img alt="" src={arrowRightWhite} />
                   </button>
                   <button type="text" class="btn-link" onClick={closeGymDetailsHandler}>Cancel</button>
                 </div>      
-                
-              </form>
-
+              </form> 
             }
           </div> 
           <div className="gymdetails_right">
