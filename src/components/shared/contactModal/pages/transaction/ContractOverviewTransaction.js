@@ -16,6 +16,7 @@ import cardActive from "../../../../../assets/images/cardActive.svg";
 import banks from "../../../../../assets/images/banks.svg";
 import outstandingCard from "../../../../../assets/images/outstandingCard.svg";
 import outstandingCash from "../../../../../assets/images/outstandingCash.svg";
+import cashCurrent from "../../../../../assets/images/cashCurrent.svg";
 import help from "../../../../../assets/images/help.svg";
 import bankActive from "../../../../../assets/images/bankActive.svg";
 import payDate from "../../../../../assets/images/payDate.svg";
@@ -239,21 +240,50 @@ const ContractOverviewTransaction = (props) => {
             <div className="outstandingDownpayment">
               <div className="downpaymentsDetails">
                 <div className="cardImage">
-                  <img src={outstandingCash} alt=""/>
+                  <img src={cashCurrent} alt=""/>
                 </div>
                 <div class="paymentModuleInfos">
                   <span className="accNumber">Down Payment 1</span>
                   <span className="accinfod"><b>$ 299.00</b></span>
                 </div>
-                <label className="receivedCash"><div class="customCheckbox"><input type="checkbox" name="" id="" /><span></span></div>I have received the amount by Cash</label>
+                
               </div>
               <div className="downpaymentsPayDetails">
                 <div className="payDate currentPayment">
-                  <img src={payDate} alt=""/> 02/04/2022
+                  <img src={payDate} alt=""/> Now
+                </div>
+              </div>
+              <label className="receivedCash"><div class="customCheckbox"><input type="checkbox" name="" id="" /><span></span></div>I have received the amount by Cash</label>
+            </div>
+
+            <div className="outstandingDownpayment tutuionSubscriptions currentPayment">
+              <div className="downpaymentsDetails">
+                <div className="cardImage">
+                  <img src={cardActive} alt=""/>
+                </div>
+                <div class="paymentModuleInfos">
+                  <span className="accNumber">Tuition Amount</span>
+                  <span className="accinfod"><b>$ 149.00</b></span>
+                </div>
+              </div>
+              <div className="downpaymentsPayDetails">
+                <div className="payDate currentPayment">
+                  <img src={payDate} alt=""/> Now
                 </div>
               </div>
             </div>
           </div>
+
+          <div className="totalCartValue">
+              <div className="billingAmt">
+                <p>Billing Total</p>
+                <h4>$ 349.00</h4>
+              </div>
+              <div className="buyBtns">
+              <button class="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button>
+              </div>
+            </div>
+
           
         </div>
 

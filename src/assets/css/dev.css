@@ -2967,9 +2967,12 @@ p.courseModalPara {
   margin-bottom: 20px;
 }
 
+.programOverview .bodytransactionForm {
+  padding: 10px 20px;
+}
+
 .bodytransactionForm {
   width: 100%;
-  padding: 15px;
 }
 
 .detailsOfPrograms {
@@ -3076,7 +3079,7 @@ p.paymentTypes {
 }
 
 .chooseTransactionType.paymentTypes label:first-child {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .cardImage {
@@ -3178,7 +3181,7 @@ ul.totalPaymentUl li:last-child {
 .outstandingDownpayment {
   width: 100%;
   float: left;
-  padding: 12px 18px;
+  padding: 10px 18px;
   border-bottom: 1px solid #FFECC7;
 }
 
@@ -3266,7 +3269,7 @@ ul.totalPaymentUl li:last-child {
 }
 
 ul.totalPaymentUl.outstandings {
-  padding: 12px 18px;
+  padding: 10px 18px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -3301,10 +3304,56 @@ ul.totalPaymentUl.outstandings li:last-child {
 
 .payDate.currentPayment {
   margin-top: 22px;
+  display: block;
+}
+.payDate.currentPayment img {
+  float: none;
+  vertical-align: middle;
 }
 
 label.receivedCash {
   width: 100%;
   float: left;
-  margin-top: 20px;
+  margin-top: 15px;
+  font-size: 12px;
+  color: #305671;
+}
+
+.outstandingDownpayment.tutuionSubscriptions.currentPayment {
+  border-bottom: none;
+}
+
+
+.totalCartValue {
+  width: 100%;
+  background-color: #F6F8FA;
+  border: 1px solid #d5d5d5;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  margin-top: 14px;
+  padding: 10px 14px;
+}
+.billingAmt {
+  flex: 1 1 60%;
+}
+
+.buyBtns {
+  flex: 1 1 auto;
+}
+
+.buyBtns .saveNnewBtn {
+  margin: 0;
+  width: 100%;
+}
+
+.billingAmt p {
+  color: #305671;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.billingAmt h4 {
+  color: #305671;
+  font-size: 20px;
 }
