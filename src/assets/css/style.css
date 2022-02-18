@@ -2955,6 +2955,11 @@ span.userProfilePic img {
   border-radius: 2px;
 }
 
+.errorField .customCheckbox input[type="checkbox"] + span {
+  border-color: #c74854;
+  background-color: #fff4f4;
+}
+
 .circleRadio input[type="radio"]:checked + span,
 .circleRadio input[type="radio"][checked] + span,
 .customCheckbox input[type="checkbox"]:checked + span,
@@ -5560,7 +5565,9 @@ select.selectBox {
   background: #f6f8fa url("../images/arrowDown.svg") no-repeat right 5px center;
   font-size: 14px;
 }
-
+.errorField select.selectBox {
+  background-color: #fff4f4;
+}
 .numSearch {
   width: 105px;
   margin: 14px auto 0;
@@ -6086,7 +6093,7 @@ p.trackName {
   margin-right: 7px;
   transition: all 0.3s ease 0s;
 }
-.disabled, :disabled {
+.disabled, .cmnBtn.disabled, :disabled {
   opacity: 0.5;
   filter: grayscale(0.7);
   cursor: not-allowed;

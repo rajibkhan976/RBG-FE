@@ -92,6 +92,8 @@ module.exports = {
     billingUrl: "https://tt7n78ndd2.execute-api.us-east-1.amazonaws.com/dev/contact/billing/",
     // Transaction Service
     transactionUrl: "https://tt7n78ndd2.execute-api.us-east-1.amazonaws.com/dev/contact/transactions/",
+    // Old Transaction Url
+    oldTransactionUrl: "https://susx9c3bvl.execute-api.us-east-1.amazonaws.com/dev/contact/old-transactions/list/",
     // Course Service
     courseUrl: "https://nayaxr4np3.execute-api.us-east-1.amazonaws.com/dev/course/",
     // Buy Course Link

@@ -14,6 +14,7 @@ const Transaction = (props) => {
   const [isLoader, setIsLoader] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [refundModal, setRefundModal] = useState(false);
+  const [oldTransactionList, setOldTransactionList] = useState({});
 
 
   const openCloseRefundModal = (param) => {
@@ -37,10 +38,24 @@ const Transaction = (props) => {
   };
   //console.log("transactionList", transactionList);
 
+  const fetchOldTransactions = async (contactId) => {
+    try {
+      setIsLoader(true);
+      const response = await TransactionServices.fetchOldTransactions(contactId);
+      setOldTransactionList(response.transactions);
+      console.log("Old transaction response ", response);
+    } catch (e) {
+
+    } finally {
+      setIsLoader(false);
+    }
+  };
+
 
 
   useEffect(() => {
     fetchTransactionList(props.contactId);
+    fetchOldTransactions(props.contactId);
   }, []);
 
   const [dt, setDt] = useState(new Date().toLocaleString());
