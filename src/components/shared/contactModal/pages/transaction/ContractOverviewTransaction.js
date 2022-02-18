@@ -5,7 +5,7 @@ import bell from "../../../../../assets/images/bell.svg";
 import updown from "../../../../../assets/images/updown.png";
 import deleteBtn from "../../../../../assets/images/deleteBtn.svg";
 import downpayment from "../../../../../assets/images/downpayment.svg";
-import modalTopIcon from "../../../../../assets/images/setupicon5.svg";
+import payMode from "../../../../../assets/images/paymode.svg";
 import crossTop from "../../../../../assets/images/cross.svg";
 import profileAvatar from "../../../../../assets/images/camera.svg";
 import chooseImg from "../../../../../assets/images/chooseImg.svg";
@@ -20,6 +20,7 @@ import cashCurrent from "../../../../../assets/images/cashCurrent.svg";
 import help from "../../../../../assets/images/help.svg";
 import bankActive from "../../../../../assets/images/bankActive.svg";
 import payDate from "../../../../../assets/images/payDate.svg";
+import pluss from "../../../../../assets/images/pluss.svg";
 import Loader from "../../../../shared/Loader";
 import { Scrollbars } from "react-custom-scrollbars-2";
 
@@ -31,15 +32,15 @@ const ContractOverviewTransaction = (props) => {
 
   const [isLoader, setIsLoader] = useState(false);
 
-  const [addPogramModal, setAddPogramModal] = useState(false);
+  const [addBankModal, setAddBankModal] = useState(false);
   
-  const addPogramModalFn = () => {
-    setAddPogramModal(true);
+  const addBankModalFn = () => {
+    setAddBankModal(true);
   };
 
 
-  const closePogramModal = () => {
-    setAddPogramModal(false);
+  const closeBankModal = () => {
+    setAddBankModal(false);
   };
   
   const contractOverviewFn = (e) => {
@@ -47,6 +48,22 @@ const ContractOverviewTransaction = (props) => {
     setContractOverview(true);
   };
 
+
+  const [choosePOS, setChoosetPOS] = useState(true);
+  const [chooseCourse, setChooseCourse] = useState(false);
+
+  const chooseTransctionTypePOS = () => {
+    setChoosetPOS(!choosePOS);
+    setChooseCourse(false);
+}
+
+
+const chooseTransctionTypeCourse = () => {
+      setChoosetPOS(false);
+      setChooseCourse(!chooseCourse);
+      
+ 
+}
 
  
 
@@ -92,7 +109,7 @@ const ContractOverviewTransaction = (props) => {
 
           <div class="programOverview"> 
               <header className='informHeader paymentAdd'>
-                    <h5>Billing Overview <span class="addPaymentInfo">+ Add</span></h5>
+                    <h5>Billing Overview <span onClick={(e)=>{addBankModalFn()}} class="addPaymentInfo">+ Add</span></h5>
               </header>
               <div className="bodytransactionForm">
                 <p className="paymentTypes">Cards</p>
@@ -286,6 +303,127 @@ const ContractOverviewTransaction = (props) => {
 
           
         </div>
+
+
+
+        {addBankModal && (
+         <div className="modalBackdrop holiday"> 
+         
+           <div className="slickModalBody">
+           
+             <div className="slickModalHeader">
+               <button className="topCross" onClick={closeBankModal}><img src={crossTop} alt="" /></button>
+               <div className="circleForIcon"><img src={payMode} alt="" /></div>
+                       <h3 className="courseModalHeading">Add new billling Option</h3>
+                       <p className="courseModalPara">Lorem Ipsum is simply dummy text of the printing</p>
+             </div>
+
+            <div className="payModalDetails">
+
+                  <div className="choosePaymentInfo" >
+                      
+                          <label>
+                              <div class="circleRadio">
+                                  <input type="radio"
+                                      name="transactionType" defaultChecked={choosePOS && "checked" }
+                                      onChange={chooseTransctionTypePOS}
+                                  /><span></span>
+                              </div> Card
+                          </label>
+                          <label> 
+                              <div class="circleRadio">
+                                  <input type="radio"
+                                      name="transactionType"
+                                      onChange={chooseTransctionTypeCourse}
+                                  /><span></span>
+                              </div> Bank Account
+                          </label>
+                      </div>
+
+
+                    {choosePOS && 
+                    <div className="posSellingForm">
+                        
+                        <div className="modalForm auto">
+                          <form >  
+                            <div class="formControl">
+                              <label>Card Number</label>
+                              <input type="number" placeholder="xxxx-xxxx-xxxx-xxxx" name="" />
+                            </div>
+
+                            <div class="formControl">
+                              <label>Card Holder Name</label>
+                              <input type="text" placeholder="Ex. Adam Smith" name="" />
+                            </div>
+                            
+                            <div className="d-flex justified-space-between">
+                              <div class="formControl half">
+                              <label>Expiry Date</label>
+                              <input type="text" placeholder="mm/yy"  name=""/>
+                            </div>
+                            <div class="formControl half">
+                              <label>CVC</label> 
+                              <input type="text"  name=""/>
+                            </div>
+                            </div>
+                            {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraClass="addStatsPopMsg"/> }
+                            { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraClass="addStatsPopMsg"/>} */}
+              
+                             <div className="modalbtnHolder">
+                                <button type="reset" className="saveNnewBtn"><img src={pluss} alt="" />Add my Card</button>
+                             </div>
+                          </form>
+                        </div>
+
+
+                    </div>
+                    }
+
+
+                  {chooseCourse && 
+                    <div className="posSellingForm">
+                      <div className="modalForm auto">
+                          <form >  
+                            <div class="formControl">
+                              <label>Account Number</label>
+                              <input type="number" placeholder="xxxx-xxxx-xxxx-xxxx" name="" />
+                            </div>
+
+                            <div class="formControl">
+                              <label>Account Holder Name</label>
+                              <input type="text" placeholder="Ex. Adam Smith" name="" />
+                            </div>
+                            
+                            <div className="d-flex justified-space-between">
+                              <div class="formControl half">
+                              <label>Routing #</label>
+                              <input type="text"  name=""/>
+                            </div>
+                            <div class="formControl half">
+                              <label>Account Type</label> 
+                              <select className='selectBox'>
+                                    <option value="null">Checking</option>
+                                </select>
+                            </div>
+                            </div>
+                            {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraClass="addStatsPopMsg"/> }
+                            { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraClass="addStatsPopMsg"/>} */}
+              
+                             <div className="modalbtnHolder">
+                                <button type="reset" className="saveNnewBtn"><img src={pluss} alt="" />Add my Bank Account</button>
+                             </div>
+                          </form>
+                        </div>
+
+                    </div>
+                    }
+            </div>
+
+             
+           </div>
+         </div>
+        )}
+
 
       </div>
     );

@@ -3357,3 +3357,56 @@ label.receivedCash {
   color: #305671;
   font-size: 20px;
 }
+
+
+.payModalDetails {
+  width: 100%;
+  border: 2px solid #E9EFF5;
+  border-radius: 19px;
+  background: #F6F8FA;
+}
+
+.choosePaymentInfo {
+  width: 100%;
+  background: #E9EFF5;
+  border-radius: 19px 19px 0 0;
+  padding: 22px 50px;
+  display: flex;
+  align-items: center;
+}
+
+.choosePaymentInfo label {
+  color: #305671;
+  font-size: 13px;
+  flex: 1 1 50%;
+}
+
+.payModalDetails .posSellingForm {
+  padding: 30px;
+}
+
+.contactTabsInner h3.courseModalHeading {
+  font-weight: 400!important;
+}
+
+.payModalDetails .posSellingForm .modalForm.auto .formControl input {
+  background: #fff;
+  border: 1px solid #eef1f5;
+}
+
+.payModalDetails .posSellingForm .modalForm.auto .formControl select.selectBox {
+  background-color: #fff;
+  border: 1px solid #eef1f5;
+}
+
+.payModalDetails .posSellingForm .modalForm.auto .modalbtnHolder {
+  width: 100%;
+}
+
+.payModalDetails .posSellingForm .modalForm.auto .modalbtnHolder button.saveNnewBtn {
+  background: linear-gradient(121.63deg, #F1A768 0%, #ED707A 85.36%);
+}
+
+.payModalDetails .posSellingForm .modalForm.auto .modalbtnHolder button.saveNnewBtn img {
+  margin-right: 5px;
+}
