@@ -85,10 +85,10 @@ const AddHolidayModal = (props) => {
     let ftoDate = new Date(holiday.toDate);
     const dayNow = new Date();
 
-    console.log("ftoDate:::::::::::::::::::", ftoDate);
-    console.log("fromDate ::::::::::::::::::::", fromDate);
-    console.log("dayNow ::::::::::::::::::::", dayNow);
-    console.log(Math.ceil(ftoDate - fromDate));
+    //console.log("ftoDate:::::::::::::::::::", ftoDate);
+    //console.log("fromDate ::::::::::::::::::::", fromDate);
+   // console.log("dayNow ::::::::::::::::::::", dayNow);
+    //console.log(Math.ceil(ftoDate - fromDate));
     
      if(holiday.name !== "" && holiday.fromDate !== "" && holiday.toDate !== "" ){
        if (Math.ceil(ftoDate - fromDate) < 0) {
