@@ -1212,6 +1212,7 @@
   box-shadow: 0 0 0 2px #fff, 0 0 0 4px #305671;
   background-image: url("../images/done_white.svg");
 }
+.sizeChoiceItem,
 .sizeChoiceProduct .sizeChoiceItem {
   display: inline-flex;
   width: 24px;
@@ -1242,7 +1243,8 @@
 .productTransaction .cmnFormField {
   position: relative; 
 }
-.productTransaction .unitAmount {
+.productTransaction .unitAmount,
+.preField .unitAmount {
   position: absolute;
   top: 0;
   left: 0;
@@ -1580,7 +1582,7 @@ input::-webkit-inner-spin-button {
 .addNewProductColor {
   position: relative;
 }
-.addNewProductColor span {
+.addNewProductColor > span {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1623,13 +1625,61 @@ input::-webkit-inner-spin-button {
   position: absolute;
   background: #30567e;
   border-radius: 50%;
-  width: 15px;
-  height: 15px;
+  width: 100%;
+  height: 100%;
   padding: 4px;
   box-shadow: 0 0 0 1px #fff;
-  right: -4px;
-  top: -4px;
+  right: 0;
+  top: 0;
 }
 .addNewProductColor .chrome-picker {
   width: 190px !important;
+}
+.colorOptions {
+  width: 24px;
+  height: 24px;
+  position: relative;
+}
+.colorPickerIn {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+.colorPickerIn footer {
+  padding: 8px;
+}
+.colorPickerIn footer .btn {
+  font-size: 13px;
+  color: var(--darkBlue);
+}
+.newProdColors label {
+  color: #315571;
+  font-size: 13px;
+  font-weight: 500;
+}
+.newProdColors .sizeChoiceItem {
+  margin: 0;
+}
+.no-float {
+  float: none;
+}
+.textCheckbox input[type="checkbox"] {
+  height: auto;
+  margin: auto;
+  min-height: 1px;
+}
+
+.textCheckbox input + span {
+  font-size: 13px;
+  line-height: 19px;
+  color: #305671;
+  margin-left: 10px;
+}
+.modalbtnHolder {
+  margin-bottom: 0;
+  padding-top: 0;
+}
+.choiceOpt header .btn {
+  flex: 0 0 11px;
+  margin-left: 15px;
 }

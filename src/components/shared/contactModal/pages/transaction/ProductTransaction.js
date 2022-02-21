@@ -14,8 +14,7 @@ import product_icon from "../../../../../assets/images/product_icon.svg"
 import camera_icon from "../../../../../assets/images/camera.svg"
 import { ErrorAlert } from '../../../messages';
 import Scrollbars from "react-custom-scrollbars-2";
-import { ColorPicker, useColor } from "react-color-palette";
-import "react-color-palette/lib/css/styles.css";
+import { HexColorPicker } from "react-colorful";
 
 const ProductTransaction = (props) => {
     const productRef = useRef(null);
@@ -45,6 +44,7 @@ const ProductTransaction = (props) => {
     const [addProductModal, setAddProductModal] = useState(false)
     const [cartState, setCartState] = useState([])
     const priceInput = useRef(null)
+    const newPriceInput = useRef(null)
     const quantityInput = useRef(null)
     const productTransaction = useRef(null)
     const increaseQuantityBtn = useRef(null)
@@ -57,8 +57,9 @@ const ProductTransaction = (props) => {
     const imageNewProduct = useRef(null)
     const productImageFileName = useRef(null)
     const colorNewProductObj = useRef(null)    
+    const taxAddRef = useRef(null)
+    const newProductCreateForm = useRef(null)
     const [hasError, setHasError] = useState(false)
-    const [newPickColor, setNewPickColor] = useColor("hex", "#121212");
 
     const [errorState, setErrorState] = useState({
         color: "",
@@ -134,16 +135,11 @@ const ProductTransaction = (props) => {
 
     const setQuantity = (e) => {
         e.preventDefault()
-        let quantityInput = productQuantity.current;
-
-        e.target === decreaseQuantityBtn.current ? 
+        let quantityInput = parseInt(productQuantity.current.value);
+        
         setSelectedProduct({
             ...selectedProduct,
-            quantity: quantityInput.value > 0 ? quantityInput.value-- : 0
-        }) :
-        setSelectedProduct({
-            ...selectedProduct,
-            quantity: quantityInput.value++
+            quantity: (e.target === decreaseQuantityBtn.current) ? quantityInput > 0 ? quantityInput-=1 : 0 : quantityInput+=1
         })
     }
 
@@ -177,6 +173,7 @@ const ProductTransaction = (props) => {
         }
 
     }
+
     useEffect(() =>{
         let summ = 0;
             summ = cartState.forEach(item=> item.price * item.quantity)
@@ -315,29 +312,155 @@ const ProductTransaction = (props) => {
 
     const getCurrentProductColor = (e) => {
         console.log(e);
-        setNewPickColor(e)
-        // setNewColor(e)
-        // const newProductColorArray = newProductObj.colors ? [...newProductObj.colors] : [];
+        setNewColor(e)
+    }
 
-        // try {
-        //     newProductColorArray.push(colorNewProductObj.current.value)
+    const addNewColorToObj = (e) => {
+        e.preventDefault()
+        const newProductColorArray = (newProductObj && newProductObj.colors) ? [...newProductObj.colors] : [];
+
+        try {
+            newProductColorArray.push(newColor)
             
-        //     setNewProductObj({
-        //         ...newProductObj,
-        //         colors: newProductColorArray
-        //     })
-        // } catch (error) {
-        //     console.log(error);
-        // }
-        // finally {
-        //     console.log("newProductObj", newProductObj);
-        //     console.log("Color added.");
-        // }
+            setNewProductObj({
+                ...newProductObj,
+                colors: newProductColorArray
+            })
+        } catch (error) {
+            console.log(error);
+        }
+        finally {
+            console.log("newProductObj", newProductObj);
+            console.log("Color added.");
+            setColorPickerState(false)
+        }
+    }
+
+    const removeThisColor = (e, index) => {
+        e.preventDefault()
+        const newProductColors = [...newProductObj.colors]
+
+        console.log(index, newProductColors);
+
+        newProductColors.splice(index, 1)
+
+        console.log(index, newProductColors);
+            
+        setNewProductObj({
+            ...newProductObj,
+            colors: newProductColors
+        })
+    }
+
+    useEffect(()=>{
+        console.log(newColor);
+    },[newColor])
+
+    const priceAddProduct = (e) => {        
+        setNewProductObj({
+            ...newProductObj,
+            price: (newPriceInput.current.value.trim() !== "" && newPriceInput.current.value > 0) ? newPriceInput.current.value : null
+        })
+        console.log(e);
+    }
+
+    const addTax = (e) => {
+        setNewProductObj({
+            ...newProductObj,
+            tax: taxAddRef.current.checked
+        })
+        console.log(e);
+    }
+
+    const setNewCategory = (e) => {
+        setNewProductObj({
+            ...newProductObj,
+            category: categoryNewProduct.current.value !== "Select" ? categoryNewProduct.current.value : null
+        })
+    }
+
+    const addProductName = (e) => {
+        setNewProductObj({
+            ...newProductObj,
+            name: nameNewProduct.current.value.trim() !== "" ? nameNewProduct.current.value : null
+        })
+    }
+
+    const addProductDescription = (e) => {
+        setNewProductObj({
+            ...newProductObj,
+            description: descriptionNewProduct.current.value.trim() !== "" ? descriptionNewProduct.current.value : null
+        })
+    }
+
+    const modifySizeItem = (e, size) => {
+        let newProdSizes = (newProductObj && newProductObj.sizes) ? [...newProductObj.sizes] : [];
+
+        try {
+            if(e.target.checked) {
+                newProdSizes.push(size);
+            }   
+            else {
+                newProdSizes = newProdSizes.filter((sizeAdded, i) => sizeAdded !== size)
+            }         
+        } catch (error) {
+            console.log(error);
+        }
+        finally {
+            setNewProductObj({
+                ...newProductObj,
+                sizes: newProdSizes
+            })
+        }
     }
     
     useEffect(()=>{
         console.log("newProductObj", newProductObj);
     },[newProductObj])
+
+    const createProduct = () => {   
+        const productItemsListDummy = [...productItemsList];
+
+        try {
+            if(newProductObj !== null){
+                setShowLoader(true);
+                if(
+                    newProductObj !== null && 
+                    newProductObj.colors.length > 0 && 
+                    newProductObj.description.trim() !== "" && 
+                    newProductObj.name.trim() !== "" && 
+                    newProductObj.picture &&
+                    newProductObj.price.trim() !== "" &&
+                    newProductObj.sizes.length > 0
+                ) {
+                    productItemsListDummy.push(newProductObj);
+                    setProductItemsList(productItemsListDummy)
+                }
+            }
+            else {
+                setHasError(true)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        finally {
+            setShowLoader(false);
+            setNewProductObj(null);
+            setShowProductList(false)
+        }
+    }
+
+    const saveNewProduct = () => {
+        createProduct()
+        closeModal()
+    }
+
+    const saveAndNewProduct = () => {
+        const newProductForm = newProductCreateForm.current;
+        
+        createProduct()
+        newProductForm.reset();
+    }
 
     const closeModal = () => {
         setAddProductModal(false);
@@ -346,10 +469,6 @@ const ProductTransaction = (props) => {
     useEffect(()=>{
         console.log("hasError UPDATED:::", hasError);
     },[hasError])
-
-    useEffect(()=>{
-        
-    },[])
 
     return (
         <>
@@ -600,7 +719,11 @@ const ProductTransaction = (props) => {
                                             <path d="M11.25 1.75H0.75V0.25H11.25V1.75Z" fill="#9BAEBC"/>
                                         </svg>
                                     </button>
-                                    <input disabled={!selectedProduct || selectedProduct === undefined || selectedProduct === null} ref={productQuantity} defaultValue={0} value={(!selectedProduct || selectedProduct === undefined || selectedProduct.quantity === undefined) ? 0 : selectedProduct.quantity} />
+                                    <input 
+                                        disabled={!selectedProduct || selectedProduct === undefined || selectedProduct === null} 
+                                        ref={productQuantity} 
+                                        defaultValue={0} 
+                                        value={(!selectedProduct || selectedProduct === undefined || selectedProduct.quantity === undefined) ? 0 : selectedProduct.quantity} />
                                     <button 
                                         className='btn' 
                                         disabled={!selectedProduct || selectedProduct === undefined || selectedProduct === null}
@@ -643,8 +766,8 @@ const ProductTransaction = (props) => {
                                     <figure className='productImg' style={{
                                         backgroundImage: "url("+cartItem.picture+")"
                                     }}></figure>
-                                    <div className='choiceOpt f1'>
-                                        <header className='d-flex'>
+                                    <div className='choiceOpt f-1'>
+                                        <header className='d-flex f-justify-between'>
                                             <h6>
                                                 {cartItem.name}
                                             </h6>
@@ -754,25 +877,26 @@ const ProductTransaction = (props) => {
                         <div className="thumb-vertical" />
                         )}
                     >
-                        <form method="post" onSubmit={handleAddProductSubmit}>
+                        <form method="post" onSubmit={handleAddProductSubmit} ref={newProductCreateForm}>
                             <div className='cmnFormRow'>
                                 <label className='cmnFieldName d-flex f-justify-between'>Select category</label>
                                 <div className='cmnFormField'>
-                                    <select className='cmnFieldStyle selectBox' ref={categoryNewProduct}>
-                                        <option value="null">Select</option>
+                                    <select className='cmnFieldStyle selectBox' ref={categoryNewProduct} onChange={setNewCategory}>
+                                        <option>Select</option>
+                                        <option value="Women's">Women's</option>
                                     </select>
                                 </div>
                             </div>
                             <div className='cmnFormRow'>
                                 <label className='cmnFieldName d-flex f-justify-between'>Enter Product Name</label>
                                 <div className='cmnFormField'>
-                                   <input type="text" placeholder='Enter product name...' className='cmnFieldStyle' ref={nameNewProduct} />
+                                   <input type="text" placeholder='Enter product name...' className='cmnFieldStyle' ref={nameNewProduct} onChange={addProductName} />
                                 </div>
                             </div>
                             <div className='cmnFormRow'>
                                 <label className='cmnFieldName d-flex f-justify-between'>Enter Product Decription</label>
                                 <div className='cmnFormField'>
-                                   <textarea placeholder='Enter product description...' className='cmnFieldStyle' ref={descriptionNewProduct}></textarea>
+                                   <textarea placeholder='Enter product description...' className='cmnFieldStyle' ref={descriptionNewProduct} onChange={addProductDescription}></textarea>
                                 </div>
                             </div>
                             <div className='cmnFormRow'>
@@ -805,13 +929,16 @@ const ProductTransaction = (props) => {
                                     <ul className='newProdColors'>
                                         {newProductObj !== undefined && newProductObj !== null && newProductObj.colors ? newProductObj.colors.map((color, i) => (
                                             <>
-                                                <li className='colorOptions'>
+                                                <li 
+                                                    className='colorOptions' 
+                                                    key={i}
+                                                >
                                                     <span
                                                         style={{
                                                             backgroundColor: color
                                                         }}
                                                     ></span>
-                                                    <button className='btn'>
+                                                    <button className='btn' onClick={(e)=>removeThisColor(e, i)}>
                                                         <img src={cross_white} alt="remove color" />
                                                     </button>
                                                 </li>
@@ -824,11 +951,87 @@ const ProductTransaction = (props) => {
                                                 </svg>
                                             </span>
                                             {colorPickerState &&
-                                                <ColorPicker color={newPickColor} onChange={getCurrentProductColor} hideHSV dark />
+                                                <div className='colorPickerIn'>
+                                                    <HexColorPicker onChange={getCurrentProductColor} />
+                                                    <footer className='d-flex f-align-center f-justify-between'>
+                                                        <button className='btn' onClick={(e)=>addNewColorToObj(e)}>Save</button>
+                                                        <button className='btn' onClick={()=>setColorPickerState(false)}>Cancel</button>
+                                                    </footer>
+                                                </div>
                                             }
                                         </li>
                                     </ul>
                                 </div>
+                            </div>
+                            <div className='cmnFormRow'>
+                                <label className='cmnFieldName d-flex f-justify-between'>Available Sizes</label>
+                                <div className='cmnFormField'>
+                                    <ul className='newProdColors'>
+                                        <li>
+                                            <label className='sizeChoiceItem'>
+                                                <input type="checkbox" name="add-product-size" onChange={(e)=>modifySizeItem(e, "S")} />
+                                                <span>S</span>
+                                            </label>
+                                        </li>
+                                        <li>
+                                            <label className='sizeChoiceItem'>
+                                                <input type="checkbox" name="add-product-size" onChange={(e)=>modifySizeItem(e, "M")} />
+                                                <span>M</span>
+                                            </label>
+                                        </li>
+                                        <li>
+                                            <label className='sizeChoiceItem'>
+                                                <input type="checkbox" name="add-product-size" onChange={(e)=>modifySizeItem(e, "L")} />
+                                                <span>L</span>
+                                            </label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className='cmnFormRow'>
+                                <label className='cmnFieldName d-flex f-justify-between'>
+                                    Price
+                                </label>
+
+                                <div className='cmnFormRow clearfix'>
+                                    <div className='cmnFormCol'>
+                                        <div className='cmnFormField preField'>
+                                            <div className='unitAmount'>
+                                                $
+                                            </div>
+                                            <input 
+                                                type="number" 
+                                                className='cmnFieldStyle' 
+                                                placeholder='0' 
+                                                ref={newPriceInput}
+                                                onChange={priceAddProduct}
+                                                step="0.01"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className='cmnFormCol f-align-center'>                                    
+                                        <div className='cmnFormField'>
+                                            <label className='textCheckbox'>
+                                                <input type="checkbox" name="check-tax" onChange={addTax} ref={taxAddRef} />
+                                                <span>Add Sales Tax (10%)</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="cmnFormRow modalbtnHolder">
+                                <button className="saveNnewBtn" onClick={(e)=>{
+                                    e.preventDefault()
+                                    saveNewProduct()
+                                }}>
+                                    Save <img src={arrow_forward} alt="" />
+                                </button>
+                                <button className="saveNnewBtn" onClick={(e)=>{
+                                    e.preventDefault()
+                                    saveAndNewProduct()
+                                }}>
+                                    Save & New <img src={arrow_forward} alt="" />
+                                </button>
                             </div>
                         </form>
                     </Scrollbars>
