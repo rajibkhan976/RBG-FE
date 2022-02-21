@@ -60,6 +60,7 @@ const TransactionChoose = (props) => {
       status: false,
       listContent: [],
     });
+    const [productTransactionPayment, setProductTransactionPayment] = useState(false)
 
     const [contractOverview, setContractOverview] = useState(false);
 
@@ -315,6 +316,12 @@ const TransactionChoose = (props) => {
       setContractOverview(true);
     };
 
+    const productPayment = (e) => {
+        setProductTransactionPayment(e === true ? true : false)
+    }
+
+    useEffect(()=>{
+    },[productTransactionPayment])
 
 
     // const toggleContactListFn = (e) => {
@@ -327,9 +334,10 @@ const TransactionChoose = (props) => {
             <div className="contactTabsInner">
 
                 <div className="transHeader pos">
-                    <div className={contractOverview ? "backToTransction transactionPage" : "backToTransction transactionPage display"
+                    <div className={(contractOverview || !productTransactionPayment) ? "backToTransction transactionPage" : "backToTransction transactionPage display"
                                 }>
-                        <button className="backBtn" onClick={props.backToTransList}><img src={arrow_forward} alt="" /></button>
+                        {!contractOverview && !productTransactionPayment && <button className="backBtn" onClick={props.backToTransList}><img src={arrow_forward} alt="" /></button>}
+                        {productTransactionPayment && !contractOverview && <button className="backBtn" onClick={()=>setProductTransactionPayment(false)}><img src={arrow_forward} alt="" /></button>}
                     </div>
                     <div>
                         <h3 className="headingTabInner">{contractOverview ? "Contract Overview" : "Make a Transaction"}</h3>
@@ -389,6 +397,8 @@ const TransactionChoose = (props) => {
                     productPriceTax={productPriceTax}
                     buyProduct={buyProduct} */}
                     <ProductTransaction
+                        productTransactionPayment={productTransactionPayment}
+                        productPayment={(e)=>productPayment(e)}
                     />
                 </div>
                 }

@@ -287,7 +287,8 @@ const ProductTransaction = (props) => {
     }
 
     const showAddProduct = (e) => {
-        setAddProductModal(!addProductModal)
+        e.preventDefault()
+        props.productPayment(true)
     }
 
     const updateNewProductImage = () => {
@@ -470,9 +471,13 @@ const ProductTransaction = (props) => {
         console.log("hasError UPDATED:::", hasError);
     },[hasError])
 
+    useEffect(()=>{
+        console.log("Loaded");
+    },[])
+
     return (
         <>
-        <form className="productTransaction" ref={productTransaction}>
+        {props.productTransactionPayment === false && <form className="productTransaction" ref={productTransaction}>
             {errorMsg && <ErrorAlert message={errorMsg}></ErrorAlert>}
 
             {/* <div className="transaction_form">      
@@ -813,10 +818,10 @@ const ProductTransaction = (props) => {
                                         $ {cartItem.price}x{cartItem.quantity}
                                     </div>
                                     <div className='cartAmount'>
-                                        {cartItem.price * cartItem.quantity}
-                                        {cartState.tax &&
+                                        {"$ "+cartItem.price * cartItem.quantity}
+                                        {cartItem.tax &&
                                             <div className='cartTax'>
-                                                +Tax
+                                                + 10% Tax
                                             </div>
                                         }
                                     </div>
@@ -849,13 +854,14 @@ const ProductTransaction = (props) => {
               <button
                 className="saveNnewBtn"
                 onClick={(e)=>showAddProduct(e)}
+                disabled={!cartState || cartState.length < 1}
               >
                 <span>Continue to Buy</span>
                 <img className="" src={arrow_forward} alt="" />
               </button>
             </div>
         </form>
-
+        }
         {addProductModal && 
             <div className="modalProductAdd modalBackdrop">
             {showLoader ? <Loader /> : ""}
@@ -1037,6 +1043,12 @@ const ProductTransaction = (props) => {
                     </Scrollbars>
                 </div>
             </div>
+            </div>
+        }
+        
+        {props.productTransactionPayment === true && 
+            <div className='productPaymentTransaction'>
+                Product Payment
             </div>
         }
         </>
