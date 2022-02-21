@@ -19,6 +19,8 @@ import outstandingCash from "../../../../../assets/images/outstandingCash.svg";
 import cashCurrent from "../../../../../assets/images/cashCurrent.svg";
 import help from "../../../../../assets/images/help.svg";
 import bankActive from "../../../../../assets/images/bankActive.svg";
+import paymentFail from "../../../../../assets/images/paymentFailed.svg";
+import cardFail from "../../../../../assets/images/cardFailed.svg";
 import payDate from "../../../../../assets/images/payDate.svg";
 import pluss from "../../../../../assets/images/pluss.svg";
 import Loader from "../../../../shared/Loader";
@@ -33,6 +35,16 @@ const ContractOverviewTransaction = (props) => {
   const [isLoader, setIsLoader] = useState(false);
 
   const [addBankModal, setAddBankModal] = useState(false);
+
+  const [paymentFailed, setPaymentFailed] = useState(false);
+
+  const paymentFailedFn = () => {
+    setPaymentFailed(true);
+  };
+
+  const closeFailedPayModal = () => {
+    setPaymentFailed(false);
+  };
   
   const addBankModalFn = () => {
     setAddBankModal(true);
@@ -150,7 +162,7 @@ const chooseTransctionTypeCourse = () => {
                 
                     <label>
                         <div class="circleRadio">
-                            <input type="radio" name="transactionTypeBank"/><span></span>
+                            <input type="radio" name="transactionTypeCard"/><span></span>
                         </div> 
                         <div className="cardImage">
                           <img src={banks} alt=""/>
@@ -164,7 +176,7 @@ const chooseTransctionTypeCourse = () => {
                     <label> 
                         <div class="circleRadio">
                             <input type="radio"
-                                name="transactionTypeBank"/><span></span>
+                                name="transactionTypeCard"/><span></span>
                         </div> 
                         <div className="cardImage">
                           <img src={banks} alt=""/>
@@ -297,7 +309,7 @@ const chooseTransctionTypeCourse = () => {
                 <h4>$ 349.00</h4>
               </div>
               <div className="buyBtns">
-              <button class="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button>
+              <button onClick={(e)=> {paymentFailedFn()}} class="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button>
               </div>
             </div>
 
@@ -423,6 +435,41 @@ const chooseTransctionTypeCourse = () => {
            </div>
          </div>
         )}
+
+
+
+
+      {paymentFailed && (
+        <div className="modalBackdrop holiday">           
+          <div className="slickModalBody paymentFailed">            
+            <div className="slickModalHeader">
+              {/* <button className="topCross" onClick={closeFailedPayModal}><img src={crossTop} alt="" /></button> */}
+              <div className="circleForIcon"><img src={paymentFail} alt="" /></div>
+                      <h3 className="courseModalHeading">Payment Failed !</h3>
+            </div>
+            <div className="payModalDetails">
+              {/* <div className="choosePaymentInfo" >                      
+                <label>
+                    <div class="circleRadio">
+                        <input type="radio" name="transactionType"/><span></span>
+                    </div> Card
+                </label>
+                <label> 
+                    <div class="circleRadio">
+                        <input type="radio" name="transactionType"/><span></span>
+                    </div> Bank Account
+                </label>
+              </div>                    */}
+              <img src={cardFail} alt="" />
+              <p>Payment Failed. We arn’t able to Process your Payment, Pease try again !</p>
+            </div>
+
+            <div className="buyBtns failedPayment">
+              <button onClick={(e)=> {closeFailedPayModal()}} class="saveNnewBtn">Close</button>
+              </div>             
+            </div>
+        </div>
+      )}
 
 
       </div>

@@ -3057,6 +3057,7 @@ span.addPaymentInfo:hover {
 p.paymentTypes {
   font-size: 13px;
   color: #9BAEBC;
+  padding-left: 8px;
 }
 
 .chooseTransactionType.paymentTypes {
@@ -3409,4 +3410,43 @@ label.receivedCash {
 
 .payModalDetails .posSellingForm .modalForm.auto .modalbtnHolder button.saveNnewBtn img {
   margin-right: 5px;
+}
+
+.cmnFormField.programsTransaction.listActive .contactListItems button.btn {
+  margin-bottom: 10px;
+}
+
+.slickModalBody.paymentFailed .slickModalHeader .circleForIcon {
+  border: none;
+}
+
+.slickModalBody.paymentFailed .slickModalHeader h3.courseModalHeading {
+  color: #ED707A;
+  font-size: 20px;
+  font-weight: 600!important;
+}
+
+.slickModalBody.paymentFailed .payModalDetails {
+  background: #FFF0F1;
+  border: 1px solid #FFCACE;
+  padding: 15px 25px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.slickModalBody.paymentFailed .payModalDetails p {
+  font-size: 12px;
+  margin: 0 20px 0  15px ;
+  color: #ED707A;
+}
+
+.buyBtns.failedPayment {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.buyBtns.failedPayment button {
+  width: 80px;
+  margin: 0 auto;
 }
