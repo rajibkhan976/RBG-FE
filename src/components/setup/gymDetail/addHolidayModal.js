@@ -83,13 +83,19 @@ const AddHolidayModal = (props) => {
 
     let fromDate = new Date(holiday.fromDate);
     let ftoDate = new Date(holiday.toDate);
+    const dayNow = new Date();
 
+    console.log("ftoDate:::::::::::::::::::", ftoDate);
+    console.log("fromDate ::::::::::::::::::::", fromDate);
+    console.log("dayNow ::::::::::::::::::::", dayNow);
     console.log(Math.ceil(ftoDate - fromDate));
     
      if(holiday.name !== "" && holiday.fromDate !== "" && holiday.toDate !== "" ){
        if (Math.ceil(ftoDate - fromDate) < 0) {
          setErrorMsg("Please choose End-Date on or after Start-Date");
-       } else {
+       } else if(Math.ceil(fromDate - dayNow) < 0){
+        setErrorMsg("Please choose a Holiday after today");
+       }else {
          createHoliday();
          setModalPopMsgsuccess(true);
          setTimeout(() => {
