@@ -9208,3 +9208,21 @@ button.addOverviewCustomFiel {
 .contactListingTable .tableListing li:first-child > div:first-child {
   padding-left: 98px;
 }
+
+.holidayListWrap {
+  padding-right: 5px;
+  height: 400px;
+  overflow: auto;
+}
+
+.holidayListWrap::-webkit-scrollbar {
+  width: 5px;
+}
+
+.holidayListWrap::-webkit-scrollbar-track {
+  background-color: #ebebeb;
+}
+
+.holidayListWrap::-webkit-scrollbar-thumb {
+  background-color: #9baebc;
+}

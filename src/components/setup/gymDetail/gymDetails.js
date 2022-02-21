@@ -33,6 +33,7 @@ const GymDetails = (props) => {
   // START - Variable set while development --- Jit
   const [isLoader, setIsLoader] = useState(false);
   const [gymData, setGymData] = useState([]);
+  const [editAccess, setEditAccess] = useState(true);
   const [holidayData, setHolidayData] = useState([]);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -67,6 +68,10 @@ const GymDetails = (props) => {
       // gymData.gymDetails.timezone = (gymData?.timezone) ? gymData?.timezone : detectedTimezone?.zoneName;
       // gymData.gymDetails.gmtOffset = (gymData?.gmtOffset) ? gymData?.gmtOffset : detectedTimezone?.gmtOffset;
       setGymData(gymData.gymDetails);
+      setEditAccess(gymData.editAccess);
+      console.log("editAccess:::::::::::::::::::" , editAccess);
+      console.log("gymDetails:::::::::::::::::::" , gymData.gymDetails);
+
       if(!gymData.gymDetails?.timezone) {
         setGymData(prevState => ({...prevState, 
           timezone: detectedTimezone?.zoneName, 
@@ -83,7 +88,6 @@ const GymDetails = (props) => {
       setIsLoader(false);
     }
   };
-
   const getTimeZoneList = async () => {
     try {
       const timezoneList = await GymDetailsServices.fetchTimeZoneList();
@@ -348,13 +352,16 @@ const GymDetails = (props) => {
                 <div className="gymName">
                   <div className="profilePicture">
                     <div className="logo_profile">
-                      {(gymData?.logo) ? <img src={(gymData?.logo) ? "https://wrapperbucket.s3.us-east-1.amazonaws.com/" + gymData?.logo : gymLogo} alt="" />
+                     {(gymData?.logo) ? <img src={(gymData?.logo) ? "https://wrapperbucket.s3.us-east-1.amazonaws.com/" + gymData?.logo : gymLogo} alt="" />
                         : <img src={profileAvatar} alt="" />}
                     </div>
 
                     <span>{(gymData?.name) ? gymData?.name : "-"}</span>
                   </div>
-                  <button><img src={edit_gym} alt="" onClick={editGymDetailsHandler} /></button>
+                 
+                  {editAccess  && 
+                     <button><img src={edit_gym} alt="" onClick={editGymDetailsHandler} /></button>
+                  }
                 </div>
                 <div className="gymInfo full">
                   <p className="textType1">Contact Person</p>
