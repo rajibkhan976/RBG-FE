@@ -9,9 +9,13 @@ import Loader from '../../../Loader';
 import cart_icon from "../../../../../assets/images/cart.svg"
 import delete_icon from "../../../../../assets/images/delete_icon_grey.svg"
 import cross from "../../../../../assets/images/cross.svg";
+import cross_white from "../../../../../assets/images/close_icon_white.svg"
 import product_icon from "../../../../../assets/images/product_icon.svg"
+import camera_icon from "../../../../../assets/images/camera.svg"
 import { ErrorAlert } from '../../../messages';
 import Scrollbars from "react-custom-scrollbars-2";
+import { ColorPicker, useColor } from "react-color-palette";
+import "react-color-palette/lib/css/styles.css";
 
 const ProductTransaction = (props) => {
     const productRef = useRef(null);
@@ -34,6 +38,8 @@ const ProductTransaction = (props) => {
             tax: false
         }
     ])
+    const [newProductObj, setNewProductObj] = useState(null)
+    const [newColor, setNewColor] = useState("#fff")
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [showProductList, setShowProductList] = useState(false);
     const [addProductModal, setAddProductModal] = useState(false)
@@ -45,8 +51,14 @@ const ProductTransaction = (props) => {
     const decreaseQuantityBtn = useRef(null)
     const productQuantity = useRef(null)
     const cartProductQuantity = useRef(null)
-
+    const categoryNewProduct = useRef(null)
+    const nameNewProduct = useRef(null)
+    const descriptionNewProduct = useRef(null)
+    const imageNewProduct = useRef(null)
+    const productImageFileName = useRef(null)
+    const colorNewProductObj = useRef(null)    
     const [hasError, setHasError] = useState(false)
+    const [newPickColor, setNewPickColor] = useColor("hex", "#121212");
 
     const [errorState, setErrorState] = useState({
         color: "",
@@ -55,6 +67,7 @@ const ProductTransaction = (props) => {
         quantity: ""
     })
     const [totalAmt, setTotalAmt] = useState(0)
+    const [colorPickerState, setColorPickerState] = useState(false)
     const selectedColor = (e) => {
         try {
             setShowLoader(true);
@@ -122,9 +135,6 @@ const ProductTransaction = (props) => {
     const setQuantity = (e) => {
         e.preventDefault()
         let quantityInput = productQuantity.current;
-        console.log("quantity", e.target === decreaseQuantityBtn.current ? quantityInput.value-- : quantityInput.value++);
-        
-        console.log(e.target === decreaseQuantityBtn.current);
 
         e.target === decreaseQuantityBtn.current ? 
         setSelectedProduct({
@@ -139,30 +149,37 @@ const ProductTransaction = (props) => {
 
     const decreaseQuantity = (e, cartItem, i) => {
         e.preventDefault()
+       try {
         let cartStatePlaceholder = [...cartState];
         let cartItemPlaceholder = cartItem;
         
         cartItemPlaceholder.quantity = (cartItemPlaceholder.quantity > 0) ? cartItemPlaceholder.quantity - 1 : 0
 
         setCartState(cartStatePlaceholder);
-
-
+       } catch (error) {
+           console.log(error);
+       }
+       
     }
 
     const increaseQuantity = (e, cartItem, i) => {
         e.preventDefault()
-        console.log("increasing buttin is clicked");
-        let cartStatePlaceholder = [...cartState];
-        let cartItemPlaceholder = cartItem;
-        console.log("cartItemPlaceholder : ", cartItemPlaceholder);
-        cartItemPlaceholder.quantity += 1
-        console.log("cartItemPlaceholder : ", cartItemPlaceholder?.quantity);
-        console.log("cartStatePlaceholder : ", cartStatePlaceholder);
+        
+        try {
+            let cartStatePlaceholder = [...cartState];
+            let cartItemPlaceholder = cartItem;
+            
+            cartItemPlaceholder.quantity += 1
 
-        setCartState(cartStatePlaceholder)
+            setCartState(cartStatePlaceholder)
+        } catch (error) {
+            console.log(error);
+        }
+
     }
     useEffect(() =>{
-        console.log("Cart State changed!... ", cartState);
+        let summ = 0;
+            summ = cartState.forEach(item=> item.price * item.quantity)
     },[cartState])
 
     const handleAddProductSubmit = () => {
@@ -175,7 +192,6 @@ const ProductTransaction = (props) => {
 
     const addThisProduct = (e) => {
         e.preventDefault()
-
 
         try {
 
@@ -222,7 +238,6 @@ const ProductTransaction = (props) => {
                     price: "",
                     quantity: ""
                 })
-                getTotalCart()
                 resetAddProduct()
             }
         } catch (error) {
@@ -237,20 +252,35 @@ const ProductTransaction = (props) => {
         setSelectedProduct(null)
     }
 
-    const getTotalCart = () => {
-        console.log("Sum now");
-        setTotalAmt(totalAmt+(selectedProduct.price*selectedProduct.quantity))
-    }
     useEffect(()=>{
-        console.log(totalAmt);
+        console.log("totalAmt changed:::", totalAmt);
     },[totalAmt])
+
+    useEffect(()=>{
+        const getTotalCart = () => {
+            if(cartState.length > 0) {
+                const totalPlaceholder = 0;
+
+                const sumAmt = cartState.reduce(
+                    (previousValue, currentValue) => previousValue + (currentValue.price * currentValue.quantity),
+                    totalPlaceholder
+                );
+                setTotalAmt(sumAmt)
+                console.log("sumAmt", sumAmt);
+            }
+            else {
+                console.log("Sum now", totalAmt)
+                setTotalAmt(0)
+            }
+        }
+        getTotalCart()
+    },[cartState, totalAmt])
 
     const deleteCartItem = (e, cartItem, i) => {
         e.preventDefault();
 
         try {
             setShowLoader(true)
-
             setCartState(cartState.filter((item, index) => index !== i))
         } catch (error) {
             console.log(error);
@@ -262,6 +292,52 @@ const ProductTransaction = (props) => {
     const showAddProduct = (e) => {
         setAddProductModal(!addProductModal)
     }
+
+    const updateNewProductImage = () => {
+        let newImageURL = imageNewProduct.current.value;
+        productImageFileName.current.textContent = newImageURL.split("\\").pop();
+
+        try {
+            setShowLoader(true)
+            if(imageNewProduct.current.files[0].size < 5000000){
+                setNewProductObj({
+                    ...newProductObj,
+                    picture: newImageURL
+                })
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        finally {
+            setShowLoader(false)
+        }
+    }
+
+    const getCurrentProductColor = (e) => {
+        console.log(e);
+        setNewPickColor(e)
+        // setNewColor(e)
+        // const newProductColorArray = newProductObj.colors ? [...newProductObj.colors] : [];
+
+        // try {
+        //     newProductColorArray.push(colorNewProductObj.current.value)
+            
+        //     setNewProductObj({
+        //         ...newProductObj,
+        //         colors: newProductColorArray
+        //     })
+        // } catch (error) {
+        //     console.log(error);
+        // }
+        // finally {
+        //     console.log("newProductObj", newProductObj);
+        //     console.log("Color added.");
+        // }
+    }
+    
+    useEffect(()=>{
+        console.log("newProductObj", newProductObj);
+    },[newProductObj])
 
     const closeModal = () => {
         setAddProductModal(false);
@@ -365,6 +441,7 @@ const ProductTransaction = (props) => {
                                         className="btn addManuallyBtn"
                                         onClick={(e) => {
                                             e.preventDefault()
+                                            setAddProductModal(true)
                                         }}
                                         >+  Add New Product</button>
 
@@ -559,7 +636,6 @@ const ProductTransaction = (props) => {
                     </header>
                     <div className={cartState && cartState.length < 1 ? 'bodytransactionForm d-flex f-column f-align-center f-justify-center text-center' : 'bodytransactionForm d-flex f-column'}>
                         <div className='bodytransaction'>
-                            {console.log("CART:::", cartState)}
                         {cartState && cartState.length > 0 ? 
                             cartState.map((cartItem, i) => 
                             <div className='cartItem' key={i}>
@@ -603,7 +679,6 @@ const ProductTransaction = (props) => {
                                                 <path d="M11.25 1.75H0.75V0.25H11.25V1.75Z" fill="#9BAEBC"/>
                                             </svg>
                                         </button>
-                                        {console.log("cartItem  :::  ", cartItem?.quantity  )}
                                         <span ref={cartProductQuantity}>{cartItem?.quantity}</span>
                                         <button className='btn' onClick={(e)=>increaseQuantity(e, cartItem, i)}>
                                             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -659,7 +734,7 @@ const ProductTransaction = (props) => {
         </form>
 
         {addProductModal && 
-            <div className="modalDependent modalBackdrop">
+            <div className="modalProductAdd modalBackdrop">
             {showLoader ? <Loader /> : ""}
 
             <div className="slickModalBody">
@@ -671,6 +746,7 @@ const ProductTransaction = (props) => {
                         <img src={product_icon} alt="" />
                     </div>
                     <h3>Add a Product</h3>
+                    <p>Choose a category to add a new product below</p>
                 </div>
                 <div className="modalForm">
                     <Scrollbars
@@ -679,7 +755,81 @@ const ProductTransaction = (props) => {
                         )}
                     >
                         <form method="post" onSubmit={handleAddProductSubmit}>
-
+                            <div className='cmnFormRow'>
+                                <label className='cmnFieldName d-flex f-justify-between'>Select category</label>
+                                <div className='cmnFormField'>
+                                    <select className='cmnFieldStyle selectBox' ref={categoryNewProduct}>
+                                        <option value="null">Select</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className='cmnFormRow'>
+                                <label className='cmnFieldName d-flex f-justify-between'>Enter Product Name</label>
+                                <div className='cmnFormField'>
+                                   <input type="text" placeholder='Enter product name...' className='cmnFieldStyle' ref={nameNewProduct} />
+                                </div>
+                            </div>
+                            <div className='cmnFormRow'>
+                                <label className='cmnFieldName d-flex f-justify-between'>Enter Product Decription</label>
+                                <div className='cmnFormField'>
+                                   <textarea placeholder='Enter product description...' className='cmnFieldStyle' ref={descriptionNewProduct}></textarea>
+                                </div>
+                            </div>
+                            <div className='cmnFormRow'>
+                                <label className='cmnFieldName d-flex f-justify-between'>Upload Program Picture</label>
+                                <div className='cmnFormField'>
+                                    <div className="imageUpload d-flex f-align-center">
+                                        <input 
+                                            type="file" 
+                                            accept='image/jpeg, image/jpg, image/png, image/gif, image/bmp'
+                                            ref={imageNewProduct} 
+                                            onChange={updateNewProductImage} 
+                                        />
+                                        <figure 
+                                            className="visualPicture"
+                                            style={{
+                                                background: (newProductObj && newProductObj.picture) ? newProductObj.picture : "none"
+                                            }}
+                                        >
+                                            {console.log("UPDATED:::::::::::::::::::::", newProductObj && newProductObj.picture && newProductObj.picture)}
+                                            <img src={camera_icon} alt="" />
+                                        </figure>
+                                        <div className="uploadImageText" ref={productImageFileName}>Program picture</div>
+                                        <span className='staticUpload'>Upload</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='cmnFormRow'>
+                                <label className='cmnFieldName d-flex f-justify-between'>Available Colours</label>
+                                <div className='cmnFormField'>
+                                    <ul className='newProdColors'>
+                                        {newProductObj !== undefined && newProductObj !== null && newProductObj.colors ? newProductObj.colors.map((color, i) => (
+                                            <>
+                                                <li className='colorOptions'>
+                                                    <span
+                                                        style={{
+                                                            backgroundColor: color
+                                                        }}
+                                                    ></span>
+                                                    <button className='btn'>
+                                                        <img src={cross_white} alt="remove color" />
+                                                    </button>
+                                                </li>
+                                            </>
+                                        )) : ""}
+                                        <li className='addNewProductColor'>
+                                            <span onClick={()=>setColorPickerState(!colorPickerState)}>
+                                                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#55BBC9">
+                                                    <path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>\
+                                                </svg>
+                                            </span>
+                                            {colorPickerState &&
+                                                <ColorPicker color={newPickColor} onChange={getCurrentProductColor} hideHSV dark />
+                                            }
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </form>
                     </Scrollbars>
                 </div>
