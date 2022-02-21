@@ -73,18 +73,26 @@ const TransactionChoose = (props) => {
     }, [successMsg, errorMsg]);
 
     const chooseTransctionTypePOS = () => {
-        setChoosetPOS(!choosePOS);
-        setChooseCourse(false);
-        fetchProductCategory();
+        try {
+            setShowLoader(true);
+            setChoosetPOS(true);
+            setChooseCourse(false);
+            fetchProductCategory();
+        } catch (error) {
+            
+        }
+        finally {
+            setShowLoader(false);
+        }
     }
     const chooseTransctionTypeCourse = async () => {
         try {
             setShowLoader(true);
             setChoosetPOS(false);
-            setChooseCourse(!chooseCourse);
-            const list = await BillingServices.fetchCardBank(props.contactId);
-            if (!list.cards.length || !list.banks.length) throw new Error("Please set the contact's billing info first");
-            fetchCourseCategories();
+            setChooseCourse(true);
+            // const list = await BillingServices.fetchCardBank(props.contactId);
+            // if (!list.cards.length || !list.banks.length) throw new Error("Please set the contact's billing info first");
+            // fetchCourseCategories();
         } catch (e) {
             setErrorMsg(e.message);
         } finally {

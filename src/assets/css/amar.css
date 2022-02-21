@@ -1688,3 +1688,10 @@ input::-webkit-inner-spin-button {
   padding: 0 5px;
   height: 18px;
 }
+
+.bodytransaction .cmnFormRow .cmnFormCol:first-child .tooltiptextInfo {
+  left: 60px;
+}
+.bodytransaction .cmnFormRow .cmnFormCol:first-child .tooltiptextInfo::after {
+  left: 52px;
+}

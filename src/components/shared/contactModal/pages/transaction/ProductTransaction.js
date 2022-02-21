@@ -175,8 +175,6 @@ const ProductTransaction = (props) => {
     }
 
     useEffect(() =>{
-        let summ = 0;
-            summ = cartState.forEach(item=> item.price * item.quantity)
     },[cartState])
 
     const handleAddProductSubmit = () => {
