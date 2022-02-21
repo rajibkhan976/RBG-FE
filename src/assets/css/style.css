@@ -3171,7 +3171,7 @@ span.userProfilePic img {
 .accoHeadName {
   font-size: 16px;
   font-weight: bold;
-  color: #9baebc;
+  color: var(--darkBlue);
 }
 
 .accoToggler {
@@ -3199,7 +3199,7 @@ span.userProfilePic img {
 }
 
 .accoRow.collapse .accoHeadName {
-  color: var(--darkBlue);
+  color: #9baebc;
 }
 
 .formAccordion::-webkit-scrollbar {

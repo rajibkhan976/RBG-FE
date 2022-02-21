@@ -44,6 +44,7 @@ const Overview = (props) => {
         dailCode: "+1",
         number: "",
         full_number: "",
+        original_number: "",
         location: "None",
         country: "",
         carrier: "None",
@@ -56,6 +57,7 @@ const Overview = (props) => {
         dailCode: "+1",
         number: "",
         full_number: "",
+        original_number: "",
         location: "None",
         country: "",
         carrier: "None",
@@ -68,6 +70,7 @@ const Overview = (props) => {
         dailCode: "+1",
         number: "",
         full_number: "",
+        original_number: "",
         location: "None",
         country: "",
         carrier: "None",
@@ -80,6 +83,7 @@ const Overview = (props) => {
         dailCode: "+1",
         number: "",
         full_number: "",
+        original_number: "",
         location: "None",
         country: "",
         carrier: "None",
@@ -156,6 +160,7 @@ const Overview = (props) => {
                 dailCode: contact.contact.phone ? (contact.contact.phone.dailCode ? contact.contact.phone.dailCode : "+1") : "+1",
                 number: contact.contact.phone ? (contact.contact.phone.number ? contact.contact.phone.number : "") : "",
                 full_number: contact.contact.phone ? (contact.contact.phone.full_number ? contact.contact.phone.full_number : "") : "",
+                original_number: contact.contact.phone ? (contact.contact.phone.original_number ? contact.contact.phone.original_number : "") : "",
                 location: contact.contact.phone ? (contact.contact.phone.location ? contact.contact.phone.location : "None") : "None",
                 country: contact.contact.phone ? (contact.contact.phone.country ? contact.contact.phone.country : "") : "",
                 carrier: contact.contact.phone ? (contact.contact.phone.carrier ? contact.contact.phone.carrier : "None") : "None",
@@ -167,6 +172,7 @@ const Overview = (props) => {
                 dailCode: contact.contact.mobile ? (contact.contact.mobile.dailCode ? contact.contact.mobile.dailCode : "+1") : "+1",
                 number: contact.contact.mobile ? (contact.contact.mobile.number ? contact.contact.mobile.number : "") : "",
                 full_number: contact.contact.mobile ? (contact.contact.mobile.full_number ? contact.contact.mobile.full_number : "") : "",
+                original_number: contact.contact.mobile ? (contact.contact.mobile.original_number ? contact.contact.mobile.original_number : "") : "",
                 location: contact.contact.mobile ? (contact.contact.mobile.location ? contact.contact.mobile.location : "None") : "None",
                 country: contact.contact.mobile ? (contact.contact.mobile.country ? contact.contact.mobile.country : "") : "",
                 carrier: contact.contact.mobile ? (contact.contact.mobile.carrier ? contact.contact.mobile.carrier : "None") : "None",
@@ -178,6 +184,7 @@ const Overview = (props) => {
                 dailCode: contact.contact.momPhone ? (contact.contact.momPhone.dailCode ? contact.contact.momPhone.dailCode : "+1") : "+1",
                 number: contact.contact.momPhone ? (contact.contact.momPhone.number ? contact.contact.momPhone.number : "") : "",
                 full_number: contact.contact.momPhone ? (contact.contact.momPhone.full_number ? contact.contact.momPhone.full_number : "") : "",
+                original_number: contact.contact.original_number ? (contact.contact.momPhone.original_number ? contact.contact.momPhone.original_number : "") : "",
                 location: contact.contact.momPhone ? (contact.contact.momPhone.location ? contact.contact.momPhone.location : "None") : "None",
                 country: contact.contact.momPhone ? (contact.contact.momPhone.country ? contact.contact.momPhone.country : "") : "",
                 carrier: contact.contact.momPhone ? (contact.contact.momPhone.carrier ? contact.contact.momPhone.carrier : "None") : "None",
@@ -189,6 +196,7 @@ const Overview = (props) => {
                 dailCode: contact.contact.dadPhone ? (contact.contact.dadPhone.dailCode ? contact.contact.dadPhone.dailCode : "+1") : "+1",
                 number: contact.contact.dadPhone ? (contact.contact.dadPhone.number ? contact.contact.dadPhone.number : "") : "",
                 full_number: contact.contact.dadPhone ? (contact.contact.dadPhone.full_number ? contact.contact.dadPhone.full_number : "") : "",
+                original_number: contact.contact.dadPhone ? (contact.contact.dadPhone.original_number ? contact.contact.dadPhone.original_number : "") : "",
                 location: contact.contact.dadPhone ? (contact.contact.dadPhone.location ? contact.contact.dadPhone.location : "None") : "None",
                 country: contact.contact.dadPhone ? (contact.contact.dadPhone.country ? contact.contact.dadPhone.country : "") : "",
                 carrier: contact.contact.dadPhone ? (contact.contact.dadPhone.carrier ? contact.contact.dadPhone.carrier : "None") : "None",
@@ -293,6 +301,7 @@ const Overview = (props) => {
             } else {
                 setBasicinfoMobilePhone(prevState => ({...prevState, [name]: value}));
                 setBasicinfoMobilePhone(prevState => ({...prevState, full_number: basicinfoMobilePhone.dailCode + value}));
+                setBasicinfoMobilePhone(prevState => ({...prevState, original_number: basicinfoMobilePhone.dailCode.replace("+", "") + value}));
             }
         }
     };
@@ -314,6 +323,7 @@ const Overview = (props) => {
             } else {
                 setBasicinfoPhone(prevState => ({...prevState, number: value}));
                 setBasicinfoPhone(prevState => ({...prevState, full_number: basicinfoPhone.dailCode + value}));
+                setBasicinfoPhone(prevState => ({...prevState, original_number: basicinfoPhone.dailCode.replace("+","") + value}));
             }
         }
     };
@@ -336,6 +346,7 @@ const Overview = (props) => {
             } else {
                 setBasicinfoMomPhone(prevState => ({...prevState, number: value}));
                 setBasicinfoMomPhone(prevState => ({...prevState, full_number: basicinfoMomPhone.dailCode + value}));
+                setBasicinfoMomPhone(prevState => ({...prevState, original_number: basicinfoMomPhone.dailCode.replace("+","") + value}));
             }
         }
     };
@@ -357,6 +368,7 @@ const Overview = (props) => {
             } else {
                 setBasicinfoDadPhone(prevState => ({...prevState, [name]: value}));
                 setBasicinfoDadPhone(prevState => ({...prevState, full_number: basicinfoDadPnone.dailCode + value}));
+                setBasicinfoDadPhone(prevState => ({...prevState, original_number: basicinfoDadPnone.dailCode.replace("+","") + value}));
             }
         }
     };

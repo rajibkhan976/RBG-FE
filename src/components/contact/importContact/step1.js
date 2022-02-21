@@ -25,8 +25,10 @@ function Step1(props) {
     }
     const uploadFileFn = (event) => {
         let file = event.target.files[0];
-        if (file && (file.type === 'text/csv' || file.type === 'application/vnd.ms-excel') && file.size < 5000000) {
-            let newFileName = getRandomFileName() + '.csv';
+        if (file && (file.type === 'text/csv' || file.type === 'application/vnd.ms-excel' ||
+            file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') && file.size < 5000000) {
+            let extension = file.name.split('.').pop();
+            let newFileName = getRandomFileName() + '.' + extension;
             const config = {
                 bucketName: env.REACT_APP_BUCKET_NAME,
                 region: env.REACT_APP_REGION,
@@ -171,11 +173,11 @@ function Step1(props) {
                             </figure>
                             <h3>{fileImportStatus ? fileName : "Choose the file to be imported"}</h3>
                             <p className={fileImportStatus ? "inportInfo hide" : "inportInfo"}>
-                                [Only csv format file is supported]<br />Maximum upload size should be 5 MB
+                                [Only csv/xlsx/xls file format is supported]<br />Maximum upload size should be 5 MB
                             </p>
                             <div className={fileImportStatus ? "uploadFileBtn" : "uploadFileBtn fileInput"}>
                                 {fileImportStatus ? "Remove & New" : "Upload File"}
-                                <input type="file" id="uploadContactFile" onChange={uploadFileFn} accept=".csv"/>
+                                <input type="file" id="uploadContactFile" onChange={uploadFileFn} accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"/>
                             </div>
                             <a href="https://rbg-file-upload.s3.amazonaws.com/testCsv.csv" target="_blank" className={fileImportStatus ? "hide" : "downloadSample"}>Download sample template for Import</a>
                         </div>

@@ -862,7 +862,7 @@ function Step2(props) {
                             </div>
                             {openWorkInfo &&
                                 <div className="accoRowBody">
-                                <div className="infoInputs">
+                                    <div className="infoInputs">
                                     <ul>
                                         <li>
                                             <div className={"formField w-50 " + (companyError ? 'error' : '') }>
@@ -890,7 +890,7 @@ function Step2(props) {
                                         </li>
                                     </ul>
                                 </div>
-                            </div>
+                                </div>
                             }
                         </div>
                         <div className={"accoRow " + (!openPersonalInfo ? 'collapse' : '')}>
@@ -900,72 +900,72 @@ function Step2(props) {
                             </div>
                             {openPersonalInfo &&
                                 <div className="accoRowBody">
-                                <div className="infoInputs">
-                                    <ul>
-                                        <li>
-                                            <div className={"formField w-50 " + (mothersNameError ? 'error' : '') }>
-                                                <label>Mother's Name</label>
-                                                <div className="inFormField">
-                                                    <select name="mothersName" value={mothersName} onChange={handlerMothersNameChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                        <option value="">Select a header</option>
-                                                        {excelHeaders.map(header =>
-                                                            <option value={header}>{header}</option>
-                                                        )};
-                                                    </select>
+                                    <div className="infoInputs">
+                                        <ul>
+                                            <li>
+                                                <div className={"formField w-50 " + (mothersNameError ? 'error' : '') }>
+                                                    <label>Mother's Name</label>
+                                                    <div className="inFormField">
+                                                        <select name="mothersName" value={mothersName} onChange={handlerMothersNameChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                            <option value="">Select a header</option>
+                                                            {excelHeaders.map(header =>
+                                                                <option value={header}>{header}</option>
+                                                            )};
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className={"formField w-50 " + (momCellPhoneError ? 'error' : '') }>
-                                                <label>Mother's Phone Number</label>
-                                                <div className="inFormField">
-                                                    <select name="momCellPhone" value={momCellPhone} onChange={handlerMomCellChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                        <option value="">Select a header</option>
-                                                        {excelHeaders.map(header =>
-                                                            <option value={header}>{header}</option>
-                                                        )};
-                                                    </select>
+                                                <div className={"formField w-50 " + (momCellPhoneError ? 'error' : '') }>
+                                                    <label>Mother's Phone Number</label>
+                                                    <div className="inFormField">
+                                                        <select name="momCellPhone" value={momCellPhone} onChange={handlerMomCellChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                            <option value="">Select a header</option>
+                                                            {excelHeaders.map(header =>
+                                                                <option value={header}>{header}</option>
+                                                            )};
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div className={"formField w-50 " + (fathersNameError ? 'error' : '') }>
-                                                <label>Father's Name</label>
-                                                <div className="inFormField">
-                                                    <select name="fathersName" value={fathersName} onChange={handlerFathersNameChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                        <option value="">Select a header</option>
-                                                        {excelHeaders.map(header =>
-                                                            <option value={header}>{header}</option>
-                                                        )};
-                                                    </select>
+                                            </li>
+                                            <li>
+                                                <div className={"formField w-50 " + (fathersNameError ? 'error' : '') }>
+                                                    <label>Father's Name</label>
+                                                    <div className="inFormField">
+                                                        <select name="fathersName" value={fathersName} onChange={handlerFathersNameChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                            <option value="">Select a header</option>
+                                                            {excelHeaders.map(header =>
+                                                                <option value={header}>{header}</option>
+                                                            )};
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className={"formField w-50 " + (dadCellPhoneError ? 'error' : '') }>
-                                                <label>Father's Phone Number</label>
-                                                <div className="inFormField">
-                                                    <select name="dadCellPhone" value={dadCellPhone} onChange={handlerDadCellChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                        <option value="">Select a header</option>
-                                                        {excelHeaders.map(header =>
-                                                            <option value={header}>{header}</option>
-                                                        )};
-                                                    </select>
+                                                <div className={"formField w-50 " + (dadCellPhoneError ? 'error' : '') }>
+                                                    <label>Father's Phone Number</label>
+                                                    <div className="inFormField">
+                                                        <select name="dadCellPhone" value={dadCellPhone} onChange={handlerDadCellChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                            <option value="">Select a header</option>
+                                                            {excelHeaders.map(header =>
+                                                                <option value={header}>{header}</option>
+                                                            )};
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div className={"formField w-50 " + (genderError ? 'error' : '') }>
-                                                <label>Gender</label>
-                                                <div className="inFormField">
-                                                    <select name="gender" value={gender} onChange={handlerGenderChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                        <option value="">Select a header</option>
-                                                        {excelHeaders.map(header =>
-                                                            <option value={header}>{header}</option>
-                                                        )};
-                                                    </select>
+                                            </li>
+                                            <li>
+                                                <div className={"formField w-50 " + (genderError ? 'error' : '') }>
+                                                    <label>Gender</label>
+                                                    <div className="inFormField">
+                                                        <select name="gender" value={gender} onChange={handlerGenderChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                            <option value="">Select a header</option>
+                                                            {excelHeaders.map(header =>
+                                                                <option value={header}>{header}</option>
+                                                            )};
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </div>
-                            </div>
                             }
                         </div>
                         <div className={"accoRow " + (!openAddressInfo ? 'collapse' : '')}>
@@ -976,83 +976,83 @@ function Step2(props) {
                             {
                                 openAddressInfo &&
                                     <div className="accoRowBody">
-                                    <div className="infoInputs">
-                                        <ul>
-                                            <li>
-                                                <div className={"formField w-50 " + (address1Error ? 'error' : '') }>
-                                                    <label>Address 1</label>
-                                                    <div className="inFormField">
-                                                        <select name="address1" value={address1} onChange={handlerAddressOneChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                            <option value="">Select a header</option>
-                                                            {excelHeaders.map(header =>
-                                                                <option value={header}>{header}</option>
-                                                            )};
-                                                        </select>
+                                        <div className="infoInputs">
+                                            <ul>
+                                                <li>
+                                                    <div className={"formField w-50 " + (address1Error ? 'error' : '') }>
+                                                        <label>Address 1</label>
+                                                        <div className="inFormField">
+                                                            <select name="address1" value={address1} onChange={handlerAddressOneChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                <option value="">Select a header</option>
+                                                                {excelHeaders.map(header =>
+                                                                    <option value={header}>{header}</option>
+                                                                )};
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className={"formField w-50 " + (address2Error ? 'error' : '') }>
-                                                    <label>Address 2</label>
-                                                    <div className="inFormField">
-                                                        <select name="address2" value={address2} onChange={handlerAddressTwoChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                            <option value="">Select a header</option>
-                                                            {excelHeaders.map(header =>
-                                                                <option value={header}>{header}</option>
-                                                            )};
-                                                        </select>
+                                                    <div className={"formField w-50 " + (address2Error ? 'error' : '') }>
+                                                        <label>Address 2</label>
+                                                        <div className="inFormField">
+                                                            <select name="address2" value={address2} onChange={handlerAddressTwoChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                <option value="">Select a header</option>
+                                                                {excelHeaders.map(header =>
+                                                                    <option value={header}>{header}</option>
+                                                                )};
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div className={"formField w-50 " + (cityError ? 'error' : '') }>
-                                                    <label>City</label>
-                                                    <div className="inFormField">
-                                                        <select name="city" value={city} onChange={handlerCityChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                            <option value="">Select a header</option>
-                                                            {excelHeaders.map(header =>
-                                                                <option value={header}>{header}</option>
-                                                            )};
-                                                        </select>
+                                                </li>
+                                                <li>
+                                                    <div className={"formField w-50 " + (cityError ? 'error' : '') }>
+                                                        <label>City</label>
+                                                        <div className="inFormField">
+                                                            <select name="city" value={city} onChange={handlerCityChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                <option value="">Select a header</option>
+                                                                {excelHeaders.map(header =>
+                                                                    <option value={header}>{header}</option>
+                                                                )};
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className={"formField w-50 " + (stateError ? 'error' : '') }>
-                                                    <label>State</label>
-                                                    <div className="inFormField">
-                                                        <select name="state" value={state} onChange={handlerStateChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                            <option value="">Select a header</option>
-                                                            {excelHeaders.map(header =>
-                                                                <option value={header}>{header}</option>
-                                                            )};
-                                                        </select>
+                                                    <div className={"formField w-50 " + (stateError ? 'error' : '') }>
+                                                        <label>State</label>
+                                                        <div className="inFormField">
+                                                            <select name="state" value={state} onChange={handlerStateChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                <option value="">Select a header</option>
+                                                                {excelHeaders.map(header =>
+                                                                    <option value={header}>{header}</option>
+                                                                )};
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div className={"formField w-50 " + (zipError ? 'error' : '') }>
-                                                    <label>Zip</label>
-                                                    <div className="inFormField">
-                                                        <select name="zip" value={zip} onChange={handlerZipChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                            <option value="">Select a header</option>
-                                                            {excelHeaders.map(header =>
-                                                                <option value={header}>{header}</option>
-                                                            )};
-                                                        </select>
+                                                </li>
+                                                <li>
+                                                    <div className={"formField w-50 " + (zipError ? 'error' : '') }>
+                                                        <label>Zip</label>
+                                                        <div className="inFormField">
+                                                            <select name="zip" value={zip} onChange={handlerZipChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                <option value="">Select a header</option>
+                                                                {excelHeaders.map(header =>
+                                                                    <option value={header}>{header}</option>
+                                                                )};
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className={"formField w-50 " + (countryError ? 'error' : '') }>
-                                                    <label>Country</label>
-                                                    <div className="inFormField">
-                                                        <select name="country" value={country} onChange={handlerCountryChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                            <option value="">Select a header</option>
-                                                            {excelHeaders.map(header =>
-                                                                <option value={header}>{header}</option>
-                                                            )};
-                                                        </select>
+                                                    <div className={"formField w-50 " + (countryError ? 'error' : '') }>
+                                                        <label>Country</label>
+                                                        <div className="inFormField">
+                                                            <select name="country" value={country} onChange={handlerCountryChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                <option value="">Select a header</option>
+                                                                {excelHeaders.map(header =>
+                                                                    <option value={header}>{header}</option>
+                                                                )};
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                        </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                </div>
                             }
                         </div>
                         <div className={"accoRow " + (!openOtherInfo ? 'collapse' : '')}>
@@ -1063,72 +1063,72 @@ function Step2(props) {
                             {
                                 openOtherInfo &&
                                     <div className="accoRowBody">
-                                    <div className="infoInputs">
-                                        <ul>
-                                            <li>
-                                                <div className={"formField w-50 " + (contactTypeError ? 'error' : '') }>
-                                                    <label>Contact Type</label>
-                                                    <div className="inFormField">
-                                                        <select name="contactType" value={contactType} onChange={handlerContactTypeChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                            <option value="">Select a header</option>
-                                                            {excelHeaders.map(header =>
-                                                                <option value={header}>{header}</option>
-                                                            )};
-                                                        </select>
+                                        <div className="infoInputs">
+                                            <ul>
+                                                <li>
+                                                    <div className={"formField w-50 " + (contactTypeError ? 'error' : '') }>
+                                                        <label>Contact Type</label>
+                                                        <div className="inFormField">
+                                                            <select name="contactType" value={contactType} onChange={handlerContactTypeChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                <option value="">Select a header</option>
+                                                                {excelHeaders.map(header =>
+                                                                    <option value={header}>{header}</option>
+                                                                )};
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className={"formField w-50 " + (ageGroupError ? 'error' : '') }>
-                                                    <label>Age Group</label>
-                                                    <div className="inFormField">
-                                                        <select name="ageGroup" value={ageGroup} onChange={handlerAgeGroupChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                            <option value="">Select a header</option>
-                                                            {excelHeaders.map(header =>
-                                                                <option value={header}>{header}</option>
-                                                            )};
-                                                        </select>
+                                                    <div className={"formField w-50 " + (ageGroupError ? 'error' : '') }>
+                                                        <label>Age Group</label>
+                                                        <div className="inFormField">
+                                                            <select name="ageGroup" value={ageGroup} onChange={handlerAgeGroupChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                <option value="">Select a header</option>
+                                                                {excelHeaders.map(header =>
+                                                                    <option value={header}>{header}</option>
+                                                                )};
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div className={"formField w-50 " + (sourceError ? 'error' : '') }>
-                                                    <label>Source</label>
-                                                    <div className="inFormField">
-                                                        <select name="source" value={source} onChange={handlerSourceChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                            <option value="">Select a header</option>
-                                                            {excelHeaders.map(header =>
-                                                                <option value={header}>{header}</option>
-                                                            )};
-                                                        </select>
+                                                </li>
+                                                <li>
+                                                    <div className={"formField w-50 " + (sourceError ? 'error' : '') }>
+                                                        <label>Source</label>
+                                                        <div className="inFormField">
+                                                            <select name="source" value={source} onChange={handlerSourceChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                <option value="">Select a header</option>
+                                                                {excelHeaders.map(header =>
+                                                                    <option value={header}>{header}</option>
+                                                                )};
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className={"formField w-50 " + (sourceDetailsError ? 'error' : '') }>
-                                                    <label>Source Details</label>
-                                                    <div className="inFormField">
-                                                        <select name="sourceDetails" value={sourceDetails} onChange={handlerSourceDetailsChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                            <option value="">Select a header</option>
-                                                            {excelHeaders.map(header =>
-                                                                <option value={header}>{header}</option>
-                                                            )};
-                                                        </select>
+                                                    <div className={"formField w-50 " + (sourceDetailsError ? 'error' : '') }>
+                                                        <label>Source Details</label>
+                                                        <div className="inFormField">
+                                                            <select name="sourceDetails" value={sourceDetails} onChange={handlerSourceDetailsChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                <option value="">Select a header</option>
+                                                                {excelHeaders.map(header =>
+                                                                    <option value={header}>{header}</option>
+                                                                )};
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div className={"formField w-50 " + (onTrialError ? 'error' : '') }>
-                                                    <label>On Trial</label>
-                                                    <div className="inFormField">
-                                                        <select name="onTrial" value={onTrial} onChange={handlerOnTrialChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                            <option value="">Select a header</option>
-                                                            {excelHeaders.map(header =>
-                                                                <option value={header}>{header}</option>
-                                                            )};
-                                                        </select>
+                                                </li>
+                                                <li>
+                                                    <div className={"formField w-50 " + (onTrialError ? 'error' : '') }>
+                                                        <label>On Trial</label>
+                                                        <div className="inFormField">
+                                                            <select name="onTrial" value={onTrial} onChange={handlerOnTrialChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                <option value="">Select a header</option>
+                                                                {excelHeaders.map(header =>
+                                                                    <option value={header}>{header}</option>
+                                                                )};
+                                                            </select>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </li>
-                                        </ul>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
-                                </div>
                             }
                         </div>
                         {
@@ -1395,52 +1395,58 @@ function Step2(props) {
                                     </div>
                                 </>
                         }
-                        {customFields.length ?
-                            <div className={"accoRow " + (!openCustomFields ? 'collapse' : '')}>
-                                <div className="accoRowHead customFieldDetails">
-                                    <span className="accoHeadName">Custom Fields</span>
-                                    {openCustomFields &&
-                                        <>
-                                            <button className="creatUserBtn" onClick={createCustomFields}>
-                                                <img className="plusIcon" src={plus_icon} alt=""/>
-                                                <span>Create Custom Field</span>
-                                            </button>
-                                        </>
-                                    }
-                                    <button className={openCustomFields ? "accoToggler openCustomFields": "accoToggler closedCustomFields"} onClick={toggleCustomField}></button>
-                                </div>
-                                {
-                                    openCustomFields &&
-                                    <div className="accoRowBody">
-                                        <div className="infoInputs">
-                                            <ul>
-                                                {
-                                                    customFields.map(row => (
-                                                        <li>
-                                                            { row.map(col => (
-                                                                <div className={"formField w-50 " + (customFieldsError[col.alias] ? 'error' : '')}>
-                                                                    <label>{col.fieldName}</label>
-                                                                    <div className="inFormField">
-                                                                        <select name={col.alias} value={customFieldsList[col.alias]}
-                                                                                onChange={handlerCustomFieldChange}
-                                                                                style={{backgroundImage: "url(" + arrowDown + ")",}}>
-                                                                            <option value="">Select a header</option>
-                                                                            {excelHeaders.map(header =>
-                                                                                <option value={header}>{header}</option>
-                                                                            )};
-                                                                        </select>
-                                                                    </div>
-                                                                </div>
-                                                            )) }
-                                                        </li>
-                                                    ))
-                                                }
-                                            </ul>
-                                        </div>
-                                    </div>
+                        <div className={"accoRow " + (!openCustomFields ? 'collapse' : '')}>
+                            <div className="accoRowHead customFieldDetails">
+                                <span className="accoHeadName">Custom Fields</span>
+                                {openCustomFields &&
+                                    <>
+                                        <button className="creatUserBtn" onClick={createCustomFields}>
+                                            <img className="plusIcon" src={plus_icon} alt=""/>
+                                            <span>Create Custom Field</span>
+                                        </button>
+                                    </>
                                 }
-                            </div> : ""
-                        }
+                                <button className={openCustomFields ? "accoToggler openCustomFields": "accoToggler closedCustomFields"} onClick={toggleCustomField}></button>
+                            </div>
+                            {
+                                openCustomFields ?
+                                    (customFields.length ? <>
+                                        <div className="accoRowBody">
+                                            <div className="infoInputs">
+                                                <ul>
+                                                    {
+                                                        customFields.map(row => (
+                                                            <li>
+                                                                { row.map(col => (
+                                                                    <div className={"formField w-50 " + (customFieldsError[col.alias] ? 'error' : '')}>
+                                                                        <label>{col.fieldName}</label>
+                                                                        <div className="inFormField">
+                                                                            <select name={col.alias} value={customFieldsList[col.alias]}
+                                                                                    onChange={handlerCustomFieldChange}
+                                                                                    style={{backgroundImage: "url(" + arrowDown + ")",}}>
+                                                                                <option value="">Select a header</option>
+                                                                                {excelHeaders.map(header =>
+                                                                                    <option value={header}>{header}</option>
+                                                                                )};
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                )) }
+                                                            </li>
+                                                        ))
+                                                    }
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </> : <>
+                                        <div className="accoRowBody">
+                                            <div className="infoInputs">
+
+                                            </div>
+                                        </div>
+                                    </>) : ""
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
