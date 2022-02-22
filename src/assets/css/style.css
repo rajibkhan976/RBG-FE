@@ -3155,7 +3155,7 @@ span.userProfilePic img {
   padding-right: 10px;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: calc(100vh - 500px);
+  max-height: calc(100vh - 395px);
 }
 
 .accoRow {
@@ -9208,7 +9208,63 @@ button.addOverviewCustomFiel {
 .contactListingTable .tableListing li:first-child > div:first-child {
   padding-left: 98px;
 }
-
+.inFormField .css-1s2u09g-control input,
+.inFormField .css-1pahdxg-control input {
+  min-height: inherit;
+  height: auto;
+}
+.inFormField .css-1s2u09g-control,
+.inFormField .css-1pahdxg-control{
+  width: 100%;
+  height: 40px;
+  background: #f6f8fa;
+  background-position-x: 0%;
+  background-position-y: 0%;
+  background-repeat: repeat;
+  background-image: none;
+  border: 1px solid #d3d9de;
+  border-radius: 5px;
+  box-sizing: border-box;
+  color: var(--darkBlue);
+  font-size: 14px;
+  font-family: "Poppins", sans-serif;
+}
+.inFormField .css-1pahdxg-control {
+  box-shadow: none !important;
+}
+.inFormField .css-tlfecz-indicatorContainer,
+.css-1hb7zxy-IndicatorsContainer div{
+  flex: 0 0 40px;
+  width: 40px;
+  height: 100%;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+.inFormField .css-tlfecz-indicatorContainer:last-child {
+  background-image: url(../images/arrowDown.svg);
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.inFormField .css-tlfecz-indicatorContainer:last-child svg {
+  display: none;
+}
+.inFormField .css-1okebmr-indicatorSeparator {
+  display: none;
+}
+.inFormField  .css-26l3qy-menu *,
+.inFormField #react-select-2-listbox *{
+  font-size: 13px !important;
+}
+.inFormField .css-26l3qy-menu,
+.inFormField #react-select-2-listbox {
+  width: calc(100% - 2px);
+  margin-left: 1px;
+}
+.formField.error .css-1s2u09g-control {
+  border: 1px solid #c74854;
+  background-color: #fff4f4;
+}
 .holidayListWrap {
   padding-right: 5px;
   height: 400px;
