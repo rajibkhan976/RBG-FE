@@ -81,7 +81,7 @@ const chooseTransctionTypeCourse = () => {
 
 
     return (
-      <div className="posSellingForm contractOverview">
+      <div className={props.paymentSuccess ? "posSellingForm contractOverview hide" : "posSellingForm contractOverview"}  >
         {props.showLoader && <Loader />}
         {props.successMsg &&
             <div className="formMsg success"></div>
@@ -309,7 +309,9 @@ const chooseTransctionTypeCourse = () => {
                 <h4>$ 349.00</h4>
               </div>
               <div className="buyBtns">
-              <button onClick={(e)=> {paymentFailedFn()}} class="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button>
+              {/* <button onClick={(e)=> {paymentFailedFn()}} class="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button> */}
+              <button onClick={props.paymentSuccessFn} class="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button>
+              
               </div>
             </div>
 
@@ -443,7 +445,7 @@ const chooseTransctionTypeCourse = () => {
         <div className="modalBackdrop holiday">           
           <div className="slickModalBody paymentFailed">            
             <div className="slickModalHeader">
-              {/* <button className="topCross" onClick={closeFailedPayModal}><img src={crossTop} alt="" /></button> */}
+               <button className="topCross" onClick={closeFailedPayModal}><img src={crossTop} alt="" /></button> 
               <div className="circleForIcon"><img src={paymentFail} alt="" /></div>
                       <h3 className="courseModalHeading">Payment Failed !</h3>
             </div>
@@ -465,7 +467,8 @@ const chooseTransctionTypeCourse = () => {
             </div>
 
             <div className="buyBtns failedPayment">
-              <button onClick={(e)=> {closeFailedPayModal()}} class="saveNnewBtn">Close</button>
+              <button onClick={props.paymentSuccessFn} class="saveNnewBtn">Close</button>
+              
               </div>             
             </div>
         </div>

@@ -12,6 +12,8 @@ import ProductTransaction from "./transaction/ProductTransaction";
 import ProgramTransaction from "./transaction/ProgramTransaction";
 import ContractOverviewTransaction from "./transaction/ContractOverviewTransaction";
 
+import PaymentSuccessSection from "./transaction/PaymentSuccessSection";
+
 
 const TransactionChoose = (props) => {
 
@@ -63,6 +65,8 @@ const TransactionChoose = (props) => {
     const [productTransactionPayment, setProductTransactionPayment] = useState(false)
 
     const [contractOverview, setContractOverview] = useState(false);
+
+    const [paymentSuccess, setPaymentSuccess] = useState(false);
 
 
     const dispatch = useDispatch();
@@ -325,6 +329,17 @@ const TransactionChoose = (props) => {
       setContractOverview(true);
     };
 
+
+
+    const paymentSuccessFn = (e) => {
+      e.preventDefault();
+      setContractOverview(false)
+      setPaymentSuccess(true);
+    };
+
+    useEffect(()=>{
+    }, [paymentSuccess])
+
     const productPayment = (e) => {
         setProductTransactionPayment(e === true ? true : false)
     }
@@ -349,13 +364,14 @@ const TransactionChoose = (props) => {
                         {productTransactionPayment && !contractOverview && <button className="backBtn" onClick={()=>setProductTransactionPayment(false)}><img src={arrow_forward} alt="" /></button>}
                     </div>
                     <div>
-                        <h3 className="headingTabInner">{contractOverview ? "Contract Overview" : "Make a Transaction"}</h3>
+                      {console.log("paymentSuccess", paymentSuccess)}
+                        <h3 className="headingTabInner">{contractOverview ? "Contract Overview" : paymentSuccess ? "Payment is Successful" : "Make a Transaction"}</h3>
                         <span>{contractOverview ? "* Explanatory contract text blurb should be here." : "* Explanatory text blurb should be here."}</span>
                     </div>
 
                 </div>
 
-              <div className={(contractOverview && !productTransactionPayment) ? "chooseTransactionWraper transactionPage" : productTransactionPayment ? "paymentTransProduct chooseTransactionWraper" : "chooseTransactionWraper transactionPage display"
+              <div className={contractOverview ? "chooseTransactionWraper transactionPage" : paymentSuccess ? "chooseTransactionWraper transactionPage" : productTransactionPayment ? "paymentTransProduct chooseTransactionWraper" : "chooseTransactionWraper transactionPage display"
                                 }>
 
                 <div className="chooseTransactionType" >
@@ -420,7 +436,7 @@ const TransactionChoose = (props) => {
                     {errorMsg &&
                         <div className=""></div>
                     }
-                    <ProgramTransaction
+                    {(!contractOverview && !paymentSuccess) && <ProgramTransaction
                         toggleContactList={toggleContactList}
                         toggleContactListFn={toggleContactListFn}
                         setAddManually={setAddManually}
@@ -447,7 +463,7 @@ const TransactionChoose = (props) => {
                         contractOverview={contractOverview}
                         setContractOverview={setContractOverview}
                         contractOverviewFn={contractOverviewFn}
-                    />
+                    />}
                 </div>
                 }
               </div>
@@ -459,6 +475,15 @@ const TransactionChoose = (props) => {
                     addDownpaymentFn={addDownpaymentFn}
                     addDownpayment={addDownpayment}
                     delDownpaymentFn={delDownpaymentFn}
+
+                    paymentSuccess={paymentSuccess}
+                    setPaymentSuccess={setPaymentSuccess}
+                    paymentSuccessFn={paymentSuccessFn}
+                  />
+                }
+
+                {paymentSuccess &&
+                  <PaymentSuccessSection
                   />
                 }
 
