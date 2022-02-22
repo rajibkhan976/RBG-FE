@@ -459,6 +459,7 @@ const ProductTransaction = (props) => {
         
         createProduct()
         newProductForm.reset();
+        productImageFileName.current.textContent = "Program picture";
     }
 
     const closeModal = () => {
