@@ -17,6 +17,7 @@ const AddHolidayModal = (props) => {
   const [modalPopMsgerror1, setModalPopMsgerror1] = useState(false);
   const [modalPopMsgerror2, setModalPopMsgerror2] = useState(false);
   const [modalPopMsgerror3, setModalPopMsgerror3] = useState(false);
+  const [isLoader, setIsLoader] = useState(false);
 
   const [modalPopMsgsuccess, setModalPopMsgsuccess] = useState(false);
   const [holiday , setHoliday] = useState(props.holiday);
@@ -84,38 +85,37 @@ const AddHolidayModal = (props) => {
     let fromDate = new Date(holiday.fromDate);
     let ftoDate = new Date(holiday.toDate);
     const dayNow = new Date();
-
-    //console.log("ftoDate:::::::::::::::::::", ftoDate);
-    //console.log("fromDate ::::::::::::::::::::", fromDate);
-   // console.log("dayNow ::::::::::::::::::::", dayNow);
-    //console.log(Math.ceil(ftoDate - fromDate));
     
-     if(holiday.name !== "" && holiday.fromDate !== "" && holiday.toDate !== "" ){
-       if (Math.ceil(ftoDate - fromDate) < 0) {
-         setErrorMsg("Please choose End-Date on or after Start-Date");
-       } else if(Math.ceil(fromDate - dayNow) < 0){
-        setErrorMsg("Please choose a Holiday after today");
-       }else {
-         createHoliday();
-         setModalPopMsgsuccess(true);
-         setTimeout(() => {
-          props.closeAddHolidayModal();       
-        }, 5000);
-       }
-       setModalPopMsgerror1(false);
-       setModalPopMsgerror2(false);
-       setModalPopMsgerror3(false);
-     }else{
-         //console.log("failed aslkjlsh");
-         if(holiday.name === ""){
-          setModalPopMsgerror1(true);
-        }else if (holiday.fromDate === ""){
-          setModalPopMsgerror2(true);
-        }else if(holiday.toDate === ""){
-          setModalPopMsgerror3(true);
+      if(holiday.name != "" && holiday.fromDate != undefined && holiday.toDate != undefined ){
+        console.log("I am in parent if = ", typeof(holiday.fromDate));
+        if (Math.ceil(ftoDate - fromDate) < 0) {
+          setErrorMsg("Please choose End-Date on or after Start-Date");
+        } else if(Math.ceil(fromDate - dayNow) < 0){
+         setErrorMsg("Please choose a Holiday after today");
+        }else {
+          //console.log("Holiday Obj", holiday);
+          createHoliday();
+         // console.log("API calling ====================================================");
+          setModalPopMsgsuccess(true);
+          setTimeout(() => {
+           props.closeAddHolidayModal();       
+         }, 5000);
         }
-        //setErrorMsg("Please fill up the fields properly!");
-     };
+        setModalPopMsgerror1(false);
+        setModalPopMsgerror2(false);
+        setModalPopMsgerror3(false);
+      }
+      else{
+          //console.log("failed aslkjlsh");
+          if(holiday.name === ""){
+            setModalPopMsgerror1(true);
+          }else if (holiday.fromDate === undefined){
+            setModalPopMsgerror2(true);
+          }else if(holiday.toDate === undefined){
+            setModalPopMsgerror3(true);
+          }
+         //setErrorMsg("Please fill up the fields properly!");
+      };
      
 };
 const handleStatusSubmitNew =(e) =>{
@@ -123,13 +123,17 @@ const handleStatusSubmitNew =(e) =>{
 
     let fromDate = new Date(holiday.fromDate);
     let ftoDate = new Date(holiday.toDate);
+    const dayNow = new Date();
 
-    if(holiday.name !== "" && holiday.fromDate !== "" && holiday.toDate !== "" ){
+    if(holiday.name != "" && holiday.fromDate != undefined && holiday.toDate != undefined){
         //console.log("a",statusName,"b", statusDesc,"c", statusType);
         if (Math.ceil(ftoDate - fromDate) < 0) {
-          setErrorMsg("Please chose End-Date on or after Start-Date");
+          setErrorMsg("Please choose End-Date on or after Start-Date");
+        } else if(Math.ceil(fromDate - dayNow) < 0){
+         setErrorMsg("Please choose a Holiday after today");
         } else {
-          createHoliday();
+          
+          
           setModalPopMsgsuccess(true);
           setEditHoliday(false);
           setHoliday({
@@ -139,14 +143,18 @@ const handleStatusSubmitNew =(e) =>{
             fromDate : "",
             toDate :  ""
           });
+          createHoliday();
+          
         }
-        
+        setModalPopMsgerror1(false);
+        setModalPopMsgerror2(false);
+        setModalPopMsgerror3(false);
     } else {
       if(holiday.name === ""){
         setModalPopMsgerror1(true);
-      }else if (holiday.fromDate === ""){
+      }else if (holiday.fromDate === undefined){
         setModalPopMsgerror2(true);
-      }else if(holiday.toDate === ""){
+      }else if(holiday.toDate === undefined){
         setModalPopMsgerror3(true);
       }
       //setErrorMsg("Please fill up the fields properly!");
