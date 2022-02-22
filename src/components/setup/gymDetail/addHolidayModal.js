@@ -133,7 +133,6 @@ const handleStatusSubmitNew =(e) =>{
          setErrorMsg("Please choose a Holiday after today");
         } else {
           
-          
           setModalPopMsgsuccess(true);
           setEditHoliday(false);
           setHoliday({
