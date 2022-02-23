@@ -828,10 +828,10 @@ function Step2(props) {
                                                             </div>
                                                         </li>
                                                         <li>
-                                                            <div className={"formField w-50 " + (mapError.paymentFrequency ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.paymentRemaining ? 'error' : '') }>
                                                                 <label>Payments Remaining</label>
                                                                 <div className="inFormField">
-                                                                    <Select name="paymentFrequency" value={map.paymentFrequency} onChange={(e) =>handleChangeFields(e, 'paymentFrequency')}
+                                                                    <Select name="paymentRemaining" value={map.paymentRemaining} onChange={(e) =>handleChangeFields(e, 'paymentRemaining')}
                                                                             options={options}  isClearable={true} placeholder="Select a header"/>
                                                                 </div>
                                                             </div>
