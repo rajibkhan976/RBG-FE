@@ -2737,13 +2737,33 @@ button.delNewDownpayment {
 
 
 .modalDependent.modalAddCourses.modalBackdrop .modalForm  {
-  max-height: 640px;
+  max-height: 430px;
   height: 100%;
 }
 
+.modalDependent .modalForm.pograms form {
+  padding-right: 15px;
+}
+
+.modalDependent .modalForm.pograms form::-webkit-scrollbar {
+  width: 4px;
+}
+
+.modalDependent .modalForm.pograms form::-webkit-scrollbar-track {
+  background-color: #dce4eb;
+}
+
+.modalDependent .modalForm.pograms form::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
+}
+
 .modalDependent.modalAddCourses.modalBackdrop .slickModalBody  {
-  height: 90%;
+  height: 70%;
   padding: 30px 25px;
+}
+
+.modalForm .formControl.cmnFormRow {
+  display: block;
 }
 
 .contactTabsInner h3.courseModalHeading {
@@ -2935,6 +2955,8 @@ p.courseModalPara {
 }
 .modalForm .formControl label {
   padding-top: 5px;
+  font-weight:400!important;
+  font-size: 14px!important;
 }
 
 .modalbtnHolder.saveCourses .saveNnewBtn.programModal {

@@ -554,20 +554,25 @@ const ProgramTransaction = (props) => {
                                                   <input type="text" placeholder="Small description here" name="productDesc"/>
                                                 </div>
 
-                                                <div className="formControl">
-                                                  <label>Upload Program Picture</label>
-                                                  <div className="profile uploads">
-                                                    <div className="profileUpload">
-                                                      <input type="file"  />
-                                                      <span className="uploadText">Upload</span>
+                                                <div className="formControl cmnFormRow">
+                                                  
+                                                  <label className='cmnFieldName d-flex f-justify-between'>Upload Program Picture</label>
+                                                    <div className='cmnFormField'>
+                                                        <div className="imageUpload d-flex f-align-center">
+                                                            <input 
+                                                                type="file" 
+                                                                accept='image/jpeg, image/jpg, image/png, image/gif, image/bmp'/>
+                                                            <figure 
+                                                                className="visualPicture">
+                                                                
+                                                                <img src={chooseImg} alt="" />
+                                                            </figure>
+                                                            <div className="uploadImageText" >Program picture</div>
+                                                            <span className='staticUpload'>Upload</span>
+                                                        </div>
                                                     </div>
-                                                    <div className="profilePicture">
-                                                      <img src={chooseImg} alt="" />
-                                                    </div>
-                                                    <div className="profileText"> Course Picture</div>
+                                                </div> 
 
-                                                  </div>
-                                                </div>
 
                                                 <div className="formControl">
                                                   <label className="labelWithInfo">
