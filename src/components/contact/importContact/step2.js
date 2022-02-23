@@ -144,6 +144,26 @@ function Step2(props) {
         setMapError(prevState => ({...prevState, [field]: false}));
     }
 
+    const handlerCustomFieldChange = (selectedOption, field) => {
+        if (customFieldsList[field]) {
+            customFieldsList[field]['isDisabled'] = true;
+            let index = options.findIndex(el => el.value === customFieldsList[field].value);
+            if (index > -1) {
+                options[index]['isDisabled'] = false;
+                setOptions(options)
+            }
+        }
+        if (selectedOption && selectedOption.value) {
+            let index = options.findIndex(el => el.value === selectedOption.value);
+            options[index]['isDisabled'] = true;
+            setOptions(options);
+            setCustomFieldsList(prevState => ({...prevState, [field]: selectedOption}));
+        } else {
+            setCustomFieldsList(prevState => ({...prevState, [field]: ""}));
+        }
+        setCustomFieldsError(prevState => ({...prevState, [field]: false}));
+    }
+
     const fetchCustomFields = async () => {
         let cFileds = await ImportContactServices.fetchCustomFields();
         if (cFileds.customFields.length > 0) {
@@ -214,7 +234,7 @@ function Step2(props) {
                     setCustomFieldsError(prevState => ({...prevState, [value]: true}));
                     errorHere++;
                 } else {
-                    key[value] = customFieldsList[value];
+                    key[value] = customFieldsList[value].value;
                 }
             });
             setUploadedKey(key);
@@ -310,11 +330,6 @@ function Step2(props) {
     }
     const toggleCourse = () => {
         setOpenCourse(!openCourse);
-    }
-    const handlerCustomFieldChange = (event) => {
-        const {name, value} = event.target;
-        setCustomFieldsList(prevState => ({...prevState, [name]: value}));
-        setCustomFieldsError(prevState => ({...prevState, [name]: false}));
     }
     const createCustomFields = () => {
         setCustomFieldOpenModal(true);
@@ -701,7 +716,7 @@ function Step2(props) {
                                                                 </div>
                                                             </div>
                                                             <div className={"formField w-50 " + (mapError.accountNumber ? 'error' : '') }>
-                                                                <label>Account Number</label>
+                                                                <label>Bank Account Number</label>
                                                                 <div className="inFormField">
                                                                     <Select name="accountNumber" value={map.accountNumber} onChange={(e) =>handleChangeFields(e, 'accountNumber')}
                                                                             options={options}  isClearable={true} placeholder="Select a header"/>
@@ -710,16 +725,9 @@ function Step2(props) {
                                                         </li>
                                                         <li>
                                                             <div className={"formField w-50 " + (mapError.accountType ? 'error' : '') }>
-                                                                <label>Account Type</label>
+                                                                <label>Bank Account Type</label>
                                                                 <div className="inFormField">
                                                                     <Select name="accountType" value={map.accountType} onChange={(e) =>handleChangeFields(e, 'accountType')}
-                                                                            options={options}  isClearable={true} placeholder="Select a header"/>
-                                                                </div>
-                                                            </div>
-                                                            <div className={"formField w-50 " + (mapError.paymentMethod ? 'error' : '') }>
-                                                                <label>Payment Method</label>
-                                                                <div className="inFormField">
-                                                                    <Select name="paymentMethod" value={map.paymentMethod} onChange={(e) =>handleChangeFields(e, 'paymentMethod')}
                                                                             options={options}  isClearable={true} placeholder="Select a header"/>
                                                                 </div>
                                                             </div>
@@ -827,6 +835,13 @@ function Step2(props) {
                                                                             options={options}  isClearable={true} placeholder="Select a header"/>
                                                                 </div>
                                                             </div>
+                                                            <div className={"formField w-50 " + (mapError.paymentMethod ? 'error' : '') }>
+                                                                <label>Payment Method</label>
+                                                                <div className="inFormField">
+                                                                    <Select name="paymentMethod" value={map.paymentMethod} onChange={(e) =>handleChangeFields(e, 'paymentMethod')}
+                                                                            options={options}  isClearable={true} placeholder="Select a header"/>
+                                                                </div>
+                                                            </div>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -861,7 +876,7 @@ function Step2(props) {
                                                                     <div className={"formField w-50 " + (customFieldsError[col.alias] ? 'error' : '')}>
                                                                         <label>{col.fieldName}</label>
                                                                         <div className="inFormField">
-                                                                            <Select name={col.alias} value={customFieldsList[col.alias]} onChange={handlerCustomFieldChange}
+                                                                            <Select name={col.alias} value={customFieldsList[col.alias]} onChange={(e) =>handlerCustomFieldChange(e, col.alias)}
                                                                                     options={options}  isClearable={true} placeholder="Select a header"/>
                                                                         </div>
                                                                     </div>
