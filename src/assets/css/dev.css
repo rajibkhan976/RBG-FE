@@ -3482,3 +3482,28 @@ label.receivedCash {
   color: #305671;
   font-size: 12px;
 }
+
+ul.paymentUlInfo {
+  width: 100%;
+  display: flex;
+  background: #F1FFF4;
+border: 1px solid #AEE2BB;
+box-sizing: border-box;
+border-radius: 5px;
+margin-bottom: 5px;
+padding: 18px;
+}
+ul.paymentUlInfo li {
+  flex: 1 1 33.3%;
+}
+
+ul.paymentUlInfo li p {
+color:#305671;
+font-size:14px;
+font-weight: 600;
+}
+
+li.paymentModeLi, li.paymentAmtLi {
+  display: flex;
+  align-items: center;
+}

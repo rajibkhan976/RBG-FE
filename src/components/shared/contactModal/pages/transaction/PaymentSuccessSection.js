@@ -66,7 +66,7 @@ const PaymentSuccessSection = (props) => {
             <img src={cashSuccess} alt=""/>
             <p>Cash</p>
           </li>
-          <li className="paymentIdLi">dfg41456df1567sdtfg45a</li>
+          <li className="paymentIdLi"><p>dfg41456df1567sdtfg45a</p></li>
           <li className="paymentAmtLi">
             <p>$ 200.00</p>
             <img src={smallTick} alt=""/>
