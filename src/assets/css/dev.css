@@ -3472,15 +3472,27 @@ label.receivedCash {
 
 .paymentUlHeader {
   display: flex;
-  text-align: center;
   width: 100%;
-  margin-bottom: 8px;
+  margin-bottom: 15px;
+  align-items: center;
+  margin-top: 4px;
 }
 
 .paymentUlHeader li {
-  flex: 1 1 33.3%;
   color: #305671;
   font-size: 12px;
+}
+
+ul.paymentUlHeader li.paymentModeHeaderLi {
+  flex: 0 0 35%;
+  padding-left: 9.5%;
+}
+ul.paymentUlHeader li.paymentIdHeaderLi {
+  flex: 0 0 50%;
+  padding-left: 1%;
+}
+ul.paymentUlHeader li.paymentAmtHeaderLi {
+  flex: 0 0 15%;
 }
 
 ul.paymentUlInfo {
@@ -3491,10 +3503,17 @@ border: 1px solid #AEE2BB;
 box-sizing: border-box;
 border-radius: 5px;
 margin-bottom: 5px;
-padding: 18px;
+padding: 10px 20px;
+align-items: center;
 }
-ul.paymentUlInfo li {
-  flex: 1 1 33.3%;
+ul.paymentUlInfo li.paymentModeLi {
+  flex: 0 0 35%;
+}
+ul.paymentUlInfo li.paymentIdLi {
+  flex: 0 0 50%;
+}
+ul.paymentUlInfo li.paymentAmtLi {
+  flex: 0 0 15%;
 }
 
 ul.paymentUlInfo li p {
@@ -3506,4 +3525,54 @@ font-weight: 600;
 li.paymentModeLi, li.paymentAmtLi {
   display: flex;
   align-items: center;
+}
+
+ul.paymentUlInfo li p {
+  color: #305671;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+ul.paymentUlInfo li.paymentIdLi p {
+  font-weight: 400!important;
+}
+
+ul.paymentUlInfo li.paymentModeLi img {
+  margin-right: 14px;
+}
+
+ul.paymentUlInfo li.paymentAmtLi img {
+  margin-left: 14px;
+}
+.totalPaymentUl {
+  width: 100%;
+  margin: 12px 0 0 0;
+  padding: 0 9% 0 9%;
+}
+
+.totalPaymentUl li:first-child p {
+ font-size: 16px;
+ font-weight: 400;
+}
+
+.totalPaymentUl li:last-child p {
+  font-size: 18px;
+  font-weight: 600;
+}
+.successPageBtn {
+  width: 100%;
+  margin-top: 26px;
+  text-align: center;
+}
+
+.successPageBtn button {
+  width: auto;
+  display: inline-block;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
+}
+
+.successPageBtn button img {
+  margin-left: 15px;
 }

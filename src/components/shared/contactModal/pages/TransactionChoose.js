@@ -358,10 +358,13 @@ const TransactionChoose = (props) => {
             <div className="contactTabsInner">
 
                 <div className="transHeader pos">
-                    <div className={(contractOverview || !productTransactionPayment) ? "backToTransction transactionPage" : "backToTransction transactionPage display"
-                                }>
+                     {/* <div className={(contractOverview || !productTransactionPayment) ? "backToTransction transactionPage" : "backToTransction transactionPage display"
+                                }>  */}
+                                <div className={(paymentSuccess && !productTransactionPayment && !contractOverview) ? "backToTransction transactionPage" : "backToTransction transactionPage display"
+                                }> 
                         {!contractOverview && !productTransactionPayment && <button className="backBtn" onClick={props.backToTransList}><img src={arrow_forward} alt="" /></button>}
                         {productTransactionPayment && !contractOverview && <button className="backBtn" onClick={()=>setProductTransactionPayment(false)}><img src={arrow_forward} alt="" /></button>}
+                        {contractOverview && !productTransactionPayment && <button className="backBtn" onClick={()=>setContractOverview(false)}><img src={arrow_forward} alt="" /></button>}
                     </div>
                     <div>
                       {console.log("paymentSuccess", paymentSuccess)}

@@ -25,6 +25,7 @@ import cardFail from "../../../../../assets/images/cardFailed.svg";
 import payDate from "../../../../../assets/images/payDate.svg";
 import pluss from "../../../../../assets/images/pluss.svg";
 import cashSuccess from "../../../../../assets/images/cashSuccess.svg";
+import paidCard from "../../../../../assets/images/paidCrad.svg";
 import smallTick from "../../../../../assets/images/smallTick.svg";
 
 import Loader from "../../../../shared/Loader";
@@ -56,9 +57,9 @@ const PaymentSuccessSection = (props) => {
         <div class="dottedBorder"></div>
 
         <ul className="paymentUlHeader">
-          <li>Payment Mode</li>
-          <li>Transaction ID</li>
-          <li>Amount</li>
+          <li className="paymentModeHeaderLi">Payment Mode</li>
+          <li className="paymentIdHeaderLi">Transaction ID</li>
+          <li className="paymentAmtHeaderLi">Amount</li>
         </ul>
 
         <ul className="paymentUlInfo">
@@ -72,15 +73,40 @@ const PaymentSuccessSection = (props) => {
             <img src={smallTick} alt=""/>
           </li>
         </ul>
-      
-        <button onClick={(e)=> {paymentFailedFn()}} class="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button>
+
+        <ul className="paymentUlInfo">
+          <li className="paymentModeLi">
+            <img src={paidCard} alt=""/>
+            <p>Card</p>
+          </li>
+          <li className="paymentIdLi"><p>dfg41456df1567sdtfg45a</p></li>
+          <li className="paymentAmtLi">
+            <p>$ 420.00</p>
+            <img src={smallTick} alt=""/>
+          </li>
+        </ul>
+
+        <ul className="totalPaymentUl">
+          <li>
+            <p>Amount Paid</p>
+          </li>
+          <li>
+            <p>$ 620.00</p>
+          </li>
+        </ul>
+
+        <div class="dottedBorder"></div>
+
+        <div className="successPageBtn">      
+          <button onClick={(e)=> {paymentFailedFn()}} class="saveNnewBtn">Go to Transaction List <img src={aaroww} alt="" /></button>
+        </div>
 
 
         {paymentFailed && (
   <div className="modalBackdrop holiday">           
     <div className="slickModalBody paymentFailed">            
       <div className="slickModalHeader">
-         <button className="topCross" onClick={closeFailedPayModal}><img src={crossTop} alt="" /></button> 
+         {/* <button className="topCross" onClick={closeFailedPayModal}><img src={crossTop} alt="" /></button>  */}
         <div className="circleForIcon"><img src={paymentFail} alt="" /></div>
                 <h3 className="courseModalHeading">Payment Failed !</h3>
       </div>
@@ -91,7 +117,7 @@ const PaymentSuccessSection = (props) => {
       </div>
 
       <div className="buyBtns failedPayment">
-        <button onClick={props.paymentSuccessFn} class="saveNnewBtn">Close</button>
+        <button onClick={closeFailedPayModal} class="saveNnewBtn">Close</button>
         
         </div>             
       </div>
