@@ -139,7 +139,7 @@ const Transaction = (props) => {
 
   return (
     <>
-      <div className={props.contact.is_course_setup_remaining ? "contactTabsInner d-flex f-column" : "contactTabsInner" }>
+      <div className="contactTabsInner">
         <h3 className="headingTabInner">Transactions</h3>
         <div className="transHeader">
           <button className="saveNnewBtn" onClick={props.goToTransaction}>
