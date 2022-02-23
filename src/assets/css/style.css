@@ -7519,7 +7519,8 @@ p.trackName {
   border-radius: 50%;
 }
 
-.transaction_form label {
+.transaction_form label,
+.transaction_form label:not(.toggleBtn) {
   display: inline-block;
   color: #315571;
   font-size: 13px;
