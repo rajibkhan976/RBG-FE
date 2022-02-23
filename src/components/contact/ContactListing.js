@@ -14,6 +14,7 @@ import Loader from "../shared/Loader";
 import Pagination from '../shared/Pagination';
 import responses from '../../configuration/responses';
 import env from '../../configuration/env';
+import Moment from 'moment';
 import config from "../../configuration/config";
 
 
@@ -343,8 +344,9 @@ const ContactListing = forwardRef((props, ref) => {
                                             ((ele[item.id] && ele[item.id].dailCode &&  ele[item.id].number !== "") ?
                                                 <span className={ele[item.id].is_valid ?
                                                     "number valid" : "number invalid"}>{ele[item.id].dailCode + "-" + ele[item.id].number}</span> :
-                                                "")  :
-                                            ele[item.id]}
+                                                "")  : (item.id === 'dob' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LL') :
+                                                (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LLL') : ele[item.id] ))
+                                             }
                                     </button>
                                 </div>
                             )
