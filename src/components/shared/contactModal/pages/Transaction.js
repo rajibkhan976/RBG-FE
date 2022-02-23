@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import icon_trans from "../../../../assets/images/icon_trans.svg";
 import wwConnect from "../../../../assets/images/wwConnect.svg";
 import wwConnect2 from "../../../../assets/images/wwConnect2.svg";
 import list_board_icon from "../../../../assets/images/list_board_icon.svg";
 import CompleteTransactionModal from "./transaction/CompleteTransactionModal";
+import { Scrollbars } from "react-custom-scrollbars-2";
 
 import { TransactionServices } from "../../../../services/transaction/transactionServices";
 import Loader from "../../Loader";
@@ -12,10 +13,15 @@ import Loader from "../../Loader";
 const Transaction = (props) => {
   const [transactionList, setTransactionList] = useState([]);
   const [isLoader, setIsLoader] = useState(false);
+  const [isLoaderTab, setIsLoaderTab] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [refundModal, setRefundModal] = useState(false);
   const [oldTransactionList, setOldTransactionList] = useState({});
-  const [upcomingTransaction, setUpcomingTransaction] = useState({});
+  const [upcomingTransaction, setUpcomingTransaction] = useState([]);
+  const [upcomingPagination, setUpcomingPagination ] = useState({});
+  const [upcomingOptIndex, setUpcomingOptIndex] = useState();
+  const [isScroll, setIsScroll] = useState(false);
+  const upcomingOptRef = useRef();
 
 
   const openCloseRefundModal = (param) => {
@@ -26,18 +32,18 @@ const Transaction = (props) => {
     setActiveTab(e.target.value);
   };
 
-  const fetchTransactionList = async (contactID) => {
-    try {
-      setIsLoader(true);
-      const transactionRes = await TransactionServices.fetchTransactionList(contactID);
-      setTransactionList(transactionRes);
-    } catch (e) {
-
-    } finally {
-      setIsLoader(false);
+  const upcomingListPageNo = (e) => {
+    if (!isScroll) {
+      let scrollHeight = e.target.scrollHeight;
+      let scrollTop = e.target.scrollTop;
+      if (scrollTop > (scrollHeight / 2)) {
+        if(upcomingPagination.currentPage < upcomingPagination.totalPages) {
+          fetchUpcomingTransactions(props.contactId, (upcomingPagination.currentPage + 1));
+        }
+        ;
+      }
     }
   };
-  //console.log("transactionList", transactionList);
 
   const fetchOldTransactions = async (contactId) => {
     try {
@@ -52,69 +58,71 @@ const Transaction = (props) => {
     }
   };
 
-  const fetchUpcomingTransactions = async () => {
+  const fetchUpcomingTransactions = async (contactId, pageNumber) => {
     try {
-      setIsLoader(true);
-      const response = await TransactionServices.fetchUpcomingTransactions();
-      setUpcomingTransaction(response.transactions);
+      setIsScroll(true);
+      setIsLoaderTab(true);
+      const response = await TransactionServices.fetchUpcomingTransactions(contactId, pageNumber);
+      setUpcomingTransaction([ ...upcomingTransaction, ...response.transactions]);
+      setIsScroll(false);
+      setUpcomingPagination(response.pagination);
       console.log("Upcoming transaction response ", response);
     } catch (e) {
 
     } finally {
-      setIsLoader(false);
+      setIsLoaderTab(false);
+      console.log(upcomingTransaction);
     }
   };
 
+  const moreOptOpen = (index) => {
+    setUpcomingOptIndex(index !== upcomingOptIndex ? index : null);
+    console.log(index);
+  }
+
+  const checkOutsideClick = (e) => {
+    if (upcomingOptRef.current.contains(e.target)) {
+      return;
+    }
+    setUpcomingOptIndex(null);
+  }
 
 
   useEffect(() => {
-    fetchTransactionList(props.contactId);
     fetchOldTransactions(props.contactId);
-    fetchUpcomingTransactions();
+    fetchUpcomingTransactions(props.contactId, 1);
+    console.log(props.contactId);
+
+    document.addEventListener("mousedown", checkOutsideClick);
+    return () => {
+        document.removeEventListener("mousedown", checkOutsideClick);
+    }
   }, []);
 
   const [dt, setDt] = useState(new Date().toLocaleString());
 
   useEffect(() => {
-    // let secTimer = setInterval(() => {
     setDt(new Date().toLocaleString());
-    // }, 1000);
-
-    // return () => clearInterval(secTimer);
   }, []);
 
   const dateCalculationFunction = (transdate) => {
-    //console.log("transdate :  ", transdate);
-    //console.log("dt :  ", new Date());
+
     const dt = new Date();
     var d1 = new Date(transdate);
-    // var d2 = new Date(dt);
-    //console.log("d1 : ", d1);
-    // console.log("d2: ", d2);
+
     var diff = dt - d1.getTime();
 
-    //console.log("diff :: ", diff);
-    // var yearCalc =  dt.getFullYear();
-    // if(yearCalc % 4 === 0 || yearCalc % 400 === 0 ){
-    //   var yeardiff = diff / (1000 * 60 * 60 * 24 * 366);
-    // }else{
-    //   var yeardiff = diff / (1000 * 60 * 60 * 24 * 365);
-    // }
-    //console.log("yearDiff :: ", yeardiff);
+ 
     var daydiff = diff / (1000 * 60 * 60 * 24);
-    //console.log("diff :: ", daydiff);
 
     var modVal = diff % (1000 * 60 * 60 * 24);
     var hours = modVal / (1000 * 60 * 60);
     modVal = modVal % (1000 * 60 * 60);
     var min = modVal / (1000 * 60);
     modVal = modVal % (1000 * 60);
-    //var sec = modVal / 1000;
 
     var showTime;
-    // if (yeardiff >= 1) {
-    //   showTime = Math.floor(yeardiff) + (Math.floor(yeardiff) == 1 ? " year ago" : " years ago");
-    // } else
+ 
     if (daydiff >= 1) {
       showTime = Math.floor(daydiff) + (Math.floor(daydiff) == 1 ? " day ago" : " days ago");
     } else if (Math.floor(hours) > 0) {
@@ -122,118 +130,12 @@ const Transaction = (props) => {
     } else if (Math.floor(min) >= 1) {
       showTime = Math.floor(min) + (Math.floor(min) == 1 ? " min ago" : " mins ago");
     } else {
-      // showTime = Math.floor(min) +  "mins ago";
       showTime = "0 mins ago";
     }
-    //console.log(transdate, showTime);
     return showTime;
   };
 
-  const CourseTransaction = (prop) => {
-    const transData = prop.list;
-    return (
-      <div key={"trans_" + prop.key}
-        className={(transData.outcome.result === "success") ? "row success" : "row fail"}
-      >
-        <div className="cell">
-          <div className="d-flex">
-            <div className="iconCont">
-              <span>
-                <img src={icon_trans} alt="" />
-              </span>
-              {transData.card && (
-                <span className="ifDependent">
-                  <img src={wwConnect} alt="" />
-                </span>
-              )}
-            </div>
-            <div className="textCont">
-              <div className="status">
-                {(transData?.outcome.result) ? transData?.outcome.result : "success"}
-              </div>
-              <div>
-                <span>Course:</span> “
-                {transData.payment_for}”
-              </div>
-              {transData.card && (
-                <a href="" className="dependent">
-                  <span>
-                    <img src={wwConnect2} alt="" />
-                  </span>{" "}
-                  {transData.card.cardholder_name}
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="cell">
-          <span
-            className="amount"
-          >
-            {transData.approved_amount
-              ? "$" + transData.approved_amount
-              : "NA"}
-            {/* {transList.is_pos && <span>POS</span>} */}
-          </span>
-        </div>
-        <div className="cell">
-          <span className="transID">
-            {transData.transaction_id
-              ? transData.transaction_id
-              : "NA"}
-            NA
-          </span>
-        </div>
-        <div className="cell">
-          <span className="time">
-            {dateCalculationFunction(transData.transaction_date)}
-          </span>
-        </div>
-      </div>
-    )
-  };
-
-  const PosTransaction = (prop) => {
-    const transData = prop.list;
-    return (
-      <div key={"trans_" + prop.key} className="row success"
-      >
-        <div className="cell">
-          <div className="d-flex">
-            <div className="iconCont">
-              <span>
-                <img src={icon_trans} alt="" />
-              </span>
-            </div>
-            <div className="textCont">
-              <div className="status">
-                Success
-              </div>
-              <div>
-                <span>Product:</span> “
-                {transData.transaction_data.name}”
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="cell">
-          <span className="amount pos">
-            ${transData.transaction_data.price}<span>POS</span>
-          </span>
-        </div>
-        <div className="cell">
-          <span className="transID">
-            {transData.transaction_id ? transData.transaction_id : "NA"}
-          </span>
-        </div>
-        <div className="cell">
-          <span className="time">
-            {dateCalculationFunction(transData.transaction_date)}
-          </span>
-        </div>
-      </div>
-    )
-  };
+  
 
   return (
     <>
@@ -253,21 +155,7 @@ const Transaction = (props) => {
             <div className="cell">Transaction ID</div>
             <div className="cell">&nbsp;</div>
           </div>
-          <>
-            {
-              transactionList?.pagination?.count > 0 ? transactionList?.transactions?.map((transaction, key) => {
-                return (!transaction.is_pos) ? <CourseTransaction list={transaction} key={key} /> : <PosTransaction list={transaction} key={key} />;
-              }) : ""}
-
-          </>
-          
         </div>
-        {/* {transactionList?.pagination?.count == 0 ? 
-          <div className="noDataFound">
-            <img src={list_board_icon} alt="" />
-            <span>No transaction found!</span>
-          </div> 
-        : "" } */}
 
 
         <div className="tabHead">
@@ -279,59 +167,67 @@ const Transaction = (props) => {
         </div>
 
         <div className={activeTab == 0 ? "listTab active" : "listTab"}>
-          <div className="transactionListing">
-            <div className="row head">
+          { isLoaderTab ? <Loader /> : "" }
+          <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={upcomingListPageNo}>
+          <div className={isLoader ? "transactionListing" : "transactionListing noEvent"}  ref={upcomingOptRef}>
+            <div className={isLoaderTab ? "hide" :"row head"}>
               <div className="cell">Particulars</div>
               <div className="cell">Amount</div>
-              <div className="cell">Transaction ID</div>
-              <div className="cell">&nbsp;</div>
+              <div className="cell">Payment Type</div>
+              <div className="cell">Duration Left</div>
               <div className="cell">&nbsp;</div>
             </div>
-            <div className="row due">
-              <div className="cell">
-                <div className="d-flex">
-                  <div className="iconCont">
-                    <span>
-                      <img src={icon_trans} alt="" />
-                    </span>
-                  </div>
-                  <div className="textCont">
-                    <div className="status">
-                      Due
+            { upcomingTransaction.length ? upcomingTransaction.map((item, index) => {
+              return (
+              <div className="row due" key={index}>
+                <div className="cell">
+                  <div className="d-flex">
+                    <div className="iconCont">
+                      <span>
+                        <img src={icon_trans} alt="" />
+                      </span>
                     </div>
-                    <div>
-                      <span>Course:</span> “Sample course name”
+                    <div className="textCont">
+                      <div className="status">
+                        Due
+                      </div>
+                      <div>
+                        <span>Course:</span> “{ item.title }”
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="cell">
-                <span className="amount" >
-                  $100
-                </span>
-              </div>
-              <div className="cell">
-                <span className="transID">
-                  dfg41456df1567sdtfg24g
-                </span>
-              </div>
-              <div className="cell">
-                <span className="time">
-                  18 m ago
-                </span>
-              </div>
-              <div className="cell">
-                <div className="moreOpt">
-                  <button type="button" className="moreOptBtn"></button>
-                  <div className="optDropdown">
-                    <button type="button" className="complete">Complete Transactions</button>  
-                    <button type="button" className="history">History</button>
-                  </div>  
+                <div className="cell">
+                  <span className="amount" >
+                    { "$" + item.amount }
+                  </span>
+                </div>
+                <div className="cell">
+                  <span className="paymentType">
+                    { item.payment_type }
+                  </span>
+                </div>
+                <div className="cell">
+                  <span className="time">
+                    { item.due_date }
+                  </span>
+                </div>
+                <div className="cell">
+                  <div className="moreOpt">
+                    <button type="button" className="moreOptBtn" onClick={() => moreOptOpen (index)}></button>
+                    <div className={upcomingOptIndex === index ? "optDropdown" : "optDropdown hide"}>
+                      <button type="button" className="edit">Edit</button> 
+                      <button type="button" className="complete">Complete Transactions</button>  
+                      <button type="button" className="history">History</button>
+                    </div>  
+                  </div>
                 </div>
               </div>
-            </div>
+            )}) : "" }
           </div>
+          </Scrollbars>
         </div>
+
         <div className={activeTab == 1 ? "listTab active" : "listTab"}>
           <div className="transactionListing">
             <div className="row head">

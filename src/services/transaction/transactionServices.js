@@ -40,9 +40,9 @@ export const TransactionServices = {
         }
     },
 
-    fetchUpcomingTransactions: async (contactId) => {
+    fetchUpcomingTransactions: async (contactId, pageNumber) => {
         try {
-            const url = config.upcomingTransactionUrl;
+            const url = config.upcomingTransactionUrl + contactId + "/" + pageNumber;
             const result = await axios.get(url, { headers: headers });
             return result.data;
         } catch (e) {

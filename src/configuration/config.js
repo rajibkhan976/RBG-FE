@@ -93,9 +93,9 @@ module.exports = {
     // Transaction Service
     transactionUrl: "https://tt7n78ndd2.execute-api.us-east-1.amazonaws.com/dev/contact/transactions/",
     // Old Transaction Url
-    oldTransactionUrl: "https://susx9c3bvl.execute-api.us-east-1.amazonaws.com/dev/contact/old-transactions/list/",
+    oldTransactionUrl: "https://susx9c3bvl.execute-api.us-east-1.amazonaws.com/dev/contact/upcoming-transactions/list/",
     // Upcoming Transaction Url
-    upcomingTransactionUrl: "https://www.getpostman.com/collections/9312419b6158a82b02ad",
+    upcomingTransactionUrl: "https://susx9c3bvl.execute-api.us-east-1.amazonaws.com/dev/contact/upcoming-transactions/list/",
     // Course Service
     courseUrl: "https://nayaxr4np3.execute-api.us-east-1.amazonaws.com/dev/course/",
     // Buy Course Link

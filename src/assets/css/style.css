@@ -6946,9 +6946,11 @@ p.trackName {
 }
 .transactionListing {
   display: table;
-  width: 100%;
+  width: calc(100% - 7px);
   border-spacing: 0;
-  overflow-y: auto;
+}
+.transactionListing.noEvent {
+  pointer-events: none;
 }
 .tabBarArea .contactTabsInner {
   background: #fff;
@@ -7094,6 +7096,9 @@ p.trackName {
   font-weight: 400;
   margin-left: 9px;
   padding: 0;
+}
+.transactionListing .paymentType {
+  text-transform: capitalize;
 }
 .transHeader .saveNnewBtn {
   padding: 0 11px;
@@ -9341,9 +9346,19 @@ button.addOverviewCustomFiel {
 
 .listTab {
   display: none;
+  position: relative;
+  min-height: 300px;
+  height: 372px;
 }
 .listTab.active {
   display: block;
+}
+
+.listTab .thumb-vertical {
+  position: relative;
+  background: #f1a668;
+  width: 3px;
+  right: -5px;
 }
 
 .moreOpt {
@@ -9422,6 +9437,13 @@ button.addOverviewCustomFiel {
 }
 .optDropdown button.cancelPayment:hover {
   background-image: url("../images/cancelPayment_icon_dark.svg");
+}
+.optDropdown button.edit {
+  background-image: url("../images/edit_gym.svg");
+  text-align: left;
+}
+.optDropdown button.edit:hover {
+  background-image: url("../images/edit_gym_dark.svg");
 }
 
 .tabBarArea > div.transactionModal {
