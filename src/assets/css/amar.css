@@ -1236,8 +1236,8 @@
   color: #fff;
   border-color: #305671;
 }
-.bodytransactionForm .cmnFieldStyle, 
-.bodytransactionForm .selectBox {
+.productTransaction .cmnFieldStyle, 
+.productTransaction .selectBox {
   background-color: #fff;
 }
 .productTransaction .cmnFormField {
@@ -1722,4 +1722,57 @@ input::-webkit-inner-spin-button {
 }
 .productDownPayment .bodytransactionForm {
   padding-bottom: 20px;
+}
+.gap {
+  padding-inline: 10px;
+}
+.cmnFormRow.gap .cmnFieldStyle {
+  background: #F6F8FA;
+  border: 1px solid #E9EFF5;
+  box-sizing: border-box;
+  border-radius: 5px;
+  font-weight: normal;
+  font-size: 13px;
+  line-height: 19px;
+  color: #305671;
+}
+.productPaymentTransaction .gridCol:first-child {
+  max-width: 365px;
+}
+.productDownPayment .informHeader, .productDownPayment .bodytransactionForm {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+.productDownPayment .forDownpayment .leftSecTransaction {
+  width: 114px;
+  padding: 0;
+}
+.productDownPayment .rightSecTransaction {
+  width: 170px;
+  padding: 0;
+}
+.productDownPayment label .labelHeading {
+  font-weight: normal;
+  letter-spacing: -0.03em;
+  font-size: 12px;
+}
+.forDownpayment .toggleBtn {
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: 0;
+  margin-left: auto;
+}
+.productDownPayment .labelWithInfo {
+  display: inline-flex;
+  line-height: 20px;
+  padding-bottom: 8px;
+}
+.productDownPayment .labelWithInfo .infoSpan {
+  margin-left: 4px;
+}
+.productPaymentTransaction select.selectBox {
+  border-color: #E9EFF5;
+}
+.productPaymentTransaction .paymentNow.display p{
+  background-color: #fff;
 }

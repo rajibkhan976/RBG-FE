@@ -18,6 +18,7 @@ const ProductPayment = (props) => {
   const [downPayments, setDownPayments] = useState([]);
   const [downPaymentActive, setDownPaymentActive] = useState(false);
   const [tempDownPayObj, setTempDownPayObj] = useState(null)
+  const newDownPaymentAdd = useRef(null)
 
   const checkAndSetDownPayments = (e) => {
     e.preventDefault();
@@ -185,7 +186,7 @@ const ProductPayment = (props) => {
                 //     </div>
                 //   </div>
                 ))}
-              <div className="newDownpayment">
+              <div className="newDownpayment" ref={newDownPaymentAdd}>
                 <button
                   className="addNewDownpayment"
                 >
@@ -207,7 +208,7 @@ const ProductPayment = (props) => {
                         <input className="cmnFieldStyle" />
                     </div>
                   </div>
-                  <div className="formsection gap">
+                  <div className="cmnFormRow gap">
                     <div className="leftSecTransaction">
                       <label className="labelWithInfo">
                         <span className="labelHeading">Amount</span>
@@ -219,12 +220,15 @@ const ProductPayment = (props) => {
                           </span>
                         </span>
                       </label>
-                      <input
-                        type="number"
-                        placeholder="149"
-                        class="editableInput numberType"
-                        value="149"
-                      />
+                      <div className="cmnFormField preField">
+                        <div class="unitAmount">$</div>
+                        <input
+                            type="number"
+                            placeholder="149"
+                            class="editableInput numberType cmnFieldStyle"
+                            value="149"
+                        />
+                      </div>
                     </div>
                     <div className="rightSecTransaction">
                       <label className="labelWithInfo paymentTime">
@@ -278,10 +282,10 @@ const ProductPayment = (props) => {
                       </div>
                     </div>
                   </div>
-                  <div className="formsection gap">
+                  <div className="cmnFormRow gap">
                     <div className="leftSecTransaction">
                       <label className="labelWithInfo">
-                        <span className="labelHeading">Payment Type</span>
+                        <span className="labelHeading">Payment Mode</span>
                         <span className="infoSpan">
                           <img src={info_icon} alt="" />
                           <span class="tooltiptextInfo paymentType">
@@ -290,9 +294,12 @@ const ProductPayment = (props) => {
                           </span>
                         </span>
                       </label>
-                      <select className="selectBox">
-                        <option value="">Recurring</option>
-                      </select>
+                      <div className="cmnFormField">
+                        <select className="selectBox">
+                            <option value="card">Card</option>
+                            <option value="cash">Cash</option>
+                        </select>
+                      </div>
                     </div>
                     <div className="rightSecTransaction">
                       <label className="labelWithInfo">
@@ -307,6 +314,7 @@ const ProductPayment = (props) => {
                       </label>
                       <select className="selectBox">
                         <option value="">Unpaid</option>
+                        <option>Paid</option>
                       </select>
                     </div>
                   </div>
