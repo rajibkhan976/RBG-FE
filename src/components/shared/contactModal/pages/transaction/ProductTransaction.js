@@ -725,9 +725,9 @@ const ProductTransaction = (props) => {
                                         </svg>
                                     </button>
                                     <input 
+                                        type="number"
                                         disabled={!selectedProduct || selectedProduct === undefined || selectedProduct === null} 
                                         ref={productQuantity} 
-                                        defaultValue={0} 
                                         value={(!selectedProduct || selectedProduct === undefined || selectedProduct.quantity === undefined) ? 0 : selectedProduct.quantity} />
                                     <button 
                                         className='btn' 
@@ -1047,7 +1047,10 @@ const ProductTransaction = (props) => {
         }
         
         {props.productTransactionPayment === true && 
-            <ProductPayment/>
+            <ProductPayment
+                productItemsList={productItemsList}
+                cartState={cartState}
+            />
         }
         </>
     );

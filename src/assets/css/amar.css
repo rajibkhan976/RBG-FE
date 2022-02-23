@@ -227,7 +227,7 @@
   padding: 0;
 }
 
-.modalDependent input[type="date"i]::-webkit-calendar-picker-indicator {
+.modalDependent input[type="date"i]::-webkit-calendar-picker-indicator, .outstandingOverviewProduct .paymentNow input[type="date"i]::-webkit-calendar-picker-indicator {
   background-image: url("../images/calendar.png");
 }
 
@@ -1708,8 +1708,12 @@ input::-webkit-inner-spin-button {
   display: flex;
   flex-direction: column;
 }
-.productDownPayment {
+.productDownPayment,
+.productBillingOverview,
+.payOverviewProduct,
+.outstandingOverviewProduct {
   flex: 0 1 auto;
+  max-height: inherit;
 }
 .informHeader .toggleBtn {
   margin-top: 0;
@@ -1736,8 +1740,9 @@ input::-webkit-inner-spin-button {
   line-height: 19px;
   color: #305671;
 }
-.productPaymentTransaction .gridCol:first-child {
-  max-width: 365px;
+.productPaymentTransaction .gridCol:first-child,
+.productPaymentTransaction .gridCol:last-child {
+  flex: 0 1 365px;
 }
 .productDownPayment .informHeader, .productDownPayment .bodytransactionForm {
   padding-left: 18px;
@@ -1775,4 +1780,150 @@ input::-webkit-inner-spin-button {
 }
 .productPaymentTransaction .paymentNow.display p{
   background-color: #fff;
+}
+.productDownPayment .paymentNow {
+  display: block;
+}
+.addPaymentInfo {
+  color: #55BBC9;
+  font-weight: 400;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 8px;
+  background-color: transparent;
+}
+.addPaymentInfo:hover {
+  background: #55bbc9;
+  color: #fff;
+  border-radius: 5px;
+  filter: saturate(1);
+}
+.newDownpayment .cmnFormRow + .cmnFormRow {
+  margin-top: 12px;
+}
+.newDownpayment .cmnFormRow {
+  margin-bottom: 0;
+}
+.productDownPayment .bodytransactionForm {
+  max-height: 322px;
+}
+.gridCol .cartProductInner + .cartProductInner {
+  margin-top: 20px;
+  flex: 0 0 auto;
+}
+.productPaymentTransaction .chooseTransactionType {
+  display: block;
+}
+.paymentType {
+  cursor: pointer;
+}
+.productPaymentTransaction .chooseTransactionType + .paymentTypes {
+  margin-top: 20px;
+}
+.outstandingOverviewProduct {
+  background: #FFF5E2;
+  border-color: #FFECC7;
+}
+.outstandingOverviewProduct .informHeader,
+.outstandingOverviewProduct .bodytransactionForm,
+.outstandingOverviewProduct ul.programInfosUl.paymentOverviews {
+  border-color: #FFECC7;
+}
+.outstandingOverviewProduct .labelWithInfo {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #305671;
+  margin-bottom: 8px;
+}
+.outstandingOverviewProduct select.selectBox {
+  background-color: #fff;
+  border-color: #fff;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+.outstandingOverviewProduct .cmnFormRow .cmnFormCol:first-child {
+  width: 149px;
+}
+.outstandingOverviewProduct .cmnFormRow .cmnFormCol:last-child {
+  width: 170px;
+}
+.outstandingOverviewProduct .bodytransactionForm, .outstandingOverviewProduct .informHeader {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+.outstandingOverviewProduct .paymentTime .toggleBtn {
+  display: inline-block;
+  vertical-align: middle;
+  margin-top: 0;
+}
+.outstandingOverviewProduct .paymentTime {
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.outstandingOverviewProduct .paymentNow.display p {
+  border-color: #fff;
+}
+.outstandingOverviewProduct .paymentNow {
+  display: block;
+}
+.outstandingOverviewProduct .paymentNow input {
+  background-color: #fff;
+  border-color: #fff;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+}
+.currentPaymentOverview .customCheckbox span {
+  background: #fff;
+}
+.totalCartValue.cartProductInner {
+  flex-direction: revert;
+}
+.currentPaymentOverview.cartProductInner .outstandingDownpayment {
+  border: none;
+}
+.paymentType.active {
+  border-color: #6AAAD9 !important;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 15px rgb(48 86 113 / 10%);
+}
+.slickModalBody.paymentFailed .payModalDetails p {
+  margin-right: 0;
+}
+
+.paymentFailed {
+  padding: 40px 56px;
+}
+.modalNewPay .posSellingForm {
+  padding: 30px;
+}
+.modalNewPay form label {
+  color: #315571;
+  font-size: 13px;
+  padding-bottom: 12px;
+  width: 100%;
+  font-weight: 500;
+  display: block;
+}
+.modalNewPay .cmnFormField .cmnFieldStyle{
+  background-color: #fff;
+}
+.modalForm form {
+  grid-column-gap: 0;
+  grid-row-gap: 0;
+  column-gap: 0;
+}
+.modalNewPay .modalbtnHolder {
+  padding: 0;
+  text-align: center;
+  width: 100%;
+}
+.modalNewPay .modalbtnHolder button {
+  margin: 0 auto;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 19px;
+  color: #FFFFFF;
 }
