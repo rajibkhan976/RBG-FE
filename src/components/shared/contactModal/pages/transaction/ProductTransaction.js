@@ -15,6 +15,7 @@ import camera_icon from "../../../../../assets/images/camera.svg"
 import { ErrorAlert } from '../../../messages';
 import Scrollbars from "react-custom-scrollbars-2";
 import { HexColorPicker } from "react-colorful";
+import ProductPayment from './ProductPayment';
 
 const ProductTransaction = (props) => {
     const productRef = useRef(null);
@@ -1046,9 +1047,7 @@ const ProductTransaction = (props) => {
         }
         
         {props.productTransactionPayment === true && 
-            <div className='productPaymentTransaction'>
-                Product Payment
-            </div>
+            <ProductPayment/>
         }
         </>
     );

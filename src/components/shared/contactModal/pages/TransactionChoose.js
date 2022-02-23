@@ -78,6 +78,7 @@ const TransactionChoose = (props) => {
             setChoosetPOS(true);
             setChooseCourse(false);
             fetchProductCategory();
+            setProductTransactionPayment(false)
         } catch (error) {
             
         }
@@ -354,7 +355,7 @@ const TransactionChoose = (props) => {
 
                 </div>
 
-              <div className={contractOverview ? "chooseTransactionWraper transactionPage" : "chooseTransactionWraper transactionPage display"
+              <div className={(contractOverview && !productTransactionPayment) ? "chooseTransactionWraper transactionPage" : productTransactionPayment ? "paymentTransProduct chooseTransactionWraper" : "chooseTransactionWraper transactionPage display"
                                 }>
 
                 <div className="chooseTransactionType" >

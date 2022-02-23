@@ -1675,7 +1675,7 @@ input::-webkit-inner-spin-button {
   color: #305671;
   margin-left: 10px;
 }
-.modalbtnHolder {
+.cmnFormRow + .modalbtnHolder {
   margin-bottom: 0;
   padding-top: 0;
 }
@@ -1694,4 +1694,32 @@ input::-webkit-inner-spin-button {
 }
 .bodytransaction .cmnFormRow .cmnFormCol:first-child .tooltiptextInfo::after {
   left: 52px;
+}
+
+.paymentTransProduct .chooseTransactionType {
+  display: none;
+}
+.paymentTransProduct .posSellingForm {
+  padding: 0;
+}
+.posSellingForm .gridCol:nth-child(n+1) {
+  flex: 1 1 auto;
+  max-width: calc(50% - 10px);  
+  display: flex;
+  flex-direction: column;
+}
+.productDownPayment {
+  flex: 0 1 auto;
+}
+.informHeader .toggleBtn {
+  margin-top: 0;
+}
+.productDownPayment .newDownpayment {
+  margin: 0;
+}
+.productDownPayment .newDownpayment + .newDownpayment {
+  margin-top: 20px;
+}
+.productDownPayment .bodytransactionForm {
+  padding-bottom: 20px;
 }
