@@ -71,11 +71,28 @@ const MainComponent = () => {
       setIsNewFeaturesAvailable(true);
     });
 
-    
-    
-
     socket.emit("getFeatureUpdateNotification");
   }, [socketUrl]);
+
+  useEffect(() => {
+
+    const notifySocket = io(socketUrl, {
+      path: '/notify',
+      transports: ["websocket"],
+      origins: "*"
+    });
+    
+    // client-side
+    notifySocket.on("connect", () => {  
+      console.log("notify socket id", notifySocket.id); // x8WIv7-mJelg7on_ALbx
+
+    });
+    notifySocket.on("setNotification", (data) => {
+      setIsNewFeaturesAvailable(true);
+    });
+
+    notifySocket.emit("getNotification");
+  });
 
 
   useEffect(() => {
