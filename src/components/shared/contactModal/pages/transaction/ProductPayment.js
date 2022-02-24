@@ -560,12 +560,6 @@ const ProductPayment = (props) => {
         <div className="modalBackdrop modalProductStatus">
           <div className="slickModalBody paymentFailed">
             <div className="slickModalHeader">
-              <button
-                className="topCross"
-                onClick={() => setProductPaymentFailed(false)}
-              >
-                <img src={crossTop} alt="" />
-              </button>
               <div className="circleForIcon">
                 <img src={paymentFail} alt="" />
               </div>
