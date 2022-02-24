@@ -18,6 +18,7 @@ const ProgramTransaction = (props) => {
   const [addPogramModal, setAddPogramModal] = useState(false);
 
   const [chooseCategory, setChooseCategory] = useState(false);
+  
 
   const chooseCategoryFn = () => {
     setChooseCategory(true);
@@ -32,7 +33,24 @@ const ProgramTransaction = (props) => {
     setAddPogramModal(false);
   };
 
+  const [addManually, setAddManually] = useState(false);
 
+
+  const [toggleContactList, setToggleContactList] = useState({
+    status: false,
+    listContent: [],
+  });
+
+  const toggleContactListFn = (e) => {
+    e.preventDefault();
+
+    let contactListOp = toggleContactList;
+
+    setToggleContactList({
+      ...toggleContactList,
+      status: e.target.value.trim() === "" ? false : true,
+    });
+  };
  
 
 
@@ -64,7 +82,7 @@ const ProgramTransaction = (props) => {
                                   <input
                                     className="cmnFieldStyle"
                                     type="text"
-                                    placeholder="Eg. Steve Martyns"
+                                    placeholder="Eg. Steve Martyns" value="Unlimited 1 year contract"
                                     //onChange={(e)=>props.toggleContactListFn(e)}
                                     onClick={chooseCategoryFn}
                                   />
@@ -76,13 +94,13 @@ const ProgramTransaction = (props) => {
                                           className="btn"
                                           onClick={(e)=>{
                                             e.preventDefault()
-                                            props.setAddManually(true)
-                                            props.toggleContactListFn(e)
+                                            setAddManually(true)
+                                            toggleContactListFn(e)
                                             addPogramModalFn()
                                           }}
                                         >+ Add Manually</button>
                                         <ul>
-                                          <li>Unlimitted 1 year contract</li>
+                                          <li>Unlimited 1 year contract</li>
                                           <li>Junior martial arts</li>
                                           <li>Fitness kickboxing</li>
                                           <li>Little dragons</li>
@@ -97,22 +115,7 @@ const ProgramTransaction = (props) => {
 
                               </div>
 
-                              {/* Custom Select Box with inbuild Button ends */}
-
-
-
-                            {/* <div className="formsection gap">
-                                <span className="labelWithInfo">
-                                    <label>Select Category</label>
-                                    <span className="infoSpan">
-                                        <img src={info_icon} alt="" />
-                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                    </span>
-                                </span>
-                                <select className="selectBox">
-                                    <option value="">Select category</option>
-                                </select>
-                            </div> */}
+                              
 
                             <div className="formsection gap">
                                 <label className="labelWithInfo">
@@ -186,12 +189,12 @@ const ProgramTransaction = (props) => {
                                         </span>
                                     </label>
                                 <input type="number" placeholder="149" class="editableInput numberType" value="149"/> */}
-                            {/* </div> */}
+                            {/* </div>cmnFormRow */}
 
 
 
 
-                            <div className='cmnFormRow'>
+                            <div className="formsection gap">
                                 <div className="cmnFormCol">
                                     <label className='labelWithInfo'>
                                         <span>Tution Amount</span>
@@ -535,7 +538,7 @@ const ProgramTransaction = (props) => {
                                             <p className="courseModalPara">Choose a category to add a new program below</p>
                                           </div>
                                           <div className="modalForm pograms">
-                                            <Scrollbars>
+                                            {/* <Scrollbars> */}
                                               <form method="post">
                                                 <div className="formControl">
                                                   <label>Select Category</label>
@@ -656,7 +659,7 @@ const ProgramTransaction = (props) => {
                                                     className="saveNnewBtn programModal"><span>Save &amp; New</span><img src={arrow_forward} alt="" /></button>
                                                 </div>
                                               </form>
-                                            </Scrollbars>
+                                            {/* </Scrollbars> */}
                                           </div>
 
                                         </div>

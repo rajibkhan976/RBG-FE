@@ -24,7 +24,7 @@ const TransactionChoose = (props) => {
   const [firstBillingDate, setFirstBillingDate] = useState("");
   const [programStartDate, setProgramStartDate] = useState("");
   const [addDownpayment, setAddDownpayment] = useState(false);
-  const [addManually, setAddManually] = useState(false);
+  
   const [courseCategory, setCourseCategory] = useState([]);
   const [courseList, setCourseList] = useState([]);
   const [courseFees, setCourseFees] = useState(0);
@@ -57,10 +57,7 @@ const TransactionChoose = (props) => {
   const [communication, setCommunication] = useState(false);
   const [communicationDownpayment, setCommunicationDownpayment] =
     useState(false);
-  const [toggleContactList, setToggleContactList] = useState({
-    status: false,
-    listContent: [],
-  });
+  
   const [productTransactionPayment, setProductTransactionPayment] =
     useState(false);
 
@@ -319,16 +316,7 @@ const TransactionChoose = (props) => {
     setAddDownpayment(false);
   };
 
-  const toggleContactListFn = (e) => {
-    e.preventDefault();
-
-    let contactListOp = toggleContactList;
-
-    setToggleContactList({
-      ...toggleContactList,
-      status: e.target.value.trim() === "" ? false : true,
-    });
-  };
+  
 
   const contractOverviewFn = (e) => {
     e.preventDefault();
@@ -481,10 +469,9 @@ const TransactionChoose = (props) => {
               {errorMsg && <div className=""></div>}
               {!contractOverview && !paymentSuccess && (
                 <ProgramTransaction
-                  toggleContactList={toggleContactList}
-                  toggleContactListFn={toggleContactListFn}
-                  setAddManually={setAddManually}
-                  addManually={addManually}
+                  
+                  
+                 
                   communication={communication}
                   communicationDownpayment={communicationDownpayment}
                   addDownpaymentFn={addDownpaymentFn}
