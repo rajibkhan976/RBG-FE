@@ -1055,6 +1055,7 @@ const ProductTransaction = (props) => {
                 successProductPayment={props.successProductPayment}
                 setProductTransactionPayment={props.setProductTransactionPayment}
                 chooseTransctionTypePOS={props.chooseTransctionTypePOS}
+                backToTransList={props.backToTransList}
             />
         }
         </>

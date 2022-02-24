@@ -651,7 +651,11 @@ const ProductPayment = (props) => {
             <div className="successPageBtn">
               <button 
                 className="saveNnewBtn"
-                onClick={(e) => resetProductForm(e)}
+                onClick={(e) => {
+                    resetProductForm(e)
+                    props.backToTransList()
+                  }
+                }
               >
                 Go to Transaction List <img src={aaroww} alt="" />
               </button>
