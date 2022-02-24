@@ -67,7 +67,7 @@ const TransactionChoose = (props) => {
     const [contractOverview, setContractOverview] = useState(false);
 
     const [paymentSuccess, setPaymentSuccess] = useState(false);
-
+    const [successProductPayment, setSuccessProductPayment] = useState(false)
 
     const dispatch = useDispatch();
 
@@ -347,11 +347,17 @@ const TransactionChoose = (props) => {
     useEffect(()=>{
     },[productTransactionPayment])
 
+    const setSuccessProductPaymentFn = (e) => {
+        setSuccessProductPayment(!successProductPayment)
+    }
+
 
     // const toggleContactListFn = (e) => {
     //   e.preventDefault();
     //   setToggleContactList(true);
     // }
+
+    useEffect(()=>{},[successProductPayment])
 
     return (
         <>
@@ -360,15 +366,14 @@ const TransactionChoose = (props) => {
                 <div className="transHeader pos">
                      {/* <div className={(contractOverview || !productTransactionPayment) ? "backToTransction transactionPage" : "backToTransction transactionPage display"
                                 }>  */}
-                                <div className={(paymentSuccess && !productTransactionPayment && !contractOverview) ? "backToTransction transactionPage" : "backToTransction transactionPage display"
-                                }> 
+                        <div className={(paymentSuccess && !productTransactionPayment && !contractOverview) ? "backToTransction transactionPage" : successProductPayment ? "backToTransction transactionPage" : "backToTransction transactionPage display"}> 
                         {!contractOverview && !productTransactionPayment && <button className="backBtn" onClick={props.backToTransList}><img src={arrow_forward} alt="" /></button>}
-                        {productTransactionPayment && !contractOverview && <button className="backBtn" onClick={()=>setProductTransactionPayment(false)}><img src={arrow_forward} alt="" /></button>}
+                        {productTransactionPayment && !contractOverview && !successProductPayment && <button className="backBtn" onClick={()=>setProductTransactionPayment(false)}><img src={arrow_forward} alt="" /></button>}
                         {contractOverview && !productTransactionPayment && <button className="backBtn" onClick={()=>setContractOverview(false)}><img src={arrow_forward} alt="" /></button>}
                     </div>
                     <div>
                       {console.log("paymentSuccess", paymentSuccess)}
-                        <h3 className="headingTabInner">{contractOverview ? "Contract Overview" : paymentSuccess ? "Payment is Successful" : "Make a Transaction"}</h3>
+                        <h3 className="headingTabInner">{contractOverview ? "Contract Overview" : (paymentSuccess || successProductPayment) ? "Payment is Successful" : "Make a Transaction"}</h3>
                         <span>{contractOverview ? "* Explanatory contract text blurb should be here." : "* Explanatory text blurb should be here."}</span>
                     </div>
 
@@ -427,6 +432,10 @@ const TransactionChoose = (props) => {
                     <ProductTransaction
                         productTransactionPayment={productTransactionPayment}
                         productPayment={(e)=>productPayment(e)}
+                        setSuccessProductPaymentFn={setSuccessProductPaymentFn}
+                        successProductPayment={successProductPayment}
+                        setProductTransactionPayment={setProductTransactionPayment}
+                        chooseTransctionTypePOS={chooseTransctionTypePOS}
                     />
                 </div>
                 }

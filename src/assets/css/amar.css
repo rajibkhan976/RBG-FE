@@ -298,19 +298,22 @@
 
 .contactListItems ul::-webkit-scrollbar,
 .userListBody.smsListing .listBody::-webkit-scrollbar,
-.bodyEditTemplate .keywordBox .keywordList::-webkit-scrollbar {
+.bodyEditTemplate .keywordBox .keywordList::-webkit-scrollbar,
+.slickModalBody .modalForm::-webkit-scrollbar {
   width: 4px;
 }
 
 .contactListItems ul::-webkit-scrollbar-track,
 .userListBody.smsListing .listBody::-webkit-scrollbar-track,
-.bodyEditTemplate .keywordBox .keywordList::-webkit-scrollbar-track {
+.bodyEditTemplate .keywordBox .keywordList::-webkit-scrollbar-track,
+.slickModalBody .modalForm::-webkit-scrollbar-track {
   background-color: #dce4eb;
 }
 
 .contactListItems ul::-webkit-scrollbar-thumb,
 .userListBody.smsListing .listBody::-webkit-scrollbar-thumb,
-.bodyEditTemplate .keywordBox .keywordList::-webkit-scrollbar-thumb {
+.bodyEditTemplate .keywordBox .keywordList::-webkit-scrollbar-thumb,
+.slickModalBody .modalForm::-webkit-scrollbar-thumb {
   background-color: #f1a668;
 }
 
@@ -1504,6 +1507,7 @@ input::-webkit-inner-spin-button {
   font-size: 14px;
   line-height: 21px;
   color: #305671;
+  text-align: right;
 }
 
 
@@ -1913,7 +1917,9 @@ input::-webkit-inner-spin-button {
 .modalForm form {
   grid-column-gap: 0;
   grid-row-gap: 0;
+  grid-column-gap: 0;
   column-gap: 0;
+  padding: 0;
 }
 .modalNewPay .modalbtnHolder {
   padding: 0;
@@ -1926,4 +1932,7 @@ input::-webkit-inner-spin-button {
   font-size: 13px;
   line-height: 19px;
   color: #FFFFFF;
+}
+.toggleBtn {
+  width: 40px !important;
 }

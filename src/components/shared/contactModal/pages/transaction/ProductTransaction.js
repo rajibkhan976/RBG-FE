@@ -1050,6 +1050,11 @@ const ProductTransaction = (props) => {
             <ProductPayment
                 productItemsList={productItemsList}
                 cartState={cartState}
+                setCartState={setCartState}
+                setSuccessProductPaymentFn={props.setSuccessProductPaymentFn}
+                successProductPayment={props.successProductPayment}
+                setProductTransactionPayment={props.setProductTransactionPayment}
+                chooseTransctionTypePOS={props.chooseTransctionTypePOS}
             />
         }
         </>
