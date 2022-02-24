@@ -749,6 +749,7 @@ const SmsTemplate = (props) => {
                         </svg>
                       </button>
                     )}
+                    {hasError && errorState.title && <span className="errorMsg">Please give some SMS title.</span>}
                   </header>
                   <div className={hasError && errorState.message !== "" ? "bodyEditTemplate error": "bodyEditTemplate"}>
                     {editState === false ? (
@@ -807,6 +808,7 @@ const SmsTemplate = (props) => {
                         </div>
                       </div>
                     )}
+                    {hasError && errorState.title && <span className="errorMsg">Please give some SMS content.</span>}
                   </div>
                   <footer
                     className="editPageFooter d-flex"

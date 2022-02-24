@@ -418,6 +418,7 @@ const EditorComponent = (props) => {
                 </ul>
               </div>
             </div>}
+            {editHasError && editErrorState.header && <span className="errorMsg">Please give some Title.</span>}
           </div>
         </div>
         <div className={editHasError && editErrorState.message ? "cmnFormRow f-1 error" : "cmnFormRow f-1"} id="editTextArea">
@@ -538,6 +539,8 @@ const EditorComponent = (props) => {
               />
             </svg>
           </button>
+
+          {editHasError && editErrorState.message && <span className="errorMsg">Please give some Email content.</span>}
         </div>
       </form>}
     </>
