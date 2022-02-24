@@ -1467,12 +1467,6 @@ input::-webkit-inner-spin-button {
   align-items: center;
   justify-content: center;
 }
-.cmnFormField .counterItem input {
-  flex: 1 1 auto;
-  height: 100%;
-  display: inline-flex;
-  padding: 0 15px;
-}
 .counterItem .btn {
   width: 24px;
   height: 22px;
@@ -1488,8 +1482,13 @@ input::-webkit-inner-spin-button {
   background: transparent;
 }
 .cmnFormField .counterItem input {
+  flex: 1 1 auto;
+  height: 100%;
+  display: inline-flex;
+  padding: 0 15px;
   flex: 0 0 calc(100% - 76px);
-  max-width: calc(100% - 80px);
+  max-width: calc(100% - 90px);
+  margin-inline: auto;
 }
 .cmnFormField .counterItem .btn {
   flex: 0 0 38px;
@@ -1919,7 +1918,6 @@ input::-webkit-inner-spin-button {
   grid-row-gap: 0;
   grid-column-gap: 0;
   column-gap: 0;
-  padding: 0;
 }
 .modalNewPay .modalbtnHolder {
   padding: 0;
@@ -1936,3 +1934,28 @@ input::-webkit-inner-spin-button {
 .toggleBtn {
   width: 40px !important;
 }
+
+/* UI fixes */
+.chooseTransactionType label {
+  display: inline-flex;
+  align-items: center;
+  line-height: 17px;
+}
+.chooseTransactionType .circleRadio {
+  position: static;
+}
+
+.tabBarArea .contactTabsInner {
+  padding-top: 25px;
+}
+.chooseTransactionType {
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+.posSellingForm {
+  padding-top: 88px;
+}
+.delNewDownpayment img {
+  vertical-align: -3px;
+}
+/* UI fixes */
