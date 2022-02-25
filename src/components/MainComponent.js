@@ -48,51 +48,36 @@ const MainComponent = () => {
 
   // For socket io connection
   const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlLocal;
-  // const socket = io(socketUrl, {
-  //   transports: ["websocket"],
-  //   origins: "*"
-  // });
 
   const closeNotification = () => {
     setIsNewFeaturesAvailable(false);
   }
 
   useEffect(() => {
-    const socket = io(socketUrl, {
-      transports: ["websocket"],
-      origins: "*"
-    });
-    // client-side
-    socket.on("connect", () => {  
-      console.log("socket id", socket.id); // x8WIv7-mJelg7on_ALbx
+    if (true) {
+      const socket = io(socketUrl, {
+        transports: ["websocket"],
+        origins: "*"
+      });
+      // client-side
+      socket.on("connect", () => {
+        console.log("socket id", socket.id); // x8WIv7-mJelg7on_ALbx
+      });
 
-    });
-    socket.on("setFeatureUpdateNotification", (data) => {
-      setIsNewFeaturesAvailable(true);
-    });
+      //Listen to feature update
+      socket.on("setFeatureUpdateNotification", (data) => {
+        console.log('Display feature update notification');
+        setIsNewFeaturesAvailable(true);
+      });
 
-    socket.emit("getFeatureUpdateNotification");
+      // socket.emit("getFeatureUpdateNotification");
+
+      //Listen to payment notifications
+      socket.on("setNotification", (data) => {
+        console.log('Display new payment update notification', data);
+      });
+    }
   }, [socketUrl]);
-
-  useEffect(() => {
-
-    const notifySocket = io(socketUrl, {
-      path: '/notify',
-      transports: ["websocket"],
-      origins: "*"
-    });
-    
-    // client-side
-    notifySocket.on("connect", () => {  
-      console.log("notify socket id", notifySocket.id); // x8WIv7-mJelg7on_ALbx
-
-    });
-    notifySocket.on("setNotification", (data) => {
-      setIsNewFeaturesAvailable(true);
-    });
-
-    notifySocket.emit("getNotification");
-  });
 
 
   useEffect(() => {
@@ -204,10 +189,10 @@ const MainComponent = () => {
               <Route exact path={["/call-setup", "/sms-setup", "/email-setup"]}>
                 <CommunicationRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></CommunicationRoutes>
               </Route>
-              <Route exact path={["/email-template","/sms-template","/audio-template"]}>
+              <Route exact path={["/email-template", "/sms-template", "/audio-template"]}>
                 <TemplateRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></TemplateRoutes>
               </Route>
-              
+
               <Route exact path="/products">
                 <ProductRouter toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}></ProductRouter>
               </Route>
@@ -241,9 +226,9 @@ const MainComponent = () => {
         </div>
       </div>
       {isShowContact && <ContactModal contactId={modalId} />}
-          
-      {isNewFeaturesAvailable && <UpdateNotification version="2.10.1" closeNotification={closeNotification} /> }     
-      
+
+      {isNewFeaturesAvailable && <UpdateNotification version="2.10.1" closeNotification={closeNotification} />}
+
     </>
   );
 };

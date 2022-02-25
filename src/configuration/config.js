@@ -125,5 +125,8 @@ module.exports = {
     dependentUrl: "https://6raxjy89xi.execute-api.us-east-1.amazonaws.com/dev/contact/dependent/",
 
     //numberVerifyUrl
-    numberVerifyUrl: "https://04w6eb9h7e.execute-api.us-east-1.amazonaws.com/dev/contact/validate-number"
+    numberVerifyUrl: "https://04w6eb9h7e.execute-api.us-east-1.amazonaws.com/dev/contact/validate-number",
+
+    //Notifications
+    notificationUrl: "https://dll0rsopl3.execute-api.us-east-1.amazonaws.com/dev/notification"
 }  

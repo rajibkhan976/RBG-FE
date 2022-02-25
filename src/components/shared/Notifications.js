@@ -1,347 +1,17 @@
 import { useEffect, useState } from "react";
 
 import BackArrow from "../../assets/images/back-arrow.png";
+import { utils } from "../../helpers";
+import { NotificationServices } from "../../services/notification/NotificationServices";
+import Loader from "./Loader";
+import moment from "moment";
 
 const Notifications = () => {
   let [detailNotification, setDetailNotification] = useState(null);
-  let dummyListing = {
-    Payment: [
-      {
-        Client: "Client One",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Two",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Three",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Four",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Five",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Six",
-        Amount: "$97",
-        Status: "Fail",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Seven",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-    ],
-    Rank: [
-      {
-        Client: "Client Four",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Five",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Six",
-        Amount: "$97",
-        Status: "Fail",
-        Product: "Generate Money Online course",
-        Read: true,
-      },
-      {
-        Client: "Client Seven",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-    ],
-    SMS: [
-      {
-        Client: "Client One",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Two",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Three",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Four",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Five",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Six",
-        Amount: "$97",
-        Status: "Fail",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Seven",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-    ],
-    Email: [
-      {
-        Client: "Email One",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Email Two",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Email Three",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Email Four",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Email Five",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Email Six",
-        Amount: "$97",
-        Status: "Fail",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Email Seven",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-    ],
-    Lead: [
-      {
-        Client: "Client One",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Two",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Three",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Four",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Five",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Six",
-        Amount: "$97",
-        Status: "Fail",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Seven",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-    ],
-    Membership: [
-      {
-        Client: "Client One",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Two",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Three",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Four",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Five",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Six",
-        Amount: "$97",
-        Status: "Fail",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Seven",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-    ],
-    MIA: [
-      {
-        Client: "Client One",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Two",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Three",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Four",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Five",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Six",
-        Amount: "$97",
-        Status: "Fail",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-      {
-        Client: "Client Seven",
-        Amount: "$97",
-        Status: "Success",
-        Product: "Generate Money Online course",
-        Read: false,
-      },
-    ]
-  };
+  const [isLoader, setIsLoader] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [notificationData, setNotificationData] = useState(null);
+  const [notificationsListing, setNotificationListing] = useState(null);
 
   const goBackToNotificationListing = () => {
     setDetailNotification(null);
@@ -349,13 +19,51 @@ const Notifications = () => {
 
   const showNOtifDetails = (e) => {
     e.preventDefault();
-    setDetailNotification(e.target.parentNode.getAttribute("data-listing"));
+    let notificationType = e.target.parentNode.getAttribute("data-listing");
+
+    //Filter notification by type
+    let filter = notificationData.filter(obj => {
+      return obj._id === notificationType
+    });
+    setNotificationListing(filter[0].notifications);
+
+    //Set detail notification type
+    setDetailNotification(notificationType);
   };
 
-  useEffect(() => {});
+  useEffect(() => {
+    /**
+     * Fetch notifications
+     */
+    fetchNotifications();
+  }, []);
+
+  /**
+   * Function to fetch notifications
+   * @returns
+   */
+  const fetchNotifications = async () => {
+
+    let pageId = utils.getQueryVariable("page") || 1;
+    try {
+      setIsLoader(true);
+      const result = await NotificationServices.fetchNotifications(pageId);
+      console.log("Data", result);
+      if (result) {
+        setNotificationData(result.notifications);
+        setIsLoader(false);
+      }
+    } catch (e) {
+      setErrorMsg(e.message);
+    } finally {
+      setIsLoader(false);
+    }
+  };
+
 
   return (
     <div className="notificationsListing">
+      {isLoader ? <Loader /> : ""}
       {detailNotification === null && (
         <>
           <div className="notifIco text-center">
@@ -439,21 +147,12 @@ const Notifications = () => {
           </div>
           <p className="notificationHeadingPara">Catch all the notifications easily from a single place</p>
           <ul className="notifLabels">
-            {Object.keys(dummyListing).map((keyname, i) => {
-              let lengthData = null;
-              for (const key of dummyListing[keyname].keys()) {
-                if (key >= 0) {
-                  lengthData = key + 1;
-                  console.log(key + 1);
-                } else {
-                  lengthData = null;
-                }
-              }
+            {notificationData && notificationData.map((keyname, i) => {
+              console.log('fs', keyname._id, i);
               return (
-                <li key={i} data-listing={keyname}>
-                  <p>{keyname}</p>
-
-                  <span>{lengthData}</span>
+                <li key={i} data-listing={keyname._id}>
+                  <p>{keyname._id}</p>
+                  <span>{keyname.count}</span>
                   <button
                     className="inlinle-btn btn-link"
                     onClick={(e) => showNOtifDetails(e)}
@@ -479,11 +178,11 @@ const Notifications = () => {
             </button>
           </h4>
           <ul className="detailNotifList">
-            {dummyListing[detailNotification].map((e, i) => {
+            {notificationsListing && notificationsListing.map((e, i) => {
               return (
-                <li key={i} className={e.Read ? "detailNotif": "detailNotif unreadNotifications"}>
+                <li key={i} className={e.isRead ? "detailNotif" : "detailNotif unreadNotifications"}>
                   <div className="notiTime_n_Icon">
-                    <span className="timeStamp">2 min ago</span>
+                    <span className="timeStamp">{moment(e.createdAt).fromNow()}</span>
                     <figure>
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -505,13 +204,13 @@ const Notifications = () => {
                       </svg>
                     </figure>
                   </div>
-                  
+
                   <p>
-                   
-                    <span className="client">{e.Client}</span> {e.paid}  paid <span className="ammount">{e.Amount}</span> successfully
-                  for the product <span className="product">“{e.Product}”</span>
+
+                    <span className="client">{e.userName}</span> {e.paid}  paid <span className="ammount">{`$` + e.amount}</span> successfully
+                    for the product <span className="product">“{e.program}”</span>
                   </p>
-                  
+
                 </li>
               );
             })}
