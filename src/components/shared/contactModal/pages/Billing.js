@@ -32,10 +32,10 @@ const Billing = (props) => {
     useState("inactive");
   const [isLoader, setIsLoader] = useState(false);
 
-  const [cardCvvCheck, setCardCvvCheck] = useState("");
-  const [bankAccountCheck, setBankAccountCheck] = useState("");
-  const [bankNameCheck, setBankNameCheck] = useState("");
-  const [bankRoutingCheck, setBankRoutingCheck] = useState("");
+    const [cardCvvCheck, setCardCvvCheck] = useState("");
+    const [bankAccountCheck, setBankAccountCheck] = useState("");
+    const [bankNameCheck, setBankNameCheck] = useState("");
+    const [bankRoutingCheck, setBankRoutingCheck] = useState("");
 
   const [cardDataFormatting, setCardDataFormatting] = useState({
     contact: props.contactId,
@@ -54,17 +54,16 @@ const Billing = (props) => {
     account_type: "checking",
     status: bankActivationCheckText,
   });
-  const [formErrorMsg, setFormErrorMsg] = useState([
-    {
-      card_num_Err: false,
-      card_name_Err: false,
-      card_exp_Err: false,
-      card_cvv_Err: false,
-      bank_routing_err: false,
-      bank_acc_Err: false,
-      bank_name_Err: false,
-    },
-  ]);
+  const [formErrorMsg, setFormErrorMsg] = useState({
+      card_num_Err: "",
+      card_name_Err: "",
+      card_exp_Err: "",
+      card_cvv_Err: "",
+      bank_routing_err: "",
+      bank_acc_Err: "",
+      bank_name_Err: "",
+      card_details_invalid: ""
+    });
 
   //   const [cardBankLoader, setCardBankLoader] = useState();
   const [cardBankList, setCardBankList] = useState([]);
@@ -73,16 +72,20 @@ const Billing = (props) => {
   const [dateError, setDateError] = useState("Please fill up the field");
 
   const fetchCardBank = async () => {
-    setIsLoader(true);
-    let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
-    if (cardBankResponce) {
-      setCardBankList(cardBankResponce.cards);
-      setBankList(cardBankResponce.banks);
-      setPrimaryType(cardBankResponce.primary);
+    try {
+      setIsLoader(true);
+      let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
+      if (cardBankResponce) {
+        setCardBankList(cardBankResponce.cards);
+        setBankList(cardBankResponce.banks);
+        setPrimaryType(cardBankResponce.primary);
+        setIsLoader(false);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
       setIsLoader(false);
     }
-    // console.log("CARD LISTING data", cardBankResponce.cards);
-    // console.log(cardBankResponce.primary);
   };
   useEffect(() => {
     fetchCardBank();
@@ -91,6 +94,26 @@ const Billing = (props) => {
   const openNewCardHandler = () => {
     setListCardAnnim(false);
     setNewCardAnnim(true);
+
+    setCardNumberCheck("");
+    setCardNumberOn("");
+    setCardNameCheck("");
+    setCardExpairyCheck("");
+    setCardExpairyMonthCheck("");
+    setCardExpairyYearCheck("");
+    setCardCvvCheck("")
+    setCardActivationCheckText("inactive");
+    
+    setFormErrorMsg({
+      card_num_Err: "",
+      card_name_Err: "",
+      card_exp_Err: "",
+      card_cvv_Err: "",
+      bank_routing_err: "",
+      bank_acc_Err: "",
+      bank_name_Err: "",
+      card_details_invalid: ""
+    });
   };
 
   const hideNewCardHandler = () => {
@@ -113,8 +136,16 @@ const Billing = (props) => {
       contactID: cardBank && props.contactId,
       accountType: cardBank && cardBank.accountType,
     };
-    await BillingServices.activeCard(cardData);
-    fetchCardBank();
+
+    try {
+      setIsLoader(true)
+      await BillingServices.activeCard(cardData);
+      fetchCardBank();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoader(false)
+    }
   };
 
   // .................. validation ................
@@ -140,7 +171,7 @@ const Billing = (props) => {
         cardString = "isAmex";
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
-          card_num_Err: false,
+          card_num_Err: "",
         }));
         return cardString;
       } else {
@@ -148,15 +179,14 @@ const Billing = (props) => {
         cardString = "isOther";
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
-          card_num_Err: false,
+          card_num_Err: "",
         }));
         return cardString;
       }
     } else {
-      // console.log("IF NOT CARD");
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        card_num_Err: true,
+        card_num_Err: "Card number is not valid.",
       }));
     }
   };
@@ -225,6 +255,7 @@ const Billing = (props) => {
     let cardCvv = e.target.value;
     var formattedCardCvv = cardCvv.replace(/[^\d]/g, "");
     formattedCardCvv = formattedCardCvv.substring(0, 3);
+    
     setCardCvvCheck(formattedCardCvv);
   };
   useEffect(() => {}, [
@@ -260,49 +291,55 @@ const Billing = (props) => {
   const saveCardData = async (e) => {
     e.preventDefault();
 
+    let cardError = false;
+
     if (!cardNumberCheck) {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        card_num_Err: true,
+        card_num_Err: "Card number is not valid.",
       }));
+      cardError = true;
     } else {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        card_num_Err: false,
+        card_num_Err: "",
       }));
     }
 
     if (!cardNameCheck) {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        card_name_Err: true,
+        card_name_Err: "Card name is not valid.",
       }));
+      cardError = true;
     } else {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        card_name_Err: false,
+        card_name_Err: "",
       }));
     }
     if (!cardExpairyCheck || cardExpairyCheck.length < 7) {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        card_exp_Err: true,
+        card_exp_Err: "Card expiry date is not valid.",
       }));
+      cardError = true;
     } else {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        card_exp_Err: false,
+        card_exp_Err: "",
       }));
     }
-    if (!cardCvvCheck || cardCvvCheck.length < 3) {
+    if (!cardCvvCheck || cardCvvCheck.length < 3 || cardCvvCheck == "000") {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        card_cvv_Err: true,
+        card_cvv_Err: "Card CVV number is not valid.",
       }));
+      cardError = true;
     } else {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        card_cvv_Err: false,
+        card_cvv_Err: "",
       }));
     }
 
@@ -327,9 +364,9 @@ const Billing = (props) => {
         } else {
           setFormErrorMsg((errorMessage) => ({
             ...errorMessage,
-            card_exp_Err: true,
+            card_exp_Err: "Card expiry date is not valid.",
           }));
-          setDateError("Expiry month should be greater than current month.");
+          cardError = true;
           return false;
         }
       }
@@ -341,64 +378,56 @@ const Billing = (props) => {
       if (inputMonth > currentMonth) {
         //console.log(inputMonth);
         if (inputMonth <= 12) {
-          setFormErrorMsg((errorMessage) => ({
-            ...errorMessage,
-            card_exp_Err: false,
-          }));
           return inputMonth;
         } else {
           setFormErrorMsg((errorMessage) => ({
             ...errorMessage,
-            card_exp_Err: true,
+            card_exp_Err: "Card expiry date is not valid.",
           }));
-          setDateError("Month has to be within or equals to 12");
+          cardError = true;
           return false;
         }
       } else if (inputMonth <= currentMonth && inputMonth.length > 0) {
         if (cardExpairyYearCheck > currentYear) {
           setFormErrorMsg((errorMessage) => ({
             ...errorMessage,
-            card_exp_Err: false,
+            card_exp_Err: "",
           }));
           return inputMonth;
         } else {
           setFormErrorMsg((errorMessage) => ({
             ...errorMessage,
-            card_exp_Err: true,
+            card_exp_Err: "Card expiry date is not valid.",
           }));
-          setDateError("Expiry year should be greater than current year.");
+          cardError = true;
           return false;
         }
       } else if (inputMonth == "00" || inputMonth === 0) {
         if (inputMonth.length > 0) {
           setFormErrorMsg((errorMessage) => ({
             ...errorMessage,
-            card_exp_Err: true,
+            card_exp_Err: "Card expiry date is not valid.",
           }));
-          setDateError("Month has to be within or equals to 12");
+          cardError = true;
           return false;
         } else {
           setFormErrorMsg((errorMessage) => ({
             ...errorMessage,
-            card_exp_Err: true,
+            card_exp_Err: "Card expiry date is not valid.",
           }));
-          setDateError("Month cannot be empty!");
+          cardError = true;
           return false;
         }
       } else {
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
-          card_exp_Err: true,
+          card_exp_Err: "Card expiry date is not valid.",
         }));
-        setDateError("Please fill up the field");
+        cardError = true;
         return false;
       }
     };
 
-    // console.log(
-    //   cardExpairyYearCheckFn(cardExpairyYearCheck),
-    //   cardExpairyMonthCheckFn(cardExpairyMonthCheck)
-    // );
 
     let cardPayload = {
       contact: props.contactId,
@@ -411,34 +440,28 @@ const Billing = (props) => {
         cardExpairyMonthCheckFn(cardExpairyMonthCheck),
       cvv: cardCvvCheck.trim() !== "" && cardCvvCheck,
       cardholder_name: cardNameCheck.trim() !== "" && cardNameCheck,
-      status: cardActivationCheckText,
+      status: cardBankList.length === 0 ? "active" : cardActivationCheckText,
     };
 
-    //console.log(cardPayload);
-
-    if (
-      cardPayload.cvv !== false &&
-      cardPayload.expiration_month !== "00" &&
-      cardPayload.expiration_year !== false &&
-      cardPayload.expiration_month !== false
-    ) {
+    if (!cardError) {
       try {
+        setIsLoader(true)
         await BillingServices.addCard(cardPayload);
         cardBankList.length == 0 && makePrimaryMethod(e, "card");
         hideNewCardHandler();
         fetchCardBank();
+        setFormErrorMsg((errorMessage) => ({
+          ...errorMessage,
+          card_details_invalid: "",
+        }));
       } catch (error) {
-        // console.log(error);
+        setFormErrorMsg((errorMessage) => ({
+          ...errorMessage,
+          card_details_invalid: error.message,
+        }));
       } finally {
-        cardPayload = {
-          contact: props.contactId,
-          card_number: "",
-          expiration_year: "",
-          expiration_month: "",
-          cvv: "",
-          cardholder_name: "",
-          status: "inactive",
-        };
+        setIsLoader(false)
+        cardError = false;
       }
     }
   };
@@ -479,15 +502,6 @@ const Billing = (props) => {
       }));
     }
 
-    // console.log(
-    //   bankRoutingCheck +
-    //     " , " +
-    //     bankAccountCheck +
-    //     " , " +
-    //     bankNameCheck +
-    //     " , " +
-    //     bankActivationCheckText
-    // );
     setBankDataFormatting({
       ...bankDataFormatting,
       contact: props.contactId,
@@ -543,9 +557,11 @@ const Billing = (props) => {
     }
   };
 
+  useEffect(()=>{},[formErrorMsg])
+
   return (
     <>
-      <div className={props.contact.is_payment_setup_remaining ? "contactTabsInner d-flex f-column" : "contactTabsInner"}>
+      <div className={props.contact.is_payment_setup_remaining ? "contactTabsInner d-flex f-column" : isLoader ? "contactTabsInner loading" : "contactTabsInner"}>
         {isLoader ? <Loader /> : ""}
         <h3 className="headingTabInner">Billing Info</h3>
         <p className="subheadingTabInner">
@@ -553,10 +569,12 @@ const Billing = (props) => {
         </p>
         {(!props.contact.is_payment_setup_remaining) ?
             <div className="twoBillingCardContainer">
-              {props.contact && props.contact.payment_error !== undefined &&
+              {props.contact && props.contact.payment_error !== undefined ?
                   <div className="importCPaymentError d-flex f-align-center f-justify-center">
                     <p>{props.contact.payment_error}</p>
-                  </div>
+                  </div> : formErrorMsg.card_details_invalid ? <div className="importCPaymentError d-flex f-align-center f-justify-center">
+                    <p>{formErrorMsg.card_details_invalid}</p>
+                  </div> : ""
               }
               <div className="billing_module">
                 {cardBankList && cardBankList.length > 0 &&
@@ -663,6 +681,7 @@ const Billing = (props) => {
                                 <input
                                     type="checkbox"
                                     name="credit"
+                                    defaultChecked={(!cardBankList || cardBankList.length === 0) && (!bankList || bankList.length === 0)}
                                     onChange={(e) =>
                                         e.target.checked
                                             ? setCardActivationCheckText("active")
@@ -677,11 +696,7 @@ const Billing = (props) => {
                             </div>
                           </div>
 
-                          {formErrorMsg.card_num_Err ? (
-                              <p className="errorMsg">Please fill up the field</p>
-                          ) : (
-                              ""
-                          )}
+                          {formErrorMsg.card_num_Err && <p className="errorMsg">{formErrorMsg.card_num_Err}</p>}
                         </div>
                         <div className="formModule">
                           <label>Card Holder Name</label>
@@ -691,11 +706,7 @@ const Billing = (props) => {
                               onChange={cardNameCheckHandler}
                               value={cardNameCheck}
                           />
-                          {formErrorMsg.card_name_Err ? (
-                              <p className="errorMsg">Please fill up the field</p>
-                          ) : (
-                              ""
-                          )}
+                          {formErrorMsg.card_name_Err && <p className="errorMsg">{formErrorMsg.card_name_Err}</p>}
                         </div>
 
                         <div className="halfDivForm">
@@ -707,11 +718,7 @@ const Billing = (props) => {
                                 onChange={cardExpairyCheckHandler}
                                 value={cardExpairyCheck}
                             />
-                            {formErrorMsg.card_exp_Err ? (
-                                <p className="errorMsg">{dateError}</p>
-                            ) : (
-                                ""
-                            )}
+                            {formErrorMsg.card_exp_Err && <p className="errorMsg">{formErrorMsg.card_exp_Err}</p>}
                           </div>
                           <div className="half formModule">
                             <label>CVV</label>
@@ -720,11 +727,7 @@ const Billing = (props) => {
                                 onChange={cardCvvCheckHandler}
                                 value={cardCvvCheck}
                             />
-                            {formErrorMsg.card_cvv_Err ? (
-                                <p className="errorMsg">Please fill up the field</p>
-                            ) : (
-                                ""
-                            )}
+                            {formErrorMsg.card_cvv_Err && <p className="errorMsg">{formErrorMsg.card_cvv_Err}</p>}
                           </div>
                         </div>
 
@@ -842,6 +845,7 @@ const Billing = (props) => {
                                 <input
                                     type="checkbox"
                                     name="credit"
+                                    defaultChecked={(!cardBankList || cardBankList.length === 0) && (!bankList || bankList.length === 0)}
                                     onChange={(e) =>
                                         e.target.checked
                                             ? setBankActivationCheckText("active")

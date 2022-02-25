@@ -1991,4 +1991,7 @@ input::-webkit-inner-spin-button {
 .twoBillingCardContainer .billing_module {
   align-self: flex-end;
 }
+.contactTabsInner.loading {
+  overflow: hidden;
+}
 /* Billing fixes */

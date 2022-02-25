@@ -68,17 +68,15 @@ export const BillingServices = {
         return result.data;
       } else {
         throw new Error(
-          "There is an error updating Ringtone. Please contact support"
+          "There is an error adding this Card. Please contact support"
         );
       }
     } catch (e) {
-      if (!typeof e.data === "undefined") {
-        console.log(e.response.data.message);
-        throw new Error(e.response.data.message);
-      } else {
-        console.log(e.stack);
-        throw new Error(e.message + ". Please contact support.");
-      }
+      console.log("data add card");
+      console.log(e.response.data);
+      throw new Error(
+        e.response.data.message
+      )
     }
   },
   addBank: async (payload) => {
