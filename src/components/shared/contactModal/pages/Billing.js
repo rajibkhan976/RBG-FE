@@ -126,6 +126,20 @@ const Billing = (props) => {
   const openNewCardHandler2 = () => {
     setListBankAnnim(false);
     setNewBankAnnim(true);
+    setBankAccountCheck("");
+    setBankNameCheck("");
+    setBankRoutingCheck("");
+
+    setFormErrorMsg({
+      card_num_Err: "",
+      card_name_Err: "",
+      card_exp_Err: "",
+      card_cvv_Err: "",
+      bank_routing_err: "",
+      bank_acc_Err: "",
+      bank_name_Err: "",
+      card_details_invalid: ""
+    });
     hideNewCardHandler()
   };
   const hideNewCardHandler2 = () => {
@@ -471,37 +485,47 @@ const Billing = (props) => {
 
   const saveBankData = async (e) => {
     e.preventDefault();
+
+    let bankError = false;
+
     if (!bankRoutingCheck || bankRoutingCheck.length < 9) {
+      bankError = true
+
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        bank_routing_err: true,
+        bank_routing_err: "Please enter proper Routing",
       }));
     } else {
+      bankError = false
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        bank_routing_err: false,
+        bank_routing_err: "",
       }));
     }
     if (!bankNameCheck) {
+      bankError = true
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        bank_name_Err: true,
+        bank_name_Err: "Please enter proper Account holder name",
       }));
     } else {
+      bankError = false
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        bank_name_Err: false,
+        bank_name_Err: "",
       }));
     }
     if (!bankAccountCheck || bankAccountCheck.length < 8) {
+      bankError = true
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        bank_acc_Err: true,
+        bank_acc_Err: "Bank account number not valid",
       }));
     } else {
+      bankError = false
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        bank_acc_Err: false,
+        bank_acc_Err: "",
       }));
     }
 
@@ -523,19 +547,22 @@ const Billing = (props) => {
       status: bankActivationCheckText,
     };
 
-    if (
-      bankRoutingCheck.trim() !== "" &&
-      bankAccountCheck.trim() !== "" &&
-      bankNameCheck.trim() !== "" &&
-      bankActivationCheckText.trim() !== ""
-    ) {
+    if (!bankError) {
       try {
         await BillingServices.addBank(bankPayload);
         cardBankList.length == 0 && makePrimaryMethod(e, "bank");
         hideNewCardHandler2();
         fetchCardBank();
+        setFormErrorMsg((errorMessage) => ({
+          ...errorMessage,
+          bank_details_invalid: "",
+        }));
       } catch (error) {
-        //console.log(error);
+        console.log(error);
+        setFormErrorMsg((errorMessage) => ({
+          ...errorMessage,
+          bank_details_invalid: error.message,
+        }));
       } finally {
         bankPayload = {
           contact: props.contactId,
@@ -577,6 +604,8 @@ const Billing = (props) => {
                     <p>{props.contact.payment_error}</p>
                   </div> : formErrorMsg.card_details_invalid ? <div className="importCPaymentError d-flex f-align-center f-justify-center">
                     <p>{formErrorMsg.card_details_invalid}</p>
+                  </div> : formErrorMsg.bank_details_invalid ? <div className="importCPaymentError d-flex f-align-center f-justify-center">
+                    <p>{formErrorMsg.bank_details_invalid}</p>
                   </div> : ""
               }
               <div className="billing_module">
@@ -862,11 +891,7 @@ const Billing = (props) => {
                               Active
                             </div>
                           </div>
-                          {formErrorMsg.bank_acc_Err ? (
-                              <p className="errorMsg">Please fill up the field</p>
-                          ) : (
-                              ""
-                          )}
+                          {formErrorMsg.bank_acc_Err && <p className="errorMsg">{formErrorMsg.bank_acc_Err}</p>}
                         </div>
                         <div className="formModule">
                           <label>Account Holder Name</label>
@@ -876,11 +901,7 @@ const Billing = (props) => {
                               onChange={bankNameCheckHandler}
                               value={bankNameCheck}
                           />
-                          {formErrorMsg.bank_name_Err ? (
-                              <p className="errorMsg">Please fill up the field</p>
-                          ) : (
-                              ""
-                          )}
+                          {formErrorMsg.bank_name_Err && <p className="errorMsg">{formErrorMsg.bank_name_Err}</p>}
                         </div>
                         <div className="halfDivForm">
                           <div className="half formModule">
@@ -890,11 +911,7 @@ const Billing = (props) => {
                                 onChange={bankRoutingCheckHandler}
                                 value={bankRoutingCheck}
                             />
-                            {formErrorMsg.bank_routing_err ? (
-                                <p className="errorMsg">Please fill up the field</p>
-                            ) : (
-                                ""
-                            )}
+                            {formErrorMsg.bank_routing_err && <p className="errorMsg">{formErrorMsg.bank_routing_err}</p>}
                           </div>
                           <div className="half formModule">
                             <label>Account Type</label>
