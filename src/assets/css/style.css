@@ -9469,3 +9469,57 @@ button.addOverviewCustomFiel {
 .transactionModal .cashReceived {
   color: #9BAEBC;
 }
+
+
+/* ........................................ */
+
+.holiday .formControl.half .flatForm {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.holiday .formControl.half .flatForm span {
+  font-size: 13px;
+  padding-right: 10px;
+  color: #305671;
+}
+.holiday .formControl label{
+  padding-top: 10px;
+}
+.holiday .modalForm .formControl label {
+  padding-top: 15px;
+  font-weight: 500 !important;
+  font-size: 13px !important;
+}
+
+.showHolidayDateValue{
+  background: #F0F5F1;
+  border-radius: 3px;
+  padding: 13px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 20px 0 0;
+}
+.showHolidayDateValue h3{
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 19px;
+  color: #305671;
+}
+
+.showHolidayDateValue .show{
+  color: #9BAEBC;
+  font-size: 14px;
+}
+.showHolidayDateValue .show span{ 
+  color: #009F40;
+  font-weight: bold;
+  padding-right: 10px;
+}
+
+
+
+
