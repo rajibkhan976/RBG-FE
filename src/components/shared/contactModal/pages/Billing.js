@@ -215,7 +215,7 @@ const Billing = (props) => {
       if (formattedCardNumber.match(/\d{1,4}/g)) {
         formattedCardNumber = cardNumberSections.join("-");
         setCardNumberCheck(formattedCardNumber);
-        var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");
+        var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");\
         setCardNumberOn(cardNumberChanged);
       }
       if (e.target.value === "") {
