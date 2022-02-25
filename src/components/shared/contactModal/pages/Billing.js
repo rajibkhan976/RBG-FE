@@ -80,6 +80,7 @@ const Billing = (props) => {
         setBankList(cardBankResponce.banks);
         setPrimaryType(cardBankResponce.primary);
         setIsLoader(false);
+        console.log(cardBankResponce.cards);
       }
     } catch (error) {
       console.log(error);
@@ -114,6 +115,7 @@ const Billing = (props) => {
       bank_name_Err: "",
       card_details_invalid: ""
     });
+    hideNewCardHandler2()
   };
 
   const hideNewCardHandler = () => {
@@ -124,6 +126,7 @@ const Billing = (props) => {
   const openNewCardHandler2 = () => {
     setListBankAnnim(false);
     setNewBankAnnim(true);
+    hideNewCardHandler()
   };
   const hideNewCardHandler2 = () => {
     setListBankAnnim(true);
@@ -215,7 +218,7 @@ const Billing = (props) => {
       if (formattedCardNumber.match(/\d{1,4}/g)) {
         formattedCardNumber = cardNumberSections.join("-");
         setCardNumberCheck(formattedCardNumber);
-        var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");\
+        var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");
         setCardNumberOn(cardNumberChanged);
       }
       if (e.target.value === "") {
