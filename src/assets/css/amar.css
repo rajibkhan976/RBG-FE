@@ -1986,3 +1986,9 @@ input::-webkit-inner-spin-button {
   vertical-align: middle;
 }
 /* UI fixes */
+
+/* Billing fixes */
+.twoBillingCardContainer .billing_module {
+  align-self: flex-end;
+}
+/* Billing fixes */

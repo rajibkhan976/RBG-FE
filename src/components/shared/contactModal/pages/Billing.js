@@ -559,25 +559,27 @@ const Billing = (props) => {
                   </div>
               }
               <div className="billing_module">
-                <div className="primaryMaker">
-                  <label>
-                    <div class="circleRadio">
-                      <input
-                          type="radio"
-                          name="primary"
-                          onChange={(e) => makePrimaryMethod(e, "card")}
-                          defaultChecked={
-                              primaryType === "card"
-                          }
-                      />
-                      <span></span>
-                    </div>
-                    <span>
-                  {primaryType !== "card" && "Make "}
-                      Primary
-                </span>
-                  </label>
-                </div>
+                {cardBankList && cardBankList.length > 0 &&
+                  <div className="primaryMaker">
+                    <label>
+                      <div class="circleRadio">
+                        <input
+                            type="radio"
+                            name="primary"
+                            onChange={(e) => makePrimaryMethod(e, "card")}
+                            defaultChecked={
+                                primaryType === "card"
+                            }
+                        />
+                        <span></span>
+                      </div>
+                      <span>
+                    {primaryType !== "card" && "Make "}
+                        Primary
+                  </span>
+                    </label>
+                  </div>
+                }
                 <div className="flipCardHolder">
                   <div
                       className={listCardAnnim ? "cardList show" : "cardList hide"}
@@ -738,6 +740,8 @@ const Billing = (props) => {
               </div>
               {/* ............................. */}
               <div className="billing_module">
+              {bankList &&
+                          bankList.length > 0 && 
                 <div className="primaryMaker">
                   <label>
                     <div class="circleRadio">
@@ -757,6 +761,7 @@ const Billing = (props) => {
                 </span>
                   </label>
                 </div>
+                }
                 <div className="flipCardHolder">
                   <div
                       className={listBankAnnim ? "cardList show" : "cardList hide"}
