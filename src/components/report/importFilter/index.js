@@ -13,7 +13,7 @@ function ImportFilter(props) {
     return (
         <>
             <div className="sideMenuOuter" id="import_Modal">
-                <div className="sideMenuInner importModalContainer">
+                <div className="sideMenuInner importModalContainer appointmentListing">
                     <div className="sideMenuHeader">
                         <h3>Apply Filter</h3>
                         
@@ -28,15 +28,15 @@ function ImportFilter(props) {
                             <p className="dateRange">Date Range</p>
                                 <ul>
                                     <li>
-                                        <div className="formField w-50 appflex">
+                                        <div className="formField w-50 appflex durationWraper">
                                             <label>From</label>
-                                            <div className="inFormField">
+                                            <div className="inFormField duration">
                                                 <input type="date" placeholder="dd/mm/yyyy" name="" />
                                             </div>
                                         </div>
-                                        <div className="formField w-50 appflex">
+                                        <div className="formField w-50 appflex durationWraper">
                                             <label>To</label>
-                                            <div className="inFormField">
+                                            <div className="inFormField duration">
                                                 <input type="date" placeholder="dd/mm/yyyy" name="" />
                                             </div>
                                         </div>

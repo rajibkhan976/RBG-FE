@@ -2416,16 +2416,15 @@ span.tagLists ul li.tagLi.sellected span.addTag {
   color: #9BAEBC;
   text-align: center;
   border-radius: 6px;
-  padding: 5px;
+  padding: 10px 14px;
   position: absolute;
   z-index: 1;
   bottom: 150%;
+  font-weight: 400;
   left: 50%;
   margin-left: -105px;
   font-size: 12px;
-  box-shadow: -3px 3px 17px -2px rgba(99,97,97,0.92);
--webkit-box-shadow: -3px 3px 17px -2px rgba(99,97,97,0.92);
--moz-box-shadow: -3px 3px 17px -2px rgba(99,97,97,0.92);
+  filter: drop-shadow(0px 10px 30px rgba(0, 0, 0, 0.102));
 }
 
 .infoSpan .tooltiptextInfo::after {
@@ -2726,6 +2725,7 @@ button.delNewDownpayment {
 
 .cmnFormField.programsTransaction.listActive .contactListItems {
   top: 68px;
+  height: 175px;
 }
 
 .transaction_form.products.forProducts .formsection.gap .cmnFormRow .cmnFormField.programsTransaction .cmnFieldStyle {
@@ -2832,7 +2832,7 @@ p.courseModalPara {
 
 .transaction_form.products.forProducts .formsection.gap.autoRenew .labelWithInfo label {
   width: auto;
-  margin-right: 10px;
+  margin-right: 0px;
 }
 
 .transaction_form.products.forProducts .formsection.gap.autoRenew .labelWithInfo .infoSpan .tooltiptextInfo {
@@ -3099,13 +3099,17 @@ span.addPaymentInfo {
 span.addPaymentInfo:hover {
   background: #55bbc9;
   color: #fff;
-  border-radius: 5px
+  border-radius: 15px
 }
 
 p.paymentTypes {
   font-size: 13px;
   color: #9BAEBC;
   padding-left: 8px;
+}
+
+.sideMenuInner.importModalContainer.appointmentListing {
+  width:457px;
 }
 
 .chooseTransactionType.paymentTypes {
@@ -3306,6 +3310,10 @@ ul.totalPaymentUl li:last-child {
 .payDate.instalments {
   display: block;
 }
+
+.payDate.instalments b {
+  color: #305671;
+}
 .payDate.instalmentDate {
   display: block;
   float: right;
@@ -3462,6 +3470,11 @@ label.receivedCash {
 
 .cmnFormField.programsTransaction.listActive .contactListItems button.btn {
   margin-bottom: 10px;
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 16px;
+  color: #55BBC9;
+  flex: 0 0 37px;
 }
 
 .slickModalBody.paymentFailed .slickModalHeader .circleForIcon {
@@ -3594,8 +3607,7 @@ ul.paymentUlInfo li.paymentAmtLi img {
 }
 .totalPaymentUl {
   width: 100%;
-  margin: 12px 0 0 0;
-  padding: 0 9% 0 9%;
+  display: inline-block;
 }
 
 .totalPaymentUl li:first-child p {
@@ -3623,4 +3635,13 @@ ul.paymentUlInfo li.paymentAmtLi img {
 
 .successPageBtn button img {
   margin-left: 15px;
+}
+
+.inFormField.duration input {
+  width: 90%;
+  font-size: 13px;
+}
+
+.infoInputs ul li .formField.durationWraper {
+  padding:0 12px;
 }
