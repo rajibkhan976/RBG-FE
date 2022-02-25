@@ -2572,6 +2572,14 @@ span.renewDate {
   padding-right: 20px;
 }
 
+.transaction_form.products.forProducts .formsection.gap .cmnFormCol .cmnFormField.preField {
+  display: inline-block;
+}
+
+.transaction_form.products.forProducts .formsection.gap .cmnFormCol .cmnFormField.preField .unitAmount {
+  top: 2px;
+}
+
 .productAvailable.downpayment.active .previewBox .previewImgBox {
   width: 100%;
   background: transparent;
@@ -3093,13 +3101,14 @@ span.addPaymentInfo {
   font-weight: 400;
   font-size: 12px;
   cursor: pointer;
-  padding: 2px 8px;
+  padding: 2px 10px 2px 8px;
   background-color: transparent;
 }
 span.addPaymentInfo:hover {
   background: #55bbc9;
   color: #fff;
-  border-radius: 15px
+  border-radius: 15px;
+  filter: saturate(1)
 }
 
 p.paymentTypes {
@@ -3645,3 +3654,10 @@ ul.paymentUlInfo li.paymentAmtLi img {
 .infoInputs ul li .formField.durationWraper {
   padding:0 12px;
 }
+.addPaymentInfo {
+  padding-right: 10px!important;
+}
+.addPaymentInfo:hover {
+  border-radius: 15px!important;
+}
+

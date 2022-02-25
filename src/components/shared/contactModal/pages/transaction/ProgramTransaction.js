@@ -51,7 +51,40 @@ const ProgramTransaction = (props) => {
       status: e.target.value.trim() === "" ? false : true,
     });
   };
- 
+
+
+  const [communication, setCommunication] = useState(false);
+  const [communicationDownpayment, setCommunicationDownpayment] =
+    useState(false);
+
+    const [addDownpayment, setAddDownpayment] = useState(false);
+    const addDownpaymentFn = (e) => {
+      e.preventDefault();
+      setAddDownpayment(true);
+    };
+  
+    const delDownpaymentFn = (e) => {
+      e.preventDefault();
+      setAddDownpayment(false);
+    };
+    const [paymentDate1, setPaymentDate1] = useState("");
+    const paymentDateHandel1 = (e) => {
+      setPaymentDate1(e.target.value);
+      console.log(paymentDate1);
+    };
+
+    const [paymentDate, setPaymentDate] = useState("");
+
+    const paymentDateHandel = (e) => {
+      setPaymentDate(e.target.value);
+      console.log(paymentDate);
+    };
+
+    const [firstBillingDate, setFirstBillingDate] = useState("");
+    const firstBillingDateHandel = (e) => {
+      setFirstBillingDate(e.target.value);
+      console.log(firstBillingDate);
+    };
 
 
     return (
@@ -249,7 +282,7 @@ const ProgramTransaction = (props) => {
                                         </span>
                                     </label>
                                     
-                                    <input type="date" placeholder="mm/dd/yyyy" onChange={props.firstBillingDateHandel}  class="editableInput" value={props.firstBillingDate} />
+                                    <input type="date" placeholder="mm/dd/yyyy" onChange={firstBillingDateHandel}  class="editableInput" value={firstBillingDate} />
                                 </div>
                                 <div className="rightSecTransaction">
 
@@ -304,7 +337,7 @@ const ProgramTransaction = (props) => {
                           <div className="downPaymentToogle">
                           <header class="informHeader"><h5>Down Payment <span class="cartCount">0</span></h5></header>
                             <label
-                                className={props.communication ? "toggleBtn active" : "toggleBtn"
+                                className={communication ? "toggleBtn active" : "toggleBtn"
                                 }
                               >
                                 <input
@@ -312,8 +345,8 @@ const ProgramTransaction = (props) => {
                                   name="check-communication"
                                   onChange={(e) =>
                                     e.target.checked
-                                      ? props.setCommunication(true)
-                                      : props.setCommunication(false)
+                                      ? setCommunication(true)
+                                      : setCommunication(false)
                                   }
                                 />
                                 <span className="toggler"></span>
@@ -321,18 +354,18 @@ const ProgramTransaction = (props) => {
                               
                             </div>
                             <div className="previewBox">
-                                <div className={props.communication ? "previewImgBox course" : "previewImgBox course display"
+                                <div className={communication ? "previewImgBox course" : "previewImgBox course display"
                                 }>
                                   <div className="nodownpaymentInfos">
                                     <img src={downpayment} alt="" />
                                     <p className="noDownpaymentText">Down Payment is Disabled</p>
                                   </div>
                                 </div>
-                                <div className={props.communication ? "previewDownpaymentBox display" : "previewDownpaymentBox"
+                                <div className={communication ? "previewDownpaymentBox display" : "previewDownpaymentBox"
                                 }>
                                    <div className="newDownpayment">
                                     
-                                      <button className="addNewDownpayment" onClick={props.addDownpaymentFn}>+ Add</button>
+                                      <button className="addNewDownpayment" onClick={addDownpaymentFn}>+ Add</button>
                                       <div className="transaction_form products forDownpayment">
                                         <div className="formsection gap">
                                         <label className="labelWithInfo">
@@ -366,7 +399,7 @@ const ProgramTransaction = (props) => {
                                                       <span class="tooltiptextInfo paymentDate">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span> */}
                                                 <label
-                                                  className={props.communicationDownpayment ? "toggleBtn active" : "toggleBtn"
+                                                  className={communicationDownpayment ? "toggleBtn active" : "toggleBtn"
                                                   }
                                                 >
                                                   <input
@@ -374,18 +407,18 @@ const ProgramTransaction = (props) => {
                                                     name="check-communication"
                                                     onChange={(e) =>
                                                       e.target.checked
-                                                        ? props.setCommunicationDownpayment(true)
-                                                        : props.setCommunicationDownpayment(false)
+                                                        ? setCommunicationDownpayment(true)
+                                                        : setCommunicationDownpayment(false)
                                                     }
                                                   />
                                                   <span className="toggler"></span>
                                                 </label>
                                             </label>
-                                            <div className={props.communicationDownpayment ? "paymentNow" : "paymentNow display"} >
+                                            <div className={communicationDownpayment ? "paymentNow" : "paymentNow display"} >
                                               <p>Payment date <span>Now</span></p>
                                             </div>
-                                            <div className={props.communicationDownpayment ? "paymentNow display" : "paymentNow"} >
-                                              <input type="date" placeholder="mm/dd/yyyy" onChange={props.paymentDateHandel1}  class="editableInput" value={props.paymentDate1} />
+                                            <div className={communicationDownpayment ? "paymentNow display" : "paymentNow"} >
+                                              <input type="date" placeholder="mm/dd/yyyy" onChange={paymentDateHandel1}  class="editableInput" value={paymentDate1} />
                                             </div>
                                             </div>
                                         </div>
@@ -422,10 +455,10 @@ const ProgramTransaction = (props) => {
                                    </div>
 
 
-                                  {props.addDownpayment && (
+                                  {addDownpayment && (
                                    <div className="newDownpayment">
                                     
-                                      <button className="delNewDownpayment" onClick={props.delDownpaymentFn}><img src={deleteBtn} alt="" /> Delete</button>
+                                      <button className="delNewDownpayment" onClick={delDownpaymentFn}><img src={deleteBtn} alt="" /> Delete</button>
                                       <div className="transaction_form products forDownpayment">
                                         <div className="formsection gap">
                                         <label className="labelWithInfo">
@@ -470,18 +503,18 @@ const ProgramTransaction = (props) => {
                                                     name="check-communication"
                                                     onChange={(e) =>
                                                       e.target.checked
-                                                        ? props.setCommunicationDownpayment(true)
-                                                        : props.setCommunicationDownpayment(false)
+                                                        ? setCommunicationDownpayment(true)
+                                                        : setCommunicationDownpayment(false)
                                                     }
                                                   />
                                                   <span className="toggler"></span>
                                                 </label>
                                             </label>
-                                            <div className={props.communicationDownpayment ? "paymentNow" : "paymentNow display"} >
+                                            <div className={communicationDownpayment ? "paymentNow" : "paymentNow display"} >
                                               <p>Payment date <span>Now</span></p>
                                             </div>
-                                            <div className={props.communicationDownpayment ? "paymentNow display" : "paymentNow"} >
-                                            <input type="date" placeholder="mm/dd/yyyy" onChange={props.paymentDateHandel} class="editableInput" value={props.paymentDate} />
+                                            <div className={communicationDownpayment ? "paymentNow display" : "paymentNow"} >
+                                            <input type="date" placeholder="mm/dd/yyyy" onChange={paymentDateHandel} class="editableInput" value={paymentDate} />
                                             </div>
                                             </div>
                                         </div>

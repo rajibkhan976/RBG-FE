@@ -519,7 +519,7 @@ const ProductTransaction = (props) => {
                                                     ></figure>
                                                     <div className='productItemShorts'>
                                                         <span>{productItem.name}</span>
-                                                        <strong>Price: {productItem.price}</strong>
+                                                        <strong>$: {productItem.price}.00</strong>
                                                     </div>
                                                 </li>
                                             ))}
