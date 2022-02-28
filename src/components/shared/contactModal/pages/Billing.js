@@ -485,6 +485,9 @@ const expiration_month = cardExpairyMonthCheckFn();
           ...errorMessage,
           card_details_invalid: "",
         })); 
+        setTimeout(() => {
+          setSuccessMessage("Card successfully added!")
+        }, 2000);
       } catch (error) {
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
@@ -502,9 +505,6 @@ const expiration_month = cardExpairyMonthCheckFn();
           cardholder_name: "",
           status: "",
         };
-        setTimeout(() => {
-          setSuccessMessage("Card successfully added!")
-        }, 2000);
       }
     }
   };
@@ -575,6 +575,9 @@ const expiration_month = cardExpairyMonthCheckFn();
           ...errorMessage,
           bank_details_invalid: "",
         })); 
+        setTimeout(() => {
+          setSuccessMessage("Bank details successfully added!")
+        }, 2000);
       } catch (error) {
         console.log(error);
         setFormErrorMsg((errorMessage) => ({
@@ -591,9 +594,6 @@ const expiration_month = cardExpairyMonthCheckFn();
           account_type: "checking",
           status: "inactive",
         };
-        setTimeout(() => {
-          setSuccessMessage("Bank details successfully added!")
-        }, 2000);
       }
     }
   };
