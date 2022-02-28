@@ -37,23 +37,23 @@ const Billing = (props) => {
     const [bankNameCheck, setBankNameCheck] = useState("");
     const [bankRoutingCheck, setBankRoutingCheck] = useState("");
 
-  const [cardDataFormatting, setCardDataFormatting] = useState({
-    contact: props.contactId,
-    card_number: cardNumberOn,
-    expiration_year: cardExpairyCheck,
-    expiration_month: cardExpairyCheck,
-    cvv: cardCvvCheck,
-    cardholder_name: cardNameCheck,
-    status: cardActivationCheckText,
-  });
-  const [bankDataFormatting, setBankDataFormatting] = useState({
-    contact: props.contactId,
-    routing_number: bankRoutingCheck,
-    account_number: bankAccountCheck,
-    account_holder: bankNameCheck,
-    account_type: "checking",
-    status: bankActivationCheckText,
-  });
+  // const [cardDataFormatting, setCardDataFormatting] = useState({
+  //   contact: props.contactId,
+  //   card_number: cardNumberOn,
+  //   expiration_year: cardExpairyCheck,
+  //   expiration_month: cardExpairyCheck,
+  //   cvv: cardCvvCheck,
+  //   cardholder_name: cardNameCheck,
+  //   status: cardActivationCheckText,
+  // });
+  // const [bankDataFormatting, setBankDataFormatting] = useState({
+  //   contact: props.contactId,
+  //   routing_number: bankRoutingCheck,
+  //   account_number: bankAccountCheck,
+  //   account_holder: bankNameCheck,
+  //   account_type: "checking",
+  //   status: bankActivationCheckText,
+  // });
   const [formErrorMsg, setFormErrorMsg] = useState({
       card_num_Err: "",
       card_name_Err: "",
@@ -250,6 +250,14 @@ const Billing = (props) => {
 
   const cardExpairyCheckHandler = (e) => {
     let cardExpairy = e.target.value;
+    
+    if(cardExpairy !=="" && cardExpairy.length)
+    {
+      if(cardExpairy[0]>1) 
+      cardExpairy = "0" + cardExpairy[0]
+    }
+    console.log("cardExpairy ::: ", cardExpairy);
+
     var formattedCardExpairy = cardExpairy.replace(/[^\d]/g, "");
     formattedCardExpairy = formattedCardExpairy.substring(0, 6);
 
@@ -360,19 +368,8 @@ const Billing = (props) => {
       }));
     }
 
-    setCardDataFormatting({
-      ...cardDataFormatting,
-      contact: props.contactId,
-      card_number: cardNumberOn,
-      expiration_year: cardExpairyYearCheck,
-      expiration_month: cardExpairyMonthCheck,
-      cvv: cardCvvCheck,
-      cardholder_name: cardNameCheck,
-      status: cardActivationCheckText,
-    });
-
-    const cardExpairyYearCheckFn = (year) => {
-      let inputYear = year;
+    const cardExpairyYearCheckFn = () => {
+      let inputYear = cardExpairyYearCheck;
       if (inputYear > currentYear) {
         return inputYear;
       } else if (inputYear == currentYear) {
@@ -389,8 +386,8 @@ const Billing = (props) => {
       }
     };
 
-    const cardExpairyMonthCheckFn = (month) => {
-      let inputMonth = month;
+    const cardExpairyMonthCheckFn = () => {
+      let inputMonth = cardExpairyMonthCheck;
 
       if (inputMonth > currentMonth) {
         //console.log(inputMonth);
@@ -445,16 +442,15 @@ const Billing = (props) => {
       }
     };
 
+const expiration_year = cardExpairyYearCheckFn();
+const expiration_month = cardExpairyMonthCheckFn();
 
     let cardPayload = {
       contact: props.contactId,
       card_number: cardNumberOn.trim() !== "" && cardNumberOn,
       expiration_year:
-        cardExpairyYearCheckFn(cardExpairyYearCheck) !== undefined &&
-        cardExpairyYearCheckFn(cardExpairyYearCheck),
-      expiration_month:
-        cardExpairyMonthCheckFn(cardExpairyMonthCheck) !== undefined &&
-        cardExpairyMonthCheckFn(cardExpairyMonthCheck),
+      expiration_year !== undefined && expiration_year,
+      expiration_month: expiration_month !== undefined && expiration_month,
       cvv: cardCvvCheck.trim() !== "" && cardCvvCheck,
       cardholder_name: cardNameCheck.trim() !== "" && cardNameCheck,
       status: cardBankList.length === 0 ? "active" : cardActivationCheckText,
@@ -528,15 +524,6 @@ const Billing = (props) => {
         bank_acc_Err: "",
       }));
     }
-
-    setBankDataFormatting({
-      ...bankDataFormatting,
-      contact: props.contactId,
-      routing_number: bankRoutingCheck,
-      account_number: bankAccountCheck,
-      account_holder: bankNameCheck,
-      status: bankActivationCheckText,
-    });
 
     let bankPayload = {
       contact: props.contactId,
@@ -764,7 +751,7 @@ const Billing = (props) => {
                         </div>
 
                         <div className="text-center">
-                          <button className="orangeBtn" onClick={saveCardData}>
+                          <button className="orangeBtn" onClick={(e)=>saveCardData(e)}>
                             <img src={plus} alt=""/> Add my Card
                           </button>
                         </div>
