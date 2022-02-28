@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useReducer, useRef } from "react";
 import bank from "../../../../assets/images/bank.svg";
 import credit_card from "../../../../assets/images/credit_card.svg";
 import cross_white from "../../../../assets/images/cross_white.svg";
@@ -37,6 +37,10 @@ const Billing = (props) => {
     const [bankNameCheck, setBankNameCheck] = useState("");
     const [bankRoutingCheck, setBankRoutingCheck] = useState("");
     const [successMessage, setSuccessMessage] = useState("")
+
+    const billingCardContainer = useRef(null)
+    const addCardBtn = useRef(null)
+    const addBankBtn = useRef(null)
 
   // const [cardDataFormatting, setCardDataFormatting] = useState({
   //   contact: props.contactId,
@@ -166,6 +170,7 @@ const Billing = (props) => {
   };
 
   const activeCreditCard = async (cardBank) => {
+    billingCardContainer.current.style.pointerEvents = "none"
     let cardData = {
       billingID: cardBank && cardBank._id,
       contactID: cardBank && props.contactId,
@@ -173,13 +178,12 @@ const Billing = (props) => {
     };
 
     try {
-      setIsLoader(true)
       await BillingServices.activeCard(cardData);
       fetchCardBank();
     } catch (error) {
       console.log(error);
     } finally {
-      setIsLoader(false)
+      billingCardContainer.current.style.pointerEvents = "all"
     }
   };
 
@@ -335,6 +339,7 @@ const Billing = (props) => {
     e.preventDefault();
 
     let cardError = false;
+    addCardBtn.current.style.pointerEvents = "none"
 
     if (!cardNumberCheck) {
       setFormErrorMsg((errorMessage) => ({
@@ -476,7 +481,6 @@ const expiration_month = cardExpairyMonthCheckFn();
 
     if (!cardError) {
       try {
-        setIsLoader(true);
         (cardBankList.length == 0 && bankList.length == 0) && makePrimaryMethod(e, "card");
         await BillingServices.addCard(cardPayload);
         hideNewCardHandler();
@@ -494,7 +498,7 @@ const expiration_month = cardExpairyMonthCheckFn();
           card_details_invalid: error.message,
         }));
       } finally {
-        setIsLoader(false);
+        addCardBtn.current.style.pointerEvents = "all"
         cardError = false;
         cardPayload = {
           contact: "",
@@ -513,6 +517,7 @@ const expiration_month = cardExpairyMonthCheckFn();
     e.preventDefault();
 
     let bankError = false;
+    addBankBtn.current.style.pointerEvents = "none"
 
     if (!bankRoutingCheck || bankRoutingCheck.length < 9) {
       bankError = true
@@ -566,7 +571,6 @@ const expiration_month = cardExpairyMonthCheckFn();
 
     if (!bankError) {
       try {
-        setIsLoader(true);
         (cardBankList.length == 0 && bankList.length == 0) && makePrimaryMethod(e, "bank");
         await BillingServices.addBank(bankPayload);
         hideNewCardHandler2();
@@ -585,7 +589,7 @@ const expiration_month = cardExpairyMonthCheckFn();
           bank_details_invalid: error.message,
         }));
       } finally {
-        setIsLoader(false);
+        addBankBtn.current.style.pointerEvents = "all"
         bankPayload = {
           contact: props.contactId,
           routing_number: "",
@@ -603,11 +607,12 @@ const expiration_month = cardExpairyMonthCheckFn();
   },[bankList, cardBankList])
 
   const makePrimaryMethod = (e, value) => {
-    let payload = {
-      contactID: props.contactId,
-      accountType: value,
-    };
     if (props.contactId && value) {
+      let payload = {
+        contactID: props.contactId,
+        accountType: value,
+      };
+      
       try {
         setIsLoader(true)
         BillingServices.makePrimary(payload);
@@ -640,7 +645,7 @@ const expiration_month = cardExpairyMonthCheckFn();
         Manage your billing details here
         </p>
         {(!props.contact.is_payment_setup_remaining) ?
-            <div className="twoBillingCardContainer">
+            <div className="twoBillingCardContainer" ref={billingCardContainer}>
               {props.contact && props.contact.payment_error !== undefined ?
                   <div className="importCPaymentError d-flex f-align-center f-justify-center">
                     <p>{props.contact.payment_error}</p>
@@ -823,7 +828,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                         </div>
 
                         <div className="text-center">
-                          <button className="orangeBtn" onClick={(e)=>saveCardData(e)}>
+                          <button className="orangeBtn" onClick={(e)=>saveCardData(e)} ref={addCardBtn}>
                             <img src={plus} alt=""/> Add my Card
                           </button>
                         </div>
@@ -997,7 +1002,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                         </div>
 
                         <div className="text-center">
-                          <button className="orangeBtn" onClick={saveBankData}>
+                          <button className="orangeBtn" onClick={saveBankData} ref={addBankBtn}>
                             <img src={plus} alt=""/> Add my Bank Account
                           </button>
                         </div>
