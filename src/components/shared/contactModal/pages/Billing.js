@@ -477,7 +477,7 @@ const expiration_month = cardExpairyMonthCheckFn();
     if (!cardError) {
       try {
         setIsLoader(true);
-        (!cardBankList || cardBankList == null || cardBankList.length == 0) && makePrimaryMethod(e, "card");
+        (cardBankList.length == 0 && bankList.length == 0) && makePrimaryMethod(e, "card");
         await BillingServices.addCard(cardPayload);
         hideNewCardHandler();
         fetchCardBank();
@@ -567,7 +567,7 @@ const expiration_month = cardExpairyMonthCheckFn();
     if (!bankError) {
       try {
         setIsLoader(true);
-        (!bankList || bankList == null || bankList.length == 0)  && makePrimaryMethod(e, "bank");
+        (cardBankList.length == 0 && bankList.length == 0) && makePrimaryMethod(e, "bank");
         await BillingServices.addBank(bankPayload);
         hideNewCardHandler2();
         fetchCardBank();
