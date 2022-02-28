@@ -3,7 +3,7 @@ import bank from "../../../../assets/images/bank.svg";
 import credit_card from "../../../../assets/images/credit_card.svg";
 import cross_white from "../../../../assets/images/cross_white.svg";
 import plus from "../../../../assets/images/plus_icon.svg";
-//import { ErrorAlert, SuccessAlert } from "../../messages";
+import { ErrorAlert, SuccessAlert } from "../../messages";
 import Loader from "../../Loader";
 //import axios from "axios";
 
@@ -36,6 +36,7 @@ const Billing = (props) => {
     const [bankAccountCheck, setBankAccountCheck] = useState("");
     const [bankNameCheck, setBankNameCheck] = useState("");
     const [bankRoutingCheck, setBankRoutingCheck] = useState("");
+    const [successMessage, setSuccessMessage] = useState("")
 
   // const [cardDataFormatting, setCardDataFormatting] = useState({
   //   contact: props.contactId,
@@ -475,6 +476,7 @@ const expiration_month = cardExpairyMonthCheckFn();
 
     if (!cardError) {
       try {
+        setIsLoader(true);
         (!cardBankList || cardBankList == null || cardBankList.length == 0) && makePrimaryMethod(e, "card");
         await BillingServices.addCard(cardPayload);
         hideNewCardHandler();
@@ -489,7 +491,20 @@ const expiration_month = cardExpairyMonthCheckFn();
           card_details_invalid: error.message,
         }));
       } finally {
+        setIsLoader(false);
         cardError = false;
+        cardPayload = {
+          contact: "",
+          card_number: "",
+          expiration_year: "",
+          expiration_month: "",
+          cvv: "",
+          cardholder_name: "",
+          status: "",
+        };
+        setTimeout(() => {
+          setSuccessMessage("Card successfully added!")
+        }, 2000);
       }
     }
   };
@@ -551,6 +566,7 @@ const expiration_month = cardExpairyMonthCheckFn();
 
     if (!bankError) {
       try {
+        setIsLoader(true);
         (!bankList || bankList == null || bankList.length == 0)  && makePrimaryMethod(e, "bank");
         await BillingServices.addBank(bankPayload);
         hideNewCardHandler2();
@@ -566,6 +582,7 @@ const expiration_month = cardExpairyMonthCheckFn();
           bank_details_invalid: error.message,
         }));
       } finally {
+        setIsLoader(false);
         bankPayload = {
           contact: props.contactId,
           routing_number: "",
@@ -574,6 +591,9 @@ const expiration_month = cardExpairyMonthCheckFn();
           account_type: "checking",
           status: "inactive",
         };
+        setTimeout(() => {
+          setSuccessMessage("Bank details successfully added!")
+        }, 2000);
       }
     }
   };
@@ -606,6 +626,10 @@ const expiration_month = cardExpairyMonthCheckFn();
   };
 
   useEffect(()=>{},[formErrorMsg])
+  
+  useEffect(() => {
+     if (successMessage) setTimeout(() => { setSuccessMessage("") }, 5000)
+ }, [successMessage])
 
   return (
     <>
@@ -625,6 +649,9 @@ const expiration_month = cardExpairyMonthCheckFn();
                   </div> : formErrorMsg.bank_details_invalid ? <div className="importCPaymentError d-flex f-align-center f-justify-center">
                     <p>{formErrorMsg.bank_details_invalid}</p>
                   </div> : ""
+              }
+              {
+                successMessage !== "" && <SuccessAlert message={successMessage} />
               }
               <div className="billing_module">
                 {cardBankList && cardBankList.length > 0 &&
