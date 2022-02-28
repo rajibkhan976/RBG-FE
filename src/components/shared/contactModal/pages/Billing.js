@@ -531,11 +531,12 @@ const expiration_month = cardExpairyMonthCheckFn();
       account_number: bankAccountCheck,
       account_holder: bankNameCheck,
       account_type: "checking",
-      status: bankActivationCheckText,
+      status: bankList && bankList.length > 0 ? bankActivationCheckText : "active",
     };
 
     if (!bankError) {
       try {
+        setIsLoader(true)
         await BillingServices.addBank(bankPayload);
         cardBankList.length == 0 && makePrimaryMethod(e, "bank");
         hideNewCardHandler2();
@@ -551,6 +552,7 @@ const expiration_month = cardExpairyMonthCheckFn();
           bank_details_invalid: error.message,
         }));
       } finally {
+        setIsLoader(false)
         bankPayload = {
           contact: props.contactId,
           routing_number: "",
@@ -569,8 +571,20 @@ const expiration_month = cardExpairyMonthCheckFn();
       accountType: value,
     };
     if (props.contactId && value) {
-      BillingServices.makePrimary(payload);
-      setPrimaryType(value);
+      try {
+        setIsLoader(true)
+        BillingServices.makePrimary(payload);
+        setPrimaryType(value);
+      }
+      catch (error) {
+        console.log(error);
+        setFormErrorMsg((errorMessage) => ({
+          ...errorMessage,
+          bank_details_invalid: error.message,
+        }));
+      } finally {
+        setIsLoader(false)
+      }
     }
   };
 
@@ -582,7 +596,7 @@ const expiration_month = cardExpairyMonthCheckFn();
         {isLoader ? <Loader /> : ""}
         <h3 className="headingTabInner">Billing Info</h3>
         <p className="subheadingTabInner">
-          Explanatory text blurb should be here.
+        Manage your billing details here
         </p>
         {(!props.contact.is_payment_setup_remaining) ?
             <div className="twoBillingCardContainer">
