@@ -37,8 +37,6 @@ const Billing = (props) => {
     const [bankNameCheck, setBankNameCheck] = useState("");
     const [bankRoutingCheck, setBankRoutingCheck] = useState("");
 
-    const [noAccountAdded, setNoAccountAdded] = useState(false);
-
   // const [cardDataFormatting, setCardDataFormatting] = useState({
   //   contact: props.contactId,
   //   card_number: cardNumberOn,
@@ -81,8 +79,6 @@ const Billing = (props) => {
         setCardBankList(cardBankResponce.cards);
         setBankList(cardBankResponce.banks);
         setPrimaryType(cardBankResponce.primary);
-        setIsLoader(false);
-        console.log(cardBankResponce.cards);
       }
     } catch (error) {
       console.log(error);
@@ -90,9 +86,11 @@ const Billing = (props) => {
       setIsLoader(false);
     }
   };
+  useEffect(()=>{
+    console.log("primaryType changed", primaryType);
+  },[primaryType])
   useEffect(() => {
     fetchCardBank();
-    (bankList.length > 0 || cardBankList.length > 0) ? setNoAccountAdded(false) : setNoAccountAdded(true)
   }, []);
 
   const openNewCardHandler = () => {
@@ -122,8 +120,16 @@ const Billing = (props) => {
   };
 
   const hideNewCardHandler = () => {
-    setListCardAnnim(true);
-    setNewCardAnnim(false);
+    try {
+      setIsLoader(true)
+      setListCardAnnim(true);
+      setNewCardAnnim(false);
+    } catch (error) {
+      console.log(error);
+    }
+    finally {
+      setIsLoader(false)
+    }
   };
 
   const openNewCardHandler2 = () => {
@@ -146,8 +152,16 @@ const Billing = (props) => {
     hideNewCardHandler()
   };
   const hideNewCardHandler2 = () => {
-    setListBankAnnim(true);
-    setNewBankAnnim(false);
+    try {
+      setIsLoader(true)
+      setListBankAnnim(true);
+      setNewBankAnnim(false);
+    } catch (error) {
+      console.log(error);
+    }
+    finally {
+      setIsLoader(false)
+    }
   };
 
   const activeCreditCard = async (cardBank) => {
@@ -461,23 +475,20 @@ const expiration_month = cardExpairyMonthCheckFn();
 
     if (!cardError) {
       try {
-        setIsLoader(true)
+        (!cardBankList || cardBankList == null || cardBankList.length == 0) && makePrimaryMethod(e, "card");
         await BillingServices.addCard(cardPayload);
-        cardBankList.length == 0 && makePrimaryMethod(e, "card");
         hideNewCardHandler();
         fetchCardBank();
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
           card_details_invalid: "",
-        }));
-        setNoAccountAdded(false)
+        })); 
       } catch (error) {
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
           card_details_invalid: error.message,
         }));
       } finally {
-        setIsLoader(false)
         cardError = false;
       }
     }
@@ -540,16 +551,14 @@ const expiration_month = cardExpairyMonthCheckFn();
 
     if (!bankError) {
       try {
-        setIsLoader(true)
+        (!bankList || bankList == null || bankList.length == 0)  && makePrimaryMethod(e, "bank");
         await BillingServices.addBank(bankPayload);
-        cardBankList.length == 0 && makePrimaryMethod(e, "bank");
         hideNewCardHandler2();
         fetchCardBank();
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
           bank_details_invalid: "",
-        }));
-        setNoAccountAdded(false)
+        })); 
       } catch (error) {
         console.log(error);
         setFormErrorMsg((errorMessage) => ({
@@ -557,7 +566,6 @@ const expiration_month = cardExpairyMonthCheckFn();
           bank_details_invalid: error.message,
         }));
       } finally {
-        setIsLoader(false)
         bankPayload = {
           contact: props.contactId,
           routing_number: "",
@@ -572,7 +580,6 @@ const expiration_month = cardExpairyMonthCheckFn();
 
   useEffect(()=>{
     console.log(bankList.length > 0 || cardBankList.length > 0);
-    (bankList.length > 0 || cardBankList.length > 0) ? setNoAccountAdded(false) : setNoAccountAdded(true)
   },[bankList, cardBankList])
 
   const makePrimaryMethod = (e, value) => {
@@ -721,17 +728,31 @@ const expiration_month = cardExpairyMonthCheckFn();
                             />
                             <div className="activate">
                               <div class="customCheckbox">
-                                <input
-                                    type="checkbox"
-                                    name="credit"
-                                    defaultChecked={noAccountAdded}
-                                    onChange={(e) =>
-                                        e.target.checked
-                                            ? setCardActivationCheckText("active")
-                                            : setCardActivationCheckText("inactive")
+                                {
+                                  cardBankList.length > 0 &&
+                                  <input
+                                      type="checkbox"
+                                      name="credit"
+                                      onChange={(e) =>
+                                          e.target.checked
+                                              ? setCardActivationCheckText("active")
+                                              : setCardActivationCheckText("inactive")
+                                      }
+                                  /> 
                                     }
-                                    // checked={cardActivationCheck}
-                                />
+                                     
+                                  {cardBankList.length === 0 && 
+                                  <input
+                                      type="checkbox"
+                                      name="credit yyy"
+                                      defaultChecked
+                                      onChange={(e) =>
+                                          e.target.checked
+                                              ? setCardActivationCheckText("active")
+                                              : setCardActivationCheckText("inactive")
+                                      }
+                                      // checked={cardActivationCheck}
+                                  /> }
                                 <span></span>
                               </div>
                               {" "}
@@ -885,17 +906,33 @@ const expiration_month = cardExpairyMonthCheckFn();
                             />
                             <div className="activate">
                               <div class="customCheckbox">
-                                <input
-                                    type="checkbox"
-                                    name="credit"
-                                    defaultChecked={noAccountAdded}
-                                    onChange={(e) =>
-                                        e.target.checked
-                                            ? setBankActivationCheckText("active")
-                                            : setBankActivationCheckText("inactive")
+                              {
+                                  bankList.length > 0 &&
+                                  <input
+                                      type="checkbox"
+                                      name="bank"
+                                      onChange={(e) =>
+                                          e.target.checked
+                                              ? setBankActivationCheckText("active")
+                                              : setBankActivationCheckText("inactive")
+                                      }
+                                      // checked={cardActivationCheck}
+                                  />
                                     }
-                                    // checked={bankActivationCheck}
-                                />
+
+                                  {
+                                  bankList.length === 0 &&
+                                  <input
+                                      type="checkbox"
+                                      name="bank"
+                                      defaultChecked
+                                      onChange={(e) =>
+                                          e.target.checked
+                                              ? setBankActivationCheckText("active")
+                                              : setBankActivationCheckText("inactive")
+                                      }
+                                      // checked={cardActivationCheck}
+                                  />}
                                 <span></span>
                               </div>
                               {" "}
