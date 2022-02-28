@@ -37,6 +37,8 @@ const Billing = (props) => {
     const [bankNameCheck, setBankNameCheck] = useState("");
     const [bankRoutingCheck, setBankRoutingCheck] = useState("");
 
+    const [noAccountAdded, setNoAccountAdded] = useState(false);
+
   // const [cardDataFormatting, setCardDataFormatting] = useState({
   //   contact: props.contactId,
   //   card_number: cardNumberOn,
@@ -90,6 +92,7 @@ const Billing = (props) => {
   };
   useEffect(() => {
     fetchCardBank();
+    (bankList.length > 0 || cardBankList.length > 0) ? setNoAccountAdded(false) : setNoAccountAdded(true)
   }, []);
 
   const openNewCardHandler = () => {
@@ -467,6 +470,7 @@ const expiration_month = cardExpairyMonthCheckFn();
           ...errorMessage,
           card_details_invalid: "",
         }));
+        setNoAccountAdded(false)
       } catch (error) {
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
@@ -545,6 +549,7 @@ const expiration_month = cardExpairyMonthCheckFn();
           ...errorMessage,
           bank_details_invalid: "",
         }));
+        setNoAccountAdded(false)
       } catch (error) {
         console.log(error);
         setFormErrorMsg((errorMessage) => ({
@@ -564,6 +569,11 @@ const expiration_month = cardExpairyMonthCheckFn();
       }
     }
   };
+
+  useEffect(()=>{
+    console.log(bankList.length > 0 || cardBankList.length > 0);
+    (bankList.length > 0 || cardBankList.length > 0) ? setNoAccountAdded(false) : setNoAccountAdded(true)
+  },[bankList, cardBankList])
 
   const makePrimaryMethod = (e, value) => {
     let payload = {
@@ -714,7 +724,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                 <input
                                     type="checkbox"
                                     name="credit"
-                                    defaultChecked={(!cardBankList || cardBankList.length === 0) && (!bankList || bankList.length === 0)}
+                                    defaultChecked={noAccountAdded}
                                     onChange={(e) =>
                                         e.target.checked
                                             ? setCardActivationCheckText("active")
@@ -878,7 +888,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                 <input
                                     type="checkbox"
                                     name="credit"
-                                    defaultChecked={(!cardBankList || cardBankList.length === 0) && (!bankList || bankList.length === 0)}
+                                    defaultChecked={noAccountAdded}
                                     onChange={(e) =>
                                         e.target.checked
                                             ? setBankActivationCheckText("active")
