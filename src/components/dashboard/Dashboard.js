@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
 
+import DashboardControls from "./DashboardControl";
+
 
 const Dashboard = () => {
 
@@ -23,7 +25,7 @@ const Dashboard = () => {
       <a href="javascript:void(0)" target="_blank">
         {/* https://xd.adobe.com/view/3e68ffa8-df37-4768-8446-0f7de594fdf4-6b3b/screen/70c06959-7b7a-469e-9e62-73ea48cc35a3?fullscreen */}
         {/* <span className="prototypeBatch">Prototype</span> */}
-        <h1>Dashboard</h1>
+        {/* <h1>Dashboard</h1> */}
       </a>
       {loggedInUser && loggedInUser.isAssociationOwner ? <div className="userListBody">
         <div className="listBody">
@@ -43,6 +45,20 @@ const Dashboard = () => {
           </ul>
         </div>
       </div> : ''}
+
+      <div className="mrrWraper">
+        <h2 className="inDashboardHeader">Dashboard</h2>
+        <p className="userListAbout">Get a clear view of your task</p>
+        </div>
+        <div className="mrrContraolsWraper">
+          <div className="sideMenuHeader">
+            <h3>Controls</h3>
+            <p>Lorem ipsum dolor sit amet.</p>
+          </div>
+         
+         <DashboardControls />
+
+        </div>
     </>
   );
 };

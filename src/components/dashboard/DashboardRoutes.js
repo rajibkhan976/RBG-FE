@@ -16,7 +16,7 @@ const DashboardRouting = (props) => {
       <InnerLeftMenu routeMenu="dashboard"/>
       <div className="dashboardElComponent">
        
-        <div className="dashInnerStructure">
+        <div className="dashInnerStructure dashboardPage">
           <Dashboard/>
           <DashboardFooter />
         </div>

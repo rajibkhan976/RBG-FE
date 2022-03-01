@@ -3661,3 +3661,50 @@ ul.paymentUlInfo li.paymentAmtLi img {
   border-radius: 15px!important;
 }
 
+
+/* Dashboard Page */
+
+.mrrWraper {
+  flex: 0 0 calc(100% - 353px);
+  padding-top: 30px;
+}
+.mrrContraolsWraper {
+  flex: 0 0 353px;
+  background: #fff;
+  min-height: 100vh;
+}
+
+.dashInnerStructure.dashboardPage {
+  flex-direction: inherit;
+  padding-top: 0;
+}
+
+.mrrContraolsWraper .sideMenuHeader h3 {
+  margin-top: 0;
+  font-size: 16px;
+}
+
+.mrrContraolsWraper ul {
+  padding:0 25px;
+}
+
+.mrrContraolsWraper ul li {
+  margin-bottom: 20px;
+}
+
+.mrrContraolsWraper ul li:last-child {
+  margin-bottom: 0px;
+}
+
+.mrrContraolsWraper ul li label span {
+  font-size: 13px;
+  color: #305671;
+}
+
+img.dragImg {
+  float: right;
+  margin-top: 3px;
+}
+img.graphImg {
+  margin: 0 9px 0 6px;
+}
