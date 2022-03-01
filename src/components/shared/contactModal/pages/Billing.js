@@ -178,7 +178,6 @@ const Billing = (props) => {
         }));
         return cardString;
       } else {
-        // console.log("IF IN CARD - ELSE");
         cardString = "isOther";
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
@@ -199,23 +198,39 @@ const Billing = (props) => {
     if (cardNumber.length <= 19) {
       var formattedCardNumber = cardNumber.replace(/[^\d]/g, "");
       let cardType = testCardTypeFn(formattedCardNumber);
-
+      
       switch (cardType) {
         case "isAmex":
-          // console.log("IF IN CARD - AMEX");
+          console.log("IF IN CARD - AMEX");
           // AMEX-specific logic goes here
           formattedCardNumber = formattedCardNumber.substring(0, 15);
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+              bank_acc_Err: "",
+          }));
+          break;
+
+        case "isOther":
+          console.log("IF IN CARD - ELSE", formattedCardNumber.length);
+         formattedCardNumber = formattedCardNumber.substring(0, 16);
+         setFormErrorMsg((errorMessage) => ({
+           ...errorMessage,
+             bank_acc_Err: "",
+         }));
           break;
 
         default:
-           // console.log("IF IN CARD - ELSE");
-          formattedCardNumber = formattedCardNumber.substring(0, 16);
+          formattedCardNumber.length < 15 && setFormErrorMsg((errorMessage) => ({
+              ...errorMessage,
+                bank_acc_Err: "Please provide proper account number.",
+            }));
           break;
       }
 
       // Split the card number is groups of 4
       var cardNumberSections = formattedCardNumber.match(/\d{1,4}/g);
       if (formattedCardNumber.match(/\d{1,4}/g)) {
+        console.log("formattedCardNumber", formattedCardNumber);
         formattedCardNumber = cardNumberSections.join("-");
         setCardNumberCheck(formattedCardNumber);
         var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");
@@ -430,7 +445,6 @@ const Billing = (props) => {
 
 const expiration_year = cardExpairyYearCheckFn();
 const expiration_month = cardExpairyMonthCheckFn();
-
     let cardPayload = cardNumberOn.trim() !== "" && expiration_year !== undefined && expiration_month !== undefined && cardNameCheck.trim() !== "" ? {
       contact: props.contactId,
       card_number: cardNumberOn,
@@ -747,7 +761,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                           {formErrorMsg.card_num_Err && <p className="errorMsg">{formErrorMsg.card_num_Err}</p>}
                         </div>
                         <div className="formModule">
-                          <label>Card Holder Name</label>
+                          <label>Card Holder's Name</label>
                           <input
                               type="text"
                               placeholder="Ex. Adam Smith"
