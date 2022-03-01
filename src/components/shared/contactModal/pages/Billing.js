@@ -341,7 +341,7 @@ const Billing = (props) => {
         card_exp_Err: "",
       }));
     }
-    if (!cardCvvCheck || cardCvvCheck.length < 3 || cardCvvCheck == "000") {
+    if (cardCvvCheck !== "" && cardCvvCheck.length < 3) {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
         card_cvv_Err: "Card CVV number is not valid.",
@@ -437,7 +437,7 @@ const expiration_month = cardExpairyMonthCheckFn();
       expiration_year:
       expiration_year !== undefined && expiration_year,
       expiration_month: expiration_month !== undefined && expiration_month,
-      cvv: cardCvvCheck.trim() !== "" && cardCvvCheck,
+      cvv: cardCvvCheck.trim() !== "" ? cardCvvCheck : "",
       cardholder_name: cardNameCheck.trim() !== "" && cardNameCheck,
       status: cardBankList.length === 0 ? "active" : cardActivationCheckText,
     };
@@ -451,6 +451,10 @@ const expiration_month = cardExpairyMonthCheckFn();
           ...errorMessage,
           card_details_invalid: "",
         })); 
+        hideNewCardHandler();
+        setTimeout(() => {
+          setSuccessMessage("Card successfully added!")
+        }, 2000);
       } catch (error) {
         setIsLoader(false)
         setFormErrorMsg((errorMessage) => ({
@@ -468,10 +472,6 @@ const expiration_month = cardExpairyMonthCheckFn();
           cardholder_name: "",
           status: "",
         };
-        setTimeout(() => {
-          setSuccessMessage("Card successfully added!")
-        }, 2000);
-        hideNewCardHandler();
         fetchCardBank();
       }
     }
@@ -484,7 +484,6 @@ const expiration_month = cardExpairyMonthCheckFn();
 
     if (!bankRoutingCheck || bankRoutingCheck.length < 9) {
       bankError = true
-
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
         bank_routing_err: "Please enter proper Routing",
@@ -498,11 +497,13 @@ const expiration_month = cardExpairyMonthCheckFn();
     }
     if (!bankNameCheck) {
       bankError = true
+      console.log("here");
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
         bank_name_Err: "Please enter proper Account holder name",
       }));
     } else {
+      console.log("here");
       bankError = false
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
@@ -525,16 +526,16 @@ const expiration_month = cardExpairyMonthCheckFn();
 
     let bankPayload = {
       contact: props.contactId,
-      routing_number: bankRoutingCheck,
-      account_number: bankAccountCheck,
-      account_holder: bankNameCheck,
+      routing_number: bankRoutingCheck.trim() !== "" && bankRoutingCheck,
+      account_number: bankAccountCheck.trim() !== "" && bankAccountCheck,
+      account_holder: bankNameCheck.trim() !== "" && bankNameCheck,
       account_type: "checking",
       status: bankList && bankList.length > 0 ? bankActivationCheckText : "active",
     };
 
     if (!bankError) {
       setIsLoader(true)
-
+      console.log(bankError, bankPayload);
       try {
         (cardBankList.length == 0 && bankList.length == 0) && makePrimaryMethod(e, "bank");
         await BillingServices.addBank(bankPayload);
@@ -542,15 +543,18 @@ const expiration_month = cardExpairyMonthCheckFn();
           ...errorMessage,
           bank_details_invalid: "",
         })); 
-        fetchCardBank();
+        hideNewCardHandler2();
+        setTimeout(() => {
+          setSuccessMessage("Bank details successfully added!")
+        }, 2000);
       } catch (error) {
         setIsLoader(false)
-        console.log(error);
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
           bank_details_invalid: error.message,
         }));
       } finally {
+        bankError = false;
         bankPayload = {
           contact: props.contactId,
           routing_number: "",
@@ -559,10 +563,6 @@ const expiration_month = cardExpairyMonthCheckFn();
           account_type: "checking",
           status: "inactive",
         };
-        setTimeout(() => {
-          setSuccessMessage("Bank details successfully added!")
-        }, 2000);
-        hideNewCardHandler2();
         fetchCardBank();
       }
     }
