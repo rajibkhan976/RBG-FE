@@ -54,7 +54,7 @@ const MainComponent = () => {
   }
 
   useEffect(() => {
-    if (true) {
+    if (false) {
       const socket = io(socketUrl, {
         transports: ["websocket"],
         origins: "*"

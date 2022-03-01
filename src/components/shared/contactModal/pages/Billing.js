@@ -42,23 +42,6 @@ const Billing = (props) => {
     const addCardBtn = useRef(null)
     const addBankBtn = useRef(null)
 
-  // const [cardDataFormatting, setCardDataFormatting] = useState({
-  //   contact: props.contactId,
-  //   card_number: cardNumberOn,
-  //   expiration_year: cardExpairyCheck,
-  //   expiration_month: cardExpairyCheck,
-  //   cvv: cardCvvCheck,
-  //   cardholder_name: cardNameCheck,
-  //   status: cardActivationCheckText,
-  // });
-  // const [bankDataFormatting, setBankDataFormatting] = useState({
-  //   contact: props.contactId,
-  //   routing_number: bankRoutingCheck,
-  //   account_number: bankAccountCheck,
-  //   account_holder: bankNameCheck,
-  //   account_type: "checking",
-  //   status: bankActivationCheckText,
-  // });
   const [formErrorMsg, setFormErrorMsg] = useState({
       card_num_Err: "",
       card_name_Err: "",
@@ -91,9 +74,6 @@ const Billing = (props) => {
       setIsLoader(false);
     }
   };
-  useEffect(()=>{
-    console.log("primaryType changed", primaryType);
-  },[primaryType])
   useEffect(() => {
     fetchCardBank();
   }, []);
@@ -125,16 +105,8 @@ const Billing = (props) => {
   };
 
   const hideNewCardHandler = () => {
-    try {
-      setIsLoader(true)
-      setListCardAnnim(true);
-      setNewCardAnnim(false);
-    } catch (error) {
-      console.log(error);
-    }
-    finally {
-      setIsLoader(false)
-    }
+    setListCardAnnim(true);
+    setNewCardAnnim(false);
   };
 
   const openNewCardHandler2 = () => {
@@ -157,16 +129,8 @@ const Billing = (props) => {
     hideNewCardHandler()
   };
   const hideNewCardHandler2 = () => {
-    try {
-      setIsLoader(true)
-      setListBankAnnim(true);
-      setNewBankAnnim(false);
-    } catch (error) {
-      console.log(error);
-    }
-    finally {
-      setIsLoader(false)
-    }
+    setListBankAnnim(true);
+    setNewBankAnnim(false);
   };
 
   const activeCreditCard = async (cardBank) => {
@@ -178,12 +142,14 @@ const Billing = (props) => {
     };
 
     try {
+      setIsLoader(true)
       await BillingServices.activeCard(cardData);
-      fetchCardBank();
     } catch (error) {
       console.log(error);
     } finally {
+      setIsLoader(false)
       billingCardContainer.current.style.pointerEvents = "all"
+      fetchCardBank();
     }
   };
 
@@ -480,19 +446,16 @@ const expiration_month = cardExpairyMonthCheckFn();
     };
 
     if (!cardError) {
+      setIsLoader(true)
       try {
         (cardBankList.length == 0 && bankList.length == 0) && makePrimaryMethod(e, "card");
         await BillingServices.addCard(cardPayload);
-        hideNewCardHandler();
-        fetchCardBank();
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
           card_details_invalid: "",
         })); 
-        setTimeout(() => {
-          setSuccessMessage("Card successfully added!")
-        }, 2000);
       } catch (error) {
+        setIsLoader(false)
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
           card_details_invalid: error.message,
@@ -509,6 +472,11 @@ const expiration_month = cardExpairyMonthCheckFn();
           cardholder_name: "",
           status: "",
         };
+        setTimeout(() => {
+          setSuccessMessage("Card successfully added!")
+        }, 2000);
+        hideNewCardHandler();
+        fetchCardBank();
       }
     }
   };
@@ -570,19 +538,18 @@ const expiration_month = cardExpairyMonthCheckFn();
     };
 
     if (!bankError) {
+      setIsLoader(true)
+
       try {
         (cardBankList.length == 0 && bankList.length == 0) && makePrimaryMethod(e, "bank");
         await BillingServices.addBank(bankPayload);
-        hideNewCardHandler2();
-        fetchCardBank();
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
           bank_details_invalid: "",
         })); 
-        setTimeout(() => {
-          setSuccessMessage("Bank details successfully added!")
-        }, 2000);
+        fetchCardBank();
       } catch (error) {
+        setIsLoader(false)
         console.log(error);
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
@@ -598,13 +565,14 @@ const expiration_month = cardExpairyMonthCheckFn();
           account_type: "checking",
           status: "inactive",
         };
+        setTimeout(() => {
+          setSuccessMessage("Bank details successfully added!")
+        }, 2000);
+        hideNewCardHandler2();
+        fetchCardBank();
       }
     }
   };
-
-  useEffect(()=>{
-    console.log(bankList.length > 0 || cardBankList.length > 0);
-  },[bankList, cardBankList])
 
   const makePrimaryMethod = (e, value) => {
     if (props.contactId && value) {
@@ -614,7 +582,6 @@ const expiration_month = cardExpairyMonthCheckFn();
       };
       
       try {
-        setIsLoader(true)
         BillingServices.makePrimary(payload);
         setPrimaryType(value);
       }
@@ -624,8 +591,6 @@ const expiration_month = cardExpairyMonthCheckFn();
           ...errorMessage,
           bank_details_invalid: error.message,
         }));
-      } finally {
-        setIsLoader(false)
       }
     }
   };
