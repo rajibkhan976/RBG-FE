@@ -475,10 +475,10 @@ const expiration_month = cardExpairyMonthCheckFn();
           ...errorMessage,
           card_details_invalid: "",
         })); 
-        hideNewCardHandler();
         setTimeout(() => {
           setSuccessMessage("Card successfully added!")
         }, 2000);
+        hideNewCardHandler();
       } catch (error) {
         setIsLoader(false)
         setFormErrorMsg((errorMessage) => ({
@@ -497,6 +497,7 @@ const expiration_month = cardExpairyMonthCheckFn();
           status: "",
         };
         fetchCardBank();
+        console.log("FINISHED");
       }
     }
   };
@@ -561,10 +562,10 @@ const expiration_month = cardExpairyMonthCheckFn();
           ...errorMessage,
           bank_details_invalid: "",
         })); 
-        hideNewCardHandler2();
         setTimeout(() => {
           setSuccessMessage("Bank details successfully added!")
         }, 2000);
+        hideNewCardHandler2();
       } catch (error) {
         setIsLoader(false)
         setFormErrorMsg((errorMessage) => ({
@@ -587,6 +588,8 @@ const expiration_month = cardExpairyMonthCheckFn();
   };
 
   const makePrimaryMethod = (e, value) => {
+    setIsLoader(true);
+    
     if (props.contactId && value) {
       let payload = {
         contactID: props.contactId,
@@ -603,6 +606,8 @@ const expiration_month = cardExpairyMonthCheckFn();
           ...errorMessage,
           bank_details_invalid: error.message,
         }));
+      } finally {
+        fetchCardBank()
       }
     }
   };
