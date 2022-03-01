@@ -307,7 +307,7 @@ const Billing = (props) => {
     if (!cardNumberCheck) {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        card_num_Err: "Card number is not valid.",
+        card_num_Err: "Please enter a proper card number.",
       }));
       cardError = true;
     } else {
@@ -320,7 +320,7 @@ const Billing = (props) => {
     if (!cardNameCheck) {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        card_name_Err: "Card name is not valid.",
+        card_name_Err: "Please enter cardholder name.",
       }));
       cardError = true;
     } else {
@@ -431,16 +431,15 @@ const Billing = (props) => {
 const expiration_year = cardExpairyYearCheckFn();
 const expiration_month = cardExpairyMonthCheckFn();
 
-    let cardPayload = {
+    let cardPayload = cardNumberOn.trim() !== "" && expiration_year !== undefined && expiration_month !== undefined && cardNameCheck.trim() !== "" ? {
       contact: props.contactId,
-      card_number: cardNumberOn.trim() !== "" && cardNumberOn,
-      expiration_year:
-      expiration_year !== undefined && expiration_year,
-      expiration_month: expiration_month !== undefined && expiration_month,
+      card_number: cardNumberOn,
+      expiration_year:expiration_year,
+      expiration_month: expiration_month,
       cvv: cardCvvCheck.trim() !== "" ? cardCvvCheck : "",
-      cardholder_name: cardNameCheck.trim() !== "" && cardNameCheck,
+      cardholder_name: cardNameCheck,
       status: cardBankList.length === 0 ? "active" : cardActivationCheckText,
-    };
+    }: cardError = true
 
     if (!cardError) {
       setIsLoader(true)
@@ -483,59 +482,53 @@ const expiration_month = cardExpairyMonthCheckFn();
     let bankError = false;
 
     if (!bankRoutingCheck || bankRoutingCheck.length < 9) {
-      bankError = true
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
         bank_routing_err: "Please enter proper Routing",
       }));
+      bankError = true
     } else {
-      bankError = false
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
         bank_routing_err: "",
       }));
     }
-    if (!bankNameCheck) {
-      bankError = true
-      console.log("here");
+    if (!bankNameCheck || bankNameCheck.trim() === "") {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
         bank_name_Err: "Please enter proper Account holder name",
       }));
+      bankError = true
     } else {
-      console.log("here");
-      bankError = false
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
         bank_name_Err: "",
       }));
     }
     if (!bankAccountCheck || bankAccountCheck.length < 8) {
-      bankError = true
       setFormErrorMsg((errorMessage) => ({
-        ...errorMessage,
-        bank_acc_Err: "Bank account number not valid",
+      ...errorMessage,
+        bank_acc_Err: "Please provide proper account number.",
       }));
+      bankError = true
     } else {
-      bankError = false
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
         bank_acc_Err: "",
       }));
     }
 
-    let bankPayload = {
-      contact: props.contactId,
-      routing_number: bankRoutingCheck.trim() !== "" && bankRoutingCheck,
-      account_number: bankAccountCheck.trim() !== "" && bankAccountCheck,
-      account_holder: bankNameCheck.trim() !== "" && bankNameCheck,
-      account_type: "checking",
-      status: bankList && bankList.length > 0 ? bankActivationCheckText : "active",
-    };
+      let bankPayload = bankRoutingCheck.trim() !== "" && bankAccountCheck.trim() !== "" && bankNameCheck.trim() !== "" ? {
+        contact: props.contactId,
+        routing_number:  bankRoutingCheck,
+        account_number: bankAccountCheck,
+        account_holder: bankNameCheck,
+        account_type: "checking",
+        status: bankList && bankList.length > 0 ? bankActivationCheckText : "active",
+      } : bankError = true
 
     if (!bankError) {
       setIsLoader(true)
-      console.log(bankError, bankPayload);
       try {
         (cardBankList.length == 0 && bankList.length == 0) && makePrimaryMethod(e, "bank");
         await BillingServices.addBank(bankPayload);

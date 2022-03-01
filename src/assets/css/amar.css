@@ -2005,4 +2005,7 @@ input::-webkit-inner-spin-button {
   transform: none;
   margin-bottom: 15px;
 }
+.twoBillingCardContainer .addInList {
+  min-height: 474px;
+}
 /* Billing fixes */
