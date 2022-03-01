@@ -134,6 +134,8 @@ const Billing = (props) => {
   };
 
   const activeCreditCard = async (cardBank) => {
+    setIsLoader(true)
+
     billingCardContainer.current.style.pointerEvents = "none"
     let cardData = {
       billingID: cardBank && cardBank._id,
@@ -142,12 +144,10 @@ const Billing = (props) => {
     };
 
     try {
-      setIsLoader(true)
       await BillingServices.activeCard(cardData);
     } catch (error) {
       console.log(error);
     } finally {
-      setIsLoader(false)
       billingCardContainer.current.style.pointerEvents = "all"
       fetchCardBank();
     }
