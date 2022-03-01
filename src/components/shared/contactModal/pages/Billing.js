@@ -136,7 +136,6 @@ const Billing = (props) => {
   const activeCreditCard = async (cardBank) => {
     setIsLoader(true)
 
-    billingCardContainer.current.style.pointerEvents = "none"
     let cardData = {
       billingID: cardBank && cardBank._id,
       contactID: cardBank && props.contactId,
@@ -148,7 +147,6 @@ const Billing = (props) => {
     } catch (error) {
       console.log(error);
     } finally {
-      billingCardContainer.current.style.pointerEvents = "all"
       fetchCardBank();
     }
   };
@@ -305,7 +303,6 @@ const Billing = (props) => {
     e.preventDefault();
 
     let cardError = false;
-    addCardBtn.current.style.pointerEvents = "none"
 
     if (!cardNumberCheck) {
       setFormErrorMsg((errorMessage) => ({
@@ -461,7 +458,6 @@ const expiration_month = cardExpairyMonthCheckFn();
           card_details_invalid: error.message,
         }));
       } finally {
-        addCardBtn.current.style.pointerEvents = "all"
         cardError = false;
         cardPayload = {
           contact: "",
@@ -485,7 +481,6 @@ const expiration_month = cardExpairyMonthCheckFn();
     e.preventDefault();
 
     let bankError = false;
-    addBankBtn.current.style.pointerEvents = "none"
 
     if (!bankRoutingCheck || bankRoutingCheck.length < 9) {
       bankError = true
@@ -556,7 +551,6 @@ const expiration_month = cardExpairyMonthCheckFn();
           bank_details_invalid: error.message,
         }));
       } finally {
-        addBankBtn.current.style.pointerEvents = "all"
         bankPayload = {
           contact: props.contactId,
           routing_number: "",
