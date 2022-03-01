@@ -220,7 +220,7 @@ const Billing = (props) => {
           break;
 
         default:
-          formattedCardNumber.length < 15 && setFormErrorMsg((errorMessage) => ({
+          formattedCardNumber.length < 16 && setFormErrorMsg((errorMessage) => ({
               ...errorMessage,
                 bank_acc_Err: "Please provide proper account number.",
             }));
