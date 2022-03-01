@@ -165,7 +165,7 @@ const Billing = (props) => {
     let isDisc = discPattern.test(cardNum) === true;
 
     let cardString;
-
+    
     if (isAmex || isVisa || isMast || isDisc) {
       // console.log("IF IN CARD");
       if (isAmex) {
@@ -201,28 +201,38 @@ const Billing = (props) => {
       
       switch (cardType) {
         case "isAmex":
-          console.log("IF IN CARD - AMEX");
+          console.log("TYPE::::", cardType);
           // AMEX-specific logic goes here
           formattedCardNumber = formattedCardNumber.substring(0, 15);
           setFormErrorMsg((errorMessage) => ({
             ...errorMessage,
-              bank_acc_Err: "",
+              card_num_Err: "",
           }));
           break;
 
         case "isOther":
-          console.log("IF IN CARD - ELSE", formattedCardNumber.length);
-         formattedCardNumber = formattedCardNumber.substring(0, 16);
-         setFormErrorMsg((errorMessage) => ({
-           ...errorMessage,
-             bank_acc_Err: "",
-         }));
+          if(formattedCardNumber.length >= 15) {
+            console.log("TYPE::::", cardType, formattedCardNumber.length);
+
+            formattedCardNumber = formattedCardNumber.substring(0, 16);
+            setFormErrorMsg((errorMessage) => ({
+              ...errorMessage,
+              card_num_Err: "",
+            }));
+          } else {
+            console.log("TYPE::::", cardType, formattedCardNumber.length);
+            
+            setFormErrorMsg((errorMessage) => ({
+              ...errorMessage,
+              card_num_Err: "Please provide a proper card number.",
+            }));
+          }
           break;
 
         default:
-          formattedCardNumber.length < 16 && setFormErrorMsg((errorMessage) => ({
+          setFormErrorMsg((errorMessage) => ({
               ...errorMessage,
-                bank_acc_Err: "Please provide proper account number.",
+              card_num_Err: "Please provide a proper card number.",
             }));
           break;
       }
@@ -318,11 +328,11 @@ const Billing = (props) => {
     e.preventDefault();
 
     let cardError = false;
-
-    if (!cardNumberCheck) {
+    console.log(cardNumberCheck, formErrorMsg.card_num_Err);
+    if (!cardNumberCheck || formErrorMsg.card_num_Err) {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        card_num_Err: "Please enter a proper card number.",
+        card_num_Err: "Please provide a proper card number.",
       }));
       cardError = true;
     } else {
@@ -445,7 +455,8 @@ const Billing = (props) => {
 
 const expiration_year = cardExpairyYearCheckFn();
 const expiration_month = cardExpairyMonthCheckFn();
-    let cardPayload = cardNumberOn.trim() !== "" && expiration_year !== undefined && expiration_month !== undefined && cardNameCheck.trim() !== "" ? {
+
+    let cardPayload = cardNumberOn.trim() !== "" && cardNumberOn.length > 14 && expiration_year !== undefined && expiration_month !== undefined && cardNameCheck.trim() !== "" ? {
       contact: props.contactId,
       card_number: cardNumberOn,
       expiration_year:expiration_year,
