@@ -29,7 +29,15 @@ import UpdateNotification from "./shared/updateNotifications/UpdateNotification"
 import { io } from "socket.io-client";
 import * as actionTypes from "../actions/types";
 import GetPositionMiddleware from "../actions/GetPosition.middleware";
+import { NotificationServices } from "../services/notification/NotificationServices";
 
+
+// For socket io connection
+const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlProd;
+const socket = io(socketUrl, {
+  transports: ["websocket"],
+  origins: "*"
+});
 
 const MainComponent = () => {
   const pathURL = useLocation().pathname;
@@ -37,7 +45,7 @@ const MainComponent = () => {
   const [createButton, setCreateButton] = useState(null);
   const [setupMenuState, setSetupMenuState] = useState(false);
   const dispatch = useDispatch();
-
+  const loggedInUser = useSelector((state) => state.user.data);
 
   const toggleLeftSubMenu = (status) => {
     setshowInnerleftMenu(status);
@@ -46,22 +54,19 @@ const MainComponent = () => {
   const [isShowContact, setIsShowContact] = useState(false);
   const [isNewFeaturesAvailable, setIsNewFeaturesAvailable] = useState(false);
 
-  // For socket io connection
-  const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlLocal;
-
   const closeNotification = () => {
     setIsNewFeaturesAvailable(false);
   }
 
   useEffect(() => {
-    if (false) {
-      const socket = io(socketUrl, {
-        transports: ["websocket"],
-        origins: "*"
-      });
-      // client-side
+    if (true) {
+      // Socket connect
       socket.on("connect", () => {
         console.log("socket id", socket.id); // x8WIv7-mJelg7on_ALbx
+        if (loggedInUser) {
+          console.log('emit connected');
+          socket.emit("connected", loggedInUser.organizationCode);
+        }
       });
 
       //Listen to feature update
@@ -71,13 +76,24 @@ const MainComponent = () => {
       });
 
       // socket.emit("getFeatureUpdateNotification");
-
-      //Listen to payment notifications
-      socket.on("setNotification", (data) => {
-        console.log('Display new payment update notification', data);
-      });
     }
-  }, [socketUrl]);
+  }, []);
+
+  useEffect(() => {
+    //Listen to payment notifications
+    socket.on("setNotification", (data) => {
+      // Update notification store
+      let parseData = JSON.parse(data);
+      console.log('Display new payment update notification in main', parseData);
+      if (loggedInUser && (parseData.organizationCode === loggedInUser.organizationCode)) {
+        console.log('notification received dispatch');
+        dispatch({
+          type: actionTypes.NOTIFICATION_RECEIVED,
+          data: data
+        });
+      }
+    });
+  }, [loggedInUser]);
 
 
   useEffect(() => {
@@ -105,21 +121,6 @@ const MainComponent = () => {
 
   useEffect(() => {
     setSetupMenuState(false)
-  });
-  const [loggedInUser, setLoggedInUser] = useState({
-    name: null,
-    email: null,
-    prefix: null,
-    phone: null,
-    image: null,
-    group: null,
-    isEdit: false,
-    fullName: null,
-    association: null,
-    organization: null,
-    isShowPlan: false,
-    isOrganizationOwner: false,
-    isAssociationOwner: false,
   });
 
   /*
@@ -154,12 +155,39 @@ const MainComponent = () => {
           type: actionTypes.USER_DATA,
           data: data
         });
-        // setLoggedInUser(data);
       }
     } catch (e) {
       console.log('Error in fetch current user', e);
     }
   };
+
+  useEffect(() => {
+    /**
+     * Fetch notifications
+     */
+    fetchNotifications();
+  }, []);
+
+  /**
+   * Function to fetch notifications
+   * @returns
+   */
+  const fetchNotifications = async () => {
+
+    try {
+      const result = await NotificationServices.fetchNotifications(1);
+      if (result) {
+        // Update notification store
+        dispatch({
+          type: actionTypes.NOTIFICATION_DATA,
+          data: result.notifications,
+        });
+      }
+    } catch (e) {
+      console.log('Error while fetching notifications', e);
+    }
+  };
+
   return (
     <>
       <div className="mainComponent">

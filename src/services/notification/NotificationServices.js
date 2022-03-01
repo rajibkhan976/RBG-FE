@@ -14,7 +14,7 @@ export const NotificationServices = {
                 (page ? "/" + page : '') +     
                 (queryParams ? "?" + queryParams : ''), 
                 { headers: headers });
-            console.log('Fetch notification services result in async await : ', result);
+            // console.log('Fetch notification services result in async await : ', result);
             return result.data;
         } catch (e) {
             if(!typeof e.data === 'undefined') {

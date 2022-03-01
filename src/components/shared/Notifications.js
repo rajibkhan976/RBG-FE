@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import * as actionTypes from "../../actions/types";
 
 import BackArrow from "../../assets/images/back-arrow.png";
 import { utils } from "../../helpers";
@@ -12,6 +14,8 @@ const Notifications = () => {
   const [errorMsg, setErrorMsg] = useState("");
   const [notificationData, setNotificationData] = useState(null);
   const [notificationsListing, setNotificationListing] = useState(null);
+  const dispatch = useDispatch();
+  const userNotifications = useSelector((state) => state.notification.data);
 
   const goBackToNotificationListing = () => {
     setDetailNotification(null);
@@ -22,7 +26,7 @@ const Notifications = () => {
     let notificationType = e.target.parentNode.getAttribute("data-listing");
 
     //Filter notification by type
-    let filter = notificationData.filter(obj => {
+    let filter = userNotifications.filter(obj => {
       return obj._id === notificationType
     });
     setNotificationListing(filter[0].notifications);
@@ -30,36 +34,6 @@ const Notifications = () => {
     //Set detail notification type
     setDetailNotification(notificationType);
   };
-
-  useEffect(() => {
-    /**
-     * Fetch notifications
-     */
-    fetchNotifications();
-  }, []);
-
-  /**
-   * Function to fetch notifications
-   * @returns
-   */
-  const fetchNotifications = async () => {
-
-    let pageId = utils.getQueryVariable("page") || 1;
-    try {
-      setIsLoader(true);
-      const result = await NotificationServices.fetchNotifications(pageId);
-      console.log("Data", result);
-      if (result) {
-        setNotificationData(result.notifications);
-        setIsLoader(false);
-      }
-    } catch (e) {
-      setErrorMsg(e.message);
-    } finally {
-      setIsLoader(false);
-    }
-  };
-
 
   return (
     <div className="notificationsListing">
@@ -147,7 +121,7 @@ const Notifications = () => {
           </div>
           <p className="notificationHeadingPara">Catch all the notifications easily from a single place</p>
           <ul className="notifLabels">
-            {notificationData && notificationData.map((keyname, i) => {
+            {userNotifications && userNotifications.map((keyname, i) => {
               console.log('fs', keyname._id, i);
               return (
                 <li key={i} data-listing={keyname._id}>
@@ -205,12 +179,15 @@ const Notifications = () => {
                     </figure>
                   </div>
 
-                  <p>
+                  {/* <p>
+                    <span className="client">Sourav</span> paid <span className="ammount">$100</span> successfully
+                    for the product <span className="product">“Online course”</span>
+                  </p> */}
 
-                    <span className="client">{e.userName}</span> {e.paid}  paid <span className="ammount">{`$` + e.amount}</span> successfully
-                    for the product <span className="product">“{e.program}”</span>
-                  </p>
-
+                  <p
+                    dangerouslySetInnerHTML={{
+                      __html: e.notification
+                    }}></p>
                 </li>
               );
             })}

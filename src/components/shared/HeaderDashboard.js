@@ -50,11 +50,14 @@ function HeaderDashboard(props) {
   } = useStopwatch({ autoStart: false });
 
   const loggedInUser = useSelector((state) => state.user.data);
-
-
+  const userNotifications = useSelector((state) => state.notification);
+  console.log('notification log in header dashboard', userNotifications);
 
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
+    dispatch({
+      type: actionTypes.NOTIFICATION_READ,
+    });
   };
 
   const dispatch = useDispatch();
@@ -394,7 +397,7 @@ function HeaderDashboard(props) {
           <img src={setupModalStatus ? SettingIconBlue : SettingIcon} alt="" />
         </button>
         <button
-          className="btn buttonNotifications newNotifications"
+          className={userNotifications.isNew ? "btn buttonNotifications newNotifications" : "btn buttonNotifications"}
           onClick={(e) => toggleNotifications(e)}
         >
           <img src={NotificationIcon} alt="" />
