@@ -371,7 +371,7 @@ const Billing = (props) => {
     if (!cardNameCheck) {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        card_name_Err: "Please enter cardholder name.",
+        card_name_Err: "Please enter card holder's name.",
       }));
       cardError = true;
     } else {
@@ -548,7 +548,7 @@ const expiration_month = cardExpairyMonthCheckFn();
     if (!bankNameCheck || bankNameCheck.trim() === "") {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        bank_name_Err: "Please enter proper Account holder name",
+        bank_name_Err: "Please enter proper Account holder's name",
       }));
       bankError = true
     } else {
