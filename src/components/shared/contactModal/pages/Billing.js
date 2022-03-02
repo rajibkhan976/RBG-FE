@@ -338,19 +338,42 @@ const Billing = (props) => {
   const cardNameCheckHandler = (e) => {
     const re = /^[a-zA-Z ]*$/;
     if (e.target.value === "" || re.test(e.target.value)) {
-      setCardNameCheck(e.target.value);
+      if(e.target.value.length === 0) { 
+        setCardNameCheck(e.target.value)
+        setFormErrorMsg((errorMessage) => ({
+          ...errorMessage,
+          card_name_Err: "Please enter card holder's name.",
+        }))
+     } 
+     else {
+       setCardNameCheck(e.target.value)
+       setFormErrorMsg((errorMessage) => ({
+         ...errorMessage,
+         card_name_Err: "",
+       }))
+     }
     }
   };
 
   const cardExpairyCheckHandler = (e) => {
     let cardExpairy = e.target.value;
     
-    if(cardExpairy !=="" && cardExpairy.length)
-    {
+    if(cardExpairy !=="" && cardExpairy.length){
       if(cardExpairy[0]>1) 
       cardExpairy = "0" + cardExpairy[0]
     }
-    console.log("cardExpairy ::: ", cardExpairy);
+    console.log(cardExpairy.length);
+    if(cardExpairy.length === 0 || cardExpairy.length < 7) {
+      setFormErrorMsg((errorMessage) => ({
+        ...errorMessage,
+        card_exp_Err: "Card expiry date is not valid.",
+      }));
+    } else {
+      setFormErrorMsg((errorMessage) => ({
+        ...errorMessage,
+        card_exp_Err: "",
+      }));
+    }
 
     var formattedCardExpairy = cardExpairy.replace(/[^\d]/g, "");
     formattedCardExpairy = formattedCardExpairy.substring(0, 6);
@@ -367,7 +390,6 @@ const Billing = (props) => {
     setCardExpairyCheck(formattedCardExpairy);
     setCardExpairyMonthCheck(cardExpairySectionsMonth);
     setCardExpairyYearCheck(cardExpairySectionsYear);
-    //console.log(cardExpairySectionsMonth + "," + cardExpairySectionsYear);
   };
 
   const cardCvvCheckHandler = (e) => {
@@ -388,6 +410,18 @@ const Billing = (props) => {
 
   const bankAccountCheckHandler = (e) => {
     let accountNumber = e.target.value;
+    if(accountNumber.length === 0 || accountNumber.length < 9){
+      setFormErrorMsg((errorMessage) => ({
+      ...errorMessage,
+        bank_acc_Err: "Please provide proper account number.",
+      }));
+    }
+    else {
+      setFormErrorMsg((errorMessage) => ({
+      ...errorMessage,
+        bank_acc_Err: "",
+      }));
+    }
     var formattedAccountNumber = accountNumber.replace(/[^\d]/g, "");
     formattedAccountNumber = formattedAccountNumber.substring(0, 12);
     setBankAccountCheck(formattedAccountNumber);
@@ -396,12 +430,36 @@ const Billing = (props) => {
   const bankNameCheckHandler = (e) => {
     const re = /^[a-zA-Z ]*$/;
     if (e.target.value === "" || re.test(e.target.value)) {
+      if(e.target.value.length === 0) {
+        setFormErrorMsg((errorMessage) => ({
+          ...errorMessage,
+          bank_name_Err: "Please enter proper Account holder's name",
+        }));
+      }
+      else {
+        setFormErrorMsg((errorMessage) => ({
+          ...errorMessage,
+          bank_name_Err: "",
+        }));
+      }
       setBankNameCheck(e.target.value);
     }
   };
 
   const bankRoutingCheckHandler = (e) => {
     let bankRouting = e.target.value;
+    if(e.target.value.length === 0) {
+      setFormErrorMsg((errorMessage) => ({
+        ...errorMessage,
+        bank_routing_err: "Please enter proper Routing",
+      }));
+    }
+    else {
+      setFormErrorMsg((errorMessage) => ({
+        ...errorMessage,
+        bank_routing_err: "",
+      }));
+    }
     var formattedBankRouting = bankRouting.replace(/[^\d]/g, "");
     formattedBankRouting = formattedBankRouting.substring(0, 9);
     setBankRoutingCheck(formattedBankRouting);
@@ -602,7 +660,7 @@ const expiration_month = cardExpairyMonthCheckFn();
         bank_routing_err: "",
       }));
     }
-    if (!bankNameCheck || bankNameCheck.trim() === "") {
+    if (!bankNameCheck || bankNameCheck.trim() === "" || bankNameCheck.length === 0) {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
         bank_name_Err: "Please enter proper Account holder's name",
@@ -614,7 +672,7 @@ const expiration_month = cardExpairyMonthCheckFn();
         bank_name_Err: "",
       }));
     }
-    if (!bankAccountCheck || bankAccountCheck.length < 8) {
+    if (!bankAccountCheck || bankAccountCheck.length === 0) {
       setFormErrorMsg((errorMessage) => ({
       ...errorMessage,
         bank_acc_Err: "Please provide proper account number.",
