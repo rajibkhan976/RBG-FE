@@ -982,7 +982,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                           {formErrorMsg.bank_acc_Err && <p className="errorMsg">{formErrorMsg.bank_acc_Err}</p>}
                         </div>
                         <div className="formModule">
-                          <label>Account Holder Name</label>
+                          <label>Account Holder's Name</label>
                           <input
                               type="text"
                               placeholder="Ex. Adam Smith"
