@@ -250,7 +250,7 @@ const Billing = (props) => {
             
             setFormErrorMsg((errorMessage) => ({
               ...errorMessage,
-              card_num_Err: "Please provide a proper card number.",
+              card_num_Err: "Please provide a valid card number.",
             }));
           }
           break;
@@ -258,7 +258,7 @@ const Billing = (props) => {
         default:
           setFormErrorMsg((errorMessage) => ({
               ...errorMessage,
-              card_num_Err: "Please provide a proper card number.",
+              card_num_Err: "Please provide a valid card number.",
             }));
           break;
       }
@@ -358,7 +358,7 @@ const Billing = (props) => {
     if (!cardNumberCheck || formErrorMsg.card_num_Err) {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
-        card_num_Err: "Please provide a proper card number.",
+        card_num_Err: "Please provide a valid card number.",
       }));
       cardError = true;
     } else {
