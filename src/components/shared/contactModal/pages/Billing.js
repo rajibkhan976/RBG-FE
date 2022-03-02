@@ -99,7 +99,8 @@ const Billing = (props) => {
       bank_routing_err: "",
       bank_acc_Err: "",
       bank_name_Err: "",
-      card_details_invalid: ""
+      card_details_invalid: "",
+      bank_details_invalid: ""
     });
     hideNewCardHandler2()
   };
@@ -107,6 +108,18 @@ const Billing = (props) => {
   const hideNewCardHandler = () => {
     setListCardAnnim(true);
     setNewCardAnnim(false);
+
+    setFormErrorMsg({
+      card_num_Err: "",
+      card_name_Err: "",
+      card_exp_Err: "",
+      card_cvv_Err: "",
+      bank_routing_err: "",
+      bank_acc_Err: "",
+      bank_name_Err: "",
+      card_details_invalid: "",
+      bank_details_invalid: ""
+    });
   };
 
   const openNewCardHandler2 = () => {
@@ -124,13 +137,26 @@ const Billing = (props) => {
       bank_routing_err: "",
       bank_acc_Err: "",
       bank_name_Err: "",
-      card_details_invalid: ""
+      card_details_invalid: "",
+      bank_details_invalid: ""
     });
     hideNewCardHandler()
   };
   const hideNewCardHandler2 = () => {
     setListBankAnnim(true);
     setNewBankAnnim(false);
+
+    setFormErrorMsg({
+      card_num_Err: "",
+      card_name_Err: "",
+      card_exp_Err: "",
+      card_cvv_Err: "",
+      bank_routing_err: "",
+      bank_acc_Err: "",
+      bank_name_Err: "",
+      card_details_invalid: "",
+      bank_details_invalid: ""
+    });
   };
 
   const activeCreditCard = async (cardBank) => {
