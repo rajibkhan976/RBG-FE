@@ -181,20 +181,36 @@ const Billing = (props) => {
 
   const testCardTypeFn = (cardNum) => {
     let visaPattern = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
+    let visaPatternTwo = /^4\d{3}(| |-)(?:\d{4}\1){2}\d{4}$/;
+    let visaPatternThree = /^4\d{12}(?:\d{3})?$/;
     let mastPattern = /^(?:5[1-5][0-9]{14})$/;
+    let mastPatternTwo = /^5[1-5]\d{14}$/;
+    let mastPatternThree = /^5[1-5]\d{2}(| |-)(?:\d{4}\1){2}\d{4}$/;
     let amexPattern = /^(?:3[47][0-9]{13})$/;
+    let amexPatternTwo = /^3[47]\d{13,14}$/;
+    let amexPatternThree = /^3[47]\d{1,2}(| |-)\d{6}\1\d{6}$/;
     let discPattern = /^(?:6(?:011|5[0-9][0-9])[0-9]{12})$/;
+    let discPatternTwo = /^6(?:011|5\d\d)(| |-)(?:\d{4}\1){2}\d{4}$/
+    let discPatternThree = /^(?:6011\d{12})|(?:65\d{14})$/
 
     let isAmex = amexPattern.test(cardNum) === true;
+    let isAmexTwo = amexPatternTwo.test(cardNum) === true;
+    let isAmexThree = amexPatternThree.test(cardNum) === true;
     let isVisa = visaPattern.test(cardNum) === true;
+    let isVisaTwo = visaPatternTwo.test(cardNum) === true
+    let isVisaThree = visaPatternThree.test(cardNum) === true
     let isMast = mastPattern.test(cardNum) === true;
+    let isMastTwo = mastPatternTwo.test(cardNum) === true
+    let isMastThree = mastPatternThree.test(cardNum) === true
     let isDisc = discPattern.test(cardNum) === true;
+    let isDiscTwo = discPatternTwo.test(cardNum) === true
+    let isDiscThree = discPatternThree.test(cardNum) === true
 
     let cardString;
     
-    if (isAmex || isVisa || isMast || isDisc) {
+    if (isAmex || isAmexTwo || isAmexThree || isVisa || isVisaTwo || isVisaThree || isMast || isMastThree || isMastTwo || isDisc || isDiscTwo || isDiscThree) {
       // console.log("IF IN CARD");
-      if (isAmex) {
+      if (isAmex || isAmexTwo || isAmexThree) {
         // console.log("IF IN CARD - AMEX");
         // AMEX-specific logic goes here
         cardString = "isAmex";
@@ -204,12 +220,44 @@ const Billing = (props) => {
         }));
         return cardString;
       } else {
-        cardString = "isOther";
+        if (isAmex || isAmexTwo || isAmexThree){
+          cardString = "isAmex";
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            card_num_Err: "",
+          }));
+          return cardString;
+        }
+        else if (isVisa || isVisaTwo || isVisaThree) {
+          cardString = "isVisa";
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            card_num_Err: "",
+          }));
+          return cardString;
+        }
+        else if (isMast || isMastThree || isMastTwo) {
+        cardString = "isMast";
         setFormErrorMsg((errorMessage) => ({
-          ...errorMessage,
-          card_num_Err: "",
-        }));
-        return cardString;
+            ...errorMessage,
+            card_num_Err: "",
+          }));
+          return cardString;
+        }
+        else if (isDisc || isDiscTwo || isDiscThree) {
+          cardString = "isDisc";
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            card_num_Err: "",
+          }));
+          return cardString;
+        }
+        else {
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            card_num_Err: "Card number is not valid.",
+          }));
+        }
       }
     } else {
       setFormErrorMsg((errorMessage) => ({
@@ -236,26 +284,35 @@ const Billing = (props) => {
           }));
           break;
 
-        case "isOther":
-          if(formattedCardNumber.length >= 15) {
-            console.log("TYPE::::", cardType, formattedCardNumber.length);
-
-            formattedCardNumber = formattedCardNumber.substring(0, 16);
-            setFormErrorMsg((errorMessage) => ({
-              ...errorMessage,
-              card_num_Err: "",
-            }));
-          } else {
-            console.log("TYPE::::", cardType, formattedCardNumber.length);
-            
-            setFormErrorMsg((errorMessage) => ({
-              ...errorMessage,
-              card_num_Err: "Please provide a valid card number.",
-            }));
-          }
+        case "isVisa":
+          console.log("TYPE::::", cardType);
+          formattedCardNumber = formattedCardNumber.substring(0, 16);
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            card_num_Err: "",
+          }));
           break;
 
+        case "isMast" || "isDisc":
+          console.log("TYPE::::", cardType);
+          formattedCardNumber = formattedCardNumber.substring(0, 16);
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            card_num_Err: "",
+          }));
+          break;
+
+        case "isDisc":
+          console.log("TYPE::::", cardType);
+          formattedCardNumber = formattedCardNumber.substring(0, 16);
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            card_num_Err: "",
+          }));
+          break;  
+  
         default:
+          console.log("cardType", cardType);
           setFormErrorMsg((errorMessage) => ({
               ...errorMessage,
               card_num_Err: "Please provide a valid card number.",
@@ -482,7 +539,7 @@ const Billing = (props) => {
 const expiration_year = cardExpairyYearCheckFn();
 const expiration_month = cardExpairyMonthCheckFn();
 
-    let cardPayload = cardNumberOn.trim() !== "" && cardNumberOn.length > 14 && expiration_year !== undefined && expiration_month !== undefined && cardNameCheck.trim() !== "" ? {
+    let cardPayload = cardNumberOn.trim() !== "" && expiration_year !== undefined && expiration_month !== undefined && cardNameCheck.trim() !== "" ? {
       contact: props.contactId,
       card_number: cardNumberOn,
       expiration_year:expiration_year,
