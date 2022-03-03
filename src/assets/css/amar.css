@@ -2009,3 +2009,81 @@ input::-webkit-inner-spin-button {
   min-height: 474px;
 }
 /* Billing fixes */
+
+/* Add a product */
+.imageUpload .profileUpload {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  cursor: pointer;
+  height: auto;
+  width: auto;
+}
+.formControl .profile .profileText {
+  color: #9baebc;
+  font-size: 13px;
+  width: auto;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 15px 0 0;
+  align-items: center;
+  margin: 0;
+}
+.formControl .profile.imageUpload {
+  padding: 0;
+  width: 100%;
+}
+.profile.imageUpload .visualPicture {
+  background: #E9EFF5;
+  border: 1px solid #9BAEBC;
+  flex: 0 0 63px;
+  width: 63px;
+  height: 63px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: min(auto, cover);
+  border-radius: 50%;
+  margin-right: 20px;
+  position: static;
+  overflow: hidden;
+}
+.modalForm .formControl + .formControl {
+  margin-top: 18px;
+}
+.cmnFormSelectBody .loaderOuter .loaderInner {
+  position: static;
+  transform: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+}
+.cmnFormSelectBody .loaderOuter {
+  position: static;
+  height: auto;
+  background: transparent;
+}
+.bodytransactionForm .paymentTypes .paymentType + .paymentType {
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+.productDownPayment .forDownpayment .cmnFormRow:first-child .tooltiptextInfo {
+  left: 70px;
+  right: auto;
+}
+.productDownPayment .forDownpayment .cmnFormRow:first-child .tooltiptextInfo::after {
+  left: 43px;
+}
+.forDownpayment .toggleBtn {
+  padding: 0;
+}
+.forDownpayment .labelWithInfo.paymentTime {
+  display: flex;
+}
+/* Add a product */

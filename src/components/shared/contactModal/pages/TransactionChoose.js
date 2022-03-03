@@ -447,6 +447,7 @@ const TransactionChoose = (props) => {
                 setProductTransactionPayment={setProductTransactionPayment}
                 chooseTransctionTypePOS={chooseTransctionTypePOS}
                 backToTransList={props.backToTransList}
+                contactId={props.contactId}
               />
             </div>
           )}

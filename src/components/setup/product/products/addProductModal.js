@@ -132,6 +132,9 @@ const AddProductModal = (props) => {
       case "category":
         setProductData({ ...productData, category: elemValue });
         break;
+
+        default:
+          break;
     }
 
   }
@@ -220,7 +223,7 @@ const AddProductModal = (props) => {
       {errorMsg &&
         <ErrorAlert message={errorMsg} extraClass="productPopupMsg"></ErrorAlert>
       }
-      <div className="modalBackdrop">
+      <div className="modalBackdrop modalProductAdd">
         {isLoader ? <Loader /> : ''}
         <div className="slickModalBody">
           <div className="slickModalHeader">
@@ -235,10 +238,10 @@ const AddProductModal = (props) => {
                 <div className="formControl">
                   <label>Select Category</label>
                   <select name="category" onChange={handleChange}>
-                    {categories.map(cat => {
+                    {categories.map((cat, i) => {
                       return (
                         <>
-                          <option value={cat._id} selected={(productData.category === cat._id) ? "selected" : ""}>{cat.name}</option>
+                          <option value={cat._id} defaultValue={(productData.category === cat._id) ? "selected" : ""} key={i}>{cat.name}</option>
                         </>
                       );
                     })}
@@ -253,16 +256,16 @@ const AddProductModal = (props) => {
                 </div>
                 <div className="formControl">
                   <label>Upload Product Picture</label>
-                  <div className="profile">
+                  <div className="profile imageUpload d-flex f-align-center">
                     <div className="profileUpload">
                       <input type="file" onChange={(e) => handleImageUpload(e)} />
                       {/* <span>Upload</span> */}
                     </div>
-                    <div className="profilePicture">
+                    <figure className="profilePicture visualPicture">
                       <img src={productData.imageUrl} alt="" />
-                    </div>
-                    <div className="profileText"> Product Picture</div>
-
+                    </figure>
+                    <div className="profileText uploadImageText"> Product Picture</div>
+                    <span class="staticUpload">Upload</span>
                   </div>
                 </div>
                 <div className="formControl">
@@ -271,11 +274,13 @@ const AddProductModal = (props) => {
                     {/* <button className="addColor active" style={{ backgroundColor: "#834140" }}></button>
                   <button className="addColor" style={{ backgroundColor: "#369ED5" }}></button>
                   <button className="addColor" style={{ backgroundColor: "#797D62" }}></button> */}
-                    {colorSize.colors.map(color => {
+                    {colorSize.colors.map((color, i) => {
                       if (color.type === "single") {
                         return <button className={(productData.colors.indexOf(color.label) != -1) ? "addColor active" : "addColor"}
                           style={{ backgroundColor: color.colorcode }}
-                          onClick={(event) => handleColor(event, color.label)}></button>
+                          onClick={(event) => handleColor(event, color.label)}
+                          key={i}  
+                        ></button>
                       }
                     })}
                   </div>
@@ -286,9 +291,9 @@ const AddProductModal = (props) => {
                     {/* <button className="size active">S</button>
                   <button className="size active">M</button>
                   <button className="size">L</button> */}
-                    {colorSize.sizes.map(size => {
+                    {colorSize.sizes.map((size, i) => {
                       return <button className={(productData.size.indexOf(size.size) != -1) ? "size active" : "size"}
-                        onClick={(event) => handleSize(event, size.size)}>{size.size}</button>
+                        onClick={(event) => handleSize(event, size.size)} key={i}>{size.size}</button>
                     })}
                   </div>
                 </div>
@@ -296,7 +301,7 @@ const AddProductModal = (props) => {
                   <label>Price</label>
                   <div className="formLeft">
                     <input type="text" name="price" placeholder="Ex: 99" onChange={handleChange} value={productData.price} />
-                    <span>* default currency is<strong> USD</strong></span>
+                    {/* <span>* default currency is<strong> USD</strong></span> */}
                   </div>
                   <div className="formRight">
                     <label>
@@ -311,7 +316,7 @@ const AddProductModal = (props) => {
                       Add Sales Tax</label>
                   </div>
                 </div>
-                <div className="modalbtnHolder">
+                <div className="modalbtnHolder w-100">
                   <button type="submit" name="save"
                     className="saveNnewBtn"
                     onClick={() => setBtnType("Save")}><span>{(isEditing) ? "Update" : "Save"}</span><img src={arrow_forward} alt="" /></button>

@@ -1,16 +1,9 @@
 import React, { useEffect, useState, useRef, createRef } from "react";
 import aaroww from "../../../../../assets/images/arrow_forward.svg";
 import info_icon from "../../../../../assets/images/infos.svg";
-import bell from "../../../../../assets/images/bell.svg";
 import help from "../../../../../assets/images/help.svg";
-import updown from "../../../../../assets/images/updown.png";
 import deleteBtn from "../../../../../assets/images/deleteBtn.svg";
-import downpayment from "../../../../../assets/images/no_downpayment.svg";
-import modalTopIcon from "../../../../../assets/images/setupicon5.svg";
 import crossTop from "../../../../../assets/images/cross.svg";
-import profileAvatar from "../../../../../assets/images/camera.svg";
-import chooseImg from "../../../../../assets/images/chooseImg.svg";
-import arrow_forward from "../../../../../assets/images/arrow_forward.svg";
 import card from "../../../../../assets/images/card.svg";
 import cashCurrent from "../../../../../assets/images/cashCurrent.svg";
 import cardActive from "../../../../../assets/images/cardActive.svg";
@@ -24,40 +17,47 @@ import smallTick from "../../../../../assets/images/smallTick.svg";
 import paymentFail from "../../../../../assets/images/paymentFailed.svg";
 import paySuccess from "../../../../../assets/images/paySuccess.png";
 import Loader from "../../../../shared/Loader";
-import { Scrollbars } from "react-custom-scrollbars-2";
+import { BillingServices } from "../../../../../services/billing/billingServices";
 
 const ProductPayment = (props) => {
   const [isLoader, setIsLoader] = useState(false);
   const [downPayments, setDownPayments] = useState([]);
   const [downPaymentActive, setDownPaymentActive] = useState(false);
-  const [tempDownPayObj, setTempDownPayObj] = useState(null);
-  const [deleteId, setDeleteId] = useState(null);
   const [payLater, setPayLater] = useState(false);
   const [newPay, setNewPay] = useState("card");
   const [newPayModal, setNewPayModal] = useState(false);
   const [productPaymentFailed, setProductPaymentFailed] = useState(false);
-  const newDownPaymentAdd = useRef(null);
   const downPaymentList = useRef(null);
+  const [totalAmt, setTotalAmt] = useState(0);
+  const [totalTaxAmt, setTotalTaxAmt] = useState(0);
+  const [outStandingAmt, setOutstandingAmt] = useState(0);
+  const [cardBankList, setCardBankList] = useState([]);
+  const [bankList, setBankList] = useState([]);
+  const [payments, setPayments] = useState([])
+  const downpaymentsContainer = useRef(null);
+
+  const fetchCardBank = async () => {
+    try {
+      console.log("Fetching cards");
+      setIsLoader(true);
+      let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
+      console.log("cardBankResponce", cardBankResponce);
+      if (cardBankResponce) {
+        setCardBankList(cardBankResponce.cards);
+        setBankList(cardBankResponce.banks);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoader(false);
+    }
+  };
 
   const checkAndSetDownPayments = (e) => {
-    if (e.target.checked && downPayments.length === 0) {
+    if (e.target.checked) {
       setDownPaymentActive(true);
-      setDownPayments([
-        ...downPayments,
-        {
-          id: "dp-" + downPayments.length,
-          status: "inactive",
-          title: "",
-          amount: "",
-          paylater: false,
-          payDate: null,
-          payMode: "Cash",
-          payStatus: "Unpaid",
-        },
-      ]);
     } else {
       setDownPaymentActive(false);
-      setDownPayments([]);
     }
   };
 
@@ -82,22 +82,9 @@ const ProductPayment = (props) => {
   //   add more down payment
   const addNewDownPayment = (e, i) => {
     e.preventDefault();
-    console.log(downPayments);
-
     try {
-      setDownPayments([
-        ...downPayments,
-        {
-          id: "dp-" + downPayments.length,
-          status: "inactive",
-          title: "",
-          amount: "",
-          paylater: false,
-          payDate: null,
-          payMode: "cash",
-          payStatus: "Unpaid",
-        },
-      ]);
+      console.log("dp"+ downPayments.length, downpaymentsContainer.current);
+      // setDownPayments(downPayPlaceholder)
     } catch (err) {
       console.log(err);
     }
@@ -153,18 +140,48 @@ const ProductPayment = (props) => {
   }
 
   useEffect(() => {
-    if (downPayments.length > 0) {
-      let downPaymentsPlaceholder = downPayments;
-      downPaymentsPlaceholder.forEach((dp, i) => {
-        if (i !== downPaymentsPlaceholder.length) {
-          dp.status = "active";
-        }
-      });
-    }
+    
   }, [downPayments]);
+
+  useEffect(() => {
+    const getTotalCart = () => {
+      if (props.cartState.length > 0) {
+        const totalPlaceholder = 0;
+        const totalTaxPlaceholder = 0;
+
+        const sumAmt = props.cartState.reduce(
+          (previousValue, currentValue) =>
+            previousValue + currentValue.price * currentValue.qnty,
+          totalPlaceholder
+        );
+          const taxtAmt = props.cartState.reduce(
+            (prevTax, currentTax)=>
+            prevTax + (currentTax.tax && currentTax.price*0.1),
+            totalTaxPlaceholder
+          )
+
+        setTotalAmt(parseFloat(sumAmt).toFixed(2));
+        setTotalTaxAmt(parseFloat(taxtAmt).toFixed(2));
+        setOutstandingAmt((parseFloat(sumAmt)+parseFloat(taxtAmt)).toFixed(2))
+
+        console.log("sumAmt", sumAmt, taxtAmt);
+      } else {
+        console.log("Sum now", props.cartState);
+        setTotalAmt(0.00);
+        setTotalTaxAmt(0.00);
+      }
+    };
+    getTotalCart();
+  }, [props.cartState, totalAmt, totalTaxAmt]);
+
+  useEffect(()=>{
+    fetchCardBank();
+    console.log(props.cartState);
+  },[])
 
   return (
     <>
+      {isLoader && <Loader />}
       {!props.successProductPayment && 
         <form className="productPaymentTransaction">
           <div className="gridCol">
@@ -190,25 +207,153 @@ const ProductPayment = (props) => {
               </header>
               {downPaymentActive && (
                 <div className="bodytransactionForm" ref={downPaymentList}>
-                  {downPayments &&
-                    downPayments.length > 0 &&
-                    downPayments.map((downpay, i) => (
-                      <div className="newDownpayment" key={"dp" + i}>
-                        {downpay.status === "inactive" ? (
-                          <button
-                            className="addNewDownpayment"
-                            onClick={(e) => addNewDownPayment(e, i)}
-                          >
-                            + Add
-                          </button>
-                        ) : (
+                  <div className="downPaymentsCreated" ref={downpaymentsContainer}>
+                    {(downPayments &&
+                      downPayments.length > 0) ?
+                      downPayments.map((downpay, i) => (
+                        <div className="newDownpayment" key={"dp" + i} id={"dp" + (downPayments && downPayments.length > 0) && downPayments.length}>
                           <button
                             className="delNewDownpayment"
                             onClick={(e) => deleteNewDownPayment(e, downpay, i)}
                           >
                             <img src={deleteBtn} alt="delete" /> Remove
                           </button>
-                        )}
+                          <div className="transaction_form products forDownpayment">
+                            <div className="cmnFormRow gap">
+                              <label className="labelWithInfo">
+                                <span className="labelHeading">Title</span>
+                                <span className="infoSpan">
+                                  <img src={info_icon} alt="" />
+                                  <span className="tooltiptextInfo">
+                                    Lorem Ipsum is simply dummy text of the printing
+                                    and typesetting industry.
+                                  </span>
+                                </span>
+                              </label>
+                              <div className="cmnFormField">
+                                <input
+                                  className="cmnFieldStyle"
+                                  defaultValue={downpay.title}
+                                />
+                              </div>
+                            </div>
+                            <div className="cmnFormRow gap">
+                              <div className="leftSecTransaction">
+                                <label className="labelWithInfo">
+                                  <span className="labelHeading">Amount</span>
+                                  <span className="infoSpan">
+                                    <img src={info_icon} alt="" />
+                                    <span className="tooltiptextInfo amount">
+                                      Lorem Ipsum is simply dummy text of the
+                                      printing and typesetting industry.
+                                    </span>
+                                  </span>
+                                </label>
+                                <div className="cmnFormField preField">
+                                  <div className="unitAmount">$</div>
+                                  <input
+                                    type="number"
+                                    placeholder="149"
+                                    className="editableInput numberType cmnFieldStyle"
+                                    defaultValue={downpay.amount}
+                                  />
+                                </div>
+                              </div>
+                              <div className="rightSecTransaction">
+                                <label className="labelWithInfo paymentTime">
+                                  <span className="labelHeading">
+                                    I want to Pay Later
+                                  </span>
+                                  <label
+                                    className={
+                                      downpay.paylater
+                                        ? "toggleBtn active"
+                                        : "toggleBtn"
+                                    }
+                                  >
+                                    <input
+                                      type="checkbox"
+                                      name="check-communication"
+                                      onChange={(e) => addpayLater(e, i)}
+                                      defaultValue={false}
+                                    />
+                                    <span className="toggler"></span>
+                                  </label>
+                                </label>
+                                {!downpay.paylater && (
+                                  <div className="paymentNow display">
+                                    <p>
+                                      Payment date <span>Now</span>
+                                    </p>
+                                  </div>
+                                )}
+                                {downpay.paylater && (
+                                  <div className="paymentNow">
+                                    <input
+                                      type="date"
+                                      placeholder="mm/dd/yyyy"
+                                      className="cmnFieldStyle"
+                                      onChange={(e) => addPayDate(e, i)}
+                                    />
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <div className="cmnFormRow gap">
+                              <div className="leftSecTransaction">
+                                <label className="labelWithInfo">
+                                  <span className="labelHeading">Payment Mode</span>
+                                  <span className="infoSpan">
+                                    <img src={info_icon} alt="" />
+                                    <span className="tooltiptextInfo paymentType">
+                                      Lorem Ipsum is simply dummy text of the
+                                      printing and typesetting industry.
+                                    </span>
+                                  </span>
+                                </label>
+                                <div className="cmnFormField">
+                                  <select
+                                    className="selectBox"
+                                    defaultValue={downpay.payMode}
+                                  >
+                                    <option value="Cash">Card</option>
+                                    <option value="Card">Cash</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div className="rightSecTransaction">
+                                <label className="labelWithInfo">
+                                  <span className="labelHeading">
+                                    Payment Status
+                                  </span>
+                                  <span className="infoSpan">
+                                    <img src={info_icon} alt="" />
+                                    <span className="tooltiptextInfo paymentStatus">
+                                      Lorem Ipsum is simply dummy text of the
+                                      printing and typesetting industry.
+                                    </span>
+                                  </span>
+                                </label>
+                                <select
+                                  className="selectBox"
+                                  defaultValue={downpay.payStatus}
+                                >
+                                  <option value="Unpaid">Unpaid</option>
+                                  <option value="Paid">Paid</option>
+                                </select>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )): ""}
+                    </div>
+                    <div className="newDownpayment">
+                          <button
+                            className="addNewDownpayment"
+                            onClick={(e)=>addNewDownPayment(e)}
+                          >
+                            + Add
+                          </button>
                         <div className="transaction_form products forDownpayment">
                           <div className="cmnFormRow gap">
                             <label className="labelWithInfo">
@@ -224,7 +369,6 @@ const ProductPayment = (props) => {
                             <div className="cmnFormField">
                               <input
                                 className="cmnFieldStyle"
-                                defaultValue={downpay.title}
                               />
                             </div>
                           </div>
@@ -246,7 +390,6 @@ const ProductPayment = (props) => {
                                   type="number"
                                   placeholder="149"
                                   className="editableInput numberType cmnFieldStyle"
-                                  defaultValue={downpay.amount}
                                 />
                               </div>
                             </div>
@@ -255,29 +398,23 @@ const ProductPayment = (props) => {
                                 <span className="labelHeading">
                                   I want to Pay Later
                                 </span>
-                                <label
-                                  className={
-                                    downpay.paylater
-                                      ? "toggleBtn active"
-                                      : "toggleBtn"
-                                  }
-                                >
+                                <label className="toggleBtn">
                                   <input
                                     type="checkbox"
                                     name="check-communication"
-                                    onChange={(e) => addpayLater(e, i)}
+                                    // onChange={(e) => addpayLater(e, i)}
                                     defaultValue={false}
                                   />
                                   <span className="toggler"></span>
                                 </label>
                               </label>
-                              {!downpay.paylater && (
+                              {/* {!downpay.paylater && ( */}
                                 <div className="paymentNow display">
                                   <p>
                                     Payment date <span>Now</span>
                                   </p>
                                 </div>
-                              )}
+                              {/* )}
                               {downpay.paylater && (
                                 <div className="paymentNow">
                                   <input
@@ -287,7 +424,7 @@ const ProductPayment = (props) => {
                                     onChange={(e) => addPayDate(e, i)}
                                   />
                                 </div>
-                              )}
+                              )} */}
                             </div>
                           </div>
                           <div className="cmnFormRow gap">
@@ -305,7 +442,7 @@ const ProductPayment = (props) => {
                               <div className="cmnFormField">
                                 <select
                                   className="selectBox"
-                                  defaultValue={downpay.payMode}
+                                  defaultValue={"Card"}
                                 >
                                   <option value="Cash">Card</option>
                                   <option value="Card">Cash</option>
@@ -327,7 +464,7 @@ const ProductPayment = (props) => {
                               </label>
                               <select
                                 className="selectBox"
-                                defaultValue={downpay.payStatus}
+                                defaultValue={"Unpaid"}
                               >
                                 <option value="Unpaid">Unpaid</option>
                                 <option value="Paid">Paid</option>
@@ -336,7 +473,6 @@ const ProductPayment = (props) => {
                           </div>
                         </div>
                       </div>
-                    ))}
                 </div>
               )}
             </div>
@@ -358,12 +494,14 @@ const ProductPayment = (props) => {
               <div className="bodytransactionForm">
                 <p className="paymentTypes">Cards</p>
                 <div className="chooseTransactionType paymentTypes">
-                  <label className="paymentType active">
+                  {console.log("cardBankList", cardBankList)}
+                { cardBankList && cardBankList.length > 0 && cardBankList.map((cardItem, i)=> 
+                  <label className={cardItem.status === "active" ? "paymentType active" : "paymentType"}> {/*active*/}
                     <span className="circleRadio">
                       <input
                         type="radio"
                         name="billingTransaction"
-                        defaultChecked
+                        defaultChecked={cardItem.status === "active"}
                       />
                       <span></span>
                     </span>
@@ -372,61 +510,36 @@ const ProductPayment = (props) => {
                     </span>
                     <span className="paymentModuleInfos">
                       <span className="accNumber">
-                        Credit Card ending with <strong>1234</strong>
+                        Credit Card ending with <strong>{cardItem.last4}</strong>
                       </span>
-                      <span className="accinfod">Expires 07 / 25</span>
+                      <span className="accinfod">Expires {cardItem.expiration_month}/{cardItem.expiration_year}</span>
                     </span>
                   </label>
-                  <label className="paymentType">
-                    <span className="circleRadio">
-                      <input type="radio" name="billingTransaction" />
-                      <span></span>
-                    </span>
-                    <span className="cardImage">
-                      <img src={card} alt="card" />
-                    </span>
-                    <span className="paymentModuleInfos">
-                      <span className="accNumber">
-                        Credit Card ending with <strong>1234</strong>
-                      </span>
-                      <span className="accinfod">Expires 07 / 25</span>
-                    </span>
-                  </label>
+                )}
                 </div>
 
                 <p className="paymentTypes">Bank</p>
-                <div className="chooseTransactionType paymentTypes">
-                  <label className="paymentType">
-                    <span className="circleRadio">
-                      <input type="radio" name="billingTransaction" />
-                      <span></span>
-                    </span>
-                    <span className="cardImage">
-                      <img src={card} alt="card" />
-                    </span>
-                    <span className="paymentModuleInfos">
-                      <span className="accNumber">
-                        Bank account ending with <strong>1234</strong>
-                      </span>
-                      <span className="accinfod">Routing Number 10000100</span>
-                    </span>
-                  </label>
-                  <label className="paymentType">
-                    <span className="circleRadio">
-                      <input type="radio" name="billingTransaction" />
-                      <span></span>
-                    </span>
-                    <span className="cardImage">
-                      <img src={card} alt="card" />
-                    </span>
-                    <span className="paymentModuleInfos">
-                      <span className="accNumber">
-                        Bank account ending with <strong>1234</strong>
-                      </span>
-                      <span className="accinfod">Routing Number 10000100</span>
-                    </span>
-                  </label>
-                </div>
+
+                  <div className="chooseTransactionType paymentTypes">
+                  {console.log("bankList", bankList)}
+                    { bankList && bankList.length > 0 && bankList.map((bankItem, i)=> 
+                      <label className="paymentType">
+                        <span className="circleRadio">
+                          <input type="radio" name="billingTransaction" />
+                          <span></span>
+                        </span>
+                        <span className="cardImage">
+                          <img src={card} alt="card" />
+                        </span>
+                        <span className="paymentModuleInfos">
+                          <span className="accNumber">
+                            Bank account ending with <strong>{bankItem.last4}</strong>
+                          </span>
+                          <span className="accinfod">Routing Number {bankItem.routing_number}</span>
+                        </span>
+                      </label>
+                    )}
+                  </div>
               </div>
             </div>
           </div>
@@ -439,23 +552,23 @@ const ProductPayment = (props) => {
                 <ul className="programInfosUl paymentOverviews">
                   <li>
                     <div className="labelSpan">Total item Price</div>
-                    <div className="informationSpan">$600.00</div>
+                    <div className="informationSpan">$ {totalAmt}</div>
                   </li>
                   <li>
                     <div className="labelSpan">Tax</div>
-                    <div className="informationSpan">$20.00</div>
+                    <div className="informationSpan">$ {totalTaxAmt}</div>
                   </li>
                 </ul>
                 <ul className="totalPaymentUl">
                   <li>Total</li>
-                  <li>$2287.00</li>
+                  <li>$ {parseFloat(totalAmt) + parseFloat(totalTaxAmt)}</li>
                 </ul>
               </div>
             </div>
             <div className="cartProductInner outstandingOverviewProduct">
               <header className="informHeader d-flex f-align-center f-justify-between">
                 <h5>Outstanding</h5>
-                <h3>$ 420.00</h3>
+                <h3>$ {outStandingAmt}</h3>
               </header>
               <div className="bodytransactionForm">
                 <div className="cmnFormRow">
@@ -544,7 +657,7 @@ const ProductPayment = (props) => {
             <div className="totalCartValue cartProductInner f-row">
               <div className="billingAmt">
                 <p>Billing Total</p>
-                <h4>$ 349.00</h4>
+                <h4>$ {parseFloat(totalAmt) + parseFloat(totalTaxAmt)}</h4>
               </div>
               <div className="buyBtns">
                 <button className="saveNnewBtn" onClick={(e) => billPayment(e)}>
