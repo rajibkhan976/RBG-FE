@@ -448,7 +448,7 @@ const Billing = (props) => {
 
   const bankRoutingCheckHandler = (e) => {
     let bankRouting = e.target.value;
-    if(e.target.value.length === 0) {
+    if(e.target.value.length === 0 || e.target.value.length < 9) {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
         bank_routing_err: "Please enter proper Routing",
@@ -756,12 +756,14 @@ const expiration_month = cardExpairyMonthCheckFn();
           bank_details_invalid: error.message,
         }));
       } finally {
-        fetchCardBank()
+        setIsLoader(false)
       }
     }
   };
 
   useEffect(()=>{},[formErrorMsg])
+
+  useEffect(()=>{},[primaryType, cardBankList, bankList])
   
   useEffect(() => {
      if (successMessage) setTimeout(() => { setSuccessMessage("") }, 5000)
@@ -798,9 +800,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                             type="radio"
                             name="primary"
                             onChange={(e) => makePrimaryMethod(e, "card")}
-                            defaultChecked={
-                                primaryType === "card"
-                            }
+                            defaultChecked={primaryType === "card" ? true : false}
                         />
                         <span></span>
                       </div>
@@ -979,9 +979,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                           type="radio"
                           name="primary"
                           onChange={(e) => makePrimaryMethod(e, "bank")}
-                          defaultChecked={
-                              primaryType === "bank"
-                          }
+                          defaultChecked={primaryType === "bank" ? true : false}
                       />
                       <span></span>
                     </div>
