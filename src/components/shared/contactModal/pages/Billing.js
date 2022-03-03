@@ -536,6 +536,14 @@ const Billing = (props) => {
           return false;
         }
       }
+      else {
+        setFormErrorMsg((errorMessage) => ({
+          ...errorMessage,
+          card_exp_Err: "Card expiry date is not valid.",
+        }));
+        cardError = true;
+        return false;
+      }
     };
 
     const cardExpairyMonthCheckFn = () => {
