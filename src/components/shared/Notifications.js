@@ -121,12 +121,11 @@ const Notifications = () => {
           </div>
           <p className="notificationHeadingPara">Catch all the notifications easily from a single place</p>
           <ul className="notifLabels">
-            {userNotifications && userNotifications.map((keyname, i) => {
-              console.log('fs', keyname._id, i);
+            {userNotifications && userNotifications.map((notification, i) => {
               return (
-                <li key={i} data-listing={keyname._id}>
-                  <p>{keyname._id}</p>
-                  <span>{keyname.count}</span>
+                <li key={i} data-listing={notification._id}>
+                  <p>{notification._id}</p>
+                  <span>{notification.unread}</span>
                   <button
                     className="inlinle-btn btn-link"
                     onClick={(e) => showNOtifDetails(e)}

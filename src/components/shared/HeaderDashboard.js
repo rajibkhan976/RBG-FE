@@ -29,6 +29,7 @@ import { CallSetupService } from "../../services/setup/callSetupServices";
 import { useStopwatch } from 'react-timer-hook';
 import { ImportContactServices } from "../../services/contact/importContact";
 import * as actionTypes from "../../actions/types";
+import { NotificationServices } from "../../services/notification/NotificationServices";
 const { Device } = require('twilio-client');
 
 function HeaderDashboard(props) {
@@ -175,7 +176,7 @@ function HeaderDashboard(props) {
     }
   };
   useEffect(() => {
-    
+
     if (Object.keys(connection).length) {
       connection.on("disconnect", function (conn) {
         setDeviceMessage("Ready");
@@ -189,13 +190,13 @@ function HeaderDashboard(props) {
       });
 
     }
-    
+
   }, [connection]);
   useEffect(() => {
     // getContactDetails("+18124051848")
     fetchCapabilityToken();
     device.on("incoming", async (connection) => {
-      
+
       setConnection(connection);
       if (connection._direction === "INCOMING") {
         setDeviceMessage("Incoming Call from " + connection.parameters.From);
@@ -291,6 +292,19 @@ function HeaderDashboard(props) {
     props.setupMenuState && setSetupModalStatus(false)
   }, [props.setupMenuState])
 
+  //Mark all notifications as read
+  const markAllAsRead = async() => {
+    console.log('Mark all as read');
+    try {
+      let markNotifications = await NotificationServices.markAllAsRead();
+      if (markNotifications) {
+        console.log('Mark all as read success', markNotifications);
+      }
+    } catch (e) {
+      console.log('Error in mark all as read', e);
+    }
+  }
+
   return (
     <>
       <div className="dashboardHeader">
@@ -325,9 +339,9 @@ function HeaderDashboard(props) {
                 <span className="callBtn green">
                   <img src={callIcon3} alt="" />
                 </span>
-                <span 
+                <span
                   className="actionName"
-                  >Call</span>
+                >Call</span>
               </button>
               <button className="listDropBtn" onClick={tglActionList}>
                 <img src={blueDownArrow} alt="" />
@@ -370,7 +384,7 @@ function HeaderDashboard(props) {
           </div>
           <div className="rightDetails">
             <p>{deviceMessage}</p>
-            
+
             <div className="d-flex">
               <button className="btn callBtn green" onClick={acceptConnection}>
                 <img src={callIcon2} alt="" />
@@ -529,7 +543,7 @@ function HeaderDashboard(props) {
             <div className="sideMenuHeader">
               <h3>
                 Notifications{" "}
-                <button className="inlinle-btn btn-link">
+                <button className="inlinle-btn btn-link" onClick={markAllAsRead}>
                   Mark all as read
                 </button>
               </h3>
