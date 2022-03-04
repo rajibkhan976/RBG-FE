@@ -1,19 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import aaroww from "../../../../../assets/images/arrow_forward.svg";
-import categoryTag from "../../../../../assets/images/categoryTag.svg";
-import productImgPlaceholder from "../../../../../assets/images/proImg1.png";
 import arrow_forward from "../../../../../assets/images/arrow_forward.svg";
 import info_icon from "../../../../../assets/images/infos.svg";
 import plus_icon from "../../../../../assets/images/plus_icon.svg";
 import Loader from "../../../Loader";
 import cart_icon from "../../../../../assets/images/cart.svg";
 import delete_icon from "../../../../../assets/images/delete_icon_grey.svg";
-import cross from "../../../../../assets/images/cross.svg";
-import cross_white from "../../../../../assets/images/close_icon_white.svg";
-import product_icon from "../../../../../assets/images/product_icon.svg";
-import camera_icon from "../../../../../assets/images/camera.svg";
+import placeholder_product_image from "../../../../../assets/images/placeholder_product_image.png"
 import { ErrorAlert } from "../../../messages";
-import Scrollbars from "react-custom-scrollbars-2";
 import ProductPayment from "./ProductPayment";
 import AddProductModal from "../../../../setup/product/products/addProductModal";
 import { utils } from "../../../../../helpers";
@@ -192,12 +185,12 @@ const ProductTransaction = (props) => {
   const selectProductToAdd = (item, index) => {
     setSelectedProduct(item);
     setShowProductList(false);
-    console.log("here", item);
   };
 
   const addProduct = (e) => {
     e.preventDefault();
     setShowProductList(!showProductList);
+    fetchProducts()
   };
 
   const getCartItems = () => {
@@ -495,6 +488,7 @@ const ProductTransaction = (props) => {
                             onClick={(e) => {
                               e.preventDefault();
                               setAddProductModal(true);
+                              setShowProductList(false)
                             }}
                           >
                             + Add New Product
@@ -509,7 +503,7 @@ const ProductTransaction = (props) => {
                                 }
                               >
                                 <figure>
-                                    <img src={config.bucketUrl+productItem.image} alt={productItem.name} />
+                                    <img src={productItem && productItem.image ? config.bucketUrl+productItem.image : placeholder_product_image} alt={productItem.name} />
                                 </figure>
                                 <div className="productItemShorts">
                                   <span>{productItem.name}</span>
@@ -823,7 +817,7 @@ const ProductTransaction = (props) => {
                           <figure
                             className="productImg"
                             style={{
-                              backgroundImage: "url(" + cartItem.image + ")",
+                              backgroundImage: cartItem.image ? "url(" + cartItem.image + ")" : "url("+placeholder_product_image+")",
                             }}
                           ></figure>
                           <div className="choiceOpt f-1">

@@ -22,6 +22,9 @@ import { BillingServices } from "../../../../../services/billing/billingServices
 const ProductPayment = (props) => {
   const [isLoader, setIsLoader] = useState(false);
   const [downPayments, setDownPayments] = useState([]);
+  const [createdDownPayment, setCreatedDownpayment] = useState({
+    isPayNow: 0
+  })
   const [downPaymentActive, setDownPaymentActive] = useState(false);
   const [payLater, setPayLater] = useState(false);
   const [newPay, setNewPay] = useState("card");
@@ -35,6 +38,13 @@ const ProductPayment = (props) => {
   const [bankList, setBankList] = useState([]);
   const [payments, setPayments] = useState([])
   const downpaymentsContainer = useRef(null);
+
+  const [hasError, setHasError] = useState(false)
+  const [downPaymentErrorMsg, setDownPaymentErrorMsg] = useState({
+      title_Err: "",
+      amount_Err: "",
+      payLater_Err: "",
+    });
 
   const fetchCardBank = async () => {
     try {
@@ -63,19 +73,16 @@ const ProductPayment = (props) => {
 
   //   toggle pay later for down payment
   const addpayLater = (e, i) => {
-    let downPaymentsPlaceholder = [...downPayments];
-    downPaymentsPlaceholder[i].paylater = e.target.checked ? true : false;
-    console.log("downPaymentsPlaceholder", downPaymentsPlaceholder);
-
     try {
-      setDownPayments(downPaymentsPlaceholder);
-      console.log(
-        "downPaymentsPlaceholder",
-        "changed",
-        downPaymentsPlaceholder
-      );
+      setIsLoader(true)
+      setCreatedDownpayment({
+        ...createdDownPayment,
+        isPayNow: e.target.checked ? 1 : 0
+      })
     } catch (error) {
       console.log(error);
+    } finally{
+      setIsLoader(false)
     }
   };
 
@@ -139,6 +146,10 @@ const ProductPayment = (props) => {
     props.setCartState([])
   }
 
+  useEffect(()=>{
+    console.log("createdDownPayment", createdDownPayment);
+  },[createdDownPayment])
+
   useEffect(() => {
     
   }, [downPayments]);
@@ -173,6 +184,48 @@ const ProductPayment = (props) => {
     };
     getTotalCart();
   }, [props.cartState, totalAmt, totalTaxAmt]);
+
+  const addDownPayTitle = (e) => {
+    if(e.target.value.trim().length > 0) {
+      setCreatedDownpayment({
+        ...createdDownPayment,
+        title: e.target.value
+      })
+      setHasError(false);
+      setDownPaymentErrorMsg({
+        ...downPaymentErrorMsg,
+        title_Err: ""
+      })
+    }
+    else {
+      setHasError(true);
+      setDownPaymentErrorMsg({
+        ...downPaymentErrorMsg,
+        title_Err: "Title cannot be blank"
+      })
+    }
+  }
+
+  const addDownPayAmount = (e) => {
+    if(e.target.value.trim().length > 0) {
+      setCreatedDownpayment({
+        ...createdDownPayment,
+        amount: e.target.value
+      })
+      setHasError(false);
+      setDownPaymentErrorMsg({
+        ...downPaymentErrorMsg,
+        amount_Err: ""
+      })
+    }
+    else {
+      setHasError(true);
+      setDownPaymentErrorMsg({
+        ...downPaymentErrorMsg,
+        amount_Err: "Amount cannot be nothing"
+      })
+    }    
+  }
 
   useEffect(()=>{
     fetchCardBank();
@@ -266,7 +319,7 @@ const ProductPayment = (props) => {
                                   </span>
                                   <label
                                     className={
-                                      downpay.paylater
+                                      createdDownPayment && createdDownPayment.isPayNow === 1
                                         ? "toggleBtn active"
                                         : "toggleBtn"
                                     }
@@ -274,20 +327,20 @@ const ProductPayment = (props) => {
                                     <input
                                       type="checkbox"
                                       name="check-communication"
-                                      onChange={(e) => addpayLater(e, i)}
-                                      defaultValue={false}
+                                      // onChange={(e) => addpayLater(e, i)}
+                                      // defaultValue={false}
                                     />
                                     <span className="toggler"></span>
                                   </label>
                                 </label>
-                                {!downpay.paylater && (
+                                {downpay.isPayNow === 0 && (
                                   <div className="paymentNow display">
                                     <p>
                                       Payment date <span>Now</span>
                                     </p>
                                   </div>
                                 )}
-                                {downpay.paylater && (
+                                {downpay.paylater === 1 && (
                                   <div className="paymentNow">
                                     <input
                                       type="date"
@@ -351,11 +404,12 @@ const ProductPayment = (props) => {
                           <button
                             className="addNewDownpayment"
                             onClick={(e)=>addNewDownPayment(e)}
+                            disabled={hasError}
                           >
                             + Add
                           </button>
                         <div className="transaction_form products forDownpayment">
-                          <div className="cmnFormRow gap">
+                          <div className={downPaymentErrorMsg.title_Err !== "" ? "cmnFormRow gap error" : "cmnFormRow gap"}>
                             <label className="labelWithInfo">
                               <span className="labelHeading">Title</span>
                               <span className="infoSpan">
@@ -369,11 +423,13 @@ const ProductPayment = (props) => {
                             <div className="cmnFormField">
                               <input
                                 className="cmnFieldStyle"
+                                onChange={(e)=>addDownPayTitle(e)}
                               />
                             </div>
+                            {downPaymentErrorMsg.title_Err && <p className="errorMsg">{downPaymentErrorMsg.title_Err}</p>}
                           </div>
                           <div className="cmnFormRow gap">
-                            <div className="leftSecTransaction">
+                            <div className={downPaymentErrorMsg.amount_Err !== "" ? "leftSecTransaction error" : "leftSecTransaction"}>
                               <label className="labelWithInfo">
                                 <span className="labelHeading">Amount</span>
                                 <span className="infoSpan">
@@ -390,41 +446,46 @@ const ProductPayment = (props) => {
                                   type="number"
                                   placeholder="149"
                                   className="editableInput numberType cmnFieldStyle"
+                                  onChange={(e)=>addDownPayAmount(e)}
+                                  defaultValue={outStandingAmt}
                                 />
                               </div>
+                            {downPaymentErrorMsg.amount_Err && <p className="errorMsg">{downPaymentErrorMsg.amount_Err}</p>}
                             </div>
                             <div className="rightSecTransaction">
                               <label className="labelWithInfo paymentTime">
                                 <span className="labelHeading">
                                   I want to Pay Later
                                 </span>
-                                <label className="toggleBtn">
+                                <label className={
+                                  createdDownPayment.isPayNow === 1 ? "toggleBtn active" : "toggleBtn"}
+                                >
                                   <input
                                     type="checkbox"
                                     name="check-communication"
-                                    // onChange={(e) => addpayLater(e, i)}
-                                    defaultValue={false}
+                                    onChange={(e) => addpayLater(e)}
+                                    defaultChecked={createdDownPayment.isPayNow === 1 ? true : false}
                                   />
                                   <span className="toggler"></span>
                                 </label>
                               </label>
-                              {/* {!downpay.paylater && ( */}
+                              {createdDownPayment.isPayNow === 0 && (
                                 <div className="paymentNow display">
                                   <p>
                                     Payment date <span>Now</span>
                                   </p>
                                 </div>
-                              {/* )}
-                              {downpay.paylater && (
+                              )}
+                              {createdDownPayment.isPayNow === 1 && (
                                 <div className="paymentNow">
                                   <input
                                     type="date"
                                     placeholder="mm/dd/yyyy"
                                     className="cmnFieldStyle"
-                                    onChange={(e) => addPayDate(e, i)}
+                                    onChange={(e) => addPayDate(e)}
                                   />
                                 </div>
-                              )} */}
+                              )}
                             </div>
                           </div>
                           <div className="cmnFormRow gap">
@@ -494,7 +555,7 @@ const ProductPayment = (props) => {
               <div className="bodytransactionForm">
                 <p className="paymentTypes">Cards</p>
                 <div className="chooseTransactionType paymentTypes">
-                  {console.log("cardBankList", cardBankList)}
+                  {/* {console.log("cardBankList", cardBankList)} */}
                 { cardBankList && cardBankList.length > 0 && cardBankList.map((cardItem, i)=> 
                   <label className={cardItem.status === "active" ? "paymentType active" : "paymentType"}> {/*active*/}
                     <span className="circleRadio">
@@ -521,7 +582,7 @@ const ProductPayment = (props) => {
                 <p className="paymentTypes">Bank</p>
 
                   <div className="chooseTransactionType paymentTypes">
-                  {console.log("bankList", bankList)}
+                  {/* {console.log("bankList", bankList)} */}
                     { bankList && bankList.length > 0 && bankList.map((bankItem, i)=> 
                       <label className="paymentType">
                         <span className="circleRadio">
@@ -872,8 +933,6 @@ const ProductPayment = (props) => {
                           </div>
                         </div>
                       </div>
-                      {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraClass="addStatsPopMsg"/> }
-                { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraClass="addStatsPopMsg"/>} */}
 
                       <div className="modalbtnHolder">
                         <button type="reset" className="saveNnewBtn orangeBtn">
@@ -933,8 +992,6 @@ const ProductPayment = (props) => {
                           </div>
                         </div>
                       </div>
-                      {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraClass="addStatsPopMsg"/> }
-                        { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraClass="addStatsPopMsg"/>} */}
 
                       <div className="modalbtnHolder">
                         <button
