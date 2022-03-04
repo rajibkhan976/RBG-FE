@@ -4,11 +4,14 @@ import icon_trans from "../../../../assets/images/icon_trans.svg";
 import wwConnect from "../../../../assets/images/wwConnect.svg";
 import wwConnect2 from "../../../../assets/images/wwConnect2.svg";
 import list_board_icon from "../../../../assets/images/list_board_icon.svg";
-import CompleteTransactionModal from "./transaction/CompleteTransactionModal";
+import cashSmallWhite from "../../../../assets/images/cash_icon_small_white.svg";
+import cardSmallWhite from "../../../../assets/images/card_icon_small_white.svg";
+import RefundModal from "./transaction/RefundModal";
 import { Scrollbars } from "react-custom-scrollbars-2";
-
+import AlertMessage from "../../messages/alertMessage";
 import { TransactionServices } from "../../../../services/transaction/transactionServices";
 import Loader from "../../Loader";
+import CompleteTransactionModal from "./transaction/CompleteTransactionModal";
 
 const Transaction = (props) => {
   const [transactionList, setTransactionList] = useState([]);
@@ -16,17 +19,45 @@ const Transaction = (props) => {
   const [isLoaderTab, setIsLoaderTab] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [refundModal, setRefundModal] = useState(false);
+  const [completeTransModal, setCompleteTransModal] = useState(false);
   const [oldTransactionList, setOldTransactionList] = useState({});
   const [upcomingTransaction, setUpcomingTransaction] = useState([]);
   const [upcomingPagination, setUpcomingPagination ] = useState({});
   const [upcomingOptIndex, setUpcomingOptIndex] = useState();
+  const [oldOptIndex, setOldOptIndex] = useState();
   const [isScroll, setIsScroll] = useState(false);
+  const [completeTransElement, setCompleteTransElement] = useState();
+  const [successMsg, setSuccessMsg] = useState(null);
   const upcomingOptRef = useRef();
+  const oldOptRef = useRef();
 
 
   const openCloseRefundModal = (param) => {
     setRefundModal(param);
   };
+
+  const openCloseCompleteTrans = (param, item) => {
+    setCompleteTransModal(param);
+    setCompleteTransElement(item);
+    if (!param) {
+      fetchUpcomingTransactions(props.contactId, 1);
+    }
+  };
+
+
+  useEffect(() => {
+    const close = (e) => {
+      if(e.keyCode === 27){
+        setRefundModal(false);
+        setCompleteTransModal(false);
+        setUpcomingOptIndex(null);
+        setOldOptIndex(null);
+      }
+    }
+    window.addEventListener('keydown', close)
+    return () => window.removeEventListener('keydown', close)
+  },[]);
+
 
   const changeTab = (e) => {
     setActiveTab(e.target.value);
@@ -71,13 +102,21 @@ const Transaction = (props) => {
 
     } finally {
       setIsLoaderTab(false);
-      console.log(upcomingTransaction);
     }
   };
 
-  const moreOptOpen = (index) => {
+  const moreOptOpenUpcoming = (index) => {
     setUpcomingOptIndex(index !== upcomingOptIndex ? index : null);
-    console.log(index);
+    if (upcomingOptIndex != null) {
+      setUpcomingOptIndex(null);
+    }
+  }
+
+  const moreOptOpenOld = (index) => {
+    setOldOptIndex(index !== upcomingOptIndex ? index : null);
+    if (oldOptIndex != null) {
+      setOldOptIndex(null);
+    }
   }
 
   const checkOutsideClick = (e) => {
@@ -85,7 +124,20 @@ const Transaction = (props) => {
       return;
     }
     setUpcomingOptIndex(null);
+
+    if (oldOptRef.current.contains(e.target)) {
+      return;
+    }
+    setOldOptIndex(null);
   }
+
+  const showSuccessAlert = (param) => {
+    setSuccessMsg(param);
+  };
+
+  const closeAlert = () => {
+    setSuccessMsg(null);
+  };
 
 
   useEffect(() => {
@@ -139,6 +191,7 @@ const Transaction = (props) => {
 
   return (
     <>
+      { successMsg && <AlertMessage type="success" message={successMsg} time={10000} close={closeAlert} /> }
       <div className="contactTabsInner">
         <h3 className="headingTabInner">Transactions</h3>
         <div className="transHeader">
@@ -157,7 +210,6 @@ const Transaction = (props) => {
           </div>
         </div>
 
-
         <div className="tabHead">
           <ul>
             <li><button type="button" value="0" onClick={changeTab} className={activeTab == 0 ? "active" : ""}>Upcoming Transactions</button></li>
@@ -169,11 +221,10 @@ const Transaction = (props) => {
         <div className={activeTab == 0 ? "listTab active" : "listTab"}>
           { isLoaderTab ? <Loader /> : "" }
           <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={upcomingListPageNo}>
-          <div className={isLoader ? "transactionListing" : "transactionListing noEvent"}  ref={upcomingOptRef}>
+          <div className="transactionListing"  ref={upcomingOptRef}>
             <div className={isLoaderTab ? "hide" :"row head"}>
               <div className="cell">Particulars</div>
               <div className="cell">Amount</div>
-              <div className="cell">Payment Type</div>
               <div className="cell">Duration Left</div>
               <div className="cell">&nbsp;</div>
             </div>
@@ -184,7 +235,11 @@ const Transaction = (props) => {
                   <div className="d-flex">
                     <div className="iconCont">
                       <span>
-                        <img src={icon_trans} alt="" />
+                        {item.payment_via === "cash" ? 
+                        <img src={cashSmallWhite} alt="" />
+                        : 
+                        <img src={cardSmallWhite} alt="" />
+                        }
                       </span>
                     </div>
                     <div className="textCont">
@@ -202,11 +257,7 @@ const Transaction = (props) => {
                     { "$" + item.amount }
                   </span>
                 </div>
-                <div className="cell">
-                  <span className="paymentType">
-                    { item.payment_type }
-                  </span>
-                </div>
+                
                 <div className="cell">
                   <span className="time">
                     { item.due_date }
@@ -214,10 +265,12 @@ const Transaction = (props) => {
                 </div>
                 <div className="cell">
                   <div className="moreOpt">
-                    <button type="button" className="moreOptBtn" onClick={() => moreOptOpen (index)}></button>
+                    <button type="button" className="moreOptBtn" onClick={() => moreOptOpenUpcoming (index)}></button>
                     <div className={upcomingOptIndex === index ? "optDropdown" : "optDropdown hide"}>
                       <button type="button" className="edit">Edit</button> 
-                      <button type="button" className="complete">Complete Transactions</button>  
+                      {item.payment_via === "cash" ? 
+                      <button type="button" className="complete" onClick={() => openCloseCompleteTrans (true, item)}>Complete Transactions</button> 
+                      : ""}
                       <button type="button" className="history">History</button>
                     </div>  
                   </div>
@@ -229,100 +282,153 @@ const Transaction = (props) => {
         </div>
 
         <div className={activeTab == 1 ? "listTab active" : "listTab"}>
-          <div className="transactionListing">
-            <div className="row head">
-              <div className="cell">Particulars</div>
-              <div className="cell">Amount</div>
-              <div className="cell">Transaction ID</div>
-              <div className="cell">&nbsp;</div>
-            </div>
-            <div className="row fail">
-              <div className="cell">
-                <div className="d-flex">
-                  <div className="iconCont">
-                    <span>
-                      <img src={icon_trans} alt="" />
+          <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={upcomingListPageNo}>
+            <div className="transactionListing" ref={oldOptRef}>
+              <div className="row head">
+                <div className="cell">Particulars</div>
+                <div className="cell">Amount</div>
+                <div className="cell">Transaction ID</div>
+                <div className="cell">&nbsp;</div>
+              </div>
+              {oldTransactionList.length > 0 ? oldTransactionList.map((item, index) => {
+                return (
+                <div className={item.status == "success" ? "row success" : "row fail"} key={index}>
+                  <div className="cell">
+                    <div className="d-flex">
+                      <div className="iconCont">
+                        <span>
+                          <img src={icon_trans} alt="" />
+                        </span>
+                      </div>
+                      <div className="textCont">
+                        <div className="status">
+                          {item.status == "success" ? "success" : "fail"}
+                        </div>
+                        <div>
+                          <span>Course:</span> “{item.transaction_data.course}”
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="cell">
+                    <span className="amount" >
+                      $100
                     </span>
                   </div>
-                  <div className="textCont">
-                    <div className="status">
-                      Fail
-                    </div>
-                    <div>
-                      <span>Course:</span> “Sample course name”
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="cell">
-                <span className="amount" >
-                  $100
-                </span>
-              </div>
-              <div className="cell">
-                <span className="transID">
-                  dfg41456df1567sdtfg24g
-                </span>
-              </div>
-              <div className="cell">
-                <span className="time">
-                  18 m ago
-                </span>
-              </div>
-              <div className="cell">
-                <div className="moreOpt">
-                  <button type="button" className="moreOptBtn"></button>
-                  <div className="optDropdown">
-                    <button type="button" className="retry">Retry</button>  
-                    <button type="button" className="history">History</button>
-                  </div>  
-                </div>
-              </div>
-            </div>
-            <div className="row success">
-              <div className="cell">
-                <div className="d-flex">
-                  <div className="iconCont">
-                    <span>
-                      <img src={icon_trans} alt="" />
+                  <div className="cell">
+                    <span className="transID">
+                     {item._id}
                     </span>
                   </div>
-                  <div className="textCont">
-                    <div className="status">
-                      Success
-                    </div>
-                    <div>
-                      <span>Course:</span> “Sample course name”
+                  <div className="cell">
+                    <span className="time">
+                      {item.transaction_date}
+                    </span>
+                  </div>
+                  <div className="cell">
+                    <div className="moreOpt">
+                      <button type="button" className="moreOptBtn" onClick={() => moreOptOpenOld (index)}></button>
+                      <div className={oldOptIndex === index ? "optDropdown" : "optDropdown hide"}>
+                        {item.status == "success" ?
+                          <button type="button" className="refund" onClick={() => openCloseRefundModal (true)}>Refund</button>
+                          :
+                          <button type="button" className="retry">Retry</button> 
+                        }
+                        <button type="button" className="history">History</button>
+                      </div>  
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="cell">
-                <span className="amount" >
-                  $100
-                </span>
-              </div>
-              <div className="cell">
-                <span className="transID">
-                  dfg41456df1567sdtfg24g
-                </span>
-              </div>
-              <div className="cell">
-                <span className="time">
-                  18 m ago
-                </span>
-              </div>
-              <div className="cell">
-                <div className="moreOpt">
-                  <button type="button" className="moreOptBtn"></button>
-                  <div className="optDropdown">
-                    <button type="button" className="refund" onClick={() => openCloseRefundModal (true)}>Refund</button>  
-                    <button type="button" className="history">History</button>
-                  </div>  
+                )
+              }) : ""}
+              {/* <div className="row fail">
+                <div className="cell">
+                  <div className="d-flex">
+                    <div className="iconCont">
+                      <span>
+                        <img src={icon_trans} alt="" />
+                      </span>
+                    </div>
+                    <div className="textCont">
+                      <div className="status">
+                        Fail
+                      </div>
+                      <div>
+                        <span>Course:</span> “Sample course name”
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="cell">
+                  <span className="amount" >
+                    $100
+                  </span>
+                </div>
+                <div className="cell">
+                  <span className="transID">
+                    dfg41456df1567sdtfg24g
+                  </span>
+                </div>
+                <div className="cell">
+                  <span className="time">
+                    18 m ago
+                  </span>
+                </div>
+                <div className="cell">
+                  <div className="moreOpt">
+                    <button type="button" className="moreOptBtn"></button>
+                    <div className="optDropdown">
+                      <button type="button" className="retry">Retry</button>  
+                      <button type="button" className="history">History</button>
+                    </div>  
+                  </div>
                 </div>
               </div>
+              <div className="row success">
+                <div className="cell">
+                  <div className="d-flex">
+                    <div className="iconCont">
+                      <span>
+                        <img src={icon_trans} alt="" />
+                      </span>
+                    </div>
+                    <div className="textCont">
+                      <div className="status">
+                        Success
+                      </div>
+                      <div>
+                        <span>Course:</span> “Sample course name”
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="cell">
+                  <span className="amount" >
+                    $100
+                  </span>
+                </div>
+                <div className="cell">
+                  <span className="transID">
+                    dfg41456df1567sdtfg24g
+                  </span>
+                </div>
+                <div className="cell">
+                  <span className="time">
+                    18 m ago
+                  </span>
+                </div>
+                <div className="cell">
+                  <div className="moreOpt">
+                    <button type="button" className="moreOptBtn"></button>
+                    <div className="optDropdown">
+                      <button type="button" className="refund" onClick={() => openCloseRefundModal (true)}>Refund</button>  
+                      <button type="button" className="history">History</button>
+                    </div>  
+                  </div>
+                </div>
+              </div> */}
             </div>
-          </div>
+          </Scrollbars>
         </div>
         <div className={activeTab == 2 ? "listTab active" : "listTab"}>
           <div className="transactionListing">
@@ -387,7 +493,16 @@ const Transaction = (props) => {
         </div>
 
       </div>
-      { refundModal && <CompleteTransactionModal closeModal={(param) => openCloseRefundModal (param)} /> }
+      { refundModal && <RefundModal closeModal={(param) => openCloseRefundModal (param)} /> }
+
+      { completeTransModal && 
+      <CompleteTransactionModal 
+        closeModal={(param) => openCloseCompleteTrans (param)} 
+        item={completeTransElement} 
+        successM={(param) => showSuccessAlert (param)} 
+      /> 
+      }
+
     </>
   );
 };

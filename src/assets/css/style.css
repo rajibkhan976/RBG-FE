@@ -2223,6 +2223,7 @@ img.dropDownIcon {
   font-size: 16px;
   color: var(--darkBlue);
   display: inline-block;
+  text-transform: capitalize;
 }
 .notifLabels li span {
   font-size: 11px;
@@ -2244,6 +2245,7 @@ img.dropDownIcon {
   margin-left: 30px;
   margin-right: 30px;
   margin-bottom: 25px;
+  text-transform: capitalize;
 }
 
 .detailNotif {
@@ -2953,11 +2955,6 @@ span.userProfilePic img {
 
 .customCheckbox input[type="checkbox"] + span {
   border-radius: 2px;
-}
-
-.errorField .customCheckbox input[type="checkbox"] + span {
-  border-color: #c74854;
-  background-color: #fff4f4;
 }
 
 .circleRadio input[type="radio"]:checked + span,
@@ -4125,6 +4122,15 @@ textarea.cmnFieldStyle {
 .cmnFieldStyle::placeholder {
   color: #9baebc;
   font-size: 14px;
+}
+.readOnlyField.readOnlyField {
+  padding: 0 10px;
+  line-height: 38px;
+  pointer-events: none;
+}
+.readOnlyField.readOnlyField span {
+  color: #9BAEBC;
+  padding-right: 7px;
 }
 .cmnInputFile {
   position: relative;
@@ -5308,7 +5314,7 @@ button.saveOverview img {
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 999999;
+  z-index: 9999;
   background: rgb(48 86 113 / 90%);
   display: flex;
   flex-wrap: wrap;
@@ -7043,7 +7049,10 @@ p.trackName {
   height: 28px;
   text-align: center;
   border-radius: 50%;
-  line-height: 28px;
+  line-height: 34px;
+}
+.transactionListing .row .cell .iconCont img {
+  width: 16px;
 }
 .transactionListing .row .cell .iconCont span.ifDependent {
   background: #139fea;
@@ -7147,7 +7156,7 @@ p.trackName {
   flex-wrap: wrap;
 }
 .flipCardHolder .cardList {
-  min-height: 448px;
+  min-height: 473px;
   border-radius: 10px;
   width: 100%;
   display: flex;
@@ -7462,6 +7471,7 @@ p.trackName {
 }
 .overviewFormWrap .loaderOuter {
   position: fixed;
+  z-index: 999;
   width: 820px;
   height: 100%;
   top:0;
@@ -9523,3 +9533,114 @@ button.addOverviewCustomFiel {
 
 
 
+/* Alert message css start */
+
+.alertMessage {
+  position: fixed !important;
+  z-index: 99999;
+  right: 30px;
+  bottom: 50px;
+  background: #F3F8FF;
+  border: 1px solid #99C0FF;
+  border-radius: 5px;
+  width: 400px !important;
+  min-height: 93px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  transition: all 0.5s ease 0s;
+}
+.alertMessage.hideAlert {
+  right: -470px;
+}
+.alertMessage .alertMsgWrap {
+  position: relative;
+}
+.alertMessage .alertBodyLeft {
+  width: 30px;
+  height: 30px;
+  float: left;
+  margin: 16px 18px 0 16px;
+}
+.alertMessage .alertBodyLeft img {
+  width: 30px;
+}
+.alertMessage .alertBodyRight {
+  float: left;
+  width: 250px;
+  margin-top: 16px;
+}
+.alertMessage .alertBodyRight h2 {
+  color: #2271F0;
+  font-size: 14px;
+  text-transform: capitalize;
+  padding-bottom: 4px;
+}
+.alertMessage .alertBodyRight p {
+  color: #2271F0;
+  font-size: 11px;
+  line-height: 16px;
+}
+.alertMessage .alertMsgWrap .closeAlert {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 12px;
+  height: 12px;
+  background: transparent url("../images/close_alertMsg_icon.svg") no-repeat center;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  opacity: 0.5;
+}
+.alertMessage .alertTimer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 7px;
+  background-color: #C9DDFC;
+}
+
+.alertMessage.success {
+  background: #E7FFEC;
+  border-color: #92C99F;
+}
+.alertMessage.success .alertBodyRight h2 {
+  color: #00BA2D;
+}
+.alertMessage.success .alertBodyRight p {
+  color: #408551;
+}
+.alertMessage.success .alertTimer {
+  background-color: #CAEAD1;
+}
+
+.alertMessage.error {
+  background: #FFF6F3;
+  border-color: #FFB4A2;
+}
+.alertMessage.error .alertBodyRight h2 {
+  color: #FF603A;
+}
+.alertMessage.error .alertBodyRight p {
+  color: #874E41;
+}
+.alertMessage.error .alertTimer {
+  background-color: #FFD5CB;
+}
+
+.alertMessage.worning {
+  background: #FFFAED;
+  border-color: #FFDA7A;
+}
+.alertMessage.worning .alertBodyRight h2 {
+  color: #EDAB00;
+}
+.alertMessage.worning .alertBodyRight p {
+  color: #8C7742;
+}
+.alertMessage.worning .alertTimer {
+  background-color: #FBEABE;
+}
+
+/* Alert message css end */

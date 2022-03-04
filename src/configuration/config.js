@@ -91,11 +91,13 @@ module.exports = {
     // Billing service
     billingUrl: "https://tt7n78ndd2.execute-api.us-east-1.amazonaws.com/dev/contact/billing/",
     // Transaction Service
-    transactionUrl: "https://tt7n78ndd2.execute-api.us-east-1.amazonaws.com/dev/contact/transactions/",
-    // Old Transaction Url
-    oldTransactionUrl: "https://susx9c3bvl.execute-api.us-east-1.amazonaws.com/dev/contact/upcoming-transactions/list/",
-    // Upcoming Transaction Url
-    upcomingTransactionUrl: "https://susx9c3bvl.execute-api.us-east-1.amazonaws.com/dev/contact/upcoming-transactions/list/",
+    //transactionUrl: "https://tt7n78ndd2.execute-api.us-east-1.amazonaws.com/dev/contact/transactions/",
+    
+    transactionUrl: "https://0sgk5dh733.execute-api.us-east-1.amazonaws.com/dev/contact/",
+    // Refund Url
+    refundUrl: "https://susx9c3bvl.execute-api.us-east-1.amazonaws.com/dev/contact/old-transactions/refund/",
+    // Complete Transaction
+    completeTransaction: "https://susx9c3bvl.execute-api.us-east-1.amazonaws.com/dev/contact/upcoming-cash-transactions/complete",
     // Course Service
     courseUrl: "https://nayaxr4np3.execute-api.us-east-1.amazonaws.com/dev/course/",
     // Buy Course Link

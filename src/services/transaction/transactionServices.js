@@ -26,7 +26,7 @@ export const TransactionServices = {
 
     fetchOldTransactions: async (contactId) => {
         try {
-            const url = config.oldTransactionUrl + contactId;
+            const url = config.transactionUrl + "old-transactions/list/" + contactId;
             const result = await axios.get(url, { headers: headers });
             return result.data;
         } catch (e) {
@@ -42,7 +42,7 @@ export const TransactionServices = {
 
     fetchUpcomingTransactions: async (contactId, pageNumber) => {
         try {
-            const url = config.upcomingTransactionUrl + contactId + "/" + pageNumber;
+            const url = config.transactionUrl + "upcoming-transactions/list/" + contactId + "/" + pageNumber;
             const result = await axios.get(url, { headers: headers });
             return result.data;
         } catch (e) {
@@ -54,7 +54,40 @@ export const TransactionServices = {
                 throw new Error(e.message + ". Please contact support.");
             }
         }
-    }
+    },
 
+    refund: async (contactId, payload) => {
+        try {
+            const url = config.transactionUrl + "old-transactions/refund/" + contactId;
+            const result = await axios.post(url, payload, { headers: headers });
+            return result.data;
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+
+    completeTransaction: async (contactId, payload) => {
+        try {
+            const url = config.transactionUrl + "upcoming-cash-transactions/complete/" + contactId;
+            console.log("Complete Transaction URL: " + url);
+            const result = await axios.post(url, payload, { headers: headers });
+            return result.data;
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
    
 };

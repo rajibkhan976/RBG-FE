@@ -1,173 +1,106 @@
 import { useState } from "react";
 
 import crossImg from "../../../../../../src/assets/images/cross.svg";
-import refundImg from "../../../../../../src/assets/images/refund_icon_dark.svg";
+import refundImg from "../../../../../../src/assets/images/cashCurrent.svg";
 import arrowForwardImg from "../../../../../../src/assets/images/arrow_forward.svg";
+import { TransactionServices } from "../../../../../services/transaction/transactionServices";
+import Loader from "../../../Loader";
 
 
 const CompleteTransactionModal = (props) => {
 
-    const [refundFormData, setRefundFormData] = useState({
-        amount: "",
-        reason: "",
-        otherReason: "",
-        confirmRefund: false
-    });
-    const [formErrorMsg, setFormErrorMsg] = useState({
-        amount: "",
-        reason: "",
-        otherReason: "",
-        confirmRefund: ""
-    });
 
 
-    const refundAmountHandel = (e) => {
-        let val = e.target.value;
-        console.log('val', val);
-        const re = new RegExp(/^\d*\.?\d{0,2}$/);
-        if (re.test(val)) {
-            fieldErrorCheck.checkAmount(val);
+    const [confirmCashRec, setConfirmCashRec] = useState(false);
+    const [note, setNote] = useState("");
+    const [formErrorMsg, setFormErrorMsg] = useState("");
+    const [loader, setLoader] = useState(false);
+
+
+
+    const confirmCash = (e) => {
+        setConfirmCashRec(e.target.checked);
+        if(e.target.checked) {
+            setFormErrorMsg("");
         }
     };
 
-    const refundReasonHandel = (e) => {
-        let val = e.target.value;
-        fieldErrorCheck.checkReason(val);
+    const noteHandel = (e) => {
+        setNote(e.target.value);
     };
 
-    const otherReasonHandel = (e) => {
-        let val = e.target.value;
-        fieldErrorCheck.checkOtherReason(val);
-    };
+    // const submitTransaction  = () => {
+    //     if (confirmCashRec) {
+    //         console.log("Submit", confirmCashRec);
+    //     } else {
+    //         setFormErrorMsg("Please check the checkbox for confirmation");
+    //     }
+    // };
 
-    const confirmRefundHandel = (e) => {
-        let val = e.target.checked;
-        fieldErrorCheck.checkConfirmation(val);
-    };
-
-    const fieldErrorCheck = {
-
-        checkAmount: (val) => {
-            setRefundFormData({...refundFormData, amount: val});
-            if (!val) {
-                setFormErrorMsg(prevState => ({...prevState, amount: "Please enter refund amount"}));
-            } else {
-                setFormErrorMsg(prevState => ({...prevState, amount: ""}));
+    const submitTransaction = async () => {
+        
+        
+        if (confirmCashRec) {
+                console.log(props.item._id);
+                try {
+                let payload = {
+                    subscriptionId : props.item._id,
+                    note: note
+                }
+                console.log(payload);
+                setLoader(true);
+                const response = await TransactionServices.completeTransaction(props.item.contactId, payload);
+                console.log("Complete transaction response ", response);
+            } catch (e) {
+        
+            } finally {
+                setLoader(false);
+                props.closeModal(false);
+                props.successM("Transaction completed successfully");
             }
-        },
-
-        checkReason: (val) => {
-            setRefundFormData({...refundFormData, reason: val});
-            if (!val) {
-                setFormErrorMsg(prevState => ({...prevState, reason: "Please enter refund reason"}));
-            } else {
-                setFormErrorMsg(prevState => ({...prevState, reason: ""}));
-            }
-        },
-
-        checkOtherReason: (val) => {
-            setRefundFormData({...refundFormData, otherReason: val});
-            if (!val && refundFormData.reason == "others") {
-                setFormErrorMsg(prevState => ({...prevState, otherReason: "Please write the reason for refund"}));
-            } else {
-                setFormErrorMsg(prevState => ({...prevState, otherReason: ""}));
-            }
-        },
-
-        checkConfirmation: (val) => {
-            setRefundFormData({...refundFormData, confirmRefund: val});
-            if (!val) {
-                setFormErrorMsg(prevState => ({...prevState, confirmRefund: "Please check the checkbox for confirmation"}));
-            } else {
-                setFormErrorMsg(prevState => ({...prevState, confirmRefund: ""}));
-            }
+        } else {
+            setFormErrorMsg("Please check the checkbox for confirmation");
         }
+      };
 
-    };
-
-    const refundSubmit = () => {
-
-        fieldErrorCheck.checkAmount(refundFormData.amount);
-        fieldErrorCheck.checkReason(refundFormData.reason);
-        fieldErrorCheck.checkOtherReason(refundFormData.otherReason);
-        fieldErrorCheck.checkConfirmation(refundFormData.confirmRefund);
-
-        if(refundFormData.reason && refundFormData.reason !== "others") {
-            if(refundFormData.amount && refundFormData.confirmRefund) {
-                console.log("Submit");
-            }
-        } else if (refundFormData.reason === "others") {
-            if (refundFormData.amount && refundFormData.otherReason && refundFormData.confirmRefund) {
-                console.log("Submit");
-            }
-        }
-
-        // if(refundFormData.amount && refundFormData.reason && refundFormData.otherReason && refundFormData.confirmRefund) {
-        //     console.log("Submit");
-        // }
-
-    };
-
-    
-    
-    
 
     return (
         <div className="modalBackdrop transactionModal">
+            {loader && <Loader />}
+            
             <div className="slickModalBody">
                 <div className="slickModalHeader">
                     <button className="topCross" onClick={() => props.closeModal (false)}><img src={crossImg} alt="" /></button>  
                     <div className="circleForIcon"><img src={refundImg} alt="" /></div>
-                    <h3>Refund</h3>
-                    <p>Fill out below details for refund</p>
+                    <h3>Complete Transactions</h3>
+                    <p>Complete Transactions for Program</p>
                 </div>
                 <div className="cmnForm">
                     <form>
-                        <div className={formErrorMsg.amount ? "cmnFormRow errorField" : "cmnFormRow"}>
-                            <label className="cmnFieldName">Refund Amount</label>
-                            <input type="text" className="cmnFieldStyle" onChange={refundAmountHandel} value={refundFormData.amount}/>
-                            { formErrorMsg.amount &&
-                            <div className="errorMsg">{formErrorMsg.amount}</div>
-                            }
+                        <div className="cmnFormRow">
+                            <label className="cmnFieldName">Transaction Amount</label>
+                            <div className="cmnFieldStyle readOnlyField"><span>$</span>{props.item.amount}</div>
                         </div>
-                        <div className={formErrorMsg.reason ? "cmnFormRow errorField" : "cmnFormRow"}>
-                            <label className="cmnFieldName">Select Refund Reason</label>
-                            <select className="cmnFieldStyle selectBox" onChange={refundReasonHandel}>
-                                <option value="">Select a reason</option>
-                                <option value="duplicate">Duplicate</option>
-                                <option value="fraudulent">Fraudulent</option>
-                                <option value="requested by customer">Requested by customer</option>
-                                <option value="others">Others</option>
-                            </select>
-                            { formErrorMsg.reason &&
-                            <div className="errorMsg">{formErrorMsg.reason}</div>
-                            }
+                        <div className="cmnFormRow">
+                            <label className="cmnFieldName">Add Note</label>
+                            <textarea className="cmnFieldStyle" placeholder="Add a Note for this Transaction (Optional)" onChange={noteHandel}></textarea>
                         </div>
-                        { refundFormData.reason == "others" ? 
-                        <div className={formErrorMsg.otherReason ? "cmnFormRow errorField" : "cmnFormRow"}>
-                            <label className="cmnFieldName">Add Refund Reason <span className="mandatory">*</span></label>
-                            <textarea className={"cmnFieldStyle"} placeholder="Add the Refund Reason (Mandatory)" onChange={otherReasonHandel}></textarea>
-                            { formErrorMsg.otherReason &&
-                            <div className="errorMsg">{formErrorMsg.otherReason}</div>
-                            }
-                        </div>
-                        : "" }
-                        <div className={formErrorMsg.confirmRefund ? "cmnFormRow errorField" : "cmnFormRow"}>
+                        <div className="cmnFormRow">
                             <label className="cmnFieldName cashReceived">
                                 <div className="customCheckbox">
-                                    <input type="checkbox" onChange={confirmRefundHandel} />
+                                    <input type="checkbox" onClick={confirmCash} />
                                     <span></span>
                                 </div> 
-                                I confirm that I have refunded the amount by cash 
+                                I confirm that I have received the amount by cash
                             </label>
-                            { formErrorMsg.confirmRefund &&
-                            <div className="errorMsg">{formErrorMsg.confirmRefund}</div>
-                            }
+                            { formErrorMsg ?
+                            <div className="errorMsg">{formErrorMsg}</div>
+                            : "" }
                         </div>
                         <div className="cmnFormRow">
                             <div className="btnGroup centered">
-                                <button type="button" className="cmnBtn" onClick={refundSubmit}>
-                                    <span>Refund</span>
+                                <button type="button" className="cmnBtn" onClick={submitTransaction}>
+                                    <span>Save</span>
                                     <img src={arrowForwardImg} alt="" />
                                 </button>
                             </div>
@@ -177,6 +110,6 @@ const CompleteTransactionModal = (props) => {
             </div>
         </div>
     );
-}
+};
 
 export default CompleteTransactionModal;
