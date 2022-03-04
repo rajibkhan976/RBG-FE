@@ -819,7 +819,9 @@ const ProductTransaction = (props) => {
                             style={{
                               backgroundImage: cartItem.image ? "url(" + cartItem.image + ")" : "url("+placeholder_product_image+")",
                             }}
-                          ></figure>
+                          >
+                            <img src={cartItem && cartItem.image} alt={cartItem.name} />
+                          </figure>
                           <div className="choiceOpt f-1">
                             <header className="d-flex f-justify-between">
                               <h6>{cartItem.name}</h6>

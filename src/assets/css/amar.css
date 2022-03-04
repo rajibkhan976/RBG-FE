@@ -1383,6 +1383,10 @@ input::-webkit-inner-spin-button {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
 }
 .choiceOpt header h6 {
   font-weight: 500;
@@ -1833,47 +1837,59 @@ input::-webkit-inner-spin-button {
 .outstandingOverviewProduct ul.programInfosUl.paymentOverviews {
   border-color: #FFECC7;
 }
-.outstandingOverviewProduct .labelWithInfo {
+.outstandingOverviewProduct .labelWithInfo,
+.outStandingProduct .labelWithInfo {
   font-weight: 500;
   font-size: 12px;
   line-height: 18px;
   color: #305671;
   margin-bottom: 8px;
 }
-.outstandingOverviewProduct select.selectBox {
+.outstandingOverviewProduct select.selectBox,
+.outStandingProduct select.selectBox  {
   background-color: #fff;
   border-color: #fff;
   font-size: 12px;
   letter-spacing: 0.05em;
 }
-.outstandingOverviewProduct .cmnFormRow .cmnFormCol:first-child {
+.outstandingOverviewProduct .cmnFormRow .cmnFormCol:first-child,
+.outStandingProduct .cmnFormRow .cmnFormCol:first-child  {
   width: 149px;
 }
-.outstandingOverviewProduct .cmnFormRow .cmnFormCol:last-child {
+.outstandingOverviewProduct .cmnFormRow .cmnFormCol:last-child,
+.outStandingProduct .cmnFormRow .cmnFormCol:last-child  {
   width: 170px;
 }
-.outstandingOverviewProduct .bodytransactionForm, .outstandingOverviewProduct .informHeader {
+.outstandingOverviewProduct .bodytransactionForm, 
+.outstandingOverviewProduct .informHeader,
+.outStandingProduct .bodytransactionForm,
+.outStandingProduct .informHeader  {
   padding-left: 18px;
   padding-right: 18px;
 }
-.outstandingOverviewProduct .paymentTime .toggleBtn {
+.outstandingOverviewProduct .paymentTime .toggleBtn,
+.outStandingProduct .paymentTime .toggleBtn {
   display: inline-block;
   vertical-align: middle;
   margin-top: 0;
 }
-.outstandingOverviewProduct .paymentTime {
+.outstandingOverviewProduct .paymentTime,
+.outStandingProduct .paymentTime {
   padding: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-.outstandingOverviewProduct .paymentNow.display p {
+.outstandingOverviewProduct .paymentNow.display p,
+.outStandingProduct .paymentNow.display p  {
   border-color: #fff;
 }
-.outstandingOverviewProduct .paymentNow {
+.outstandingOverviewProduct .paymentNow,
+.outStandingProduct .paymentNow {
   display: block;
 }
-.outstandingOverviewProduct .paymentNow input {
+.outstandingOverviewProduct .paymentNow input,
+.outStandingProduct  .paymentNow input {
   background-color: #fff;
   border-color: #fff;
   font-size: 12px;
@@ -2085,5 +2101,76 @@ input::-webkit-inner-spin-button {
 }
 .forDownpayment .labelWithInfo.paymentTime {
   display: flex;
+}
+.newDownpayment + .downPaymentsCreated,
+.downPaymentsCreated .newDownpayment + .newDownpayment {
+  margin-top: 15px;
+}
+.bodyProductPayModes {
+  position: relative;
+  max-height: 330px;
+  padding-top: 0;
+}
+.bodyProductPayModes p.paymentTypes {
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background: #F6F8FA;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.chooseTransactionType.paymentTypes {
+  padding-top: 0;
+}
+.error .cmnFormField, .error .cmnFormField input {
+  border-color: #c74854 !important;
+  color: #c74854 !important;
+}
+.error .unitAmount {
+  color: #c74854 !important;
+}
+.outstandingDownpayment .downpaymentsDetails {
+  width: 60%;
+}
+.outstandingDownpayment .downpaymentsPayDetails {
+  width: 40%;
+}
+.paymentModuleInfos {
+  overflow: hidden;
+}
+.paymentModuleInfos .accinfod {
+  max-width: 100%;
+  word-break: break-word;
+}
+
+.outStandingProduct {
+  flex: 0 0 auto;
+}
+.outStandingProduct .cmnFormRow {
+  margin: 0;
+}
+.outStandingProduct .bodytransactionForm {
+  padding-bottom: 30px;
+}
+.payOverviewProduct {
+  order: 1;
+}
+.productPaymentTransaction .gridCol .dottedBorder {
+  order: 2;
+}
+.productPaymentTransaction .gridCol .currentPaymentOverview {
+  order: 3;
+  margin-top: 14px;
+  flex: 0 0 auto;
+}
+.productPaymentTransaction .gridCol .outStandingProduct {
+  order: 6;
+  margin-top: 5px;
+}
+.productPaymentTransaction .gridCol .totalCartValue {
+  order: 99;
+  margin-top: 10px;
 }
 /* Add a product */

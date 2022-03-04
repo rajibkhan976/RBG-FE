@@ -23,28 +23,35 @@ const ProductPayment = (props) => {
   const [isLoader, setIsLoader] = useState(false);
   const [downPayments, setDownPayments] = useState([]);
   const [createdDownPayment, setCreatedDownpayment] = useState({
-    isPayNow: 0
+    isPayNow: 1
   })
   const [downPaymentActive, setDownPaymentActive] = useState(false);
   const [payLater, setPayLater] = useState(false);
-  const [newPay, setNewPay] = useState("card");
+  const [newPay, setNewPay] = useState("cash");
   const [newPayModal, setNewPayModal] = useState(false);
   const [productPaymentFailed, setProductPaymentFailed] = useState(false);
   const downPaymentList = useRef(null);
   const [totalAmt, setTotalAmt] = useState(0);
   const [totalTaxAmt, setTotalTaxAmt] = useState(0);
-  const [outStandingAmt, setOutstandingAmt] = useState(0);
+  const [outStanding, setOutstanding] = useState({
+    amount: 0,
+    payment_type: "online"
+  });
   const [cardBankList, setCardBankList] = useState([]);
   const [bankList, setBankList] = useState([]);
   const [payments, setPayments] = useState([])
   const downpaymentsContainer = useRef(null);
+  const createDownpayAmount = useRef(null)
 
   const [hasError, setHasError] = useState(false)
   const [downPaymentErrorMsg, setDownPaymentErrorMsg] = useState({
-      title_Err: "",
-      amount_Err: "",
-      payLater_Err: "",
-    });
+    title_Err: "",
+    amount_Err: "",
+    payNow_Err: "",
+    payMode_Err: "",
+    payStatus_Err: "",
+    payDate_Err: ""
+  });
 
   const fetchCardBank = async () => {
     try {
@@ -63,37 +70,26 @@ const ProductPayment = (props) => {
     }
   };
 
-  const checkAndSetDownPayments = (e) => {
-    if (e.target.checked) {
-      setDownPaymentActive(true);
-    } else {
-      setDownPaymentActive(false);
-    }
-  };
-
   //   toggle pay later for down payment
   const addpayLater = (e, i) => {
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
+
+    today = yyyy + '/' + mm + '/' + dd;
+
     try {
       setIsLoader(true)
       setCreatedDownpayment({
         ...createdDownPayment,
-        isPayNow: e.target.checked ? 1 : 0
+        isPayNow: e.target.checked ? 0 : 1,
+        paymentDate: e.target.checked ? today : ""
       })
     } catch (error) {
       console.log(error);
     } finally{
       setIsLoader(false)
-    }
-  };
-
-  //   add more down payment
-  const addNewDownPayment = (e, i) => {
-    e.preventDefault();
-    try {
-      console.log("dp"+ downPayments.length, downpaymentsContainer.current);
-      // setDownPayments(downPayPlaceholder)
-    } catch (err) {
-      console.log(err);
     }
   };
 
@@ -110,21 +106,29 @@ const ProductPayment = (props) => {
   //   add pay date
   const addPayDate = (e, i) => {
     let dateSelected = e.target.value;
-    let downPaymentsPlaceholder = [...downPayments];
-
-    try {
-      downPaymentsPlaceholder[i].payDate =
-        downPaymentsPlaceholder[i].paylater && dateSelected
-          ? dateSelected
-          : null;
-      setDownPayments(downPaymentsPlaceholder);
-    } catch (error) {
-      console.log(error);
+    
+    if(e.target.value !== "") {
+      try {
+        setIsLoader(true)
+        setCreatedDownpayment({
+          ...createdDownPayment,
+          paymentDate: dateSelected
+        })
+      } catch (error) {
+        console.log(error);
+      } finally{
+        setIsLoader(false)
+      }
+    } else {
+      setHasError(true)
+      setDownPaymentErrorMsg({
+        ...downPaymentErrorMsg,
+        payDate_Err: "Next payment cannot be empty"
+      })
     }
   };
 
   const payDateChangeOverview = () => {
-    console.log("hi");
     setPayLater(!payLater);
   };
 
@@ -152,7 +156,7 @@ const ProductPayment = (props) => {
 
   useEffect(() => {
     
-  }, [downPayments]);
+  }, [downPayments, outStanding]);
 
   useEffect(() => {
     const getTotalCart = () => {
@@ -173,7 +177,10 @@ const ProductPayment = (props) => {
 
         setTotalAmt(parseFloat(sumAmt).toFixed(2));
         setTotalTaxAmt(parseFloat(taxtAmt).toFixed(2));
-        setOutstandingAmt((parseFloat(sumAmt)+parseFloat(taxtAmt)).toFixed(2))
+        setOutstanding({
+          ...outStanding,
+          amount: (parseFloat(sumAmt)+parseFloat(taxtAmt)).toFixed(2)
+        })
 
         console.log("sumAmt", sumAmt, taxtAmt);
       } else {
@@ -184,6 +191,39 @@ const ProductPayment = (props) => {
     };
     getTotalCart();
   }, [props.cartState, totalAmt, totalTaxAmt]);
+
+  const checkAndSetDownPayments = (e) => {    
+    if (e.target.checked) {
+      setDownPaymentActive(true);
+      setCreatedDownpayment({
+        title: "",
+        amount: outStanding.amount,
+        type: "downpayment",
+        isPayNow: 1,
+        payment_type: "cash",
+        payment_status: "unpaid"
+      })
+      setHasError(true);
+      setDownPaymentErrorMsg({
+        ...downPaymentErrorMsg,
+        title_Err: "Title cannot be blank"
+      })
+    } else {
+      setDownPaymentActive(false);
+      setCreatedDownpayment({
+        ...downPayments,
+        amount: 0,
+        isPayNow: 0,
+        title: ""
+      })
+      setHasError(false);
+      setDownPaymentErrorMsg({
+        ...downPaymentErrorMsg,
+        title_Err: ""
+      })
+      setDownPayments([])
+    }
+  };
 
   const addDownPayTitle = (e) => {
     if(e.target.value.trim().length > 0) {
@@ -207,7 +247,10 @@ const ProductPayment = (props) => {
   }
 
   const addDownPayAmount = (e) => {
-    if(e.target.value.trim().length > 0) {
+    if(e.target.value[0] == 0) {
+      e.target.value = ""
+    }
+    if(e.target.value.trim().length > 0 && parseFloat(e.target.value) !== 0 && parseFloat(e.target.value) <= parseFloat(outStanding.amount)) {
       setCreatedDownpayment({
         ...createdDownPayment,
         amount: e.target.value
@@ -222,14 +265,71 @@ const ProductPayment = (props) => {
       setHasError(true);
       setDownPaymentErrorMsg({
         ...downPaymentErrorMsg,
-        amount_Err: "Amount cannot be nothing"
+        amount_Err: parseFloat(e.target.value) === 0 ? "Amount cannot be 0" : parseFloat(e.target.value) > parseFloat(outStanding.amount) ? "Amount cannot be more than outstanding amount" : "Amount cannot be nothing"
       })
     }    
   }
 
+  const changePaymentType = (e) => {
+    setCreatedDownpayment({
+      ...createdDownPayment,
+      payment_type: e.target.value,
+    })
+  }
+
+  const changePaymentStatus = (e) => {
+    setCreatedDownpayment({
+      ...createdDownPayment,
+      payment_status: e.target.value,
+    })
+  }
+
+  //   add more down payment
+  const addNewDownPayment = (e, i) => {
+    e.preventDefault();
+    console.log(hasError&&"HAS ERROR");
+    if(!hasError) {
+      setIsLoader(true);
+      console.log(downPaymentErrorMsg, createdDownPayment)
+
+      try {
+        setOutstanding({
+          ...outStanding,
+          amount: parseFloat(outStanding.amount) - createdDownPayment.amount
+        })
+        setDownPayments(prevDownpayments => [...prevDownpayments, createdDownPayment])
+      } catch (err) {
+        console.log(err);
+        setHasError(true);
+        setDownPaymentErrorMsg({
+          ...downPaymentErrorMsg,
+          server_Err: err.message
+        })
+      } finally {
+        setHasError(true);
+        setDownPaymentErrorMsg({
+          title_Err: "",
+          amount_Err: "",
+          payNow_Err: "",
+          payMode_Err: "",
+          payStatus_Err: "",
+        })
+        createDownpayAmount.current.value = outStanding.amount !== 0 ? (parseFloat(outStanding.amount) - createdDownPayment.amount).toFixed(2) : 0
+        setCreatedDownpayment({
+          title: "",
+          amount: outStanding.amount !== 0 ? (parseFloat(outStanding.amount) - createdDownPayment.amount).toFixed(2) : 0,
+          type: "downpayment",
+          isPayNow: 1,
+          payment_type: "cash",
+          payment_status: "unpaid"
+        })
+        setIsLoader(false);
+      }
+    }
+  };
+
   useEffect(()=>{
     fetchCardBank();
-    console.log(props.cartState);
   },[])
 
   return (
@@ -260,11 +360,151 @@ const ProductPayment = (props) => {
               </header>
               {downPaymentActive && (
                 <div className="bodytransactionForm" ref={downPaymentList}>
-                  <div className="downPaymentsCreated" ref={downpaymentsContainer}>
-                    {(downPayments &&
-                      downPayments.length > 0) ?
-                      downPayments.map((downpay, i) => (
-                        <div className="newDownpayment" key={"dp" + i} id={"dp" + (downPayments && downPayments.length > 0) && downPayments.length}>
+                {outStanding.amount !== 0 && <div className="newDownpayment">
+                      <button
+                        className="addNewDownpayment"
+                        onClick={(e)=>addNewDownPayment(e)}
+                        disabled={hasError === true || outStanding.amount === 0}
+                      >
+                        + Add
+                      </button>
+                    <div className="transaction_form products forDownpayment">
+                      <div className={downPaymentErrorMsg.title_Err !== "" ? "cmnFormRow gap error" : "cmnFormRow gap"}>
+                        <label className="labelWithInfo">
+                          <span className="labelHeading">Title</span>
+                          <span className="infoSpan">
+                            <img src={info_icon} alt="" />
+                            <span className="tooltiptextInfo">
+                              Lorem Ipsum is simply dummy text of the printing
+                              and typesetting industry.
+                            </span>
+                          </span>
+                        </label>
+                        <div className="cmnFormField">
+                          <input
+                            className="cmnFieldStyle"
+                            onChange={(e)=>addDownPayTitle(e)}
+                            defaultValue={createdDownPayment.title}
+                          />
+                        </div>
+                        {downPaymentErrorMsg.title_Err && <p className="errorMsg">{downPaymentErrorMsg.title_Err}</p>}
+                      </div>
+                      <div className="cmnFormRow gap">
+                        <div className={downPaymentErrorMsg.amount_Err !== "" ? "leftSecTransaction error" : "leftSecTransaction"} style={{fontSize: 0}}>
+                          <label className="labelWithInfo">
+                            <span className="labelHeading">Amount</span>
+                            <span className="infoSpan">
+                              <img src={info_icon} alt="" />
+                              <span className="tooltiptextInfo amount">
+                                Lorem Ipsum is simply dummy text of the
+                                printing and typesetting industry.
+                              </span>
+                            </span>
+                          </label>
+                          <div className="cmnFormField preField">
+                            <div className="unitAmount">$</div>
+                            <input
+                              type="number"
+                              placeholder="149"
+                              className="editableInput numberType cmnFieldStyle"
+                              onChange={(e)=>addDownPayAmount(e)}
+                              defaultValue={outStanding.amount}
+                              ref={createDownpayAmount}
+                            />
+                          </div>
+                        {downPaymentErrorMsg.amount_Err && <p className="errorMsg">{downPaymentErrorMsg.amount_Err}</p>}
+                        </div>
+                        <div className={downPaymentErrorMsg.payDate_Err !== "" ? "rightSecTransaction error" : "rightSecTransaction"}>
+                          <label className="labelWithInfo paymentTime">
+                            <span className="labelHeading">
+                              I want to Pay Later
+                            </span>
+                            <label className={
+                              createdDownPayment.isPayNow === 1 ? "toggleBtn" : "toggleBtn active"}
+                            >
+                              <input
+                                type="checkbox"
+                                name="check-communication"
+                                onChange={(e) => addpayLater(e)}
+                                defaultChecked={createdDownPayment.isPayNow === 1 ? false : true}
+                              />
+                              <span className="toggler"></span>
+                            </label>
+                          </label>
+                          {createdDownPayment.isPayNow === 1 && (
+                            <div className="paymentNow display">
+                              <p>
+                                Payment date <span>Now</span>
+                              </p>
+                            </div>
+                          )}
+                          {createdDownPayment.isPayNow === 0 && (
+                            <div className="paymentNow">
+                              <input
+                                type="date"
+                                placeholder="mm/dd/yyyy"
+                                className="cmnFieldStyle"
+                                onChange={(e) => addPayDate(e)}
+                                defaultValue={new Date().toISOString().split('T')[0]}
+                              />
+                            </div>
+                          )}
+                          {downPaymentErrorMsg.payDate_Err && <p className="errorMsg">{downPaymentErrorMsg.payDate_Err}</p>}
+                        </div>
+                      </div>
+                      <div className="cmnFormRow gap">
+                        <div className="leftSecTransaction">
+                          <label className="labelWithInfo">
+                            <span className="labelHeading">Payment Mode</span>
+                            <span className="infoSpan">
+                              <img src={info_icon} alt="" />
+                              <span className="tooltiptextInfo paymentType">
+                                Lorem Ipsum is simply dummy text of the
+                                printing and typesetting industry.
+                              </span>
+                            </span>
+                          </label>
+                          <div className="cmnFormField">
+                            <select
+                              className="selectBox"
+                              defaultValue={createdDownPayment.payment_type}
+                              onChange={(e)=>changePaymentType(e)}
+                            >
+                              <option value="cash">Cash</option>
+                              <option value="online">Online</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="rightSecTransaction">
+                          <label className="labelWithInfo">
+                            <span className="labelHeading">
+                              Payment Status
+                            </span>
+                            <span className="infoSpan">
+                              <img src={info_icon} alt="" />
+                              <span className="tooltiptextInfo paymentStatus">
+                                Lorem Ipsum is simply dummy text of the
+                                printing and typesetting industry.
+                              </span>
+                            </span>
+                          </label>
+                          <select
+                            className="selectBox"
+                            onChange={(e)=>changePaymentStatus(e)}
+                            defaultValue={createdDownPayment.payment_status}
+                          >
+                            <option value="unpaid">Unpaid</option>
+                            <option value="paid">Paid</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>}
+                  {(downPayments &&
+                      downPayments.length > 0) && 
+                      <div className="downPaymentsCreated" ref={downpaymentsContainer}>
+                    {downPayments.map((downpay, i) => (
+                        <div className="newDownpayment" key={"dp" + i} id={`dp-${downPayments.length}`}>
                           <button
                             className="delNewDownpayment"
                             onClick={(e) => deleteNewDownPayment(e, downpay, i)}
@@ -319,34 +559,33 @@ const ProductPayment = (props) => {
                                   </span>
                                   <label
                                     className={
-                                      createdDownPayment && createdDownPayment.isPayNow === 1
-                                        ? "toggleBtn active"
-                                        : "toggleBtn"
+                                      downpay.isPayNow === 1
+                                        ? "toggleBtn"
+                                        : "toggleBtn active"
                                     }
                                   >
                                     <input
                                       type="checkbox"
                                       name="check-communication"
-                                      // onChange={(e) => addpayLater(e, i)}
-                                      // defaultValue={false}
+                                      defaultValue={downpay.isPayNow === 0 ? true : false}
                                     />
                                     <span className="toggler"></span>
                                   </label>
                                 </label>
-                                {downpay.isPayNow === 0 && (
+                                {downpay.isPayNow === 1 && (
                                   <div className="paymentNow display">
                                     <p>
                                       Payment date <span>Now</span>
                                     </p>
                                   </div>
                                 )}
-                                {downpay.paylater === 1 && (
+                                {downpay.isPayNow === 0 && (
                                   <div className="paymentNow">
                                     <input
                                       type="date"
                                       placeholder="mm/dd/yyyy"
                                       className="cmnFieldStyle"
-                                      onChange={(e) => addPayDate(e, i)}
+                                      defaultValue={downpay.paymentDate}
                                     />
                                   </div>
                                 )}
@@ -369,8 +608,8 @@ const ProductPayment = (props) => {
                                     className="selectBox"
                                     defaultValue={downpay.payMode}
                                   >
-                                    <option value="Cash">Card</option>
-                                    <option value="Card">Cash</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="online">Online</option>
                                   </select>
                                 </div>
                               </div>
@@ -398,142 +637,8 @@ const ProductPayment = (props) => {
                             </div>
                           </div>
                         </div>
-                      )): ""}
-                    </div>
-                    <div className="newDownpayment">
-                          <button
-                            className="addNewDownpayment"
-                            onClick={(e)=>addNewDownPayment(e)}
-                            disabled={hasError}
-                          >
-                            + Add
-                          </button>
-                        <div className="transaction_form products forDownpayment">
-                          <div className={downPaymentErrorMsg.title_Err !== "" ? "cmnFormRow gap error" : "cmnFormRow gap"}>
-                            <label className="labelWithInfo">
-                              <span className="labelHeading">Title</span>
-                              <span className="infoSpan">
-                                <img src={info_icon} alt="" />
-                                <span className="tooltiptextInfo">
-                                  Lorem Ipsum is simply dummy text of the printing
-                                  and typesetting industry.
-                                </span>
-                              </span>
-                            </label>
-                            <div className="cmnFormField">
-                              <input
-                                className="cmnFieldStyle"
-                                onChange={(e)=>addDownPayTitle(e)}
-                              />
-                            </div>
-                            {downPaymentErrorMsg.title_Err && <p className="errorMsg">{downPaymentErrorMsg.title_Err}</p>}
-                          </div>
-                          <div className="cmnFormRow gap">
-                            <div className={downPaymentErrorMsg.amount_Err !== "" ? "leftSecTransaction error" : "leftSecTransaction"}>
-                              <label className="labelWithInfo">
-                                <span className="labelHeading">Amount</span>
-                                <span className="infoSpan">
-                                  <img src={info_icon} alt="" />
-                                  <span className="tooltiptextInfo amount">
-                                    Lorem Ipsum is simply dummy text of the
-                                    printing and typesetting industry.
-                                  </span>
-                                </span>
-                              </label>
-                              <div className="cmnFormField preField">
-                                <div className="unitAmount">$</div>
-                                <input
-                                  type="number"
-                                  placeholder="149"
-                                  className="editableInput numberType cmnFieldStyle"
-                                  onChange={(e)=>addDownPayAmount(e)}
-                                  defaultValue={outStandingAmt}
-                                />
-                              </div>
-                            {downPaymentErrorMsg.amount_Err && <p className="errorMsg">{downPaymentErrorMsg.amount_Err}</p>}
-                            </div>
-                            <div className="rightSecTransaction">
-                              <label className="labelWithInfo paymentTime">
-                                <span className="labelHeading">
-                                  I want to Pay Later
-                                </span>
-                                <label className={
-                                  createdDownPayment.isPayNow === 1 ? "toggleBtn active" : "toggleBtn"}
-                                >
-                                  <input
-                                    type="checkbox"
-                                    name="check-communication"
-                                    onChange={(e) => addpayLater(e)}
-                                    defaultChecked={createdDownPayment.isPayNow === 1 ? true : false}
-                                  />
-                                  <span className="toggler"></span>
-                                </label>
-                              </label>
-                              {createdDownPayment.isPayNow === 0 && (
-                                <div className="paymentNow display">
-                                  <p>
-                                    Payment date <span>Now</span>
-                                  </p>
-                                </div>
-                              )}
-                              {createdDownPayment.isPayNow === 1 && (
-                                <div className="paymentNow">
-                                  <input
-                                    type="date"
-                                    placeholder="mm/dd/yyyy"
-                                    className="cmnFieldStyle"
-                                    onChange={(e) => addPayDate(e)}
-                                  />
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                          <div className="cmnFormRow gap">
-                            <div className="leftSecTransaction">
-                              <label className="labelWithInfo">
-                                <span className="labelHeading">Payment Mode</span>
-                                <span className="infoSpan">
-                                  <img src={info_icon} alt="" />
-                                  <span className="tooltiptextInfo paymentType">
-                                    Lorem Ipsum is simply dummy text of the
-                                    printing and typesetting industry.
-                                  </span>
-                                </span>
-                              </label>
-                              <div className="cmnFormField">
-                                <select
-                                  className="selectBox"
-                                  defaultValue={"Card"}
-                                >
-                                  <option value="Cash">Card</option>
-                                  <option value="Card">Cash</option>
-                                </select>
-                              </div>
-                            </div>
-                            <div className="rightSecTransaction">
-                              <label className="labelWithInfo">
-                                <span className="labelHeading">
-                                  Payment Status
-                                </span>
-                                <span className="infoSpan">
-                                  <img src={info_icon} alt="" />
-                                  <span className="tooltiptextInfo paymentStatus">
-                                    Lorem Ipsum is simply dummy text of the
-                                    printing and typesetting industry.
-                                  </span>
-                                </span>
-                              </label>
-                              <select
-                                className="selectBox"
-                                defaultValue={"Unpaid"}
-                              >
-                                <option value="Unpaid">Unpaid</option>
-                                <option value="Paid">Paid</option>
-                              </select>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      ))}
+                    </div>}
                 </div>
               )}
             </div>
@@ -552,12 +657,12 @@ const ProductPayment = (props) => {
                 </button>
               </header>
 
-              <div className="bodytransactionForm">
+              <div className="bodytransactionForm bodyProductPayModes">
                 <p className="paymentTypes">Cards</p>
                 <div className="chooseTransactionType paymentTypes">
                   {/* {console.log("cardBankList", cardBankList)} */}
                 { cardBankList && cardBankList.length > 0 && cardBankList.map((cardItem, i)=> 
-                  <label className={cardItem.status === "active" ? "paymentType active" : "paymentType"}> {/*active*/}
+                  <label className={cardItem.status === "active" ? "paymentType active" : "paymentType"} key={i}> {/*active*/}
                     <span className="circleRadio">
                       <input
                         type="radio"
@@ -622,14 +727,17 @@ const ProductPayment = (props) => {
                 </ul>
                 <ul className="totalPaymentUl">
                   <li>Total</li>
-                  <li>$ {parseFloat(totalAmt) + parseFloat(totalTaxAmt)}</li>
+                  <li>$ {(parseFloat(totalAmt) + parseFloat(totalTaxAmt)).toFixed(2)}</li>
                 </ul>
               </div>
             </div>
-            <div className="cartProductInner outstandingOverviewProduct">
+
+            <div className="dottedBorder"></div>
+
+            {outStanding.amount !== 0 && <div className="cartProductInner outStandingProduct "> {/**outstandingOverviewProduct */}
               <header className="informHeader d-flex f-align-center f-justify-between">
                 <h5>Outstanding</h5>
-                <h3>$ {outStandingAmt}</h3>
+                <h3>$ {parseFloat(outStanding.amount).toFixed(2)}</h3>
               </header>
               <div className="bodytransactionForm">
                 <div className="cmnFormRow">
@@ -685,40 +793,41 @@ const ProductPayment = (props) => {
                   </div>
                 </div>
               </div>
-            </div>
+            </div>}
 
-            <div className="currentPaymentOverview cartProductInner">
-              <div className="outstandingDownpayment">
-                <div className="downpaymentsDetails">
-                  <div className="cardImage">
-                    <img src={cashCurrent} alt="" />
+            {downPayments.length > 0 && <div className="currentPaymentOverview cartProductInner">
+                <div className="outstandingDownpayment">
+                  <div className="downpaymentsDetails">
+                    <div className="cardImage">
+                      <img src={cashCurrent} alt="" />
+                    </div>
+                    <div className="paymentModuleInfos">
+                      <span className="accNumber">{downPayments[0].title}</span>
+                      <span className="accinfod">
+                        <b>$ {downPayments[0].amount}</b>
+                      </span>
+                    </div>
                   </div>
-                  <div className="paymentModuleInfos">
-                    <span className="accNumber">Down Payment 1</span>
-                    <span className="accinfod">
-                      <b>$ 299.00</b>
-                    </span>
+                  <div className="downpaymentsPayDetails">
+                    <div className="payDate currentPayment">
+                      <img src={payDate} alt="" /> {downPayments[0].isPayNow === 1 ? "Now" : downPayments[0].paymentDate}
+                    </div>
                   </div>
+                  <label className="receivedCash">
+                    <div className="customCheckbox">
+                      <input type="checkbox" name="" id="" />
+                      <span></span>
+                    </div>
+                    I have received the amount by Cash
+                  </label>
                 </div>
-                <div className="downpaymentsPayDetails">
-                  <div className="payDate currentPayment">
-                    <img src={payDate} alt="" /> Now
-                  </div>
-                </div>
-                <label className="receivedCash">
-                  <div className="customCheckbox">
-                    <input type="checkbox" name="" id="" />
-                    <span></span>
-                  </div>
-                  I have received the amount by Cash
-                </label>
-              </div>
-            </div>
+            </div>}
 
             <div className="totalCartValue cartProductInner f-row">
               <div className="billingAmt">
                 <p>Billing Total</p>
-                <h4>$ {parseFloat(totalAmt) + parseFloat(totalTaxAmt)}</h4>
+                {/* downPayments[0] */}
+                <h4>$ {downPayments.length > 0 ? downPayments[0].amount : (parseFloat(totalAmt)+parseFloat(totalTaxAmt)).toFixed(2)}</h4>
               </div>
               <div className="buyBtns">
                 <button className="saveNnewBtn" onClick={(e) => billPayment(e)}>
