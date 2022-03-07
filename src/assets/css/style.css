@@ -9644,3 +9644,144 @@ button.addOverviewCustomFiel {
 }
 
 /* Alert message css end */
+
+
+/* ......... css for edit upcoming transaction section starts ......................... */
+ 
+.cmnFormRow.fullWidth{
+  position: relative;
+  padding: 20px 0;
+}
+.cmnFormRow.fullWidth:before{
+  content: "";
+  position: absolute;
+  width: calc(100% + 82px);
+  height: 1px;
+  background: #E9EFF5;
+  left: -41px;
+  top: 0;
+}
+.cmnForm.fullWidth{
+  padding: 0 14px;
+}
+.cmnFormRow.fullWidth.flatForm{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+}
+.cmnFormRow.fullWidth.flatForm .cmnFieldStyle{ 
+  width: auto;
+  min-width: 180px;
+}
+.cmnFormRow.fullWidth.flatForm .cmnFieldName{
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.onlinePymentboxTrans{
+  background: #F6F8FA;
+  border: 1px solid #E9EFF5;
+  box-sizing: border-box;
+  border-radius: 5px;
+  margin: 10px 0 0 0;
+  width: 100%;
+}
+
+.onlinePymentboxTrans .head{
+  width: 100%;
+  padding: 7px 27px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #E9EFF5;
+}
+.onlinePymentboxTrans .head h3{
+  color: var(--darkBlue);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.addBtn_style2 {
+  color: #fff;
+  font-weight: 500;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 8px;
+  background-color: #55bbc9;
+  border-radius: 20px;
+  border: 0;
+  height: 25px;
+  line-height: 1;
+}
+
+.onlinePymentboxTrans .paymentSourcetabs{
+  width: 100%;
+  padding: 10px 27px;
+}
+.cmnFormRow.fullWidth.flatForm .preField .cmnFieldStyle {
+  width: 180px;
+}
+.notifyBox {
+  background: #f0f5f1;
+  border-radius: 0px;
+  padding: 13px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin: 0px 0 0;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #9BAEBC;
+}
+.notifyBox .customCheckbox{
+  top: 0;
+  margin-right: 12px;
+  background: #fff;
+}
+/* fill="#9BAEBC" */
+.paymentSourcetabs .tabBtns {
+  padding: 0 0;
+  border-bottom: 2px solid #E9EFF5;
+}
+.paymentSourcetabs .tabBtns button {
+  background: transparent;
+  border: none;
+  height: 37px;
+  padding-bottom: 10px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #9BAEBC;
+  border-bottom: 2px solid transparent;
+  margin-right: 20px;
+}
+.paymentSourcetabs .tabBtns button:hover,
+  .paymentSourcetabs .tabBtns button.active{
+    border-bottom: 2px solid #ED707A;
+    color: #ED707A;
+}
+.paymentSourcetabs .tabcontent ul{
+  margin: 13px 0;
+  padding: 0;
+}
+.paymentSourcetabs .tabcontent li{
+  background: #FFFFFF;
+  border: 1px solid #E9EFF5;
+  box-sizing: border-box;
+  border-radius: 5px;
+  padding: 10px;
+}
+.paymentSourcetabs .tabcontent li:hover{
+  border: 1px solid #6AAAD9;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 15px rgba(48, 86, 113, 0.1);
+}
+
+
+
+
+/* ......... css for edit upcoming transaction section ends ......................... */

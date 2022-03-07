@@ -7,6 +7,7 @@ import list_board_icon from "../../../../assets/images/list_board_icon.svg";
 import cashSmallWhite from "../../../../assets/images/cash_icon_small_white.svg";
 import cardSmallWhite from "../../../../assets/images/card_icon_small_white.svg";
 import RefundModal from "./transaction/RefundModal";
+import EditTrModal from "./transaction/EditTrModal";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import AlertMessage from "../../messages/alertMessage";
 import { TransactionServices } from "../../../../services/transaction/transactionServices";
@@ -19,6 +20,7 @@ const Transaction = (props) => {
   const [isLoaderTab, setIsLoaderTab] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [refundModal, setRefundModal] = useState(false);
+  const [editTransModal, setEditTransModal] = useState(false);
   const [completeTransModal, setCompleteTransModal] = useState(false);
   const [oldTransactionList, setOldTransactionList] = useState({});
   const [upcomingTransaction, setUpcomingTransaction] = useState([]);
@@ -35,6 +37,9 @@ const Transaction = (props) => {
   const openCloseRefundModal = (param) => {
     setRefundModal(param);
   };
+  const openCloseEditTransModal = (param) => {
+    setEditTransModal(param);
+  };
 
   const openCloseCompleteTrans = (param, item) => {
     setCompleteTransModal(param);
@@ -43,7 +48,7 @@ const Transaction = (props) => {
       fetchUpcomingTransactions(props.contactId, 1);
     }
   };
-
+  
 
   useEffect(() => {
     const close = (e) => {
@@ -267,7 +272,7 @@ const Transaction = (props) => {
                   <div className="moreOpt">
                     <button type="button" className="moreOptBtn" onClick={() => moreOptOpenUpcoming (index)}></button>
                     <div className={upcomingOptIndex === index ? "optDropdown" : "optDropdown hide"}>
-                      <button type="button" className="edit">Edit</button> 
+                      <button type="button" className="edit" onClick={() => openCloseEditTransModal (true, item)}>Edit</button> 
                       {item.payment_via === "cash" ? 
                       <button type="button" className="complete" onClick={() => openCloseCompleteTrans (true, item)}>Complete Transactions</button> 
                       : ""}
@@ -305,7 +310,8 @@ const Transaction = (props) => {
                           {item.status == "success" ? "success" : "fail"}
                         </div>
                         <div>
-                          <span>Course:</span> “{item.transaction_data.course}”
+                           <span>Course:</span> “{item.course}”
+                         { console.log("lklklkl;klk;lk;lk;lk", item.course)}
                         </div>
                       </div>
                     </div>
@@ -494,6 +500,8 @@ const Transaction = (props) => {
 
       </div>
       { refundModal && <RefundModal closeModal={(param) => openCloseRefundModal (param)} /> }
+
+      { editTransModal && <EditTrModal closeModal={(param) => openCloseEditTransModal (param)} /> }
 
       { completeTransModal && 
       <CompleteTransactionModal 
