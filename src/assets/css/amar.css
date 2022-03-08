@@ -1900,6 +1900,7 @@ input::-webkit-inner-spin-button {
 }
 .totalCartValue.cartProductInner {
   flex-direction: revert;
+  flex: 0 0 auto;
 }
 .currentPaymentOverview.cartProductInner .outstandingDownpayment {
   border: none;
@@ -2136,6 +2137,7 @@ input::-webkit-inner-spin-button {
 }
 .outstandingDownpayment .downpaymentsPayDetails {
   width: 40%;
+  text-align: right;
 }
 .paymentModuleInfos {
   overflow: hidden;
@@ -2171,6 +2173,34 @@ input::-webkit-inner-spin-button {
 }
 .productPaymentTransaction .gridCol .totalCartValue {
   order: 99;
+}
+.productPaymentTransaction .gridCol .outStandingProduct + .totalCartValue {
   margin-top: 10px;
+}
+.productPaymentTransaction .gridCol .downPayLater {
+  order: 2;
+}
+.downPayLater .outstandingDownpayment .currentPayment {
+  margin-top: 5px;
+}
+.downpaymentsPayDetails .payDue {
+  height: 18px;
+  padding: 0 5px;
+  display: inline-flex;
+  align-items: center;
+  background: #F1A768;
+  color: #fff;
+  font-size: 10px;
+  line-height: 15px;
+  letter-spacing: 0.02em;
+  border-radius: 3px;
+}
+.notificationNumber {
+  width: auto;
+  padding: 0 6px;
+}
+.paymentNow.error .cmnFieldStyle {
+  border: 1px solid #ed707a;
+  background-color: #fff4f4;
 }
 /* Add a product */

@@ -91,10 +91,10 @@ const ProductTransaction = (props) => {
       if (showLoader) setShowLoader(true);
       const result = await ProductServices.fetchProducts(pageId, queryParams);
       if (result) {
-        console.log(
-          "result:::::::::::::::::::::::::::::::::::::::",
-          result.products
-        );
+        // console.log(
+        //   "result:::::::::::::::::::::::::::::::::::::::",
+        //   result.products
+        // );
         setProductData(result.products);
         setProductItemsList(result.products);
       }
@@ -117,7 +117,7 @@ const ProductTransaction = (props) => {
         colors: result.colors,
         sizes: result.sizes,
       });
-      console.log("Color Size", colorSize);
+      // console.log("Color Size", colorSize);
     } catch (e) {
       setErrorMsg(e.message);
     } finally {
@@ -131,7 +131,7 @@ const ProductTransaction = (props) => {
       const result = await ProductServices.fetchCategory();
       if (result.length) {
         setCategoryData(result);
-        console.log("CategoryData", categoryData);
+        // console.log("CategoryData", categoryData);
       } else {
         // setErrorMsg("No categories found");
         // props.successMsg("No categories found");
@@ -253,7 +253,7 @@ const ProductTransaction = (props) => {
   };
 
   useEffect(() => {
-      console.log("CART ITEMS NOW:::", cartState);
+      // console.log("CART ITEMS NOW:::", cartState);
   }, [cartState]);
 
   const handleAddProductSubmit = () => {
@@ -261,7 +261,7 @@ const ProductTransaction = (props) => {
   };
 
   useEffect(() => {
-    console.log("selectedProduct", selectedProduct);
+    // console.log("selectedProduct", selectedProduct);
   }, [selectedProduct, hasError]);
 
   const addThisProduct = (e) => {
@@ -340,7 +340,7 @@ const ProductTransaction = (props) => {
   };
 
   useEffect(() => {
-    console.log("totalAmt changed:::", totalAmt);
+    // console.log("totalAmt changed:::", totalAmt);
   }, [totalAmt]);
 
   useEffect(() => {
@@ -356,7 +356,7 @@ const ProductTransaction = (props) => {
         setTotalAmt(parseFloat(sumAmt).toFixed(2));
         console.log("sumAmt", sumAmt);
       } else {
-        console.log("Sum now", totalAmt);
+        // console.log("Sum now", totalAmt);
         setTotalAmt(0.00);
       }
     };
@@ -378,12 +378,12 @@ const ProductTransaction = (props) => {
 
   const showAddProduct = (e) => {
     e.preventDefault();
-    console.log("cartState:::", cartState);
+    // console.log("cartState:::", cartState);
     props.productPayment(true);
   };
 
   useEffect(() => {
-    console.log("newProductObj", newProductObj);
+    // console.log("newProductObj", newProductObj);
   }, [newProductObj]);
 
 //   const createProduct = () => {
@@ -434,11 +434,11 @@ const ProductTransaction = (props) => {
 //   };
 
   useEffect(() => {
-    console.log("hasError UPDATED:::", hasError);
+    // console.log("hasError UPDATED:::", hasError);
   }, [hasError]);
 
   useEffect(() => {
-    console.log("Loaded");
+    // console.log("Loaded");
     fetchCategories();
     fetchProducts();
     fetchColorSizes();
@@ -897,8 +897,8 @@ const ProductTransaction = (props) => {
                             $ {cartItem.price}x{cartItem.qnty}
                           </div>
                           <div className="cartAmount">
-                            {"$ " + cartItem.price * cartItem.qnty}
-                            {console.log("TAX::::", cartItem.tax)}
+                            {"$ " + parseFloat(cartItem.price * cartItem.qnty).toFixed(2)}
+                            
                             {cartItem.tax && (
                               <div className="cartTax">+ 10% Tax</div>
                             )}
