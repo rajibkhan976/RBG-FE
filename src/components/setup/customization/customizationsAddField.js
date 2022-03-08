@@ -32,7 +32,13 @@ const CustomizationsAddField = (props) => {
 
   const fieldNameHandel = (event) => {
       let val = event.target.value;
-      setCustomField({...customField, name: val});
+      let reg = /[^a-z0-9 .]/gi;
+      
+      if (reg.test(val)) {
+        let valAlias = val.split(" ").join("_");
+        setCustomField({...customField, name: val, alias: valAlias});
+      }
+      
   };
 
   const fieldTypeHandel = (event) => {
@@ -46,7 +52,8 @@ const CustomizationsAddField = (props) => {
   };
 
   const fieldAliasHandel = (event) => {
-    let val = event.target.value;
+    // let val = event.target.value;
+    let val = customField.name.split(" ").join("_");
     setCustomField({...customField, alias: val});
     console.log(customField);
   };

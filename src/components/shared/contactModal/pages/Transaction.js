@@ -6,6 +6,7 @@ import wwConnect2 from "../../../../assets/images/wwConnect2.svg";
 import list_board_icon from "../../../../assets/images/list_board_icon.svg";
 import cashSmallWhite from "../../../../assets/images/cash_icon_small_white.svg";
 import cardSmallWhite from "../../../../assets/images/card_icon_small_white.svg";
+import dropVector from "../../../../assets/images/dropVector.svg";
 import RefundModal from "./transaction/RefundModal";
 import EditTrModal from "./transaction/EditTrModal";
 import { Scrollbars } from "react-custom-scrollbars-2";
@@ -32,6 +33,12 @@ const Transaction = (props) => {
   const [successMsg, setSuccessMsg] = useState(null);
   const upcomingOptRef = useRef();
   const oldOptRef = useRef();
+
+  const [showHistory, setShowHistory] = useState(false);
+
+  const setShowHistoryFn = () => {
+    setShowHistory(true);
+  };
 
 
   const openCloseRefundModal = (param) => {
@@ -226,58 +233,63 @@ const Transaction = (props) => {
         <div className={activeTab == 0 ? "listTab active" : "listTab"}>
           { isLoaderTab ? <Loader /> : "" }
           <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={upcomingListPageNo}>
-          <div className="transactionListing"  ref={upcomingOptRef}>
-            <div className={isLoaderTab ? "hide" :"row head"}>
-              <div className="cell">Particulars</div>
-              <div className="cell">Amount</div>
-              <div className="cell">Duration Left</div>
-              <div className="cell">&nbsp;</div>
+          <div className="transactionListing dueTransactions"  ref={upcomingOptRef}>
+            {/* <div className={isLoaderTab ? "hide" :"row head"}> */}
+            <div className="row head">
+                <div className="cell particulars">Particulars</div>
+                <div className="cell amt">Amount</div>
+                <div className="cell times">&nbsp;</div>
+                <div className="cell action">&nbsp;</div>
             </div>
             { upcomingTransaction.length ? upcomingTransaction.map((item, index) => {
               return (
-              <div className="row due" key={index}>
-                <div className="cell">
-                  <div className="d-flex">
-                    <div className="iconCont">
-                      <span>
-                        {item.payment_via === "cash" ? 
-                        <img src={cashSmallWhite} alt="" />
-                        : 
-                        <img src={cardSmallWhite} alt="" />
-                        }
-                      </span>
-                    </div>
-                    <div className="textCont">
-                      <div className="status">
-                        Due
+              <div className="row withHistory due" key={index}>
+                <div className="cellWraperss">
+
+                  <div className="cell particulars">
+                    <div className="d-flex">
+                      <div className="iconCont">
+                        <span>
+                          {item.payment_via === "cash" ? 
+                          <img src={cashSmallWhite} alt="" />
+                          : 
+                          <img src={cardSmallWhite} alt="" />
+                          }
+                        </span>
                       </div>
-                      <div>
-                        <span>Course:</span> “{ item.title }”
+                      <div className="textCont">
+                        <div className="status">
+                          Due
+                        </div>
+                        <div>
+                          <span>Course:</span> “{ item.title }”
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="cell">
-                  <span className="amount" >
-                    { "$" + item.amount }
-                  </span>
-                </div>
+                  <div className="cell amt">
+                    <span className="amount" >
+                    <span className="tutionAmt">Tution Fee</span>
+                      { "$" + item.amount }
+                    </span>
+                  </div>
                 
-                <div className="cell">
-                  <span className="time">
-                    { item.due_date }
-                  </span>
-                </div>
-                <div className="cell">
-                  <div className="moreOpt">
-                    <button type="button" className="moreOptBtn" onClick={() => moreOptOpenUpcoming (index)}></button>
-                    <div className={upcomingOptIndex === index ? "optDropdown" : "optDropdown hide"}>
-                      <button type="button" className="edit" onClick={() => openCloseEditTransModal (true, item)}>Edit</button> 
-                      {item.payment_via === "cash" ? 
-                      <button type="button" className="complete" onClick={() => openCloseCompleteTrans (true, item)}>Complete Transactions</button> 
-                      : ""}
-                      <button type="button" className="history">History</button>
-                    </div>  
+                  <div className="cell times">
+                    <span className="time">
+                      { item.due_date }
+                    </span>
+                  </div>
+                  <div className="cell action">
+                    <div className="moreOpt">
+                      <button type="button" className="moreOptBtn" onClick={() => moreOptOpenUpcoming (index)}></button>
+                      <div className={upcomingOptIndex === index ? "optDropdown" : "optDropdown hide"}>
+                        <button type="button" className="edit" onClick={() => openCloseEditTransModal (true, item)}>Edit</button> 
+                        {item.payment_via === "cash" ? 
+                        <button type="button" className="complete" onClick={() => openCloseCompleteTrans (true, item)}>Complete Transactions</button> 
+                        : ""}
+                        {/* <button type="button" className="history">History</button> */}
+                      </div>  
+                    </div>
                   </div>
                 </div>
               </div>
@@ -288,63 +300,175 @@ const Transaction = (props) => {
 
         <div className={activeTab == 1 ? "listTab active" : "listTab"}>
           <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={upcomingListPageNo}>
-            <div className="transactionListing" ref={oldOptRef}>
-              <div className="row head">
-                <div className="cell">Particulars</div>
-                <div className="cell">Amount</div>
-                <div className="cell">Transaction ID</div>
-                <div className="cell">&nbsp;</div>
-              </div>
+            <div className="transactionListing oldTransactions" ref={oldOptRef}>
+            {/* <div className="indRowHeadWrapers"> */}
+                <div className="row head">
+                  <div className="cell particulars">Particulars</div>
+                  <div className="cell amt">Amount</div>
+                  {/* <div className="cell transactionIds">Transaction ID</div> */}
+                  <div className="cell times">&nbsp;</div>
+                  <div className="cell action">&nbsp;</div>
+                </div>
+              {/* </div> */}
               {oldTransactionList.length > 0 ? oldTransactionList.map((item, index) => {
                 return (
-                <div className={item.status == "success" ? "row success" : "row fail"} key={index}>
-                  <div className="cell">
-                    <div className="d-flex">
-                      <div className="iconCont">
-                        <span>
-                          <img src={icon_trans} alt="" />
-                        </span>
-                      </div>
-                      <div className="textCont">
-                        <div className="status">
-                          {item.status == "success" ? "success" : "fail"}
+                  //  <div className="indRowWrapers">
+
+
+                  
+                    <div className={item.status == "success withHistory" ? "row success withHistory" : "row fail withHistory"} key={index}>
+                      <div className="cellWraperss">
+
+                        <div className="cell particulars">
+                          <div className="d-flex">
+                            <div className="iconCont">
+                              <span>
+                                <img src={icon_trans} alt="" />
+                              </span>
+                            </div>
+                            <div className="textCont">
+                              <div className="status">
+                                {item.status == "success" ? "success" : "fail"}
+                              </div>
+                              <div>
+                                <span>Program:</span> “{item.course}”
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                        <div>
-                           <span>Course:</span> “{item.course}”
-                         { console.log("lklklkl;klk;lk;lk;lk", item.course)}
+
+                        <div className="cell amt">
+                          <div className="amount" >
+                            <span className="tutionAmt">Tution Fee</span>
+                            {"$ " + item.amount}
+                          </div>
                         </div>
+
+                        {/* <div className="cell transactionIds">
+                          <span className="transID">
+                          {item._id}
+                          </span>
+                        </div> */}
+
+                        <div className="cell times">
+                          <span className="time">
+                            {item.transaction_date} 
+                            30 d ago 
+                          </span>
+                        </div>
+
+                        <div className="cell action">
+                          <div className="moreOpt">
+                            <button type="button" className="moreOptBtn" onClick={() => moreOptOpenOld (index)}></button>
+                            <div className={oldOptIndex === index ? "optDropdown" : "optDropdown hide"}>
+                              {item.status == "success" ?
+                                <button type="button" className="refund" onClick={() => openCloseRefundModal (true)}>Refund</button>
+                                :
+                                <button type="button" className="retry">Retry</button> 
+                              }
+                              {/* <button type="button" className="history">History</button> */}
+                            </div>  
+                          </div>
+                        </div>
+                      </div> 
+                      <div className="cellWrapers historyDetails">
+
+                        <div className={showHistory ? "showMore hide" : "showMore"}>
+                          <img onClick={setShowHistoryFn} src={dropVector} alt="" />
+                        </div>
+
+
+                        {showHistory && (
+                        <div className="showDetails">
+                          <div className="cellWrapers success historyInnerInfo">
+                            <div className="cell particulars">
+                              <div className="d-flex">
+                                <div className="iconCont">
+                                  <span>
+                                    <img src={cashSmallWhite} alt="" />
+                                  </span>
+                                </div>
+                                <div className="textCont">
+                                  <div className="status">
+                                    {item.status == "success" ? "successful" : "failed"}
+                                  </div>
+                                  <div>
+                                    <span>Transaction ID:</span> {item._id}
+                                
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="cell amt">
+                              <div className="amount" >
+                                {"$ " + item.amount}
+                              </div>
+                            </div>
+
+                            <div className="cell times">
+                              <span className="time">
+                                12.59 PM 
+                                <span className="historyDate">15 Feb, 2022</span>
+                              </span>
+                            </div>
+                          </div>
+
+                          
+                          
+                          
+                          
+                          <div className="cellWrapers fail historyInnerInfo">
+                            <div className="cell particulars">
+                              <div className="d-flex">
+                                <div className="iconCont">
+                                  <span>
+                                    <img src={cardSmallWhite} alt="" />
+                                  </span>
+                                </div>
+                                <div className="textCont">
+                                  <div className="status">
+                                    {item.status == "success" ? "successful" : "failed"}
+                                  </div>
+                                  <div>
+                                    <span>Transaction ID:</span> {item._id}
+                                
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className="cell amt">
+                              <div className="amount" >
+                                {"$ " + item.amount}
+                              </div>
+                            </div>
+
+                            <div className="cell times">
+                              <span className="time">
+                                12.59 PM 
+                                <span className="historyDate">15 Feb, 2022</span>
+                              </span>
+                            </div>
+                          </div>
+
+                        </div>
+
+                        )}
+
+
+
+
                       </div>
                     </div>
-                  </div>
-                  <div className="cell">
-                    <span className="amount" >
-                      $100
-                    </span>
-                  </div>
-                  <div className="cell">
-                    <span className="transID">
-                     {item._id}
-                    </span>
-                  </div>
-                  <div className="cell">
-                    <span className="time">
-                      {item.transaction_date}
-                    </span>
-                  </div>
-                  <div className="cell">
-                    <div className="moreOpt">
-                      <button type="button" className="moreOptBtn" onClick={() => moreOptOpenOld (index)}></button>
-                      <div className={oldOptIndex === index ? "optDropdown" : "optDropdown hide"}>
-                        {item.status == "success" ?
-                          <button type="button" className="refund" onClick={() => openCloseRefundModal (true)}>Refund</button>
-                          :
-                          <button type="button" className="retry">Retry</button> 
-                        }
-                        <button type="button" className="history">History</button>
-                      </div>  
-                    </div>
-                  </div>
-                </div>
+
+
+
+
+
+
+
+                  //  </div>
                 )
               }) : ""}
               {/* <div className="row fail">

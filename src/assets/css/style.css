@@ -7529,8 +7529,7 @@ p.trackName {
   border-radius: 50%;
 }
 
-.transaction_form label,
-.transaction_form label:not(.toggleBtn) {
+.transaction_form label {
   display: inline-block;
   color: #315571;
   font-size: 13px;
@@ -9481,58 +9480,6 @@ button.addOverviewCustomFiel {
 }
 
 
-/* ........................................ */
-
-.holiday .formControl.half .flatForm {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-}
-.holiday .formControl.half .flatForm span {
-  font-size: 13px;
-  padding-right: 10px;
-  color: #305671;
-}
-.holiday .formControl label{
-  padding-top: 10px;
-}
-.holiday .modalForm .formControl label {
-  padding-top: 15px;
-  font-weight: 500 !important;
-  font-size: 13px !important;
-}
-
-.showHolidayDateValue{
-  background: #F0F5F1;
-  border-radius: 3px;
-  padding: 13px 15px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  margin: 20px 0 0;
-}
-.showHolidayDateValue h3{
-  font-weight: 600;
-  font-size: 13px;
-  line-height: 19px;
-  color: #305671;
-}
-
-.showHolidayDateValue .show{
-  color: #9BAEBC;
-  font-size: 14px;
-}
-.showHolidayDateValue .show span{ 
-  color: #009F40;
-  font-weight: bold;
-  padding-right: 10px;
-}
-
-
-
-
 /* Alert message css start */
 
 .alertMessage {
@@ -9719,7 +9666,7 @@ button.addOverviewCustomFiel {
 
 .onlinePymentboxTrans .paymentSourcetabs{
   width: 100%;
-  padding: 10px 27px;
+  padding: 7px 27px;
 }
 .cmnFormRow.fullWidth.flatForm .preField .cmnFieldStyle {
   width: 180px;
@@ -9727,7 +9674,7 @@ button.addOverviewCustomFiel {
 .notifyBox {
   background: #f0f5f1;
   border-radius: 0px;
-  padding: 13px 15px;
+  padding: 7px 15px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -9737,6 +9684,7 @@ button.addOverviewCustomFiel {
   font-size: 12px;
   line-height: 18px;
   color: #9BAEBC;
+  border-radius: 5px;
 }
 .notifyBox .customCheckbox{
   top: 0;
@@ -9751,7 +9699,7 @@ button.addOverviewCustomFiel {
 .paymentSourcetabs .tabBtns button {
   background: transparent;
   border: none;
-  height: 37px;
+  height: 31px;
   padding-bottom: 10px;
   font-weight: 600;
   font-size: 13px;
@@ -9760,27 +9708,149 @@ button.addOverviewCustomFiel {
   margin-right: 20px;
 }
 .paymentSourcetabs .tabBtns button:hover,
-  .paymentSourcetabs .tabBtns button.active{
+.paymentSourcetabs .tabBtns button.active{
     border-bottom: 2px solid #ED707A;
     color: #ED707A;
 }
-.paymentSourcetabs .tabcontent ul{
+.paymentSourcetabs .tabcontent ul,
+.editform{
   margin: 13px 0;
-  padding: 0;
+  padding: 0 10px 0 0;
+  max-height: 130px;
+  overflow: auto;
 }
+
+.paymentSourcetabs .tabcontent ul::-webkit-scrollbar,
+.editform::-webkit-scrollbar {
+  width: 4px;
+}
+
+.paymentSourcetabs .tabcontent ul::-webkit-scrollbar-track,
+.editform::-webkit-scrollbar-track{
+  background-color: #dce4eb;
+}
+
+.paymentSourcetabs .tabcontent ul::-webkit-scrollbar-thumb,
+.editform::-webkit-scrollbar-thumb{
+  background-color: #f1a668;
+}
+
 .paymentSourcetabs .tabcontent li{
   background: #FFFFFF;
   border: 1px solid #E9EFF5;
   box-sizing: border-box;
   border-radius: 5px;
   padding: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
 }
-.paymentSourcetabs .tabcontent li:hover{
+
+.paymentSourcetabs .tabcontent li:hover,
+.paymentSourcetabs .tabcontent li.active{
   border: 1px solid #6AAAD9;
   box-sizing: border-box;
   box-shadow: 0px 4px 15px rgba(48, 86, 113, 0.1);
 }
+.btnPlaceMiddle{
+  width: 100%;
+  padding: 25px 0 12px 0;
+  text-align: center;
+}
+.btnPlaceMiddle .saveNnewBtn{
+  width: 85px;
+  margin: 0 auto;
+}
 
+.paymentSourcetabs .tabcontent li .img,
+.paymentSourcetabs .tabcontent li .radio{
+  background: transparent;
+  border-radius: 5px;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+.paymentSourcetabs .tabcontent li .img{
+  background: #F3FAFF;
+}
+.paymentSourcetabs .tabcontent li .img path{
+  fill: #9BAEBC;
+}
+.paymentSourcetabs .tabcontent li:hover .img path,
+.paymentSourcetabs .tabcontent li.active .img path{
+  fill:  var(--darkBlue);
+}
+.paymentSourcetabs .tabcontent li .img {
+  fill:  var(--darkBlue);
+}
+.paymentSourcetabs .tabcontent li .text{
+  padding: 0 10px;
+}
+.paymentSourcetabs .tabcontent li .text h3{
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--darkBlue);
+}
+.paymentSourcetabs .tabcontent li .text p{
+  font-size: 12px;
+  line-height: 18px;
+  color: #9BAEBC;
+}
+/* .circleRadio input[type="radio"]:checked + span, 
+.circleRadio input[type="radio"][checked] + span{
+  background-color: #6AAAD9;
+  border-color: #6AAAD9;
+} */
+
+.editformRow{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0 0 0;
+}
+.editformRow .half{
+  width: calc(50% - 10px);
+}
+.editformRow .editFormLabel{
+  color: var(--darkBlue);
+  font-size: 12px;
+  width: 100%;
+  padding: 0 0 7px 0;
+  display: inline-block;
+}
+.editFormStyle{
+  width: 100%;
+  border: none;
+  background: #fff;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+select.editFormStyle{
+  background: #fff url("../images/arrowDown.svg") no-repeat right 5px center;
+}
+.justify-content-center{
+  justify-content: center;
+}
+.mt20{
+  margin-top: 12px;
+}
+.noFill{
+  background: transparent;
+  border: none; 
+  padding: 0;
+  height: 25px;
+}
+.transactionModal .circleForIcon img.small{
+  width: 25px;
+}
 
 
 
