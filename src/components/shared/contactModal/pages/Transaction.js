@@ -33,11 +33,12 @@ const Transaction = (props) => {
   const [successMsg, setSuccessMsg] = useState(null);
   const upcomingOptRef = useRef();
   const oldOptRef = useRef();
+  const oldTrxHistRef = useRef();
 
-  const [showHistory, setShowHistory] = useState(false);
+  const [oldHistoryIndex, setOldHistoryIndex] = useState(null);
 
-  const setShowHistoryFn = () => {
-    setShowHistory(true);
+  const showOldTrxHistory = (index) => {
+    setOldHistoryIndex(index);
   };
 
 
@@ -64,6 +65,7 @@ const Transaction = (props) => {
         setCompleteTransModal(false);
         setUpcomingOptIndex(null);
         setOldOptIndex(null);
+        setOldHistoryIndex(null);
       }
     }
     window.addEventListener('keydown', close)
@@ -141,6 +143,7 @@ const Transaction = (props) => {
       return;
     }
     setOldOptIndex(null);
+    setOldHistoryIndex(null);
   }
 
   const showSuccessAlert = (param) => {
@@ -316,7 +319,7 @@ const Transaction = (props) => {
 
 
                   
-                    <div className={item.status == "success withHistory" ? "row success withHistory" : "row fail withHistory"} key={index}>
+                    <div className={item.history.length && item.history[item.history.length - 1].status == "success" ? "row success withHistory" : "row fail withHistory"} key={index}>
                       <div className="cellWraperss">
 
                         <div className="cell particulars">
@@ -340,7 +343,7 @@ const Transaction = (props) => {
                         <div className="cell amt">
                           <div className="amount" >
                             <span className="tutionAmt">Tution Fee</span>
-                            {"$ " + item.amount}
+                            {item.history.length && item.history[item.history.length - 1].transaction_data.amount}
                           </div>
                         </div>
 
@@ -373,12 +376,12 @@ const Transaction = (props) => {
                       </div> 
                       <div className="cellWrapers historyDetails">
 
-                        <div className={showHistory ? "showMore hide" : "showMore"}>
-                          <img onClick={setShowHistoryFn} src={dropVector} alt="" />
+                        <div className={oldHistoryIndex == index ? "showMore hide" : "showMore"} onClick={() => showOldTrxHistory (index)} >
+                          <img src={dropVector} alt="" />
                         </div>
 
 
-                        {showHistory && (
+                        {oldHistoryIndex == index ?
                         <div className="showDetails">
                           <div className="cellWrapers success historyInnerInfo">
                             <div className="cell particulars">
@@ -454,7 +457,7 @@ const Transaction = (props) => {
 
                         </div>
 
-                        )}
+                        : ""}
 
 
 

@@ -26,7 +26,7 @@ export const TransactionServices = {
 
     fetchOldTransactions: async (contactId) => {
         try {
-            const url = config.transactionUrl + "old-transactions/list/" + contactId;
+            const url = config.transactionUrl + "transactions/old/" + contactId;
             const result = await axios.get(url, { headers: headers });
             return result.data;
         } catch (e) {
@@ -42,7 +42,7 @@ export const TransactionServices = {
 
     fetchUpcomingTransactions: async (contactId, pageNumber) => {
         try {
-            const url = config.transactionUrl + "upcoming-transactions/list/" + contactId + "/" + pageNumber;
+            const url = config.transactionUrl + "transactions/upcoming/" + contactId + "/" + pageNumber;
             const result = await axios.get(url, { headers: headers });
             return result.data;
         } catch (e) {
@@ -58,7 +58,7 @@ export const TransactionServices = {
 
     refund: async (contactId, payload) => {
         try {
-            const url = config.transactionUrl + "old-transactions/refund/" + contactId;
+            const url = config.transactionUrl + "transactions/refund/" + contactId;
             const result = await axios.post(url, payload, { headers: headers });
             return result.data;
         } catch (e) {

@@ -1855,7 +1855,7 @@ img.profileImage {
 }
 
 
-.gymDetails.personalPage .gymdetails_left .showing_gym_data .gymName .profilePicture span {
+.gymDetails.personalPage .gymdetails_left .showing_gym_data .gymName .profilePicture span.profileImgSection.personalDetailsPage {
   font-size: 16px;
   color: #305671;
 
@@ -1888,19 +1888,19 @@ img.profileImage {
 }
 
 
-span.profileImgSection {
-  width: 64px!important;
-  padding: 0!important;
+.showing_gym_data .gymName span.profileImgSection.personalDetailsPage {
+  width: 64px;
+  padding: 0;
 }
 
-span.profileImgSection span {
-  padding-left: 0!important;
+.showing_gym_data .gymName span.profileImgSection.personalDetailsPage span {
+  padding-left: 0;
   padding-top: 5px;
-  width: 100%!important;
-  font-size: 13px!important;
+  width: 100%;
+  font-size: 13px;
   text-align: center;
   cursor: pointer;
-  color: #55BBC9!important;
+  color: #55BBC9;
   float: left;
   width: 100%;
 }
@@ -2020,8 +2020,8 @@ p.dateRange {
     margin-top: 10px;
 }
 
-.blockLi {
-  display: block!important;
+.infoInputs ul li.blockLi {
+  display: block;
 }
 
 .formField.w-100.appModals.formControl:last-child {
@@ -2041,8 +2041,17 @@ span.clearFilter {
     padding-left: 15px;
 }
 
+
+/*
+!important Removed
+
 li.listHeading.appointment > div:after {
   background-image: none!important;
+} */
+
+
+li.listHeading.appointment > div:after {
+  background-image: none;
 }
 
 .dataTableCell.email {
@@ -2066,7 +2075,7 @@ img.monthIcons {
     top: 11px;
 }
 button.saveNnewBtn.appFilter.expContactBtn {
-    background: #FFF!important;
+    background: #FFF;
 }
 
 
@@ -2180,10 +2189,20 @@ form.dsiplay.none {
     z-index: 9;
 }
 
+/*
+
+!important Removed for the set appointment modals
+
 .modalForm.appointmentForm.setappointment.successApp {
       max-height: 194px;
     overflow: hidden;
         min-height: 194px!important;
+} */
+
+.modalForm.appointmentForm.setappointment.successApp {
+  max-height: 194px;
+overflow: hidden;
+    min-height: 194px;
 }
 
 .innerModalHeader.appSuccess {
@@ -2416,15 +2435,16 @@ span.tagLists ul li.tagLi.sellected span.addTag {
   color: #9BAEBC;
   text-align: center;
   border-radius: 6px;
-  padding: 10px 14px;
+  padding: 5px;
   position: absolute;
   z-index: 1;
   bottom: 150%;
-  font-weight: 400;
   left: 50%;
   margin-left: -105px;
   font-size: 12px;
-  filter: drop-shadow(0px 10px 30px rgba(0, 0, 0, 0.102));
+  box-shadow: -3px 3px 17px -2px rgba(99,97,97,0.92);
+-webkit-box-shadow: -3px 3px 17px -2px rgba(99,97,97,0.92);
+-moz-box-shadow: -3px 3px 17px -2px rgba(99,97,97,0.92);
 }
 
 .infoSpan .tooltiptextInfo::after {
@@ -2463,9 +2483,9 @@ span.tagLists ul li.tagLi.sellected span.addTag {
     padding-right: 8px;
 }
 
-.leftSecTransaction input.editableInput, .rightSecTransaction input.editableInput {
+.transaction_form .formsection .leftSecTransaction input.editableInput, .transaction_form .formsection .rightSecTransaction input.editableInput {
 
-    width: 100%!important;
+    width: 100%;
 }
 
 .rightSecTransaction {
@@ -2483,8 +2503,16 @@ span.tagLists ul li.tagLi.sellected span.addTag {
   width: 100%;
 }
 
+
+/*
+Removing the Important for the 
 .transaction_form.products .formsection.gap .editableInput.numberType {
   width: 100%!important;
+} */
+
+
+.transaction_form.products .formsection.gap .editableInput.numberType {
+  width: 100%;
 }
 
 input.editableInput.numberType::-webkit-outer-spin-button,
@@ -2505,7 +2533,7 @@ input.editableInput.numberType[type=number] {
 
 .autoRenewDate {
   background-color: #FFF5ED;
-  padding:11px 25px;
+  padding:11px 28px;
 }
 
 .autoRenewDate {
@@ -2517,9 +2545,9 @@ input.editableInput.numberType[type=number] {
   margin-left: 10px;
 }
 
-.autoRenewDate p {
-  color: #F1A768!important;
-  font-size: 13px!important;
+.transaction_form .formsection.gap.autoRenew.Section .autoRenewDate p {
+  color: #F1A768;
+  font-size: 13px;
 }
 
 span.renewDate {
@@ -2570,14 +2598,6 @@ span.renewDate {
 
 .transaction_form.products.forProducts .formsection.gap {
   padding-right: 20px;
-}
-
-.transaction_form.products.forProducts .formsection.gap .cmnFormCol .cmnFormField.preField {
-  display: inline-block;
-}
-
-.transaction_form.products.forProducts .formsection.gap .cmnFormCol .cmnFormField.preField .unitAmount {
-  top: 2px;
 }
 
 .productAvailable.downpayment.active .previewBox .previewImgBox {
@@ -2692,7 +2712,7 @@ button.delNewDownpayment {
 
 .transaction_form .formsection .editableInput {
   font-size: 12.5px!important;
-  padding: 3px 10px;
+  padding: 0 5px;
 }
 
 .infoSpan .tooltiptextInfo.amount {
@@ -2733,7 +2753,6 @@ button.delNewDownpayment {
 
 .cmnFormField.programsTransaction.listActive .contactListItems {
   top: 68px;
-  height: 175px;
 }
 
 .transaction_form.products.forProducts .formsection.gap .cmnFormRow .cmnFormField.programsTransaction .cmnFieldStyle {
@@ -2745,51 +2764,13 @@ button.delNewDownpayment {
 
 
 .modalDependent.modalAddCourses.modalBackdrop .modalForm  {
-  max-height: 385px;
+  max-height: 580px;
   height: 100%;
 }
 
-.modalDependent .modalForm.pograms form {
-  padding-right: 15px;
-}
-
-
-
-.slickModalBody .modalForm::-webkit-scrollbar {
-  width: 4px;
-}
-
-
-
-.slickModalBody .modalForm::-webkit-scrollbar-track {
-  background-color: #dce4eb;
-}
-
-.slickModalBody .modalForm::-webkit-scrollbar-thumb {
-  background-color: #f1a668;
-}
-
-
-
-.modalDependent .modalForm.pograms form::-webkit-scrollbar {
-  width: 4px;
-}
-
-.modalDependent .modalForm.pograms form::-webkit-scrollbar-track {
-  background-color: #dce4eb;
-}
-
-.modalDependent .modalForm.pograms form::-webkit-scrollbar-thumb {
-  background-color: #f1a668;
-}
-
 .modalDependent.modalAddCourses.modalBackdrop .slickModalBody  {
-  height: 74%;
+  height: 90%;
   padding: 30px 25px;
-}
-
-.modalForm .formControl.cmnFormRow {
-  display: block;
 }
 
 .contactTabsInner h3.courseModalHeading {
@@ -2840,7 +2821,7 @@ p.courseModalPara {
 
 .transaction_form.products.forProducts .formsection.gap.autoRenew .labelWithInfo label {
   width: auto;
-  margin-right: 0px;
+  margin-right: 10px;
 }
 
 .transaction_form.products.forProducts .formsection.gap.autoRenew .labelWithInfo .infoSpan .tooltiptextInfo {
@@ -2979,19 +2960,9 @@ p.courseModalPara {
   font-weight: 700;
   color:#F09070;
 }
-.modalForm .formControl label {
+/* .modalForm .formControl label {
   padding-top: 5px;
-  font-weight:400!important;
-  font-size: 14px!important;
-}
-
-.modalDependent.modalAddCourses.modalBackdrop .modalForm.pograms .formControl  {
-  margin-bottom: 15px;
-}
-
-.payModalDetails .posSellingForm .modalForm.auto .formControl {
-  margin-bottom: 15px;
-}
+} */
 
 .modalbtnHolder.saveCourses .saveNnewBtn.programModal {
   margin: 20px 5px 0;
@@ -3101,24 +3072,19 @@ span.addPaymentInfo {
   font-weight: 400;
   font-size: 12px;
   cursor: pointer;
-  padding: 2px 10px 2px 8px;
+  padding: 2px 8px;
   background-color: transparent;
 }
 span.addPaymentInfo:hover {
   background: #55bbc9;
   color: #fff;
-  border-radius: 15px;
-  filter: saturate(1)
+  border-radius: 5px
 }
 
 p.paymentTypes {
   font-size: 13px;
   color: #9BAEBC;
   padding-left: 8px;
-}
-
-.sideMenuInner.importModalContainer.appointmentListing {
-  width:457px;
 }
 
 .chooseTransactionType.paymentTypes {
@@ -3319,10 +3285,6 @@ ul.totalPaymentUl li:last-child {
 .payDate.instalments {
   display: block;
 }
-
-.payDate.instalments b {
-  color: #305671;
-}
 .payDate.instalmentDate {
   display: block;
   float: right;
@@ -3479,11 +3441,6 @@ label.receivedCash {
 
 .cmnFormField.programsTransaction.listActive .contactListItems button.btn {
   margin-bottom: 10px;
-  font-weight: 500;
-  font-size: 11px;
-  line-height: 16px;
-  color: #55BBC9;
-  flex: 0 0 37px;
 }
 
 .slickModalBody.paymentFailed .slickModalHeader .circleForIcon {
@@ -3542,27 +3499,15 @@ label.receivedCash {
 
 .paymentUlHeader {
   display: flex;
+  text-align: center;
   width: 100%;
-  margin-bottom: 15px;
-  align-items: center;
-  margin-top: 4px;
+  margin-bottom: 8px;
 }
 
 .paymentUlHeader li {
+  flex: 1 1 33.3%;
   color: #305671;
   font-size: 12px;
-}
-
-ul.paymentUlHeader li.paymentModeHeaderLi {
-  flex: 0 0 35%;
-  padding-left: 9.5%;
-}
-ul.paymentUlHeader li.paymentIdHeaderLi {
-  flex: 0 0 50%;
-  padding-left: 1%;
-}
-ul.paymentUlHeader li.paymentAmtHeaderLi {
-  flex: 0 0 15%;
 }
 
 ul.paymentUlInfo {
@@ -3573,17 +3518,10 @@ border: 1px solid #AEE2BB;
 box-sizing: border-box;
 border-radius: 5px;
 margin-bottom: 5px;
-padding: 10px 20px;
-align-items: center;
+padding: 18px;
 }
-ul.paymentUlInfo li.paymentModeLi {
-  flex: 0 0 35%;
-}
-ul.paymentUlInfo li.paymentIdLi {
-  flex: 0 0 50%;
-}
-ul.paymentUlInfo li.paymentAmtLi {
-  flex: 0 0 15%;
+ul.paymentUlInfo li {
+  flex: 1 1 33.3%;
 }
 
 ul.paymentUlInfo li p {
@@ -3597,114 +3535,324 @@ li.paymentModeLi, li.paymentAmtLi {
   align-items: center;
 }
 
-ul.paymentUlInfo li p {
-  color: #305671;
-  font-weight: 600;
-  font-size: 14px;
+
+/* Transaction History */
+
+.transactionListing.oldTransactions {
+  display: block;
 }
 
-ul.paymentUlInfo li.paymentIdLi p {
-  font-weight: 400!important;
-}
-
-ul.paymentUlInfo li.paymentModeLi img {
-  margin-right: 14px;
-}
-
-ul.paymentUlInfo li.paymentAmtLi img {
-  margin-left: 14px;
-}
-.totalPaymentUl {
+.indRowHeadWrapers {
+  display: table;
   width: 100%;
+}
+
+.indRowWrapers {
+  display: table;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+
+
+.transactionListing .row.withHistory {
+  filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.15));
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
+
+
+
+.transactionListing .row.fail.withHistory {
+  border: 1px solid #fce4e7;
+  background: #FFF5F6;
+}
+.transactionListing .row.success.withHistory {
+  border: 1px solid #E6EFE7;
+  background: #F0F5F1;
+}
+
+.transactionListing .row .cellWraperss {
+  display: contents;
+}
+
+
+ .transactionListing.dueTransactions .row .cellWraperss .cell {
+  border-bottom: none;
+ }
+
+ .transactionListing.oldTransactions .row .cellWraperss .cell {
+  border-bottom: none;
+ }
+
+
+ .transactionListing.contractTransactions .row .cellWraperss .cell {
+  border-bottom: none;
+ }
+
+
+
+
+ .transactionListing.oldTransactions .row {
+  display: block;
+  width: 100%;
+  float: left;
+}
+
+.transactionListing.oldTransactions .row .cell {
   display: inline-block;
 }
 
-.totalPaymentUl li:first-child p {
- font-size: 16px;
- font-weight: 400;
+.transactionListing.oldTransactions .row .cell {
+  border-bottom: none;
 }
 
-.totalPaymentUl li:last-child p {
-  font-size: 18px;
-  font-weight: 600;
-}
-.successPageBtn {
-  width: 100%;
-  margin-top: 26px;
-  text-align: center;
+.transactionListing.oldTransactions .row .cell.particulars {
+  width: 50%;
 }
 
-.successPageBtn button {
-  width: auto;
-  display: inline-block;
-  padding-left: 15px;
-  padding-right: 15px;
+.transactionListing.oldTransactions .row .cell.amt {
+    width: 30%;
+}
+
+.transactionListing.oldTransactions .row .cell.amt span.tutionAmt {
+    color: #9BAEBC;
+    width: 100%;
+    float: left;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 3px;
+}
+
+.transactionListing.oldTransactions .row .cell.transactionIds {
+  width: 28%;
+}
+
+.transactionListing.oldTransactions .row .cell.times {
+  width: 15%!important;
+  padding: 18px 5px;
+}
+
+.transactionListing.oldTransactions .row .cell.action {
+  width: 5%;
+}
+
+.transactionListing .row.fail.withHistory .showMore {  
+  background: #fce4e7;
   cursor: pointer;
 }
 
-.successPageBtn button img {
-  margin-left: 15px;
+.transactionListing .row.success.withHistory .showMore {  
+  background: #E6EFE7;
+  cursor: pointer;
 }
 
-.inFormField.duration input {
-  width: 90%;
-  font-size: 13px;
+.showMore {
+  width: 100%;
+  text-align: center;
 }
 
-.infoInputs ul li .formField.durationWraper {
-  padding:0 12px;
-}
-.addPaymentInfo {
-  padding-right: 10px!important;
-}
-.addPaymentInfo:hover {
-  border-radius: 15px!important;
+.showMore img {
+  cursor: pointer;
+  vertical-align: middle;
 }
 
-
-/* Dashboard Page */
-
-.mrrWraper {
-  flex: 0 0 calc(100% - 353px);
-  padding-top: 30px;
+.cellWrapers.historyInnerInfo {
+  border-bottom: none;
 }
-.mrrContraolsWraper {
-  flex: 0 0 353px;
+.showDetails {
+  width: 100%;
+  float: left;
+  padding: 0px 70px;
   background: #fff;
-  min-height: 100vh;
+  border-radius: 0 0 5px 5px;
 }
 
-.dashInnerStructure.dashboardPage {
-  flex-direction: inherit;
-  padding-top: 0;
+
+.transactionListing.oldTransactions .row .cellWrapers.historyInnerInfo .cell {
+  background: transparent;
 }
 
-.mrrContraolsWraper .sideMenuHeader h3 {
-  margin-top: 0;
-  font-size: 16px;
+
+
+.cellWrapers.historyInnerInfo .cell.particulars .status {
+ font-size: 13px;
+ font-weight: 700;
 }
 
-.mrrContraolsWraper ul {
-  padding:0 25px;
+.cellWrapers.historyInnerInfo .cell.particulars div {
+  font-size: 11px;
+  color: #9BAEBC;
 }
 
-.mrrContraolsWraper ul li {
-  margin-bottom: 20px;
+.cellWrapers.historyInnerInfo .cell.particulars ~ div span {
+  color: #B2BFC9;
 }
 
-.mrrContraolsWraper ul li:last-child {
-  margin-bottom: 0px;
+.cellWrapers.fail.historyInnerInfo .cell.particulars .status {
+  color: #ed707a;
 }
 
-.mrrContraolsWraper ul li label span {
-  font-size: 13px;
+.cellWrapers.historyInnerInfo {
+  border-bottom: 1px solid #DCE4EB;
+  padding:2px 0;
+  position: relative;
+}
+
+.cellWrapers.historyInnerInfo:last-child {
+  border-bottom: none;
+}
+
+.cellWrapers.historyInnerInfo .cell.particulars .status {
+  color: #319340;
+}
+
+.cellWrapers.historyInnerInfo .cell.particulars .iconCont {
+  width: 42px;
+  padding-left: 0;
+}
+
+.cellWrapers.historyInnerInfo .cell.particulars .textCont {
+  width:100%;
+  padding-left: 30px;
+}
+
+.cellWrapers.success.historyInnerInfo .cell.particulars .iconCont span {
+  background: #319340;
+}
+
+.cellWrapers.fail.historyInnerInfo .cell.amt {
+  width: 28%;
+}
+
+.cellWrapers.fail.historyInnerInfo .cell.times {
+  width: 22%;
+}
+.cellWrapers.historyInnerInfo .cell.particulars ~ div span.historyDate {
+  width: 100%;
+  float: left;
   color: #305671;
 }
-
-img.dragImg {
-  float: right;
-  margin-top: 3px;
+.transactionListing.oldTransactions .row .cellWrapers.historyInnerInfo .cell.amt {
+  color: #B2BFC9;
+  width: 35%;
+  padding-top: 0%;
 }
-img.graphImg {
-  margin: 0 9px 0 6px;
+
+
+.cellWrapers.historyInnerInfo .cell.particulars {
+  padding-left: 0;
+}
+
+.cellWrapers.historyInnerInfo .cell.particulars .d-flex {
+  position: relative;
+}
+
+.cellWrapers.historyInnerInfo .cell.particulars .d-flex .iconCont {
+  position: absolute;
+  left: -13px;
+  top: 2px;
+}
+
+
+.cellWrapers.historyInnerInfo::before, .cellWrapers.historyInnerInfo::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0px;
+  width: 1px;
+  height: calc(50% - 15px);
+  background: #DCE4EB;
+}
+
+.cellWrapers.historyInnerInfo::after {
+  top: unset;
+  bottom: 0;
+}
+
+
+.cellWrapers.historyInnerInfo:last-child::after { 
+  display: none;
+}
+
+.cellWrapers.fail.historyInnerInfo .cell.particulars .iconCont span {
+  background: #ed707a;
+}
+
+.cellWrapers.historyInnerInfo .cell.particulars div span {
+  color: #345973;
+}
+
+
+
+/* Transaction History Upcoming Transaction */
+
+
+.transactionListing.dueTransactions {
+  display: block;
+}
+
+.transactionListing.dueTransactions .row {
+  display: block;
+  width: 100%;
+  float: left;
+}
+
+.transactionListing.dueTransactions .row .cell {
+  display: inline-block;
+}
+
+.transactionListing.dueTransactions .row .cell {
+  border-bottom: none;
+}
+
+.transactionListing.dueTransactions .row .cell.particulars {
+  width: 50%;
+}
+
+.transactionListing.dueTransactions .row .cell.amt {
+    width: 30%;
+}
+
+.transactionListing.dueTransactions .row .cell.amt span.tutionAmt {
+    color: #9BAEBC;
+    width: 100%;
+    float: left;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 3px;
+}
+
+.transactionListing.dueTransactions .row .cell.transactionIds {
+  width: 28%;
+}
+
+.transactionListing.dueTransactions .row .cell.times {
+  width: 15%!important;
+  padding: 18px 5px;
+}
+
+.transactionListing.dueTransactions .row .cell.action {
+  width: 5%;
+}
+
+
+.transactionListing.oldTransactions .row .cellWrapers.historyInnerInfo .cell {
+  background: transparent;
+}
+
+
+.transactionListing.oldTransactions .row .cellWrapers.historyInnerInfo .cell.amt {
+  color: #B2BFC9;
+  width: 35%;
+  padding-top: 0%;
+}
+
+.transactionListing .row.due {
+  background: #F5F9FD;
+  /* border: 1px solid #E9F1F9; */
+}
+
+.transactionListing.dueTransactions .row.due .cell {
+  background: transparent;
 }
