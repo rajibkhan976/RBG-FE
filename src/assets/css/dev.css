@@ -2821,7 +2821,7 @@ p.courseModalPara {
 
 .transaction_form.products.forProducts .formsection.gap.autoRenew .labelWithInfo label {
   width: auto;
-  margin-right: 10px;
+  margin-right: 0px;
 }
 
 .transaction_form.products.forProducts .formsection.gap.autoRenew .labelWithInfo .infoSpan .tooltiptextInfo {
@@ -3855,4 +3855,38 @@ li.paymentModeLi, li.paymentAmtLi {
 
 .transactionListing.dueTransactions .row.due .cell {
   background: transparent;
+}
+
+
+/* UI fixex 09.03.2022 */
+
+/* Overview modal of Contact Page */
+.overviewFormWrap.overviewInfos .cmnFormField.radioGroup {
+  display: block;
+}
+
+/* Appointment listing in the modal of contact page */
+
+.holidayListWrap.appLists {
+  height: auto;
+  overflow: initial;
+}
+
+.holidayListWrap.appLists:last-child .sideEditOption .dropdownOptions {
+  top: unset;
+  bottom: 30px;
+}
+
+
+/* Program Transaction page tooltip moddifications */
+
+.cmnFormField.preField {
+  display: inline-block;
+}
+.transaction_form.products.forProducts .cmnFormField.preField .unitAmount {
+  top: 0;
+}
+
+.transaction_form.products.forProducts .formsection.gap.autoRenew .autoRenewDate p {
+  color: #f1a768;
 }
