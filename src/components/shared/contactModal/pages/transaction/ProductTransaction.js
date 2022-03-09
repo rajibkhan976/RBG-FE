@@ -183,7 +183,11 @@ const ProductTransaction = (props) => {
   };
 
   const selectProductToAdd = (item, index) => {
-    setSelectedProduct(item);
+    const productPlaceholder = item;
+          productPlaceholder.selectedColor = null;
+          productPlaceholder.selectedSize = null;
+    console.log(productPlaceholder);
+    setSelectedProduct(productPlaceholder);
     setShowProductList(false);
   };
 
@@ -571,7 +575,9 @@ const ProductTransaction = (props) => {
                                 type="radio"
                                 name="select-product-color"
                                 onChange={() => selectedColor(color)}
+                                checked={selectedProduct && selectedProduct.selectedColor !== null && selectedProduct.selectedColor === color}
                               />
+                              {console.log(selectedProduct.selectedColor)}
                               <span
                                 style={{
                                   backgroundColor: color,
@@ -631,7 +637,9 @@ const ProductTransaction = (props) => {
                                 type="radio"
                                 name="select-product-size"
                                 onChange={() => selectedSize(size)}
+                                checked={selectedProduct && selectedProduct.selectedSize !== null && selectedProduct.selectedSize === size}
                               />
+                              {console.log(selectedProduct.selectedSize)}
                               <span>{size}</span>
                             </label>
                           ))

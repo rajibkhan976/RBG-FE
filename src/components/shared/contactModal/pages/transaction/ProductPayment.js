@@ -59,6 +59,7 @@ const ProductPayment = (props) => {
   const datePayment = useRef(null)
   const inputOutstandingDate = useRef(null)
 
+  const [paymentFailed, setPaymentFailed] = useState(null)
   const [hasError, setHasError] = useState(false)
   const [downPaymentErrorMsg, setDownPaymentErrorMsg] = useState({
     title_Err: "",
@@ -238,17 +239,23 @@ const ProductPayment = (props) => {
       payments: paymentsArray
     };
 
+    console.log("productPayload:::::", productPayload, "CARD LIST:::", cardBankList, "BANK LIST:::", bankList);
+
     if(!hasError) {
       try {
         setIsLoader(true)
-        await ProductServices.buyProduct(productPayload)
-        openSuccessMessage()
-        console.log("Success");
+        let productBuy = await ProductServices.buyProduct(productPayload)
+        if(productBuy) {
+          openSuccessMessage()
+          setPaymentFailed(null)
+          setProductPaymentFailed(false)
+          console.log("SUCCESS:::", productBuy);
+        }
       } catch (error) {
-        console.log("ERROR", error);
+        setPaymentFailed(error.message)
+        setProductPaymentFailed(true)
       } finally {
         setIsLoader(false)
-        console.log("Success");
       }
     }
   };
@@ -1392,8 +1399,7 @@ const ProductPayment = (props) => {
             <div className="payModalDetails">
               <img src={cardFail} alt="" />
               <p>
-                Payment Failed. We arn’t able to Process your Payment, Pease try
-                again !
+                {paymentFailed}
               </p>
             </div>
 
