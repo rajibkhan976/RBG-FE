@@ -9857,3 +9857,12 @@ select.editFormStyle{
 
 
 /* ......... css for edit upcoming transaction section ends ......................... */
+
+.labelWithInfo.paymentTime.firstBillTime {
+  padding-bottom: 0;
+  position: relative;
+  top: 5px;
+}
+.labelWithInfo.paymentTime.firstBillTime .toggleBtn {
+  margin: 0 0 0 10px;
+}

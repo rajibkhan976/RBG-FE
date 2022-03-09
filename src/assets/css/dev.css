@@ -2476,7 +2476,7 @@ filter: drop-shadow(0px 10px 30px rgba(0, 0, 0, 0.102));
   display: inline-block;
   color: #315571;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .leftSecTransaction {
@@ -2907,7 +2907,7 @@ p.courseModalPara {
 }
 
 .transaction_form.products.forDownpayment .formsection.gap .leftSecTransaction {
-  width: 42%;
+  width: 43.5%;
   padding-right: 5px;
 }
 
@@ -2916,7 +2916,7 @@ p.courseModalPara {
 }
 
 .transaction_form.products.forDownpayment .formsection.gap .rightSecTransaction {
-  width: 58%;
+  width: 56.5%;
   padding-right: 5px;
 }
 

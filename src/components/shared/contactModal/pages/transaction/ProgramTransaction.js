@@ -16,8 +16,40 @@ import { Scrollbars } from "react-custom-scrollbars-2";
 const ProgramTransaction = (props) => {
   const [isLoader, setIsLoader] = useState(false);
   const [addPogramModal, setAddPogramModal] = useState(false);
-
   const [chooseCategory, setChooseCategory] = useState(false);
+  const [selectedProgram, setSelectedProgram] = useState(null);
+  const [selectedProgramIndex, setSelectedProgramIndex] = useState(null);
+  const [programList, setProgramList] = useState([
+    {
+      "_id": "61e91a3bc58a0c00092f50d0",
+      "name": "Jujutsu",
+    },
+    {
+      "_id": "61e91a3bc58a0c00092f50d0",
+      "name": "Unlimitted 1 year contract",
+    },
+    {
+      "_id": "61e91a3bc58a0c00092f50d0",
+      "name": "Junior martial arts",
+    },
+    {
+      "_id": "61e91a3bc58a0c00092f50d0",
+      "name": "Fitness kickboxing",
+    },
+    {
+      "_id": "61e91a3bc58a0c00092f50d0",
+      "name": "Little dragons",
+    },
+    {
+      "_id": "61e91a3bc58a0c00092f50d0",
+      "name": "Unlimitted 1 year contract",
+    },
+    {
+      "_id": "61e91a3bc58a0c00092f50d0",
+      "name": "Jujutsu",
+    }
+  ]);
+  const selectProgramRef = useRef();
   
 
   const chooseCategoryFn = () => {
@@ -54,8 +86,9 @@ const ProgramTransaction = (props) => {
 
 
   const [communication, setCommunication] = useState(false);
-  const [communicationDownpayment, setCommunicationDownpayment] =
-    useState(false);
+  const [downPayTime, setDownPayTime] = useState(false);
+  const [downPayTime2, setDownPayTime2] = useState(false);
+  const [firstBillingTime, setFirstBillingTime] = useState(false);
 
     const [addDownpayment, setAddDownpayment] = useState(false);
     const addDownpaymentFn = (e) => {
@@ -87,6 +120,35 @@ const ProgramTransaction = (props) => {
     };
 
 
+    const selectProgram = (item, index) => {
+      setSelectedProgram(item);
+      setSelectedProgramIndex(index);
+      setChooseCategory(false);
+    };
+
+    const checkOutsideClick = (e) => {
+      console.log('out side click', e.target, selectProgramRef.current);
+      if (!selectProgramRef && !selectProgramRef.current.contains(e.target)) {
+        console.log("Return");
+        return;
+        
+      }
+      console.log("Out Return");
+      setChooseCategory(false);
+    };
+
+    useEffect(() => {
+      document.addEventListener("mousedown", checkOutsideClick);
+      return () => {
+          document.removeEventListener("mousedown", checkOutsideClick);
+      }
+    }, []);
+
+    const closeAddProgModal = () => {
+      setAddPogramModal(false);
+    };
+
+
     return (
         <form>
                         <div className="transaction_form products forProducts">
@@ -115,14 +177,14 @@ const ProgramTransaction = (props) => {
                                   <input
                                     className="cmnFieldStyle"
                                     type="text"
-                                    placeholder="Eg. Steve Martyns" value="Unlimited 1 year contract"
+                                    placeholder="Eg. Steve Martyns" value={selectedProgram ? selectedProgram.name : "Select a program"}
                                     //onChange={(e)=>props.toggleContactListFn(e)}
                                     onClick={chooseCategoryFn}
                                   />
                                   {chooseCategory && (
                                   // {props.toggleContactList.status && (
                                     <>
-                                      <div className="contactListItems">
+                                      <div className="contactListItems" ref={selectProgramRef}>
                                         <button 
                                           className="btn"
                                           onClick={(e)=>{
@@ -133,10 +195,11 @@ const ProgramTransaction = (props) => {
                                           }}
                                         >+ Add Manually</button>
                                         <ul>
-                                          <li>Unlimited 1 year contract</li>
-                                          <li>Junior martial arts</li>
-                                          <li>Fitness kickboxing</li>
-                                          <li>Little dragons</li>
+                                          {programList.map((item, index) => {
+                                            return (
+                                              <li onClick={() => selectProgram (item, index)} key={index} className={selectedProgramIndex == index ? "active" : ""}>{item.name}</li>
+                                            )
+                                          })}
                                         </ul>          
                                       </div>
                                     </>
@@ -159,7 +222,7 @@ const ProgramTransaction = (props) => {
                                     </span>
                                 </label>
                                 <span className="leftSecTransaction">
-                                    <input type="text" placeholder="12" class="editableInput" value="12" />
+                                    <input type="text" class="editableInput" />
                                 </span>
                                 <span className="rightSecTransaction">
                                     <select className="selectBox">
@@ -240,8 +303,7 @@ const ProgramTransaction = (props) => {
                                         <div className='unitAmount'>
                                             $
                                         </div>
-                                        <input 
-                                            type="number" className='cmnFieldStyle' placeholder='149.00' value="149.00"  />
+                                        <input type="text" className="cmnFieldStyle" />
                                     </div>
                                 </div>
                                 <div className="cmnFormCol">
@@ -274,15 +336,37 @@ const ProgramTransaction = (props) => {
                             <div className="formsection gap">
                                 
                                 <div className="leftSecTransaction">
-                                <label className="labelWithInfo">
+                                    <label className="labelWithInfo">
                                       <span className="labelHeading">First Billing Date</span>
+                                      <label className="labelWithInfo paymentTime firstBillTime">
+                                            <span className="labelHeading">I want to Pay Later</span>
+                                            <label
+                                              className={firstBillingTime ? "toggleBtn active" : "toggleBtn"
+                                              }
+                                            >
+                                              <input
+                                                type="checkbox"
+                                                name="check-communication"
+                                                onChange={(e) =>
+                                                  e.target.checked
+                                                    ? setFirstBillingTime(true)
+                                                    : setFirstBillingTime(false)
+                                                }
+                                              />
+                                              <span className="toggler"></span>
+                                            </label>
+                                        </label>
                                         <span className="infoSpan">
                                             <img src={info_icon} alt="" />
                                             <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                         </span>
                                     </label>
-                                    
-                                    <input type="date" placeholder="mm/dd/yyyy" onChange={firstBillingDateHandel}  class="editableInput" value={firstBillingDate} />
+                                    <div className={firstBillingTime ? "paymentNow" : "paymentNow display"} >
+                                      <p>Payment date <span>Now</span></p>
+                                    </div>
+                                    <div className={firstBillingTime ? "paymentNow display" : "paymentNow"} >
+                                      <input type="date" placeholder="mm/dd/yyyy" onChange={firstBillingDateHandel}  class="editableInput" defaultValue={firstBillingDate} />
+                                    </div>
                                 </div>
                                 <div className="rightSecTransaction">
 
@@ -293,7 +377,7 @@ const ProgramTransaction = (props) => {
                                             <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                         </span>
                                     </label>
-                                <input type="date" placeholder="mm/dd/yyyy" onChange={props.programStartDateHandel}  class="editableInput" value={props.programStartDate} />
+                                <input type="date" placeholder="mm/dd/yyyy" onChange={props.programStartDateHandel}  class="editableInput" defaultValue={props.programStartDate} />
                                 </div>
                             </div>
 
@@ -368,16 +452,14 @@ const ProgramTransaction = (props) => {
                                       <button className="addNewDownpayment" onClick={addDownpaymentFn}>+ Add</button>
                                       <div className="transaction_form products forDownpayment">
                                         <div className="formsection gap">
-                                        <label className="labelWithInfo">
-                                            <span className="labelHeading">Select Category</span>
-                                              <span className="infoSpan">
-                                                  <img src={info_icon} alt="" />
-                                                  <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                                              </span>
-                                         </label>
-                                            <select className="selectBox">
-                                                <option value="">Select category</option>
-                                            </select>
+                                          <label className="labelWithInfo">
+                                              <span className="labelHeading">Title</span>
+                                                <span className="infoSpan">
+                                                    <img src={info_icon} alt="" />
+                                                    <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                </span>
+                                          </label>
+                                            <input type="text" className="cmnFieldStyle" />
                                         </div>
                                         <div className="formsection gap">                                
                                             <div className="leftSecTransaction">
@@ -399,7 +481,7 @@ const ProgramTransaction = (props) => {
                                                       <span class="tooltiptextInfo paymentDate">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span> */}
                                                 <label
-                                                  className={communicationDownpayment ? "toggleBtn active" : "toggleBtn"
+                                                  className={downPayTime ? "toggleBtn active" : "toggleBtn"
                                                   }
                                                 >
                                                   <input
@@ -407,17 +489,17 @@ const ProgramTransaction = (props) => {
                                                     name="check-communication"
                                                     onChange={(e) =>
                                                       e.target.checked
-                                                        ? setCommunicationDownpayment(true)
-                                                        : setCommunicationDownpayment(false)
+                                                        ? setDownPayTime(true)
+                                                        : setDownPayTime(false)
                                                     }
                                                   />
                                                   <span className="toggler"></span>
                                                 </label>
                                             </label>
-                                            <div className={communicationDownpayment ? "paymentNow" : "paymentNow display"} >
+                                            <div className={downPayTime ? "paymentNow" : "paymentNow display"} >
                                               <p>Payment date <span>Now</span></p>
                                             </div>
-                                            <div className={communicationDownpayment ? "paymentNow display" : "paymentNow"} >
+                                            <div className={downPayTime ? "paymentNow display" : "paymentNow"} >
                                               <input type="date" placeholder="mm/dd/yyyy" onChange={paymentDateHandel1}  class="editableInput" value={paymentDate1} />
                                             </div>
                                             </div>
@@ -426,7 +508,7 @@ const ProgramTransaction = (props) => {
                                 
                                           <div className="leftSecTransaction">
                                             <label className="labelWithInfo">
-                                                <span className="labelHeading">Payment Type</span>
+                                                <span className="labelHeading">Payment Mode</span>
                                                   <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
                                                       <span class="tooltiptextInfo paymentType">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
@@ -461,16 +543,14 @@ const ProgramTransaction = (props) => {
                                       <button className="delNewDownpayment" onClick={delDownpaymentFn}><img src={deleteBtn} alt="" /> Delete</button>
                                       <div className="transaction_form products forDownpayment">
                                         <div className="formsection gap">
-                                        <label className="labelWithInfo">
-                                                <span className="labelHeading">Select Category</span>
+                                          <label className="labelWithInfo">
+                                                <span className="labelHeading">Title</span>
                                                   <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
                                                       <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
                                             </label>
-                                            <select className="selectBox" onChange={props.choseCatHandel}>
-                                                <option value="">Select category</option>
-                                            </select>
+                                            <input type="text" className="cmnFieldStyle" />
                                         </div>
                                         
                                         <div className="formsection gap">                                
@@ -495,7 +575,7 @@ const ProgramTransaction = (props) => {
                                                       <span class="tooltiptextInfo paymentDate">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span> */}
                                                 <label
-                                                  className={props.communicationDownpayment ? "toggleBtn active" : "toggleBtn"
+                                                  className={downPayTime2 ? "toggleBtn active" : "toggleBtn"
                                                   }
                                                 >
                                                   <input
@@ -503,17 +583,17 @@ const ProgramTransaction = (props) => {
                                                     name="check-communication"
                                                     onChange={(e) =>
                                                       e.target.checked
-                                                        ? setCommunicationDownpayment(true)
-                                                        : setCommunicationDownpayment(false)
+                                                        ? setDownPayTime2(true)
+                                                        : setDownPayTime2(false)
                                                     }
                                                   />
                                                   <span className="toggler"></span>
                                                 </label>
                                             </label>
-                                            <div className={communicationDownpayment ? "paymentNow" : "paymentNow display"} >
+                                            <div className={downPayTime2 ? "paymentNow" : "paymentNow display"} >
                                               <p>Payment date <span>Now</span></p>
                                             </div>
-                                            <div className={communicationDownpayment ? "paymentNow display" : "paymentNow"} >
+                                            <div className={downPayTime2 ? "paymentNow display" : "paymentNow"} >
                                             <input type="date" placeholder="mm/dd/yyyy" onChange={paymentDateHandel} class="editableInput" value={paymentDate} />
                                             </div>
                                             </div>
@@ -522,7 +602,7 @@ const ProgramTransaction = (props) => {
                                 
                                           <div className="leftSecTransaction">
                                           <label className="labelWithInfo">
-                                                <span className="labelHeading">Payment Type</span>
+                                                <span className="labelHeading">Payment Mode</span>
                                                   <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
                                                       <span class="tooltiptextInfo paymentType">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
@@ -560,19 +640,19 @@ const ProgramTransaction = (props) => {
                             </div>
 
 
-                                {addPogramModal && (
+                                {addPogramModal && ( 
                                   <div className="modalDependent modalAddCourses modalBackdrop">
                                     {isLoader ? <Loader /> : ''}
                                         <div className="slickModalBody">
                                           <div className="slickModalHeader coursesModalHeader">
-                                            <button className="topCross" onClick={props.closeCourseModal}><img src={crossTop} alt="" /></button>
+                                            <button type="button" className="topCross" onClick={closeAddProgModal}><img src={crossTop} alt="" /></button>
                                             <div className="circleForIcon"><img src={modalTopIcon} alt="" /></div>
                                             <h3 className="courseModalHeading">Add a Program</h3>
                                             <p className="courseModalPara">Choose a category to add a new program below</p>
                                           </div>
                                           <div className="modalForm pograms">
                                             {/* <Scrollbars> */}
-                                              <form method="post">
+                                              
                                                 <div className="formControl">
                                                   <label>Select Category</label>
                                                   <select name="category">                    
@@ -691,7 +771,7 @@ const ProgramTransaction = (props) => {
                                                   <button type="submit" name="saveNew"
                                                     className="saveNnewBtn programModal"><span>Save &amp; New</span><img src={arrow_forward} alt="" /></button>
                                                 </div>
-                                              </form>
+                                              
                                             {/* </Scrollbars> */}
                                           </div>
 
