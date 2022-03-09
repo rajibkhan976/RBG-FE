@@ -633,7 +633,7 @@ const Overview = (props) => {
                 </div>
             }
             <form>
-                <div className="overviewFormWrap">
+                <div className="overviewFormWrap overviewInfos">
                     {isLoader ? <Loader/> : ""}
                     <div className="overviewForm cmnForm">
                         <div className="cmnFormHead">
