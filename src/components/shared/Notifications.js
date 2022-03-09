@@ -7,10 +7,13 @@ import { utils } from "../../helpers";
 import { NotificationServices } from "../../services/notification/NotificationServices";
 import Loader from "./Loader";
 import moment from "moment";
+import Status from "../contact/importContact/status";
 
 const Notifications = () => {
   let [detailNotification, setDetailNotification] = useState(null);
   const [isLoader, setIsLoader] = useState(false);
+  const [showImportContactStory, setShowImportContactStory] = useState(false);
+  const [importId, setImportId] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [notificationData, setNotificationData] = useState(null);
   const [notificationsListing, setNotificationListing] = useState(null);
@@ -29,12 +32,36 @@ const Notifications = () => {
     let filter = userNotifications.filter(obj => {
       return obj._id === notificationType
     });
+    console.log(filter)
     setNotificationListing(filter[0].notifications);
 
     //Set detail notification type
     setDetailNotification(notificationType);
   };
-
+  const onClickNotification = (e) => {
+    if (e.type === 'import-contact') {
+      setShowImportContactStory(true);
+      setImportId(e.contactId);
+    } else if (e.type === 'payment') {
+      dispatch({
+        type: actionTypes.CONTACTS_MODAL_ID,
+        contact_modal_id: {
+          "id": e.contactId,
+          "page": 4
+        },
+      });
+    }
+  }
+  const closeImportStatusModal = () => {
+    setShowImportContactStory(false);
+    setImportId("");
+  }
+  const showNotification = (e) => {
+    return <p onClick={() => onClickNotification(e)}
+              dangerouslySetInnerHTML={{
+                __html: e.notification
+              }}/>
+  }
   return (
     <div className="notificationsListing">
       {isLoader ? <Loader /> : ""}
@@ -177,27 +204,18 @@ const Notifications = () => {
                       </svg>
                     </figure>
                   </div>
-
-                  {/* <p>
-                    <span className="client">Sourav</span> paid <span className="ammount">$100</span> successfully
-                    for the product <span className="product">“Online course”</span>
-                  </p> */}
-
-                  <p
-                    dangerouslySetInnerHTML={{
-                      __html: e.notification
-                    }}></p>
+                  { showNotification(e) }
                 </li>
               );
             })}
           </ul>
-          <div className="loadMorebutton">
-            <button>Load More …</button>
-          </div>
         </>
       ) : (
         ""
       )}
+      {
+        showImportContactStory ? <Status importId={importId} closeModal={closeImportStatusModal}/> : ""
+      }
     </div>
   );
 };

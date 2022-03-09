@@ -116,7 +116,7 @@ function Step1(props) {
                         <li className="importStape active" data-step="1">Upload File<span>&gt;</span></li>
                         <li className="importStape" data-step="2">Mapping Details<span>&gt;</span></li>
                         <li className="importStape" data-step="2">Confirm Mapping<span>&gt;</span></li>
-                        <li className="importStape" data-step="3">Import Summary</li>
+                        <li className="importStape" data-step="3">Summary</li>
                     </ul>
                 </div>
                 <div id="step_1" className="">

@@ -12,7 +12,8 @@ const notificationReducer = (state = initialState, action) => {
             newState.data = action.data;
             break;
         case actionTypes.NOTIFICATION_RECEIVED:
-            newState.data[0].notifications.push(JSON.parse(action.data));
+            let noti = [JSON.parse(action.data), ...newState.data[0].notifications]
+            newState.data[0].notifications = noti;
             newState.data[0].unread++;
             newState.isNew = true;
             break;

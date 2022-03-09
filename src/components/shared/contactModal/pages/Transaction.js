@@ -93,9 +93,9 @@ const Transaction = (props) => {
   const fetchOldTransactions = async (contactId) => {
     try {
       setIsLoader(true);
-      const response = await TransactionServices.fetchOldTransactions(contactId);
-      setOldTransactionList(response.transactions);
-      console.log("Old transaction response ", response);
+      //const response = await TransactionServices.fetchOldTransactions(contactId);
+      //setOldTransactionList(response.transactions);
+      //console.log("Old transaction response ", response);
     } catch (e) {
 
     } finally {
@@ -107,11 +107,11 @@ const Transaction = (props) => {
     try {
       setIsScroll(true);
       setIsLoaderTab(true);
-      const response = await TransactionServices.fetchUpcomingTransactions(contactId, pageNumber);
-      setUpcomingTransaction([ ...upcomingTransaction, ...response.transactions]);
+      //const response = await TransactionServices.fetchUpcomingTransactions(contactId, pageNumber);
+      //setUpcomingTransaction([ ...upcomingTransaction, ...response.transactions]);
       setIsScroll(false);
-      setUpcomingPagination(response.pagination);
-      console.log("Upcoming transaction response ", response);
+      //setUpcomingPagination(response.pagination);
+      //console.log("Upcoming transaction response ", response);
     } catch (e) {
 
     } finally {

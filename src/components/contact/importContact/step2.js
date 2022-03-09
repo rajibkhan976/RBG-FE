@@ -185,7 +185,7 @@ function Step2(props) {
             setCustomFields([]);
         }
     }
-    const handleSetp2Submit = async () => {
+    const handleSetp2Submit = () => {
         const custom = props.getState('custom');
         setPrimaryError(false);
         if (custom.primaryField === 'email') {
@@ -247,24 +247,7 @@ function Step2(props) {
                     key: uploadedKey,
                     importType: importType
                 }
-                setIsLoader(true);
-                let importResponse = await ImportContactServices.importContact(JSON.stringify(payload));
-                setIsLoader(false);
-                if (importResponse.data.success) {
-                    let errors = importResponse.data.errorCount;
-                    let newData = importResponse.data.newDataLength;
-                    let duplicateCount = importResponse.data.duplicateCount;
-                    let object = {
-                        duplicateCount: duplicateCount,
-                        newData: newData,
-                        totalRecords: totalRecord,
-                        errors: errors
-                    }
-                    props.setState('custom', object);
-                    props.next();
-                } else {
-                    console.log("api error ! " + importResponse.data.message);
-                }
+                callImportContactApi(payload);
             } else {
                 setOpenBasicInfo(true);
                 setOpenWorkInfo(true);
@@ -284,28 +267,41 @@ function Step2(props) {
                     key: uploadedKey,
                     importType: importType
                 }
-                setIsLoader(true);
-                let importResponse = await ImportContactServices.importContact(JSON.stringify(payload));
-                setIsLoader(false);
-                if (importResponse.data.success) {
-                    let errors = importResponse.data.errorCount;
-                    let newData = importResponse.data.newDataLength;
-                    let duplicateCount = importResponse.data.duplicateCount;
-                    let object = {
-                        duplicateCount: duplicateCount,
-                        newData: newData,
-                        totalRecords: totalRecord,
-                        errors: errors,
-                        duplicate: custom.duplicate
-                    }
-                    props.setState('custom', object);
-                    props.next();
-                } else {
-                    console.log("api error ! " + importResponse.data.message);
-                }
+                callImportContactApi(payload);
             }
         }
         setClickCount(clickCount + 1);
+    }
+    const callImportContactApi = async (payload) => {
+        let object = {
+            status: false,
+            message: "Something went wrong. Please try again after some time."
+        }
+        try {
+            setIsLoader(true);
+            let importResponse = await ImportContactServices.importContact(JSON.stringify(payload));
+            if (importResponse.data.success) {
+                object = {
+                    status: true,
+                    message: "File importing is in progress. We will be notifying you once import is getting completed. You can close this window."
+                }
+            } else {
+                object = {
+                    status: false,
+                    message: importResponse.data.message
+                }
+            }
+        } catch (e) {
+            object = {
+                status: false,
+                message: e.message
+            }
+        } finally {
+            setIsLoader(false);
+            props.setState('custom', object);
+            props.next();
+        }
+
     }
     const toggleBasicInfo = () => {
         setOpenBasicInfo(!openBasicInfo);
@@ -381,7 +377,7 @@ function Step2(props) {
                         <li className="importStape active" data-step="1">Upload File<span>&gt;</span></li>
                         <li className="importStape active" data-step="2">Mapping Details<span>&gt;</span></li>
                         <li className={"importStape " + (!primaryError && clickCount > 0 ? 'active' : '')} data-step="2">Confirm Mapping<span>&gt;</span></li>
-                        <li className="importStape" data-step="3">Import Summary</li>
+                        <li className="importStape" data-step="3">Summary</li>
                     </ul>
                 </div>
                 <div id="step_2">

@@ -52,7 +52,6 @@ function HeaderDashboard(props) {
 
   const loggedInUser = useSelector((state) => state.user.data);
   const userNotifications = useSelector((state) => state.notification);
-  console.log('notification log in header dashboard', userNotifications);
 
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
@@ -294,17 +293,18 @@ function HeaderDashboard(props) {
 
   //Mark all notifications as read
   const markAllAsRead = async() => {
-    console.log('Mark all as read');
     try {
       let markNotifications = await NotificationServices.markAllAsRead();
       if (markNotifications) {
-        console.log('Mark all as read success', markNotifications);
+        props.fetchNotifications()
       }
     } catch (e) {
       console.log('Error in mark all as read', e);
     }
   }
-
+  const handlerScrollNotification = (e) => {
+    props.handlerScrollNotification(e);
+  }
   return (
     <>
       <div className="dashboardHeader">
@@ -557,7 +557,7 @@ function HeaderDashboard(props) {
               </button>
             </div>
 
-            <div className="sideMenuBody">
+            <div className="sideMenuBody"  onScroll={(e) => handlerScrollNotification(e)}>
               <Notifications />
             </div>
           </div>

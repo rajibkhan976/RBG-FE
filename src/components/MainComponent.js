@@ -31,9 +31,9 @@ import * as actionTypes from "../actions/types";
 import GetPositionMiddleware from "../actions/GetPosition.middleware";
 import { NotificationServices } from "../services/notification/NotificationServices";
 
-
 // For socket io connection
-const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlProd;
+//const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlProd;
+const socketUrl = config.socketUrlProd;
 const socket = io(socketUrl, {
   transports: ["websocket"],
   origins: "*"
@@ -44,16 +44,19 @@ const MainComponent = () => {
   const [showInnerleftMenu, setshowInnerleftMenu] = useState(true);
   const [createButton, setCreateButton] = useState(null);
   const [setupMenuState, setSetupMenuState] = useState(false);
+  const [isLoadingNotification, setIsLoadingNotification] = useState(false);
   const dispatch = useDispatch();
   const loggedInUser = useSelector((state) => state.user.data);
-
+  const [notificationPage, setNotificationPage] = useState(1);
+  const [isPageIsLoading, setIsPageIsLoading] = useState(false);
   const toggleLeftSubMenu = (status) => {
     setshowInnerleftMenu(status);
   };
   const [showLeftSubMenu, setShowLeftSubMenu] = useState(true);
   const [isShowContact, setIsShowContact] = useState(false);
   const [isNewFeaturesAvailable, setIsNewFeaturesAvailable] = useState(false);
-
+  const [contactId, setContactId] = useState("");
+  const [page, setPage] = useState("");
   const closeNotification = () => {
     setIsNewFeaturesAvailable(false);
   }
@@ -95,6 +98,14 @@ const MainComponent = () => {
     });
   }, [loggedInUser]);
 
+  useEffect(() => {
+    return () => {
+      socket.off('setNotification');
+      socket.off('setFeatureUpdateNotification');
+      socket.off('connect');
+      socket.disconnect();
+    }
+  }, [])
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(function (position) {
@@ -104,11 +115,25 @@ const MainComponent = () => {
   }, [])
 
   const modalId = useSelector((state) => state.contact.contact_modal_id);
-  useEffect(() => {
-    if (modalId !== '') {
-      setIsShowContact(true);
+  useEffect(async () => {
+    console.log(modalId, typeof modalId)
+    let page = 1;
+    if (typeof modalId === 'object') {
+      setContactId(modalId.id);
+      setPage(modalId.page);
+      console.log(modalId.id, page)
+      if (modalId.id !== '') {
+        setIsShowContact(true);
+      } else {
+        setIsShowContact(false);
+      }
     } else {
-      setIsShowContact(false);
+      setContactId(modalId);
+      if (modalId !== '') {
+        setIsShowContact(true);
+      } else {
+        setIsShowContact(false);
+      }
     }
   }, [modalId]);
   const toggleCreate = (e) => {
@@ -175,8 +200,14 @@ const MainComponent = () => {
   const fetchNotifications = async () => {
 
     try {
-      const result = await NotificationServices.fetchNotifications(1);
+      setIsLoadingNotification(true);
+      setIsPageIsLoading(true);
+      let page = notificationPage;
+      const result = await NotificationServices.fetchNotifications(page);
+      setIsLoadingNotification(false);
+      setIsPageIsLoading(false);
       if (result) {
+        setNotificationPage(page + 1);
         // Update notification store
         dispatch({
           type: actionTypes.NOTIFICATION_DATA,
@@ -187,7 +218,11 @@ const MainComponent = () => {
       console.log('Error while fetching notifications', e);
     }
   };
-
+  const handlerScrollNotification = (element) => {
+    if ((element.target.scrollHeight - element.target.scrollTop === element.target.clientHeight) && !isLoadingNotification && !isPageIsLoading) {
+      fetchNotifications()
+    }
+  }
   return (
     <>
       <div className="mainComponent">
@@ -200,7 +235,8 @@ const MainComponent = () => {
         >
           <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu} clickedSetupStatus={(e) => clickedSetupStatus(e)} />
           <div className="dashMain">
-            <HeaderDashboard toggleCreate={(e) => toggleCreate(e)} setupMenuState={setupMenuState} />
+            <HeaderDashboard toggleCreate={(e) => toggleCreate(e)} setupMenuState={setupMenuState}
+                             fetchNotifications={fetchNotifications} handlerScrollNotification={(e) => handlerScrollNotification(e)}/>
             <Switch>
               <Route exact path="/dashboard">
                 <DashboardRoutes toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
@@ -253,7 +289,7 @@ const MainComponent = () => {
           </div>
         </div>
       </div>
-      {isShowContact && <ContactModal contactId={modalId} />}
+      {isShowContact && <ContactModal contactId={contactId} page={page}/>}
 
       {isNewFeaturesAvailable && <UpdateNotification version="2.10.1" closeNotification={closeNotification} />}
 

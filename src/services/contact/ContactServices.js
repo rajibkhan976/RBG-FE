@@ -148,5 +148,22 @@ export const ContactService = {
                 throw new Error("Please contact support.");
             }
         }
+    },
+    showStatusOfImport: async (payload) => {
+        try {
+            let url = config.getContactsUrl + '/fetch-status-import'
+            const result = await axios.post(url, payload, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error in status import modal. Please contact support");
+            }
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                throw new Error(e.response.data.message);
+            } else {
+                throw new Error("Please contact support.");
+            }
+        }
     }
 };

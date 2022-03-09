@@ -215,6 +215,10 @@ const Overview = (props) => {
             setBasicinfoCountry(contact.contact.country);
         }
         setIsLoader(false);
+        console.log(props)
+        if (props.page > 1) {
+            props.jump(props.page)
+        }
     }
 
     useEffect(() => {

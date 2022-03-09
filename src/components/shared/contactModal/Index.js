@@ -70,7 +70,6 @@ const ContactModal = (props) => {
             location: "before"
         }
     };
-
     const [stickeyHeadStatus, setStickeyHeadStatus] = useState(false);
     const [contactName, setContactName] = useState("");
     const [isLoader, setIsLoader] = useState(false);
@@ -284,7 +283,7 @@ const ContactModal = (props) => {
                     <div className="tabBarArea">
                         <Steps config={config}>
                             <Step title="Overview" component={Overview} getContactDetails={getContactDetails} closeContactModal={closeContactModal}
-                                contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} />
+                                contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} page={props.page}/>
                             <Step title="Attendance" component={Attendance} />
                             <Step title="Appointment" component={Appointment} contactId={props.contactId} />
                             <Step title="Transaction"

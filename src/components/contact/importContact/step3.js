@@ -1,5 +1,6 @@
 import React from "react";
 import fileDoneIcon from "../../../assets/images/fileDoneIcon.svg";
+import fileFail_icon from "../../../assets/images/fileFail_icon.svg";
 import done_white_icon from "../../../assets/images/done_white.svg";
 
 function FinalStep(props) {
@@ -12,62 +13,25 @@ function FinalStep(props) {
                         <li className="importStape active" data-step="1">Upload File<span>&gt;</span></li>
                         <li className="importStape active" data-step="2">Mapping Details<span>&gt;</span></li>
                         <li className="importStape active" data-step="2">Confirm Mapping<span>&gt;</span></li>
-                        <li className="importStape active" data-step="3">Import Summary</li>
+                        <li className="importStape active" data-step="3">Summary</li>
                     </ul>
                 </div>
                 <div id="step_5">
-                    <div className="fileImportBox green">
-                        <figure className="statusIcon">
-                            <img src={fileDoneIcon} alt="" />
-                        </figure>
-                        <h3>The selected file has been uploaded successfully.</h3>
-                        {
-                            custom.newData > 0 ?
-                                <div className="uploadFileBtn">
-                                    View Records
-                                    <input type="button" onClick={() => props.handleParentFun()}/>
-                                </div> : ""
-                        }
-
-                    </div>
-                    <div className="uploadedDataSummary">
-                        <h3>Summary</h3>
-                        <ul>
-                            <li>
-                                <div className="summryCell">
-                                    <p>Total records added</p>
-                                    <span>{custom.newData}</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div className="summryCell">
-                                    <p>Total records {custom.duplicate === 'skip' ? 'skipped' : 'updated' }</p>
-                                    <span>{custom.totalRecords - (custom.newData + custom.errors.length )}</span>
-                                </div>
-                            </li>
-                            <li>
-                                <div className="summryCell error">
-                                    <p>Number of errors</p>
-                                    <span>{custom.errors.length}</span>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    { custom.errors.length ?
-                        <div className="errorList">
-                        <h3>Error Details</h3>
-                        <ul>
-                            { custom.errors.map((error, index) =>
-                                <li>
-                                    <div className="errorRowNo">Row { error.index }:</div>
-                                    <p>
-                                        {error.message}
-                                    </p>
-                                </li>
-                            )}
-                        </ul>
-                    </div>
-                        : ""
+                    {
+                        custom.status ?
+                            <div className="fileImportBox green">
+                                <figure className="statusIcon">
+                                    <img src={fileDoneIcon} alt="" />
+                                </figure>
+                                <h3>{custom.message}</h3>
+                            </div>
+                            :
+                            <div className="fileImportBox red">
+                                <figure className="statusIcon">
+                                    <img src={fileFail_icon} alt="" />
+                                </figure>
+                                <h3>{custom.message}</h3>
+                            </div>
                     }
                 </div>
             </div>
