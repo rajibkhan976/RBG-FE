@@ -14,7 +14,9 @@ const EditTrModal = (props) => {
     const [editCardDetailsPart, setEditCardDetailsPart] = useState(false);
     const [editBankDetailsPart, setEditBankDetailsPart] = useState(false);
 
-    const [cashOrOnline, setCashOrOnline] = useState("");
+    const [checkingForCard, setCheckingForCard] = useState(false);
+    const [checkingForBank, setCheckingForBank] = useState(false);
+    const [addBtnClicked, setAddBtnClicked] = useState(false);
 
     const [openOnlineBox, setOpenOnlineBox] = useState(false);
 
@@ -22,15 +24,46 @@ const EditTrModal = (props) => {
         amount: "",
         date: "",
         mode: "",
+        form : "",
         note: false
     });
     const [formErrorMsg, setFormErrorMsg] = useState({
         amount: "",
         date: "",
         mode: "",
+        form:"",
         note: false,
     });
+    
+    const [addCardFormData, setAddCardFormData] = useState({
+        cardNumber: "",
+        cardHolderName: "",
+        exDate: "",
+        cvv: ""
+    });
+    const [addCardformErrorMsg, setAddCardFormErrorMsg] = useState({
+        cardNumber: "",
+        cardHolderName: "",
+        exDate: "",
+        cvv: ""
+    });
 
+    const [addBankFormData, setAddBankFormData] = useState({
+        accNumber: "",
+        accHolderName: "",
+        routing: "",
+        checking: ""
+    });
+    const [addBankformErrorMsg, setAddBankFormErrorMsg] = useState({
+        accNumber: "",
+        accHolderName: "",
+        routing: "",
+        checking: ""
+    });
+
+        
+
+    
     const editCardHandler = (e) =>{
         e.preventDefault();
         setEditCardPart(true);
@@ -59,6 +92,147 @@ const EditTrModal = (props) => {
         setEditCardPart(false);
         setEditCardDetailsPart(false);
     }
+        
+     const addCardNumberHandler = (e) =>{
+        let val = e.target.value;
+        addCardfieldErrorCheck.checkcardNumber(val);
+    }
+    const addCardNameHandler = (e) =>{
+        let val = e.target.value;
+        addCardfieldErrorCheck.checkcardName(val);
+    }
+    const cardExpiryHandler = (e) =>{
+        let val = e.target.value;
+        addCardfieldErrorCheck.checkcardExp(val);
+    }
+    const cardcvvHandler = (e) =>{
+        let val = e.target.value;
+        addCardfieldErrorCheck.checkcardcvv(val);
+    }
+
+
+
+    const addCardfieldErrorCheck = {
+
+        checkcardNumber: (val) => {
+            setAddCardFormData({...addCardFormData, cardNumber: val});
+            if (!val) {
+                setAddCardFormErrorMsg(prevState => ({...prevState, cardNumber: "Please enter Card Number"}));
+            } else {
+                setAddCardFormErrorMsg(prevState => ({...prevState, cardNumber: ""}));
+            }
+        },
+        checkcardName: (val) => {
+            setAddCardFormData({...addCardFormData, cardHolderName: val});
+            if (!val) {
+                setAddCardFormErrorMsg(prevState => ({...prevState, cardHolderName: "Please enter Card Holder Name"}));
+            } else {
+                setAddCardFormErrorMsg(prevState => ({...prevState, cardHolderName: ""}));
+            }
+        },
+        checkcardExp: (val) => {
+            setAddCardFormData({...addCardFormData, exDate: val});
+            if (!val) {
+                setAddCardFormErrorMsg(prevState => ({...prevState, exDate: "Please enter expiry date"}));
+            } else {
+                setAddCardFormErrorMsg(prevState => ({...prevState, exDate: ""}));
+            }
+        },
+        checkcardcvv: (val) => {
+            setAddCardFormData({...addCardFormData, cvv: val});
+            if (!val) {
+                setAddCardFormErrorMsg(prevState => ({...prevState, cvv: "Please enter CVV"}));
+            } else {
+                setAddCardFormErrorMsg(prevState => ({...prevState, cvv: ""}));
+            }
+        }
+    }
+  
+
+    const submitCardChangeForm = (e) =>{
+        e.preventDefault();
+        addCardfieldErrorCheck.checkcardNumber(addCardFormData.cardNumber);
+        addCardfieldErrorCheck.checkcardName(addCardFormData.cardHolderName);
+        addCardfieldErrorCheck.checkcardExp(addCardFormData.exDate);
+        addCardfieldErrorCheck.checkcardcvv(addCardFormData.cvv);       
+        setAddBtnClicked(true) ;
+
+        if(addCardFormData.cardNumber === "" && addCardFormData.cardHolderName === "" && addCardFormData.exDate === "" && addCardFormData.cvv !== ""){
+            setCheckingForCard(false);
+        } else{
+            setCheckingForCard(true);
+        }
+       
+    }
+
+    const addBankNumberHandler = (e) =>{
+        let val = e.target.value;
+        addBankfieldErrorCheck.checkaccNumber(val);
+    }
+    const addBankNameHandler = (e) =>{
+        let val = e.target.value;
+        addBankfieldErrorCheck.checkaccHolderName(val);
+    }
+    const bankRoutingHandler = (e) =>{
+        let val = e.target.value;
+        addBankfieldErrorCheck.checkrouting(val);
+    }
+    const bankTypeHandler = (e) =>{
+        let val = e.target.value;
+        addBankfieldErrorCheck.checkchecking(val);
+    }
+
+    const addBankfieldErrorCheck = {
+
+        checkaccNumber: (val) => {
+            setAddBankFormData({...addBankFormData, accNumber: val});
+            if (!val) {
+                setAddBankFormErrorMsg(prevState => ({...prevState, accNumber: "Please enter Account Number"}));
+            } else {
+                setAddBankFormErrorMsg(prevState => ({...prevState, accNumber: ""}));
+            }
+        },
+        checkaccHolderName: (val) => {
+            setAddBankFormData({...addBankFormData, accHolderName: val});
+            if (!val) {
+                setAddBankFormErrorMsg(prevState => ({...prevState, accHolderName: "Please enter Account holder name"}));
+            } else {
+                setAddBankFormErrorMsg(prevState => ({...prevState, accHolderName: ""}));
+            }
+        },
+        checkrouting: (val) => {
+            setAddBankFormData({...addBankFormData, routing: val});
+            if (!val) {
+                setAddBankFormErrorMsg(prevState => ({...prevState, routing: "Please enter Routing"}));
+            } else {
+                setAddBankFormErrorMsg(prevState => ({...prevState, routing: ""}));
+            }
+        },
+        checkchecking: (val) => {
+            setAddBankFormData({...addBankFormData, checking: val});
+            if (!val) {
+                setAddBankFormErrorMsg(prevState => ({...prevState, checking: "Please enter Checking"}));
+            } else {
+                setAddBankFormErrorMsg(prevState => ({...prevState, checking: ""}));
+            }
+        },
+    }
+
+    
+    const submitBankChangeForm = (e) =>{
+        e.preventDefault();
+        addBankfieldErrorCheck.checkaccNumber(addBankFormData.accNumber);
+        addBankfieldErrorCheck.checkaccHolderName(addBankFormData.accHolderName);
+        addBankfieldErrorCheck.checkrouting(addBankFormData.routing);
+        addBankfieldErrorCheck.checkchecking(addBankFormData.checking);   
+        setAddBtnClicked(true) ;
+        if (addBankFormData.accNumber === "" && addBankFormData.accHolderName === "" && addBankFormData.routing === "" && addBankFormData.checking === ""){
+            setCheckingForBank(false);
+        }else{
+            setCheckingForBank(true);
+        }
+    }
+
     const selectCashOrOnlineHandler = (e) =>{
         let val = e.target.value;
         fieldErrorCheck.checkmode(val);
@@ -75,12 +249,15 @@ const EditTrModal = (props) => {
     }
     const changeTransAmountHandler = (e) =>{
         let val = e.target.value;
-        fieldErrorCheck.checkamount(val);
+        const re = new RegExp(/^\d*\.?\d{0,2}$/);
+        if (re.test(val)) {
+            fieldErrorCheck.checkamount(val);
+        }
+        
     }
     const checkNoteHandler = (e) =>{
         let val = e.target.value;
         fieldErrorCheck.checknote(val);
-        
     }
     
     
@@ -117,6 +294,15 @@ const EditTrModal = (props) => {
             } else {
                 setFormErrorMsg(prevState => ({...prevState, note: ""}));
             }
+        },
+        checkform: () => {
+            if (editTransFormData.mode === "online") {
+                if((addBtnClicked === true && checkingForBank === false) || (addBtnClicked === true &&  checkingForCard === false)){
+                    setFormErrorMsg(prevState => ({...prevState, form: "Fill up the form for add bank/add card"}));   
+                } else{
+                    setFormErrorMsg(prevState => ({...prevState, form: ""}));   
+                } 
+            }
         }
     }
      
@@ -126,9 +312,13 @@ const EditTrModal = (props) => {
         fieldErrorCheck.checkmode(editTransFormData.mode);
         fieldErrorCheck.checkamount(editTransFormData.amount);
         fieldErrorCheck.checkdate(editTransFormData.date);
-
-        console.log("fffffffffffffffff",editTransFormData.mode,editTransFormData.amount,editTransFormData.date);
+        fieldErrorCheck.checknote(editTransFormData.note);
+        
+        fieldErrorCheck.checkform();    
     }
+   
+
+
 
     return (
         <div className="modalBackdrop transactionModal">
@@ -159,7 +349,7 @@ const EditTrModal = (props) => {
                             <div className="errorMsg">{formErrorMsg.mode}</div>
                             }
                             {openOnlineBox && 
-                                 <div className="onlinePymentboxTrans">
+                              <div className="onlinePymentboxTrans">
                                  <div className="head">
                                      <h3>
                                          { (editCardDetailsPart || editBankDetailsPart) ? "Add a New Payment Source" : "Payment Source"}         
@@ -183,7 +373,7 @@ const EditTrModal = (props) => {
                                                      <li>
                                                          <div className="radio">
                                                              <div class="circleRadio">
-                                                                 <input type="radio"/>
+                                                                 <input type="radio" name="radio11"/>
                                                                  <span></span>
                                                              </div>
                                                          </div>
@@ -200,7 +390,7 @@ const EditTrModal = (props) => {
                                                      <li>
                                                          <div className="radio">
                                                              <div class="circleRadio">
-                                                                 <input type="radio"/>
+                                                                 <input type="radio" name="radio11"/>
                                                                  <span></span>
                                                              </div>
                                                          </div>
@@ -217,7 +407,7 @@ const EditTrModal = (props) => {
                                                      <li>
                                                          <div className="radio">
                                                              <div class="circleRadio">
-                                                                 <input type="radio"/>
+                                                                 <input type="radio" name="radio11"/>
                                                                  <span></span>
                                                              </div>
                                                          </div>
@@ -236,26 +426,57 @@ const EditTrModal = (props) => {
                                              {/* edit form for card */}
                                              {editCardDetailsPart && 
                                                  <div className="editform">
+    
                                                      <div class="editformRow">
                                                          <label class="editFormLabel">Card Number</label>
-                                                         <input type="text" className="editFormStyle" placeholder="xxxx-xxxx-xxxx-xxxx"/>
+                                                         <input type="text" className="editFormStyle" 
+                                                           placeholder="xxxx-xxxx-xxxx-xxxx"
+                                                           value={addCardFormData.cardNumber}
+                                                           onChange={addCardNumberHandler} 
+                                                           />
+                                                          
+                                                           { addCardformErrorMsg.cardNumber &&
+                                                                <div className="errorMsg">{addCardformErrorMsg.cardNumber}</div>
+                                                            }
                                                      </div>
                                                      <div class="editformRow">
                                                          <label class="editFormLabel">Card Holder Name</label>
-                                                         <input type="text" className="editFormStyle" placeholder="Ex. Adam Smith"/>
+                                                         <input type="text" className="editFormStyle" 
+                                                           placeholder="Ex. Adam Smith"
+                                                           value={addCardFormData.cardHolderName}
+                                                           onChange={addCardNameHandler}
+                                                         />
+                                                         { addCardformErrorMsg.cardHolderName &&
+                                                                <div className="errorMsg">{addCardformErrorMsg.cardHolderName}</div>
+                                                            }
                                                      </div>
                                                      <div class="editformRow">
                                                          <div className="half">
                                                              <label class="editFormLabel">Expiry Date</label>
-                                                             <input type="text" className="editFormStyle" placeholder="mm/yy"/>
+                                                             <input type="text" className="editFormStyle" 
+                                                               placeholder="mm/yy"
+                                                               value={addCardFormData.exDate}        
+                                                               onChange={cardExpiryHandler}
+                                                             />
+                                                             { addCardformErrorMsg.exDate &&
+                                                                <div className="errorMsg">{addCardformErrorMsg.exDate}</div>
+                                                             }
                                                          </div>
                                                          <div className="half">
-                                                             <label class="editFormLabel">CVC</label>
-                                                             <input type="text" className="editFormStyle"/>
+                                                             <label class="editFormLabel">CVV</label>
+                                                             <input type="text" className="editFormStyle"
+                                                               onChange={cardcvvHandler}
+                                                               value={addCardFormData.cvv}        
+                                                             />
+                                                             { addCardformErrorMsg.cvv &&
+                                                                <div className="errorMsg">{addCardformErrorMsg.cvv}</div>
+                                                             }
                                                          </div>
                                                      </div>
                                                      <div className="d-flex justify-content-center mt20">
-                                                         <button class="creatUserBtn"><img class="plusIcon" src={plus_icon} alt=""/><span>Add my Card</span></button>
+                                                         <button class="creatUserBtn" onClick={submitCardChangeForm}>
+                                                             <img class="plusIcon" src={plus_icon} alt=""/><span>Add my Card</span>
+                                                         </button>
                                                      </div>
                                                  </div>
                                              }
@@ -287,30 +508,56 @@ const EditTrModal = (props) => {
                                              
                                             </ul>
                                             }
+                                            
                                              {editBankDetailsPart && 
                                                  <div className="editform">
                                                      <div class="editformRow">
                                                          <label class="editFormLabel">Account Number</label>
-                                                         <input type="text" className="editFormStyle"/>
+                                                         <input type="text" className="editFormStyle"
+                                                           onChange={addBankNumberHandler}
+                                                           value={addBankFormData.accNumber} 
+                                                         />
+                                                          { addBankformErrorMsg.accNumber &&  
+                                                                <div className="errorMsg">{addBankformErrorMsg.accNumber}</div>
+                                                             }
                                                      </div>
                                                      <div class="editformRow">
                                                          <label class="editFormLabel">Account Holder Name</label>
-                                                         <input type="text" className="editFormStyle"/>
+                                                         <input type="text" className="editFormStyle"
+                                                           onChange={addBankNameHandler}
+                                                           value={addBankFormData.accHolderName} 
+                                                         />
+                                                         { addBankformErrorMsg.accHolderName &&  
+                                                                <div className="errorMsg">{addBankformErrorMsg.accHolderName}</div>
+                                                             }
                                                      </div>
                                                      <div class="editformRow">
                                                          <div className="half">
-                                                             <label class="editFormLabel">Routing #</label>
-                                                             <input type="text" className="editFormStyle" />
+                                                             <label class="editFormLabel">Routing #</label>   
+                                                             <input type="text" className="editFormStyle" 
+                                                                onChange={bankRoutingHandler}                                                              
+                                                                value={addBankFormData.routing}                                                              
+                                                             />
+                                                              { addBankformErrorMsg.routing &&  
+                                                                <div className="errorMsg">{addBankformErrorMsg.routing}</div>
+                                                             }
                                                          </div>
                                                          <div className="half">
                                                              <label class="editFormLabel">Account Type</label>
-                                                             <select className="editFormStyle">
-                                                                 <option>Checking</option>
+                                                             <select className="editFormStyle" 
+                                                                onChange={bankTypeHandler}  
+                                                                value={addBankFormData.checking}                                                              
+                                                             >
+                                                                 <option value="">Select</option>
+                                                                 <option value="Checking">Checking</option>
                                                              </select>
+                                                             { addBankformErrorMsg.checking &&  
+                                                                <div className="errorMsg">{addBankformErrorMsg.checking}</div>
+                                                             }
                                                          </div>
                                                      </div>
                                                      <div className="d-flex justify-content-center mt20">
-                                                         <button class="creatUserBtn"><img class="plusIcon" src={plus_icon} alt=""/><span>Add my Card</span></button>
+                                                         <button class="creatUserBtn" onClick={submitBankChangeForm}><img class="plusIcon" src={plus_icon} alt=""/><span>Add my Card</span></button>
                                                      </div>
                                                      
                                                  </div>
@@ -321,7 +568,9 @@ const EditTrModal = (props) => {
                              </div>  
                             } 
                             {/* //total box is ended here  */}
-                           
+                            { formErrorMsg.form &&
+                            <div className="errorMsg">{formErrorMsg.form}</div>
+                            }
                         </div> 
                        <div class="cmnFormRow fullWidth flatForm">
                             <label class="cmnFieldName">Change Amount</label>
@@ -340,6 +589,9 @@ const EditTrModal = (props) => {
                                 </div>
                                 <div>I want update this change for all the upcoming transactions of this subscription</div>
                             </label>
+                            { formErrorMsg.note &&
+                            <div className="errorMsg">{formErrorMsg.note}</div>
+                            }
                         </div>
                         <div className="btnPlaceMiddle">
                             <button class="saveNnewBtn" onClick={editMainFormSubmit}>Submit</button>
