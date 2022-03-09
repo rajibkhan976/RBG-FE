@@ -256,7 +256,7 @@
   border-top: none;
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
-  height: 196px;
+  height: 182px;
   display: flex;
   flex-direction: column;
 }
@@ -292,8 +292,9 @@
   color: #f1a668;
 }
 
-.contactListItems li+li {
-  margin-top: 12px;
+.contactListItems li {
+  /* margin-top: 12px; */
+  padding: 6px 10px;
 }
 
 .contactListItems ul::-webkit-scrollbar,
@@ -2203,4 +2204,19 @@ input::-webkit-inner-spin-button {
   border: 1px solid #ed707a;
   background-color: #fff4f4;
 }
+.productPaymentTransaction .errorMsg {
+  font-size: 10px;
+  line-height: 1.5;
+  margin-top: 5px;
+}
+ul.paymentUlInfo li.paymentModeLi,
+ul.paymentUlHeader li.paymentModeHeaderLi {
+  flex: 1 1 auto;
+}
 /* Add a product */
+
+/* Later additions for Program (Transaction) */
+.contactListItems li.active {
+  background-color: #e4ecf3;
+}
+/* Later additions for Program (Transaction) */

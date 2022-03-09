@@ -507,7 +507,7 @@ const ProductTransaction = (props) => {
                                 </figure>
                                 <div className="productItemShorts">
                                   <span>{productItem.name}</span>
-                                  <strong>$: {productItem.price}</strong>
+                                  <strong>$ {productItem.price}</strong>
                                 </div>
                               </li>
                             ))}

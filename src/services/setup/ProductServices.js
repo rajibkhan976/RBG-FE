@@ -215,8 +215,16 @@ export const ProductServices = {
         try {
             const url = config.buyProductUrl;
             const result = await axios.post(url, payload, { headers: headers });
-            return result.data;
+            
+            if (result.status === 200) {
+              return result.data;
+            } else {
+              throw new Error(
+                "There is an error adding this(ese) Product(s). Please contact support"
+              );
+            }
         } catch (e) {
+            console.log(e.response.data);
             throw new Error(e.response.data.message);
         }
     }

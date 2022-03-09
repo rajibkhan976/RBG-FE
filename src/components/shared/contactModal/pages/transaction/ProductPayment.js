@@ -19,6 +19,7 @@ import paymentFail from "../../../../../assets/images/paymentFailed.svg";
 import paySuccess from "../../../../../assets/images/paySuccess.png";
 import Loader from "../../../../shared/Loader";
 import { BillingServices } from "../../../../../services/billing/billingServices";
+import { ProductServices } from "../../../../../services/setup/ProductServices";
 
 const ProductPayment = (props) => {
   const [isLoader, setIsLoader] = useState(false);
@@ -29,7 +30,10 @@ const ProductPayment = (props) => {
   })
   const [downPaymentActive, setDownPaymentActive] = useState(false);
   const [payLater, setPayLater] = useState(false);
-  const [newPay, setNewPay] = useState("card");
+  const [newPay, setNewPay] = useState({
+    type: "card",
+    billingId: null
+  });
   const [newPayModal, setNewPayModal] = useState(false);
   const [productPaymentFailed, setProductPaymentFailed] = useState(false);
   const downPaymentList = useRef(null);
@@ -40,17 +44,20 @@ const ProductPayment = (props) => {
     payment_type: "online",
     title: "Outstanding",
     type: "outstanding",
-    paymentDate: new Date(new Date()),
+    paymentDate: new Date(new Date()).toISOString().split('T')[0],
     isPayNow: 1,
-    payment_type: "online",
     payment_status: "unpaid"
   });
   const [cardBankList, setCardBankList] = useState([]);
   const [bankList, setBankList] = useState([]);
   const [payments, setPayments] = useState([])
+  const [newCard, setNewCard] = useState(null)
+  const [newBank, setNewBank] = useState(null)
+  const [newPayMethod, setNewPayMethod] = useState(null)
   const downpaymentsContainer = useRef(null);
   const createDownpayAmount = useRef(null)
   const datePayment = useRef(null)
+  const inputOutstandingDate = useRef(null)
 
   const [hasError, setHasError] = useState(false)
   const [downPaymentErrorMsg, setDownPaymentErrorMsg] = useState({
@@ -70,101 +77,40 @@ const ProductPayment = (props) => {
   });
 
   const fetchCardBank = async () => {
+    let cardBanksList;
+
     try {
-      console.log("Fetching cards");
       setIsLoader(true);
       let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
-      console.log("cardBankResponce", cardBankResponce);
+          cardBanksList = cardBankResponce;
+
       if (cardBankResponce) {
         setCardBankList(cardBankResponce.cards);
         setBankList(cardBankResponce.banks);
+        setNewPay({
+          ...newPay,
+          type: cardBankResponce.primary
+        })
+        setNewPayMethod(cardBankResponce.primary)
+        console.log("cardBankResponce", cardBankResponce);
       }
     } catch (error) {
-      console.log(error);
+      //  //  console.log(error);
     } finally {
+      console.log("cardBankList", cardBanksList && cardBanksList);
+    
+      setNewPay({
+        ...newPay,
+        billingId: cardBanksList && cardBanksList.primary === "card" ? cardBanksList.cards[0]._id : cardBanksList.banks[0]._id
+      })
+
       setIsLoader(false);
     }
   };
 
-  //   toggle pay later for down payment
-  const addpayLater = (e, i) => {
-    let today = new Date();
-    let dd = String(today.getDate()).padStart(2, '0');
-    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-    let yyyy = today.getFullYear();
-    
-    today = yyyy + '/' + mm + '/' + dd;
-
-    try {
-      setIsLoader(true)
-      setCreatedDownpayment({
-        ...createdDownPayment,
-        isPayNow: e.target.checked ? 0 : 1,
-        paymentDate: e.target.checked ? today : ""
-      })
-    } catch (error) {
-      console.log(error);
-    } finally{
-      setIsLoader(false)
-    }
-  };
-
-  //   add pay date
-  const addPayDate = (e, i) => {
-    let dateSelected = e.target.value;
-    
-    if(e.target.value !== "") {
-      try {
-        setIsLoader(true)
-        setCreatedDownpayment({
-          ...createdDownPayment,
-          paymentDate: dateSelected
-        })
-      } catch (error) {
-        console.log(error);
-      } finally{
-        setIsLoader(false)
-      }
-    } else {
-      setHasError(true)
-      setDownPaymentErrorMsg({
-        ...downPaymentErrorMsg,
-        payDate_Err: "Next payment cannot be empty"
-      })
-    }
-  };
-
-  const payDateChangeOverview = () => {
-    setPayLater(!payLater);
-  };
-
-  const billPayment = (e) => {
-    e.preventDefault();
-    setProductPaymentFailed(true);
-  };
-
-  const openSuccessMessage = () => {
-    setProductPaymentFailed(false)
-    props.setSuccessProductPaymentFn(true)
-  }
-
-  const resetProductForm = (e) => {
-    e.preventDefault()
-    props.setSuccessProductPaymentFn(false)
-    props.setProductTransactionPayment(false)
-    props.chooseTransctionTypePOS()
-    props.setCartState([])
-  }
-
   useEffect(()=>{
-    console.log("createdDownPayment", createdDownPayment);
-  },[createdDownPayment])
+    fetchCardBank();
 
-  useEffect(() => {
-    
-  }, [downPayments, outStanding]);
-
-  useEffect(() => {
     const getTotalCart = () => {
       if (props.cartState.length > 0) {
         const totalPlaceholder = 0;
@@ -188,22 +134,145 @@ const ProductPayment = (props) => {
           amount: (parseFloat(sumAmt)+parseFloat(taxtAmt)).toFixed(2)
         })
 
-        console.log("sumAmt", sumAmt, taxtAmt);
+        //  //  console.log("sumAmt", sumAmt, taxtAmt);
       } else {
-        console.log("Sum now", props.cartState);
+        //  //  console.log("Sum now", props.cartState);
         setTotalAmt(0.00);
         setTotalTaxAmt(0.00);
       }
     };
+
     getTotalCart();
-  }, [props.cartState, totalAmt, totalTaxAmt]);
+  },[])
+
+  //   toggle pay later for down payment
+  const addpayLater = (e, i) => {
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
+    
+    today = yyyy + '-' + mm + '-' + dd;
+
+    try {
+      setIsLoader(true)
+      setCreatedDownpayment({
+        ...createdDownPayment,
+        isPayNow: e.target.checked ? 0 : 1,
+        paymentDate: e.target.checked ? today : ""
+      })
+    } catch (error) {
+    } finally{
+      setIsLoader(false)
+    }
+  };
+
+  //   add pay date
+  const addPayDate = (e, i) => {
+    let dateSelected = e.target.value;
+    
+    if(e.target.value !== "") {
+      try {
+        setIsLoader(true)
+        setCreatedDownpayment({
+          ...createdDownPayment,
+          paymentDate: dateSelected
+        })
+        setHasError(false)
+        setDownPaymentErrorMsg({
+          ...downPaymentErrorMsg,
+          payDate_Err: ""
+        })
+      } catch (error) {
+        setHasError(true)
+        setDownPaymentErrorMsg({
+          ...downPaymentErrorMsg,
+          payDate_Err: error
+        })
+      } finally{
+        setHasError(false)
+        setDownPaymentErrorMsg({
+          ...downPaymentErrorMsg,
+          payDate_Err: ""
+        })
+        setIsLoader(false)
+      }
+    } else {
+      setHasError(true)
+      setDownPaymentErrorMsg({
+        ...downPaymentErrorMsg,
+        payDate_Err: "Next payment cannot be empty"
+      })
+    }
+  };
+
+  const payDateChangeOverview = (e) => {
+    const outStandingPlaceholder = outStanding;
+
+    try{
+      if(e.target.checked) {
+        setPayLater(true);
+        outStandingPlaceholder.paymentDate = nextPayDate().toISOString().split('T')[0]
+      } else {
+        setPayLater(false)
+        outStandingPlaceholder.paymentDate = todayPayDate().toISOString().split('T')[0]
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setOutstanding(outStandingPlaceholder)
+      setIsLoader(false)
+    }
+  };
+
+  const billPayment = async (e) => {
+    e.preventDefault();
+    const paymentsArray = [...downPayments]
+          outStanding.amount !== 0 && paymentsArray.push(outStanding)
+
+    const productPayload = {
+      contact: props.contactId,
+      default_transaction: newPay && newPay.type,
+      billingId: newPay.billingId !== null && newPay.billingId,
+      items: props.cartState,
+      payments: paymentsArray
+    };
+
+    if(!hasError) {
+      try {
+        setIsLoader(true)
+        await ProductServices.buyProduct(productPayload)
+        openSuccessMessage()
+        console.log("Success");
+      } catch (error) {
+        console.log("ERROR", error);
+      } finally {
+        setIsLoader(false)
+        console.log("Success");
+      }
+    }
+  };
+
+  const openSuccessMessage = () => {
+    setProductPaymentFailed(false)
+    props.setSuccessProductPaymentFn(true)
+  }
+
+  const resetProductForm = (e) => {
+    e.preventDefault()
+    props.setSuccessProductPaymentFn(false)
+    props.setProductTransactionPayment(false)
+    props.chooseTransctionTypePOS()
+    props.setCartState([])
+  }
 
   const checkAndSetDownPayments = (e) => {    
     if (e.target.checked) {
+      //  console.log("outStanding.amount       ::::           ", outStanding.amount , typeof outStanding.amount);
       setDownPaymentActive(true);
       setCreatedDownpayment({
         title: "Downpayment",
-        amount: outStanding.amount,
+        amount: parseFloat(outStanding.amount).toFixed(2),
         type: "downpayment",
         isPayNow: 1,
         payment_type: "cash",
@@ -219,10 +288,10 @@ const ProductPayment = (props) => {
       setDownPayments([])
       setOutstanding({
         ...outStanding,
-        amount: (parseFloat(totalAmt)+parseFloat(totalTaxAmt)).toFixed(2),
+        amount: parseFloat(totalAmt)+parseFloat(totalTaxAmt),
         payment_type: "online",
       });
-      console.log("parseFloat(totalAmt+totalTaxAmt).toFixed(2)", (parseFloat(totalAmt)+parseFloat(totalTaxAmt)).toFixed(2));
+      // console.log("parseFloat(totalAmt+totalTaxAmt).toFixed(2)", parseFloat(totalAmt)+parseFloat(totalTaxAmt));
     }
   };
 
@@ -266,13 +335,13 @@ const ProductPayment = (props) => {
       setHasError(true);
       setDownPaymentErrorMsg({
         ...downPaymentErrorMsg,
-        amount_Err: parseFloat(e.target.value) === 0 ? "Amount cannot be 0" : parseFloat(e.target.value) > parseFloat(outStanding.amount) ? "Amount cannot be more than outstanding amount" : "Amount cannot be nothing"
+        amount_Err: parseFloat(e.target.value).toFixed(2) === 0 ? "Amount cannot be 0" : parseFloat(e.target.value).toFixed(2) > parseFloat(outStanding.amount).toFixed(2) ? "Amount cannot be more than outstanding amount" : "Amount cannot be nothing"
       })
     }    
   }
 
   const changePaymentType = (e) => {
-    console.log("changePaymentType:::::", e.target.value);
+    //  //  console.log("changePaymentType:::::", e.target.value);
 
     setCreatedDownpayment({
       ...createdDownPayment,
@@ -281,7 +350,7 @@ const ProductPayment = (props) => {
   }
 
   const changePaymentStatus = (e) => {
-    console.log("changePaymentStatus:::::", e.target.value);
+    //  //  console.log("changePaymentStatus:::::", e.target.value);
     
     setCreatedDownpayment({
       ...createdDownPayment,
@@ -293,7 +362,7 @@ const ProductPayment = (props) => {
   const addNewDownPayment = (e, i) => {
     e.preventDefault();
 
-    console.log("outstanding", outStanding);
+      console.log("outstanding ::: 266  ::::::::  in add ",outStanding.amount, typeof outStanding.amount);
 
     let createdDownPaymentPlaceholder = createdDownPayment;
 
@@ -303,15 +372,14 @@ const ProductPayment = (props) => {
       setIsLoader(true);
 
       try {
-        console.log("createdDownPaymentPlaceholder", createdDownPaymentPlaceholder);
         setDownPayments(prevDownpayments => [...prevDownpayments, createdDownPaymentPlaceholder])
         setOutstanding({
           ...outStanding,
-          amount: parseFloat(outStanding.amount) - parseFloat(createdDownPaymentPlaceholder.amount) === 0 ? 0 : parseFloat(outStanding.amount) - parseFloat(createdDownPaymentPlaceholder.amount)
+          amount: parseFloat(outStanding.amount).toFixed(2) - parseFloat(createdDownPaymentPlaceholder.amount).toFixed(2) <= 0 ? 0.00 : (parseFloat(outStanding.amount) - parseFloat(createdDownPaymentPlaceholder.amount)).toFixed(2)
         })
-        console.log(":::createdDownPayment:::", outStanding);
+          // console.log(":::createdDownPayment:::", outStanding);
       } catch (err) {
-        console.log(err);
+        //  //  console.log(err);
         setHasError(true);
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
@@ -326,12 +394,12 @@ const ProductPayment = (props) => {
           payMode_Err: "",
           payStatus_Err: "",
         })
-
-        createDownpayAmount.current.value = outStanding.amount > 0 ? parseFloat(outStanding.amount - createdDownPayment.amount).toFixed(2) : 0
-
+        
+        createDownpayAmount.current.value = outStanding.amount > 0 ? (outStanding.amount - parseFloat(createdDownPayment.amount)).toFixed(2) : 0
+        
         setCreatedDownpayment({
           title: `Downpayment`,
-          amount: outStanding.amount > 0 ? parseFloat(outStanding.amount - createdDownPayment.amount).toFixed(2) : 0,
+          amount: outStanding.amount > 0 ? (outStanding.amount - parseFloat(createdDownPayment.amount)).toFixed(2) : 0,
           type: "downpayment",
           isPayNow: 0,
           payment_type: "online",
@@ -346,7 +414,7 @@ const ProductPayment = (props) => {
   const deleteNewDownPayment = (e, downpay, i) => {
     e.preventDefault();
     try {
-      console.log("outStanding.amount", downpay)
+      //  //  console.log("outStanding.amount", downpay)
       setDownPayments(downpayment => downpayment.filter((dn, index) => index !== i))
       downpay.paymentDate ? setCreatedDownpayment({
         title: "Downpayment",
@@ -369,7 +437,7 @@ const ProductPayment = (props) => {
         amount: downpay.amount
       })
     } catch (error) {
-      console.log(error);
+      //  //  console.log(error);
     }
   };
 
@@ -386,13 +454,30 @@ const ProductPayment = (props) => {
   }
 
   const payDueMode = (e) => {
-    console.log(e.target.value);
+    try {
+      setIsLoader(true);
+
+      if(e.target.value === "online") {
+        setOutstanding({
+          ...outStanding,
+          payment_type: "online"
+        }) 
+      }
+      if(e.target.value === "cash") {
+        setOutstanding({
+          ...outStanding,
+          payment_type: "cash"
+        }) 
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoader(false)
+    }
   }
 
-  const changeOutstandingPayDate = (e) => {
-    console.log(e.target.value);
-    
-    let outStandingDateSelected = e.target.value;
+  const changeOutstandingPayDate = (e) => {    
+    let outStandingDateSelected = e.target.value.toISOString().split('T')[0];
     
     if(e.target.value !== "") {
       try {
@@ -402,7 +487,7 @@ const ProductPayment = (props) => {
           paymentDate: outStandingDateSelected
         })
       } catch (error) {
-        console.log(error);
+        //  //  console.log(error);
         setHasError(true)
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
@@ -426,7 +511,7 @@ const ProductPayment = (props) => {
   }
 
   const billingTotalAmt = () => {
-    console.log("Downpayments:::", downPayments.length);
+    //  //  console.log("Downpayments:::", downPayments.length);
     if(downPayments.length === 0) {
       if(payLater){
         return 0
@@ -450,9 +535,55 @@ const ProductPayment = (props) => {
     }
   }
 
+  // mark first downpayment PAID
+  const markDownPaid = (e) => {
+    const downPaymentsPlaceholder = [...downPayments];
+    let today = new Date();
+    let dd = String(today.getDate()).padStart(2, '0');
+    let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = today.getFullYear();
+    
+    today = yyyy + '-' + mm + '-' + dd;
+
+    try {
+      setIsLoader(true)
+      if(e.target.checked) {
+        downPaymentsPlaceholder[0].isPayNow = 1
+        downPaymentsPlaceholder[0].paymentDate = today
+        downPaymentsPlaceholder[0].payment_status = "paid"
+      } else {
+        downPaymentsPlaceholder[0].isPayNow = 0
+        downPaymentsPlaceholder[0].paymentDate = nextPayDate().toISOString().split('T')[0]
+        downPaymentsPlaceholder[0].payment_status = "unpaid"
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setCreatedDownpayment(downPaymentsPlaceholder)
+      console.log(downPaymentsPlaceholder);
+      setIsLoader(false)
+    }
+  }
+  // mark first downpayment PAID
+
+  // Change default payment method
+  const changeDefaultPay= (e, payItem, type, i) => {
+    try {
+      setIsLoader(true)
+      setNewPay({
+        type: type,
+        billingId: payItem._id
+      })      
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoader(false)
+    }
+  }
+
   // Edit created Downpayments
   const changeDownpaymentTitle = (e, downpay, i) => {
-    console.log(e.target);
+    //  //  console.log(e.target);
     const downPaymentsPlaceholder = [...downPayments];
     
     if(e.target.value.trim().length > 0) {
@@ -474,72 +605,167 @@ const ProductPayment = (props) => {
     }
   }
   const changeDownpaymentAmount = (e, downpay, i) => {
-    if(e.target.value[0] == 0) {
-      e.target.value = ""
-    }
-
     const downPaymentsPlaceholder = [...downPayments];
+    const totalPlaceholder = 0;
 
-    if(e.target.value !== "" && parseFloat(e.target.value) !== 0 && parseFloat(e.target.value) <= parseFloat(downpay.amount)) {
-      if(outStanding.amount === 0) {
-        if(parseFloat(e.target.value) < parseFloat(downpay.amount)) {
-          downPaymentsPlaceholder[i].amount = e.target.value;
-          setOutstanding({
-            ...outStanding,
-            amount: parseFloat(downpay.amount) - parseFloat(e.target.value)
-          })
+    const totalDownpaymentsAmt = downPayments.filter((dpTarget, index) => index !== i).reduce(
+      (previousValue, currentValue) =>
+        parseFloat(previousValue) + parseFloat(currentValue.amount),
+      totalPlaceholder
+    );
 
-          setDownPayments(downPaymentsPlaceholder)      
-          setHasError(false);
-          setDownPaymentErrorMsg({
-            ...downPaymentErrorMsg,
-            edit_Amount_Err: ""
-          })
-        }
-        else if(parseFloat(e.target.value) > parseFloat(downpay.amount)) {
-          setHasError(true);
-          setDownPaymentErrorMsg({
-            ...downPaymentErrorMsg,
-            edit_Amount_Err: "Amount cannot be more than outstanding amount"
-          })
-        }
+    try {
+      if(e.target.value.trim() === "" || parseFloat(e.target.value) === 0) {
+        //  //  console.log("e.target.value.trim() ===  || parseFloat(e.target.value) === 0");
+        setHasError(true)
+        setDownPaymentErrorMsg({
+          ...downPaymentErrorMsg,
+          edit_Amount_Err: "Amount can't be empty or 0"
+        })
       }
-      if(outStanding.amount > 0) {
+      if(parseFloat(e.target.value)+parseFloat(totalDownpaymentsAmt) > (parseFloat(totalAmt) + parseFloat(totalTaxAmt))){
+        //  //  console.log("parseFloat(e.target.value)+parseFloat(totalDownpaymentsAmt) > (parseFloat(totalAmt) + parseFloat(totalTaxAmt))");
+        setHasError(true)
+        setDownPaymentErrorMsg({
+          ...downPaymentErrorMsg,
+          edit_Amount_Err: "Downpayments amount exceeding total"
+        })
+
         setOutstanding({
           ...outStanding,
-          amount: (parseFloat(downpay.amount) - parseFloat(e.target.value))+outStanding.amount
+          amount: 0
+        })
+      }
+      if(parseFloat(e.target.value)+parseFloat(totalDownpaymentsAmt) < (parseFloat(totalAmt) + parseFloat(totalTaxAmt))) {
+        //  //  console.log("parseFloat(e.target.value)+parseFloat(totalDownpaymentsAmt) < (parseFloat(totalAmt) + parseFloat(totalTaxAmt))");
+        downPaymentsPlaceholder[i].amount = e.target.value;
+        
+        setDownPayments(downPaymentsPlaceholder)
+
+        setOutstanding({
+          ...outStanding,
+          amount: (parseFloat(totalAmt) + parseFloat(totalTaxAmt)) - (parseFloat(totalDownpaymentsAmt) + parseFloat(e.target.value))
+        })
+
+        setHasError(false)
+        setDownPaymentErrorMsg({
+          ...downPaymentErrorMsg,
+          edit_Amount_Err: ""
+        })
+      }
+      if(parseFloat(e.target.value)+parseFloat(totalDownpaymentsAmt) === (parseFloat(totalAmt) + parseFloat(totalTaxAmt))) {
+        //  //  console.log("parseFloat(e.target.value)+parseFloat(totalDownpaymentsAmt) === (parseFloat(totalAmt) + parseFloat(totalTaxAmt))");
+        downPaymentsPlaceholder[i].amount = e.target.value;
+        
+        setDownPayments(downPaymentsPlaceholder)
+
+        setOutstanding({
+          ...outStanding,
+          amount: 0
+        })
+
+        setHasError(false)
+        setDownPaymentErrorMsg({
+          ...downPaymentErrorMsg,
+          edit_Amount_Err: ""
         })
       }
     }
-    else {
-      setHasError(true);
-      setDownPaymentErrorMsg({
-        ...downPaymentErrorMsg,
-        edit_Amount_Err: parseFloat(e.target.value) === 0 ? "Amount cannot be 0" : parseFloat(e.target.value) > parseFloat(outStanding.amount) ? "Amount cannot be more than outstanding amount" : "Amount cannot be nothing"
-      })
-    }  
+    catch (err) {
+      //  //  console.log(err);
+    }
+    finally {
+      // ((parseFloat(totalAmt) + parseFloat(totalTaxAmt)) - (parseFloat(totalDownpaymentsAmt) + parseFloat(e.target.value))).toFixed(2)
+      //  //  console.log((parseFloat(totalAmt) + parseFloat(totalTaxAmt)) - (parseFloat(totalDownpaymentsAmt) + parseFloat(e.target.value)));
+      setTimeout(() => {
+        createDownpayAmount.current.value = 0
+        setHasError(true);
+        setDownPaymentErrorMsg({
+          ...downPaymentErrorMsg,
+          amount_Err: "Amount cannot be nothing"
+        })
+      }, 1000);
+    }
+    // //  //  console.log(parseFloat(e.target.value)+parseFloat(totalDownpaymentsAmt));
   }
   const changeDownpaymentIsPayNow = (e, downpay, i) => {
-    console.log(e.target);
-    const downPaymentsPlaceholder = [...downPayments];
+    //  //  console.log(e.target);
+    try {
+      setIsLoader(true)
+      const downPaymentsPlaceholder = [...downPayments];
+            downPaymentsPlaceholder[i].isPayNow = e.target.checked ? 0 : 1
+
+      setDownPayments(downPaymentsPlaceholder)
+      
+      if(e.target.checked) {
+        setHasError(true)
+        setDownPaymentErrorMsg({
+          ...downPaymentErrorMsg,
+          edit_PayDate_Err: "Date cannot be empty"
+        })
+      } else {
+        setHasError(false)
+        setDownPaymentErrorMsg({
+          ...downPaymentErrorMsg,
+          edit_PayDate_Err: ""
+        })
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    finally {
+      setIsLoader(false)
+    }
   }
   const changeDownpaymentDate = (e, downpay, i) => {
-    console.log(e.target);
+    //  //  console.log(e.target);
     const downPaymentsPlaceholder = [...downPayments];
+
+    try {
+      setIsLoader(true);
+      downPaymentsPlaceholder[i].paymentDate = e.target.value;
+
+      setDownPayments(downPaymentsPlaceholder);
+
+      setHasError(false)
+      setDownPaymentErrorMsg({
+        ...downPaymentErrorMsg,
+        edit_PayDate_Err: ""
+      })
+    } catch (error) {
+      console.log(error);
+      setHasError(true)
+      setDownPaymentErrorMsg({
+        ...downPaymentErrorMsg,
+        edit_PayDate_Err: error
+      })
+    } finally {
+      setIsLoader(false);
+      setHasError(false)
+      setDownPaymentErrorMsg({
+        ...downPaymentErrorMsg,
+        edit_PayDate_Err: ""
+      })
+    }
+    console.log("changeDownpaymentDate", e.target.value, downpay);
   }
   const changeDownpaymentType = (e, downpay, i) => {
-    console.log(e.target);
+    //  //  console.log(e.target);
     const downPaymentsPlaceholder = [...downPayments];
+          downPaymentsPlaceholder[i].payment_type = e.target.value
+
+    setDownPayments(downPaymentsPlaceholder)
+    console.log("changeDownpaymentType", e.target.value, downpay);
   }
   const changeDownpaymentStatus = (e, downpay, i) => {
-    console.log(e.target);
+    //  //  console.log(e.target);
     const downPaymentsPlaceholder = [...downPayments];
+          downPaymentsPlaceholder[i].payment_status = e.target.value
+
+    setDownPayments(downPaymentsPlaceholder)
+    console.log("changeDownpaymentStatus", e.target.value, downpay);
   }
   // Edit created Downpayments
-
-  useEffect(()=>{
-    fetchCardBank();
-  },[])
 
   return (
     <>
@@ -569,6 +795,7 @@ const ProductPayment = (props) => {
               </header>
               {downPaymentActive && (
                 <div className="bodytransactionForm" ref={downPaymentList}>
+                  {/* {//  //  console.log("OUTSTANDING::::", outStanding)} */}
                 {outStanding.amount > 0 && <div className="newDownpayment">
                       <button
                         className="addNewDownpayment"
@@ -659,7 +886,7 @@ const ProductPayment = (props) => {
                               <input
                                 ref={datePayment}
                                 type="date"
-                                placeholder="mm/dd/yyyy"
+                                placeholder="mm-dd-yyyy"
                                 className="cmnFieldStyle"
                                 onChange={(e) => addPayDate(e)}
                                 defaultValue={nextPayDate().toISOString().split('T')[0]}
@@ -682,7 +909,7 @@ const ProductPayment = (props) => {
                             </span>
                           </label>
                           <div className="cmnFormField">
-                          {console.log("{createdDownPayment.payment_type} ", createdDownPayment.payment_type)}
+                          {/* {  //  console.log("{createdDownPayment.payment_type} ", createdDownPayment.payment_type)} */}
                             <select
                               className="selectBox"
                               value={createdDownPayment.payment_type}
@@ -752,7 +979,7 @@ const ProductPayment = (props) => {
                               {downPaymentErrorMsg.edit_Title_Err && <p className="errorMsg">{downPaymentErrorMsg.edit_Title_Err}</p>}
                             </div>
                             <div className="cmnFormRow gap">
-                              <div className="leftSecTransaction">
+                              <div className={downPaymentErrorMsg.edit_Amount_Err ? "leftSecTransaction error" : "leftSecTransaction"}>
                                 <label className="labelWithInfo">
                                   <span className="labelHeading">Amount</span>
                                   <span className="infoSpan">
@@ -773,8 +1000,9 @@ const ProductPayment = (props) => {
                                     onChange={(e)=>changeDownpaymentAmount(e, downpay, i)}
                                   />
                                 </div>
+                              {downPaymentErrorMsg.edit_Amount_Err && <p className="errorMsg">{downPaymentErrorMsg.edit_Amount_Err}</p>}
                               </div>
-                              <div className="rightSecTransaction">
+                              <div className={downPaymentErrorMsg.edit_PayDate_Err ? "rightSecTransaction error" : "rightSecTransaction"}>
                                 <label className="labelWithInfo paymentTime">
                                   <span className="labelHeading">
                                     I want to Pay Later
@@ -789,8 +1017,9 @@ const ProductPayment = (props) => {
                                     <input
                                       type="checkbox"
                                       name="check-communication"
-                                      defaultValue={downpay.isPayNow === 0 ? true : false}
+                                      // defaultValue={downpay.isPayNow === 0 ? true : false}
                                       onChange={(e)=>changeDownpaymentIsPayNow(e, downpay, i)}
+                                      value={downpay.isPayNow === 0 ? true : false}
                                     />
                                     <span className="toggler"></span>
                                   </label>
@@ -806,7 +1035,7 @@ const ProductPayment = (props) => {
                                   <div className="paymentNow">
                                     <input
                                       type="date"
-                                      placeholder="mm/dd/yyyy"
+                                      placeholder="mm-dd-yyyy"
                                       className="cmnFieldStyle"
                                       defaultValue={downpay.paymentDate}
                                       onChange={(e)=>changeDownpaymentDate(e, downpay, i)}
@@ -814,6 +1043,7 @@ const ProductPayment = (props) => {
                                     />
                                   </div>
                                 )}
+                                {downPaymentErrorMsg.edit_PayDate_Err && <p className="errorMsg">{downPaymentErrorMsg.edit_PayDate_Err}</p>}
                               </div>
                             </div>
                             <div className="cmnFormRow gap">
@@ -887,15 +1117,17 @@ const ProductPayment = (props) => {
               <div className="bodytransactionForm bodyProductPayModes">
                 <p className="paymentTypes">Cards</p>
                 <div className="chooseTransactionType paymentTypes">
-                  {/* {console.log("cardBankList", cardBankList)} */}
+                  {console.log(":::cardBankList:::", newPay)}
                 { cardBankList && cardBankList.length > 0 && cardBankList.map((cardItem, i)=> 
-                  <label className={cardItem.status === "active" ? "paymentType active" : "paymentType"} key={i}> {/*active*/}
+                  <label className={newPay.type === "card" && newPay.billingId === cardItem._id ? "paymentType active" : "paymentType"} key={i}> {/*active*/}
                     <span className="circleRadio">
                       <input
                         type="radio"
                         name="billingTransaction"
-                        defaultChecked={cardItem.status === "active"}
+                        onChange={(e)=>changeDefaultPay(e, cardItem, "card", i)}
+                        checked={newPay.type === "card" && newPay.billingId === cardItem._id}
                       />
+                      {console.log(":::CARD:::", newPay === "card" && newPay.billingId === cardItem._id)}
                       <span></span>
                     </span>
                     <span className="cardImage">
@@ -914,11 +1146,17 @@ const ProductPayment = (props) => {
                 <p className="paymentTypes">Bank</p>
 
                   <div className="chooseTransactionType paymentTypes">
-                  {/* {console.log("bankList", bankList)} */}
+                  {/* {//  //  console.log("bankList", bankList)} */}
                     { bankList && bankList.length > 0 && bankList.map((bankItem, i)=> 
-                      <label className="paymentType" key={i}>
+                      <label className={newPay === "bank" && newPay.billingId === bankItem._id ? "paymentType active" : "paymentType"} key={i}>
                         <span className="circleRadio">
-                          <input type="radio" name="billingTransaction" />
+                          <input 
+                            type="radio" 
+                            name="billingTransaction"
+                            onChange={(e)=>changeDefaultPay(e, bankItem, "bank", i)}
+                            checked={newPay.type === "bank" && newPay.billingId === bankItem._id}
+                          />
+                          {console.log(":::BANK:::", newPay === "bank" && newPay.billingId === bankItem._id)}
                           <span></span>
                         </span>
                         <span className="cardImage">
@@ -999,7 +1237,7 @@ const ProductPayment = (props) => {
               order: payLater && "3"
             }}></div>
 
-            {outStanding.amount > 0 && <div 
+            {parseFloat(outStanding.amount) > 0 && <div 
               className={payLater ? "cartProductInner outStandingProduct outstandingOverviewProduct" : "cartProductInner outStandingProduct"}
               style={{
                 marginTop: payLater && "10px",
@@ -1061,6 +1299,7 @@ const ProductPayment = (props) => {
                           defaultValue={nextPayDate().toISOString().split('T')[0]}
                           min={todayPayDate().toISOString().split('T')[0]}
                           onChange={(e)=>changeOutstandingPayDate(e)}
+                          ref={inputOutstandingDate}
                         />
                         {downPaymentErrorMsg.outStandingDate_Err && <p className="errorMsg">{downPaymentErrorMsg.outStandingDate_Err}</p>}
                       </div>
@@ -1103,7 +1342,14 @@ const ProductPayment = (props) => {
                   </div>
                   <label className="receivedCash">
                     <div className="customCheckbox">
-                      <input type="checkbox" name="" id="" />
+                      <input 
+                        type="checkbox" 
+                        name="" 
+                        id="" 
+                        onChange={(e)=>markDownPaid(e)}
+                        checked={downPayments && downPayments[0].payment_status === "paid" ? true : false}
+                      />
+                      {console.log(downPayments && downPayments[0].payment_status === "paid" ? true : false)}
                       <span></span>
                     </div>
                     I have received the amount by Cash
@@ -1119,7 +1365,12 @@ const ProductPayment = (props) => {
                 <h4>{billingTotalAmt()}</h4>
               </div>
               <div className="buyBtns">
-                <button className="saveNnewBtn" onClick={(e) => billPayment(e)}>
+                <button 
+                  className="saveNnewBtn" 
+                  onClick={(e) => billPayment(e)}
+                  disabled={hasError === false ? false : true}
+                >
+                  {console.log(hasError && "hasError", "downPaymentErrorMsg", downPaymentErrorMsg)}
                   Bill Now <img src={aaroww} alt="" />
                 </button>
               </div>
@@ -1171,7 +1422,7 @@ const ProductPayment = (props) => {
 
             <ul className="paymentUlHeader">
               <li className="paymentModeHeaderLi">Payment Mode</li>
-              <li className="paymentIdHeaderLi">Transaction ID</li>
+              {/* <li className="paymentIdHeaderLi">Transaction ID</li> */}
               <li className="paymentAmtHeaderLi">Amount</li>
             </ul>
 
@@ -1180,9 +1431,9 @@ const ProductPayment = (props) => {
                 <img src={cashSuccess} alt="" />
                 <p>Cash</p>
               </li>
-              <li className="paymentIdLi">
+              {/* <li className="paymentIdLi">
                 <p>dfg41456df1567sdtfg45a</p>
-              </li>
+              </li> */}
               <li className="paymentAmtLi">
                 <p>$ 200.00</p>
                 <img src={smallTick} alt="" />
@@ -1194,9 +1445,9 @@ const ProductPayment = (props) => {
                 <img src={paidCard} alt="" />
                 <p>Card</p>
               </li>
-              <li className="paymentIdLi">
+              {/* <li className="paymentIdLi">
                 <p>dfg41456df1567sdtfg45a</p>
-              </li>
+              </li> */}
               <li className="paymentAmtLi">
                 <p>$ 420.00</p>
                 <img src={smallTick} alt="" />
@@ -1232,6 +1483,7 @@ const ProductPayment = (props) => {
 
       {newPayModal && (
         <div className="modalBackdrop modalNewPay">
+          {console.log("NEW PAY METHOD:::", newPay.type)}
           <div className="slickModalBody">
             <div className="slickModalHeader">
               <button
@@ -1259,8 +1511,8 @@ const ProductPayment = (props) => {
                     <input
                       type="radio"
                       name="transactionType"
-                      defaultChecked={newPay === "card"}
-                      onChange={(e) => setNewPay("card")}
+                      defaultChecked={newPayMethod === "card"}
+                      onChange={(e) => setNewPayMethod("card")}
                     />
                     <span></span>
                   </div>{" "}
@@ -1271,8 +1523,8 @@ const ProductPayment = (props) => {
                     <input
                       type="radio"
                       name="transactionType"
-                      defaultChecked={newPay === "bank"}
-                      onChange={(e) => setNewPay("bank")}
+                      defaultChecked={newPayMethod === "bank"}
+                      onChange={(e) => setNewPayMethod("bank")}
                     />
                     <span></span>
                   </div>{" "}
@@ -1280,7 +1532,7 @@ const ProductPayment = (props) => {
                 </label>
               </div>
 
-              {newPay === "card" && (
+              {newPayMethod === "card" && (
                 <div className="posSellingForm">
                   <div className="modalForm">
                     <form>
@@ -1321,7 +1573,7 @@ const ProductPayment = (props) => {
                           </div>
                         </div>
                         <div className="cmnFormCol">
-                          <label>CVC</label>
+                          <label>CVV</label>
                           <div className="cmnFormField">
                             <input
                               type="text"
@@ -1333,7 +1585,8 @@ const ProductPayment = (props) => {
                       </div>
 
                       <div className="modalbtnHolder">
-                        <button type="reset" className="saveNnewBtn orangeBtn">
+                        <button 
+                          type="reset" className="saveNnewBtn orangeBtn">
                           <img src={pluss} alt="" /> Add my Card
                         </button>
                       </div>
@@ -1342,7 +1595,7 @@ const ProductPayment = (props) => {
                 </div>
               )}
 
-              {newPay === "bank" && (
+              {newPayMethod === "bank" && (
                 <div className="posSellingForm">
                   <div className="modalForm">
                     <form>
