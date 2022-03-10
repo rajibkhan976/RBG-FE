@@ -217,14 +217,15 @@ export const ProductServices = {
             const result = await axios.post(url, payload, { headers: headers });
             
             if (result.status === 200) {
-              return result.data;
+                console.log(":::RESULT 200:::");
+              return result;
             } else {
               throw new Error(
                 "There is an error adding this(ese) Product(s). Please contact support"
               );
             }
         } catch (e) {
-            console.log(e.response.data);
+            console.log("THROWING ERROR HERE:::", e.response.data);
             throw new Error(e.response.data.message);
         }
     }

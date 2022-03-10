@@ -2212,7 +2212,42 @@ input::-webkit-inner-spin-button {
 }
 ul.paymentUlInfo li.paymentModeLi,
 ul.paymentUlHeader li.paymentModeHeaderLi {
-  flex: 1 1 auto;
+  flex: 1 1 calc(100% - 150px);
+  text-align: left;
+}
+ul.paymentUlHeader li.paymentModeHeaderLi {
+  padding-left: 70px;
+}
+ul.paymentUlInfo li.paymentModeLi {
+  padding-left: 50px;
+}
+.paymentUlHeader .paymentAmtHeaderLi, .paymentUlInfo .paymentAmtLi {
+  flex: 0 1 150px;
+}
+.paymentUlInfo .paymentAmtLi {
+  justify-content: flex-end;
+}
+.paymentUlInfo .paymentAmtLi img {
+  margin-left: 12px;
+}
+.paymentUlInfo .paymentModeLi img {
+  margin-right: 14px;
+}
+.paymentTransProduct .paymentUlInfo {
+  margin-bottom: 14px;
+}
+.paymentUlInfo + .totalPaymentUl {
+  width: 100%;
+  padding-left: 70px;
+  padding-right: 55px;
+}
+.successPageBtn .saveNnewBtn {
+  padding-left: 20px;
+  padding-right: 20px;
+  width: auto;
+}
+.successPageBtn .saveNnewBtn img {
+  margin-left: 14px;
 }
 /* Add a product */
 
