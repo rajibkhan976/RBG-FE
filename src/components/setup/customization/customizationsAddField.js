@@ -15,16 +15,25 @@ const CustomizationsAddField = (props) => {
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [customField, setCustomField] = useState(props.ele);
+  const [hasError, setHasError] = useState(true)
+  const [customFieldErrors, setCustomFieldErrors] = useState({
+    name: "Please enter Field name",
+    type: "Please select a Field type",
+    defaultValue: "Default value cannot be empty"
+  })
 
-  useEffect(() =>{
-    console.log('PPPPP', props)
-  });
+  // useEffect(() =>{
+    // console.log('PPPPP', props)
+  // });
 
   useEffect(() => {
     if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
     if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
   }, [successMsg, errorMsg]);
 
+useEffect(()=>{
+  console.log("customFieldErrors ::::::::::: ", customFieldErrors);
+}, [customFieldErrors]);
 
   const handleSubmit =(e) =>{
    e.prevent.default();
@@ -32,34 +41,122 @@ const CustomizationsAddField = (props) => {
 
   const fieldNameHandel = (event) => {
       let val = event.target.value;
-      let reg = /[^a-z0-9 .]/gi;
       
-      if (reg.test(val)) {
-        let valAlias = val.split(" ").join("_");
-        setCustomField({...customField, name: val, alias: valAlias});
+      if(val !== "" && val.length > 0) {
+        let reg = /^[A-Za-z0-9 ]*$/
+        let regSpaceNum = /^[ 0-9]*$/
+
+        let isValidValue = reg.test(val)
+        let isStartValidValue = regSpaceNum.test(val[0])
+
+        if(isValidValue && !isStartValidValue) {
+          console.log("IS SPACE:::", isStartValidValue);
+
+          let valAlias = val.charAt(0).toLowerCase() + val.slice(1).split(" ").join("_");
+
+          setCustomField({...customField, name: val, alias: valAlias});
+          setHasError(false)
+          setCustomFieldErrors({
+            ...customFieldErrors,
+            name: ""
+          })
+        }
+        else {
+          event.target.value = ""
+          setHasError(true)
+          setCustomFieldErrors({
+            ...customFieldErrors,
+            name: "Field name cannot start with space or special number"
+          })
+        }
       }
-      
+      else {
+        setHasError(true)
+        setCustomFieldErrors({
+          ...customFieldErrors,
+          name: "Field name cannot be empty"
+        })
+      }
   };
 
   const fieldTypeHandel = (event) => {
     let val = event.target.value;
-    setCustomField({...customField, type: val});
+
+    if(val !== "" && val.length > 0) {
+      setCustomField({...customField, type: val});
+      setHasError(false)
+      setCustomFieldErrors({
+        ...customFieldErrors,
+        type: ""
+      })
+
+
+      if(val == "email" && customField.defaultValue && customField.defaultValue.length > 0) {
+        let regEmail = /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi;
+        let isValidateEmail = regEmail.test(val);
+
+        if(!isValidateEmail){
+          setHasError(true)
+          setCustomFieldErrors({
+            ...customFieldErrors,
+            defaultValue: "Please provide valid email"
+          })
+        }
+      }
+    } else {
+      setHasError(true)
+      setCustomFieldErrors({
+        ...customFieldErrors,
+        type: "Please enter Field type"
+      })
+    }
   };
 
   const defaultValueHandel = (event) => {
     let val = event.target.value;
-    setCustomField({...customField, defaultValue: val});
+    if(val !== "" && val.length > 0) {
+      if(customField.type === "email") {
+        let regEmail = /\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b/gi;
+        let isValidateEmail = regEmail.test(val);
+
+        if(isValidateEmail){
+          setCustomField({...customField, defaultValue: val});
+          setHasError(false)
+          setCustomFieldErrors({
+            ...customFieldErrors,
+            defaultValue: ""
+          })
+        }
+        else {
+          setHasError(true)
+          setCustomFieldErrors({
+            ...customFieldErrors,
+            defaultValue: "Please provide valid email"
+          })
+        }
+      }
+      else {
+        setCustomField({...customField, defaultValue: val});
+        setHasError(false)
+        setCustomFieldErrors({
+          ...customFieldErrors,
+          defaultValue: ""
+        })
+      }
+    }
+    else {
+      setHasError(true)
+      setCustomFieldErrors({
+        ...customFieldErrors,
+        defaultValue: "Please enter default Value"
+      })
+    }
   };
 
-  const fieldAliasHandel = (event) => {
-    // let val = event.target.value;
-    let val = customField.name.split(" ").join("_");
-    setCustomField({...customField, alias: val});
-    console.log(customField);
-  };
 
   const addCustomField = async (status) => {
-    if(customField.name !== "" && customField.type !== "" && customField.defaultValue !== "" && customField.defaultValue !== "") {
+
+    if(!hasError) {
       if (props.editStatus) {
         editField();
       } else {
@@ -69,13 +166,14 @@ const CustomizationsAddField = (props) => {
         } else {
           await createField();
           props.closeAddCustomModal(true);
-        }
-        
+        }        
       }
-      
-    } else {
-      setErrorMsg("Please fill up the fields properly");
     }
+    // setCustomFieldErrors(isValidate)
+
+    //  else {
+      // setErrorMsg("Please fill up the fields properly");
+    // }
 
     // if(customField.name !== "" && customField.type !== "" && customField.defaultValue !== "" && customField.defaultValue !== "") {
     //   console.log("Form OK");
@@ -144,28 +242,38 @@ const CustomizationsAddField = (props) => {
                 <div className="modalForm">
                 <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />}>
                     <form method="post" onSubmit={handleSubmit}>
-                    <div className="formControl">
+                    <div className={customFieldErrors.name ? "formControl error" : "formControl"}>
                         <label>Field Name</label>
-                        <input type="text" name="" onChange={fieldNameHandel} value={customField.name} />
+                        <input 
+                          type="text" 
+                          name="" 
+                          onChange={fieldNameHandel} 
+                          // value={customField.name}
+                          className="cmnFieldStyle"
+                        />
+                        {customFieldErrors.name && <p className="errorMsg">{customFieldErrors.name}</p>}
                     </div>
                     
-                    <div className="formControl">
+                    <div className={customFieldErrors.type ? "formControl error" : "formControl"}>
                         <label>Field Type</label>
-                        <select name="category" onChange={fieldTypeHandel} value={customField.type}>
+                        <select name="category" onChange={fieldTypeHandel} className="cmnFieldStyle">
                             <option value="">Select field type</option>
                             <option value="text">Text</option>
                             <option value="number">Phone</option>
                             <option value="email">Email</option>
                             <option value="textarea">Textarea</option>
                         </select>
+                        {customFieldErrors.type && <p className="errorMsg">{customFieldErrors.type}</p>}
                     </div>
-                    <div className="formControl">
+                    <div className={customFieldErrors.defaultValue ? "formControl error" : "formControl"}>
                         <label>Default Value</label>
-                        <input type="text" name="" onChange={defaultValueHandel} value={customField.defaultValue}/>
+                        {customField.type === "email" && <input type="email" name="" onChange={defaultValueHandel} className="cmnFieldStyle"/>}
+                        {customField.type !== "email" && <input type="text" name="" onChange={defaultValueHandel} className="cmnFieldStyle"/>}
+                        {customFieldErrors.defaultValue && <p className="errorMsg">{customFieldErrors.defaultValue}</p>}
                     </div>
-                    <div className="formControl">
+                    <div className={customFieldErrors.fieldAlias ? "formControl error" : "formControl"}>
                         <label>Field Alias</label>
-                        <input type="text" name="" onChange={fieldAliasHandel} value={customField.alias}/>
+                        <div className="cmnFieldStyle d-flex f-align-center">{customField.alias}</div>
                     </div>
                     <div className="modalbtnHolder">
                         <button type="button" name="save"
