@@ -115,7 +115,7 @@ const BillingOverview = (props) => {
                   }
                   key={i}
                 >
-                  {/* {console.log(":::setNewPay::::", isPrimary)} */}
+                  {console.log(":::setNewPay::::", isPrimary)}
                   <span className="circleRadio">
                     <input
                       type="radio"

@@ -32,106 +32,62 @@ import Loader from "../../../../shared/Loader";
 import { Scrollbars } from "react-custom-scrollbars-2";
 
 
-
 const PaymentSuccessSection = (props) => {
-  const [paymentFailed, setPaymentFailed] = useState(false);
+  const [successList, setSuccessList] = useState([]);
+  const [amountPaid, setAmountPaid] = useState(0);
 
-  const paymentFailedFn = () => {
-    setPaymentFailed(true);
-  };
-
-  const closeFailedPayModal = () => {
-    setPaymentFailed(false);
-  };
-  
-
- 
+  useEffect(() => {
+    console.table('Payment props', props.successData);
+    setSuccessList(props.successData);
+    let totalAmount = props.successData && props.successData.reduce((total, obj) => parseInt(obj.amount) + total, 0)
+    setAmountPaid(totalAmount);
+  }, [props.successData]);
 
 
-    return (
-      <div className="posSellingForm contractOverview">
-        <div className="successHeader">
-          <div className="circleForIcon"><img src={paySuccess} alt="" /></div>
-          <h3 className="paySuccessHeading">Payment Successful ! </h3>
-        </div>
-        <div className="dottedBorder"></div>
-
-        <ul className="paymentUlHeader">
-          <li className="paymentModeHeaderLi">Payment Mode</li>
-          <li className="paymentIdHeaderLi">Transaction ID</li>
-          <li className="paymentAmtHeaderLi">Amount</li>
-        </ul>
-
-        <ul className="paymentUlInfo">
-          <li className="paymentModeLi">
-            <img src={cashSuccess} alt=""/>
-            <p>Cash</p>
-          </li>
-          <li className="paymentIdLi"><p>dfg41456df1567sdtfg45a</p></li>
-          <li className="paymentAmtLi">
-            <p>$ 200.00</p>
-            <img src={smallTick} alt=""/>
-          </li>
-        </ul>
-
-        <ul className="paymentUlInfo">
-          <li className="paymentModeLi">
-            <img src={paidCard} alt=""/>
-            <p>Card</p>
-          </li>
-          <li className="paymentIdLi"><p>dfg41456df1567sdtfg45a</p></li>
-          <li className="paymentAmtLi">
-            <p>$ 420.00</p>
-            <img src={smallTick} alt=""/>
-          </li>
-        </ul>
-
-        <ul className="totalPaymentUl">
-          <li>
-            <p>Amount Paid</p>
-          </li>
-          <li>
-            <p>$ 620.00</p>
-          </li>
-        </ul>
-
-        <div className="dottedBorder"></div>
-
-        <div className="successPageBtn">      
-          <button onClick={(e)=> {paymentFailedFn()}} className="saveNnewBtn">Go to Transaction List <img src={aaroww} alt="" /></button>
-        </div>
-
-
-        {paymentFailed && (
-  <div className="modalBackdrop holiday">           
-    <div className="slickModalBody paymentFailed">            
-      <div className="slickModalHeader">
-         {/* <button className="topCross" onClick={closeFailedPayModal}><img src={crossTop} alt="" /></button>  */}
-        <div className="circleForIcon"><img src={paymentFail} alt="" /></div>
-                <h3 className="courseModalHeading">Payment Failed !</h3>
+  return (
+    <div className="posSellingForm contractOverview">
+      <div className="successHeader">
+        <div className="circleForIcon"><img src={paySuccess} alt="" /></div>
+        <h3 className="paySuccessHeading">Payment Successful ! </h3>
       </div>
-      <div className="payModalDetails">
-       
-        <img src={cardFail} alt="" />
-        <p>Payment Failed. We arn’t able to Process your Payment, Pease try again !</p>
+      <div class="dottedBorder"></div>
+
+      <ul className="paymentUlHeader">
+        <li className="paymentModeHeaderLi">Payment Mode</li>
+        <li className="paymentIdHeaderLi">Transaction ID</li>
+        <li className="paymentAmtHeaderLi">Amount</li>
+      </ul>
+      {successList && successList.map((el, key) => {
+        return (
+          <React.Fragment key={key + "_paymentSuccess"}>
+            <ul className="paymentUlInfo programPaymentSuccess">
+              <li className="paymentModeLi">
+                <img src={el.defaultTransaction === 'cash' ? cashSuccess : paidCard} alt="" />
+                <p>{el.defaultTransaction}</p>
+              </li>
+              <li className="paymentIdLi"><p>{el.transactionId}</p></li>
+              <li className="paymentAmtLi">
+                <p>$ {el.amount}</p>
+                <img src={smallTick} alt="" />
+              </li>
+            </ul>
+          </React.Fragment>
+        );
+      })}
+      <ul className="totalPaymentUl">
+        <li>
+          <p>Amount Paid</p>
+        </li>
+        <li>
+          <p>$ {parseFloat(amountPaid).toFixed(2)}</p>
+        </li>
+      </ul>
+      <div class="dottedBorder"></div>
+      <div className="successPageBtn programPayment">
+        <button onClick={props.backToTransList} class="saveNnewBtn">Go to Transaction List <img src={aaroww} alt="" /></button>
       </div>
-
-      <div className="buyBtns failedPayment">
-        <button onClick={closeFailedPayModal} className="saveNnewBtn">Close</button>
-        
-        </div>             
-      </div>
-  </div>
-)}
-
-                           
-       
-
-       
-        </div>
-
-
-)
-};     
+    </div>
+  )
+};
 
 export default PaymentSuccessSection;

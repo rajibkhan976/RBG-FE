@@ -2670,7 +2670,7 @@ span.renewDate {
   background: #FFFFFF;
   box-shadow: 0px 1px 6px rgb(0 0 0 / 10%);
   border-radius: 10px;
-  margin-bottom: 15px;
+  margin-top: 15px;
   display: flow-root;
 }
 
@@ -3893,4 +3893,48 @@ li.paymentModeLi, li.paymentAmtLi {
 
 .transaction_form.products.forProducts .formsection.gap.autoRenew .autoRenewDate p {
   color: #f1a768;
+}
+
+.programsTransaction .contactListItems .loaderOuter { 
+  position: static; 
+  height: auto; 
+  background: transparent; 
+  padding: 10px 0;
+}
+.programsTransaction .contactListItems .loaderInner { 
+  position: static; 
+  transform: none; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  height: 30px; 
+}
+.programsTransaction .contactListItems {
+  height: inherit;
+  max-height: 182px;
+}
+.transaction_form.products.forDownpayment.programs {
+  float: left;
+}
+
+.downPaymentsCreated .newDownpayment + .newDownpayment.programs {
+  margin-top:0;
+  border-radius: 0 0 10px 10px;
+}
+
+.newDownpayment.programs button.addNewDownpayment {
+  margin-bottom: 15px;
+}
+
+.newDownpayment.programs.buttons {
+  box-shadow: none;
+  background: transparent;
+}
+
+.newDownpayment_downPaymentWrapers:first-child > .downPaymentsCreated .newDownpayment.programs {
+  border-radius: 15px;
+}
+
+.newDownpayment.programs.buttons button.delNewDownpayment {
+  box-shadow: 0px -1px 4px rgb(0 0 0 / 10%);
 }

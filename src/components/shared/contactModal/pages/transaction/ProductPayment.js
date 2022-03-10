@@ -539,9 +539,8 @@ const ProductPayment = (props) => {
   };
   // mark first downpayment PAID
 
-  // Change default payment method
   const changeDefaultPayFn = (data) => {
-    // console.log('data came from biling overviwe', data);
+    console.log('data came from biling overviwe', data);
     setNewPay({
       type: data.type,
       billingId: data.billingId

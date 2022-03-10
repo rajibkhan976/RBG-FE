@@ -131,5 +131,8 @@ module.exports = {
     numberVerifyUrl: "https://04w6eb9h7e.execute-api.us-east-1.amazonaws.com/dev/contact/validate-number",
 
     //Notifications
-    notificationUrl: "https://dll0rsopl3.execute-api.us-east-1.amazonaws.com/dev/notification"
+    notificationUrl: "https://dll0rsopl3.execute-api.us-east-1.amazonaws.com/dev/notification",
+
+    //Program
+    programUrl: "https://fbde3pjlce.execute-api.us-east-1.amazonaws.com/dev/course"
 }  

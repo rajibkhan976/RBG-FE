@@ -1,4 +1,5 @@
 import { history } from "./history";
+import moment from "moment";
 
 export const utils = {
     /**
@@ -91,5 +92,37 @@ export const utils = {
      */
     generateExcerpt: (str) => {
         return (str.length > 12) ? str.substr(0, 12) + '...' : str;
+    },
+    //Next due date
+    getNextDueDate: (dueDate, interval, billingCycle) => {
+        const now = (dueDate) ? moment(new Date(dueDate)) : moment();
+        switch (billingCycle) {
+            case "yearly":
+                now.add(parseInt(interval), "Y");
+                break;
+            case "monthly":
+                now.add(parseInt(interval), "M");
+                break;
+            case "weekly":
+                now.add(parseInt(interval), "W");
+                break;
+            case "quarterly":
+                now.add(3 * parseInt(interval), "M");
+                break;
+            case "fortnight":
+                now.add(2 * parseInt(interval), "W");
+                break;
+            case "daily":
+                now.add(parseInt(interval), "D");
+                break;
+        }
+        return now.format("MM/DD/YYYY");
+    },
+    //Capitalize first letter
+    capitalizeFirst: (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    },
+    standardDateFormat: (date) => {
+        return moment(date).format("MM/DD/YYYY");
     }
 }

@@ -25,27 +25,37 @@ import payDate from "../../../../../assets/images/payDate.svg";
 import pluss from "../../../../../assets/images/pluss.svg";
 import Loader from "../../../../shared/Loader";
 import { Scrollbars } from "react-custom-scrollbars-2";
+import config from "../../../../../configuration/config";
+import BillingOverview from "./BillingOverview";
+import { utils } from "../../../../../helpers";
+import { ProgramServices } from "../../../../../services/transaction/ProgramServices";
+import PaymentSuccessSection from "./PaymentSuccessSection";
 
 
 
 const ContractOverviewTransaction = (props) => {
-  
+  console.log('overview ', props.programContractData);
+
   const [contractOverview, setContractOverview] = useState(false);
 
   const [isLoader, setIsLoader] = useState(false);
 
   const [addBankModal, setAddBankModal] = useState(false);
 
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [paymentFailed, setPaymentFailed] = useState(false);
+  const [paymentFailedMessage, setPaymentFailedMessage] = useState("");
 
-  const paymentFailedFn = () => {
+
+  const paymentFailedFn = (message) => {
     setPaymentFailed(true);
+    setPaymentFailedMessage(message);
   };
 
   const closeFailedPayModal = () => {
     setPaymentFailed(false);
   };
-  
+
   const addBankModalFn = () => {
     setAddBankModal(true);
   };
@@ -54,7 +64,7 @@ const ContractOverviewTransaction = (props) => {
   const closeBankModal = () => {
     setAddBankModal(false);
   };
-  
+
   const contractOverviewFn = (e) => {
     e.preventDefault();
     setContractOverview(true);
@@ -67,416 +77,514 @@ const ContractOverviewTransaction = (props) => {
   const chooseTransctionTypePOS = () => {
     setChoosetPOS(!choosePOS);
     setChooseCourse(false);
-}
+  }
 
 
-const chooseTransctionTypeCourse = () => {
-      setChoosetPOS(false);
-      setChooseCourse(!chooseCourse);
-      
- 
-}
+  const chooseTransctionTypeCourse = () => {
+    setChoosetPOS(false);
+    setChooseCourse(!chooseCourse);
+  }
 
- 
+  const [contractData, setContractData] = useState({
+    courseName: "",
+    courseImage: "",
+    duration: ""
+  });
 
+  // Change default payment method
+  const changeDefaultPayFn = (data) => {
+    console.log('data came from biling overviwe', data);
+    setContractData({
+      ...contractData,
+      billingId: data.billingId
+    });
+  };
 
-    return (
-      <div className={props.paymentSuccess ? "posSellingForm contractOverview hide" : "posSellingForm contractOverview"}  >
-        {props.showLoader && <Loader />}
-        {props.successMsg &&
-            <div className="formMsg success"></div>
+  //Set program contract data
+  useEffect(() => {
+    //Remaining payment count
+    let remainingPaymentCount = props.programContractData.numberOfPayments;
+    //Pay now tuition fee
+    let payNowTuitionAmount = 0;
+    if (props.programContractData.isPayNow) {
+      payNowTuitionAmount = parseFloat(props.programContractData.amount);
+      console.log('Pay now tuition amount', payNowTuitionAmount)
+      remainingPaymentCount--;
+    }
+
+    //Pay now down payments
+    let payNowDownPayments = [];
+    let payNowDownPaymentsAmount = 0;
+    if (props.programContractData.downPayments && props.programContractData.downPayments.length) {
+      payNowDownPayments = props.programContractData.downPayments.filter(obj => {
+        return obj.isPayNow === 1
+      });
+      payNowDownPayments = payNowDownPayments.map(payNowDownPayments => ({ ...payNowDownPayments, isReceivedCash: false }));
+      console.log('Pay now down payments ', payNowDownPayments);
+      payNowDownPaymentsAmount = payNowDownPayments.reduce((total, obj) => parseInt(obj.amount) + total, 0);
+      console.log('Pay now down payments total amout: ', payNowDownPaymentsAmount);
+    }
+    console.log('Now amount', typeof payNowTuitionAmount, typeof payNowDownPaymentsAmount);
+    let nowPaymentAmount = payNowTuitionAmount + payNowDownPaymentsAmount;
+
+    //Due tuition fee
+    let dueTuitionAmount = 0;
+    if (props.programContractData.payment_type === "recurring") {
+      dueTuitionAmount = props.programContractData.amount * remainingPaymentCount;
+      console.log('Due tuition amount', dueTuitionAmount)
+    }
+
+    //Due down payments
+    let dueDownPayments = [];
+    let dueDownPaymentsAmount = 0;
+    if (props.programContractData.downPayments && props.programContractData.downPayments.length) {
+      dueDownPayments = props.programContractData.downPayments.filter(obj => {
+        return obj.isPayNow === false
+      });
+      console.log('Due down payments ', dueDownPayments);
+      dueDownPaymentsAmount = dueDownPayments.reduce((total, obj) => parseInt(obj.amount) + total, 0);
+      console.log('Due down payments total amout: ', dueDownPaymentsAmount);
+
+    }
+
+    let duePaymentAmount = dueTuitionAmount + dueDownPaymentsAmount;
+    console.log('Due payment amount', duePaymentAmount);
+
+    setContractData({
+      ...contractData,
+      contact: props.programContractData.contact,
+      amount: props.programContractData.amount,
+      payment_type: props.programContractData.payment_type,
+      billing_cycle: props.programContractData.billing_cycle,
+      courseStart: props.programContractData.courseStart,
+      numberOfPayments: props.programContractData.numberOfPayments,
+      paymentDate: props.programContractData.paymentDate,
+      isPayNow: props.programContractData.isPayNow,
+      default_transaction: props.programContractData.default_transaction,
+      downpayments: props.programContractData.downPayments,
+
+      courseName: props.programContractData.courseName,
+      courseImage: props.programContractData.courseImage,
+      duration: props.programContractData.duration + ' ' + utils.capitalizeFirst(props.programContractData.durationInterval) + '(s)',
+      billingCycleText: props.programContractData.billing_cycle === 'monthly' ? 'Month' : 'Year',
+      auto_renew_text: props.programContractData.auto_renew ? 'ON' : 'OFF',
+      auto_renew: props.programContractData.auto_renew,
+      totalDownPayment: props.programContractData.downPayments.reduce((total, obj) => parseInt(obj.amount) + total, 0),
+      tuitionAmount: props.programContractData.amount,
+      totalTuitionAmount: props.programContractData.amount * props.programContractData.numberOfPayments,
+      total: props.programContractData.downPayments.reduce((total, obj) => parseInt(obj.amount) + total, 0) + (props.programContractData.amount * props.programContractData.numberOfPayments),
+      isPayNow: props.programContractData.isPayNow,
+      dueDownPayments: dueDownPayments,
+      payNowDownPayments: payNowDownPayments,
+      durationInterval: props.programContractData.durationInterval,
+      payNowTuitionAmount: payNowTuitionAmount,
+      nowPaymentAmount: nowPaymentAmount,
+      remainingPaymentCount: remainingPaymentCount,
+      duePaymentAmount: duePaymentAmount,
+      nextDueDate: props.programContractData.nextDueDate
+    });
+
+  }, [props.programContractData]);
+
+  //Toggle receive cash
+  const toggleReceiveCash = async (e, key) => {
+    console.log('Toggle receive cash', e.target.checked, key);
+    let elems = [...contractData.payNowDownPayments];
+    elems[key]["isReceivedCash"] = e.target.checked;
+    if (e.target.checked) {
+      elems[key]["isReceivedCashFlagErr"] = !e.target.checked;
+    }
+    let newElem = elems[key];
+    elems[key] = newElem;
+    console.log('RC D', elems);
+    setContractData({
+      ...contractData,
+      payNowDownPayments: elems
+    });
+  }
+
+  //Bill Now
+  const billNow = async (e) => {
+    e.preventDefault();
+    console.log('Bill now', contractData.downpayments);
+    let isError = false;
+    //Check cash received or not
+    if (contractData.payNowDownPayments.length) {
+      let isExistsNotPaidCash = contractData.payNowDownPayments.filter(obj => {
+        return obj.payment_type === 'cash' && obj.isReceivedCash === false
+      });
+      //Cash not received
+      if (isExistsNotPaidCash.length) {
+        isError = true;
+        console.log('Pay now down payments length', contractData);
+        let newEl = contractData.payNowDownPayments.filter(obj => {
+          if (obj.payment_type === 'cash' && !obj.isReceivedCash) {
+            obj.isReceivedCashFlagErr = true
+          }
+          return obj;
+        });
+        setContractData({
+          ...contractData,
+          payNowDownPayments: newEl
+        });
+      }
+
+    }
+    if (!isError) {
+      setIsLoader(true);
+      let oprationMethod = "buyProgram";
+      try {
+        const result = await ProgramServices[oprationMethod](contractData)
+        if (result.status === 'success') {
+          console.log('bill now result', result);
+          props.paymentSuccessFn(e, result.data);
+        } else {
+          paymentFailedFn(result.description);
         }
-        {props.errorMsg &&
-            <div className=""></div>
-        }
+      } catch (e) {
+        paymentFailedFn('Something went wrong! Please contact support.');
+        console.log("Error in bill now", e);
+      } finally {
+        setIsLoader(false);
+      }
+    }
+  }
 
 
+  return (
+    <div className={props.paymentSuccess ? "posSellingForm contractOverview hide" : "posSellingForm contractOverview"}  >
+      {isLoader && <Loader />}
+      {props.successMsg &&
+        <div className="formMsg success"></div>
+      }
+      {props.errorMsg &&
+        <div className=""></div>
+      }
 
-        <div className="productAvailable contractdetails active">
-          <div className="programOverview"> 
-              <header className='informHeader'>
-                    <h5>Program Overview</h5>
-              </header>
-              <div className="bodytransactionForm">
-              <div className="programDetailsInfos">
-                <div className="programListImage">
-                  <img src={program} alt="" />
-                </div>
-                <div className="programInfos">
-                  <h6 className="programHeading">Lifetime Jujutsu Program...</h6>
-                  <ul className="programInfosUl">
-                    <li>
-                      <span className="labelSpan">Duration</span>
-                      <span className="informationSpan"><b>12 Months</b></span>
-                    </li>
-                    <li>
-                      <span className="labelSpan">Auto Renual</span>
-                      <span className="informationSpan">OFF</span>
-                    </li>
-                  </ul>
-                </div>
-                </div>
+      <div className="productAvailable contractdetails active">
+        <div class="programOverview">
+          <header className='informHeader'>
+            <h5>Program Overview</h5>
+          </header>
+          <div className="bodytransactionForm">
+            <div className="programDetailsInfos">
+              <div className="programListImage">
+                <img src={contractData.courseImage ? config.bucketUrl + contractData.courseImage : program} />
               </div>
-          </div>    
-
-          <div className="programOverview"> 
-              <header className='informHeader paymentAdd'>
-                    <h5>Billing Overview <span onClick={(e)=>{addBankModalFn()}} className="addPaymentInfo">+ Add</span></h5>
-              </header>
-              <div className="bodytransactionForm">
-                <p className="paymentTypes">Cards</p>
-
-                <div className="chooseTransactionType paymentTypes" >
-                
-                    <label>
-                        <div className="circleRadio">
-                            <input type="radio" name="transactionTypeCard"/><span></span>
-                        </div> 
-                        <div className="cardImage">
-                          <img src={card} alt=""/>
-                        </div>
-                        <div className="paymentModuleInfos">
-                          <span className="accNumber">Credit Card ending with <b>1234</b></span>
-                          <span className="accinfod">Expires  07 / 25</span>
-                        </div>
-                        
-                    </label>
-                    <label> 
-                        <div className="circleRadio">
-                            <input type="radio"
-                                name="transactionTypeCard"/><span></span>
-                        </div> 
-                        <div className="cardImage">
-                          <img src={card} alt=""/>
-                        </div>
-                        <div className="paymentModuleInfos">
-                          <span className="accNumber">Debit Card ending with <b>7890</b></span>
-                          <span className="accinfod">Expires  05 / 28</span>
-                        </div>
-                    </label>
-                </div>
-
-                <p className="paymentTypes bank">Bank</p>
-
-                <div className="chooseTransactionType paymentTypes" >
-                
-                    <label>
-                        <div className="circleRadio">
-                            <input type="radio" name="transactionTypeCard"/><span></span>
-                        </div> 
-                        <div className="cardImage">
-                          <img src={banks} alt=""/>
-                        </div>
-                        <div className="paymentModuleInfos">
-                          <span className="accNumber">Bank account ending with <b>1234</b></span>
-                          <span className="accinfod">Routing Number  10000100</span>
-                        </div>
-                        
-                    </label>
-                    <label> 
-                        <div className="circleRadio">
-                            <input type="radio"
-                                name="transactionTypeCard"/><span></span>
-                        </div> 
-                        <div className="cardImage">
-                          <img src={banks} alt=""/>
-                        </div>
-                        <div className="paymentModuleInfos">
-                          <span className="accNumber">Bank account ending with <b>7890</b></span>
-                          <span className="accinfod">Routing Number  10000200</span>
-                        </div>
-                    </label>
-                </div>
-
-
-              </div>
-          </div> 
-
-        </div>                    
-
-        <div className="productAvailable paymentDetails active">
-          <div className="programOverview"> 
-              <header className='informHeader'>
-                    <h5>Payment Overview</h5>
-              </header>
-              <div className="bodytransactionForm">
-              <ul className="programInfosUl paymentOverviews">
-                    <li>
-                      <div className="labelSpan">Total Down Payment Amount</div>
-                      <div className="informationSpan">$499.00</div>
-                    </li>
-                    <li>
-                      <div className="labelSpan">Total Tuition Amount</div>
-                      <div className="informationSpan">
-                        <span className="infoSpan">
-                            <img src={help} alt="" />
-                            <span className="tooltiptextInfo">$149 x 12 Months</span>
-                        </span>&nbsp;&nbsp;$1788.00</div>
-                    </li>
-                  </ul>
-                  <ul className="totalPaymentUl">
-                    <li>Total</li>
-                    <li>$2287.00</li>
-                  </ul>
-              </div>
-          </div> 
-
-          <div className="outstandingOverview">
-            <div className="outstandingDownpayment">
-              <div className="downpaymentsDetails">
-                <div className="cardImage">
-                  <img src={outstandingCash} alt=""/>
-                </div>
-                <div className="paymentModuleInfos">
-                  <span className="accNumber">Down Payment 2</span>
-                  <span className="accinfod"><b>$ 299.00</b></span>
-                </div>
-              </div>
-              <div className="downpaymentsPayDetails">
-                <div className="paymentStatus due">Due</div>
-                <div className="payDate">
-                  <img src={payDate} alt=""/> 02/04/2022
-                </div>
-              </div>
-            </div>
-            <div className="outstandingDownpayment tutuionSubscriptions">
-              <div className="downpaymentsDetails">
-                <div className="cardImage">
-                  <img src={outstandingCard} alt=""/>
-                </div>
-                <div className="paymentModuleInfos">
-                  <span className="accNumber">Tuition Amount</span>
-                  <span className="accinfod"><b>$ 149.00</b> / Month</span>
-                </div>
-              </div>
-              <div className="downpaymentsPayDetails">
-              <div className="payDate instalments">Payment Remaing ... <b>11</b></div>
-                <div className="payDate instalmentDate">
-                  <img src={payDate} alt=""/> 02/04/2022
-                </div>
-              </div>
-            </div>
-
-            <ul className="totalPaymentUl outstandings">
-                    <li>Outstanding</li>
-                    <li>$1938.00</li>
-                  </ul>
-          </div>
-
-          <div className="dottedBorder"></div>
-
-          <div className="currentPaymentOverview">
-            <div className="outstandingDownpayment">
-              <div className="downpaymentsDetails">
-                <div className="cardImage">
-                  <img src={cashCurrent} alt=""/>
-                </div>
-                <div className="paymentModuleInfos">
-                  <span className="accNumber">Down Payment 1</span>
-                  <span className="accinfod"><b>$ 299.00</b></span>
-                </div>
-                
-              </div>
-              <div className="downpaymentsPayDetails">
-                <div className="payDate currentPayment">
-                  <img src={payDate} alt=""/> Now
-                </div>
-              </div>
-              <label className="receivedCash"><div className="customCheckbox"><input type="checkbox" name="" id="" /><span></span></div>I have received the amount by Cash</label>
-            </div>
-
-            <div className="outstandingDownpayment tutuionSubscriptions currentPayment">
-              <div className="downpaymentsDetails">
-                <div className="cardImage">
-                  <img src={cardActive} alt=""/>
-                </div>
-                <div className="paymentModuleInfos">
-                  <span className="accNumber">Tuition Amount</span>
-                  <span className="accinfod"><b>$ 149.00</b></span>
-                </div>
-              </div>
-              <div className="downpaymentsPayDetails">
-                <div className="payDate currentPayment">
-                  <img src={payDate} alt=""/> Now
-                </div>
+              <div className="programInfos">
+                <h6 className="programHeading">{contractData.courseName}</h6>
+                <ul className="programInfosUl">
+                  <li>
+                    <span className="labelSpan">Duration</span>
+                    <span className="informationSpan"><b>{contractData.duration}</b></span>
+                  </li>
+                  <li>
+                    <span className="labelSpan">Auto Renual</span>
+                    <span className="informationSpan">{contractData.auto_renew_text}</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="totalCartValue">
-              <div className="billingAmt">
-                <p>Billing Total</p>
-                <h4>$ 349.00</h4>
+        <BillingOverview
+          contactId={props.programContractData.contact}
+          changeDefaultPay={changeDefaultPayFn}
+        />
+      </div>
+
+      <div className="productAvailable paymentDetails active">
+        <div class="programOverview">
+          <header className='informHeader'>
+            <h5>Payment Overview</h5>
+          </header>
+          <div className="bodytransactionForm">
+            <ul className="programInfosUl paymentOverviews">
+              <li>
+                <div className="labelSpan">Total Down Payment Amount</div>
+                <div className="informationSpan">${parseFloat(contractData.totalDownPayment).toFixed(2)}</div>
+              </li>
+              <li>
+                <div className="labelSpan">Total Tuition Amount</div>
+                <div className="informationSpan">
+                  <span className="infoSpan">
+                    <img src={help} alt="" />
+                    <span class="tooltiptextInfo">${contractData.tuitionAmount} x {contractData.numberOfPayments + ' ' + contractData.billingCycleText + '(s)'}</span>
+                  </span>&nbsp;&nbsp;${parseFloat(contractData.totalTuitionAmount).toFixed(2)}</div>
+              </li>
+            </ul>
+            <ul className="totalPaymentUl">
+              <li>Total</li>
+              <li>${parseFloat(contractData.total).toFixed(2)}</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="outstandingOverview">
+          {contractData.dueDownPayments && contractData.dueDownPayments.map((el, key) => {
+            return (
+              <React.Fragment key={key + "_dueDownPayments"}>
+                <div className="outstandingDownpayment">
+                  <div className="downpaymentsDetails">
+                    <div className="cardImage">
+                      <img src={el.payment_type === 'cash' ? outstandingCash : outstandingCard} alt="" />
+                    </div>
+                    <div class="paymentModuleInfos">
+                      <span className="accNumber">{el.title}</span>
+                      <span className="accinfod"><b>$ {parseFloat(el.amount).toFixed(2)}</b></span>
+                    </div>
+                  </div>
+                  <div className="downpaymentsPayDetails">
+                    <div className="paymentStatus due">Due</div>
+                    <div className="payDate">
+                      <img src={payDate} /> {utils.standardDateFormat(el.paymentDate)}
+                    </div>
+                  </div>
+                </div>
+              </React.Fragment>
+            );
+          })}
+
+          <div className="outstandingDownpayment tutuionSubscriptions">
+            <div className="downpaymentsDetails">
+              <div className="cardImage">
+                <img src={outstandingCard} alt="" />
               </div>
-              <div className="buyBtns">
-              {/* <button onClick={(e)=> {paymentFailedFn()}} className="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button> */}
-              <button onClick={props.paymentSuccessFn} className="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button>
-              
+              <div class="paymentModuleInfos">
+                <span className="accNumber">Tuition Amount</span>
+                <span className="accinfod"><b>$ {parseFloat(contractData.tuitionAmount).toFixed(2)}</b> / {contractData.billingCycleText}</span>
               </div>
             </div>
+            <div className="downpaymentsPayDetails">
+              <div className="payDate instalments">Payment Remaing ... <b>{contractData.remainingPaymentCount}</b></div>
+              <div className="payDate instalmentDate">
+                <img src={payDate} alt="" /> {contractData.nextDueDate}
+              </div>
+            </div>
+          </div>
 
-          
+          <ul className="totalPaymentUl outstandings">
+            <li>Outstanding</li>
+            <li>${parseFloat(contractData.duePaymentAmount).toFixed(2)}</li>
+          </ul>
+        </div>
+
+        <div className="dottedBorder"></div>
+
+        <div className="currentPaymentOverview programPayNowOverview">
+          {contractData.payNowDownPayments && contractData.payNowDownPayments.map((el, key) => {
+            return (
+              <React.Fragment key={key + "_payNowDownPayments"}>
+                <div className="outstandingDownpayment">
+                  <div className="downpaymentsDetails">
+                    <div className="cardImage">
+                      <img src={el.payment_type === 'cash' ? cashCurrent : cardActive} />
+                    </div>
+                    <div class="paymentModuleInfos">
+                      <span className="accNumber">{el.title}</span>
+                      <span className="accinfod"><b>$ {parseFloat(el.amount).toFixed(2)}</b></span>
+                    </div>
+
+                  </div>
+                  <div className="downpaymentsPayDetails">
+                    <div className="payDate currentPayment">
+                      <img src={payDate} alt="" /> Now
+                    </div>
+                  </div>
+                  {el.payment_type === 'cash' ?
+                    <label className={el.isReceivedCashFlagErr ? "receivedCash error" : "receivedCash"}>
+                      <div class="customCheckbox">
+                        <input type="checkbox" onChange={e => toggleReceiveCash(e, key)} />
+                        <span></span>
+                      </div>I have received the amount by Cash
+                    </label>
+                    : ''}
+                </div>
+              </React.Fragment>
+            );
+          })}
+
+
+          <div className="outstandingDownpayment tutuionSubscriptions currentPayment">
+            <div className="downpaymentsDetails">
+              <div className="cardImage">
+                <img src={cardActive} alt="" />
+              </div>
+              <div class="paymentModuleInfos">
+                <span className="accNumber">Tuition Amount</span>
+                <span className="accinfod"><b>$ {parseFloat(contractData.payNowTuitionAmount).toFixed(2)}</b></span>
+              </div>
+            </div>
+            <div className="downpaymentsPayDetails">
+              <div className="payDate currentPayment">
+                <img src={payDate} alt="" /> {contractData.isPayNow ? 'Now' : ''}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="totalCartValue">
+          <div className="billingAmt">
+            <p>Billing Total</p>
+            <h4>$ {parseFloat(contractData.nowPaymentAmount).toFixed(2)}</h4>
+          </div>
+          <div className="buyBtns">
+            {/* <button onClick={(e)=> {paymentFailedFn()}} class="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button> */}
+            <button onClick={billNow} class="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button>
+
+          </div>
         </div>
 
 
+      </div>
 
-        {addBankModal && (
-         <div className="modalBackdrop holiday"> 
-         
-           <div className="slickModalBody">
-           
-             <div className="slickModalHeader">
-               <button className="topCross" onClick={closeBankModal}><img src={crossTop} alt="" /></button>
-               <div className="circleForIcon"><img src={payMode} alt="" /></div>
-                       <h3 className="courseModalHeading">Add new billling Option</h3>
-                       <p className="courseModalPara">Lorem Ipsum is simply dummy text of the printing</p>
-             </div>
+
+
+      {addBankModal && (
+        <div className="modalBackdrop holiday">
+
+          <div className="slickModalBody">
+
+            <div className="slickModalHeader">
+              <button className="topCross" onClick={closeBankModal}><img src={crossTop} alt="" /></button>
+              <div className="circleForIcon"><img src={payMode} alt="" /></div>
+              <h3 className="courseModalHeading">Add new billling Option</h3>
+              <p className="courseModalPara">Lorem Ipsum is simply dummy text of the printing</p>
+            </div>
 
             <div className="payModalDetails">
 
-                  <div className="choosePaymentInfo" >
-                      
-                          <label>
-                              <div className="circleRadio">
-                                  <input type="radio"
-                                      name="transactionType" defaultChecked={choosePOS && "checked" }
-                                      onChange={chooseTransctionTypePOS}
-                                  /><span></span>
-                              </div> Card
-                          </label>
-                          <label> 
-                              <div className="circleRadio">
-                                  <input type="radio"
-                                      name="transactionType"
-                                      onChange={chooseTransctionTypeCourse}
-                                  /><span></span>
-                              </div> Bank Account
-                          </label>
+              <div className="choosePaymentInfo" >
+
+                <label>
+                  <div class="circleRadio">
+                    <input type="radio"
+                      name="transactionType" defaultChecked={choosePOS && "checked"}
+                      onChange={chooseTransctionTypePOS}
+                    /><span></span>
+                  </div> Card
+                </label>
+                <label>
+                  <div class="circleRadio">
+                    <input type="radio"
+                      name="transactionType"
+                      onChange={chooseTransctionTypeCourse}
+                    /><span></span>
+                  </div> Bank Account
+                </label>
+              </div>
+
+
+              {choosePOS &&
+                <div className="posSellingForm">
+
+                  <div className="modalForm auto">
+                    <form >
+                      <div class="formControl">
+                        <label>Card Number</label>
+                        <input type="number" placeholder="xxxx-xxxx-xxxx-xxxx" name="" />
                       </div>
 
+                      <div class="formControl">
+                        <label>Card Holder Name</label>
+                        <input type="text" placeholder="Ex. Adam Smith" name="" />
+                      </div>
 
-                    {choosePOS && 
-                    <div className="posSellingForm">
-                        
-                        <div className="modalForm auto">
-                          <form >  
-                            <div className="formControl">
-                              <label>Card Number</label>
-                              <input type="number" placeholder="xxxx-xxxx-xxxx-xxxx" name="" />
-                            </div>
-
-                            <div className="formControl">
-                              <label>Card Holder Name</label>
-                              <input type="text" placeholder="Ex. Adam Smith" name="" />
-                            </div>
-                            
-                            <div className="d-flex justified-space-between">
-                              <div className="formControl half">
-                              <label>Expiry Date</label>
-                              <input type="text" placeholder="mm/yy"  name=""/>
-                            </div>
-                            <div className="formControl half">
-                              <label>CVC</label> 
-                              <input type="text"  name=""/>
-                            </div>
-                            </div>
-                            {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraclassName="addStatsPopMsg"/> }
-                            { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraclassName="addStatsPopMsg"/>} */}
-              
-                             <div className="modalbtnHolder">
-                                <button type="reset" className="saveNnewBtn"><img src={pluss} alt="" />Add my Card</button>
-                             </div>
-                          </form>
+                      <div className="d-flex justified-space-between">
+                        <div class="formControl half">
+                          <label>Expiry Date</label>
+                          <input type="text" placeholder="mm/yy" name="" />
                         </div>
-
-
-                    </div>
-                    }
-
-
-                  {chooseCourse && 
-                    <div className="posSellingForm">
-                      <div className="modalForm auto">
-                          <form >  
-                            <div className="formControl">
-                              <label>Account Number</label>
-                              <input type="number" placeholder="xxxx-xxxx-xxxx-xxxx" name="" />
-                            </div>
-
-                            <div className="formControl">
-                              <label>Account Holder Name</label>
-                              <input type="text" placeholder="Ex. Adam Smith" name="" />
-                            </div>
-                            
-                            <div className="d-flex justified-space-between">
-                              <div className="formControl half">
-                              <label>Routing #</label>
-                              <input type="text"  name=""/>
-                            </div>
-                            <div className="formControl half">
-                              <label>Account Type</label> 
-                              <select className='selectBox'>
-                                    <option value="null">Checking</option>
-                                </select>
-                            </div>
-                            </div>
-                            {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraclassName="addStatsPopMsg"/> }
-                            { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraclassName="addStatsPopMsg"/>} */}
-              
-                             <div className="modalbtnHolder">
-                                <button type="reset" className="saveNnewBtn"><img src={pluss} alt="" />Add my Bank Account</button>
-                             </div>
-                          </form>
+                        <div class="formControl half">
+                          <label>CVC</label>
+                          <input type="text" name="" />
                         </div>
+                      </div>
+                      {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraClass="addStatsPopMsg"/> }
+                            { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraClass="addStatsPopMsg"/>} */}
 
-                    </div>
-                    }
+                      <div className="modalbtnHolder">
+                        <button type="reset" className="saveNnewBtn"><img src={pluss} alt="" />Add my Card</button>
+                      </div>
+                    </form>
+                  </div>
+
+
+                </div>
+              }
+
+
+              {chooseCourse &&
+                <div className="posSellingForm">
+                  <div className="modalForm auto">
+                    <form >
+                      <div class="formControl">
+                        <label>Account Number</label>
+                        <input type="number" placeholder="xxxx-xxxx-xxxx-xxxx" name="" />
+                      </div>
+
+                      <div class="formControl">
+                        <label>Account Holder Name</label>
+                        <input type="text" placeholder="Ex. Adam Smith" name="" />
+                      </div>
+
+                      <div className="d-flex justified-space-between">
+                        <div class="formControl half">
+                          <label>Routing #</label>
+                          <input type="text" name="" />
+                        </div>
+                        <div class="formControl half">
+                          <label>Account Type</label>
+                          <select className='selectBox'>
+                            <option value="null">Checking</option>
+                          </select>
+                        </div>
+                      </div>
+                      {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraClass="addStatsPopMsg"/> }
+                            { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraClass="addStatsPopMsg"/>} */}
+
+                      <div className="modalbtnHolder">
+                        <button type="reset" className="saveNnewBtn"><img src={pluss} alt="" />Add my Bank Account</button>
+                      </div>
+                    </form>
+                  </div>
+
+                </div>
+              }
             </div>
 
-             
-           </div>
-         </div>
-        )}
 
+          </div>
+        </div>
+      )}
 
-
+      {paymentSuccess && <PaymentSuccessSection />}
 
       {paymentFailed && (
-        <div className="modalBackdrop holiday">           
-          <div className="slickModalBody paymentFailed">            
+        <div className="modalBackdrop holiday">
+          <div className="slickModalBody paymentFailed">
             <div className="slickModalHeader">
-               <button className="topCross" onClick={closeFailedPayModal}><img src={crossTop} alt="" /></button> 
+              <button className="topCross" onClick={closeFailedPayModal}><img src={crossTop} alt="" /></button>
               <div className="circleForIcon"><img src={paymentFail} alt="" /></div>
-                      <h3 className="courseModalHeading">Payment Failed !</h3>
+              <h3 className="courseModalHeading">Payment Failed !</h3>
             </div>
             <div className="payModalDetails">
-              {/* <div className="choosePaymentInfo" >                      
-                <label>
-                    <div className="circleRadio">
-                        <input type="radio" name="transactionType"/><span></span>
-                    </div> Card
-                </label>
-                <label> 
-                    <div className="circleRadio">
-                        <input type="radio" name="transactionType"/><span></span>
-                    </div> Bank Account
-                </label>
-              </div>                    */}
               <img src={cardFail} alt="" />
-              <p>Payment Failed. We arn’t able to Process your Payment, Pease try again !</p>
+              <p>{paymentFailedMessage}</p>
             </div>
 
             <div className="buyBtns failedPayment">
-              <button onClick={props.paymentSuccessFn} className="saveNnewBtn">Close</button>
-              
-              </div>             
+              <button onClick={closeFailedPayModal} class="saveNnewBtn">Close</button>
+
             </div>
+          </div>
         </div>
       )}
 
 
-      </div>
-    );
+    </div>
+  );
 };
 
 export default ContractOverviewTransaction;

@@ -3654,6 +3654,7 @@ li:hover .extraDottedBtn {
 
 .errorField input,
 .errorField textarea,
+.errorField span.cmnFieldStyle,  
 .errorField select {
   border: 1px solid #c74854;
   background-color: #fff4f4;
@@ -10157,4 +10158,33 @@ li.listHeadingContacts > div > div.asc::after {
 }
 li.listHeadingContacts > div > div.dsc::after {
   background-image: url("../images/only_up_icon.svg");
+}
+.cmnFieldStyle.selectProg {
+  width: 100%;
+  display: inline-block;
+  box-sizing: border-box;
+  line-height: 40px;
+  padding-left: 10px;
+}
+
+.programStartDate.cmnFieldStyle {
+  font-size: 13px;
+}
+
+.currentPaymentOverview.programPayNowOverview .outstandingDownpayment label.receivedCash.error .customCheckbox input[type="checkbox"] + span {
+  box-shadow: 0 0 0 1px #c74854;
+  border: 1px solid #c74854;
+}
+
+.paymentUlInfo.programPaymentSuccess {
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.successPageBtn.programPayment {
+  width: 100%;
+}
+
+.successPageBtn.programPayment button.saveNnewBtn {
+  margin: 5px auto;
 }

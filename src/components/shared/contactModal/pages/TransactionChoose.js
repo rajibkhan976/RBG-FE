@@ -19,11 +19,11 @@ const TransactionChoose = (props) => {
 
   const [choosePOS, setChoosetPOS] = useState(false);
   const [chooseCourse, setChooseCourse] = useState(false);
-  
-  
+
+
   const [programStartDate, setProgramStartDate] = useState("");
   const [addDownpayment, setAddDownpayment] = useState(false);
-  
+
   const [courseCategory, setCourseCategory] = useState([]);
   const [courseList, setCourseList] = useState([]);
   const [courseFees, setCourseFees] = useState(0);
@@ -56,11 +56,13 @@ const TransactionChoose = (props) => {
   const [communication, setCommunication] = useState(false);
   const [communicationDownpayment, setCommunicationDownpayment] =
     useState(false);
-  
+
   const [productTransactionPayment, setProductTransactionPayment] =
     useState(false);
 
   const [contractOverview, setContractOverview] = useState(false);
+  const [programContractData, setProgramContractData] = useState(null);
+  const [successData, setSuccessData] = useState(null);
 
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [successProductPayment, setSuccessProductPayment] = useState(false);
@@ -223,7 +225,7 @@ const TransactionChoose = (props) => {
     setSize(productList[e.target.value].size);
     setProductImg(
       "https://wrapperbucket.s3.us-east-1.amazonaws.com/" +
-        productList[e.target.value].image
+      productList[e.target.value].image
     );
     setProductImgName(productList[e.target.value].image);
 
@@ -285,7 +287,7 @@ const TransactionChoose = (props) => {
     }
   };
 
- 
+
 
   const programStartDateHandel = (e) => {
     setProgramStartDate(e.target.value);
@@ -306,26 +308,30 @@ const TransactionChoose = (props) => {
     setAddDownpayment(false);
   };
 
-  
 
-  const contractOverviewFn = (e) => {
+
+  const contractOverviewFn = (e, programContractData) => {
     e.preventDefault();
+    console.log('Trans choose contract data', e, programContractData);
     setContractOverview(true);
+    setProgramContractData(programContractData);
   };
 
-  const paymentSuccessFn = (e) => {
+  const paymentSuccessFn = (e, successData) => {
     e.preventDefault();
+    console.log('payment success')
     setContractOverview(false);
     setPaymentSuccess(true);
+    setSuccessData(successData);
   };
 
-  useEffect(() => {}, [paymentSuccess]);
+  useEffect(() => { }, [paymentSuccess]);
 
   const productPayment = (e) => {
     setProductTransactionPayment(e === true ? true : false);
   };
 
-  useEffect(() => {}, [productTransactionPayment]);
+  useEffect(() => { }, [productTransactionPayment]);
 
   const setSuccessProductPaymentFn = (e) => {
     setSuccessProductPayment(!successProductPayment);
@@ -336,7 +342,11 @@ const TransactionChoose = (props) => {
   //   setToggleContactList(true);
   // }
 
-  useEffect(() => {}, [successProductPayment]);
+  useEffect(() => { }, [successProductPayment]);
+
+  const backToTransListFn = () => {
+    props.backToTransList();
+  }
 
   return (
     <>
@@ -349,12 +359,12 @@ const TransactionChoose = (props) => {
               paymentSuccess && !productTransactionPayment && !contractOverview
                 ? "backToTransction transactionPage"
                 : successProductPayment
-                ? "backToTransction transactionPage"
-                : "backToTransction transactionPage display"
+                  ? "backToTransction transactionPage"
+                  : "backToTransction transactionPage display"
             }
           >
             {!contractOverview && !productTransactionPayment && (
-              <button className="backBtn" onClick={props.backToTransList}>
+              <button className="backBtn x" onClick={props.backToTransList}>
                 <img src={arrow_forward} alt="" />
               </button>
             )}
@@ -362,7 +372,7 @@ const TransactionChoose = (props) => {
               !contractOverview &&
               !successProductPayment && (
                 <button
-                  className="backBtn"
+                  className="backBtn y"
                   onClick={() => setProductTransactionPayment(false)}
                 >
                   <img src={arrow_forward} alt="" />
@@ -370,7 +380,7 @@ const TransactionChoose = (props) => {
               )}
             {contractOverview && !productTransactionPayment && (
               <button
-                className="backBtn"
+                className="backBtn z"
                 onClick={() => setContractOverview(false)}
               >
                 <img src={arrow_forward} alt="" />
@@ -383,8 +393,8 @@ const TransactionChoose = (props) => {
               {contractOverview
                 ? "Contract Overview"
                 : paymentSuccess || successProductPayment
-                ? "Payment is Successful"
-                : "Make a Transaction"}
+                  ? "Payment is Successful"
+                  : "Make a Transaction"}
             </h3>
             <span>
               {contractOverview
@@ -399,10 +409,10 @@ const TransactionChoose = (props) => {
             contractOverview
               ? "chooseTransactionWraper transactionPage"
               : paymentSuccess
-              ? "chooseTransactionWraper transactionPage"
-              : productTransactionPayment
-              ? "paymentTransProduct chooseTransactionWraper"
-              : "chooseTransactionWraper transactionPage display"
+                ? "chooseTransactionWraper transactionPage"
+                : productTransactionPayment
+                  ? "paymentTransProduct chooseTransactionWraper"
+                  : "chooseTransactionWraper transactionPage display"
           }
         >
           <div className="chooseTransactionType">
@@ -436,9 +446,9 @@ const TransactionChoose = (props) => {
                 <div className="formMsg success">{successMsg}</div>
               )}
               {errorMsg &&
-                {
-                  /*  <div className="formMsg error">{errorMsg}</div>*/
-                }}
+              {
+                /*  <div className="formMsg error">{errorMsg}</div>*/
+              }}
               <ProductTransaction
                 productTransactionPayment={productTransactionPayment}
                 productPayment={productPayment}
@@ -459,16 +469,17 @@ const TransactionChoose = (props) => {
               )}
               {errorMsg && <div className=""></div>}
               {!contractOverview && !paymentSuccess && (
-                <ProgramTransaction                
+                <ProgramTransaction
                   choseCatHandel={choseCatHandel}
                   programStartDateHandel={programStartDateHandel}
-                  programStartDate={programStartDate}                 
+                  programStartDate={programStartDate}
                   courseSelected={courseSelected}
-                  buyCourse={buyCourse}                  
+                  buyCourse={buyCourse}
                   setCommunicationDownpayment={setCommunicationDownpayment}
                   contractOverview={contractOverview}
                   setContractOverview={setContractOverview}
                   contractOverviewFn={contractOverviewFn}
+                  contactId={props.contactId}
                 />
               )}
             </div>
@@ -485,10 +496,16 @@ const TransactionChoose = (props) => {
             paymentSuccess={paymentSuccess}
             setPaymentSuccess={setPaymentSuccess}
             paymentSuccessFn={paymentSuccessFn}
+            programContractData={programContractData}
           />
         )}
 
-        {paymentSuccess && <PaymentSuccessSection />}
+        {paymentSuccess &&
+          <PaymentSuccessSection
+            successData={successData}
+            backToTransList={backToTransListFn}
+          />
+        }
       </div>
     </>
   );
