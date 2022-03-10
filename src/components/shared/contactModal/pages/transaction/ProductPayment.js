@@ -20,6 +20,7 @@ import paySuccess from "../../../../../assets/images/paySuccess.png";
 import Loader from "../../../../shared/Loader";
 import { BillingServices } from "../../../../../services/billing/billingServices";
 import { ProductServices } from "../../../../../services/setup/ProductServices";
+import BillingOverview from "./BillingOverview";
 
 const ProductPayment = (props) => {
   const [isLoader, setIsLoader] = useState(false);
@@ -34,7 +35,6 @@ const ProductPayment = (props) => {
     type: "card",
     billingId: null
   });
-  const [newPayModal, setNewPayModal] = useState(false);
   const [productPaymentFailed, setProductPaymentFailed] = useState(false);
   const downPaymentList = useRef(null);
   const [totalAmt, setTotalAmt] = useState(0);
@@ -54,6 +54,7 @@ const ProductPayment = (props) => {
   const [newCard, setNewCard] = useState(null)
   const [newBank, setNewBank] = useState(null)
   const [newPayMethod, setNewPayMethod] = useState(null)
+  const [paymentSuccessMessage, setPaymentSuccessMessage] = useState(null)
   const downpaymentsContainer = useRef(null);
   const createDownpayAmount = useRef(null)
   const datePayment = useRef(null)
@@ -246,16 +247,18 @@ const ProductPayment = (props) => {
         setIsLoader(true)
         let productBuy = await ProductServices.buyProduct(productPayload)
         if(productBuy) {
+          setPaymentSuccessMessage(productBuy.message)
           openSuccessMessage()
-          setPaymentFailed(null)
-          setProductPaymentFailed(false)
-          console.log("SUCCESS:::", productBuy);
+          console.log("Payload result:::", productBuy);
         }
       } catch (error) {
         setPaymentFailed(error.message)
         setProductPaymentFailed(true)
       } finally {
         setIsLoader(false)
+        setPaymentFailed(null)
+        setProductPaymentFailed(false)
+        console.log("SUCCESS:::");
       }
     }
   };
@@ -574,7 +577,8 @@ const ProductPayment = (props) => {
   // mark first downpayment PAID
 
   // Change default payment method
-  const changeDefaultPay= (e, payItem, type, i) => {
+  const changeDefaultPay= (payItem, type) => {
+    console.log("here");
     try {
       setIsLoader(true)
       setNewPay({
@@ -587,6 +591,10 @@ const ProductPayment = (props) => {
       setIsLoader(false)
     }
   }
+
+  useEffect(()=>{
+    console.log("PAY METHOD MODIFIED:::", newPay);
+  },[newPay])
 
   // Edit created Downpayments
   const changeDownpaymentTitle = (e, downpay, i) => {
@@ -1106,80 +1114,14 @@ const ProductPayment = (props) => {
                 </div>
               )}
             </div>
-            <div className="cartProductInner productBillingOverview">
-              <header className="informHeader d-flex f-align-center f-justify-between">
-                <h5>Billing Overview</h5>
-
-                <button
-                  className="btn addPaymentInfo"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setNewPayModal(true);
-                  }}
-                >
-                  + Add
-                </button>
-              </header>
-
-              <div className="bodytransactionForm bodyProductPayModes">
-                <p className="paymentTypes">Cards</p>
-                <div className="chooseTransactionType paymentTypes">
-                  {console.log(":::cardBankList:::", newPay)}
-                { cardBankList && cardBankList.length > 0 && cardBankList.map((cardItem, i)=> 
-                  <label className={newPay.type === "card" && newPay.billingId === cardItem._id ? "paymentType active" : "paymentType"} key={i}> {/*active*/}
-                    <span className="circleRadio">
-                      <input
-                        type="radio"
-                        name="billingTransaction"
-                        onChange={(e)=>changeDefaultPay(e, cardItem, "card", i)}
-                        checked={newPay.type === "card" && newPay.billingId === cardItem._id}
-                      />
-                      {console.log(":::CARD:::", newPay === "card" && newPay.billingId === cardItem._id)}
-                      <span></span>
-                    </span>
-                    <span className="cardImage">
-                      <img src={cardActive} alt="card" />
-                    </span>
-                    <span className="paymentModuleInfos">
-                      <span className="accNumber">
-                        Credit Card ending with <strong>{cardItem.last4}</strong>
-                      </span>
-                      <span className="accinfod">Expires {cardItem.expiration_month}/{cardItem.expiration_year}</span>
-                    </span>
-                  </label>
-                )}
-                </div>
-
-                <p className="paymentTypes">Bank</p>
-
-                  <div className="chooseTransactionType paymentTypes">
-                  {/* {//  //  console.log("bankList", bankList)} */}
-                    { bankList && bankList.length > 0 && bankList.map((bankItem, i)=> 
-                      <label className={newPay === "bank" && newPay.billingId === bankItem._id ? "paymentType active" : "paymentType"} key={i}>
-                        <span className="circleRadio">
-                          <input 
-                            type="radio" 
-                            name="billingTransaction"
-                            onChange={(e)=>changeDefaultPay(e, bankItem, "bank", i)}
-                            checked={newPay.type === "bank" && newPay.billingId === bankItem._id}
-                          />
-                          {console.log(":::BANK:::", newPay === "bank" && newPay.billingId === bankItem._id)}
-                          <span></span>
-                        </span>
-                        <span className="cardImage">
-                          <img src={card} alt="card" />
-                        </span>
-                        <span className="paymentModuleInfos">
-                          <span className="accNumber">
-                            Bank account ending with <strong>{bankItem.last4}</strong>
-                          </span>
-                          <span className="accinfod">Routing Number {bankItem.routing_number}</span>
-                        </span>
-                      </label>
-                    )}
-                  </div>
-              </div>
-            </div>
+            <BillingOverview
+              cardBankList={cardBankList}
+              bankList={bankList}
+              newPay={newPay}
+              changeDefaultPay={changeDefaultPay}
+              newPayMethod={newPayMethod}
+              setNewPayMethod={setNewPayMethod}
+            />
           </div>
           <div className="gridCol">
             <div className="cartProductInner payOverviewProduct">
@@ -1377,7 +1319,6 @@ const ProductPayment = (props) => {
                   onClick={(e) => billPayment(e)}
                   disabled={hasError === false ? false : true}
                 >
-                  {console.log(hasError && "hasError", "downPaymentErrorMsg", downPaymentErrorMsg)}
                   Bill Now <img src={aaroww} alt="" />
                 </button>
               </div>
@@ -1422,7 +1363,7 @@ const ProductPayment = (props) => {
               <div className="circleForIcon">
                 <img src={paySuccess} alt="" />
               </div>
-              <h3 className="paySuccessHeading">Payment Successful ! </h3>
+              <h3 className="paySuccessHeading">{paymentSuccessMessage}</h3>
             </div>
             <div className="dottedBorder"></div>
 
@@ -1485,191 +1426,6 @@ const ProductPayment = (props) => {
             </div>
           </div>
         </>
-      )}
-
-      {newPayModal && (
-        <div className="modalBackdrop modalNewPay">
-          {console.log("NEW PAY METHOD:::", newPay.type)}
-          <div className="slickModalBody">
-            <div className="slickModalHeader">
-              <button
-                className="topCross"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setNewPayModal(false);
-                }}
-              >
-                <img src={crossTop} alt="" />
-              </button>
-              <div className="circleForIcon">
-                <img src={payMode} alt="" />
-              </div>
-              <h3 className="courseModalHeading">Add new billling Option</h3>
-              <p className="courseModalPara">
-                Lorem Ipsum is simply dummy text of the printing
-              </p>
-            </div>
-
-            <div className="payModalDetails">
-              <div className="choosePaymentInfo">
-                <label>
-                  <div className="circleRadio">
-                    <input
-                      type="radio"
-                      name="transactionType"
-                      defaultChecked={newPayMethod === "card"}
-                      onChange={(e) => setNewPayMethod("card")}
-                    />
-                    <span></span>
-                  </div>{" "}
-                  Card
-                </label>
-                <label>
-                  <div className="circleRadio">
-                    <input
-                      type="radio"
-                      name="transactionType"
-                      defaultChecked={newPayMethod === "bank"}
-                      onChange={(e) => setNewPayMethod("bank")}
-                    />
-                    <span></span>
-                  </div>{" "}
-                  Bank Account
-                </label>
-              </div>
-
-              {newPayMethod === "card" && (
-                <div className="posSellingForm">
-                  <div className="modalForm">
-                    <form>
-                      <div className="cmnFormRow">
-                        <label>Card Number</label>
-                        <div className="cmnFormField">
-                          <input
-                            className="cmnFieldStyle"
-                            type="number"
-                            placeholder="xxxx-xxxx-xxxx-xxxx"
-                            name=""
-                          />
-                        </div>
-                      </div>
-
-                      <div className="cmnFormRow">
-                        <label>Card Holder Name</label>
-                        <div className="cmnFormField">
-                          <input
-                            type="text"
-                            placeholder="Ex. Adam Smith"
-                            className="cmnFieldStyle"
-                            name=""
-                          />
-                        </div>
-                      </div>
-
-                      <div className="cmnFormRow">
-                        <div className="cmnFormCol">
-                          <label>Expiry Date</label>
-                          <div className="cmnFormField">
-                            <input
-                              type="text"
-                              placeholder="mm/yy"
-                              name=""
-                              className="cmnFieldStyle"
-                            />
-                          </div>
-                        </div>
-                        <div className="cmnFormCol">
-                          <label>CVV</label>
-                          <div className="cmnFormField">
-                            <input
-                              type="text"
-                              name=""
-                              className="cmnFieldStyle"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="modalbtnHolder">
-                        <button 
-                          type="reset" className="saveNnewBtn orangeBtn">
-                          <img src={pluss} alt="" /> Add my Card
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              )}
-
-              {newPayMethod === "bank" && (
-                <div className="posSellingForm">
-                  <div className="modalForm">
-                    <form>
-                      <div className="cmnFormRow">
-                        <label>Account Number</label>
-                        <div className="cmnFormField">
-                          <input
-                            type="number"
-                            placeholder="xxxx-xxxx-xxxx-xxxx"
-                            className="cmnFieldStyle"
-                            name=""
-                          />
-                        </div>
-                      </div>
-
-                      <div className="cmnFormRow">
-                        <label>Account Holder Name</label>
-                        <div className="cmnFormField">
-                          <input
-                            type="text"
-                            placeholder="Ex. Adam Smith"
-                            className="cmnFieldStyle"
-                            name=""
-                          />
-                        </div>
-                      </div>
-
-                      <div className="cmnFormRow">
-                        <div className="cmnFormCol">
-                          <label>Routing #</label>
-                          <div className="cmnFormField">
-                            <input
-                              type="text"
-                              className="cmnFieldStyle"
-                              name=""
-                            />
-                          </div>
-                        </div>
-                        <div className="cmnFormCol">
-                          <label>Account Type</label>
-                          <div className="cmnFormField">
-                            <select className="cmnFieldStyle selectBox">
-                              <option value="null">Checking</option>
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="modalbtnHolder">
-                        <button
-                          type="reset"
-                          className="saveNnewBtn orangeBtn"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setNewPayModal(true);
-                          }}
-                        >
-                          <img src={pluss} alt="" />
-                          Add my Bank Account
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
       )}
     </>
   );
