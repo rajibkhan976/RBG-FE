@@ -167,7 +167,7 @@ const Billing = (props) => {
       contactID: cardBank && props.contactId,
       accountType: cardBank && cardBank.accountType,
     };
-
+    
     try {
       await BillingServices.activeCard(cardData);
     } catch (error) {
