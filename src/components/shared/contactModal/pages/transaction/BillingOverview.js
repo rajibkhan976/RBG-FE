@@ -1,12 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import card from "../../../../../assets/images/card.svg";
 import cardActive from "../../../../../assets/images/cardActive.svg";
 // import crossTop from "../../../../../assets/images/cross.svg";
 // import payMode from "../../../../../assets/images/paymode.svg";
 // import pluss from "../../../../../assets/images/pluss.svg";
+import Loader from "../../../Loader";
+
+import { BillingServices } from "../../../../../services/billing/billingServices";
 
 const BillingOverview = (props) => {
 //   const [newPayModal, setNewPayModal] = useState(false);
+  const [isLoader, setIsLoader] = useState(false);
+
+  const fetchCardBank = async () => {
+    let cardBanksList;
+
+    try {
+      setIsLoader(true);
+      let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
+          cardBanksList = cardBankResponce;
+
+          console.log("cardBankResponce", cardBankResponce);
+
+      if (cardBankResponce) {
+        props.setCardBankList(cardBankResponce.cards);
+        props.setBankList(cardBankResponce.banks);
+        props.setNewPay({
+          ...props.newPay,
+          type: cardBankResponce.primary
+        })
+        props.setNewPayMethod(cardBankResponce.primary)
+        console.log("cardBankResponce", cardBankResponce);
+      }
+    } catch (error) {
+      //  //  console.log(error);
+    } finally {
+      console.log("cardBankList", cardBanksList && cardBanksList);
+    
+      props.setNewPay({
+        ...props.newPay,
+        billingId: cardBanksList && cardBanksList.primary === "card" ? cardBanksList.cards[0]._id : cardBanksList.banks[0]._id
+      })
+
+      setIsLoader(false);
+    }
+  };
+
+  useEffect(()=>{
+      fetchCardBank()
+      console.log(":::::::INSIDE BILLING OVERVIEW:::::::");
+  },[])
+
 
   return (
     <>
@@ -26,9 +70,9 @@ const BillingOverview = (props) => {
         </header>
 
         <div className="bodytransactionForm bodyProductPayModes">
+        {isLoader && <Loader/>}
           <p className="paymentTypes">Cards</p>
           <div className="chooseTransactionType paymentTypes">
-            {console.log(":::props.cardBankList:::", props.newPay)}
             {props.cardBankList &&
               props.cardBankList.length > 0 &&
               props.cardBankList.map((cardItem, i) => (

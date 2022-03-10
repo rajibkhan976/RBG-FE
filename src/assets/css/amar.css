@@ -2110,7 +2110,8 @@ input::-webkit-inner-spin-button {
 }
 .bodyProductPayModes {
   position: relative;
-  max-height: 330px;
+  min-height: 300px;
+  max-height: 340px;
   padding-top: 0;
 }
 .bodyProductPayModes p.paymentTypes {

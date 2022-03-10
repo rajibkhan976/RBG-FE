@@ -78,41 +78,7 @@ const ProductPayment = (props) => {
     edit_PayStatus_Err: ""
   });
 
-  const fetchCardBank = async () => {
-    let cardBanksList;
-
-    try {
-      setIsLoader(true);
-      let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
-          cardBanksList = cardBankResponce;
-
-      if (cardBankResponce) {
-        setCardBankList(cardBankResponce.cards);
-        setBankList(cardBankResponce.banks);
-        setNewPay({
-          ...newPay,
-          type: cardBankResponce.primary
-        })
-        setNewPayMethod(cardBankResponce.primary)
-        console.log("cardBankResponce", cardBankResponce);
-      }
-    } catch (error) {
-      //  //  console.log(error);
-    } finally {
-      console.log("cardBankList", cardBanksList && cardBanksList);
-    
-      setNewPay({
-        ...newPay,
-        billingId: cardBanksList && cardBanksList.primary === "card" ? cardBanksList.cards[0]._id : cardBanksList.banks[0]._id
-      })
-
-      setIsLoader(false);
-    }
-  };
-
   useEffect(()=>{
-    fetchCardBank();
-
     const getTotalCart = () => {
       if (props.cartState.length > 0) {
         const totalPlaceholder = 0;
@@ -1115,12 +1081,16 @@ const ProductPayment = (props) => {
               )}
             </div>
             <BillingOverview
+              contactId={props.contactId}
               cardBankList={cardBankList}
               bankList={bankList}
               newPay={newPay}
               changeDefaultPay={changeDefaultPay}
               newPayMethod={newPayMethod}
               setNewPayMethod={setNewPayMethod}
+              setCardBankList={setCardBankList}
+              setBankList={setBankList}
+              setNewPay={setNewPay}
             />
           </div>
           <div className="gridCol">
