@@ -25,21 +25,16 @@ const BillingOverview = (props) => {
         props.setBankList(cardBankResponce.banks);
         props.setNewPay({
           ...props.newPay,
-          type: cardBankResponce.primary
+          type: cardBankResponce.primary,
+          billingId: cardBankResponce.primary === "card" ? cardBanksList.cards.filter((cards, i)=>cards.status === "active")[0]._id : cardBanksList.banks.filter((banks,i)=>banks.status === "active")[0]._id
         })
         props.setNewPayMethod(cardBankResponce.primary)
-        console.log("cardBankResponce", cardBankResponce);
+        console.log("cardBankResponce.primary", cardBankResponce.primary, cardBankResponce.banks);
       }
     } catch (error) {
       //  //  console.log(error);
     } finally {
       console.log("cardBankList", cardBanksList && cardBanksList);
-      if(cardBanksList.cards.length>0 || cardBanksList.banks.length>0) {
-        props.setNewPay({
-          ...props.newPay,
-          billingId: cardBanksList && cardBanksList.primary === "card" ? cardBanksList.cards[0]._id : cardBanksList.banks[0]._id
-        })
-      }
 
       setIsLoader(false);
     }
@@ -72,6 +67,7 @@ const BillingOverview = (props) => {
         {isLoader && <Loader/>}
           <p className="paymentTypes">Cards</p>
           <div className="chooseTransactionType paymentTypes">
+
             {props.cardBankList &&
               props.cardBankList.length > 0 &&
               props.cardBankList.map((cardItem, i) => (
@@ -83,6 +79,7 @@ const BillingOverview = (props) => {
                   }
                   key={i}
                 >
+                  {/* {console.log(":::setNewPay::::", props.newPay)} */}
                   <span className="circleRadio">
                     <input
                       type="radio"
