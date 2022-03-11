@@ -144,6 +144,8 @@ const ProductTransaction = (props) => {
   };
 
   const selectedColor = (e) => {
+    let errorStatPl = {...errorState}
+
     try {
         console.log(e);
       setShowLoader(true);
@@ -151,11 +153,8 @@ const ProductTransaction = (props) => {
         ...selectedProduct,
         selectedColor: e,
       });
-      setHasError(true);
-      setErrorState({
-        ...hasError,
-        color: "",
-      });
+      errorStatPl.color = ""
+      setErrorState(errorStatPl);
     } catch (err) {
       setErrorMsg(err);
     } finally {
@@ -164,17 +163,16 @@ const ProductTransaction = (props) => {
   };
 
   const selectedSize = (e) => {
+    let errorStatPl = {...errorState}
+
     try {
       setShowLoader(true);
       setSelectedProduct({
         ...selectedProduct,
         selectedSize: e,
       });
-      setHasError(true);
-      setErrorState({
-        ...hasError,
-        sizes: "",
-      });
+      errorStatPl.sizes = ""
+      setErrorState(errorStatPl);
     } catch (err) {
       setErrorMsg(err);
     } finally {
@@ -214,6 +212,7 @@ const ProductTransaction = (props) => {
   const setQuantity = (e) => {
     e.preventDefault();
     let quantityInput = parseInt(productQuantity.current.value);
+    let errorStatPl = {...errorState}
 
     setSelectedProduct({
       ...selectedProduct,
@@ -224,6 +223,14 @@ const ProductTransaction = (props) => {
             : 0
           : (quantityInput += 1),
     });
+
+    if(quantityInput === 0) {
+      errorStatPl.quantity = "Quantity cannot be 0!"
+      setErrorState(errorStatPl)
+    } else {
+      errorStatPl.quantity = ""
+      setErrorState(errorStatPl)
+    }
   };
 
   const decreaseQuantity = (e, cartItem, i) => {
@@ -233,7 +240,7 @@ const ProductTransaction = (props) => {
       let cartItemPlaceholder = cartItem;
 
       cartItemPlaceholder.qnty =
-        cartItemPlaceholder.qnty > 0 ? cartItemPlaceholder.qnty - 1 : 0;
+        cartItemPlaceholder.qnty > 1 ? cartItemPlaceholder.qnty - 1 : 1;
 
       setCartState(cartStatePlaceholder);
     } catch (error) {
@@ -265,75 +272,70 @@ const ProductTransaction = (props) => {
   };
 
   useEffect(() => {
-    // console.log("selectedProduct", selectedProduct);
+    console.log("selectedProduct", selectedProduct);
   }, [selectedProduct, hasError]);
 
   const addThisProduct = (e) => {
     e.preventDefault();
+    console.log("ADD PRODUCT", selectedProduct.selectedSize);
+    let errorStatePlaceholder = {...errorState};
 
     try {
       if (selectedProduct.qnty === undefined) {
-        console.log("selectedProduct.quantity");
         setHasError(true);
-        setErrorState({
-          ...hasError,
-          quantity: "Please set some quantity!",
-        });
+
+        errorStatePlaceholder.quantity = "Please set some quantity!"
+        setErrorState(errorStatePlaceholder)
       }
       if (priceInput.current.value.trim().length === 0) {
-        console.log("selectedProduct.price");
         setHasError(true);
-        setErrorState({
-          ...hasError,
-          price: "Please set proper price!",
-        });
+
+        errorStatePlaceholder.price = "Please set proper price!"
+        setErrorState(errorStatePlaceholder)
       }
-      if (selectedProduct.selectedColor === undefined) {
-        console.log("selectedProduct.color");
+      if (selectedProduct.selectedColor === undefined || selectedProduct.selectedColor === null) {
         setHasError(true);
-        setErrorState({
-          ...hasError,
-          color: "Please select a color!",
-        });
+
+        errorStatePlaceholder.color = "Please select a color!"
+        setErrorState(errorStatePlaceholder)
       }
-      if (selectedProduct.selectedSize === undefined) {
-        console.log("selectedProduct.size");
+      if (selectedProduct.selectedSize === undefined || selectedProduct.selectedSize === null) {
         setHasError(true);
-        setErrorState({
-          ...hasError,
-          sizes: "Please select a size!",
-        });
-      } else if (
-        selectedProduct.qnty &&
-        selectedProduct.price &&
-        selectedProduct.selectedColor &&
-        selectedProduct.selectedSize
+
+        errorStatePlaceholder.sizes = "Please select a size!"
+        setErrorState(errorStatePlaceholder)
+      }
+      
+      if (
+        selectedProduct.qnty && selectedProduct.qnty !== undefined &&
+        selectedProduct.price && selectedProduct.price !== undefined &&
+        selectedProduct.selectedColor && selectedProduct.selectedColor !== undefined &&
+        selectedProduct.selectedSize && selectedProduct.selectedSize !== undefined
       ) {
-          console.log(selectedProduct.tax);
-          let cartItemToAdd = {
-              product: selectedProduct.name,
-              color: selectedProduct.selectedColor,
-              size: selectedProduct.selectedSize,
-              price: selectedProduct.price,
-              qnty: selectedProduct.qnty,
-              image: config.bucketUrl+selectedProduct.image,
-              name: selectedProduct.name,
-              tax: selectedProduct.tax === 1 ? true : false
-          }
-          console.log("HERE cartItemToAdd:::", e, cartItemToAdd);
+        let cartItemToAdd = {
+            product: selectedProduct.name,
+            color: selectedProduct.selectedColor,
+            size: selectedProduct.selectedSize,
+            price: selectedProduct.price,
+            qnty: selectedProduct.qnty,
+            image: config.bucketUrl+selectedProduct.image,
+            name: selectedProduct.name,
+            tax: selectedProduct.tax === 1 ? true : false
+        }
         setCartState([...cartState, cartItemToAdd]);
-        setHasError(false);
         setErrorState({
           color: "",
           sizes: "",
           price: "",
           quantity: "",
-        });
+        })
+        setErrorState(errorStatePlaceholder)
         resetAddProduct();
       }
     } catch (error) {
       setErrorMsg(error);
     } finally {
+      setHasError(false);
       setErrorMsg("");
     }
   };
@@ -438,8 +440,8 @@ const ProductTransaction = (props) => {
 //   };
 
   useEffect(() => {
-    // console.log("hasError UPDATED:::", hasError);
-  }, [hasError]);
+    console.log("hasError UPDATED:::", hasError, errorState);
+  }, [hasError, errorState]);
 
   useEffect(() => {
     // console.log("Loaded");
@@ -522,7 +524,7 @@ const ProductTransaction = (props) => {
                   </div>
                 </div>
                 <div
-                  className={hasError.color ? "cmnFormRow error" : "cmnFormRow"}
+                  className={errorState.color ? "cmnFormRow error" : "cmnFormRow"}
                 >
                   <label>Color</label>
                   <div className="cmnFormField">
@@ -577,7 +579,7 @@ const ProductTransaction = (props) => {
                                 onChange={() => selectedColor(color)}
                                 checked={selectedProduct && selectedProduct.selectedColor !== null && selectedProduct.selectedColor === color}
                               />
-                              {console.log(selectedProduct.selectedColor)}
+                              {/* {console.log(selectedProduct.selectedColor)} */}
                               <span
                                 style={{
                                   backgroundColor: color,
@@ -589,9 +591,10 @@ const ProductTransaction = (props) => {
                       )}
                     </div>
                   </div>
+                  {errorState.color && <p className="errorMsg">{errorState.color}</p>}
                 </div>
                 <div
-                  className={hasError.sizes ? "cmnFormRow error" : "cmnFormRow"}
+                  className={errorState.sizes ? "cmnFormRow error" : "cmnFormRow"}
                 >
                   <label>Available Sizes</label>
                   <div className="cmnFormField">
@@ -639,7 +642,7 @@ const ProductTransaction = (props) => {
                                 onChange={() => selectedSize(size)}
                                 checked={selectedProduct && selectedProduct.selectedSize !== null && selectedProduct.selectedSize === size}
                               />
-                              {console.log(selectedProduct.selectedSize)}
+                              {/* {console.log(selectedProduct.selectedSize)} */}
                               <span>{size}</span>
                             </label>
                           ))
@@ -652,7 +655,7 @@ const ProductTransaction = (props) => {
                 <div className="cmnFormRow">
                   <div
                     className={
-                      hasError.price ? "cmnFormCol error" : "cmnFormCol"
+                      errorState.price ? "cmnFormCol error" : "cmnFormCol"
                     }
                   >
                     <label className="labelWithInfo">
@@ -686,9 +689,10 @@ const ProductTransaction = (props) => {
                       />
                     </div>
                   </div>
+                  {errorState.price && <p className="errorMsg">{errorState.price}</p>}
                   <div
                     className={
-                      hasError.quantity ? "cmnFormCol error" : "cmnFormCol"
+                      errorState.quantity ? "cmnFormCol error" : "cmnFormCol"
                     }
                   >
                     <label className="labelWithInfo">
@@ -703,19 +707,6 @@ const ProductTransaction = (props) => {
                     </label>
 
                     <div className="cmnFormField">
-                      {/* <select 
-                                    className='selectBox' 
-                                    disabled={!selectedProduct || selectedProduct === undefined || selectedProduct === null} 
-                                    ref={quantityInput}
-                                    onChange={setQuantity}
-                                >
-                                    <option value="null">Quantity</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                </select> */}
                       <div className="counterItem cmnFieldStyle d-flex">
                         <button
                           className="btn"
@@ -781,6 +772,7 @@ const ProductTransaction = (props) => {
                         </button>
                       </div>
                     </div>
+                  {errorState.quantity && <p className="errorMsg">{errorState.quantity}</p>}
                   </div>
                   {selectedProduct && selectedProduct.tax === 1 && <sub className="footnoteInfo">
                     * 10% Tax will be applicable
@@ -790,11 +782,13 @@ const ProductTransaction = (props) => {
                   <button
                     className="addToCart orangeBtn"
                     disabled={
-                      !selectedProduct ||
                       selectedProduct === undefined ||
                       selectedProduct === null
                     }
                     onClick={addThisProduct}
+                    style={{
+                      filter: `grayscale(${selectedProduct ? 0 : 1}`
+                    }}
                   >
                     <img src={plus_icon} alt="Add Product" />
                     <span>Add Product</span>
@@ -902,7 +896,7 @@ const ProductTransaction = (props) => {
                             </button>
                           </div>
                           <div className="countPrice">
-                            $ {cartItem.price}x{cartItem.qnty}
+                            $ {cartItem.price} x {cartItem.qnty}
                           </div>
                           <div className="cartAmount">
                             {"$ " + parseFloat(cartItem.price * cartItem.qnty).toFixed(2)}

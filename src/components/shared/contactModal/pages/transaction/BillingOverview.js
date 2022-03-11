@@ -20,8 +20,6 @@ const BillingOverview = (props) => {
       let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
           cardBanksList = cardBankResponce;
 
-          console.log("cardBankResponce", cardBankResponce);
-
       if (cardBankResponce) {
         props.setCardBankList(cardBankResponce.cards);
         props.setBankList(cardBankResponce.banks);
@@ -36,11 +34,12 @@ const BillingOverview = (props) => {
       //  //  console.log(error);
     } finally {
       console.log("cardBankList", cardBanksList && cardBanksList);
-    
-      props.setNewPay({
-        ...props.newPay,
-        billingId: cardBanksList && cardBanksList.primary === "card" ? cardBanksList.cards[0]._id : cardBanksList.banks[0]._id
-      })
+      if(cardBanksList.cards.length>0 || cardBanksList.banks.length>0) {
+        props.setNewPay({
+          ...props.newPay,
+          billingId: cardBanksList && cardBanksList.primary === "card" ? cardBanksList.cards[0]._id : cardBanksList.banks[0]._id
+        })
+      }
 
       setIsLoader(false);
     }

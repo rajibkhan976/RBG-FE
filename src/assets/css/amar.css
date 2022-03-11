@@ -2249,6 +2249,15 @@ ul.paymentUlInfo li.paymentModeLi {
 .successPageBtn .saveNnewBtn img {
   margin-left: 14px;
 }
+.newDownpayment .addNewDownpayment {
+  border-radius: 3px;
+}
+.formControl .pickColor {
+  padding-left: 1px;
+}
+.error .sizeChoiceItem span {
+  box-shadow: 0 0 0 1px #c74854;
+}
 /* Add a product */
 
 /* Later additions for Program (Transaction) */
