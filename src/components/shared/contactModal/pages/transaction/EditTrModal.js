@@ -5,6 +5,7 @@ import arrowForwardImg from "../../../../../../src/assets/images/arrow_forward.s
 import editForModal from "../../../../../../src/assets/images/editForModal.svg";
 import plus_icon from "../../../../../../src/assets/images/plus_icon.svg";
 import cross_small from "../../../../../../src/assets/images/cross_small.svg";
+import Loader from "../../../Loader";
 
 import { BillingServices } from "../../../../../services/billing/billingServices";
 
@@ -19,6 +20,12 @@ const EditTrModal = (props) => {
     const [checkingForCard, setCheckingForCard] = useState(false);
     const [checkingForBank, setCheckingForBank] = useState(false);
     const [addBtnClicked, setAddBtnClicked] = useState(false);
+    
+    const [cardExpairyMonthCheck, setCardExpairyMonthCheck] = useState("");
+    const [cardExpairyYearCheck, setCardExpairyYearCheck] = useState("");
+    const [cardNumberOn, setCardNumberOn] = useState("");
+     
+    
 
     const [openOnlineBox, setOpenOnlineBox] = useState(false);
     const [communicationDownpayment, setCommunicationDownpayment] = useState(false);
@@ -42,13 +49,16 @@ const EditTrModal = (props) => {
         cardNumber: "",
         cardHolderName: "",
         exDate: "",
-
+        exDateMonth: "",
+        exDateYear: "",
         cvv: ""
     });
     const [addCardformErrorMsg, setAddCardFormErrorMsg] = useState({
         cardNumber: "",
         cardHolderName: "",
         exDate: "",
+        exDateMonth: "",
+        exDateYear: "",
         cvv: ""
     });
 
@@ -65,56 +75,7 @@ const EditTrModal = (props) => {
         checking: ""
     });
     
-    // some dummy payload starts
     
-    const mainData = {
-        "cards": [
-            {
-                "_id": "617fd404ca07431527720997",
-                "card_brand": "discover",
-                "last4": "4101",
-                "expiration_month": 12,
-                "expiration_year": 2021,
-                "cardholder_name": "Ujjal Das",
-                "account_updater_options": {},
-                "contactId": "610c2e2fef032942ab5b823b",
-                "organizationId": "603e3f245e257524e35660c2",
-                "token": "vlt_b00b2c327c6e4e4e916a849964a6ff06",
-                "accountType": "card",
-                "status": "inactive"
-            },
-            {
-                "_id": "617fd496fbff6a1527f5ac83",
-                "card_brand": "mastercard",
-                "last4": "5454",
-                "expiration_month": 12,
-                "expiration_year": 2021,
-                "cardholder_name": "Jit Talukdar",
-                "account_updater_options": {},
-                "contactId": "610c2e2fef032942ab5b823b",
-                "organizationId": "603e3f245e257524e35660c2",
-                "token": "vlt_f0546b1592c54841898b73a68ddd17dc",
-                "accountType": "card",
-                "status": "active"
-            }
-        ],
-        "banks": [
-            {
-                "_id": "617fd46a836c2e152776fd04",
-                "card_brand": "visa",
-                "last4": "1111",
-                "expiration_month": 12,
-                "expiration_year": 2021,
-                "cardholder_name": "Subhadip Sahoo",
-                "account_updater_options": {},
-                "contactId": "610c2e2fef032942ab5b823b",
-                "organizationId": "603e3f245e257524e35660c2",
-                "token": "vlt_57ca1bfc23cf4b8ca2776bb4e5748585",
-                "accountType": "bank",
-                "status": "inactive"
-            }
-        ]
-    }
     const [isLoader, setIsLoader] = useState(false);
       
     const [cardList, setCardList] = useState([]);
@@ -178,9 +139,23 @@ const EditTrModal = (props) => {
         setAddBtnClicked(true) ;
     }
 
-    const activeCreditCard = () =>{
+    const activeCreditCard = async (cardBank) => {
+        setIsLoader(true)
+    
+        let cardData = {
+          billingID: cardBank && cardBank._id,
+          contactID: cardBank && props.contactId,
+          accountType: cardBank && cardBank.accountType,
+        };
         
-    }
+        try {
+          await BillingServices.activeCard(cardData);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          fetchCardBank();
+        }
+      };
 
 
     const testCardTypeFn = (cardNum) => {
@@ -330,8 +305,8 @@ const EditTrModal = (props) => {
               //console.log("formattedCardNumber", formattedCardNumber);
               formattedCardNumber = cardNumberSections.join("-");
               addCardfieldErrorCheck.checkcardNumber(formattedCardNumber);
-              //var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");
-              //addCardfieldErrorCheck.checkcardNumber(cardNumberChanged);
+              var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");
+              setCardNumberOn(cardNumberChanged);
             }
             if (e.target.value === "") {
                 addCardfieldErrorCheck.checkcardNumber("");
@@ -361,6 +336,8 @@ const EditTrModal = (props) => {
         } else if (formattedCardExpairy <= 2) {
         formattedCardExpairy = cardExpairySectionsMonth;
         }
+        setCardExpairyYearCheck(cardExpairySectionsYear);
+        setCardExpairyMonthCheck(cardExpairySectionsMonth);
         addCardfieldErrorCheck.checkcardExp(formattedCardExpairy);
         
     }
@@ -411,7 +388,7 @@ const EditTrModal = (props) => {
     }
   
 
-    const submitCardChangeForm = (e) =>{
+    const submitCardChangeForm = async (e) =>{
         e.preventDefault();
         addCardfieldErrorCheck.checkcardNumber(addCardFormData.cardNumber);
         addCardfieldErrorCheck.checkcardName(addCardFormData.cardHolderName);
@@ -424,7 +401,49 @@ const EditTrModal = (props) => {
         } else{
             setCheckingForCard(true);
         }
-       
+        console.log("cardExpairySectionsMonth",cardExpairyMonthCheck);
+        let cardPayload =  {
+            contact: props.contactId,
+            card_number: addCardFormData.cardNumber.split("-").join(""),
+            expiration_year: cardExpairyYearCheck,
+            expiration_month: cardExpairyMonthCheck,
+            cvv: addCardFormData.cvv.trim() !== "" ? addCardFormData.cvv : "",
+            cardholder_name: addCardFormData.cardHolderName,
+            status: "inactive",
+          }
+        try {
+            await BillingServices.addCard(cardPayload);
+            // setFormErrorMsg((errorMessage) => ({
+            //   ...errorMessage,
+            //   card_details_invalid: "",
+            // })); 
+            // setTimeout(() => {
+            //   setSuccessMessage("Card successfully added!")
+            // }, 2000);
+            //hideNewCardHandler();
+          } catch (error) {
+            setIsLoader(false)
+            // setFormErrorMsg((errorMessage) => ({
+            //   ...errorMessage,
+            //   card_details_invalid: error.message,
+            // }));
+          } finally {
+            //cardError = false;
+            cardPayload = {
+              contact: "",
+              card_number: "",
+              expiration_year: "",
+              expiration_month: "",
+              cvv: "",
+              cardholder_name: "",
+              status: "",
+            };
+            fetchCardBank();
+            console.log("FINISHED");
+            setEditCardDetailsPart(false);
+            setEditCardPart(true);
+            
+          }
     }
 
     const addBankNumberHandler = (e) =>{
@@ -488,7 +507,7 @@ const EditTrModal = (props) => {
     }
 
     
-    const submitBankChangeForm = (e) =>{
+    const submitBankChangeForm = async (e)  =>{
         e.preventDefault();
         addBankfieldErrorCheck.checkaccNumber(addBankFormData.accNumber);
         addBankfieldErrorCheck.checkaccHolderName(addBankFormData.accHolderName);
@@ -501,15 +520,40 @@ const EditTrModal = (props) => {
             setCheckingForBank(true);
         }
 
-        console.log(
+        let bankPayload = {
+            contact: props.contactId,
+            routing_number:  addBankFormData.routing,
+            account_number: addBankFormData.accNumber,
+            account_holder: addBankFormData.accHolderName,
+            account_type: "checking",
+            status: "inactive"
+          } 
             
-                "accountnumber"      , addBankFormData.accNumber ,
-                "banhAccountHolder" ,addBankFormData.accHolderName,
-                "routing"         , addBankFormData.routing,
-                "banktype"          , addBankFormData.checking
+          try {
             
-        )
-
+            let response = await BillingServices.addBank(bankPayload);
+            // setFormErrorMsg((errorMessage) => ({
+            //   ...errorMessage,
+            //   bank_details_invalid: "",
+            // })); 
+            // setTimeout(() => {
+            //   setSuccessMessage("Bank details successfully added!")
+            // }, 2000);
+            // hideNewCardHandler2();
+            console.log(response);
+          } catch (error) {
+            setIsLoader(false)
+            // setFormErrorMsg((errorMessage) => ({
+            //   ...errorMessage,
+            //   bank_details_invalid: error.message,
+            // }));
+          } finally {
+            //bankError = false;
+            bankPayload = null;
+            fetchCardBank();
+            setEditBankDetailsPart(false);
+            setEditBankPart(true);
+          }
 
 
     }
@@ -629,6 +673,7 @@ const EditTrModal = (props) => {
                 </div>
                 <div className="cmnForm fullWidth">
                     <form>
+                    {isLoader ? <Loader /> : ""}
                         <div className="cmnFormRow fullWidth flatForm">
                             <label className="cmnFieldName">Change Date</label>
                             <div className="dateHolderDiv">
