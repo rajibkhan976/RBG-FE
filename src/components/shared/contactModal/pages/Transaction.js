@@ -628,7 +628,7 @@ const Transaction = (props) => {
       </div>
       { refundModal && <RefundModal closeModal={(param) => openCloseRefundModal (param)} /> }
 
-      { editTransModal && <EditTrModal closeModal={(param) => openCloseEditTransModal (param)} /> }
+      { editTransModal && <EditTrModal closeModal={(param) => openCloseEditTransModal (param)} contactId={props.contactId} /> }
 
       { completeTransModal && 
       <CompleteTransactionModal 

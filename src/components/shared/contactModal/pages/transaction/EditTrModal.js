@@ -1,10 +1,12 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 import crossImg from "../../../../../../src/assets/images/cross.svg";
 import arrowForwardImg from "../../../../../../src/assets/images/arrow_forward.svg";
 import editForModal from "../../../../../../src/assets/images/editForModal.svg";
 import plus_icon from "../../../../../../src/assets/images/plus_icon.svg";
 import cross_small from "../../../../../../src/assets/images/cross_small.svg";
+
+import { BillingServices } from "../../../../../services/billing/billingServices";
 
 
 const EditTrModal = (props) => {
@@ -113,8 +115,32 @@ const EditTrModal = (props) => {
             }
         ]
     }
-    
-    
+    const [isLoader, setIsLoader] = useState(false);
+      
+    const [cardList, setCardList] = useState([]);
+    const [bankList, setBankList] = useState([]);
+    const [primaryType, setPrimaryType] = useState(null);
+   
+    const fetchCardBank = async () => {
+        try {
+          setIsLoader(true);
+          let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
+          if (cardBankResponce) {
+            setCardList(cardBankResponce.cards);
+            setBankList(cardBankResponce.banks);
+            setPrimaryType(cardBankResponce.primary);
+          }
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setIsLoader(false);
+        }
+      };
+      useEffect(() => {
+        fetchCardBank();
+      }, []);
+
+      
     const editCardHandler = (e) =>{
         e.preventDefault();
         setEditCardPart(true);
@@ -152,9 +178,9 @@ const EditTrModal = (props) => {
         setAddBtnClicked(true) ;
     }
 
-   const activeCreditCard = () =>{
-
-   }
+    const activeCreditCard = () =>{
+        
+    }
 
 
     const testCardTypeFn = (cardNum) => {
@@ -583,6 +609,9 @@ const EditTrModal = (props) => {
                 //console.log(mainData.banks);
                 console.log("Edit done successfully");
             }
+            
+            console.log("hhhh",cardList);
+            console.log("dddd",bankList);
              
     }
    
@@ -654,8 +683,8 @@ const EditTrModal = (props) => {
                                             {editCardPart &&
                                                  <ul>
                                                     
-                                                     {mainData.cards &&
-                                                            mainData.cards.map((elem, i) => (
+                                                     {cardList &&
+                                                            cardList.map((elem, i) => (
                                                              
                                                                 <li className={elem.status === "active" ? "active" : ""} key={i}>
                                                                     <div className="radio"> 
@@ -741,8 +770,8 @@ const EditTrModal = (props) => {
                                         {editBankPart &&  
                                             <ul>
                                              
-                                              {mainData.banks &&
-                                                    mainData.banks.map((elem, i) => (                                                    
+                                              {bankList &&
+                                                    bankList.map((elem, i) => (                                                    
                                                         <li className={elem.status === "active" ? "active" : ""} key={i}>
                                                             <div className="radio">
                                                                 <div className="circleRadio">
