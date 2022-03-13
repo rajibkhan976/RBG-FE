@@ -296,6 +296,13 @@ const ProductPayment = (props) => {
       }
     } catch(error) {
       console.log(error);
+    } finally{
+      setTimeout(() => {
+        downPaymentList.current.scroll({
+          top: 300,
+          behavior: 'smooth'
+        })
+      }, 500);
     }
   }
   // Add new downpayments
