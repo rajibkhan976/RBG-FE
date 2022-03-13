@@ -146,11 +146,13 @@ const ProductPayment = (props) => {
     const paymentsArray = [...downPayments];
     let outStandingPlaceholder = outStanding;
         outStandingPlaceholder.title = "Outstanding";
-        outStandingPlaceholder.amount !== 0 && outStandingPlaceholder.amount.toFixed(2)
+        if(parseFloat(outStandingPlaceholder.amount) !== 0) {
+          outStandingPlaceholder.amount = parseFloat(parseFloat(outStandingPlaceholder.amount).toFixed(2))
+          paymentsArray.push(outStandingPlaceholder);
+          console.log("paymentsArray", paymentsArray);
+        }
+        // console.log(outStandingPlaceholder);
 
-        console.log(outStandingPlaceholder);
-
-    outStanding.amount !== 0 && paymentsArray.push(outStandingPlaceholder);
 
     const productPayload = {
       contact: props.contactId,
@@ -227,6 +229,8 @@ const ProductPayment = (props) => {
 
   // MAKE DOWNPAYMENTS ACTIVE
   const checkAndSetDownPayments = (e) => {
+    let errStat = downPaymentErrorMsg;
+
     if (e.target.checked) {
       setDownPaymentActive(true);
       setDownPayments(downpayments=>[...downpayments, {
@@ -239,26 +243,27 @@ const ProductPayment = (props) => {
         payment_status: "unpaid",
       }])
       setHasError(true);
-      setDownPaymentErrorMsg({
-        ...downPaymentErrorMsg,
-        title_Err: "Title cannot be blank",
-        amount_Err: "Amount cannot be nothing",
-      });
+
+      errStat.title = "Title cannot be blank";
+      errStat.amount_Err = "Amount cannot be nothing";
+
+      setDownPaymentErrorMsg(errStat);
+      console.log("here", errStat);
     } else {
       setDownPaymentActive(false);
       
       setDownPayments([]);
+
+      errStat.title = "";
+      errStat.amount_Err = "";
+
       setOutstanding({
         ...outStanding,
         amount: parseFloat(totalAmt) + parseFloat(totalTaxAmt),
         payment_type: "online",
       });
       setHasError(false);
-      setDownPaymentErrorMsg({
-        ...downPaymentErrorMsg,
-        title_Err: "",
-        amount_Err: "",
-      });
+      setDownPaymentErrorMsg(errStat);
     }
   };
   // MAKE DOWNPAYMENTS ACTIVE
@@ -274,22 +279,24 @@ const ProductPayment = (props) => {
         totalPlaceholder
       );
 
-    // try {
-    //   if(downPayments.length === 0) {
-    //     setOutstanding({
-    //       ...outStanding,
-    //       amount: (parseFloat(totalAmt)+parseFloat(totalTaxAmt))
-    //     })
-    //   }
-    //   else {
-    //     setOutstanding({
-    //       ...outStanding,
-    //       amount: (parseFloat(totalAmt)+parseFloat(totalTaxAmt))
-    //     })
-    //   }
-    // } catch(error) {
-    //   console.log(error);
-    // }
+    try {
+      if (totalDownpaymentsAmt !== 0 && outStanding.amount !== 0) {
+          setDownPayments(downpayments=>[
+            ...downpayments,
+        {
+          title: "",
+          amount: 0,
+          type: "downpayment",
+          isPayNow: 1,
+          paymentDate: todayPayDate().toISOString().split("T")[0],
+          payment_type: "cash",
+          payment_status: "unpaid",
+        },
+      ])
+      }
+    } catch(error) {
+      console.log(error);
+    }
   }
   // Add new downpayments
 
@@ -533,9 +540,11 @@ const ProductPayment = (props) => {
         parseFloat(e.target.value) + parseFloat(totalDownpaymentsAmt) <
         parseFloat(totalAmt) + parseFloat(totalTaxAmt)
       ) {
-        downPaymentsPlaceholder[i].amount = e.target.value;
+        downPaymentsPlaceholder[i].amount = parseFloat(e.target.value);
 
         setDownPayments(downPaymentsPlaceholder);
+
+        console.log("downPaymentsPlaceholder", downPaymentsPlaceholder, parseFloat(e.target.value));
 
         setOutstanding({
           ...outStanding,
@@ -558,7 +567,7 @@ const ProductPayment = (props) => {
         (parseFloat(e.target.value) + totalDownpaymentsAmt) ===
         parseFloat(totalAmt) + parseFloat(totalTaxAmt)
       ) {
-        downPaymentsPlaceholder[i].amount = e.target.value;
+        downPaymentsPlaceholder[i].amount = parseFloat(e.target.value);
 
         setDownPayments(downPaymentsPlaceholder);
 
@@ -589,9 +598,9 @@ const ProductPayment = (props) => {
       console.log("IS CHECKED:::", e.target.checked);
       if (e.target.checked) {
         downPaymentsPlaceholder[i].isPayNow = 0;
-        downPaymentsPlaceholder[i].payDate = nextPayDate().toISOString().split("T")[0];
+        downPaymentsPlaceholder[i].paymentDate = nextPayDate().toISOString().split("T")[0];
 
-        if(downPaymentsPlaceholder[i].payDate === "") {
+        if(downPaymentsPlaceholder[i].paymentDate === "") {
           setHasError(true);
           setDownPaymentErrorMsg({
             ...downPaymentErrorMsg,
@@ -601,7 +610,7 @@ const ProductPayment = (props) => {
         setDownPayments(downPaymentsPlaceholder);
       } else {
         downPaymentsPlaceholder[i].isPayNow = 1;
-        downPaymentsPlaceholder[i].payDate = todayPayDate().toISOString().split("T")[0];
+        downPaymentsPlaceholder[i].paymentDate = todayPayDate().toISOString().split("T")[0];
 
         setHasError(false);
         setDownPaymentErrorMsg({
@@ -666,6 +675,18 @@ const ProductPayment = (props) => {
   };
   // Edit created Downpayments
 
+  const totalDownpayment = () => {
+    let totalPlaceholder = 0;
+
+    downPayments.reduce(
+      (previousValue, currentValue) =>
+        parseFloat(previousValue) + parseFloat(currentValue.amount),
+      totalPlaceholder
+    );
+
+    return totalPlaceholder
+  }
+
   return (
     <>
       {isLoader && <Loader />}
@@ -696,7 +717,7 @@ const ProductPayment = (props) => {
               </header>
               {downPaymentActive && (
                 <div className="bodytransactionForm" ref={downPaymentList}>
-                  {outStanding.amount > 0 && (
+                  {parseFloat(outStanding.amount) > 0 && (
                     <div className="newDownpayment">
                       <button
                         className="addNewDownpayment"
@@ -715,7 +736,7 @@ const ProductPayment = (props) => {
                       ref={downpaymentsContainer}
                     >
                       {downPayments.map((downpay, i) => (
-                        <div className="newDownpayment" key={"dp" + i}>
+                        <div className="newDownpayment" key={i}>
                           {i !== 0 && <button
                             className="delNewDownpayment"
                             onClick={(e) => deleteNewDownPayment(e, downpay, i)}
@@ -743,10 +764,10 @@ const ProductPayment = (props) => {
                               <div className="cmnFormField">
                                 <input
                                   className="cmnFieldStyle"
-                                  defaultValue={downpay.title}
                                   onChange={(e) =>
                                     changeDownpaymentTitle(e, downpay, i)
                                   }
+                                  value={downpay.title}
                                 />
                               </div>
                               {downPaymentErrorMsg.edit_Title_Err && (
@@ -779,7 +800,7 @@ const ProductPayment = (props) => {
                                     type="number"
                                     placeholder="149"
                                     className="editableInput numberType cmnFieldStyle"
-                                    defaultValue={downpay.amount}
+                                    value={downpay.amount}
                                     onChange={(e) =>
                                       changeDownpaymentAmount(e, downpay, i)
                                     }
@@ -1149,6 +1170,7 @@ const ProductPayment = (props) => {
                 className="currentPaymentOverview cartProductInner"
                 style={{
                   marginTop: 0,
+                  marginBottom: "5px"
                 }}
               >
                 <div className="outstandingDownpayment">

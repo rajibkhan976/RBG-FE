@@ -1388,6 +1388,7 @@ input::-webkit-inner-spin-button {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  background-image: none !important;
 }
 .choiceOpt header h6 {
   font-weight: 500;
@@ -2257,6 +2258,13 @@ ul.paymentUlInfo li.paymentModeLi {
 }
 .error .sizeChoiceItem span {
   box-shadow: 0 0 0 1px #c74854;
+}
+.downpaymentsDetails .cardImage {
+  width: 44px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 /* Add a product */
 
