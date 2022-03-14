@@ -168,12 +168,12 @@ const AddProductModal = (props) => {
             msg = "Product added successfully";
           }
         }
+
         if (btnType !== "SaveNew") {
           console.log("Inisde Save");
           setSuccessMsg(msg);
-          setTimeout(function () {
-            props.closeAddProductModal("fetch");
-          }, messageDelay);
+
+          props.getAddedProduct(data)
         } else {
           props.retriveProducts(false);
           props.retrieveCategories();
@@ -197,7 +197,10 @@ const AddProductModal = (props) => {
     } catch (e) {
       setErrorMsg(e.message);
     } finally {
-      setIsLoader(false);
+      setTimeout(function () {
+        props.closeAddProductModal("fetch");
+        setIsLoader(false);
+      }, messageDelay);
     }
   }
 
@@ -299,11 +302,12 @@ const AddProductModal = (props) => {
                 </div>
                 <div className="formControl">
                   <label>Price</label>
-                  <div className="formLeft">
-                    <input type="text" name="price" placeholder="Ex: 99" onChange={handleChange} value={productData.price} />
+                  <div className="formLeft preField">
+                    <div class="unitAmount">$</div>
+                    <input type="text" name="price" placeholder="Ex: 99" onChange={handleChange} value={productData.price} className="cmnFieldStyle" />
                     {/* <span>* default currency is<strong> USD</strong></span> */}
                   </div>
-                  <div className="formRight">
+                  <div className="formRight addTaxProduct">
                     <label>
                       <div className="customCheckbox">
                         <input type="checkbox"
@@ -317,9 +321,14 @@ const AddProductModal = (props) => {
                   </div>
                 </div>
                 <div className="modalbtnHolder w-100">
-                  <button type="submit" name="save"
+                  {!props.productTransaction && <button type="submit" name="save"
                     className="saveNnewBtn"
-                    onClick={() => setBtnType("Save")}><span>{(isEditing) ? "Update" : "Save"}</span><img src={arrow_forward} alt="" /></button>
+                    onClick={() => setBtnType("Save")}><span>{(isEditing) ? "Update" : "Save"}</span><img src={arrow_forward} alt="" /></button>}
+
+                  {props.productTransaction && <button type="submit" name="save"
+                    className="saveNnewBtn"
+                    onClick={() => setBtnType("Save")}><span>Save and Select</span><img src={arrow_forward} alt="" /></button>
+                  }
                   <button type="submit" name="saveNew"
                     className="saveNnewBtn"
                     onClick={() => setBtnType("SaveNew")}><span>{(isEditing) ? "Update" : "Save"} &amp; New</span><img src={arrow_forward} alt="" /></button>

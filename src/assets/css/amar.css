@@ -2266,6 +2266,18 @@ ul.paymentUlInfo li.paymentModeLi {
   align-items: center;
   justify-content: center;
 }
+.preField {
+  position: relative;
+}
+.modalProductAdd .formLeft.preField .cmnFieldStyle {
+  margin: 0;
+}
+.modalProductAdd .formLeft.preField .unitAmount {
+  height: 40px;
+}
+.modalProductAdd .addTaxProduct label {
+  padding-top: 8px;
+}
 /* Add a product */
 
 /* Later additions for Program (Transaction) */

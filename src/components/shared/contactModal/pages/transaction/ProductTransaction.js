@@ -180,7 +180,7 @@ const ProductTransaction = (props) => {
     }
   };
 
-  const selectProductToAdd = (item, index) => {
+  const selectProductToAdd = (item) => {
     const productPlaceholder = item;
           productPlaceholder.selectedColor = null;
           productPlaceholder.selectedSize = null;
@@ -439,6 +439,11 @@ const ProductTransaction = (props) => {
 //     setAddProductModal(false);
 //   };
 
+  const getAddedProduct = (e) => {
+    console.log("NEWLY ADDED", e);
+    selectProductToAdd(e)
+  }
+
   useEffect(() => {
     console.log("hasError UPDATED:::", hasError, errorState);
   }, [hasError, errorState]);
@@ -505,7 +510,7 @@ const ProductTransaction = (props) => {
                               <li
                                 key={i}
                                 onClick={() =>
-                                  selectProductToAdd(productItem, i)
+                                  selectProductToAdd(productItem)
                                 }
                               >
                                 <figure>
@@ -947,6 +952,8 @@ const ProductTransaction = (props) => {
           retrieveCategories={fetchCategories}
           categories={categoryData}
           getcolorSize={colorSize}
+          productTransaction={true}
+          getAddedProduct={getAddedProduct}
         />
       )}
 
