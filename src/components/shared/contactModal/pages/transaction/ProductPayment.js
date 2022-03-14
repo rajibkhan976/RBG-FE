@@ -68,6 +68,7 @@ const ProductPayment = (props) => {
     edit_PayDate_Err: "",
     edit_PayType_Err: "",
     edit_PayStatus_Err: "",
+    payment_not_received: ""
   });
 
   useEffect(() => {
@@ -154,69 +155,87 @@ const ProductPayment = (props) => {
         }
         // console.log(outStandingPlaceholder);
 
-      // let filteredPay = paymentsArray.filter((payNow, i)=> payNow.isPayNow === 1)
-      // console.log("PAY NOW:::::::::", );
-    const productPayload = {
-      contact: props.contactId,
-      default_transaction: newPay && newPay.type,
-      billingId: newPay.billingId !== null && newPay.billingId,
-      items: modifiedCart,
-      payments: paymentsArray,
-    };
-
-    console.log("PAYLOAD:::", productPayload);
-
+        
+        const productPayload = {
+          contact: props.contactId,
+          default_transaction: newPay && newPay.type,
+          billingId: newPay.billingId !== null && newPay.billingId,
+          items: modifiedCart,
+          payments: paymentsArray,
+        };
+        
+        console.log("PAYLOAD:::", productPayload);
+        
+        let filteredPay = paymentsArray.filter((payNow, i)=> payNow.isPayNow === 1 && payNow.payment_status === "unpaid")
 
     if (!hasError) {
-      try {
-        setIsLoader(true);
+      console.log("filteredPay.length", filteredPay.length)
 
-        let productBuy = await ProductServices.buyProduct(productPayload);
+      if(filteredPay.length === 0) {
+        try {
+          setIsLoader(true);
 
-        if (productBuy.status === 200) {
-          let payIfo = [];
-          let cashAmount = 0;
-          let onlineAmount = 0;
+          let productBuy = await ProductServices.buyProduct(productPayload);
 
-          console.log("::::PRODUCT PAYLOAD::::", productPayload);
+          if (productBuy.status === 200) {
+            let payIfo = [];
+            let cashAmount = 0;
+            let onlineAmount = 0;
 
-          setPaymentSuccessMessage(productBuy.data.message);
-          payIfo.onlinePayment = productPayload.payments.filter(
-            (payment) => payment.payment_type === "online"
-          );
-          payIfo.cashPayment = productPayload.payments.filter(
-            (payment) => payment.payment_type === "cash"
-          );
+            console.log("::::PRODUCT PAYLOAD::::", productPayload);
 
-          payIfo.onlineAmount = productPayload.payments
-            .filter((payment) => payment.payment_type === "online" && payment.isPayNow === 1)
-            .reduce(
-              (previousValue, currentValue) =>
-                parseFloat(previousValue) + parseFloat(currentValue.amount),
-              onlineAmount
+            setPaymentSuccessMessage(productBuy.data.message);
+            payIfo.onlinePayment = productPayload.payments.filter(
+              (payment) => payment.payment_type === "online"
             );
-          payIfo.cashAmount = productPayload.payments
-            .filter((payment) => payment.payment_type === "cash" && payment.isPayNow === 1)
-            .reduce(
-              (previousValue, currentValue) =>
-                parseFloat(previousValue) + parseFloat(currentValue.amount),
-              cashAmount
+            payIfo.cashPayment = productPayload.payments.filter(
+              (payment) => payment.payment_type === "cash"
             );
 
-          console.log(":::payIfo:::", payIfo);
-          setPaymentInfo(payIfo);
-          console.log("Payload result:::", productBuy);
-          
-          setPaymentFailed(null);
-          setProductPaymentFailed(false);
-          openSuccessMessage();
-          console.log(":::::::::::HERE:::::::::::");
+            payIfo.onlineAmount = productPayload.payments
+              .filter((payment) => payment.payment_type === "online" && payment.isPayNow === 1)
+              .reduce(
+                (previousValue, currentValue) =>
+                  parseFloat(previousValue) + parseFloat(currentValue.amount),
+                onlineAmount
+              );
+            payIfo.cashAmount = productPayload.payments
+              .filter((payment) => payment.payment_type === "cash" && payment.isPayNow === 1)
+              .reduce(
+                (previousValue, currentValue) =>
+                  parseFloat(previousValue) + parseFloat(currentValue.amount),
+                cashAmount
+              );
+
+            console.log(":::payIfo:::", payIfo);
+            setPaymentInfo(payIfo);
+            console.log("Payload result:::", productBuy);
+            
+            setPaymentFailed(null);
+            setProductPaymentFailed(false);
+            openSuccessMessage();
+            console.log(":::::::::::HERE:::::::::::");
+          }
+
+          setHasError(false);
+          setDownPaymentErrorMsg({
+            ...downPaymentErrorMsg,
+            payment_not_received: ""
+          })
+        } catch (error) {
+          console.log(error.message);
+          setPaymentFailed(error.message);
+          setProductPaymentFailed(true);
+        } finally {
+          setIsLoader(false);
         }
-      } catch (error) {
-        setPaymentFailed(error.message);
-        setProductPaymentFailed(true);
-      } finally {
-        setIsLoader(false);
+      }
+      else {
+        setHasError(true);
+        setDownPaymentErrorMsg({
+          ...downPaymentErrorMsg,
+          payment_not_received: "Please confirm the payment has been received"
+        })
       }
     }
   };
@@ -454,6 +473,11 @@ const ProductPayment = (props) => {
         downPaymentsPlaceholder[i].paymentDate = today;
         downPaymentsPlaceholder[i].payment_status = "paid";
         setDownPayments(downPaymentsPlaceholder)
+        setHasError(false)
+        setDownPaymentErrorMsg({
+          ...downPaymentActive,
+          payment_not_received: ""
+        })
       } else {
         downPaymentsPlaceholder[i].payment_status = "unpaid";
         setDownPayments(downPaymentsPlaceholder)
@@ -1265,18 +1289,23 @@ const ProductPayment = (props) => {
                     </div>
                   </div>
                   {downPay.payment_type === "cash" && 
-                    <label className="receivedCash">
-                      <div className="customCheckbox">
-                        <input
-                          type="checkbox"
-                          name=""
-                          id=""
-                          onChange={(e) => markDownPaid(e, downPay, i)}
-                        />
-                        <span></span>
-                      </div>
-                      I have received the amount by Cash
-                    </label>
+                    <>
+                      <label className="receivedCash">
+                        <div className="customCheckbox">
+                          <input
+                            type="checkbox"
+                            name=""
+                            id=""
+                            onChange={(e) => markDownPaid(e, downPay, i)}
+                          />
+                          <span></span>
+                        </div>
+                        I have received the amount by Cash
+                      </label>
+                      {downPaymentErrorMsg.payment_not_received !== "" && <p className="errorMsg">
+                              {downPaymentErrorMsg.payment_not_received}
+                            </p>}
+                    </>
                   }
                 </div>
               </div>
@@ -1315,7 +1344,7 @@ const ProductPayment = (props) => {
 
             <div className="payModalDetails">
               <img src={cardFail} alt="" />
-              <p>Online Payment failed. Please try again or change payment method.</p>
+              <p>{paymentFailed}</p>
             </div>
 
             <div className="buyBtns failedPayment">
@@ -1332,7 +1361,7 @@ const ProductPayment = (props) => {
 
       {props.successProductPayment && (
         <>
-          <div className="posSellingForm contractOverview">
+          <div className="posSellingForm contractOverview paymentSuccessFullScreen">
             <div className="successHeader">
               <div className="circleForIcon">
                 <img src={paySuccess} alt="" />
