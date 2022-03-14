@@ -124,7 +124,7 @@ const ProductPayment = (props) => {
         setOutstanding({
           ...outStanding,
           isPayNow: 0,
-          paymentDate: nextPayDate().toISOString().split("T")[0],
+          paymentDate: tomorrowPayDate().toISOString().split("T")[0],
           payment_type: "online"
         })
       } else {
@@ -166,7 +166,7 @@ const ProductPayment = (props) => {
         
         console.log("PAYLOAD:::", productPayload);
         
-        let filteredPay = paymentsArray.filter((payNow, i)=> payNow.isPayNow === 1 && payNow.payment_status === "unpaid")
+        let filteredPay = paymentsArray.filter((payNow, i)=> payNow.type === "downpayment" && payNow.isPayNow === 1 && payNow.payment_status === "unpaid")
 
     if (!hasError) {
       console.log("filteredPay.length", filteredPay.length)
@@ -182,14 +182,12 @@ const ProductPayment = (props) => {
             let cashAmount = 0;
             let onlineAmount = 0;
 
-            console.log("::::PRODUCT PAYLOAD::::", productPayload);
-
             setPaymentSuccessMessage(productBuy.data.message);
             payIfo.onlinePayment = productPayload.payments.filter(
-              (payment) => payment.payment_type === "online"
+              (payment) => payment.payment_type === "online" && payment.isPayNow === 1
             );
             payIfo.cashPayment = productPayload.payments.filter(
-              (payment) => payment.payment_type === "cash"
+              (payment) => payment.payment_type === "cash" && payment.isPayNow === 1
             );
 
             payIfo.onlineAmount = productPayload.payments
@@ -269,27 +267,33 @@ const ProductPayment = (props) => {
         payment_type: "cash",
         payment_status: "paid",
       }])
+      
       setHasError(true);
 
-      errStat.title = "Title cannot be blank";
-      errStat.amount_Err = "Amount cannot be nothing";
-
-      setDownPaymentErrorMsg(errStat);
-      console.log("here", errStat);
+      setDownPaymentErrorMsg({
+        ...downPaymentErrorMsg,
+        title: "Title cannot be blank",
+        amount_Err: "Amount cannot be nothing",
+      });
+      
     } else {
       setDownPaymentActive(false);
       
       setDownPayments([]);
-
-      errStat.title = "";
-      errStat.amount_Err = "";
 
       setOutstanding({
         ...outStanding,
         amount: parseFloat(totalAmt) + parseFloat(totalTaxAmt),
         payment_type: "online",
       });
+      
       setHasError(false);
+
+      setDownPaymentErrorMsg({
+        ...downPaymentErrorMsg,
+        title: "",
+        amount_Err: "",
+      });
       setDownPaymentErrorMsg(errStat);
     }
   };
@@ -363,6 +367,14 @@ const ProductPayment = (props) => {
     return today;
   };
 
+  const tomorrowPayDate = () => {
+    let today = new Date();
+    let tomorrow = new Date(today)
+        tomorrow.setDate(tomorrow.getDate() + 1)
+
+    return tomorrow;
+  };
+
   const payDueMode = (e) => {
     try {
       setIsLoader(true);
@@ -421,7 +433,7 @@ const ProductPayment = (props) => {
   };
 
   const billingTotalAmt = () => {
-    let totalPlaceholder= 0;
+    let totalPlaceholder= 0.00;
 
     const totalDownpaymentsAmt = downPayments
     .filter((dpTarget, index) => dpTarget.isPayNow === 1)
@@ -440,7 +452,7 @@ const ProductPayment = (props) => {
       }
     }
     if (downPayments.length > 0) {
-      if (outStanding.amount > 0) {
+      if (outStanding.amount > 0.00) {
         if (outStanding.isPayNow === 0) {
           return totalDownpaymentsAmt;
         }
@@ -448,7 +460,7 @@ const ProductPayment = (props) => {
           return (parseFloat(outStanding.amount) + totalDownpaymentsAmt).toFixed(2)
         }
       }
-      if (outStanding.amount === 0) {
+      if (outStanding.amount === 0.00) {
         return totalDownpaymentsAmt
       }
     }
@@ -520,6 +532,10 @@ const ProductPayment = (props) => {
         edit_Title_Err: "",
       });
     } else {
+      downPaymentsPlaceholder[i].title = e.target.value;
+
+      setDownPayments(downPaymentsPlaceholder);
+      
       setHasError(true);
       setDownPaymentErrorMsg({
         ...downPaymentErrorMsg,
@@ -541,11 +557,10 @@ const ProductPayment = (props) => {
       
     try {
       // if modified amount is 0 or nothing
-      if (e.target.value.trim() === "" || parseFloat(e.target.value) === 0) {
-        setOutstanding({
-          ...outStanding,
-          amount: (parseFloat(totalAmt)+parseFloat(totalTaxAmt)) - totalDownpaymentsAmt
-        })
+      if (e.target.value.trim() === "" || parseFloat(e.target.value) === 0 || e.target.value[0] === 0) {
+        downPaymentsPlaceholder[i].amount = "";
+
+        setDownPayments(downPaymentsPlaceholder);
 
         setHasError(true);
         setDownPaymentErrorMsg({
@@ -630,7 +645,7 @@ const ProductPayment = (props) => {
       
       if (e.target.checked) {
         downPaymentsPlaceholder[i].isPayNow = 0;
-        downPaymentsPlaceholder[i].paymentDate = nextPayDate().toISOString().split("T")[0];
+        downPaymentsPlaceholder[i].paymentDate = tomorrowPayDate().toISOString().split("T")[0];
         downPaymentsPlaceholder[i].payment_status = "unpaid"
 
         if(downPaymentsPlaceholder[i].paymentDate === "") {
@@ -855,7 +870,7 @@ const ProductPayment = (props) => {
                               >
                                 <label className="labelWithInfo paymentTime">
                                   <span className="labelHeading">
-                                    I want to Pay Later
+                                    I want to pay later
                                   </span>
                                   <label
                                     className={
@@ -1002,7 +1017,7 @@ const ProductPayment = (props) => {
                 <ul className="totalPaymentUl">
                   <li>Total</li>
                   <li>
-                    {(parseFloat(totalAmt) + parseFloat(totalTaxAmt)).toFixed(
+                    $ {(parseFloat(totalAmt) + parseFloat(totalTaxAmt)).toFixed(
                       2
                     )}
                   </li>
@@ -1145,7 +1160,7 @@ const ProductPayment = (props) => {
                     <div className="cmnFormCol">
                       <label className="labelWithInfo paymentTime">
                         <span className="labelHeading">
-                          I want to Pay Later
+                          I want to pay later
                         </span>
                         <label
                           className={
@@ -1182,7 +1197,7 @@ const ProductPayment = (props) => {
                             placeholder="mm/dd/yyyy"
                             className="cmnFieldStyle"
                             defaultValue={
-                              nextPayDate().toISOString().split("T")[0]
+                              tomorrowPayDate().toISOString().split("T")[0]
                             }
                             min={todayPayDate().toISOString().split("T")[0]}
                             onChange={(e) => changeOutstandingPayDate(e)}
@@ -1316,15 +1331,22 @@ const ProductPayment = (props) => {
                 <p>Billing Total</p>
                 {/* downPayments[0] */}
                 {/* <h4>$ {downPayments.length > 0 ? downPayments[0].amount : (parseFloat(totalAmt)+parseFloat(totalTaxAmt)).toFixed(2)}</h4> */}
-                <h4>{billingTotalAmt()}</h4>
+                <h4>$ {billingTotalAmt()}</h4>
               </div>
               <div className="buyBtns">
                 <button
                   className="saveNnewBtn"
                   onClick={(e) => billPayment(e)}
                   disabled={hasError === false ? false : true}
+                  style={{
+                    paddingLeft: billingTotalAmt() === 0 && "10px",
+                    paddingRight: billingTotalAmt() === 0 && "10px"
+                  }}
                 >
-                  Bill Now <img src={aaroww} alt="" />
+                  {billingTotalAmt() === 0 ? "Make Contract" : "Bill Now"} <img src={aaroww} alt=""
+                  style={{
+                    marginLeft: billingTotalAmt() === 0 && "6px"
+                  }} />
                 </button>
               </div>
             </div>
@@ -1367,18 +1389,22 @@ const ProductPayment = (props) => {
                 <img src={paySuccess} alt="" />
               </div>
               <h3 className="paySuccessHeading">
-                Payment Successful!
+                {paymentSuccessMessage}
               </h3>
             </div>
-            <div className="dottedBorder"></div>
+            {(payMentInfo.cashAmount > 0 || payMentInfo.onlineAmount > 0) &&
+            <>
+              <div className="dottedBorder"></div>
 
-            <ul className="paymentUlHeader">
-              <li className="paymentModeHeaderLi">Payment Mode</li>
-              {/* <li className="paymentIdHeaderLi">Transaction ID</li> */}
-              <li className="paymentAmtHeaderLi">Amount</li>
-            </ul>
+              <ul className="paymentUlHeader">
+                <li className="paymentModeHeaderLi">Payment Mode</li>
+                {/* <li className="paymentIdHeaderLi">Transaction ID</li> */}
+                <li className="paymentAmtHeaderLi">Amount</li>
+              </ul>
+            </>
+            }
             
-            {payMentInfo.cashPayment.length > 0 && (
+            {payMentInfo.cashPayment.length > 0 && payMentInfo.cashAmount > 0 && (
               <ul className="paymentUlInfo">
                 <li className="paymentModeLi">
                   <img src={cashSuccess} alt="" />
@@ -1391,7 +1417,7 @@ const ProductPayment = (props) => {
               </ul>
             )}
 
-            {payMentInfo.onlinePayment.length > 0 && (
+            {payMentInfo.onlinePayment.length > 0 && payMentInfo.onlineAmount > 0 && (
               <ul className="paymentUlInfo">
                 <li className="paymentModeLi">
                   <img src={paidCard} alt="" />
@@ -1404,24 +1430,29 @@ const ProductPayment = (props) => {
                 </li>
               </ul>
             )}
+            {(payMentInfo.cashAmount > 0 || payMentInfo.onlineAmount > 0) &&
+              <>
+                <ul className="totalPaymentUl">
+                  <li>
+                    <p>Amount Paid</p>
+                  </li>
+                  <li>
+                    <p>$ {billingTotalAmt()}</p>
+                  </li>
+                </ul>
 
-            <ul className="totalPaymentUl">
-              <li>
-                <p>Amount Paid</p>
-              </li>
-              <li>
-                <p>$ {billingTotalAmt()}</p>
-              </li>
-            </ul>
-
-            <div className="dottedBorder"></div>
-
+                <div className="dottedBorder"></div>
+              </>
+            }
             <div className="successPageBtn w-100 d-flex f-justify-center">
               <button
                 className="saveNnewBtn"
                 onClick={(e) => {
                   resetProductForm(e);
                   props.backToTransList();
+                }}
+                style={{
+                  marginTop: (payMentInfo.cashAmount > 0 || payMentInfo.onlineAmount > 0) && "150px"
                 }}
               >
                 Go to Transaction List <img src={aaroww} alt="" />

@@ -184,7 +184,8 @@ const ProductTransaction = (props) => {
     const productPlaceholder = item;
           productPlaceholder.selectedColor = null;
           productPlaceholder.selectedSize = null;
-    console.log(productPlaceholder);
+          productPlaceholder.qnty = 1;
+          
     setSelectedProduct(productPlaceholder);
     setShowProductList(false);
   };
