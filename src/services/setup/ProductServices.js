@@ -215,6 +215,8 @@ export const ProductServices = {
         try {
             const url = config.buyProductUrl;
             const result = await axios.post(url, payload, { headers: headers });
+
+            console.log("BUY PRODUCT STATUS:::", result);
             
             if (result.status === 200) {
                 console.log(":::RESULT 200:::");

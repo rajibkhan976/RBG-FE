@@ -31,7 +31,7 @@ const ProductPayment = (props) => {
   const [totalTaxAmt, setTotalTaxAmt] = useState(0);
   const [outStanding, setOutstanding] = useState({
     amount: 0,
-    payment_type: "online",
+    payment_type: "cash",
     title: "",
     type: "outstanding",
     paymentDate: new Date(new Date()).toISOString().split("T")[0],
@@ -39,8 +39,8 @@ const ProductPayment = (props) => {
     payment_status: "unpaid",
   });
   const [cardBankList, setCardBankList] = useState([]);
-  const [bankList, setBankList] = useState([]);
-  const [payments, setPayments] = useState([]);
+  // const [bankList, setBankList] = useState([]);
+  // const [payments, setPayments] = useState([]);
   const [newCard, setNewCard] = useState(null);
   const [newBank, setNewBank] = useState(null);
   const [newPayMethod, setNewPayMethod] = useState(null);
@@ -123,14 +123,15 @@ const ProductPayment = (props) => {
         setOutstanding({
           ...outStanding,
           isPayNow: 0,
-          paymentDate: nextPayDate().toISOString().split("T")[0]
+          paymentDate: nextPayDate().toISOString().split("T")[0],
+          payment_type: "online"
         })
       } else {
-        console.log("unchecked");
         setOutstanding({
           ...outStanding,
           isPayNow: 1,
-          paymentDate: todayPayDate().toISOString().split("T")[0]
+          paymentDate: todayPayDate().toISOString().split("T")[0],
+          payment_type: "cash"
         })
       }
     } catch (error) {
@@ -153,7 +154,8 @@ const ProductPayment = (props) => {
         }
         // console.log(outStandingPlaceholder);
 
-
+      // let filteredPay = paymentsArray.filter((payNow, i)=> payNow.isPayNow === 1)
+      // console.log("PAY NOW:::::::::", );
     const productPayload = {
       contact: props.contactId,
       default_transaction: newPay && newPay.type,
@@ -162,17 +164,21 @@ const ProductPayment = (props) => {
       payments: paymentsArray,
     };
 
+    console.log("PAYLOAD:::", productPayload);
+
 
     if (!hasError) {
       try {
-        console.log(":::productPayload:::", productPayload);
         setIsLoader(true);
 
         let productBuy = await ProductServices.buyProduct(productPayload);
-        if (productBuy) {
+
+        if (productBuy.status === 200) {
           let payIfo = [];
           let cashAmount = 0;
           let onlineAmount = 0;
+
+          console.log("::::PRODUCT PAYLOAD::::", productPayload);
 
           setPaymentSuccessMessage(productBuy.data.message);
           payIfo.onlinePayment = productPayload.payments.filter(
@@ -200,10 +206,12 @@ const ProductPayment = (props) => {
           console.log(":::payIfo:::", payIfo);
           setPaymentInfo(payIfo);
           console.log("Payload result:::", productBuy);
+          
+          setPaymentFailed(null);
+          setProductPaymentFailed(false);
+          openSuccessMessage();
+          console.log(":::::::::::HERE:::::::::::");
         }
-        setPaymentFailed(null);
-        setProductPaymentFailed(false);
-        openSuccessMessage();
       } catch (error) {
         setPaymentFailed(error.message);
         setProductPaymentFailed(true);
@@ -240,7 +248,7 @@ const ProductPayment = (props) => {
         isPayNow: 1,
         paymentDate: todayPayDate().toISOString().split("T")[0],
         payment_type: "cash",
-        payment_status: "unpaid",
+        payment_status: "paid",
       }])
       setHasError(true);
 
@@ -290,7 +298,7 @@ const ProductPayment = (props) => {
           isPayNow: 1,
           paymentDate: todayPayDate().toISOString().split("T")[0],
           payment_type: "cash",
-          payment_status: "unpaid",
+          payment_status: "paid",
         },
       ])
       }
@@ -438,8 +446,6 @@ const ProductPayment = (props) => {
 
     today = yyyy + "-" + mm + "-" + dd;
 
-    console.log(downPay, i);
-
     try {
       setIsLoader(true);
 
@@ -448,13 +454,9 @@ const ProductPayment = (props) => {
         downPaymentsPlaceholder[i].paymentDate = today;
         downPaymentsPlaceholder[i].payment_status = "paid";
         setDownPayments(downPaymentsPlaceholder)
-
-        console.log("downPaymentsPlaceholder", downPaymentsPlaceholder);
       } else {
         downPaymentsPlaceholder[i].payment_status = "unpaid";
         setDownPayments(downPaymentsPlaceholder)
-
-        console.log("downPaymentsPlaceholder", downPaymentsPlaceholder);
       }
     } catch (error) {
       console.log(error);
@@ -597,15 +599,15 @@ const ProductPayment = (props) => {
     }
   };
   const changeDownpaymentIsPayNow = (e, downpay, i) => {
-    //  //  console.log(e.target);
     const downPaymentsPlaceholder = [...downPayments];
 
     try {
       setIsLoader(true);
-      console.log("IS CHECKED:::", e.target.checked);
+      
       if (e.target.checked) {
         downPaymentsPlaceholder[i].isPayNow = 0;
         downPaymentsPlaceholder[i].paymentDate = nextPayDate().toISOString().split("T")[0];
+        downPaymentsPlaceholder[i].payment_status = "unpaid"
 
         if(downPaymentsPlaceholder[i].paymentDate === "") {
           setHasError(true);
@@ -618,6 +620,7 @@ const ProductPayment = (props) => {
       } else {
         downPaymentsPlaceholder[i].isPayNow = 1;
         downPaymentsPlaceholder[i].paymentDate = todayPayDate().toISOString().split("T")[0];
+        downPaymentsPlaceholder[i].payment_status = "paid"
 
         setHasError(false);
         setDownPaymentErrorMsg({
@@ -843,7 +846,7 @@ const ProductPayment = (props) => {
                                       onChange={(e) =>
                                         changeDownpaymentIsPayNow(e, downpay, i)
                                       }
-                                      value={downpay.isPayNow === 0 ? true : false}
+                                      value={downpay.isPayNow === 0}
                                     />
                                     <span className="toggler"></span>
                                   </label>
@@ -924,10 +927,11 @@ const ProductPayment = (props) => {
                                 </label>
                                 <select
                                   className="selectBox"
-                                  value={downpay.payment_status}
+                                  value={downpay.payment_type === "online" ? "unpaid" : downpay.payment_status}
                                   onChange={(e) =>
                                     changeDownpaymentStatus(e, downpay, i)
                                   }
+                                  disabled={downpay.payment_type === "online"}
                                 >
                                   <option value="unpaid">Unpaid</option>
                                   <option value="paid">Paid</option>
@@ -944,14 +948,14 @@ const ProductPayment = (props) => {
             </div>
             <BillingOverview
               contactId={props.contactId}
-              cardBankList={cardBankList}
-              bankList={bankList}
+              // cardBankList={cardBankList}
+              // bankList={bankList}
               newPay={newPay}
               changeDefaultPay={changeDefaultPay}
               newPayMethod={newPayMethod}
               setNewPayMethod={setNewPayMethod}
-              setCardBankList={setCardBankList}
-              setBankList={setBankList}
+              // setCardBankList={setCardBankList}
+              // setBankList={setBankList}
               setNewPay={setNewPay}
             />
           </div>
@@ -1107,6 +1111,7 @@ const ProductPayment = (props) => {
                         <select
                           className="selectBox cmnFieldStyle"
                           onChange={(e) => payDueMode(e)}
+                          value={outStanding.payment_type}
                         >
                           <option value="online">Online</option>
                           <option value="cash">Cash</option>
@@ -1246,31 +1251,33 @@ const ProductPayment = (props) => {
                       </span>
                     </div>
                   </div>
-                  <div className="downpaymentsPayDetails">
-                    <div className="payDate currentPayment">
+                  <div className={downPay.payment_type === "cash" ? "downpaymentsPayDetails" : "downpaymentsPayDetails d-flex f-align-center"}>
+                    <div 
+                      className="payDate currentPayment"
+                      style={{
+                        marginTop: downPay.payment_type === "online" && "16px"
+                      }}
+                    >
                       <img src={payDate} alt="" />{" "}
                       {downPay.isPayNow === 1
                         ? "Now"
                         : downPay.paymentDate}
                     </div>
                   </div>
-                  <label className="receivedCash">
-                    <div className="customCheckbox">
-                      <input
-                        type="checkbox"
-                        name=""
-                        id=""
-                        onChange={(e) => markDownPaid(e, downPay, i)}
-                        checked={
-                          downPay.payment_status === "paid"
-                            ? true
-                            : false
-                        }
-                      />
-                      <span></span>
-                    </div>
-                    I have received the amount by Cash
-                  </label>
+                  {downPay.payment_type === "cash" && 
+                    <label className="receivedCash">
+                      <div className="customCheckbox">
+                        <input
+                          type="checkbox"
+                          name=""
+                          id=""
+                          onChange={(e) => markDownPaid(e, downPay, i)}
+                        />
+                        <span></span>
+                      </div>
+                      I have received the amount by Cash
+                    </label>
+                  }
                 </div>
               </div>
             )}
@@ -1308,12 +1315,12 @@ const ProductPayment = (props) => {
 
             <div className="payModalDetails">
               <img src={cardFail} alt="" />
-              <p>{paymentFailed}</p>
+              <p>Online Payment failed. Please try again or change payment method.</p>
             </div>
 
             <div className="buyBtns failedPayment">
               <button
-                onClick={() => openSuccessMessage()}
+                onClick={() => setProductPaymentFailed(false)}
                 className="saveNnewBtn"
               >
                 Close
@@ -1330,7 +1337,9 @@ const ProductPayment = (props) => {
               <div className="circleForIcon">
                 <img src={paySuccess} alt="" />
               </div>
-              <h3 className="paySuccessHeading">{paymentSuccessMessage}</h3>
+              <h3 className="paySuccessHeading">
+                Payment Successful!
+              </h3>
             </div>
             <div className="dottedBorder"></div>
 
@@ -1339,7 +1348,7 @@ const ProductPayment = (props) => {
               {/* <li className="paymentIdHeaderLi">Transaction ID</li> */}
               <li className="paymentAmtHeaderLi">Amount</li>
             </ul>
-
+            
             {payMentInfo.cashPayment.length > 0 && (
               <ul className="paymentUlInfo">
                 <li className="paymentModeLi">

@@ -10,6 +10,8 @@ import { BillingServices } from "../../../../../services/billing/billingServices
 
 const BillingOverview = (props) => {
 //   const [newPayModal, setNewPayModal] = useState(false);
+  const [cardBankList, setCardBankList] = useState([])
+  const [bankList, setBankList] = useState([])
   const [isLoader, setIsLoader] = useState(false);
 
   const fetchCardBank = async () => {
@@ -21,8 +23,8 @@ const BillingOverview = (props) => {
           cardBanksList = cardBankResponce;
 
       if (cardBankResponce) {
-        props.setCardBankList(cardBankResponce.cards);
-        props.setBankList(cardBankResponce.banks);
+        setCardBankList(cardBankResponce.cards);
+        setBankList(cardBankResponce.banks);
         props.setNewPay({
           ...props.newPay,
           type: cardBankResponce.primary,
@@ -68,9 +70,9 @@ const BillingOverview = (props) => {
           <p className="paymentTypes">Cards</p>
           <div className="chooseTransactionType paymentTypes">
 
-            {props.cardBankList &&
-              props.cardBankList.length > 0 &&
-              props.cardBankList.map((cardItem, i) => (
+            {cardBankList &&
+              cardBankList.length > 0 &&
+              cardBankList.map((cardItem, i) => (
                 <label
                   className={
                     props.newPay.type === "card" && props.newPay.billingId === cardItem._id
@@ -112,9 +114,9 @@ const BillingOverview = (props) => {
 
           <div className="chooseTransactionType paymentTypes">
             {/* {//  //  console.log("bankList", bankList)} */}
-            {props.bankList &&
-              props.bankList.length > 0 &&
-              props.bankList.map((bankItem, i) => (
+            {bankList &&
+              bankList.length > 0 &&
+              bankList.map((bankItem, i) => (
                 <label
                   className={
                     props.newPay === "bank" && props.newPay.billingId === bankItem._id

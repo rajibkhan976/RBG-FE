@@ -329,9 +329,9 @@ const AddProductModal = (props) => {
                     className="saveNnewBtn"
                     onClick={() => setBtnType("Save")}><span>Save and Select</span><img src={arrow_forward} alt="" /></button>
                   }
-                  <button type="submit" name="saveNew"
+                  {!props.productTransaction && <button type="submit" name="saveNew"
                     className="saveNnewBtn"
-                    onClick={() => setBtnType("SaveNew")}><span>{(isEditing) ? "Update" : "Save"} &amp; New</span><img src={arrow_forward} alt="" /></button>
+                    onClick={() => setBtnType("SaveNew")}><span>{(isEditing) ? "Update" : "Save"} &amp; New</span><img src={arrow_forward} alt="" /></button>}
                 </div>
               </form>
             </Scrollbars>
