@@ -166,9 +166,9 @@ const ProductPayment = (props) => {
         
         console.log("PAYLOAD:::", productPayload);
         
-        let filteredPay = paymentsArray.filter((payNow, i)=> payNow.paymentConfirmation === false)
+        let filteredPay = [...downPayments].filter((payNow, i)=> payNow.isPayNow === 1 && payNow.paymentConfirmation === false)
 
-        console.log("filteredPay", filteredPay);
+        console.log("filteredPay", filteredPay, paymentsArray);
 
     if (!hasError) {
       if(filteredPay.length === 0) {
@@ -487,6 +487,7 @@ const ProductPayment = (props) => {
         downPaymentsPlaceholder[i].paymentDate = today;
         downPaymentsPlaceholder[i].payment_status = "paid";
         downPaymentsPlaceholder[i].paymentConfirmation = true;
+
         setDownPayments(downPaymentsPlaceholder)
         setHasError(false)
         setDownPaymentErrorMsg({
@@ -494,10 +495,10 @@ const ProductPayment = (props) => {
           payment_not_received: ""
         })
       }
-      //  else {
-      //   downPaymentsPlaceholder[i].payment_status = "unpaid";
-      //   setDownPayments(downPaymentsPlaceholder)
-      // }
+       else {
+        downPaymentsPlaceholder[i].paymentConfirmation = false;
+        setDownPayments(downPaymentsPlaceholder)
+      }
     } catch (error) {
       console.log(error);
     } finally {      
@@ -1457,7 +1458,7 @@ const ProductPayment = (props) => {
                   props.backToTransList();
                 }}
                 style={{
-                  marginTop: (payMentInfo.cashAmount > 0 && payMentInfo.onlineAmount > 0) && "150px"
+                  marginTop: (payMentInfo.cashAmount === 0 || payMentInfo.onlineAmount === 0) && "100px"
                 }}
               >
                 Go to Transaction List <img src={aaroww} alt="" />

@@ -147,7 +147,7 @@ const ProductTransaction = (props) => {
     let errorStatPl = {...errorState}
 
     try {
-        console.log(e);
+        // console.log(e);
       setShowLoader(true);
       setSelectedProduct({
         ...selectedProduct,
@@ -200,14 +200,31 @@ const ProductTransaction = (props) => {
     return cartState && cartState.length;
   };
 
-  const priceChangeProduct = () => {
-    let priceChange = parseFloat(priceInput.current.value).toFixed(2);
-    // let resultSplit = priceChange.split(".")
-    
-    setSelectedProduct({
-      ...selectedProduct,
-      price: priceChange,
-    });
+  const priceChangeProduct = (e) => {
+    let addProductErrors = errorState
+
+    if(e.target.value.trim() !== "" && parseFloat(e.target.value) > 0 && e.target.value.length !== 0) {
+      setSelectedProduct({
+        ...selectedProduct,
+        price: e.target.value,
+      });
+      setHasError(false);
+
+      addProductErrors.price = ""
+      setErrorState(addProductErrors)
+    }
+    else {
+      setHasError(true);
+
+      setSelectedProduct({
+        ...selectedProduct,
+        price: e.target.value,
+      });
+
+      addProductErrors.price = "Please set proper price!"
+      setErrorState(addProductErrors)
+      // console.log("addProductErrors", addProductErrors);
+    }
   };
 
   const setQuantity = (e) => {
@@ -268,51 +285,49 @@ const ProductTransaction = (props) => {
       // console.log("CART ITEMS NOW:::", cartState);
   }, [cartState]);
 
-  const handleAddProductSubmit = () => {
-    console.log("hi");
-  };
-
-  useEffect(() => {
-    console.log("selectedProduct", selectedProduct);
-  }, [selectedProduct, hasError]);
+  // const handleAddProductSubmit = () => {
+  //   console.log("hi");
+  // };
 
   const addThisProduct = (e) => {
     e.preventDefault();
-    console.log("ADD PRODUCT", selectedProduct.selectedSize);
+    
+    let localError = false;
     let errorStatePlaceholder = {...errorState};
 
     try {
       if (selectedProduct.qnty === undefined) {
         setHasError(true);
+        localError = true
 
         errorStatePlaceholder.quantity = "Please set some quantity!"
         setErrorState(errorStatePlaceholder)
       }
-      if (priceInput.current.value.trim().length === 0) {
+      // console.log("selectedProduct ::::: ", selectedProduct);
+      // console.log("selectedProduct.price ::::: ", selectedProduct?.price);
+      if (selectedProduct.price === null || selectedProduct.price === "" || parseFloat(selectedProduct.price) <= 0) {
         setHasError(true);
+        localError = true
 
         errorStatePlaceholder.price = "Please set proper price!"
         setErrorState(errorStatePlaceholder)
       }
       if (selectedProduct.selectedColor === undefined || selectedProduct.selectedColor === null) {
         setHasError(true);
+        localError = true
 
         errorStatePlaceholder.color = "Please select a color!"
         setErrorState(errorStatePlaceholder)
       }
       if (selectedProduct.selectedSize === undefined || selectedProduct.selectedSize === null) {
         setHasError(true);
+        localError = true
 
         errorStatePlaceholder.sizes = "Please select a size!"
         setErrorState(errorStatePlaceholder)
       }
-      
-      if (
-        selectedProduct.qnty && selectedProduct.qnty !== undefined &&
-        selectedProduct.price && selectedProduct.price !== undefined &&
-        selectedProduct.selectedColor && selectedProduct.selectedColor !== undefined &&
-        selectedProduct.selectedSize && selectedProduct.selectedSize !== undefined
-      ) {
+      // console.log("localError ::: ", localError);
+      if (!localError) {
         let cartItemToAdd = {
             product: selectedProduct.name,
             color: selectedProduct.selectedColor,
@@ -361,7 +376,7 @@ const ProductTransaction = (props) => {
           totalPlaceholder
         );
         setTotalAmt(parseFloat(sumAmt).toFixed(2));
-        console.log("sumAmt", sumAmt);
+        // console.log("sumAmt", sumAmt);
       } else {
         // console.log("Sum now", totalAmt);
         setTotalAmt(0.00);
@@ -393,67 +408,17 @@ const ProductTransaction = (props) => {
     // console.log("newProductObj", newProductObj);
   }, [newProductObj]);
 
-//   const createProduct = () => {
-//     const productItemsListDummy = [...productItemsList];
-
-//     try {
-//       if (newProductObj !== null) {
-//         setShowLoader(true);
-//         if (
-//           newProductObj !== null &&
-//           newProductObj.colors.length > 0 &&
-//           newProductObj.description.trim() !== "" &&
-//           newProductObj.name.trim() !== "" &&
-//           newProductObj.image &&
-//           newProductObj.price.trim() !== "" &&
-//           newProductObj.sizes.length > 0
-//         ) {
-//           productItemsListDummy.push(newProductObj);
-//           setProductItemsList(productItemsListDummy);
-//         }
-//       } else {
-//         setHasError(true);
-//       }
-//     } catch (error) {
-//       console.log(error);
-//     } finally {
-//       setShowLoader(false);
-//       setNewProductObj(null);
-//       setShowProductList(false);
-//     }
-//   };
-
-//   const saveNewProduct = () => {
-//     createProduct();
-//     closeModal();
-//   };
-
-//   const saveAndNewProduct = () => {
-//     const newProductForm = newProductCreateForm.current;
-
-//     createProduct();
-//     newProductForm.reset();
-//     productImageFileName.current.textContent = "Program picture";
-//   };
-
-//   const closeModal = () => {
-//     setAddProductModal(false);
-//   };
-
   const getAddedProduct = (e) => {
-    console.log("NEWLY ADDED", e);
+    // console.log("NEWLY ADDED", e);
     selectProductToAdd(e)
   }
-
-  useEffect(() => {
-    console.log("hasError UPDATED:::", hasError, errorState);
-  }, [hasError, errorState]);
 
   useEffect(() => {
     // console.log("Loaded");
     fetchCategories();
     fetchProducts();
     fetchColorSizes();
+    // console.log("CART STATE:::", cartState.length > 0 && cartState);
   }, []);
 
   return (
@@ -686,16 +651,17 @@ const ProductTransaction = (props) => {
                           selectedProduct === null
                         }
                         ref={priceInput}
-                        defaultValue={
-                          selectedProduct &&
-                          parseFloat(selectedProduct.price).toFixed(2)
-                        }
-                        onChange={priceChangeProduct}
+                        // defaultValue={
+                        //   selectedProduct &&
+                        //   parseFloat(selectedProduct.price).toFixed(2)
+                        // }
+                        onChange={(e)=>priceChangeProduct(e)}
+                        value={selectedProduct ? selectedProduct.price : ""}
                         step="0.01"
                       />
                     </div>
-                  </div>
                   {errorState.price && <p className="errorMsg">{errorState.price}</p>}
+                  </div>
                   <div
                     className={
                       errorState.quantity ? "cmnFormCol error" : "cmnFormCol"
@@ -791,7 +757,7 @@ const ProductTransaction = (props) => {
                       selectedProduct === undefined ||
                       selectedProduct === null
                     }
-                    onClick={addThisProduct}
+                    onClick={(e)=>addThisProduct(e)}
                     style={{
                       filter: `grayscale(${selectedProduct ? 0 : 1}`
                     }}
@@ -824,10 +790,11 @@ const ProductTransaction = (props) => {
                         <div className="upperCart d-flex">
                           <figure
                             className="productImg"
-                            style={{
-                              backgroundImage: cartItem.image ? "url(" + cartItem.image + ")" : "url("+placeholder_product_image+")",
-                            }}
+                            // style={{
+                            //   backgroundImage: cartItem.image ? "url(" + cartItem.image + ")" : "url("+placeholder_product_image+")",
+                            // }}
                           >
+                            {/* {console.log("TESTING CART:::>>>", cartItem, cartItem.image)} */}
                             <img src={cartItem && cartItem.image} alt={cartItem.name} />
                           </figure>
                           <div className="choiceOpt f-1">
@@ -843,7 +810,7 @@ const ProductTransaction = (props) => {
                             <div className="customizedItemDeet">
                               <div className="colorItem">
                                 <label>Color</label>
-                                {console.log("cartItem", cartItem)}
+                                {/* {console.log("cartItem", cartItem)} */}
                                 <figure
                                   className="colorFig"
                                   style={{
@@ -853,7 +820,7 @@ const ProductTransaction = (props) => {
                               </div>
                               <div className="customizedItemSize">
                                 <label>Size</label>
-                                {console.log("cartItem", cartItem)}
+                                {/* {console.log("cartItem", cartItem)} */}
                                 <figure className="sizeItem">
                                   {cartItem.size}
                                 </figure>
@@ -959,8 +926,10 @@ const ProductTransaction = (props) => {
       )}
 
       {props.productTransactionPayment === true && (
+        <>
+        {/* {console.log(":::cartState:::", cartState, ":::productItemsList:::", productItemsList)} */}
         <ProductPayment
-          productItemsList={productItemsList}
+          // productItemsList={productItemsList}
           cartState={cartState}
           setCartState={setCartState}
           setSuccessProductPaymentFn={props.setSuccessProductPaymentFn}
@@ -970,6 +939,7 @@ const ProductTransaction = (props) => {
           backToTransList={props.backToTransList}
           contactId={props.contactId}
         />
+        </>
       )}
     </>
   );
