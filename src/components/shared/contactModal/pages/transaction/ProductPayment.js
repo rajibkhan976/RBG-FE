@@ -72,47 +72,46 @@ const ProductPayment = (props) => {
   });
 
   useEffect(() => {
-    const getTotalCart = () => {
-      if (props.cartState.length > 0) {
-        const totalPlaceholder = 0;
-        const totalTaxPlaceholder = 0;
-        let modifiedCartState = [...props.cartState];
-
-        const sumAmt = props.cartState.reduce(
-          (previousValue, currentValue) =>
-            previousValue + currentValue.price * currentValue.qnty,
-          totalPlaceholder
-        );
-        const taxtAmt = props.cartState.reduce(
-          (prevTax, currentTax) =>
-            prevTax + (currentTax.tax ? currentTax.price * 0.1 : 0),
-          totalTaxPlaceholder
-        );
-
-        setTotalAmt(parseFloat(sumAmt).toFixed(2));
-        setTotalTaxAmt(parseFloat(taxtAmt).toFixed(2));
-        setOutstanding({
-          ...outStanding,
-          amount: (parseFloat(sumAmt) + parseFloat(taxtAmt)).toFixed(2),
-          title: "Outstanding"
-        });
-        modifiedCartState.forEach((cartItem, index) => {
-          delete cartItem.image;
-          delete cartItem.name;
-          delete cartItem.tax;
-          return cartItem;
-        });
-        setModifiedCart(modifiedCartState);
-      } else {
-        setTotalAmt(0.0);
-        setTotalTaxAmt(0.0);
-      }
-    };
-
+   
     console.log("totalAmt+totalTaxAmt", parseFloat(totalAmt)+parseFloat(totalTaxAmt), outStanding);
 
     getTotalCart();
   }, []);
+
+
+  const getTotalCart = () => {
+    if (props.cartState.length > 0) {
+      const totalPlaceholder = 0;
+      const totalTaxPlaceholder = 0;
+      let modifiedCartState = [...props.cartState];
+
+      const sumAmt = modifiedCartState.reduce(
+        (previousValue, currentValue) =>
+          previousValue + currentValue.price * currentValue.qnty,
+        totalPlaceholder
+      );
+      const taxtAmt = modifiedCartState.filter((cartItem, i) => cartItem.tax === true).reduce(
+        (prevTax, currentTax) =>
+          prevTax + (currentTax.tax ? currentTax.price * 0.1 : 0),
+        totalTaxPlaceholder
+      );
+
+      console.log("TAxED AMOUNT", modifiedCartState, taxtAmt, modifiedCartState.filter((cartItem, i) => cartItem.tax === 1));
+
+      setTotalAmt(parseFloat(sumAmt).toFixed(2));
+      setTotalTaxAmt(parseFloat(taxtAmt).toFixed(2));
+      setOutstanding({
+        ...outStanding,
+        amount: (parseFloat(sumAmt) + parseFloat(taxtAmt)).toFixed(2),
+        title: "Outstanding"
+      });
+      
+      setModifiedCart(modifiedCartState);
+    } else {
+      setTotalAmt(0.0);
+      setTotalTaxAmt(0.0);
+    }
+  };
 
   
   const payDateChangeOverview = (e) => {
@@ -144,8 +143,10 @@ const ProductPayment = (props) => {
 
   const billPayment = async (e) => {
     e.preventDefault();
-    // console.log("Trigger payment");
+    let cartItems = [...modifiedCart];
+
     const paymentsArray = [...downPayments];
+
     let outStandingPlaceholder = outStanding;
         outStandingPlaceholder.title = "Outstanding";
         if(parseFloat(outStandingPlaceholder.amount) !== 0) {
@@ -155,18 +156,27 @@ const ProductPayment = (props) => {
         }
         // console.log(outStandingPlaceholder);
 
+        cartItems.forEach((cartItem, index) => {
+          const cartItemss = {...cartItem}
+          delete cartItemss.image;
+          delete cartItemss.name;
+          delete cartItemss.tax;
+          return cartItemss;
+        });
+
+        console.log("cartItems from bill now", cartItems);
         
-        const productPayload = {
-          contact: props.contactId,
-          default_transaction: newPay && newPay.type,
-          billingId: newPay.billingId !== null && newPay.billingId,
-          items: modifiedCart,
-          payments: paymentsArray,
-        };
-        
+    const productPayload = {
+      contact: props.contactId,
+      default_transaction: newPay && newPay.type,
+      billingId: newPay.billingId !== null && newPay.billingId,
+      items: cartItems,
+      payments: paymentsArray,
+    };
+    
         console.log("PAYLOAD:::", productPayload);
-        
-        let filteredPay = [...downPayments].filter((payNow, i)=> payNow.isPayNow === 1 && payNow.paymentConfirmation === false)
+    
+    let filteredPay = [...downPayments].filter((payNow, i)=> payNow.isPayNow === 1 && payNow.paymentConfirmation === false)
 
         console.log("filteredPay", filteredPay, paymentsArray);
 
@@ -182,7 +192,7 @@ const ProductPayment = (props) => {
             let cashAmount = 0;
             let onlineAmount = 0;
 
-            setPaymentSuccessMessage(productBuy.data.message);
+            setPaymentSuccessMessage("Product purchase transaction successfull.");
             payIfo.onlinePayment = productPayload.payments.filter(
               (payment) => payment.payment_type === "online" && payment.isPayNow === 1
             );
@@ -1172,7 +1182,7 @@ const ProductPayment = (props) => {
                             outStanding.isPayNow === 0 ? "toggleBtn active" : "toggleBtn"
                           }
                         >
-                          {console.log(":::outStanding:::", outStanding)}
+                          {/* {console.log(":::outStanding:::", outStanding)} */}
                           <input
                             type="checkbox"
                             name="check-communication"

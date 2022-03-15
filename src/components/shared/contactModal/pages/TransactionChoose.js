@@ -441,7 +441,7 @@ const TransactionChoose = (props) => {
                 }}
               <ProductTransaction
                 productTransactionPayment={productTransactionPayment}
-                productPayment={(e) => productPayment(e)}
+                productPayment={productPayment}
                 setSuccessProductPaymentFn={setSuccessProductPaymentFn}
                 successProductPayment={successProductPayment}
                 setProductTransactionPayment={setProductTransactionPayment}

@@ -20,27 +20,16 @@ const ProductTransaction = (props) => {
 
   const [productItemsList, setProductItemsList] = useState([]);
   const [newProductObj, setNewProductObj] = useState(null);
-  const [newColor, setNewColor] = useState("#fff");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showProductList, setShowProductList] = useState(false);
   const [addProductModal, setAddProductModal] = useState(false);
   const [cartState, setCartState] = useState([]);
   const priceInput = useRef(null);
-  const newPriceInput = useRef(null);
-  const quantityInput = useRef(null);
   const productTransaction = useRef(null);
   const increaseQuantityBtn = useRef(null);
   const decreaseQuantityBtn = useRef(null);
   const productQuantity = useRef(null);
   const cartProductQuantity = useRef(null);
-  const categoryNewProduct = useRef(null);
-  const nameNewProduct = useRef(null);
-  const descriptionNewProduct = useRef(null);
-  const imageNewProduct = useRef(null);
-  const productImageFileName = useRef(null);
-  const colorNewProductObj = useRef(null);
-  const taxAddRef = useRef(null);
-  const newProductCreateForm = useRef(null);
   const [hasError, setHasError] = useState(false);
   const [productData, setProductData] = useState([]);
   const [updateProduct, setUpdateProduct] = useState({});
@@ -57,7 +46,6 @@ const ProductTransaction = (props) => {
     quantity: "",
   });
   const [totalAmt, setTotalAmt] = useState(0);
-  const [colorPickerState, setColorPickerState] = useState(false);
 
   const getQueryParams = async () => {
     const catID = utils.getQueryVariable("catID");
@@ -104,10 +92,6 @@ const ProductTransaction = (props) => {
       setShowLoader(false);
     }
   };
-
-  useEffect(()=>{
-
-  },[productItemsList])
 
   const fetchColorSizes = async () => {
     try {
@@ -187,6 +171,7 @@ const ProductTransaction = (props) => {
           productPlaceholder.qnty = 1;
           
     setSelectedProduct(productPlaceholder);
+    console.log("selected product to add :::", productPlaceholder);
     setShowProductList(false);
   };
 
@@ -281,13 +266,9 @@ const ProductTransaction = (props) => {
     }
   };
 
-  useEffect(() => {
-      // console.log("CART ITEMS NOW:::", cartState);
-  }, [cartState]);
-
-  // const handleAddProductSubmit = () => {
-  //   console.log("hi");
-  // };
+  useEffect(()=>{
+    console.log("cartState ::: ", cartState);
+  },[cartState  ])
 
   const addThisProduct = (e) => {
     e.preventDefault();
@@ -303,8 +284,6 @@ const ProductTransaction = (props) => {
         errorStatePlaceholder.quantity = "Please set some quantity!"
         setErrorState(errorStatePlaceholder)
       }
-      // console.log("selectedProduct ::::: ", selectedProduct);
-      // console.log("selectedProduct.price ::::: ", selectedProduct?.price);
       if (selectedProduct.price === null || selectedProduct.price === "" || parseFloat(selectedProduct.price) <= 0) {
         setHasError(true);
         localError = true
@@ -326,7 +305,7 @@ const ProductTransaction = (props) => {
         errorStatePlaceholder.sizes = "Please select a size!"
         setErrorState(errorStatePlaceholder)
       }
-      // console.log("localError ::: ", localError);
+      
       if (!localError) {
         let cartItemToAdd = {
             product: selectedProduct.name,
@@ -360,10 +339,6 @@ const ProductTransaction = (props) => {
     productTransaction.current.reset();
     setSelectedProduct(null);
   };
-
-  useEffect(() => {
-    // console.log("totalAmt changed:::", totalAmt);
-  }, [totalAmt]);
 
   useEffect(() => {
     const getTotalCart = () => {
@@ -400,13 +375,9 @@ const ProductTransaction = (props) => {
 
   const showAddProduct = (e) => {
     e.preventDefault();
-    // console.log("cartState:::", cartState);
+    console.log("cartState in show add prod :::", cartState);
     props.productPayment(true);
   };
-
-  useEffect(() => {
-    // console.log("newProductObj", newProductObj);
-  }, [newProductObj]);
 
   const getAddedProduct = (e) => {
     // console.log("NEWLY ADDED", e);
@@ -418,7 +389,8 @@ const ProductTransaction = (props) => {
     fetchCategories();
     fetchProducts();
     fetchColorSizes();
-    // console.log("CART STATE:::", cartState.length > 0 && cartState);
+    // console.log("CART STATE:::", cartState.length > 0, cartState);
+    // console.log("props.productTransactionPayment", props.productTransactionPayment);
   }, []);
 
   return (
