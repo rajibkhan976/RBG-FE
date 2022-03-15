@@ -166,11 +166,11 @@ const ProductPayment = (props) => {
         
         console.log("PAYLOAD:::", productPayload);
         
-        let filteredPay = paymentsArray.filter((payNow, i)=> payNow.type === "downpayment" && payNow.isPayNow === 1 && payNow.payment_status === "unpaid")
+        let filteredPay = paymentsArray.filter((payNow, i)=> payNow.paymentConfirmation === false)
+
+        console.log("filteredPay", filteredPay);
 
     if (!hasError) {
-      console.log("filteredPay.length", filteredPay.length)
-
       if(filteredPay.length === 0) {
         try {
           setIsLoader(true);
@@ -266,6 +266,7 @@ const ProductPayment = (props) => {
         paymentDate: todayPayDate().toISOString().split("T")[0],
         payment_type: "cash",
         payment_status: "paid",
+        paymentConfirmation: false
       }])
       
       setHasError(true);
@@ -322,6 +323,7 @@ const ProductPayment = (props) => {
           paymentDate: todayPayDate().toISOString().split("T")[0],
           payment_type: "cash",
           payment_status: "paid",
+          paymentConfirmation: false
         },
       ])
       }
@@ -484,16 +486,18 @@ const ProductPayment = (props) => {
         downPaymentsPlaceholder[i].isPayNow = 1;
         downPaymentsPlaceholder[i].paymentDate = today;
         downPaymentsPlaceholder[i].payment_status = "paid";
+        downPaymentsPlaceholder[i].paymentConfirmation = true;
         setDownPayments(downPaymentsPlaceholder)
         setHasError(false)
         setDownPaymentErrorMsg({
           ...downPaymentActive,
           payment_not_received: ""
         })
-      } else {
-        downPaymentsPlaceholder[i].payment_status = "unpaid";
-        setDownPayments(downPaymentsPlaceholder)
       }
+      //  else {
+      //   downPaymentsPlaceholder[i].payment_status = "unpaid";
+      //   setDownPayments(downPaymentsPlaceholder)
+      // }
     } catch (error) {
       console.log(error);
     } finally {      
@@ -1312,6 +1316,7 @@ const ProductPayment = (props) => {
                             name=""
                             id=""
                             onChange={(e) => markDownPaid(e, downPay, i)}
+                            value={downPay.paymentConfirmation}
                           />
                           <span></span>
                         </div>
@@ -1452,7 +1457,7 @@ const ProductPayment = (props) => {
                   props.backToTransList();
                 }}
                 style={{
-                  marginTop: (payMentInfo.cashAmount > 0 || payMentInfo.onlineAmount > 0) && "150px"
+                  marginTop: (payMentInfo.cashAmount > 0 && payMentInfo.onlineAmount > 0) && "150px"
                 }}
               >
                 Go to Transaction List <img src={aaroww} alt="" />
