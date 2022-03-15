@@ -3575,7 +3575,8 @@ li.paymentModeLi, li.paymentAmtLi {
 }
 
 .transactionListing .row .cellWraperss {
-  display: contents;
+  display: inline-block;
+  width: 100%;
 }
 
 
@@ -3610,7 +3611,7 @@ li.paymentModeLi, li.paymentAmtLi {
 }
 
 .transactionListing.oldTransactions .row .cell.particulars {
-  width: 50%;
+  width: 48%;
 }
 
 .transactionListing.oldTransactions .row .cell.amt {
@@ -3624,19 +3625,17 @@ li.paymentModeLi, li.paymentAmtLi {
     font-size: 12px;
     font-weight: 500;
     margin-bottom: 3px;
+    text-transform: capitalize;
 }
 
 .transactionListing.oldTransactions .row .cell.transactionIds {
   width: 28%;
 }
 
-.transactionListing.oldTransactions .row .cell.times {
-  width: 15%!important;
-  padding: 18px 5px;
-}
 
 .transactionListing.oldTransactions .row .cell.action {
   width: 5%;
+  float: right;
 }
 
 .transactionListing .row.fail.withHistory .showMore {  
@@ -3665,7 +3664,7 @@ li.paymentModeLi, li.paymentAmtLi {
 .showDetails {
   width: 100%;
   float: left;
-  padding: 0px 70px;
+  padding: 0px 50px 0 70px;
   background: #fff;
   border-radius: 0 0 5px 5px;
 }
@@ -3680,6 +3679,10 @@ li.paymentModeLi, li.paymentAmtLi {
 .cellWrapers.historyInnerInfo .cell.particulars .status {
  font-size: 13px;
  font-weight: 700;
+}
+
+.cellWrapers.refunded.historyInnerInfo .cell.particulars .status {
+  color: #F1A768;
 }
 
 .cellWrapers.historyInnerInfo .cell.particulars div {
@@ -3723,6 +3726,10 @@ li.paymentModeLi, li.paymentAmtLi {
   background: #319340;
 }
 
+.cellWrapers.success.refunded.historyInnerInfo .cell.particulars .iconCont span {
+  background-color: #F1A768;
+}
+
 .cellWrapers.fail.historyInnerInfo .cell.amt {
   width: 28%;
 }
@@ -3734,16 +3741,25 @@ li.paymentModeLi, li.paymentAmtLi {
   width: 100%;
   float: left;
   color: #305671;
+  font-weight: 500;
 }
 .transactionListing.oldTransactions .row .cellWrapers.historyInnerInfo .cell.amt {
   color: #B2BFC9;
-  width: 35%;
-  padding-top: 0%;
+  width: 180px;
+  padding-top: 0;
+  padding-left: 10px;
 }
 
+.transactionListing.oldTransactions .row .cellWrapers.historyInnerInfo .cell.times {
+  float: right;
+  padding-right: 5px;
+  width: 112px;
+}
 
-.cellWrapers.historyInnerInfo .cell.particulars {
+.transactionListing.oldTransactions .cellWrapers.historyInnerInfo .cell.particulars {
   padding-left: 0;
+  padding-right: 5px;
+  width: 285px;
 }
 
 .cellWrapers.historyInnerInfo .cell.particulars .d-flex {
@@ -3841,13 +3857,6 @@ li.paymentModeLi, li.paymentAmtLi {
 
 .transactionListing.oldTransactions .row .cellWrapers.historyInnerInfo .cell {
   background: transparent;
-}
-
-
-.transactionListing.oldTransactions .row .cellWrapers.historyInnerInfo .cell.amt {
-  color: #B2BFC9;
-  width: 35%;
-  padding-top: 0%;
 }
 
 .transactionListing .row.due {

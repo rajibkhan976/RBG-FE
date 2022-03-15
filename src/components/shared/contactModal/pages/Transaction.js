@@ -6,11 +6,14 @@ import wwConnect2 from "../../../../assets/images/wwConnect2.svg";
 import list_board_icon from "../../../../assets/images/list_board_icon.svg";
 import cashSmallWhite from "../../../../assets/images/cash_icon_small_white.svg";
 import cardSmallWhite from "../../../../assets/images/card_icon_small_white.svg";
+import bankSmallWhite from "../../../../assets/images/bank.svg";
+import refundIcon from "../../../../assets/images/refund_icon_white.svg";
 import dropVector from "../../../../assets/images/dropVector.svg";
 import RefundModal from "./transaction/RefundModal";
 import EditTrModal from "./transaction/EditTrModal";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import AlertMessage from "../../messages/alertMessage";
+import moment from "moment";
 import { TransactionServices } from "../../../../services/transaction/transactionServices";
 import Loader from "../../Loader";
 import CompleteTransactionModal from "./transaction/CompleteTransactionModal";
@@ -34,17 +37,44 @@ const Transaction = (props) => {
   const upcomingOptRef = useRef();
   const oldOptRef = useRef();
   const oldTrxHistRef = useRef();
-
+  const [refundAmount, setRefundAmount] = useState();
+  const [subscriptionId, setSubscriptionId] = useState();
   const [oldHistoryIndex, setOldHistoryIndex] = useState(null);
 
   const showOldTrxHistory = (index) => {
-    setOldHistoryIndex(index);
+    if (oldHistoryIndex == index) {
+      setOldHistoryIndex(null);
+    } else {
+      setOldHistoryIndex(index);
+    }
+    
   };
 
 
-  const openCloseRefundModal = (param) => {
-    setRefundModal(param);
+  const openRefundModal = (item) => {
+    setRefundModal(true);
+
+    let trxType = item.history[item.history.length -1].transaction_for;
+    console.log("trxType ", item);
+    let data = item.history[item.history.length -1];
+    setSubscriptionId(item._id);
+
+    if (trxType == "product") {
+      let amount = (data.transaction_data.length > 1) ? data.transaction_data.reduce((v1, v2) => (v1.price*v1.qnty) + (v2.price*v2.qnty)).toFixed(2) : (data.transaction_data[0].price*data.transaction_data[0].qnty).toFixed(2);
+      setRefundAmount(amount);
+    } else {
+      setRefundAmount(data.transaction_data.amount);
+    }
   };
+
+  const closeRefundModal = () => {
+    setRefundModal(false);
+  };
+
+  const refundLoader = (param) => {
+    setIsLoader(param);
+  };
+
   const openCloseEditTransModal = (param) => {
     setEditTransModal(param);
   };
@@ -202,6 +232,16 @@ const Transaction = (props) => {
     return showTime;
   };
 
+
+  const calculateTotalTransactionAmount = (data) => {
+    if(data?.amount) {
+      return Math.abs(data.amount);
+    } else {
+      const amount = (data.length > 1) ? data.reduce((v1, v2) => (v1.price*v1.qnty) + (v2.price*v2.qnty)).toFixed(2) : (data[0].price*data[0].qnty).toFixed(2);
+      // console.log("reduced"+JSON.stringify(amount));
+      return amount;
+    }
+  }
   
 
   return (
@@ -265,15 +305,15 @@ const Transaction = (props) => {
                           Due
                         </div>
                         <div>
-                          <span>Course:</span> “{ item.title }”
+                          <span>{item.transaction_for == "product" ? "Product" : "Program"}:</span> “{ item.title }”
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="cell amt">
                     <span className="amount" >
-                    <span className="tutionAmt">Tution Fee</span>
-                      { "$" + item.amount }
+                    <span className="tutionAmt">{item.type == "tuiton_fees" ? "Tution Fee" : (item.type == "downpayment" ? "Downpayment" : "Outstanding")}</span>
+                      { "$" + parseFloat(item.amount).toFixed(2) }
                     </span>
                   </div>
                 
@@ -325,16 +365,37 @@ const Transaction = (props) => {
                         <div className="cell particulars">
                           <div className="d-flex">
                             <div className="iconCont">
+                              {item.history.length && item.history[item.history.length - 1].payment_via == "cash" ? 
                               <span>
-                                <img src={icon_trans} alt="" />
+                                <img src={cashSmallWhite} alt="" />
                               </span>
+                              : (item.history.length && item.history[item.history.length - 1].payment_via == "bank" ? 
+                                <span>
+                                  <img src={bankSmallWhite} alt="" />
+                                </span>
+                                :
+                                <span>
+                                  <img src={cardSmallWhite} alt="" />
+                                </span>
+                                )
+                              }
+                              
+                              {item.history.length && item.history[item.history.length - 1].amount < 0 ?
+                              <span className="refund">
+                                <img src={refundIcon} alt="" />
+                              </span>
+                              : ""}
                             </div>
                             <div className="textCont">
                               <div className="status">
-                                {item.status == "success" ? "success" : "fail"}
+                                {item.history.length && item.history[item.history.length - 1].status == "success" ? "success" : "failed"}
+                                {item.history.length && item.history[item.history.length - 1].amount < 0 ? 
+                                <span className="refundedTag">Refunded</span>
+                                : ""}
+                                
                               </div>
                               <div>
-                                <span>Program:</span> “{item.course}”
+                                <span>{item.type == "tuiton_fees" ? "Program" : "Product"}:</span> “{item.title}”
                               </div>
                             </div>
                           </div>
@@ -342,8 +403,8 @@ const Transaction = (props) => {
 
                         <div className="cell amt">
                           <div className="amount" >
-                            <span className="tutionAmt">Tution Fee</span>
-                            {item.history.length && item.history[item.history.length - 1].transaction_data.amount}
+                            <span className="tutionAmt">{item.type == "tuiton_fees" ? "Tution Fee" : (item.type == "downpayment" ? "Downpayment" : "Outstanding")}</span>
+                            {"$ " + parseFloat(Math.abs(item.history.length && item.history[item.history.length - 1].amount)).toFixed(2)}
                           </div>
                         </div>
 
@@ -355,17 +416,16 @@ const Transaction = (props) => {
 
                         <div className="cell times">
                           <span className="time">
-                            {item.transaction_date} 
-                            30 d ago 
+                            {moment(item.history.length && item.history[item.history.length - 1].transaction_date, 'YYYY-MM-DD').fromNow()}
                           </span>
                         </div>
 
                         <div className="cell action">
                           <div className="moreOpt">
-                            <button type="button" className="moreOptBtn" onClick={() => moreOptOpenOld (index)}></button>
+                          <button type="button" className="moreOptBtn" onClick={() => moreOptOpenOld (index)}></button>
                             <div className={oldOptIndex === index ? "optDropdown" : "optDropdown hide"}>
-                              {item.status == "success" ?
-                                <button type="button" className="refund" onClick={() => openCloseRefundModal (true)}>Refund</button>
+                              {item.history.length && item.history[item.history.length -1].status == "success" ?
+                                <button type="button" className="refund" onClick={() => openRefundModal (item)}>Refund</button>
                                 :
                                 <button type="button" className="retry">Retry</button> 
                               }
@@ -376,52 +436,69 @@ const Transaction = (props) => {
                       </div> 
                       <div className="cellWrapers historyDetails">
 
-                        <div className={oldHistoryIndex == index ? "showMore hide" : "showMore"} onClick={() => showOldTrxHistory (index)} >
+                        <div className={oldHistoryIndex == index ? "showMore hide" : "showMore"} onClick={() => showOldTrxHistory (index)}>
                           <img src={dropVector} alt="" />
                         </div>
 
 
                         {oldHistoryIndex == index ?
                         <div className="showDetails">
-                          <div className="cellWrapers success historyInnerInfo">
-                            <div className="cell particulars">
-                              <div className="d-flex">
-                                <div className="iconCont">
-                                  <span>
-                                    <img src={cashSmallWhite} alt="" />
+                          {item.history.map((element, key) => {
+                            return (
+                              <div key={"oldhistory" + key} className={element.status == "failed" ? "cellWrapers fail historyInnerInfo" : (element.amount < 0 ? "cellWrapers success refunded historyInnerInfo" : "cellWrapers success historyInnerInfo")}>
+                                <div className="cell particulars">
+                                  <div className="d-flex">
+                                    <div className="iconCont">
+                                      <span>
+                                        {element.amount < 0 ? 
+                                        <img src={refundIcon} alt="" />
+                                        : ( element.payment_via == "cash" ? 
+                                          <img src={cashSmallWhite} alt="" />
+                                          : ( element.payment_via == "bank" ?
+                                            <img src={bankSmallWhite} alt="" />
+                                            :
+                                            <img src={cardSmallWhite} alt="" />
+                                            )
+                                          )
+                                        }
+                                      </span>
+                                    </div>
+                                    <div className="textCont">
+                                      <div className="status">
+                                        {element.status == "failed" ? "failed" : (element.amount < 0 ? "refunded" : "successful")}
+                                      </div>
+                                      <div>
+                                        <span>Transaction ID:</span> {element._id}
+                                    
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+
+                                <div className="cell amt">
+                                  <div className="amount" >
+                                    {/* $ {calculateTotalTransactionAmount(element.transaction_data)} */}
+                                    {/* ${(element.transaction_data?.amount)?element.transaction_data.amount : element.transaction_data[0].price} */}
+                                    {Math.abs(element.amount)}
+                                  </div>
+                                </div>
+
+                                <div className="cell times">
+                                  <span className="time">
+                                    {moment(element.transaction_date.split(" ")[1], 'hh:mm A').format('hh:mm A')}
+                                    <span className="historyDate">
+                                      {/* {element.transaction_date.split(" ")[0]}  */}
+                                      {moment(element.transaction_date.split(" ")[0], 'YYYY-MM-DD').format('Do MMM, YYYY')}
+                                    </span>
                                   </span>
                                 </div>
-                                <div className="textCont">
-                                  <div className="status">
-                                    {item.status == "success" ? "successful" : "failed"}
-                                  </div>
-                                  <div>
-                                    <span>Transaction ID:</span> {item._id}
-                                
-                                  </div>
-                                </div>
                               </div>
-                            </div>
-
-                            <div className="cell amt">
-                              <div className="amount" >
-                                {"$ " + item.amount}
-                              </div>
-                            </div>
-
-                            <div className="cell times">
-                              <span className="time">
-                                12.59 PM 
-                                <span className="historyDate">15 Feb, 2022</span>
-                              </span>
-                            </div>
-                          </div>
-
+                            )
+                          })}
                           
                           
                           
-                          
-                          <div className="cellWrapers fail historyInnerInfo">
+                          {/* <div className="cellWrapers fail historyInnerInfo">
                             <div className="cell particulars">
                               <div className="d-flex">
                                 <div className="iconCont">
@@ -453,7 +530,7 @@ const Transaction = (props) => {
                                 <span className="historyDate">15 Feb, 2022</span>
                               </span>
                             </div>
-                          </div>
+                          </div> */}
 
                         </div>
 
@@ -626,7 +703,12 @@ const Transaction = (props) => {
         </div>
 
       </div>
-      { refundModal && <RefundModal closeModal={(param) => openCloseRefundModal (param)} /> }
+      { refundModal && <RefundModal closeModal={() => closeRefundModal ()} 
+      amount={refundAmount} 
+      subscriptionId={subscriptionId} 
+      contactId={props.contactId} 
+      loader={(param) => refundLoader ()}
+      /> }
 
       { editTransModal && <EditTrModal closeModal={(param) => openCloseEditTransModal (param)} contactId={props.contactId} /> }
 
