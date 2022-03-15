@@ -3,12 +3,13 @@ import { useState } from "react";
 import crossImg from "../../../../../../src/assets/images/cross.svg";
 import refundImg from "../../../../../../src/assets/images/refund_icon_dark.svg";
 import arrowForwardImg from "../../../../../../src/assets/images/arrow_forward.svg";
+import { TransactionServices } from "../../../../../services/transaction/transactionServices";
 
 
 const RefundModal = (props) => {
 
     const [refundFormData, setRefundFormData] = useState({
-        amount: "",
+        amount: props.amount,
         reason: "",
         otherReason: "",
         confirmRefund: false
@@ -19,6 +20,8 @@ const RefundModal = (props) => {
         otherReason: "",
         confirmRefund: ""
     });
+
+    console.log(props.item);
 
 
     const refundAmountHandel = (e) => {
@@ -94,11 +97,11 @@ const RefundModal = (props) => {
 
         if(refundFormData.reason && refundFormData.reason !== "others") {
             if(refundFormData.amount && refundFormData.confirmRefund) {
-                console.log("Submit");
+                refundFn();
             }
         } else if (refundFormData.reason === "others") {
             if (refundFormData.amount && refundFormData.otherReason && refundFormData.confirmRefund) {
-                console.log("Submit");
+                refundFn();
             }
         }
 
@@ -106,6 +109,24 @@ const RefundModal = (props) => {
         //     console.log("Submit");
         // }
 
+    };
+    
+    const refundFn = async () => {
+        let payload = {
+            subscriptionId: props.subscriptionId,
+            amount: parseFloat(refundFormData.amount),
+            note: refundFormData.reason == "others" ? refundFormData.otherReason : refundFormData.reason
+        }
+        props.loader(true);
+        try {
+            let rsponse = await TransactionServices.refund(props.contactId, payload);
+            console.log("Refund Response: ", rsponse);
+        } catch (e) {
+
+        } finally {
+
+        }
+        
     };
 
     

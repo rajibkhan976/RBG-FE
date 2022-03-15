@@ -254,10 +254,10 @@ const AddCourseModal = (props) => {
           <div className="slickModalHeader">
             <button className="topCross" onClick={props.closeCourseModal}><img src={crossTop} alt="" /></button>
             <div className="circleForIcon"><img src={modalTopIcon} alt="" /></div>
-            <h3>{(isEditing) ? "Edit" : "Add"} a Course</h3>
-            <p>Choose a category to add a new course below</p>
+            <h3>{(isEditing) ? "Edit" : "Add"} a Program</h3>
+            <p>Choose a category to add a new program below</p>
           </div>
-          <div className="modalForm">
+          <div className="modalForm addProgramFrom">
             <Scrollbars
               renderThumbVertical={(props) => <div className="thumb-vertical" />}
             >
@@ -277,14 +277,14 @@ const AddCourseModal = (props) => {
                 </div>
 
                 <div className="formControl">
-                  <label>Enter Course Name</label>
+                  <label>Enter Program Name</label>
                   <input type="text" placeholder="Ex: v-shape gym vest" name="courseName"
                     onChange={handleChange}
                     value={courseData.name} />
                 </div>
 
                 <div className="formControl">
-                  <label>Enter Course Description</label>
+                  <label>Enter Program Description</label>
                   {/* <textarea name="productDesc" onChange={handleChange}>{courseData.desc}</textarea> */}
                   <input type="text" placeholder="Small description here" name="productDesc"
                     onChange={handleChange}
@@ -292,7 +292,7 @@ const AddCourseModal = (props) => {
                 </div>
 
                 <div className="formControl">
-                  <label>Upload Course Picture</label>
+                  <label>Upload Program Picture</label>
                   <div className="profile">
                     <div className="profileUpload">
                       <input type="file" onChange={(e) => handleImageUpload(e)} />
@@ -301,7 +301,7 @@ const AddCourseModal = (props) => {
                     <div className="profilePicture">
                       <img src={courseData.imageUrl} alt="" />
                     </div>
-                    <div className="profileText"> Course Picture</div>
+                    <div className="profileText"> Program Picture</div>
 
                   </div>
                 </div>

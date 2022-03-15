@@ -94,18 +94,18 @@ const CourseListing = (props) => {
           <div class="listInfo">
             <ul class="listPath">
               <li>Settings </li>
-              <li>Courses</li>
+              <li>Pragrams</li>
             </ul>
             <h2 class="inDashboardHeader">
-              Courses (
+              Programs (
               {props.paginationData.count ? props.paginationData.count : 0})
             </h2>
-            <p class="userListAbout">Manage your courses</p>
+            <p class="userListAbout">Manage your programs</p>
           </div>
           <div class="listFeatures">
             <button class="creatUserBtn" onClick={props.openCourseModal}>
               <img class="plusIcon" src={plus_icon} alt="" />
-              <span>Add a Course</span>
+              <span>Add a Program</span>
             </button>
           </div>
         </div>
@@ -267,7 +267,7 @@ const CourseListing = (props) => {
               <div className="createNew">
                 <span>
                   <img src={list_board_icon} alt="" />
-                  <p>No courses found!</p>
+                  <p>No Program found!</p>
                 </span>
               </div>
             )}

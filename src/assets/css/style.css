@@ -1236,7 +1236,6 @@ li.listHeading > div.dsc::after {
 
 .status {
   min-width: 100px;
-  width: 8%;
 }
 
 .createDate {
@@ -7034,6 +7033,7 @@ p.trackName {
 }
 .transactionListing .row .cell .time {
   color: #9baebc;
+  text-transform: capitalize;
 }
 .transactionListing .row .cell .iconCont {
   width: 60px;
@@ -7050,6 +7050,11 @@ p.trackName {
   text-align: center;
   border-radius: 50%;
   line-height: 34px;
+}
+.transactionListing .row .cell .iconCont span.refund {
+  background-color: #F1A768;
+  border: 1px solid #F0F5F1;
+  margin-top: -5px;
 }
 .transactionListing .row .cell .iconCont img {
   width: 16px;
@@ -9875,4 +9880,22 @@ select.editFormStyle{
 }
 .labelWithInfo.paymentTime.firstBillTime .toggleBtn {
   margin: 0 0 0 10px;
+}
+
+.refundedTag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #139FEA;
+  height: 18px;
+  width: 68px;
+  border-radius: 20px;
+  text-align: center;
+  line-height: 18px;
+  margin-left: 10px;
+}
+
+.addProgramFrom .formControl .profile .profileText {
+  padding-left: 23px;
 }
