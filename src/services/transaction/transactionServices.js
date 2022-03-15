@@ -24,9 +24,9 @@ export const TransactionServices = {
         }
     },
 
-    fetchOldTransactions: async (contactId) => {
+    fetchOldTransactions: async (contactId, pageNumber) => {
         try {
-            const url = config.transactionUrl + "transactions/old/" + contactId;
+            const url = config.transactionUrl + "transactions/old/" + contactId + "/" + pageNumber;
             const result = await axios.get(url, { headers: headers });
             return result.data;
         } catch (e) {

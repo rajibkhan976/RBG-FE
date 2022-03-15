@@ -22,13 +22,15 @@ const Transaction = (props) => {
   const [transactionList, setTransactionList] = useState([]);
   const [isLoader, setIsLoader] = useState(false);
   const [isLoaderTab, setIsLoaderTab] = useState(false);
+  const [isLoaderScroll, setIsLoaderScroll] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [refundModal, setRefundModal] = useState(false);
   const [editTransModal, setEditTransModal] = useState(false);
   const [completeTransModal, setCompleteTransModal] = useState(false);
-  const [oldTransactionList, setOldTransactionList] = useState({});
+  const [oldTransactionList, setOldTransactionList] = useState([]);
   const [upcomingTransaction, setUpcomingTransaction] = useState([]);
   const [upcomingPagination, setUpcomingPagination ] = useState({});
+  const [oldPagination, setOldPagination ] = useState({});
   const [upcomingOptIndex, setUpcomingOptIndex] = useState();
   const [oldOptIndex, setOldOptIndex] = useState();
   const [isScroll, setIsScroll] = useState(false);
@@ -69,6 +71,7 @@ const Transaction = (props) => {
 
   const closeRefundModal = () => {
     setRefundModal(false);
+    fetchOldTransactions(props.contactId, 1);
   };
 
   const refundLoader = (param) => {
@@ -120,32 +123,56 @@ const Transaction = (props) => {
     }
   };
 
-  const fetchOldTransactions = async (contactId) => {
+   const oldListPageNo = (e) => {
+    if (!isScroll) {
+      let scrollHeight = e.target.scrollHeight;
+      let scrollTop = e.target.scrollTop;
+      if (scrollTop > (scrollHeight / 2)) {
+        if(oldPagination.currentPage < oldPagination.totalPages) {
+          fetchOldTransactions(props.contactId, (oldPagination.currentPage + 1));
+        }
+        ;
+      }
+    }
+  };
+
+  const fetchOldTransactions = async (contactId, pageNumber) => {
     try {
-      setIsLoader(true);
-      const response = await TransactionServices.fetchOldTransactions(contactId);
-      setOldTransactionList(response.transactions);
+      setIsScroll(true);
+      setIsLoaderScroll(true);
+      const response = await TransactionServices.fetchOldTransactions(contactId, pageNumber);
+      setIsScroll(false);
+      if (response.pagination.currentPage == 1) {
+        setOldTransactionList(response.transactions);
+      } else {
+        setOldTransactionList([ ...oldTransactionList, ...response.transactions]);
+      }
+      setOldPagination(response.pagination);
       console.log("Old transaction response ", response);
     } catch (e) {
 
     } finally {
-      setIsLoader(false);
+      setIsLoaderScroll(false);
     }
   };
 
   const fetchUpcomingTransactions = async (contactId, pageNumber) => {
     try {
       setIsScroll(true);
-      setIsLoaderTab(true);
+      setIsLoaderScroll(true);
       const response = await TransactionServices.fetchUpcomingTransactions(contactId, pageNumber);
-      setUpcomingTransaction([ ...upcomingTransaction, ...response.transactions]);
+      if (response.pagination.currentPage == 1) {
+        setUpcomingTransaction(response.transactions);
+      } else {
+        setUpcomingTransaction([ ...upcomingTransaction, ...response.transactions]);
+      }
       setIsScroll(false);
       setUpcomingPagination(response.pagination);
       console.log("Upcoming transaction response ", response);
     } catch (e) {
 
     } finally {
-      setIsLoaderTab(false);
+      setIsLoaderScroll(false);
     }
   };
 
@@ -186,7 +213,7 @@ const Transaction = (props) => {
 
 
   useEffect(() => {
-    fetchOldTransactions(props.contactId);
+    fetchOldTransactions(props.contactId, 1);
     fetchUpcomingTransactions(props.contactId, 1);
     console.log(props.contactId);
 
@@ -274,7 +301,6 @@ const Transaction = (props) => {
         </div>
 
         <div className={activeTab == 0 ? "listTab active" : "listTab"}>
-          { isLoaderTab ? <Loader /> : "" }
           <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={upcomingListPageNo}>
           <div className="transactionListing dueTransactions"  ref={upcomingOptRef}>
             {/* <div className={isLoaderTab ? "hide" :"row head"}> */}
@@ -335,14 +361,64 @@ const Transaction = (props) => {
                     </div>
                   </div>
                 </div>
+                {item.history.length > 0 ? item.history.map((element, index) => {
+                  return (
+                    <div className="cellWrapers historyDetails">
+                      <div className="showMore hide">
+                        {element.amount < 0 ? 
+                          <img src={refundIcon} alt="" />
+                          : ( element.payment_via == "cash" ? 
+                            <img src={cashSmallWhite} alt="" />
+                            : ( element.payment_via == "bank" ?
+                              <img src={bankSmallWhite} alt="" />
+                              :
+                              <img src={cardSmallWhite} alt="" />
+                              )
+                            )
+                        }
+                      </div>
+                      <div className="showDetails">
+                        <div className="cellWrapers success historyInnerInfo">
+                          <div className="cell particulars">
+                            <div className="d-flex">
+                              <div className="iconCont">
+                                <span>
+                                  <img src="" alt="" />
+                                </span>
+                              </div>
+                              <div className="textCont">
+                                <div className="status">successful</div>
+                                <div>
+                                  <span>Transaction ID:</span> 62307ac00018f8000972734c
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="cell amt">
+                            <div className="amount">$ 36.30</div>
+                          </div>
+                          <div className="cell times">
+                            <span className="time">11:38 AM<span className="historyDate">15th Mar, 2022</span></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }) : ""}
+                
+
               </div>
             )}) : "" }
+            {isLoaderScroll ? 
+              <div className="bottomLoader">
+              </div>  
+              : ""}
           </div>
           </Scrollbars>
         </div>
 
         <div className={activeTab == 1 ? "listTab active" : "listTab"}>
-          <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={upcomingListPageNo}>
+          <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={oldListPageNo}>
             <div className="transactionListing oldTransactions" ref={oldOptRef}>
             {/* <div className="indRowHeadWrapers"> */}
                 <div className="row head">
@@ -479,7 +555,7 @@ const Transaction = (props) => {
                                   <div className="amount" >
                                     {/* $ {calculateTotalTransactionAmount(element.transaction_data)} */}
                                     {/* ${(element.transaction_data?.amount)?element.transaction_data.amount : element.transaction_data[0].price} */}
-                                    {Math.abs(element.amount)}
+                                    $ {Math.abs(element.amount).toFixed(2)}
                                   </div>
                                 </div>
 
@@ -551,6 +627,12 @@ const Transaction = (props) => {
                   //  </div>
                 )
               }) : ""}
+              
+              {isLoaderScroll ? 
+              <div className="bottomLoader">
+              </div>  
+              : ""}
+              
               {/* <div className="row fail">
                 <div className="cell">
                   <div className="d-flex">
@@ -664,7 +746,7 @@ const Transaction = (props) => {
                       success
                     </div>
                     <div>
-                      <span>Course:</span> “Sample course name”
+                      <span>Program:</span> “Sample course name”
                     </div>
                       <a href="" className="dependent">
                         <span>
@@ -693,7 +775,7 @@ const Transaction = (props) => {
               <div className="cell">
                 <div className="moreOpt">
                   <button type="button" className="moreOptBtn"></button>
-                  <div className="optDropdown">
+                  <div className="optDropdown hide">
                     <button type="button" className="cancelPayment">Cancel</button>
                   </div>  
                 </div>
@@ -707,7 +789,7 @@ const Transaction = (props) => {
       amount={refundAmount} 
       subscriptionId={subscriptionId} 
       contactId={props.contactId} 
-      loader={(param) => refundLoader ()}
+      loader={(param) => refundLoader (param)}
       /> }
 
       { editTransModal && <EditTrModal closeModal={(param) => openCloseEditTransModal (param)} contactId={props.contactId} /> }

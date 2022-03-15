@@ -21,7 +21,13 @@ const RefundModal = (props) => {
         confirmRefund: ""
     });
 
-    console.log(props.item);
+    const loader = (param) => {
+        props.loader(param);
+    };
+
+    const closeModal = () => {
+        props.closeModal();
+    }
 
 
     const refundAmountHandel = (e) => {
@@ -117,14 +123,17 @@ const RefundModal = (props) => {
             amount: parseFloat(refundFormData.amount),
             note: refundFormData.reason == "others" ? refundFormData.otherReason : refundFormData.reason
         }
-        props.loader(true);
+        
         try {
+            loader(true);
             let rsponse = await TransactionServices.refund(props.contactId, payload);
             console.log("Refund Response: ", rsponse);
+            
         } catch (e) {
 
         } finally {
-
+            loader(false);
+            closeModal();
         }
         
     };
@@ -137,7 +146,7 @@ const RefundModal = (props) => {
         <div className="modalBackdrop transactionModal">
             <div className="slickModalBody">
                 <div className="slickModalHeader">
-                    <button className="topCross" onClick={() => props.closeModal (false)}><img src={crossImg} alt="" /></button>  
+                    <button className="topCross" onClick={closeModal}><img src={crossImg} alt="" /></button>  
                     <div className="circleForIcon"><img src={refundImg} alt="" /></div>
                     <h3>Refund</h3>
                     <p>Fill out below details for refund</p>
