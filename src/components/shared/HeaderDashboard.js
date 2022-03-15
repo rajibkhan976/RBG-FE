@@ -30,10 +30,12 @@ import { useStopwatch } from 'react-timer-hook';
 import { ImportContactServices } from "../../services/contact/importContact";
 import * as actionTypes from "../../actions/types";
 import { NotificationServices } from "../../services/notification/NotificationServices";
+import Loader from "./Loader";
 const { Device } = require('twilio-client');
 
 function HeaderDashboard(props) {
   const [setupModalStatus, setSetupModalStatus] = useState(false);
+  const [isLoader, setIsLoader] = useState(false);
   const [stateNotifMenu, setStateNotifMenu] = useState(false);
   const [stateUserMenu, setStateUserMenu] = useState(false);
   const [locationLoaded, setLocationLoaded] = useState("user");
@@ -41,6 +43,8 @@ function HeaderDashboard(props) {
   const [device, setDevice] = useState(new Device());
   const [deviceMessage, setDeviceMessage] = useState("loading");
   const [connection, setConnection] = useState({});
+  const [notificationUnread, setNotificationUnread] = useState(0);
+  const [notificationStructure, setNotificationStructure] = useState([]);
   const {
     seconds,
     minutes,
@@ -55,9 +59,6 @@ function HeaderDashboard(props) {
 
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
-    dispatch({
-      type: actionTypes.NOTIFICATION_READ,
-    });
   };
 
   const dispatch = useDispatch();
@@ -86,11 +87,6 @@ function HeaderDashboard(props) {
           : window.location.pathname === "/automation-list"
             ? props.toggleCreate("automation")
             : props.toggleCreate(null);
-  };
-
-  const closeSideMenu = (e) => {
-    e.preventDefault();
-    setStateNotifMenu(false);
   };
   const fetchCapabilityToken = async () => {
     try {
@@ -290,21 +286,20 @@ function HeaderDashboard(props) {
   useEffect(() => {
     props.setupMenuState && setSetupModalStatus(false)
   }, [props.setupMenuState])
-
-  //Mark all notifications as read
-  const markAllAsRead = async() => {
-    try {
-      let markNotifications = await NotificationServices.markAllAsRead();
-      if (markNotifications) {
-        props.fetchNotifications()
-      }
-    } catch (e) {
-      console.log('Error in mark all as read', e);
+  useEffect(() => {
+    if (props.notificationStructure.hasOwnProperty('payment') || props.notificationStructure.hasOwnProperty('general'))  {
+      setNotificationStructure(props.notificationStructure);
     }
+  }, [props.notificationStructure])
+
+  useEffect(() => {
+    setNotificationUnread(props.notificationUnread);
+  }, [props.notificationUnread])
+
+  const closeModalNotification = () => {
+    setStateNotifMenu(false);
   }
-  const handlerScrollNotification = (e) => {
-    props.handlerScrollNotification(e);
-  }
+
   return (
     <>
       <div className="dashboardHeader">
@@ -411,10 +406,11 @@ function HeaderDashboard(props) {
           <img src={setupModalStatus ? SettingIconBlue : SettingIcon} alt="" />
         </button>
         <button
-          className={userNotifications.isNew ? "btn buttonNotifications newNotifications" : "btn buttonNotifications"}
+          className="btn buttonNotifications"
           onClick={(e) => toggleNotifications(e)}
         >
           <img src={NotificationIcon} alt="" />
+          {notificationUnread > 0 ? <span>{ notificationUnread }</span> : ""}
         </button>
         {locationLoaded === "user" && (
           <button
@@ -538,30 +534,8 @@ function HeaderDashboard(props) {
 
       {/* NOTIFICATIONS SIDE MENU */}
       {stateNotifMenu && (
-        <div className="sideMenuOuter notificationsMenu">
-          <div className="sideMenuInner">
-            <div className="sideMenuHeader">
-              <h3>
-                Notifications{" "}
-                <button className="inlinle-btn btn-link" onClick={markAllAsRead}>
-                  Mark all as read
-                </button>
-              </h3>
-              <p>Check all the notifications</p>
-              <button
-                className="btn btn-closeSideMenu"
-                onClick={(e) => closeSideMenu(e)}
-              >
-                <span></span>
-                <span></span>
-              </button>
-            </div>
-
-            <div className="sideMenuBody"  onScroll={(e) => handlerScrollNotification(e)}>
-              <Notifications />
-            </div>
-          </div>
-        </div>
+        <Notifications closeModalNotification={closeModalNotification} notificationStructure={notificationStructure}
+                       triggerMarkAsRead={props.triggerMarkAsRead} notificationTrigger={props.notificationTrigger}/>
       )}
       {/* NOTIFICATIONS SIDE MENU */}
 

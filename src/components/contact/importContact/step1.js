@@ -138,6 +138,7 @@ function Step1(props) {
                                         <select name="primaryField" value={primaryField} onChange={handlePrimaryField} id="" style={{backgroundImage: "url(" + arrowDown + ")",}}>
                                             <option value="email">Email Id</option>
                                             <option value="phone">Phone</option>
+                                            <option value="both">Both</option>
                                         </select>
                                     </div>
                                 </div>

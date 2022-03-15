@@ -202,9 +202,26 @@ function Step2(props) {
                 }
                 return false;
             }
-        } else {
+        } else if (custom.primaryField === 'phone') {
             if (map.phone === '' || map.firstName === "" || map.lastName === "") {
                 setPrimaryError(true);
+                if (map.phone === "") {
+                    setMapError(prevState => ({...prevState, phone: true}));
+                }
+                if (map.firstName === "") {
+                    setMapError(prevState => ({...prevState, firstName: true}));
+                }
+                if (map.lastName === "") {
+                    setMapError(prevState => ({...prevState, lastName: true}));
+                }
+                return false;
+            }
+        } else {
+            if (map.email === "" || map.phone === '' || map.firstName === "" || map.lastName === "") {
+                setPrimaryError(true);
+                if (map.email === "") {
+                    setMapError(prevState => ({...prevState, email: true}));
+                }
                 if (map.phone === "") {
                     setMapError(prevState => ({...prevState, phone: true}));
                 }

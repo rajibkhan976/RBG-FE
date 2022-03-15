@@ -9877,3 +9877,14 @@ select.editFormStyle{
 .labelWithInfo.paymentTime.firstBillTime .toggleBtn {
   margin: 0 0 0 10px;
 }
+
+.buttonNotifications span{
+  position: absolute;
+  top: 0;
+  left: 17px;
+  color: red;
+  font-size: 12px;
+}
+.notifLabels p{
+  cursor: pointer;
+}
