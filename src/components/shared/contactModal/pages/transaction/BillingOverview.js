@@ -65,10 +65,14 @@ const BillingOverview = (props) => {
           </button> */}
         </header>
 
-        <div className="bodytransactionForm bodyProductPayModes">
+        <div className="bodytransactionForm bodyProductPayModes d-flex f-column">
         {isLoader && <Loader/>}
-          <p className="paymentTypes">Cards</p>
-          <div className="chooseTransactionType paymentTypes">
+          <p className="paymentTypes" style={{
+            order: props.newPay.type === "card" ? "1" : "3"
+          }}>Cards</p>
+          <div className="chooseTransactionType paymentTypes" style={{
+            order: props.newPay.type === "card" ? "2" : "4"
+          }}>
 
             {cardBankList &&
               cardBankList.length > 0 &&
@@ -109,10 +113,14 @@ const BillingOverview = (props) => {
                 </label>
               ))}
           </div>
+          
+          <p className="paymentTypes" style={{
+            order: props.newPay.type === "bank" ? "1" : "3"
+          }}>Bank</p>
 
-          <p className="paymentTypes">Bank</p>
-
-          <div className="chooseTransactionType paymentTypes">
+          <div className="chooseTransactionType paymentTypes" style={{
+            order: props.newPay.type === "bank" ? "2" : "4"
+          }}>
             {/* {//  //  console.log("bankList", bankList)} */}
             {bankList &&
               bankList.length > 0 &&
