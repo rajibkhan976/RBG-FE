@@ -405,7 +405,7 @@ function Step2(props) {
                         </div>
                     }
                     { error > 0 &&
-                        <div className="formMsg error">Following fields are not mapped but still you can process.
+                        <div className="formMsg error warning">Following fields are not mapped but still you can process.
                         </div>}
                     { primaryError && <div className="formMsg error">Primary Field is not Selected.</div>}
                     <div className="formAccordion">
@@ -419,14 +419,14 @@ function Step2(props) {
                                     <div className="infoInputs">
                                         <ul>
                                             <li>
-                                                <div className={"formField w-50 " + (mapError.firstName ? 'error' : '') }>
+                                                <div className={"formField w-50 " + (mapError.firstName ? (primaryError ? 'error' : 'error warning') : '') }>
                                                     <label>First name</label>
                                                     <div className="inFormField">
                                                         <Select name="firstName" value={map.firstName} onChange={(e) =>handleChangeFields(e, 'firstName')}
                                                                 options={options}  isClearable={true} placeholder="Select a header"/>
                                                     </div>
                                                 </div>
-                                                <div className={"formField w-50 " + (mapError.lastName ? 'error' : '') }>
+                                                <div className={"formField w-50 " + (mapError.lastName ? (primaryError ? 'error' : 'error warning') : '') }>
                                                     <label>Last Name</label>
                                                     <div className="inFormField">
                                                         <Select name="lastName" value={map.lastName} onChange={(e) =>handleChangeFields(e, 'lastName')}
@@ -435,14 +435,14 @@ function Step2(props) {
                                                 </div>
                                             </li>
                                             <li>
-                                                <div className={"formField w-50 " + (mapError.dob ? 'error' : '') }>
+                                                <div className={"formField w-50 " + (mapError.dob ? 'error warning' : '') }>
                                                     <label>Date of Birth</label>
                                                     <div className="inFormField">
                                                         <Select name="dob" value={map.dob} onChange={(e) =>handleChangeFields(e, 'dob')}
                                                                 options={options}  isClearable={true} placeholder="Select a header"/>
                                                     </div>
                                                 </div>
-                                                <div className={"formField w-50 " + (mapError.email ? 'error' : '') }>
+                                                <div className={"formField w-50 " + (mapError.email ? (primaryError ? 'error' : 'error warning') : '') }>
                                                     <label>Email</label>
                                                     <div className="inFormField">
                                                         <Select name="email" value={map.email} onChange={(e) =>handleChangeFields(e, 'email')}
@@ -451,14 +451,14 @@ function Step2(props) {
                                                 </div>
                                             </li>
                                             <li>
-                                                <div className={"formField w-50 " + (mapError.phone ? 'error' : '') }>
+                                                <div className={"formField w-50 " + (mapError.phone ? (primaryError ? 'error' : 'error warning') : '') }>
                                                     <label>Phone</label>
                                                     <div className="inFormField">
                                                         <Select name="phone" value={map.phone} onChange={(e) =>handleChangeFields(e, 'phone')}
                                                                 options={options}  isClearable={true} placeholder="Select a header"/>
                                                     </div>
                                                 </div>
-                                                <div className={"formField w-50 " + (mapError.mobile ? 'error' : '') }>
+                                                <div className={"formField w-50 " + (mapError.mobile ? 'error warning' : '') }>
                                                     <label>Mobile</label>
                                                     <div className="inFormField">
                                                         <Select name="mobile" value={map.mobile} onChange={(e) =>handleChangeFields(e, 'mobile')}
@@ -481,14 +481,14 @@ function Step2(props) {
                                     <div className="infoInputs">
                                     <ul>
                                         <li>
-                                            <div className={"formField w-50 " + (mapError.company ? 'error' : '') }>
+                                            <div className={"formField w-50 " + (mapError.company ? 'error warning' : '') }>
                                                 <label>Company</label>
                                                 <div className="inFormField">
                                                     <Select name="company" value={map.company} onChange={(e) =>handleChangeFields(e, 'company')}
                                                             options={options}  isClearable={true} placeholder="Select a header"/>
                                                 </div>
                                             </div>
-                                            <div className={"formField w-50 " + (mapError.jobRole ? 'error' : '') }>
+                                            <div className={"formField w-50 " + (mapError.jobRole ? 'error warning' : '') }>
                                                 <label>Job Role</label>
                                                 <div className="inFormField">
                                                     <Select name="jobRole" value={map.jobRole} onChange={(e) =>handleChangeFields(e, 'jobRole')}
@@ -511,14 +511,14 @@ function Step2(props) {
                                     <div className="infoInputs">
                                         <ul>
                                             <li>
-                                                <div className={"formField w-50 " + (mapError.mothersName ? 'error' : '') }>
+                                                <div className={"formField w-50 " + (mapError.mothersName ? 'error warning' : '') }>
                                                     <label>Mother's Name</label>
                                                     <div className="inFormField">
                                                         <Select name="mothersName" value={map.mothersName} onChange={(e) =>handleChangeFields(e, 'mothersName')}
                                                                 options={options}  isClearable={true} placeholder="Select a header"/>
                                                     </div>
                                                 </div>
-                                                <div className={"formField w-50 " + (mapError.momCellPhone ? 'error' : '') }>
+                                                <div className={"formField w-50 " + (mapError.momCellPhone ? 'error warning' : '') }>
                                                     <label>Mother's Phone Number</label>
                                                     <div className="inFormField">
                                                         <Select name="momCellPhone" value={map.momCellPhone} onChange={(e) =>handleChangeFields(e, 'momCellPhone')}
@@ -527,14 +527,14 @@ function Step2(props) {
                                                 </div>
                                             </li>
                                             <li>
-                                                <div className={"formField w-50 " + (mapError.fathersName ? 'error' : '') }>
+                                                <div className={"formField w-50 " + (mapError.fathersName ? 'error warning' : '') }>
                                                     <label>Father's Name</label>
                                                     <div className="inFormField">
                                                         <Select name="fathersName" value={map.fathersName} onChange={(e) =>handleChangeFields(e, 'fathersName')}
                                                                 options={options}  isClearable={true} placeholder="Select a header"/>
                                                     </div>
                                                 </div>
-                                                <div className={"formField w-50 " + (mapError.dadCellPhone ? 'error' : '') }>
+                                                <div className={"formField w-50 " + (mapError.dadCellPhone ? 'error warning' : '') }>
                                                     <label>Father's Phone Number</label>
                                                     <div className="inFormField">
                                                         <Select name="dadCellPhone" value={map.dadCellPhone} onChange={(e) =>handleChangeFields(e, 'dadCellPhone')}
@@ -543,7 +543,7 @@ function Step2(props) {
                                                 </div>
                                             </li>
                                             <li>
-                                                <div className={"formField w-50 " + (mapError.gender ? 'error' : '') }>
+                                                <div className={"formField w-50 " + (mapError.gender ? 'error warning' : '') }>
                                                     <label>Gender</label>
                                                     <div className="inFormField">
                                                         <Select name="gender" value={map.gender} onChange={(e) =>handleChangeFields(e, 'gender')}
@@ -567,14 +567,14 @@ function Step2(props) {
                                         <div className="infoInputs">
                                             <ul>
                                                 <li>
-                                                    <div className={"formField w-50 " + (mapError.address1 ? 'error' : '') }>
+                                                    <div className={"formField w-50 " + (mapError.address1 ? 'error warning' : '') }>
                                                         <label>Address 1</label>
                                                         <div className="inFormField">
                                                             <Select name="address1" value={map.address1} onChange={(e) =>handleChangeFields(e, 'address1')}
                                                                     options={options}  isClearable={true} placeholder="Select a header"/>
                                                         </div>
                                                     </div>
-                                                    <div className={"formField w-50 " + (mapError.address2 ? 'error' : '') }>
+                                                    <div className={"formField w-50 " + (mapError.address2 ? 'error warning' : '') }>
                                                         <label>Address 2</label>
                                                         <div className="inFormField">
                                                             <Select name="address2" value={map.address2} onChange={(e) =>handleChangeFields(e, 'address2')}
@@ -583,14 +583,14 @@ function Step2(props) {
                                                     </div>
                                                 </li>
                                                 <li>
-                                                    <div className={"formField w-50 " + (mapError.city ? 'error' : '') }>
+                                                    <div className={"formField w-50 " + (mapError.city ? 'error warning' : '') }>
                                                         <label>City</label>
                                                         <div className="inFormField">
                                                             <Select name="city" value={map.city} onChange={(e) =>handleChangeFields(e, 'city')}
                                                                     options={options}  isClearable={true} placeholder="Select a header"/>
                                                         </div>
                                                     </div>
-                                                    <div className={"formField w-50 " + (mapError.state ? 'error' : '') }>
+                                                    <div className={"formField w-50 " + (mapError.state ? 'error warning' : '') }>
                                                         <label>State</label>
                                                         <div className="inFormField">
                                                             <Select name="state" value={map.state} onChange={(e) =>handleChangeFields(e, 'state')}
@@ -599,14 +599,14 @@ function Step2(props) {
                                                     </div>
                                                 </li>
                                                 <li>
-                                                    <div className={"formField w-50 " + (mapError.zip ? 'error' : '') }>
+                                                    <div className={"formField w-50 " + (mapError.zip ? 'error warning' : '') }>
                                                         <label>Zip</label>
                                                         <div className="inFormField">
                                                             <Select name="zip" value={map.zip} onChange={(e) =>handleChangeFields(e, 'zip')}
                                                                     options={options}  isClearable={true} placeholder="Select a header"/>
                                                         </div>
                                                     </div>
-                                                    <div className={"formField w-50 " + (mapError.country ? 'error' : '') }>
+                                                    <div className={"formField w-50 " + (mapError.country ? 'error warning' : '') }>
                                                         <label>Country</label>
                                                         <div className="inFormField">
                                                             <Select name="country" value={map.country} onChange={(e) =>handleChangeFields(e, 'country')}
@@ -630,14 +630,14 @@ function Step2(props) {
                                         <div className="infoInputs">
                                             <ul>
                                                 <li>
-                                                    <div className={"formField w-50 " + (mapError.contactType ? 'error' : '') }>
+                                                    <div className={"formField w-50 " + (mapError.contactType ? 'error warning' : '') }>
                                                         <label>Contact Type</label>
                                                         <div className="inFormField">
                                                             <Select name="contactType" value={map.contactType} onChange={(e) =>handleChangeFields(e, 'contactType')}
                                                                     options={options}  isClearable={true} placeholder="Select a header"/>
                                                         </div>
                                                     </div>
-                                                    <div className={"formField w-50 " + (mapError.ageGroup ? 'error' : '') }>
+                                                    <div className={"formField w-50 " + (mapError.ageGroup ? 'error warning' : '') }>
                                                         <label>Age Group</label>
                                                         <div className="inFormField">
                                                             <Select name="ageGroup" value={map.ageGroup} onChange={(e) =>handleChangeFields(e, 'ageGroup')}
@@ -646,14 +646,14 @@ function Step2(props) {
                                                     </div>
                                                 </li>
                                                 <li>
-                                                    <div className={"formField w-50 " + (mapError.source ? 'error' : '') }>
+                                                    <div className={"formField w-50 " + (mapError.source ? 'error warning' : '') }>
                                                         <label>Source</label>
                                                         <div className="inFormField">
                                                             <Select name="source" value={map.source} onChange={(e) =>handleChangeFields(e, 'source')}
                                                                     options={options}  isClearable={true} placeholder="Select a header"/>
                                                         </div>
                                                     </div>
-                                                    <div className={"formField w-50 " + (mapError.sourceDetails ? 'error' : '') }>
+                                                    <div className={"formField w-50 " + (mapError.sourceDetails ? 'error warning' : '') }>
                                                         <label>Source Details</label>
                                                         <div className="inFormField">
                                                             <Select name="sourceDetails" value={map.sourceDetails} onChange={(e) =>handleChangeFields(e, 'sourceDetails')}
@@ -662,7 +662,7 @@ function Step2(props) {
                                                     </div>
                                                 </li>
                                                 <li>
-                                                    <div className={"formField w-50 " + (mapError.onTrial ? 'error' : '') }>
+                                                    <div className={"formField w-50 " + (mapError.onTrial ? 'error warning' : '') }>
                                                         <label>On Trial</label>
                                                         <div className="inFormField">
                                                             <Select name="onTrial" value={map.onTrial} onChange={(e) =>handleChangeFields(e, 'onTrial')}
@@ -689,14 +689,14 @@ function Step2(props) {
                                                 <div className="infoInputs">
                                                     <ul>
                                                         <li>
-                                                            <div className={"formField w-50 " + (mapError.cardNumber ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.cardNumber ? 'error warning' : '') }>
                                                                 <label>Credit card number</label>
                                                                 <div className="inFormField">
                                                                     <Select name="cardNumber" value={map.cardNumber} onChange={(e) =>handleChangeFields(e, 'cardNumber')}
                                                                             options={options}  isClearable={true} placeholder="Select a header"/>
                                                                 </div>
                                                             </div>
-                                                            <div className={"formField w-50 " + (mapError.cardExpire ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.cardExpire ? 'error warning' : '') }>
                                                                 <label>Card Expire Date</label>
                                                                 <div className="inFormField">
                                                                     <Select name="cardExpire" value={map.cardExpire} onChange={(e) =>handleChangeFields(e, 'cardExpire')}
@@ -705,14 +705,14 @@ function Step2(props) {
                                                             </div>
                                                         </li>
                                                         <li>
-                                                            <div className={"formField w-50 " + (mapError.cardName ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.cardName ? 'error warning' : '') }>
                                                                 <label>Name on Card</label>
                                                                 <div className="inFormField">
                                                                     <Select name="cardName" value={map.cardName} onChange={(e) =>handleChangeFields(e, 'cardName')}
                                                                             options={options}  isClearable={true} placeholder="Select a header"/>
                                                                 </div>
                                                             </div>
-                                                            <div className={"formField w-50 " + (mapError.bankName ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.bankName ? 'error warning' : '') }>
                                                                 <label>Bank name</label>
                                                                 <div className="inFormField">
                                                                     <Select name="bankName" value={map.bankName} onChange={(e) =>handleChangeFields(e, 'bankName')}
@@ -721,14 +721,14 @@ function Step2(props) {
                                                             </div>
                                                         </li>
                                                         <li>
-                                                            <div className={"formField w-50 " + (mapError.bankRouting ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.bankRouting ? 'error warning' : '') }>
                                                                 <label>Bank Routing</label>
                                                                 <div className="inFormField">
                                                                     <Select name="bankRouting" value={map.bankRouting} onChange={(e) =>handleChangeFields(e, 'bankRouting')}
                                                                             options={options}  isClearable={true} placeholder="Select a header"/>
                                                                 </div>
                                                             </div>
-                                                            <div className={"formField w-50 " + (mapError.accountNumber ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.accountNumber ? 'error warning' : '') }>
                                                                 <label>Bank Account Number</label>
                                                                 <div className="inFormField">
                                                                     <Select name="accountNumber" value={map.accountNumber} onChange={(e) =>handleChangeFields(e, 'accountNumber')}
@@ -737,7 +737,7 @@ function Step2(props) {
                                                             </div>
                                                         </li>
                                                         <li>
-                                                            <div className={"formField w-50 " + (mapError.accountType ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.accountType ? 'error warning' : '') }>
                                                                 <label>Bank Account Type</label>
                                                                 <div className="inFormField">
                                                                     <Select name="accountType" value={map.accountType} onChange={(e) =>handleChangeFields(e, 'accountType')}
@@ -761,14 +761,14 @@ function Step2(props) {
                                                 <div className="infoInputs">
                                                     <ul>
                                                         <li>
-                                                            <div className={"formField w-50 " + (mapError.courseName ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.courseName ? 'error warning' : '') }>
                                                                 <label>Program Name</label>
                                                                 <div className="inFormField">
                                                                     <Select name="courseName" value={map.courseName} onChange={(e) =>handleChangeFields(e, 'courseName')}
                                                                             options={options}  isClearable={true} placeholder="Select a header"/>
                                                                 </div>
                                                             </div>
-                                                            <div className={"formField w-50 " + (mapError.startDate ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.startDate ? 'error warning' : '') }>
                                                                 <label>Program Start Date</label>
                                                                 <div className="inFormField">
                                                                     <Select name="startDate" value={map.startDate} onChange={(e) =>handleChangeFields(e, 'startDate')}
@@ -777,14 +777,14 @@ function Step2(props) {
                                                             </div>
                                                         </li>
                                                         <li>
-                                                            <div className={"formField w-50 " + (mapError.endDate ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.endDate ? 'error warning' : '') }>
                                                                 <label>Program End Date</label>
                                                                 <div className="inFormField">
                                                                     <Select name="endDate" value={map.endDate} onChange={(e) =>handleChangeFields(e, 'endDate')}
                                                                             options={options}  isClearable={true} placeholder="Select a header"/>
                                                                 </div>
                                                             </div>
-                                                            <div className={"formField w-50 " + (mapError.contractAmount ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.contractAmount ? 'error warning' : '') }>
                                                                 <label>Total Contract Amount</label>
                                                                 <div className="inFormField">
                                                                     <Select name="contractAmount" value={map.contractAmount} onChange={(e) =>handleChangeFields(e, 'contractAmount')}
@@ -793,14 +793,14 @@ function Step2(props) {
                                                             </div>
                                                         </li>
                                                         <li>
-                                                            <div className={"formField w-50 " + (mapError.downPayment ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.downPayment ? 'error warning' : '') }>
                                                                 <label>Down Payment</label>
                                                                 <div className="inFormField">
                                                                     <Select name="downPayment" value={map.downPayment} onChange={(e) =>handleChangeFields(e, 'downPayment')}
                                                                             options={options}  isClearable={true} placeholder="Select a header"/>
                                                                 </div>
                                                             </div>
-                                                            <div className={"formField w-50 " + (mapError.firstPaymentDue ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.firstPaymentDue ? 'error warning' : '') }>
                                                                 <label>First Payment Due Date</label>
                                                                 <div className="inFormField">
                                                                     <Select name="firstPaymentDue" value={map.firstPaymentDue} onChange={(e) =>handleChangeFields(e, 'firstPaymentDue')}
@@ -809,14 +809,14 @@ function Step2(props) {
                                                             </div>
                                                         </li>
                                                         <li>
-                                                            <div className={"formField w-50 " + (mapError.nextPaymentDue ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.nextPaymentDue ? 'error warning' : '') }>
                                                                 <label>Next Payment Due</label>
                                                                 <div className="inFormField">
                                                                     <Select name="nextPaymentDue" value={map.nextPaymentDue} onChange={(e) =>handleChangeFields(e, 'nextPaymentDue')}
                                                                             options={options}  isClearable={true} placeholder="Select a header"/>
                                                                 </div>
                                                             </div>
-                                                            <div className={"formField w-50 " + (mapError.lastPaymentDate ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.lastPaymentDate ? 'error warning' : '') }>
                                                                 <label>Last Payment Date</label>
                                                                 <div className="inFormField">
                                                                     <Select name="lastPaymentDate" value={map.lastPaymentDate} onChange={(e) =>handleChangeFields(e, 'lastPaymentDate')}
@@ -825,14 +825,14 @@ function Step2(props) {
                                                             </div>
                                                         </li>
                                                         <li>
-                                                            <div className={"formField w-50 " + (mapError.paymentFrequency ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.paymentFrequency ? 'error warning' : '') }>
                                                                 <label>Payment Frequency</label>
                                                                 <div className="inFormField">
                                                                     <Select name="paymentFrequency" value={map.paymentFrequency} onChange={(e) =>handleChangeFields(e, 'paymentFrequency')}
                                                                             options={options}  isClearable={true} placeholder="Select a header"/>
                                                                 </div>
                                                             </div>
-                                                            <div className={"formField w-50 " + (mapError.tuitionAmount ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.tuitionAmount ? 'error warning' : '') }>
                                                                 <label>Tuition Amount</label>
                                                                 <div className="inFormField">
                                                                     <Select name="tuitionAmount" value={map.tuitionAmount} onChange={(e) =>handleChangeFields(e, 'tuitionAmount')}
@@ -841,14 +841,14 @@ function Step2(props) {
                                                             </div>
                                                         </li>
                                                         <li>
-                                                            <div className={"formField w-50 " + (mapError.paymentRemaining ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.paymentRemaining ? 'error warning' : '') }>
                                                                 <label>Payments Remaining</label>
                                                                 <div className="inFormField">
                                                                     <Select name="paymentRemaining" value={map.paymentRemaining} onChange={(e) =>handleChangeFields(e, 'paymentRemaining')}
                                                                             options={options}  isClearable={true} placeholder="Select a header"/>
                                                                 </div>
                                                             </div>
-                                                            <div className={"formField w-50 " + (mapError.paymentMethod ? 'error' : '') }>
+                                                            <div className={"formField w-50 " + (mapError.paymentMethod ? 'error warning' : '') }>
                                                                 <label>Payment Method</label>
                                                                 <div className="inFormField">
                                                                     <Select name="paymentMethod" value={map.paymentMethod} onChange={(e) =>handleChangeFields(e, 'paymentMethod')}
@@ -886,7 +886,7 @@ function Step2(props) {
                                                         customFields.map(row => (
                                                             <li>
                                                                 { row.map(col => (
-                                                                    <div className={"formField w-50 " + (customFieldsError[col.alias] ? 'error' : '')}>
+                                                                    <div className={"formField w-50 " + (customFieldsError[col.alias] ? 'error warning' : '')}>
                                                                         <label>{col.fieldName}</label>
                                                                         <div className="inFormField">
                                                                             <Select name={col.alias} value={customFieldsList[col.alias]} onChange={(e) =>handlerCustomFieldChange(e, col.alias)}

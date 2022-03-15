@@ -294,7 +294,7 @@ const Notifications = (props) => {
                                         );
                                     })}
                                     { isLoader ?
-                                        <li>
+                                        <li className="loaderLi">
                                             <img src={smallLoaderImg} alt="loading" className="smallLoader" />
                                         </li> : ""
                                     }

@@ -9905,11 +9905,31 @@ select.editFormStyle{
 
 .buttonNotifications span{
   position: absolute;
-  top: 0;
-  left: 17px;
-  color: red;
-  font-size: 12px;
+  top: -4px;
+  left: 15px;
+  color: #fff;
+  font-size: 9px;
+  background: linear-gradient(270deg, #F1A768 0%, #ED707A 100%);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  line-height: 21px;
+  font-weight: 600;
 }
 .notifLabels p{
   cursor: pointer;
 }
+
+
+/*Ujjal's fixex Kallol 15.03.2022*/
+
+.formField.error.warning .css-1s2u09g-control {
+  border: 1px solid #EDAB00;
+  background-color: #FFFAED;
+}
+
+.loaderLi {
+  text-align: center;
+  padding: 20px;
+}
+
