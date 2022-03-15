@@ -52,7 +52,6 @@ const Transaction = (props) => {
     
   };
 
-
   const openRefundModal = (item) => {
     setRefundModal(true);
 
