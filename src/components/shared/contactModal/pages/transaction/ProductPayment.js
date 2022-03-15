@@ -9,7 +9,7 @@ import cashSuccess from "../../../../../assets/images/cashSuccess.svg";
 import paidCard from "../../../../../assets/images/paidCrad.svg";
 import smallTick from "../../../../../assets/images/smallTick.svg";
 import paymentFail from "../../../../../assets/images/paymentFailed.svg";
-import paySuccess from "../../../../../assets/images/paySuccess.png";
+import paySuccess from "../../../../../assets/images/paySuccess.svg";
 import Loader from "../../../../shared/Loader";
 import { ProductServices } from "../../../../../services/setup/ProductServices";
 import BillingOverview from "./BillingOverview";

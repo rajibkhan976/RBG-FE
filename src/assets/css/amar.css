@@ -2291,6 +2291,10 @@ ul.paymentUlInfo li.paymentModeLi {
   padding-top: 8px;
   padding-left: 24px;
 }
+.paymentSuccessFullScreen .circleForIcon img {
+  width: 64px;
+  height: 64px;
+}
 /* Add a product */
 
 /* Later additions for Program (Transaction) */
