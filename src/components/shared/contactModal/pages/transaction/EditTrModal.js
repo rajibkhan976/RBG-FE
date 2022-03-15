@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 import crossImg from "../../../../../../src/assets/images/cross.svg";
 import arrowForwardImg from "../../../../../../src/assets/images/arrow_forward.svg";
 import editForModal from "../../../../../../src/assets/images/editForModal.svg";
 import plus_icon from "../../../../../../src/assets/images/plus_icon.svg";
 import cross_small from "../../../../../../src/assets/images/cross_small.svg";
+import Loader from "../../../Loader";
+
+import { BillingServices } from "../../../../../services/billing/billingServices";
 
 
 const EditTrModal = (props) => {
@@ -17,8 +20,15 @@ const EditTrModal = (props) => {
     const [checkingForCard, setCheckingForCard] = useState(false);
     const [checkingForBank, setCheckingForBank] = useState(false);
     const [addBtnClicked, setAddBtnClicked] = useState(false);
+    
+    const [cardExpairyMonthCheck, setCardExpairyMonthCheck] = useState("");
+    const [cardExpairyYearCheck, setCardExpairyYearCheck] = useState("");
+    const [cardNumberOn, setCardNumberOn] = useState("");
+     
+    
 
     const [openOnlineBox, setOpenOnlineBox] = useState(false);
+    const [communicationDownpayment, setCommunicationDownpayment] = useState(false);
 
     const [editTransFormData, setEditTransFormData] = useState({
         amount: "",
@@ -39,12 +49,16 @@ const EditTrModal = (props) => {
         cardNumber: "",
         cardHolderName: "",
         exDate: "",
+        exDateMonth: "",
+        exDateYear: "",
         cvv: ""
     });
     const [addCardformErrorMsg, setAddCardFormErrorMsg] = useState({
         cardNumber: "",
         cardHolderName: "",
         exDate: "",
+        exDateMonth: "",
+        exDateYear: "",
         cvv: ""
     });
 
@@ -60,16 +74,42 @@ const EditTrModal = (props) => {
         routing: "",
         checking: ""
     });
-
-        
-
     
+    
+    const [isLoader, setIsLoader] = useState(false);
+      
+    const [cardList, setCardList] = useState([]);
+    const [bankList, setBankList] = useState([]);
+    const [primaryType, setPrimaryType] = useState(null);
+   
+    const fetchCardBank = async () => {
+        try {
+          setIsLoader(true);
+          let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
+          if (cardBankResponce) {
+            setCardList(cardBankResponce.cards);
+            setBankList(cardBankResponce.banks);
+            setPrimaryType(cardBankResponce.primary);
+          }
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setIsLoader(false);
+        }
+      };
+      useEffect(() => {
+        fetchCardBank();
+      }, []);
+
+      
     const editCardHandler = (e) =>{
         e.preventDefault();
         setEditCardPart(true);
         setEditBankPart(false);
         setEditCardDetailsPart(false);
         setEditBankDetailsPart(false);
+
+        setAddBtnClicked(false) ;
     }
     const editBankHandler = (e) =>{
         e.preventDefault();
@@ -77,6 +117,8 @@ const EditTrModal = (props) => {
         setEditCardPart(false);
         setEditCardDetailsPart(false);
         setEditBankDetailsPart(false);
+
+        setAddBtnClicked(false) ;
     }
     const editCardDetailsHandler = (e) =>{
         e.preventDefault();
@@ -84,6 +126,8 @@ const EditTrModal = (props) => {
         setEditCardPart(false);
         setEditBankPart(false);
         setEditBankDetailsPart(false);
+
+        setAddBtnClicked(true) ;
     }
     const editBankDetailsHandler = (e) =>{
         e.preventDefault();
@@ -91,23 +135,218 @@ const EditTrModal = (props) => {
         setEditBankPart(false);
         setEditCardPart(false);
         setEditCardDetailsPart(false);
+
+        setAddBtnClicked(true) ;
     }
+
+    const activeCreditCard = async (cardBank) => {
+        setIsLoader(true)
+    
+        let cardData = {
+          billingID: cardBank && cardBank._id,
+          contactID: cardBank && props.contactId,
+          accountType: cardBank && cardBank.accountType,
+        };
         
+        try {
+          await BillingServices.activeCard(cardData);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          fetchCardBank();
+        }
+      };
+
+
+    const testCardTypeFn = (cardNum) => {
+        let visaPattern = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
+        let visaPatternTwo = /^4\d{3}(| |-)(?:\d{4}\1){2}\d{4}$/;
+        let visaPatternThree = /^4\d{12}(?:\d{3})?$/;
+        let mastPattern = /^(?:5[1-5][0-9]{14})$/;
+        let mastPatternTwo = /^5[1-5]\d{14}$/;
+        let mastPatternThree = /^5[1-5]\d{2}(| |-)(?:\d{4}\1){2}\d{4}$/;
+        let amexPattern = /^(?:3[47][0-9]{13})$/;
+        let amexPatternTwo = /^3[47]\d{13,14}$/;
+        let amexPatternThree = /^3[47]\d{1,2}(| |-)\d{6}\1\d{6}$/;
+        let discPattern = /^(?:6(?:011|5[0-9][0-9])[0-9]{12})$/;
+        let discPatternTwo = /^6(?:011|5\d\d)(| |-)(?:\d{4}\1){2}\d{4}$/
+        let discPatternThree = /^(?:6011\d{12})|(?:65\d{14})$/
+    
+        let isAmex = amexPattern.test(cardNum) === true;
+        let isAmexTwo = amexPatternTwo.test(cardNum) === true;
+        let isAmexThree = amexPatternThree.test(cardNum) === true;
+        let isVisa = visaPattern.test(cardNum) === true;
+        let isVisaTwo = visaPatternTwo.test(cardNum) === true
+        let isVisaThree = visaPatternThree.test(cardNum) === true
+        let isMast = mastPattern.test(cardNum) === true;
+        let isMastTwo = mastPatternTwo.test(cardNum) === true
+        let isMastThree = mastPatternThree.test(cardNum) === true
+        let isDisc = discPattern.test(cardNum) === true;
+        let isDiscTwo = discPatternTwo.test(cardNum) === true
+        let isDiscThree = discPatternThree.test(cardNum) === true
+    
+        let cardString;
+        
+        if (isAmex || isAmexTwo || isAmexThree || isVisa || isVisaTwo || isVisaThree || isMast || isMastThree || isMastTwo || isDisc || isDiscTwo || isDiscThree) {
+          // console.log("IF IN CARD");
+          if (isAmex || isAmexTwo || isAmexThree) {
+            // console.log("IF IN CARD - AMEX");
+            // AMEX-specific logic goes here
+            cardString = "isAmex";
+            setFormErrorMsg((errorMessage) => ({
+              ...errorMessage,
+              card_num_Err: "",
+            }));
+            return cardString;
+          } else {
+            if (isAmex || isAmexTwo || isAmexThree){
+              cardString = "isAmex";
+              setFormErrorMsg((errorMessage) => ({
+                ...errorMessage,
+                card_num_Err: "",
+              }));
+              return cardString;
+            }
+            else if (isVisa || isVisaTwo || isVisaThree) {
+              cardString = "isVisa";
+              setFormErrorMsg((errorMessage) => ({
+                ...errorMessage,
+                card_num_Err: "",
+              }));
+              return cardString;
+            }
+            else if (isMast || isMastThree || isMastTwo) {
+            cardString = "isMast";
+            setFormErrorMsg((errorMessage) => ({
+                ...errorMessage,
+                card_num_Err: "",
+              }));
+              return cardString;
+            }
+            else if (isDisc || isDiscTwo || isDiscThree) {
+              cardString = "isDisc";
+              setFormErrorMsg((errorMessage) => ({
+                ...errorMessage,
+                card_num_Err: "",
+              }));
+              return cardString;
+            }
+            else {
+              setFormErrorMsg((errorMessage) => ({
+                ...errorMessage,
+                card_num_Err: "Card number is not valid.",
+              }));
+            }
+          }
+        } else {
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            card_num_Err: "Card number is not valid.",
+          }));
+        }
+      };
+
      const addCardNumberHandler = (e) =>{
         let val = e.target.value;
-        addCardfieldErrorCheck.checkcardNumber(val);
+        if (val.length <= 19) {
+            var formattedCardNumber = val.replace(/[^\d]/g, "");
+            let cardType = testCardTypeFn(formattedCardNumber);
+            
+            switch (cardType) {
+              case "isAmex":
+                console.log("TYPE::::", cardType);
+                // AMEX-specific logic goes here
+                formattedCardNumber = formattedCardNumber.substring(0, 15);
+                setFormErrorMsg((errorMessage) => ({
+                  ...errorMessage,
+                    card_num_Err: "",
+                }));
+                break;
+      
+              case "isVisa":
+                console.log("TYPE::::", cardType);
+                formattedCardNumber = formattedCardNumber.substring(0, 16);
+                setFormErrorMsg((errorMessage) => ({
+                  ...errorMessage,
+                  card_num_Err: "",
+                }));
+                break;
+      
+              case "isMast" || "isDisc":
+                console.log("TYPE::::", cardType);
+                formattedCardNumber = formattedCardNumber.substring(0, 16);
+                setFormErrorMsg((errorMessage) => ({
+                  ...errorMessage,
+                  card_num_Err: "",
+                }));
+                break;
+      
+              case "isDisc":
+                console.log("TYPE::::", cardType);
+                formattedCardNumber = formattedCardNumber.substring(0, 16);
+                setFormErrorMsg((errorMessage) => ({
+                  ...errorMessage,
+                  card_num_Err: "",
+                }));
+                break;  
+        
+              default:
+                console.log("cardType", cardType);
+                setFormErrorMsg((errorMessage) => ({
+                    ...errorMessage,
+                    card_num_Err: "Please provide a valid card number.",
+                  }));
+                break;
+            }
+      
+            // Split the card number is groups of 4
+            var cardNumberSections = formattedCardNumber.match(/\d{1,4}/g);
+            if (formattedCardNumber.match(/\d{1,4}/g)) {
+              //console.log("formattedCardNumber", formattedCardNumber);
+              formattedCardNumber = cardNumberSections.join("-");
+              addCardfieldErrorCheck.checkcardNumber(formattedCardNumber);
+              var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");
+              setCardNumberOn(cardNumberChanged);
+            }
+            if (e.target.value === "") {
+                addCardfieldErrorCheck.checkcardNumber("");
+            }
+          }
+        
     }
     const addCardNameHandler = (e) =>{
         let val = e.target.value;
-        addCardfieldErrorCheck.checkcardName(val);
+        const re = /^[a-zA-Z ]*$/;
+        if (re.test(val)) {
+          addCardfieldErrorCheck.checkcardName(val);
+        }
     }
     const cardExpiryHandler = (e) =>{
         let val = e.target.value;
-        addCardfieldErrorCheck.checkcardExp(val);
+        
+        var formattedCardExpairy = val.replace(/[^\d]/g, "");
+        formattedCardExpairy = formattedCardExpairy.substring(0, 6);
+
+        var cardExpairySectionsMonth = formattedCardExpairy.slice(0, 2);
+        var cardExpairySectionsYear = formattedCardExpairy.slice(2, 6);
+
+        if (cardExpairySectionsMonth > 0 && cardExpairySectionsYear > 0) {
+        formattedCardExpairy =
+            cardExpairySectionsMonth + "/" + cardExpairySectionsYear;
+        } else if (formattedCardExpairy <= 2) {
+        formattedCardExpairy = cardExpairySectionsMonth;
+        }
+        setCardExpairyYearCheck(cardExpairySectionsYear);
+        setCardExpairyMonthCheck(cardExpairySectionsMonth);
+        addCardfieldErrorCheck.checkcardExp(formattedCardExpairy);
+        
     }
+
     const cardcvvHandler = (e) =>{
         let val = e.target.value;
-        addCardfieldErrorCheck.checkcardcvv(val);
+        var formattedCardCvv = val.replace(/[^\d]/g, "");
+        formattedCardCvv = formattedCardCvv.substring(0, 3);
+        addCardfieldErrorCheck.checkcardcvv(formattedCardCvv);
     }
 
 
@@ -132,7 +371,7 @@ const EditTrModal = (props) => {
         },
         checkcardExp: (val) => {
             setAddCardFormData({...addCardFormData, exDate: val});
-            if (!val) {
+            if (!val || val.length < 7) {
                 setAddCardFormErrorMsg(prevState => ({...prevState, exDate: "Please enter expiry date"}));
             } else {
                 setAddCardFormErrorMsg(prevState => ({...prevState, exDate: ""}));
@@ -149,33 +388,82 @@ const EditTrModal = (props) => {
     }
   
 
-    const submitCardChangeForm = (e) =>{
+    const submitCardChangeForm = async (e) =>{
         e.preventDefault();
         addCardfieldErrorCheck.checkcardNumber(addCardFormData.cardNumber);
         addCardfieldErrorCheck.checkcardName(addCardFormData.cardHolderName);
         addCardfieldErrorCheck.checkcardExp(addCardFormData.exDate);
         addCardfieldErrorCheck.checkcardcvv(addCardFormData.cvv);       
-        setAddBtnClicked(true) ;
+        //setAddBtnClicked(true) ;
 
         if(addCardFormData.cardNumber === "" && addCardFormData.cardHolderName === "" && addCardFormData.exDate === "" && addCardFormData.cvv !== ""){
             setCheckingForCard(false);
         } else{
             setCheckingForCard(true);
         }
-       
+        console.log("cardExpairySectionsMonth",cardExpairyMonthCheck);
+        let cardPayload =  {
+            contact: props.contactId,
+            card_number: addCardFormData.cardNumber.split("-").join(""),
+            expiration_year: cardExpairyYearCheck,
+            expiration_month: cardExpairyMonthCheck,
+            cvv: addCardFormData.cvv.trim() !== "" ? addCardFormData.cvv : "",
+            cardholder_name: addCardFormData.cardHolderName,
+            status: "inactive",
+          }
+        try {
+            await BillingServices.addCard(cardPayload);
+            // setFormErrorMsg((errorMessage) => ({
+            //   ...errorMessage,
+            //   card_details_invalid: "",
+            // })); 
+            // setTimeout(() => {
+            //   setSuccessMessage("Card successfully added!")
+            // }, 2000);
+            //hideNewCardHandler();
+          } catch (error) {
+            setIsLoader(false)
+            // setFormErrorMsg((errorMessage) => ({
+            //   ...errorMessage,
+            //   card_details_invalid: error.message,
+            // }));
+          } finally {
+            //cardError = false;
+            cardPayload = {
+              contact: "",
+              card_number: "",
+              expiration_year: "",
+              expiration_month: "",
+              cvv: "",
+              cardholder_name: "",
+              status: "",
+            };
+            fetchCardBank();
+            console.log("FINISHED");
+            setEditCardDetailsPart(false);
+            setEditCardPart(true);
+            
+          }
     }
 
     const addBankNumberHandler = (e) =>{
         let val = e.target.value;
-        addBankfieldErrorCheck.checkaccNumber(val);
+        var formattedAccNum = val.replace(/[^\d]/g, "");
+        formattedAccNum = formattedAccNum.substring(0, 12);
+        addBankfieldErrorCheck.checkaccNumber(formattedAccNum);
     }
     const addBankNameHandler = (e) =>{
         let val = e.target.value;
-        addBankfieldErrorCheck.checkaccHolderName(val);
+        const re = /^[a-zA-Z ]*$/;
+        if (re.test(val)) {
+            addBankfieldErrorCheck.checkaccHolderName(val);
+        }
     }
     const bankRoutingHandler = (e) =>{
-        let val = e.target.value;
-        addBankfieldErrorCheck.checkrouting(val);
+        let val = e.target.value;    
+        var formattedRouting = val.replace(/[^\d]/g, "");
+        formattedRouting = formattedRouting.substring(0, 9);
+        addBankfieldErrorCheck.checkrouting(formattedRouting);
     }
     const bankTypeHandler = (e) =>{
         let val = e.target.value;
@@ -186,7 +474,7 @@ const EditTrModal = (props) => {
 
         checkaccNumber: (val) => {
             setAddBankFormData({...addBankFormData, accNumber: val});
-            if (!val) {
+            if (!val || val.length < 9) {
                 setAddBankFormErrorMsg(prevState => ({...prevState, accNumber: "Please enter Account Number"}));
             } else {
                 setAddBankFormErrorMsg(prevState => ({...prevState, accNumber: ""}));
@@ -219,18 +507,55 @@ const EditTrModal = (props) => {
     }
 
     
-    const submitBankChangeForm = (e) =>{
+    const submitBankChangeForm = async (e)  =>{
         e.preventDefault();
         addBankfieldErrorCheck.checkaccNumber(addBankFormData.accNumber);
         addBankfieldErrorCheck.checkaccHolderName(addBankFormData.accHolderName);
         addBankfieldErrorCheck.checkrouting(addBankFormData.routing);
         addBankfieldErrorCheck.checkchecking(addBankFormData.checking);   
-        setAddBtnClicked(true) ;
+        //setAddBtnClicked(true) ;
         if (addBankFormData.accNumber === "" && addBankFormData.accHolderName === "" && addBankFormData.routing === "" && addBankFormData.checking === ""){
             setCheckingForBank(false);
         }else{
             setCheckingForBank(true);
         }
+
+        let bankPayload = {
+            contact: props.contactId,
+            routing_number:  addBankFormData.routing,
+            account_number: addBankFormData.accNumber,
+            account_holder: addBankFormData.accHolderName,
+            account_type: "checking",
+            status: "inactive"
+          } 
+            
+          try {
+            
+            let response = await BillingServices.addBank(bankPayload);
+            // setFormErrorMsg((errorMessage) => ({
+            //   ...errorMessage,
+            //   bank_details_invalid: "",
+            // })); 
+            // setTimeout(() => {
+            //   setSuccessMessage("Bank details successfully added!")
+            // }, 2000);
+            // hideNewCardHandler2();
+            console.log(response);
+          } catch (error) {
+            setIsLoader(false)
+            // setFormErrorMsg((errorMessage) => ({
+            //   ...errorMessage,
+            //   bank_details_invalid: error.message,
+            // }));
+          } finally {
+            //bankError = false;
+            bankPayload = null;
+            fetchCardBank();
+            setEditBankDetailsPart(false);
+            setEditBankPart(true);
+          }
+
+
     }
 
     const selectCashOrOnlineHandler = (e) =>{
@@ -244,8 +569,12 @@ const EditTrModal = (props) => {
         }
     }
     const changeTransDateHandler = (e) =>{
+        const dayNow = new Date();
         let val = e.target.value;
-        fieldErrorCheck.checkdate(val);
+        let dateChecking = new Date(val);
+        if(dayNow < dateChecking){
+            fieldErrorCheck.checkdate(val);
+        }   
     }
     const changeTransAmountHandler = (e) =>{
         let val = e.target.value;
@@ -297,8 +626,8 @@ const EditTrModal = (props) => {
         },
         checkform: () => {
             if (editTransFormData.mode === "online") {
-                if((addBtnClicked === true && checkingForBank === false) || (addBtnClicked === true &&  checkingForCard === false)){
-                    setFormErrorMsg(prevState => ({...prevState, form: "Fill up the form for add bank/add card"}));   
+                if((addBtnClicked === true && checkingForBank === false) || (addBtnClicked === true && checkingForCard === false)){
+                    setFormErrorMsg(prevState => ({...prevState, form: "Fill up the form for bank/card details"}));   
                 } else{
                     setFormErrorMsg(prevState => ({...prevState, form: ""}));   
                 } 
@@ -309,12 +638,25 @@ const EditTrModal = (props) => {
     
     const editMainFormSubmit = (e) =>{
         e.preventDefault();
-        fieldErrorCheck.checkmode(editTransFormData.mode);
-        fieldErrorCheck.checkamount(editTransFormData.amount);
-        fieldErrorCheck.checkdate(editTransFormData.date);
-        fieldErrorCheck.checknote(editTransFormData.note);
-        
-        fieldErrorCheck.checkform();    
+     
+       
+            fieldErrorCheck.checkmode(editTransFormData.mode);
+            fieldErrorCheck.checkamount(editTransFormData.amount);
+            fieldErrorCheck.checkdate(editTransFormData.date);
+            fieldErrorCheck.checknote(editTransFormData.note);
+            
+            fieldErrorCheck.checkform();
+      
+            
+            if(editTransFormData.mode !=="" && editTransFormData.amount !=="" && editTransFormData.date !== "" && editTransFormData.note !== "" &&  addBtnClicked === false){
+                //console.log(mainData.cards);
+                //console.log(mainData.banks);
+                console.log("Edit done successfully");
+            }
+            
+            console.log("hhhh",cardList);
+            console.log("dddd",bankList);
+             
     }
    
 
@@ -331,16 +673,33 @@ const EditTrModal = (props) => {
                 </div>
                 <div className="cmnForm fullWidth">
                     <form>
-                        <div class="cmnFormRow fullWidth flatForm">
-                            <label class="cmnFieldName">Change Date</label>
-                            <input type="date" class="cmnFieldStyle" value={editTransFormData.date} onChange={changeTransDateHandler}/>
-                            { formErrorMsg.date &&
-                            <div className="errorMsg">{formErrorMsg.date}</div>
+                    {isLoader ? <Loader /> : ""}
+                        <div className="cmnFormRow fullWidth flatForm">
+                            <label className="cmnFieldName">Change Date</label>
+                            <div className="dateHolderDiv">
+                                <label className="labelWithInfo paymentTime">
+                                    <span className="labelHeading">I want to Pay Later</span>
+                                    <label className={communicationDownpayment ? "toggleBtn active" : "toggleBtn"}>
+                                        <input type="checkbox" name="check-communication" 
+                                           onChange={(e) =>
+                                            e.target.checked
+                                              ? setCommunicationDownpayment(true)
+                                              : setCommunicationDownpayment(false)
+                                          }
+                                        />
+                                        <span className="toggler"></span>
+                                    </label>
+                                </label>
+                                <div className={communicationDownpayment ? "paymentNow" : "paymentNow display"}><p>Payment date <span>Now</span></p></div>
+                                <div className={communicationDownpayment ? "paymentNow display" : "paymentNow"} ><input type="date" className="cmnFieldStyle" value={editTransFormData.date} onChange={changeTransDateHandler}/></div>
+                            </div>                            
+                            { (formErrorMsg.date && communicationDownpayment) &&
+                             <div className="errorMsg">{formErrorMsg.date}</div>
                             }
                         </div>
-                        <div class="cmnFormRow fullWidth flatForm">
-                            <label class="cmnFieldName">Change Payment Mode</label>
-                            <select class="cmnFieldStyle selectBox" onChange={selectCashOrOnlineHandler} value={editTransFormData.mode}>
+                        <div className="cmnFormRow fullWidth flatForm">
+                            <label className="cmnFieldName">Change Payment Mode</label>
+                            <select className="cmnFieldStyle selectBox" onChange={selectCashOrOnlineHandler} value={editTransFormData.mode}>
                                 <option value="">Select</option>
                                 <option value="online">Online</option>
                                 <option value="cash">Cash</option>
@@ -352,8 +711,7 @@ const EditTrModal = (props) => {
                               <div className="onlinePymentboxTrans">
                                  <div className="head">
                                      <h3>
-                                         { (editCardDetailsPart || editBankDetailsPart) ? "Add a New Payment Source" : "Payment Source"}         
-                                              
+                                         { (editCardDetailsPart || editBankDetailsPart) ? "Add a New Payment Source" : "Payment Source"}                                   
                                      </h3>
                                      {editCardPart && <button className="addBtn_style2" onClick={editCardDetailsHandler}>+ Add</button>}
                                      {editBankPart && <button className="addBtn_style2" onClick={editBankDetailsHandler}>+ Add</button>}
@@ -363,72 +721,44 @@ const EditTrModal = (props) => {
                                  <div className="paymentSourcetabs">
                                      <div className="tabBtns">
                                          <button className={(editCardPart || editCardDetailsPart) ? "active" : ""} onClick={editCardHandler}>Card</button>
-                                         <button className={(editBankPart || editBankDetailsPart) ? "active" : ""} onClick={editBankHandler}>Bank</button>
-                                         
+                                         <button className={(editBankPart || editBankDetailsPart) ? "active" : ""} onClick={editBankHandler}>Bank</button>       
                                      </div>
                                      
                                          <div className="tabcontent">
                                             {editCardPart &&
                                                  <ul>
-                                                     <li>
-                                                         <div className="radio">
-                                                             <div class="circleRadio">
-                                                                 <input type="radio" name="radio11"/>
-                                                                 <span></span>
-                                                             </div>
-                                                         </div>
-                                                         <div className="img">
-                                                             <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                 <path d="M18 0H2C0.89 0 0.00999999 0.89 0.00999999 2L0 14C0 15.11 0.89 16 2 16H18C19.11 16 20 15.11 20 14V2C20 0.89 19.11 0 18 0ZM17 14H3C2.45 14 2 13.55 2 13V8H18V13C18 13.55 17.55 14 17 14ZM18 4H2V2H18V4Z" />
-                                                             </svg>
-                                                         </div>
-                                                         <div className="text">
-                                                             <h3>Creadit Card ending with 1234</h3>
-                                                             <p>Expires  07 / 25</p>
-                                                         </div>
-                                                     </li>
-                                                     <li>
-                                                         <div className="radio">
-                                                             <div class="circleRadio">
-                                                                 <input type="radio" name="radio11"/>
-                                                                 <span></span>
-                                                             </div>
-                                                         </div>
-                                                         <div className="img">
-                                                             <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                 <path d="M18 0H2C0.89 0 0.00999999 0.89 0.00999999 2L0 14C0 15.11 0.89 16 2 16H18C19.11 16 20 15.11 20 14V2C20 0.89 19.11 0 18 0ZM17 14H3C2.45 14 2 13.55 2 13V8H18V13C18 13.55 17.55 14 17 14ZM18 4H2V2H18V4Z" />
-                                                             </svg>
-                                                         </div>
-                                                         <div className="text">
-                                                             <h3>Creadit Card ending with 1234</h3>
-                                                             <p>Expires  07 / 25</p>
-                                                         </div>
-                                                     </li>
-                                                     <li>
-                                                         <div className="radio">
-                                                             <div class="circleRadio">
-                                                                 <input type="radio" name="radio11"/>
-                                                                 <span></span>
-                                                             </div>
-                                                         </div>
-                                                         <div className="img">
-                                                             <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                 <path d="M18 0H2C0.89 0 0.00999999 0.89 0.00999999 2L0 14C0 15.11 0.89 16 2 16H18C19.11 16 20 15.11 20 14V2C20 0.89 19.11 0 18 0ZM17 14H3C2.45 14 2 13.55 2 13V8H18V13C18 13.55 17.55 14 17 14ZM18 4H2V2H18V4Z" />
-                                                             </svg>
-                                                         </div>
-                                                         <div className="text">
-                                                             <h3>Creadit Card ending with 1234</h3>
-                                                             <p>Expires  07 / 25</p>
-                                                         </div>
-                                                     </li>
+                                                    
+                                                     {cardList &&
+                                                            cardList.map((elem, i) => (
+                                                             
+                                                                <li className={elem.status === "active" ? "active" : ""} key={i}>
+                                                                    <div className="radio"> 
+                                                                        <div className="circleRadio">     
+                                                                            <input type="radio" name="radio11" onChange={() => activeCreditCard(elem)} defaultChecked={elem.status === "active" ? "checked" : ""}/>
+                                                                            <span></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div className="img">
+                                                                        <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                            <path d="M18 0H2C0.89 0 0.00999999 0.89 0.00999999 2L0 14C0 15.11 0.89 16 2 16H18C19.11 16 20 15.11 20 14V2C20 0.89 19.11 0 18 0ZM17 14H3C2.45 14 2 13.55 2 13V8H18V13C18 13.55 17.55 14 17 14ZM18 4H2V2H18V4Z" />
+                                                                        </svg>
+                                                                    </div>
+                                                                    <div className="text">
+                                                                        <h3>Creadit Card ending with {elem.last4}</h3>
+                                                                        <p>Expires  {elem.expiration_month} / {elem.expiration_year}</p>
+                                                                    </div>
+                                                                </li>
+                                                            )
+                                                        )  
+                                                     }
                                                  </ul>
                                              }
                                              {/* edit form for card */}
                                              {editCardDetailsPart && 
                                                  <div className="editform">
     
-                                                     <div class="editformRow">
-                                                         <label class="editFormLabel">Card Number</label>
+                                                     <div className="editformRow">
+                                                         <label className="editFormLabel">Card Number</label>
                                                          <input type="text" className="editFormStyle" 
                                                            placeholder="xxxx-xxxx-xxxx-xxxx"
                                                            value={addCardFormData.cardNumber}
@@ -439,8 +769,8 @@ const EditTrModal = (props) => {
                                                                 <div className="errorMsg">{addCardformErrorMsg.cardNumber}</div>
                                                             }
                                                      </div>
-                                                     <div class="editformRow">
-                                                         <label class="editFormLabel">Card Holder Name</label>
+                                                     <div className="editformRow">
+                                                         <label className="editFormLabel">Card Holder Name</label>
                                                          <input type="text" className="editFormStyle" 
                                                            placeholder="Ex. Adam Smith"
                                                            value={addCardFormData.cardHolderName}
@@ -450,9 +780,9 @@ const EditTrModal = (props) => {
                                                                 <div className="errorMsg">{addCardformErrorMsg.cardHolderName}</div>
                                                             }
                                                      </div>
-                                                     <div class="editformRow">
+                                                     <div className="editformRow">
                                                          <div className="half">
-                                                             <label class="editFormLabel">Expiry Date</label>
+                                                             <label className="editFormLabel">Expiry Date</label>
                                                              <input type="text" className="editFormStyle" 
                                                                placeholder="mm/yy"
                                                                value={addCardFormData.exDate}        
@@ -463,7 +793,7 @@ const EditTrModal = (props) => {
                                                              }
                                                          </div>
                                                          <div className="half">
-                                                             <label class="editFormLabel">CVV</label>
+                                                             <label className="editFormLabel">CVV</label>
                                                              <input type="text" className="editFormStyle"
                                                                onChange={cardcvvHandler}
                                                                value={addCardFormData.cvv}        
@@ -474,8 +804,8 @@ const EditTrModal = (props) => {
                                                          </div>
                                                      </div>
                                                      <div className="d-flex justify-content-center mt20">
-                                                         <button class="creatUserBtn" onClick={submitCardChangeForm}>
-                                                             <img class="plusIcon" src={plus_icon} alt=""/><span>Add my Card</span>
+                                                         <button className="creatUserBtn" onClick={submitCardChangeForm}>
+                                                             <img className="plusIcon" src={plus_icon} alt=""/><span>Add my Card</span>
                                                          </button>
                                                      </div>
                                                  </div>
@@ -484,35 +814,40 @@ const EditTrModal = (props) => {
                                          {/* //end condition for card */}
                                         {editBankPart &&  
                                             <ul>
-                                              <li>
-                                                  <div className="radio">
-                                                      <div class="circleRadio">
-                                                          <input type="radio"/>
-                                                          <span></span>
-                                                      </div>  
-                                                  </div>
-                                                  <div className="img">
-                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M7 10H4V17H7V10Z" />
-                                                        <path d="M13.5 10H10.5V17H13.5V10Z"/>
-                                                        <path d="M22 19H2V22H22V19Z"/>
-                                                        <path d="M20 10H17V17H20V10Z"/>
-                                                        <path d="M12 1L2 6V8H22V6L12 1Z"/>
-                                                    </svg>
-                                                  </div>
-                                                  <div className="text">
-                                                      <h3>Account number ending with 1234</h3>
-                                                      <p>#Routing </p>
-                                                  </div>
-                                              </li>
                                              
+                                              {bankList &&
+                                                    bankList.map((elem, i) => (                                                    
+                                                        <li className={elem.status === "active" ? "active" : ""} key={i}>
+                                                            <div className="radio">
+                                                                <div className="circleRadio">
+                                                                    <input type="radio" onChange={() => activeCreditCard(elem)} defaultChecked={elem.status === "active" ? "checked" : ""} />
+                                                                    <span></span>
+                                                                </div>  
+                                                            </div>
+                                                            <div className="img">
+                                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M7 10H4V17H7V10Z" />
+                                                                    <path d="M13.5 10H10.5V17H13.5V10Z"/>
+                                                                    <path d="M22 19H2V22H22V19Z"/>
+                                                                    <path d="M20 10H17V17H20V10Z"/>
+                                                                    <path d="M12 1L2 6V8H22V6L12 1Z"/>
+                                                                </svg>
+                                                            </div>
+                                                            <div className="text">
+                                                                <h3>Account number ending with {elem.last4}</h3>
+                                                                <p>#Routing </p>
+                                                            </div>
+                                                        </li>
+                                                    )
+                                                )
+                                              }
                                             </ul>
                                             }
                                             
                                              {editBankDetailsPart && 
                                                  <div className="editform">
-                                                     <div class="editformRow">
-                                                         <label class="editFormLabel">Account Number</label>
+                                                     <div className="editformRow">
+                                                         <label className="editFormLabel">Account Number</label>
                                                          <input type="text" className="editFormStyle"
                                                            onChange={addBankNumberHandler}
                                                            value={addBankFormData.accNumber} 
@@ -521,8 +856,8 @@ const EditTrModal = (props) => {
                                                                 <div className="errorMsg">{addBankformErrorMsg.accNumber}</div>
                                                              }
                                                      </div>
-                                                     <div class="editformRow">
-                                                         <label class="editFormLabel">Account Holder Name</label>
+                                                     <div className="editformRow">
+                                                         <label className="editFormLabel">Account Holder Name</label>
                                                          <input type="text" className="editFormStyle"
                                                            onChange={addBankNameHandler}
                                                            value={addBankFormData.accHolderName} 
@@ -531,9 +866,9 @@ const EditTrModal = (props) => {
                                                                 <div className="errorMsg">{addBankformErrorMsg.accHolderName}</div>
                                                              }
                                                      </div>
-                                                     <div class="editformRow">
+                                                     <div className="editformRow">
                                                          <div className="half">
-                                                             <label class="editFormLabel">Routing #</label>   
+                                                             <label className="editFormLabel">Routing #</label>   
                                                              <input type="text" className="editFormStyle" 
                                                                 onChange={bankRoutingHandler}                                                              
                                                                 value={addBankFormData.routing}                                                              
@@ -543,7 +878,7 @@ const EditTrModal = (props) => {
                                                              }
                                                          </div>
                                                          <div className="half">
-                                                             <label class="editFormLabel">Account Type</label>
+                                                             <label className="editFormLabel">Account Type</label>
                                                              <select className="editFormStyle" 
                                                                 onChange={bankTypeHandler}  
                                                                 value={addBankFormData.checking}                                                              
@@ -557,7 +892,7 @@ const EditTrModal = (props) => {
                                                          </div>
                                                      </div>
                                                      <div className="d-flex justify-content-center mt20">
-                                                         <button class="creatUserBtn" onClick={submitBankChangeForm}><img class="plusIcon" src={plus_icon} alt=""/><span>Add my Card</span></button>
+                                                         <button className="creatUserBtn" onClick={submitBankChangeForm}><img className="plusIcon" src={plus_icon} alt=""/><span>Add my Card</span></button>
                                                      </div>
                                                      
                                                  </div>
@@ -572,10 +907,10 @@ const EditTrModal = (props) => {
                             <div className="errorMsg">{formErrorMsg.form}</div>
                             }
                         </div> 
-                       <div class="cmnFormRow fullWidth flatForm">
-                            <label class="cmnFieldName">Change Amount</label>
-                            <div class="cmnFormField preField"><div class="unitAmount">$</div>
-                                 <input type="number" class="cmnFieldStyle" placeholder="300" value={editTransFormData.amount} onChange={changeTransAmountHandler}/>                      
+                       <div className="cmnFormRow fullWidth flatForm">
+                            <label className="cmnFieldName">Change Amount</label>
+                            <div className="cmnFormField preField"><div className="unitAmount">$</div>
+                                 <input type="number" className="cmnFieldStyle" placeholder="300" value={editTransFormData.amount} onChange={changeTransAmountHandler}/>                      
                             </div>
                             { formErrorMsg.amount &&
                             <div className="errorMsg">{formErrorMsg.amount}</div>
@@ -583,7 +918,7 @@ const EditTrModal = (props) => {
                         </div>
                         <div className="notifyBox">
                             <label className="d-flex f-align-center">
-                                <div class="customCheckbox">
+                                <div className="customCheckbox">
                                     <input type="checkbox" name="" onChange={checkNoteHandler} defaultCheck={editTransFormData.note ? "checked" : ""}/>
                                     <span></span>
                                 </div>
@@ -594,7 +929,7 @@ const EditTrModal = (props) => {
                             }
                         </div>
                         <div className="btnPlaceMiddle">
-                            <button class="saveNnewBtn" onClick={editMainFormSubmit}>Submit</button>
+                            <button className="saveNnewBtn" onClick={editMainFormSubmit}>Submit</button>
                         </div>    
                     </form>
                 </div>

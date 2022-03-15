@@ -9614,7 +9614,7 @@ button.addOverviewCustomFiel {
 .cmnFormRow.fullWidth.flatForm{
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   margin: 0;
 }
@@ -9853,6 +9853,16 @@ select.editFormStyle{
 }
 .cmnFormRow.fullWidth.flatForm .errorMsg {
   width: 100%;
+}
+.dateHolderDiv{
+  max-width: 100%;
+  width: 180px;
+}
+.dateHolderDiv .toggleBtn {
+  margin: 0 0 0 10px;
+}
+.dateHolderDiv .labelWithInfo.paymentTime {
+  justify-content: space-between;
 }
 
 
