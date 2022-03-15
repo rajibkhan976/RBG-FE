@@ -657,7 +657,7 @@ const ProductTransaction = (props) => {
                           disabled={
                             !selectedProduct ||
                             selectedProduct === undefined ||
-                            selectedProduct === null
+                            selectedProduct === null || selectedProduct.qnty === 1
                           }
                           ref={decreaseQuantityBtn}
                           onClick={(e) => setQuantity(e)}
