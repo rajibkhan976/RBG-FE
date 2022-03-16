@@ -29,6 +29,7 @@ const EditTrModal = (props) => {
 
     const [openOnlineBox, setOpenOnlineBox] = useState(false);
     const [paylater, setPaylater] = useState(false);
+    const [isModified, setIsModified] = useState(false);
 
     const [alertMsg, setAlertMsg] = useState({
         type: null,
@@ -36,13 +37,7 @@ const EditTrModal = (props) => {
         time: 5000 //ms
     })
 
-    const [editTransFormData, setEditTransFormData] = useState({
-        amount: props.transaction ? props.transaction.amount : null,
-        dueDate: props.transaction ? props.transaction.due_date: null,
-        paymentMode: props.transaction ? props.transaction.payment_via: null,
-        form : "",
-        applyForAll: false
-    });
+    const [editTransFormData, setEditTransFormData] = useState({});
     const [formErrorMsg, setFormErrorMsg] = useState({
         amount: "",
         dueDate: "",
@@ -86,6 +81,16 @@ const EditTrModal = (props) => {
     const [cardList, setCardList] = useState([]);
     const [bankList, setBankList] = useState([]);
     const [primaryType, setPrimaryType] = useState(null);
+
+    useEffect(() => {
+        setEditTransFormData({
+            amount: props.transaction.amount,
+            dueDate: props.transaction.due_date,
+            paymentMode: props.transaction.payment_via,
+            form : "",
+            applyForAll: false
+        })
+    }, [])
    
     const fetchCardBank = async () => {
         try {
@@ -596,6 +601,7 @@ const EditTrModal = (props) => {
     const fieldErrorCheck = {
 
         checkdate: (val) => {
+            setIsModified(true);
             setEditTransFormData({...editTransFormData, dueDate: val});
             if (!val) {
                 setFormErrorMsg(prevState => ({...prevState, dueDate: "Please select a future date"}));
@@ -604,6 +610,7 @@ const EditTrModal = (props) => {
             }
         },
         checkamount: (val) => {
+            setIsModified(true);
             setEditTransFormData({...editTransFormData, amount: parseFloat(val)});
             if (!val) {
                 setFormErrorMsg(prevState => ({...prevState, amount: "Please enter amount"}));
@@ -612,6 +619,7 @@ const EditTrModal = (props) => {
             }
         },
         checkmode: (val) => {
+            setIsModified(true);
             setEditTransFormData({...editTransFormData, paymentMode: val});
             if (!val) {
                 setFormErrorMsg(prevState => ({...prevState, paymentMode: "Please enter Payment mode"}));
@@ -634,7 +642,7 @@ const EditTrModal = (props) => {
     }    
 
     const closeAlert = () => {
-        props.closeModal (false, null)
+        props.closeModal (false, null, isModified)
     };
     
     const editMainFormSubmit = async (e) =>{
