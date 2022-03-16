@@ -64,7 +64,7 @@ const SmsSetup = () => {
                     callback={(isConfirmed) => deleteConfig(isAlert.el, isConfirmed)}
                 /> 
             }*/}
-            <div class="dashInnerUI">
+            <div className="dashInnerUI">
                 <div className="userListHead">
                     <div className="listInfo">
                         <ul className="listPath">
@@ -175,7 +175,7 @@ const SmsSetup = () => {
                                                 </label>
                                             </div>
                                                     
-                                            <div class="createDate">
+                                            <div className="createDate">
                                                 <button className="btn"><p>{list.created}</p></button>
                                                 <div className="info_3dot_icon">
                                                     <button className="btn" onClick={() => {

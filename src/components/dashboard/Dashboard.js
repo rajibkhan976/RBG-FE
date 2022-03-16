@@ -31,16 +31,16 @@ const Dashboard = () => {
       {loggedInUser && loggedInUser.isAssociationOwner ? <div className="userListBody">
         <div className="listBody">
           <ul className="tableListing">
-            <li class="listHeading userRole">
-              <div class="userName ">Organization Name</div>
-              <div class="phoneNum assignedPeople ">Active Member</div>
+            <li className="listHeading userRole">
+              <div className="userName ">Organization Name</div>
+              <div className="phoneNum assignedPeople ">Active Member</div>
             </li>
             <li className="owerInfo userRole">
-              <div class="userName">
-                <button class="btn"><p>Tier5 martial arts</p></button>
+              <div className="userName">
+                <button className="btn"><p>Tier5 martial arts</p></button>
               </div>
-              <div class="phoneNum">
-                <button class="btn">2</button>
+              <div className="phoneNum">
+                <button className="btn">2</button>
               </div>
             </li>
           </ul>

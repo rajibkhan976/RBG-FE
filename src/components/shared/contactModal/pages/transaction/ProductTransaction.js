@@ -410,7 +410,7 @@ const ProductTransaction = (props) => {
                     <span>Select Product</span>
                     <span className="infoSpan">
                       <img src={info_icon} alt="" />
-                      <span class="tooltiptextInfo">
+                      <span className="tooltiptextInfo">
                         Lorem Ipsum is simply dummy text of the printing and
                         typesetting industry.
                       </span>
@@ -605,7 +605,7 @@ const ProductTransaction = (props) => {
                       <span>Price</span>
                       <span className="infoSpan">
                         <img src={info_icon} alt="" />
-                        <span class="tooltiptextInfo">
+                        <span className="tooltiptextInfo">
                           Lorem Ipsum is simply dummy text of the printing and
                           typesetting industry.
                         </span>
@@ -643,7 +643,7 @@ const ProductTransaction = (props) => {
                       <span>Quantity</span>
                       <span className="infoSpan">
                         <img src={info_icon} alt="" />
-                        <span class="tooltiptextInfo">
+                        <span className="tooltiptextInfo">
                           Lorem Ipsum is simply dummy text of the printing and
                           typesetting industry.
                         </span>

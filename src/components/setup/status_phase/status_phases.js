@@ -54,31 +54,31 @@ const toggleOptions = (index) => {
   return (
         <>
         <div className="dashInnerUI phases">
-            <div class="userListHead phases">
-                <div class="listInfo">
-                    <ul class="listPath">
+            <div className="userListHead phases">
+                <div className="listInfo">
+                    <ul className="listPath">
                     <li>Setup </li>
                     <li>Phases &amp; Status</li>
                     </ul>
-                    <h2 class="inDashboardHeader">
+                    <h2 className="inDashboardHeader">
                     Phases &amp; Status
                     </h2>
-                    <p class="userListAbout">Lorem ipsum dolor sit amet. Semi headline should be here.</p>
+                    <p className="userListAbout">Lorem ipsum dolor sit amet. Semi headline should be here.</p>
                 </div>
-                <button class="creatUserBtn" 
+                <button className="creatUserBtn"
                   onClick={openAddStatusFieldHandler}
                   >
-                   <img class="plusIcon" src={plus_icon} alt="" />
+                   <img className="plusIcon" src={plus_icon} alt="" />
                        <span>Add a Status</span>
                 </button>
             </div>
             <div className="userListBody">
-                <ul class="customtableListing">
-                    <li class="listHeading">
+                <ul className="customtableListing">
+                    <li className="listHeading">
                         <div>Status Name</div>
                         <div className="bigspace">Description</div>
                         <div>Created at</div>
-                        <div class="vacent"></div>
+                        <div className="vacent"></div>
                     </li>
                     {phasesData.map((elem, key) => {
                     return (
@@ -92,10 +92,10 @@ const toggleOptions = (index) => {
                                    onChange={() => {
                                     statusToogle(key);
                                     }}/>
-                                    <span class="toggler"></span>
+                                    <span className="toggler"></span>
                             </label>
-                            <div class="info_3dot_icon">
-                                <button class="btn"  
+                            <div className="info_3dot_icon">
+                                <button className="btn"
                                     onClick={() => {
                                     toggleOptions(key);
                                     }}>
@@ -107,15 +107,15 @@ const toggleOptions = (index) => {
                                     ? "dropdownOptions listOpen"
                                     : "listHide"
                                 }> 
-                                <button class="btn btnEdit"> 
+                                <button className="btn btnEdit">
                                 <span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" class="editIcon"><g transform="translate(0.75 0.75)"><path class="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path><path class="a" d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z" transform="translate(-4.384 -2)"></path></g></svg>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 13.553 13.553" className="editIcon"><g transform="translate(0.75 0.75)"><path className="a" d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423" transform="translate(-2 -2.795)"></path><path className="a" d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z" transform="translate(-4.384 -2)"></path></g></svg>
                                 </span> 
                                 Edit
                                 </button>
-                                <button class="btn btnDelete">
+                                <button className="btn btnDelete">
                                 <span>
-                                    <svg class="deleteIcon" xmlns="http://www.w3.org/2000/svg" width="12.347" height="13.553" viewBox="0 0 12.347 13.553"><g transform="translate(0.75 0.75)"><path class="a" d="M3,6H13.847" transform="translate(-3 -3.589)"></path><path class="a" d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411" transform="translate(-3.795 -2)"></path><line class="a" y2="3" transform="translate(4.397 6.113)"></line><line class="a" y2="3" transform="translate(6.397 6.113)"></line></g></svg>
+                                    <svg className="deleteIcon" xmlns="http://www.w3.org/2000/svg" width="12.347" height="13.553" viewBox="0 0 12.347 13.553"><g transform="translate(0.75 0.75)"><path className="a" d="M3,6H13.847" transform="translate(-3 -3.589)"></path><path className="a" d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411" transform="translate(-3.795 -2)"></path><line className="a" y2="3" transform="translate(4.397 6.113)"></line><line className="a" y2="3" transform="translate(6.397 6.113)"></line></g></svg>
                                 </span>
                                 Delete
                                 </button>

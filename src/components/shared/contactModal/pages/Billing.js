@@ -795,7 +795,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                 {cardBankList && cardBankList.length > 0 &&
                   <div className="primaryMaker">
                     <label>
-                      <div class="circleRadio">
+                      <div className="circleRadio">
                         <input
                             type="radio"
                             name="primary"
@@ -835,7 +835,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                   }
                               >
                                 <label className="leftside">
-                                  <div class="circleRadio">
+                                  <div className="circleRadio">
                                     <input
                                         type="radio"
                                         name="credit"
@@ -890,7 +890,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                 value={cardNumberCheck}
                             />
                             <div className="activate">
-                              <div class="customCheckbox">
+                              <div className="customCheckbox">
                                 {
                                   cardBankList.length > 0 &&
                                   <input
@@ -974,7 +974,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                           bankList.length > 0 && 
                 <div className="primaryMaker">
                   <label>
-                    <div class="circleRadio">
+                    <div className="circleRadio">
                       <input
                           type="radio"
                           name="primary"
@@ -1012,7 +1012,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                   }
                               >
                                 <label className="leftside">
-                                  <div class="circleRadio">
+                                  <div className="circleRadio">
                                     <input
                                         type="radio"
                                         name="bank"
@@ -1066,7 +1066,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                 value={bankAccountCheck}
                             />
                             <div className="activate">
-                              <div class="customCheckbox">
+                              <div className="customCheckbox">
                               {
                                   bankList.length > 0 &&
                                   <input

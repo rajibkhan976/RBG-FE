@@ -164,7 +164,7 @@ const ProgramTransaction = (props) => {
                                       <span className="labelHeading">Select Category</span>
                                       <span className="infoSpan">
                                           <img src={info_icon} alt="" />
-                                          <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                          <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                       </span>
                                 </label>
                                 
@@ -218,11 +218,11 @@ const ProgramTransaction = (props) => {
                                     <span className="labelHeading">Duration</span>
                                     <span className="infoSpan">
                                         <img src={info_icon} alt="" />
-                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                        <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                     </span>
                                 </label>
                                 <span className="leftSecTransaction">
-                                    <input type="text" class="editableInput" />
+                                    <input type="text" className="editableInput" />
                                 </span>
                                 <span className="rightSecTransaction">
                                     <select className="selectBox">
@@ -240,7 +240,7 @@ const ProgramTransaction = (props) => {
                                       <span className="labelHeading">Payment Type</span>
                                         <span className="infoSpan">
                                             <img src={info_icon} alt="" />
-                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                            <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                         </span>
                                     </label>
                                     <select className="selectBox">
@@ -253,14 +253,14 @@ const ProgramTransaction = (props) => {
                                   <span className="labelHeading">Billing Cycle</span>
                                     <span className="infoSpan">
                                         <img src={info_icon} alt="" />
-                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                        <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                     </span>
                                 </span> */}
                                 <label className="labelWithInfo">
                                       <span className="labelHeading">Billing Cycle</span>
                                         <span className="infoSpan">
                                             <img src={props.info_icon} alt="" />
-                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                            <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                         </span>
                                     </label>
                                     <select className="selectBox">
@@ -274,17 +274,17 @@ const ProgramTransaction = (props) => {
                                     <label>Tuition Amount</label>
                                     <span className="infoSpan">
                                         <img src={props.info_icon} alt="" />
-                                        <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                        <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                     </span>
                                 </span> */}
                                 {/* <label className="labelWithInfo">
                                       <span className="labelHeading">Tution Amount</span>
                                         <span className="infoSpan">
                                             <img src={info_icon} alt="" />
-                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                            <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                         </span>
                                     </label>
-                                <input type="number" placeholder="149" class="editableInput numberType" value="149"/> */}
+                                <input type="number" placeholder="149" className="editableInput numberType" value="149"/> */}
                             {/* </div>cmnFormRow */}
 
 
@@ -296,7 +296,7 @@ const ProgramTransaction = (props) => {
                                         <span>Tution Amount</span>
                                         <span className="infoSpan">
                                             <img src={info_icon} alt="" />
-                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                            <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                         </span>
                                     </label>
                                     <div className='cmnFormField preField'>
@@ -311,7 +311,7 @@ const ProgramTransaction = (props) => {
                                         <span>Payment Mode</span>
                                         <span className="infoSpan">
                                             <img src={info_icon} alt="" />
-                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                            <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                         </span>
                                     </label>
                                     
@@ -358,14 +358,14 @@ const ProgramTransaction = (props) => {
                                         </label>
                                         <span className="infoSpan">
                                             <img src={info_icon} alt="" />
-                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                            <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                         </span>
                                     </label>
                                     <div className={firstBillingTime ? "paymentNow" : "paymentNow display"} >
                                       <p>Payment date <span>Now</span></p>
                                     </div>
                                     <div className={firstBillingTime ? "paymentNow display" : "paymentNow"} >
-                                      <input type="date" placeholder="mm/dd/yyyy" onChange={firstBillingDateHandel}  class="editableInput" defaultValue={firstBillingDate} />
+                                      <input type="date" placeholder="mm/dd/yyyy" onChange={firstBillingDateHandel}  className="editableInput" defaultValue={firstBillingDate} />
                                     </div>
                                 </div>
                                 <div className="rightSecTransaction">
@@ -374,20 +374,20 @@ const ProgramTransaction = (props) => {
                                       <span className="labelHeading">Program Start Date</span>
                                         <span className="infoSpan">
                                             <img src={info_icon} alt="" />
-                                            <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                            <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                         </span>
                                     </label>
-                                <input type="date" placeholder="mm/dd/yyyy" onChange={props.programStartDateHandel}  class="editableInput" defaultValue={props.programStartDate} />
+                                <input type="date" placeholder="mm/dd/yyyy" onChange={props.programStartDateHandel}  className="editableInput" defaultValue={props.programStartDate} />
                                 </div>
                             </div>
 
 
                             <div className="formsection gap autoRenew">
                               <span className="labelWithInfo">
-                                <label><div class="customCheckbox"><input type="checkbox" name="" id="" /><span></span></div>Auto Renewal</label>
+                                <label><div className="customCheckbox"><input type="checkbox" name="" id="" /><span></span></div>Auto Renewal</label>
                                 <span className="infoSpan">
                                   <img src={info_icon} alt="" />
-                                  <span class="tooltiptextInfo">Recurring payment will continue irrespective of duration of the program until it's cancelled.</span>
+                                  <span className="tooltiptextInfo">Recurring payment will continue irrespective of duration of the program until it's cancelled.</span>
                                 </span>
                               </span>
                             </div>
@@ -419,7 +419,7 @@ const ProgramTransaction = (props) => {
                         </div>
                         <div className="productAvailable downpayment active">
                           <div className="downPaymentToogle">
-                          <header class="informHeader"><h5>Down Payment <span class="cartCount">0</span></h5></header>
+                          <header className="informHeader"><h5>Down Payment <span className="cartCount">0</span></h5></header>
                             <label
                                 className={communication ? "toggleBtn active" : "toggleBtn"
                                 }
@@ -456,7 +456,7 @@ const ProgramTransaction = (props) => {
                                               <span className="labelHeading">Title</span>
                                                 <span className="infoSpan">
                                                     <img src={info_icon} alt="" />
-                                                    <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                    <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
                                           </label>
                                             <input type="text" className="cmnFieldStyle" />
@@ -467,10 +467,10 @@ const ProgramTransaction = (props) => {
                                                 <span className="labelHeading">Amount</span>
                                                   <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
-                                                      <span class="tooltiptextInfo amount">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                      <span className="tooltiptextInfo amount">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                   </span>
                                             </label>
-                                                <input type="number" placeholder="149" class="editableInput numberType" value="149"/>
+                                                <input type="number" placeholder="149" className="editableInput numberType" value="149"/>
                                             </div>
                                             <div className="rightSecTransaction">
 
@@ -478,7 +478,7 @@ const ProgramTransaction = (props) => {
                                                 <span className="labelHeading">I want to Pay Later</span>
                                                   {/* <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
-                                                      <span class="tooltiptextInfo paymentDate">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                      <span className="tooltiptextInfo paymentDate">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span> */}
                                                 <label
                                                   className={downPayTime ? "toggleBtn active" : "toggleBtn"
@@ -500,7 +500,7 @@ const ProgramTransaction = (props) => {
                                               <p>Payment date <span>Now</span></p>
                                             </div>
                                             <div className={downPayTime ? "paymentNow display" : "paymentNow"} >
-                                              <input type="date" placeholder="mm/dd/yyyy" onChange={paymentDateHandel1}  class="editableInput" value={paymentDate1} />
+                                              <input type="date" placeholder="mm/dd/yyyy" onChange={paymentDateHandel1}  className="editableInput" value={paymentDate1} />
                                             </div>
                                             </div>
                                         </div>
@@ -511,7 +511,7 @@ const ProgramTransaction = (props) => {
                                                 <span className="labelHeading">Payment Mode</span>
                                                   <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
-                                                      <span class="tooltiptextInfo paymentType">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                      <span className="tooltiptextInfo paymentType">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
                                             </label>
                                               <select className="selectBox">
@@ -524,7 +524,7 @@ const ProgramTransaction = (props) => {
                                                 <span className="labelHeading">Payment Status</span>
                                                   <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
-                                                      <span class="tooltiptextInfo paymentStatus">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                      <span className="tooltiptextInfo paymentStatus">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
                                             </label>
                                               <select className="selectBox">
@@ -547,7 +547,7 @@ const ProgramTransaction = (props) => {
                                                 <span className="labelHeading">Title</span>
                                                   <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
-                                                      <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                      <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
                                             </label>
                                             <input type="text" className="cmnFieldStyle" />
@@ -559,10 +559,10 @@ const ProgramTransaction = (props) => {
                                                 <span className="labelHeading">Amount</span>
                                                   <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
-                                                      <span class="tooltiptextInfo amount">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                      <span className="tooltiptextInfo amount">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
                                             </label>
-                                                <input type="number" placeholder="149" class="editableInput numberType" value="149"/>
+                                                <input type="number" placeholder="149" className="editableInput numberType" value="149"/>
                                             </div>
 
 
@@ -572,7 +572,7 @@ const ProgramTransaction = (props) => {
                                                 <span className="labelHeading">I want to Pay Later</span>
                                                   {/* <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
-                                                      <span class="tooltiptextInfo paymentDate">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                      <span className="tooltiptextInfo paymentDate">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span> */}
                                                 <label
                                                   className={downPayTime2 ? "toggleBtn active" : "toggleBtn"
@@ -594,7 +594,7 @@ const ProgramTransaction = (props) => {
                                               <p>Payment date <span>Now</span></p>
                                             </div>
                                             <div className={downPayTime2 ? "paymentNow display" : "paymentNow"} >
-                                            <input type="date" placeholder="mm/dd/yyyy" onChange={paymentDateHandel} class="editableInput" value={paymentDate} />
+                                            <input type="date" placeholder="mm/dd/yyyy" onChange={paymentDateHandel} className="editableInput" value={paymentDate} />
                                             </div>
                                             </div>
                                         </div>
@@ -605,7 +605,7 @@ const ProgramTransaction = (props) => {
                                                 <span className="labelHeading">Payment Mode</span>
                                                   <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
-                                                      <span class="tooltiptextInfo paymentType">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                      <span className="tooltiptextInfo paymentType">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
                                             </label>
                                               <select className="selectBox">
@@ -618,7 +618,7 @@ const ProgramTransaction = (props) => {
                                                 <span className="labelHeading">Payment Status</span>
                                                   <span className="infoSpan">
                                                       <img src={info_icon} alt="" />
-                                                      <span class="tooltiptextInfo paymentStatus">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                      <span className="tooltiptextInfo paymentStatus">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                 </span>
                                             </label>
                                               <select className="selectBox">
@@ -695,7 +695,7 @@ const ProgramTransaction = (props) => {
                                                     <span className="labelHeading">Duration</span>
                                                       <span className="infoSpan">
                                                           <img src={info_icon} alt="" />
-                                                          <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                          <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                       </span>
                                                   </label>
                                                   {/* <label>Duration</label> */}
@@ -716,7 +716,7 @@ const ProgramTransaction = (props) => {
                                                     <span className="labelHeading">Payment Type</span>
                                                       <span className="infoSpan">
                                                           <img src={info_icon} alt="" />
-                                                          <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                          <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                       </span>
                                                   </label>
                                                     {/* <label>Payment Type</label> */}
@@ -731,7 +731,7 @@ const ProgramTransaction = (props) => {
                                                     <span className="labelHeading">Billing Cycle</span>
                                                       <span className="infoSpan">
                                                           <img src={info_icon} alt="" />
-                                                          <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                                                          <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                                                       </span>
                                                   </label>
                                                     {/* <label>Billing Cycle</label> */}
@@ -780,10 +780,10 @@ const ProgramTransaction = (props) => {
                                 )}
 
 
-                            {/* <button class={props.courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={props.buyCourse}>Buy <img src={aaroww} alt="" /></button> */}
+                            {/* <button className={props.courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={props.buyCourse}>Buy <img src={aaroww} alt="" /></button> */}
                         </div>
                         <div className="continueBuy">
-                          <button class="saveNnewBtn" onClick={props.contractOverviewFn}>Continue to Buy <img src={aaroww} alt="" /></button>
+                          <button className="saveNnewBtn" onClick={props.contractOverviewFn}>Continue to Buy <img src={aaroww} alt="" /></button>
                         </div>
                     </form>
     );

@@ -117,15 +117,15 @@ const ProductFilter = (props) => {
 
     return (
         <>
-            <div class="sideMenuOuter filterUserMenu">
-                <div class="sideMenuInner">
-                    <button class="btn btn-closeSideMenu" onClick={props.closeModal}><span></span><span></span></button>
-                    <div class="sideMenuHeader">
-                        <h3 class="liteHeading">Apply Filter</h3>
+            <div className="sideMenuOuter filterUserMenu">
+                <div className="sideMenuInner">
+                    <button className="btn btn-closeSideMenu" onClick={props.closeModal}><span></span><span></span></button>
+                    <div className="sideMenuHeader">
+                        <h3 className="liteHeading">Apply Filter</h3>
                     </div>
-                    <div class="sideMenuBody">
-                        <form class="formBody" onSubmit={handleApplyFilter}>
-                            <div class="aplyfilteCheck">
+                    <div className="sideMenuBody">
+                        <form className="formBody" onSubmit={handleApplyFilter}>
+                            <div className="aplyfilteCheck">
                                 <p>Category</p>
                                 {categories.map((cat, key) => {
                                     return (
@@ -144,7 +144,7 @@ const ProductFilter = (props) => {
                                     )
                                 })}
                             </div>
-                            <div class="aplyfilteCheck">
+                            <div className="aplyfilteCheck">
                                 <p>Size</p>
                                 {colorSize.sizes.map((size, key) => {
                                     return (
@@ -163,7 +163,7 @@ const ProductFilter = (props) => {
                                     )
                                 })}
                             </div>
-                            <div class="aplyfilteCheck">
+                            <div className="aplyfilteCheck">
                                 <p>Color</p>
                                 {colorSize.colors.map((color, key) => {
                                     return (
@@ -189,9 +189,9 @@ const ProductFilter = (props) => {
                                     minval={minPrice}
                                     maxval={maxPrice} />
                             </div>
-                            <div class="applyFilterBtn">
-                                <button class="saveNnewBtn" type="submit"><span>Apply Filter</span><img class="" src={arrowForward} alt="" /></button>
-                                <button class="btn-link" type="button" onClick={handleResetFilter}>Clear</button>
+                            <div className="applyFilterBtn">
+                                <button className="saveNnewBtn" type="submit"><span>Apply Filter</span><img className="" src={arrowForward} alt="" /></button>
+                                <button className="btn-link" type="button" onClick={handleResetFilter}>Clear</button>
                             </div>
 
                         </form>

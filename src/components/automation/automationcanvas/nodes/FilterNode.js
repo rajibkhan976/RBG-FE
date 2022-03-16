@@ -14,7 +14,7 @@ export default memo(({ data }) => {
       />
       <div style={style} className="filterNode">
         {/* {data.label} */}
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.144 22.317" class="filterBuilder"><path class="a" d="M3.228,7.558,12.462,18.3v8.516l5.677-3.785V18.3L27.374,7.558A.945.945,0,0,0,26.643,6H3.959A.945.945,0,0,0,3.228,7.558Z" transform="translate(-2.229 -5.25)"></path></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 26.144 22.317" className="filterBuilder"><path className="a" d="M3.228,7.558,12.462,18.3v8.516l5.677-3.785V18.3L27.374,7.558A.945.945,0,0,0,26.643,6H3.959A.945.945,0,0,0,3.228,7.558Z" transform="translate(-2.229 -5.25)"></path></svg>
       </div>
       <Handle
         type="source"

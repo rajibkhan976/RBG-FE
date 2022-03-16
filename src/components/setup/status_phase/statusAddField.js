@@ -91,9 +91,9 @@ useEffect(() => {
                         <label>Status Description</label>
                         <textarea  onChange={addStatusDescHandler} value={statusDesc}> </textarea>
                     </div>
-                    {(popMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraClass="addStatsPopMsg"/> }
+                    {(popMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraclassName="addStatsPopMsg"/> }
                 
-                    { (popMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraClass="addStatsPopMsg"/>}
+                    { (popMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraclassName="addStatsPopMsg"/>}
 
                     <div className="modalbtnHolder">
                         <button onClick={handleStatusSubmit} type="submit"

@@ -380,8 +380,8 @@ const InnerLeftMenu = (props) => {
                         Audio
                       </NavLink>
                     </li>
-                    <li><a href="#">RVM</a></li>
-                    <li><a href="#">Sales Bridge</a></li>
+                    <li><a href="javascript:void(0)">RVM</a></li>
+                    <li><a href="javascript:void(0)">Sales Bridge</a></li>
                   </ul>
                 </NavLink>
 

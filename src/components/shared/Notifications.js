@@ -223,25 +223,22 @@ const Notifications = (props) => {
                                 <ul className="notifLabels">
                                     {
                                         props.notificationStructure.hasOwnProperty('general') ?
-                                            <li>
-                                                <p onClick={() => showNOtifDetails('general')}>General</p>
+                                            <li onClick={() => showNOtifDetails('general')}>
+                                                <p>General</p>
                                                 <span>{props.notificationStructure.general.totalUnread}</span>
                                                 <button
-                                                    className="inlinle-btn btn-link"
-                                                    onClick={() => showNOtifDetails('general')}
-                                                >
+                                                    className="inlinle-btn btn-link">
                                                     View All
                                                 </button>
                                             </li> : ""
                                     }
                                     {
                                         props.notificationStructure.hasOwnProperty('payment') ?
-                                            <li>
-                                                <p onClick={() => showNOtifDetails('payment')}>Payments</p>
+                                            <li onClick={() => showNOtifDetails('payment')}>
+                                                <p >Payments</p>
                                                 <span>{props.notificationStructure.payment.totalUnread}</span>
                                                 <button
-                                                    className="inlinle-btn btn-link"
-                                                    onClick={() => showNOtifDetails('payment')}>
+                                                    className="inlinle-btn btn-link">
                                                     View All
                                                 </button>
                                             </li> : ""
@@ -262,37 +259,43 @@ const Notifications = (props) => {
                                     </button>
                                 </h4>
                                 <ul className="detailNotifList">
-                                    {notificationsListing && notificationsListing.map((e, i) => {
-                                        return (
-                                            <li key={i}
-                                                className={e.isRead ? "detailNotif" : "detailNotif unreadNotifications"}>
-                                                <div className="notiTime_n_Icon">
-                                                    <span className="timeStamp">{moment(e.createdAt).fromNow()}</span>
-                                                    <figure>
-                                                        <svg
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewBox="0 0 12.536 10.029"
-                                                            id="payment-ico"
-                                                        >
-                                                            <g transform="translate(-1355.732 -269.986)">
-                                                                <path
-                                                                    className="a"
-                                                                    d="M12.655,4H3.88A1.88,1.88,0,0,0,2,5.88v6.268a1.88,1.88,0,0,0,1.88,1.88h8.775a1.88,1.88,0,0,0,1.88-1.88V5.88A1.88,1.88,0,0,0,12.655,4Zm.627,6.456H11.4a1.442,1.442,0,0,1,0-2.883h1.88Zm0-3.949H11.4a2.507,2.507,0,0,0,0,5.014h1.88v.627a.627.627,0,0,1-.627.627H3.88a.627.627,0,0,1-.627-.627V5.88a.627.627,0,0,1,.627-.627h8.775a.627.627,0,0,1,.627.627ZM10.775,9.014a.627.627,0,1,0,.627-.627A.627.627,0,0,0,10.775,9.014Z"
-                                                                    transform="translate(1353.732 265.986)"
-                                                                />
-                                                                <path
-                                                                    className="b"
-                                                                    d="M20,19.4l1.049,1.049L23.5,18"
-                                                                    transform="translate(1338.274 255.777)"
-                                                                />
-                                                            </g>
-                                                        </svg>
-                                                    </figure>
-                                                </div>
-                                                {showNotification(e)}
+                                    {
+                                        notificationsListing && notificationsListing.length ? notificationsListing.map((e, i) => {
+                                            return (
+                                                <li key={i}
+                                                    className={e.isRead ? "detailNotif" : "detailNotif unreadNotifications"}>
+                                                    <div className="notiTime_n_Icon">
+                                                        <span className="timeStamp">{moment(e.createdAt).fromNow()}</span>
+                                                        <figure>
+                                                            <svg
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                viewBox="0 0 12.536 10.029"
+                                                                id="payment-ico"
+                                                            >
+                                                                <g transform="translate(-1355.732 -269.986)">
+                                                                    <path
+                                                                        className="a"
+                                                                        d="M12.655,4H3.88A1.88,1.88,0,0,0,2,5.88v6.268a1.88,1.88,0,0,0,1.88,1.88h8.775a1.88,1.88,0,0,0,1.88-1.88V5.88A1.88,1.88,0,0,0,12.655,4Zm.627,6.456H11.4a1.442,1.442,0,0,1,0-2.883h1.88Zm0-3.949H11.4a2.507,2.507,0,0,0,0,5.014h1.88v.627a.627.627,0,0,1-.627.627H3.88a.627.627,0,0,1-.627-.627V5.88a.627.627,0,0,1,.627-.627h8.775a.627.627,0,0,1,.627.627ZM10.775,9.014a.627.627,0,1,0,.627-.627A.627.627,0,0,0,10.775,9.014Z"
+                                                                        transform="translate(1353.732 265.986)"
+                                                                    />
+                                                                    <path
+                                                                        className="b"
+                                                                        d="M20,19.4l1.049,1.049L23.5,18"
+                                                                        transform="translate(1338.274 255.777)"
+                                                                    />
+                                                                </g>
+                                                            </svg>
+                                                        </figure>
+                                                    </div>
+                                                    {showNotification(e)}
+                                                </li>
+                                            );
+                                        }) : <>
+                                            <li key="notFound">
+                                                <p>No notification found.</p>
                                             </li>
-                                        );
-                                    })}
+                                        </>
+                                    }
                                     { isLoader ?
                                         <li className="loaderLi">
                                             <img src={smallLoaderImg} alt="loading" className="smallLoader" />

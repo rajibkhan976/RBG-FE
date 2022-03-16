@@ -16,7 +16,7 @@ export default memo(({ data }) => {
             />
             <div style={style} className="actionNode  actionNodeSMS">
                 {/* {data.label} */}
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27.5 24.5" className="smsNode"><g transform="translate(-2.25 -5.25)"><line class="a" x2="7" transform="translate(18 22)"/><circle class="a" cx="7" cy="7" r="7" transform="translate(15 15)"/><path class="a" d="M21.9,25,25,22l-3.1-3"/><path class="a" d="M24,15.7V6H3V27H3a30.86,30.86,0,0,1,12-6"/><line class="b" x2="6" transform="translate(9 12)"/><line class="b" x2="3" transform="translate(9 16)"/></g></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 27.5 24.5" className="smsNode"><g transform="translate(-2.25 -5.25)"><line className="a" x2="7" transform="translate(18 22)"/><circle className="a" cx="7" cy="7" r="7" transform="translate(15 15)"/><path className="a" d="M21.9,25,25,22l-3.1-3"/><path className="a" d="M24,15.7V6H3V27H3a30.86,30.86,0,0,1,12-6"/><line className="b" x2="6" transform="translate(9 12)"/><line className="b" x2="3" transform="translate(9 16)"/></g></svg>
             </div>
             <Handle
                 type="source"

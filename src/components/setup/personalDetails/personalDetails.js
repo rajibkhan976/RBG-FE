@@ -66,7 +66,7 @@ const PersonalDetails = (props) => {
                     <p className="textType3">Platinum</p>
                   </div>
                   <div className="gymInfo half textRight">
-                  <button class="common_blue_button">Upgrade <img alt="" src={arrowRightWhite} /></button>
+                  <button className="common_blue_button">Upgrade <img alt="" src={arrowRightWhite} /></button>
                   </div>
                 </div>
               </div>  
@@ -79,7 +79,7 @@ const PersonalDetails = (props) => {
               </div>
               <div className="detailsForm">
                 <form>
-                  <div class="formControl">
+                  <div className="formControl">
                     <label>Timezone</label>
                     {/* <input type="text" placeholder="Eg. Republic Day" name="" /> */}
                     <select
@@ -90,7 +90,7 @@ const PersonalDetails = (props) => {
                         <option value="">GST - Europe/England (GMT+0:00)</option>                        
                     </select>
                   </div>
-                  <div class="formControl">
+                  <div className="formControl">
                     <label>Country</label>
                     {/* <input type="text" placeholder="Eg. Republic Day" name="" /> */}
                     <select
@@ -101,7 +101,7 @@ const PersonalDetails = (props) => {
                         <option value="">USA</option>                        
                     </select>
                   </div>
-                  <div class="formControl">
+                  <div className="formControl">
                     <label>Default Number</label>
                     {/* <input type="text" placeholder="Eg. Republic Day" name="" /> */}
                     <select
@@ -120,19 +120,19 @@ const PersonalDetails = (props) => {
               </div>
               <div className="detailsForm">
                 <form>
-                  <div class="formControl">
+                  <div className="formControl">
                     <label>Current Password</label>
                    <input type="text" name="" />
                   </div>
-                  <div class="formControl">
+                  <div className="formControl">
                     <label>New Password</label>
                     <input type="text" name="" />
                   </div>
-                  <div class="formControl">
+                  <div className="formControl">
                     <label>Confirm New Password</label>
                     <input type="text" name="" />
                   </div>
-                  <div class="formControl">
+                  <div className="formControl">
                   <button type="submit" className="saveNnewBtn"><span>Save</span><img src={arrowRightWhite} alt="" /></button>
                   </div>
                 </form>

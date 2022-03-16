@@ -170,7 +170,7 @@ const Login = (props) => {
               Please login below to access RedBeltGym.
             </p> */}
             
-            {errorMessage && <ErrorAlert message={errorMessage} extraClass="innerDrawerMessage "></ErrorAlert>}
+            {errorMessage && <ErrorAlert message={errorMessage} extraclassName="innerDrawerMessage "></ErrorAlert>}
             <div className="formInputs">
               <label>Email</label>
 
@@ -216,7 +216,7 @@ const Login = (props) => {
             {/* ......... implemented later .................... */}
             {/* <div className="formInputs remember">
             <label>
-              <div class="customCheckbox"><input type="checkbox" name="categories" value=""/><span></span></div>
+              <div className="customCheckbox"><input type="checkbox" name="categories" value=""/><span></span></div>
               Remember me
             </label>     
           </div> */}

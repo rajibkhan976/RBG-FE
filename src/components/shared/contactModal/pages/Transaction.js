@@ -747,7 +747,7 @@ const Transaction = (props) => {
                     <div>
                       <span>Program:</span> “Sample course name”
                     </div>
-                      <a href="" className="dependent">
+                      <a href="javascript:void(0)" className="dependent">
                         <span>
                           <img src={wwConnect2} alt="" />
                         </span>

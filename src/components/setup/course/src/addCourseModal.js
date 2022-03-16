@@ -243,10 +243,10 @@ const AddCourseModal = (props) => {
   return (
     <>
       {successMsg &&
-        <SuccessAlert message={successMsg} extraClass="coursePopupMsg"></SuccessAlert>
+        <SuccessAlert message={successMsg} extraclassName="coursePopupMsg"></SuccessAlert>
       }
       {errorMsg &&
-        <ErrorAlert message={errorMsg} extraClass="coursePopupMsg"></ErrorAlert>
+        <ErrorAlert message={errorMsg} extraclassName="coursePopupMsg"></ErrorAlert>
       }
       <div className="modalBackdrop">
         {isLoader ? <Loader /> : ''}
@@ -268,7 +268,7 @@ const AddCourseModal = (props) => {
                     {categories.map(cat => {
                       return (
                         <>
-                          <option value={cat._id} selected={(courseData.category === cat._id) ? "selected" : ""}>{cat.name}</option>
+                          <option key={cat._id} value={cat._id} selected={(courseData.category === cat._id) ? "selected" : ""}>{cat.name}</option>
                         </>
                       );
                     })}
@@ -325,7 +325,7 @@ const AddCourseModal = (props) => {
                   <div className="formLeft">
                     <label>Payment Type</label>
                     <select name="paymentType" onChange={handleChange}>
-                      {paymentType.map(pt => <option value={pt.toLowerCase()}
+                      {paymentType.map(pt => <option key={pt} value={pt.toLowerCase()}
                         selected={(courseData.payment_type.toLowerCase() === pt.toLowerCase()) ? "selected" : ""}>{pt}</option>)}
                     </select>
                   </div>
@@ -347,7 +347,7 @@ const AddCourseModal = (props) => {
                       {ageGroup.map(ag => {
                         return (
                           <>
-                            <option value={ag} selected={(courseData.ageGroup === ag) ? "selected" : ""}>{ag}</option>
+                            <option key={ag} value={ag} selected={(courseData.ageGroup === ag) ? "selected" : ""}>{ag}</option>
                           </>
                         );
                       })}

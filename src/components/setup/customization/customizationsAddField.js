@@ -227,10 +227,10 @@ useEffect(()=>{
         <div className="modalBackdrop">
             {isLoader ? <Loader /> : ''}
             {successMsg &&
-              <SuccessAlert message={successMsg} extraClass="pullUp" />
+              <SuccessAlert message={successMsg} extraclassName="pullUp" />
             }
             {errorMsg &&
-              <ErrorAlert message={errorMsg} extraClass="pullUp" />
+              <ErrorAlert message={errorMsg} extraclassName="pullUp" />
             }
             <div className="slickModalBody">
                 <div className="slickModalHeader">

@@ -93,7 +93,7 @@ const chooseTransctionTypeCourse = () => {
 
 
         <div className="productAvailable contractdetails active">
-          <div class="programOverview"> 
+          <div className="programOverview"> 
               <header className='informHeader'>
                     <h5>Program Overview</h5>
               </header>
@@ -119,9 +119,9 @@ const chooseTransctionTypeCourse = () => {
               </div>
           </div>    
 
-          <div class="programOverview"> 
+          <div className="programOverview"> 
               <header className='informHeader paymentAdd'>
-                    <h5>Billing Overview <span onClick={(e)=>{addBankModalFn()}} class="addPaymentInfo">+ Add</span></h5>
+                    <h5>Billing Overview <span onClick={(e)=>{addBankModalFn()}} className="addPaymentInfo">+ Add</span></h5>
               </header>
               <div className="bodytransactionForm">
                 <p className="paymentTypes">Cards</p>
@@ -129,27 +129,27 @@ const chooseTransctionTypeCourse = () => {
                 <div className="chooseTransactionType paymentTypes" >
                 
                     <label>
-                        <div class="circleRadio">
+                        <div className="circleRadio">
                             <input type="radio" name="transactionTypeCard"/><span></span>
                         </div> 
                         <div className="cardImage">
                           <img src={card} alt=""/>
                         </div>
-                        <div class="paymentModuleInfos">
+                        <div className="paymentModuleInfos">
                           <span className="accNumber">Credit Card ending with <b>1234</b></span>
                           <span className="accinfod">Expires  07 / 25</span>
                         </div>
                         
                     </label>
                     <label> 
-                        <div class="circleRadio">
+                        <div className="circleRadio">
                             <input type="radio"
                                 name="transactionTypeCard"/><span></span>
                         </div> 
                         <div className="cardImage">
                           <img src={card} alt=""/>
                         </div>
-                        <div class="paymentModuleInfos">
+                        <div className="paymentModuleInfos">
                           <span className="accNumber">Debit Card ending with <b>7890</b></span>
                           <span className="accinfod">Expires  05 / 28</span>
                         </div>
@@ -161,27 +161,27 @@ const chooseTransctionTypeCourse = () => {
                 <div className="chooseTransactionType paymentTypes" >
                 
                     <label>
-                        <div class="circleRadio">
+                        <div className="circleRadio">
                             <input type="radio" name="transactionTypeCard"/><span></span>
                         </div> 
                         <div className="cardImage">
                           <img src={banks} alt=""/>
                         </div>
-                        <div class="paymentModuleInfos">
+                        <div className="paymentModuleInfos">
                           <span className="accNumber">Bank account ending with <b>1234</b></span>
                           <span className="accinfod">Routing Number  10000100</span>
                         </div>
                         
                     </label>
                     <label> 
-                        <div class="circleRadio">
+                        <div className="circleRadio">
                             <input type="radio"
                                 name="transactionTypeCard"/><span></span>
                         </div> 
                         <div className="cardImage">
                           <img src={banks} alt=""/>
                         </div>
-                        <div class="paymentModuleInfos">
+                        <div className="paymentModuleInfos">
                           <span className="accNumber">Bank account ending with <b>7890</b></span>
                           <span className="accinfod">Routing Number  10000200</span>
                         </div>
@@ -195,7 +195,7 @@ const chooseTransctionTypeCourse = () => {
         </div>                    
 
         <div className="productAvailable paymentDetails active">
-          <div class="programOverview"> 
+          <div className="programOverview"> 
               <header className='informHeader'>
                     <h5>Payment Overview</h5>
               </header>
@@ -210,7 +210,7 @@ const chooseTransctionTypeCourse = () => {
                       <div className="informationSpan">
                         <span className="infoSpan">
                             <img src={help} alt="" />
-                            <span class="tooltiptextInfo">$149 x 12 Months</span>
+                            <span className="tooltiptextInfo">$149 x 12 Months</span>
                         </span>&nbsp;&nbsp;$1788.00</div>
                     </li>
                   </ul>
@@ -227,7 +227,7 @@ const chooseTransctionTypeCourse = () => {
                 <div className="cardImage">
                   <img src={outstandingCash} alt=""/>
                 </div>
-                <div class="paymentModuleInfos">
+                <div className="paymentModuleInfos">
                   <span className="accNumber">Down Payment 2</span>
                   <span className="accinfod"><b>$ 299.00</b></span>
                 </div>
@@ -244,7 +244,7 @@ const chooseTransctionTypeCourse = () => {
                 <div className="cardImage">
                   <img src={outstandingCard} alt=""/>
                 </div>
-                <div class="paymentModuleInfos">
+                <div className="paymentModuleInfos">
                   <span className="accNumber">Tuition Amount</span>
                   <span className="accinfod"><b>$ 149.00</b> / Month</span>
                 </div>
@@ -271,7 +271,7 @@ const chooseTransctionTypeCourse = () => {
                 <div className="cardImage">
                   <img src={cashCurrent} alt=""/>
                 </div>
-                <div class="paymentModuleInfos">
+                <div className="paymentModuleInfos">
                   <span className="accNumber">Down Payment 1</span>
                   <span className="accinfod"><b>$ 299.00</b></span>
                 </div>
@@ -282,7 +282,7 @@ const chooseTransctionTypeCourse = () => {
                   <img src={payDate} alt=""/> Now
                 </div>
               </div>
-              <label className="receivedCash"><div class="customCheckbox"><input type="checkbox" name="" id="" /><span></span></div>I have received the amount by Cash</label>
+              <label className="receivedCash"><div className="customCheckbox"><input type="checkbox" name="" id="" /><span></span></div>I have received the amount by Cash</label>
             </div>
 
             <div className="outstandingDownpayment tutuionSubscriptions currentPayment">
@@ -290,7 +290,7 @@ const chooseTransctionTypeCourse = () => {
                 <div className="cardImage">
                   <img src={cardActive} alt=""/>
                 </div>
-                <div class="paymentModuleInfos">
+                <div className="paymentModuleInfos">
                   <span className="accNumber">Tuition Amount</span>
                   <span className="accinfod"><b>$ 149.00</b></span>
                 </div>
@@ -309,8 +309,8 @@ const chooseTransctionTypeCourse = () => {
                 <h4>$ 349.00</h4>
               </div>
               <div className="buyBtns">
-              {/* <button onClick={(e)=> {paymentFailedFn()}} class="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button> */}
-              <button onClick={props.paymentSuccessFn} class="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button>
+              {/* <button onClick={(e)=> {paymentFailedFn()}} className="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button> */}
+              <button onClick={props.paymentSuccessFn} className="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button>
               
               </div>
             </div>
@@ -337,7 +337,7 @@ const chooseTransctionTypeCourse = () => {
                   <div className="choosePaymentInfo" >
                       
                           <label>
-                              <div class="circleRadio">
+                              <div className="circleRadio">
                                   <input type="radio"
                                       name="transactionType" defaultChecked={choosePOS && "checked" }
                                       onChange={chooseTransctionTypePOS}
@@ -345,7 +345,7 @@ const chooseTransctionTypeCourse = () => {
                               </div> Card
                           </label>
                           <label> 
-                              <div class="circleRadio">
+                              <div className="circleRadio">
                                   <input type="radio"
                                       name="transactionType"
                                       onChange={chooseTransctionTypeCourse}
@@ -360,28 +360,28 @@ const chooseTransctionTypeCourse = () => {
                         
                         <div className="modalForm auto">
                           <form >  
-                            <div class="formControl">
+                            <div className="formControl">
                               <label>Card Number</label>
                               <input type="number" placeholder="xxxx-xxxx-xxxx-xxxx" name="" />
                             </div>
 
-                            <div class="formControl">
+                            <div className="formControl">
                               <label>Card Holder Name</label>
                               <input type="text" placeholder="Ex. Adam Smith" name="" />
                             </div>
                             
                             <div className="d-flex justified-space-between">
-                              <div class="formControl half">
+                              <div className="formControl half">
                               <label>Expiry Date</label>
                               <input type="text" placeholder="mm/yy"  name=""/>
                             </div>
-                            <div class="formControl half">
+                            <div className="formControl half">
                               <label>CVC</label> 
                               <input type="text"  name=""/>
                             </div>
                             </div>
-                            {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraClass="addStatsPopMsg"/> }
-                            { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraClass="addStatsPopMsg"/>} */}
+                            {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraclassName="addStatsPopMsg"/> }
+                            { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraclassName="addStatsPopMsg"/>} */}
               
                              <div className="modalbtnHolder">
                                 <button type="reset" className="saveNnewBtn"><img src={pluss} alt="" />Add my Card</button>
@@ -398,30 +398,30 @@ const chooseTransctionTypeCourse = () => {
                     <div className="posSellingForm">
                       <div className="modalForm auto">
                           <form >  
-                            <div class="formControl">
+                            <div className="formControl">
                               <label>Account Number</label>
                               <input type="number" placeholder="xxxx-xxxx-xxxx-xxxx" name="" />
                             </div>
 
-                            <div class="formControl">
+                            <div className="formControl">
                               <label>Account Holder Name</label>
                               <input type="text" placeholder="Ex. Adam Smith" name="" />
                             </div>
                             
                             <div className="d-flex justified-space-between">
-                              <div class="formControl half">
+                              <div className="formControl half">
                               <label>Routing #</label>
                               <input type="text"  name=""/>
                             </div>
-                            <div class="formControl half">
+                            <div className="formControl half">
                               <label>Account Type</label> 
                               <select className='selectBox'>
                                     <option value="null">Checking</option>
                                 </select>
                             </div>
                             </div>
-                            {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraClass="addStatsPopMsg"/> }
-                            { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraClass="addStatsPopMsg"/>} */}
+                            {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraclassName="addStatsPopMsg"/> }
+                            { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraclassName="addStatsPopMsg"/>} */}
               
                              <div className="modalbtnHolder">
                                 <button type="reset" className="saveNnewBtn"><img src={pluss} alt="" />Add my Bank Account</button>
@@ -452,12 +452,12 @@ const chooseTransctionTypeCourse = () => {
             <div className="payModalDetails">
               {/* <div className="choosePaymentInfo" >                      
                 <label>
-                    <div class="circleRadio">
+                    <div className="circleRadio">
                         <input type="radio" name="transactionType"/><span></span>
                     </div> Card
                 </label>
                 <label> 
-                    <div class="circleRadio">
+                    <div className="circleRadio">
                         <input type="radio" name="transactionType"/><span></span>
                     </div> Bank Account
                 </label>
@@ -467,7 +467,7 @@ const chooseTransctionTypeCourse = () => {
             </div>
 
             <div className="buyBtns failedPayment">
-              <button onClick={props.paymentSuccessFn} class="saveNnewBtn">Close</button>
+              <button onClick={props.paymentSuccessFn} className="saveNnewBtn">Close</button>
               
               </div>             
             </div>

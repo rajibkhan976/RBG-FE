@@ -65,9 +65,9 @@ const ProductListing = (props) => {
         html += `<span style="background-color: ${color.colorcode}"></span>`;
       } else {
         if (index + 1 === 4) {
-          html += `<div class="colorpaletContainer">
-                    <button class="dropIt">+${prop.colors.length - 3}</button>
-                    <div class="colorPalet">`;
+          html += `<div className="colorpaletContainer">
+                    <button className="dropIt">+${prop.colors.length - 3}</button>
+                    <div className="colorPalet">`;
         }
         html += `<span style="background-color: ${color.colorcode}"></span>`;
         if (index + 1 === prop.colors.length) {
@@ -94,21 +94,21 @@ const ProductListing = (props) => {
         ""
       )}
       <div className="dashInnerUI productSteUp">
-        <div class="userListHead product">
-          <div class="listInfo">
-            <ul class="listPath">
+        <div className="userListHead product">
+          <div className="listInfo">
+            <ul className="listPath">
               <li>Settings </li>
               <li>Products</li>
             </ul>
-            <h2 class="inDashboardHeader">
+            <h2 className="inDashboardHeader">
               Products (
               {props.paginationData.count ? props.paginationData.count : 0})
             </h2>
-            <p class="userListAbout">Manage your POS products</p>
+            <p className="userListAbout">Manage your POS products</p>
           </div>
-          <div class="listFeatures">
-            <button class="creatUserBtn" onClick={props.openProductModal}>
-              <img class="plusIcon" src={plus_icon} alt="" />
+          <div className="listFeatures">
+            <button className="creatUserBtn" onClick={props.openProductModal}>
+              <img className="plusIcon" src={plus_icon} alt="" />
               <span>Add a Product</span>
             </button>
           </div>
@@ -118,7 +118,7 @@ const ProductListing = (props) => {
             <img src={listView} alt="filter" />
           </button>
         </div>
-        <div class="productListBody">
+        <div className="productListBody">
           <div className="productListing">
             {props.productData.length ? (
               props.productData.map((elem, key) => {
@@ -137,7 +137,7 @@ const ProductListing = (props) => {
                         </div>
                         <div className="proInfo">
                           <p>
-                            <a href="#">{elem.name}</a>
+                            <a href="javascript:void(0)">{elem.name}</a>
                           </p>
                           <div className="d-flex">
                             <h3>${elem.price.toFixed(2)}</h3>
@@ -181,23 +181,23 @@ const ProductListing = (props) => {
                             {" "}
                             {/*//listHide class is to be replaced with listOpen to hide it */}
                             <button
-                              class="btn btnEdit"
+                              className="btn btnEdit"
                               onClick={() => handleEdit(elem)}
                             >
                               <span>
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
                                   viewBox="0 0 13.553 13.553"
-                                  class="editIcon"
+                                  className="editIcon"
                                 >
                                   <g transform="translate(0.75 0.75)">
                                     <path
-                                      class="a"
+                                      className="a"
                                       d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423"
                                       transform="translate(-2 -2.795)"
                                     ></path>
                                     <path
-                                      class="a"
+                                      className="a"
                                       d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z"
                                       transform="translate(-4.384 -2)"
                                     ></path>
@@ -207,7 +207,7 @@ const ProductListing = (props) => {
                               Edit
                             </button>
                             <button
-                              class="btn btnDelete"
+                              className="btn btnDelete"
                               onClick={() => deleteProduct(elem._id)}
                             >
                               <span>
@@ -220,22 +220,22 @@ const ProductListing = (props) => {
                                 >
                                   <g transform="translate(0.75 0.75)">
                                     <path
-                                      class="a"
+                                      className="a"
                                       d="M3,6H13.847"
                                       transform="translate(-3 -3.589)"
                                     />
                                     <path
-                                      class="a"
+                                      className="a"
                                       d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
                                       transform="translate(-3.795 -2)"
                                     />
                                     <line
-                                      class="a"
+                                      className="a"
                                       y2="3"
                                       transform="translate(4.397 6.113)"
                                     />
                                     <line
-                                      class="a"
+                                      className="a"
                                       y2="3"
                                       transform="translate(6.397 6.113)"
                                     />

@@ -611,7 +611,7 @@ const Dependents = (props) => {
                             {dependent.phone && dependent.phone.dailCode && dependent.phone.number && dependent.email ? " | " : ''}
                             <a
                               className="mailCont"
-                              href={dependent.isCommunication && dependent.email ? "mailto:" + dependent.email : ""}
+                              href={dependent.isCommunication && dependent.email ? "mailto:" + dependent.email : "javascript:void(0)"}
                             >
 
                               {dependent.isCommunication && dependent.email ? dependent.email : ''}

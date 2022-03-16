@@ -54,7 +54,7 @@ const PaymentSuccessSection = (props) => {
           <div className="circleForIcon"><img src={paySuccess} alt="" /></div>
           <h3 className="paySuccessHeading">Payment Successful ! </h3>
         </div>
-        <div class="dottedBorder"></div>
+        <div className="dottedBorder"></div>
 
         <ul className="paymentUlHeader">
           <li className="paymentModeHeaderLi">Payment Mode</li>
@@ -95,10 +95,10 @@ const PaymentSuccessSection = (props) => {
           </li>
         </ul>
 
-        <div class="dottedBorder"></div>
+        <div className="dottedBorder"></div>
 
         <div className="successPageBtn">      
-          <button onClick={(e)=> {paymentFailedFn()}} class="saveNnewBtn">Go to Transaction List <img src={aaroww} alt="" /></button>
+          <button onClick={(e)=> {paymentFailedFn()}} className="saveNnewBtn">Go to Transaction List <img src={aaroww} alt="" /></button>
         </div>
 
 
@@ -117,7 +117,7 @@ const PaymentSuccessSection = (props) => {
       </div>
 
       <div className="buyBtns failedPayment">
-        <button onClick={closeFailedPayModal} class="saveNnewBtn">Close</button>
+        <button onClick={closeFailedPayModal} className="saveNnewBtn">Close</button>
         
         </div>             
       </div>

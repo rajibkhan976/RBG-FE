@@ -115,19 +115,19 @@ const CallConfiguration = (props) => {
                     </div>
                 </div>     
               </div>
-              <div class="cmnFormRow setupForms sms">
-                    <h4 class="formSecHeading">Setup</h4>
-                    <div class="setupFormLists">
-                        <div class="setupFormRow">
-                            <div class="setupFormRowHead">
+              <div className="cmnFormRow setupForms sms">
+                    <h4 className="formSecHeading">Setup</h4>
+                    <div className="setupFormLists">
+                        <div className="setupFormRow">
+                            <div className="setupFormRowHead">
                                 <label>
-                                    <div class="customCheckbox">
+                                    <div className="customCheckbox">
                                         <input 
                                         type="checkbox"
                                         onChange={handleCheckboxAutoResponder}
                                         /><span></span>
                                     </div>
-                                    <span class="fomrListHeadName">Auto Responders available</span>
+                                    <span className="fomrListHeadName">Auto Responders available</span>
                                 </label>
                             </div>
                           
@@ -142,7 +142,7 @@ const CallConfiguration = (props) => {
                                  </div>
                                  <div className="autoresponderRow">
                                     <div className="checking">
-                                      <div class="circleRadio">
+                                      <div className="circleRadio">
                                         <input 
                                         type="radio" name="radio"
                                         /><span></span>
@@ -159,7 +159,7 @@ const CallConfiguration = (props) => {
                                  <div className="autoresponderRow">
                                     <div className="checking">
                                       
-                                    <div class="circleRadio">
+                                    <div className="circleRadio">
                                         <input 
                                         type="radio" name="radio"
                                         /><span></span>
@@ -177,13 +177,13 @@ const CallConfiguration = (props) => {
                                </div>
                             ) : ""}
                           </div>
-                        <div class="setupFormRow">
-                            <div class="setupFormRowHead">
+                        <div className="setupFormRow">
+                            <div className="setupFormRowHead">
                                 <label>
-                                    <div class="customCheckbox">
+                                    <div className="customCheckbox">
                                         <input type="checkbox" defaultChecked="" onChange={handleCheckboxEnableSms}/><span></span>
                                     </div>
-                                    <span class="fomrListHeadName">Enable SMS notification</span>
+                                    <span className="fomrListHeadName">Enable SMS notification</span>
                                 </label>
                             </div>
                             {enableSms ? (
@@ -195,7 +195,7 @@ const CallConfiguration = (props) => {
                                                   <div className="countryCode cmnFieldStyle">
                                                       <div className="countryName">US</div>
                                                       <div className="daileCode">+1</div>
-                                                      <select class="selectCountry"><option value="AF_93">AF (+93)</option></select>
+                                                      <select className="selectCountry"><option value="AF_93">AF (+93)</option></select>
                                                   </div>
                                                   <input type="text" className="cmnFieldStyle" placeholder="Eg. 5143654785" value=""/>
                                               </div>

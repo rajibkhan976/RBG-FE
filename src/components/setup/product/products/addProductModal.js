@@ -221,10 +221,10 @@ const AddProductModal = (props) => {
   return (
     <>
       {successMsg &&
-        <SuccessAlert message={successMsg} extraClass="productPopupMsg"></SuccessAlert>
+        <SuccessAlert message={successMsg} extraclassName="productPopupMsg"></SuccessAlert>
       }
       {errorMsg &&
-        <ErrorAlert message={errorMsg} extraClass="productPopupMsg"></ErrorAlert>
+        <ErrorAlert message={errorMsg} extraclassName="productPopupMsg"></ErrorAlert>
       }
       <div className="modalBackdrop modalProductAdd">
         {isLoader ? <Loader /> : ''}
@@ -268,7 +268,7 @@ const AddProductModal = (props) => {
                       <img src={productData.imageUrl} alt="" />
                     </figure>
                     <div className="profileText uploadImageText"> Product Picture</div>
-                    <span class="staticUpload">Upload</span>
+                    <span className="staticUpload">Upload</span>
                   </div>
                 </div>
                 <div className="formControl">
@@ -303,7 +303,7 @@ const AddProductModal = (props) => {
                 <div className="formControl">
                   <label>Price</label>
                   <div className="formLeft preField">
-                    <div class="unitAmount">$</div>
+                    <div className="unitAmount">$</div>
                     <input type="text" name="price" placeholder="Ex: 99" onChange={handleChange} value={productData.price} className="cmnFieldStyle" />
                     {/* <span>* default currency is<strong> USD</strong></span> */}
                   </div>

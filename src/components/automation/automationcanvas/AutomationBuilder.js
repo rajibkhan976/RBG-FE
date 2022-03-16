@@ -1198,7 +1198,7 @@ const AutomationBuilder = (props) => {
                         <div className="formFieldsArea">
                           <div className="inputField">
                             <label htmlFor="">webhook URL</label>
-                            <div class="inFormField d-flex">
+                            <div className="inFormField d-flex">
                               <input type="text" name="webhook-url" id="webhook-url" value={automationUrl} onClick={() => onClickCopy(automationUrl)} readOnly={true}/>
                               <button className="refreshFieldsBtn" onClick={() => refreshWebhook(automationUrlId, triggerNodeId)}></button>
                             </div>
@@ -1256,7 +1256,7 @@ const AutomationBuilder = (props) => {
                                 <label htmlFor="">To</label>
                                 <div className="inFormField">
                                 <input className={`icon ${toError}`} type="text" name="messageTo" id="" value={to} onChange={handleToChange} onClick={handleToChange}/>
-                                <button class="toggleTags" onClick={(e)=>toggletoMail(e)}></button>
+                                <button className="toggleTags" onClick={(e)=>toggletoMail(e)}></button>
                                 </div>
                               <div className="messageTagTo">
                                 <h6>Select Option(s)</h6>

@@ -192,10 +192,10 @@ const handleStatusSubmitNew =(e) =>{
       <div className="modalBackdrop holiday">  
       { loader && <Loader /> }
       {successMsg &&
-        <SuccessAlert message={successMsg} extraClass="addStatsPopMsg"></SuccessAlert>
+        <SuccessAlert message={successMsg} extraclassName="addStatsPopMsg"></SuccessAlert>
       }
       {errorMsg &&
-        <ErrorAlert message={errorMsg} extraClass="addStatsPopMsg"></ErrorAlert>
+        <ErrorAlert message={errorMsg} extraclassName="addStatsPopMsg"></ErrorAlert>
       }
         <div className="slickModalBody">
         
@@ -208,14 +208,14 @@ const handleStatusSubmitNew =(e) =>{
           <div className="modalForm auto">
             <form >    
              <p>{props.holidayValue}</p>   
-              <div class="formControl">
+              <div className="formControl">
                 <label>Holiday Name</label>
                 <input type="text" placeholder="Eg. Republic Day" name="" value={holiday.name}  onChange={holidayhandler}/>
                 {modalPopMsgerror1 && <div className="errorMsg">Please fill up the holiday name field</div>}
               </div>
               
               <div className="d-flex justified-space-between">
-                <div class="formControl half">
+                <div className="formControl half">
                 <label>Choose a date</label>
                 <div className="flatForm">
                   <span>From</span>
@@ -223,7 +223,7 @@ const handleStatusSubmitNew =(e) =>{
                 </div> 
                 {modalPopMsgerror2 && <div className="errorMsg">Please fill up the start date</div>}
               </div>
-              <div class="formControl half">
+              <div className="formControl half">
                 <label>&nbsp;</label> 
                 <div className="flatForm">
                   <span>To</span>
@@ -237,8 +237,8 @@ const handleStatusSubmitNew =(e) =>{
                 <h3>Holiday Duration :</h3>
                 <div className="show"><span>{holidayDuration ? holidayDuration : "0"}</span>     Day(S)</div>
               </div>
-              {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraClass="addStatsPopMsg"/> }
-              { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraClass="addStatsPopMsg"/>} */}
+              {/* {(modalPopMsgerror === true) && <ErrorAlert  message="Fill Up all the field" extraclassName="addStatsPopMsg"/> }
+              { (modalPopMsgsuccess === true) && <SuccessAlert message="You Successfully added a status" extraclassName="addStatsPopMsg"/>} */}
 
               <div className="modalbtnHolder">
                   <button type="submit"

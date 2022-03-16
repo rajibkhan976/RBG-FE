@@ -200,6 +200,10 @@ function Step2(props) {
                 if (map.lastName === "") {
                     setMapError(prevState => ({...prevState, lastName: true}));
                 }
+                document.getElementsByClassName('formAccordion')[0].scroll({
+                    top: 0,
+                    behavior: 'smooth',
+                });
                 return false;
             }
         } else if (custom.primaryField === 'phone') {
@@ -214,6 +218,10 @@ function Step2(props) {
                 if (map.lastName === "") {
                     setMapError(prevState => ({...prevState, lastName: true}));
                 }
+                document.getElementsByClassName('formAccordion')[0].scroll({
+                    top: 0,
+                    behavior: 'smooth',
+                });
                 return false;
             }
         } else {
@@ -231,6 +239,10 @@ function Step2(props) {
                 if (map.lastName === "") {
                     setMapError(prevState => ({...prevState, lastName: true}));
                 }
+                document.getElementsByClassName('formAccordion')[0].scroll({
+                    top: 0,
+                    behavior: 'smooth',
+                });
                 return false;
             }
         }
@@ -274,6 +286,13 @@ function Step2(props) {
                 setOpenCustomFields(true);
                 setOpenCourse(true);
                 setOpenPayment(true);
+                setTimeout(() => {
+                    let heightError = document.getElementsByClassName('w-50 warning')[0].offsetHeight;
+                    document.getElementsByClassName('formAccordion')[0].scroll({
+                        top: heightError,
+                        behavior: 'smooth',
+                    });
+                }, 100);
             }
         } else {
             if (!primaryError) {
@@ -442,7 +461,8 @@ function Step2(props) {
                                                                 options={options}  isClearable={true} placeholder="Select a header"/>
                                                     </div>
                                                 </div>
-                                                <div className={"formField w-50 " + (mapError.email ? (primaryError ? 'error' : 'error warning') : '') }>
+                                                <div className={"formField w-50 " + (mapError.email ? (primaryError &&
+                                                (props.getState('custom').primaryField === 'both' || props.getState('custom').primaryField === 'email') ? 'error' : 'error warning') : '') }>
                                                     <label>Email</label>
                                                     <div className="inFormField">
                                                         <Select name="email" value={map.email} onChange={(e) =>handleChangeFields(e, 'email')}
@@ -451,7 +471,8 @@ function Step2(props) {
                                                 </div>
                                             </li>
                                             <li>
-                                                <div className={"formField w-50 " + (mapError.phone ? (primaryError ? 'error' : 'error warning') : '') }>
+                                                <div className={"formField w-50 " + (mapError.phone ? (primaryError &&
+                                                (props.getState('custom').primaryField === 'both' || props.getState('custom').primaryField === 'phone') ? 'error' : 'error warning') : '') }>
                                                     <label>Phone</label>
                                                     <div className="inFormField">
                                                         <Select name="phone" value={map.phone} onChange={(e) =>handleChangeFields(e, 'phone')}

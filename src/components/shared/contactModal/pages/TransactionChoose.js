@@ -407,7 +407,7 @@ const TransactionChoose = (props) => {
         >
           <div className="chooseTransactionType">
             <label>
-              <div class="circleRadio">
+              <div className="circleRadio">
                 <input
                   type="radio"
                   name="transactionType"
@@ -418,7 +418,7 @@ const TransactionChoose = (props) => {
               Product
             </label>
             <label>
-              <div class="circleRadio">
+              <div className="circleRadio">
                 <input
                   type="radio"
                   name="transactionType"

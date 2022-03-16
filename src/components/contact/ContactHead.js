@@ -17,17 +17,17 @@ const ContactHead = (props) => {
   }
   return (
     <div className="contactHead">
-      <div class="userListHead">
-        <div class="listInfo">
-          <ul class="listPath">
+      <div className="userListHead">
+        <div className="listInfo">
+          <ul className="listPath">
             <li>Contacts</li>
             <li>My Contacts</li>
           </ul>
-          <h2 class="inDashboardHeader">Contacts List ({props.totalCount})</h2>
-          <p class="userListAbout">Create, import &amp; manage your contacts</p>
+          <h2 className="inDashboardHeader">Contacts List ({props.totalCount})</h2>
+          <p className="userListAbout">Create, import &amp; manage your contacts</p>
         </div>
-        <div class="listFeatures">
-          <div class="searchBar">
+        <div className="listFeatures">
+          <div className="searchBar">
             <form onSubmit={props.handleSearch}>
               <input
                 type="search"
@@ -60,16 +60,16 @@ const ContactHead = (props) => {
               </button>
             </form>
           </div>
-          <button class="btn btn-filter">
+          <button className="btn btn-filter">
             <img
-              class="filterIcon"
+              className="filterIcon"
               src="/static/media/filter_icon.dac97ac8.svg"
               alt=""
             />
           </button>
-          <button class="creatUserBtn" onClick={() => createIndivitualContact()}>
+          <button className="creatUserBtn" onClick={() => createIndivitualContact()}>
             <img
-              class="plusIcon"
+              className="plusIcon"
               src="/static/media/plus_icon.200ad5cb.svg"
               alt=""
             />
