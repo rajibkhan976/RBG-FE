@@ -82,7 +82,7 @@ module.exports = {
     audioTemplateUrl: "https://i18vj5dg2l.execute-api.us-east-1.amazonaws.com/dev/audio/",
     // audioTemplateUrl: "http://localhost:4000/dev/audio"
     callSetupUrl: "https://ltj70u1guh.execute-api.us-east-1.amazonaws.com/dev/communication/call",
-    // callSetupUrl: "http://localhost:3001/dev/communication/call",
+    // callSetupUrl: "http://localhost:4000/dev/communication/call",
     // callWebhookUrl: "https://memz99rc6c.execute-api.us-east-1.amazonaws.com/dev/",
     callWebhookUrl: "https://api.redbeltgym.com/call/",
     ec2ApiBaseURl: "https://api.redbeltgym.com",
@@ -94,6 +94,7 @@ module.exports = {
     //transactionUrl: "https://tt7n78ndd2.execute-api.us-east-1.amazonaws.com/dev/contact/transactions/",
     
     transactionUrl: "https://xuenomxey1.execute-api.us-east-1.amazonaws.com/dev/contact/",
+    // transactionUrl: "http://localhost:4000/dev/contact/",
     // Refund Url
     refundUrl: "https://susx9c3bvl.execute-api.us-east-1.amazonaws.com/dev/contact/old-transactions/refund/",
     // Complete Transaction

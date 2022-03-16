@@ -89,5 +89,21 @@ export const TransactionServices = {
             }
         }
     },
+
+    updateTransaction: async (contactId, payload) => {
+        try {
+            const url = config.transactionUrl + "transactions/update/" + contactId;
+            const result = await axios.put(url, payload, { headers: headers });
+            return result.data;
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
    
 };

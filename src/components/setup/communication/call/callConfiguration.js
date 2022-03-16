@@ -122,7 +122,7 @@ const CallConfiguration = (props) => {
         setInstCallForward(props.editConfig.instantCallForward);
         setCallForwardNumbers(props.editConfig.callForwardNumbers || []);
         
-        if (props.editConfig.introAudioUrl) {
+        if (props.editConfig.introAudioKey) {
           setIntroAudio(props.editConfig.introAudio);
           let oldIntro = new Audio(config.bucketUrl + props.editConfig.introAudioKey);
           setOldIntroAudio(oldIntro);

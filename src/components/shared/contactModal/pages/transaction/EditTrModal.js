@@ -8,6 +8,8 @@ import cross_small from "../../../../../../src/assets/images/cross_small.svg";
 import Loader from "../../../Loader";
 
 import { BillingServices } from "../../../../../services/billing/billingServices";
+import { TransactionServices } from "../../../../../services/transaction/transactionServices";
+import AlertMessage from "../../../messages/alertMessage";
 
 
 const EditTrModal = (props) => {
@@ -23,26 +25,29 @@ const EditTrModal = (props) => {
     
     const [cardExpairyMonthCheck, setCardExpairyMonthCheck] = useState("");
     const [cardExpairyYearCheck, setCardExpairyYearCheck] = useState("");
-    const [cardNumberOn, setCardNumberOn] = useState("");
-     
-    
+    const [cardNumberOn, setCardNumberOn] = useState("");    
 
     const [openOnlineBox, setOpenOnlineBox] = useState(false);
-    const [communicationDownpayment, setCommunicationDownpayment] = useState(false);
+    const [paylater, setPaylater] = useState(false);
+
+    const [alertMsg, setAlertMsg] = useState({
+        type: null,
+        message: null,
+        time: 5000 //ms
+    })
 
     const [editTransFormData, setEditTransFormData] = useState({
-        amount: "",
-        date: "",
-        mode: "",
+        amount: props.transaction ? props.transaction.amount : null,
+        dueDate: props.transaction ? props.transaction.due_date: null,
+        paymentMode: props.transaction ? props.transaction.payment_via: null,
         form : "",
-        note: false
+        applyForAll: false
     });
     const [formErrorMsg, setFormErrorMsg] = useState({
         amount: "",
-        date: "",
-        mode: "",
-        form:"",
-        note: false,
+        dueDate: "",
+        paymentMode: "",
+        form:""
     });
     
     const [addCardFormData, setAddCardFormData] = useState({
@@ -349,8 +354,6 @@ const EditTrModal = (props) => {
         addCardfieldErrorCheck.checkcardcvv(formattedCardCvv);
     }
 
-
-
     const addCardfieldErrorCheck = {
 
         checkcardNumber: (val) => {
@@ -584,24 +587,24 @@ const EditTrModal = (props) => {
         }
         
     }
-    const checkNoteHandler = (e) =>{
+    const checkUpdateForAllHandler = (e) =>{
         let val = e.target.value;
-        fieldErrorCheck.checknote(val);
+        fieldErrorCheck.checkUpdateForAll(val);
     }
     
     
     const fieldErrorCheck = {
 
         checkdate: (val) => {
-            setEditTransFormData({...editTransFormData, date: val});
+            setEditTransFormData({...editTransFormData, dueDate: val});
             if (!val) {
-                setFormErrorMsg(prevState => ({...prevState, date: "Please enter date"}));
+                setFormErrorMsg(prevState => ({...prevState, dueDate: "Please select a future date"}));
             } else {
-                setFormErrorMsg(prevState => ({...prevState, date: ""}));
+                setFormErrorMsg(prevState => ({...prevState, dueDate: ""}));
             }
         },
         checkamount: (val) => {
-            setEditTransFormData({...editTransFormData, amount: val});
+            setEditTransFormData({...editTransFormData, amount: parseFloat(val)});
             if (!val) {
                 setFormErrorMsg(prevState => ({...prevState, amount: "Please enter amount"}));
             } else {
@@ -609,23 +612,18 @@ const EditTrModal = (props) => {
             }
         },
         checkmode: (val) => {
-            setEditTransFormData({...editTransFormData, mode: val});
+            setEditTransFormData({...editTransFormData, paymentMode: val});
             if (!val) {
-                setFormErrorMsg(prevState => ({...prevState, mode: "Please enter Payment mode"}));
+                setFormErrorMsg(prevState => ({...prevState, paymentMode: "Please enter Payment mode"}));
             } else {
-                setFormErrorMsg(prevState => ({...prevState, mode: ""}));
+                setFormErrorMsg(prevState => ({...prevState, paymentMode: ""}));
             }
         },
-        checknote: (val) => {
-            setEditTransFormData({...editTransFormData, note: val});
-            if (!val) {
-                setFormErrorMsg(prevState => ({...prevState, note: "Please check to submit"}));
-            } else {
-                setFormErrorMsg(prevState => ({...prevState, note: ""}));
-            }
+        checkUpdateForAll: (val) => {
+            setEditTransFormData({...editTransFormData, applyForAll: val});
         },
         checkform: () => {
-            if (editTransFormData.mode === "online") {
+            if (editTransFormData.paymentMode === "online") {
                 if((addBtnClicked === true && checkingForBank === false) || (addBtnClicked === true && checkingForCard === false)){
                     setFormErrorMsg(prevState => ({...prevState, form: "Fill up the form for bank/card details"}));   
                 } else{
@@ -633,34 +631,43 @@ const EditTrModal = (props) => {
                 } 
             }
         }
-    }
-     
+    }    
+
+    const closeAlert = () => {
+        props.closeModal (false, null)
+    };
     
-    const editMainFormSubmit = (e) =>{
-        e.preventDefault();
-     
+    const editMainFormSubmit = async (e) =>{
+        e.preventDefault();     
        
-            fieldErrorCheck.checkmode(editTransFormData.mode);
-            fieldErrorCheck.checkamount(editTransFormData.amount);
-            fieldErrorCheck.checkdate(editTransFormData.date);
-            fieldErrorCheck.checknote(editTransFormData.note);
-            
-            fieldErrorCheck.checkform();
-      
-            
-            if(editTransFormData.mode !=="" && editTransFormData.amount !=="" && editTransFormData.date !== "" && editTransFormData.note !== "" &&  addBtnClicked === false){
-                //console.log(mainData.cards);
-                //console.log(mainData.banks);
-                console.log("Edit done successfully");
+        fieldErrorCheck.checkmode(editTransFormData.paymentMode);
+        fieldErrorCheck.checkamount(editTransFormData.amount);
+        fieldErrorCheck.checkdate(editTransFormData.dueDate);            
+        fieldErrorCheck.checkform();      
+        
+        let dueDate = paylater ? editTransFormData.dueDate : new Date().toISOString().split('T')[0];        
+        
+        if ( editTransFormData.paymentMode && editTransFormData.amount && dueDate ) {
+            try {
+                setIsLoader(true);
+                let payload = {
+                    subscriptionId: props.transaction._id,
+                    amount: editTransFormData.amount,
+                    payment_via: editTransFormData.paymentMode,
+                    due_date: dueDate
+                }
+                let updateResp = await TransactionServices.updateTransaction(props.contactId, payload);
+                console.log("updateResp", updateResp)
+                props.setSuccessMsg(updateResp);
+                closeAlert();
+            } catch (e) {
+               setAlertMsg({ ...alertMsg, type: "error", "message": e.message, time: 5000 })
+            } finally {
+                setIsLoader(false);
             }
-            
-            console.log("hhhh",cardList);
-            console.log("dddd",bankList);
+        }
              
     }
-   
-
-
 
     return (
         <div className="modalBackdrop transactionModal">
@@ -679,33 +686,32 @@ const EditTrModal = (props) => {
                             <div className="dateHolderDiv">
                                 <label className="labelWithInfo paymentTime">
                                     <span className="labelHeading">I want to Pay Later</span>
-                                    <label className={communicationDownpayment ? "toggleBtn active" : "toggleBtn"}>
+                                    <label className={paylater ? "toggleBtn active" : "toggleBtn"}>
                                         <input type="checkbox" name="check-communication" 
                                            onChange={(e) =>
                                             e.target.checked
-                                              ? setCommunicationDownpayment(true)
-                                              : setCommunicationDownpayment(false)
+                                              ? setPaylater(true)
+                                              : setPaylater(false)
                                           }
                                         />
                                         <span className="toggler"></span>
                                     </label>
                                 </label>
-                                <div className={communicationDownpayment ? "paymentNow" : "paymentNow display"}><p>Payment date <span>Now</span></p></div>
-                                <div className={communicationDownpayment ? "paymentNow display" : "paymentNow"} ><input type="date" className="cmnFieldStyle" value={editTransFormData.date} onChange={changeTransDateHandler}/></div>
+                                <div className={paylater ? "paymentNow" : "paymentNow display"}><p>Payment date <span>Now</span></p></div>
+                                <div className={paylater ? "paymentNow display" : "paymentNow"} ><input type="date" className="cmnFieldStyle" value={editTransFormData.dueDate} onChange={changeTransDateHandler}/></div>
                             </div>                            
-                            { (formErrorMsg.date && communicationDownpayment) &&
-                             <div className="errorMsg">{formErrorMsg.date}</div>
+                            { (formErrorMsg.dueDate && paylater) &&
+                             <div className="errorMsg">{formErrorMsg.dueDate}</div>
                             }
                         </div>
                         <div className="cmnFormRow fullWidth flatForm">
                             <label className="cmnFieldName">Change Payment Mode</label>
-                            <select className="cmnFieldStyle selectBox" onChange={selectCashOrOnlineHandler} value={editTransFormData.mode}>
-                                <option value="">Select</option>
+                            <select className="cmnFieldStyle selectBox" onChange={selectCashOrOnlineHandler} value={editTransFormData.paymentMode}>
                                 <option value="online">Online</option>
                                 <option value="cash">Cash</option>
                             </select>
-                            { formErrorMsg.mode &&
-                            <div className="errorMsg">{formErrorMsg.mode}</div>
+                            { formErrorMsg.paymentMode &&
+                            <div className="errorMsg">{formErrorMsg.paymentMode}</div>
                             }
                             {openOnlineBox && 
                               <div className="onlinePymentboxTrans">
@@ -919,14 +925,11 @@ const EditTrModal = (props) => {
                         <div className="notifyBox">
                             <label className="d-flex f-align-center">
                                 <div className="customCheckbox">
-                                    <input type="checkbox" name="" onChange={checkNoteHandler} defaultCheck={editTransFormData.note ? "checked" : ""}/>
+                                    <input type="checkbox" name="" onChange={checkUpdateForAllHandler} />
                                     <span></span>
                                 </div>
                                 <div>I want update this change for all the upcoming transactions of this subscription</div>
                             </label>
-                            { formErrorMsg.note &&
-                            <div className="errorMsg">{formErrorMsg.note}</div>
-                            }
                         </div>
                         <div className="btnPlaceMiddle">
                             <button className="saveNnewBtn" onClick={editMainFormSubmit}>Submit</button>
@@ -934,6 +937,11 @@ const EditTrModal = (props) => {
                     </form>
                 </div>
             </div>
+            {alertMsg.message && <AlertMessage
+                type={alertMsg.type}
+                message={alertMsg.message}
+                time={alertMsg.time}
+                close={closeAlert} />}
         </div>
     );
 }

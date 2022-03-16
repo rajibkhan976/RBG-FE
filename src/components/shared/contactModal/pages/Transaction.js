@@ -42,6 +42,7 @@ const Transaction = (props) => {
   const [refundAmount, setRefundAmount] = useState();
   const [subscriptionId, setSubscriptionId] = useState();
   const [oldHistoryIndex, setOldHistoryIndex] = useState(null);
+  const [editTransaction, setEditTransaction] = useState(null);
 
   const showOldTrxHistory = (index) => {
     if (oldHistoryIndex == index) {
@@ -77,7 +78,8 @@ const Transaction = (props) => {
     setIsLoader(param);
   };
 
-  const openCloseEditTransModal = (param) => {
+  const openCloseEditTransModal = (param, transaction) => {
+    setEditTransaction(transaction);
     setEditTransModal(param);
   };
 
@@ -311,7 +313,7 @@ const Transaction = (props) => {
             </div>
             { upcomingTransaction.length ? upcomingTransaction.map((item, index) => {
               return (
-              <div className="row withHistory due" key={index}>
+              <div className="row withHistory due" key={"upcmng"+index}>
                 <div className="cellWraperss">
 
                   <div className="cell particulars">
@@ -430,11 +432,8 @@ const Transaction = (props) => {
               {/* </div> */}
               {oldTransactionList.length > 0 ? oldTransactionList.map((item, index) => {
                 return (
-                  //  <div className="indRowWrapers">
-
-
-                  
-                    <div className={item.history.length && item.history[item.history.length - 1].status == "success" ? "row success withHistory" : "row fail withHistory"} key={index}>
+                  //  <div className="indRowWrapers">                  
+                    <div key={"oldtrns-" + index} className={item.history.length && item.history[item.history.length - 1].status == "success" ? "row success withHistory" : "row fail withHistory"} key={index}>
                       <div className="cellWraperss">
 
                         <div className="cell particulars">
@@ -603,42 +602,6 @@ const Transaction = (props) => {
                               </div>
                             )
                           })}
-                          
-                          
-                          
-                          {/* <div className="cellWrapers fail historyInnerInfo">
-                            <div className="cell particulars">
-                              <div className="d-flex">
-                                <div className="iconCont">
-                                  <span>
-                                    <img src={cardSmallWhite} alt="" />
-                                  </span>
-                                </div>
-                                <div className="textCont">
-                                  <div className="status">
-                                    {item.status == "success" ? "successful" : "failed"}
-                                  </div>
-                                  <div>
-                                    <span>Transaction ID:</span> {item._id}
-                                
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-
-                            <div className="cell amt">
-                              <div className="amount" >
-                                {"$ " + item.amount}
-                              </div>
-                            </div>
-
-                            <div className="cell times">
-                              <span className="time">
-                                12.59 PM 
-                                <span className="historyDate">15 Feb, 2022</span>
-                              </span>
-                            </div>
-                          </div> */}
 
                         </div>
 
@@ -649,108 +612,8 @@ const Transaction = (props) => {
 
                       </div>
                     </div>
-
-
-
-
-
-
-
-                  //  </div>
                 )
               }) : ""}
-              
-              {isLoaderScroll ? 
-              <div className="bottomLoader">
-              </div>  
-              : ""}
-              
-              {/* <div className="row fail">
-                <div className="cell">
-                  <div className="d-flex">
-                    <div className="iconCont">
-                      <span>
-                        <img src={icon_trans} alt="" />
-                      </span>
-                    </div>
-                    <div className="textCont">
-                      <div className="status">
-                        Fail
-                      </div>
-                      <div>
-                        <span>Course:</span> “Sample course name”
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="cell">
-                  <span className="amount" >
-                    $100
-                  </span>
-                </div>
-                <div className="cell">
-                  <span className="transID">
-                    dfg41456df1567sdtfg24g
-                  </span>
-                </div>
-                <div className="cell">
-                  <span className="time">
-                    18 m ago
-                  </span>
-                </div>
-                <div className="cell">
-                  <div className="moreOpt">
-                    <button type="button" className="moreOptBtn"></button>
-                    <div className="optDropdown">
-                      <button type="button" className="retry">Retry</button>  
-                      <button type="button" className="history">History</button>
-                    </div>  
-                  </div>
-                </div>
-              </div>
-              <div className="row success">
-                <div className="cell">
-                  <div className="d-flex">
-                    <div className="iconCont">
-                      <span>
-                        <img src={icon_trans} alt="" />
-                      </span>
-                    </div>
-                    <div className="textCont">
-                      <div className="status">
-                        Success
-                      </div>
-                      <div>
-                        <span>Course:</span> “Sample course name”
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="cell">
-                  <span className="amount" >
-                    $100
-                  </span>
-                </div>
-                <div className="cell">
-                  <span className="transID">
-                    dfg41456df1567sdtfg24g
-                  </span>
-                </div>
-                <div className="cell">
-                  <span className="time">
-                    18 m ago
-                  </span>
-                </div>
-                <div className="cell">
-                  <div className="moreOpt">
-                    <button type="button" className="moreOptBtn"></button>
-                    <div className="optDropdown">
-                      <button type="button" className="refund" onClick={() => openCloseRefundModal (true)}>Refund</button>  
-                      <button type="button" className="history">History</button>
-                    </div>  
-                  </div>
-                </div>
-              </div> */}
             </div>
           </Scrollbars>
         </div>
@@ -824,7 +687,12 @@ const Transaction = (props) => {
       loader={(param) => refundLoader (param)}
       /> }
 
-      { editTransModal && <EditTrModal closeModal={(param) => openCloseEditTransModal (param)} contactId={props.contactId} /> }
+      {editTransModal && <EditTrModal
+        transaction={editTransaction}
+        closeModal={(param) => openCloseEditTransModal(param, null)}
+        contactId={props.contactId}
+        setSuccessMsg={setSuccessMsg}
+      />}
 
       { completeTransModal && 
       <CompleteTransactionModal 
