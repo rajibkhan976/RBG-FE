@@ -8,6 +8,7 @@ import cashSmallWhite from "../../../../assets/images/cash_icon_small_white.svg"
 import cardSmallWhite from "../../../../assets/images/card_icon_small_white.svg";
 import bankSmallWhite from "../../../../assets/images/bank.svg";
 import refundIcon from "../../../../assets/images/refund_icon_white.svg";
+import noDataIcon from "../../../../assets/images/noData_icon.svg";
 import dropVector from "../../../../assets/images/dropVector.svg";
 import RefundModal from "./transaction/RefundModal";
 import EditTrModal from "./transaction/EditTrModal";
@@ -43,6 +44,7 @@ const Transaction = (props) => {
   const [subscriptionId, setSubscriptionId] = useState();
   const [oldHistoryIndex, setOldHistoryIndex] = useState(null);
   const [editTransaction, setEditTransaction] = useState(null);
+  const [contract, setContract] = useState();
 
   const showOldTrxHistory = (index) => {
     if (oldHistoryIndex == index) {
@@ -177,6 +179,20 @@ const Transaction = (props) => {
     }
   };
 
+  const fetchContract = async () => {
+    try {
+      const response = await TransactionServices.fetchContract(props.contactId);
+      setContract(response.transactions);
+      console.log("Contract response ", response);
+    } catch (e) {
+
+    } finally {
+      setIsLoaderScroll(false);
+    }
+  };
+
+
+
   const moreOptOpenUpcoming = (index) => {
     setUpcomingOptIndex(index !== upcomingOptIndex ? index : null);
     if (upcomingOptIndex != null) {
@@ -216,6 +232,7 @@ const Transaction = (props) => {
   useEffect(() => {
     fetchOldTransactions(props.contactId, 1);
     fetchUpcomingTransactions(props.contactId, 1);
+    fetchContract();
     console.log(props.contactId);
 
     document.addEventListener("mousedown", checkOutsideClick);
@@ -305,12 +322,20 @@ const Transaction = (props) => {
           <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={upcomingListPageNo}>
           <div className="transactionListing dueTransactions"  ref={upcomingOptRef}>
             {/* <div className={isLoaderTab ? "hide" :"row head"}> */}
+            {upcomingTransaction.length ? 
             <div className="row head">
                 <div className="cell particulars">Particulars</div>
                 <div className="cell amt">Amount</div>
                 <div className="cell times">&nbsp;</div>
                 <div className="cell action">&nbsp;</div>
             </div>
+            :
+            <div className={isLoaderScroll ? "hide" : "noDataSec"}>
+              <img src={noDataIcon} alt="" />
+              <h2>No Transaction Found</h2>
+              <p>No transaction have been created yet</p>
+            </div>
+            }
             { upcomingTransaction.length ? upcomingTransaction.map((item, index) => {
               return (
               <div className="row withHistory due" key={"upcmng"+index}>
@@ -422,6 +447,7 @@ const Transaction = (props) => {
           <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={oldListPageNo}>
             <div className="transactionListing oldTransactions" ref={oldOptRef}>
             {/* <div className="indRowHeadWrapers"> */}
+              {oldTransactionList.length ?
                 <div className="row head">
                   <div className="cell particulars">Particulars</div>
                   <div className="cell amt">Amount</div>
@@ -429,8 +455,15 @@ const Transaction = (props) => {
                   <div className="cell times">&nbsp;</div>
                   <div className="cell action">&nbsp;</div>
                 </div>
+              : 
+              <div className={isLoaderScroll ? "hide" : "noDataSec"}>
+                <img src={noDataIcon} alt="" />
+                <h2>No Transaction Found</h2>
+                <p>No transaction have been created yet</p>
+              </div>
+            }
               {/* </div> */}
-              {oldTransactionList.length > 0 ? oldTransactionList.map((item, index) => {
+              {oldTransactionList && oldTransactionList.length > 0 ? oldTransactionList.map((item, index) => {
                 return (
                   //  <div className="indRowWrapers">                  
                     <div key={"oldtrns-" + index} className={item.history.length && item.history[item.history.length - 1].status == "success" ? "row success withHistory" : "row fail withHistory"} key={index}>
@@ -469,9 +502,14 @@ const Transaction = (props) => {
                                 
                               </div>
                               <div>
-                                <span>{item.type == "tuiton_fees" ? "Program" : "Product"}: </span> 
-                                {item.history.length && item.history[item.history.length - 1].transaction_data[0].product}
-                                <div className="productItemList">
+                                <span>{item.transaction_for == "course" ? "Program" : "Product"}: </span> 
+                                {item.transaction_for === "product" ? 
+                                 item.history && item.history[item.history.length - 1].transaction_data[0].product
+                                :
+                                item.title
+                                }
+                                
+                                <div className={item.transaction_for == "product" ? "productItemList" : "hide"}>
                                   <div className="productNumber">
                                     {item.history.length && item.history[item.history.length - 1].transaction_data.length > 1 ?
                                     item.history.length && item.history[item.history.length - 1].transaction_data.length
@@ -479,7 +517,7 @@ const Transaction = (props) => {
                                   </div>
                                   <ul className="productItems">
                                     
-                                    {item.history.length && item.history[item.history.length - 1].transaction_data.map((product, key) => {
+                                    {item.transaction_for == "product" ? item.history[item.history.length - 1].transaction_data.map((product, key) => {
                                       return (
                                         <li className="itemList">
                                           <h3><span>{key+1 + "."}</span>{product.product}</h3>
@@ -490,7 +528,7 @@ const Transaction = (props) => {
                                           </div>
                                         </li>
                                       )
-                                    })}
+                                    }) : ""}
                                     
                                   </ul>
                                 </div>
@@ -619,63 +657,83 @@ const Transaction = (props) => {
         </div>
         <div className={activeTab == 2 ? "listTab active" : "listTab"}>
           <div className="transactionListing">
+            {contract && contract.length ?
             <div className="row head">
-              <div className="cell">Particulars</div>
-              <div className="cell">Amount</div>
-              <div className="cell">Transaction ID</div>
+              <div className="cell">Program Name</div>
+              <div className="cell">Total Amount</div>
+              <div className="cell">Contract Duraton</div>
+              <div className="cell">Auto Renuwal</div>
               <div className="cell">&nbsp;</div>
             </div>
-            <div className="row success">
-              <div className="cell">
-                <div className="d-flex">
-                  <div className="iconCont">
-                    <span>
-                      <img src={icon_trans} alt="" />
-                    </span>
-                      <span className="ifDependent">
-                        <img src={wwConnect} alt="" />
-                      </span>
-                  </div>
-                  <div className="textCont">
-                    <div className="status">
-                      success
-                    </div>
-                    <div>
-                      <span>Program:</span> “Sample course name”
-                    </div>
-                      <a href="javascript:void(0)" className="dependent">
-                        <span>
-                          <img src={wwConnect2} alt="" />
-                        </span>
-                        Emily Martyns
-                      </a>
-                  </div>
-                </div>
-              </div>
-              <div className="cell">
-                <span className="amount" >
-                  $100
-                </span>
-              </div>
-              <div className="cell">
-                <span className="transID">
-                  dfg41456df1567sdtfg24g
-                </span>
-              </div>
-              <div className="cell">
-                <span className="time">
-                  18 m ago
-                </span>
-              </div>
-              <div className="cell">
-                <div className="moreOpt">
-                  <button type="button" className="moreOptBtn"></button>
-                  <div className="optDropdown hide">
-                    <button type="button" className="cancelPayment">Cancel</button>
-                  </div>  
-                </div>
-              </div>
+            :
+            <div className={isLoaderScroll ? "hide" : "noDataSec"}>
+              <img src={noDataIcon} alt="" />
+              <h2>No Transaction Found</h2>
+              <p>No transaction have been created yet</p>
             </div>
+            }
+            
+            {contract && contract.length > 0 ? contract.map((item, index) => {
+              return (
+                <div className="row success" key={index}>
+                  <div className="cell">
+                    <div className="d-flex">
+                      <div className="iconCont">
+                        <span>
+                          <img src={icon_trans} alt="" />
+                        </span>
+                        {/* <span className="ifDependent">
+                          <img src={wwConnect} alt="" />
+                        </span> */}
+                      </div>
+                      <div className="textCont">
+                        <div className="status">
+                          {item.status == "active" ? "active" : "expired"}
+                        </div>
+                        <div>
+                          <span>Program:</span> “{item.courseName}”
+                        </div>
+                          {/* <a href="javascript:void(0)" className="dependent">
+                            <span>
+                              <img src={wwConnect2} alt="" />
+                            </span>
+                            Emily Martyns
+                          </a> */}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="cell">
+                    <span className="amount" >
+                      $ {item.amount}
+                    </span>
+                  </div>
+                  <div className="cell">
+                    <span className="transID">
+                      {item.duration}
+                    </span>
+                  </div>
+                  <div className="cell">
+                    <span className="time">
+                    {item.auto_renew == 1 ? 
+                      <span className="enableStatus">Enable</span>
+                      :
+                      <span className="disableStatus">Disable</span>
+                    }
+                    </span>
+                  </div>
+                  <div className="cell">
+                    <div className="moreOpt">
+                      <button type="button" className="moreOptBtn"></button>
+                      <div className="optDropdown hide">
+                        <button type="button" className="cancelPayment">Cancel</button>
+                      </div>  
+                    </div>
+                  </div>
+                </div>
+              )
+            }) : ""}
+            
+
           </div>
         </div>
 

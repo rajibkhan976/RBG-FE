@@ -10080,3 +10080,30 @@ select.editFormStyle{
   position: relative;
   top: 5px;
 }
+
+.enableStatus {
+  font-weight: 600;
+  font-size: 13px;
+  color: #009F40;
+}
+.disableStatus {
+  font-weight: 600;
+  font-size: 13px;
+  color: #ED707A;
+}
+
+.noDataSec {
+  text-align: center;
+  width: 260px;
+  margin: 100px auto 0;
+}
+.noDataSec h2 {
+  font-size: 16px;
+  color: var(--darkBlue);
+  margin-bottom: 10px;
+  margin-top: 30px;
+}
+.noDataSec p {
+  font-size: 13px;
+  color: #9BAEBC;
+}
