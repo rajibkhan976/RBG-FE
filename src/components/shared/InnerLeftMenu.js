@@ -343,7 +343,7 @@ const InnerLeftMenu = (props) => {
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Customizations</p>
-                    <p className="linkAbout">Lorem ipsum dolor sit</p>
+                    <p className="linkAbout">Manage tax and custom fields</p>
                     <button className="btn sidemenuarrow">
                       <img src={SideMenuArrow} alt="" />
                     </button>

@@ -69,7 +69,7 @@ useEffect(()=>{
           setHasError(true)
           setCustomFieldErrors({
             ...customFieldErrors,
-            name: "Field name cannot start with space or special number"
+            name: "Field name cannot start with space or number or -"
           })
 
           console.log(customField);
@@ -88,7 +88,7 @@ useEffect(()=>{
 
   const fieldTypeHandel = (event) => {
     let val = event.target.value;
-
+    
     if(val !== "" && val.length > 0) {
       setCustomField({...customField, type: val});
       setHasError(false)
@@ -152,41 +152,54 @@ useEffect(()=>{
       }
     }
     else {
-      setHasError(true)
+      setCustomField({...customField, defaultValue: val});
+      setHasError(false)
       setCustomFieldErrors({
         ...customFieldErrors,
-        defaultValue: "Please enter default Value"
+        defaultValue: ""
       })
     }
   };
 
 
   const addCustomField = async (status) => {
+    let errorPlaceholder = {...customFieldErrors};
 
-    if(!hasError) {
-      if (props.editStatus) {
-        editField();
-      } else {
-        if (status) {
-          createField();
-          props.savedNew();
+    if(customField.name && customField.name !== "" && customField.type && customField.type !== "") {
+      if(!hasError) {
+        if (props.editStatus) {
+          editField();
         } else {
-          await createField();
-          props.closeAddCustomModal(true);
-        }        
+          if (status) {
+            createField();
+            props.savedNew();
+          } else {
+            await createField();
+            props.closeAddCustomModal(true);
+          }        
+        }
+      }
+
+      else {
+        setErrorMsg("Please fill up the fields properly");
       }
     }
-    // setCustomFieldErrors(isValidate)
+    else {
+      setErrorMsg("Please fill up the fields properly");
 
-    //  else {
-      // setErrorMsg("Please fill up the fields properly");
-    // }
+      if(!customField.name || customField.name === "") {
+        setHasError(true)
+        
+        errorPlaceholder.name = "Field name cannot be empty"
+      }
+      if(!customField.type || customField.type === ""){
+        setHasError(true)
+        
+        errorPlaceholder.type = "Please enter Field type"
+      }
 
-    // if(customField.name !== "" && customField.type !== "" && customField.defaultValue !== "" && customField.defaultValue !== "") {
-    //   console.log("Form OK");
-    // } else {
-    //   setErrorMsg("Please fill up the fields properly");
-    // }
+      setCustomFieldErrors(errorPlaceholder)
+    }
       
   }
 
@@ -280,7 +293,7 @@ useEffect(()=>{
                     </div>
                     <div className={customFieldErrors.fieldAlias ? "formControl error" : "formControl"}>
                         <label>Field Alias</label>
-                        <div className="cmnFieldStyle d-flex f-align-center">{customField.alias}</div>
+                        <div className="cmnFieldStyle d-flex f-align-center fieldAlias">{customField.alias}</div>
                     </div>
                     <div className="modalbtnHolder">
                         <button type="button" name="save"

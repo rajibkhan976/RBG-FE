@@ -2385,3 +2385,6 @@ ul.paymentUlInfo li.paymentModeLi {
   margin-right: 20px;
   opacity: 0;
 }
+.cmnFieldStyle.fieldAlias {
+  padding: 3px 10px;
+}
