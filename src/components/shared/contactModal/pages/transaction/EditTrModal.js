@@ -29,7 +29,6 @@ const EditTrModal = (props) => {
 
     const [openOnlineBox, setOpenOnlineBox] = useState(false);
     const [paylater, setPaylater] = useState(false);
-    const [isModified, setIsModified] = useState(false);
 
     const [alertMsg, setAlertMsg] = useState({
         type: null,
@@ -37,12 +36,17 @@ const EditTrModal = (props) => {
         time: 5000 //ms
     })
 
-    const [editTransFormData, setEditTransFormData] = useState({});
+    const [editTransFormData, setEditTransFormData] = useState({
+        amount: "",
+        dueDate: "",
+        paymentMode: "",
+        applyForAll: false
+    });
     const [formErrorMsg, setFormErrorMsg] = useState({
         amount: "",
         dueDate: "",
         paymentMode: "",
-        form:""
+        form:"",
     });
     
     const [addCardFormData, setAddCardFormData] = useState({
@@ -601,7 +605,6 @@ const EditTrModal = (props) => {
     const fieldErrorCheck = {
 
         checkdate: (val) => {
-            setIsModified(true);
             setEditTransFormData({...editTransFormData, dueDate: val});
             if (!val) {
                 setFormErrorMsg(prevState => ({...prevState, dueDate: "Please select a future date"}));
@@ -610,7 +613,6 @@ const EditTrModal = (props) => {
             }
         },
         checkamount: (val) => {
-            setIsModified(true);
             setEditTransFormData({...editTransFormData, amount: parseFloat(val)});
             if (!val) {
                 setFormErrorMsg(prevState => ({...prevState, amount: "Please enter amount"}));
@@ -619,7 +621,6 @@ const EditTrModal = (props) => {
             }
         },
         checkmode: (val) => {
-            setIsModified(true);
             setEditTransFormData({...editTransFormData, paymentMode: val});
             if (!val) {
                 setFormErrorMsg(prevState => ({...prevState, paymentMode: "Please enter Payment mode"}));
@@ -641,8 +642,9 @@ const EditTrModal = (props) => {
         }
     }    
 
-    const closeAlert = () => {
-        props.closeModal (false, null, isModified)
+    const closeAlert = (loadData) => {
+        props.closeModal(false, null, loadData)
+        setAlertMsg({})
     };
     
     const editMainFormSubmit = async (e) =>{
@@ -655,7 +657,7 @@ const EditTrModal = (props) => {
         
         let dueDate = paylater ? editTransFormData.dueDate : new Date().toISOString().split('T')[0];        
         
-        if ( editTransFormData.paymentMode && editTransFormData.amount && dueDate ) {
+        if (editTransFormData.paymentMode && editTransFormData.amount && dueDate) {
             try {
                 setIsLoader(true);
                 let payload = {
@@ -667,7 +669,7 @@ const EditTrModal = (props) => {
                 let updateResp = await TransactionServices.updateTransaction(props.contactId, payload);
                 console.log("updateResp", updateResp)
                 props.setSuccessMsg(updateResp);
-                closeAlert();
+                closeAlert(true);
             } catch (e) {
                setAlertMsg({ ...alertMsg, type: "error", "message": e.message, time: 5000 })
             } finally {

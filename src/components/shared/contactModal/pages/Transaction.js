@@ -45,6 +45,7 @@ const Transaction = (props) => {
   const [oldHistoryIndex, setOldHistoryIndex] = useState(null);
   const [upcomingHistoryIndex, setUpcomingHistoryIndex] = useState(true);
   const [contract, setContract] = useState();
+  const [editTransaction, setEditTransaction] = useState(null);
   
 
   const showOldTrxHistory = (index) => {
@@ -78,8 +79,13 @@ const Transaction = (props) => {
     setIsLoader(param);
   };
 
-  const openCloseEditTransModal = (param) => {
+  const openCloseEditTransModal = (param, transaction, loadData) => {
+    setEditTransaction(transaction);
     setEditTransModal(param);
+    if (loadData) {
+      fetchOldTransactions(props.contactId, 1);
+      fetchUpcomingTransactions(props.contactId, 1);
+    }
   };
 
   const openCloseCompleteTrans = (param, item) => {
@@ -867,7 +873,7 @@ const Transaction = (props) => {
 
       {editTransModal && <EditTrModal
         transaction={editTransaction}
-        closeModal={(param) => openCloseEditTransModal(param, null)}
+        closeModal={(param, trans, loadDate) => openCloseEditTransModal(param, trans, loadDate)}
         contactId={props.contactId}
         setSuccessMsg={setSuccessMsg}
       />}
