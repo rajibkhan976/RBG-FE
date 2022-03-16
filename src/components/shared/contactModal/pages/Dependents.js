@@ -210,6 +210,7 @@ const Dependents = (props) => {
       let filteredContact = toggleContactList.contacts.filter(contact => {
         return contact._id === e.currentTarget.dataset.id
       });
+      console.log('Filtered contact', filteredContact);
       //Update dependant state
       setDependant({
         ...dependant,
@@ -220,9 +221,9 @@ const Dependents = (props) => {
         gender: (filteredContact[0].gender ? filteredContact[0].gender : ''),
         isCommunication: (filteredContact[0].email || filteredContact[0].phone.number ? true : false),
         email: filteredContact[0].email ? filteredContact[0].email : '',
-        phone: filteredContact[0].phone.number ? filteredContact[0].phone.number : '',
-        dailCode: filteredContact[0].phone.dailCode ? filteredContact[0].phone.dailCode : '',
-        countryCode: filteredContact[0].phone.countryCode ? filteredContact[0].phone.countryCode : '',
+        phone: filteredContact[0].phone ? filteredContact[0].phone.number ? filteredContact[0].phone.number : '' : '',
+        dailCode: filteredContact[0].phone ? filteredContact[0].phone.dailCode ? filteredContact[0].phone.dailCode : '' : '+1',
+        countryCode: filteredContact[0].phone ? filteredContact[0].phone.countryCode ? filteredContact[0].phone.countryCode : '' : 'US',
       })
       setToggleContactList({ ...toggleContactList, status: false, isCross: true });
       console.log('Filter contact', filteredContact);
