@@ -148,7 +148,6 @@ const UserModal = (props) => {
             let dailCode = daileCodeindex != undefined ? daileCodeindex.getAttribute("data-dailcode") : "+1";
             setBasicinfoMobilePhone(prevState => ({ ...prevState, dailCode: dailCode }));
         }
-
         setBasicinfoMobilePhone(prevState => ({ ...prevState, [name]: value }));
     };
 
@@ -889,6 +888,7 @@ const UserModal = (props) => {
                 firstName: firstName,
                 lastName: lastName,
                 prefix: basicinfoMobilePhone.dailCode,
+                countryCode: basicinfoMobilePhone.countryCode,
                 phone: phoneNumber,
                 email: email,
                 groupId: newGroupId ? newGroupId : groupId,
