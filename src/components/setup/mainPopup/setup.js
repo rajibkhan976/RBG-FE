@@ -248,22 +248,22 @@ const Setup = (props) => {
                 </div>
               </div>
             </li>
-            <li>
+            {/* <li>
               <div className="listHead">
                 <i>
                   <img src={SetupIcon4} alt="" />
                 </i>
-                <div>
+                <div> */}
                   {/* <div className="prototypeBatch">Prototype</div> */}
-                  <h3>
+                  {/* <h3> */}
                     {/* <Link to={{ pathname: "https://xd.adobe.com/view/2825ba92-a435-4be1-8c5d-4f0bc82450c3-7d76/?fullscreen" }}
                       target="_blank"></Link> */}
-                      <a href="javascript:void(0)">Setup</a>
+                      {/* <a href="javascript:void(0)">Setup</a>
                   </h3>
                   <p>Setup details</p>
                 </div>
               </div>
-            </li>
+            </li> */}
           </ul>
         </Scrollbars>
       </div>
