@@ -17,9 +17,12 @@ const CustomizationsAddField = (props) => {
   const [customField, setCustomField] = useState(props.ele);
   const [hasError, setHasError] = useState(true)
   const [customFieldErrors, setCustomFieldErrors] = useState({
-    name: "Please enter Field name",
-    type: "Please select a Field type",
-    defaultValue: "Default value cannot be empty"
+    // name: "Please enter Field name",
+    // type: "Please select a Field type",
+    // defaultValue: "Default value cannot be empty"
+    name: "",
+    type: "",
+    defaultValue: ""
   })
 
   // useEffect(() =>{
@@ -41,33 +44,37 @@ useEffect(()=>{
 
   const fieldNameHandel = (event) => {
       let val = event.target.value;
-      
+      let valAlias
+
       if(val !== "" && val.length > 0) {
-        let reg = /^[A-Za-z0-9 ]*$/
-        let regSpaceNum = /^[ 0-9]*$/
+        let reg = /^[A-Za-z0-9 -]*$/
+        let regSpaceNum = /^[ 0-9 -]*$/
 
         let isValidValue = reg.test(val)
         let isStartValidValue = regSpaceNum.test(val[0])
 
         if(isValidValue && !isStartValidValue) {
-          console.log("IS SPACE:::", isStartValidValue);
-
-          let valAlias = val.charAt(0).toLowerCase() + val.slice(1).split(" ").join("_");
-
-          setCustomField({...customField, name: val, alias: valAlias});
+          valAlias = val.charAt(0).toLowerCase() + val.slice(1).split(" ").join("_");
           setHasError(false)
           setCustomFieldErrors({
             ...customFieldErrors,
             name: ""
           })
+
+          setCustomField({...customField, name: val, alias: valAlias});
         }
         else {
-          event.target.value = ""
+          console.log("VAL:::", val);
+          
           setHasError(true)
           setCustomFieldErrors({
             ...customFieldErrors,
             name: "Field name cannot start with space or special number"
           })
+
+          console.log(customField);
+
+          setCustomField({...customField, name: customField.name, alias: customField.alias});
         }
       }
       else {
