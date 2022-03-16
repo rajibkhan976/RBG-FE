@@ -930,7 +930,8 @@ const CallConfiguration = (props) => {
                     {callForward && (
                       <div className="setupFormRowBody">
                         <div className="cmnFormRow">
-                          <div className="cmnFormField">
+                          {/* Instant call forward is disabled for now */}
+                          <div className="cmnFormField hide"> 
                             <label className="cmnFieldName">
                               Instant Call Forward
                             </label>
