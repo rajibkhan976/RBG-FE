@@ -2302,3 +2302,56 @@ ul.paymentUlInfo li.paymentModeLi {
   background-color: #e4ecf3;
 }
 /* Later additions for Program (Transaction) */
+
+/* FIXES */
+.showHolidayDateValue {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: #F0F5F1;
+  border-radius: 3px;
+}
+.showHolidayDateValue h3 {
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 20px;
+  color: #305671;
+}
+.showHolidayDateValue .show {
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 21px;
+  color: #9BAEBC;
+}
+.showHolidayDateValue .show span {
+  color: #009F40;
+}
+.holiday .half .flatForm {
+  display: flex;
+  align-items: center;
+  max-width: 100%;
+}
+.holiday .half .flatForm span {
+  margin-right: 12px;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  color: #305671;
+}
+.holiday .half .flatForm input {
+  margin-top: 0;
+}
+.modalForm .formControl + .formControl {
+  margin-top: 18px;
+}
+.showHolidayDateValue {
+  margin-top: 20px;
+}
+.holiday .half label {
+  padding-bottom: 0;
+}
+.gymDetails .profile .profileUpload {
+  flex: 0 0 64px;
+  margin-right: 20px;
+  opacity: 0;
+}
