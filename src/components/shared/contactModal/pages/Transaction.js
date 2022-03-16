@@ -865,7 +865,12 @@ const Transaction = (props) => {
       loader={(param) => refundLoader (param)}
       /> }
 
-      { editTransModal && <EditTrModal closeModal={(param) => openCloseEditTransModal (param)} contactId={props.contactId} /> }
+      {editTransModal && <EditTrModal
+        transaction={editTransaction}
+        closeModal={(param) => openCloseEditTransModal(param, null)}
+        contactId={props.contactId}
+        setSuccessMsg={setSuccessMsg}
+      />}
 
       { completeTransModal && 
       <CompleteTransactionModal 
