@@ -537,6 +537,14 @@ const ProductPayment = (props) => {
     }
   };
 
+  const changeDefaultPayFn = (data) => {
+    console.log('data came from biling overviwe', data);
+    setNewPay({
+      type: data.type,
+      billingId: data.billingId
+    });
+  };
+
   // Edit created Downpayments
   const changeDownpaymentTitle = (e, downpay, i) => {
     //  //  console.log(e.target);
@@ -1007,15 +1015,7 @@ const ProductPayment = (props) => {
             </div>
             <BillingOverview
               contactId={props.contactId}
-              // cardBankList={cardBankList}
-              // bankList={bankList}
-              newPay={newPay}
-              changeDefaultPay={changeDefaultPay}
-              newPayMethod={newPayMethod}
-              setNewPayMethod={setNewPayMethod}
-              // setCardBankList={setCardBankList}
-              // setBankList={setBankList}
-              setNewPay={setNewPay}
+              changeDefaultPay={changeDefaultPayFn}
             />
           </div>
           <div className="gridCol">
