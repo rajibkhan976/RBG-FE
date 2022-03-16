@@ -67,7 +67,13 @@ const GymDetails = (props) => {
       console.log("Gym Details", gymData);
       // gymData.gymDetails.timezone = (gymData?.timezone) ? gymData?.timezone : detectedTimezone?.zoneName;
       // gymData.gymDetails.gmtOffset = (gymData?.gmtOffset) ? gymData?.gmtOffset : detectedTimezone?.gmtOffset;
-      setGymData(gymData.gymDetails);
+      setGymData({...gymData.gymDetails, 
+        contactPerson: (gymData.gymDetails?.contactPerson) ? gymData.gymDetails?.contactPerson : gymData.gymDetails?.ownerDetails?.firstName + " " + gymData.gymDetails?.ownerDetails?.lastName,
+        contactEmail: (gymData.gymDetails?.contactEmail) ? gymData.gymDetails?.contactEmail : gymData.gymDetails?.ownerDetails?.email,
+        phone: (gymData?.phone) ? gymData?.phone : gymData.gymDetails?.ownerDetails?.phone,
+        countryCode: (gymData?.countryCode) ? gymData?.countryCode : gymData.gymDetails?.ownerDetails?.prefix,
+        country: (gymData.country) ? gymData.country : gymData.gymDetails?.ownerDetails?.countryCode,
+      });
       setEditAccess(gymData.editAccess);
       console.log("editAccess:::::::::::::::::::" , editAccess);
       console.log("gymDetails:::::::::::::::::::" , gymData.gymDetails);
@@ -79,7 +85,7 @@ const GymDetails = (props) => {
       }
       setHolidayData(gymData?.holidays);
       setValidateMsg({ ...validateMsg, disabledAccess: !gymData.editAccess });
-      if(!gymData?.gymDetails.timezone && detectedTimezone?.zoneName) setSuccessMsg(`Timezone auto detected as (${detectedTimezone.countryName} - ${detectedTimezone.zoneName}), but the data is not saved yet.`);
+      // if(!gymData?.gymDetails.timezone && detectedTimezone?.zoneName) setSuccessMsg(`Timezone auto detected as (${detectedTimezone.countryName} - ${detectedTimezone.zoneName}), but the data is not saved yet.`);
     } catch (e) {
       console.log(e.message);
       setErrorMsg(e.message);
