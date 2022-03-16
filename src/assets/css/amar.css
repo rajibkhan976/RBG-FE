@@ -1922,7 +1922,7 @@ input::-webkit-inner-spin-button {
 .modalNewPay .posSellingForm {
   padding: 30px;
 }
-.modalNewPay form label {
+.modalNewPay .formBodyNew label {
   color: #315571;
   font-size: 13px;
   padding-bottom: 12px;
@@ -1933,7 +1933,7 @@ input::-webkit-inner-spin-button {
 .modalNewPay .cmnFormField .cmnFieldStyle{
   background-color: #fff;
 }
-.modalForm form {
+.modalForm .formBodyNew {
   grid-column-gap: 0;
   grid-row-gap: 0;
   grid-column-gap: 0;
