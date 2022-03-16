@@ -43,8 +43,9 @@ const Transaction = (props) => {
   const [refundAmount, setRefundAmount] = useState();
   const [subscriptionId, setSubscriptionId] = useState();
   const [oldHistoryIndex, setOldHistoryIndex] = useState(null);
-  const [editTransaction, setEditTransaction] = useState(null);
+  const [upcomingHistoryIndex, setUpcomingHistoryIndex] = useState(true);
   const [contract, setContract] = useState();
+  
 
   const showOldTrxHistory = (index) => {
     if (oldHistoryIndex == index) {
@@ -52,8 +53,15 @@ const Transaction = (props) => {
     } else {
       setOldHistoryIndex(index);
     }
-    
   };
+
+  const showUpcomingHistory = (index) => {
+    if (upcomingHistoryIndex == index) {
+      setUpcomingHistoryIndex(null);
+    } else {
+      setUpcomingHistoryIndex(index);
+    }
+  }
 
   const openRefundModal = (item) => {
     setRefundModal(true);
@@ -80,8 +88,7 @@ const Transaction = (props) => {
     setIsLoader(param);
   };
 
-  const openCloseEditTransModal = (param, transaction) => {
-    setEditTransaction(transaction);
+  const openCloseEditTransModal = (param) => {
     setEditTransModal(param);
   };
 
@@ -102,6 +109,7 @@ const Transaction = (props) => {
         setUpcomingOptIndex(null);
         setOldOptIndex(null);
         setOldHistoryIndex(null);
+        setUpcomingHistoryIndex(null);
       }
     }
     window.addEventListener('keydown', close)
@@ -216,6 +224,7 @@ const Transaction = (props) => {
     if (oldOptRef.current.contains(e.target)) {
       return;
     }
+    setUpcomingHistoryIndex(null);
     setOldOptIndex(null);
     setOldHistoryIndex(null);
   }
@@ -276,17 +285,6 @@ const Transaction = (props) => {
     }
     return showTime;
   };
-
-
-  const calculateTotalTransactionAmount = (data) => {
-    if(data?.amount) {
-      return Math.abs(data.amount);
-    } else {
-      const amount = (data.length > 1) ? data.reduce((v1, v2) => (v1.price*v1.qnty) + (v2.price*v2.qnty)).toFixed(2) : (data[0].price*data[0].qnty).toFixed(2);
-      // console.log("reduced"+JSON.stringify(amount));
-      return amount;
-    }
-  }
   
 
   return (
@@ -338,7 +336,7 @@ const Transaction = (props) => {
             }
             { upcomingTransaction.length ? upcomingTransaction.map((item, index) => {
               return (
-              <div className="row withHistory due" key={"upcmng"+index}>
+              <div className="row withHistory due" key={index}>
                 <div className="cellWraperss">
 
                   <div className="cell particulars">
@@ -387,50 +385,83 @@ const Transaction = (props) => {
                     </div>
                   </div>
                 </div>
-                {item.history.length > 0 ? item.history.map((element, index) => {
-                  return (
-                    <div className="cellWrapers historyDetails">
-                      <div className="showMore hide">
-                        {element.amount < 0 ? 
-                          <img src={refundIcon} alt="" />
-                          : ( element.payment_via == "cash" ? 
-                            <img src={cashSmallWhite} alt="" />
-                            : ( element.payment_via == "bank" ?
-                              <img src={bankSmallWhite} alt="" />
-                              :
-                              <img src={cardSmallWhite} alt="" />
-                              )
-                            )
-                        }
-                      </div>
-                      <div className="showDetails">
-                        <div className="cellWrapers success historyInnerInfo">
+                
+
+                <div className={item.history.length ? "cellWrapers historyDetails upcoming" : "hide"}>
+
+                  <div className={upcomingHistoryIndex == index ? "showMore hide" : "showMore"} onClick={() => showUpcomingHistory (index)}>
+                    <img src={dropVector} alt="" />
+                  </div>
+
+
+                  {upcomingHistoryIndex == index ?
+                  <div className="showDetails">
+                    {item.history.map((element, key) => {
+                      return (
+                        <div key={"oldhistory" + key} className={element.status == "failed" ? "cellWrapers fail historyInnerInfo" : (element.amount < 0 ? "cellWrapers success refunded historyInnerInfo" : "cellWrapers success historyInnerInfo")}>
                           <div className="cell particulars">
                             <div className="d-flex">
                               <div className="iconCont">
                                 <span>
-                                  <img src="" alt="" />
+                                  {element.amount < 0 ? 
+                                  <img src={refundIcon} alt="" />
+                                  : ( element.payment_via == "cash" ? 
+                                    <img src={cashSmallWhite} alt="" />
+                                    : ( element.payment_via == "bank" ?
+                                      <img src={bankSmallWhite} alt="" />
+                                      :
+                                      <img src={cardSmallWhite} alt="" />
+                                      )
+                                    )
+                                  }
                                 </span>
                               </div>
                               <div className="textCont">
-                                <div className="status">successful</div>
+                                <div className="status">
+                                  {element.status == "failed" ? "failed" : (element.amount < 0 ? "refunded" : "successful")}
+                                  {element.amount < 0 ? 
+                                  <div className="notePop">
+                                    <div className="notePopIcon"></div>
+                                    <div className="notePopContent">
+                                      <span>Reason: </span>
+                                      {element.note}
+                                    </div>
+                                  </div>
+                                  : ""}
+                                </div>
                                 <div>
-                                  <span>Transaction ID:</span> 62307ac00018f8000972734c
+                                  <span>Transaction ID:</span> {element._id}
+                              
                                 </div>
                               </div>
                             </div>
                           </div>
+
                           <div className="cell amt">
-                            <div className="amount">$ 36.30</div>
+                            <div className="amount" >
+                              {/* $ {calculateTotalTransactionAmount(element.transaction_data)} */}
+                              {/* ${(element.transaction_data?.amount)?element.transaction_data.amount : element.transaction_data[0].price} */}
+                              $ {Math.abs(element.amount).toFixed(2)}
+                            </div>
                           </div>
+
                           <div className="cell times">
-                            <span className="time">11:38 AM<span className="historyDate">15th Mar, 2022</span></span>
+                            <span className="time">
+                              {moment(element.transaction_date.split(" ")[1], 'hh:mm A').format('hh:mm A')}
+                              <span className="historyDate">
+                                {/* {element.transaction_date.split(" ")[0]}  */}
+                                {moment(element.transaction_date.split(" ")[0], 'YYYY-MM-DD').format('Do MMM, YYYY')}
+                              </span>
+                            </span>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  )
-                }) : ""}
+                      )
+                    })}
+
+                  </div>
+
+                  : ""}
+                </div>
                 
 
               </div>
@@ -465,8 +496,11 @@ const Transaction = (props) => {
               {/* </div> */}
               {oldTransactionList && oldTransactionList.length > 0 ? oldTransactionList.map((item, index) => {
                 return (
-                  //  <div className="indRowWrapers">                  
-                    <div key={"oldtrns-" + index} className={item.history.length && item.history[item.history.length - 1].status == "success" ? "row success withHistory" : "row fail withHistory"} key={index}>
+                  //  <div className="indRowWrapers">
+
+
+                  
+                    <div className={item.history.length && item.history[item.history.length - 1].status == "success" ? "row success withHistory" : "row fail withHistory"} key={index}>
                       <div className="cellWraperss">
 
                         <div className="cell particulars">
@@ -644,14 +678,110 @@ const Transaction = (props) => {
                         </div>
 
                         : ""}
-
-
-
-
                       </div>
                     </div>
+
+
+
+
+
+
+
+                  //  </div>
                 )
               }) : ""}
+              
+              {isLoaderScroll ? 
+              <div className="bottomLoader">
+              </div>  
+              : ""}
+              
+              {/* <div className="row fail">
+                <div className="cell">
+                  <div className="d-flex">
+                    <div className="iconCont">
+                      <span>
+                        <img src={icon_trans} alt="" />
+                      </span>
+                    </div>
+                    <div className="textCont">
+                      <div className="status">
+                        Fail
+                      </div>
+                      <div>
+                        <span>Course:</span> “Sample course name”
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="cell">
+                  <span className="amount" >
+                    $100
+                  </span>
+                </div>
+                <div className="cell">
+                  <span className="transID">
+                    dfg41456df1567sdtfg24g
+                  </span>
+                </div>
+                <div className="cell">
+                  <span className="time">
+                    18 m ago
+                  </span>
+                </div>
+                <div className="cell">
+                  <div className="moreOpt">
+                    <button type="button" className="moreOptBtn"></button>
+                    <div className="optDropdown">
+                      <button type="button" className="retry">Retry</button>  
+                      <button type="button" className="history">History</button>
+                    </div>  
+                  </div>
+                </div>
+              </div>
+              <div className="row success">
+                <div className="cell">
+                  <div className="d-flex">
+                    <div className="iconCont">
+                      <span>
+                        <img src={icon_trans} alt="" />
+                      </span>
+                    </div>
+                    <div className="textCont">
+                      <div className="status">
+                        Success
+                      </div>
+                      <div>
+                        <span>Course:</span> “Sample course name”
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="cell">
+                  <span className="amount" >
+                    $100
+                  </span>
+                </div>
+                <div className="cell">
+                  <span className="transID">
+                    dfg41456df1567sdtfg24g
+                  </span>
+                </div>
+                <div className="cell">
+                  <span className="time">
+                    18 m ago
+                  </span>
+                </div>
+                <div className="cell">
+                  <div className="moreOpt">
+                    <button type="button" className="moreOptBtn"></button>
+                    <div className="optDropdown">
+                      <button type="button" className="refund" onClick={() => openCloseRefundModal (true)}>Refund</button>  
+                      <button type="button" className="history">History</button>
+                    </div>  
+                  </div>
+                </div>
+              </div> */}
             </div>
           </Scrollbars>
         </div>
@@ -745,12 +875,7 @@ const Transaction = (props) => {
       loader={(param) => refundLoader (param)}
       /> }
 
-      {editTransModal && <EditTrModal
-        transaction={editTransaction}
-        closeModal={(param) => openCloseEditTransModal(param, null)}
-        contactId={props.contactId}
-        setSuccessMsg={setSuccessMsg}
-      />}
+      { editTransModal && <EditTrModal closeModal={(param) => openCloseEditTransModal (param)} contactId={props.contactId} /> }
 
       { completeTransModal && 
       <CompleteTransactionModal 

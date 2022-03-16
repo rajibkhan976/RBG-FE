@@ -10107,3 +10107,12 @@ select.editFormStyle{
   font-size: 13px;
   color: #9BAEBC;
 }
+
+.upcoming .cellWrapers.historyInnerInfo .cell.particulars .d-flex .iconCont {
+  left: -24px;
+}
+.transactionListing.dueTransactions .row .upcoming .cell.times {
+  width: 96px;
+  float: right;
+  padding: 18px 0 0;
+}

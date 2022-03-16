@@ -3650,6 +3650,7 @@ li.paymentModeLi, li.paymentAmtLi {
 .showMore {
   width: 100%;
   text-align: center;
+  cursor: pointer;
 }
 
 .showMore img {
@@ -3845,7 +3846,7 @@ li.paymentModeLi, li.paymentAmtLi {
 }
 
 .transactionListing.dueTransactions .row .cell.times {
-  width: 15%!important;
+  width: 15%;
   padding: 18px 5px;
 }
 
@@ -3860,7 +3861,10 @@ li.paymentModeLi, li.paymentAmtLi {
 
 .transactionListing .row.due {
   background: #F5F9FD;
-  /* border: 1px solid #E9F1F9; */
+  border: 1px solid #E9F1F9;
+}
+.transactionListing .row.due .showMore {
+  background: #E9F1F9;
 }
 
 .transactionListing.dueTransactions .row.due .cell {
