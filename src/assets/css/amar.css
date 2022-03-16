@@ -2371,7 +2371,7 @@ ul.paymentUlInfo li.paymentModeLi {
 .holiday .half .flatForm input {
   margin-top: 0;
 }
-.modalForm .formControl + .formControl {
+.modalForm .formControl:not(.half)+.formControl:not(.half) {
   margin-top: 18px;
 }
 .showHolidayDateValue {
