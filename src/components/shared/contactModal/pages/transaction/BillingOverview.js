@@ -84,6 +84,10 @@ const BillingOverview = (props) => {
                       : "paymentType"
                   }
                   key={i}
+                  style={{
+                    order: (props.newPay.type === "card" && props.newPay.billingId === cardItem._id) ? 1 : 2,
+                    marginTop: (props.newPay.type === "card" && props.newPay.billingId === cardItem._id) ? "0" : "10px"
+                  }}
                 >
                   {/* {console.log(":::setNewPay::::", props.newPay)} */}
                   <span className="circleRadio">
@@ -132,6 +136,10 @@ const BillingOverview = (props) => {
                       : "paymentType"
                   }
                   key={i}
+                  style={{
+                    order: (props.newPay.type === "bank" && props.newPay.billingId === bankItem._id) ? 1 : 2,
+                    marginTop: (props.newPay.type === "bank" && props.newPay.billingId === bankItem._id) ? "0" : "10px"
+                  }}
                 >
                   <span className="circleRadio">
                     <input

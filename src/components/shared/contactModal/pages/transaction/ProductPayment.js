@@ -194,7 +194,6 @@ const ProductPayment = (props) => {
             let cashAmount = 0;
             let onlineAmount = 0;
 
-            setPaymentSuccessMessage("Product purchase transaction successfull.");
             payIfo.onlinePayment = productPayload.payments.filter(
               (payment) => payment.payment_type === "online" && payment.isPayNow === 1
             );
@@ -220,6 +219,8 @@ const ProductPayment = (props) => {
             console.log(":::payIfo:::", payIfo);
             setPaymentInfo(payIfo);
             console.log("Payload result:::", productBuy);
+
+            setPaymentSuccessMessage((cashAmount === 0 && onlineAmount === 0) ? "Contract creation successful." : "Product purchase transaction successfull.");
             
             setPaymentFailed(null);
             setProductPaymentFailed(false);
@@ -347,7 +348,7 @@ const ProductPayment = (props) => {
     } finally{
       setTimeout(() => {
         downPaymentList.current.scroll({
-          top: 300,
+          top: (300 * downPayments.length),
           behavior: 'smooth'
         })
       }, 500);
