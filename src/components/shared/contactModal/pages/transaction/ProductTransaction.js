@@ -444,7 +444,8 @@ const ProductTransaction = (props) => {
                           </button>
 
                           <ul>
-                            {(!productItemsList || productItemsList.length === 0 || productItemsList === undefined) ? <Loader /> : productItemsList.map((productItem, i) => (
+                            {showLoader && <Loader />}
+                            {productItemsList.map((productItem, i) => (
                               <li
                                 key={i}
                                 onClick={() =>

@@ -2388,3 +2388,10 @@ ul.paymentUlInfo li.paymentModeLi {
 .cmnFieldStyle.fieldAlias {
   padding: 3px 10px;
 }
+.productPaymentTransaction .innerDrawerMessage {
+  position: static;
+  transform: none;
+  width: 100%;
+  margin-inline: 0;
+  max-width: 100%;
+}

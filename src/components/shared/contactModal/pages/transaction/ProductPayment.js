@@ -54,6 +54,7 @@ const ProductPayment = (props) => {
 
   const [paymentFailed, setPaymentFailed] = useState(null);
   const [hasError, setHasError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("")
   const [downPaymentErrorMsg, setDownPaymentErrorMsg] = useState({
     title_Err: "",
     amount_Err: "",
@@ -174,7 +175,7 @@ const ProductPayment = (props) => {
       payments: paymentsArray,
     };
     
-        console.log("PAYLOAD:::", productPayload);
+        console.log("PAYLOAD:::", productPayload, newPay, newPay.type);
     
     let filteredPay = [...downPayments].filter((payNow, i)=> payNow.isPayNow === 1 && payNow.paymentConfirmation === false)
 
@@ -182,64 +183,73 @@ const ProductPayment = (props) => {
 
     if (!hasError) {
       if(filteredPay.length === 0) {
-        try {
-          setIsLoader(true);
+        if(productPayload.billingId !== "") {
+          try {
+            setIsLoader(true);
 
-          let productBuy = await ProductServices.buyProduct(productPayload);
+            let productBuy = await ProductServices.buyProduct(productPayload);
 
-          console.log("HERE NOW:::::::::", productBuy.status);
+            console.log("HERE NOW:::::::::", productBuy.status);
 
-          if (productBuy.status === "success") {
-            let payIfo = [];
-            let cashAmount = 0;
-            let onlineAmount = 0;
+            if (productBuy.status === "success") {
+              let payIfo = [];
+              let cashAmount = 0;
+              let onlineAmount = 0;
 
-            setPaymentSuccessMessage("Product purchase transaction successfull.");
-            payIfo.onlinePayment = productPayload.payments.filter(
-              (payment) => payment.payment_type === "online" && payment.isPayNow === 1
-            );
-            payIfo.cashPayment = productPayload.payments.filter(
-              (payment) => payment.payment_type === "cash" && payment.isPayNow === 1
-            );
-
-            payIfo.onlineAmount = productPayload.payments
-              .filter((payment) => payment.payment_type === "online" && payment.isPayNow === 1)
-              .reduce(
-                (previousValue, currentValue) =>
-                  parseFloat(previousValue) + parseFloat(currentValue.amount),
-                onlineAmount
+              setPaymentSuccessMessage("Product purchase transaction successfull.");
+              payIfo.onlinePayment = productPayload.payments.filter(
+                (payment) => payment.payment_type === "online" && payment.isPayNow === 1
               );
-            payIfo.cashAmount = productPayload.payments
-              .filter((payment) => payment.payment_type === "cash" && payment.isPayNow === 1)
-              .reduce(
-                (previousValue, currentValue) =>
-                  parseFloat(previousValue) + parseFloat(currentValue.amount),
-                cashAmount
+              payIfo.cashPayment = productPayload.payments.filter(
+                (payment) => payment.payment_type === "cash" && payment.isPayNow === 1
               );
 
-            console.log(":::payIfo:::", payIfo);
-            setPaymentInfo(payIfo);
-            console.log("Payload result:::", productBuy);
-            
-            setPaymentFailed(null);
-            setProductPaymentFailed(false);
-            openSuccessMessage();
-            console.log(":::::::::::HERE:::::::::::");
+              payIfo.onlineAmount = productPayload.payments
+                .filter((payment) => payment.payment_type === "online" && payment.isPayNow === 1)
+                .reduce(
+                  (previousValue, currentValue) =>
+                    parseFloat(previousValue) + parseFloat(currentValue.amount),
+                  onlineAmount
+                );
+              payIfo.cashAmount = productPayload.payments
+                .filter((payment) => payment.payment_type === "cash" && payment.isPayNow === 1)
+                .reduce(
+                  (previousValue, currentValue) =>
+                    parseFloat(previousValue) + parseFloat(currentValue.amount),
+                  cashAmount
+                );
 
-            setHasError(false);
-            setDownPaymentErrorMsg({
-              ...downPaymentErrorMsg,
-              payment_not_received: ""
-            })
-          } else {
-            setPaymentFailed(productBuy.description);
+              console.log(":::payIfo:::", payIfo);
+              setPaymentInfo(payIfo);
+              console.log("Payload result:::", productBuy);
+              
+              setPaymentFailed(null);
+              setProductPaymentFailed(false);
+              openSuccessMessage();
+              console.log(":::::::::::HERE:::::::::::");
+
+              setHasError(false);
+              setDownPaymentErrorMsg({
+                ...downPaymentErrorMsg,
+                payment_not_received: ""
+              })
+            } else {
+              setPaymentFailed(productBuy.description);
+              setProductPaymentFailed(true);
+            }
+          } catch (error) {
+            setPaymentFailed(error);
             setProductPaymentFailed(true);
+          } finally {
+            setErrorMsg("")
+            setIsLoader(false);
           }
-        } catch (error) {
-          setPaymentFailed(error);
-          setProductPaymentFailed(true);
-        } finally {
-          setIsLoader(false);
+        }
+        else {
+          setErrorMsg("Please add some payment methods (card or bank) before making online payment!")
+          setTimeout(() => {
+            setErrorMsg("")
+          }, 5000);
         }
       }
       else {
@@ -275,7 +285,7 @@ const ProductPayment = (props) => {
       setDownPaymentActive(true);
       setDownPayments(downpayments=>[...downpayments, {
         title: "",
-        amount: 0,
+        amount: "",
         type: "downpayment",
         isPayNow: 1,
         paymentDate: todayPayDate().toISOString().split("T")[0],
@@ -456,7 +466,7 @@ const ProductPayment = (props) => {
     .filter((dpTarget, index) => dpTarget.isPayNow === 1)
     .reduce(
       (previousValue, currentValue) =>
-        parseFloat(previousValue) + parseFloat(currentValue.amount),
+        parseFloat(previousValue) + downPayments.length > 0 && downPayments[0].amount !== "" ? parseFloat(currentValue.amount) : 0,
       totalPlaceholder
     )
 
@@ -523,20 +533,6 @@ const ProductPayment = (props) => {
   // mark first downpayment PAID
 
   // Change default payment method
-  const changeDefaultPay = (payItem, type) => {
-    try {
-      setIsLoader(true);
-      setNewPay({
-        type: type,
-        billingId: payItem._id,
-      });
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setIsLoader(false);
-    }
-  };
-
   const changeDefaultPayFn = (data) => {
     console.log('data came from biling overviwe', data);
     setNewPay({
@@ -585,7 +581,9 @@ const ProductPayment = (props) => {
       
     try {
       // if modified amount is 0 or nothing
-      if (e.target.value.trim() === "" || parseFloat(e.target.value) === 0 || e.target.value[0] === 0) {
+      if (e.target.value.trim() === "" || parseFloat(e.target.value) === 0 || e.target.value[0] === "0") {
+        e.target.value = ""
+
         downPaymentsPlaceholder[i].amount = "";
 
         setDownPayments(downPaymentsPlaceholder);
@@ -595,6 +593,7 @@ const ProductPayment = (props) => {
           ...downPaymentErrorMsg,
           edit_Amount_Err: "Amount can't be empty or 0",
         });
+        console.log("downPaymentsPlaceholder:::", downPaymentsPlaceholder);
       }
       // if modified amount is 0 or nothing
 
@@ -665,6 +664,9 @@ const ProductPayment = (props) => {
       
     }
   };
+  useEffect(()=>{
+    console.log("downPayments", downPayments);
+  },[downPayments])
   const changeDownpaymentIsPayNow = (e, downpay, i) => {
     const downPaymentsPlaceholder = [...downPayments];
 
@@ -769,6 +771,9 @@ const ProductPayment = (props) => {
       {isLoader && <Loader />}
       {!props.successProductPayment && (
         <form className="productPaymentTransaction">
+          {errorMsg !== "" && <div className="popupMessage error innerDrawerMessage">
+            <p>{errorMsg}</p>
+          </div>}
           <div className="gridCol">
             <div className="cartProductInner productDownPayment">
               <header className="informHeader d-flex f-align-center f-justify-between">
