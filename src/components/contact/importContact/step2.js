@@ -185,6 +185,9 @@ function Step2(props) {
             setCustomFields([]);
         }
     }
+    const handlePreviousButton = () => {
+        props.prev();
+    }
     const handleSetp2Submit = () => {
         const custom = props.getState('custom');
         setPrimaryError(false);
@@ -200,10 +203,12 @@ function Step2(props) {
                 if (map.lastName === "") {
                     setMapError(prevState => ({...prevState, lastName: true}));
                 }
-                document.getElementsByClassName('formAccordion')[0].scroll({
-                    top: 0,
-                    behavior: 'smooth',
-                });
+                setTimeout(() => {
+                    document.getElementsByClassName('formAccordion')[0].scroll({
+                        top: 0,
+                        behavior: 'smooth',
+                    });
+                }, 100);
                 return false;
             }
         } else if (custom.primaryField === 'phone') {
@@ -218,10 +223,12 @@ function Step2(props) {
                 if (map.lastName === "") {
                     setMapError(prevState => ({...prevState, lastName: true}));
                 }
-                document.getElementsByClassName('formAccordion')[0].scroll({
-                    top: 0,
-                    behavior: 'smooth',
-                });
+                setTimeout(() => {
+                    document.getElementsByClassName('formAccordion')[0].scroll({
+                        top: 0,
+                        behavior: 'smooth',
+                    });
+                }, 100);
                 return false;
             }
         } else {
@@ -239,10 +246,12 @@ function Step2(props) {
                 if (map.lastName === "") {
                     setMapError(prevState => ({...prevState, lastName: true}));
                 }
-                document.getElementsByClassName('formAccordion')[0].scroll({
-                    top: 0,
-                    behavior: 'smooth',
-                });
+                setTimeout(() => {
+                    document.getElementsByClassName('formAccordion')[0].scroll({
+                        top: 0,
+                        behavior: 'smooth',
+                    });
+                }, 100);
                 return false;
             }
         }
@@ -934,6 +943,9 @@ function Step2(props) {
                 </div>
             </div>
             <div className="importModalFooter">
+                {/*<button className={"nextButton previousButton"} onClick={handlePreviousButton}>
+                    <span>Previous <img src={arrow_forward} alt="" /></span>
+                </button>*/}
                 <button className={"nextButton"} onClick={handleSetp2Submit}>
                     <span>Next <img src={arrow_forward} alt="" /></span>
                 </button>

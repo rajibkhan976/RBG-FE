@@ -711,14 +711,21 @@ const UserModal = (props) => {
             formErrorsCopy.orgEmail = "Please fillup the email";
         }
 
+        if (orgEmail) {
+            let isEmail = orgEmail.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i);
+            if (!isEmail) {
+                isError = true;
+                formErrorsCopy.orgEmail = "Invalid email address";
+            }
+        }
+
         /**
         * Check org description field
         */
-        if (isOwner && !orgDescription) {
+       /* if (isOwner && !orgDescription) {
             isError = true;
             formErrorsCopy.orgDescription = "Please fillup the description";
-        }
-
+        }*/
         /**
          * Check association name
          */
@@ -777,6 +784,10 @@ const UserModal = (props) => {
                 associationEmail: formErrors.associationEmail,
                 associationDescription: formErrors.associationDescription,
             });
+            document.getElementsByClassName('sideMenuBody')[0].scroll({
+                top: 0,
+                behavior: 'smooth',
+            });
             setTimeout(
                 () => setFormErrors({
                     ...formErrors,
@@ -793,10 +804,7 @@ const UserModal = (props) => {
                     associationName: "",
                     associationEmail: "",
                     associationDescription: ""
-                }),
-                5000
-            );
-            console.log('formErrors', formErrors)
+                }), 5000);
         } else {
             /**
              * Submit group create form
@@ -827,7 +835,8 @@ const UserModal = (props) => {
             let assoId = null;
             let orgPayload = null;
             if (isOwner) {
-                let slug = orgName.replace(/\s+/g, '-').toLowerCase();
+                let organizationName = orgName.trim();
+                let slug = organizationName.replace(/\s+/g, '-').toLowerCase();
                 orgPayload = {
                     name: orgName,
                     email: orgEmail,

@@ -62,9 +62,9 @@ const CourseListing = (props) => {
         html += `<span style="background-color: ${color.colorcode}"></span>`;
       } else {
         if (index + 1 === 4) {
-          html += `<div className="colorpaletContainer">
-                    <button className="dropIt">+${prop.colors.length - 3}</button>
-                    <div className="colorPalet">`;
+          html += `<div class="colorpaletContainer">
+                    <button class="dropIt">+${prop.colors.length - 3}</button>
+                    <div class="colorPalet">`;
         }
         html += `<span style="background-color: ${color.colorcode}"></span>`;
         if (index + 1 === prop.colors.length) {

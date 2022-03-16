@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import { useHistory } from "react-router-dom";
 import fileDoneIcon from "../../../assets/images/fileDoneIcon.svg";
 import fileFail_icon from "../../../assets/images/fileFail_icon.svg";
 import done_white_icon from "../../../assets/images/done_white.svg";
@@ -6,6 +7,7 @@ import {ContactService} from "../../../services/contact/ContactServices";
 import Loader from "../../shared/Loader";
 
 function Status(props) {
+    const history = useHistory();
     const [errors, setErrors] = useState([]);
     const [totalRecord, setTotalRecord] = useState(0);
     const [updatedRecord, setUpdatedRecord] = useState(0);
@@ -26,6 +28,10 @@ function Status(props) {
         setDuplicateType(status.duplicateType);
         setImportError(status.importError);
         setIsLoader(false);
+    }
+    const viewRecords = () => {
+        history.push(`/contacts`);
+        props.closeModal();
     }
     useEffect(() => {
         fetchDetails()
@@ -59,7 +65,7 @@ function Status(props) {
                                         <h3>The selected file has been uploaded successfully.</h3>
                                         <div className="uploadFileBtn">
                                             View Records
-                                            <input type="button" />
+                                            <input type="button" onClick={viewRecords}/>
                                         </div>
 
                                     </div>
@@ -118,7 +124,7 @@ function Status(props) {
                     </div>
                     <div className="importModalFooter">
                         <button className={"nextButton lastStepBtn"} onClick={props.closeModal}>
-                            <span className="doneStepBtn"><img src={done_white_icon} alt="" /> Finish</span>
+                            <span className="doneStepBtn"><img src={done_white_icon} alt="" /> Close</span>
                         </button>
                     </div>
                 </div>

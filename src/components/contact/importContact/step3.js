@@ -37,8 +37,11 @@ function FinalStep(props) {
             </div>
             <div className="importModalFooter">
                 <button className={"nextButton lastStepBtn"} onClick={() => props.handleParentFun()}>
-                    <span className="doneStepBtn"><img src={done_white_icon} alt="" /> Finish</span>
+                    <span className="doneStepBtn"><img src={done_white_icon} alt="" /> Close</span>
                 </button>
+                {/*<button className={"nextButton lastStepBtn"} onClick={() => props.handleParentFun()}>
+                    <span className="doneStepBtn"><img src={done_white_icon} alt="" /> Import again</span>
+                </button>*/}
                 <p className="stapeIndicator">Step: {props.current} of 3</p>
             </div>
         </>

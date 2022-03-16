@@ -17,7 +17,7 @@ const Notifications = (props) => {
     const [importId, setImportId] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
     const [notificationData, setNotificationData] = useState(null);
-    const [notificationsListing, setNotificationListing] = useState(null);
+    const [notificationsListing, setNotificationListing] = useState([]);
     const [notificationsType, setNotificationType] = useState(null);
     const [notificationsPage, setNotificationPage] = useState(1);
     const [notificationsLastPage, setNotificationLastPage] = useState(false);
@@ -260,7 +260,7 @@ const Notifications = (props) => {
                                 </h4>
                                 <ul className="detailNotifList">
                                     {
-                                        notificationsListing && notificationsListing.length ? notificationsListing.map((e, i) => {
+                                        notificationsListing.length ? notificationsListing.map((e, i) => {
                                             return (
                                                 <li key={i}
                                                     className={e.isRead ? "detailNotif" : "detailNotif unreadNotifications"}>
@@ -290,11 +290,11 @@ const Notifications = (props) => {
                                                     {showNotification(e)}
                                                 </li>
                                             );
-                                        }) : <>
+                                        }) : ( !isLoader ? <>
                                             <li key="notFound">
                                                 <p>No notification found.</p>
                                             </li>
-                                        </>
+                                        </> : "" )
                                     }
                                     { isLoader ?
                                         <li className="loaderLi">
