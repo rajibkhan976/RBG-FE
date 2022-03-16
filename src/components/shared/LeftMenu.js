@@ -65,13 +65,13 @@ function LeftMenu(props) {
             <span className="menuName">Dashboard</span>
           </NavLink>
         </li>
-        {!isAssociationOwner ?
-        <li className="prototypeLink">
+        {/* {!isAssociationOwner ?
+        <li className="prototypeLink"> */}
           {/* <Link to={{ pathname: "https://xd.adobe.com/view/51a2c0f4-74d2-4ab7-9635-d6b625301742-04f1/?fullscreen" }}
             target="_blank"> */}
-            <a href="javascript:void(0)">
+            {/* <a href="javascript:void(0)"> */}
             {/* <div className="prototypeBatch">Prototype</div> */}
-            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
+            {/* <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28">
               <g id="_tower_icon_svg" transform="translate(-0.75 -0.75)">
                 <rect id="Rectangle_537" data-name="Rectangle 537" width="1" height="1" transform="translate(28 28)" fill="#305671" stroke="#305671" strokeWidth="0.5" />
                 <rect id="Rectangle_538" data-name="Rectangle 538" width="1" height="1" transform="translate(1 28)" fill="#305671" stroke="#305671" strokeWidth="0.5" />
@@ -79,9 +79,9 @@ function LeftMenu(props) {
               </g>
             </svg>
             <span className="menuName">Comm.</span>
-            </a>
+            </a> */}
           {/* </Link> */}
-        </li> : ''}
+        {/* </li> : ''} */}
         {/* <li>
           <NavLink
             className="leftMenuLink"
@@ -251,13 +251,13 @@ function LeftMenu(props) {
             </svg>
           </NavLink>
         </li> */}
-        {!isAssociationOwner && permissions && permissions.findIndex(p => p.entity === "automation") >= 0 ?
-          <li className="prototypeLink">
+        {/* {!isAssociationOwner && permissions && permissions.findIndex(p => p.entity === "automation") >= 0 ?
+          <li className="prototypeLink"> */}
             {/* <Link to={{ pathname: "https://xd.adobe.com/view/c9a94693-8d3c-4ffb-9a8b-6b07f07ef79c-9cfa/?fullscreen" }}
               target="_blank"> */}
-              <a href="javascript:void(0)">
+              {/* <a href="javascript:void(0)"> */}
               {/* <div className="prototypeBatch">Prototype</div> */}
-              <svg
+              {/* <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20.438"
                 height="28.033"
@@ -272,9 +272,9 @@ function LeftMenu(props) {
                 </g>
               </svg>
               <span className="menuName">Automation</span>
-              </a>
+              </a> */}
             {/* </Link> */}
-          </li> : ""}
+          {/* </li> : ""} */}
         {false && permissions && permissions.findIndex(p => p.entity === "automation") >= 0 ?
           <li>
             <NavLink
@@ -432,17 +432,17 @@ function LeftMenu(props) {
             </svg>
           </NavLink>
         </li>  */}
-        {isOrganizationOwner ? <li className="prototypeLink">
-          <NavLink to="/appointment"
+        {/* {isOrganizationOwner ? <li className="prototypeLink"> */}
+          {/* <NavLink to="/appointment"
           className="leftMenuLink"
               activeClassName="selected"
-          onClick={(e) => props.clickedSetupStatus(e)}
+          onClick={(e) => props.clickedSetupStatus(e)} */}
 
-          // {{ pathname: "https://xd.adobe.com/view/1a813aee-7ec1-42ca-9093-051ac3823496-4fd2/screen/b9e30ce7-1846-4d55-aedd-1639f29e7f28/?fullscreen" }}
+          {/* // {{ pathname: "https://xd.adobe.com/view/1a813aee-7ec1-42ca-9093-051ac3823496-4fd2/screen/b9e30ce7-1846-4d55-aedd-1639f29e7f28/?fullscreen" }}
           //
-          >
+          // > */}
             {/* <div className="prototypeBatch">Prototype</div> */}
-            <svg
+            {/* <svg
               xmlns="http://www.w3.org/2000/svg"
               width="22.612"
               height="27.5"
@@ -495,7 +495,7 @@ function LeftMenu(props) {
             </svg>
             <span className="menuName">Report</span>
           </NavLink>
-        </li> : ''}
+        </li> : ''} */}
       </ul>
       <div className="leftMenuToggle">
         {pathURL !== "/dashboard" ?
