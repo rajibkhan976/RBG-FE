@@ -168,7 +168,7 @@ const CategoryListing = (props) => {
         >
           <div className="innerScroll">
             {props.isLoader ? <Loader2 /> : ""}
-            <h3 className="productListingHeader">Course Categories</h3>
+            <h3 className="productListingHeader">Programs Categories</h3>
             <div className="productSearchPanel">
               <form method="post" onSubmit={handleSubmit}>
                 {category.showCross ? (
@@ -194,7 +194,7 @@ const CategoryListing = (props) => {
                   name="catname"
                   onChange={handleChange}
                   value={category.name}
-                  placeholder="Enter a course category"
+                  placeholder="Enter a program category"
                 />
                 <button className="btn" type="submit">
                   {category.btnName}
