@@ -7483,7 +7483,7 @@ p.trackName {
 }
 .overviewFormWrap .loaderOuter {
   position: fixed;
-  z-index: 999;
+  z-index: 9999;
   width: 820px;
   height: 100%;
   top:0;
@@ -10118,4 +10118,9 @@ select.editFormStyle{
 }
 .transactionListing.dueTransactions .row .upcoming .cell.amt {
   padding-left: 0;
+}
+
+.tabBarArea > div.loaderOuter {
+  position: fixed;
+  background: rgba(255, 255, 255, 0.8);
 }

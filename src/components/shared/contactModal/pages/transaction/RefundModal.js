@@ -29,6 +29,10 @@ const RefundModal = (props) => {
         props.closeModal();
     }
 
+    const alertMsg = (msg, type) => {
+        props.alertMsg(msg, type);
+    };
+
 
     const refundAmountHandel = (e) => {
         let val = e.target.value;
@@ -95,7 +99,6 @@ const RefundModal = (props) => {
     };
 
     const refundSubmit = () => {
-
         fieldErrorCheck.checkAmount(refundFormData.amount);
         fieldErrorCheck.checkReason(refundFormData.reason);
         fieldErrorCheck.checkOtherReason(refundFormData.otherReason);
@@ -123,14 +126,13 @@ const RefundModal = (props) => {
             amount: parseFloat(refundFormData.amount),
             note: refundFormData.reason == "others" ? refundFormData.otherReason : refundFormData.reason
         }
-        
+        loader(true);
         try {
-            loader(true);
             let rsponse = await TransactionServices.refund(props.contactId, payload);
             console.log("Refund Response: ", rsponse);
-            
+            alertMsg("Refund transaction successfull", "success");
         } catch (e) {
-
+            alertMsg(e.message, "error");
         } finally {
             loader(false);
             closeModal();

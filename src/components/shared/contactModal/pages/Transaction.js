@@ -22,7 +22,7 @@ import CompleteTransactionModal from "./transaction/CompleteTransactionModal";
 const Transaction = (props) => {
   const [transactionList, setTransactionList] = useState([]);
   const [isLoader, setIsLoader] = useState(false);
-  const [isLoaderTab, setIsLoaderTab] = useState(false);
+  const [isRefundLoader, setIsRefundLoader] = useState(false);
   const [isLoaderScroll, setIsLoaderScroll] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [refundModal, setRefundModal] = useState(false);
@@ -46,6 +46,10 @@ const Transaction = (props) => {
   const [upcomingHistoryIndex, setUpcomingHistoryIndex] = useState(true);
   const [contract, setContract] = useState();
   const [editTransaction, setEditTransaction] = useState(null);
+  const [refundAlertMsg, setRefundAlertMsg] = useState({
+    message: "",
+    type: ""
+  });
   
 
   const showOldTrxHistory = (index) => {
@@ -76,7 +80,15 @@ const Transaction = (props) => {
   };
 
   const refundLoader = (param) => {
-    setIsLoader(param);
+    setIsRefundLoader(param);
+  };
+
+  const refundAlert = (msg, type) => {
+    setRefundAlertMsg({...refundAlertMsg, message: msg, type: type});
+  }
+
+  const closeRefundAlert = () => {
+    setRefundAlertMsg({...refundAlertMsg, message: "", type: ""});
   };
 
   const openCloseEditTransModal = (param, transaction, loadData) => {
@@ -285,6 +297,7 @@ const Transaction = (props) => {
 
   return (
     <>
+      {isRefundLoader ? <Loader /> : ''}
       { successMsg && <AlertMessage type="success" message={successMsg} time={10000} close={closeAlert} /> }
       <div className="contactTabsInner">
         <h3 className="headingTabInner">Transactions</h3>
@@ -868,8 +881,10 @@ const Transaction = (props) => {
       amount={refundAmount} 
       subscriptionId={subscriptionId} 
       contactId={props.contactId} 
-      loader={(param) => refundLoader (param)}
+      loader={(param) => refundLoader (param)} 
+      alertMsg={(msg, type) => refundAlert (msg, type)} 
       /> }
+
 
       {editTransModal && <EditTrModal
         transaction={editTransaction}
@@ -878,6 +893,11 @@ const Transaction = (props) => {
         setSuccessMsg={setSuccessMsg}
       />}
 
+      { refundAlertMsg.message ? 
+      <AlertMessage message={setRefundAlertMsg.message} type={refundAlertMsg.type} time={5000} close={closeRefundAlert} /> 
+      : ""}
+
+
       { completeTransModal && 
       <CompleteTransactionModal 
         closeModal={(param) => openCloseCompleteTrans (param)} 
@@ -885,6 +905,8 @@ const Transaction = (props) => {
         successM={(param) => showSuccessAlert (param)} 
       /> 
       }
+
+      
 
     </>
   );
