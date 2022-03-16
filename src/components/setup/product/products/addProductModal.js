@@ -173,7 +173,7 @@ const AddProductModal = (props) => {
           console.log("Inisde Save");
           setSuccessMsg(msg);
 
-          props.getAddedProduct(data)
+          props.getAddedProduct &&props.getAddedProduct(data)
         } else {
           props.retriveProducts(false);
           props.retrieveCategories();

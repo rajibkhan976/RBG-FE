@@ -218,7 +218,7 @@ const AddCourseModal = (props) => {
     try {
       if (courseData.name === "") {
         throw new Error("Course name should not be empty");
-      } else if (courseData.fees === "" || courseData.fees === 0) {
+      } else if (courseData.fees === "" || courseData.fees === '0') {
         throw new Error("Course fees should not be 0 or empty");
       } else if (courseData.duration === "0") {
         throw new Error("Course duration should never be 0")
