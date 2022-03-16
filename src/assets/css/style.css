@@ -4437,11 +4437,17 @@ button.saveOverview img {
 .green {
   background: #36d177;
 }
+.gray {
+  background: #808080;
+}
 .red {
   background: #ed4755;
 }
 .blue {
   background: #009dff;
+}
+.black {
+  background: #000;
 }
 .violet {
   background: #5570c9;
@@ -9938,4 +9944,138 @@ select.editFormStyle{
   width: 100%;
   height: 50px;
   background: #fff url("../images/loader.gif") no-repeat center / 50px;
+}
+
+
+/* Refund reason css */
+
+.notePop {
+  display: inline-block;
+  position: relative;
+  width: 14px;
+  height: 14px;
+  top: 2px;
+  left: 10px;
+}
+.notePopIcon {
+  width: 14px;
+  height: 14px;
+  background: #fff url("../images/note_icon_dark.svg") no-repeat center;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: all 0.3s ease 0s;
+}
+.notePopContent {
+  position: absolute;
+  z-index: 5;
+  width: 250px;
+  background: #fff;
+  bottom: 90%;
+  left: -123px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  box-shadow: 0 9px 25px rgb(0 0 0 / 14%);
+  font-size: 11px;
+  font-weight: normal;
+  text-transform: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease 0s;
+}
+.notePopContent span {
+  font-weight: bold;
+}
+.notePopContent::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  bottom: 0;
+  right: 115px;
+  border-top: 6px solid #fff;
+  border-right: 6px solid transparent;
+  border-left: 6px solid transparent;
+  transition: all 0.3s ease 0.2s;
+}
+.notePop:hover .notePopIcon {
+  opacity: 1;
+}
+.notePop:hover .notePopContent {
+  opacity: 1;
+  bottom: calc(100% + 10px);
+  pointer-events: visible;
+}
+.notePop:hover .notePopContent::after {
+  bottom: -6px;
+}
+
+
+/* Product item list css */
+
+.productItemList {
+  display: inline-block;
+  position: relative;
+  margin-left: 10px;
+}
+.productItemList .productNumber {
+  padding: 0 10px;
+  font-weight: 600;
+  border: 1px solid #9BAEBC;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.productItemList .productItems {
+  position: absolute;
+  z-index: 5;
+  left: 0;
+  top: 18px;
+  background-color: #fff;
+  border-radius: 5px;
+  width: 358px;
+  max-height: 190px;
+  box-shadow: 0 5px 20px rgb(0 0 0 / 14%);
+  display: none;
+}
+.productItemList:hover .productItems {
+  display: block;
+  
+}
+.productItemList .productItems li {
+  padding: 10px 14px 14px 18px;
+  border-bottom: 1px solid #E9EFF5;
+  font-size: 12px;
+  color: #9BAEBC;
+}
+.productItemList .productItems li h3 {
+  color: var(--darkBlue);
+  font-size: 12px;
+  font-weight: normal;
+  padding-bottom: 5px;
+}
+.productItemList .productItems li h3 span {
+  display: inline-block;
+  padding-right: 7px;
+}
+.productItemList .productItems li:last-child {
+  border-bottom: none;
+}
+.productItemList .productItems li .productSpec {
+  font-weight: 600;
+  font-size: 10px;
+}
+.productItemList .productItems li .productSpec span {
+  display: inline-block;
+  margin-right: 16px;
+  margin-left: 5px;
+  color: var(--darkBlue);
+}
+.productItemList .productItems li .productSpec .productColor {
+  display: inline-block;
+  margin-right: 14px;
+  margin-left: 5px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  position: relative;
+  top: 5px;
 }

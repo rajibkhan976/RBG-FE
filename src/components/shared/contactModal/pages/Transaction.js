@@ -470,7 +470,31 @@ const Transaction = (props) => {
                                 
                               </div>
                               <div>
-                                <span>{item.type == "tuiton_fees" ? "Program" : "Product"}:</span> “{item.title}”
+                                <span>{item.type == "tuiton_fees" ? "Program" : "Product"}: </span> 
+                                {item.history.length && item.history[item.history.length - 1].transaction_data[0].product}
+                                <div className="productItemList">
+                                  <div className="productNumber">
+                                    {item.history.length && item.history[item.history.length - 1].transaction_data.length > 1 ?
+                                    item.history.length && item.history[item.history.length - 1].transaction_data.length
+                                    : "1"}
+                                  </div>
+                                  <ul className="productItems">
+                                    
+                                    {item.history.length && item.history[item.history.length - 1].transaction_data.map((product, key) => {
+                                      return (
+                                        <li className="itemList">
+                                          <h3><span>{key+1 + "."}</span>{product.product}</h3>
+                                          <div className="productSpec">
+                                            Color: <span className={"productColor " + product.color}></span>
+                                            Size: <span>{product.size}</span>
+                                            Qty: <span>{product.qnty}</span>
+                                          </div>
+                                        </li>
+                                      )
+                                    })}
+                                    
+                                  </ul>
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -541,6 +565,15 @@ const Transaction = (props) => {
                                     <div className="textCont">
                                       <div className="status">
                                         {element.status == "failed" ? "failed" : (element.amount < 0 ? "refunded" : "successful")}
+                                        {element.amount < 0 ? 
+                                        <div className="notePop">
+                                          <div className="notePopIcon"></div>
+                                          <div className="notePopContent">
+                                            <span>Reason: </span>
+                                            {element.note}
+                                          </div>
+                                        </div>
+                                        : ""}
                                       </div>
                                       <div>
                                         <span>Transaction ID:</span> {element._id}
