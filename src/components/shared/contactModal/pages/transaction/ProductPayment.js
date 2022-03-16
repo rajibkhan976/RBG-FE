@@ -187,7 +187,9 @@ const ProductPayment = (props) => {
 
           let productBuy = await ProductServices.buyProduct(productPayload);
 
-          if (productBuy.status === 200) {
+          console.log("HERE NOW:::::::::", productBuy.status);
+
+          if (productBuy.status === "success") {
             let payIfo = [];
             let cashAmount = 0;
             let onlineAmount = 0;
@@ -223,22 +225,25 @@ const ProductPayment = (props) => {
             setProductPaymentFailed(false);
             openSuccessMessage();
             console.log(":::::::::::HERE:::::::::::");
-          }
 
-          setHasError(false);
-          setDownPaymentErrorMsg({
-            ...downPaymentErrorMsg,
-            payment_not_received: ""
-          })
+            setHasError(false);
+            setDownPaymentErrorMsg({
+              ...downPaymentErrorMsg,
+              payment_not_received: ""
+            })
+          } else {
+            setPaymentFailed(productBuy.description);
+            setProductPaymentFailed(true);
+          }
         } catch (error) {
-          console.log(error.message);
-          setPaymentFailed(error.message);
+          setPaymentFailed(error);
           setProductPaymentFailed(true);
         } finally {
           setIsLoader(false);
         }
       }
       else {
+        console.log("IN ERROR!");
         setHasError(true);
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
@@ -1383,6 +1388,7 @@ const ProductPayment = (props) => {
             <div className="payModalDetails">
               <img src={cardFail} alt="" />
               <p>{paymentFailed}</p>
+              {/* {console.log("IN BODY:::", paymentFailed)} */}
             </div>
 
             <div className="buyBtns failedPayment">

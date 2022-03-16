@@ -215,20 +215,21 @@ export const ProductServices = {
         try {
             const url = config.buyProductUrl;
             const result = await axios.post(url, payload, { headers: headers });
-
-            console.log("BUY PRODUCT STATUS:::", result);
             
             if (result.status === 200) {
-                console.log(":::RESULT 200:::");
-              return result;
+                console.log(":::RESULT 200:::", result);
+
+                return result.data;
             } else {
-              throw new Error(
-                "There is an error adding this(ese) Product(s). Please contact support"
-              );
+                console.log("In error now", result);
+                throw new Error(result);
             }
         } catch (e) {
-            console.log("THROWING ERROR HERE:::", e.response.data);
-            throw new Error(e.response.data.message);
+            if(!typeof e.data === 'undefined') {
+                throw new Error(e.response.data.message);
+            } else {
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
     }
 };
