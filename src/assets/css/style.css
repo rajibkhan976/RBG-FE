@@ -2252,6 +2252,7 @@ img.dropDownIcon {
   width: 100%;
   padding: 15px 0;
   position: relative;
+  cursor: pointer;
 }
 .detailNotif::before,
 .detailNotif::after {
