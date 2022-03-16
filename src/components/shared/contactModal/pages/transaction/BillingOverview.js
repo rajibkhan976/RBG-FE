@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import card from "../../../../../assets/images/card.svg";
 import cardActive from "../../../../../assets/images/cardActive.svg";
 // import crossTop from "../../../../../assets/images/cross.svg";
@@ -13,6 +13,7 @@ const BillingOverview = (props) => {
   const [cardBankList, setCardBankList] = useState([])
   const [bankList, setBankList] = useState([])
   const [isLoader, setIsLoader] = useState(false);
+  const payModes = useRef(null)
 
   const fetchCardBank = async () => {
     let cardBanksList;
@@ -42,6 +43,15 @@ const BillingOverview = (props) => {
     }
   };
 
+  const scrollToTop = () => {
+    setTimeout(() => {
+      payModes.current.scroll({
+        top: 0,
+        behavior: 'smooth'
+      })
+    }, 100);
+  }
+
   useEffect(()=>{
       fetchCardBank()
       console.log(":::::::INSIDE BILLING OVERVIEW:::::::");
@@ -65,7 +75,7 @@ const BillingOverview = (props) => {
           </button> */}
         </header>
 
-        <div className="bodytransactionForm bodyProductPayModes d-flex f-column">
+        <div className="bodytransactionForm bodyProductPayModes d-flex f-column" ref={payModes}>
         {isLoader && <Loader/>}
           <p className="paymentTypes" style={{
             order: props.newPay.type === "card" ? "1" : "3"
@@ -94,7 +104,11 @@ const BillingOverview = (props) => {
                     <input
                       type="radio"
                       name="billingTransaction"
-                      onChange={() => props.changeDefaultPay(cardItem, "card")}
+                      onChange={() => {
+                          props.changeDefaultPay(cardItem, "card")
+                          scrollToTop()
+                        }
+                      }
                       checked={
                         props.newPay.type === "card" &&
                         props.newPay.billingId === cardItem._id
@@ -145,7 +159,11 @@ const BillingOverview = (props) => {
                     <input
                       type="radio"
                       name="billingTransaction"
-                      onChange={(e) => props.changeDefaultPay(bankItem, "bank")}
+                      onChange={(e) => {
+                          props.changeDefaultPay(bankItem, "bank")
+                          scrollToTop()
+                        }
+                      }
                       checked={
                         props.newPay.type === "bank" &&
                         props.newPay.billingId === bankItem._id
