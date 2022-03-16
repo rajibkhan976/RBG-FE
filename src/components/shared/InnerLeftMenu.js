@@ -330,8 +330,8 @@ const InnerLeftMenu = (props) => {
                 <NavLink className="leftMenuInnerLink" to="/courses">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
-                    <p className="linkHeading">Courses</p>
-                    <p className="linkAbout">Manage your courses</p>
+                    <p className="linkHeading">Programs</p>
+                    <p className="linkAbout">Manage your programs</p>
                     <button className="btn sidemenuarrow">
                       <img src={SideMenuArrow} alt="" />
                     </button>

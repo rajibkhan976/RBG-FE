@@ -241,10 +241,10 @@ const Setup = (props) => {
                       to="/courses"
                       onClick={(e) => props.clickedLink(e)}
                     >
-                      Courses
+                      Programs
                     </NavLink>
                   </h3>
-                  <p>Manage your courses</p>
+                  <p>Manage your programs</p>
                 </div>
               </div>
             </li>
