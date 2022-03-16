@@ -65,18 +65,8 @@ const Transaction = (props) => {
 
   const openRefundModal = (item) => {
     setRefundModal(true);
-
-    let trxType = item.history[item.history.length -1].transaction_for;
-    console.log("trxType ", item);
-    let data = item.history[item.history.length -1];
     setSubscriptionId(item._id);
-
-    if (trxType == "product") {
-      let amount = (data.transaction_data.length > 1) ? data.transaction_data.reduce((v1, v2) => (v1.price*v1.qnty) + (v2.price*v2.qnty)).toFixed(2) : (data.transaction_data[0].price*data.transaction_data[0].qnty).toFixed(2);
-      setRefundAmount(amount);
-    } else {
-      setRefundAmount(data.transaction_data.amount);
-    }
+    setRefundAmount(item.amount);
   };
 
   const closeRefundModal = () => {
@@ -298,8 +288,8 @@ const Transaction = (props) => {
           </button>
           <span>* Explanatory text blurb should be here.</span>
         </div>
+        {isLoader ? <Loader /> : ''}
         <div className={transactionList?.pagination?.count > 0 ? "transactionListing" : "hide"}>
-          {isLoader ? <Loader /> : ''}
           <div className="row head">
             <div className="cell">Particulars</div>
             <div className="cell">Amount</div>
@@ -363,7 +353,7 @@ const Transaction = (props) => {
                   <div className="cell amt">
                     <span className="amount" >
                     <span className="tutionAmt">{item.type == "tuiton_fees" ? "Tution Fee" : (item.type == "downpayment" ? "Downpayment" : "Outstanding")}</span>
-                      { "$" + parseFloat(item.amount).toFixed(2) }
+                      { "$ " + parseFloat(item.amount).toFixed(2) }
                     </span>
                   </div>
                 

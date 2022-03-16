@@ -10116,3 +10116,6 @@ select.editFormStyle{
   float: right;
   padding: 18px 0 0;
 }
+.transactionListing.dueTransactions .row .upcoming .cell.amt {
+  padding-left: 0;
+}
