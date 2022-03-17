@@ -2401,3 +2401,10 @@ ul.paymentUlInfo li.paymentModeLi {
   display: none !important;
 }
 /* HOT FIX FOR IFRAME ISSUE */
+
+.authBody .loginRightPart .popupMessage {
+  position: static;
+  transform: none;
+  margin: 0 !important;
+  text-align: left;
+}
