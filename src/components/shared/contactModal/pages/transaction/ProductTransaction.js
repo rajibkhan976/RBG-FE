@@ -346,7 +346,7 @@ const ProductTransaction = (props) => {
             previousValue + currentValue.price * currentValue.qnty,
           totalPlaceholder
         );
-        setTotalAmt(parseFloat(sumAmt).toFixed(2));
+        setTotalAmt(parseFloat(sumAmt));
         // console.log("sumAmt", sumAmt);
       } else {
         // console.log("Sum now", totalAmt);
@@ -841,7 +841,7 @@ const ProductTransaction = (props) => {
                             $ {cartItem.price} x {cartItem.qnty}
                           </div>
                           <div className="cartAmount">
-                            {"$ " + parseFloat(cartItem.price * cartItem.qnty).toFixed(2)}
+                            {"$ " + parseFloat(cartItem.price * cartItem.qnty)}
                             
                             {cartItem.tax && (
                               <div className="cartTax">+ 10% Tax</div>

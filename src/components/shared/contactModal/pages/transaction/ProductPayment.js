@@ -99,11 +99,11 @@ const ProductPayment = (props) => {
 
       console.log("TAxED AMOUNT", modifiedCartState, taxtAmt, modifiedCartState.filter((cartItem, i) => cartItem.tax === 1));
 
-      setTotalAmt(parseFloat(sumAmt).toFixed(2));
-      setTotalTaxAmt(parseFloat(taxtAmt).toFixed(2));
+      setTotalAmt(parseFloat(sumAmt));
+      setTotalTaxAmt(parseFloat(taxtAmt));
       setOutstanding({
         ...outStanding,
-        amount: (parseFloat(sumAmt) + parseFloat(taxtAmt)).toFixed(2),
+        amount: (parseFloat(sumAmt) + parseFloat(taxtAmt)),
         title: "Outstanding"
       });
       
@@ -151,7 +151,7 @@ const ProductPayment = (props) => {
     let outStandingPlaceholder = outStanding;
         outStandingPlaceholder.title = "Outstanding";
         if(parseFloat(outStandingPlaceholder.amount) !== 0) {
-          outStandingPlaceholder.amount = parseFloat(parseFloat(outStandingPlaceholder.amount).toFixed(2))
+          outStandingPlaceholder.amount = parseFloat(parseFloat(outStandingPlaceholder.amount))
           paymentsArray.push(outStandingPlaceholder);
           console.log("paymentsArray", paymentsArray);
         }
@@ -466,7 +466,7 @@ const ProductPayment = (props) => {
     .filter((dpTarget, index) => dpTarget.isPayNow === 1)
     .reduce(
       (previousValue, currentValue) =>
-        parseFloat(previousValue) + downPayments.length > 0 && downPayments[0].amount !== "" ? parseFloat(currentValue.amount) : 0,
+        parseFloat(previousValue) + parseFloat(currentValue.amount),
       totalPlaceholder
     )
 
@@ -475,20 +475,20 @@ const ProductPayment = (props) => {
         return 0.00;
       }
       if (outStanding.isPayNow === 1) {
-        return parseFloat(outStanding.amount).toFixed(2);
+        return parseFloat(outStanding.amount);
       }
     }
     if (downPayments.length > 0) {
       if (outStanding.amount > 0.00) {
         if (outStanding.isPayNow === 0) {
-          return totalDownpaymentsAmt.toFixed(2);
+          return totalDownpaymentsAmt;
         }
         if (outStanding.isPayNow === 1) {
-          return (parseFloat(outStanding.amount) + totalDownpaymentsAmt).toFixed(2)
+          return (parseFloat(outStanding.amount) + totalDownpaymentsAmt)
         }
       }
       if (outStanding.amount === 0.00) {
-        return totalDownpaymentsAmt.toFixed(2)
+        return totalDownpaymentsAmt
       }
     }
   };
