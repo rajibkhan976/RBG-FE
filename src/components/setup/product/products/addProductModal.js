@@ -141,9 +141,9 @@ const AddProductModal = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoader(true);
     try {
       if (createValidation()) {
+        setIsLoader(true);
         const data = {
           category: (productData.category) ? productData.category : categories[0]._id,
           name: productData.name,
@@ -153,15 +153,16 @@ const AddProductModal = (props) => {
           size: productData.size,
           tax: productData.tax.toString()
         };
-        console.log("Data to be updated or added", data);
+        // console.log("Data to be updated or added", data);
         let msg;
         if (productData.id) {
           const updateData = { ...data, id: productData.id };
           msg = await ProductServices.editProduct(updateData);
           console.clear();
           console.log(msg)
-        } else {
+        } else {  
           const res = await ProductServices.createProduct(data);
+          console.log("res add new card : ",  res);
           if (!res._id) {
             setErrorMsg("Error adding product. Please try again");
           } else {
@@ -191,16 +192,18 @@ const AddProductModal = (props) => {
           });
         }
         setBtnType("");
+        setTimeout(function () {
+          props.closeAddProductModal("fetch");
+        }, 1000);
       } else {
         setErrorMsg("Fields should not be left blank");
       }
     } catch (e) {
       setErrorMsg(e.message);
     } finally {
-      setTimeout(function () {
-        props.closeAddProductModal("fetch");
-        setIsLoader(false);
-      }, messageDelay);
+        setTimeout(function () {
+          setIsLoader(false);
+        }, 1000);
     }
   }
 

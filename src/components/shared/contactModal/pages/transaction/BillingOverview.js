@@ -115,7 +115,7 @@ const BillingOverview = (props) => {
                   }
                   key={i}
                 >
-                  {console.log(":::setNewPay::::", isPrimary)}
+                  {/* {console.log(":::setNewPay::::", isPrimary)} */}
                   <span className="circleRadio">
                     <input
                       type="radio"
@@ -173,10 +173,10 @@ const BillingOverview = (props) => {
                         (isPrimary.billingId === bankItem._id)
                       }
                     />
-                    {console.log(
+                    {/* {console.log(
                       ":::BANK:::",
                       isPrimary.type === "bank" && (isPrimary.billingId === bankItem._id)
-                    )}
+                    )} */}
                     <span></span>
                   </span>
                   <span className="cardImage">

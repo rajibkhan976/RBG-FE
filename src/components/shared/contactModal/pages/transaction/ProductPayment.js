@@ -472,7 +472,7 @@ const ProductPayment = (props) => {
 
     if (downPayments.length === 0) {
       if (outStanding.isPayNow === 0) {
-        return 0;
+        return 0.00;
       }
       if (outStanding.isPayNow === 1) {
         return parseFloat(outStanding.amount).toFixed(2);
@@ -481,14 +481,14 @@ const ProductPayment = (props) => {
     if (downPayments.length > 0) {
       if (outStanding.amount > 0.00) {
         if (outStanding.isPayNow === 0) {
-          return totalDownpaymentsAmt;
+          return totalDownpaymentsAmt.toFixed(2);
         }
         if (outStanding.isPayNow === 1) {
           return (parseFloat(outStanding.amount) + totalDownpaymentsAmt).toFixed(2)
         }
       }
       if (outStanding.amount === 0.00) {
-        return totalDownpaymentsAmt
+        return totalDownpaymentsAmt.toFixed(2)
       }
     }
   };
@@ -534,7 +534,7 @@ const ProductPayment = (props) => {
 
   // Change default payment method
   const changeDefaultPayFn = (data) => {
-    console.log('data came from biling overviwe', data);
+    // console.log('data came from biling overviwe', data);
     setNewPay({
       type: data.type,
       billingId: data.billingId
@@ -1419,7 +1419,7 @@ const ProductPayment = (props) => {
                 {paymentSuccessMessage}
               </h3>
             </div>
-            {(payMentInfo.cashAmount > 0 || payMentInfo.onlineAmount > 0) &&
+            {(payMentInfo.cashAmount > 0.00 || payMentInfo.onlineAmount > 0.00) &&
             <>
               <div className="dottedBorder"></div>
 
@@ -1431,20 +1431,20 @@ const ProductPayment = (props) => {
             </>
             }
             
-            {payMentInfo.cashPayment.length > 0 && payMentInfo.cashAmount > 0 && (
+            {payMentInfo.cashPayment.length > 0.00 && payMentInfo.cashAmount > 0 && (
               <ul className="paymentUlInfo">
                 <li className="paymentModeLi">
                   <img src={cashSuccess} alt="" />
                   <p>Cash</p>
                 </li>
                 <li className="paymentAmtLi">
-                  <p>$ {payMentInfo.cashAmount}</p>
+                  <p>$ {payMentInfo.cashAmount.toFixed(2)}</p>
                   <img src={smallTick} alt="" />
                 </li>
               </ul>
             )}
 
-            {payMentInfo.onlinePayment.length > 0 && payMentInfo.onlineAmount > 0 && (
+            {payMentInfo.onlinePayment.length > 0.00 && payMentInfo.onlineAmount > 0 && (
               <ul className="paymentUlInfo">
                 <li className="paymentModeLi">
                   <img src={paidCard} alt="" />
@@ -1452,12 +1452,12 @@ const ProductPayment = (props) => {
                 </li>
                 
                 <li className="paymentAmtLi">
-                  <p>$ {payMentInfo.onlineAmount}</p>
+                  <p>$ {payMentInfo.onlineAmount.toFixed(2)}</p>
                   <img src={smallTick} alt="" />
                 </li>
               </ul>
             )}
-            {(payMentInfo.cashAmount > 0 || payMentInfo.onlineAmount > 0) &&
+            {(payMentInfo.cashAmount > 0.00 || payMentInfo.onlineAmount > 0.00) &&
               <>
                 <ul className="totalPaymentUl">
                   <li>

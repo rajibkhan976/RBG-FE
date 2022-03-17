@@ -2395,3 +2395,9 @@ ul.paymentUlInfo li.paymentModeLi {
   margin-inline: 0;
   max-width: 100%;
 }
+
+/* HOT FIX FOR IFRAME ISSUE */
+#root~iframe:last-child {
+  display: none !important;
+}
+/* HOT FIX FOR IFRAME ISSUE */

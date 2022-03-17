@@ -72,17 +72,13 @@ const ProductTransaction = (props) => {
     return queryParams;
   };
 
-  const fetchProducts = async (showLoader = true) => {
+  const fetchProducts = async () => {
     const pageId = utils.getQueryVariable("page") || 1;
     const queryParams = await getQueryParams();
     try {
-      if (showLoader) setShowLoader(true);
+      setShowLoader(true);
       const result = await ProductServices.fetchProducts(pageId, queryParams);
       if (result) {
-        // console.log(
-        //   "result:::::::::::::::::::::::::::::::::::::::",
-        //   result.products
-        // );
         setProductData(result.products);
         setProductItemsList(result.products);
       }

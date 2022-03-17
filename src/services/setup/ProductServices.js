@@ -164,7 +164,8 @@ export const ProductServices = {
                 throw new Error(e.response.data.message);
             } else {
                 console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
+                // throw new Error(e.message + ". Please contact support.");
+                throw new Error(e.response.data);
             }
         }
     },
