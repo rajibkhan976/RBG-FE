@@ -69,4 +69,18 @@ export const NotificationServices = {
             }
         }
     },
+    markSingleAsRead: async (payload) => {
+        try {
+            const result = await axios.put(config.notificationUrl+ "/mark-read", payload, { headers: headers });
+            return result.data;
+        } catch (e) {
+            if (!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    }
 };

@@ -5,9 +5,10 @@ import BackArrow from "../../assets/images/back-arrow.png";
 import {utils} from "../../helpers";
 import {NotificationServices} from "../../services/notification/NotificationServices";
 import Loader from "./Loader";
-import moment from "moment";
+import moment from "moment-timezone";
 import Status from "../contact/importContact/status";
 import smallLoaderImg from "../../assets/images/loader.gif";
+
 
 const Notifications = (props) => {
     let [detailNotification, setDetailNotification] = useState(null);
@@ -63,6 +64,21 @@ const Notifications = (props) => {
 
         setIsScrollLoading(false);
     }
+    const makeNotificationAsRead = async (e) => {
+        let payload = {
+            id: e
+        };
+        await NotificationServices.markSingleAsRead(JSON.stringify(payload));
+        props.triggerMarkAsRead();
+        setNotificationListing((elms) =>
+            elms.map((el) => {
+                if (el._id === e) {
+                    el.isRead = true;
+                }
+                return { ...el };
+            })
+        );
+    };
     const showNOtifDetails = (type) => {
         setNotificationPage(1);
         fetchNotifications(type);
@@ -80,6 +96,7 @@ const Notifications = (props) => {
                 },
             });
         }
+        makeNotificationAsRead(e._id);
     }
     const closeImportStatusModal = () => {
         setShowImportContactStory(false);
@@ -104,6 +121,9 @@ const Notifications = (props) => {
         } catch (e) {
             console.log('Error in mark all as read', e);
         }
+    }
+    const showTimeDiff = (e) => {
+        return moment.tz(e.createdAt, "Europe/London").fromNow()
     }
     useEffect(() => {
       if (props.notificationTrigger && notificationsType) {
@@ -265,7 +285,7 @@ const Notifications = (props) => {
                                                 <li key={i}
                                                     className={e.isRead ? "detailNotif" : "detailNotif unreadNotifications"}>
                                                     <div className="notiTime_n_Icon">
-                                                        <span className="timeStamp">{moment(e.createdAt).fromNow()}</span>
+                                                        <span className="timeStamp">{ showTimeDiff(e) }</span>
                                                         <figure>
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"
