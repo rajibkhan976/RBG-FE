@@ -1249,7 +1249,7 @@ const ProductPayment = (props) => {
                   marginBottom: "5px"
                 }}
               >
-                <div className="outstandingDownpayment">
+                <div className={downPaymentErrorMsg.payment_not_received !== "" ? "outstandingDownpayment error" : "outstandingDownpayment"}>
                   <div className="downpaymentsDetails">
                     <div className="cardImage">
                       {downPay.payment_type === "cash" ? (

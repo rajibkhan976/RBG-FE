@@ -2408,3 +2408,8 @@ ul.paymentUlInfo li.paymentModeLi {
   margin: 0 !important;
   text-align: left;
 }
+.outstandingDownpayment.error {
+  box-shadow: 0 0 0 1px #c74854, 0 0 5px #c74854;
+  border-radius: 5px;
+  background: rgb(255 202 207 / 10%);
+}
