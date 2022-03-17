@@ -174,7 +174,7 @@ const ProductTransaction = (props) => {
   const addProduct = (e) => {
     e.preventDefault();
     setShowProductList(!showProductList);
-    fetchProducts()
+    // fetchProducts()
   };
 
   const getCartItems = () => {

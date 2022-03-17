@@ -165,7 +165,9 @@ useEffect(()=>{
   const addCustomField = async (status) => {
     let errorPlaceholder = {...customFieldErrors};
 
-    if(customField.name && customField.name !== "" && customField.type && customField.type !== "") {
+    console.log("HAS ERROR:::", customField.name, customField.name !== "", customField.type, customField.type !== "", customFieldErrors.name !== "", customFieldErrors.type !== "", customFieldErrors);
+
+    if(customField.name && customField.name !== "" && customField.type && customField.type !== "" && customFieldErrors.name === "" && customFieldErrors.type === "") {
       if(!hasError) {
         if (props.editStatus) {
           editField();
