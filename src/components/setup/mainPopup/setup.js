@@ -21,7 +21,7 @@ const Setup = (props) => {
         >
           <p className="headding1">Set Up </p>
           <ul>
-            <li>
+            {/* <li>
               <div className="listHead">
                 <i>
                   <img src={SetupIcon1} alt="" />
@@ -34,7 +34,7 @@ const Setup = (props) => {
                   <p>Manage your personal details</p>
                 </div>
               </div>
-            </li>
+            </li> */}
             <li>
               <div className="listHead">
                 <i>
@@ -87,7 +87,7 @@ const Setup = (props) => {
                 </li>
               </ul>
             </li>
-            <li>
+            {/* <li>
               <div className="listHead">
                 <i>
                   <img src={SetupIcon4} alt="" />
@@ -123,7 +123,7 @@ const Setup = (props) => {
                   </a>
                 </li>
               </ul>
-            </li>
+            </li> */}
             <li>
               <div className="listHead">
                 <i>
@@ -155,11 +155,11 @@ const Setup = (props) => {
                     >Customizations
                     </NavLink>
                   </h3>
-                  <p>Lorem ipsum dolor sit</p>
+                  <p>Add Custom fields</p>
                 </div>
               </div>
             </li>
-            <li>
+            {/* <li>
               <div className="listHead">
                 <i>
                   <img src={SetupIcon7} alt="" />
@@ -211,7 +211,7 @@ const Setup = (props) => {
                   </a>
                 </li>
               </ul>
-            </li>
+            </li> */}
             <li>
               <div className="listHead">
                 <i>

@@ -2413,3 +2413,67 @@ ul.paymentUlInfo li.paymentModeLi {
   border-radius: 5px;
   background: rgb(255 202 207 / 10%);
 }
+
+/* HOT FIX FOR AUTH LISTING */
+
+li.listHeading > div {
+  font-size: 13px;
+  color: var(--darkBlue);
+  padding: 13px 16px;
+  cursor: pointer;
+  display: table-cell;
+  vertical-align: middle;
+  position: relative;
+}
+
+li.listHeading > div:after {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  width: 9px;
+  height: 13px;
+  background-image: url("../images/off_icon.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 9px auto;
+  pointer-events: none;
+  margin-left: 13px;
+}
+
+li.listHeading > div.asc::after {
+  background-image: url("../images/only_down_icon.svg");
+}
+li.listHeading > div.dsc::after {
+  background-image: url("../images/only_up_icon.svg");
+}
+.dashInnerUI .createNew {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.inputsContainerHead p .btn-link {
+  padding: 0;
+  margin: 0 10px 0 4px;
+  font-size: 0;
+  width: 16px;
+  height: 16px;
+  background: #ffffff;
+  border: 1px solid #9baebc;
+  box-sizing: border-box;
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  position: relative;
+}
+.headerSearch input[type="search"] {
+  background: transparent;
+  pointer-events: none;
+  color: transparent;
+  visibility: hidden;
+}
+.headerSearch .searchIco {
+  display: none;
+}

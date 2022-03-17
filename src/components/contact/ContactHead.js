@@ -60,13 +60,13 @@ const ContactHead = (props) => {
               </button>
             </form>
           </div>
-          <button className="btn btn-filter">
+          {/* <button className="btn btn-filter">
             <img
               className="filterIcon"
               src="/static/media/filter_icon.dac97ac8.svg"
               alt=""
             />
-          </button>
+          </button> */}
           <button className="creatUserBtn" onClick={() => createIndivitualContact()}>
             <img
               className="plusIcon"
@@ -88,9 +88,9 @@ const ContactHead = (props) => {
           >
             <img src={download_icon} alt="" /> Import Contacts
           </button>
-          <button className="saveNnewBtn expContactBtn">
+          {/* <button className="saveNnewBtn expContactBtn">
             <img src={uparrow_icon_grey} alt="" /> Export Contacts
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

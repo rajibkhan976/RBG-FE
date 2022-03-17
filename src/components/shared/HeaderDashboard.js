@@ -41,7 +41,7 @@ function HeaderDashboard(props) {
   const [locationLoaded, setLocationLoaded] = useState("user");
   const [showActionState, setShowActionState] = useState(false);
   const [device, setDevice] = useState(new Device());
-  const [deviceMessage, setDeviceMessage] = useState("loading");
+  const [deviceMessage, setDeviceMessage] = useState("Not Assigned");
   const [connection, setConnection] = useState({});
   const [notificationUnread, setNotificationUnread] = useState(0);
   const [notificationStructure, setNotificationStructure] = useState([]);
@@ -338,10 +338,12 @@ function HeaderDashboard(props) {
                   className="actionName"
                 >Call</span>
               </button>
-              <button className="listDropBtn" onClick={tglActionList}>
+              {/* <button className="listDropBtn" 
+              onClick={tglActionList}
+              >
                 <img src={blueDownArrow} alt="" />
-              </button>
-              {showActionState ? (
+              </button> */}
+              {/* {showActionState ? (
                 <div className="leftBtnList">
                   <ul>
                     <li className="active">
@@ -374,7 +376,7 @@ function HeaderDashboard(props) {
                 </div>
               ) : (
                 ""
-              )}
+              )} */}
             </div>
           </div>
           <div className="rightDetails">
@@ -390,11 +392,11 @@ function HeaderDashboard(props) {
             </div>
           </div>
         </div>
-        <a href="https://xd.adobe.com/view/f428f5e1-01d0-4d64-a79c-482c686b1e38-a17b/screen/438f7332-a65e-4dd8-937b-b10284d5c189?fullscreen" target="_blank">
+        {/* <a href="https://xd.adobe.com/view/f428f5e1-01d0-4d64-a79c-482c686b1e38-a17b/screen/438f7332-a65e-4dd8-937b-b10284d5c189?fullscreen" target="_blank">
           <button className="btn buttonHeaderIcons">
             <img src={DownloadIcon} alt="" />
           </button>
-        </a>
+        </a> */}
         <button
           className={
             setupModalStatus
@@ -412,7 +414,7 @@ function HeaderDashboard(props) {
           <img src={NotificationIcon} alt="" />
           {notificationUnread > 0 ? <span>{ notificationUnread }</span> : ""}
         </button>
-        {locationLoaded === "user" && (
+        {/* {locationLoaded === "user" && (
           <button
             className="btn buttonCreate"
             id="createUser"
@@ -451,7 +453,7 @@ function HeaderDashboard(props) {
           >
             <img src={CreateIcon} alt="" />
           </button>
-        )}
+        )} */}
         <div className="menuUser">
           <button className="btn btnUserMenu" onClick={toggleUserMenu}>
             <figure
