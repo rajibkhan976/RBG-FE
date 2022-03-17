@@ -43,6 +43,12 @@ const ContactListing = forwardRef((props, ref) => {
     const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "contact")));
     const dispatch = useDispatch();
     const modalId = useSelector((state) => state.contact.contact_modal_id);
+    const isClicked = useSelector((state) => state.notification.importId);
+    useEffect(() => {
+        if (isClicked) {
+            fetchContact();
+        }
+    }, [isClicked]);
     useEffect(() => {
         if (modalId === '') {
             fetchContact();

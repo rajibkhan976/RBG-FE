@@ -2,7 +2,8 @@ import * as actionTypes from "../actions/types";
 
 const initialState = {
     isNew: false,
-    data: null
+    data: null,
+    importId: null
 }
 
 const notificationReducer = (state = initialState, action) => {
@@ -21,6 +22,9 @@ const notificationReducer = (state = initialState, action) => {
             break;
         case actionTypes.NOTIFICATION_READ:
             newState.isNew = false;
+            break;
+        case actionTypes.NOTIFICATION_CLICK_CONTACT:
+            newState.importId = action.importId
             break;
         default:
             break;

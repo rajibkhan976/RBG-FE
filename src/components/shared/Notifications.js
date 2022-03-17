@@ -25,7 +25,6 @@ const Notifications = (props) => {
     const [isScrollLoading, setIsScrollLoading] = useState(false);
     const dispatch = useDispatch();
     const userNotifications = useSelector((state) => state.notification.data);
-
     const goBackToNotificationListing = () => {
         setNotificationListing([]);
         setDetailNotification(null);
@@ -65,19 +64,21 @@ const Notifications = (props) => {
         setIsScrollLoading(false);
     }
     const makeNotificationAsRead = async (e) => {
-        let payload = {
-            id: e
-        };
-        await NotificationServices.markSingleAsRead(JSON.stringify(payload));
-        props.triggerMarkAsRead();
-        setNotificationListing((elms) =>
-            elms.map((el) => {
-                if (el._id === e) {
-                    el.isRead = true;
-                }
-                return { ...el };
-            })
-        );
+        if (!e.isRead) {
+            let payload = {
+                id: e._id
+            };
+            await NotificationServices.markSingleAsRead(JSON.stringify(payload));
+            props.triggerMarkAsRead();
+            setNotificationListing((elms) =>
+                elms.map((el) => {
+                    if (el._id === e._id) {
+                        el.isRead = true;
+                    }
+                    return { ...el };
+                })
+            );
+        }
     };
     const showNOtifDetails = (type) => {
         setNotificationPage(1);
@@ -96,7 +97,7 @@ const Notifications = (props) => {
                 },
             });
         }
-        makeNotificationAsRead(e._id);
+        makeNotificationAsRead(e);
     }
     const closeImportStatusModal = () => {
         setShowImportContactStory(false);

@@ -5,6 +5,8 @@ import fileFail_icon from "../../../assets/images/fileFail_icon.svg";
 import done_white_icon from "../../../assets/images/done_white.svg";
 import {ContactService} from "../../../services/contact/ContactServices";
 import Loader from "../../shared/Loader";
+import * as actionTypes from "../../../actions/types";
+import {useDispatch} from "react-redux";
 
 function Status(props) {
     const history = useHistory();
@@ -15,6 +17,7 @@ function Status(props) {
     const [duplicateType, setDuplicateType] = useState("skip");
     const [isLoader, setIsLoader] = useState(false);
     const [importError, setImportError] = useState("");
+    const dispatch = useDispatch();
     const fetchDetails = async () => {
         setIsLoader(true);
         let importId = props.importId;
@@ -30,6 +33,16 @@ function Status(props) {
         setIsLoader(false);
     }
     const viewRecords = () => {
+        dispatch({
+            type: actionTypes.NOTIFICATION_CLICK_CONTACT,
+            importId: props.importId,
+        });
+        setTimeout(() => {
+            dispatch({
+                type: actionTypes.NOTIFICATION_CLICK_CONTACT,
+                importId: null,
+            });
+        }, 200)
         history.push(`/contacts`);
         props.closeModal();
     }

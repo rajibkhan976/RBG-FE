@@ -53,7 +53,12 @@ function HeaderDashboard(props) {
     reset,
     pause
   } = useStopwatch({ autoStart: false });
-
+  const isClicked = useSelector((state) => state.notification.importId);
+  useEffect(() => {
+    if (isClicked) {
+      closeModalNotification();
+    }
+  }, [isClicked]);
   const loggedInUser = useSelector((state) => state.user.data);
   const userNotifications = useSelector((state) => state.notification);
 
