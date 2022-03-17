@@ -299,16 +299,17 @@ const ContactListing = forwardRef((props, ref) => {
             setErrorMsg(responses.permissions.contact.read);
         }
     }
-
     const GenerateColumns = () => {
+        let i = 0;
         return (
             <li className="listHeading">
                 {savedColList.map((item, index) => {
+                    i++;
                     return (
-                        <>
-                            {item.status ? <div key={index} className={"dataTableCell " + (item.id === sortBy ? (sortType === 'asc' ? 'asc' : "dsc") : "")}
+                        <div className="GenerateColumnsCell" key={i}>
+                            {item.status ? <div key={i + index} className={"dataTableCell " +(item.id === sortBy ? (sortType === 'asc' ? 'asc' : "dsc") : "")}
                                 onClick={() => handleSortBy(item.id)}>{item.name}</div> : ""}
-                        </>
+                        </div>
                     )
                 })}
             </li>
@@ -324,7 +325,7 @@ const ContactListing = forwardRef((props, ref) => {
                         if (item.status) {
                             j++;
                             return (
-                                <div className={item.id === "name" ? "dataTableCell user" : "dataTableCell"} key={pp}>
+                                <div className={item.id === "name" ? "dataTableCell user" : "dataTableCell"} key={'dataTableCell_'+i+pp}>
                                     {(j === 1) ? <button className="extraDottedBtn" type="button"></button> : ""}
                                     {(j === 1) ? ((ele.payment_error != undefined || ele.course_error != undefined) ? <span className="infoWarning warningSpace"
                                         data-title={(ele.payment_error != undefined ? ele.payment_error : "" ) + ' ' + (ele.course_error != undefined ? ele.course_error : "")}>

@@ -1140,7 +1140,7 @@ input:focus + .searchIco #search-ico .a,
 .audioListing .tableListing li > div.listAction {
   width: 56px;
 }
-
+/*
 li.listHeading > div {
   font-size: 13px;
   color: var(--darkBlue);
@@ -1171,7 +1171,7 @@ li.listHeading > div.asc::after {
 li.listHeading > div.dsc::after {
   background-image: url("../images/only_up_icon.svg");
 }
-
+*/
 .arrowUp,
 .arrowDown {
   top: 50%;
@@ -10080,7 +10080,6 @@ select.editFormStyle{
   position: relative;
   top: 5px;
 }
-
 .enableStatus {
   font-weight: 600;
   font-size: 13px;
@@ -10123,4 +10122,37 @@ select.editFormStyle{
 .tabBarArea > div.loaderOuter {
   position: fixed;
   background: rgba(255, 255, 255, 0.8);
+}
+iframe{
+  z-index: -5555555555 !important;
+}
+li.listHeading > div > div {
+  font-size: 13px;
+  color: var(--darkBlue);
+  padding: 13px 16px;
+  cursor: pointer;
+  display: table-cell;
+  vertical-align: middle;
+  position: relative;
+}
+
+li.listHeading > div > div:after {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  width: 9px;
+  height: 13px;
+  background-image: url("../images/off_icon.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 9px auto;
+  pointer-events: none;
+  margin-left: 13px;
+}
+
+li.listHeading > div > div.asc::after {
+  background-image: url("../images/only_down_icon.svg");
+}
+li.listHeading > div > div.dsc::after {
+  background-image: url("../images/only_up_icon.svg");
 }
