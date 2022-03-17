@@ -91,9 +91,10 @@ const ProductPayment = (props) => {
           previousValue + currentValue.price * currentValue.qnty,
         totalPlaceholder
       );
+      console.log("currentTax.tax", props.cartState);
       const taxtAmt = modifiedCartState.filter((cartItem, i) => cartItem.tax === true).reduce(
         (prevTax, currentTax) =>
-          prevTax + (currentTax.tax ? currentTax.price * 0.1 : 0),
+          prevTax + (currentTax.tax ? (currentTax.price * currentTax.qnty) * 0.1 : 0),
         totalTaxPlaceholder
       );
 
@@ -177,7 +178,7 @@ const ProductPayment = (props) => {
     
         console.log("PAYLOAD:::", productPayload, newPay, newPay.type);
     
-    let filteredPay = [...downPayments].filter((payNow, i)=> payNow.isPayNow === 1 && payNow.paymentConfirmation === false)
+    let filteredPay = [...downPayments].filter((payNow, i)=> payNow.isPayNow === 1 && payNow.payment_type === "cash" && payNow.paymentConfirmation === false)
 
         console.log("filteredPay", filteredPay, paymentsArray);
 

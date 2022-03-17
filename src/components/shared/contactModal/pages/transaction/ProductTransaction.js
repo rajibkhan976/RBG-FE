@@ -311,7 +311,7 @@ const ProductTransaction = (props) => {
             qnty: selectedProduct.qnty,
             image: config.bucketUrl+selectedProduct.image,
             name: selectedProduct.name,
-            tax: selectedProduct.tax === 1 ? true : false
+            tax: (selectedProduct.tax === 1 || selectedProduct.tax === "1") ? true : false
         }
         setCartState([...cartState, cartItemToAdd]);
         setErrorState({
@@ -715,7 +715,7 @@ const ProductTransaction = (props) => {
                     </div>
                   {errorState.quantity && <p className="errorMsg">{errorState.quantity}</p>}
                   </div>
-                  {selectedProduct && selectedProduct.tax === 1 && <sub className="footnoteInfo">
+                  {selectedProduct && (selectedProduct.tax === 1 || selectedProduct.tax === "1") && <sub className="footnoteInfo">
                     * 10% Tax will be applicable
                   </sub>}
                 </div>
