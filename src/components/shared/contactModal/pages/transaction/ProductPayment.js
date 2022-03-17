@@ -738,9 +738,10 @@ const ProductPayment = (props) => {
     console.log("changeDownpaymentDate", e.target.value, downpay);
   };
   const changeDownpaymentType = (e, downpay, i) => {
-    //  //  console.log(e.target);
+    //  console.log(e.target.value === "online");
     const downPaymentsPlaceholder = [...downPayments];
     downPaymentsPlaceholder[i].payment_type = e.target.value;
+    downPaymentsPlaceholder[i].payment_status = e.target.value === "online" ? "unpaid" : "paid";
 
     setDownPayments(downPaymentsPlaceholder);
     console.log("changeDownpaymentType", e.target.value, downpay);
