@@ -4101,7 +4101,7 @@ li:hover .extraDottedBtn {
   margin-bottom: 10px;
   display: inline-block;
 }
-.cmnFieldName .mandatory {
+.cmnFieldName .mandatory, .mandatory {
   color: #ed707a;
   font-weight: 500;
 }

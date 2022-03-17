@@ -270,7 +270,7 @@ const RoleModal = (props) => {
                 }
                 <form onSubmit={handleSubmit}>
                   <div className={"formField " + (formErrors.name ? "error" : "")}>
-                    <p>Enter role name <span>*</span></p>
+                    <p>Enter role name <span className="mandatory">*</span></p>
                     <div className="inFormField">
                       <input
                         type="text"

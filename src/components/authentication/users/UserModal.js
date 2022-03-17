@@ -1065,7 +1065,7 @@ const UserModal = (props) => {
                                                 <ul>
                                                     <li>
                                                         <div className={formErrors.firstName ? "formField w-50 error" : "formField w-50"}>
-                                                            <p>First Name</p>
+                                                            <p>First Name <span className="mandatory">*</span></p>
                                                             <div className="inFormField">
                                                                 <input
                                                                     type="text"
@@ -1078,7 +1078,7 @@ const UserModal = (props) => {
                                                             {formErrors.firstName ? <span className="errorMsg">{formErrors.firstName}</span> : ''}
                                                         </div>
                                                         <div className={formErrors.lastName ? "formField w-50 error" : "formField w-50"}>
-                                                            <p>Last Name</p>
+                                                            <p>Last Name <span className="mandatory">*</span></p>
                                                             <div className="inFormField">
                                                                 <input
                                                                     type="text"
@@ -1093,7 +1093,7 @@ const UserModal = (props) => {
                                                     </li>
                                                     <li>
                                                         <div className={formErrors.phoneNumber ? "formField w-50 error" : "formField w-50"}>
-                                                            <p>Phone No</p>
+                                                            <p>Phone No <span className="mandatory">*</span></p>
                                                             <div className="inFormField countryCodeField">
                                                                 <div className="countryCode cmnFieldStyle">
                                                                     <div className="countryName">{basicinfoMobilePhone.countryCode}</div>
@@ -1114,7 +1114,7 @@ const UserModal = (props) => {
                                                             {formErrors.phoneNumber ? <span className="errorMsg">{formErrors.phoneNumber}</span> : ''}
                                                         </div>
                                                         <div className={formErrors.email ? "formField w-50 error" : "formField w-50"}>
-                                                            <p>Email</p>
+                                                            <p>Email <span className="mandatory">*</span></p>
                                                             <div className="inFormField">
                                                                 <input
                                                                     type="text"
@@ -1347,7 +1347,7 @@ const UserModal = (props) => {
                                                 <ul>
                                                     <li>
                                                         <div className={formErrors.roleId ? "formField w-50 error" : "formField w-50"}>
-                                                            <p>Default user role</p>
+                                                            <p>Default user role <span className="mandatory">*</span></p>
                                                             <div className="inFormField">
                                                                 <select
                                                                     style={{
@@ -1369,7 +1369,7 @@ const UserModal = (props) => {
                                                             </div>
                                                         </div>
                                                         <div className={formErrors.groupId ? "formField w-50 error" : "formField w-50"}>
-                                                            <p>Select a group</p>
+                                                            <p>Select a group <span className="mandatory">*</span></p>
                                                             <div className="inFormField">
                                                                 <select
                                                                     style={{

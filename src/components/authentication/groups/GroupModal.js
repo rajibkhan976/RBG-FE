@@ -327,7 +327,7 @@ const GroupModal = (props) => {
                                         <ul>
                                             <li>
                                                 <div className={formErrors.groupName ? "formField w-50 error" : "formField w-50"}>
-                                                    <p>Enter group name</p>
+                                                    <p>Enter group name <span className="mandatory">*</span></p>
                                                     <div className="inFormField">
                                                         <input
                                                             type="text"
@@ -340,7 +340,7 @@ const GroupModal = (props) => {
                                                     {formErrors.groupName ? <span className="errorMsg">{formErrors.groupName}</span> : ''}
                                                 </div>
                                                 <div className={formErrors.roleId ? "formField w-50 error" : "formField w-50"}>
-                                                    <p>Select a role</p>
+                                                    <p>Select a role <span className="mandatory">*</span></p>
                                                     <div className="inFormField">
                                                         <select
                                                             style={{
