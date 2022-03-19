@@ -94,7 +94,7 @@ const ProductPayment = (props) => {
       console.log("currentTax.tax", props.cartState);
       const taxtAmt = modifiedCartState.filter((cartItem, i) => cartItem.tax === true).reduce(
         (prevTax, currentTax) =>
-          prevTax + (currentTax.tax ? (currentTax.price * currentTax.qnty) * 0.1 : 0),
+          parseFloat(prevTax) + (currentTax.price * currentTax.qnty * 0.1),
         totalTaxPlaceholder
       );
 
@@ -302,7 +302,6 @@ const ProductPayment = (props) => {
         title: "Title cannot be blank",
         amount_Err: "Amount cannot be nothing",
       });
-      
     } else {
       setDownPaymentActive(false);
       
@@ -467,7 +466,7 @@ const ProductPayment = (props) => {
     .filter((dpTarget, index) => dpTarget.isPayNow === 1)
     .reduce(
       (previousValue, currentValue) =>
-        parseFloat(previousValue) + parseFloat(currentValue.amount),
+        parseFloat(previousValue) + (currentValue.amount === "" || parseFloat(currentValue.amount) === 0 || currentValue.amount === "0" ? 0 : parseFloat(currentValue.amount)),
       totalPlaceholder
     )
 
@@ -1034,11 +1033,11 @@ const ProductPayment = (props) => {
                 <ul className="programInfosUl paymentOverviews">
                   <li>
                     <div className="labelSpan">Total item Price</div>
-                    <div className="informationSpan">$ {totalAmt}</div>
+                    <div className="informationSpan">$ {totalAmt.toFixed(2)}</div>
                   </li>
                   <li>
                     <div className="labelSpan">Tax</div>
-                    <div className="informationSpan">$ {totalTaxAmt}</div>
+                    <div className="informationSpan">$ {totalTaxAmt.toFixed(2)}</div>
                   </li>
                 </ul>
                 <ul className="totalPaymentUl">
@@ -1466,7 +1465,7 @@ const ProductPayment = (props) => {
                     <p>Amount Paid</p>
                   </li>
                   <li>
-                    <p>$ {billingTotalAmt()}</p>
+                    <p>$ {billingTotalAmt().toFixed(2)}</p>
                   </li>
                 </ul>
 

@@ -864,7 +864,7 @@ const PermissionMatrix = (props) => {
           <ul>
             <li className="inputsContainerHead">
               <p>
-                Entity <button className="btn-link" onClick={(e) => handleSelectAllChange(e)}>{isSelectAll ? 'Select ' : 'Deselect '} All</button>
+                Entity <button className={isSelectAll ? "btn-link" : "btn-link selected"} onClick={(e) => handleSelectAllChange(e)}>{isSelectAll ? 'Select ' : 'Deselect '} All</button>
               </p>
               {actionData && actionData.map((el, key) => {
                 return (

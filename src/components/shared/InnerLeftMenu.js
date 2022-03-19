@@ -410,7 +410,7 @@ const InnerLeftMenu = (props) => {
   };
 
   return (
-    <div className="menuDetails">
+    <div className={pathURL === "/number-list" ? "menuDetails numberlist" : "menuDetails"}>
       <figure className="logoSidebar">
         <img src={SidebarLogo} alt="" />
       </figure>

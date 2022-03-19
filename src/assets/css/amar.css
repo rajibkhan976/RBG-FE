@@ -2426,7 +2426,7 @@ li.listHeading > div {
   position: relative;
 }
 
-li.listHeading > div:after {
+li.listHeading > div:not(.GenerateColumnsCell):after {
   content: "";
   display: inline-block;
   vertical-align: middle;
@@ -2438,6 +2438,10 @@ li.listHeading > div:after {
   background-size: 9px auto;
   pointer-events: none;
   margin-left: 13px;
+}
+
+li.listHeading .GenerateColumnsCell .dataTableCell {
+  padding-inline: 0;
 }
 
 li.listHeading > div.asc::after {
@@ -2476,4 +2480,50 @@ li.listHeading > div.dsc::after {
 }
 .headerSearch .searchIco {
   display: none;
+}
+
+/* fix from home */
+.callToActionBtn::after {
+  content: none;
+}
+
+.dashMain {
+  flex: 1 1 calc(100% - 76px);
+  max-width: calc(100% - 76px);
+}
+.menuDetails.numberlist,
+.numberlist .innerMenuScroll {
+  background: transparent;
+  pointer-events: none;
+}
+.numberlist .innerMenuScroll {
+  display: none;
+}
+.dashboardBody .selected:before {
+  top: -5px;
+}
+.routeMenu > ul {
+  margin-top: 15px;
+}
+.inputsContainerHead .btn-link.selected {
+  background-color: #305671;
+  border-color: #305671;
+  box-shadow: 0 0 0 2px rgb(48 86 113 / 26%);
+}
+.inputsContainerHead .btn-link.selected:after {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 1px;
+  border: 1px solid #fff;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+}
+.dashboardBody .leftMenuLink:after, .dashboardBody .leftMenuLink:before {
+  height: 12px;
 }
