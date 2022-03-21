@@ -70,7 +70,6 @@ const ProductPayment = (props) => {
     edit_PayType_Err: "",
     edit_PayStatus_Err: "",
     payment_not_received: "",
-    downpayment_no_title: ""
   });
 
   useEffect(() => {
@@ -181,6 +180,7 @@ const ProductPayment = (props) => {
     
     let filteredPay = [...downPayments].filter((payNow, i)=> payNow.isPayNow === 1 && payNow.payment_type === "cash" && payNow.paymentConfirmation === false)
     let titleDpConfirmation = [...downPayments].filter((titleNow, i) => titleNow.title === "" || titleNow.title.trim() === "")
+    let amountDpConfirmation = [...downPayments].filter((titleNow, i) => titleNow.amount === "" || titleNow.amount === "0" || parseFloat(titleNow.amount) === 0)
 
     if (!hasError) {
       if(filteredPay.length === 0 && titleDpConfirmation.length === 0) {
@@ -265,6 +265,12 @@ const ProductPayment = (props) => {
           setDownPaymentErrorMsg({
             ...downPaymentErrorMsg,
             downpayment_no_title: "Please give downpayment Title(s)"
+          })
+        }
+        if(amountDpConfirmation.length > 0) {
+          setDownPaymentErrorMsg({
+            ...downPaymentErrorMsg,
+            edit_Amount_Err: "Please enter some downpayment value"
           })
         }
       }
@@ -1282,7 +1288,7 @@ const ProductPayment = (props) => {
                   marginBottom: "5px"
                 }}
               >
-                <div className={downPaymentErrorMsg.payment_not_received !== "" ? "outstandingDownpayment error" : "outstandingDownpayment"}>
+                <div className={(downPay.payment_type === "cash" && downPaymentErrorMsg.payment_not_received !== "") ? "outstandingDownpayment error" : "outstandingDownpayment"}>
                   <div className="downpaymentsDetails">
                     <div className="cardImage">
                       {downPay.payment_type === "cash" ? (
