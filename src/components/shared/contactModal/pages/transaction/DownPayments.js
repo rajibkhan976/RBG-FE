@@ -14,6 +14,8 @@ import downpayment from "../../../../../assets/images/no_downpayment.svg";
 
 const DownPayments = forwardRef((props, ref) => {
 
+    console.log({ props }, { ref });
+
     const downPaymentElement = {
         title: "Down Payment 1",
         titleErr: "",
@@ -28,6 +30,14 @@ const DownPayments = forwardRef((props, ref) => {
 
     const [isDownPayment, setIsDownPayment] = useState(false);
     const [downPaymentElems, setDownPaymentElems] = useState([{ ...downPaymentElement }]);
+
+    useEffect(() => {
+        if (props.contractData && props.contractData.downPayments.length) {
+            console.log('Props', props.contractData);
+            setIsDownPayment(true);
+            setDownPaymentElems(props.contractData.downPayments);
+        }
+    }, [props])
 
     useEffect(() => {
         broadcastToParent();
@@ -113,7 +123,7 @@ const DownPayments = forwardRef((props, ref) => {
                 break;
             case "payment_type":
                 newElem.payment_status = e.target.value === 'cash' ? 'paid' : 'unpaid';
-                
+
             default:
                 break;
         }
@@ -141,7 +151,7 @@ const DownPayments = forwardRef((props, ref) => {
         <React.Fragment>
             <div className="productAvailable downpayment active">
                 <div className="downPaymentToogle">
-                    <header class="informHeader"><h5>Down Payment <span class="cartCount">{!isDownPayment ? 0 : downPaymentElems.length}</span></h5></header>
+                    <header class="informHeader"><h5>Down Payment <span className="cartCount">{!isDownPayment ? 0 : downPaymentElems.length}</span></h5></header>
                     <label
                         className={isDownPayment ? "toggleBtn active" : "toggleBtn"
                         }

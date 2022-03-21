@@ -82,9 +82,9 @@ const PaymentSuccessSection = (props) => {
           <p>$ {parseFloat(amountPaid).toFixed(2)}</p>
         </li>
       </ul>
-      <div class="dottedBorder"></div>
+      <div className="dottedBorder"></div>
       <div className="successPageBtn programPayment">
-        <button onClick={props.backToTransList} class="saveNnewBtn">Go to Transaction List <img src={aaroww} alt="" /></button>
+        <button onClick={props.backToTransList} className="saveNnewBtn">Go to Transaction List <img src={aaroww} alt="" /></button>
       </div>
     </div>
   )

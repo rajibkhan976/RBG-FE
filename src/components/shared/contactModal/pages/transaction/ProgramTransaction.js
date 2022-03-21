@@ -2,16 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import aaroww from "../../../../../assets/images/arrow_forward.svg";
 import info_icon from "../../../../../assets/images/infos.svg";
 import bell from "../../../../../assets/images/bell.svg";
-import updown from "../../../../../assets/images/updown.png";
-import deleteBtn from "../../../../../assets/images/deleteBtn.svg";
-import downpayment from "../../../../../assets/images/no_downpayment.svg";
-import modalTopIcon from "../../../../../assets/images/setupicon5.svg";
-import crossTop from "../../../../../assets/images/cross.svg";
-import profileAvatar from "../../../../../assets/images/camera.svg";
-import chooseImg from "../../../../../assets/images/chooseImg.svg";
-import arrow_forward from "../../../../../assets/images/arrow_forward.svg";
 import Loader from "../../../../shared/Loader";
-import { Scrollbars } from "react-custom-scrollbars-2";
 import { ProgramServices } from "../../../../../services/transaction/ProgramServices";
 import { utils } from "../../../../../helpers";
 import DownPayments from "./DownPayments";
@@ -22,9 +13,7 @@ const ProgramTransaction = (props) => {
   const [addPogramModal, setAddPogramModal] = useState(false);
   const [chooseCategory, setChooseCategory] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState(null);
-  const [selectedProgramIndex, setSelectedProgramIndex] = useState(null);
   const [programList, setProgramList] = useState([]);
-  const selectProgramRef = useRef();
 
   const [contractData, setContractData] = useState({
     contact: "",
@@ -58,76 +47,12 @@ const ProgramTransaction = (props) => {
   const getLatestClone = () => JSON.parse(JSON.stringify(contractData));
 
 
+  const [firstBillingTime, setFirstBillingTime] = useState(false);
+  const addDownPaymentsRef = useRef();
+
   const chooseCategoryFn = () => {
     setChooseCategory(!chooseCategory);
   };
-
-  const addPogramModalFn = () => {
-    setAddPogramModal(true);
-  };
-
-
-  const closePogramModal = () => {
-    setAddPogramModal(false);
-  };
-
-  const [addManually, setAddManually] = useState(false);
-
-
-  const [toggleContactList, setToggleContactList] = useState({
-    status: false,
-    listContent: [],
-  });
-
-  const toggleContactListFn = (e) => {
-    e.preventDefault();
-
-    let contactListOp = toggleContactList;
-
-    setToggleContactList({
-      ...toggleContactList,
-      status: e.target.value.trim() === "" ? false : true,
-    });
-  };
-
-
-  const [communication, setCommunication] = useState(false);
-  const [downPayTime, setDownPayTime] = useState(false);
-  const [downPayTime2, setDownPayTime2] = useState(false);
-  const [firstBillingTime, setFirstBillingTime] = useState(false);
-
-  const [addDownpayment, setAddDownpayment] = useState(false);
-
-  const addDownPaymentsRef = useRef();
-
-  const addDownpaymentFn = (e) => {
-    e.preventDefault();
-    setAddDownpayment(true);
-  };
-
-  const delDownpaymentFn = (e) => {
-    e.preventDefault();
-    setAddDownpayment(false);
-  };
-  const [paymentDate1, setPaymentDate1] = useState("");
-  const paymentDateHandel1 = (e) => {
-    setPaymentDate1(e.target.value);
-    console.log(paymentDate1);
-  };
-
-  const [paymentDate, setPaymentDate] = useState("");
-
-  const paymentDateHandel = (e) => {
-    setPaymentDate(e.target.value);
-    console.log(paymentDate);
-  };
-
-  const [firstBillingDate, setFirstBillingDate] = useState("");
-  const firstBillingDateHandel = (e) => {
-    setFirstBillingDate(e.target.value);
-    console.log(firstBillingDate);
-  };
-
 
   const selectProgram = (item, index) => {
     console.log('Program', item);
@@ -144,28 +69,7 @@ const ProgramTransaction = (props) => {
       amount: item.fees
     });
     setSelectedProgram(item);
-    setSelectedProgramIndex(index);
     setChooseCategory(false);
-  };
-
-  const checkOutsideClick = (e) => {
-    console.log('out side click', e.target, selectProgramRef.current);
-    if (!selectProgramRef && !selectProgramRef.current.contains(e.target)) {
-      alert("You clicked outside of me!");
-    }
-    console.log("Out Return");
-    setChooseCategory(false);
-  };
-
-  useEffect(() => {
-    // document.addEventListener("mousedown", checkOutsideClick);
-    return () => {
-      // document.removeEventListener("mousedown", checkOutsideClick);
-    }
-  }, []);
-
-  const closeAddProgModal = () => {
-    setAddPogramModal(false);
   };
 
   //Update current contact id
@@ -595,6 +499,7 @@ const ProgramTransaction = (props) => {
       <DownPayments
         downPaymentsCallback={downPaymentsCallbackFn}
         ref={addDownPaymentsRef}
+        contractData={contractData}
       />
       {/* <button className={props.courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={props.buyCourse}>Buy <img src={aaroww} alt="" /></button> */}
 

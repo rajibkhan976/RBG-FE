@@ -262,7 +262,7 @@ const ContractOverviewTransaction = (props) => {
       }
 
       <div className="productAvailable contractdetails active">
-        <div class="programOverview">
+        <div className="programOverview">
           <header className='informHeader'>
             <h5>Program Overview</h5>
           </header>
@@ -295,7 +295,7 @@ const ContractOverviewTransaction = (props) => {
       </div>
 
       <div className="productAvailable paymentDetails active">
-        <div class="programOverview">
+        <div className="programOverview">
           <header className='informHeader'>
             <h5>Payment Overview</h5>
           </header>
@@ -310,7 +310,7 @@ const ContractOverviewTransaction = (props) => {
                 <div className="informationSpan">
                   <span className="infoSpan">
                     <img src={help} alt="" />
-                    <span class="tooltiptextInfo">${contractData.tuitionAmount} x {contractData.numberOfPayments + ' ' + contractData.billingCycleText + '(s)'}</span>
+                    <span className="tooltiptextInfo">${contractData.tuitionAmount} x {contractData.numberOfPayments + ' ' + contractData.billingCycleText + '(s)'}</span>
                   </span>&nbsp;&nbsp;${parseFloat(contractData.totalTuitionAmount).toFixed(2)}</div>
               </li>
             </ul>
@@ -330,7 +330,7 @@ const ContractOverviewTransaction = (props) => {
                     <div className="cardImage">
                       <img src={el.payment_type === 'cash' ? outstandingCash : outstandingCard} alt="" />
                     </div>
-                    <div class="paymentModuleInfos">
+                    <div className="paymentModuleInfos">
                       <span className="accNumber">{el.title}</span>
                       <span className="accinfod"><b>$ {parseFloat(el.amount).toFixed(2)}</b></span>
                     </div>
@@ -351,7 +351,7 @@ const ContractOverviewTransaction = (props) => {
               <div className="cardImage">
                 <img src={outstandingCard} alt="" />
               </div>
-              <div class="paymentModuleInfos">
+              <div className="paymentModuleInfos">
                 <span className="accNumber">Tuition Amount</span>
                 <span className="accinfod"><b>$ {parseFloat(contractData.tuitionAmount).toFixed(2)}</b> / {contractData.billingCycleText}</span>
               </div>
@@ -381,7 +381,7 @@ const ContractOverviewTransaction = (props) => {
                     <div className="cardImage">
                       <img src={el.payment_type === 'cash' ? cashCurrent : cardActive} />
                     </div>
-                    <div class="paymentModuleInfos">
+                    <div className="paymentModuleInfos">
                       <span className="accNumber">{el.title}</span>
                       <span className="accinfod"><b>$ {parseFloat(el.amount).toFixed(2)}</b></span>
                     </div>
@@ -394,7 +394,7 @@ const ContractOverviewTransaction = (props) => {
                   </div>
                   {el.payment_type === 'cash' ?
                     <label className={el.isReceivedCashFlagErr ? "receivedCash error" : "receivedCash"}>
-                      <div class="customCheckbox">
+                      <div className="customCheckbox">
                         <input type="checkbox" onChange={e => toggleReceiveCash(e, key)} />
                         <span></span>
                       </div>I have received the amount by Cash
@@ -411,7 +411,7 @@ const ContractOverviewTransaction = (props) => {
               <div className="cardImage">
                 <img src={cardActive} alt="" />
               </div>
-              <div class="paymentModuleInfos">
+              <div className="paymentModuleInfos">
                 <span className="accNumber">Tuition Amount</span>
                 <span className="accinfod"><b>$ {parseFloat(contractData.payNowTuitionAmount).toFixed(2)}</b></span>
               </div>
@@ -430,8 +430,8 @@ const ContractOverviewTransaction = (props) => {
             <h4>$ {parseFloat(contractData.nowPaymentAmount).toFixed(2)}</h4>
           </div>
           <div className="buyBtns">
-            {/* <button onClick={(e)=> {paymentFailedFn()}} class="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button> */}
-            <button onClick={billNow} class="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button>
+            {/* <button onClick={(e)=> {paymentFailedFn()}} className="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button> */}
+            <button onClick={billNow} className="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button>
 
           </div>
         </div>
@@ -458,7 +458,7 @@ const ContractOverviewTransaction = (props) => {
               <div className="choosePaymentInfo" >
 
                 <label>
-                  <div class="circleRadio">
+                  <div className="circleRadio">
                     <input type="radio"
                       name="transactionType" defaultChecked={choosePOS && "checked"}
                       onChange={chooseTransctionTypePOS}
@@ -466,7 +466,7 @@ const ContractOverviewTransaction = (props) => {
                   </div> Card
                 </label>
                 <label>
-                  <div class="circleRadio">
+                  <div className="circleRadio">
                     <input type="radio"
                       name="transactionType"
                       onChange={chooseTransctionTypeCourse}
@@ -481,22 +481,22 @@ const ContractOverviewTransaction = (props) => {
 
                   <div className="modalForm auto">
                     <form >
-                      <div class="formControl">
+                      <div className="formControl">
                         <label>Card Number</label>
                         <input type="number" placeholder="xxxx-xxxx-xxxx-xxxx" name="" />
                       </div>
 
-                      <div class="formControl">
+                      <div className="formControl">
                         <label>Card Holder Name</label>
                         <input type="text" placeholder="Ex. Adam Smith" name="" />
                       </div>
 
                       <div className="d-flex justified-space-between">
-                        <div class="formControl half">
+                        <div className="formControl half">
                           <label>Expiry Date</label>
                           <input type="text" placeholder="mm/yy" name="" />
                         </div>
-                        <div class="formControl half">
+                        <div className="formControl half">
                           <label>CVC</label>
                           <input type="text" name="" />
                         </div>
@@ -519,22 +519,22 @@ const ContractOverviewTransaction = (props) => {
                 <div className="posSellingForm">
                   <div className="modalForm auto">
                     <form >
-                      <div class="formControl">
+                      <div className="formControl">
                         <label>Account Number</label>
                         <input type="number" placeholder="xxxx-xxxx-xxxx-xxxx" name="" />
                       </div>
 
-                      <div class="formControl">
+                      <div className="formControl">
                         <label>Account Holder Name</label>
                         <input type="text" placeholder="Ex. Adam Smith" name="" />
                       </div>
 
                       <div className="d-flex justified-space-between">
-                        <div class="formControl half">
+                        <div className="formControl half">
                           <label>Routing #</label>
                           <input type="text" name="" />
                         </div>
-                        <div class="formControl half">
+                        <div className="formControl half">
                           <label>Account Type</label>
                           <select className='selectBox'>
                             <option value="null">Checking</option>
@@ -575,7 +575,7 @@ const ContractOverviewTransaction = (props) => {
             </div>
 
             <div className="buyBtns failedPayment">
-              <button onClick={closeFailedPayModal} class="saveNnewBtn">Close</button>
+              <button onClick={closeFailedPayModal} className="saveNnewBtn">Close</button>
 
             </div>
           </div>
