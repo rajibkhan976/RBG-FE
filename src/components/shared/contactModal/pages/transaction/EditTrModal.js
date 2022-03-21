@@ -601,7 +601,7 @@ const EditTrModal = (props) => {
         
     }
     const checkUpdateForAllHandler = (e) =>{
-        let val = e.target.value;
+        let val = e.target.checked;
         fieldErrorCheck.checkUpdateForAll(val);
     }
     
@@ -668,7 +668,8 @@ const EditTrModal = (props) => {
                     subscriptionId: props.transaction._id,
                     amount: editTransFormData.amount,
                     payment_via: editTransFormData.paymentMode,
-                    due_date: dueDate
+                    due_date: dueDate,
+                    applyForAll: editTransFormData.applyForAll
                 }
                 let updateResp = await TransactionServices.updateTransaction(props.contactId, payload);
                 console.log("updateResp", updateResp)
@@ -939,7 +940,7 @@ const EditTrModal = (props) => {
                         <div className="notifyBox">
                             <label className="d-flex f-align-center">
                                 <div className="customCheckbox">
-                                    <input type="checkbox" name="" onChange={checkUpdateForAllHandler} />
+                                    <input type="checkbox" name=""  onChange={checkUpdateForAllHandler} />
                                     <span></span>
                                 </div>
                                 <div>I want update this change for all the upcoming transactions of this subscription</div>

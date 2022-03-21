@@ -903,7 +903,7 @@ const Transaction = (props) => {
       />}
 
       { refundAlertMsg.message ? 
-      <AlertMessage message={setRefundAlertMsg.message} type={refundAlertMsg.type} time={5000} close={closeRefundAlert} /> 
+      <AlertMessage message={refundAlertMsg.message} type={refundAlertMsg.type} time={5000} close={closeRefundAlert} /> 
       : ""}
 
 
