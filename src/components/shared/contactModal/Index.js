@@ -215,22 +215,22 @@ const ContactModal = (props) => {
                         {props.contactId !== 0 &&
                             <div className="contactModalHeaderBottomSec">
                                 <div className="bottomLeftArea">
-                                    {contactData && contactData.isDependent && contactData.guardianInfo ?
+                                    {/* {contactData && contactData.isDependent && contactData.guardianInfo ?
                                         <div className="userDependents"
                                              onClick={() => openGuardianContactModal(contactData.guardianInfo._id)}>
                                             <img src={dependent_white} alt=""/>
                                             <span>
                                                 Guardian - {contactData.guardianInfo.firstName + ' ' + contactData.guardianInfo.lastName}
                                             </span>
-                                        </div> : ''}
+                                        </div> : ''} */}
                                     <div className="userContacts">
-                                        {(contactData && contactData.phone && contactData.phone.number) &&
+                                        {/* {(contactData && contactData.phone && contactData.phone.number) &&
                                             <div className="userPhone">
                                                 <img src={phone_call_icon_white} alt=""/>
                                                 <span>{contactData.phone && contactData.phone.dailCode && contactData.phone.number ?
                                                     contactData.phone.dailCode + "-" + contactData.phone.number : ""}</span>
                                             </div>
-                                        }
+                                        } */}
                                         {(contactData && contactData.email) &&
                                             <div className="userEmail overviewModal">
                                                 <img src={email_icon_white} alt=""/>
@@ -238,14 +238,14 @@ const ContactModal = (props) => {
                                             </div>
                                         }
                                     </div>
-                                    <div className="clockinArea">
+                                    {/* <div className="clockinArea">
                                         <button className="clockinBtn orangeBtn">
                                             <img src={histroy_icon_white} alt=""/> Check-in
                                         </button>
                                         <p className="logTime">Last attended 19 hrs ago</p>
-                                    </div>
+                                    </div> */}
                                 </div>
-                                <div className="bottomRightArea">
+                                {/* <div className="bottomRightArea">
                                     <div className="bottomRightAreaCol firstCol">
                                         {(contactData && contactData.jobRole) &&
                                             <div className="userInfoCell jobRole">
@@ -276,7 +276,7 @@ const ContactModal = (props) => {
                                             <button className="addNewTag">+ Add Tag</button>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                         }
                     </div>
