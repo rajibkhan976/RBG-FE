@@ -58,7 +58,6 @@ const ProductPayment = (props) => {
   const [downPaymentErrorMsg, setDownPaymentErrorMsg] = useState({
     title_Err: "",
     amount_Err: "",
-    less_amount: "",
     payNow_Err: "",
     payMode_Err: "",
     payStatus_Err: "",
@@ -607,7 +606,7 @@ const ProductPayment = (props) => {
         setHasError(true);
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
-          less_amount: "Downpayment amounts can't be empty or 0",
+          edit_Amount_Err: "Downpayment amounts can't be empty or 0",
         });
         console.log("downPaymentsPlaceholder:::", downPaymentsPlaceholder);
       }
@@ -769,6 +768,7 @@ const ProductPayment = (props) => {
     //  //  console.log(e.target);
     const downPaymentsPlaceholder = [...downPayments];
     downPaymentsPlaceholder[i].payment_status = e.target.value;
+    downPaymentsPlaceholder[i].paymentConfirmation = e.target.value === "unpaid" ? false : ""
 
     setDownPayments(downPaymentsPlaceholder);
     console.log("changeDownpaymentStatus", e.target.value, downpay);
@@ -886,12 +886,12 @@ const ProductPayment = (props) => {
                             <div className="cmnFormRow gap">
                               <div
                                 className={
-                                  (downPaymentErrorMsg.edit_Amount_Err || (downpay.amount === 0 || downpay.amount === "0" || downpay.amount === undefined || isNaN(downpay.amount) && downPaymentErrorMsg.less_amount))
+                                  (downPaymentErrorMsg.edit_Amount_Err || (downpay.amount === 0 || downpay.amount === "0" || downpay.amount === undefined || isNaN(downpay.amount)))
                                     ? "leftSecTransaction error"
                                     : "leftSecTransaction"
                                 }
                               >
-                                {/* {console.log("CHECKING LOGGED:::", downpay.amount === 0 || downpay.amount === "0" || downpay.amount === undefined || isNaN(downpay.amount))} */}
+                                {console.log("CHECKING LOGGED:::>>>", downpay, downpay.amount === 0, downpay.amount === "0", downpay.amount === undefined, isNaN(downpay.amount))}
                                 <label className="labelWithInfo">
                                   <span className="labelHeading">Amount</span>
                                   <span className="infoSpan">
@@ -916,15 +916,16 @@ const ProductPayment = (props) => {
                                 </div>
                                 {downPaymentErrorMsg.edit_Amount_Err && (
                                   <p className="errorMsg">
+                                  {console.log("HERE:::::::>>>")}
                                     {downPaymentErrorMsg.edit_Amount_Err}
                                   </p>
                                 )}
-                                {(downpay.amount === 0 || downpay.amount === "0" || downpay.amount === undefined || isNaN(downpay.amount) &&  downPaymentErrorMsg.less_amount) && (
+                                {!downPaymentErrorMsg.edit_Amount_Err && (downpay.amount === 0 || downpay.amount === "0" || downpay.amount === undefined || isNaN(downpay.amount)) ? (
                                   <p className="errorMsg">
-                                    {downPaymentErrorMsg.less_amount}
+                                    {console.log("HERE:::::::")}
+                                    Amount cannot be empty or 0
                                   </p>
-                                )}
-                                {console.log((downpay.amount === 0 || downpay.amount === "0" || downpay.amount === undefined || isNaN(downpay.amount) &&  downPaymentErrorMsg.less_amount))}
+                                ) : ""}
                               </div>
                               <div
                                 className={
@@ -1035,7 +1036,7 @@ const ProductPayment = (props) => {
                                   onChange={(e) =>
                                     changeDownpaymentStatus(e, downpay, i)
                                   }
-                                  disabled={downpay.payment_type === "online"}
+                                  disabled={downpay.payment_type === "online" || downpay.isPayNow === 0}
                                 >
                                   <option value="unpaid">Unpaid</option>
                                   <option value="paid">Paid</option>
@@ -1360,7 +1361,7 @@ const ProductPayment = (props) => {
                         : downPay.paymentDate}
                     </div>
                   </div>
-                  {downPay.payment_type === "cash" && 
+                  {(downPay.payment_type === "cash" && downPay.isPayNow === 1) && 
                     <>
                       <label className="receivedCash">
                         <div className="customCheckbox">
@@ -1369,7 +1370,7 @@ const ProductPayment = (props) => {
                             name=""
                             id=""
                             onChange={(e) => markDownPaid(e, downPay, i)}
-                            value={downPay.paymentConfirmation}
+                            checked={downPay.paymentConfirmation}
                           />
                           <span></span>
                         </div>
