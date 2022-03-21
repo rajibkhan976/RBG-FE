@@ -797,7 +797,7 @@ input:focus + .searchIco #search-ico .a,
 
 .sideMenuHeader h3 .btn-link {
   position: absolute;
-  right: 40px;
+  right: 20px;
   top: 7px;
 }
 
@@ -809,8 +809,8 @@ input:focus + .searchIco #search-ico .a,
 
 .btn-closeSideMenu {
   position: absolute;
-  top: 32px;
-  right: 30px;
+  top: 20px;
+  right: 20px;
   padding: 0;
   width: 20px;
   height: 20px;
@@ -2238,10 +2238,12 @@ img.dropDownIcon {
 }
 .notifLabels li .btn-link {
   float: right;
+  padding-top: 0;
+  margin-right: 42px;
 }
 
 .notificationsListing h4.inlineHeader {
-  margin-left: 30px;
+  margin-left: -4px;
   margin-right: 30px;
   margin-bottom: 25px;
   text-transform: capitalize;
@@ -2250,7 +2252,7 @@ img.dropDownIcon {
 .detailNotif {
   display: inline-block;
   width: 100%;
-  padding: 15px 0;
+  padding: 15px 29px 15px 0;
   position: relative;
   cursor: pointer;
 }
