@@ -58,6 +58,7 @@ const ProductPayment = (props) => {
   const [downPaymentErrorMsg, setDownPaymentErrorMsg] = useState({
     title_Err: "",
     amount_Err: "",
+    less_amount: "",
     payNow_Err: "",
     payMode_Err: "",
     payStatus_Err: "",
@@ -592,7 +593,7 @@ const ProductPayment = (props) => {
       // );
       
     try {
-      console.log(parseFloat(e.target.value), parseFloat(totalDownpaymentsAmt) , parseFloat(totalAmt) + parseFloat(totalTaxAmt));
+      console.log(parseFloat(e.target.value), downPayments, parseFloat(totalDownpaymentsAmt) , parseFloat(totalAmt) + parseFloat(totalTaxAmt));
 
       // if modified amount is 0 or nothing
       if (e.target.value.trim() === "" || parseFloat(e.target.value) === 0 || e.target.value[0] === "0") {
@@ -606,7 +607,7 @@ const ProductPayment = (props) => {
         setHasError(true);
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
-          edit_Amount_Err: "Downpayment amounts can't be empty or 0",
+          less_amount: "Downpayment amounts can't be empty or 0",
         });
         console.log("downPaymentsPlaceholder:::", downPaymentsPlaceholder);
       }
@@ -845,7 +846,7 @@ const ProductPayment = (props) => {
                           <div className="transaction_form products forDownpayment">
                             <div
                               className={
-                                (downPaymentErrorMsg.edit_Title_Err || downPaymentErrorMsg.downpayment_no_title)
+                                ((downPaymentErrorMsg.edit_Title_Err || downPaymentErrorMsg.downpayment_no_title) && downpay.title.trim() === "")
                                   ? "cmnFormRow gap error"
                                   : "cmnFormRow gap"
                               }
@@ -869,25 +870,26 @@ const ProductPayment = (props) => {
                                   value={downpay.title}
                                 />
                               </div>
-                              {(downPaymentErrorMsg.edit_Title_Err) && (
+                              {(downPaymentErrorMsg.edit_Title_Err && downpay.title.trim() === "") && (
                                 <p className="errorMsg">
                                   {downPaymentErrorMsg.edit_Title_Err}
                                 </p>
                               )}
-                              {(downPaymentErrorMsg.downpayment_no_title && (
+                              {(downPaymentErrorMsg.downpayment_no_title && downpay.title.trim() === "") && (
                                 <p className="errorMsg">
                                   {downPaymentErrorMsg.downpayment_no_title}
                                 </p>
-                              ))}
+                              )}
                             </div>
                             <div className="cmnFormRow gap">
                               <div
                                 className={
-                                  downPaymentErrorMsg.edit_Amount_Err
+                                  (downPaymentErrorMsg.edit_Amount_Err || (downpay.amount === 0 || downpay.amount === "0" || downpay.amount === undefined || isNaN(downpay.amount) && downPaymentErrorMsg.less_amount))
                                     ? "leftSecTransaction error"
                                     : "leftSecTransaction"
                                 }
                               >
+                                {/* {console.log("CHECKING LOGGED:::", downpay.amount === 0 || downpay.amount === "0" || downpay.amount === undefined || isNaN(downpay.amount))} */}
                                 <label className="labelWithInfo">
                                   <span className="labelHeading">Amount</span>
                                   <span className="infoSpan">
@@ -913,6 +915,11 @@ const ProductPayment = (props) => {
                                 {downPaymentErrorMsg.edit_Amount_Err && (
                                   <p className="errorMsg">
                                     {downPaymentErrorMsg.edit_Amount_Err}
+                                  </p>
+                                )}
+                                {(downpay.amount === 0 || downpay.amount === "0" || downpay.amount === undefined || isNaN(downpay.amount) &&  downPaymentErrorMsg.less_amount) && (
+                                  <p className="errorMsg">
+                                    {downPaymentErrorMsg.less_amount}
                                   </p>
                                 )}
                               </div>
@@ -1379,7 +1386,7 @@ const ProductPayment = (props) => {
                 <p>Billing Total</p>
                 {/* downPayments[0] */}
                 {/* <h4>$ {downPayments.length > 0 ? downPayments[0].amount : (parseFloat(totalAmt)+parseFloat(totalTaxAmt)).toFixed(2)}</h4> */}
-                <h4>$ {billingTotalAmt()}</h4>
+                <h4>$ {billingTotalAmt().toFixed(2)}</h4>
               </div>
               <div className="buyBtns">
                 <button
