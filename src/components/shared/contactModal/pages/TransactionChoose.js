@@ -480,6 +480,7 @@ const TransactionChoose = (props) => {
                   setContractOverview={setContractOverview}
                   contractOverviewFn={contractOverviewFn}
                   contactId={props.contactId}
+                  programContractData={programContractData}
                 />
               )}
             </div>

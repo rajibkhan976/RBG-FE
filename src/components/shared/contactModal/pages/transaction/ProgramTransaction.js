@@ -30,6 +30,7 @@ const ProgramTransaction = (props) => {
     contact: "",
     billingId: "",
     courseName: "",
+    courseIndex: "",
     courseImage: "",
     amount: "",
     duration: "",
@@ -135,6 +136,7 @@ const ProgramTransaction = (props) => {
     setContractData({
       ...contractData,
       courseName: item.name,
+      courseIndex: index,
       courseImage: item.image,
       duration: durationArray[0],
       durationInterval: durationArray[1],
@@ -170,6 +172,15 @@ const ProgramTransaction = (props) => {
   useEffect(() => {
     setContractData({ ...contractData, contact: props.contactId });
   }, [props.contactId]);
+
+  //Update current program state
+  useEffect(() => {
+    console.log('Current program data', props.programContractData);
+    if (props.programContractData) {
+      setSelectedProgram({name : props.programContractData.courseName})
+      setContractData(props.programContractData);
+    }
+  }, [props.programContractData])
 
   //Fetch programs
   useEffect(() => {
@@ -288,15 +299,15 @@ const ProgramTransaction = (props) => {
          * duration : 2 years
          * billing cycle : monthly
          */
-        if(contractData.billing_cycle === 'monthly'){
+        if (contractData.billing_cycle === 'monthly') {
           let months = contractData.durationInterval === 'month' ? 1 : 12;
           noOfPayments = contractData.duration * months;
-        } else if(contractData.billing_cycle === 'yearly') {
+        } else if (contractData.billing_cycle === 'yearly') {
           noOfPayments = contractData.duration * 1;
         }
       }
       console.log({ nextDueDate, noOfPayments });
-      setContractData({ ...contractData, nextDueDate: nextDueDate, numberOfPayments : noOfPayments });
+      setContractData({ ...contractData, nextDueDate: nextDueDate, numberOfPayments: noOfPayments });
     }
   }, [contractData.duration, contractData.billing_cycle, contractData.payment_type])
 
@@ -383,7 +394,7 @@ const ProgramTransaction = (props) => {
               <span className="labelHeading">Select Program</span>
               <span className="infoSpan">
                 <img src={info_icon} alt="" />
-                <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
               </span>
             </label>
 
@@ -419,7 +430,7 @@ const ProgramTransaction = (props) => {
                     <ul>
                       {programList && programList.map((item, index) => {
                         return (
-                          <li onClick={() => selectProgram(item, index)} key={index} className={selectedProgramIndex == index ? "active" : ""}>{item.name}</li>
+                          <li onClick={() => selectProgram(item, index)} key={index} className={contractData.courseIndex == index ? "active" : ""}>{item.name}</li>
                         )
                       })}
                     </ul>
@@ -434,11 +445,11 @@ const ProgramTransaction = (props) => {
             <span className="labelHeading">Duration</span>
             <span className="infoSpan">
               <img src={info_icon} alt="" />
-              <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+              <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
             </span>
           </label>
           <span className={(formErrors.duration ? "leftSecTransaction errorField" : "leftSecTransaction")}>
-            <input type="text" class="cmnFieldStyle" onChange={handleDurationChange} defaultValue={contractData.duration} />
+            <input type="text" className="cmnFieldStyle" onChange={handleDurationChange} defaultValue={contractData.duration} />
           </span>
           <span className="rightSecTransaction">
             <select className="selectBox" name="duration_interval" value={contractData.durationInterval} onChange={handelDurationIntervalChange}>
@@ -457,7 +468,7 @@ const ProgramTransaction = (props) => {
               <span className="labelHeading">Payment Type</span>
               <span className="infoSpan">
                 <img src={info_icon} />
-                <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
               </span>
             </label>
             <select className="selectBox" name="paymentType" value={contractData.payment_type} onChange={handelPaymentTypeChange}>
@@ -470,7 +481,7 @@ const ProgramTransaction = (props) => {
               <span className="labelHeading">Billing Cycle</span>
               <span className="infoSpan">
                 <img src={props.info_icon} />
-                <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
               </span>
             </label>
             <select className="selectBox" name="billingCycle" defaultValue={contractData.billing_cycle} onChange={handelBillingCycleChange}>
@@ -485,7 +496,7 @@ const ProgramTransaction = (props) => {
               <span>Tution Amount</span>
               <span className="infoSpan">
                 <img src={info_icon} alt="" />
-                <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
               </span>
             </label>
             <div className={(formErrors.amount ? "cmnFormField preField errorField" : "cmnFormField preField")}>
@@ -500,7 +511,7 @@ const ProgramTransaction = (props) => {
               <span>Payment Mode</span>
               <span className="infoSpan">
                 <img src={info_icon} alt="" />
-                <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
               </span>
             </label>
 
@@ -538,14 +549,14 @@ const ProgramTransaction = (props) => {
               </label>
               <span className="infoSpan">
                 <img src={info_icon} alt="" />
-                <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
               </span>
             </label>
             <div className={firstBillingTime ? "paymentNow" : "paymentNow display"} >
               <p>Payment date <span>Now</span></p>
             </div>
             <div className={firstBillingTime ? "paymentNow display" : "paymentNow"} >
-              <input type="date" name="firstBillingDate" placeholder="mm/dd/yyyy" onChange={handelFirstBillingDateChange} class="editableInput" defaultValue={contractData.paymentDate} />
+              <input type="date" name="firstBillingDate" placeholder="mm/dd/yyyy" onChange={handelFirstBillingDateChange} className="editableInput" defaultValue={contractData.paymentDate} />
             </div>
           </div>
           <div className={formErrors.courseStart ? "rightSecTransaction errorField" : "rightSecTransaction"}>
@@ -554,18 +565,18 @@ const ProgramTransaction = (props) => {
               <span className="labelHeading">Program Start Date</span>
               <span className="infoSpan">
                 <img src={info_icon} alt="" />
-                <span class="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
               </span>
             </label>
-            <input type="date" name="programStartDate" placeholder="mm/dd/yyyy" onChange={handelProgramStartDateChange} class="programStartDate cmnFieldStyle" defaultValue={contractData.courseStart} />
+            <input type="date" name="programStartDate" placeholder="mm/dd/yyyy" onChange={handelProgramStartDateChange} className="programStartDate cmnFieldStyle" defaultValue={contractData.courseStart} />
           </div>
         </div>
         <div className="formsection gap autoRenew">
           <span className="labelWithInfo">
-            <label><div class="customCheckbox"><input type="checkbox" name="autoRenew" onChange={handelAutoRenewChange} /><span></span></div>Auto Renewal</label>
+            <label><div className="customCheckbox"><input type="checkbox" name="autoRenew" onChange={handelAutoRenewChange} /><span></span></div>Auto Renewal</label>
             <span className="infoSpan">
               <img src={info_icon} alt="" />
-              <span class="tooltiptextInfo">Recurring payment will continue irrespective of duration of the program until it's cancelled.</span>
+              <span className="tooltiptextInfo">Recurring payment will continue irrespective of duration of the program until it's cancelled.</span>
             </span>
           </span>
         </div>
@@ -585,10 +596,10 @@ const ProgramTransaction = (props) => {
         downPaymentsCallback={downPaymentsCallbackFn}
         ref={addDownPaymentsRef}
       />
-      {/* <button class={props.courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={props.buyCourse}>Buy <img src={aaroww} alt="" /></button> */}
+      {/* <button className={props.courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={props.buyCourse}>Buy <img src={aaroww} alt="" /></button> */}
 
       <div className="continueBuy">
-        <button class="saveNnewBtn" onClick={e => continueToBuy(e)}>Continue to Buy <img src={aaroww} alt="" /></button>
+        <button className="saveNnewBtn" onClick={e => continueToBuy(e)}>Continue to Buy <img src={aaroww} alt="" /></button>
       </div>
     </form>
   );
