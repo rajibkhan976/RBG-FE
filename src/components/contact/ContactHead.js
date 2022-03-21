@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../actions/types";
 import download_icon from "../../../src/assets/images/download_icon.svg";
+import download_cloud_icon from "../../../src/assets/images/download_cloud_icon_white.svg"
 import uparrow_icon_grey from "../../../src/assets/images/uparrow_icon_grey.svg";
 
 const ContactHead = (props) => {
@@ -86,7 +87,7 @@ const ContactHead = (props) => {
             className="saveNnewBtn impContactBtn"
             onClick={() => props.openImportContact()}
           >
-            <img src={download_icon} alt="" /> Import Contacts
+            <img src={download_cloud_icon} alt="" /> Import Contacts
           </button>
           {/* <button className="saveNnewBtn expContactBtn">
             <img src={uparrow_icon_grey} alt="" /> Export Contacts

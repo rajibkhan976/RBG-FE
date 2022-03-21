@@ -2527,3 +2527,10 @@ li.listHeading > div.dsc::after {
 .dashboardBody .leftMenuLink:after, .dashboardBody .leftMenuLink:before {
   height: 12px;
 }
+
+input[type=number] {
+  -moz-appearance:textfield;
+}
+.impContactBtn img {
+  width: 23px;
+}

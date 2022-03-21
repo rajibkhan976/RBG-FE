@@ -69,7 +69,8 @@ const ProductPayment = (props) => {
     edit_PayDate_Err: "",
     edit_PayType_Err: "",
     edit_PayStatus_Err: "",
-    payment_not_received: ""
+    payment_not_received: "",
+    downpayment_no_title: ""
   });
 
   useEffect(() => {
@@ -179,11 +180,10 @@ const ProductPayment = (props) => {
         console.log("PAYLOAD:::", productPayload, newPay, newPay.type);
     
     let filteredPay = [...downPayments].filter((payNow, i)=> payNow.isPayNow === 1 && payNow.payment_type === "cash" && payNow.paymentConfirmation === false)
-
-        console.log("filteredPay", filteredPay, paymentsArray);
+    let titleDpConfirmation = [...downPayments].filter((titleNow, i) => titleNow.title === "" || titleNow.title.trim() === "")
 
     if (!hasError) {
-      if(filteredPay.length === 0) {
+      if(filteredPay.length === 0 && titleDpConfirmation.length === 0) {
         if(productPayload.billingId !== "") {
           try {
             setIsLoader(true);
@@ -254,12 +254,19 @@ const ProductPayment = (props) => {
         }
       }
       else {
-        console.log("IN ERROR!");
         setHasError(true);
-        setDownPaymentErrorMsg({
-          ...downPaymentErrorMsg,
-          payment_not_received: "Please confirm the payment has been received"
-        })
+        if(filteredPay.length > 0){
+          setDownPaymentErrorMsg({
+            ...downPaymentErrorMsg,
+            payment_not_received: "Please confirm the payment has been received"
+          })
+        }
+        if(titleDpConfirmation.length > 0) {
+          setDownPaymentErrorMsg({
+            ...downPaymentErrorMsg,
+            downpayment_no_title: "Please give downpayment Titles"
+          })
+        }
       }
     }
   };
@@ -342,7 +349,7 @@ const ProductPayment = (props) => {
             ...downpayments,
         {
           title: "",
-          amount: 0,
+          amount: "",
           type: "downpayment",
           isPayNow: 1,
           paymentDate: todayPayDate().toISOString().split("T")[0],
@@ -554,6 +561,7 @@ const ProductPayment = (props) => {
       setDownPaymentErrorMsg({
         ...downPaymentErrorMsg,
         edit_Title_Err: "",
+        downpayment_no_title: ""
       });
     } else {
       downPaymentsPlaceholder[i].title = e.target.value;
@@ -575,23 +583,31 @@ const ProductPayment = (props) => {
       .filter((dpTarget, index) => index !== i)
       .reduce(
         (previousValue, currentValue) =>
-          parseFloat(previousValue) + parseFloat(currentValue.amount),
+          parseFloat(previousValue) + (currentValue.amount === "" || parseFloat(currentValue.amount) === 0 || currentValue.amount === "0" ? 0 : parseFloat(currentValue.amount)),
         totalPlaceholder
-      );
+      )
+      // .reduce(
+      //   (previousValue, currentValue) =>
+      //     parseFloat(previousValue) + parseFloat(currentValue.amount),
+      //   totalPlaceholder
+      // );
       
     try {
+      console.log(parseFloat(e.target.value), parseFloat(totalDownpaymentsAmt) , parseFloat(totalAmt) + parseFloat(totalTaxAmt));
+
       // if modified amount is 0 or nothing
       if (e.target.value.trim() === "" || parseFloat(e.target.value) === 0 || e.target.value[0] === "0") {
-        e.target.value = ""
+        // e.target.value = ""
+      console.log("e value", e.target.value);
 
-        downPaymentsPlaceholder[i].amount = "";
-
+        downPaymentsPlaceholder[i].amount = parseFloat(e.target.value);
+        console.log("e.target.value", e.target.value, downpay.amount);
         setDownPayments(downPaymentsPlaceholder);
 
         setHasError(true);
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
-          edit_Amount_Err: "Amount can't be empty or 0",
+          edit_Amount_Err: "Downpayment amounts can't be empty or 0",
         });
         console.log("downPaymentsPlaceholder:::", downPaymentsPlaceholder);
       }
@@ -602,6 +618,7 @@ const ProductPayment = (props) => {
         parseFloat(e.target.value) + totalDownpaymentsAmt + parseFloat(outStanding.amount) >
         parseFloat(totalAmt) + parseFloat(totalTaxAmt)
       ) {
+        console.log("e value", e.target.value);
         setHasError(true);
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
@@ -615,11 +632,10 @@ const ProductPayment = (props) => {
         parseFloat(e.target.value) + parseFloat(totalDownpaymentsAmt) <
         parseFloat(totalAmt) + parseFloat(totalTaxAmt)
       ) {
+        console.log("e value", e.target.value);
         downPaymentsPlaceholder[i].amount = parseFloat(e.target.value);
 
         setDownPayments(downPaymentsPlaceholder);
-
-        console.log("downPaymentsPlaceholder", downPaymentsPlaceholder, parseFloat(e.target.value));
 
         setOutstanding({
           ...outStanding,
@@ -642,6 +658,7 @@ const ProductPayment = (props) => {
         (parseFloat(e.target.value) + totalDownpaymentsAmt) ===
         parseFloat(totalAmt) + parseFloat(totalTaxAmt)
       ) {
+        console.log("e value", e.target.value);
         downPaymentsPlaceholder[i].amount = parseFloat(e.target.value);
 
         setDownPayments(downPaymentsPlaceholder);
@@ -829,7 +846,7 @@ const ProductPayment = (props) => {
                           <div className="transaction_form products forDownpayment">
                             <div
                               className={
-                                downPaymentErrorMsg.edit_Title_Err
+                                (downPaymentErrorMsg.edit_Title_Err || downPaymentErrorMsg.downpayment_no_title)
                                   ? "cmnFormRow gap error"
                                   : "cmnFormRow gap"
                               }
@@ -853,11 +870,16 @@ const ProductPayment = (props) => {
                                   value={downpay.title}
                                 />
                               </div>
-                              {downPaymentErrorMsg.edit_Title_Err && (
+                              {(downPaymentErrorMsg.edit_Title_Err) && (
                                 <p className="errorMsg">
                                   {downPaymentErrorMsg.edit_Title_Err}
                                 </p>
                               )}
+                              {(downPaymentErrorMsg.downpayment_no_title && (
+                                <p className="errorMsg">
+                                  {downPaymentErrorMsg.downpayment_no_title}
+                                </p>
+                              ))}
                             </div>
                             <div className="cmnFormRow gap">
                               <div
