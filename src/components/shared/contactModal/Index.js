@@ -104,8 +104,8 @@ const ContactModal = (props) => {
             } else {
                 setImage(owner_img_1);
             }
-            const ltvVal = (contact.contact.ltv + contact.contact.ltvPOS).toLocaleString("en-US");
-            setLtv(ltvVal);
+            const ltvVal = Number(contact.contact.ltv);
+            setLtv(ltvVal.toFixed(2));
         }
     }
     const [goToTransactionClicked, setGoToTransactionClicked] = useState(false);
@@ -207,7 +207,7 @@ const ContactModal = (props) => {
                                     </div>
                                     <div className="ltValue">
                                         <header>Life Time Value :</header>
-                                        <span>USD {Number(ltv).toFixed(2)}</span>
+                                        <span>USD { ltv }</span>
                                     </div>
                                 </div>
                             }
