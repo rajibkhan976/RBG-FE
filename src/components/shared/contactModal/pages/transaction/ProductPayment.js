@@ -265,7 +265,7 @@ const ProductPayment = (props) => {
         if(titleDpConfirmation.length > 0) {
           setDownPaymentErrorMsg({
             ...downPaymentErrorMsg,
-            downpayment_no_title: "Please give downpayment Titles"
+            downpayment_no_title: "Please give downpayment Title(s)"
           })
         }
       }
@@ -583,7 +583,7 @@ const ProductPayment = (props) => {
       .filter((dpTarget, index) => index !== i)
       .reduce(
         (previousValue, currentValue) =>
-          parseFloat(previousValue) + (currentValue.amount === "" || parseFloat(currentValue.amount) === 0 || currentValue.amount === "0" ? 0 : parseFloat(currentValue.amount)),
+          parseFloat(previousValue) + (currentValue.amount === "" || parseFloat(currentValue.amount) === 0 || currentValue.amount === "0" || isNaN(currentValue.amount) ? 0 : parseFloat(currentValue.amount)),
         totalPlaceholder
       )
       // .reduce(
@@ -601,7 +601,7 @@ const ProductPayment = (props) => {
       console.log("e value", e.target.value);
 
         downPaymentsPlaceholder[i].amount = parseFloat(e.target.value);
-        console.log("e.target.value", e.target.value, downpay.amount);
+        
         setDownPayments(downPaymentsPlaceholder);
 
         setHasError(true);
@@ -618,7 +618,10 @@ const ProductPayment = (props) => {
         parseFloat(e.target.value) + totalDownpaymentsAmt + parseFloat(outStanding.amount) >
         parseFloat(totalAmt) + parseFloat(totalTaxAmt)
       ) {
+        downPaymentsPlaceholder[i].amount = parseFloat(e.target.value);
+
         console.log("e value", e.target.value);
+        
         setHasError(true);
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
@@ -870,16 +873,15 @@ const ProductPayment = (props) => {
                                   value={downpay.title}
                                 />
                               </div>
-                              {(downPaymentErrorMsg.edit_Title_Err && downpay.title.trim() === "") && (
+                              {(downPaymentErrorMsg.edit_Title_Err && downpay.title.trim() === "") ? (
                                 <p className="errorMsg">
                                   {downPaymentErrorMsg.edit_Title_Err}
                                 </p>
-                              )}
-                              {(downPaymentErrorMsg.downpayment_no_title && downpay.title.trim() === "") && (
+                              ) : (downPaymentErrorMsg.downpayment_no_title && downpay.title.trim() === "") ? (
                                 <p className="errorMsg">
                                   {downPaymentErrorMsg.downpayment_no_title}
                                 </p>
-                              )}
+                              ): ""}
                             </div>
                             <div className="cmnFormRow gap">
                               <div
@@ -922,6 +924,7 @@ const ProductPayment = (props) => {
                                     {downPaymentErrorMsg.less_amount}
                                   </p>
                                 )}
+                                {console.log((downpay.amount === 0 || downpay.amount === "0" || downpay.amount === undefined || isNaN(downpay.amount) &&  downPaymentErrorMsg.less_amount))}
                               </div>
                               <div
                                 className={
