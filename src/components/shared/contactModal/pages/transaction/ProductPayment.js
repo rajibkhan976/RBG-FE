@@ -254,6 +254,7 @@ const ProductPayment = (props) => {
         }
       }
       else {
+        console.log("amountDpConfirmation", amountDpConfirmation);
         setHasError(true);
         if(filteredPay.length > 0){
           setDownPaymentErrorMsg({
@@ -270,7 +271,7 @@ const ProductPayment = (props) => {
         if(amountDpConfirmation.length > 0) {
           setDownPaymentErrorMsg({
             ...downPaymentErrorMsg,
-            edit_Amount_Err: "Please enter some downpayment value"
+            edit_Amount_Err: {msg : "Please enter some downpayment value", key :  0}
           })
         }
       }
@@ -581,6 +582,7 @@ const ProductPayment = (props) => {
     }
   };
   const changeDownpaymentAmount = (e, downpay, i) => {
+    console.log("i : index ::: ", i,typeof e.target.value);
     const downPaymentsPlaceholder = [...downPayments];
     const totalPlaceholder = 0;
 
@@ -601,7 +603,7 @@ const ProductPayment = (props) => {
       console.log(parseFloat(e.target.value), downPayments, parseFloat(totalDownpaymentsAmt) , parseFloat(totalAmt) + parseFloat(totalTaxAmt));
 
       // if modified amount is 0 or nothing
-      if (e.target.value.trim() === "" || parseFloat(e.target.value) === 0 || e.target.value[0] === "0") {
+      if (e.target.value.trim() === "" || parseFloat(e.target.value) === 0 || e.target.value === "0") {
         // e.target.value = ""
       console.log("e value", e.target.value);
 
@@ -612,7 +614,7 @@ const ProductPayment = (props) => {
         setHasError(true);
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
-          edit_Amount_Err: "Downpayment amounts can't be empty or 0",
+          edit_Amount_Err: {msg : "Downpayment amounts can't be empty or 0", key : i},
         });
         console.log("downPaymentsPlaceholder:::", downPaymentsPlaceholder);
       }
@@ -623,14 +625,14 @@ const ProductPayment = (props) => {
         parseFloat(e.target.value) + totalDownpaymentsAmt + parseFloat(outStanding.amount) >
         parseFloat(totalAmt) + parseFloat(totalTaxAmt)
       ) {
-        downPaymentsPlaceholder[i].amount = parseFloat(e.target.value);
+        // downPaymentsPlaceholder[i].amount = parseFloat(e.target.value);
 
         console.log("e value", e.target.value);
         
         setHasError(true);
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
-          edit_Amount_Err: "Downpayments amount exceeding total",
+          edit_Amount_Err: {msg : "Downpayments amount exceeding total; please modify amount", key : i}
         });
       }
       // if amount in summation with other downpayments and outstanding is more than total
@@ -655,7 +657,7 @@ const ProductPayment = (props) => {
         setHasError(false);
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
-          edit_Amount_Err: "",
+          edit_Amount_Err: {msg : "", key : null}
         });
       }
       // if amount in summation with other downpayments and outstanding is less than total
@@ -679,7 +681,7 @@ const ProductPayment = (props) => {
         setHasError(false);
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
-          edit_Amount_Err: "",
+          edit_Amount_Err: {msg : "", key : null},
         });
       }
       // if amount in summation with other downpayments and outstanding is equalling total
@@ -892,12 +894,12 @@ const ProductPayment = (props) => {
                             <div className="cmnFormRow gap">
                               <div
                                 className={
-                                  (downPaymentErrorMsg.edit_Amount_Err || (downpay.amount === 0 || downpay.amount === "0" || downpay.amount === undefined || isNaN(downpay.amount)))
+                                  (downPaymentErrorMsg.edit_Amount_Err && (downPaymentErrorMsg.edit_Amount_Err.key !== null && downPaymentErrorMsg.edit_Amount_Err.key ===i )  || (downpay.amount === 0 || downpay.amount === "0" || downpay.amount === undefined || isNaN(downpay.amount)))
                                     ? "leftSecTransaction error"
                                     : "leftSecTransaction"
                                 }
                               >
-                                {console.log("CHECKING LOGGED:::>>>", downpay, downpay.amount === 0, downpay.amount === "0", downpay.amount === undefined, isNaN(downpay.amount))}
+                                {/* {console.log("CHECKING LOGGED:::>>>", downpay, downpay.amount === 0, downpay.amount === "0", downpay.amount === undefined, isNaN(downpay.amount))} */}
                                 <label className="labelWithInfo">
                                   <span className="labelHeading">Amount</span>
                                   <span className="infoSpan">
@@ -920,10 +922,12 @@ const ProductPayment = (props) => {
                                     }
                                   />
                                 </div>
-                                {downPaymentErrorMsg.edit_Amount_Err && (
-                                  <p className="errorMsg">
-                                  {console.log("HERE:::::::>>>")}
-                                    {downPaymentErrorMsg.edit_Amount_Err}
+
+                                {downPaymentErrorMsg.edit_Amount_Err && downPaymentErrorMsg.edit_Amount_Err.key !== null && downPaymentErrorMsg.edit_Amount_Err.key ===i  && (
+                                <p className="errorMsg">
+                                {/* {console.log("I : ", i)} */}
+
+                                    {downPaymentErrorMsg.edit_Amount_Err.msg}
                                   </p>
                                 )}
                                 {!downPaymentErrorMsg.edit_Amount_Err && (downpay.amount === 0 || downpay.amount === "0" || downpay.amount === undefined || isNaN(downpay.amount)) ? (
@@ -1288,7 +1292,8 @@ const ProductPayment = (props) => {
                   marginBottom: "5px"
                 }}
               >
-                <div className={(downPay.payment_type === "cash" && downPaymentErrorMsg.payment_not_received !== "") ? "outstandingDownpayment error" : "outstandingDownpayment"}>
+                {console.log(downPay.payment_type === "cash", downPaymentErrorMsg.payment_not_received !== "")}
+                <div className={(downPay.payment_type === "cash" && downPay.paymentConfirmation === false) ? "outstandingDownpayment error" : "outstandingDownpayment"}>
                   <div className="downpaymentsDetails">
                     <div className="cardImage">
                       {downPay.payment_type === "cash" ? (
@@ -1382,7 +1387,7 @@ const ProductPayment = (props) => {
                         </div>
                         I have received the amount by Cash
                       </label>
-                      {downPaymentErrorMsg.payment_not_received !== "" && <p className="errorMsg">
+                      {downPaymentErrorMsg.payment_not_received !== "" && downPay.payment_type === "cash" && downPay.paymentConfirmation === false && <p className="errorMsg">
                               {downPaymentErrorMsg.payment_not_received}
                             </p>}
                     </>
