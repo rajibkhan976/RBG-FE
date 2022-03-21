@@ -51,7 +51,7 @@ const Notifications = (props) => {
         if (result.notifications.length > 0) {
             let notifi = [];
             if (notificationsListing) {
-                notifi = [...result.notifications, ...notificationsListing];
+                notifi = [...notificationsListing, ...result.notifications];
             } else {
                 notifi = result.notifications;
             }
@@ -284,7 +284,7 @@ const Notifications = (props) => {
                                         notificationsListing.length ? notificationsListing.map((e, i) => {
                                             return (
                                                 <li key={i}
-                                                    className={e.isRead ? "detailNotif" : "detailNotif unreadNotifications"}>
+                                                    className={"detailNotif "  + e.status + (!e.isRead ? " unreadNotifications" : "")}>
                                                     <div className="notiTime_n_Icon">
                                                         <span className="timeStamp">{ showTimeDiff(e) }</span>
                                                         <figure>

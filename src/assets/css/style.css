@@ -2256,6 +2256,7 @@ img.dropDownIcon {
   position: relative;
   cursor: pointer;
 }
+
 .detailNotif::before,
 .detailNotif::after {
   content: "";
@@ -2307,6 +2308,9 @@ img.dropDownIcon {
   color: var(--darkBlue);
   line-height: 20px;
   opacity: 0.7;
+}
+.detailNotifList.error p {
+  color: red;
 }
 .detailNotifList p .client {
   color: #55bbc9;
