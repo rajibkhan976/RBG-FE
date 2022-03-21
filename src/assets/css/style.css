@@ -10126,7 +10126,7 @@ select.editFormStyle{
 iframe{
   z-index: -5555555555 !important;
 }
-li.listHeading > div > div {
+li.listHeadingContacts > div > div {
   font-size: 13px;
   color: var(--darkBlue);
   padding: 13px 16px;
@@ -10136,7 +10136,7 @@ li.listHeading > div > div {
   position: relative;
 }
 
-li.listHeading > div > div:after {
+li.listHeadingContacts > div > div:after {
   content: "";
   display: inline-block;
   vertical-align: middle;
@@ -10150,9 +10150,9 @@ li.listHeading > div > div:after {
   margin-left: 13px;
 }
 
-li.listHeading > div > div.asc::after {
+li.listHeadingContacts > div > div.asc::after {
   background-image: url("../images/only_down_icon.svg");
 }
-li.listHeading > div > div.dsc::after {
+li.listHeadingContacts > div > div.dsc::after {
   background-image: url("../images/only_up_icon.svg");
 }

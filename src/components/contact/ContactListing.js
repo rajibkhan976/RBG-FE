@@ -308,7 +308,7 @@ const ContactListing = forwardRef((props, ref) => {
     const GenerateColumns = () => {
         let i = 0;
         return (
-            <li className="listHeading">
+            <li className="listHeadingContacts">
                 {savedColList.map((item, index) => {
                     i++;
                     return (
