@@ -261,7 +261,7 @@ const InnerLeftMenu = (props) => {
               </h4>
             </div>
             <ul>
-              <li>
+              {/* <li>
                 <NavLink className="leftMenuInnerLink" to="/personal-details">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
@@ -272,7 +272,7 @@ const InnerLeftMenu = (props) => {
                     </button>
                   </div>
                 </NavLink>
-              </li>
+              </li> */}
               <li>
                 <NavLink className="leftMenuInnerLink" to="/gym-details">
                   <div className="indicator"></div>
@@ -285,7 +285,7 @@ const InnerLeftMenu = (props) => {
                   </div>
                 </NavLink>
               </li>
-              <li>
+              {/* <li>
                 <NavLink className="leftMenuInnerLink" to="/call-setup" activeClassName="active">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
@@ -313,7 +313,7 @@ const InnerLeftMenu = (props) => {
                     </li>
                   </ul>
                 </NavLink>
-              </li>
+              </li> */}
               <li>
                 <NavLink className="leftMenuInnerLink" to="/products" activeClassName="active">
                   <div className="indicator"></div>
@@ -350,7 +350,7 @@ const InnerLeftMenu = (props) => {
                   </div>
                 </NavLink>
               </li>
-              <li>
+              {/* <li>
                 {console.log(pathURL === "/email-template" || pathURL === "/sms-template" || pathURL === "/audio-template")}
                 <NavLink 
                   className={(pathURL === "/email-template" || pathURL === "/sms-template" || pathURL === "/audio-template") ? "leftMenuInnerLink active" : "leftMenuInnerLink"} 
@@ -385,8 +385,8 @@ const InnerLeftMenu = (props) => {
                   </ul>
                 </NavLink>
 
-              </li>
-              <li>
+              </li> */}
+              {/* <li>
                 <NavLink className="leftMenuInnerLink" to="/phases-status"> 
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
@@ -397,7 +397,7 @@ const InnerLeftMenu = (props) => {
                     </button>
                   </div>
                 </NavLink>
-              </li>
+              </li> */}
             </ul>
             <div className="linkImg">
               <img src={undraw_personal_settings_kihd} alt="" />
