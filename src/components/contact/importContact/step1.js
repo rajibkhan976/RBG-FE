@@ -17,6 +17,8 @@ function Step1(props) {
     const [primaryField, setPrimaryField] = useState('');
     const [importType, setImportType] = useState('data');
     const [uploadedFile, setUploadedFile] = useState('');
+    const [importName, setImportName] = useState('');
+    const [importNameError, setImportNameError] = useState('');
     const [isLoader, setIsLoader] = useState(false);
     const getRandomFileName = () => {
         let timestamp = new Date().toISOString().replace(/[-:.]/g,"");
@@ -70,17 +72,37 @@ function Step1(props) {
     const handleImportType = (event) => {
         setImportType(event.target.value);
     }
+    const handleImportName = (event) => {
+        if (event.target.value.length > 20) {
+            setImportNameError('Please provide name with 20 characters only.');
+            setTimeout(() => {
+                setImportNameError('');
+            }, 5000);
+        } else {
+            setImportName(event.target.value);
+        }
+    }
     const downLoadSample = (e) => {
       e.preventDefault();
     }
     const submitFirstStep = async () => {
-        if (uploadedFile === '') {
-            setFileUploadError(true);
+        if (uploadedFile === '' || importName === '') {
+            if (importName === '') {
+                setImportNameError('Please provide name for this import.')
+            }
+            if (uploadedFile === '') {
+                setFileUploadError(true);
+            }
+            setTimeout(() => {
+                setImportNameError("");
+                setFileUploadError(false)
+            }, 5000)
         } else {
             let payload = {
                 'file': uploadedFile,
                 'duplicate': duplicate,
-                'primaryField': primaryField
+                'primaryField': primaryField,
+                'name': importName
             }
             setIsLoader(true);
             let uploadedFileResponse = await ImportContactServices.uploadFile(JSON.stringify(payload));
@@ -94,7 +116,8 @@ function Step1(props) {
                     totalRecords: totalRecord,
                     duplicate: duplicate,
                     primaryField: primaryField,
-                    importType: importType
+                    importType: importType,
+                    importName: importName
                 }
                 props.setState('custom', object);
                 props.next();
@@ -122,6 +145,15 @@ function Step1(props) {
                 <div id="step_1" className="">
                     <div className="infoInputs">
                         <ul>
+                            <li>
+                                <div className={"formField w-50 " + (importNameError ? 'error' : '')}>
+                                    <label>Save this import as</label>
+                                    <div className="inFormField">
+                                        <input type="text" name="importDataName" className="importName" value={importName} onChange={handleImportName}/>
+                                        {importNameError ? <span className="errorMsg">{importNameError}</span> : ''}
+                                    </div>
+                                </div>
+                            </li>
                             <li>
                                 <div className="formField w-50">
                                     <label>Import data for</label>

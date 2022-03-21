@@ -779,14 +779,12 @@ const expiration_month = cardExpairyMonthCheckFn();
         </p>
         {(!props.contact.is_payment_setup_remaining) ?
             <div className="twoBillingCardContainer" ref={billingCardContainer}>
-              {props.contact && props.contact.payment_error !== undefined ?
-                  <div className="importCPaymentError d-flex f-align-center f-justify-center">
-                    <p>{props.contact.payment_error}</p>
-                  </div> : formErrorMsg.card_details_invalid ? <div className="importCPaymentError d-flex f-align-center f-justify-center">
-                    <p>{formErrorMsg.card_details_invalid}</p>
-                  </div> : formErrorMsg.bank_details_invalid ? <div className="importCPaymentError d-flex f-align-center f-justify-center">
-                    <p>{formErrorMsg.bank_details_invalid}</p>
-                  </div> : ""
+              {
+                formErrorMsg.card_details_invalid ? <div className="importCPaymentError d-flex f-align-center f-justify-center">
+                  <p>{formErrorMsg.card_details_invalid}</p>
+                </div> : formErrorMsg.bank_details_invalid ? <div className="importCPaymentError d-flex f-align-center f-justify-center">
+                  <p>{formErrorMsg.bank_details_invalid}</p>
+                </div> : ""
               }
               {
                 successMessage !== "" && <SuccessAlert message={successMessage} />

@@ -16,6 +16,7 @@ import responses from '../../configuration/responses';
 import env from '../../configuration/env';
 import Moment from 'moment';
 import config from "../../configuration/config";
+import dependent_white from "../../assets/images/dependent.svg";
 
 
 const ContactListing = forwardRef((props, ref) => {
@@ -333,10 +334,10 @@ const ContactListing = forwardRef((props, ref) => {
                             return (
                                 <div className={item.id === "name" ? "dataTableCell user" : "dataTableCell"} key={'dataTableCell_'+i+pp}>
                                     {(j === 1) ? <button className="extraDottedBtn" type="button"></button> : ""}
-                                    {(j === 1) ? ((ele.payment_error != undefined || ele.course_error != undefined) ? <span className="infoWarning warningSpace"
+                                    {(j === 1) && (!ele.isDependent || ele.isDependent === undefined) ? ((ele.payment_error != undefined || ele.course_error != undefined) ? <span className="infoWarning warningSpace"
                                         data-title={(ele.payment_error != undefined ? ele.payment_error : "" ) + ' ' + (ele.course_error != undefined ? ele.course_error : "")}>
-                                        <img src={warning_bell} alt="warning" />
-                        </span> : <span className="warningSpace"></span>) : ""}
+                                        <img src={warning_bell} alt="warning" /></span> : <span className="warningSpace"></span>) : ""}
+                                    { ((j === 1) && (ele && ele.isDependent && ele.guardianId) ?  <span className="infoDependent"><img src={dependent_white} alt="warning" /></span> : "" ) }
                                     <button className="btn" onClick={() => openContactModal(ele._id)}>
                                         {(item.id === "name") ? <span className="tableCellUserImg">
                                             <LazyLoadImage

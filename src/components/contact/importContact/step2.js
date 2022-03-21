@@ -283,7 +283,8 @@ function Step2(props) {
                     duplicate: custom.duplicate,
                     primaryField: custom.primaryField,
                     key: uploadedKey,
-                    importType: importType
+                    importType: importType,
+                    importName: custom.importName
                 }
                 callImportContactApi(payload);
             } else {
@@ -310,7 +311,8 @@ function Step2(props) {
                     duplicate: custom.duplicate,
                     primaryField: custom.primaryField,
                     key: uploadedKey,
-                    importType: importType
+                    importType: importType,
+                    importName: custom.importName
                 }
                 callImportContactApi(payload);
             }
