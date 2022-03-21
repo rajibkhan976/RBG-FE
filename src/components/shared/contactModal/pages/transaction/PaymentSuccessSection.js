@@ -35,12 +35,17 @@ import { Scrollbars } from "react-custom-scrollbars-2";
 const PaymentSuccessSection = (props) => {
   const [successList, setSuccessList] = useState([]);
   const [amountPaid, setAmountPaid] = useState(0);
+  const [successMsg, setSuccessMsg] = useState("Payment Successful!");
 
   useEffect(() => {
     console.table('Payment props', props.successData);
-    setSuccessList(props.successData);
-    let totalAmount = props.successData && props.successData.reduce((total, obj) => parseInt(obj.amount) + total, 0)
-    setAmountPaid(totalAmount);
+    if (props.successData) {
+      setSuccessList(props.successData);
+      let totalAmount = props.successData && props.successData.reduce((total, obj) => parseInt(obj.amount) + total, 0)
+      setAmountPaid(totalAmount);
+    } else {
+      setSuccessMsg("Contract has been created successfully!");
+    }
   }, [props.successData]);
 
 
@@ -48,15 +53,18 @@ const PaymentSuccessSection = (props) => {
     <div className="posSellingForm contractOverview">
       <div className="successHeader">
         <div className="circleForIcon"><img src={paySuccess} alt="" /></div>
-        <h3 className="paySuccessHeading">Payment Successful ! </h3>
+        <h3 className="paySuccessHeading">{successMsg}</h3>
       </div>
-      <div class="dottedBorder"></div>
-
-      <ul className="paymentUlHeader">
-        <li className="paymentModeHeaderLi">Payment Mode</li>
-        <li className="paymentIdHeaderLi">Transaction ID</li>
-        <li className="paymentAmtHeaderLi">Amount</li>
-      </ul>
+      {successList.length ?
+        <React.Fragment>
+          <div class="dottedBorder"></div>
+          <ul className="paymentUlHeader">
+            <li className="paymentModeHeaderLi">Payment Mode</li>
+            <li className="paymentIdHeaderLi">Transaction ID</li>
+            <li className="paymentAmtHeaderLi">Amount</li>
+          </ul>
+        </React.Fragment>
+        : ''}
       {successList && successList.map((el, key) => {
         return (
           <React.Fragment key={key + "_paymentSuccess"}>
@@ -74,15 +82,21 @@ const PaymentSuccessSection = (props) => {
           </React.Fragment>
         );
       })}
-      <ul className="totalPaymentUl">
-        <li>
-          <p>Amount Paid</p>
-        </li>
-        <li>
-          <p>$ {parseFloat(amountPaid).toFixed(2)}</p>
-        </li>
-      </ul>
-      <div className="dottedBorder"></div>
+
+      {amountPaid ?
+        <React.Fragment>
+          <ul className="totalPaymentUl">
+            <li>
+              <p>Amount Paid</p>
+            </li>
+            <li>
+              <p>$ {parseFloat(amountPaid).toFixed(2)}</p>
+            </li>
+          </ul>
+          <div className="dottedBorder"></div>
+        </React.Fragment>
+        : ''}
+
       <div className="successPageBtn programPayment">
         <button onClick={props.backToTransList} className="saveNnewBtn">Go to Transaction List <img src={aaroww} alt="" /></button>
       </div>

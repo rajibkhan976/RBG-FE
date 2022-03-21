@@ -14,8 +14,6 @@ import downpayment from "../../../../../assets/images/no_downpayment.svg";
 
 const DownPayments = forwardRef((props, ref) => {
 
-    console.log({ props }, { ref });
-
     const downPaymentElement = {
         title: "Down Payment 1",
         titleErr: "",
@@ -37,7 +35,7 @@ const DownPayments = forwardRef((props, ref) => {
             setIsDownPayment(true);
             setDownPaymentElems(props.contractData.downPayments);
         }
-    }, [props])
+    }, [props.contractData])
 
     useEffect(() => {
         broadcastToParent();
@@ -141,17 +139,19 @@ const DownPayments = forwardRef((props, ref) => {
     //Downpayment toggle
     const downPaymentToggle = (e) => {
         let isActive = e.target.checked;
-        if (!isActive) {
-            setDownPaymentElems([{ ...downPaymentElement }])
-        }
+        console.log('Toggle', isActive);
         setIsDownPayment(isActive);
+        setDownPaymentElems([{ ...downPaymentElement }]);
+        if (!isActive) {        
+            setDownPaymentElems([]);
+        }
     }
 
     return (
         <React.Fragment>
             <div className="productAvailable downpayment active">
                 <div className="downPaymentToogle">
-                    <header class="informHeader"><h5>Down Payment <span className="cartCount">{!isDownPayment ? 0 : downPaymentElems.length}</span></h5></header>
+                    <header className="informHeader"><h5>Down Payment <span className="cartCount">{!isDownPayment ? 0 : downPaymentElems.length}</span></h5></header>
                     <label
                         className={isDownPayment ? "toggleBtn active" : "toggleBtn"
                         }
@@ -160,6 +160,7 @@ const DownPayments = forwardRef((props, ref) => {
                             type="checkbox"
                             name="check-communication"
                             onChange={(e) => downPaymentToggle(e)}
+                            checked={isDownPayment}
                         />
                         <span className="toggler"></span>
                     </label>
@@ -201,7 +202,7 @@ const DownPayments = forwardRef((props, ref) => {
                                                     <span className="labelHeading">Title</span>
                                                     <span className="infoSpan">
                                                         <img src={info_icon} alt="" />
-                                                        <span class="tooltiptextInfo">Title for down payment.</span>
+                                                        <span className="tooltiptextInfo">Title for down payment.</span>
                                                     </span>
                                                 </label>
                                                 <input
@@ -222,7 +223,7 @@ const DownPayments = forwardRef((props, ref) => {
                                                         <span className="labelHeading">Amount</span>
                                                         <span className="infoSpan">
                                                             <img src={info_icon} alt="" />
-                                                            <span class="tooltiptextInfo amount">Amount you want to pay as down payment.</span>
+                                                            <span className="tooltiptextInfo amount">Amount you want to pay as down payment.</span>
                                                         </span>
                                                     </label>
                                                     <div className="cmnFormField preField">
@@ -231,7 +232,7 @@ const DownPayments = forwardRef((props, ref) => {
                                                         </div>
                                                         <input
                                                             type="number"
-                                                            class="cmnFieldStyle numberType"
+                                                            className="cmnFieldStyle numberType"
                                                             value={el.amount}
                                                             onBlur={e => validateIndividual(e, key, "amount")}
                                                             onChange={e => validateIndividual(e, key, "amount")}
@@ -261,7 +262,7 @@ const DownPayments = forwardRef((props, ref) => {
                                                     <div className={el.isPayNow ? "paymentNow " : "paymentNow display"} >
                                                         <input
                                                             type="date"
-                                                            class="editableInput"
+                                                            className="editableInput"
                                                             placeholder="mm/dd/yyyy"
                                                             value={el.paymentDate}
                                                             min={el.minPaymentDate}
@@ -276,7 +277,7 @@ const DownPayments = forwardRef((props, ref) => {
                                                         <span className="labelHeading">Payment Mode</span>
                                                         <span className="infoSpan">
                                                             <img src={info_icon} alt="" />
-                                                            <span class="tooltiptextInfo paymentType">Payment mode.</span>
+                                                            <span className="tooltiptextInfo paymentType">Payment mode.</span>
                                                         </span>
                                                     </label>
                                                     <select
@@ -294,7 +295,7 @@ const DownPayments = forwardRef((props, ref) => {
                                                         <span className="labelHeading">Payment Status</span>
                                                         <span className="infoSpan">
                                                             <img src={info_icon} alt="" />
-                                                            <span class="tooltiptextInfo paymentStatus">Payment status.</span>
+                                                            <span className="tooltiptextInfo paymentStatus">Payment status.</span>
                                                         </span>
                                                     </label>
                                                     <select

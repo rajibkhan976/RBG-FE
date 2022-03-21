@@ -124,7 +124,7 @@ const ContractOverviewTransaction = (props) => {
       payNowDownPaymentsAmount = payNowDownPayments.reduce((total, obj) => parseInt(obj.amount) + total, 0);
       console.log('Pay now down payments total amout: ', payNowDownPaymentsAmount);
     }
-    console.log('Now amount', typeof payNowTuitionAmount, typeof payNowDownPaymentsAmount);
+    console.log('Now amount', payNowTuitionAmount, payNowDownPaymentsAmount);
     let nowPaymentAmount = payNowTuitionAmount + payNowDownPaymentsAmount;
 
     //Due tuition fee
@@ -238,6 +238,8 @@ const ContractOverviewTransaction = (props) => {
         if (result.status === 'success') {
           console.log('bill now result', result);
           props.paymentSuccessFn(e, result.data);
+        } else if (result.status === 'pending') {
+          props.paymentSuccessFn(e, []);
         } else {
           paymentFailedFn(result.description);
         }
@@ -372,56 +374,59 @@ const ContractOverviewTransaction = (props) => {
 
         <div className="dottedBorder"></div>
 
-        <div className="currentPaymentOverview programPayNowOverview">
-          {contractData.payNowDownPayments && contractData.payNowDownPayments.map((el, key) => {
-            return (
-              <React.Fragment key={key + "_payNowDownPayments"}>
-                <div className="outstandingDownpayment">
-                  <div className="downpaymentsDetails">
-                    <div className="cardImage">
-                      <img src={el.payment_type === 'cash' ? cashCurrent : cardActive} />
-                    </div>
-                    <div className="paymentModuleInfos">
-                      <span className="accNumber">{el.title}</span>
-                      <span className="accinfod"><b>$ {parseFloat(el.amount).toFixed(2)}</b></span>
-                    </div>
+        <div className={contractData.payNowTuitionAmount || contractData.payNowDownPayments ? "currentPaymentOverview programPayNowOverview" : "currentPaymentOverview programPayNowOverview noNowPayments"}>
+        {contractData.payNowDownPayments && contractData.payNowDownPayments.map((el, key) => {
+          return (
+            <React.Fragment key={key + "_payNowDownPayments"}>
+              <div className={el.isReceivedCashFlagErr ? "outstandingDownpayment error": "outstandingDownpayment"}>
+                <div className="downpaymentsDetails">
+                  <div className="cardImage">
+                    <img src={el.payment_type === 'cash' ? cashCurrent : cardActive} />
+                  </div>
+                  <div className="paymentModuleInfos">
+                    <span className="accNumber">{el.title}</span>
+                    <span className="accinfod"><b>$ {parseFloat(el.amount).toFixed(2)}</b></span>
+                  </div>
 
-                  </div>
-                  <div className="downpaymentsPayDetails">
-                    <div className="payDate currentPayment">
-                      <img src={payDate} alt="" /> Now
-                    </div>
-                  </div>
-                  {el.payment_type === 'cash' ?
-                    <label className={el.isReceivedCashFlagErr ? "receivedCash error" : "receivedCash"}>
-                      <div className="customCheckbox">
-                        <input type="checkbox" onChange={e => toggleReceiveCash(e, key)} />
-                        <span></span>
-                      </div>I have received the amount by Cash
-                    </label>
-                    : ''}
                 </div>
-              </React.Fragment>
-            );
-          })}
+                <div className="downpaymentsPayDetails">
+                  <div className="payDate currentPayment">
+                    <img src={payDate} alt="" /> Now
+                  </div>
+                </div>
+                {el.payment_type === 'cash' ?
+                <>
+                  <label className="receivedCash">
+                    <div className="customCheckbox">
+                      <input type="checkbox" onChange={e => toggleReceiveCash(e, key)} />
+                      <span></span>
+                    </div>I have received the amount by Cash
+                  </label>
+                  {el.isReceivedCashFlagErr ? <p class="errorMsg">Please confirm the payment has been received</p> : ""}
+                  </>
+                  : ''}
+              </div>
+            </React.Fragment>
+          );
+        })}
 
 
-          <div className="outstandingDownpayment tutuionSubscriptions currentPayment">
-            <div className="downpaymentsDetails">
-              <div className="cardImage">
-                <img src={cardActive} alt="" />
-              </div>
-              <div className="paymentModuleInfos">
-                <span className="accNumber">Tuition Amount</span>
-                <span className="accinfod"><b>$ {parseFloat(contractData.payNowTuitionAmount).toFixed(2)}</b></span>
-              </div>
+        {contractData.payNowTuitionAmount ? <div className="outstandingDownpayment tutuionSubscriptions currentPayment">
+          <div className="downpaymentsDetails">
+            <div className="cardImage">
+              <img src={cardActive} alt="" />
             </div>
-            <div className="downpaymentsPayDetails">
-              <div className="payDate currentPayment">
-                <img src={payDate} alt="" /> {contractData.isPayNow ? 'Now' : ''}
-              </div>
+            <div className="paymentModuleInfos">
+              <span className="accNumber">Tuition Amount</span>
+              <span className="accinfod"><b>$ {parseFloat(contractData.payNowTuitionAmount).toFixed(2)}</b></span>
             </div>
           </div>
+          <div className="downpaymentsPayDetails">
+            <div className="payDate currentPayment">
+              <img src={payDate} alt="" /> {contractData.isPayNow ? 'Now' : ''}
+            </div>
+          </div>
+        </div> : ''}
         </div>
 
         <div className="totalCartValue">
@@ -431,7 +436,7 @@ const ContractOverviewTransaction = (props) => {
           </div>
           <div className="buyBtns">
             {/* <button onClick={(e)=> {paymentFailedFn()}} className="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button> */}
-            <button onClick={billNow} className="saveNnewBtn">Bill Now <img src={aaroww} alt="" /></button>
+            <button onClick={billNow} className="saveNnewBtn">{contractData.nowPaymentAmount ? 'Bill Now' : 'Make Contract'} <img src={aaroww} alt="" /></button>
 
           </div>
         </div>

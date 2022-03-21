@@ -3938,3 +3938,10 @@ li.paymentModeLi, li.paymentAmtLi {
 .newDownpayment.programs.buttons button.delNewDownpayment {
   box-shadow: 0px -1px 4px rgb(0 0 0 / 10%);
 }
+
+.noNowPayments {
+  display: none;
+}
+.outstandingDownpayment + .outstandingDownpayment {
+  margin-top: 5px;
+}

@@ -29,6 +29,7 @@ const ProgramTransaction = (props) => {
     courseStart: "",
     numberOfPayments: 1,
     paymentDate: moment().format("YYYY-MM-DD"),
+    firstBillingTime: false,
     auto_renew: 0,
     isPayNow: 1,
     default_transaction: "cash",
@@ -47,7 +48,6 @@ const ProgramTransaction = (props) => {
   const getLatestClone = () => JSON.parse(JSON.stringify(contractData));
 
 
-  const [firstBillingTime, setFirstBillingTime] = useState(false);
   const addDownPaymentsRef = useRef();
 
   const chooseCategoryFn = () => {
@@ -169,11 +169,15 @@ const ProgramTransaction = (props) => {
     setContractData({ ...contractData, default_transaction: e.target.value });
   }
 
+  const handelFirstBillingDateToggle = (e) => {
+    setContractData({...contractData, firstBillingTime : e.target.checked});
+  }
+
   //First billing date change
   const handelFirstBillingDateChange = (e) => {
     e.preventDefault();
     console.log('first billing date change', e.target.value);
-    setContractData({ ...contractData, paymentDate: e.target.value, isPayNow: 0 });
+    setContractData({ ...contractData, paymentDate: e.target.value, nextDueDate: moment(e.target.value).format("MM/DD/YYYY"), isPayNow: 0 });
   }
 
   //Program start date change
@@ -420,7 +424,7 @@ const ProgramTransaction = (props) => {
             </label>
 
             <div className='cmnFormField'>
-              <select className='selectBox' name="paymentMode" defaultValue={contractData.default_transaction} onChange={handelPaymentModeChange}>
+              <select className='selectBox' name="paymentMode" value={contractData.default_transaction} onChange={handelPaymentModeChange}>
                 <option value="cash">Cash</option>
                 <option value="online">Online</option>
               </select>
@@ -436,17 +440,14 @@ const ProgramTransaction = (props) => {
               <label className="labelWithInfo paymentTime firstBillTime">
                 <span className="labelHeading">I want to Pay Later</span>
                 <label
-                  className={firstBillingTime ? "toggleBtn active" : "toggleBtn"
+                  className={contractData.firstBillingTime ? "toggleBtn active" : "toggleBtn"
                   }
                 >
                   <input
                     type="checkbox"
                     name="check-communication"
-                    onChange={(e) =>
-                      e.target.checked
-                        ? setFirstBillingTime(true)
-                        : setFirstBillingTime(false)
-                    }
+                    onChange={handelFirstBillingDateToggle}
+                    checked={contractData.firstBillingTime}
                   />
                   <span className="toggler"></span>
                 </label>
@@ -456,11 +457,11 @@ const ProgramTransaction = (props) => {
                 <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
               </span>
             </label>
-            <div className={firstBillingTime ? "paymentNow" : "paymentNow display"} >
+            <div className={contractData.firstBillingTime ? "paymentNow" : "paymentNow display"} >
               <p>Payment date <span>Now</span></p>
             </div>
-            <div className={firstBillingTime ? "paymentNow display" : "paymentNow"} >
-              <input type="date" name="firstBillingDate" placeholder="mm/dd/yyyy" onChange={handelFirstBillingDateChange} className="editableInput" defaultValue={contractData.paymentDate} />
+            <div className={contractData.firstBillingTime ? "paymentNow display" : "paymentNow"} >
+              <input type="date" name="firstBillingDate" placeholder="mm/dd/yyyy" onChange={handelFirstBillingDateChange} className="editableInput" value={contractData.paymentDate} />
             </div>
           </div>
           <div className={formErrors.courseStart ? "rightSecTransaction errorField" : "rightSecTransaction"}>
@@ -477,7 +478,7 @@ const ProgramTransaction = (props) => {
         </div>
         <div className="formsection gap autoRenew">
           <span className="labelWithInfo">
-            <label><div className="customCheckbox"><input type="checkbox" name="autoRenew" onChange={handelAutoRenewChange} /><span></span></div>Auto Renewal</label>
+            <label><div className="customCheckbox"><input type="checkbox" name="autoRenew" onChange={handelAutoRenewChange} checked={contractData.auto_renew} /><span></span></div>Auto Renewal</label>
             <span className="infoSpan">
               <img src={info_icon} alt="" />
               <span className="tooltiptextInfo">Recurring payment will continue irrespective of duration of the program until it's cancelled.</span>
