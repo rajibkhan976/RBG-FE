@@ -2491,14 +2491,14 @@ li.listHeading > div.dsc::after {
   flex: 1 1 calc(100% - 76px);
   max-width: calc(100% - 76px);
 }
-.menuDetails.numberlist,
+/* .menuDetails.numberlist,
 .numberlist .innerMenuScroll {
   background: transparent;
   pointer-events: none;
 }
 .numberlist .innerMenuScroll {
   display: none;
-}
+} */
 .dashboardBody .selected:before {
   top: -5px;
 }

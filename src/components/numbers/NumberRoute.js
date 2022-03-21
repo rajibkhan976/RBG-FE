@@ -8,8 +8,9 @@ const NumberRouting = (props) => {
   document.title = "Red Belt Gym - Number management";
   return (
     <React.Fragment>
-      <InnerLeftMenu routeMenu="dashboard"/>
-      <div className="dashboardElComponent full">
+      <InnerLeftMenu routeMenu="setup"/>
+      {/* <div className="dashboardElComponent full"> */}
+      <div className="dashboardElComponent">
         {/* <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} /> */}
         <div className="dashInnerStructure">
           <NumberListing/>
