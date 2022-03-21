@@ -841,7 +841,7 @@ const ProductTransaction = (props) => {
                             $ {cartItem.price} x {cartItem.qnty}
                           </div>
                           <div className="cartAmount">
-                            {"$ " + parseFloat(cartItem.price * cartItem.qnty)}
+                            {"$ " + parseFloat(cartItem.price * cartItem.qnty).toFixed(2)}
                             
                             {cartItem.tax && (
                               <div className="cartTax">+ 10% Tax</div>
@@ -864,7 +864,7 @@ const ProductTransaction = (props) => {
             <footer className="cartTotal">
               <label>Total item Price</label>
               <div className="cartPrice">
-                <h4>$ {totalAmt}</h4>
+                <h4>$ {parseFloat(totalAmt).toFixed(2)}</h4>
               </div>
             </footer>
           </div>
