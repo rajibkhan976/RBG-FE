@@ -94,6 +94,10 @@ const EditTrModal = (props) => {
             form : "",
             applyForAll: false
         })
+        if (props.transaction.payment_via == "online") {
+            setOpenOnlineBox(true);
+        }
+        
     }, [])
    
     const fetchCardBank = async () => {
