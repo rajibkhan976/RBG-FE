@@ -4316,7 +4316,7 @@ button.saveOverview img {
   border-radius: 50%;
 }
 .buttonHeaderIcons.active {
-  background: #9baebc;
+  background: #dae3ea;
 }
 .buttonNotifications {
   margin-left: 17px;
@@ -10205,4 +10205,16 @@ li.listHeadingContacts > div > div.dsc::after {
 
 .successPageBtn.programPayment button.saveNnewBtn {
   margin: 5px auto;
+}
+
+.refundedAmount {
+  display: inline-block;
+  padding: 4px 10px;
+  margin-top: 7px;
+  border: 1px solid #9BAEBC;
+  border-radius: 20px;
+  color: #9BAEBC;
+  font-size: 10px;
+  font-weight: 500;
+  font-style: italic;
 }

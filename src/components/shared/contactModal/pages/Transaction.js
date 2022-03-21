@@ -240,7 +240,15 @@ const Transaction = (props) => {
   const showSuccessAlert = (param) => {
     setSuccessMsg(param);
   };
-
+  const checkRefundAmount = (param) => {
+    return param.map(e => {
+      if (e.refunded_amount !== undefined && e.amount > 0 && e.status == "success") {
+        return (
+          <div className="refundedAmount">{ "Refunded $" + parseFloat(Math.abs(e.refunded_amount)).toFixed(2)}</div>
+        )
+      }
+    })
+  }
   const closeAlert = () => {
     setSuccessMsg(null);
   };
@@ -530,16 +538,16 @@ const Transaction = (props) => {
                                 )
                               }
                               
-                              {item.amount < 0 ?
+                              {/* {item.amount < 0 ?
                               <span className="refund">
                                 <img src={refundIcon} alt="" />
                               </span>
-                              : ""}
+                              : ""} */}
                             </div>
                             <div className="textCont">
                               <div className="status">
                                 {item.history && item.history[0].status == "success" ? "success" : "failed"}
-                                {item.amount < 0 ? 
+                                {item.history && item.history[0].amount < 0 ? 
                                 <span className="refundedTag">Refunded</span>
                                 : ""}
                                 
@@ -583,7 +591,8 @@ const Transaction = (props) => {
                         <div className="cell amt">
                           <div className="amount" >
                             <span className="tutionAmt">{item.type == "tuiton_fees" ? "Tution Fee" : (item.type == "downpayment" ? "Downpayment" : "Outstanding")}</span>
-                            {"$ " + parseFloat(Math.abs(item.history && item.amount)).toFixed(2)}
+                            <p>{"$" + parseFloat(Math.abs(item.history && item.amount)).toFixed(2)}</p>
+                            { checkRefundAmount(item.history) }
                           </div>
                         </div>
 
