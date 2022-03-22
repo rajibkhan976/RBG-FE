@@ -122,9 +122,9 @@ const ContractOverviewTransaction = (props) => {
       payNowDownPayments = payNowDownPayments.map(payNowDownPayments => ({ ...payNowDownPayments, isReceivedCash: false }));
       console.log('Pay now down payments ', payNowDownPayments);
       payNowDownPaymentsAmount = payNowDownPayments.reduce((total, obj) => parseInt(obj.amount) + total, 0);
-      console.log('Pay now down payments total amout: ', payNowDownPaymentsAmount);
+      console.log('Pay now down payments total amout: ', payNowDownPaymentsAmount, typeof payNowDownPaymentsAmount);
     }
-    console.log('Now amount', payNowTuitionAmount, payNowDownPaymentsAmount);
+    console.log('Now amount', payNowTuitionAmount, typeof payNowTuitionAmount);
     let nowPaymentAmount = payNowTuitionAmount + payNowDownPaymentsAmount;
 
     //Due tuition fee
@@ -150,6 +150,18 @@ const ContractOverviewTransaction = (props) => {
     let duePaymentAmount = dueTuitionAmount + dueDownPaymentsAmount;
     console.log('Due payment amount', duePaymentAmount);
 
+    //total down payment amount
+    let totalDownPayment = 0;
+    if (props.programContractData.downPayments && props.programContractData.downPayments.length) {
+      totalDownPayment = props.programContractData.downPayments.reduce((total, obj) => (obj.amount) + total, 0);
+    }
+
+    //total
+    let total = 0;
+    if (props.programContractData.downPayments && props.programContractData.downPayments.length) {
+      total = props.programContractData.downPayments.reduce((total, obj) => (obj.amount) + total, 0) + (props.programContractData.amount * props.programContractData.numberOfPayments)
+    }
+
     setContractData({
       ...contractData,
       contact: props.programContractData.contact,
@@ -169,10 +181,10 @@ const ContractOverviewTransaction = (props) => {
       billingCycleText: props.programContractData.billing_cycle === 'monthly' ? 'Month' : 'Year',
       auto_renew_text: props.programContractData.auto_renew ? 'ON' : 'OFF',
       auto_renew: props.programContractData.auto_renew,
-      totalDownPayment: props.programContractData.downPayments.reduce((total, obj) => parseInt(obj.amount) + total, 0),
+      totalDownPayment: totalDownPayment,
       tuitionAmount: props.programContractData.amount,
       totalTuitionAmount: props.programContractData.amount * props.programContractData.numberOfPayments,
-      total: props.programContractData.downPayments.reduce((total, obj) => parseInt(obj.amount) + total, 0) + (props.programContractData.amount * props.programContractData.numberOfPayments),
+      total: total,
       isPayNow: props.programContractData.isPayNow,
       dueDownPayments: dueDownPayments,
       payNowDownPayments: payNowDownPayments,
@@ -375,58 +387,58 @@ const ContractOverviewTransaction = (props) => {
         <div className="dottedBorder"></div>
 
         <div className={contractData.payNowTuitionAmount || contractData.payNowDownPayments ? "currentPaymentOverview programPayNowOverview" : "currentPaymentOverview programPayNowOverview noNowPayments"}>
-        {contractData.payNowDownPayments && contractData.payNowDownPayments.map((el, key) => {
-          return (
-            <React.Fragment key={key + "_payNowDownPayments"}>
-              <div className={el.isReceivedCashFlagErr ? "outstandingDownpayment error": "outstandingDownpayment"}>
-                <div className="downpaymentsDetails">
-                  <div className="cardImage">
-                    <img src={el.payment_type === 'cash' ? cashCurrent : cardActive} />
-                  </div>
-                  <div className="paymentModuleInfos">
-                    <span className="accNumber">{el.title}</span>
-                    <span className="accinfod"><b>$ {parseFloat(el.amount).toFixed(2)}</b></span>
-                  </div>
+          {contractData.payNowDownPayments && contractData.payNowDownPayments.map((el, key) => {
+            return (
+              <React.Fragment key={key + "_payNowDownPayments"}>
+                <div className={el.isReceivedCashFlagErr ? "outstandingDownpayment error" : "outstandingDownpayment"}>
+                  <div className="downpaymentsDetails">
+                    <div className="cardImage">
+                      <img src={el.payment_type === 'cash' ? cashCurrent : cardActive} />
+                    </div>
+                    <div className="paymentModuleInfos">
+                      <span className="accNumber">{el.title}</span>
+                      <span className="accinfod"><b>$ {parseFloat(el.amount).toFixed(2)}</b></span>
+                    </div>
 
-                </div>
-                <div className="downpaymentsPayDetails">
-                  <div className="payDate currentPayment">
-                    <img src={payDate} alt="" /> Now
                   </div>
+                  <div className="downpaymentsPayDetails">
+                    <div className="payDate currentPayment">
+                      <img src={payDate} alt="" /> Now
+                    </div>
+                  </div>
+                  {el.payment_type === 'cash' ?
+                    <>
+                      <label className="receivedCash">
+                        <div className="customCheckbox">
+                          <input type="checkbox" onChange={e => toggleReceiveCash(e, key)} />
+                          <span></span>
+                        </div>I have received the amount by Cash
+                      </label>
+                      {el.isReceivedCashFlagErr ? <p class="errorMsg">Please confirm the payment has been received</p> : ""}
+                    </>
+                    : ''}
                 </div>
-                {el.payment_type === 'cash' ?
-                <>
-                  <label className="receivedCash">
-                    <div className="customCheckbox">
-                      <input type="checkbox" onChange={e => toggleReceiveCash(e, key)} />
-                      <span></span>
-                    </div>I have received the amount by Cash
-                  </label>
-                  {el.isReceivedCashFlagErr ? <p class="errorMsg">Please confirm the payment has been received</p> : ""}
-                  </>
-                  : ''}
+              </React.Fragment>
+            );
+          })}
+
+
+          {contractData.payNowTuitionAmount ? <div className="outstandingDownpayment tutuionSubscriptions currentPayment">
+            <div className="downpaymentsDetails">
+              <div className="cardImage">
+                <img src={cardActive} alt="" />
               </div>
-            </React.Fragment>
-          );
-        })}
-
-
-        {contractData.payNowTuitionAmount ? <div className="outstandingDownpayment tutuionSubscriptions currentPayment">
-          <div className="downpaymentsDetails">
-            <div className="cardImage">
-              <img src={cardActive} alt="" />
+              <div className="paymentModuleInfos">
+                <span className="accNumber">Tuition Amount</span>
+                <span className="accinfod"><b>$ {parseFloat(contractData.payNowTuitionAmount).toFixed(2)}</b></span>
+              </div>
             </div>
-            <div className="paymentModuleInfos">
-              <span className="accNumber">Tuition Amount</span>
-              <span className="accinfod"><b>$ {parseFloat(contractData.payNowTuitionAmount).toFixed(2)}</b></span>
+            <div className="downpaymentsPayDetails">
+              <div className="payDate currentPayment">
+                <img src={payDate} alt="" /> {contractData.isPayNow ? 'Now' : ''}
+              </div>
             </div>
-          </div>
-          <div className="downpaymentsPayDetails">
-            <div className="payDate currentPayment">
-              <img src={payDate} alt="" /> {contractData.isPayNow ? 'Now' : ''}
-            </div>
-          </div>
-        </div> : ''}
+          </div> : ''}
         </div>
 
         <div className="totalCartValue">
