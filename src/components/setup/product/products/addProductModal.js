@@ -26,6 +26,16 @@ const AddProductModal = (props) => {
     tax: 0
   });
 
+  const [errorClass, setErrorClass] = useState({
+    name: "",
+    nameMsg: "",
+    colors: "",
+    colorMsg: "",
+    size: "",
+    sizeMsg: "",
+    price: "",
+    priceMsg:""
+  });
   const [categories, setCategories] = useState([]);
   const [colorSize, setColorSize] = useState({
     colors: [],
@@ -98,6 +108,7 @@ const AddProductModal = (props) => {
       choosenColors = choosenColors.filter(colorlabel => colorlabel !== label);
     }
     setProductData({ ...productData, colors: choosenColors });
+    setErrorClass(prevState => ({...prevState, colors: "", colorMsg: ""}));
   }
 
   const handleSize = (e, label) => {
@@ -109,6 +120,7 @@ const AddProductModal = (props) => {
       choosenSizes = choosenSizes.filter(size => size !== label);
     }
     setProductData({ ...productData, size: choosenSizes });
+    setErrorClass(prevState => ({...prevState, size: "", sizeMsg: ""}));
   }
 
   const handleChange = (e) => {
@@ -116,17 +128,19 @@ const AddProductModal = (props) => {
     const elemValue = e.target.value;
     const regex = {
       numericRegex: /[^0-9.]/,
-      alphaRegex: /[^a-zA-Z0-9 ]/
+      alphaRegex: /[^a-zA-Z0-9- ]/
     };
     switch (elemName) {
       case "price":
         if (!regex.numericRegex.test(elemValue)) {
           setProductData({ ...productData, price: elemValue });
+          setErrorClass(prevState => ({...prevState, price: "", priceMsg: ""}));
         }
         break;
       case "productName":
         if (!regex.alphaRegex.test(elemValue)) {
           setProductData({ ...productData, name: elemValue });
+          setErrorClass(prevState => ({...prevState, name: "", nameMsg: ""}));
         }
         break;
       case "category":
@@ -195,8 +209,6 @@ const AddProductModal = (props) => {
         setTimeout(function () {
           props.closeAddProductModal("fetch");
         }, 1000);
-      } else {
-        setErrorMsg("Fields should not be left blank");
       }
     } catch (e) {
       setErrorMsg(e.message);
@@ -208,13 +220,38 @@ const AddProductModal = (props) => {
   }
 
   const createValidation = () => {
-    let bool = false;
-    if (productData.colors.length
-      && productData.image !== ""
-      && productData.name !== ""
-      && productData.price !== ""
-      && productData.size.length) {
-      bool = true;
+    let bool = true;
+    if(productData.name === "") {
+      bool = false;
+      setErrorClass(prevState => ({...prevState, name: "error", nameMsg: "Please enter product name"}));
+    }
+
+    if(productData.colors.length === 0) {
+      bool = false;
+      setErrorClass(prevState => ({...prevState, colors: "error", colorMsg: "Please choose atleast one color from the available colors"}));
+    }
+
+    if(productData.size.length === 0) {
+      bool = false;
+      setErrorClass(prevState => ({...prevState, size: "error", sizeMsg: "Please choose atleast one size from the available sizes"}));
+    }
+
+    if(productData.price === "") {
+      bool = false;
+      setErrorClass(prevState => ({...prevState, price: "error", priceMsg: "Please enter the product price"}));
+    }
+
+    if(bool) {
+      setErrorClass({
+        name: "",
+        nameMsg: "",
+        colors: "", 
+        colorMsg: "",
+        size: "",
+        sizeMsg: "",
+        price: "", 
+        priceMsg: ""
+      });
     }
     return bool;
   }
@@ -254,11 +291,13 @@ const AddProductModal = (props) => {
 
                   </select>
                 </div>
-                <div className="formControl">
+                <div className={"formControl " + errorClass.name}>
                   <label>Enter Product Name</label>
                   <input type="text" placeholder="Ex: v-shape gym vest" name="productName"
                     onChange={handleChange}
-                    value={productData.name} />
+                    value={productData.name} 
+                    className="cmnFieldStyle"/>
+                  <p className="errorMsg">{errorClass.nameMsg}</p>
                 </div>
                 <div className="formControl">
                   <label>Upload Product Picture</label>
@@ -274,7 +313,7 @@ const AddProductModal = (props) => {
                     <span className="staticUpload">Upload</span>
                   </div>
                 </div>
-                <div className="formControl">
+                <div className={"formControl " + errorClass.colors}>
                   <label>Available Colours</label>
                   <div className="pickColor">
                     {/* <button className="addColor active" style={{ backgroundColor: "#834140" }}></button>
@@ -290,8 +329,9 @@ const AddProductModal = (props) => {
                       }
                     })}
                   </div>
+                  <p className="errorMsg">{errorClass.colorMsg}</p>
                 </div>
-                <div className="formControl">
+                <div className={"formControl " + errorClass.size}>
                   <label>Available Sizes</label>
                   <div className="pickSize">
                     {/* <button className="size active">S</button>
@@ -302,8 +342,10 @@ const AddProductModal = (props) => {
                         onClick={(event) => handleSize(event, size.size)} key={i}>{size.size}</button>
                     })}
                   </div>
+                  <p className="errorMsg">{errorClass.sizeMsg}</p>
                 </div>
-                <div className="formControl">
+
+                <div className={"formControl " + errorClass.price}>
                   <label>Price</label>
                   <div className="formLeft preField">
                     <div className="unitAmount">$</div>
@@ -318,11 +360,14 @@ const AddProductModal = (props) => {
                           onChange={(e) => handleTaxCheck(e.target.checked)}
                           checked={(productData.tax) ? true : false}
                         />
+                        
                         <span></span>
                       </div>
                       Add Sales Tax</label>
                   </div>
+                  <p className="errorMsg">{errorClass.priceMsg}</p>
                 </div>
+
                 <div className="modalbtnHolder w-100">
                   {!props.productTransaction && <button type="submit" name="save"
                     className="saveNnewBtn"

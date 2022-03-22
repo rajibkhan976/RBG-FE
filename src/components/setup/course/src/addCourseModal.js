@@ -37,6 +37,17 @@ const AddCourseModal = (props) => {
     "Teens"
   ]);
 
+  const [errorClass, setErrorClass] = useState({
+    name: "",
+    nameMsg: "",
+    fees: "",
+    feesMsg: "",
+    duration: "",
+    durationMsg: "",
+    paymentType: "",
+    paymentTypeMsg: ""
+  });
+
   const [paymentType, setpaymentType] = useState([
     "Onetime",
     "Recurring"
@@ -109,7 +120,7 @@ const AddCourseModal = (props) => {
     const elemValue = e.target.value;
     const regex = {
       floatRegex: /[^0-9.]/,
-      alphaRegex: /[^a-zA-Z0-9 ]/,
+      alphaRegex: /[^a-zA-Z0-9- ]/,
       intRegex: /[^0-9]/,
     };
     switch (elemName) {
@@ -119,11 +130,13 @@ const AddCourseModal = (props) => {
       case "fees":
         if (!regex.floatRegex.test(elemValue)) {
           setCourseData({ ...courseData, fees: elemValue });
+          setErrorClass(prevState => ({ ...prevState, fees: "", feesMsg: "" }));
         }
         break;
       case "courseName":
         if (!regex.alphaRegex.test(elemValue)) {
           setCourseData({ ...courseData, name: elemValue });
+          setErrorClass(prevState => ({ ...prevState, name: "", nameMsg: "" }));
         }
         break;
       case "productDesc":
@@ -132,6 +145,7 @@ const AddCourseModal = (props) => {
       case "duration_num":
         if (!regex.intRegex.test(elemValue)) {
           setCourseData({ ...courseData, duration: elemValue });
+          setErrorClass(prevState => ({ ...prevState, duration: "", durationMsg: "" }));
         }
         break;
       case "duration_months":
@@ -139,9 +153,11 @@ const AddCourseModal = (props) => {
         break;
       case "paymentType":
         setCourseData({ ...courseData, payment_type: elemValue, disabledCycle: (elemValue === "onetime") ? true : false });
+        setErrorClass(prevState => ({ ...prevState, paymentType: "", paymentTypeMsg: "" }));
         break;
       case "billingCycle":
         setCourseData({ ...courseData, billing_cycle: elemValue });
+        setErrorClass(prevState => ({ ...prevState, paymentType: "", paymentTypeMsg: "" }));
         break;
       case "age_group":
         setCourseData({ ...courseData, ageGroup: elemValue });
@@ -159,7 +175,7 @@ const AddCourseModal = (props) => {
           name: courseData.name,
           desc: (courseData.desc) ? courseData.desc : "",
           image: (courseData.image) ? courseData.image : "",
-          duration: courseData.duration + " " + courseData.duration_months ,
+          duration: courseData.duration + " " + courseData.duration_months,
           payment_type: courseData.payment_type,
           billing_cycle: courseData.billing_cycle,
           fees: courseData.fees.toString(),
@@ -215,27 +231,52 @@ const AddCourseModal = (props) => {
   }
 
   const createValidation = () => {
-    try {
+      // return true;
+      let bool = true;
       if (courseData.name === "") {
-        throw new Error("Course name should not be empty");
-      } else if (courseData.fees === "" || courseData.fees === '0') {
-        throw new Error("Course fees should not be 0 or empty");
-      } else if (courseData.duration === "0") {
-        throw new Error("Course duration should never be 0")
-      } else if (courseData.duration == 1 && courseData.duration_months === "month" && courseData.payment_type === "recurring") {
-        throw new Error("Recurring course duration should be more than 1 month atleast")
+        bool = false;
+        setErrorClass(prevState => ({ ...prevState, name: "error", nameMsg: "Please enter a valid program name" }));
+      }
+
+      if (courseData.duration === "0") {
+        bool = false;
+        setErrorClass(prevState => ({ ...prevState, duration: "error", durationMsg: "Program duration should never be 0" }));
+      }
+
+      if (courseData.fees === "" || courseData.fees === '0') {
+        bool = false;
+        setErrorClass(prevState => ({ ...prevState, fees: "error", feesMsg: "Program fees should not be 0 or empty" }));
+      }
+
+      if (courseData.duration == 1 && courseData.duration_months === "month" && courseData.payment_type === "recurring") {
+        bool = false;
+        setErrorClass(prevState => ({ ...prevState, duration: "error", durationMsg: "Recurring program duration should be more than 1 month atleast" }));
       } else if (courseData.duration_months === "month" && courseData.billing_cycle === "yearly" && courseData.payment_type === "recurring") {
-        throw new Error("Recurring yearly billing cycle should have more than a year duration")
+        bool = false;
+        setErrorClass(prevState => ({ ...prevState, paymentType: "error", paymentTypeMsg: "Recurring yearly billing cycle should have more than a year duration" }));
       } else if (courseData.duration == 1
         && courseData.duration_months === "year"
         && courseData.payment_type === "recurring"
         && courseData.billing_cycle === "yearly") {
-        throw new Error("Recurring course duration should be more than 1 year atleast for year billing cycle");
+        // throw new Error("Recurring program duration should be more than 1 year atleast for year billing cycle");
+        bool = false;
+        setErrorClass(prevState => ({ ...prevState, paymentType: "error", paymentTypeMsg: "Recurring program duration should be more than 1 year atleast for year billing cycle" }));
       }
-      return true;
-    } catch (e) {
-      throw new Error(e.message);
-    }
+
+      if (bool) {
+        setErrorClass({
+          name: "",
+          nameMsg: "",
+          fees: "",
+          feesMsg: "",
+          duration: "",
+          durationMsg: "",
+          paymentType: "",
+          paymentTypeMsg: ""
+        });
+      }
+      // return false;
+      return bool;
   }
 
   const handleTaxCheck = (isChecked) => setCourseData({ ...courseData, tax: (isChecked) ? 1 : 0 });
@@ -276,11 +317,12 @@ const AddCourseModal = (props) => {
                   </select>
                 </div>
 
-                <div className="formControl">
+                <div className={"formControl " + errorClass.name}>
                   <label>Enter Program Name</label>
                   <input type="text" placeholder="Ex: v-shape gym vest" name="courseName"
                     onChange={handleChange}
                     value={courseData.name} />
+                  <p className="errorMsg">{errorClass.nameMsg}</p>
                 </div>
 
                 <div className="formControl">
@@ -306,22 +348,23 @@ const AddCourseModal = (props) => {
                   </div>
                 </div>
 
-                <div className="formControl">
+                <div className={"formControl " + errorClass.duration}>
                   <label>Duration</label>
                   <div className="formLeft">
                     <input type="text" name="duration_num"
                       onChange={handleChange}
                       value={courseData.duration} />
                   </div>
-                  <div className="formRight">
+                  <div className={"formRight " + errorClass.duration}>
                     <select name="duration_months" onChange={handleChange}>
                       <option value="month" selected={(courseData.duration_months === "month") ? "selected" : ""}>Month(s)</option>
                       <option value="year" selected={(courseData.duration_months === "year") ? "selected" : ""}>Year(s)</option>
                     </select>
                   </div>
+                  <p className="errorMsg">{errorClass.durationMsg}</p>
                 </div>
 
-                <div className="formControl">
+                <div className={"formControl " + errorClass.paymentType}>
                   <div className="formLeft">
                     <label>Payment Type</label>
                     <select name="paymentType" onChange={handleChange}>
@@ -338,6 +381,7 @@ const AddCourseModal = (props) => {
                       <option value="yearly" selected={(courseData.billing_cycle === "yearly") ? "selected" : ""}>Yearly</option>
                     </select>
                   </div>
+                  <p className="errorMsg">{errorClass.paymentTypeMsg}</p>
                 </div>
 
                 <div className="formControl">
@@ -355,11 +399,12 @@ const AddCourseModal = (props) => {
                     </select>
                   </div>
 
-                  <div className="formRight">
+                  <div className={"formRight " + errorClass.fees}>
                     <label>Fees</label>
                     <input type="text" name="fees" placeholder="Ex: 99" onChange={handleChange} value={courseData.fees} />
                     <span className="smallspan">* default currency is<strong> USD</strong></span>
                   </div>
+                  <p className="errorMsg">{errorClass.feesMsg}</p>
                 </div>
                 {/* <div className="formControl">
                   <label className="labelStick2">

@@ -3,9 +3,7 @@ import plus_icon from "../../../../assets/images/plus_icon.svg";
 import percentTag from "../../../../assets/images/percentage_icon.png";
 import list_board_icon from "../../../../assets/images/list_board_icon.svg";
 import proImg1 from "../../../../assets/images/proImg1.png";
-import listView from "../../../../assets/images/listView.svg";
 import dot3White from "../../../../assets/images/dot3gray.svg";
-import { CourseServices } from "../../../../services/setup/CourseServices";
 import Pagination from "../../../shared/Pagination";
 import ConfirmBox from "../../../shared/confirmBox";
 
@@ -119,7 +117,7 @@ const CourseListing = (props) => {
             {props.courseData.length ? (
               props.courseData.map((elem, key) => {
                 return (
-                  <React.Fragment key={key + "_products"}>
+                  <React.Fragment key={key + "_courses"}>
                     <div className="productList">
                       <div className="productListLeft">
                         <div className="proImage">

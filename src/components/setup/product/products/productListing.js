@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import ProductFilter from "./productFilter";
-
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import percentTag from "../../../../assets/images/percentage_icon.png";
 import list_board_icon from "../../../../assets/images/list_board_icon.svg";
 import listView from "../../../../assets/images/listView.svg";
 import dot3White from "../../../../assets/images/dot3gray.svg";
-import { ProductServices } from "../../../../services/setup/ProductServices";
+import proImg1 from "../../../../assets/images/proImg1.png";
 import Pagination from "../../../shared/Pagination";
 import ConfirmBox from "../../../shared/confirmBox";
 import Loader from "../../../shared/Loader";
@@ -127,13 +125,17 @@ const ProductListing = (props) => {
                     <div className="productList">
                       <div className="productListLeft">
                         <div className="proImage">
-                          <img
-                            src={
-                              "https://wrapperbucket.s3.us-east-1.amazonaws.com/" +
-                              elem.image
-                            }
-                            alt=""
-                          />
+                          {elem.image ? (
+                            <img
+                              src={
+                                "https://wrapperbucket.s3.us-east-1.amazonaws.com/" +
+                                elem.image
+                              }
+                              alt=""
+                            />
+                          ) : (
+                            <img src={proImg1} alt="" />
+                          )}
                         </div>
                         <div className="proInfo">
                           <p>
