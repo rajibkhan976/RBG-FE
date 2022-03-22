@@ -30,7 +30,7 @@ const DownPayments = forwardRef((props, ref) => {
     const [downPaymentElems, setDownPaymentElems] = useState([{ ...downPaymentElement }]);
 
     useEffect(() => {
-        if (props.contractData && props.contractData.downPayments.length) {
+        if (props.contractData && props.contractData.isDownPayment && props.contractData.downPayments.length) {
             console.log('Props', props.contractData);
             setIsDownPayment(true);
             setDownPaymentElems(props.contractData.downPayments);
@@ -90,7 +90,7 @@ const DownPayments = forwardRef((props, ref) => {
 
     const checkAmountErr = amount => {
         let val = parseFloat(amount);
-        let regex = /^\d+(.\d{1,2})?$/;
+        let regex = /^\d{0,5}(\.\d{1,2})?$/;
         return isNaN(val)
             ? "Numeric value expected for amount."
             : val <= 0
@@ -180,7 +180,7 @@ const DownPayments = forwardRef((props, ref) => {
                             <div className="newDownpayment_downPaymentWrapers" key={key}>
                                 <div className="downPaymentsCreated">
                                     <div className="newDownpayment programs buttons">
-                                        {console.log('Loop through payments', el)}
+                                        {console.log('Loop through payments', el, isDownPayment)}
                                         {key === 0 ?
 
                                             <button className="addNewDownpayment" onClick={addDownpaymentFn}>+ Add more Downpayments</button> :

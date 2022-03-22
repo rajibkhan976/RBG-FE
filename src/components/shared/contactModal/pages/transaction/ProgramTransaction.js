@@ -16,7 +16,7 @@ const ProgramTransaction = (props) => {
   const [programList, setProgramList] = useState([]);
 
   const [contractData, setContractData] = useState({
-    contact: "",
+    contact: props.contactId,
     billingId: "",
     courseName: "",
     courseIndex: "",
@@ -72,11 +72,6 @@ const ProgramTransaction = (props) => {
     setSelectedProgram(item);
     setChooseCategory(false);
   };
-
-  //Update current contact id
-  useEffect(() => {
-    setContractData({ ...contractData, contact: props.contactId });
-  }, [props.contactId]);
 
   //Update current program state
   useEffect(() => {
@@ -199,10 +194,12 @@ const ProgramTransaction = (props) => {
   //Count no of payments
   useEffect(() => {
     if (contractData.duration) {
+      let nextDueDate = "";
+      let noOfPayments = 1;
       if (contractData.payment_type === 'recurring') {
-        let nextDueDate = utils.getNextDueDate(false, 1, contractData.billing_cycle)
+        nextDueDate = utils.getNextDueDate(false, 1, contractData.billing_cycle)
         //No of payments
-        let noOfPayments = 1;
+        noOfPayments = 1;
         /**
          * Example
          * duration : 2 years
@@ -215,16 +212,18 @@ const ProgramTransaction = (props) => {
           noOfPayments = contractData.duration * 1;
         }
         console.log({ nextDueDate, noOfPayments });
-        setContractData({ ...contractData, nextDueDate: nextDueDate, numberOfPayments: noOfPayments });
+      } else if(!contractData.firstBillingTime && contractData.payment_type === 'onetime' ) {
+        nextDueDate = ""
       }
+      setContractData({ ...contractData, nextDueDate: nextDueDate, numberOfPayments: noOfPayments });
     }
   }, [contractData.duration, contractData.billing_cycle, contractData.payment_type])
 
-  useEffect(() => {
-    if (!contractData.firstBillingTime && contractData.payment_type === 'onetime') {
-      setContractData({ ...contractData, nextDueDate: "" });
-    }
-  }, [contractData.payment_type, contractData.firstBillingTime]);
+  // useEffect(() => {
+  //   if (!contractData.firstBillingTime && contractData.payment_type === 'onetime') {
+  //     setContractData({ ...contractData, nextDueDate: "" });
+  //   }
+  // }, [contractData.payment_type, contractData.firstBillingTime]);
 
   //Continue to buy
   const continueToBuy = (e) => {
@@ -250,12 +249,19 @@ const ProgramTransaction = (props) => {
     }
 
     //Duration
+    let threeDigit = /^\d{0,3}$/;
     if (!contractData.duration) {
       isError = true;
       formErrorsCopy.duration = "Please provide the program duration."
+    } else if (isNaN(contractData.duration)) {
+      isError = true;
+      formErrorsCopy.duration = "Numeric value required"
     } else if (contractData.duration <= 0) {
       isError = true;
       formErrorsCopy.duration = "Please provide a valid duraion"
+    } else if (!threeDigit.test(contractData.duration)) {
+      isError = true;
+      formErrorsCopy.duration = "Please provide 3 digit"
     }
 
     //Duration interval
@@ -266,11 +272,21 @@ const ProgramTransaction = (props) => {
       formErrorsCopy.billing_cycle = "Please modify billing cycle"
     }
 
+    if (contractData.durationInterval === 'month' &&
+      contractData.billing_cycle === 'yearly' &&
+      contractData.payment_type === 'onetime') {
+      isError = true;
+      formErrorsCopy.billing_cycle = "Please modify billing cycle"
+    }
+
     //Tution amount
-    let regex = /^\d+(.\d{1,2})?$/;
+    let regex = /^\d{0,5}(\.\d{1,2})?$/;
     if (!contractData.amount) {
       isError = true;
       formErrorsCopy.amount = "Please provide the program tution fee."
+    } else if (isNaN(contractData.amount)) {
+      isError = true;
+      formErrorsCopy.amount = "Numeric value required"
     } else if (contractData.amount <= 0) {
       isError = true;
       formErrorsCopy.amount = "Tution fee can't be zero."
@@ -384,7 +400,7 @@ const ProgramTransaction = (props) => {
             </span>
           </label>
           <span className={(formErrors.duration ? "leftSecTransaction errorField" : "leftSecTransaction")}>
-            <input type="text" className="cmnFieldStyle" onChange={handleDurationChange} defaultValue={contractData.duration} />
+            <input type="text" className="cmnFieldStyle" onChange={handleDurationChange} value={contractData.duration} />
           </span>
           <span className="rightSecTransaction">
             <select className="selectBox" name="duration_interval" value={contractData.durationInterval} onChange={handelDurationIntervalChange}>
