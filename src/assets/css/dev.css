@@ -3956,15 +3956,88 @@ li.paymentModeLi, li.paymentAmtLi {
 .dashInnerStructure.dashboardPage {
   padding-top: 0;
   background: #6f8a9d;
-  padding-left: 85px;
+  padding-left: 5%;
 }
 
 .dashboardWraperImg {
   width: 100%;
   padding: 0;
+  position: relative;
 }
 
-.dashboardWraperImg img {
+.dashboardWraperImg img.dashboardimg {
   width: 100%;
   height: 99vh;
 }
+
+.arrowPoint {
+  position: absolute;
+  top: 3%;
+  right: 370px;
+  width: 160px;
+  /* height: 175px; */
+  /* transform: translate(-50%, -50%); */
+}
+
+.menuUserDetail h3 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 22px;
+}
+
+.menuUserDetail {
+    max-width: 160px;
+}
+
+.menuUser {
+  width: 248px;
+}
+
+@media only screen and (max-width: 2150px) and (min-width: 1950px) {
+  .arrowPoint {
+    width: 182px;
+  }
+
+}
+
+
+@media only screen and (max-width: 2750px) and (min-width: 2151px) {
+  .arrowPoint {
+    right:305px;
+    width: 315px;
+    height: 315px;
+  }
+
+  .arrowPoint img {    
+    height: 100%;
+  }
+
+}
+
+@media only screen and (max-width: 3250px) and (min-width: 2751px) {
+  .arrowPoint {
+    right: 295px;
+    width: 380px;
+    height: 380px;
+  }
+  .arrowPoint img {    
+    height: 100%;
+  }
+  .dashInnerStructure.dashboardPage {
+    padding-left: 10%;
+  }
+
+}
+
+/* @media only screen and (max-width: 2560px) and (min-width: 1950px) {
+  .dashInnerStructure.dashboardPage {
+    padding-left: 7%;
+  }
+  .arrowPoint {
+    top: 12%;
+    left: 77%;
+    width: 345px;
+    height: 345px;
+}
+
+} */

@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import DashboardControls from "./DashboardControl";
 
 import DashboardImg from "../../assets/images/Dashboard.jpg";
+import DashboardImg2 from "../../assets/images/Dashboard.png";
+import arrowLong from "../../assets/images/arrowLong.png";
 
 
 const Dashboard = () => {
@@ -55,7 +57,10 @@ const Dashboard = () => {
         </div> */}
 
         <div className="dashboardWraperImg">
-         <img src={DashboardImg} className="dashboardimg" alt="" />
+         <img src={DashboardImg2} className="dashboardimg" alt="" />
+         {/* <div className="arrowPoint">
+           <img src={arrowLong} alt="" />
+         </div> */}
 
         </div>
         {/* <div className="mrrContraolsWraper"> */}
