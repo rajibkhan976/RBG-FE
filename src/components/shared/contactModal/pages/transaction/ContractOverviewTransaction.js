@@ -117,7 +117,7 @@ const ContractOverviewTransaction = (props) => {
     let payNowDownPaymentsAmount = 0;
     if (props.programContractData.downPayments && props.programContractData.downPayments.length) {
       payNowDownPayments = props.programContractData.downPayments.filter(obj => {
-        return obj.isPayNow === 1
+        return obj.isPayNow === 1 && obj.amount !== ''
       });
       payNowDownPayments = payNowDownPayments.map(payNowDownPayments => ({ ...payNowDownPayments, isReceivedCash: false }));
       console.log('Pay now down payments ', payNowDownPayments);
