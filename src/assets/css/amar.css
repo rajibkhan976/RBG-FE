@@ -2564,3 +2564,19 @@ input[type=number] {
   background-position: center center;
   padding: 0;
 }
+
+/* contact modal UI height issue */
+.contactModal .modalContainer {
+  display: flex;
+  flex-direction: column;
+}
+.contactModal .modalContainer .tabBarArea {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+.contactModal .contactTabsInner,
+.contactModal .contactTabsInner .listTab {
+  flex: 1 1 auto;
+}
+/* contact modal UI height issue */
