@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux';
 
 import DashboardControls from "./DashboardControl";
 
+import DashboardImg from "../../assets/images/Dashboard.jpg";
+
 
 const Dashboard = () => {
 
@@ -47,9 +49,14 @@ const Dashboard = () => {
         </div>
       </div> : ''}
 
-      <div className="mrrWraper">
+      {/* <div className="mrrWraper">
         <h2 className="inDashboardHeader">Dashboard</h2>
         <p className="userListAbout">Get a clear view of your task</p>
+        </div> */}
+
+        <div className="dashboardWraperImg">
+         <img src={DashboardImg} className="dashboardimg" alt="" />
+
         </div>
         {/* <div className="mrrContraolsWraper"> */}
           {/* <div className="sideMenuHeader">

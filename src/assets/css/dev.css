@@ -3949,3 +3949,22 @@ li.paymentModeLi, li.paymentAmtLi {
 .tableDataConfigArea .configColArea .configColBtn {
   position: relative;
 }
+
+
+/* Dashboard Img */
+
+.dashInnerStructure.dashboardPage {
+  padding-top: 0;
+  background: #6f8a9d;
+  padding-left: 85px;
+}
+
+.dashboardWraperImg {
+  width: 100%;
+  padding: 0;
+}
+
+.dashboardWraperImg img {
+  width: 100%;
+  height: 99vh;
+}
