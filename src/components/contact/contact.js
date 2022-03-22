@@ -12,7 +12,6 @@ const Contact = () => {
     }
     const hideModal = () => {
       setIsModal(false);
-      childCompRef.current.fetchContactForImportContactModalClose();
     }
     return (
     <>

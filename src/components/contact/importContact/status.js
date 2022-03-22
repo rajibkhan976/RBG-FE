@@ -43,7 +43,7 @@ function Status(props) {
                 importId: null,
             });
         }, 200)
-        history.push(`/contacts`);
+        history.push(`/contacts?page=1&import=`+props.importId);
         props.closeModal();
     }
     useEffect(() => {

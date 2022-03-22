@@ -1,21 +1,36 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../actions/types";
 import download_icon from "../../../src/assets/images/download_icon.svg";
 import download_cloud_icon from "../../../src/assets/images/download_cloud_icon_white.svg"
 import uparrow_icon_grey from "../../../src/assets/images/uparrow_icon_grey.svg";
+import {utils} from "../../helpers";
 
 const ContactHead = (props) => {
   const dispatch = useDispatch();
-
-  const [searchKeyword, setSearchKeyword] = useState();
-
+  const [filter, setFilter] = useState(false);
   const createIndivitualContact = () => {
     dispatch({
         type: actionTypes.CONTACTS_MODAL_ID,
         contact_modal_id: 0,
     });
   }
+  useEffect(() => {
+    const importId = utils.getQueryVariable('import');
+    if (importId) {
+     setFilter(true);
+    }
+  }, [props.isClicked]);
+
+  useEffect(() => {
+    const importId = utils.getQueryVariable('import');
+    if (importId) {
+      setFilter(true);
+    } else {
+      setFilter(false);
+    }
+  }, [props.hideFilter]);
+
   return (
     <div className="contactHead">
       <div className="userListHead">
@@ -61,13 +76,15 @@ const ContactHead = (props) => {
               </button>
             </form>
           </div>
-          {/* <button className="btn btn-filter">
-            <img
-              className="filterIcon"
-              src="/static/media/filter_icon.dac97ac8.svg"
-              alt=""
-            />
-          </button> */}
+          {filter ?
+              <button className="btn btn-filter" onClick={props.clearFilter}>
+                <img
+                    className="filterIcon"
+                    src="/static/media/filter_icon.dac97ac8.svg"
+                    alt=""
+                />
+              </button> : ""}
+
           <button className="creatUserBtn" onClick={() => createIndivitualContact()}>
             <img
               className="plusIcon"

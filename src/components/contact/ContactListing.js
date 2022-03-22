@@ -34,6 +34,7 @@ const ContactListing = forwardRef((props, ref) => {
     const [successMsg, setSuccessMsg] = useState('');
     const [sortBy, setSortBy] = useState("");
     const [sortType, setSortType] = useState("asc");
+    const [hideFilter, setHideFilter] = useState(false);
     const [paginationData, setPaginationData] = useState({
         count: null,
         totalPages: null,
@@ -47,6 +48,7 @@ const ContactListing = forwardRef((props, ref) => {
     const isClicked = useSelector((state) => state.notification.importId);
     useEffect(() => {
         if (isClicked) {
+            setHideFilter(false);
             fetchContact();
         }
     }, [isClicked]);
@@ -162,6 +164,7 @@ const ContactListing = forwardRef((props, ref) => {
         const srtBy = utils.getQueryVariable('sortBy');
         const srtType = utils.getQueryVariable('sortType');
         const cache = utils.getQueryVariable('cache');
+        const importId = utils.getQueryVariable('import');
 
         const queryParams = new URLSearchParams();
         if (cache) {
@@ -186,6 +189,9 @@ const ContactListing = forwardRef((props, ref) => {
         }
         if (srtType) {
             queryParams.append("sortType", srtType);
+        }
+        if (importId) {
+            queryParams.append("import", importId);
         }
         return queryParams;
     }
@@ -337,7 +343,7 @@ const ContactListing = forwardRef((props, ref) => {
                                     {(j === 1) && (!ele.isDependent || ele.isDependent === undefined) ? ((ele.payment_error != undefined || ele.course_error != undefined) ? <span className="infoWarning warningSpace"
                                         data-title={(ele.payment_error != undefined ? ele.payment_error : "" ) + ' ' + (ele.course_error != undefined ? ele.course_error : "")}>
                                         <img src={warning_bell} alt="warning" /></span> : <span className="warningSpace"></span>) : ""}
-                                    { ((j === 1) && (ele && ele.isDependent && ele.guardianId) ?  <span className="infoDependent"><img src={dependent_white} alt="warning" /></span> : "" ) }
+                                    { ((j === 1) && (ele && ele.isDependent && ele.guardianId) ?  <span className="infoDependent" title="Dependent"><img src={dependent_white} alt="dependent_white" /></span> : "" ) }
                                     <button className="btn" onClick={() => openContactModal(ele._id)}>
                                         {(item.id === "name") ? <span className="tableCellUserImg">
                                             <LazyLoadImage
@@ -418,6 +424,12 @@ const ContactListing = forwardRef((props, ref) => {
             setErrorMsg(responses.permissions.contact.import);
         }
     }
+    const clearFilter = () => {
+        utils.removeQueryParameter('import');
+        utils.removeQueryParameter('page');
+        setHideFilter(true);
+        fetchContact();
+    }
     return (
         <div className="dashInnerUI">
             {isLoader ? <Loader /> : ''}
@@ -426,7 +438,10 @@ const ContactListing = forwardRef((props, ref) => {
                 handleSearch={handleSearch}
                 handleKeywordChange={handleKeywordChange}
                 keyword={keyword}
-                openImportContact={handleImportModal}></ContactHead>
+                openImportContact={handleImportModal}
+                isClicked={isClicked}
+                hideFilter={hideFilter}
+                clearFilter={clearFilter}></ContactHead>
             {successMsg &&
                 <SuccessAlert message={successMsg}></SuccessAlert>
             }
