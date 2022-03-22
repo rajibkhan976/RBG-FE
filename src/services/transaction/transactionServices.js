@@ -56,10 +56,26 @@ export const TransactionServices = {
         }
     },
 
-    fetchContract: async (contactId) => {
+    fetchContract: async (contactId, pageNumber) => {
         try {
-            const url = config.transactionUrl + "contract-transactions/list/" + contactId;
+            const url = config.transactionUrl + "contract-transactions/list/" + contactId + "/" + pageNumber;
             const result = await axios.get(url, { headers: headers });
+            return result.data;
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    retryPayment: async (contactId, payload) => {
+        try {
+            const url = config.transactionUrl + "transactions/retry/" + contactId;
+            const result = await axios.get(url, payload, { headers: headers });
             return result.data;
         } catch (e) {
             if(!typeof e.data === 'undefined') {
@@ -88,6 +104,21 @@ export const TransactionServices = {
         }
     },
 
+    cancelContract: async (contactId, payload) => {
+        try {
+            const url = config.transactionUrl + "contract-transactions/cancel/" + contactId;
+            const result = await axios.post(url, payload, { headers: headers });
+            return result.data;
+        } catch (e) {
+            if(!typeof e.data === 'undefined') {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else {
+                console.log(e.stack);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
 
     completeTransaction: async (contactId, payload) => {
         try {

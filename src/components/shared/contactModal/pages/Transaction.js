@@ -10,6 +10,7 @@ import bankSmallWhite from "../../../../assets/images/bank.svg";
 import refundIcon from "../../../../assets/images/refund_icon_white.svg";
 import noDataIcon from "../../../../assets/images/noData_icon.svg";
 import dropVector from "../../../../assets/images/dropVector.svg";
+import contractIconWhite from "../../../../assets/images/contract_icon_white.svg";
 import RefundModal from "./transaction/RefundModal";
 import EditTrModal from "./transaction/EditTrModal";
 import { Scrollbars } from "react-custom-scrollbars-2";
@@ -18,6 +19,7 @@ import moment from "moment";
 import { TransactionServices } from "../../../../services/transaction/transactionServices";
 import Loader from "../../Loader";
 import CompleteTransactionModal from "./transaction/CompleteTransactionModal";
+import ConfirmBox from "../../confirmBox";
 
 const Transaction = (props) => {
   const [transactionList, setTransactionList] = useState([]);
@@ -32,6 +34,7 @@ const Transaction = (props) => {
   const [upcomingTransaction, setUpcomingTransaction] = useState([]);
   const [upcomingPagination, setUpcomingPagination ] = useState({});
   const [oldPagination, setOldPagination ] = useState({});
+  const [contractPagination, setContractPagination ] = useState({});
   const [upcomingOptIndex, setUpcomingOptIndex] = useState();
   const [oldOptIndex, setOldOptIndex] = useState();
   const [isScroll, setIsScroll] = useState(false);
@@ -39,14 +42,25 @@ const Transaction = (props) => {
   const [successMsg, setSuccessMsg] = useState(null);
   const upcomingOptRef = useRef();
   const oldOptRef = useRef();
-  const oldTrxHistRef = useRef();
+  const contractRef = useRef();
   const [refundAmount, setRefundAmount] = useState();
   const [subscriptionId, setSubscriptionId] = useState();
   const [oldHistoryIndex, setOldHistoryIndex] = useState(null);
   const [upcomingHistoryIndex, setUpcomingHistoryIndex] = useState(true);
   const [contract, setContract] = useState();
   const [editTransaction, setEditTransaction] = useState(null);
+  const [contractOptIndex, setContractOptIndex] = useState(null);
+  const [cancelContractModal, setCancelContractModal] = useState(false);
+  const [cancelContractId, setCancelContractId] = useState(null);
   const [refundAlertMsg, setRefundAlertMsg] = useState({
+    message: "",
+    type: ""
+  });
+  const [cancelAlertMsg, setCancelAlertMsg] = useState({
+    message: "",
+    type: ""
+  });
+  const [retryPayAlertMsg, setRetryPayAlertMsg] = useState({
     message: "",
     type: ""
   });
@@ -91,6 +105,10 @@ const Transaction = (props) => {
     setRefundAlertMsg({...refundAlertMsg, message: "", type: ""});
   };
 
+  const closeCancelContractAlert = () => {
+    setRefundAlertMsg({...cancelAlertMsg, message: "", type: ""});
+  };
+
   const openCloseEditTransModal = (param, transaction, loadData) => {
     setEditTransaction(transaction);
     setEditTransModal(param);
@@ -107,6 +125,24 @@ const Transaction = (props) => {
       fetchUpcomingTransactions(props.contactId, 1);
     }
   };
+
+  const contractOptTgl = (index) => {
+    setContractOptIndex(index);
+  }
+
+  const openCancelContractModal = (item) => {
+    setCancelContractModal(true);
+    setCancelContractId(item._id);
+  }
+
+  const cancelContractHandle = (param) => {
+    if (param == "yes") {
+      cancelContract();
+    } else {
+      setCancelContractModal(false);
+      setCancelContractId(null);
+    }
+  }
   
 
   useEffect(() => {
@@ -118,6 +154,7 @@ const Transaction = (props) => {
         setOldOptIndex(null);
         setOldHistoryIndex(null);
         setUpcomingHistoryIndex(null);
+        setContractOptIndex(null);
       }
     }
     window.addEventListener('keydown', close)
@@ -142,7 +179,7 @@ const Transaction = (props) => {
     }
   };
 
-   const oldListPageNo = (e) => {
+  const oldListPageNo = (e) => {
     if (!isScroll) {
       let scrollHeight = e.target.scrollHeight;
       let scrollTop = e.target.scrollTop;
@@ -154,6 +191,21 @@ const Transaction = (props) => {
       }
     }
   };
+
+  const contractListPageNo = (e) => {
+      
+      if (!isScroll) {
+        let scrollHeight = e.target.scrollHeight;
+        let scrollTop = e.target.scrollTop;
+        if (scrollTop > (scrollHeight / 2)) {
+          if(contractPagination.currentPage < contractPagination.totalPages) {
+            console.log(e.target.scrollHeight);
+            fetchContract(props.contactId, (contractPagination.currentPage + 1));
+          }
+          ;
+        }
+      }
+    };
 
   const fetchOldTransactions = async (contactId, pageNumber) => {
     try {
@@ -195,11 +247,20 @@ const Transaction = (props) => {
     }
   };
 
-  const fetchContract = async () => {
+  const fetchContract = async (contactId, pageNumber) => {
     try {
-      const response = await TransactionServices.fetchContract(props.contactId);
-      setContract(response.transactions);
+      setIsScroll(true);
+      setIsLoaderScroll(true);
+      const response = await TransactionServices.fetchContract(contactId, pageNumber);
       console.log("Contract response ", response);
+      if (response.pagination.currentPage == 1) {
+        setContract(response.transactions);
+      } else {
+        setContract([ ...contract, ...response.transactions]);
+      }
+      //setContract(response.transactions);
+      setIsScroll(false);
+      setContractPagination(response.pagination);
     } catch (e) {
 
     } finally {
@@ -207,21 +268,53 @@ const Transaction = (props) => {
     }
   };
 
+  const cancelContract = async () => {
+    let payload = {
+      contractId : cancelContractId
+    }
+    try {
+      setIsLoader(true);
+      const response = await TransactionServices.cancelContract(props.contactId, payload);
+      setCancelAlertMsg({ ...cancelAlertMsg, message: response, type: "success"});
+    } catch (e) {
+      setCancelAlertMsg({ ...cancelAlertMsg, message: e.message, type: "error"});
+    } finally {
+      setCancelContractModal(false);
+      setIsLoader(false);
+      setCancelContractId(null);
+      fetchContract(props.contactId, 1);
+    }
+  };
 
+  const retryPayment = async (item) => {
+    let payload = {
+      subscriptionId: item._id,
+      note: "Retry note"
+    }
+    try {
+      setIsLoader(true);
+      const response = await TransactionServices.retryPayment(props.contactId, payload);
+      console.log("Retry response: ", response);
+    } catch (e) {
+      setRetryPayAlertMsg({ ...retryPayAlertMsg, message: e.message, type: "success" });
+    } finally {
+      setIsLoader(false);
+    }
+  };
 
   const moreOptOpenUpcoming = (index) => {
     setUpcomingOptIndex(index !== upcomingOptIndex ? index : null);
     if (upcomingOptIndex != null) {
       setUpcomingOptIndex(null);
     }
-  }
+  };
 
   const moreOptOpenOld = (index) => {
     setOldOptIndex(index !== upcomingOptIndex ? index : null);
     if (oldOptIndex != null) {
       setOldOptIndex(null);
     }
-  }
+  };
 
   const checkOutsideClick = (e) => {
     if (upcomingOptRef.current.contains(e.target)) {
@@ -232,10 +325,14 @@ const Transaction = (props) => {
     if (oldOptRef.current.contains(e.target)) {
       return;
     }
+    if (contractRef.current.contains(e.target)) {
+      return;
+    }
     setUpcomingHistoryIndex(null);
     setOldOptIndex(null);
     setOldHistoryIndex(null);
-  }
+    setContractOptIndex(null);
+  };
 
   const showSuccessAlert = (param) => {
     setSuccessMsg(param);
@@ -248,7 +345,7 @@ const Transaction = (props) => {
         )
       }
     })
-  }
+  };
   const closeAlert = () => {
     setSuccessMsg(null);
   };
@@ -257,7 +354,7 @@ const Transaction = (props) => {
   useEffect(() => {
     fetchOldTransactions(props.contactId, 1);
     fetchUpcomingTransactions(props.contactId, 1);
-    fetchContract();
+    fetchContract(props.contactId, 1);
     console.log(props.contactId);
 
     document.addEventListener("mousedown", checkOutsideClick);
@@ -612,10 +709,10 @@ const Transaction = (props) => {
                           <div className="moreOpt">
                           <button type="button" className="moreOptBtn" onClick={() => moreOptOpenOld (index)}></button>
                             <div className={oldOptIndex === index ? "optDropdown" : "optDropdown hide"}>
-                              {item.history.length && item.history[item.history.length -1].status == "success" ?
+                              {item.history && item.history[0].status == "success" ?
                                 <button type="button" className="refund" onClick={() => openRefundModal (item)}>Refund</button>
                                 :
-                                <button type="button" className="retry">Retry</button> 
+                                <button type="button" className="retry" onClick={() => retryPayment (item)}>Retry</button> 
                               }
                               {/* <button type="button" className="history">History</button> */}
                             </div>  
@@ -633,7 +730,7 @@ const Transaction = (props) => {
                         <div className="showDetails">
                           {item.history && item.history.map((element, key) => {
                             return (
-                              <div key={"oldhistory" + key} className={element.status == "failed" ? "cellWrapers fail historyInnerInfo" : (element.amount < 0 ? "cellWrapers success refunded historyInnerInfo" : "cellWrapers success historyInnerInfo")}>
+                              <div key={"oldhistory" + key} className={element.status == "failed" || element.status == "declined" ? "cellWrapers fail historyInnerInfo" : (element.amount < 0 ? "cellWrapers success refunded historyInnerInfo" : "cellWrapers success historyInnerInfo")}>
                                 <div className="cell particulars">
                                   <div className="d-flex">
                                     <div className="iconCont">
@@ -653,7 +750,7 @@ const Transaction = (props) => {
                                     </div>
                                     <div className="textCont">
                                       <div className="status">
-                                        {element.status == "failed" ? "failed" : (element.amount < 0 ? "refunded" : "successful")}
+                                        {element.status == "failed" ? "failed" : (element.status == "declined" ? "declined" :  (element.amount < 0 ? "refunded" : "successful"))}
                                         {element.amount < 0 ? 
                                         <div className="notePop">
                                           <div className="notePopIcon"></div>
@@ -699,13 +796,6 @@ const Transaction = (props) => {
                       </div>
                     </div>
 
-
-
-
-
-
-
-                  //  </div>
                 )
               }) : ""}
               
@@ -713,98 +803,12 @@ const Transaction = (props) => {
               <div className="bottomLoader">
               </div>  
               : ""}
-              
-              {/* <div className="row fail">
-                <div className="cell">
-                  <div className="d-flex">
-                    <div className="iconCont">
-                      <span>
-                        <img src={icon_trans} alt="" />
-                      </span>
-                    </div>
-                    <div className="textCont">
-                      <div className="status">
-                        Fail
-                      </div>
-                      <div>
-                        <span>Course:</span> “Sample course name”
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="cell">
-                  <span className="amount" >
-                    $100
-                  </span>
-                </div>
-                <div className="cell">
-                  <span className="transID">
-                    dfg41456df1567sdtfg24g
-                  </span>
-                </div>
-                <div className="cell">
-                  <span className="time">
-                    18 m ago
-                  </span>
-                </div>
-                <div className="cell">
-                  <div className="moreOpt">
-                    <button type="button" className="moreOptBtn"></button>
-                    <div className="optDropdown">
-                      <button type="button" className="retry">Retry</button>  
-                      <button type="button" className="history">History</button>
-                    </div>  
-                  </div>
-                </div>
-              </div>
-              <div className="row success">
-                <div className="cell">
-                  <div className="d-flex">
-                    <div className="iconCont">
-                      <span>
-                        <img src={icon_trans} alt="" />
-                      </span>
-                    </div>
-                    <div className="textCont">
-                      <div className="status">
-                        Success
-                      </div>
-                      <div>
-                        <span>Course:</span> “Sample course name”
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="cell">
-                  <span className="amount" >
-                    $100
-                  </span>
-                </div>
-                <div className="cell">
-                  <span className="transID">
-                    dfg41456df1567sdtfg24g
-                  </span>
-                </div>
-                <div className="cell">
-                  <span className="time">
-                    18 m ago
-                  </span>
-                </div>
-                <div className="cell">
-                  <div className="moreOpt">
-                    <button type="button" className="moreOptBtn"></button>
-                    <div className="optDropdown">
-                      <button type="button" className="refund" onClick={() => openCloseRefundModal (true)}>Refund</button>  
-                      <button type="button" className="history">History</button>
-                    </div>  
-                  </div>
-                </div>
-              </div> */}
             </div>
           </Scrollbars>
         </div>
         <div className={activeTab == 2 ? "listTab active" : "listTab"}>
-          <div className="transactionListing">
+        <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={contractListPageNo}>
+          <div className="transactionListing" ref={contractRef}>
             {contract && contract.length ?
             <div className="row head">
               <div className="cell">Program Name</div>
@@ -823,12 +827,12 @@ const Transaction = (props) => {
             
             {contract && contract.length > 0 ? contract.map((item, index) => {
               return (
-                <div className="row success" key={index}>
+                <div className={item.status == "active" ? "row success" : (item.status == "cancelled" ? "row fail" : "row inactive")} key={index}>
                   <div className="cell">
                     <div className="d-flex">
                       <div className="iconCont">
                         <span>
-                          <img src={icon_trans} alt="" />
+                          <img src={contractIconWhite} alt="" />
                         </span>
                         {/* <span className="ifDependent">
                           <img src={wwConnect} alt="" />
@@ -836,17 +840,11 @@ const Transaction = (props) => {
                       </div>
                       <div className="textCont">
                         <div className="status">
-                          {item.status == "active" ? "active" : "expired"}
+                          {item.status}
                         </div>
                         <div>
                           <span>Program:</span> “{item.courseName}”
                         </div>
-                          {/* <a href="javascript:void(0)" className="dependent">
-                            <span>
-                              <img src={wwConnect2} alt="" />
-                            </span>
-                            Emily Martyns
-                          </a> */}
                       </div>
                     </div>
                   </div>
@@ -870,19 +868,24 @@ const Transaction = (props) => {
                     </span>
                   </div>
                   <div className="cell">
-                    <div className="moreOpt">
-                      <button type="button" className="moreOptBtn"></button>
-                      <div className="optDropdown hide">
-                        <button type="button" className="cancelPayment">Cancel</button>
-                      </div>  
+                    <div className={item.status == "cancelled" ? "hide" : "moreOpt"}>
+                      <button type="button" className="moreOptBtn" onClick={() => contractOptTgl (index)}></button>
+                      {contractOptIndex == index ? 
+                      <div className="optDropdown">
+                        <button type="button" className="cancelPayment" onClick={() => openCancelContractModal (item)}>Cancel</button>
+                      </div> 
+                      : ""} 
                     </div>
                   </div>
                 </div>
               )
             }) : ""}
-            
-
-          </div>
+            </div>
+            {isLoaderScroll ? 
+            <div className="bottomLoader">
+            </div>  
+            : ""}
+          </Scrollbars>
         </div>
 
       </div>
@@ -915,7 +918,16 @@ const Transaction = (props) => {
       /> 
       }
 
-      
+      { cancelContractModal && 
+      <ConfirmBox 
+      message="Are you sure, you want to cancel this contract?"
+      callback={(param) => cancelContractHandle (param)} 
+      />
+      }
+
+      { cancelAlertMsg.message ? 
+      <AlertMessage message={cancelAlertMsg.message} type={cancelAlertMsg.type} time={5000} close={closeCancelContractAlert} /> 
+      : ""}
 
     </>
   );
