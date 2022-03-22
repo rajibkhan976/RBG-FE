@@ -75,7 +75,7 @@ const PaymentSuccessSection = (props) => {
               </li>
               <li className="paymentIdLi"><p>{el.transactionId}</p></li>
               <li className="paymentAmtLi">
-                <p>$ {el.amount}</p>
+                <p>$ {parseFloat(el.amount).toFixed(2)}</p>
                 <img src={smallTick} alt="" />
               </li>
             </ul>
