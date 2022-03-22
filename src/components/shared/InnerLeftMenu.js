@@ -285,7 +285,7 @@ const InnerLeftMenu = (props) => {
                   </div>
                 </NavLink>
               </li>
-              {/* <li>
+              <li>
                 <NavLink className="leftMenuInnerLink" to="/call-setup" activeClassName="active">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
@@ -296,7 +296,7 @@ const InnerLeftMenu = (props) => {
                     </button>
                   </div>
                   <ul className="sideSubMenu">
-                    <li>
+                    {/* <li>
                       <NavLink to="/email-setup" activeClassName="active">
                         Email
                       </NavLink>
@@ -305,7 +305,7 @@ const InnerLeftMenu = (props) => {
                       <NavLink to="/sms-setup" activeClassName="active">
                         SMS
                       </NavLink>
-                    </li>
+                    </li> */}
                     <li>
                       <NavLink to="/call-setup" activeClassName="active">
                         Call
@@ -313,7 +313,7 @@ const InnerLeftMenu = (props) => {
                     </li>
                   </ul>
                 </NavLink>
-              </li> */}
+              </li>
               <li>
                 <NavLink className="leftMenuInnerLink" to="/products" activeClassName="active">
                   <div className="indicator"></div>
