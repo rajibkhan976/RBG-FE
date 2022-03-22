@@ -117,6 +117,7 @@ const ProductPayment = (props) => {
 
   
   const payDateChangeOverview = (e) => {
+    console.log(outStanding);
     try {
       setIsLoader(true);
 
@@ -125,15 +126,13 @@ const ProductPayment = (props) => {
         setOutstanding({
           ...outStanding,
           isPayNow: 0,
-          paymentDate: tomorrowPayDate().toISOString().split("T")[0],
-          payment_type: "online"
+          paymentDate: tomorrowPayDate().toISOString().split("T")[0]
         })
       } else {
         setOutstanding({
           ...outStanding,
           isPayNow: 1,
-          paymentDate: todayPayDate().toISOString().split("T")[0],
-          payment_type: "cash"
+          paymentDate: todayPayDate().toISOString().split("T")[0]
         })
       }
     } catch (error) {
@@ -308,7 +307,8 @@ const ProductPayment = (props) => {
         paymentDate: todayPayDate().toISOString().split("T")[0],
         payment_type: "cash",
         payment_status: "paid",
-        paymentConfirmation: false
+        paymentConfirmation: false,
+        dpId: Math.floor(100000 + Math.random() * 900000)
       }])
       
       setHasError(true);
@@ -364,7 +364,8 @@ const ProductPayment = (props) => {
           paymentDate: todayPayDate().toISOString().split("T")[0],
           payment_type: "cash",
           payment_status: "paid",
-          paymentConfirmation: false
+          paymentConfirmation: false,
+          dpId: Math.floor(100000 + Math.random() * 900000)
         },
       ])
       }
@@ -386,7 +387,7 @@ const ProductPayment = (props) => {
     e.preventDefault();
     try {
       setDownPayments((downpayment) =>
-        downpayment.filter((dn, index) => index !== i)
+        downpayment.filter((dn) => dn.dpId !== i)
       );
       setOutstanding({
         ...outStanding,
@@ -523,11 +524,10 @@ const ProductPayment = (props) => {
     try {
       setIsLoader(true);
 
-      if (e.target.checked) {
-        downPaymentsPlaceholder[i].isPayNow = 1;
-        downPaymentsPlaceholder[i].paymentDate = today;
-        downPaymentsPlaceholder[i].payment_status = "paid";
-        downPaymentsPlaceholder[i].paymentConfirmation = true;
+      if (e.target.checked) {        
+        downPaymentsPlaceholder.filter((dpP) => dpP.dpId === i)[0].paymentDate = today;
+        downPaymentsPlaceholder.filter((dpP) => dpP.dpId === i)[0].payment_status = "paid";
+        downPaymentsPlaceholder.filter((dpP) => dpP.dpId === i)[0].paymentConfirmation = true;
 
         setDownPayments(downPaymentsPlaceholder)
         setHasError(false)
@@ -537,7 +537,7 @@ const ProductPayment = (props) => {
         })
       }
        else {
-        downPaymentsPlaceholder[i].paymentConfirmation = false;
+        downPaymentsPlaceholder.filter((dpP) => dpP.dpId === i)[0].paymentConfirmation = false;
         setDownPayments(downPaymentsPlaceholder)
       }
     } catch (error) {
@@ -699,6 +699,8 @@ const ProductPayment = (props) => {
   const changeDownpaymentIsPayNow = (e, downpay, i) => {
     const downPaymentsPlaceholder = [...downPayments];
 
+    console.log(e, downpay, i, e.target.checked);
+
     try {
       setIsLoader(true);
       
@@ -706,7 +708,7 @@ const ProductPayment = (props) => {
         downPaymentsPlaceholder[i].isPayNow = 0;
         downPaymentsPlaceholder[i].paymentDate = tomorrowPayDate().toISOString().split("T")[0];
         downPaymentsPlaceholder[i].payment_status = "unpaid"
-
+        
         if(downPaymentsPlaceholder[i].paymentDate === "") {
           setHasError(true);
           setDownPaymentErrorMsg({
@@ -714,11 +716,12 @@ const ProductPayment = (props) => {
             edit_PayDate_Err: "Date cannot be empty",
           });
         }
+        console.log("CHANGED:::::", downPaymentsPlaceholder, downPaymentsPlaceholder.filter((dpP) => dpP.dpId === i));
         setDownPayments(downPaymentsPlaceholder);
       } else {
         downPaymentsPlaceholder[i].isPayNow = 1;
         downPaymentsPlaceholder[i].paymentDate = todayPayDate().toISOString().split("T")[0];
-        downPaymentsPlaceholder[i].payment_status = "paid"
+        downPaymentsPlaceholder[i].paymentConfirmation =  false
 
         setHasError(false);
         setDownPaymentErrorMsg({
@@ -852,7 +855,7 @@ const ProductPayment = (props) => {
                         <div className="newDownpayment" key={i}>
                           {i !== 0 && <button
                             className="delNewDownpayment"
-                            onClick={(e) => deleteNewDownPayment(e, downpay, i)}
+                            onClick={(e) => deleteNewDownPayment(e, downpay, downpay.dpId)}
                           >
                             <img src={deleteBtn} alt="delete" /> Remove
                           </button>}
@@ -963,8 +966,8 @@ const ProductPayment = (props) => {
                                       onChange={(e) =>
                                         changeDownpaymentIsPayNow(e, downpay, i)
                                       }
-                                      value={downpay.isPayNow === 0}
                                     />
+                                    {console.log("downpay.isPayNow", downpay.dpId, downpay.isPayNow)}
                                     <span className="toggler"></span>
                                   </label>
                                 </label>
@@ -1286,15 +1289,16 @@ const ProductPayment = (props) => {
               </div>
             )}
 
-            {downPayments.length > 0 && downPayments.length > 0 && downPayments.filter((downpay, i) => downpay.isPayNow === 1 && downpay.amount > 0).map((downPay, i) =>
+            {downPayments.length > 0 && downPayments.filter((downpay, i) => downpay.isPayNow === 1).map((downPay, i) =>
               <div
                 className="currentPaymentOverview cartProductInner"
                 style={{
                   marginTop: 0,
                   marginBottom: "5px"
                 }}
+                key={i}
               >
-                {console.log(downPay.payment_type === "cash", downPaymentErrorMsg.payment_not_received !== "")}
+                {console.log("::::MAPPING::::", downPay, i)}
                 <div className={(downPay.payment_type === "cash" && downPay.paymentConfirmation === false) ? "outstandingDownpayment error" : "outstandingDownpayment"}>
                   <div className="downpaymentsDetails">
                     <div className="cardImage">
@@ -1357,7 +1361,7 @@ const ProductPayment = (props) => {
                     <div className="paymentModuleInfos">
                       <span className="accNumber">{downPay.title}</span>
                       <span className="accinfod">
-                        <b>$ {downPay.amount}</b>
+                        <b>$ {isNaN(downPay.amount) ? 0 : downPay.amount}</b>
                       </span>
                     </div>
                   </div>
@@ -1374,7 +1378,7 @@ const ProductPayment = (props) => {
                         : downPay.paymentDate}
                     </div>
                   </div>
-                  {(downPay.payment_type === "cash" && downPay.isPayNow === 1) && 
+                  {(downPay.isPayNow === 1 && downPay.payment_type === "cash") && 
                     <>
                       <label className="receivedCash">
                         <div className="customCheckbox">
@@ -1382,12 +1386,12 @@ const ProductPayment = (props) => {
                             type="checkbox"
                             name=""
                             id=""
-                            onChange={(e) => markDownPaid(e, downPay, i)}
+                            onChange={(e) => markDownPaid(e, downPay, downPay.dpId)}
                             checked={downPay.paymentConfirmation}
                           />
                           <span></span>
                         </div>
-                        I have received the amount by Cash
+                        I have received the amount by {downPay.payment_type === "cash" ? "Cash" : "Card/Bank"}
                       </label>
                       {downPaymentErrorMsg.payment_not_received !== "" && downPay.payment_type === "cash" && downPay.paymentConfirmation === false && <p className="errorMsg">
                               {downPaymentErrorMsg.payment_not_received}
@@ -1403,7 +1407,7 @@ const ProductPayment = (props) => {
                 <p>Billing Total</p>
                 {/* downPayments[0] */}
                 {/* <h4>$ {downPayments.length > 0 ? downPayments[0].amount : (parseFloat(totalAmt)+parseFloat(totalTaxAmt)).toFixed(2)}</h4> */}
-                <h4>$ {billingTotalAmt().toFixed(2)}</h4>
+                <h4>$ {isNaN(billingTotalAmt()) ? 0 : billingTotalAmt().toFixed(2)}</h4>
               </div>
               <div className="buyBtns">
                 <button
