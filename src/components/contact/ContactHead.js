@@ -4,6 +4,7 @@ import * as actionTypes from "../../actions/types";
 import download_icon from "../../../src/assets/images/download_icon.svg";
 import download_cloud_icon from "../../../src/assets/images/download_cloud_icon_white.svg"
 import uparrow_icon_grey from "../../../src/assets/images/uparrow_icon_grey.svg";
+import remove_filter from "../../../src/assets/images/remove_filter.svg"
 import {utils} from "../../helpers";
 
 const ContactHead = (props) => {
@@ -77,10 +78,10 @@ const ContactHead = (props) => {
             </form>
           </div>
           {filter ?
-              <button className="btn btn-filter" onClick={props.clearFilter}>
+              <button className="btn btn-filter" onClick={props.clearFilter} title="Remove filter">
                 <img
                     className="filterIcon"
-                    src="/static/media/filter_icon.dac97ac8.svg"
+                    src={remove_filter}
                     alt=""
                 />
               </button> : ""}
