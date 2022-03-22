@@ -28,12 +28,13 @@ const ProgramTransaction = (props) => {
     billing_cycle: "monthly",
     courseStart: "",
     numberOfPayments: 1,
-    paymentDate: moment().format("YYYY-MM-DD"),
+    paymentDate: moment().add(1, "days").format("YYYY-MM-DD"),
     firstBillingTime: false,
     auto_renew: 0,
     isPayNow: 1,
     default_transaction: "cash",
     nextDueDate: "",
+    isDownPayment: false,
     downPayments: []
   });
 
@@ -81,7 +82,7 @@ const ProgramTransaction = (props) => {
   useEffect(() => {
     console.log('Current program data', props.programContractData);
     if (props.programContractData) {
-      setSelectedProgram({name : props.programContractData.courseName})
+      setSelectedProgram({ name: props.programContractData.courseName })
       setContractData(props.programContractData);
     }
   }, [props.programContractData])
@@ -113,12 +114,13 @@ const ProgramTransaction = (props) => {
     console.log('Data from child for down payments call back', dataFromChild);
     let clone = getLatestClone();
     clone.downPayments = dataFromChild.downPaymentElems;
+    clone.isDownPayment = dataFromChild.isDownPayment;
     setContractData(clone);
   };
 
   //Validate down payment cards
   const validatDownPaymentsFn = () => {
-    return addDownPaymentsRef.current.validatDownPayments();
+    return addDownPaymentsRef.current.validate();
   };
 
   //Duration change
@@ -170,7 +172,7 @@ const ProgramTransaction = (props) => {
   }
 
   const handelFirstBillingDateToggle = (e) => {
-    setContractData({...contractData, firstBillingTime : e.target.checked});
+    setContractData({ ...contractData, firstBillingTime: e.target.checked, nextDueDate: moment().add(1, "days").format("MM/DD/YYYY") });
   }
 
   //First billing date change
@@ -194,14 +196,13 @@ const ProgramTransaction = (props) => {
   }
 
 
-
+  //Count no of payments
   useEffect(() => {
     if (contractData.duration) {
-      //Next due date
-      let nextDueDate = utils.getNextDueDate(false, 1, contractData.billing_cycle)
-      //No of payments
-      let noOfPayments = 1;
       if (contractData.payment_type === 'recurring') {
+        let nextDueDate = utils.getNextDueDate(false, 1, contractData.billing_cycle)
+        //No of payments
+        let noOfPayments = 1;
         /**
          * Example
          * duration : 2 years
@@ -213,17 +214,34 @@ const ProgramTransaction = (props) => {
         } else if (contractData.billing_cycle === 'yearly') {
           noOfPayments = contractData.duration * 1;
         }
+        console.log({ nextDueDate, noOfPayments });
+        setContractData({ ...contractData, nextDueDate: nextDueDate, numberOfPayments: noOfPayments });
       }
-      console.log({ nextDueDate, noOfPayments });
-      setContractData({ ...contractData, nextDueDate: nextDueDate, numberOfPayments: noOfPayments });
     }
   }, [contractData.duration, contractData.billing_cycle, contractData.payment_type])
+
+  useEffect(() => {
+    if (!contractData.firstBillingTime && contractData.payment_type === 'onetime') {
+      setContractData({ ...contractData, nextDueDate: "" });
+    }
+  }, [contractData.payment_type, contractData.firstBillingTime]);
 
   //Continue to buy
   const continueToBuy = (e) => {
     e.preventDefault();
+
+
     let formErrorsCopy = formErrors;
     let isError = false;
+
+    //Validate down payments
+    console.log('dp flag', contractData.isDownPayment);
+    if (contractData.isDownPayment) {
+      let validateDP = validatDownPaymentsFn();
+      if (!validateDP) {
+        isError = true;
+      }
+    }
 
     //Program name
     if (!contractData.courseName) {
@@ -235,6 +253,9 @@ const ProgramTransaction = (props) => {
     if (!contractData.duration) {
       isError = true;
       formErrorsCopy.duration = "Please provide the program duration."
+    } else if (contractData.duration <= 0) {
+      isError = true;
+      formErrorsCopy.duration = "Please provide a valid duraion"
     }
 
     //Duration interval
@@ -246,12 +267,16 @@ const ProgramTransaction = (props) => {
     }
 
     //Tution amount
+    let regex = /^\d+(.\d{1,2})?$/;
     if (!contractData.amount) {
       isError = true;
       formErrorsCopy.amount = "Please provide the program tution fee."
     } else if (contractData.amount <= 0) {
       isError = true;
       formErrorsCopy.amount = "Tution fee can't be zero."
+    } else if (!regex.test(contractData.amount)) {
+      isError = true;
+      formErrorsCopy.amount = "Tution fee can't be more than 2 decimal places."
     }
 
     //Program/Course start date
@@ -293,7 +318,7 @@ const ProgramTransaction = (props) => {
     <form>
       <div className="transaction_form products forProducts">
 
-        {/* Custom Select Box with inbuild Button starts */ console.log({ contractData })}
+        {/* Custom Select Box with inbuild Button starts */ console.log({ programList })}
 
         <div className="formsection gap">
 
@@ -323,7 +348,7 @@ const ProgramTransaction = (props) => {
               </span>
               {chooseCategory && (
                 // {props.toggleContactList.status && (
-                <>
+                <React.Fragment>
                   <div className="contactListItems">
                     {isLoader ? <Loader /> : ''}
                     {/* <button
@@ -335,15 +360,17 @@ const ProgramTransaction = (props) => {
                         addPogramModalFn()
                       }}
                     >+ Add Manually</button> */}
+
                     <ul>
-                      {programList && programList.map((item, index) => {
+                      {programList.length ? programList.map((item, index) => {
                         return (
                           <li onClick={() => selectProgram(item, index)} key={index} className={contractData.courseIndex == index ? "active" : ""}>{item.name}</li>
                         )
-                      })}
+                      }) : <li>No data!</li>
+                      }
                     </ul>
                   </div>
-                </>
+                </React.Fragment>
               )}
             </div>
           </div>
@@ -392,7 +419,7 @@ const ProgramTransaction = (props) => {
                 <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
               </span>
             </label>
-            <select className="selectBox" name="billingCycle" defaultValue={contractData.billing_cycle} onChange={handelBillingCycleChange}>
+            <select className="selectBox" name="billingCycle" value={contractData.billing_cycle} onChange={handelBillingCycleChange}>
               <option value="monthly">Monthly</option>
               <option value="yearly">Yearly</option>
             </select>
@@ -411,7 +438,7 @@ const ProgramTransaction = (props) => {
               <div className='unitAmount'>
                 $
               </div>
-              <input type="text" className="cmnFieldStyle" defaultValue={contractData.amount} onChange={handleTutionAmountChange} />
+              <input type="text" className="cmnFieldStyle" value={contractData.amount} onChange={handleTutionAmountChange} />
             </div>
           </div>
           <div className="cmnFormCol">
@@ -461,7 +488,7 @@ const ProgramTransaction = (props) => {
               <p>Payment date <span>Now</span></p>
             </div>
             <div className={contractData.firstBillingTime ? "paymentNow display" : "paymentNow"} >
-              <input type="date" name="firstBillingDate" placeholder="mm/dd/yyyy" onChange={handelFirstBillingDateChange} className="editableInput" value={contractData.paymentDate} />
+              <input type="date" name="firstBillingDate" placeholder="mm/dd/yyyy" min={contractData.paymentDate} onChange={handelFirstBillingDateChange} className="editableInput" value={contractData.paymentDate} />
             </div>
           </div>
           <div className={formErrors.courseStart ? "rightSecTransaction errorField" : "rightSecTransaction"}>

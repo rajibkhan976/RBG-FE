@@ -42,14 +42,11 @@ const DownPayments = forwardRef((props, ref) => {
     }, [downPaymentElems]);
 
     const broadcastToParent = () => {
-        props.downPaymentsCallback({ downPaymentElems });
+        props.downPaymentsCallback({ downPaymentElems, isDownPayment });
     };
 
     useImperativeHandle(ref, () => ({
-        validateDownPayments() {
-            console.log('Inside use imperative handle');
-            return validate();
-        }
+        validate,
     }));
 
     const validate = (addnew = false) => {
@@ -93,11 +90,14 @@ const DownPayments = forwardRef((props, ref) => {
 
     const checkAmountErr = amount => {
         let val = parseFloat(amount);
+        let regex = /^\d+(.\d{1,2})?$/;
         return isNaN(val)
             ? "Numeric value expected for amount."
             : val <= 0
                 ? "Zero is not considered as a valid amount."
-                : "";
+                : !regex.test(val)
+                    ? "Amount can't be more than 2 decimal places."
+                    : "";
     };
 
     const validateIndividual = (e, key, type) => {
@@ -142,7 +142,7 @@ const DownPayments = forwardRef((props, ref) => {
         console.log('Toggle', isActive);
         setIsDownPayment(isActive);
         setDownPaymentElems([{ ...downPaymentElement }]);
-        if (!isActive) {        
+        if (!isActive) {
             setDownPaymentElems([]);
         }
     }
