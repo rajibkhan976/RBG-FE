@@ -148,7 +148,7 @@ const ContactModal = (props) => {
             });
             uploadFile(file, config)
                 .then(async data => {
-                    setIsLoader(false);
+                    // setIsLoader(false);
                     await ContactService.uploadProfilePic({
                         contactId: props.contactId,
                         file: data.location
@@ -156,6 +156,9 @@ const ContactModal = (props) => {
                     setImage(data.location);
                 })
                 .catch(err => {
+                    setIsLoader(false);
+                })
+                .finally(()=>{
                     setIsLoader(false);
                 })
         }

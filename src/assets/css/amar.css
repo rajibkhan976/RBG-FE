@@ -2552,3 +2552,9 @@ input[type=number] {
   position: relative;
   z-index: 1;
 }
+.buttonNotifications {
+  flex: 0 0 26px;
+}
+.buttonHeaderIcons {
+  flex: 0 0 50px;
+}
