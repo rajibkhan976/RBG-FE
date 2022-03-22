@@ -182,8 +182,10 @@ const ProductPayment = (props) => {
     let titleDpConfirmation = [...downPayments].filter((titleNow, i) => titleNow.title === "" || titleNow.title.trim() === "")
     let amountDpConfirmation = [...downPayments].filter((titleNow, i) => titleNow.amount === "" || titleNow.amount === "0" || parseFloat(titleNow.amount) === 0)
 
+    console.log("TESTING AMOUNT 0", downPayments);
+
     if (!hasError) {
-      if(filteredPay.length === 0 && titleDpConfirmation.length === 0) {
+      if(filteredPay.length === 0 && titleDpConfirmation.length === 0 && amountDpConfirmation.length === 0) {
         if(productPayload.billingId !== "") {
           try {
             setIsLoader(true);
