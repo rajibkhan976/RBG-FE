@@ -177,14 +177,14 @@ const ForgetPassword = (props) => {
             <div className="text-center"><NavLink className="link_to_login " to="/login">Return to Login</NavLink></div>
           </form>
           <div className="login_footer">
-            &copy; 2021 Red Belt Gym, Inc. All rights reserved
+            &copy; 2022 Red Belt Gym, Inc. All rights reserved
           </div>
         </div>
         <div className="loginLeftPart">
           <img src={login_side_img} alt="" />
           <span className="overlay"></span>
           <div className="login_left_text">
-            <h2>Black Friday 2021 🎉</h2>
+            <h2>Black Friday 2022 🎉</h2>
             <p>Enjoy 30% off our Premium Plans for a limited time only<br />
               <button className="link_btn">Get This Deal NOW</button></p>
           </div>

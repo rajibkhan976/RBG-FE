@@ -287,7 +287,7 @@ const ResetPassword = (props) => {
           </form>
 
           <div className="login_footer">
-            &copy; 2021 Red Belt Gym, Inc. All rights reserved
+            &copy; 2022 Red Belt Gym, Inc. All rights reserved
           </div>
         </div>
 

@@ -185,6 +185,7 @@ const Login = (props) => {
                   onChange={handleEmailChange}
                   onBlur={() => validateField("email")}
                   placeholder="Email"
+                  tabIndex={1}
                 />
                 {formErrors.email ? (
                   <div className="errorMsg">{formErrors.email}</div>
@@ -206,6 +207,7 @@ const Login = (props) => {
                   onBlur={() => validateField("password")}
                   placeholder="Password"
                   className="loginPassField"
+                  tabIndex={2}
                 />
                 <button type="button" className={hidePss ? "hidePass" : "hidePass show"} onClick={togglePass}></button>
                 {formErrors.password ? (
@@ -226,14 +228,14 @@ const Login = (props) => {
             </div>
           </form>
           <div className="login_footer">
-            &copy; 2021 Red Belt Gym, Inc. All rights reserved
+            &copy; 2022 Red Belt Gym, Inc. All rights reserved
           </div>
         </div>
         <div className="loginLeftPart">
           <img src={login_side_img} alt="" />
           <span className="overlay"></span>
           <div className="login_left_text">
-            <h2>Black Friday 2021 🎉</h2>
+            <h2>Black Friday 2022 🎉</h2>
             <p>Enjoy 30% off our Premium Plans for a limited time only<br />
               <button className="link_btn">Get This Deal NOW</button></p>
           </div>
