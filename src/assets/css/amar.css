@@ -2534,3 +2534,7 @@ input[type=number] {
 .impContactBtn img {
   width: 23px;
 }
+
+.contactModalHeaderTopSec button.minimize {
+  display: none !important;
+}
