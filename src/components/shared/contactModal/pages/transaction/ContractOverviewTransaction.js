@@ -121,7 +121,7 @@ const ContractOverviewTransaction = (props) => {
       });
       payNowDownPayments = payNowDownPayments.map(payNowDownPayments => ({ ...payNowDownPayments, isReceivedCash: false }));
       console.log('Pay now down payments ', payNowDownPayments);
-      payNowDownPaymentsAmount = payNowDownPayments.reduce((total, obj) => parseInt(obj.amount) + total, 0);
+      payNowDownPaymentsAmount = payNowDownPayments.reduce((total, obj) => Number(obj.amount) + total, 0);
       console.log('Pay now down payments total amout: ', payNowDownPaymentsAmount, typeof payNowDownPaymentsAmount);
     }
     console.log('Now amount', payNowTuitionAmount, typeof payNowTuitionAmount);
@@ -142,7 +142,7 @@ const ContractOverviewTransaction = (props) => {
         return obj.isPayNow === false
       });
       console.log('Due down payments ', dueDownPayments);
-      dueDownPaymentsAmount = dueDownPayments.reduce((total, obj) => parseInt(obj.amount) + total, 0);
+      dueDownPaymentsAmount = dueDownPayments.reduce((total, obj) => Number(obj.amount) + total, 0);
       console.log('Due down payments total amout: ', dueDownPaymentsAmount);
 
     }
@@ -153,13 +153,13 @@ const ContractOverviewTransaction = (props) => {
     //total down payment amount
     let totalDownPayment = 0;
     if (props.programContractData.downPayments && props.programContractData.downPayments.length) {
-      totalDownPayment = props.programContractData.downPayments.reduce((total, obj) => (obj.amount) + total, 0);
+      totalDownPayment = props.programContractData.downPayments.reduce((total, obj) => Number(obj.amount) + total, 0);
     }
 
     //total
     let total = 0;
     if (props.programContractData.downPayments && props.programContractData.downPayments.length) {
-      total = props.programContractData.downPayments.reduce((total, obj) => (obj.amount) + total, 0) + (props.programContractData.amount * props.programContractData.numberOfPayments)
+      total = props.programContractData.downPayments.reduce((total, obj) => Number(obj.amount) + total, 0) + (props.programContractData.amount * props.programContractData.numberOfPayments)
     }
 
     setContractData({
