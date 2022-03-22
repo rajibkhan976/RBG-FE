@@ -3945,3 +3945,7 @@ li.paymentModeLi, li.paymentAmtLi {
 .outstandingDownpayment + .outstandingDownpayment {
   margin-top: 5px;
 }
+
+.tableDataConfigArea .configColArea .configColBtn {
+  position: relative;
+}
