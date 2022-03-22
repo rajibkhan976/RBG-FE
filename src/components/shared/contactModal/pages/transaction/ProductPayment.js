@@ -270,9 +270,11 @@ const ProductPayment = (props) => {
           })
         }
         if(amountDpConfirmation.length > 0) {
-          setDownPaymentErrorMsg({
-            ...downPaymentErrorMsg,
-            edit_Amount_Err: {msg : "Please enter some downpayment value", key :  0}
+          [...downPayments].filter((titleNow, i) => titleNow.amount === "" || titleNow.amount === "0" || parseFloat(titleNow.amount) === 0).map((errDp, i) => {
+            setDownPaymentErrorMsg({
+              ...downPaymentErrorMsg,
+              edit_Amount_Err: {msg : "Please enter some downpayment value", key : errDp.dpId}
+            })
           })
         }
       }
@@ -616,7 +618,7 @@ const ProductPayment = (props) => {
         setHasError(true);
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
-          edit_Amount_Err: {msg : "Downpayment amounts can't be empty or 0", key : i},
+          edit_Amount_Err: {msg : "Downpayment amounts can't be empty or 0", key : downpay.dpId},
         });
         console.log("downPaymentsPlaceholder:::", downPaymentsPlaceholder);
       }
@@ -630,12 +632,19 @@ const ProductPayment = (props) => {
         // downPaymentsPlaceholder[i].amount = parseFloat(e.target.value);
 
         console.log("e value", e.target.value);
-        
         setHasError(true);
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
-          edit_Amount_Err: {msg : "Downpayments amount exceeding total; please modify amount", key : i}
+          edit_Amount_Err: {msg : "Downpayments amount exceeding total; please modify amount", key : downpay.dpId}
         });
+
+        setTimeout(() => {
+          setHasError(false);
+          setDownPaymentErrorMsg({
+            ...downPaymentErrorMsg,
+            edit_Amount_Err: {msg : "", key : null}
+          });
+        }, 5000);
       }
       // if amount in summation with other downpayments and outstanding is more than total
 
@@ -899,7 +908,7 @@ const ProductPayment = (props) => {
                             <div className="cmnFormRow gap">
                               <div
                                 className={
-                                  (downPaymentErrorMsg.edit_Amount_Err && (downPaymentErrorMsg.edit_Amount_Err.key !== null && downPaymentErrorMsg.edit_Amount_Err.key ===i )  || (downpay.amount === 0 || downpay.amount === "0" || downpay.amount === undefined || isNaN(downpay.amount)))
+                                  (downPaymentErrorMsg.edit_Amount_Err && (downPaymentErrorMsg.edit_Amount_Err.key !== null && downPaymentErrorMsg.edit_Amount_Err.key === downpay.dpId))
                                     ? "leftSecTransaction error"
                                     : "leftSecTransaction"
                                 }
@@ -928,7 +937,7 @@ const ProductPayment = (props) => {
                                   />
                                 </div>
 
-                                {downPaymentErrorMsg.edit_Amount_Err && downPaymentErrorMsg.edit_Amount_Err.key !== null && downPaymentErrorMsg.edit_Amount_Err.key ===i  && (
+                                {downPaymentErrorMsg.edit_Amount_Err && downPaymentErrorMsg.edit_Amount_Err.key !== null && downPaymentErrorMsg.edit_Amount_Err.key === downpay.dpId && (
                                 <p className="errorMsg">
                                 {/* {console.log("I : ", i)} */}
 
@@ -1299,7 +1308,7 @@ const ProductPayment = (props) => {
                 key={i}
               >
                 {console.log("::::MAPPING::::", downPay, i)}
-                <div className={(downPay.payment_type === "cash" && downPay.paymentConfirmation === false) ? "outstandingDownpayment error" : "outstandingDownpayment"}>
+                <div className={(downPaymentErrorMsg.payment_not_received !== "" && downPay.payment_type === "cash" && downPay.paymentConfirmation === false) ? "outstandingDownpayment error" : "outstandingDownpayment"}>
                   <div className="downpaymentsDetails">
                     <div className="cardImage">
                       {downPay.payment_type === "cash" ? (
@@ -1378,7 +1387,7 @@ const ProductPayment = (props) => {
                         : downPay.paymentDate}
                     </div>
                   </div>
-                  {(downPay.isPayNow === 1 && downPay.payment_type === "cash") && 
+                  {(downPay.isPayNow === 1 && downPay.payment_type === "cash" && (downPay.amount !== "" && downPay.amount !== "0" && parseFloat(downPay.amount) !== 0)) && 
                     <>
                       <label className="receivedCash">
                         <div className="customCheckbox">

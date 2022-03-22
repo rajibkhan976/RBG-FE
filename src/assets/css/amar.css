@@ -2579,4 +2579,7 @@ input[type=number] {
 .contactModal .contactTabsInner .listTab {
   flex: 1 1 auto;
 }
+.contactModal .contactTabsInner .listTab {
+  height: calc(100% - 180px);
+}
 /* contact modal UI height issue */
