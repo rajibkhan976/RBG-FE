@@ -764,7 +764,7 @@ const ProductTransaction = (props) => {
                             // }}
                           >
                             {/* {console.log("TESTING CART:::>>>", cartItem, cartItem.image)} */}
-                            <img src={cartItem && cartItem.image} alt={cartItem.name} />
+                            <img src={cartItem && cartItem.image !== "" && cartItem.image !== "https://wrapperbucket.s3.amazonaws.com/" ? cartItem.image : placeholder_product_image} alt={cartItem.name} />
                           </figure>
                           <div className="choiceOpt f-1">
                             <header className="d-flex f-justify-between">

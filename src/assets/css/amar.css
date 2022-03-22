@@ -2583,3 +2583,9 @@ input[type=number] {
   height: calc(100% - 180px);
 }
 /* contact modal UI height issue */
+
+.modalProductAdd .formControl.error .size,
+.modalProductAdd .formControl.error .addColor {
+  border-color: #c74854;
+  color: #c74854;
+}
