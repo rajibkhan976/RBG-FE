@@ -2538,3 +2538,17 @@ input[type=number] {
 .contactModalHeaderTopSec button.minimize {
   display: none !important;
 }
+.userContacts .userEmail.overviewModal .mailToEmail {
+  white-space: nowrap;
+  float: left;
+  width: 236px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.userContacts .userEmail .mailToEmail {
+  color: #46c8d3;
+}
+.contactModalHeaderBottomSec {
+  position: relative;
+  z-index: 1;
+}

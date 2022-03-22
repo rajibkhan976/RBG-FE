@@ -234,7 +234,7 @@ const ContactModal = (props) => {
                                         {(contactData && contactData.email) &&
                                             <div className="userEmail overviewModal">
                                                 <img src={email_icon_white} alt=""/>
-                                                <span>{contactData.email}</span>
+                                                <a href={`mailto:${contactData.email}`} className="mailToEmail">{contactData.email}</a>
                                             </div>
                                         }
                                     </div>
