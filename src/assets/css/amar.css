@@ -2558,3 +2558,9 @@ input[type=number] {
 .buttonHeaderIcons {
   flex: 0 0 50px;
 }
+
+.leftMenuToggleBtn {
+  background-size: 27px 27px;
+  background-position: center center;
+  padding: 0;
+}
