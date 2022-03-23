@@ -108,7 +108,11 @@ const ProgramTransaction = (props) => {
   const downPaymentsCallbackFn = (dataFromChild) => {
     console.log('Data from child for down payments call back', dataFromChild);
     let clone = getLatestClone();
-    clone.downPayments = dataFromChild.downPaymentElems;
+    if(dataFromChild.isDownPayment) {
+      clone.downPayments = dataFromChild.downPaymentElems;
+    } else {
+      clone.downPayments = [];
+    }
     clone.isDownPayment = dataFromChild.isDownPayment;
     setContractData(clone);
   };

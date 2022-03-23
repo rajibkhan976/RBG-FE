@@ -35,7 +35,6 @@ import { Scrollbars } from "react-custom-scrollbars-2";
 const PaymentSuccessSection = (props) => {
   const [successList, setSuccessList] = useState([]);
   const [amountPaid, setAmountPaid] = useState(0);
-  const [successMsg, setSuccessMsg] = useState("Payment Successful!");
 
   useEffect(() => {
     console.table('Payment props', props.successData);
@@ -43,8 +42,6 @@ const PaymentSuccessSection = (props) => {
       setSuccessList(props.successData);
       let totalAmount = props.successData && props.successData.reduce((total, obj) => parseInt(obj.amount) + total, 0)
       setAmountPaid(totalAmount);
-    } else {
-      setSuccessMsg("Contract has been created successfully!");
     }
   }, [props.successData]);
 
@@ -53,7 +50,7 @@ const PaymentSuccessSection = (props) => {
     <div className="posSellingForm contractOverview">
       <div className="successHeader">
         <div className="circleForIcon"><img src={paySuccess} alt="" /></div>
-        <h3 className="paySuccessHeading">{successMsg}</h3>
+        <h3 className="paySuccessHeading">{successList.length ? "Payment Successful!" : "Contract has been created successfully!"}</h3>
       </div>
       {successList.length ?
         <React.Fragment>
