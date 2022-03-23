@@ -258,7 +258,7 @@ const NumberListing = () => {
             </ul>
             <h2 className="inDashboardHeader">Number List { isSuperAdmin && paginationData && paginationData.count ? "(" + paginationData.count + ")" : ""}</h2>
             <p className="userListAbout">
-              Lorem ipsum dolor sit amet. Semi headline should be here.
+              Assign number to organization
             </p>
           </div>
           {isSuperAdmin && 

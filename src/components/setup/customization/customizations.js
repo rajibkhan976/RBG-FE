@@ -233,7 +233,7 @@ const Customizations = (props) => {
             <h2 className="inDashboardHeader">
               Customizations
             </h2>
-            <p className="userListAbout">Lorem ipsum dolor sit amet. Semi headline should be here.</p>
+            <p className="userListAbout">Manage tax and custom fields.</p>
             {successMsg &&
               <SuccessAlert message={successMsg}></SuccessAlert>
             }
