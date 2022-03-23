@@ -177,9 +177,20 @@ const ProductPayment = (props) => {
     
         console.log("PAYLOAD:::", productPayload, newPay, newPay.type);
     
-    let filteredPay = [...downPayments].filter((payNow, i)=> payNow.isPayNow === 1 && payNow.payment_type === "cash" && payNow.paymentConfirmation === false)
-    let titleDpConfirmation = [...downPayments].filter((titleNow, i) => titleNow.title === "" || titleNow.title.trim() === "")
-    let amountDpConfirmation = [...downPayments].filter((titleNow, i) => titleNow.amount === "" || titleNow.amount === "0" || parseFloat(titleNow.amount) === 0)
+    const  filteredPay = [...downPayments].filter((payNow, i)=> payNow.isPayNow === 1 && payNow.payment_type === "cash" && payNow.paymentConfirmation === false)
+    const  titleDpConfirmation = [...downPayments].filter((titleNow, i) => titleNow.title === "" || titleNow.title.trim() === "")
+    const  amountDpConfirmation = [...downPayments].filter((titleNow, i) => titleNow.amount === "" || titleNow.amount === "0" || parseFloat(titleNow.amount) === 0 || isNaN(titleNow.amount))
+
+    // console.log("::::amountDpConfirmation >>>>>>>", [...downPayments], [...downPayments].map((titleNow, i) => (titleNow?.amount === "", titleNow.amount === "0", titleNow.amount === 0)))
+
+    var titleCon = [],amountCon = [];
+    for(var i =0; i<downPayments.length; ++i){
+      // console.log("downPayments["+i+"].amount :::::::::: ", downPayments[i].amount, isNaN(downPayments[i].amount));
+      if(downPayments[i].title.trim() === "")
+        titleCon = [...titleCon,i]
+      if((typeof downPayments[i]?.amount) === "string" && downPayments[i]?.amount?.trim() === "" || downPayments[i].amount === 0 || downPayments[i].amount === "0" || isNaN(downPayments[i].amount ))
+        amountCon = [...amountCon,i]
+    }
 
     console.log("TESTING AMOUNT 0", downPayments);
 
@@ -270,11 +281,9 @@ const ProductPayment = (props) => {
           })
         }
         if(amountDpConfirmation.length > 0) {
-          [...downPayments].filter((titleNow, i) => titleNow.amount === "" || titleNow.amount === "0" || parseFloat(titleNow.amount) === 0).map((errDp, i) => {
-            setDownPaymentErrorMsg({
-              ...downPaymentErrorMsg,
-              edit_Amount_Err: {msg : "Please enter some downpayment value", key : errDp.dpId}
-            })
+          setDownPaymentErrorMsg({
+            ...downPaymentErrorMsg,
+            edit_Amount_Err: {msg : "Please enter some downpayment value", key :  amountCon}
           })
         }
       }
@@ -618,7 +627,7 @@ const ProductPayment = (props) => {
         setHasError(true);
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
-          edit_Amount_Err: {msg : "Downpayment amounts can't be empty or 0", key : downpay.dpId},
+          edit_Amount_Err: {msg : "Downpayment amounts can't be empty or 0", key : [i]},
         });
         console.log("downPaymentsPlaceholder:::", downPaymentsPlaceholder);
       }
@@ -632,10 +641,11 @@ const ProductPayment = (props) => {
         // downPaymentsPlaceholder[i].amount = parseFloat(e.target.value);
 
         console.log("e value", e.target.value);
+        
         setHasError(true);
         setDownPaymentErrorMsg({
           ...downPaymentErrorMsg,
-          edit_Amount_Err: {msg : "Downpayments amount exceeding total; please modify amount", key : downpay.dpId}
+          edit_Amount_Err: {msg : "Downpayments amount exceeding total; please modify amount", key : [i]}
         });
 
         setTimeout(() => {
@@ -906,9 +916,10 @@ const ProductPayment = (props) => {
                               ): ""}
                             </div>
                             <div className="cmnFormRow gap">
+                              {console.log("downPaymentErrorMsg.edit_Amount_Err : "+i+" : ",downPaymentErrorMsg.edit_Amount_Err)}
                               <div
                                 className={
-                                  (downPaymentErrorMsg.edit_Amount_Err && (downPaymentErrorMsg.edit_Amount_Err.key !== null && downPaymentErrorMsg.edit_Amount_Err.key === downpay.dpId))
+                                  (downPaymentErrorMsg.edit_Amount_Err && downPaymentErrorMsg.edit_Amount_Err.key !== null &&  (downPaymentErrorMsg.edit_Amount_Err.key.includes(i)))
                                     ? "leftSecTransaction error"
                                     : "leftSecTransaction"
                                 }
@@ -937,7 +948,7 @@ const ProductPayment = (props) => {
                                   />
                                 </div>
 
-                                {downPaymentErrorMsg.edit_Amount_Err && downPaymentErrorMsg.edit_Amount_Err.key !== null && downPaymentErrorMsg.edit_Amount_Err.key === downpay.dpId && (
+                                {downPaymentErrorMsg.edit_Amount_Err && downPaymentErrorMsg.edit_Amount_Err.key !== null &&  downPaymentErrorMsg.edit_Amount_Err.key.includes(i)  && (
                                 <p className="errorMsg">
                                 {/* {console.log("I : ", i)} */}
 
@@ -1308,7 +1319,7 @@ const ProductPayment = (props) => {
                 key={i}
               >
                 {console.log("::::MAPPING::::", downPay, i)}
-                <div className={(downPaymentErrorMsg.payment_not_received !== "" && downPay.payment_type === "cash" && downPay.paymentConfirmation === false) ? "outstandingDownpayment error" : "outstandingDownpayment"}>
+                <div className={(downPay.payment_type === "cash" && downPay.paymentConfirmation === false) ? "outstandingDownpayment error" : "outstandingDownpayment"}>
                   <div className="downpaymentsDetails">
                     <div className="cardImage">
                       {downPay.payment_type === "cash" ? (
@@ -1387,7 +1398,7 @@ const ProductPayment = (props) => {
                         : downPay.paymentDate}
                     </div>
                   </div>
-                  {(downPay.isPayNow === 1 && downPay.payment_type === "cash" && (downPay.amount !== "" && downPay.amount !== "0" && parseFloat(downPay.amount) !== 0)) && 
+                  {(downPay.isPayNow === 1 && downPay.payment_type === "cash") && 
                     <>
                       <label className="receivedCash">
                         <div className="customCheckbox">

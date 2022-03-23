@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import card from "../../../../../assets/images/card.svg";
+import bank_active from "../../../../../assets/images/bankActive.svg";
+import bank_inactive from "../../../../../assets/images/banks.svg";
 import cardActive from "../../../../../assets/images/cardActive.svg";
 // import crossTop from "../../../../../assets/images/cross.svg";
 // import payMode from "../../../../../assets/images/paymode.svg";
@@ -180,7 +182,7 @@ const BillingOverview = (props) => {
                     <span></span>
                   </span>
                   <span className="cardImage">
-                    <img src={card} alt="card" />
+                    <img src={isPrimary.type === "bank" && (isPrimary.billingId === bankItem._id) ? bank_active : bank_inactive} alt="card" />
                   </span>
                   <span className="paymentModuleInfos">
                     <span className="accNumber">

@@ -187,7 +187,7 @@ const ProductTransaction = (props) => {
     if(e.target.value.trim() !== "" && parseFloat(e.target.value) > 0 && e.target.value.length !== 0) {
       setSelectedProduct({
         ...selectedProduct,
-        price: e.target.value,
+        price: e.target.value.replace(/(\.\d{2})\d+/g, '$1'),
       });
       setHasError(false);
 
@@ -199,7 +199,7 @@ const ProductTransaction = (props) => {
 
       setSelectedProduct({
         ...selectedProduct,
-        price: e.target.value,
+        price: e.target.value.replace(/(\.\d{2})\d+/g, '$1'),
       });
 
       addProductErrors.price = "Please set proper price!"
