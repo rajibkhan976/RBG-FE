@@ -407,8 +407,7 @@ const ProductTransaction = (props) => {
                     <span className="infoSpan">
                       <img src={info_icon} alt="" />
                       <span className="tooltiptextInfo">
-                        Lorem Ipsum is simply dummy text of the printing and
-                        typesetting industry.
+                        Select or Create a Product for transaction
                       </span>
                     </span>
                   </label>
@@ -603,8 +602,7 @@ const ProductTransaction = (props) => {
                       <span className="infoSpan">
                         <img src={info_icon} alt="" />
                         <span className="tooltiptextInfo">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry.
+                          Set a price of selected product
                         </span>
                       </span>
                     </label>
@@ -641,8 +639,7 @@ const ProductTransaction = (props) => {
                       <span className="infoSpan">
                         <img src={info_icon} alt="" />
                         <span className="tooltiptextInfo">
-                          Lorem Ipsum is simply dummy text of the printing and
-                          typesetting industry.
+                          Increase or decrease number of selected products you want to add to cart
                         </span>
                       </span>
                     </label>

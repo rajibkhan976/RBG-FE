@@ -887,12 +887,11 @@ const ProductPayment = (props) => {
                               }
                             >
                               <label className="labelWithInfo">
-                                <span className="labelHeading">Title</span>
+                                <span className="labelHeading">Title *</span>
                                 <span className="infoSpan">
                                   <img src={info_icon} alt="" />
                                   <span className="tooltiptextInfo">
-                                    Lorem Ipsum is simply dummy text of the
-                                    printing and typesetting industry.
+                                    Add a title for your downpayment
                                   </span>
                                 </span>
                               </label>
@@ -926,12 +925,11 @@ const ProductPayment = (props) => {
                               >
                                 {/* {console.log("CHECKING LOGGED:::>>>", downpay, downpay.amount === 0, downpay.amount === "0", downpay.amount === undefined, isNaN(downpay.amount))} */}
                                 <label className="labelWithInfo">
-                                  <span className="labelHeading">Amount</span>
+                                  <span className="labelHeading">Amount *</span>
                                   <span className="infoSpan">
                                     <img src={info_icon} alt="" />
                                     <span className="tooltiptextInfo amount">
-                                      Lorem Ipsum is simply dummy text of the
-                                      printing and typesetting industry.
+                                      Enter downpayment amount
                                     </span>
                                   </span>
                                 </label>
@@ -1034,8 +1032,7 @@ const ProductPayment = (props) => {
                                   <span className="infoSpan">
                                     <img src={info_icon} alt="" />
                                     <span className="tooltiptextInfo paymentType">
-                                      Lorem Ipsum is simply dummy text of the
-                                      printing and typesetting industry.
+                                      Set mode of payment of this downpayment (Cash or Online for Bank and Card)
                                     </span>
                                   </span>
                                 </label>
@@ -1060,8 +1057,7 @@ const ProductPayment = (props) => {
                                   <span className="infoSpan">
                                     <img src={info_icon} alt="" />
                                     <span className="tooltiptextInfo paymentStatus">
-                                      Lorem Ipsum is simply dummy text of the
-                                      printing and typesetting industry.
+                                      Set status of payment <br/>(Default unpaid for Online payment mode)
                                     </span>
                                   </span>
                                 </label>
@@ -1234,8 +1230,7 @@ const ProductPayment = (props) => {
                         <span className="infoSpan">
                           <img src={help} alt="Help" />
                           <span className="tooltiptextInfo">
-                            Lorem Ipsum is simply dummy text of the printing and
-                            typesetting industry.
+                            Set mode of payment of Outstanding amount (Cash or Online for Bank and Card)
                           </span>
                         </span>
                       </label>
