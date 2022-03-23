@@ -218,22 +218,22 @@ const ContactModal = (props) => {
                         {props.contactId !== 0 &&
                             <div className="contactModalHeaderBottomSec">
                                 <div className="bottomLeftArea">
-                                    {/* {contactData && contactData.isDependent && contactData.guardianInfo ?
+                                    {contactData && contactData.isDependent && contactData.guardianInfo ?
                                         <div className="userDependents"
                                              onClick={() => openGuardianContactModal(contactData.guardianInfo._id)}>
                                             <img src={dependent_white} alt=""/>
                                             <span>
                                                 Guardian - {contactData.guardianInfo.firstName + ' ' + contactData.guardianInfo.lastName}
                                             </span>
-                                        </div> : ''} */}
+                                        </div> : ''}
                                     <div className="userContacts">
-                                        {/* {(contactData && contactData.phone && contactData.phone.number) &&
+                                        {(contactData && contactData.phone && contactData.phone.number) &&
                                             <div className="userPhone">
                                                 <img src={phone_call_icon_white} alt=""/>
                                                 <span>{contactData.phone && contactData.phone.dailCode && contactData.phone.number ?
                                                     contactData.phone.dailCode + "-" + contactData.phone.number : ""}</span>
                                             </div>
-                                        } */}
+                                        }
                                         {(contactData && contactData.email) &&
                                             <div className="userEmail overviewModal">
                                                 <img src={email_icon_white} alt=""/>

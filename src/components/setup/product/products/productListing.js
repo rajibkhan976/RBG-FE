@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import percentTag from "../../../../assets/images/percentage_icon.png";
 import list_board_icon from "../../../../assets/images/list_board_icon.svg";
 import listView from "../../../../assets/images/listView.svg";
 import dot3White from "../../../../assets/images/dot3gray.svg";
 import proImg1 from "../../../../assets/images/proImg1.png";
+import cross_icon from "../../../../assets/images/cross.svg"
 import Pagination from "../../../shared/Pagination";
 import ConfirmBox from "../../../shared/confirmBox";
 import Loader from "../../../shared/Loader";
+import { ProductServices } from "../../../../services/setup/ProductServices"
 
 const ProductListing = (props) => {
   document.title = "Red Belt Gym - Products";
@@ -18,6 +20,7 @@ const ProductListing = (props) => {
   });
   const [option, setOption] = useState(null);
   const [colorDropdown, setColorDropdown] = useState(null);
+  const [categoryData, setCategoryData] = useState(null)
 
   /****************************** FUNCTIONS START **********************************/
   const handleEdit = (product) => {
@@ -78,6 +81,28 @@ const ProductListing = (props) => {
     );
   };
 
+  const fetchCategories = async () => {
+    try {
+      const result = await ProductServices.fetchCategory();
+      if (result.length) {
+        setCategoryData(result);
+        console.log("CategoryData", categoryData);
+      } else {
+        // setErrorMsg("No categories found");
+        // props.successMsg("No categories found");
+      }
+    } catch (e) {
+      // props.errorMsg(e.message);
+    } finally {
+      setIsLoader(false);
+    }
+  };
+
+  useEffect(()=>{
+    console.log("::::::::::::PROPS", props.filteredData && props.filteredData);
+    fetchCategories()
+  }, [])
+
   /****************************** FUNCTIONS START **********************************/
   return (
     <>
@@ -111,8 +136,42 @@ const ProductListing = (props) => {
             </button>
           </div>
         </div>
-        <div className="productViewType">
-          <button className="btn" onClick={() => props.openFilterModal()}>
+        <div className="productViewType d-flex">
+          {props.filteredData && <>
+            <span className="filteredShow">Filtered by:</span>
+            <ul className="filteredData">
+              {
+                // list filtered categories
+                props.filteredData.categories.length > 0 ? props.filteredData.categories.map((filteredCat, i) =>
+                  (<li>{categoryData && categoryData.filter((filterCategory) => filterCategory._id === filteredCat)[0].name} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>)
+                ) : ""
+              }
+              {
+                // list filtered Colors
+                props.filteredData.colors.length > 0 ? props.filteredData.colors.map((filteredCol, i) =>
+                  (<li><figure style={{backgroundColor: filteredCol}}></figure> {filteredCol} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>)
+                ) : ""
+              }
+              {
+                // list filtered Sizes
+                props.filteredData.sizes.length > 0 ? props.filteredData.sizes.map((filteredSize, i) =>
+                  (<li>Size:  {filteredSize} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>)
+                ) : ""
+              }
+              {props.filteredData.fromPriceProduct.trim() !== "" && parseInt(props.filteredData.fromPriceProduct) > 0 && props.filteredData.toPriceProduct.trim() !== "" ?
+                <>
+                  <li>&#36;{props.filteredData.fromPriceProduct} - &#36;{props.filteredData.toPriceProduct} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>
+                </> : props.filteredData.fromPriceProduct.trim() !== "" && parseInt(props.filteredData.fromPriceProduct) > 0 ?
+                // list filtered From Price
+                <li>Lowest Price: &#36;{props.filteredData.fromPriceProduct} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li> : props.filteredData.toPriceProduct.trim() !== "" ?
+                // list filtered From Price
+                <li>Highest Price: &#36;{props.filteredData.toPriceProduct} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li> : ""
+              }
+              {/* <li className="clearFilter"><button>Clear all</button></li> */}
+            </ul>
+          </>}
+
+          <button className="btn filterButton" onClick={() => props.openFilterModal()}>
             <img src={listView} alt="filter" />
           </button>
         </div>

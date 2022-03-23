@@ -225,6 +225,7 @@ const Products = () => {
         deleteProduct={(productID) => deleteProduct(productID)}
         successMsg={(msg) => setSuccessMsg(msg)}
         errorMsg={(msg) => setErrorMsg(msg)}
+        filteredData={filteredData}
       />
       <CategoryListing
         isLoader={isLoaderCat}
@@ -252,6 +253,7 @@ const Products = () => {
           successMsg={(msg) => setSuccessMsg(msg)}
           errorMsg={(msg) => setErrorMsg(msg)}
           getcolorSize={colorSize}
+          setFilteredData={setFilteredData}
         />}
 
 

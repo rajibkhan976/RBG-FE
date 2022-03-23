@@ -94,7 +94,7 @@ const ProductPayment = (props) => {
       console.log("currentTax.tax", props.cartState);
       const taxtAmt = modifiedCartState.filter((cartItem, i) => cartItem.tax === true).reduce(
         (prevTax, currentTax) =>
-          parseFloat(prevTax) + (currentTax.price * currentTax.qnty * 0.1),
+          parseFloat(prevTax) + (currentTax.price * currentTax.qnty * (props.salesTax / 100)),
         totalTaxPlaceholder
       );
 

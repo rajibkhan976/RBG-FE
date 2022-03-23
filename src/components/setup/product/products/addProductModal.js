@@ -272,15 +272,15 @@ const AddProductModal = (props) => {
           <div className="slickModalHeader">
             <button className="topCross" onClick={props.closeAddProductModal}><img src={crossTop} alt="" /></button>
             <div className="circleForIcon"><img src={modalTopIcon} alt="" /></div>
-            <h3>{(isEditing) ? "Edit" : "Add"} a Product</h3>
-            <p>Choose a category to add a new product below</p>
+            <h3>{(isEditing) ? "Edit" : "Add a"} Product</h3>
+            {!isEditing ? <p>Choose a category to add a new product below</p>: ""}
           </div>
           <div className="modalForm">
             <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />}>
               <form method="post" onSubmit={handleSubmit}>
                 <div className="formControl">
                   <label>Select Category</label>
-                  <select name="category" onChange={handleChange}>
+                  <select name="category" onChange={handleChange} value={productData.category}>
                     {categories.map((cat, i) => {
                       return (
                         <>

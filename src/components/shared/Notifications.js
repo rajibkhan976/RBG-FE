@@ -286,7 +286,7 @@ const Notifications = (props) => {
                                                 <li key={i}
                                                     className={"detailNotif "  + e.status + (!e.isRead ? " unreadNotifications" : "")}>
                                                     <div className="notiTime_n_Icon">
-                                                        <span className="timeStamp">{ showTimeDiff(e) }</span>
+                                                        <span className="timeStamp">{ showTimeDiff(e).replace("minutes", "mins") }</span>
                                                         <figure>
                                                             <svg
                                                                 xmlns="http://www.w3.org/2000/svg"

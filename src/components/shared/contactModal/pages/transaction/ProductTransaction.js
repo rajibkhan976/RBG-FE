@@ -11,6 +11,7 @@ import ProductPayment from "./ProductPayment";
 import AddProductModal from "../../../../setup/product/products/addProductModal";
 import { utils } from "../../../../../helpers";
 import { ProductServices } from "../../../../../services/setup/ProductServices";
+import { CustomizationServices } from "../../../../../services/setup/CustomizationServices"
 import config from "../../../../../configuration/config";
 
 const ProductTransaction = (props) => {
@@ -34,6 +35,7 @@ const ProductTransaction = (props) => {
   const [productData, setProductData] = useState([]);
   const [updateProduct, setUpdateProduct] = useState({});
   const [categoryData, setCategoryData] = useState([]);
+  const [salesTax, setSalesTax] = useState(null)
   const [colorSize, setColorSize] = useState({
     colors: [],
     sizes: [],
@@ -88,6 +90,21 @@ const ProductTransaction = (props) => {
       setShowLoader(false);
     }
   };
+
+  const fetchTax = async () => {
+    try {
+      setShowLoader(true);
+      const result = await CustomizationServices.fetchTax();
+      setSalesTax(result ? parseFloat(result.tax) : null)
+      console.log("RESULT", result);
+    }
+    catch (err) {
+      console.log(err);
+    }
+    finally {
+      setShowLoader(false);
+    }
+  }
 
   const fetchColorSizes = async () => {
     try {
@@ -169,7 +186,8 @@ const ProductTransaction = (props) => {
     setSelectedProduct(productPlaceholder);
     console.log("selected product to add :::", productPlaceholder);
     setShowProductList(false);
-  };
+    fetchTax()
+  }
 
   const addProduct = (e) => {
     e.preventDefault();
@@ -714,7 +732,7 @@ const ProductTransaction = (props) => {
                   {errorState.quantity && <p className="errorMsg">{errorState.quantity}</p>}
                   </div>
                   {selectedProduct && (selectedProduct.tax === 1 || selectedProduct.tax === "1") && <sub className="footnoteInfo">
-                    * 10% Tax will be applicable
+                    * {salesTax}% Tax will be applicable
                   </sub>}
                 </div>
                 <div className="cmnFormRow">
@@ -842,7 +860,7 @@ const ProductTransaction = (props) => {
                             {"$ " + parseFloat(cartItem.price * cartItem.qnty).toFixed(2)}
                             
                             {cartItem.tax && (
-                              <div className="cartTax">+ 10% Tax</div>
+                              <div className="cartTax">+ {salesTax}% Tax</div>
                             )}
                           </div>
                         </footer>
@@ -905,6 +923,7 @@ const ProductTransaction = (props) => {
           chooseTransctionTypePOS={props.chooseTransctionTypePOS}
           backToTransList={props.backToTransList}
           contactId={props.contactId}
+          salesTax={salesTax ? salesTax : null}
         />
         </>
       )}

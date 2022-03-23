@@ -2157,7 +2157,7 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 .outStandingProduct .bodytransactionForm {
-  padding-bottom: 30px;
+  padding-bottom: 21px;
 }
 .payOverviewProduct {
   order: 1;
@@ -2446,10 +2446,10 @@ li.listHeading .GenerateColumnsCell .dataTableCell {
 }
 
 li.listHeading > div.asc::after {
-  background-image: url("../images/only_down_icon.svg");
+  background-image: url("../images/only_down_icon.svg") !important;
 }
 li.listHeading > div.dsc::after {
-  background-image: url("../images/only_up_icon.svg");
+  background-image: url("../images/only_up_icon.svg") !important;
 }
 .dashInnerUI .createNew {
   display: flex;
@@ -2601,3 +2601,55 @@ input[type=number] {
   top: auto;
 }
 /* Customization listing option toggle menu ui issue */
+
+.filteredData {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: top;
+  margin-right: auto;
+  max-width: calc(100% - 50px);
+}
+.filteredData li:not(.clearFilter) {
+  display: inline-flex;
+  border: 1px solid #DCE4EB;
+  min-height: 29px;
+  padding: 0 12px;
+  align-items: center;
+  font-size: 10px;
+  line-height: 15px;
+  color: #305671;
+  border-radius: 30px;
+  margin-right: 10px;
+  background-color: #fff;
+  text-transform: capitalize;
+}
+.productViewType .filterButton {
+  margin-left: auto;
+  font-size: 0;
+}
+.filteredData li figure {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 10px;
+}
+.filteredShow {
+  display: inline-flex;
+  vertical-align: middle;
+  align-self: center;
+  margin-right: 15px;
+  color: #305671;
+  font-size: 14px;
+  font-weight: 500;
+}
+.filteredData .clearFilter button {
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 29px;
+  color: #55BBC9;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
