@@ -238,7 +238,7 @@ const AddProductModal = (props) => {
 
     if(productData.price === "" || parseFloat(productData.price) <= 0) {
       bool = false;
-      setErrorClass(prevState => ({...prevState, price: "error", priceMsg: "Please enter the product price"}));
+      setErrorClass(prevState => ({...prevState, price: "error", priceMsg: parseFloat(productData.price) === 0 ? "Price cannot be 0 or blank" :"Please enter the product price"}));
     }
 
     if(bool) {
