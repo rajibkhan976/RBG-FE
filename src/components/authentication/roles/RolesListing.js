@@ -6,6 +6,7 @@ import { ErrorAlert, SuccessAlert } from "../../shared/messages";
 import Pagination from "../../shared/Pagination";
 import ListHead from "../auth-shared/ListHead";
 import noRecords from '../../../assets/images/noRecords.svg';
+import plus_icon from '../../../assets/images/plus_icon.svg';
 import Loader from "../../shared/Loader";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 import { RoleServices } from "../../../services/authentication/RoleServices";
@@ -549,11 +550,12 @@ const RolesListing = (props) => {
         //     <p>No roles found!</p>
         //   </span>
         // </div>
-        <div className="createNew noInfos">
+        <div className="createNew noInfos authentications">
           <div className="noRecordsImgWraper">
-            <img src={noRecords} alt="" />
+            <img src={noRecords} className="noRecords" alt="" />
             <h4>No Roles Found</h4>
             <p>No roles have been listed here yet</p>
+            <button className="creatUserBtn"><img className="plusIcon" src={plus_icon} alt="" /><span>Create the First Role</span></button>
           </div>
         </div>
       }

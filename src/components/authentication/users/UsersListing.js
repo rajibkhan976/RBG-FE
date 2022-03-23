@@ -15,6 +15,7 @@ import owner_img_1 from "../../../assets/images/owner_img_1.png";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 import noRecords from '../../../assets/images/noRecords.svg';
 import list_board_icon from "../../../assets/images/list_board_icon.svg";
+import plus_icon from '../../../assets/images/plus_icon.svg';
 import moment from "moment";
 import responses from '../../../configuration/responses';
 import env from '../../../configuration/env';
@@ -599,11 +600,12 @@ const UsersListing = (props) => {
                 //         <p>No users found!</p>
                 //     </span>
                 // </div>
-                <div className="createNew noInfos">
+                <div className="createNew noInfos authentications">
                   <div className="noRecordsImgWraper">
-                    <img src={noRecords} alt="" />
+                    <img src={noRecords} className="noRecords" alt="" />
                     <h4>No Users Found</h4>
                     <p>No users have been listed here yet</p>
+                    <button className="creatUserBtn"><img className="plusIcon" src={plus_icon} alt="" /><span>Create the First User</span></button>
                   </div>
                 </div>
             }

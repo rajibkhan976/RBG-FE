@@ -12,7 +12,7 @@ import ListHead from "../auth-shared/ListHead";
 // import plus_icon from "../../../assets/images/plus_icon.svg";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 import noRecords from '../../../assets/images/noRecords.svg';
-
+import plus_icon from '../../../assets/images/plus_icon.svg';
 import { utils } from "../../../helpers";
 import { GroupServices } from "../../../services/authentication/GroupServices";
 import { ErrorAlert, SuccessAlert } from "../../shared/messages";
@@ -559,11 +559,12 @@ const GroupListing = (props) => {
         //     <p>No groups found!</p>
         //   </span>
         // </div>
-        <div className="createNew noInfos">
+        <div className="createNew noInfos authentications groups">
           <div className="noRecordsImgWraper">
-            <img src={noRecords} alt="" />
+            <img src={noRecords} className="noRecords" alt="" />
             <h4>No Groups Found</h4>
             <p>No groups have been listed here yet</p>
+            <button className="creatUserBtn"><img className="plusIcon" src={plus_icon} alt="" /><span>Create the First Group</span></button>
           </div>
         </div>
       }

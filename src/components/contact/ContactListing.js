@@ -455,8 +455,6 @@ const ContactListing = forwardRef((props, ref) => {
         <>
             <div className="userListBody">
 
-            <div>Kallols</div>
-
                 <div className="listBody contactListingTable" style={{ 'width': tableWidth }}>
                     <div className="tableDataConfigArea">
                         <div className="configColArea">
@@ -494,7 +492,7 @@ const ContactListing = forwardRef((props, ref) => {
         </> :
         <div className="createNew noInfos">
           <div className="noRecordsImgWraper">
-            <img src={noRecords} alt="" />
+            <img src={noRecords} className="noRecords" alt="" />
             <h4>No Contacts Found</h4>
             <p>No contacts have been listed here yet</p>
           </div>

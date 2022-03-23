@@ -4054,7 +4054,7 @@ li.paymentModeLi, li.paymentAmtLi {
   text-align: center;
 }
 
-.dashInnerUI .createNew.noInfos .noRecordsImgWraper img {
+.dashInnerUI .createNew.noInfos .noRecordsImgWraper img.noRecords {
   width: 140px;
   margin-bottom: 15px;
   margin-top: 6%;
@@ -4076,4 +4076,12 @@ li.paymentModeLi, li.paymentAmtLi {
   width: 225px;
   display: inline-flex;
   margin: 25px auto;
+}
+
+.dashInnerUI .createNew.noInfos.authentications .creatUserBtn {
+  width: 200px;
+}
+
+.dashInnerUI .createNew.noInfos.authentications.groups .creatUserBtn {
+  width: 212px;
 }
