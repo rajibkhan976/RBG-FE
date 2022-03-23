@@ -4111,3 +4111,20 @@ label.labelWithInfo.paymentTime.firstBillTime.programBillings {
 .cmnFormField.radioGroup.userTypeSelect {
   width: 100%;
 }
+
+.showHolidayDateValue .show span {
+  font-weight: 700;
+  margin-right: 5px;
+}
+
+.slickModalBody .modalForm.auto .showHolidayDateValue .show {
+  font-weight: 400;
+}
+
+.holiday .formControl.half.firstHalf label {
+  padding-bottom: 8.5px;
+}
+
+.holiday .formControl.half.secondHalf label {
+  padding-bottom: 4.25px;
+}

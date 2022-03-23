@@ -215,7 +215,7 @@ const handleStatusSubmitNew =(e) =>{
               </div>
               
               <div className="d-flex justified-space-between">
-                <div className="formControl half">
+                <div className="formControl half firstHalf">
                 <label>Choose a date</label>
                 <div className="flatForm">
                   <span>From</span>
@@ -223,8 +223,8 @@ const handleStatusSubmitNew =(e) =>{
                 </div> 
                 {modalPopMsgerror2 && <div className="errorMsg">Please fill up the start date</div>}
               </div>
-              <div className="formControl half">
-                <label>&nbsp;</label> 
+              <div className="formControl half secondHalf">
+                <label></label> 
                 <div className="flatForm">
                   <span>To</span>
                   <input type="date"  name="" value={holiday.toDate} onChange={holidayEndhandler}/>  
