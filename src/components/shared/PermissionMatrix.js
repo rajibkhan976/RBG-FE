@@ -54,7 +54,7 @@ const PermissionMatrix = (props) => {
       // Reflect permission data
       getEntities();
     }
-  }, [props])
+  }, [props.resetPermissions])
 
 
   /**
