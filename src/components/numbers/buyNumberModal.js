@@ -228,7 +228,7 @@ const BuyAndAssignNumber = (props) => {
               </div>
               <div className="cmnFormRow">
                 <div className="cmnFieldName">Type {type}</div>
-                <div className="cmnFormField radioGroup">
+                <div className="cmnFormField radioGroup numberList">
                   <label className="cmnFormRadioLable">
                     <div className="circleRadio">
                       <input 

@@ -3987,10 +3987,12 @@ li.paymentModeLi, li.paymentAmtLi {
   height: 22px;
 }
 
-.menuUserDetail {
+/* .menuUserDetail {
     max-width: 160px;
+} */
+.dashboardHeader .menuUser {
+  width: 260px;
 }
-
 .menuUser {
   width: 248px;
 }
@@ -4127,4 +4129,66 @@ label.labelWithInfo.paymentTime.firstBillTime.programBillings {
 
 .holiday .formControl.half.secondHalf label {
   padding-bottom: 4.25px;
+}
+
+.configColArea .configColModal.contactPage {
+  position: absolute;
+  left: 5%;
+  top: 70%;
+}
+
+.configColArea .configColModal.contactPage .configColModalfooter .btn-link {
+  margin-top: 0;
+}
+
+.overviewForm .formActBtnWrap button.saveOverview {
+  width: 100px;
+}
+
+input#formDate {
+  font-size: 13px;
+}
+
+.cmnFormField.radioGroup.numberList {
+  width: 100%;
+}
+
+.sideMenuHeader h3.liteHeading {
+  font-weight: 600;
+}
+
+.cartProductInner.outStandingProduct select.selectBox {
+  margin-top: 1px;
+}
+
+.transaction_form.products.forDownpayment.programs {
+  padding-top: 7px;
+}
+
+.transaction_form.products.forDownpayment {
+  padding-top: 8px;
+}
+
+.colorpaletContainer .dropIt {
+  font-size: 14px;
+}
+
+.proInfo h3 {
+  /* overflow: hidden;
+  text-overflow: ellipsis; */
+}
+
+.billing_module .flipCardHolder .cardList .body .list:last-child {
+  border-bottom: 1px solid #e2ebf2;
+}
+.tableCellUserImg {
+  min-width: 40px;
+}
+
+.productList .productListLeft {
+  width: 56%;
+}
+
+.productList .productListRight {
+  width: 44%;
 }
