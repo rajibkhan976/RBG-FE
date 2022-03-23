@@ -9,6 +9,8 @@ import owner_img_1 from '../../../src/assets/images/owner_img_1.png';
 import arrow_forward from '../../../src/assets/images/arrow_forward.svg';
 import warning_bell from "../../../src/assets/images/bell.svg"
 import { ContactService } from "../../services/contact/ContactServices";
+import noRecords from '../../../src/assets/images/noRecords.svg';
+import plus_icon from '../../../src/assets/images/plus_icon.svg';
 import { utils } from "../../helpers";
 import Loader from "../shared/Loader";
 import Pagination from '../shared/Pagination';
@@ -448,7 +450,13 @@ const ContactListing = forwardRef((props, ref) => {
             {errorMsg &&
                 <ErrorAlert message={errorMsg}></ErrorAlert>
             }
+
+{contactCount ?
+        <>
             <div className="userListBody">
+
+            <div>Kallols</div>
+
                 <div className="listBody contactListingTable" style={{ 'width': tableWidth }}>
                     <div className="tableDataConfigArea">
                         <div className="configColArea">
@@ -482,6 +490,20 @@ const ContactListing = forwardRef((props, ref) => {
                 paginationData={paginationData}
                 dataCount={contactCount}
                 callback={fetchContact} /> : ''}
+
+        </> :
+        <div className="createNew noInfos">
+          <div className="noRecordsImgWraper">
+            <img src={noRecords} alt="" />
+            <h4>No Contacts Found</h4>
+            <p>No contacts have been listed here yet</p>
+          </div>
+          <button className="creatUserBtn"><img className="plusIcon" src={plus_icon} alt="" /><span>Create the First Contact</span></button>
+        </div>
+      }
+
+
+
         </div>
     );
 

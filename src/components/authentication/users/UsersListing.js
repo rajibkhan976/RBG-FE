@@ -13,6 +13,7 @@ import * as actionTypes from "../../../actions/types";
 import { ErrorAlert, SuccessAlert } from '../../shared/messages';
 import owner_img_1 from "../../../assets/images/owner_img_1.png";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
+import noRecords from '../../../assets/images/noRecords.svg';
 import list_board_icon from "../../../assets/images/list_board_icon.svg";
 import moment from "moment";
 import responses from '../../../configuration/responses';
@@ -592,11 +593,18 @@ const UsersListing = (props) => {
                             callback={fetchUsers} /> : ''
                     }
                 </> :
-                <div className="createNew">
-                    <span>
-                        <img src={list_board_icon} alt="" />
-                        <p>No users found!</p>
-                    </span>
+                // <div className="createNew">
+                //     <span>
+                //         <img src={list_board_icon} alt="" />
+                //         <p>No users found!</p>
+                //     </span>
+                // </div>
+                <div className="createNew noInfos">
+                  <div className="noRecordsImgWraper">
+                    <img src={noRecords} alt="" />
+                    <h4>No Users Found</h4>
+                    <p>No users have been listed here yet</p>
+                  </div>
                 </div>
             }
         </div>

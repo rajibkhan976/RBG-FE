@@ -4041,3 +4041,39 @@ li.paymentModeLi, li.paymentAmtLi {
 }
 
 } */
+
+
+
+/* No records found */
+
+.dashInnerUI .createNew.noInfos {
+  margin-right: 46px;
+  /* flex: 1 0 auto; */
+  background-color: transparent;
+  display: block;
+  text-align: center;
+}
+
+.dashInnerUI .createNew.noInfos .noRecordsImgWraper img {
+  width: 140px;
+  margin-bottom: 15px;
+  margin-top: 6%;
+}
+
+.dashInnerUI .createNew.noInfos .noRecordsImgWraper h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #566570;
+  margin-bottom: 6px;
+}
+
+.dashInnerUI .createNew.noInfos .noRecordsImgWraper p {
+  font-size: 13px;
+  color: #9BAEBC;
+}
+
+.dashInnerUI .createNew.noInfos .creatUserBtn {
+  width: 225px;
+  display: inline-flex;
+  margin: 25px auto;
+}

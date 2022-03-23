@@ -5,7 +5,7 @@ import * as actionTypes from "../../../actions/types";
 import { ErrorAlert, SuccessAlert } from "../../shared/messages";
 import Pagination from "../../shared/Pagination";
 import ListHead from "../auth-shared/ListHead";
-
+import noRecords from '../../../assets/images/noRecords.svg';
 import Loader from "../../shared/Loader";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
 import { RoleServices } from "../../../services/authentication/RoleServices";
@@ -543,11 +543,18 @@ const RolesListing = (props) => {
               callback={paginationCallbackHandle}
             />) : ''}
         </> :
-        <div className="createNew">
-          <span>
-            <img src={list_board_icon} alt="" />
-            <p>No roles found!</p>
-          </span>
+        // <div className="createNew">
+        //   <span>
+        //     <img src={list_board_icon} alt="" />
+        //     <p>No roles found!</p>
+        //   </span>
+        // </div>
+        <div className="createNew noInfos">
+          <div className="noRecordsImgWraper">
+            <img src={noRecords} alt="" />
+            <h4>No Roles Found</h4>
+            <p>No roles have been listed here yet</p>
+          </div>
         </div>
       }
     </div>

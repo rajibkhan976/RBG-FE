@@ -11,6 +11,7 @@ import ListHead from "../auth-shared/ListHead";
 // import filter_icon from "../../../assets/images/filter_icon.svg";
 // import plus_icon from "../../../assets/images/plus_icon.svg";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
+import noRecords from '../../../assets/images/noRecords.svg';
 
 import { utils } from "../../../helpers";
 import { GroupServices } from "../../../services/authentication/GroupServices";
@@ -552,11 +553,18 @@ const GroupListing = (props) => {
             />
           ) : ""}
         </> :
-        <div className="createNew">
-          <span>
-            <img src={list_board_icon} alt="" />
-            <p>No groups found!</p>
-          </span>
+        // <div className="createNew">
+        //   <span>
+        //     <img src={list_board_icon} alt="" />
+        //     <p>No groups found!</p>
+        //   </span>
+        // </div>
+        <div className="createNew noInfos">
+          <div className="noRecordsImgWraper">
+            <img src={noRecords} alt="" />
+            <h4>No Groups Found</h4>
+            <p>No groups have been listed here yet</p>
+          </div>
         </div>
       }
     </div>
