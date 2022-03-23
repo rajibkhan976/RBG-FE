@@ -131,7 +131,7 @@ const BillingOverview = (props) => {
                     <span></span>
                   </span>
                   <span className="cardImage">
-                    <img src={cardActive} alt="card" />
+                    <img src={isPrimary.type === "card" && (isPrimary.billingId === cardItem._id) ? cardActive : card} alt="card" />
                   </span>
                   <span className="paymentModuleInfos">
                     <span className="accNumber">
