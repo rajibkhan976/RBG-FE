@@ -184,7 +184,7 @@ const ProductTransaction = (props) => {
   const priceChangeProduct = (e) => {
     let addProductErrors = errorState
 
-    if(e.target.value.trim() !== "" && parseFloat(e.target.value) > 0 && e.target.value.length !== 0) {
+    if(e.target.value.trim() !== "" && parseFloat(e.target.value) > 0 && e.target.value.length !== 0 && e.target.value.split(".")[0].length <=5) {
       setSelectedProduct({
         ...selectedProduct,
         price: e.target.value.replace(/(\.\d{2})\d+/g, '$1'),
@@ -280,7 +280,7 @@ const ProductTransaction = (props) => {
         errorStatePlaceholder.quantity = "Please set some quantity!"
         setErrorState(errorStatePlaceholder)
       }
-      if (selectedProduct.price === null || selectedProduct.price === "" || parseFloat(selectedProduct.price) <= 0) {
+      if (selectedProduct.price === null || selectedProduct.price === "" || parseFloat(selectedProduct.price) <= 0 || selectedProduct.price.toString().split(".")[0].length > 5) {
         setHasError(true);
         localError = true
 
