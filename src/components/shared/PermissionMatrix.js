@@ -123,6 +123,7 @@ const PermissionMatrix = (props) => {
      */
     if (permissions.length) {
       let updatedPermission = permissions.map((entities, key) => {
+        console.log('update final', { entities });
         return {
           entity: entities.entity,
           actions: entities.actions.map((action, key) => {
@@ -139,6 +140,7 @@ const PermissionMatrix = (props) => {
       /**
        * Send data to parent
        */
+      console.log('btp1');
       broadcastToParent(updatedPermission);
 
     }
@@ -404,6 +406,10 @@ const PermissionMatrix = (props) => {
           entity: entity._id, actions
         })
         entity.subEntity.map((subEntityEle, key) => {
+          console.log('sub ent', {subEntityEle})
+          if(!subEntityEle) {
+            return false;
+          }
           permissions.push({
             entity: subEntityEle._id, actions
           })
@@ -417,6 +423,7 @@ const PermissionMatrix = (props) => {
     /**
      * Send data to parent
      */
+    console.log('btp2');
     broadcastToParent(permissions);
   }
 
@@ -434,6 +441,7 @@ const PermissionMatrix = (props) => {
      */
     let actions = [];
     entityData.map((entity, key) => {
+      
       if (entity._id === entityId && isCheckedEntity) {
         /**
          * Select all sub entities with
@@ -452,6 +460,10 @@ const PermissionMatrix = (props) => {
         })
 
         entity.subEntity.map((subEntityEle, key) => {
+          console.log('sub entity change', {subEntityEle});
+          if(!subEntityEle){
+            return false;
+          }
           permissions.push({
             entity: subEntityEle._id, actions
           })
@@ -472,6 +484,7 @@ const PermissionMatrix = (props) => {
     /**
      * Send data to parent
      */
+    console.log('btp3');
     broadcastToParent(permissions);
   }
 
@@ -768,7 +781,7 @@ const PermissionMatrix = (props) => {
     /**
      * Send data to parent
      */
-
+     console.log('btp4');
     broadcastToParent(permissions);
   }
 
