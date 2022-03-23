@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useSelector } from 'react-redux';
 import { PermissionServices } from "../../services/authentication/PermissionServices";
 import Loader from "./Loader";
 
@@ -20,6 +21,8 @@ const PermissionMatrix = (props) => {
     id: null,
     data: null
   })
+
+  const loggedInUser = useSelector((state) => state.user.data);
 
   useEffect(() => {
     console.log('Global use effect call');
@@ -51,7 +54,7 @@ const PermissionMatrix = (props) => {
       // Reflect permission data
       getEntities();
     }
-  }, [props.resetPermissions])
+  }, [props])
 
 
   /**
@@ -158,6 +161,10 @@ const PermissionMatrix = (props) => {
                 name: entity.name,
                 slug: entity.slug,
                 subEntity: entity.subEntity.map((subEntity, key) => {
+                  // console.log('Org checking', { subEntity });
+                  if (subEntity.slug === "organization" && loggedInUser && loggedInUser.organizationCode !== 'RBG') {
+                    return false;
+                  }
                   return {
                     isChecked: false,
                     _id: subEntity._id,
@@ -314,6 +321,10 @@ const PermissionMatrix = (props) => {
         name: entity.name,
         slug: entity.slug,
         subEntity: entity.subEntity.map((subEntity, key) => {
+          console.log('global Org checking', { subEntity });
+          if (!subEntity) {
+            return false;
+          }
           return {
             isChecked: (entity._id === entityId) ? isChecked : false,
             _id: subEntity._id,
@@ -1012,30 +1023,31 @@ const PermissionMatrix = (props) => {
                       })}
                       <ul className="optionMoreInput open show">
                         {entity.subEntity && entity.subEntity.map((subEle, key) => {
-                          //console.log('Sub ent', subEle.associatedActions)
+                          // console.log('Sub ent', subEle)
 
                           return (
                             <React.Fragment key={key + "_sub"}>
-                              <li>
-                                <span>{subEle.name}</span>
-                                {subEle.associatedActions && subEle.associatedActions.map((action, key) => {
-                                  return (
-                                    <React.Fragment key={key + "actions"}>
-                                      <span>
-                                        <label className="checkCutsom">
-                                          <input
-                                            type="checkbox"
-                                            data={key}
-                                            value={action._id}
-                                            checked={action.isChecked ? action.isChecked : false}
-                                            onChange={(e) => handleActionChange(e, subEle._id, subEle.slug, action._id, action.slug)} />
-                                          <span></span>
-                                        </label>
-                                      </span>
-                                    </React.Fragment>
-                                  );
-                                })}
-                              </li>
+                              {subEle ?
+                                <li>
+                                  <span>{subEle.name}</span>
+                                  {subEle.associatedActions && subEle.associatedActions.map((action, key) => {
+                                    return (
+                                      <React.Fragment key={key + "actions"}>
+                                        <span>
+                                          <label className="checkCutsom">
+                                            <input
+                                              type="checkbox"
+                                              data={key}
+                                              value={action._id}
+                                              checked={action.isChecked ? action.isChecked : false}
+                                              onChange={(e) => handleActionChange(e, subEle._id, subEle.slug, action._id, action.slug)} />
+                                            <span></span>
+                                          </label>
+                                        </span>
+                                      </React.Fragment>
+                                    );
+                                  })}
+                                </li> : ""}
                             </React.Fragment>
                           );
                         })}

@@ -1427,14 +1427,14 @@ const UserModal = (props) => {
                                         </label>
                                     </div>}
                                     <div className="permissionButtons">
-                                        {!editId && <button className="creatUserBtn createBtn" disabled={processing}>
+                                        <button className="creatUserBtn createBtn" disabled={processing}>
                                             <img className="plusIcon" src={plus_icon} alt="" />
-                                            <span>Create an user</span>
-                                        </button>}
-                                        <button className="saveNnewBtn" disabled={processing} onClick={handleSaveAndNew}>
-                                            <span>{editId ? "Update user" : "Save & New"}</span>
-                                            <img className="" src={arrow_forward} alt="" />
+                                            <span>{editId ? "Update user" : "Create an user"}</span>
                                         </button>
+                                        {!editId && <button className="saveNnewBtn" disabled={processing} onClick={handleSaveAndNew}>
+                                            <span>Save & New</span>
+                                            <img className="" src={arrow_forward} alt="" />
+                                        </button>}
                                     </div>
                                 </form>
                             </div>
