@@ -163,7 +163,7 @@ const ProductListing = (props) => {
                   <li>&#36;{props.filteredData.fromPriceProduct} - &#36;{props.filteredData.toPriceProduct} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>
                 </> : props.filteredData.fromPriceProduct.trim() !== "" && parseInt(props.filteredData.fromPriceProduct) > 0 ?
                 // list filtered From Price
-                <li>Lowest Price: &#36;{props.filteredData.fromPriceProduct} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li> : props.filteredData.toPriceProduct.trim() !== "" ?
+                <li>Lowest Price: &#36;{props.filteredData.fromPriceProduct} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li> : props.filteredData.toPriceProduct.trim() !== ""  && parseInt(props.filteredData.toPriceProduct) > 0 ?
                 // list filtered From Price
                 <li>Highest Price: &#36;{props.filteredData.toPriceProduct} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li> : ""
               }
