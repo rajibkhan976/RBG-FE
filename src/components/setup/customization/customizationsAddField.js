@@ -283,7 +283,7 @@ useEffect(()=>{
                     
                     <div className={customFieldErrors.type ? "formControl error" : "formControl"}>
                         <label>Field Type</label>
-                        <select name="category" onChange={fieldTypeHandel} className="cmnFieldStyle">
+                        <select name="category" onChange={fieldTypeHandel} className="cmnFieldStyle" defaultValue={customField && customField.type}>
                             <option value="">Select field type</option>
                             <option value="text">Text</option>
                             <option value="number">Phone</option>
