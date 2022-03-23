@@ -4085,3 +4085,27 @@ li.paymentModeLi, li.paymentAmtLi {
 .dashInnerUI .createNew.noInfos.authentications.groups .creatUserBtn {
   width: 212px;
 }
+
+label.labelWithInfo.paymentTime.firstBillTime.programBillings span.labelHeading {
+  font-size: 12px;
+  letter-spacing: -0.035em;
+}
+
+label.labelWithInfo.paymentTime.firstBillTime.programBillings {
+  top: 0;
+}
+.labelWithInfo.paymentTime.firstBillTime .toggleBtn {
+  margin: 0 0 0 16px;
+}
+
+.transaction_form label.labelWithInfo.firstBillTimeWraper {
+  padding-bottom: 9px;
+}
+
+.leftSecTransaction.billWraper .paymentNow.display p {
+  color: #93abc1;
+}
+
+.cmnFormField.radioGroup.userTypeSelect {
+  width: 100%;
+}

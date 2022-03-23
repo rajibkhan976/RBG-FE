@@ -477,10 +477,10 @@ const ProgramTransaction = (props) => {
 
         <div className="formsection gap">
 
-          <div className="leftSecTransaction">
-            <label className="labelWithInfo">
-              <span className="labelHeading">First Billing Date</span>
-              <label className="labelWithInfo paymentTime firstBillTime">
+          <div className="leftSecTransaction billWraper">
+            <label className="labelWithInfo firstBillTimeWraper">
+              {/* <span className="labelHeading">First Billing Date</span> */}
+              <label className="labelWithInfo paymentTime firstBillTime programBillings">
                 <span className="labelHeading">I want to Pay Later</span>
                 <label
                   className={contractData.firstBillingTime ? "toggleBtn active" : "toggleBtn"
@@ -495,13 +495,13 @@ const ProgramTransaction = (props) => {
                   <span className="toggler"></span>
                 </label>
               </label>
-              <span className="infoSpan">
+              {/* <span className="infoSpan">
                 <img src={info_icon} alt="" />
                 <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-              </span>
+              </span> */}
             </label>
             <div className={contractData.firstBillingTime ? "paymentNow" : "paymentNow display"} >
-              <p>Payment date <span>Now</span></p>
+              <p>1st Billing Date <span>Now</span></p>
             </div>
             <div className={contractData.firstBillingTime ? "paymentNow display" : "paymentNow"} >
               <input type="date" name="firstBillingDate" placeholder="mm/dd/yyyy" min={contractData.paymentDate} onChange={handelFirstBillingDateChange} className="editableInput" value={contractData.paymentDate} />

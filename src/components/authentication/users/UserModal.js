@@ -1135,7 +1135,7 @@ const UserModal = (props) => {
 
                                                 <div className="cmnFormRow">
                                                     <div className="cmnFieldName">Select Type</div>
-                                                    <div className="cmnFormField radioGroup" onChange={handleUserTypeChange}>
+                                                    <div className="cmnFormField radioGroup userTypeSelect" onChange={handleUserTypeChange}>
                                                         <label className="cmnFormRadioLable">
                                                             <div className="circleRadio">
                                                                 <input type="radio" value="organization" name="userType" />
