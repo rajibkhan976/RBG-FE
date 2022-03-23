@@ -5,6 +5,7 @@ import { utils } from "../../../../helpers";
 import { ProductServices } from "../../../../services/setup/ProductServices";
 import ConfirmBox from "../../../shared/confirmBox";
 import Loader2 from "../../../shared/Loader2";
+import Loader from "../../../shared/Loader";
 import cross from "../../../../assets/images/cross.svg";
 import { Scrollbars } from "react-custom-scrollbars-2";
 
@@ -153,11 +154,11 @@ const CategoryListing = (props) => {
                 ""
             )}
             <div className="productRightSetUpPanel">
+                {props.isLoader ? <Loader /> : ''}
 
                 <Scrollbars
                     renderThumbVertical={(props) => <div className="thumb-vertical" />}
                 >
-                    {props.isLoader ? <Loader2 /> : ''}
                     <div className="innerScroll">
                         <h3 className="productListingHeader">Product Categories</h3>
                         <div className="productSearchPanel">
