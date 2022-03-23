@@ -207,10 +207,8 @@ const CallConfiguration = (props) => {
     // Add time number
     const scheduleOverite = async () => {
       for (let i = 0; i < schedule.length; i++) {
-        if (!schedule[i].startTimeNumber) {
-          schedule[i].startTimeNumber = convertTimeToNumber(schedule[i].startTime);
-          schedule[i].endTimeNumber = convertTimeToNumber(schedule[i].endTime);
-        }
+        schedule[i].startTimeNumber = convertTimeToNumber(schedule[i].startTime);
+        schedule[i].endTimeNumber = convertTimeToNumber(schedule[i].endTime);        
       }
       setSchedule([...schedule]);
     }
