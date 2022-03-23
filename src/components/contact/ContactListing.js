@@ -60,6 +60,14 @@ const ContactListing = forwardRef((props, ref) => {
         }
     }, [modalId]);
 
+
+    const createIndivitualContact = () => {
+      dispatch({
+          type: actionTypes.CONTACTS_MODAL_ID,
+          contact_modal_id: 0,
+      });
+    }
+
     const handelSize = () => {
         setTableWidth(window.innerWidth - 504);
     }
@@ -496,7 +504,7 @@ const ContactListing = forwardRef((props, ref) => {
             <h4>No Contacts Found</h4>
             <p>No contacts have been listed here yet</p>
           </div>
-          <button className="creatUserBtn"><img className="plusIcon" src={plus_icon} alt="" /><span>Create the First Contact</span></button>
+          <button className="creatUserBtn" onClick={() => createIndivitualContact()}><img className="plusIcon" src={plus_icon} alt="" /><span>Create the First Contact</span></button>
         </div>
       }
 
