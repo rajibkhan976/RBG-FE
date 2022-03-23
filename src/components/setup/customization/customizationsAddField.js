@@ -243,6 +243,10 @@ useEffect(()=>{
 
     props.closeAddCustomModal(false);
   }
+
+  useEffect(()=>{
+    console.log("props", props);
+  },[])
   
 
      return(
@@ -271,6 +275,7 @@ useEffect(()=>{
                           name="" 
                           onChange={fieldNameHandel} 
                           // value={customField.name}
+                          defaultValue={customField && customField.name}
                           className="cmnFieldStyle"
                         />
                         {customFieldErrors.name && <p className="errorMsg">{customFieldErrors.name}</p>}
@@ -289,8 +294,8 @@ useEffect(()=>{
                     </div>
                     <div className={customFieldErrors.defaultValue ? "formControl error" : "formControl"}>
                         <label>Default Value</label>
-                        {customField.type === "email" && <input type="email" name="" onChange={defaultValueHandel} className="cmnFieldStyle"/>}
-                        {customField.type !== "email" && <input type="text" name="" onChange={defaultValueHandel} className="cmnFieldStyle"/>}
+                        {customField.type === "email" && <input type="email" name="" onChange={defaultValueHandel} className="cmnFieldStyle" defaultValue={customField && customField.defaultValue} />}
+                        {customField.type !== "email" && <input type="text" name="" onChange={defaultValueHandel} className="cmnFieldStyle"  defaultValue={customField && customField.defaultValue} />}
                         {customFieldErrors.defaultValue && <p className="errorMsg">{customFieldErrors.defaultValue}</p>}
                     </div>
                     <div className={customFieldErrors.fieldAlias ? "formControl error" : "formControl"}>
