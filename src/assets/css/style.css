@@ -3381,14 +3381,14 @@ span.userProfilePic img {
   padding: 30px 20px 0;
 }
 .alertBoxFooter .saveNnewBtn {
-  float: left;
+  float: right;
   min-width: 80px;
   width: auto;
 }
 .alertBox .btn-link {
   background-color: transparent;
   border: none;
-  float: right;
+  float: left;
 }
 
 .popupMessage {

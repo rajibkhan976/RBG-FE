@@ -192,21 +192,6 @@ const Transaction = (props) => {
     }
   };
 
-  const contractListPageNo = (e) => {
-      
-      if (!isScroll) {
-        let scrollHeight = e.target.scrollHeight;
-        let scrollTop = e.target.scrollTop;
-        if (scrollTop > (scrollHeight / 2)) {
-          if(contractPagination.currentPage < contractPagination.totalPages) {
-            console.log(e.target.scrollHeight);
-            fetchContract(props.contactId, (contractPagination.currentPage + 1));
-          }
-          ;
-        }
-      }
-    };
-
   const fetchOldTransactions = async (contactId, pageNumber) => {
     try {
       setIsScroll(true);
@@ -247,18 +232,31 @@ const Transaction = (props) => {
     }
   };
 
+  const contractListPageNo = (e) => {
+    if (!isScroll) {
+      let scrollHeight = e.target.scrollHeight;
+      let scrollTop = e.target.scrollTop;
+      if (scrollTop > (scrollHeight / 2.5)) {
+        if(contractPagination.currentPage < contractPagination.totalPages) {
+          console.log(e.target.scrollHeight);
+          fetchContract(props.contactId, (contractPagination.currentPage + 1));
+        }
+        ;
+      }
+    }
+  };
+
   const fetchContract = async (contactId, pageNumber) => {
     try {
       setIsScroll(true);
       setIsLoaderScroll(true);
       const response = await TransactionServices.fetchContract(contactId, pageNumber);
-      console.log("Contract response ", response);
       if (response.pagination.currentPage == 1) {
         setContract(response.transactions);
       } else {
         setContract([ ...contract, ...response.transactions]);
       }
-      //setContract(response.transactions);
+      // setContract(response.transactions);
       setIsScroll(false);
       setContractPagination(response.pagination);
     } catch (e) {
@@ -337,6 +335,7 @@ const Transaction = (props) => {
   const showSuccessAlert = (param) => {
     setSuccessMsg(param);
   };
+  
   const checkRefundAmount = (param) => {
     return param.map(e => {
       if (e.refunded_amount !== undefined && e.amount > 0 && e.status == "success") {
@@ -346,10 +345,10 @@ const Transaction = (props) => {
       }
     })
   };
+
   const closeAlert = () => {
     setSuccessMsg(null);
   };
-
 
   useEffect(() => {
     fetchOldTransactions(props.contactId, 1);
@@ -751,15 +750,22 @@ const Transaction = (props) => {
                                     <div className="textCont">
                                       <div className="status">
                                         {element.status == "failed" ? "failed" : (element.status == "declined" ? "declined" :  (element.amount < 0 ? "refunded" : "successful"))}
-                                        {element.amount < 0 ? 
+                                        {element.note && element.note != "" ? 
                                         <div className="notePop">
                                           <div className="notePopIcon"></div>
                                           <div className="notePopContent">
-                                            <span>Reason: </span>
+                                            <span>{element.amount < 0 ? "Reason: " : "Note: "}</span>
                                             {element.note}
                                           </div>
                                         </div>
-                                        : ""}
+                                        : (element.status == "declined" || element.status == "failed" && element.payment_resp.outcome ? 
+                                        <div className="notePop">
+                                          <div className="notePopIcon"></div>
+                                          <div className="notePopContent">
+                                            <span>Note: </span> {element.payment_resp.outcome.description}
+                                          </div>
+                                        </div>
+                                        : "")}
                                       </div>
                                       <div>
                                         <span>Transaction ID:</span> {element._id}
@@ -850,7 +856,7 @@ const Transaction = (props) => {
                   </div>
                   <div className="cell">
                     <span className="amount" >
-                      $ {item.amount}
+                      {"$" + item.amount}
                     </span>
                   </div>
                   <div className="cell">

@@ -3732,6 +3732,7 @@ li.paymentModeLi, li.paymentAmtLi {
   float: left;
   color: #305671;
   font-weight: 500;
+  padding-top: 5px;
 }
 .transactionListing.oldTransactions .row .cellWrapers.historyInnerInfo .cell.amt {
   color: #B2BFC9;
@@ -3744,6 +3745,7 @@ li.paymentModeLi, li.paymentAmtLi {
   float: right;
   padding-right: 5px;
   width: 112px;
+  font-size: 12px;
 }
 
 .transactionListing.oldTransactions .cellWrapers.historyInnerInfo .cell.particulars {

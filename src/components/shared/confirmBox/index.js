@@ -16,10 +16,10 @@ const ConfirmBox = (props) => {
                     <p>{props.message ? props.message : "Are you sure, you want to delete?"}</p>
                 </div>
                 <div className="alertBoxFooter">
+                    <button className="btn-link" onClick={() => confirmed("cancel")}>Cancel</button>
                     <button className="saveNnewBtn" onClick={() => confirmed("yes")}>
                         <span>Yes</span>
                     </button>
-                    <button className="btn-link" onClick={() => confirmed("cancel")}>Cancel</button>
                 </div>
             </div>
         </div>
