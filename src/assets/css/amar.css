@@ -2426,7 +2426,8 @@ li.listHeading > div {
   position: relative;
 }
 
-li.listHeading > div:not(.GenerateColumnsCell):after {
+/* li.listHeading > div:not(.GenerateColumnsCell):after { */
+li.listHeading > div:not(.GenerateColumnsCell):not(.vacent):after{
   content: "";
   display: inline-block;
   vertical-align: middle;
@@ -2589,3 +2590,14 @@ input[type=number] {
   border-color: #c74854;
   color: #c74854;
 }
+
+/* Customization listing option toggle menu ui issue */
+.customFieldListing {
+  display: flex;
+  flex-direction: column;
+}
+.customtableListing li:nth-child(n+10):last-child .dropdownOptions {
+  bottom: 70%;
+  top: auto;
+}
+/* Customization listing option toggle menu ui issue */
