@@ -73,7 +73,7 @@ const CompleteTransactionModal = (props) => {
                     <button className="topCross" onClick={() => props.closeModal (false)}><img src={crossImg} alt="" /></button>  
                     <div className="circleForIcon"><img src={refundImg} alt="" /></div>
                     <h3>Complete Transactions</h3>
-                    <p>Complete Transactions for Program</p>
+                    <p>Complete Transactions for Program/Product</p>
                 </div>
                 <div className="cmnForm">
                     <form>

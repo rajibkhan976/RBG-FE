@@ -20,6 +20,7 @@ import { TransactionServices } from "../../../../services/transaction/transactio
 import Loader from "../../Loader";
 import CompleteTransactionModal from "./transaction/CompleteTransactionModal";
 import ConfirmBox from "../../confirmBox";
+import RetryPayment from "./transaction/RetryPayment";
 
 const Transaction = (props) => {
   const [transactionList, setTransactionList] = useState([]);
@@ -52,6 +53,9 @@ const Transaction = (props) => {
   const [contractOptIndex, setContractOptIndex] = useState(null);
   const [cancelContractModal, setCancelContractModal] = useState(false);
   const [cancelContractId, setCancelContractId] = useState(null);
+  const [retryModal, setRetryModal] = useState(false);
+  const [retryAmount, setRetryAmount] = useState();
+  const [retryId, setRetryId] = useState();
   const [refundAlertMsg, setRefundAlertMsg] = useState({
     message: "",
     type: ""
@@ -64,6 +68,7 @@ const Transaction = (props) => {
     message: "",
     type: ""
   });
+  
   
 
   const showOldTrxHistory = (index) => {
@@ -85,7 +90,15 @@ const Transaction = (props) => {
   const openRefundModal = (item) => {
     setRefundModal(true);
     setSubscriptionId(item._id);
-    setRefundAmount(item.amount);
+    if(item.refunded_amount && item.refunded_amount != undefined){
+      setRefundAmount(item.amount - item.refunded_amount)
+    } else {
+      setRefundAmount(item.amount);
+    }
+    
+        // parseFloat(Math.abs(e.refunded_amount)).toFixed(2)
+      
+    // setRefundAmount(item.amount);
   };
 
   const closeRefundModal = () => {
@@ -97,9 +110,13 @@ const Transaction = (props) => {
     setIsRefundLoader(param);
   };
 
+  const retryAlertMsg = (param) => {
+    setRetryPayAlertMsg({...retryPayAlertMsg, message: param.message, type: param.type});
+  };
+
   const refundAlert = (msg, type) => {
     setRefundAlertMsg({...refundAlertMsg, message: msg, type: type});
-  }
+  };
 
   const closeRefundAlert = () => {
     setRefundAlertMsg({...refundAlertMsg, message: "", type: ""});
@@ -107,6 +124,10 @@ const Transaction = (props) => {
 
   const closeCancelContractAlert = () => {
     setRefundAlertMsg({...cancelAlertMsg, message: "", type: ""});
+  };
+
+  const closeRetryPaymentAlert = () => {
+    setRetryPayAlertMsg({...retryPayAlertMsg, message: "", type: ""});
   };
 
   const openCloseEditTransModal = (param, transaction, loadData) => {
@@ -125,6 +146,17 @@ const Transaction = (props) => {
       fetchUpcomingTransactions(props.contactId, 1);
     }
   };
+
+  const openCloseRetryModal =  (param, item) => {
+    setRetryModal(param);
+    setRetryAmount(item.amount);
+    setRetryId(item._id);
+    if (param == false) {
+      setRetryModal(false);
+      setRetryAmount(0);
+      setRetryId(null);
+    }
+  }
 
   const contractOptTgl = (index) => {
     setContractOptIndex(index);
@@ -253,6 +285,7 @@ const Transaction = (props) => {
       const response = await TransactionServices.fetchContract(contactId, pageNumber);
       if (response.pagination.currentPage == 1) {
         setContract(response.transactions);
+        console.log("Contract response: ", response);
       } else {
         setContract([ ...contract, ...response.transactions]);
       }
@@ -281,22 +314,6 @@ const Transaction = (props) => {
       setIsLoader(false);
       setCancelContractId(null);
       fetchContract(props.contactId, 1);
-    }
-  };
-
-  const retryPayment = async (item) => {
-    let payload = {
-      subscriptionId: item._id,
-      note: "Retry note"
-    }
-    try {
-      setIsLoader(true);
-      const response = await TransactionServices.retryPayment(props.contactId, payload);
-      console.log("Retry response: ", response);
-    } catch (e) {
-      setRetryPayAlertMsg({ ...retryPayAlertMsg, message: e.message, type: "success" });
-    } finally {
-      setIsLoader(false);
     }
   };
 
@@ -337,11 +354,11 @@ const Transaction = (props) => {
   };
   
   const checkRefundAmount = (param) => {
-    return param.map(e => {
+    return param.history && param.history.map(e => {
       if (e.refunded_amount !== undefined && e.amount > 0 && e.status == "success") {
-        return (
-          <div className="refundedAmount">{ "Refunded $" + parseFloat(Math.abs(e.refunded_amount)).toFixed(2)}</div>
-        )
+        console.log(e.refunded_amount)
+        param.refunded_amount = (parseFloat(Math.abs(e.refunded_amount)).toFixed(2));
+        return true;
       }
     })
   };
@@ -409,7 +426,7 @@ const Transaction = (props) => {
           <button className="saveNnewBtn" onClick={props.goToTransaction}>
             Make a Transaction <img src={arrow_forward} alt="" />
           </button>
-          <span>* Explanatory text blurb should be here.</span>
+          <span>* Manage transaction for Products and Programs</span>
         </div>
         {isLoader ? <Loader /> : ''}
         <div className={transactionList?.pagination?.count > 0 ? "transactionListing" : "hide"}>
@@ -688,7 +705,9 @@ const Transaction = (props) => {
                           <div className="amount" >
                             <span className="tutionAmt">{item.type == "tuiton_fees" ? "Tution Fee" : (item.type == "downpayment" ? "Downpayment" : "Outstanding")}</span>
                             <p>{"$" + parseFloat(Math.abs(item.history && item.amount)).toFixed(2)}</p>
-                            { checkRefundAmount(item.history) }
+                            {checkRefundAmount(item) && item.refunded_amount != undefined ? 
+                            <div className="refundedAmount">{ "Refunded $" + item.refunded_amount}</div>
+                            : ""}
                           </div>
                         </div>
 
@@ -706,12 +725,13 @@ const Transaction = (props) => {
 
                         <div className="cell action">
                           <div className="moreOpt">
-                          <button type="button" className="moreOptBtn" onClick={() => moreOptOpenOld (index)}></button>
+                           
+                          <button type="button" className={checkRefundAmount(item) && item.refunded_amount != Math.abs(item.amount).toFixed(2) ? "moreOptBtn" : "hide"} onClick={() => moreOptOpenOld (index)}></button>
                             <div className={oldOptIndex === index ? "optDropdown" : "optDropdown hide"}>
                               {item.history && item.history[0].status == "success" ?
                                 <button type="button" className="refund" onClick={() => openRefundModal (item)}>Refund</button>
                                 :
-                                <button type="button" className="retry" onClick={() => retryPayment (item)}>Retry</button> 
+                                <button type="button" className="retry" onClick={() => openCloseRetryModal (true, item)}>Retry</button> 
                               }
                               {/* <button type="button" className="history">History</button> */}
                             </div>  
@@ -933,6 +953,20 @@ const Transaction = (props) => {
 
       { cancelAlertMsg.message ? 
       <AlertMessage message={cancelAlertMsg.message} type={cancelAlertMsg.type} time={5000} close={closeCancelContractAlert} /> 
+      : ""}
+
+      { retryModal && 
+      <RetryPayment 
+      closeModal={(param) => openCloseRetryModal (param)} 
+      amount={retryAmount} 
+      contactId={props.contactId}
+      _id={retryId}
+      alertMsg={(param) => retryAlertMsg (param)}
+      />
+      }
+
+      { retryPayAlertMsg.message ? 
+      <AlertMessage message={retryPayAlertMsg.message} type={retryPayAlertMsg.type} time={5000} close={closeRetryPaymentAlert} /> 
       : ""}
 
     </>

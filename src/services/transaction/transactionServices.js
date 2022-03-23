@@ -87,7 +87,7 @@ export const TransactionServices = {
     retryPayment: async (contactId, payload) => {
         try {
             const url = config.transactionUrl + "transactions/retry/" + contactId;
-            const result = await axios.get(url, payload, { headers: headers });
+            const result = await axios.post(url, payload, { headers: headers });
             return result.data;
         } catch (e) {
              if(e.response && e.response.data && e.response.data.message) {
