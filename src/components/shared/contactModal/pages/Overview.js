@@ -11,6 +11,7 @@ import cross_icon from "../../../../assets/images/cross_white.svg";
 import verify_icon from "../../../../assets/images/verifyIcon.svg";
 import {ImportContactServices} from "../../../../services/contact/importContact";
 import arrowDown from "../../../../assets/images/arrowDown.svg";
+import moment from "moment-timezone";
 
 const Overview = (props) => {
     const [formScrollStatus, setFormScrollStatus] = useState(false);
@@ -666,7 +667,7 @@ const Overview = (props) => {
                                     Date of Birth
                                 </div>
                                 <div className={formErrorMsg.dob ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <input type="date" className="cmnFieldStyle" placeholder=""
+                                    <input type="date" className="cmnFieldStyle" placeholder="" max={moment().format('YYYY-MM-DD')}
                                            defaultValue={basicinfoDob} onChange={handelBasicinfoDob}/>
                                     {formErrorMsg.dob ? <p className="errorMsg">{formErrorMsg.dob}</p> : ""}
                                 </div>
