@@ -270,7 +270,6 @@ const Transaction = (props) => {
       let scrollTop = e.target.scrollTop;
       if (scrollTop > (scrollHeight / 2.5)) {
         if(contractPagination.currentPage < contractPagination.totalPages) {
-          console.log(e.target.scrollHeight);
           fetchContract(props.contactId, (contractPagination.currentPage + 1));
         }
         ;
@@ -356,7 +355,6 @@ const Transaction = (props) => {
   const checkRefundAmount = (param) => {
     return param.history && param.history.map(e => {
       if (e.refunded_amount !== undefined && e.amount > 0 && e.status == "success") {
-        console.log(e.refunded_amount)
         param.refunded_amount = (parseFloat(Math.abs(e.refunded_amount)).toFixed(2));
         return true;
       }
