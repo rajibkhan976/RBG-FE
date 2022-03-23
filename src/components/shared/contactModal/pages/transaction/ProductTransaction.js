@@ -590,6 +590,7 @@ const ProductTransaction = (props) => {
                       )}
                     </div>
                   </div>
+                  {errorState.sizes && <p className="errorMsg">{errorState.sizes}</p>}
                 </div>
                 <div className="cmnFormRow">
                   <div

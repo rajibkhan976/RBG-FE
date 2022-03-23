@@ -132,8 +132,8 @@ const AddProductModal = (props) => {
     };
     switch (elemName) {
       case "price":
-        if (!regex.numericRegex.test(elemValue)) {
-          setProductData({ ...productData, price: elemValue });
+        if (!regex.numericRegex.test(elemValue) && elemValue.split(".")[0].length <= 5) {
+          setProductData({ ...productData, price: elemValue.replace(/(\.\d{2})\d+/g, '$1') });
           setErrorClass(prevState => ({...prevState, price: "", priceMsg: ""}));
         }
         break;
@@ -236,7 +236,7 @@ const AddProductModal = (props) => {
       setErrorClass(prevState => ({...prevState, size: "error", sizeMsg: "Please choose atleast one size from the available sizes"}));
     }
 
-    if(productData.price === "") {
+    if(productData.price === "" || parseFloat(productData.price) <= 0) {
       bool = false;
       setErrorClass(prevState => ({...prevState, price: "error", priceMsg: "Please enter the product price"}));
     }
