@@ -192,7 +192,7 @@ const AddCourseModal = (props) => {
           if (!res._id) {
             setErrorMsg("Error adding course. Please try again");
           } else {
-            msg = "Course added successfully";
+            msg = "Program added successfully";
           }
         }
         if (btnType !== "SaveNew") {
@@ -401,8 +401,11 @@ const AddCourseModal = (props) => {
 
                   <div className={"formRight " + errorClass.fees}>
                     <label>Fees</label>
-                    <input type="text" name="fees" placeholder="Ex: 99" onChange={handleChange} value={courseData.fees} />
-                    <span className="smallspan">* default currency is<strong> USD</strong></span>
+                    <div className="preField">
+                      {/* <span className="smallspan">* default currency is<strong> USD</strong></span> */}
+                      <div className="unitAmount">$</div>
+                      <input className="cmnFieldStyle" type="text" name="fees" placeholder="Ex: 99" onChange={handleChange} value={courseData.fees} />
+                    </div>
                   </div>
                   <p className="errorMsg">{errorClass.feesMsg}</p>
                 </div>
