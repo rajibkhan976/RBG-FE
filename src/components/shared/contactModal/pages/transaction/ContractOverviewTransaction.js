@@ -103,11 +103,11 @@ const ContractOverviewTransaction = (props) => {
   //Set program contract data
   useEffect(() => {
     //Remaining payment count
-    let remainingPaymentCount = props.programContractData.numberOfPayments;
+    let remainingPaymentCount = Number(props.programContractData.numberOfPayments);
     //Pay now tuition fee
     let payNowTuitionAmount = 0;
     if (props.programContractData.isPayNow) {
-      payNowTuitionAmount = parseFloat(props.programContractData.amount);
+      payNowTuitionAmount = Number(props.programContractData.amount);
       console.log('Pay now tuition amount', payNowTuitionAmount)
       remainingPaymentCount--;
     }
@@ -158,8 +158,9 @@ const ContractOverviewTransaction = (props) => {
 
     //total
     let total = 0;
-    if (props.programContractData.downPayments && props.programContractData.downPayments.length) {
-      total = props.programContractData.downPayments.reduce((total, obj) => Number(obj.amount) + total, 0) + (props.programContractData.amount * props.programContractData.numberOfPayments)
+    if (payNowTuitionAmount) {
+      total = totalDownPayment + (payNowTuitionAmount * props.programContractData.numberOfPayments)
+      console.log('total:', typeof total, total);
     }
 
     setContractData({
