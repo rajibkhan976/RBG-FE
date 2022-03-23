@@ -83,18 +83,18 @@ const CategoryListing = (props) => {
           const res = await CourseServices.createCategory(catData);
           props.successMsg("Category created successfully");
         }
+        setCategory({
+          name: "",
+          id: null,
+          btnName: "Add Category",
+          showCross: false,
+        });
+        props.fetchCategories();
       }
     } catch (e) {
       props.errorMsg(e.message);
     } finally {
       props.setIsLoader(false);
-      setCategory({
-        name: "",
-        id: null,
-        btnName: "Add Category",
-        showCross: false,
-      });
-      props.fetchCategories();
     }
   };
 

@@ -28,6 +28,8 @@ const CategoryListing = (props) => {
         setOption(index !== option ? index : null);
     }
 
+    const [errorCatMsg, setErrorCatMsg] = useState('');
+
     useEffect(() => {
         const catID = utils.getQueryVariable('catID');
         setDefaultCatID(catID);
@@ -67,7 +69,7 @@ const CategoryListing = (props) => {
         try {
             let catData = { name: category.name };
             if (!catData.name.length) {
-                props.errorMsg("Category name should not be empty");
+                throw new Error("Category name should not be empty");
             } else {
                 props.setIsLoader(true);
                 if (category.id) {
@@ -78,19 +80,18 @@ const CategoryListing = (props) => {
                     const res = await ProductServices.createCategory(catData);
                     props.successMsg("Category created successfully");
                 }
-
+                setCategory({
+                    name: "",
+                    id: null,
+                    btnName: "Add Category",
+                    showCross: false
+                });
+                props.fetchCategories()
             }
         } catch (e) {
             props.errorMsg(e.message);
         } finally {
             props.setIsLoader(false);
-            setCategory({
-                name: "",
-                id: null,
-                btnName: "Add Category",
-                showCross: false
-            });
-            props.fetchCategories()
         }
     };
 
@@ -166,6 +167,7 @@ const CategoryListing = (props) => {
                                 {category.showCross ? <button className="deleteIt" onClick={() => setCategory({ ...category, name: "", id: null, btnName: "Add Category", showCross: false })}><img src={cross} alt="" /></button> : ''}
                                 <input type="text" name="catname" onChange={handleChange} value={category.name} placeholder="Enter a product category" />
                                 <button className="btn" type="submit">{category.btnName}<img src={arrowRightWhite} alt="" /></button>
+                                <p className="errorMsg">{errorCatMsg}</p>
                             </form>
                         </div>
                         <ul className="ProCategoryListing">
