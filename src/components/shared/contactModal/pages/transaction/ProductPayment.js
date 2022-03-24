@@ -318,7 +318,7 @@ const ProductPayment = (props) => {
         payment_type: "cash",
         payment_status: "paid",
         paymentConfirmation: false,
-        dpId: Math.floor(100000 + Math.random() * 900000)
+        dpId: [...downpayments].filter(dp=>dp.dpId === Math.floor(100000 + Math.random() * 900000)).length === 0 ? Math.floor(100000 + Math.random() * 900000) : Math.floor(100000 + Math.random() * 900000)
       }])
       
       setHasError(true);
@@ -375,7 +375,7 @@ const ProductPayment = (props) => {
           payment_type: "cash",
           payment_status: "paid",
           paymentConfirmation: false,
-          dpId: Math.floor(100000 + Math.random() * 900000)
+          dpId: [...downpayments].filter(dp=>dp.dpId === Math.floor(100000 + Math.random() * 900000)).length === 0 ? Math.floor(100000 + Math.random() * 900000) : Math.floor(100000 + Math.random() * 900000)
         },
       ])
       }
@@ -734,7 +734,7 @@ const ProductPayment = (props) => {
             edit_PayDate_Err: "Date cannot be empty",
           });
         }
-        console.log("CHANGED:::::", downPaymentsPlaceholder, downPaymentsPlaceholder.filter((dpP) => dpP.dpId === i));
+        
         setDownPayments(downPaymentsPlaceholder);
       } else {
         downPaymentsPlaceholder[i].isPayNow = 1;
