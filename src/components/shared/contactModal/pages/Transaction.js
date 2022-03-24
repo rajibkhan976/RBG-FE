@@ -900,9 +900,9 @@ const Transaction = (props) => {
                   <div className="cell">
                     <span className="time">
                     {item.auto_renew == 1 ? 
-                      <span className="enableStatus">Enable</span>
+                      <span className="enableStatus">Enabled</span>
                       :
-                      <span className="disableStatus">Disable</span>
+                      <span className="disableStatus">Disabled</span>
                     }
                     </span>
                   </div>

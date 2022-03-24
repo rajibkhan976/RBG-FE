@@ -8,6 +8,7 @@ import { TransactionServices } from "../../../../../services/transaction/transac
 
 const RefundModal = (props) => {
 
+    const [refundLimit, setRefundLimit] = useState(props.amount);
     const [refundFormData, setRefundFormData] = useState({
         amount: props.amount,
         reason: "",
@@ -21,7 +22,6 @@ const RefundModal = (props) => {
         confirmRefund: ""
     });
 
-    console.log(refundFormData);
 
     const loader = (param) => {
         props.loader(param);
@@ -38,12 +38,23 @@ const RefundModal = (props) => {
 
     const refundAmountHandel = (e) => {
         let val = e.target.value;
-        console.log('val', val);
         const re = new RegExp(/^\d*\.?\d{0,2}$/);
         if (re.test(val)) {
             fieldErrorCheck.checkAmount(val);
+            if (val > refundLimit) {
+                setFormErrorMsg({ ...formErrorMsg, amount: "Refund amount limit crossed. Refund amount limit is $" + refundLimit});
+            }
         }
+        
     };
+
+    // const checkRefundLimit = () => {
+    //     if (refundFormData.amount > refundLimit) {
+    //         setFormErrorMsg({ ...formErrorMsg, amount: "Refund amount limit crossed. Refund amount limit is $" + refundLimit});
+    //     } else {
+    //         setFormErrorMsg({ ...formErrorMsg, amount: ""});
+    //     }
+    // };
 
     const refundReasonHandel = (e) => {
         let val = e.target.value;
@@ -105,20 +116,20 @@ const RefundModal = (props) => {
         fieldErrorCheck.checkReason(refundFormData.reason);
         fieldErrorCheck.checkOtherReason(refundFormData.otherReason);
         fieldErrorCheck.checkConfirmation(refundFormData.confirmRefund);
-
+        
         if(refundFormData.reason && refundFormData.reason !== "others") {
-            if(refundFormData.amount && refundFormData.confirmRefund) {
+            if(refundFormData.amount && refundFormData.confirmRefund && formErrorMsg.amount == "") {
                 refundFn();
             }
         } else if (refundFormData.reason === "others") {
-            if (refundFormData.amount && refundFormData.otherReason && refundFormData.confirmRefund) {
+            if (refundFormData.amount && refundFormData.otherReason && refundFormData.confirmRefund && formErrorMsg.amount == "") {
                 refundFn();
             }
         }
 
-        // if(refundFormData.amount && refundFormData.reason && refundFormData.otherReason && refundFormData.confirmRefund) {
-        //     console.log("Submit");
-        // }
+        if (refundFormData.amount > refundLimit) {
+            setFormErrorMsg({ ...formErrorMsg, amount: "Refund amount limit crossed. Refund amount limit is $" + refundLimit});
+        }
 
     };
     
