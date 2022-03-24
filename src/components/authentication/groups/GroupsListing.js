@@ -564,7 +564,9 @@ const GroupListing = (props) => {
             <img src={noRecords} className="noRecords" alt="" />
             <h4>No Groups Found</h4>
             <p>No groups have been listed here yet</p>
+            {(keyword === '') ?
             <button className="creatUserBtn" onClick={toggleCreateHeader}><img className="plusIcon" src={plus_icon} alt="" /><span>Create the First Group</span></button>
+            : ''}
           </div>
         </div>
       }

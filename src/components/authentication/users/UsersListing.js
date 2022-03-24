@@ -605,7 +605,9 @@ const UsersListing = (props) => {
                     <img src={noRecords} className="noRecords" alt="" />
                     <h4>No Users Found</h4>
                     <p>No users have been listed here yet</p>
+                    {(keyword === '') ?
                     <button className="creatUserBtn" onClick={toggleCreateHeader}><img className="plusIcon" src={plus_icon} alt="" /><span>Create the First User</span></button>
+                    : ''}
                   </div>
                 </div>
             }

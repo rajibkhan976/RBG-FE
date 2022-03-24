@@ -504,7 +504,12 @@ const ContactListing = forwardRef((props, ref) => {
             <h4>No Contacts Found</h4>
             <p>No contacts have been listed here yet</p>
           </div>
-          <button className="creatUserBtn" onClick={() => createIndivitualContact()}><img className="plusIcon" src={plus_icon} alt="" /><span>Create the First Contact</span></button>
+          {(keyword === '') ?
+          <button className="creatUserBtn" onClick={() => createIndivitualContact()}>
+            <img className="plusIcon" src={plus_icon} alt="" />
+            <span>Create the First Contact</span>
+          </button> 
+          : ''}
         </div>
       }
 

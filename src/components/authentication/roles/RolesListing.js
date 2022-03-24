@@ -555,7 +555,11 @@ const RolesListing = (props) => {
             <img src={noRecords} className="noRecords" alt="" />
             <h4>No Roles Found</h4>
             <p>No roles have been listed here yet</p>
-            <button className="creatUserBtn" onClick={toggleCreateHeader}><img className="plusIcon" src={plus_icon} alt="" /><span>Create the First Role</span></button>
+            
+
+            {(keyword === '') ?
+          <button className="creatUserBtn" onClick={toggleCreateHeader}><img className="plusIcon" src={plus_icon} alt="" /><span>Create the First Role</span></button>
+          : ''}
           </div>
         </div>
       }
