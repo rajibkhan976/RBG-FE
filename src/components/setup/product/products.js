@@ -16,7 +16,7 @@ const Products = () => {
   const messageDelay = 5000; // ms
   // const [createButton, setCreateButton] = useState(null);
   // const [stateFilter, setStateFilter] = useState(null);
-  const [filteredData, setFilteredData] = useState(null);
+  // const [filteredData, setFilteredData] = useState(null);
   const [categoryData, setCategoryData] = useState([]);
   const [isLoaderCat, setIsLoaderCat] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -225,7 +225,7 @@ const Products = () => {
         deleteProduct={(productID) => deleteProduct(productID)}
         successMsg={(msg) => setSuccessMsg(msg)}
         errorMsg={(msg) => setErrorMsg(msg)}
-        filteredData={filteredData}
+        // filteredData={filteredData}
       />
       <CategoryListing
         isLoader={isLoaderCat}
@@ -253,10 +253,10 @@ const Products = () => {
           successMsg={(msg) => setSuccessMsg(msg)}
           errorMsg={(msg) => setErrorMsg(msg)}
           getcolorSize={colorSize}
-          setFilteredData={setFilteredData}
+          // setFilteredData={setFilteredData}
         />}
 
-        {console.log("Filtered data", filteredData)}
+        {/* {console.log("Filtered data", filteredData)} */}
     </>
   );
 };

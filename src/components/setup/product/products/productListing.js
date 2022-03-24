@@ -20,8 +20,8 @@ const ProductListing = (props) => {
   });
   const [option, setOption] = useState(null);
   const [colorDropdown, setColorDropdown] = useState(null);
-  const [categoryData, setCategoryData] = useState(null)
-  const [filteredData, setFilteredData] = useState(null)
+  // const [categoryData, setCategoryData] = useState(null)
+  // const [filteredData, setFilteredData] = useState(null)
 
   /****************************** FUNCTIONS START **********************************/
   const handleEdit = (product) => {
@@ -82,53 +82,59 @@ const ProductListing = (props) => {
     );
   };
 
-  const fetchCategories = async () => {
-    try {
-      const result = await ProductServices.fetchCategory();
-      if (result.length) {
-        setCategoryData(result);
-        console.log("CategoryData", categoryData);
-      } else {
-        // setErrorMsg("No categories found");
-        // props.successMsg("No categories found");
-      }
-    } catch (e) {
-      // props.errorMsg(e.message);
-    } finally {
-      setIsLoader(false);
-    }
-  };
+  // const fetchCategories = async () => {
+  //   try {
+  //     const result = await ProductServices.fetchCategory();
+  //     if (result.length) {
+  //       setCategoryData(result);
+  //       console.log("CategoryData", categoryData);
+  //     } else {
+  //       // setErrorMsg("No categories found");
+  //       // props.successMsg("No categories found");
+  //     }
+  //   } catch (e) {
+  //     // props.errorMsg(e.message);
+  //   } finally {
+  //     setIsLoader(false);
+  //   }
+  // };
 
-  const parseURLParams = (url) => {
-    var queryStart = url.indexOf("?") + 1,
-        queryEnd   = url.indexOf("#") + 1 || url.length + 1,
-        query = url.slice(queryStart, queryEnd - 1),
-        pairs = query.replace(/\+/g, " ").split("&"),
-        parms = {}, i, n, v, nv;
+//   const parseURLParams = (url) => {
+//     var queryStart = url.indexOf("?") + 1,
+//         queryEnd   = url.indexOf("#") + 1 || url.length + 1,
+//         query = url.slice(queryStart, queryEnd - 1),
+//         pairs = query.replace(/\+/g, " ").split("&"),
+//         parms = {}, i, n, v, nv;
 
-    if (query === url || query === "") return;
+//     if (query === url || query === "") return;
 
-    for (i = 0; i < pairs.length; i++) {
-        nv = pairs[i].split("=", 2);
-        n = decodeURIComponent(nv[0]);
-        v = decodeURIComponent(nv[1]);
+//     for (i = 0; i < pairs.length; i++) {
+//         nv = pairs[i].split("=", 2);
+//         n = decodeURIComponent(nv[0]);
+//         v = decodeURIComponent(nv[1]);
 
-        if (!parms.hasOwnProperty(n)) parms[n] = [];
-        parms[n].push(nv.length === 2 ? v : null);
-    }
-    parms.page && delete parms.page
-    console.log(">>>>>>>>>>>>>>>>>", parms); 
-    return parms;
-}
+//         if (!parms.hasOwnProperty(n)) parms[n] = [];
+//         parms[n].push(nv.length === 2 ? v : null);
+//     }
+//     parms.page && delete parms.page
+//     console.log(">>>>>>>>>>>>>>>>>", parms); 
+//     return parms;
+// }
 
-  useEffect(()=>{
-    let urlString = window.location.href
-    
-    if(parseURLParams(urlString) && props.filteredData === null && Object.keys(parseURLParams(urlString)).length !== 0) {
-      setFilteredData(parseURLParams(urlString))
-    }
-    fetchCategories()
-  }, [])
+// useEffect(()=>{
+//   let urlString = window.location.href
+
+//   console.log("parseURLParams(urlString)", parseURLParams(urlString), Object.keys(parseURLParams(urlString)).length !== 0);
+  
+//   if(parseURLParams(urlString) && props.filteredData === null && Object.keys(parseURLParams(urlString)).length !== 0) {
+//     setFilteredData(parseURLParams(urlString))
+//   }
+//   console.log("hi");
+// },[props.filteredData])
+
+//   useEffect(()=>{
+//     fetchCategories()
+//   }, [])
 
   /****************************** FUNCTIONS START **********************************/
   return (
@@ -164,37 +170,32 @@ const ProductListing = (props) => {
           </div>
         </div>
         <div className="productViewType d-flex">
-          {props.filteredData !== null && <>
+          {/* {props.filteredData !== null && <>
             <span className="filteredShow">Filtered by:</span>
             <ul className="filteredData">
               {
-                // list filtered categories
                 props.filteredData.categories && props.filteredData.categories.length > 0 ? props.filteredData.categories.map((filteredCat, i) =>
-                  (<li>{categoryData && categoryData.filter((filterCategory) => filterCategory._id === filteredCat)[0].name} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>)
+                  (<li>{categoryData && categoryData.filter((filterCategory) => filterCategory._id === filteredCat)[0].name} </li>)
                 ) : ""
               }
               {
-                // list filtered Colors
                 props.filteredData.colors && props.filteredData.colors.length > 0 ? props.filteredData.colors.map((filteredCol, i) =>
-                  (<li><figure style={{backgroundColor: filteredCol}}></figure> {filteredCol} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>)
+                  (<li><figure style={{backgroundColor: filteredCol}}></figure> {filteredCol} </li>)
                 ) : ""
               }
               {
-                // list filtered Sizes
                 props.filteredData.sizes && props.filteredData.sizes.length > 0 ? props.filteredData.sizes.map((filteredSize, i) =>
-                  (<li>Size:  {filteredSize} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>)
+                  (<li>Size:  {filteredSize} </li>)
+                  
                 ) : ""
               }
               {props.filteredData.fromPriceProduct.trim() !== "" && parseInt(props.filteredData.fromPriceProduct) > 0 && props.filteredData.toPriceProduct.trim() !== "" ?
                 <>
-                  <li>&#36;{props.filteredData.fromPriceProduct} - &#36;{props.filteredData.toPriceProduct} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>
+                  <li>&#36;{props.filteredData.fromPriceProduct} - &#36;{props.filteredData.toPriceProduct}</li>
                 </> : props.filteredData.fromPriceProduct.trim() !== "" && parseInt(props.filteredData.fromPriceProduct) > 0 ?
-                // list filtered From Price
-                <li>Lowest Price: &#36;{props.filteredData.fromPriceProduct} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li> : props.filteredData.toPriceProduct.trim() !== ""  && parseInt(props.filteredData.toPriceProduct) > 0 ?
-                // list filtered From Price
-                <li>Highest Price: &#36;{props.filteredData.toPriceProduct} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li> : ""
+                <li>Lowest Price: &#36;{props.filteredData.fromPriceProduct}</li> : props.filteredData.toPriceProduct.trim() !== ""  && parseInt(props.filteredData.toPriceProduct) > 0 ?
+                <li>Highest Price: &#36;{props.filteredData.toPriceProduct} </li> : ""
               }
-              {/* <li className="clearFilter"><button>Clear all</button></li> */}
             </ul>
           </>}
 
@@ -203,34 +204,29 @@ const ProductListing = (props) => {
             {console.log("filteredData", filteredData)}
             <ul className="filteredData">
               {
-                // list filtered categories
                 filteredData.catID ? filteredData.catID[0].split(",").map((filteredCat, i) =>
-                  (<li>{categoryData && categoryData.filter((filterCategory) => filterCategory._id === filteredCat)[0].name} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>)
+                  (<li>{categoryData && categoryData.filter((filterCategory) => filterCategory._id === filteredCat)[0].name} </li>)
                 ) : ""
               }
               {
-                // list filtered Colors
                 filteredData.colors ? filteredData.colors[0].split(",").map((filteredCol, i) =>
-                  (<li><figure style={{backgroundColor: filteredCol}}></figure> {filteredCol} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>)
+                  (<li><figure style={{backgroundColor: filteredCol}}></figure> {filteredCol} </li>)
                 ) : ""
               }
               {
-                // list filtered Sizes
                 filteredData.sizes ? filteredData.sizes[0].split(",").map((filteredSize, i) =>
-                  (<li>Size:  {filteredSize} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>)
+                  (<li>Size:  {filteredSize} </li>)
                 ) : ""
               }
               {filteredData.fromPriceProduct && filteredData.toPriceProduct && filteredData.fromPriceProduct[0].trim() !== "" && parseInt(filteredData.fromPriceProduct[0]) > 0 && filteredData.toPriceProduct[0].trim() !== "" ?
                 <>
-                  <li>&#36;{filteredData.fromPriceProduct[0]} - &#36;{filteredData.toPriceProduct[0]} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>
+                  <li>&#36;{filteredData.fromPriceProduct[0]} - &#36;{filteredData.toPriceProduct[0]} </li>
                 </> : filteredData.fromPriceProduct[0].trim() !== "" && parseInt(filteredData.fromPriceProduct[0]) > 0 ?
-                // list filtered From Price
-                <li>Lowest Price: &#36;{filteredData.fromPriceProduct[0]} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li> : filteredData.toPriceProduct[0].trim() !== ""  && parseInt(filteredData.toPriceProduct[0]) > 0 ?
-                // list filtered From Price
-                <li>Highest Price: &#36;{filteredData.toPriceProduct[0]} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li> : ""
+                <li>Lowest Price: &#36;{filteredData.fromPriceProduct[0]} </li> : filteredData.toPriceProduct[0].trim() !== ""  && parseInt(filteredData.toPriceProduct[0]) > 0 ?
+                <li>Highest Price: &#36;{filteredData.toPriceProduct[0]} </li> : ""
               }
             </ul>
-          </>}
+          </>} */}
 
           <button className="btn filterButton" onClick={() => props.openFilterModal()}>
             <img src={listView} alt="filter" />
