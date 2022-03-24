@@ -12,6 +12,7 @@ import { NumberServices } from "../../services/number/NumberServices";
 import Pagination from "../shared/Pagination";
 import ConfirmBox from "../shared/confirmBox";
 import { utils } from "../../helpers";
+import moment from "moment";
 
 const NumberListing = () => {
 
@@ -382,7 +383,7 @@ const NumberListing = () => {
                       </div>
                       
                       <div className="createDate">
-                        <button className="btn">{el.createdAt}</button>
+                        <button className="btn">{moment(el.createdAt).format("MM-DD-YYYY H:m")}</button>
                         {isSuperAdmin && 
                           <div className="info_3dot_icon">
                               <button

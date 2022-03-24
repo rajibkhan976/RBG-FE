@@ -353,18 +353,35 @@ const CallConfiguration = (props) => {
     }
 
     const resetForm = async (e) => {
-        console.log("reseting form");
-        setName("");
-        setNameError("");
-        setIsOverlapped(false);
-        setCallResponse('receive_calls');
-        let conf = [{
-            day: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
-            startTime: "00:00",
-            endTime: "24:00"
-        }];
-        setSchedule(conf);
-        
+      console.log("reseting form");
+      setName("");
+      setNameError("");
+      setIsOverlapped(false);
+      setCallResponse('receive_calls');
+      setIntroAudio(false);
+      setCallForward(false);
+      
+      setSchedule([{
+          day: ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'],
+          startTime: "00:00",
+          endTime: "24:00"
+      }]);      
+      setCallForwardNumbers([]);
+      setCallForwardErr(false);
+      setCallForwardOption(false);
+      setCallForwardOption(false);
+      setScheduleErr(false);
+      setType("upload");
+      setIntroFile("");
+      setIntroFileTitle("");
+      setFormErrors("");
+      setIntroAudioFileChosed(false);
+      setIntroAudioinputFileName("No file chosen");
+      setIntroChosedFileError(false);
+      setOldIntroAudio(null);
+      setOldIntroAudioKey(null);
+      setNewIntroAudio(null);
+      setTmpIntroAudioFile(null);     
     }
     const saveNew = async (e) => {
         e.preventDefault();
@@ -582,6 +599,7 @@ const CallConfiguration = (props) => {
                           <ul className="weekDateList">
                             <li className="weekDate">
                               <input
+                                key={Math.random()}
                                 type="checkbox"
                                 value="sun"
                                 defaultChecked={list.day.includes("sun")}
@@ -591,6 +609,7 @@ const CallConfiguration = (props) => {
                             </li>
                             <li className="weekDate">
                               <input
+                                key={Math.random()}
                                 type="checkbox"
                                 value="mon"
                                 defaultChecked={list.day.includes("mon")}
@@ -600,6 +619,7 @@ const CallConfiguration = (props) => {
                             </li>
                             <li className="weekDate">
                               <input
+                                key={Math.random()}
                                 type="checkbox"
                                 value="tue"
                                 defaultChecked={list.day.includes("tue")}
@@ -609,6 +629,7 @@ const CallConfiguration = (props) => {
                             </li>
                             <li className="weekDate">
                               <input
+                                key={Math.random()}
                                 type="checkbox"
                                 value="wed"
                                 defaultChecked={list.day.includes("wed")}
@@ -618,6 +639,7 @@ const CallConfiguration = (props) => {
                             </li>
                             <li className="weekDate">
                               <input
+                                key={Math.random()}
                                 type="checkbox"
                                 value="wed"
                                 defaultChecked={list.day.includes("thu")}
@@ -627,6 +649,7 @@ const CallConfiguration = (props) => {
                             </li>
                             <li className="weekDate">
                               <input
+                                key={Math.random()}
                                 type="checkbox"
                                 value="wed"
                                 defaultChecked={list.day.includes("fri")}
@@ -636,6 +659,7 @@ const CallConfiguration = (props) => {
                             </li>
                             <li className="weekDate">
                               <input
+                                key={Math.random()}
                                 type="checkbox"
                                 value="wed"
                                 defaultChecked={list.day.includes("sat")}
@@ -792,6 +816,7 @@ const CallConfiguration = (props) => {
                       <label>
                         <div className="customCheckbox">
                           <input
+                            key={Math.random()}
                             type="checkbox"
                             defaultChecked={introAudio}
                             onChange={(e) => {
@@ -912,6 +937,7 @@ const CallConfiguration = (props) => {
                       <label>
                         <div className="customCheckbox">
                           <input
+                            key={Math.random()}
                             type="checkbox"
                             defaultChecked={callForward}
                             onChange={(e) =>

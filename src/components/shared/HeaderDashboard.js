@@ -103,7 +103,10 @@ function HeaderDashboard(props) {
             incoming: result.ringtone,
           },
         };
-      }
+        
+      } else {
+        console.log("Ringtone is blank", result)
+      }   
       setDevice(device.setup(result.token, conf));
     } catch (e) {
       console.log("error", e);
