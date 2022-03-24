@@ -4245,3 +4245,7 @@ body .inFormField input {
   color: #9baebc;
   font-weight: 600;
 }
+
+.cartItem .upperCart {
+  border-bottom: 1px solid #e9eff5;
+}
