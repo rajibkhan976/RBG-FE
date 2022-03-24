@@ -225,6 +225,7 @@ const ProductFilter = (props) => {
         });
         props.getProduct();
         props.closeModal();
+        props.setFilteredData(null)
     }
 
     return (

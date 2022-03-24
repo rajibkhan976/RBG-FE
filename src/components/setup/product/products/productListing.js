@@ -21,6 +21,7 @@ const ProductListing = (props) => {
   const [option, setOption] = useState(null);
   const [colorDropdown, setColorDropdown] = useState(null);
   const [categoryData, setCategoryData] = useState(null)
+  const [filteredData, setFilteredData] = useState(null)
 
   /****************************** FUNCTIONS START **********************************/
   const handleEdit = (product) => {
@@ -98,8 +99,32 @@ const ProductListing = (props) => {
     }
   };
 
+  const parseURLParams = (url) => {
+    var queryStart = url.indexOf("?") + 1,
+        queryEnd   = url.indexOf("#") + 1 || url.length + 1,
+        query = url.slice(queryStart, queryEnd - 1),
+        pairs = query.replace(/\+/g, " ").split("&"),
+        parms = {}, i, n, v, nv;
+
+    if (query === url || query === "") return;
+
+    for (i = 0; i < pairs.length; i++) {
+        nv = pairs[i].split("=", 2);
+        n = decodeURIComponent(nv[0]);
+        v = decodeURIComponent(nv[1]);
+
+        if (!parms.hasOwnProperty(n)) parms[n] = [];
+        parms[n].push(nv.length === 2 ? v : null);
+    }
+    return parms;
+}
+
   useEffect(()=>{
-    console.log("::::::::::::PROPS", props.filteredData && props.filteredData);
+    let urlString = window.location.href
+    
+    if(props.filteredData === null) {
+      setFilteredData(parseURLParams(urlString))
+    }
     fetchCategories()
   }, [])
 
@@ -137,24 +162,24 @@ const ProductListing = (props) => {
           </div>
         </div>
         <div className="productViewType d-flex">
-          {props.filteredData && <>
+          {props.filteredData !== null && <>
             <span className="filteredShow">Filtered by:</span>
             <ul className="filteredData">
               {
                 // list filtered categories
-                props.filteredData.categories.length > 0 ? props.filteredData.categories.map((filteredCat, i) =>
+                props.filteredData.categories && props.filteredData.categories.length > 0 ? props.filteredData.categories.map((filteredCat, i) =>
                   (<li>{categoryData && categoryData.filter((filterCategory) => filterCategory._id === filteredCat)[0].name} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>)
                 ) : ""
               }
               {
                 // list filtered Colors
-                props.filteredData.colors.length > 0 ? props.filteredData.colors.map((filteredCol, i) =>
+                props.filteredData.colors && props.filteredData.colors.length > 0 ? props.filteredData.colors.map((filteredCol, i) =>
                   (<li><figure style={{backgroundColor: filteredCol}}></figure> {filteredCol} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>)
                 ) : ""
               }
               {
                 // list filtered Sizes
-                props.filteredData.sizes.length > 0 ? props.filteredData.sizes.map((filteredSize, i) =>
+                props.filteredData.sizes && props.filteredData.sizes.length > 0 ? props.filteredData.sizes.map((filteredSize, i) =>
                   (<li>Size:  {filteredSize} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>)
                 ) : ""
               }
@@ -168,6 +193,40 @@ const ProductListing = (props) => {
                 <li>Highest Price: &#36;{props.filteredData.toPriceProduct} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li> : ""
               }
               {/* <li className="clearFilter"><button>Clear all</button></li> */}
+            </ul>
+          </>}
+
+          {props.filteredData === null && filteredData !== null && filteredData !== undefined && <>
+            <span className="filteredShow">Filtered by:</span>
+            {console.log("filteredData", filteredData)}
+            <ul className="filteredData">
+              {
+                // list filtered categories
+                filteredData.catID ? filteredData.catID[0].split(",").map((filteredCat, i) =>
+                  (<li>{categoryData && categoryData.filter((filterCategory) => filterCategory._id === filteredCat)[0].name} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>)
+                ) : ""
+              }
+              {
+                // list filtered Colors
+                filteredData.colors ? filteredData.colors[0].split(",").map((filteredCol, i) =>
+                  (<li><figure style={{backgroundColor: filteredCol}}></figure> {filteredCol} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>)
+                ) : ""
+              }
+              {
+                // list filtered Sizes
+                filteredData.sizes ? filteredData.sizes[0].split(",").map((filteredSize, i) =>
+                  (<li>Size:  {filteredSize} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>)
+                ) : ""
+              }
+              {filteredData.fromPriceProduct && filteredData.toPriceProduct && filteredData.fromPriceProduct[0].trim() !== "" && parseInt(filteredData.fromPriceProduct[0]) > 0 && filteredData.toPriceProduct[0].trim() !== "" ?
+                <>
+                  <li>&#36;{filteredData.fromPriceProduct[0]} - &#36;{filteredData.toPriceProduct[0]} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li>
+                </> : filteredData.fromPriceProduct[0].trim() !== "" && parseInt(filteredData.fromPriceProduct[0]) > 0 ?
+                // list filtered From Price
+                <li>Lowest Price: &#36;{filteredData.fromPriceProduct[0]} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li> : filteredData.toPriceProduct[0].trim() !== ""  && parseInt(filteredData.toPriceProduct[0]) > 0 ?
+                // list filtered From Price
+                <li>Highest Price: &#36;{filteredData.toPriceProduct[0]} {/*<button><img src={cross_icon} alt="Delete Filter" /></button>*/}</li> : ""
+              }
             </ul>
           </>}
 
