@@ -108,7 +108,7 @@ const ProgramTransaction = (props) => {
   const downPaymentsCallbackFn = (dataFromChild) => {
     console.log('Data from child for down payments call back', dataFromChild);
     let clone = getLatestClone();
-    if(dataFromChild.isDownPayment) {
+    if (dataFromChild.isDownPayment) {
       clone.downPayments = dataFromChild.downPaymentElems;
     } else {
       clone.downPayments = [];
@@ -191,7 +191,7 @@ const ProgramTransaction = (props) => {
   //Auto renew 
   const handelAutoRenewChange = (e) => {
     console.log('Program auto renew change', e.target.checked);
-    setContractData({ ...contractData, auto_renew: e.target.checked });
+    setContractData({ ...contractData, auto_renew: e.target.checked ? 1 : 0 });
   }
 
 
@@ -216,7 +216,7 @@ const ProgramTransaction = (props) => {
           noOfPayments = contractData.duration * 1;
         }
         console.log({ nextDueDate, noOfPayments });
-      } else if(!contractData.firstBillingTime && contractData.payment_type === 'onetime' ) {
+      } else if (!contractData.firstBillingTime && contractData.payment_type === 'onetime') {
         nextDueDate = ""
       }
       setContractData({ ...contractData, nextDueDate: nextDueDate, numberOfPayments: noOfPayments });
