@@ -2662,3 +2662,10 @@ input[type=number] {
 .paymentUlHeader li:nth-child(2) {
   text-align: left;
 }
+.productListBody {
+  flex: 1 1 auto;
+}
+.productListBody .productList:nth-child(n+10):last-child .dropdownOptions {
+  bottom: 70%;
+  top: auto;
+}
