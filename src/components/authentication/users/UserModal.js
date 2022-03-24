@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { UserServices } from "../../../services/authentication/UserServices";
 import { RoleServices } from "../../../services/authentication/RoleServices";
 import { OrganizationServices } from "../../../services/authentication/OrganizationServices";
@@ -73,11 +73,11 @@ const UserModal = (props) => {
         number: "1234567890"
     });
 
-    const [resetPermissions, setResetPermissions] = useState(false);
     const messageDelay = 5000; // ms
     const [associationList, setAssociationList] = useState([]);
     const [associationId, setAssociationId] = useState('');
     const [saveAndNew, setSaveAndNew] = useState(false);
+    const permissionMatrixRef = useRef();
 
     const fetchCountry = async () => {
         let conntryResponse = await ContactService.fetchCountry();
@@ -374,7 +374,7 @@ const UserModal = (props) => {
     const handlePhoneNumberChange = (event) => {
         event.preventDefault();
         let pattern = new RegExp(/^[0-9\b]+$/);
-        if(!pattern.test(event.target.value)) {
+        if (!pattern.test(event.target.value)) {
             setPhoneNumber("");
         } else {
             setPhoneNumber(event.target.value);
@@ -512,12 +512,12 @@ const UserModal = (props) => {
      */
     const handleRoleChange = (event) => {
         event.preventDefault();
-        console.log(event.target.value);
+        console.log('Role change', event.target.value);
         setRoleId(event.target.value);
         getGroupsByRoleId(event.target.value);
         // Set permissions to null
         console.log('Set permission data to null')
-        setResetPermissions('yes');
+        permissionMatrixRef.current.resetPermissionsFn();
     }
     /**
      * Get groups by role ID
@@ -526,14 +526,19 @@ const UserModal = (props) => {
     const getGroupsByRoleId = async (roleId) => {
         setIsLoader(true);
         try {
-            const groups = await UserServices.fetchGroupsByRoleId(roleId);
-            if (groups) {
-                console.log('Fetched groups', groups);
-                setGroups(groups);
-                setIsLoader(false);
+            if (roleId) {
+                const groups = await UserServices.fetchGroupsByRoleId(roleId);
+                if (groups) {
+                    console.log('Fetched groups', groups);
+                    setGroupId('');
+                    setGroups(groups);
+                }
+            } else {
+                setGroups([]);
             }
         } catch (error) {
             console.error('Get groups', error);
+        } finally {
             setIsLoader(false);
         }
     }
@@ -721,10 +726,10 @@ const UserModal = (props) => {
         /**
         * Check org description field
         */
-       /* if (isOwner && !orgDescription) {
-            isError = true;
-            formErrorsCopy.orgDescription = "Please fillup the description";
-        }*/
+        /* if (isOwner && !orgDescription) {
+             isError = true;
+             formErrorsCopy.orgDescription = "Please fillup the description";
+         }*/
         /**
          * Check association name
          */
@@ -1396,8 +1401,8 @@ const UserModal = (props) => {
                                     </div>
                                     <PermissionMatrix
                                         getData={getDataFn}
+                                        ref={permissionMatrixRef}
                                         setPermissionData={permissionData}
-                                        resetPermissions={resetPermissions}
                                     />
                                     <p className="staredInfo">
                                         * You can customize permissions for this user based on your need.

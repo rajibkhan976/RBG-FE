@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, forwardRef, useImperativeHandle } from "react";
 import { useSelector } from 'react-redux';
 import { PermissionServices } from "../../services/authentication/PermissionServices";
 import Loader from "./Loader";
 
 
-const PermissionMatrix = (props) => {
+const PermissionMatrix = forwardRef((props, ref) => {
   const [entityData, setEntityData] = useState('');
   const [actionData, setActionData] = useState('');
   const [actionTypeData, setActionTypeData] = useState('');
@@ -23,6 +23,8 @@ const PermissionMatrix = (props) => {
   })
 
   const loggedInUser = useSelector((state) => state.user.data);
+
+
 
   useEffect(() => {
     console.log('Global use effect call');
@@ -45,18 +47,31 @@ const PermissionMatrix = (props) => {
 
   }, [])
 
-  useEffect(() => {
-    console.log('props reset permission', props.resetPermissions)
-    if (props.resetPermissions == 'yes') {
-      console.log('data to null')
-      //Empty edited permission data
-      setEditedPermissionData([]);
-      // Reflect permission data
-      getEntities();
-    }
-  }, [props.resetPermissions])
+  // useEffect(() => {
+  //   console.log('props reset permission', props.resetPermissions)
+  //   if (props.resetPermissions == 'yes') {
+  //     console.log('data to null')
+  //     //Empty edited permission data
+  //     setEditedPermissionData([]);
+  //     // Reflect permission data
+  //     getEntities();
+  //   }
+  // }, [props.resetPermissions])
 
+  useImperativeHandle(ref, () => ({
+    resetPermissionsFn,
+  }));
 
+  const resetPermissionsFn = () => {
+    console.log('Reset permissions fn')
+    setEditedPermissionData([]);
+    //Empty edited permission data
+    setEditedPermissionData([]);
+    // Reflect permission data
+    getEntities();
+    //Reflect action type
+    getActionTypes();
+  }
   /**
    * Pre populate permission matrix data
    */
@@ -406,8 +421,8 @@ const PermissionMatrix = (props) => {
           entity: entity._id, actions
         })
         entity.subEntity.map((subEntityEle, key) => {
-          console.log('sub ent', {subEntityEle})
-          if(!subEntityEle) {
+          console.log('sub ent', { subEntityEle })
+          if (!subEntityEle) {
             return false;
           }
           permissions.push({
@@ -441,7 +456,7 @@ const PermissionMatrix = (props) => {
      */
     let actions = [];
     entityData.map((entity, key) => {
-      
+
       if (entity._id === entityId && isCheckedEntity) {
         /**
          * Select all sub entities with
@@ -460,8 +475,8 @@ const PermissionMatrix = (props) => {
         })
 
         entity.subEntity.map((subEntityEle, key) => {
-          console.log('sub entity change', {subEntityEle});
-          if(!subEntityEle){
+          console.log('sub entity change', { subEntityEle });
+          if (!subEntityEle) {
             return false;
           }
           permissions.push({
@@ -781,7 +796,7 @@ const PermissionMatrix = (props) => {
     /**
      * Send data to parent
      */
-     console.log('btp4');
+    console.log('btp4');
     broadcastToParent(permissions);
   }
 
@@ -1074,6 +1089,6 @@ const PermissionMatrix = (props) => {
       </div>
     </>
   );
-};
+});
 
 export default PermissionMatrix;
