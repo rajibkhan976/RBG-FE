@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from "../../configuration/config";
-
+import { utils } from "../../helpers";
 let headers = {
     "Content-Type": "application/json",
 };
@@ -8,6 +8,8 @@ let headers = {
 export const ProductServices = {
     fetchCategory: async () => {
         try {
+            const hasPermission = utils.hasPermission("product","read");
+            if(!hasPermission) throw new Error("You do not have permission");
             const result = await axios.get(config.fetchCategoryUrl, { headers: headers });
             console.log('Categories From Service : ', result);
             return result.data;
@@ -26,6 +28,8 @@ export const ProductServices = {
     createCategory: async (payload) => {
         // headers.Authorization = localStorage.getItem("_token");
         try {
+            const hasPermission = utils.hasPermission("product","create");
+            if(!hasPermission) throw new Error("You do not have permission");
             const result = await axios.post(config.otherCategoryUrl, payload, { headers: headers });
             if(result.status === 200) {
                 return result.data;
@@ -46,6 +50,8 @@ export const ProductServices = {
     editCategory: async (payload) => {
         // headers.Authorization = localStorage.getItem("_token");
         try {
+            const hasPermission = utils.hasPermission("product","update");
+            if(!hasPermission) throw new Error("You do not have permission");
             const url = config.otherCategoryUrl + "/" + payload.id;
             const result = await axios.put(url, payload, { headers: headers });
             if(result.status === 200) {
@@ -67,6 +73,8 @@ export const ProductServices = {
     deleteCategory: async (catID) => {
         // headers.Authorization = localStorage.getItem("_token");
         try {
+            const hasPermission = utils.hasPermission("product","delete");
+            if(!hasPermission) throw new Error("You do not have permission");
             const url = config.otherCategoryUrl + "/" + catID;
             const result = await axios.delete(url, { headers: headers });
             if(result.status === 200) {
@@ -87,6 +95,8 @@ export const ProductServices = {
 
     fetchProducts: async (page=null, queryParams=null) => {
         try {
+            const hasPermission = utils.hasPermission("product","read");
+            if(!hasPermission) throw new Error("You do not have permission");
             const result = await axios.get(config.fetchProductUrl +
             (page ? "/" + page : '') +
             (queryParams ? "?" + decodeURI(queryParams) : ''),
@@ -134,6 +144,8 @@ export const ProductServices = {
 
     fetchColorSizes: async (page=null, queryParams=null) => {
         try {
+            const hasPermission = utils.hasPermission("product","read");
+            if(!hasPermission) throw new Error("You do not have permission");
             const result = await axios.get(config.colorSizeUrl,{ headers: headers });
             console.log('Color Sizes: ', result);
             return result.data;
@@ -152,6 +164,8 @@ export const ProductServices = {
     createProduct: async (payload) => {
         // headers.Authorization = localStorage.getItem("_token");
         try {
+            const hasPermission = utils.hasPermission("product","create");
+            if(!hasPermission) throw new Error("You do not have permission.");
             const result = await axios.post(config.createProductUrl, payload, { headers: headers });
             if(result.status === 200) {
                 return result.data;
@@ -173,6 +187,8 @@ export const ProductServices = {
     editProduct: async (payload) => {
         // headers.Authorization = localStorage.getItem("_token");
         try {
+            const hasPermission = utils.hasPermission("product","update");
+            if(!hasPermission) throw new Error("You do not have permission.");
             const url = config.editProductUrl + "/" + payload.id;
             const result = await axios.put(url, payload, { headers: headers });
             if(result.status === 200) {
@@ -194,6 +210,8 @@ export const ProductServices = {
     deleteProduct: async (productID) => {
         // headers.Authorization = localStorage.getItem("_token");
         try {
+            const hasPermission = utils.hasPermission("product","delete");
+            if(!hasPermission) throw new Error("You do not have permission.");
             const url = config.deleteProductUrl + "/" + productID;
             const result = await axios.delete(url, { headers: headers });
             if(result.status === 200) {

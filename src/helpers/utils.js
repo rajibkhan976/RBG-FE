@@ -1,5 +1,6 @@
 import { history } from "./history";
 import moment from "moment";
+const permissions = JSON.parse(localStorage.getItem('permissions'));
 
 export const utils = {
     /**
@@ -124,5 +125,14 @@ export const utils = {
     },
     standardDateFormat: (date) => {
         return moment(date).format("MM/DD/YYYY");
+    },
+
+    hasPermission: (entityName, actionName) => {
+        let bool = false;
+        const entityIndex = permissions.findIndex(el => el.entity === entityName);
+        if(entityIndex > -1) {
+            bool = permissions[entityIndex].actions.includes(actionName);
+        }
+        return bool;
     }
 }
