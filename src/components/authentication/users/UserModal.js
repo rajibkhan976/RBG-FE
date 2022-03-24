@@ -174,7 +174,7 @@ const UserModal = (props) => {
         setEmail(editUser.email);
         if (editUser && editUser.role && editUser.group) {
             setRoleId(editUser.role[0]._id);
-            getGroupsByRoleId(editUser.role[0]._id);
+            getGroupsByRoleId(editUser.role[0]._id, true);
             setGroupId(editUser.group[0]._id);
             setPermissionData(editUser.group[0].permissions);
             //Keep a original copy of permissions data
@@ -523,14 +523,16 @@ const UserModal = (props) => {
      * Get groups by role ID
      * @param {*} event 
      */
-    const getGroupsByRoleId = async (roleId) => {
+    const getGroupsByRoleId = async (roleId, isEdit = false) => {
         setIsLoader(true);
         try {
             if (roleId) {
                 const groups = await UserServices.fetchGroupsByRoleId(roleId);
                 if (groups) {
                     console.log('Fetched groups', groups);
-                    setGroupId('');
+                    if (!isEdit) {
+                        setGroupId('');
+                    }
                     setGroups(groups);
                 }
             } else {
