@@ -104,13 +104,20 @@ const ContractOverviewTransaction = (props) => {
   useEffect(() => {
     //Remaining payment count
     let remainingPaymentCount = Number(props.programContractData.numberOfPayments);
-    //Pay now tuition fee
+
+
+    /**
+     * Payment now
+     */
     let payNowTuitionAmount = 0;
     if (props.programContractData.isPayNow) {
+      remainingPaymentCount--;
+
+      //Pay now tuition fee
       payNowTuitionAmount = Number(props.programContractData.amount);
       console.log('Pay now tuition amount', payNowTuitionAmount)
-      remainingPaymentCount--;
     }
+
 
     //Pay now down payments
     let payNowDownPayments = [];
@@ -125,7 +132,12 @@ const ContractOverviewTransaction = (props) => {
       console.log('Pay now down payments total amout: ', payNowDownPaymentsAmount, typeof payNowDownPaymentsAmount);
     }
     console.log('Now amount', payNowTuitionAmount, typeof payNowTuitionAmount);
+    //Billing total
     let nowPaymentAmount = payNowTuitionAmount + payNowDownPaymentsAmount;
+
+    /**
+     * Payment due
+     */
 
     //Due tuition fee
     let dueTuitionAmount = 0;
@@ -150,18 +162,24 @@ const ContractOverviewTransaction = (props) => {
     let duePaymentAmount = dueTuitionAmount + dueDownPaymentsAmount;
     console.log('Due payment amount', duePaymentAmount);
 
-    //total down payment amount
+    /**
+     * Payment Overview
+     */
+
+    //Total down payment amount
     let totalDownPayment = 0;
     if (props.programContractData.downPayments && props.programContractData.downPayments.length) {
       totalDownPayment = props.programContractData.downPayments.reduce((total, obj) => Number(obj.amount) + total, 0);
     }
 
-    //total
-    let total = 0;
-    if (payNowTuitionAmount) {
-      total = totalDownPayment + (payNowTuitionAmount * props.programContractData.numberOfPayments)
-      console.log('total:', typeof total, total);
-    }
+    //Total tuition amount
+    let totalTuitionAmount = Number(props.programContractData.amount) * props.programContractData.numberOfPayments
+
+    //Total
+    let total = totalDownPayment + totalTuitionAmount;
+
+
+
 
     setContractData({
       ...contractData,

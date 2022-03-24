@@ -9,12 +9,12 @@ let headers = {
 };
 
 export const ProgramServices = {
-    fetchPrograms: async (page = null, queryParams = null) => {
+    fetchPrograms: async () => {
         try {
             if (isLoggedIn() === false) {
                 throw new Error(message.loginFailed);
             }
-            const url = config.programUrl + '/list' + (page ? "/" + page : '') + (queryParams ? "?" + queryParams : '');
+            const url = config.programUrl + '/list/all';
             const options = {
                 headers: headers
             };

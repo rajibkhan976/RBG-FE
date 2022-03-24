@@ -104,7 +104,7 @@ const DownPayments = forwardRef((props, ref) => {
         console.log('validate individual', key, type, e.target.value, e.target.checked);
         let elems = [...downPaymentElems];
         if (type === "isPayNow") {
-            elems[key][type] = e.target.checked;
+            elems[key][type] = e.target.checked ? 1 : 0;
         } else {
             elems[key][type] = e.target.value;
         }
@@ -180,7 +180,7 @@ const DownPayments = forwardRef((props, ref) => {
                             <div className="newDownpayment_downPaymentWrapers" key={key}>
                                 <div className="downPaymentsCreated">
                                     <div className="newDownpayment programs buttons">
-                                        {console.log('Loop through payments', el, isDownPayment)}
+                                        {console.log('Loop through payments', el)}
                                         {key === 0 ?
 
                                             <button className="addNewDownpayment" onClick={addDownpaymentFn}>+ Add more Downpayments</button> :
@@ -303,6 +303,7 @@ const DownPayments = forwardRef((props, ref) => {
                                                         name="paymentStatus"
                                                         value={el.payment_status}
                                                         onChange={e => validateIndividual(e, key, "payment_status")}
+                                                        disabled={el.isPayNow === 0 ? 'disabled' : ''}
                                                     >
                                                         <option value="unpaid">Unpaid</option>
                                                         <option value="paid">Paid</option>

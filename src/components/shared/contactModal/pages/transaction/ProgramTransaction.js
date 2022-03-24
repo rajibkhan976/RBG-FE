@@ -29,6 +29,7 @@ const ProgramTransaction = (props) => {
     courseStart: "",
     numberOfPayments: 1,
     paymentDate: moment().add(1, "days").format("YYYY-MM-DD"),
+    minPaymentDate : moment().add(1, "days").format("YYYY-MM-DD"),
     firstBillingTime: false,
     auto_renew: 0,
     isPayNow: 1,
@@ -92,7 +93,7 @@ const ProgramTransaction = (props) => {
       setIsLoader(true);
       const pageId = utils.getQueryVariable('page');
       const queryParams = new URLSearchParams();
-      const fetchProgram = await ProgramServices.fetchPrograms(pageId, queryParams);
+      const fetchProgram = await ProgramServices.fetchPrograms();
       console.log('fetch programs', fetchProgram);
       if (fetchProgram.courses.length) {
         setProgramList(fetchProgram.courses);
@@ -141,12 +142,7 @@ const ProgramTransaction = (props) => {
   const handelPaymentTypeChange = (e) => {
     e.preventDefault();
     console.log('pt', e.target.value);
-    //Calculate no of payments
-    let noOfPayments = 1;
-    if (e.target.value === 'recurring') {
-      noOfPayments = contractData.duration
-    }
-    setContractData({ ...contractData, payment_type: e.target.value, numberOfPayments: noOfPayments });
+    setContractData({ ...contractData, payment_type: e.target.value });
   }
 
   //Payment type change
@@ -178,7 +174,7 @@ const ProgramTransaction = (props) => {
   const handelFirstBillingDateChange = (e) => {
     e.preventDefault();
     console.log('first billing date change', e.target.value);
-    setContractData({ ...contractData, paymentDate: e.target.value, nextDueDate: moment(e.target.value).format("MM/DD/YYYY"), isPayNow: 0 });
+    setContractData({ ...contractData, paymentDate: e.target.value, isPayNow: 0 });
   }
 
   //Program start date change
@@ -201,33 +197,37 @@ const ProgramTransaction = (props) => {
       let nextDueDate = "";
       let noOfPayments = 1;
       if (contractData.payment_type === 'recurring') {
-        nextDueDate = utils.getNextDueDate(false, 1, contractData.billing_cycle)
-        //No of payments
-        noOfPayments = 1;
+        nextDueDate = utils.getNextDueDate(contractData.paymentDate, 1, contractData.billing_cycle)
         /**
          * Example
-         * duration : 2 years
+         * duration : 6 years
          * billing cycle : monthly
          */
-        if (contractData.billing_cycle === 'monthly') {
-          let months = contractData.durationInterval === 'month' ? 1 : 12;
-          noOfPayments = contractData.duration * months;
-        } else if (contractData.billing_cycle === 'yearly') {
+        if (contractData.durationInterval === 'year' && contractData.billing_cycle === 'monthly') {
+          noOfPayments = contractData.duration * 12;
+        } else {
           noOfPayments = contractData.duration * 1;
         }
-        console.log({ nextDueDate, noOfPayments });
+        /**
+         * First billing date is later
+         */
+        if (contractData.firstBillingTime) {
+          nextDueDate = utils.getNextDueDate(contractData.paymentDate, 1, contractData.billing_cycle)
+        }
+
       } else if (!contractData.firstBillingTime && contractData.payment_type === 'onetime') {
         nextDueDate = ""
       }
       setContractData({ ...contractData, nextDueDate: nextDueDate, numberOfPayments: noOfPayments });
     }
-  }, [contractData.duration, contractData.billing_cycle, contractData.payment_type])
+  }, [
+    contractData.duration,
+    contractData.billing_cycle,
+    contractData.payment_type,
+    contractData.firstBillingTime,
+    contractData.paymentDate
+  ]);
 
-  // useEffect(() => {
-  //   if (!contractData.firstBillingTime && contractData.payment_type === 'onetime') {
-  //     setContractData({ ...contractData, nextDueDate: "" });
-  //   }
-  // }, [contractData.payment_type, contractData.firstBillingTime]);
 
   //Continue to buy
   const continueToBuy = (e) => {
@@ -508,7 +508,7 @@ const ProgramTransaction = (props) => {
               <p>1st Billing Date <span>Now</span></p>
             </div>
             <div className={contractData.firstBillingTime ? "paymentNow display" : "paymentNow"} >
-              <input type="date" name="firstBillingDate" placeholder="mm/dd/yyyy" min={contractData.paymentDate} onChange={handelFirstBillingDateChange} className="editableInput" value={contractData.paymentDate} />
+              <input type="date" name="firstBillingDate" placeholder="mm/dd/yyyy" min={contractData.minPaymentDate} onChange={handelFirstBillingDateChange} className="editableInput" value={contractData.paymentDate} />
             </div>
           </div>
           <div className={formErrors.courseStart ? "rightSecTransaction errorField" : "rightSecTransaction"}>
