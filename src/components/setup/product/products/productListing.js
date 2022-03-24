@@ -121,8 +121,8 @@ const ProductListing = (props) => {
 
   useEffect(()=>{
     let urlString = window.location.href
-    
-    if(props.filteredData === null) {
+    console.log("parseURLParams(urlString)", parseURLParams(urlString));
+    if(props.filteredData === null && (parseURLParams(urlString) !== undefined || parseURLParams(urlString) !== null)) {
       setFilteredData(parseURLParams(urlString))
     }
     fetchCategories()

@@ -256,7 +256,7 @@ const Products = () => {
           setFilteredData={setFilteredData}
         />}
 
-
+        {console.log("Filtered data", filteredData)}
     </>
   );
 };
