@@ -240,7 +240,6 @@ useEffect(()=>{
   }
 
   const closeModal = () => {
-
     props.closeAddCustomModal(false);
   }
 
@@ -306,11 +305,10 @@ useEffect(()=>{
                         <button type="button" name="save"
                         className="saveNnewBtn" onClick={() => addCustomField (false)}>
                         <span>Save</span><img src={arrow_forward} alt="" /></button>
-                        {props.editStatus ? "" : 
-                        <button type="button" name="save"
-                        className="saveNnewBtn" onClick={() => addCustomField (true)}>
-                        <span>Save &amp; New</span><img src={arrow_forward} alt="" /></button>
-                        }
+                        { props.origin === 'settings' ? (props.editStatus ? "" :
+                            <button type="button" name="save"
+                                    className="saveNnewBtn" onClick={() => addCustomField (true)}>
+                                <span>Save &amp; New</span><img src={arrow_forward} alt="" /></button>) : "" }
                     </div>
                     </form>
                 </Scrollbars>

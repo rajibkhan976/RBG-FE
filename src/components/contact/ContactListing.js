@@ -313,7 +313,7 @@ const ContactListing = forwardRef((props, ref) => {
             event.preventDefault();
             utils.addQueryParameter('page', 1);
             if (keyword) {
-                utils.addQueryParameter('search', keyword);
+                utils.addQueryParameter('search', keyword.trim());
             } else {
                 utils.removeQueryParameter('search');
             }
@@ -323,15 +323,13 @@ const ContactListing = forwardRef((props, ref) => {
         }
     }
     const GenerateColumns = () => {
-        let i = 0;
         return (
             <li className="listHeadingContacts">
-                {savedColList.map((item, index) => {
-                    i++;
+                {savedColList.filter(filterCondition => filterCondition.status ).map((item, index) => {
                     return (
-                        <div className="GenerateColumnsCell" key={i}>
-                            {item.status ? <div key={i + index} className={"dataTableCell " +(item.id === sortBy ? (sortType === 'asc' ? 'asc' : "dsc") : "")}
-                                onClick={() => handleSortBy(item.id)}>{item.name}</div> : ""}
+                        <div className="GenerateColumnsCell" key={index}>
+                            <div className={"dataTableCell " +(item.id === sortBy ? (sortType === 'asc' ? 'asc' : "dsc") : "")}
+                                 onClick={() => handleSortBy(item.id)}>{item.name}</div>
                         </div>
                     )
                 })}

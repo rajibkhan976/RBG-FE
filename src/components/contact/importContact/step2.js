@@ -961,6 +961,7 @@ function Step2(props) {
                     savedNew={() => fetchCustomFields ()}
                     successMessage={(msg) => createSuccess (msg)}
                     errorMessage={(msg) => createError (msg)}
+                    origin="importContact"
                 />
             }
         </>

@@ -335,6 +335,7 @@ const Customizations = (props) => {
           savedNew={() => fetchCustomFields ()} 
           successMessage={(msg) => createSuccess (msg)} 
           errorMessage={(msg) => createError (msg)}
+          origin="settings"
         />
       }
     </>

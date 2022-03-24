@@ -58,7 +58,17 @@ const MainComponent = () => {
     const [isNewNotification, setIsNewNotification] = useState(false);
     const [contactId, setContactId] = useState("");
     const [page, setPage] = useState("");
-    const [notificationStructure, setNotificationStructure] = useState([]);
+    const [notificationStructure, setNotificationStructure] = useState({
+        payment: {
+            totalUnread: 0,
+            totalRead: 0
+        },
+        general: {
+            totalUnread: 0,
+            totalRead: 0
+        },
+        totalNotification: 0
+    });
     const [notificationUnread, setNotificationUnread] = useState(0);
     const closeNotification = () => {
         setIsNewFeaturesAvailable(false);
@@ -102,15 +112,16 @@ const MainComponent = () => {
         let parseData = JSON.parse(data);
         setIsNewNotification(true);
         let notificationStructureLocal = notificationStructure;
+        console.log('socket', notificationStructure, data)
         if (loggedInUser && (parseData.organizationCode === loggedInUser.organizationCode)) {
-            setNotificationUnread(notificationUnread + 1);
+            notificationStructureLocal.totalNotification = notificationStructure.totalNotification + 1;
             if (parseData.type === 'payment') {
                 notificationStructureLocal.payment.totalUnread = notificationStructure.payment.totalUnread + 1;
             } else {
                 notificationStructureLocal.general.totalUnread = notificationStructure.general.totalUnread + 1;
             }
-            setNotificationStructure([]);
             setTimeout(() => {
+                setNotificationUnread(notificationStructure.totalNotification);
                 setNotificationStructure(notificationStructureLocal);
             }, 100)
 
@@ -158,7 +169,7 @@ const MainComponent = () => {
     };
 
     useEffect(() => {
-        setSetupMenuState(false)
+        setSetupMenuState(false);
     });
 
     /*
@@ -199,11 +210,11 @@ const MainComponent = () => {
         }
     };
 
-    useEffect(() => {
+    useEffect(async () => {
         /**
          * Fetch notifications
          */
-        fetchNotifications();
+        await fetchNotifications();
     }, []);
 
     /**
@@ -212,15 +223,18 @@ const MainComponent = () => {
      */
     const fetchNotifications = async () => {
         try {
-            let notificationStructureLocal = [];
-            notificationStructureLocal['payment'] = {
-                totalRead: 0,
-                totalUnread: 0
+            let notificationStructureLocal = {
+                payment: {
+                    totalUnread: 0,
+                    totalRead: 0
+                },
+                general: {
+                    totalUnread: 0,
+                    totalRead: 0
+                },
+                totalNotification: 0
             };
-            notificationStructureLocal['general'] = {
-                totalRead: 0,
-                totalUnread: 0
-            };
+            setNotificationStructure(notificationStructureLocal);
             let totalUnread = 0;
             const result = await NotificationServices.fetchListOfNotification();
             if (result) {
@@ -235,16 +249,39 @@ const MainComponent = () => {
                         notificationStructureLocal.general.totalUnread = notificationStructureLocal.general.totalUnread + element.unread;
                     }
                 });
+                notificationStructureLocal.totalNotification = totalUnread;
                 setNotificationUnread(totalUnread);
-                setNotificationStructure(notificationStructureLocal);
+                setNotificationStructure(prevState => {
+                    return {
+                        ...prevState,
+                        ...notificationStructureLocal
+                    }
+                });
             }
         } catch (e) {
             console.log('Error while fetching notifications', e);
         }
     };
+
     const triggerMarkAsRead = () => {
-        fetchNotifications();
+        setNotificationStructure(prevState => {
+            return {
+                ...prevState,
+                payment: {
+                    totalUnread: 0,
+                    totalRead: 0
+                },
+                general: {
+                    totalUnread: 0,
+                    totalRead: 0
+                },
+                totalNotification: 0
+            }
+        });
+        setNotificationUnread(0);
     }
+
+
     return (
         <>
             <div className="mainComponent">

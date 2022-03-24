@@ -39,6 +39,7 @@ const Notifications = (props) => {
     }
     const fetchNotifications = async (type = null) => {
         setIsScrollLoading(true);
+        //setNotificationListing([]);
         setIsLoader(true);
         if (type) {
             setNotificationType(type);
@@ -96,6 +97,14 @@ const Notifications = (props) => {
                     "page": 4
                 },
             });
+            setTimeout(() => {
+                dispatch({
+                    type: actionTypes.CONTACTS_MODAL_ID,
+                    contact_modal_id: {
+                        "id": e.contactId
+                    },
+                }, 100);
+            })
         }
         makeNotificationAsRead(e);
     }
@@ -113,11 +122,9 @@ const Notifications = (props) => {
     const markAllAsRead = async () => {
         try {
             setIsBigLoader(true);
-            let markNotifications = await NotificationServices.markAllAsRead();
+            await NotificationServices.markAllAsRead();
             setIsBigLoader(false);
-            if (markNotifications) {
-                fetchNotifications()
-            }
+            await fetchNotifications()
             props.triggerMarkAsRead();
         } catch (e) {
             console.log('Error in mark all as read', e);

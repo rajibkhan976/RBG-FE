@@ -76,11 +76,11 @@ function Status(props) {
                                             <img src={fileDoneIcon} alt="" />
                                         </figure>
                                         <h3>The selected file has been uploaded successfully.</h3>
+                                        {addedRecord ?
                                         <div className="uploadFileBtn">
                                             View Records
                                             <input type="button" onClick={viewRecords}/>
-                                        </div>
-
+                                        </div> : ""}
                                     </div>
                                     :
                                     <div className="fileImportBox error">
