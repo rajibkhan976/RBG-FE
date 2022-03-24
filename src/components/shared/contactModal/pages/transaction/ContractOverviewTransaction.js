@@ -325,7 +325,10 @@ const ContractOverviewTransaction = (props) => {
                 <div className="informationSpan">
                   <span className="infoSpan">
                     <img src={help} alt="" />
-                    <span className="tooltiptextInfo">${contractData.tuitionAmount} x {contractData.numberOfPayments + ' ' + contractData.billingCycleText + '(s)'}</span>
+                    {contractData.payment_type === 'onetime' ?
+                      <span className="tooltiptextInfo"> ${contractData.tuitionAmount} x 1 </span> :
+                      <span className="tooltiptextInfo">${contractData.tuitionAmount} x {contractData.numberOfPayments + ' ' + contractData.billingCycleText + '(s)'}</span>
+                    }
                   </span>&nbsp;&nbsp;${parseFloat(contractData.totalTuitionAmount).toFixed(2)}</div>
               </li>
             </ul>
@@ -335,56 +338,56 @@ const ContractOverviewTransaction = (props) => {
             </ul>
           </div>
         </div>
-
-        <div className="outstandingOverview">
-          {contractData.dueDownPayments && contractData.dueDownPayments.map((el, key) => {
-            return (
-              <React.Fragment key={key + "_dueDownPayments"}>
-                <div className="outstandingDownpayment">
-                  <div className="downpaymentsDetails">
-                    <div className="cardImage">
-                      <img src={el.payment_type === 'cash' ? outstandingCash : outstandingCard} alt="" />
+        {contractData.duePaymentAmount > 0 ?
+          <div className="outstandingOverview">
+            {contractData.dueDownPayments && contractData.dueDownPayments.map((el, key) => {
+              return (
+                <React.Fragment key={key + "_dueDownPayments"}>
+                  <div className="outstandingDownpayment">
+                    <div className="downpaymentsDetails">
+                      <div className="cardImage">
+                        <img src={el.payment_type === 'cash' ? outstandingCash : outstandingCard} alt="" />
+                      </div>
+                      <div className="paymentModuleInfos">
+                        <span className="accNumber">{el.title}</span>
+                        <span className="accinfod"><b>$ {parseFloat(el.amount).toFixed(2)}</b></span>
+                      </div>
                     </div>
-                    <div className="paymentModuleInfos">
-                      <span className="accNumber">{el.title}</span>
-                      <span className="accinfod"><b>$ {parseFloat(el.amount).toFixed(2)}</b></span>
+                    <div className="downpaymentsPayDetails">
+                      <div className="paymentStatus due">Due</div>
+                      <div className="payDate">
+                        <img src={payDate} /> {utils.standardDateFormat(el.paymentDate)}
+                      </div>
                     </div>
                   </div>
-                  <div className="downpaymentsPayDetails">
-                    <div className="paymentStatus due">Due</div>
-                    <div className="payDate">
-                      <img src={payDate} /> {utils.standardDateFormat(el.paymentDate)}
-                    </div>
+                </React.Fragment>
+              );
+            })}
+            {contractData.remainingPaymentCount > 0 ?
+              <div className="outstandingDownpayment tutuionSubscriptions">
+                <div className="downpaymentsDetails">
+                  <div className="cardImage">
+                    <img src={outstandingCard} alt="" />
+                  </div>
+                  <div className="paymentModuleInfos">
+                    <span className="accNumber">Tuition Amount</span>
+                    <span className="accinfod"><b>$ {parseFloat(contractData.tuitionAmount).toFixed(2)}</b> / {contractData.billingCycleText}</span>
                   </div>
                 </div>
-              </React.Fragment>
-            );
-          })}
+                <div className="downpaymentsPayDetails">
+                  <div className="payDate instalments">Payment Remaing ... <b>{contractData.remainingPaymentCount}</b></div>
+                  <div className="payDate instalmentDate">
+                    <img src={payDate} alt="" /> {contractData.nextDueDate}
+                  </div>
+                </div>
+              </div> : ""}
 
-          <div className="outstandingDownpayment tutuionSubscriptions">
-            <div className="downpaymentsDetails">
-              <div className="cardImage">
-                <img src={outstandingCard} alt="" />
-              </div>
-              <div className="paymentModuleInfos">
-                <span className="accNumber">Tuition Amount</span>
-                <span className="accinfod"><b>$ {parseFloat(contractData.tuitionAmount).toFixed(2)}</b> / {contractData.billingCycleText}</span>
-              </div>
-            </div>
-            <div className="downpaymentsPayDetails">
-              <div className="payDate instalments">Payment Remaing ... <b>{contractData.remainingPaymentCount}</b></div>
-              <div className="payDate instalmentDate">
-                <img src={payDate} alt="" /> {contractData.nextDueDate}
-              </div>
-            </div>
+            <ul className="totalPaymentUl outstandings">
+              <li>Outstanding</li>
+              <li>${parseFloat(contractData.duePaymentAmount).toFixed(2)}</li>
+            </ul>
           </div>
-
-          <ul className="totalPaymentUl outstandings">
-            <li>Outstanding</li>
-            <li>${parseFloat(contractData.duePaymentAmount).toFixed(2)}</li>
-          </ul>
-        </div>
-
+          : ''}
         <div className="dottedBorder"></div>
 
         <div className={contractData.payNowTuitionAmount || contractData.payNowDownPayments ? "currentPaymentOverview programPayNowOverview" : "currentPaymentOverview programPayNowOverview noNowPayments"}>

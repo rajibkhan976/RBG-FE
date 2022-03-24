@@ -276,12 +276,12 @@ const ProgramTransaction = (props) => {
       formErrorsCopy.billing_cycle = "Please modify billing cycle"
     }
 
-    if (contractData.durationInterval === 'month' &&
-      contractData.billing_cycle === 'yearly' &&
-      contractData.payment_type === 'onetime') {
-      isError = true;
-      formErrorsCopy.billing_cycle = "Please modify billing cycle"
-    }
+    // if (contractData.durationInterval === 'month' &&
+    //   contractData.billing_cycle === 'yearly' &&
+    //   contractData.payment_type === 'onetime') {
+    //   isError = true;
+    //   formErrorsCopy.billing_cycle = "Please modify billing cycle"
+    // }
 
     //Tution amount
     let regex = /^\d{0,5}(\.\d{1,2})?$/;
@@ -439,7 +439,7 @@ const ProgramTransaction = (props) => {
                 <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
               </span>
             </label>
-            <select className="selectBox" name="billingCycle" value={contractData.billing_cycle} onChange={handelBillingCycleChange}>
+            <select className="selectBox" name="billingCycle" value={contractData.billing_cycle} onChange={handelBillingCycleChange} disabled={contractData.payment_type === 'onetime'}>
               <option value="monthly">Monthly</option>
               <option value="yearly">Yearly</option>
             </select>
