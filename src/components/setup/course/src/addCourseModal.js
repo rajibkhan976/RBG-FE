@@ -399,7 +399,7 @@ const AddCourseModal = (props) => {
                     </select>
                   </div>
 
-                  <div className={"formRight " + errorClass.fees}>
+                  <div className={"formRight programModals" + errorClass.fees}>
                     <label>Fees</label>
                     <div className="preField">
                       {/* <span className="smallspan">* default currency is<strong> USD</strong></span> */}

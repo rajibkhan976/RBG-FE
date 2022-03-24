@@ -4229,3 +4229,14 @@ span.userNames {
 .transaction_form.products.forDownpayment .cmnFormRow.gap .rightSecTransaction label.labelWithInfo.paymentTime {
   padding-bottom: 11px;
 }
+
+.formRight.programModals label {
+  padding-bottom: 10px;
+}
+
+.formRight.programModals .preField .cmnFieldStyle {
+  margin-top: 0;
+}
+body .inFormField input {
+  font-size: 13px;
+}
