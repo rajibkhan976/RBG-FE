@@ -185,28 +185,43 @@ const ProductFilter = (props) => {
     }
 
     const handleApplyFilter = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         // handleResetFilter(e, false);
         const data = { ...filterData, fromPriceProduct: minPrice.toString(), toPriceProduct: maxPrice.toString() };
         if (data.categories.length) {
             utils.addQueryParameter("catID", data.categories.join(",").toString());
+        } else {
+            utils.removeQueryParameter("catID");
         }
         if (data.colors.length) {
             utils.addQueryParameter("colors", data.colors.join(",").toString());
+        } else {
+            utils.removeQueryParameter("colors");
         }
         if (data.sizes.length) {
             utils.addQueryParameter("sizes", data.sizes.join(",").toString());
+        } else {
+            utils.removeQueryParameter("sizes");
         }
-        if (data.fromPriceProduct !== "0" || data.fromPriceProduct !== "false") {
+        // if (data.fromPriceProduct !== "0") {
+        //     utils.addQueryParameter("fromPriceProduct", data.fromPriceProduct.toString());
+        // } else {
+        //     utils.removeQueryParameter("fromPriceProduct");
+        // }
+        if (data.toPriceProduct !== "0") {
             utils.addQueryParameter("fromPriceProduct", data.fromPriceProduct.toString());
-        }
-        if (data.toPriceProduct !== "0" || data.toPriceProduct !== "false") {
             utils.addQueryParameter("toPriceProduct", data.toPriceProduct.toString());
+        } else {
+            utils.removeQueryParameter("fromPriceProduct");
+            utils.removeQueryParameter("toPriceProduct");
         }
         // console.log(data);
         props.getProduct();
         props.closeModal();
+<<<<<<< HEAD
         // props.setFilteredData(data)
+=======
+>>>>>>> Product and Course bug fixes
     }
 
     const handleResetFilter = (event) => {
@@ -225,7 +240,10 @@ const ProductFilter = (props) => {
         });
         props.getProduct();
         props.closeModal();
+<<<<<<< HEAD
         // props.setFilteredData(null)
+=======
+>>>>>>> Product and Course bug fixes
     }
 
     return (
@@ -243,12 +261,12 @@ const ProductFilter = (props) => {
                                 <p>Category</p>
                                 {props.categories.map((cat, key) => {
                                     return (
-                                        <React.Fragment>
+                                        <React.Fragment key={"cat_"+key}>
                                             <label>
                                                 <div className="customCheckbox">
                                                     <input type="checkbox"
                                                         name="categories"
-                                                        value={cat._id}
+                                                        defaultValue={cat._id}
                                                         onChange={handleCategoryCheckbox}
                                                         defaultChecked={filterData.categories.includes(cat._id)}
                                                     />
@@ -264,12 +282,12 @@ const ProductFilter = (props) => {
                                 <p>Size</p>
                                 {colorSize.sizes.map((size, key) => {
                                     return (
-                                        <React.Fragment>
+                                        <React.Fragment key={"sizes_"+key}>
                                             <label>
                                                 <div className="customCheckbox">
                                                     <input type="checkbox"
                                                         name="sizes"
-                                                        value={size.size}
+                                                        defaultValue={size.size}
                                                         onChange={handleSizeCheckbox}
                                                         defaultChecked={filterData.sizes.includes(size.size)}
                                                     />
@@ -285,14 +303,14 @@ const ProductFilter = (props) => {
                                 <p>Color</p>
                                 {colorSize.colors.map((color, key) => {
                                     return (
-                                        <React.Fragment>
+                                        <React.Fragment key={"color_"+key}>
                                             <label>
                                                 <div className="customCheckbox">
                                                     <input type="checkbox"
                                                         name="colors"
-                                                        value={color.label}
+                                                        defaultValue={color.label}
                                                         onChange={handleColorCheckbox}
-                                                        checked={filterData.colors.includes(color.label)}
+                                                        defaultChecked={filterData.colors.includes(color.label)}
                                                     />
                                                     <span></span>
                                                 </div>

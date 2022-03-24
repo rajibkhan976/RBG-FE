@@ -82,6 +82,7 @@ const ProductListing = (props) => {
     );
   };
 
+<<<<<<< HEAD
   // const fetchCategories = async () => {
   //   try {
   //     const result = await ProductServices.fetchCategory();
@@ -136,6 +137,8 @@ const ProductListing = (props) => {
 //     fetchCategories()
 //   }, [])
 
+=======
+>>>>>>> Product and Course bug fixes
   /****************************** FUNCTIONS START **********************************/
   return (
     <>
@@ -170,6 +173,7 @@ const ProductListing = (props) => {
           </div>
         </div>
         <div className="productViewType d-flex">
+<<<<<<< HEAD
           {/* {props.filteredData !== null && <>
             <span className="filteredShow">Filtered by:</span>
             <ul className="filteredData">
@@ -228,6 +232,8 @@ const ProductListing = (props) => {
             </ul>
           </>} */}
 
+=======
+>>>>>>> Product and Course bug fixes
           <button className="btn filterButton" onClick={() => props.openFilterModal()}>
             <img src={listView} alt="filter" />
           </button>

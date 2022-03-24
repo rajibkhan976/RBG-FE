@@ -243,7 +243,7 @@ const AddCourseModal = (props) => {
         setErrorClass(prevState => ({ ...prevState, duration: "error", durationMsg: "Program duration should never be 0" }));
       }
 
-      if (courseData.fees === "" || courseData.fees === '0') {
+      if (courseData.fees === "" || parseFloat(courseData.fees) <= 0) {
         bool = false;
         setErrorClass(prevState => ({ ...prevState, fees: "error", feesMsg: "Program fees should not be 0 or empty" }));
       }

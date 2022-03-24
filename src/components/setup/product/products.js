@@ -16,7 +16,6 @@ const Products = () => {
   const messageDelay = 5000; // ms
   // const [createButton, setCreateButton] = useState(null);
   // const [stateFilter, setStateFilter] = useState(null);
-  // const [filteredData, setFilteredData] = useState(null);
   const [categoryData, setCategoryData] = useState([]);
   const [isLoaderCat, setIsLoaderCat] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
@@ -75,16 +74,11 @@ const Products = () => {
   }
 
   const fetchCategories = async () => {
-    /************ PERMISSION CHECKING (FRONTEND) *******************/
-    // const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
-    // console.log("Permission", permissions);
-    /************ PERMISSION CHECKING (FRONTEND) *******************/
     try {
       if (!isLoaderCat) setIsLoaderCat(true);
       /************ PERMISSION CHECKING (FRONTEND) *******************/
-      // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
-      //     throw new Error(responses.permissions.role.read);
-      // }
+      const hasPermission = utils.hasPermission("product", "read");
+      if (!hasPermission) throw new Error("You do not have permission");
       /************ PERMISSION CHECKING (FRONTEND) *******************/
       const result = await ProductServices.fetchCategory();
       if (result.length) {
@@ -95,6 +89,7 @@ const Products = () => {
         // props.successMsg("No categories found");
       }
     } catch (e) {
+      setErrorMsg(e.message);
       // props.errorMsg(e.message);
     } finally {
       setIsLoaderCat(false);
@@ -108,9 +103,10 @@ const Products = () => {
     const queryParams = await getQueryParams();
     try {
       if (showLoader) setIsLoader(true);
-      // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
-      //     throw new Error(responses.permissions.role.read);
-      // }
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
+      const hasPermission = utils.hasPermission("product", "read");
+      if (!hasPermission) throw new Error("You do not have permission");
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
       const result = await ProductServices.fetchProducts(pageId, queryParams);
       if (result) {
         console.log("Product List", result);
@@ -132,6 +128,10 @@ const Products = () => {
   const fetchColorSizes = async () => {
     try {
       if (!isLoader) setIsLoader(true);
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
+      const hasPermission = utils.hasPermission("product", "read");
+      if (!hasPermission) throw new Error("You do not have permission");
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
       const result = await ProductServices.fetchColorSizes();
       setColorSize({
         colors: result.colors,
@@ -155,11 +155,20 @@ const Products = () => {
   // };
 
   const addProductModal = (bool = true, updateObj = {}) => {
-    if (categoryData.length) {
-      setOpenModal(bool);
-      setUpdateProduct(updateObj);
-    } else {
-      setErrorMsg("Please add category first");
+    try {
+      const action = (Object.keys(updateObj).length) ? "update" : "create";
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
+      const hasPermission = utils.hasPermission("product", action);
+      if (!hasPermission) throw new Error("You do not have permission");
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
+      if (categoryData.length) {
+        setOpenModal(bool);
+        setUpdateProduct(updateObj);
+      } else {
+        setErrorMsg("Please add category first");
+      }
+    } catch (e) {
+      setErrorMsg(e.message);
     }
   }
 
@@ -172,7 +181,15 @@ const Products = () => {
   }
 
   const openFilterModal = () => {
-    setProdFilterModalStatus(true);
+    try {
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
+      const hasPermission = utils.hasPermission("product", "read");
+      if (!hasPermission) throw new Error("You do not have permission");
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
+      setProdFilterModalStatus(true);
+    } catch (e) {
+      setErrorMsg(e.message);
+    }
   };
 
   const closeFilterModal = () => {
@@ -191,6 +208,10 @@ const Products = () => {
 
   const deleteProduct = async (productID) => {
     try {
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
+      const hasPermission = utils.hasPermission("product", "delete");
+      if (!hasPermission) throw new Error("You do not have permission");
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
       setIsLoader(true);
       const result = await ProductServices.deleteProduct(productID);
       if (result) {
@@ -225,7 +246,6 @@ const Products = () => {
         deleteProduct={(productID) => deleteProduct(productID)}
         successMsg={(msg) => setSuccessMsg(msg)}
         errorMsg={(msg) => setErrorMsg(msg)}
-        // filteredData={filteredData}
       />
       <CategoryListing
         isLoader={isLoaderCat}
@@ -253,10 +273,7 @@ const Products = () => {
           successMsg={(msg) => setSuccessMsg(msg)}
           errorMsg={(msg) => setErrorMsg(msg)}
           getcolorSize={colorSize}
-          // setFilteredData={setFilteredData}
         />}
-
-        {/* {console.log("Filtered data", filteredData)} */}
     </>
   );
 };

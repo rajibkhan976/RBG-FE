@@ -1,6 +1,5 @@
 import { history } from "./history";
 import moment from "moment";
-const permissions = JSON.parse(localStorage.getItem('permissions'));
 
 export const utils = {
     /**
@@ -128,6 +127,7 @@ export const utils = {
     },
 
     hasPermission: (entityName, actionName) => {
+        const permissions = JSON.parse(localStorage.getItem('permissions'));
         let bool = false;
         const entityIndex = permissions.findIndex(el => el.entity === entityName);
         if(entityIndex > -1) {

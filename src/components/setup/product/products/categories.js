@@ -76,6 +76,10 @@ const CategoryListing = (props) => {
         
         if(category.name.trim() !== ""){
             try {
+                /************ PERMISSION CHECKING (FRONTEND) *******************/
+                const hasPermission = utils.hasPermission("product", "read");
+                if (!hasPermission) throw new Error("You do not have permission");
+                /************ PERMISSION CHECKING (FRONTEND) *******************/
                 let catData = { name: category.name };
                 if (!catData.name.length) {
                     throw new Error("Category name should not be empty");
@@ -191,10 +195,10 @@ const CategoryListing = (props) => {
                             {props.categoryData.map((elem, key) => {
                                 return (
                                     <React.Fragment key={key + "_category"}>
-                                        <li ref={optionsToggleRef} 
-                                        // className={option === key ? "active" : ""} 
-                                        className={defaultCatID === elem._id ? "active" : ""}
-                                        key={elem._id}>
+                                        <li ref={optionsToggleRef}
+                                            // className={option === key ? "active" : ""} 
+                                            className={defaultCatID === elem._id ? "active" : ""}
+                                            key={elem._id}>
                                             <button className={elem.slug === "uncategorized" ? "smallListName" : "bigListName"} onClick={() => handleCategoryClick(elem._id)}>{elem.name} ({(elem.productCount) ? elem.productCount : 0})</button>
                                             {(elem.slug !== "uncategorized") ?
                                                 <button className="showList" onClick={() => toogleActionList(key)}>

@@ -70,6 +70,10 @@ const CategoryListing = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
+      const hasPermission = utils.hasPermission("course", "create");
+      if (!hasPermission) throw new Error("You do not have permission");
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
       let catData = { name: category.name };
       if (!catData.name.length) {
         props.errorMsg("Category name should not be empty");

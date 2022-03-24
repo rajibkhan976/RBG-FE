@@ -72,11 +72,11 @@ const Courses = () => {
   }
 
   const fetchCategories = async () => {
-    /************ PERMISSION CHECKING (FRONTEND) *******************/
-    // const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
-    // console.log("Permission", permissions);
-    /************ PERMISSION CHECKING (FRONTEND) *******************/
     try {
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
+      const hasPermission = utils.hasPermission("course", "read");
+      if (!hasPermission) throw new Error("You do not have permission");
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
       if (!isLoader) setIsLoaderCat(true);
       /************ PERMISSION CHECKING (FRONTEND) *******************/
       // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
@@ -99,15 +99,14 @@ const Courses = () => {
   };
 
   const fetchCourses = async (showLoader = true) => {
-    // const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
-    // console.log("Permission", permissions)
     const pageId = utils.getQueryVariable('page') || 1;
     const queryParams = await getQueryParams();
     try {
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
+      const hasPermission = utils.hasPermission("course", "read");
+      if (!hasPermission) throw new Error("You do not have permission");
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
       if (showLoader) setIsLoader(true);
-      // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
-      //     throw new Error(responses.permissions.role.read);
-      // }
       const result = await CourseServices.fetchCourses(pageId, queryParams);
       if (result) {
         console.log("Course Data", result);
@@ -127,11 +126,20 @@ const Courses = () => {
   };
 
   const openCourseModal = (bool = true, updateObj = {}) => {
-    if (categoryData.length) {
-      setOpenModal(bool);
-      setUpdateProduct(updateObj);
-    } else {
-      setErrorMsg("Please add category first");
+    try {
+      const action = (Object.keys(updateObj).length) ? "update" : "create";
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
+      const hasPermission = utils.hasPermission("product", action);
+      if (!hasPermission) throw new Error("You do not have permission");
+      /************ PERMISSION CHECKING (FRONTEND) *******************/
+      if (categoryData.length) {
+        setOpenModal(bool);
+        setUpdateProduct(updateObj);
+      } else {
+        setErrorMsg("Please add category first");
+      }
+    } catch (e) {
+      setErrorMsg(e.message);
     }
   }
 
