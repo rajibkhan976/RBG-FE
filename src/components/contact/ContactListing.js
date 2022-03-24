@@ -364,6 +364,7 @@ const ContactListing = forwardRef((props, ref) => {
                                                 placeholderSrc={owner_img_1}
                                             />
                                         </span> : ""}
+                                        <span className="userNames">
                                         {(item.id === 'mobile' || item.id === 'phone' || item.id === 'dadPhone' || item.id === 'momPhone') ?
                                             ((ele[item.id] && ele[item.id].dailCode &&  ele[item.id].number !== "") ?
                                                 <span className={ele[item.id].is_valid ?
@@ -371,6 +372,7 @@ const ContactListing = forwardRef((props, ref) => {
                                                 "")  : (item.id === 'dob' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LL') :
                                                 (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LLL') : ele[item.id] ))
                                              }
+                                             </span>
                                     </button>
                                 </div>
                             )

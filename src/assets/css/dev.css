@@ -1649,7 +1649,7 @@
   overflow: auto;
 }
 .productListBody {
-  min-height: 150px;
+  min-height: 350px;
 }
 .menuUserDetail {
   min-width: 160px;
@@ -4191,4 +4191,41 @@ input#formDate {
 
 .productList .productListRight {
   width: 44%;
+}
+
+span.userNames {
+  max-width: 184px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  float: right;
+  white-space: nowrap;
+}
+
+.menuDetails .logoSidebar img {
+  max-width: 185px;
+  height: 35px;
+}
+
+.productList .productListLeft .proInfo {
+  width: calc(100% - 120px);
+}
+
+.productList .productListLeft .proInfo h3 {
+  width: auto;
+  margin-right: 10px;
+}
+
+.dropdownOptions.listOpen.bumberLists .btn span {
+  max-width: 15px;
+  margin-right: 5px;
+}
+
+.dropdownOptions.listOpen.bumberLists .btn svg {
+  max-width: 15px;
+  margin-top: 5px;
+  width: 15px;
+}
+
+.transaction_form.products.forDownpayment .cmnFormRow.gap .rightSecTransaction label.labelWithInfo.paymentTime {
+  padding-bottom: 11px;
 }
