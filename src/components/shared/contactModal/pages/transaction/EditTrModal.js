@@ -943,7 +943,7 @@ const EditTrModal = (props) => {
                                     <input type="checkbox" name=""  onChange={checkUpdateForAllHandler} />
                                     <span></span>
                                 </div>
-                                <div>I want update this change for all the upcoming transactions of this subscription</div>
+                                <div>I want to update this change for all the upcoming transactions of this subscription</div>
                             </label>
                         </div>
                         <div className="btnPlaceMiddle">

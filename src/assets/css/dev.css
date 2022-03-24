@@ -4197,7 +4197,7 @@ span.userNames {
   max-width: 184px;
   overflow: hidden;
   text-overflow: ellipsis;
-  float: right;
+  /* float: right; */
   white-space: nowrap;
 }
 

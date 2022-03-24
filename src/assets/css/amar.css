@@ -2673,6 +2673,9 @@ input[type=number] {
   border-color: #c74854;
 }
 .userListBody::-webkit-scrollbar {
+  transition: all ease-in-out 0.5s;
+}
+.userListBody:hover::-webkit-scrollbar {
   height: 8px;
 }
 .userListBody::-webkit-scrollbar-thumb,
@@ -2686,3 +2689,29 @@ input[type=number] {
   padding-bottom: 18px;
   padding-top: 15px;
 }
+
+/* Fix for shifting header lable on contact table */
+.contactListingTable .tableListing .listHeadingContacts .dataTableCell {
+  padding-inline: 0;
+}
+/* Fix for shifting header lable on contact table */
+
+.proInfo p a {
+  word-break: break-word;
+}
+
+/* for role text break in header */
+.menuUserDetail {
+  line-height: 1;
+}
+.menuUserDetail span {
+  height: auto;
+  min-height: 15px;
+}
+/* for role text break in header */
+
+/* For contact file upload success message line height */
+.fileImportBox.green h3 {
+  line-height: 32px;
+}
+/* For contact file upload success message line height */

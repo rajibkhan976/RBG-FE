@@ -354,6 +354,7 @@ const AddCourseModal = (props) => {
                     <input type="text" name="duration_num"
                       onChange={handleChange}
                       value={courseData.duration} />
+                      <p className="errorMsg">{errorClass.durationMsg}</p>
                   </div>
                   <div className={"formRight " + errorClass.duration}>
                     <select name="duration_months" onChange={handleChange}>
@@ -361,7 +362,6 @@ const AddCourseModal = (props) => {
                       <option value="year" selected={(courseData.duration_months === "year") ? "selected" : ""}>Year(s)</option>
                     </select>
                   </div>
-                  <p className="errorMsg">{errorClass.durationMsg}</p>
                 </div>
 
                 <div className={"formControl " + errorClass.paymentType}>
@@ -371,6 +371,7 @@ const AddCourseModal = (props) => {
                       {paymentType.map(pt => <option key={pt} value={pt.toLowerCase()}
                         selected={(courseData.payment_type.toLowerCase() === pt.toLowerCase()) ? "selected" : ""}>{pt}</option>)}
                     </select>
+                  <p className="errorMsg">{errorClass.paymentTypeMsg}</p>
                   </div>
 
 
@@ -381,7 +382,6 @@ const AddCourseModal = (props) => {
                       <option value="yearly" selected={(courseData.billing_cycle === "yearly") ? "selected" : ""}>Yearly</option>
                     </select>
                   </div>
-                  <p className="errorMsg">{errorClass.paymentTypeMsg}</p>
                 </div>
 
                 <div className="formControl">
@@ -406,8 +406,8 @@ const AddCourseModal = (props) => {
                       <div className="unitAmount">$</div>
                       <input className="cmnFieldStyle" type="text" name="fees" placeholder="Ex: 99" onChange={handleChange} value={courseData.fees} />
                     </div>
-                  </div>
                   <p className="errorMsg">{errorClass.feesMsg}</p>
+                  </div>
                 </div>
                 {/* <div className="formControl">
                   <label className="labelStick2">
