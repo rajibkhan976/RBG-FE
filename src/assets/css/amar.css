@@ -2679,3 +2679,10 @@ input[type=number] {
 .userListBody::-webkit-scrollbar-track {
   cursor: pointer;
 }
+.transactionIdProduct span + span:before {
+  content: ", ";
+}
+.contactModalHeader.stickey .contactModalHeaderTopSec {
+  padding-bottom: 18px;
+  padding-top: 15px;
+}

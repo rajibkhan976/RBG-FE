@@ -1505,8 +1505,8 @@ const ProductPayment = (props) => {
                 </li>
                 <li className="transactionIdProduct">
                   {
-                    productBuy.data.filter(cashTransac => cashTransac.defaultTransaction && cashTransac.defaultTransaction === "cash").map((transId)=>(
-                      `${transId.transactionId}, `
+                    productBuy.data.filter(cashTransac => cashTransac.defaultTransaction && cashTransac.isPayNow !== 0 && cashTransac.defaultTransaction === "cash").map((transId)=>(
+                      <span>{transId.transactionId}</span>
                     ))
                   }
                 </li>
@@ -1526,7 +1526,7 @@ const ProductPayment = (props) => {
                 <li className="transactionIdProduct">
                   {
                     productBuy.data.filter(onlineTransac => onlineTransac.defaultTransaction && (onlineTransac.defaultTransaction === "card" || onlineTransac.defaultTransaction === "bank")).map((transId)=>(
-                      `${transId.transactionId}, `
+                      <span>{transId.transactionId}</span>
                     ))
                   }
                 </li>
