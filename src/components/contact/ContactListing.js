@@ -416,6 +416,15 @@ const ContactListing = forwardRef((props, ref) => {
                     {(provided) => {
                         return (
                             <ul ref={provided.innerRef}>
+                              <li>
+                                                <label>
+                                                    <div className="customCheckbox">
+                                                        <input type="checkbox" />
+                                                        <span></span>
+                                                    </div>
+                                                    <span>Select All</span>
+                                                </label>
+                                            </li>
                                 {listCol.filter(el => el.name.toLowerCase().includes(prop.searchData.toLowerCase())).map((item, index) => (
                                     <Draggable key={item.id} draggableId={item.id} index={index}>
                                         {(provided) => (
