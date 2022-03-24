@@ -2672,3 +2672,10 @@ input[type=number] {
 .productSearchPanel .error input {
   border-color: #c74854;
 }
+.userListBody::-webkit-scrollbar {
+  height: 8px;
+}
+.userListBody::-webkit-scrollbar-thumb,
+.userListBody::-webkit-scrollbar-track {
+  cursor: pointer;
+}

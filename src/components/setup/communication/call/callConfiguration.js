@@ -1044,7 +1044,7 @@ const CallConfiguration = (props) => {
                       </div>
                     )}
                   </div>
-                  <div className="setupFormRow">
+                  {/* <div className="setupFormRow">
                     <div className="setupFormRowHead">
                       <label>
                         <div className="customCheckbox">
@@ -1157,8 +1157,8 @@ const CallConfiguration = (props) => {
                         </div>
                       </div>
                     )}
-                  </div>
-                  <div className="setupFormRow">
+                  </div> */}
+                  {/* <div className="setupFormRow">
                     <div className="setupFormRowHead">
                       <label>
                         <div className="customCheckbox">
@@ -1406,7 +1406,7 @@ const CallConfiguration = (props) => {
                         </div>
                       </div>
                     )}
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="cmnFormRow">
