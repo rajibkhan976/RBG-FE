@@ -218,10 +218,7 @@ const ProductFilter = (props) => {
         // console.log(data);
         props.getProduct();
         props.closeModal();
-<<<<<<< HEAD
         // props.setFilteredData(data)
-=======
->>>>>>> Product and Course bug fixes
     }
 
     const handleResetFilter = (event) => {
@@ -240,10 +237,7 @@ const ProductFilter = (props) => {
         });
         props.getProduct();
         props.closeModal();
-<<<<<<< HEAD
         // props.setFilteredData(null)
-=======
->>>>>>> Product and Course bug fixes
     }
 
     return (
