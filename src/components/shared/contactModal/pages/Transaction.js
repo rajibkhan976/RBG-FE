@@ -45,6 +45,7 @@ const Transaction = (props) => {
   const oldOptRef = useRef();
   const contractRef = useRef();
   const [refundAmount, setRefundAmount] = useState();
+  const [refundPayVia, setRefundPayVia] = useState();
   const [subscriptionId, setSubscriptionId] = useState();
   const [oldHistoryIndex, setOldHistoryIndex] = useState(null);
   const [upcomingHistoryIndex, setUpcomingHistoryIndex] = useState(true);
@@ -95,10 +96,8 @@ const Transaction = (props) => {
     } else {
       setRefundAmount(item.amount);
     }
-    
-        // parseFloat(Math.abs(e.refunded_amount)).toFixed(2)
-      
-    // setRefundAmount(item.amount);
+    setRefundPayVia(item.payment_via);
+    console.log(item.payment_via);
   };
 
   const closeRefundModal = () => {
@@ -935,6 +934,7 @@ const Transaction = (props) => {
       contactId={props.contactId} 
       loader={(param) => refundLoader (param)} 
       alertMsg={(msg, type) => refundAlert (msg, type)} 
+      payVia={refundPayVia}
       /> }
 
 

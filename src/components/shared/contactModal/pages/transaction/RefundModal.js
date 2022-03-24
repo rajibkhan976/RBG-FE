@@ -12,7 +12,7 @@ const RefundModal = (props) => {
         amount: props.amount,
         reason: "",
         otherReason: "",
-        confirmRefund: false
+        confirmRefund: props.payVia == "cash" ? undefined : true
     });
     const [formErrorMsg, setFormErrorMsg] = useState({
         amount: "",
@@ -20,6 +20,8 @@ const RefundModal = (props) => {
         otherReason: "",
         confirmRefund: ""
     });
+
+    console.log(refundFormData);
 
     const loader = (param) => {
         props.loader(param);
@@ -184,6 +186,7 @@ const RefundModal = (props) => {
                             }
                         </div>
                         : "" }
+                        {props.payVia == "cash" ?
                         <div className={formErrorMsg.confirmRefund ? "cmnFormRow errorField" : "cmnFormRow"}>
                             <label className="cmnFieldName cashReceived">
                                 <div className="customCheckbox">
@@ -196,6 +199,7 @@ const RefundModal = (props) => {
                             <div className="errorMsg">{formErrorMsg.confirmRefund}</div>
                             }
                         </div>
+                        : ""}
                         <div className="cmnFormRow">
                             <div className="btnGroup centered">
                                 <button type="button" className="cmnBtn" onClick={refundSubmit}>
