@@ -4240,3 +4240,8 @@ span.userNames {
 body .inFormField input {
   font-size: 13px;
 }
+
+.sideMenuInner.userModal .modal_call_header p {
+  color: #9baebc;
+  font-weight: 600;
+}
