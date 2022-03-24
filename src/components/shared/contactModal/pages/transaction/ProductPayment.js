@@ -71,6 +71,7 @@ const ProductPayment = (props) => {
     edit_PayStatus_Err: "",
     payment_not_received: "",
   });
+  const [productBuy, setProductBuy] = useState([])
 
   useEffect(() => {
    
@@ -202,12 +203,11 @@ const ProductPayment = (props) => {
 
             let productBuy = await ProductServices.buyProduct(productPayload);
 
-            console.log("HERE NOW:::::::::", productBuy.status);
-
             if (productBuy.status === "success") {
               let payIfo = [];
               let cashAmount = 0;
               let onlineAmount = 0;
+              let transIdArr = []
 
               setPaymentSuccessMessage("Product purchase transaction successfull.");
               payIfo.onlinePayment = productPayload.payments.filter(
@@ -232,14 +232,13 @@ const ProductPayment = (props) => {
                   cashAmount
                 );
 
-              console.log(":::payIfo:::", payIfo);
               setPaymentInfo(payIfo);
-              console.log("Payload result:::", productBuy);
+              
+              setProductBuy(productBuy)
               
               setPaymentFailed(null);
               setProductPaymentFailed(false);
               openSuccessMessage();
-              console.log(":::::::::::HERE:::::::::::");
 
               setHasError(false);
               setDownPaymentErrorMsg({
@@ -1490,17 +1489,26 @@ const ProductPayment = (props) => {
 
               <ul className="paymentUlHeader">
                 <li className="paymentModeHeaderLi">Payment Mode</li>
-                {/* <li className="paymentIdHeaderLi">Transaction ID</li> */}
+                <li className="paymentIdHeaderLi">Transaction ID</li>
                 <li className="paymentAmtHeaderLi">Amount</li>
               </ul>
             </>
             }
+
+            {console.log("Product Trans ID>>>>", productBuy.data)}
             
             {payMentInfo.cashPayment.length > 0.00 && payMentInfo.cashAmount > 0 && (
               <ul className="paymentUlInfo">
                 <li className="paymentModeLi">
                   <img src={cashSuccess} alt="" />
                   <p>Cash</p>
+                </li>
+                <li className="transactionIdProduct">
+                  {
+                    productBuy.data.filter(cashTransac => cashTransac.defaultTransaction && cashTransac.defaultTransaction === "cash").map((transId)=>(
+                      `${transId.transactionId}, `
+                    ))
+                  }
                 </li>
                 <li className="paymentAmtLi">
                   <p>$ {payMentInfo.cashAmount.toFixed(2)}</p>
@@ -1515,7 +1523,13 @@ const ProductPayment = (props) => {
                   <img src={paidCard} alt="" />
                   <p>Online</p>
                 </li>
-                
+                <li className="transactionIdProduct">
+                  {
+                    productBuy.data.filter(onlineTransac => onlineTransac.defaultTransaction && (onlineTransac.defaultTransaction === "card" || onlineTransac.defaultTransaction === "bank")).map((transId)=>(
+                      `${transId.transactionId}, `
+                    ))
+                  }
+                </li>
                 <li className="paymentAmtLi">
                   <p>$ {payMentInfo.onlineAmount.toFixed(2)}</p>
                   <img src={smallTick} alt="" />
