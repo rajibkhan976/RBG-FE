@@ -41,6 +41,8 @@ const Billing = (props) => {
     const billingCardContainer = useRef(null)
     const addCardBtn = useRef(null)
     const addBankBtn = useRef(null)
+    const addCardForm = useRef(null)
+    const addBankForm = useRef(null)
 
   const [formErrorMsg, setFormErrorMsg] = useState({
       card_num_Err: "",
@@ -645,6 +647,7 @@ const expiration_month = cardExpairyMonthCheckFn();
           cardholder_name: "",
           status: "",
         };
+        addCardForm.current.reset()
         fetchCardBank();
         console.log("FINISHED");
       }
@@ -731,6 +734,7 @@ const expiration_month = cardExpairyMonthCheckFn();
           account_type: "checking",
           status: "inactive",
         };
+        addBankForm.current.reset()
         fetchCardBank();
       }
     }
@@ -876,7 +880,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                       <h3>Add a credit Card</h3>
                     </div>
                     <div className="addingForm">
-                      <form id="addCardForm">
+                      <form id="addCardForm" ref={addCardForm}>
                         <div className="formModule">
                           <label>Card Number</label>
                           <div className="activeFactor">
@@ -1053,7 +1057,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                       <h3>Add a Bank Account</h3>
                     </div>
                     <div className="addingForm">
-                      <form>
+                      <form ref={addBankForm}>
                         <div className="formModule">
                           <label>Account Number</label>
                           <div className="activeFactor">
