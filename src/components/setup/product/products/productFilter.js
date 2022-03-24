@@ -206,7 +206,7 @@ const ProductFilter = (props) => {
         // console.log(data);
         props.getProduct();
         props.closeModal();
-        props.setFilteredData(data)
+        // props.setFilteredData(data)
     }
 
     const handleResetFilter = (event) => {
@@ -225,7 +225,7 @@ const ProductFilter = (props) => {
         });
         props.getProduct();
         props.closeModal();
-        props.setFilteredData(null)
+        // props.setFilteredData(null)
     }
 
     return (
