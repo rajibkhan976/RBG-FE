@@ -124,7 +124,12 @@ const Notifications = (props) => {
             setIsBigLoader(true);
             await NotificationServices.markAllAsRead();
             setIsBigLoader(false);
-            await fetchNotifications()
+            setNotificationListing((elms) =>
+                elms.map((el) => {
+                    el.isRead = true;
+                    return { ...el };
+                })
+            );
             props.triggerMarkAsRead();
         } catch (e) {
             console.log('Error in mark all as read', e);

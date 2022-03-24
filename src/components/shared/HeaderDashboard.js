@@ -297,10 +297,6 @@ function HeaderDashboard(props) {
     }
   }, [props.notificationStructure])
 
-  useEffect(() => {
-    setNotificationUnread(props.notificationUnread);
-  }, [props.notificationUnread])
-
   const closeModalNotification = () => {
     setStateNotifMenu(false);
   }
@@ -417,7 +413,7 @@ function HeaderDashboard(props) {
           onClick={(e) => toggleNotifications(e)}
         >
           <img src={NotificationIcon} alt="" />
-          {notificationUnread > 0 ? <span>{ notificationUnread }</span> : ""}
+          {notificationStructure.totalNotification > 0 ? <span>{ notificationStructure.totalNotification }</span> : ""}
         </button>
         {/* {locationLoaded === "user" && (
           <button

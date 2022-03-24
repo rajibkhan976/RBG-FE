@@ -114,17 +114,27 @@ const MainComponent = () => {
         let notificationStructureLocal = notificationStructure;
         console.log('socket', notificationStructure, data)
         if (loggedInUser && (parseData.organizationCode === loggedInUser.organizationCode)) {
-            notificationStructureLocal.totalNotification = notificationStructure.totalNotification + 1;
             if (parseData.type === 'payment') {
-                notificationStructureLocal.payment.totalUnread = notificationStructure.payment.totalUnread + 1;
+                setNotificationStructure(prevState => {
+                    return {
+                        ...prevState,
+                        totalNotification: prevState.totalNotification + 1,
+                        payment: {
+                            totalUnread: prevState.payment.totalUnread + 1
+                        }
+                    }
+                });
             } else {
-                notificationStructureLocal.general.totalUnread = notificationStructure.general.totalUnread + 1;
+                setNotificationStructure(prevState => {
+                    return {
+                        ...prevState,
+                        totalNotification: prevState.totalNotification + 1,
+                        general: {
+                            totalUnread: prevState.general.totalUnread + 1
+                        }
+                    }
+                });
             }
-            setTimeout(() => {
-                setNotificationUnread(notificationStructure.totalNotification);
-                setNotificationStructure(notificationStructureLocal);
-            }, 100)
-
         }
     }
     useEffect(() => {
@@ -223,38 +233,42 @@ const MainComponent = () => {
      */
     const fetchNotifications = async () => {
         try {
-            let notificationStructureLocal = {
-                payment: {
-                    totalUnread: 0,
-                    totalRead: 0
-                },
-                general: {
-                    totalUnread: 0,
-                    totalRead: 0
-                },
-                totalNotification: 0
-            };
-            setNotificationStructure(notificationStructureLocal);
-            let totalUnread = 0;
+            setNotificationStructure(prevState => {
+                return {
+                    ...prevState,
+                    payment: {
+                        totalUnread: 0
+                    },
+                    general: {
+                        totalUnread: 0
+                    },
+                    totalNotification: 0
+                }
+            });
             const result = await NotificationServices.fetchListOfNotification();
             if (result) {
                 let notifications = result.notifications;
                 await notifications.forEach(element => {
-                    totalUnread = totalUnread + element.unread;
                     if (element._id === 'payment') {
-                        notificationStructureLocal.payment.totalRead = element.read;
-                        notificationStructureLocal.payment.totalUnread = element.unread;
+                        setNotificationStructure(prevState => {
+                            return {
+                                ...prevState,
+                                totalNotification: prevState.totalNotification + element.unread,
+                                payment: {
+                                    totalUnread: prevState.payment.totalUnread + element.unread
+                                }
+                            }
+                        });
                     } else {
-                        notificationStructureLocal.general.totalRead = notificationStructureLocal.general.totalRead + element.read;
-                        notificationStructureLocal.general.totalUnread = notificationStructureLocal.general.totalUnread + element.unread;
-                    }
-                });
-                notificationStructureLocal.totalNotification = totalUnread;
-                setNotificationUnread(totalUnread);
-                setNotificationStructure(prevState => {
-                    return {
-                        ...prevState,
-                        ...notificationStructureLocal
+                        setNotificationStructure(prevState => {
+                            return {
+                                ...prevState,
+                                totalNotification: prevState.totalNotification + element.unread,
+                                general: {
+                                    totalUnread: prevState.general.totalUnread + element.unread
+                                }
+                            }
+                        });
                     }
                 });
             }
@@ -264,21 +278,9 @@ const MainComponent = () => {
     };
 
     const triggerMarkAsRead = () => {
-        setNotificationStructure(prevState => {
-            return {
-                ...prevState,
-                payment: {
-                    totalUnread: 0,
-                    totalRead: 0
-                },
-                general: {
-                    totalUnread: 0,
-                    totalRead: 0
-                },
-                totalNotification: 0
-            }
-        });
-        setNotificationUnread(0);
+        setTimeout(() => {
+            fetchNotifications();
+        }, 200)
     }
 
 
