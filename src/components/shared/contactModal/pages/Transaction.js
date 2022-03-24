@@ -140,10 +140,24 @@ const Transaction = (props) => {
   };
 
   const openCloseCompleteTrans = (param, item) => {
-    setCompleteTransModal(param);
-    setCompleteTransElement(item);
-    if (!param) {
+
+    console.log("outside condition");
+    
+    if (param) {
+      console.log("inside if");
+      setCompleteTransElement(item);    
+      setCompleteTransModal(param);
+    } else if (param == false) {
+      console.log("inside else if");
+      setCompleteTransModal(false);
       fetchUpcomingTransactions(props.contactId, 1);
+      fetchOldTransactions(props.contactId, 1);
+      setActiveTab(1);
+    } 
+
+    if (param == "close") {
+      console.log("outside close");
+      setCompleteTransModal(false);
     }
   };
 
@@ -155,6 +169,7 @@ const Transaction = (props) => {
       setRetryModal(false);
       setRetryAmount(0);
       setRetryId(null);
+      fetchOldTransactions(props.contactId);
     }
   }
 
@@ -313,6 +328,7 @@ const Transaction = (props) => {
       setIsLoader(false);
       setCancelContractId(null);
       fetchContract(props.contactId, 1);
+      fetchOldTransactions(props.contactId, 1);
     }
   };
 

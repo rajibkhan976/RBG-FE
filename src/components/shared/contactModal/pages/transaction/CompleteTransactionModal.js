@@ -70,7 +70,7 @@ const CompleteTransactionModal = (props) => {
             
             <div className="slickModalBody">
                 <div className="slickModalHeader">
-                    <button className="topCross" onClick={() => props.closeModal (false)}><img src={crossImg} alt="" /></button>  
+                    <button className="topCross" onClick={() => props.closeModal ("close")}><img src={crossImg} alt="" /></button>  
                     <div className="circleForIcon"><img src={refundImg} alt="" /></div>
                     <h3>Complete Transactions</h3>
                     <p>Complete Transactions for Program/Product</p>
