@@ -57,6 +57,7 @@ const CategoryListing = (props) => {
     const handleChange = (e) => {
         const name = e.target.value;
         const regex = /[^a-zA-Z0-9- ]/;
+        name.trim().length > 0 ? setErrorCatMsg("") : setErrorCatMsg("Category name should not be empty.")
         if (!regex.test(name)) {
             setCategory({ ...category, name: name, showCross: true });
         }
@@ -64,34 +65,47 @@ const CategoryListing = (props) => {
         if (!name.length && !category.id) setCategory({ name: "", id: null, btnName: "Add Category", showCross: false });
     };
 
+    const handleCatBlur = (e) => {
+        if(e.target.value.trim().length === 0){
+            setErrorCatMsg("")
+        }
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            let catData = { name: category.name };
-            if (!catData.name.length) {
-                throw new Error("Category name should not be empty");
-            } else {
-                props.setIsLoader(true);
-                if (category.id) {
-                    catData = { ...catData, id: category.id };
-                    const res = await ProductServices.editCategory(catData);
-                    props.successMsg("Category updated successfully");
+        
+        if(category.name.trim() !== ""){
+            try {
+                let catData = { name: category.name };
+                if (!catData.name.length) {
+                    throw new Error("Category name should not be empty");
                 } else {
-                    const res = await ProductServices.createCategory(catData);
-                    props.successMsg("Category created successfully");
+                    props.setIsLoader(true);
+                    if (category.id) {
+                        catData = { ...catData, id: category.id };
+                        const res = await ProductServices.editCategory(catData);
+                        props.successMsg("Category updated successfully");
+                    } else {
+                        const res = await ProductServices.createCategory(catData);
+                        props.successMsg("Category created successfully");
+                    }
+                    setCategory({
+                        name: "",
+                        id: null,
+                        btnName: "Add Category",
+                        showCross: false
+                    });
+                    props.fetchCategories()
                 }
-                setCategory({
-                    name: "",
-                    id: null,
-                    btnName: "Add Category",
-                    showCross: false
-                });
-                props.fetchCategories()
+            } catch (e) {
+                props.errorMsg(e.message);
+            } finally {
+                props.setIsLoader(false);
+                setErrorCatMsg("");
             }
-        } catch (e) {
-            props.errorMsg(e.message);
-        } finally {
-            props.setIsLoader(false);
+        }
+        else {
+            setErrorCatMsg("Category name should not be empty.");
         }
     };
 
@@ -163,9 +177,9 @@ const CategoryListing = (props) => {
                     <div className="innerScroll">
                         <h3 className="productListingHeader">Product Categories</h3>
                         <div className="productSearchPanel">
-                            <form method="post" onSubmit={handleSubmit}>
+                            <form method="post" onSubmit={handleSubmit} className={errorCatMsg !== "" ? "error" : ""}>
                                 {category.showCross ? <button className="deleteIt" onClick={() => setCategory({ ...category, name: "", id: null, btnName: "Add Category", showCross: false })}><img src={cross} alt="" /></button> : ''}
-                                <input type="text" name="catname" onChange={handleChange} value={category.name} placeholder="Enter a product category" />
+                                <input type="text" name="catname" onChange={handleChange} onBlur={(e)=>handleCatBlur(e)} value={category.name} placeholder="Enter a product category" />
                                 <button className="btn" type="submit">{category.btnName}<img src={arrowRightWhite} alt="" /></button>
                                 <p className="errorMsg">{errorCatMsg}</p>
                             </form>

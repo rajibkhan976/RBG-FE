@@ -2669,3 +2669,6 @@ input[type=number] {
   bottom: 70%;
   top: auto;
 }
+.productSearchPanel .error input {
+  border-color: #c74854;
+}
