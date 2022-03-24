@@ -116,13 +116,15 @@ const ProductListing = (props) => {
         if (!parms.hasOwnProperty(n)) parms[n] = [];
         parms[n].push(nv.length === 2 ? v : null);
     }
+    parms.page && delete parms.page
+    console.log(">>>>>>>>>>>>>>>>>", parms); 
     return parms;
 }
 
   useEffect(()=>{
     let urlString = window.location.href
-    console.log("parseURLParams(urlString)", parseURLParams(urlString));
-    if(props.filteredData === null && (parseURLParams(urlString) !== undefined || parseURLParams(urlString) !== null)) {
+    
+    if(props.filteredData === null && Object.keys(parseURLParams(urlString)).length !== 0) {
       setFilteredData(parseURLParams(urlString))
     }
     fetchCategories()
