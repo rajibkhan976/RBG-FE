@@ -5,12 +5,14 @@ import bank_inactive from "../../../../../assets/images/banks.svg";
 import cardActive from "../../../../../assets/images/cardActive.svg";
 // import crossTop from "../../../../../assets/images/cross.svg";
 // import payMode from "../../../../../assets/images/paymode.svg";
-// import pluss from "../../../../../assets/images/pluss.svg";
+// import pluss from "../../../../../assets/images/pluss.svg";.
+import noDataIcon from "../../../../../assets/images/noData_icon.svg"
 import Loader from "../../../Loader";
 
 import { BillingServices } from "../../../../../services/billing/billingServices";
 
 const BillingOverview = (props) => {
+  {console.log('billing props', props)}
   //   const [newPayModal, setNewPayModal] = useState(false);
   const [cardBankList, setCardBankList] = useState([])
   const [bankList, setBankList] = useState([])
@@ -90,7 +92,7 @@ const BillingOverview = (props) => {
 
   return (
     <>
-      <div className="cartProductInner productBillingOverview">
+      <div className={props.isNoCardBankFlagErr ? "cartProductInner productBillingOverview error" : "cartProductInner productBillingOverview"}>
         <header className="informHeader d-flex f-align-center f-justify-between">
           <h5>Billing Overview</h5>
 
@@ -107,9 +109,17 @@ const BillingOverview = (props) => {
 
         <div className="bodytransactionForm bodyProductPayModes d-flex f-column">
           {isLoader && <Loader />}
-          <p className="paymentTypes" style={{
+          {cardBankList &&
+            !cardBankList.length &&
+            bankList &&
+            !bankList.length ? <div className="noDataSec">
+            <img src={noDataIcon} alt="" />
+            <h2>No Card/Bank Found</h2>
+            <p>No billing details have been created yet</p>
+          </div> : ''}
+          {cardBankList && cardBankList.length ? <p className="paymentTypes" style={{
             order: isPrimary.type === "card" ? "1" : "3"
-          }}>Cards</p>
+          }}>Cards</p> : ''}
           <div className="chooseTransactionType paymentTypes" style={{
             order: isPrimary.type === "card" ? "2" : "4"
           }}>
@@ -154,9 +164,9 @@ const BillingOverview = (props) => {
               ))}
           </div>
 
-          <p className="paymentTypes" style={{
+          {bankList && bankList.length ? <p className="paymentTypes" style={{
             order: isPrimary.type === "bank" ? "1" : "3"
-          }}>Bank</p>
+          }}>Bank</p> : ''}
 
           <div className="chooseTransactionType paymentTypes" style={{
             order: isPrimary.type === "bank" ? "2" : "4"

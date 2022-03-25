@@ -303,7 +303,6 @@ const DownPayments = forwardRef((props, ref) => {
                                                         name="paymentStatus"
                                                         value={el.payment_status}
                                                         onChange={e => validateIndividual(e, key, "payment_status")}
-                                                        disabled={el.isPayNow === 0 ? 'disabled' : ''}
                                                     >
                                                         <option value="unpaid">Unpaid</option>
                                                         <option value="paid">Paid</option>

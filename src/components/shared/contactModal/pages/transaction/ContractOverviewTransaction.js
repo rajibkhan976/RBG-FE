@@ -181,8 +181,6 @@ const ContractOverviewTransaction = (props) => {
     let total = totalDownPayment + totalTuitionAmount;
 
 
-
-
     setContractData({
       ...contractData,
       contact: props.programContractData.contact,
@@ -216,7 +214,8 @@ const ContractOverviewTransaction = (props) => {
       duePaymentAmount: duePaymentAmount,
       nextDueDate: props.programContractData.nextDueDate,
       isReceivedDefaultCash: isReceivedDefaultCash,
-      isReceivedDefaultCashFlagErr: isReceivedDefaultCashFlagErr 
+      isReceivedDefaultCashFlagErr: isReceivedDefaultCashFlagErr,
+      isNoCardBankFlagErr: false 
     });
 
   }, [props.programContractData]);
@@ -274,12 +273,21 @@ const ContractOverviewTransaction = (props) => {
       }
     }
     //Check default transaction cash received or not
-    console.log('default cash not received', contractData.isReceivedDefaultCash);
-    if(!contractData.isReceivedDefaultCash) {
+    console.log('default cash not received', contractData.isReceivedDefaultCash, contractData.default_transaction);
+    if(!contractData.isReceivedDefaultCash && contractData.default_transaction === 'cash') {
       isError = true;
       setContractData({
         ...contractData,
         isReceivedDefaultCashFlagErr: true
+      });
+    }
+    //Check billing id
+    console.log('no card and bank', !contractData.billingId, contractData.default_transaction);
+    if(!contractData.billingId && contractData.default_transaction === 'online') {
+      isError = true;
+      setContractData({
+        ...contractData,
+        isNoCardBankFlagErr: true
       });
     }
     if (!isError) {
@@ -345,6 +353,7 @@ const ContractOverviewTransaction = (props) => {
         <BillingOverview
           contactId={props.programContractData.contact}
           changeDefaultPay={changeDefaultPayFn}
+          isNoCardBankFlagErr={contractData.isNoCardBankFlagErr}
         />
       </div>
 
