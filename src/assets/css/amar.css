@@ -2756,3 +2756,6 @@ input[type=number] {
 .addingForm .orangeBtn:disabled {
   filter: grayscale(1);
 }
+.contactModal .tabBarArea .loaderOuter {
+  position: absolute;
+}

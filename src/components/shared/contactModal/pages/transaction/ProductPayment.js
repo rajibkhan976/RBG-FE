@@ -310,7 +310,7 @@ const ProductPayment = (props) => {
     if (e.target.checked) {
       setDownPaymentActive(true);
       setDownPayments(downpayments=>[...downpayments, {
-        title: "",
+        title: "Downpayment 1",
         amount: "",
         type: "downpayment",
         isPayNow: 1,
@@ -1456,7 +1456,7 @@ const ProductPayment = (props) => {
 
             <div className="payModalDetails">
               <img src={cardFail} alt="" />
-              <p>{paymentFailed}</p>
+              <p>{paymentFailed && paymentFailed}</p>
               {/* {console.log("IN BODY:::", paymentFailed)} */}
             </div>
 

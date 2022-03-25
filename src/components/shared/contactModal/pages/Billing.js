@@ -779,6 +779,7 @@ const expiration_month = cardExpairyMonthCheckFn();
 
   return (
     <>
+    {isLoader ? <Loader /> : ""}
       <div className={props.contact.is_payment_setup_remaining ? "contactTabsInner d-flex f-column" : isLoader ? "contactTabsInner loading" : "contactTabsInner"}>
         <h3 className="headingTabInner">Billing Info</h3>
         <p className="subheadingTabInner">
@@ -786,7 +787,6 @@ const expiration_month = cardExpairyMonthCheckFn();
         </p>
         {(!props.contact.is_payment_setup_remaining) ?
             <div className="twoBillingCardContainer" ref={billingCardContainer}>
-            {isLoader ? <Loader /> : ""}
               {
                 formErrorMsg.card_details_invalid ? <div className="importCPaymentError d-flex f-align-center f-justify-center">
                   <p>{formErrorMsg.card_details_invalid}</p>
