@@ -34,8 +34,16 @@ const BillingOverview = (props) => {
         let filterCardBank = cardBankResponce[primaryPaymentSource].filter(obj => {
           return obj.status === 'active'
         });
-        setCardBankList(cardBankResponce.cards);
-        setBankList(cardBankResponce.banks);
+        //Sort cards
+        if (cardBankResponce.cards) {
+          let sortedCards = cardBankResponce.cards.sort(el => (el.status === "active") ? -1 : 1)
+          setCardBankList(sortedCards);
+        }
+        //Sort banks
+        if (cardBankResponce.banks) {
+          let sortedBanks = cardBankResponce.banks.sort(el => (el.status === "active") ? -1 : 1)
+          setBankList(sortedBanks);
+        }
         //Set primary data
         if (filterCardBank) {
           setIsPrimay({

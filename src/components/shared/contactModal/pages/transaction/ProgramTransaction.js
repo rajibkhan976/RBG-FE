@@ -28,8 +28,8 @@ const ProgramTransaction = (props) => {
     billing_cycle: "monthly",
     courseStart: "",
     numberOfPayments: 1,
-    paymentDate: moment().add(1, "days").format("YYYY-MM-DD"),
-    minPaymentDate : moment().add(1, "days").format("YYYY-MM-DD"),
+    paymentDate: moment().format("YYYY-MM-DD"),
+    minPaymentDate: moment().add(1, "days").format("YYYY-MM-DD"),
     firstBillingTime: false,
     auto_renew: 0,
     isPayNow: 1,
@@ -167,7 +167,12 @@ const ProgramTransaction = (props) => {
   }
 
   const handelFirstBillingDateToggle = (e) => {
-    setContractData({ ...contractData, firstBillingTime: e.target.checked, nextDueDate: moment().add(1, "days").format("MM/DD/YYYY") });
+    console.log('toggle', e.target.checked);
+    if (e.target.checked) {
+      setContractData({ ...contractData, firstBillingTime: e.target.checked, paymentDate: moment().add(1, "days").format("YYYY-MM-DD"), isPayNow: 0 });
+    } else {
+      setContractData({ ...contractData, firstBillingTime: e.target.checked, paymentDate: moment().format("YYYY-MM-DD"), isPayNow: 1 });
+    }
   }
 
   //First billing date change
@@ -197,6 +202,7 @@ const ProgramTransaction = (props) => {
       let nextDueDate = "";
       let noOfPayments = 1;
       if (contractData.payment_type === 'recurring') {
+        console.log('before nDD call')
         nextDueDate = utils.getNextDueDate(contractData.paymentDate, 1, contractData.billing_cycle)
         /**
          * Example
@@ -208,14 +214,9 @@ const ProgramTransaction = (props) => {
         } else {
           noOfPayments = contractData.duration * 1;
         }
-        /**
-         * First billing date is later
-         */
-        if (contractData.firstBillingTime) {
-          nextDueDate = utils.getNextDueDate(contractData.paymentDate, 1, contractData.billing_cycle)
-        }
 
       } else if (!contractData.firstBillingTime && contractData.payment_type === 'onetime') {
+        console.log('reset nDD call')
         nextDueDate = ""
       }
       setContractData({ ...contractData, nextDueDate: nextDueDate, numberOfPayments: noOfPayments });
