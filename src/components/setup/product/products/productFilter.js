@@ -181,6 +181,7 @@ const ProductFilter = (props) => {
         } else {
             choosenCategories = choosenCategories.filter(categoryID => categoryID !== catID);
         }
+        console.log("Choosen Category", choosenCategories);
         setFilterData({ ...filterData, categories: choosenCategories });
     }
 
@@ -255,14 +256,14 @@ const ProductFilter = (props) => {
                                 <p>Category</p>
                                 {props.categories.map((cat, key) => {
                                     return (
-                                        <React.Fragment key={"cat_"+key}>
+                                        <React.Fragment key={"categories_"+key}>
                                             <label>
                                                 <div className="customCheckbox">
                                                     <input type="checkbox"
                                                         name="categories"
-                                                        defaultValue={cat._id}
+                                                        value={cat._id}
                                                         onChange={handleCategoryCheckbox}
-                                                        defaultChecked={filterData.categories.includes(cat._id)}
+                                                        checked={filterData.categories.includes(cat._id)}
                                                     />
                                                     <span></span>
                                                 </div>
