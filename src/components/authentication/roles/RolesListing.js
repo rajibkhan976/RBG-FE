@@ -263,9 +263,10 @@ const RolesListing = (props) => {
   /**
    * Handle options toggle
    */
-  const toggleOptions = (index) => {
+  const toggleOptions = (e, index) => {
     console.log("Index", index);
     setOption(index !== option ? index : null);
+    console.log(e, document.querySelector('.userListBody').offsetHeight, e.clientY > document.querySelector('.userListBody').offsetHeight);
   };
 
   useEffect(() => {
@@ -441,8 +442,8 @@ const RolesListing = (props) => {
                             <div className="info_3dot_icon">
                               <button
                                 className="btn"
-                                onClick={() => {
-                                  toggleOptions(key);
+                                onClick={(e) => {
+                                  toggleOptions(e, key);
                                 }}
                               >
                                 <img src={info_3dot_icon} alt="" />
