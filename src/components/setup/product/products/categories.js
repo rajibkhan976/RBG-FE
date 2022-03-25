@@ -154,6 +154,7 @@ const CategoryListing = (props) => {
     };
 
     const handleCategoryClick = (catID) => {
+        setOption(null);
         if (catID) {
             utils.addQueryParameter("catID", catID);
         } else {

@@ -1160,6 +1160,7 @@
   margin-right: 8px;
   margin-top: 14px;
   margin-bottom: 14px;
+  min-height: 66px;
 }
 .transaction_form .colorChoiceProduct .colorChoiceItem {
   padding: 0;
@@ -2087,6 +2088,10 @@ input::-webkit-inner-spin-button {
   position: static;
   height: auto;
   background: transparent;
+  min-height: 66px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .bodytransactionForm .paymentTypes .paymentType + .paymentType {
   margin-top: 15px;
@@ -2114,6 +2119,7 @@ input::-webkit-inner-spin-button {
   min-height: 300px;
   max-height: 340px;
   padding-top: 0;
+  scroll-behavior: smooth;
 }
 .bodyProductPayModes p.paymentTypes {
   position: sticky;
@@ -2721,4 +2727,26 @@ input[type=number] {
 }
 .applySlider .min-max-slider>input::-webkit-slider-thumb {
   width: 8px;
+}
+.tooltiptextInfo {
+  pointer-events: none;
+}
+.buyNumberModal .loaderOuter {
+  position: absolute;
+}
+.scheduleRow:after {
+  clear: both;
+  content: '';
+  display: table;
+}
+.scheduleList > .scheduleRow:not(:first-child) .cmnFormCol:first-of-type {
+  float: left;
+}
+.scheduleList > .scheduleRow:not(:first-child) .cmnFormCol:last-of-type {
+  float: right;
+}
+.ProCategoryListing li .showList {
+  width: 20px;
+  align-items: center;
+  justify-content: center;
 }

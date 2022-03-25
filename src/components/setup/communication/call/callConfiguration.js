@@ -560,15 +560,16 @@ const CallConfiguration = (props) => {
                           >
                             <span>
                               <svg
+                                className="deleteIcon"
                                 xmlns="http://www.w3.org/2000/svg"
                                 width="12.347"
                                 height="13.553"
                                 viewBox="0 0 12.347 13.553"
-                                className="deleteIcon"
                               >
                                 <g transform="translate(0.75 0.75)">
                                   <path
                                     className="a"
+                                    d="M3,6H13.847"
                                     transform="translate(-3 -3.589)"
                                   />
                                   <path

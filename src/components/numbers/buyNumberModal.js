@@ -180,8 +180,8 @@ const BuyAndAssignNumber = (props) => {
 
   return (
     <div className="sideMenuOuter">
-      {isLoader ? <Loader /> : ''}
       <div className="sideMenuInner buyNumberModal">
+      {isLoader ? <Loader /> : ''}
         <button className="btn btn-closeSideMenu" onClick={props.closeModal}>
           <span></span>
           <span></span>
