@@ -12,80 +12,44 @@ import smallLoaderImg from "../../assets/images/loader.gif";
 
 const Notifications = (props) => {
     let [detailNotification, setDetailNotification] = useState(null);
-    const [isLoader, setIsLoader] = useState(false);
     const [isBigLoader, setIsBigLoader] = useState(false);
     const [showImportContactStory, setShowImportContactStory] = useState(false);
     const [importId, setImportId] = useState("");
-    const [errorMsg, setErrorMsg] = useState("");
-    const [notificationData, setNotificationData] = useState(null);
     const [notificationsListing, setNotificationListing] = useState([]);
     const [notificationsType, setNotificationType] = useState(null);
-    const [notificationsPage, setNotificationPage] = useState(1);
-    const [notificationsLastPage, setNotificationLastPage] = useState(false);
-    const [isScrollLoading, setIsScrollLoading] = useState(false);
     const dispatch = useDispatch();
-    const userNotifications = useSelector((state) => state.notification.data);
+    const [notification, setNotification] = useState({
+        general: {
+            data: [],
+            page: 1,
+            totalPage: 1
+        },
+        payment: {
+            data: [],
+            page: 1,
+            totalPage: 1
+        },
+        isLoading: false,
+        fullLoading: false
+    });
     const goBackToNotificationListing = () => {
-        setNotificationListing([]);
         setDetailNotification(null);
         setNotificationType(null);
-        setNotificationLastPage(false);
-        setNotificationPage(1);
     };
     const handlerScrollNotification = (element) => {
-        if ((element.target.scrollHeight - element.target.scrollTop === element.target.clientHeight) && !isScrollLoading && !notificationsLastPage) {
+        if ((element.target.scrollHeight - element.target.scrollTop === element.target.clientHeight)) {
+            props.scrollNotification(notificationsType);
+        }
+        /*if ((element.target.scrollHeight - element.target.scrollTop === element.target.clientHeight) && !isScrollLoading && !notificationsLastPage) {
             fetchNotifications()
-        }
+        }*/
     }
-    const fetchNotifications = async (type = null) => {
-        setIsScrollLoading(true);
-        //setNotificationListing([]);
-        setIsLoader(true);
-        if (type) {
-            setNotificationType(type);
-            setDetailNotification(type);
-        } else {
-            type = notificationsType;
-        }
-        const result = await NotificationServices.fetchNotifications(notificationsPage, type);
-        setIsLoader(false);
-        if (result.notifications.length > 0) {
-            let notifi = [];
-            if (notificationsListing) {
-                notifi = [...notificationsListing, ...result.notifications];
-            } else {
-                notifi = result.notifications;
-            }
-            setNotificationListing(notifi);
-            setNotificationPage(notificationsPage + 1);
-        } else {
-            setNotificationLastPage(true);
-        }
-
-        setIsScrollLoading(false);
-    }
-    const makeNotificationAsRead = async (e) => {
-        if (!e.isRead) {
-            let payload = {
-                id: e._id
-            };
-            await NotificationServices.markSingleAsRead(JSON.stringify(payload));
-            props.triggerMarkAsRead();
-            setNotificationListing((elms) =>
-                elms.map((el) => {
-                    if (el._id === e._id) {
-                        el.isRead = true;
-                    }
-                    return { ...el };
-                })
-            );
-        }
-    };
     const showNOtifDetails = (type) => {
-        setNotificationPage(1);
-        fetchNotifications(type);
+        setNotificationType(type);
+        setDetailNotification(type);
     };
     const onClickNotification = (e) => {
+        props.markSingleAsRead(e);
         if (e.type === 'import-contact') {
             setShowImportContactStory(true);
             setImportId(e.contactId);
@@ -106,7 +70,6 @@ const Notifications = (props) => {
                 }, 100);
             })
         }
-        makeNotificationAsRead(e);
     }
     const closeImportStatusModal = () => {
         setShowImportContactStory(false);
@@ -120,34 +83,15 @@ const Notifications = (props) => {
     }
     //Mark all notifications as read
     const markAllAsRead = async () => {
-        try {
-            setIsBigLoader(true);
-            await NotificationServices.markAllAsRead();
-            setIsBigLoader(false);
-            setNotificationListing((elms) =>
-                elms.map((el) => {
-                    el.isRead = true;
-                    return { ...el };
-                })
-            );
-            props.triggerMarkAsRead();
-        } catch (e) {
-            console.log('Error in mark all as read', e);
-        }
+        props.markAllAsRead();
     }
     const showTimeDiff = (e) => {
         return moment.tz(e.createdAt, "Europe/London").fromNow()
     }
+
     useEffect(() => {
-      if (props.notificationTrigger && notificationsType) {
-          setNotificationListing([]);
-          setNotificationLastPage(false);
-          setNotificationPage(1);
-          setTimeout(() => {
-              fetchNotifications()
-          }, 100);
-      }
-    }, [props.notificationTrigger])
+        setNotification(props.notification)
+    }, [props.notification])
     return (
         <div className="sideMenuOuter notificationsMenu">
             <div className="sideMenuInner">
@@ -168,7 +112,7 @@ const Notifications = (props) => {
                 </div>
 
                 <div className="sideMenuBody" onScroll={(e) => handlerScrollNotification(e)}>
-                    { isBigLoader ? <Loader/> : ""}
+                    { notification.fullLoading ? <Loader/> : ""}
                     <div className="notificationsListing">
                         {detailNotification === null && (
                             <>
@@ -293,7 +237,7 @@ const Notifications = (props) => {
                                 </h4>
                                 <ul className="detailNotifList">
                                     {
-                                        notificationsListing.length ? notificationsListing.map((e, i) => {
+                                        notification[notificationsType].data.length ? notification[notificationsType].data.map((e, i) => {
                                             return (
                                                 <li key={i}
                                                     className={"detailNotif "  + e.status + (!e.isRead ? " unreadNotifications" : "")}>
@@ -323,13 +267,11 @@ const Notifications = (props) => {
                                                     {showNotification(e)}
                                                 </li>
                                             );
-                                        }) : ( !isLoader ? <>
-                                            <li key="notFound">
-                                                <p>No notification found.</p>
-                                            </li>
-                                        </> : "" )
+                                        }) : <li key="notFound">
+                                            <p>No notification found.</p>
+                                        </li>
                                     }
-                                    { isLoader ?
+                                    { notification.isLoading ?
                                         <li className="loaderLi">
                                             <img src={smallLoaderImg} alt="loading" className="smallLoader" />
                                         </li> : ""

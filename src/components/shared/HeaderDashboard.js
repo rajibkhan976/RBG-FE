@@ -35,7 +35,6 @@ const { Device } = require('twilio-client');
 
 function HeaderDashboard(props) {
   const [setupModalStatus, setSetupModalStatus] = useState(false);
-  const [isLoader, setIsLoader] = useState(false);
   const [stateNotifMenu, setStateNotifMenu] = useState(false);
   const [stateUserMenu, setStateUserMenu] = useState(false);
   const [locationLoaded, setLocationLoaded] = useState("user");
@@ -43,7 +42,6 @@ function HeaderDashboard(props) {
   const [device, setDevice] = useState(new Device());
   const [deviceMessage, setDeviceMessage] = useState("Not Assigned");
   const [connection, setConnection] = useState({});
-  const [notificationUnread, setNotificationUnread] = useState(0);
   const [notificationStructure, setNotificationStructure] = useState([]);
   const {
     seconds,
@@ -60,7 +58,20 @@ function HeaderDashboard(props) {
     }
   }, [isClicked]);
   const loggedInUser = useSelector((state) => state.user.data);
-  const userNotifications = useSelector((state) => state.notification);
+  const [notification, setNotification] = useState({
+    general: {
+      data: [],
+      page: 1,
+      totalPage: 1
+    },
+    payment: {
+      data: [],
+      page: 1,
+      totalPage: 1
+    },
+    isLoading: false,
+    fullLoading: false
+  });
 
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
@@ -293,17 +304,27 @@ function HeaderDashboard(props) {
 
   useEffect(() => {
     props.setupMenuState && setSetupModalStatus(false)
-  }, [props.setupMenuState])
+  }, [props.setupMenuState]);
+
   useEffect(() => {
     if (props.notificationStructure.hasOwnProperty('payment') || props.notificationStructure.hasOwnProperty('general'))  {
       setNotificationStructure(props.notificationStructure);
     }
-  }, [props.notificationStructure])
+  }, [props.notificationStructure]);
+
+  useEffect(() => {
+    setNotification(props.notification);
+  }, [props.notification]);
 
   const closeModalNotification = () => {
     setStateNotifMenu(false);
   }
-
+  const markSingleAsRead = (element) => {
+    props.markSingleAsRead(element);
+  }
+  const markAllAsRead = () => {
+    props.markAllAsRead();
+  }
   return (
     <>
       <div className="dashboardHeader">
@@ -541,7 +562,9 @@ function HeaderDashboard(props) {
       {/* NOTIFICATIONS SIDE MENU */}
       {stateNotifMenu && (
         <Notifications closeModalNotification={closeModalNotification} notificationStructure={notificationStructure}
-                       triggerMarkAsRead={props.triggerMarkAsRead} notificationTrigger={props.notificationTrigger}/>
+                       scrollNotification={(type) => props.scrollNotification(type)}
+                       notificationTrigger={props.notificationTrigger} notification={notification}
+                       markSingleAsRead={(ele) => markSingleAsRead(ele)} markAllAsRead={markAllAsRead}/>
       )}
       {/* NOTIFICATIONS SIDE MENU */}
 

@@ -1,23 +1,22 @@
-import React, { useState, useEffect, forwardRef, useRef, useImperativeHandle } from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import {LazyLoadImage} from 'react-lazy-load-image-component';
 import * as actionTypes from "../../actions/types";
 import ContactHead from './ContactHead';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { ErrorAlert, SuccessAlert } from '../shared/messages';
+import {DragDropContext, Draggable, Droppable} from 'react-beautiful-dnd';
+import {ErrorAlert, SuccessAlert} from '../shared/messages';
 import owner_img_1 from '../../../src/assets/images/owner_img_1.png';
 import arrow_forward from '../../../src/assets/images/arrow_forward.svg';
 import warning_bell from "../../../src/assets/images/bell.svg"
-import { ContactService } from "../../services/contact/ContactServices";
+import {ContactService} from "../../services/contact/ContactServices";
 import noRecords from '../../../src/assets/images/noRecords.svg';
 import plus_icon from '../../../src/assets/images/plus_icon.svg';
-import { utils } from "../../helpers";
+import {utils} from "../../helpers";
 import Loader from "../shared/Loader";
 import Pagination from '../shared/Pagination';
 import responses from '../../configuration/responses';
 import env from '../../configuration/env';
 import Moment from 'moment';
-import config from "../../configuration/config";
 import dependent_white from "../../assets/images/dependent.svg";
 
 
@@ -218,8 +217,7 @@ const ContactListing = forwardRef((props, ref) => {
     // a little function to help us with reordering the result
     const reorder = (startIndex, endIndex) => {
         // const result = Array.from(list);
-        let preSavedCol = listCol;
-        const result = preSavedCol;
+        const result = listCol;
         const [removed] = result.splice(startIndex, 1);
         result.splice(endIndex, 0, removed);
         return result;
@@ -237,16 +235,17 @@ const ContactListing = forwardRef((props, ref) => {
     }
 
     const handleCheckCol = (e, id) => {
-        let data = JSON.parse(JSON.stringify(listCol));
-        let index = data.findIndex(element => element.id == id);
-
-        if (index >= 0) {
-            data[index].status = e;
-            setListCol([]);
-            setTimeout(() => setListCol(data), 1);
-        }
+        setListCol((elms) =>
+            elms.map((el) => {
+                if (el.id === id) {
+                    el.status = e;
+                }
+                return { ...el };
+            })
+        );
     }
 
+    
     const handleSave = async () => {
         setIsLoader(true);
         try {
@@ -322,6 +321,9 @@ const ContactListing = forwardRef((props, ref) => {
             setErrorMsg(responses.permissions.contact.read);
         }
     }
+    useEffect(() => {
+        setSavedColList(listCol)
+    }, [listCol])
     const GenerateColumns = () => {
         return (
             <li className="listHeadingContacts">
@@ -342,18 +344,17 @@ const ContactListing = forwardRef((props, ref) => {
             let j = 0;
             return (
                 <li key={'contact_'+i}>
-                    {savedColList.map((item, pp) => {
-                        if (item.status) {
-                            j++;
-                            return (
-                                <div className={item.id === "name" ? "dataTableCell user" : "dataTableCell"} key={'dataTableCell_'+i+pp}>
-                                    {(j === 1) ? <button className="extraDottedBtn" type="button"></button> : ""}
-                                    {(j === 1) && (!ele.isDependent || ele.isDependent === undefined) ? ((ele.payment_error != undefined || ele.course_error != undefined) ? <span className="infoWarning warningSpace"
-                                        data-title={(ele.payment_error != undefined ? ele.payment_error : "" ) + ' ' + (ele.course_error != undefined ? ele.course_error : "")}>
+                    {savedColList.filter(filterCondition => filterCondition.status ).map((item, pp) => {
+                        j++;
+                        return (
+                            <div className={item.id === "name" ? "dataTableCell user" : "dataTableCell"} key={'dataTableCell_'+i+pp}>
+                                {(j === 1) ? <button className="extraDottedBtn" type="button"></button> : ""}
+                                {(j === 1) && (!ele.isDependent || ele.isDependent === undefined) ? ((ele.payment_error != undefined || ele.course_error != undefined) ? <span className="infoWarning warningSpace"
+                                                                                                                                                                               data-title={(ele.payment_error != undefined ? ele.payment_error : "" ) + ' ' + (ele.course_error != undefined ? ele.course_error : "")}>
                                         <img src={warning_bell} alt="warning" /></span> : <span className="warningSpace"></span>) : ""}
-                                    { ((j === 1) && (ele && ele.isDependent && ele.guardianId) ?  <span className="infoDependent" title="Dependent"><img src={dependent_white} alt="dependent_white" /></span> : "" ) }
-                                    <button className="btn" onClick={() => openContactModal(ele._id)}>
-                                        {(item.id === "name") ? <span className="tableCellUserImg">
+                                { ((j === 1) && (ele && ele.isDependent && ele.guardianId) ?  <span className="infoDependent" title="Dependent"><img src={dependent_white} alt="dependent_white" /></span> : "" ) }
+                                <button className="btn" onClick={() => openContactModal(ele._id)}>
+                                    {(item.id === "name") ? <span className="tableCellUserImg">
                                             <LazyLoadImage
                                                 className="thumbImg"
                                                 src={ele.profilePic !== undefined ? ele.profilePic : owner_img_1}
@@ -362,21 +363,18 @@ const ContactListing = forwardRef((props, ref) => {
                                                 placeholderSrc={owner_img_1}
                                             />
                                         </span> : ""}
-                                        <span className="userNames">
+                                    <span className="userNames">
                                         {(item.id === 'mobile' || item.id === 'phone' || item.id === 'dadPhone' || item.id === 'momPhone') ?
                                             ((ele[item.id] && ele[item.id].dailCode &&  ele[item.id].number !== "") ?
                                                 <span className={ele[item.id].is_valid ?
                                                     "number valid" : "number invalid"}>{ele[item.id].dailCode + "-" + ele[item.id].number}</span> :
                                                 "")  : (item.id === 'dob' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LL') :
                                                 (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LLL') : ele[item.id] ))
-                                             }
+                                        }
                                              </span>
-                                    </button>
-                                </div>
-                            )
-
-                        }
-
+                                </button>
+                            </div>
+                        )
                     })}
                 </li>
             )

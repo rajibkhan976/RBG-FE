@@ -30,6 +30,7 @@ import {io} from "socket.io-client";
 import * as actionTypes from "../actions/types";
 import GetPositionMiddleware from "../actions/GetPosition.middleware";
 import {NotificationServices} from "../services/notification/NotificationServices";
+import moment from "moment-timezone";
 
 // For socket io connection
 //const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlProd;
@@ -68,6 +69,20 @@ const MainComponent = () => {
             totalRead: 0
         },
         totalNotification: 0
+    });
+    const [notification, setNotification] = useState({
+        general: {
+            data: [],
+            page: 1,
+            totalPage: 1
+        },
+        payment: {
+            data: [],
+            page: 1,
+            totalPage: 1
+        },
+        isLoading: false,
+        fullLoading: false
     });
     const [notificationUnread, setNotificationUnread] = useState(0);
     const closeNotification = () => {
@@ -111,8 +126,8 @@ const MainComponent = () => {
     const updateSocketDataForNotification = async (data) => {
         let parseData = JSON.parse(data);
         setIsNewNotification(true);
-        let notificationStructureLocal = notificationStructure;
-        console.log('socket', notificationStructure, data)
+        parseData['isRead'] = false;
+        parseData['createdAt'] = moment.tz("Europe/London").format('YYYY-MM-DD HH:mm:ss');
         if (loggedInUser && (parseData.organizationCode === loggedInUser.organizationCode)) {
             if (parseData.type === 'payment') {
                 setNotificationStructure(prevState => {
@@ -124,6 +139,16 @@ const MainComponent = () => {
                         }
                     }
                 });
+                setNotification(prevState => {
+                    return {
+                        ...prevState,
+                        payment: {
+                            data: [parseData, ...prevState.payment.data],
+                            page: prevState.payment.page,
+                            totalPage: prevState.payment.totalPage
+                        }
+                    }
+                });
             } else {
                 setNotificationStructure(prevState => {
                     return {
@@ -131,6 +156,16 @@ const MainComponent = () => {
                         totalNotification: prevState.totalNotification + 1,
                         general: {
                             totalUnread: prevState.general.totalUnread + 1
+                        }
+                    }
+                });
+                setNotification(prevState => {
+                    return {
+                        ...prevState,
+                        general: {
+                            data: [parseData, ...prevState.general.data],
+                            page: prevState.general.page,
+                            totalPage: prevState.general.totalPage
                         }
                     }
                 });
@@ -225,8 +260,103 @@ const MainComponent = () => {
          * Fetch notifications
          */
         await fetchNotifications();
+        await fetchPaymentNotification(1);
+        await fetchGeneralNotification(1);
     }, []);
-
+    const scrollNotification = (type) => {
+      if (type === 'general') {
+          if (notification.general.page < notification.general.totalPage && !notification.isLoading) {
+              fetchGeneralNotification(notification.general.page + 1);
+          }
+      } else {
+          if (notification.payment.page < notification.payment.totalPage && !notification.isLoading) {
+              fetchPaymentNotification(notification.payment.page + 1);
+          }
+      }
+    }
+    const fetchPaymentNotification = async (page) => {
+        if (page === 1) {
+            setNotification(prevState => {
+                return {
+                    ...prevState,
+                    payment: {
+                        data: [],
+                        page: 1,
+                        totalPage: 1
+                    }
+                }
+            });
+        }
+        setNotification(prevState => {
+            return {
+                ...prevState,
+                isLoading: true
+            }
+        });
+        const result = await NotificationServices.fetchNotifications(page, 'payment');
+        if (result.notifications.length) {
+            setNotification(prevState => {
+                return {
+                    ...prevState,
+                    payment: {
+                        data: [...prevState.payment.data, ...result.notifications],
+                        page: page,
+                        totalPage: result.pagination.totalPages
+                    },
+                    isLoading: false
+                }
+            });
+        } else {
+            setNotification(prevState => {
+                return {
+                    ...prevState,
+                    isLoading: false
+                }
+            });
+        }
+    }
+    
+    const fetchGeneralNotification = async (page) => {
+        if (page === 1) {
+            setNotification(prevState => {
+                return {
+                    ...prevState,
+                    general: {
+                        data: [],
+                        page: 1,
+                        totalPage: 1
+                    }
+                }
+            });
+        }
+        setNotification(prevState => {
+            return {
+                ...prevState,
+                isLoading: true
+            }
+        });
+        const result = await NotificationServices.fetchNotifications(page, 'general');
+        if (result.notifications.length) {
+            setNotification(prevState => {
+                return {
+                    ...prevState,
+                    general: {
+                        data: [ ...prevState.general.data, ...result.notifications],
+                        page: page,
+                        totalPage: result.pagination.totalPages
+                    },
+                    isLoading: false
+                }
+            });
+        } else {
+            setNotification(prevState => {
+                return {
+                    ...prevState,
+                    isLoading: false
+                }
+            });
+        }
+    }
     /**
      * Function to fetch notifications
      * @returns
@@ -276,13 +406,134 @@ const MainComponent = () => {
             console.log('Error while fetching notifications', e);
         }
     };
-
-    const triggerMarkAsRead = () => {
-        setTimeout(() => {
-            fetchNotifications();
-        }, 200)
+    const markAllAsRead = async () => {
+        try {
+            setNotification(prevState => {
+                return {
+                    ...prevState,
+                    fullLoading: true
+                }
+            });
+            await NotificationServices.markAllAsRead();
+            setNotification(prevState => {
+                return {
+                    ...prevState,
+                    fullLoading: false
+                }
+            });
+            setNotification(prevState => {
+                return {
+                    ...prevState,
+                    general: {
+                        data: prevState.general.data.map((el) => {
+                            el.isRead = true;
+                            return {...el};
+                        }),
+                        page: prevState.general.page,
+                        totalPage: prevState.general.totalPage
+                    },
+                    payment: {
+                        data: prevState.payment.data.map((el) => {
+                            el.isRead = true;
+                            return {...el};
+                        }),
+                        page: prevState.payment.page,
+                        totalPage: prevState.payment.totalPage
+                    }
+                }
+            });
+            setNotificationStructure(prevState => {
+                return {
+                    ...prevState,
+                    payment: {
+                        totalUnread: 0
+                    },
+                    general: {
+                        totalUnread: 0
+                    },
+                    totalNotification: 0
+                }
+            });
+        } catch (e) {
+            console.log('Error in mark all as read', e);
+        }
     }
-
+    const markSingleAsRead = async (ele) => {
+        if (!ele.isRead) {
+            let payload = {
+                id: ele.uniqueId
+            };
+            await NotificationServices.markSingleAsRead(JSON.stringify(payload));
+            if (ele.type === 'payment') {
+                setNotificationStructure(prevState => {
+                    return {
+                        ...prevState,
+                        payment: {
+                            totalUnread: prevState.payment.totalUnread - 1
+                        },
+                        totalNotification: prevState.totalNotification - 1
+                    }
+                });
+                setNotification(prevState => {
+                    return {
+                        ...prevState,
+                        payment: {
+                            data: prevState.payment.data.map((el) => {
+                                if (el.uniqueId === ele.uniqueId) {
+                                    el.isRead = true;
+                                    return {...el};
+                                }  else {
+                                    return {...el};
+                                }
+                            }),
+                            page: prevState.payment.page,
+                            totalPage: prevState.payment.totalPage
+                        }
+                    }
+                });
+            } else {
+                setNotificationStructure(prevState => {
+                    return {
+                        ...prevState,
+                        general: {
+                            totalUnread: prevState.general.totalUnread - 1
+                        },
+                        totalNotification: prevState.totalNotification - 1
+                    }
+                });
+                setNotification(prevState => {
+                    return {
+                        ...prevState,
+                        general: {
+                            data: prevState.general.data.map((el) => {
+                                if (el.uniqueId === ele.uniqueId) {
+                                    el.isRead = true;
+                                    return {...el};
+                                } else {
+                                    return {...el};
+                                }
+                            }),
+                            page: prevState.general.page,
+                            totalPage: prevState.general.totalPage
+                        }
+                    }
+                });
+            }
+            setNotification(prevState => {
+                return {
+                    ...prevState,
+                    payment: {
+                        data: prevState.payment.data.map((el) => {
+                            el.isRead = true;
+                            return {...el};
+                        }),
+                        page: prevState.payment.page,
+                        totalPage: prevState.payment.totalPage
+                    }
+                }
+            });
+        }
+    }
 
     return (
         <>
@@ -300,8 +551,11 @@ const MainComponent = () => {
                                          fetchNotifications={fetchNotifications}
                                          notificationStructure={notificationStructure}
                                          notificationUnread={notificationUnread}
-                                         triggerMarkAsRead={triggerMarkAsRead}
                                          notificationTrigger={isNewNotification}
+                                         notification={notification}
+                                         scrollNotification={(type) => scrollNotification(type)}
+                                         markSingleAsRead={(ele) => markSingleAsRead(ele)}
+                                         markAllAsRead={markAllAsRead}
                         />
                         <Switch>
                             <Route exact path="/dashboard">

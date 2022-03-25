@@ -32,7 +32,7 @@ const RolesListing = (props) => {
     currentPage: 1,
     limit: 10,
   });
-  const [keyword, setKeyword] = useState(null);
+  const [keyword, setKeyword] = useState('');
   const [option, setOption] = useState(null);
   const optionsToggleRefs = useRef([]);
   const dispatch = useDispatch();
@@ -161,7 +161,8 @@ const RolesListing = (props) => {
       ? await permissions.actions.includes("read")
       : false;
     console.log("Permission", permissions);
-    let pageId = utils.getQueryVariable("page") || 1;
+    let pageId = utils.getQueryVariable("page");
+    pageId = pageId ? pageId : 1;
     let queryParams = await getQueryParams();
     try {
       setIsLoader(true);
@@ -225,7 +226,6 @@ const RolesListing = (props) => {
    * Update keyword
    */
   const handleKeywordChange = (event) => {
-    console.log(event.target.value);
     setKeyword(event.target.value);
   };
 
@@ -233,7 +233,7 @@ const RolesListing = (props) => {
    * Trigger search when keyword is empty
    */
   useEffect(() => {
-    if (keyword == "") {
+    if (keyword) {
       handleSearch({ preventDefault: () => { } });
     }
   }, [keyword]);
