@@ -2753,3 +2753,6 @@ input[type=number] {
 .staticUpload {
   display: none;
 }
+.addingForm .orangeBtn:disabled {
+  filter: grayscale(1);
+}

@@ -469,7 +469,7 @@ const Billing = (props) => {
 
   const saveCardData = async (e) => {
     e.preventDefault();
-
+    
     let cardError = false;
     console.log(cardNumberCheck, formErrorMsg.card_num_Err);
     if (!cardNumberCheck || formErrorMsg.card_num_Err) {
@@ -618,6 +618,8 @@ const expiration_month = cardExpairyMonthCheckFn();
     }: cardError = true
 
     if (!cardError) {
+      addCardBtn.current.disabled = true
+      addBankBtn.current.disabled = true
       setIsLoader(true)
       try {
         (cardBankList.length == 0 && bankList.length == 0) && makePrimaryMethod(e, "card");
@@ -650,6 +652,8 @@ const expiration_month = cardExpairyMonthCheckFn();
         addCardForm.current.reset()
         fetchCardBank();
         console.log("FINISHED");
+        addCardBtn.current.disabled = false
+        addBankBtn.current.disabled = false
       }
     }
   };
@@ -961,7 +965,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                         </div>
 
                         <div className="text-center">
-                          <button className="orangeBtn" onClick={(e)=>saveCardData(e)} ref={addCardBtn} disabled={isLoader}>
+                          <button className="orangeBtn" onClick={(e)=>saveCardData(e)} ref={addCardBtn}>
                             <img src={plus} alt=""/> Add my Card
                           </button>
                         </div>
