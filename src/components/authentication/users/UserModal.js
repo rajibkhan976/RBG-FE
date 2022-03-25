@@ -1150,13 +1150,13 @@ const UserModal = (props) => {
                                                             </div>
                                                             Organization
                                                         </label>
-                                                        <label className="cmnFormRadioLable">
+                                                        {false && <label className="cmnFormRadioLable">
                                                             <div className="circleRadio">
                                                                 <input type="radio" value="association" name="userType" />
                                                                 <span></span>
                                                             </div>
                                                             Association
-                                                        </label>
+                                                        </label> }
                                                     </div>
 
                                                     {/* <p className="">Is it organization owner?
