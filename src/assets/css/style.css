@@ -7092,7 +7092,7 @@ p.trackName {
   color: #11a750;
   font-size: 10px;
   font-weight: 600;
-  padding-bottom: 5px;
+  padding-bottom: 7px;
   text-transform: uppercase;
 }
 .transactionListing .row.inactive .cell .status {
@@ -9918,7 +9918,7 @@ select.editFormStyle{
 
 /* ......... css for edit upcoming transaction section ends ......................... */
 
-.refundedTag {
+.refundedTag, .editedTag {
   display: inline-block;
   font-size: 10px;
   font-weight: bold;
@@ -9930,6 +9930,11 @@ select.editFormStyle{
   text-align: center;
   line-height: 18px;
   margin-left: 10px;
+}
+
+.editedTag {
+  width: 52px;
+  background-color: #139FEA;
 }
 
 .addProgramFrom .formControl .profile .profileText {
@@ -10233,4 +10238,26 @@ li.listHeadingContacts > div > div.dsc::after {
   font-size: 10px;
   font-weight: 500;
   font-style: italic;
+}
+
+.pid {
+  padding-top: 5px;
+  color: #9BAEBC;
+  display: inline-block;
+}
+.pid span {
+  color: var(--darkBlue);
+}
+.pid .copyTo {
+  width: 24px;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.05) url("../images/copyIcon.svg") no-repeat center;
+  border-radius: 100%;
+  float: right;
+  cursor: pointer;
+  border: none;
+  margin: -5px 0 0 10px;
+}
+.pid .copyTo:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }

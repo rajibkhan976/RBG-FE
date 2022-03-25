@@ -69,6 +69,10 @@ const Transaction = (props) => {
     message: "",
     type: ""
   });
+  const [copyToClipMsg, setCopyToClipMsg] = useState({
+    message: "",
+    type: ""
+  });
   
   
 
@@ -127,6 +131,10 @@ const Transaction = (props) => {
 
   const closeRetryPaymentAlert = () => {
     setRetryPayAlertMsg({...retryPayAlertMsg, message: "", type: ""});
+  };
+
+  const closeCopyToClipAlert = () => {
+    setCopyToClipMsg({...copyToClipMsg, message: "", type: ""});
   };
 
   const openCloseEditTransModal = (param, transaction, loadData) => {
@@ -328,6 +336,7 @@ const Transaction = (props) => {
       setCancelContractId(null);
       fetchContract(props.contactId, 1);
       fetchOldTransactions(props.contactId, 1);
+      fetchUpcomingTransactions(props.contactId, 1);
     }
   };
 
@@ -375,6 +384,15 @@ const Transaction = (props) => {
       }
     })
   };
+
+
+  const copyToClipboard = (id) => {
+    if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+      setCopyToClipMsg({ ...copyToClipMsg, message: "PID copied to clipboard", type: "success"});
+      return navigator.clipboard.writeText(id);
+    }
+  };
+
 
   const closeAlert = () => {
     setSuccessMsg(null);
@@ -499,6 +517,10 @@ const Transaction = (props) => {
                         </div>
                         <div>
                           <span>{item.transaction_for == "product" ? "Product" : "Program"}:</span> “{ item.title }”
+                        </div>
+                        <div className="pid">
+                          <span>PID: </span> {item._id}
+                          <button type="button" className="copyTo" onClick={() => copyToClipboard (item._id)}></button>
                         </div>
                       </div>
                     </div>
@@ -643,7 +665,7 @@ const Transaction = (props) => {
 
 
                   
-                    <div className={item.history && item.history[0].status == "success" ? "row success withHistory" : "row fail withHistory"} key={index}>
+                    <div className={item.history && item.history[0].status == "success" ? "row success withHistory" : (item.history[0].status == "failed" && item.history[0].amount > 0 ? "row fail withHistory" : "row success withHistory")} key={index}>
                       <div className="cellWraperss">
 
                         <div className="cell particulars">
@@ -672,11 +694,16 @@ const Transaction = (props) => {
                             </div>
                             <div className="textCont">
                               <div className="status">
-                                {item.history && item.history[0].status == "success" ? "success" : "failed"}
-                                {item.history && item.history[0].amount < 0 ? 
+                                {item.history && item.history[0].status == "failed" && item.history[0].amount > 0 ? "failed" : "success"}
+                                {/* {item.history && item.history[0].amount < 0 && item.history[0].status == "success" ? 
+                                <span className="refundedTag">Refunded</span>
+                                : ""} */}
+                                {item.refunded_amount ? 
                                 <span className="refundedTag">Refunded</span>
                                 : ""}
-                                
+                                {item.createdAt != item.updatedAt ? 
+                                <div className="editedTag">Edited</div>
+                                : ""}
                               </div>
                               <div>
                                 <span>{item.transaction_for == "course" ? "Program" : "Product"}: </span> 
@@ -710,6 +737,10 @@ const Transaction = (props) => {
                                   </ul>
                                 </div>
                               </div>
+                              <div className="pid">
+                                <span>PID: </span> {item._id}
+                                <button type="button" className="copyTo" onClick={() => copyToClipboard (item._id)}></button>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -741,10 +772,10 @@ const Transaction = (props) => {
                            
                           <button type="button" className={checkRefundAmount(item) && item.refunded_amount != Math.abs(item.amount).toFixed(2) ? "moreOptBtn" : "hide"} onClick={() => moreOptOpenOld (index)}></button>
                             <div className={oldOptIndex === index ? "optDropdown" : "optDropdown hide"}>
-                              {item.history && item.history[0].status == "success" ?
-                                <button type="button" className="refund" onClick={() => openRefundModal (item)}>Refund</button>
-                                :
+                              {item.history && item.history[0].status == "failed" && item.history[0].amount > 0 ?
                                 <button type="button" className="retry" onClick={() => openCloseRetryModal (true, item)}>Retry</button> 
+                                :
+                                <button type="button" className="refund" onClick={() => openRefundModal (item)}>Refund</button>
                               }
                               {/* <button type="button" className="history">History</button> */}
                             </div>  
@@ -981,6 +1012,10 @@ const Transaction = (props) => {
 
       { retryPayAlertMsg.message ? 
       <AlertMessage message={retryPayAlertMsg.message} type={retryPayAlertMsg.type} time={5000} close={closeRetryPaymentAlert} /> 
+      : ""}
+
+      { copyToClipMsg.message ? 
+      <AlertMessage message={copyToClipMsg.message} type={copyToClipMsg.type} time={2000} close={closeCopyToClipAlert} /> 
       : ""}
 
     </>
