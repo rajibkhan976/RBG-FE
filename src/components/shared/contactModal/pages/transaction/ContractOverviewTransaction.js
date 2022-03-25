@@ -393,7 +393,7 @@ const ContractOverviewTransaction = (props) => {
                   </div>
                 </div>
                 <div className="downpaymentsPayDetails">
-                  <div className="payDate instalments">Payment Remaing ... <b>{contractData.remainingPaymentCount}</b></div>
+                  <div className="payDate instalments">Payment Remaing <b>{contractData.remainingPaymentCount}</b></div>
                   <div className="payDate instalmentDate">
                     <img src={payDate} alt="" /> {contractData.nextDueDate}
                   </div>
