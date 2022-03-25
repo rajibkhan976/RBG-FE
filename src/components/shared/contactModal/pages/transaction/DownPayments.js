@@ -117,10 +117,20 @@ const DownPayments = forwardRef((props, ref) => {
                 newElem.amountErr = checkAmountErr(newElem.amount);
                 break;
             case "isPayNow":
-                newElem.payment_status = e.target.checked ? 'paid' : 'unpaid';
+                if (e.target.checked && newElem.payment_type === 'cash') {
+                    newElem.payment_status = 'paid';
+                } else if (e.target.checked && newElem.payment_type === 'online') {
+                    newElem.payment_status = 'unpaid';
+                } else {
+                    newElem.payment_status = 'unpaid';
+                }
                 break;
             case "payment_type":
-                newElem.payment_status = e.target.value === 'cash' ? 'paid' : 'unpaid';
+                if (newElem.payment_type === 'online') {
+                    newElem.payment_status = 'unpaid';
+                } else if(newElem.payment_type === 'cash' && newElem.isPayNow === 1) {
+                    newElem.payment_status = 'paid';
+                }
 
             default:
                 break;
@@ -303,6 +313,7 @@ const DownPayments = forwardRef((props, ref) => {
                                                         name="paymentStatus"
                                                         value={el.payment_status}
                                                         onChange={e => validateIndividual(e, key, "payment_status")}
+                                                        disabled
                                                     >
                                                         <option value="unpaid">Unpaid</option>
                                                         <option value="paid">Paid</option>
