@@ -304,11 +304,11 @@ const ProductFilter = (props) => {
                                 })}
 
                             </div>
-                            <div className="applySlider">
+                            {/* <div className="applySlider">
                                 <p>Price</p>
 
                                 <Slider min={300} max={3000} />
-                            </div>
+                            </div> */}
                             <div className="applyFilterBtn">
                                 <button className="saveNnewBtn" type="submit"><span>Apply Filter</span><img className="" src={arrowForward} alt="" /></button>
                                 <button className="btn-link" type="button" onClick={handleResetFilter}>Clear</button>

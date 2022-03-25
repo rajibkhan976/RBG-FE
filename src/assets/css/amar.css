@@ -2726,7 +2726,7 @@ input[type=number] {
   pointer-events: none;
 }
 .applySlider .min-max-slider>input::-webkit-slider-thumb {
-  width: 8px;
+  width: 13px;
 }
 .tooltiptextInfo {
   pointer-events: none;
@@ -2749,4 +2749,7 @@ input[type=number] {
   width: 20px;
   align-items: center;
   justify-content: center;
+}
+.staticUpload {
+  display: none;
 }
