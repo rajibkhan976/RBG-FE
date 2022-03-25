@@ -961,7 +961,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                         </div>
 
                         <div className="text-center">
-                          <button className="orangeBtn" onClick={(e)=>saveCardData(e)} ref={addCardBtn}>
+                          <button className="orangeBtn" onClick={(e)=>saveCardData(e)} ref={addCardBtn} disabled={isLoader}>
                             <img src={plus} alt=""/> Add my Card
                           </button>
                         </div>
@@ -1133,7 +1133,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                         </div>
 
                         <div className="text-center">
-                          <button className="orangeBtn" onClick={saveBankData} ref={addBankBtn}>
+                          <button className="orangeBtn" onClick={saveBankData} ref={addBankBtn} disabled={isLoader}>
                             <img src={plus} alt=""/> Add my Bank Account
                           </button>
                         </div>
