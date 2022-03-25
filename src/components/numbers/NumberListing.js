@@ -13,6 +13,7 @@ import Pagination from "../shared/Pagination";
 import ConfirmBox from "../shared/confirmBox";
 import { utils } from "../../helpers";
 import moment from "moment";
+import list_board_icon from "../../assets/images/list_board_icon.svg";
 
 const NumberListing = () => {
 
@@ -452,15 +453,17 @@ const NumberListing = () => {
                 )
               })
               }
-              {/* {!numbers.length && 
-                <li className="userName" >
-                  <div className="cell_xl">No record found</div>
-                </li>
-              }  */}
             </ul>
+             {!numbers.length && 
+          <div className="createNew">
+              <span>
+                  <img src={list_board_icon} alt="" />
+                  <p>No number found!</p>
+              </span>
           </div>
-        </div>
-
+        } 
+          </div>
+        </div>      
         {paginationData && paginationData.totalPages > 1 && <Pagination
           type="numbers"
           paginationData={paginationData}
@@ -474,6 +477,7 @@ const NumberListing = () => {
             errorMsg={(msg) => setErrorMsg(msg)}
             prependRecord={(newRecord) => addNewNumber(newRecord)} />}
 
+      
       </div>
     </>
   );

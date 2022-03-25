@@ -16,6 +16,7 @@ import Loader from "../../../shared/Loader";
 import ConfirmBox from "../../../shared/confirmBox";
 import { utils } from "../../../../helpers";
 import moment from "moment";
+import list_board_icon from "../../../../assets/images/list_board_icon.svg";
 
 let ringtoneList = [];
 let ringtone = new Audio();
@@ -445,518 +446,527 @@ const CallSetup = () => {
                 }
             </div>
             {
-                Object.keys(numberObj).length ?
-                <div className="userListBody callListingTable">
-                    <div className="assignedNumberArea">
-                        <h3>Assigned Phone Number</h3>
-                        <p>{ "+" + numberObj.prefix + "-" + numberObj.nationalNumber + " [ " + numberObj.numberAlias + " ] "}</p>
-                        <div className="ringToneArea" ref={ref}>
-                            <button className="addRingBtn" onClick={tglRingtoneDropdown}>
-                                <img src={orange_add_icon} alt="" /> Ringtone Setup
-                            </button>
-                            {ringtoneDropdown ? (
-                                <div className="ringToneDropDown">
-                                {ringtoneLoader && <Loader />}
-                                <div
-                                    className={uploadRingSlide ? "hide" : "ringtoneListSlide"}
-                                >
-                                    <div
-                                    className={
-                                        isSearching
-                                        ? "ringToneDropDownHead searchign"
-                                        : "ringToneDropDownHead"
-                                    }
-                                    >
-                                    <div
-                                        className={
-                                        isSearching
-                                            ? "searchRingTone searching"
-                                            : "searchRingTone"
-                                        }
-                                    >
-                                        <input
-                                        type="text"
-                                        value={searchKeyVal}
-                                        placeholder="Search Ringtone"
-                                        onChange={filterTrack}
-                                        />
-                                    </div>
-                                    {isSearching ? (
-                                        <button
-                                        className="clearSearchBtn"
-                                        onClick={clearTrackSearch}
-                                        ></button>
-                                    ) : (
-                                        <button
-                                        className="addRingToneBtn"
-                                        onClick={gotoUpload}
-                                        ></button>
-                                    )}
-                                    </div>
-                                    <div className="ringToneList">
-                                    <Scrollbars
-                                        renderThumbVertical={(props) => (
-                                        <div className="thumb-vertical" />
-                                        )}
-                                    >
-                                        <ul className={isSearching ? "filterResult" : ""}>
-                                        {foundTrack && foundTrack.length > 0 ? (
-                                            foundTrack.map((element, key) => (
-                                            <li
-                                                key={key}
-                                                className={
-                                                selectedRingtone == "" &&
-                                                activeRingtone === element._id
-                                                    ? "active"
-                                                    : selectedRingtone === element._id
-                                                    ? "selected"
-                                                    : ""
-                                                }
-                                            >
-                                                {nowEditing === element._id ? (
-                                                <>
-                                                    <input
-                                                    type="text"
-                                                    className="toneNameEdit"
-                                                    value={newRingName}
-                                                    onChange={newTrackName}
-                                                    />
-                                                    <div className="toneAction">
-                                                    {newRingName === element.name ? (
-                                                        <button
-                                                        className="cancelName"
-                                                        onClick={() => cancelName(element)}
-                                                        ></button>
-                                                    ) : (
-                                                        <button
-                                                        className={element.organizationId == 0 ? "hide" : "saveName" }
-                                                        onClick={() => editRingtone(element)}
-                                                        ></button>
-                                                    )}
+              Object.keys(numberObj).length ?
+              <div className="userListBody callListingTable">
+                  <div className="assignedNumberArea">
+                      <h3>Assigned Phone Number</h3>
+                      <p>{ "+" + numberObj.prefix + "-" + numberObj.nationalNumber + " [ " + numberObj.numberAlias + " ] "}</p>
+                      <div className="ringToneArea" ref={ref}>
+                          <button className="addRingBtn" onClick={tglRingtoneDropdown}>
+                              <img src={orange_add_icon} alt="" /> Ringtone Setup
+                          </button>
+                          {ringtoneDropdown ? (
+                              <div className="ringToneDropDown">
+                              {ringtoneLoader && <Loader />}
+                              <div
+                                  className={uploadRingSlide ? "hide" : "ringtoneListSlide"}
+                              >
+                                  <div
+                                  className={
+                                      isSearching
+                                      ? "ringToneDropDownHead searchign"
+                                      : "ringToneDropDownHead"
+                                  }
+                                  >
+                                  <div
+                                      className={
+                                      isSearching
+                                          ? "searchRingTone searching"
+                                          : "searchRingTone"
+                                      }
+                                  >
+                                      <input
+                                      type="text"
+                                      value={searchKeyVal}
+                                      placeholder="Search Ringtone"
+                                      onChange={filterTrack}
+                                      />
+                                  </div>
+                                  {isSearching ? (
+                                      <button
+                                      className="clearSearchBtn"
+                                      onClick={clearTrackSearch}
+                                      ></button>
+                                  ) : (
+                                      <button
+                                      className="addRingToneBtn"
+                                      onClick={gotoUpload}
+                                      ></button>
+                                  )}
+                                  </div>
+                                  <div className="ringToneList">
+                                  <Scrollbars
+                                      renderThumbVertical={(props) => (
+                                      <div className="thumb-vertical" />
+                                      )}
+                                  >
+                                      <ul className={isSearching ? "filterResult" : ""}>
+                                      {foundTrack && foundTrack.length > 0 ? (
+                                          foundTrack.map((element, key) => (
+                                          <li
+                                              key={key}
+                                              className={
+                                              selectedRingtone == "" &&
+                                              activeRingtone === element._id
+                                                  ? "active"
+                                                  : selectedRingtone === element._id
+                                                  ? "selected"
+                                                  : ""
+                                              }
+                                          >
+                                              {nowEditing === element._id ? (
+                                              <>
+                                                  <input
+                                                  type="text"
+                                                  className="toneNameEdit"
+                                                  value={newRingName}
+                                                  onChange={newTrackName}
+                                                  />
+                                                  <div className="toneAction">
+                                                  {newRingName === element.name ? (
+                                                      <button
+                                                      className="cancelName"
+                                                      onClick={() => cancelName(element)}
+                                                      ></button>
+                                                  ) : (
+                                                      <button
+                                                      className={element.organizationId == 0 ? "hide" : "saveName" }
+                                                      onClick={() => editRingtone(element)}
+                                                      ></button>
+                                                  )}
 
-                                                    <button
-                                                        className="deleteTrack"
-                                                        onClick={() => deleteRingtone(element)}
-                                                    ></button>
-                                                    </div>
-                                                </>
-                                                ) : (
-                                                <>
-                                                    <button
-                                                    className={
-                                                        nowPlaying === element._id
-                                                        ? "toneName playing"
-                                                        : "toneName"
-                                                    }
-                                                    onClick={() => selectRingtone(element)}
-                                                    >
-                                                    {element.name}
-                                                    </button>
-                                                    <div className="toneAction">
-                                                    {!element.default ? (
-                                                        <button
-                                                        className={element.organizationId == 0 ? "hide" : "toneEdit"}
-                                                        onClick={() => editTrack(element)}
-                                                        ></button>
-                                                    ) : (
-                                                        ""
-                                                    )}
-                                                    <button
-                                                        className={
-                                                        nowPlaying === element._id &&
-                                                        isAudioPlaying
-                                                            ? "tonePause"
-                                                            : "tonePlay"
-                                                        }
-                                                        ref={ringtineListItem}
-                                                        onClick={() => playRingtone(element)}
-                                                    ></button>
-                                                    </div>
-                                                </>
-                                                )}
-                                            </li>
-                                            ))
-                                        ) : (
-                                            <li className="noData">No results found!</li>
-                                        )}
-                                        </ul>
-                                    </Scrollbars>
-                                    </div>
-                                    <div className="ringToneDropBottom">
-                                    <button
-                                        className={
-                                        selectedRingtone == "" ||
-                                        activeRingtone === selectedRingtone
-                                            ? "cmnBtn updateRingTone disabled"
-                                            : "cmnBtn updateRingTone"
-                                        }
-                                        onClick={saveSelectedRingtone}
-                                    >
-                                        <span>Update</span>
-                                        <img src={arrow_forward} alt="" />
-                                    </button>
-                                    </div>
-                                </div>
-                                <div className={uploadRingSlide ? "uploadRingSlide" : "hide"}>
-                                    <div className="ringToneDropDownHead">
-                                    <button
-                                        className="backToToneList"
-                                        onClick={backToToneList}
-                                    >
-                                        Add Ringtone
-                                    </button>
-                                    </div>
-                                    <div
-                                    className={
-                                        fileUploadStatus
-                                        ? "ringUploadPlate successScreen"
-                                        : "ringUploadPlate"
-                                    }
-                                    >
-                                    <h3 className={fileUploadStatus ? "success" : ""}>
-                                        <figure>
-                                        <img
-                                            src={
-                                            choosedFile === ""
-                                                ? upload_cloud_icon_small
-                                                : fileUploadStatus
-                                                ? file_done_icon
-                                                : music_file_icon
-                                            }
-                                            alt=""
-                                        />
-                                        </figure>
-                                        {choosedFile === ""
-                                        ? "Choose your ringtone"
-                                        : fileUploadStatus
-                                        ? "Congratulations"
-                                        : choosedFile}
-                                    </h3>
-                                    <p className="fileUploadInfo">
-                                        {choosedFilePath === ""
-                                        ? "[Only MP3, WMA, AMR formats are supported] Maximum upload size is 5 MB"
-                                        : fileUploadStatus
-                                        ? "File successfully uploaded"
-                                        : choosedFilePath}
-                                    </p>
-                                    <input
-                                        type="file"
-                                        accept=".mp3, .wma, .amr"
-                                        className="importRingtone"
-                                        id="choseRingtone"
-                                        onChange={fileChose}
-                                    />
-                                    </div>
-                                    {uploadError ? (
-                                    <div className="errorMsg">
-                                        Please chose file less than 5MB
-                                    </div>
-                                    ) : (
-                                    ""
-                                    )}
-                                    {!fileUploadStatus ? (
-                                    <div className="ringtoneName">
-                                        <div className="cmnFormRow">
-                                        <div className="cmnFieldName">Ringtone Name</div>
-                                        <div className="cmnFormField">
-                                            <input
-                                            type="text"
-                                            className="cmnFieldStyle"
-                                            onChange={handelRingtoneName}
-                                            value={ringtoneName}
-                                            />
-                                        </div>
-                                        </div>
-                                    </div>
-                                    ) : (
-                                    ""
-                                    )}
-                                    <div className="ringToneDropBottom">
-                                    <button
-                                        className={
-                                        fileUploadStatus
-                                            ? "cmnBtn updateRingTone"
-                                            : choosedFile === "" || ringtoneName === ""
-                                            ? "cmnBtn updateRingTone disabled"
-                                            : "cmnBtn updateRingTone"
-                                        }
-                                        onClick={uploadRingtone}
-                                    >
-                                        <span>{fileUploadStatus ? "Done" : "Upload"}</span>
-                                        <img src={arrow_forward} alt="" />
-                                    </button>
-                                    </div>
-                                </div>
-                                </div>
-                            ) : (
-                                ""
-                            )}
-                        </div>
-                    </div>
-                    <h3 className="callListTabHeading">
-                        Configurations
-                    </h3>
-                    <div className="listBody">
-                        <ul className="tableListing">
-                            <li className="listHeading">
-                                <div
-                                    className={"userName " + (sortBy == "name" ? "sort " + sortType : "")}
-                                    onClick={() => handleSortBy("name")}>
-                                    Name
-                                </div>
-                                <div>
-                                    Scheduled Day (s)
-                                </div>
-                                <div 
-                                    className={(sortBy == "name" ? "sort " + sortType : "")}
-                                    onClick={() => handleSortBy("status")}>
-                                    Status
-                                </div>
-                                <div
-                                    className={"createDate " + (sortBy == "createdAt" ? "sort " + sortType : "")}
-                                    onClick={() => handleSortBy("createdAt")}
-                                >Created on</div>
-                            </li>
-                            {
-                                configurationList.map((list, key) => {
-                                    return (
-                                      <li key={key}>
-                                        <div className="userName">
-                                          <button className="btn">
-                                            <p>{list.name}</p>
-                                          </button>
-                                        </div>
-                                        <div>
-                                          <ul className="weekDateList">
-                                            <li
-                                              className={
-                                                handleCheck(
-                                                  "sun",
-                                                  list.schedules
-                                                )
-                                                  ? "weekDate active"
-                                                  : "weekDate"
-                                              }
-                                            >
-                                              <span>S</span>
-                                            </li>
-                                            <li
-                                              className={
-                                                handleCheck(
-                                                  "mon",
-                                                  list.schedules
-                                                )
-                                                  ? "weekDate active"
-                                                  : "weekDate"
-                                              }
-                                            >
-                                              <span>M</span>
-                                            </li>
-                                            <li
-                                              className={
-                                                handleCheck(
-                                                  "tue",
-                                                  list.schedules
-                                                )
-                                                  ? "weekDate active"
-                                                  : "weekDate"
-                                              }
-                                            >
-                                              <span>T</span>
-                                            </li>
-                                            <li
-                                              className={
-                                                handleCheck(
-                                                  "wed",
-                                                  list.schedules
-                                                )
-                                                  ? "weekDate active"
-                                                  : "weekDate"
-                                              }
-                                            >
-                                              <span>W</span>
-                                            </li>
-                                            <li
-                                              className={
-                                                handleCheck(
-                                                  "thu",
-                                                  list.schedules
-                                                )
-                                                  ? "weekDate active"
-                                                  : "weekDate"
-                                              }
-                                            >
-                                              <span>T</span>
-                                            </li>
-                                            <li
-                                              className={
-                                                handleCheck(
-                                                  "fri",
-                                                  list.schedules
-                                                )
-                                                  ? "weekDate active"
-                                                  : "weekDate"
-                                              }
-                                            >
-                                              <span>F</span>
-                                            </li>
-                                            <li
-                                              className={
-                                                handleCheck(
-                                                  "sat",
-                                                  list.schedules
-                                                )
-                                                  ? "weekDate active"
-                                                  : "weekDate"
-                                              }
-                                            >
-                                              <span>S</span>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                        <div>
-                                          <label
+                                                  <button
+                                                      className="deleteTrack"
+                                                      onClick={() => deleteRingtone(element)}
+                                                  ></button>
+                                                  </div>
+                                              </>
+                                              ) : (
+                                              <>
+                                                  <button
+                                                  className={
+                                                      nowPlaying === element._id
+                                                      ? "toneName playing"
+                                                      : "toneName"
+                                                  }
+                                                  onClick={() => selectRingtone(element)}
+                                                  >
+                                                  {element.name}
+                                                  </button>
+                                                  <div className="toneAction">
+                                                  {!element.default ? (
+                                                      <button
+                                                      className={element.organizationId == 0 ? "hide" : "toneEdit"}
+                                                      onClick={() => editTrack(element)}
+                                                      ></button>
+                                                  ) : (
+                                                      ""
+                                                  )}
+                                                  <button
+                                                      className={
+                                                      nowPlaying === element._id &&
+                                                      isAudioPlaying
+                                                          ? "tonePause"
+                                                          : "tonePlay"
+                                                      }
+                                                      ref={ringtineListItem}
+                                                      onClick={() => playRingtone(element)}
+                                                  ></button>
+                                                  </div>
+                                              </>
+                                              )}
+                                          </li>
+                                          ))
+                                      ) : (
+                                          <li className="noData">No results found!</li>
+                                      )}
+                                      </ul>
+                                  </Scrollbars>
+                                  </div>
+                                  <div className="ringToneDropBottom">
+                                  <button
+                                      className={
+                                      selectedRingtone == "" ||
+                                      activeRingtone === selectedRingtone
+                                          ? "cmnBtn updateRingTone disabled"
+                                          : "cmnBtn updateRingTone"
+                                      }
+                                      onClick={saveSelectedRingtone}
+                                  >
+                                      <span>Update</span>
+                                      <img src={arrow_forward} alt="" />
+                                  </button>
+                                  </div>
+                              </div>
+                              <div className={uploadRingSlide ? "uploadRingSlide" : "hide"}>
+                                  <div className="ringToneDropDownHead">
+                                  <button
+                                      className="backToToneList"
+                                      onClick={backToToneList}
+                                  >
+                                      Add Ringtone
+                                  </button>
+                                  </div>
+                                  <div
+                                  className={
+                                      fileUploadStatus
+                                      ? "ringUploadPlate successScreen"
+                                      : "ringUploadPlate"
+                                  }
+                                  >
+                                  <h3 className={fileUploadStatus ? "success" : ""}>
+                                      <figure>
+                                      <img
+                                          src={
+                                          choosedFile === ""
+                                              ? upload_cloud_icon_small
+                                              : fileUploadStatus
+                                              ? file_done_icon
+                                              : music_file_icon
+                                          }
+                                          alt=""
+                                      />
+                                      </figure>
+                                      {choosedFile === ""
+                                      ? "Choose your ringtone"
+                                      : fileUploadStatus
+                                      ? "Congratulations"
+                                      : choosedFile}
+                                  </h3>
+                                  <p className="fileUploadInfo">
+                                      {choosedFilePath === ""
+                                      ? "[Only MP3, WMA, AMR formats are supported] Maximum upload size is 5 MB"
+                                      : fileUploadStatus
+                                      ? "File successfully uploaded"
+                                      : choosedFilePath}
+                                  </p>
+                                  <input
+                                      type="file"
+                                      accept=".mp3, .wma, .amr"
+                                      className="importRingtone"
+                                      id="choseRingtone"
+                                      onChange={fileChose}
+                                  />
+                                  </div>
+                                  {uploadError ? (
+                                  <div className="errorMsg">
+                                      Please chose file less than 5MB
+                                  </div>
+                                  ) : (
+                                  ""
+                                  )}
+                                  {!fileUploadStatus ? (
+                                  <div className="ringtoneName">
+                                      <div className="cmnFormRow">
+                                      <div className="cmnFieldName">Ringtone Name</div>
+                                      <div className="cmnFormField">
+                                          <input
+                                          type="text"
+                                          className="cmnFieldStyle"
+                                          onChange={handelRingtoneName}
+                                          value={ringtoneName}
+                                          />
+                                      </div>
+                                      </div>
+                                  </div>
+                                  ) : (
+                                  ""
+                                  )}
+                                  <div className="ringToneDropBottom">
+                                  <button
+                                      className={
+                                      fileUploadStatus
+                                          ? "cmnBtn updateRingTone"
+                                          : choosedFile === "" || ringtoneName === ""
+                                          ? "cmnBtn updateRingTone disabled"
+                                          : "cmnBtn updateRingTone"
+                                      }
+                                      onClick={uploadRingtone}
+                                  >
+                                      <span>{fileUploadStatus ? "Done" : "Upload"}</span>
+                                      <img src={arrow_forward} alt="" />
+                                  </button>
+                                  </div>
+                              </div>
+                              </div>
+                          ) : (
+                              ""
+                          )}
+                      </div>
+                  </div>
+                  <h3 className="callListTabHeading">
+                      Configurations
+                  </h3>
+                  <div className="listBody">
+                      <ul className="tableListing">
+                          <li className="listHeading">
+                              <div
+                                  className={"userName " + (sortBy == "name" ? "sort " + sortType : "")}
+                                  onClick={() => handleSortBy("name")}>
+                                  Name
+                              </div>
+                              <div>
+                                  Scheduled Day (s)
+                              </div>
+                              <div 
+                                  className={(sortBy == "name" ? "sort " + sortType : "")}
+                                  onClick={() => handleSortBy("status")}>
+                                  Status
+                              </div>
+                              <div
+                                  className={"createDate " + (sortBy == "createdAt" ? "sort " + sortType : "")}
+                                  onClick={() => handleSortBy("createdAt")}
+                              >Created on</div>
+                          </li>
+                          {
+                              configurationList.map((list, key) => {
+                                  return (
+                                    <li key={key}>
+                                      <div className="userName">
+                                        <button className="btn">
+                                          <p>{list.name}</p>
+                                        </button>
+                                      </div>
+                                      <div>
+                                        <ul className="weekDateList">
+                                          <li
                                             className={
-                                              "toggleBtn " + list.status
+                                              handleCheck(
+                                                "sun",
+                                                list.schedules
+                                              )
+                                                ? "weekDate active"
+                                                : "weekDate"
                                             }
                                           >
-                                            <input
-                                              type="checkbox"
-                                              onChange={(e) => {
-                                                statusToogle(e, list._id, key);
-                                              }}
+                                            <span>S</span>
+                                          </li>
+                                          <li
+                                            className={
+                                              handleCheck(
+                                                "mon",
+                                                list.schedules
+                                              )
+                                                ? "weekDate active"
+                                                : "weekDate"
+                                            }
+                                          >
+                                            <span>M</span>
+                                          </li>
+                                          <li
+                                            className={
+                                              handleCheck(
+                                                "tue",
+                                                list.schedules
+                                              )
+                                                ? "weekDate active"
+                                                : "weekDate"
+                                            }
+                                          >
+                                            <span>T</span>
+                                          </li>
+                                          <li
+                                            className={
+                                              handleCheck(
+                                                "wed",
+                                                list.schedules
+                                              )
+                                                ? "weekDate active"
+                                                : "weekDate"
+                                            }
+                                          >
+                                            <span>W</span>
+                                          </li>
+                                          <li
+                                            className={
+                                              handleCheck(
+                                                "thu",
+                                                list.schedules
+                                              )
+                                                ? "weekDate active"
+                                                : "weekDate"
+                                            }
+                                          >
+                                            <span>T</span>
+                                          </li>
+                                          <li
+                                            className={
+                                              handleCheck(
+                                                "fri",
+                                                list.schedules
+                                              )
+                                                ? "weekDate active"
+                                                : "weekDate"
+                                            }
+                                          >
+                                            <span>F</span>
+                                          </li>
+                                          <li
+                                            className={
+                                              handleCheck(
+                                                "sat",
+                                                list.schedules
+                                              )
+                                                ? "weekDate active"
+                                                : "weekDate"
+                                            }
+                                          >
+                                            <span>S</span>
+                                          </li>
+                                        </ul>
+                                      </div>
+                                      <div>
+                                        <label
+                                          className={
+                                            "toggleBtn " + list.status
+                                          }
+                                        >
+                                          <input
+                                            type="checkbox"
+                                            onChange={(e) => {
+                                              statusToogle(e, list._id, key);
+                                            }}
+                                          />
+                                          <span className="toggler"></span>
+                                        </label>
+                                      </div>
+                                      <div className="createDate">
+                                        <button className="btn">
+                                          {moment(list.createdAt).format(
+                                            "Do MMM YYYY"
+                                          )}
+                                        </button>
+                                        <div className="info_3dot_icon">
+                                          <button
+                                            className="btn"
+                                            onClick={() => {
+                                              toggleOptions(key);
+                                            }}
+                                          >
+                                            <img
+                                              src={info_3dot_icon}
+                                              alt=""
                                             />
-                                            <span className="toggler"></span>
-                                          </label>
-                                        </div>
-                                        <div className="createDate">
-                                          <button className="btn">
-                                            {moment(list.createdAt).format(
-                                              "Do MMM YYYY"
-                                            )}
                                           </button>
-                                          <div className="info_3dot_icon">
+                                        </div>
+                                        <React.Fragment
+                                          key={key + "_fragment"}
+                                        >
+                                          <div
+                                            className={
+                                              option === key
+                                                ? "dropdownOptions listOpen"
+                                                : "listHide"
+                                            }
+                                          >
                                             <button
-                                              className="btn"
-                                              onClick={() => {
-                                                toggleOptions(key);
-                                              }}
+                                              className="btn btnEdit"
+                                              onClick={(e) =>
+                                                editConfigHandle(list)
+                                              }
                                             >
-                                              <img
-                                                src={info_3dot_icon}
-                                                alt=""
-                                              />
+                                              <span>
+                                                <svg
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                  viewBox="0 0 13.553 13.553"
+                                                  className="editIcon"
+                                                >
+                                                  <g transform="translate(0.75 0.75)">
+                                                    <path
+                                                      className="a"
+                                                      d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423"
+                                                      transform="translate(-2 -2.795)"
+                                                    />
+                                                    <path
+                                                      className="a"
+                                                      d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z"
+                                                      transform="translate(-4.384 -2)"
+                                                    />
+                                                  </g>
+                                                </svg>
+                                              </span>
+                                              Edit
+                                            </button>
+                                            <button
+                                              className="btn btnDelete"
+                                              onClick={() =>
+                                                deleteConfig(list)
+                                              }
+                                            >
+                                              <span>
+                                                <svg
+                                                  className="deleteIcon"
+                                                  xmlns="http://www.w3.org/2000/svg"
+                                                  width="12.347"
+                                                  height="13.553"
+                                                  viewBox="0 0 12.347 13.553"
+                                                >
+                                                  <g transform="translate(0.75 0.75)">
+                                                    <path
+                                                      className="a"
+                                                      d="M3,6H13.847"
+                                                      transform="translate(-3 -3.589)"
+                                                      style={{
+                                                        stroke: "#9baebc",
+                                                      }}
+                                                    />
+                                                    <path
+                                                      className="a"
+                                                      d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
+                                                      transform="translate(-3.795 -2)"
+                                                      style={{
+                                                        stroke: "#9baebc",
+                                                      }}
+                                                    />
+                                                    <line
+                                                      className="a"
+                                                      y2="3"
+                                                      transform="translate(4.397 6.113)"
+                                                      style={{
+                                                        stroke: "#9baebc",
+                                                      }}
+                                                    />
+                                                    <line
+                                                      className="a"
+                                                      y2="3"
+                                                      transform="translate(6.397 6.113)"
+                                                      style={{
+                                                        stroke: "#9baebc",
+                                                      }}
+                                                    />
+                                                  </g>
+                                                </svg>
+                                              </span>
+                                              Delete
                                             </button>
                                           </div>
-                                          <React.Fragment
-                                            key={key + "_fragment"}
-                                          >
-                                            <div
-                                              className={
-                                                option === key
-                                                  ? "dropdownOptions listOpen"
-                                                  : "listHide"
-                                              }
-                                            >
-                                              <button
-                                                className="btn btnEdit"
-                                                onClick={(e) =>
-                                                  editConfigHandle(list)
-                                                }
-                                              >
-                                                <span>
-                                                  <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 13.553 13.553"
-                                                    className="editIcon"
-                                                  >
-                                                    <g transform="translate(0.75 0.75)">
-                                                      <path
-                                                        className="a"
-                                                        d="M12.847,10.424v3.218a1.205,1.205,0,0,1-1.205,1.205H3.205A1.205,1.205,0,0,1,2,13.642V5.205A1.205,1.205,0,0,1,3.205,4H6.423"
-                                                        transform="translate(-2 -2.795)"
-                                                      />
-                                                      <path
-                                                        className="a"
-                                                        d="M14.026,2l2.411,2.411-6.026,6.026H8V8.026Z"
-                                                        transform="translate(-4.384 -2)"
-                                                      />
-                                                    </g>
-                                                  </svg>
-                                                </span>
-                                                Edit
-                                              </button>
-                                              <button
-                                                className="btn btnDelete"
-                                                onClick={() =>
-                                                  deleteConfig(list)
-                                                }
-                                              >
-                                                <span>
-                                                  <svg
-                                                    className="deleteIcon"
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="12.347"
-                                                    height="13.553"
-                                                    viewBox="0 0 12.347 13.553"
-                                                  >
-                                                    <g transform="translate(0.75 0.75)">
-                                                      <path
-                                                        className="a"
-                                                        d="M3,6H13.847"
-                                                        transform="translate(-3 -3.589)"
-                                                        style={{
-                                                          stroke: "#9baebc",
-                                                        }}
-                                                      />
-                                                      <path
-                                                        className="a"
-                                                        d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
-                                                        transform="translate(-3.795 -2)"
-                                                        style={{
-                                                          stroke: "#9baebc",
-                                                        }}
-                                                      />
-                                                      <line
-                                                        className="a"
-                                                        y2="3"
-                                                        transform="translate(4.397 6.113)"
-                                                        style={{
-                                                          stroke: "#9baebc",
-                                                        }}
-                                                      />
-                                                      <line
-                                                        className="a"
-                                                        y2="3"
-                                                        transform="translate(6.397 6.113)"
-                                                        style={{
-                                                          stroke: "#9baebc",
-                                                        }}
-                                                      />
-                                                    </g>
-                                                  </svg>
-                                                </span>
-                                                Delete
-                                              </button>
-                                            </div>
-                                          </React.Fragment>
-                                        </div>
-                                      </li>
-                                    );
-                                })
-                            }
-                        </ul>
+                                        </React.Fragment>
+                                      </div>
+                                    </li>
+                                  );
+                              })
+                          }
+                    </ul>
+                    {!configurationList.length && 
+                    <div className="createNew">
+                          <span>
+                              <img src={list_board_icon} alt="" />
+                              <p>No configuration found!</p>
+                          </span>
                     </div>
-                </div> : ""
-            }
-            { configModalShow && <CallConfiguration  
-                editConfig={editConfig} 
-                openModal={openConfigModal} 
-                closeModal={closeConfigModal} 
-                numberId={numberObj._id} 
-                setSuccessMsg={setSuccessMsg}
-                setErrorMsg={setErrorMsg}
-                conf={selectedConf}/> }
+                    }
+                  </div>
+              </div> : ""
+        }
+          
+          { configModalShow && <CallConfiguration  
+              editConfig={editConfig} 
+              openModal={openConfigModal} 
+              closeModal={closeConfigModal} 
+              numberId={numberObj._id} 
+              setSuccessMsg={setSuccessMsg}
+              setErrorMsg={setErrorMsg}
+              conf={selectedConf}/> }
         </div>
     );
 }
