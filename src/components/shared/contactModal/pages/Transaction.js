@@ -393,6 +393,25 @@ const Transaction = (props) => {
     }
   };
 
+  const dayLeft = (due_date) => {
+    let payDate = moment(due_date);
+    let today = moment();
+    let result = payDate.diff(today, 'days');
+
+    if (result < 31) {
+      if (result == 0) {
+        return "Today"
+      } else {
+        if (result == 1) {
+          return result + " Day left"
+        } else {
+          return result + " Days left"
+        }
+      }
+    } else {
+      return moment(due_date.split(" ")[0], 'YYYY-MM-DD').format('Do MMM, YYYY')
+    }
+  };
 
   const closeAlert = () => {
     setSuccessMsg(null);
@@ -534,7 +553,7 @@ const Transaction = (props) => {
                 
                   <div className="cell times">
                     <span className="time">
-                      { item.due_date }
+                      {dayLeft(item.due_date)}
                     </span>
                   </div>
                   <div className="cell action">
@@ -592,7 +611,15 @@ const Transaction = (props) => {
                                       {element.note}
                                     </div>
                                   </div>
-                                  : ""}
+                                  : (element.status == "failed" && element.payment_resp.outcome.description ? 
+                                  <div className="notePop">
+                                    <div className="notePopIcon"></div>
+                                    <div className="notePopContent">
+                                      <span>Failed reason: </span>
+                                      {element.payment_resp.outcome.description}
+                                    </div>
+                                  </div>
+                                  : "")}
                                 </div>
                                 <div>
                                   <span>Transaction ID:</span> {element._id}
@@ -818,15 +845,24 @@ const Transaction = (props) => {
                                         <div className="notePop">
                                           <div className="notePopIcon"></div>
                                           <div className="notePopContent">
-                                            <span>{element.amount < 0 ? "Reason: " : "Note: "}</span>
-                                            {element.note}
+                                            <p>
+                                              <span>{element.amount < 0 ? "Reason: " : "Note: "}</span>
+                                              {element.note}
+                                            </p>
+                                            {element.status == "failed" && element.payment_resp.outcome.description ? 
+                                            <p>
+                                              <span>Failed reason: </span>
+                                              {element.payment_resp.outcome.description}
+                                            </p>
+                                            : ""}
+                                            
                                           </div>
                                         </div>
                                         : (element.status == "declined" || element.status == "failed" && element.payment_resp.outcome ? 
                                         <div className="notePop">
                                           <div className="notePopIcon"></div>
                                           <div className="notePopContent">
-                                            <span>Note: </span> {element.payment_resp.outcome.description}
+                                            <span>Failed reason: </span> {element.payment_resp.outcome.description}
                                           </div>
                                         </div>
                                         : "")}

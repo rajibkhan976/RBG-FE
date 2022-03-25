@@ -3558,10 +3558,16 @@ li:hover .extraDottedBtn {
 .configColBtn {
   width: 20px;
   height: 20px;
-  background: url("../images/configCol_icon.svg") no-repeat center;
+  background: url("../images/configCol_icon.svg") no-repeat center / 16px;
   border: none;
   margin-top: 5px;
   position: fixed;
+  transition: all 0.2s ease 0s;
+}
+
+.configColBtn.close {
+  background-image: url("../images/cancelPayment_icon_dark.svg");
+  background-size: 20px;
 }
 
 .configColModal {
@@ -10025,6 +10031,9 @@ select.editFormStyle{
   pointer-events: none;
   transition: all 0.3s ease 0s;
 }
+.notePopContent p + p {
+  margin-top: 7px;
+}
 .notePopContent span {
   font-weight: bold;
 }
@@ -10122,15 +10131,18 @@ select.editFormStyle{
   position: relative;
   top: 5px;
 }
-.enableStatus {
+.enableStatus, .disableStatus {
   font-weight: 600;
   font-size: 13px;
   color: #009F40;
 }
 .disableStatus {
-  font-weight: 600;
-  font-size: 13px;
   color: #ED707A;
+}
+
+.fail .enableStatus, 
+.fail .disableStatus {
+  color: var(--darkBlue);
 }
 
 .noDataSec {

@@ -1,4 +1,4 @@
-import React, {forwardRef, useEffect, useImperativeHandle, useState} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useState, useRef} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {LazyLoadImage} from 'react-lazy-load-image-component';
 import * as actionTypes from "../../actions/types";
@@ -59,6 +59,32 @@ const ContactListing = forwardRef((props, ref) => {
         }
     }, [modalId]);
 
+    let arrangeColRef = useRef();
+
+    const checkOutsideClick = (e) => {
+        if (arrangeColRef.current.contains(e.target)) {
+            return;
+        } else {
+            setColModalStatus(false);
+            handleClear();
+        }
+    };
+
+    const toggleColModal = () => {
+        if (colModalStatus) {
+            setColModalStatus(false);
+            handleClear();
+        } else {
+            setColModalStatus(true);
+        }
+    }
+
+    // useEffect(() => {
+    //     document.addEventListener("click", checkOutsideClick);
+    //     return () => {
+    //         document.removeEventListener("click", checkOutsideClick);
+    //     }
+    // }, []);
 
     const createIndivitualContact = () => {
       dispatch({
@@ -86,11 +112,13 @@ const ContactListing = forwardRef((props, ref) => {
             setSortType(sortTypeNew);
         }
     }, []);
+
     useImperativeHandle(ref, () => ({
         fetchContactForImportContactModalClose() {
             fetchContact();
         },
     }))
+    
     useEffect(() => {
         (async () => {
             const localSavedCol = localStorage.getItem("storedSavedColList", []);
@@ -463,8 +491,8 @@ const ContactListing = forwardRef((props, ref) => {
 
                 <div className="listBody contactListingTable" style={{ 'width': tableWidth }}>
                     <div className="tableDataConfigArea">
-                        <div className="configColArea">
-                            <button className="configColBtn" onClick={() => setColModalStatus(!colModalStatus)}></button>
+                        <div className="configColArea" ref={arrangeColRef}>
+                            <button className={colModalStatus ? "configColBtn close" : "configColBtn"} onClick={toggleColModal}></button>
                             {colModalStatus ?
                                 <div className="configColModal contactPage">
                                     <div className="configColModalHead">
