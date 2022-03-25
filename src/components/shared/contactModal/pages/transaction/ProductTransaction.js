@@ -192,7 +192,6 @@ const ProductTransaction = (props) => {
   const addProduct = (e) => {
     e.preventDefault();
     setShowProductList(!showProductList);
-    // fetchProducts()
   };
 
   const getCartItems = () => {
@@ -396,6 +395,7 @@ const ProductTransaction = (props) => {
   const getAddedProduct = (e) => {
     // console.log("NEWLY ADDED", e);
     selectProductToAdd(e)
+    fetchProducts()
   }
 
   useEffect(() => {
