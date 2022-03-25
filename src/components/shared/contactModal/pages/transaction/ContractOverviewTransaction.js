@@ -104,7 +104,9 @@ const ContractOverviewTransaction = (props) => {
   useEffect(() => {
     //Remaining payment count
     let remainingPaymentCount = Number(props.programContractData.numberOfPayments);
-
+    //Default transaction is in cash
+    let isReceivedDefaultCash = false;
+    let isReceivedDefaultCashFlagErr = false;
 
     /**
      * Payment now
@@ -212,7 +214,9 @@ const ContractOverviewTransaction = (props) => {
       nowPaymentAmount: nowPaymentAmount,
       remainingPaymentCount: remainingPaymentCount,
       duePaymentAmount: duePaymentAmount,
-      nextDueDate: props.programContractData.nextDueDate
+      nextDueDate: props.programContractData.nextDueDate,
+      isReceivedDefaultCash: isReceivedDefaultCash,
+      isReceivedDefaultCashFlagErr: isReceivedDefaultCashFlagErr 
     });
 
   }, [props.programContractData]);
@@ -234,10 +238,19 @@ const ContractOverviewTransaction = (props) => {
     });
   }
 
+  //Toggle default receive cash
+  const toggleDefaultReceiveCash = async (e) => {
+    setContractData({
+      ...contractData,
+      isReceivedDefaultCash: e.target.checked,
+      isReceivedDefaultCashFlagErr: !e.target.checked
+    });
+  }
+
   //Bill Now
   const billNow = async (e) => {
     e.preventDefault();
-    console.log('Bill now', contractData.downpayments);
+    console.log('Bill now', contractData);
     let isError = false;
     //Check cash received or not
     if (contractData.payNowDownPayments.length) {
@@ -259,7 +272,15 @@ const ContractOverviewTransaction = (props) => {
           payNowDownPayments: newEl
         });
       }
-
+    }
+    //Check default transaction cash received or not
+    console.log('default cash not received', contractData.isReceivedDefaultCash);
+    if(!contractData.isReceivedDefaultCash) {
+      isError = true;
+      setContractData({
+        ...contractData,
+        isReceivedDefaultCashFlagErr: true
+      });
     }
     if (!isError) {
       setIsLoader(true);
@@ -445,10 +466,10 @@ const ContractOverviewTransaction = (props) => {
           })}
 
 
-          {contractData.payNowTuitionAmount ? <div className="outstandingDownpayment tutuionSubscriptions currentPayment">
+          {contractData.payNowTuitionAmount ? <div className={contractData.isReceivedDefaultCashFlagErr ? "outstandingDownpayment tutuionSubscriptions currentPayment error" : "outstandingDownpayment tutuionSubscriptions currentPayment"}>
             <div className="downpaymentsDetails">
               <div className="cardImage">
-                <img src={cardActive} alt="" />
+                <img src={contractData.default_transaction === 'cash' ? cashCurrent : cardActive} alt="" />
               </div>
               <div className="paymentModuleInfos">
                 <span className="accNumber">Tuition Amount</span>
@@ -460,6 +481,18 @@ const ContractOverviewTransaction = (props) => {
                 <img src={payDate} alt="" /> {contractData.isPayNow ? 'Now' : ''}
               </div>
             </div>
+            {contractData.default_transaction === 'cash' ?
+              <React.Fragment>
+                <label className="receivedCash">
+                  <div className="customCheckbox">
+                    <input type="checkbox" onChange={e => toggleDefaultReceiveCash(e)} />
+                    <span></span>
+                  </div>I have received the amount by Cash
+                </label>
+                {contractData.isReceivedDefaultCashFlagErr ? <p className="errorMsg">Please confirm the payment has been received</p> : ""}
+              </React.Fragment>
+              : ''}
+
           </div> : ''}
         </div>
 

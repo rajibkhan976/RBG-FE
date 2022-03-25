@@ -54,7 +54,7 @@ const PaymentSuccessSection = (props) => {
       </div>
       {successList.length ?
         <React.Fragment>
-          <div class="dottedBorder"></div>
+          <div className="dottedBorder"></div>
           <ul className="paymentUlHeader">
             <li className="paymentModeHeaderLi">Payment Mode</li>
             <li className="paymentIdHeaderLi">Transaction ID</li>
