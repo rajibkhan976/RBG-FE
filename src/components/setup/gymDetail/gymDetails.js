@@ -297,6 +297,7 @@ const GymDetails = (props) => {
       setOption(false);
       setDeleteConfirmBox(false);
       setSuccessMsg("Holiday deleted successfully");
+      fetchGymDetails();
     }
   };
 
@@ -510,9 +511,11 @@ const GymDetails = (props) => {
                 <div className="addInEmptySpace">
                   <img alt="" src={listIcon} />
                   <div>You haven’t created any holiday yet.</div>
+                  {editAccess && 
                   <button className="common_blue_button" onClick={openAddHolidayModal}>
                     Add a Holiday <img alt="" src={arrowRightWhite} />
                   </button>
+                  }
                 </div>
               </div>
             }
@@ -521,12 +524,14 @@ const GymDetails = (props) => {
                 <div className="holidayListHeader">
                   <div>
                     <h3>Holiday List</h3>
-                    <p>Explanatory text blurb here</p>
+                    <p>Manage your holidays</p>
                   </div>
                   <div>
+                  {editAccess && 
                     <button className="common_blue_button" onClick={openAddHolidayModal}>
                       Add a Holiday <img alt="" src={arrowRightWhite} />
                     </button>
+                  }
                   </div>
                 </div>
                 <div className="gymHolidayList header">
@@ -535,7 +540,7 @@ const GymDetails = (props) => {
                   <div className="cell">Holiday</div>
                 </div>
                 <div className="holidayListWrap">
-                {holidayData.filter(item => item._id !== deletedId).map((elem, key) => {
+                {holidayData.map((elem, key) => {
                   return (
                       
                   <div className="gymHolidayList">
@@ -543,12 +548,14 @@ const GymDetails = (props) => {
                     <div className="cell">{elem.toDate}</div>
                     <div className="cell">
                       <span>{elem.name}</span>
+                      {editAccess && 
                       <div className="sideEditOption">
                         <button onClick={() => {
                           toggleOptions(key);
                         }}>
                           <img src={dot3gray} alt="" />
                         </button>
+                        
                         <div className={
                           option === key
                             ? "dropdownOptions listOpen"
@@ -570,6 +577,7 @@ const GymDetails = (props) => {
                           </button>
                         </div>
                       </div>
+                      }
                     </div>
                   </div>
                   )
