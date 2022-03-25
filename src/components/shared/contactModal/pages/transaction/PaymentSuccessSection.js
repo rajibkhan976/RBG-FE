@@ -40,7 +40,7 @@ const PaymentSuccessSection = (props) => {
     console.table('Payment props', props.successData);
     if (props.successData) {
       setSuccessList(props.successData);
-      let totalAmount = props.successData && props.successData.reduce((total, obj) => parseInt(obj.amount) + total, 0)
+      let totalAmount = props.successData && props.successData.reduce((total, obj) => Number(obj.amount) + total, 0)
       setAmountPaid(totalAmount);
     }
   }, [props.successData]);

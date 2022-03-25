@@ -151,7 +151,7 @@ const ContractOverviewTransaction = (props) => {
     let dueDownPaymentsAmount = 0;
     if (props.programContractData.downPayments && props.programContractData.downPayments.length) {
       dueDownPayments = props.programContractData.downPayments.filter(obj => {
-        return obj.isPayNow === false
+        return obj.isPayNow === 0 && obj.amount !== ''
       });
       console.log('Due down payments ', dueDownPayments);
       dueDownPaymentsAmount = dueDownPayments.reduce((total, obj) => Number(obj.amount) + total, 0);
@@ -436,7 +436,7 @@ const ContractOverviewTransaction = (props) => {
                           <span></span>
                         </div>I have received the amount by Cash
                       </label>
-                      {el.isReceivedCashFlagErr ? <p class="errorMsg">Please confirm the payment has been received</p> : ""}
+                      {el.isReceivedCashFlagErr ? <p className="errorMsg">Please confirm the payment has been received</p> : ""}
                     </>
                     : ''}
                 </div>
