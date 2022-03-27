@@ -75,12 +75,11 @@ const ProductTransaction = (props) => {
   };
 
   const fetchProducts = async () => {
-    const pageId = utils.getQueryVariable("page") || 1;
-    const queryParams = await getQueryParams();
     try {
       setShowLoader(true);
-      const result = await ProductServices.fetchProducts(pageId, queryParams);
+      const result = await ProductServices.fetchAllProducts();
       if (result) {
+        console.log("result", result);
         setProductData(result.products);
         setProductItemsList(result.products);
       }

@@ -170,7 +170,7 @@ const ProductPayment = (props) => {
         
     const productPayload = {
       contact: props.contactId,
-      default_transaction: newPay && newPay.type,
+      default_transaction: paymentsArray.filter(py => py.payment_type === "online").length === 0 ? "cash" : newPay && newPay.type,
       billingId: newPay.billingId !== null && newPay.billingId,
       items: cartItems,
       payments: paymentsArray,
@@ -197,7 +197,75 @@ const ProductPayment = (props) => {
 
     if (!hasError) {
       if(filteredPay.length === 0 && titleDpConfirmation.length === 0 && amountDpConfirmation.length === 0) {
-        if(productPayload.billingId !== "") {
+        if(paymentsArray.filter(py => py.payment_type === "online").length !== 0) {
+          if(productPayload.billingId !== "") {
+            try {
+              setIsLoader(true);
+  
+              let productBuy = await ProductServices.buyProduct(productPayload);
+  
+              if (productBuy.status === "success") {
+                let payIfo = [];
+                let cashAmount = 0;
+                let onlineAmount = 0;
+                let transIdArr = []
+  
+                setPaymentSuccessMessage("Product purchase transaction successfull.");
+                payIfo.onlinePayment = productPayload.payments.filter(
+                  (payment) => payment.payment_type === "online" && payment.isPayNow === 1
+                );
+                payIfo.cashPayment = productPayload.payments.filter(
+                  (payment) => payment.payment_type === "cash" && payment.isPayNow === 1
+                );
+  
+                payIfo.onlineAmount = productPayload.payments
+                  .filter((payment) => payment.payment_type === "online" && payment.isPayNow === 1)
+                  .reduce(
+                    (previousValue, currentValue) =>
+                      parseFloat(previousValue) + parseFloat(currentValue.amount),
+                    onlineAmount
+                  );
+                payIfo.cashAmount = productPayload.payments
+                  .filter((payment) => payment.payment_type === "cash" && payment.isPayNow === 1)
+                  .reduce(
+                    (previousValue, currentValue) =>
+                      parseFloat(previousValue) + parseFloat(currentValue.amount),
+                    cashAmount
+                  );
+  
+                setPaymentInfo(payIfo);
+                
+                setProductBuy(productBuy)
+                
+                setPaymentFailed(null);
+                setProductPaymentFailed(false);
+                openSuccessMessage();
+  
+                setHasError(false);
+                setDownPaymentErrorMsg({
+                  ...downPaymentErrorMsg,
+                  payment_not_received: ""
+                })
+              } else {
+                setPaymentFailed(productBuy.description);
+                setProductPaymentFailed(true);
+              }
+            } catch (error) {
+              setPaymentFailed(error);
+              setProductPaymentFailed(true);
+            } finally {
+              setErrorMsg("")
+              setIsLoader(false);
+            }
+          }
+          else {
+            setErrorMsg("Please add some payment methods (card or bank) before making online payment!")
+            setTimeout(() => {
+              setErrorMsg("")
+            }, 5000);
+          }
+        }
+        if(paymentsArray.filter(py => py.payment_type === "online").length === 0) {
           try {
             setIsLoader(true);
 
@@ -256,12 +324,6 @@ const ProductPayment = (props) => {
             setErrorMsg("")
             setIsLoader(false);
           }
-        }
-        else {
-          setErrorMsg("Please add some payment methods (card or bank) before making online payment!")
-          setTimeout(() => {
-            setErrorMsg("")
-          }, 5000);
         }
       }
       else {
@@ -1525,7 +1587,7 @@ const ProductPayment = (props) => {
                 </li>
                 <li className="transactionIdProduct">
                   {
-                    productBuy.data.filter(onlineTransac => onlineTransac.defaultTransaction && (onlineTransac.defaultTransaction === "card" || onlineTransac.defaultTransaction === "bank")).map((transId)=>(
+                    productBuy.data.filter(onlineTransac => onlineTransac.defaultTransaction && onlineTransac.defaultTransaction === "online").map((transId)=>(
                       <span>{transId.transactionId}</span>
                     ))
                   }
