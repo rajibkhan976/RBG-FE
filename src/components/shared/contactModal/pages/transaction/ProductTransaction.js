@@ -869,7 +869,7 @@ const ProductTransaction = (props) => {
                     <>
                       <figure className="noProduct">
                         <img src={cart_icon} alt="No product added" />
-                        <figcaption>havn’t add any Product</figcaption>
+                        <figcaption>Cart is empty</figcaption>
                       </figure>
                     </>
                   )}

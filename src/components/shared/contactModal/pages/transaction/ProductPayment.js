@@ -951,7 +951,7 @@ const ProductPayment = (props) => {
                               }
                             >
                               <label className="labelWithInfo">
-                                <span className="labelHeading">Title *</span>
+                                <span className="labelHeading">Title <sup className="requiredSt">*</sup></span>
                                 <span className="infoSpan">
                                   <img src={info_icon} alt="" />
                                   <span className="tooltiptextInfo">
@@ -989,7 +989,7 @@ const ProductPayment = (props) => {
                               >
                                 {/* {console.log("CHECKING LOGGED:::>>>", downpay, downpay.amount === 0, downpay.amount === "0", downpay.amount === undefined, isNaN(downpay.amount))} */}
                                 <label className="labelWithInfo">
-                                  <span className="labelHeading">Amount *</span>
+                                  <span className="labelHeading">Amount <sup className="requiredSt">*</sup></span>
                                   <span className="infoSpan">
                                     <img src={info_icon} alt="" />
                                     <span className="tooltiptextInfo amount">

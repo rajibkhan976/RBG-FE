@@ -377,7 +377,7 @@ const AddCourseModal = (props) => {
 
                   <div className="formRight">
                     <label>Billing Cycle</label>
-                    <select name="billingCycle" onChange={handleChange} disabled={courseData.disabledCycle}>
+                    <select className="selectBox" name="billingCycle" onChange={handleChange} disabled={courseData.disabledCycle}>
                       <option value="monthly" selected={(courseData.billing_cycle === "monthly") ? "selected" : ""}>Monthly</option>
                       <option value="yearly" selected={(courseData.billing_cycle === "yearly") ? "selected" : ""}>Yearly</option>
                     </select>

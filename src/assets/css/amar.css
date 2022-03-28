@@ -2776,3 +2776,29 @@ input[type=number] {
   line-clamp: 2;
   -webkit-box-orient: vertical;
 }
+.selectBox:disabled {
+  color: #bbb9d1 !important;
+  background-image: none;
+}
+.addProgramFrom select {
+  font-size: 13px;
+}
+.choiceOpt {
+  overflow: hidden;
+}
+
+.choiceOpt header h6 {
+  word-break: break-all;
+}
+.paymentUlInfo .transactionIdProduct {
+  font-weight: normal;
+}
+.paymentSuccessFullScreen .dottedBorder {
+  border-color: #D0D6DB;
+}
+.cartItem {
+  border: 1px solid #E9EFF5;
+}
+.labelHeading .requiredSt {
+  color: #ED707A;
+}

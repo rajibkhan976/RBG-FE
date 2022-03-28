@@ -341,7 +341,7 @@ const ContractOverviewTransaction = (props) => {
                     <span className="informationSpan"><b>{contractData.duration}</b></span>
                   </li>
                   <li>
-                    <span className="labelSpan">Auto Renual</span>
+                    <span className="labelSpan">Auto Renewal</span>
                     <span className="informationSpan">{contractData.auto_renew_text}</span>
                   </li>
                 </ul>
