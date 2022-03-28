@@ -420,6 +420,7 @@ const ProductPayment = (props) => {
   const addNewDownPayment = (e) => {
     e.preventDefault()
     const totalPlaceholder = 0;
+    const downpaymentsPlaceholder = [...downPayments]
 
     const totalDownpaymentsAmt = downPayments.reduce(
         (previousValue, currentValue) =>
@@ -428,11 +429,9 @@ const ProductPayment = (props) => {
       );
 
     try {
-      if (totalDownpaymentsAmt !== 0 && outStanding.amount !== 0) {
-          setDownPayments(downpayments=>[
-            ...downpayments,
-        {
-          title: "",
+      if ((totalDownpaymentsAmt !== 0 && !isNaN(totalDownpaymentsAmt)) && outStanding.amount !== 0) {
+        downpaymentsPlaceholder.unshift({
+          title: `Downpayment ${parseInt([...downPayments].length) + 1}`,
           amount: "",
           type: "downpayment",
           isPayNow: 1,
@@ -440,19 +439,29 @@ const ProductPayment = (props) => {
           payment_type: "cash",
           payment_status: "paid",
           paymentConfirmation: false,
-          dpId: [...downpayments].filter(dp=>dp.dpId === Math.floor(100000 + Math.random() * 900000)).length === 0 ? Math.floor(100000 + Math.random() * 900000) : Math.floor(100000 + Math.random() * 900000)
-        },
-      ])
+          dpId: [...downPayments].filter(dp=>dp.dpId === Math.floor(100000 + Math.random() * 900000)).length === 0 ? Math.floor(100000 + Math.random() * 900000) : Math.floor(100000 + Math.random() * 900000)
+        })
+
+        setDownPayments(downpaymentsPlaceholder)
+      //     setDownPayments(downpayments=>[
+      //       ...downpayments,
+      //   {
+      //     title: `Downpayment ${parseInt([...downpayments].length) + 1}`,
+      //     amount: "",
+      //     type: "downpayment",
+      //     isPayNow: 1,
+      //     paymentDate: todayPayDate().toISOString().split("T")[0],
+      //     payment_type: "cash",
+      //     payment_status: "paid",
+      //     paymentConfirmation: false,
+      //     dpId: [...downpayments].filter(dp=>dp.dpId === Math.floor(100000 + Math.random() * 900000)).length === 0 ? Math.floor(100000 + Math.random() * 900000) : Math.floor(100000 + Math.random() * 900000)
+      //   },
+      // ])
       }
     } catch(error) {
       console.log(error);
     } finally{
-      setTimeout(() => {
-        downPaymentList.current.scroll({
-          top: (300 * downPayments.length),
-          behavior: 'smooth'
-        })
-      }, 500);
+      
     }
   }
   // Add new downpayments
@@ -936,7 +945,7 @@ const ProductPayment = (props) => {
                     >
                       {downPayments.map((downpay, i) => (
                         <div className="newDownpayment" key={i}>
-                          {i !== 0 && <button
+                          {i !== downPayments.length - 1 && <button
                             className="delNewDownpayment"
                             onClick={(e) => deleteNewDownPayment(e, downpay, downpay.dpId)}
                           >
