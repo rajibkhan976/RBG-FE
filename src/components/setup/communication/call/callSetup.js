@@ -833,7 +833,7 @@ const CallSetup = () => {
                                       <div className="createDate">
                                         <button className="btn">
                                           {moment(list.createdAt).format(
-                                            "Do MMM YYYY"
+                                            "MM/DD/YYYY h:mm a"
                                           )}
                                         </button>
                                         <div className="info_3dot_icon">

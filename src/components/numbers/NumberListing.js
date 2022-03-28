@@ -384,7 +384,7 @@ const NumberListing = () => {
                       </div>
                       
                       <div className="createDate">
-                        <button className="btn">{moment(el.createdAt).format("MM-DD-YYYY H:m")}</button>
+                        <button className="btn">{moment(el.createdAt).format("MM/DD/YYYY h:mm a")}</button>
                         {isSuperAdmin && 
                           <div className="info_3dot_icon">
                               <button
