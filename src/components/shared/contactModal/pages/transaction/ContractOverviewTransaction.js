@@ -143,12 +143,12 @@ const ContractOverviewTransaction = (props) => {
 
     //Due tuition fee
     let dueTuitionAmount = 0;
-    if (props.programContractData.payment_type === "recurring") {
+    if (props.programContractData.payment_type === "recurring" && !props.programContractData.isPayNow) {
       dueTuitionAmount = props.programContractData.amount * remainingPaymentCount;
       console.log('Due tuition amount', dueTuitionAmount)
     }
 
-    if (props.programContractData.payment_type === "onetime") {
+    if (props.programContractData.payment_type === "onetime" && !props.programContractData.isPayNow) {
       dueTuitionAmount = props.programContractData.amount * 1;
       console.log('Due tuition amount', dueTuitionAmount)
     }
@@ -279,7 +279,7 @@ const ContractOverviewTransaction = (props) => {
     }
     //Check default transaction cash received or not
     console.log('default cash not received', contractData.isReceivedDefaultCash, contractData.default_transaction);
-    if (!contractData.isReceivedDefaultCash && contractData.default_transaction === 'cash') {
+    if (contractData.isPayNow && !contractData.isReceivedDefaultCash && contractData.default_transaction === 'cash') {
       isError = true;
       setContractData({
         ...contractData,
