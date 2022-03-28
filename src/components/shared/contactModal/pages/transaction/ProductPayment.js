@@ -47,6 +47,7 @@ const ProductPayment = (props) => {
   const [modifiedCart, setModifiedCart] = useState(null);
   const [paymentSuccessMessage, setPaymentSuccessMessage] = useState(null);
   const [payMentInfo, setPaymentInfo] = useState(null);
+  const [noBankCard, setNoBankCard] = useState(false)
   const downpaymentsContainer = useRef(null);
   const createDownpayAmount = useRef(null);
   const datePayment = useRef(null);
@@ -260,8 +261,10 @@ const ProductPayment = (props) => {
           }
           else {
             setErrorMsg("Please add some payment methods (card or bank) before making online payment!")
+            setNoBankCard(true)
             setTimeout(() => {
               setErrorMsg("")
+              setNoBankCard(false)
             }, 5000);
           }
         }
@@ -1146,6 +1149,7 @@ const ProductPayment = (props) => {
             <BillingOverview
               contactId={props.contactId}
               changeDefaultPay={changeDefaultPayFn}
+              isNoCardBankFlagErr={noBankCard}
             />
           </div>
           <div className="gridCol">
