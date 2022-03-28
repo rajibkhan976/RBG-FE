@@ -783,7 +783,7 @@ const ProductTransaction = (props) => {
                           </figure>
                           <div className="choiceOpt f-1">
                             <header className="d-flex f-justify-between">
-                              <h6>{cartItem.name}</h6>
+                              <h6 title={cartItem.name}>{cartItem.name}</h6>
                               <button
                                 className="btn"
                                 onClick={(e) => deleteCartItem(e, cartItem, i)}

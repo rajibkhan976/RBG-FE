@@ -450,14 +450,14 @@ function Step2(props) {
                                         <ul>
                                             <li>
                                                 <div className={"formField w-50 " + (mapError.firstName ? (primaryError ? 'error' : 'error warning') : '') }>
-                                                    <label>First name</label>
+                                                    <label>First name <span class="mandatory">*</span></label>
                                                     <div className="inFormField">
                                                         <Select name="firstName" value={map.firstName} onChange={(e) =>handleChangeFields(e, 'firstName')}
                                                                 options={options}  isClearable={true} placeholder="Select a header"/>
                                                     </div>
                                                 </div>
                                                 <div className={"formField w-50 " + (mapError.lastName ? (primaryError ? 'error' : 'error warning') : '') }>
-                                                    <label>Last Name</label>
+                                                    <label>Last Name <span class="mandatory">*</span></label>
                                                     <div className="inFormField">
                                                         <Select name="lastName" value={map.lastName} onChange={(e) =>handleChangeFields(e, 'lastName')}
                                                                 options={options}  isClearable={true} placeholder="Select a header"/>
@@ -474,7 +474,7 @@ function Step2(props) {
                                                 </div>
                                                 <div className={"formField w-50 " + (mapError.email ? (primaryError &&
                                                 (props.getState('custom').primaryField === 'both' || props.getState('custom').primaryField === 'email') ? 'error' : 'error warning') : '') }>
-                                                    <label>Email</label>
+                                                    <label>Email <span class="mandatory">*</span></label>
                                                     <div className="inFormField">
                                                         <Select name="email" value={map.email} onChange={(e) =>handleChangeFields(e, 'email')}
                                                                 options={options}  isClearable={true} placeholder="Select a header"/>

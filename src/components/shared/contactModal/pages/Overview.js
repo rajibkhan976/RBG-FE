@@ -642,7 +642,7 @@ const Overview = (props) => {
                         <div className="cmnFormRow">
                             <div className="cmnFormCol">
                                 <div className="cmnFieldName">
-                                    First name
+                                    First name <span class="mandatory">*</span>
                                 </div>
                                 <div className={formErrorMsg.fName ? "cmnFormField errorField" : "cmnFormField"}>
                                     <input type="text" className="cmnFieldStyle" defaultValue={basicinfoFname}
@@ -652,7 +652,7 @@ const Overview = (props) => {
                             </div>
                             <div className="cmnFormCol">
                                 <div className="cmnFieldName">
-                                    Last Name
+                                    Last Name <span class="mandatory">*</span>
                                 </div>
                                 <div className={formErrorMsg.lName ? "cmnFormField errorField" : "cmnFormField"}>
                                     <input type="text" className="cmnFieldStyle" placeholder=""
@@ -674,7 +674,7 @@ const Overview = (props) => {
                             </div>
                             <div className="cmnFormCol">
                                 <div className="cmnFieldName">
-                                    Email
+                                    Email <span class="mandatory">*</span>
                                 </div>
                                 <div className={formErrorMsg.email ? "cmnFormField errorField" : "cmnFormField"}>
                                     <input type="email" className="cmnFieldStyle" placeholder="Eg. Jon.doe@domain.com"

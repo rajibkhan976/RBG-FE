@@ -4265,3 +4265,17 @@ body .inFormField input {
   align-items: center;
   justify-content: center;
 }
+
+button.btn.btnUserMenu .menuUserDetail span {
+  max-width: 153px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.choiceOpt header h6 {
+  width: 168px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
