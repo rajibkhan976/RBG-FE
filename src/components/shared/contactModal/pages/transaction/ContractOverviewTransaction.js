@@ -148,6 +148,11 @@ const ContractOverviewTransaction = (props) => {
       console.log('Due tuition amount', dueTuitionAmount)
     }
 
+    if (props.programContractData.payment_type === "onetime") {
+      dueTuitionAmount = props.programContractData.amount * 1;
+      console.log('Due tuition amount', dueTuitionAmount)
+    }
+
     //Due down payments
     let dueDownPayments = [];
     let dueDownPaymentsAmount = 0;
@@ -215,7 +220,7 @@ const ContractOverviewTransaction = (props) => {
       nextDueDate: props.programContractData.nextDueDate,
       isReceivedDefaultCash: isReceivedDefaultCash,
       isReceivedDefaultCashFlagErr: isReceivedDefaultCashFlagErr,
-      isNoCardBankFlagErr: false 
+      isNoCardBankFlagErr: false
     });
 
   }, [props.programContractData]);
@@ -274,7 +279,7 @@ const ContractOverviewTransaction = (props) => {
     }
     //Check default transaction cash received or not
     console.log('default cash not received', contractData.isReceivedDefaultCash, contractData.default_transaction);
-    if(!contractData.isReceivedDefaultCash && contractData.default_transaction === 'cash') {
+    if (!contractData.isReceivedDefaultCash && contractData.default_transaction === 'cash') {
       isError = true;
       setContractData({
         ...contractData,
@@ -283,7 +288,7 @@ const ContractOverviewTransaction = (props) => {
     }
     //Check billing id
     console.log('no card and bank', !contractData.billingId, contractData.default_transaction);
-    if(!contractData.billingId && contractData.default_transaction === 'online') {
+    if (!contractData.billingId && contractData.default_transaction === 'online') {
       isError = true;
       setContractData({
         ...contractData,
@@ -425,7 +430,7 @@ const ContractOverviewTransaction = (props) => {
                 <div className="downpaymentsPayDetails">
                   <div className="payDate instalments">Payment Remaing <b>{contractData.remainingPaymentCount}</b></div>
                   <div className="payDate instalmentDate">
-                    <img src={payDate} alt="" /> {contractData.nextDueDate}
+                    <img src={payDate} alt="" /> {contractData.nextDueDate ? utils.standardDateFormat(contractData.nextDueDate) : utils.standardDateFormat(contractData.paymentDate)}
                   </div>
                 </div>
               </div> : ""}
