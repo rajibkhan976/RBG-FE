@@ -128,7 +128,7 @@ const DownPayments = forwardRef((props, ref) => {
             case "payment_type":
                 if (newElem.payment_type === 'online') {
                     newElem.payment_status = 'unpaid';
-                } else if(newElem.payment_type === 'cash' && newElem.isPayNow === 1) {
+                } else if (newElem.payment_type === 'cash' && newElem.isPayNow === 1) {
                     newElem.payment_status = 'paid';
                 }
 
@@ -143,7 +143,9 @@ const DownPayments = forwardRef((props, ref) => {
     //Delete down payment
     const delDownpaymentFn = (e, key) => {
         e.preventDefault();
-        setDownPaymentElems(key !== 0 ? downPaymentElems.filter((_, k) => key !== k) : downPaymentElems);
+        console.log('Down payment click', e, key);
+        // setDownPaymentElems(key !== 0 ? downPaymentElems.filter((_, k) => key !== k) : downPaymentElems);
+        setDownPaymentElems(downPaymentElems.filter((_, k) => key !== k));
     };
 
     //Downpayment toggle
@@ -190,18 +192,20 @@ const DownPayments = forwardRef((props, ref) => {
                             <div className="newDownpayment_downPaymentWrapers" key={key}>
                                 <div className="downPaymentsCreated">
                                     <div className="newDownpayment programs buttons">
-                                        {console.log('Loop through payments', el)}
+                                        {console.log('Loop through payments', el, key, downPaymentElems.length)}
                                         {key === 0 ?
 
-                                            <button className="addNewDownpayment" onClick={addDownpaymentFn}>+ Add more Downpayments</button> :
-                                            <button className="delNewDownpayment" onClick={(e) => delDownpaymentFn(e, key)}><img src={deleteBtn} /> Remove</button>
-
+                                            <button className="addNewDownpayment" onClick={addDownpaymentFn}>+ Add more Downpayments</button> : ''
                                         }
+
                                     </div>
 
 
 
                                     <div className="newDownpayment programs">
+                                        {key !== (downPaymentElems.length - 1) ?
+                                            <button className="delNewDownpayment" onClick={(e) => delDownpaymentFn(e, key)}><img src={deleteBtn} /> Remove</button> : ''
+                                        }
                                         <div className="transaction_form products forDownpayment programs">
                                             <div className={
                                                 el.titleErr.length > 0
