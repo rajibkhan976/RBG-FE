@@ -4279,3 +4279,9 @@ button.btn.btnUserMenu .menuUserDetail span {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.scheduleList > .scheduleRow:not(:first-child) .scheduleRow+.cmnFormCol {
+  float: left;
+}
+.scheduleList > .scheduleRow:not(:first-child) .scheduleRow {
+    text-align: right;
+}

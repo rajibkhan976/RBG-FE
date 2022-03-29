@@ -396,10 +396,11 @@ const CallConfiguration = (props) => {
         }
     }
 
-    const removeSchedule = async (key) => {
-        schedule.splice(key, 1)
-        setSchedule([...schedule]);
-    }
+  const removeSchedule = async (e, key) => {
+    e.preventDefault();
+    schedule.splice(key, 1)
+    setSchedule([...schedule]);
+  }
 
     /** Intro audio type change */
     const handleIntroTypeChange = async (t) => {
@@ -556,7 +557,7 @@ const CallConfiguration = (props) => {
                         <div className="scheduleRow">
                           <button
                             className="btn"
-                            onClick={() => removeSchedule(key)}
+                            onClick={(e) => removeSchedule(e, key)}
                           >
                             <span>
                               <svg
