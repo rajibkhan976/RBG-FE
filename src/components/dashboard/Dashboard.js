@@ -82,7 +82,7 @@ const Dashboard = () => {
       <div className="mrrWraper">
         {/* <div className="userListHead"> */}
           <h2 className="inDashboardHeader">Dashboard</h2>
-          <p className="userListAbout">Get a very clear view of your task</p>
+          <p className="userListAbout">Get a clear view of your task</p>
           {/* </div> */}
         <div className="widgetWrapers">
           <div className="individualWidgwet">
@@ -130,7 +130,7 @@ const Dashboard = () => {
             <div className="widgetIcon">
                 <img src={chart} /> 
                 <h3>Monthly Recurring Revenue Growth (Set)</h3>
-                <button class="creatUserBtn"><span>Set Goal</span></button>
+                <button class="creatUserBtn" onClick={() =>openFilterModal()}><span>Set Goal</span></button>
                 <figure>
                   <img src ={Dragable} className="dragable" />
                 </figure>
@@ -179,7 +179,7 @@ const Dashboard = () => {
             <div className="widgetIcon">
                 <img src={chart} /> 
                 <h3>Monthly Recurring Revenue Growth (Showed)</h3>
-                <button class="creatUserBtn"><span>Set Goal</span></button>
+                <button class="creatUserBtn" onClick={() =>openFilterModal()}><span>Set Goal</span></button>
                 <figure>
                   <img src ={Dragable} className="dragable" />
                 </figure>
@@ -229,7 +229,7 @@ const Dashboard = () => {
             <div className="widgetIcon">
                 <img src={chart} /> 
                 <h3>Monthly Recurring Revenue Growth (Signed)</h3>
-                <button class="creatUserBtn"><span>Set Goal</span></button>
+                <button class="creatUserBtn" onClick={() =>openFilterModal()}><span>Set Goal</span></button>
                 <figure>
                   <img src ={Dragable} className="dragable" />
                 </figure>
@@ -278,7 +278,7 @@ const Dashboard = () => {
             <div className="widgetIcon">
                 <img src={dashCal} /> 
                 <h3>Monthly Appointment Statistics</h3>
-                <button class="creatUserBtn"><span>Set Goal</span></button>
+                <button class="creatUserBtn" onClick={() =>openFilterModal()}><span>Set Goal</span></button>
                 <figure>
                   <img src ={Dragable} className="dragable" />
                 </figure>

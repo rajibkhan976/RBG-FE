@@ -1,5 +1,6 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
-// import arrowForward from "../../../../assets/images/arrow_forward.svg";
+import arrow_forward from "../../../src/assets/images/arrow_forward.svg";
+import pluss from "../../../src/assets/images/pluss.svg";
 
 //import Loader2 from "../../../";
 
@@ -18,12 +19,26 @@ const GoalSetModal = (props) => {
                 <div className="sideMenuInner">
                     <button className="btn btn-closeSideMenu" onClick={props.closeModal}><span></span><span></span></button>
                     <div className="sideMenuHeader">
-                        <h3 className="liteHeading">Apply Filter</h3>
+                        <h3 className="liteHeading">MRR Goal Set</h3>
+                        <p className="sideMenuPara">It is a long established fact that a reader will be readable content of a page when looking at its layout.</p>
                     </div>
                     <div className="sideMenuBody">
                         <form className="formBody" >
                             
-                            JJJ
+                        <div className="formField w-100 appModals formControl">
+                            <label className="modalDashboardLabel">Set a Goal here</label>
+                            <input type="text" placeholder="Ex. 100" name="" />
+                            
+                        </div>
+
+                        <div className="permissionButtons enterRoleNameBtn">
+                                    <button className="creatUserBtn createBtn">
+                                        <img className="plus" src={pluss} alt="" />
+                                        <span>Create New</span>
+                                    </button>
+                                    <button className="saveNnewBtn" ><span>Save &amp; Update</span>
+                                        <img className="" src={arrow_forward} alt="" /></button>
+                                </div>
 
                         </form>
                     </div>
