@@ -143,14 +143,12 @@ const ContractOverviewTransaction = (props) => {
 
     //Due tuition fee
     let dueTuitionAmount = 0;
-    if (props.programContractData.payment_type === "recurring" && !props.programContractData.isPayNow) {
+    if (props.programContractData.payment_type === "recurring") {
       dueTuitionAmount = props.programContractData.amount * remainingPaymentCount;
-      console.log('Due tuition amount', dueTuitionAmount)
-    }
-
-    if (props.programContractData.payment_type === "onetime" && !props.programContractData.isPayNow) {
+      console.log('Due tuition amount recurring', dueTuitionAmount)
+    } else if (props.programContractData.payment_type === "onetime" && !props.programContractData.isPayNow) {
       dueTuitionAmount = props.programContractData.amount * 1;
-      console.log('Due tuition amount', dueTuitionAmount)
+      console.log('Due tuition amount one time', dueTuitionAmount)
     }
 
     //Due down payments
