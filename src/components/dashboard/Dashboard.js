@@ -82,7 +82,7 @@ const Dashboard = () => {
       <div className="mrrWraper">
         {/* <div className="userListHead"> */}
           <h2 className="inDashboardHeader">Dashboard</h2>
-          <p className="userListAbout">Get a clear view of your task</p>
+          <p className="userListAbout">Get a very clear view of your task</p>
           {/* </div> */}
         <div className="widgetWrapers">
           <div className="individualWidgwet">
