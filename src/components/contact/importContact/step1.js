@@ -147,7 +147,7 @@ function Step1(props) {
                         <ul>
                             <li>
                                 <div className={"formField w-50 " + (importNameError ? 'error' : '')}>
-                                    <label>Save this import as <span class="mandatory">*</span></label>
+                                    <label>Save this import as <span className="mandatory">*</span></label>
                                     <div className="inFormField">
                                         <input type="text" name="importDataName" className="importName" value={importName} onChange={handleImportName}/>
                                         {importNameError ? <span className="errorMsg">{importNameError}</span> : ''}
