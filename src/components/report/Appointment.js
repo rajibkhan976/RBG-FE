@@ -1,10 +1,10 @@
 import React, {useState} from "react";
-import ContactListing from "./ContactListing";
+import AppointmenttListing from "./AppointmenttListing";
 
 import ImportFilter from "./importFilter";
 
 const Appointment = () => {
-  document.title = "Red Belt Gym - Contacts";
+  document.title = "Red Belt Gym - Appointments";
     const [isModal, setIsModal] = useState(false);
     const openModal = () => {
       setIsModal(true);
@@ -15,7 +15,7 @@ const Appointment = () => {
     // key={Math.random().toString()}
     return (
     <>
-      <ContactListing openModal={() => {openModal()}} modalStatus={isModal}/>
+      <AppointmenttListing openModal={() => {openModal()}} modalStatus={isModal}/>
         { isModal &&
             <ImportFilter hideModal={() => {hideModal()}} />
         }

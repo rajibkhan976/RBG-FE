@@ -5,7 +5,7 @@ import arrowDown from "../../assets/images/arrowDown.svg";
 import monthIcon from "../../assets/images/month.svg";
 import filter from "../../assets/images/filter.svg";
 
-const ContactHead = (props) => {
+const AppointmentHead = (props) => {
   return (
     <div className="contactHead">
       <div className="userListHead">
@@ -32,7 +32,7 @@ const ContactHead = (props) => {
             <img src={uparrow_icon_grey} alt="" /> Export
           </button>
           
-          <button className="saveNnewBtn appFilter expContactBtn" onClick={() => props.openImportContact()}>
+          <button className="saveNnewBtn appFilter expContactBtn" onClick={() => props.openImportAppointment()}>
             Filter <img src={filter} alt="" /> 
           </button>
         </div>
@@ -51,4 +51,4 @@ const ContactHead = (props) => {
   );
 };
 
-export default ContactHead;
+export default AppointmentHead;

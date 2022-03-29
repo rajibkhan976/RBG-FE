@@ -309,7 +309,7 @@ const toggleTagListFn = (e) => {
                 <span>This contact doesn’t have a appointment yet.</span>
               </span>
             </div> */}
-
+           </div>
 
             {/* If appointment listing is there, this section will be dsiplayed */}
 
@@ -576,7 +576,7 @@ const toggleTagListFn = (e) => {
 
 
 
-          </div>
+          {/* </div> */}
        
         
       </div>

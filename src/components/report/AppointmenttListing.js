@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../actions/types";
-import ContactHead from './ContactHead';
+import AppointmentHead from './AppointmentHead';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { ErrorAlert, SuccessAlert } from '../shared/messages';
 import owner_img_1 from '../../../src/assets/images/owner_img_1.png';
@@ -15,7 +15,7 @@ import responses from '../../configuration/responses';
 import env from '../../configuration/env';
 
 
-const ContactListing = (props) => {
+const AppointmenttListing = (props) => {
     const [tableWidth, setTableWidth] = useState(500);
     const messageDelay = 5000; // ms
     const [contactList, setContactList] = useState([]);
@@ -25,7 +25,7 @@ const ContactListing = (props) => {
     const [keyword, setKeyword] = useState('');
     const [checkedColListHead, setCheckedColListHead] = useState([]);
     const [colModalStatus, setColModalStatus] = useState(false);
-    const [contactCount, setContactCount] = useState(0);
+    const [appointmentCount, setAppointmentCount] = useState(0);
     const [errorMsg, setErrorMsg] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
     const [sortBy, setSortBy] = useState("");
@@ -99,7 +99,7 @@ const ContactListing = (props) => {
             if (result) {
                 console.log("Fetch Contact", result);
                 setContactList(result.contacts);
-                setContactCount(result.pagination.count);
+                setAppointmentCount(result.pagination.count);
                 setPaginationData({
                     ...paginationData,
                     currentPage: result.pagination.currentPage,
@@ -398,12 +398,12 @@ const ContactListing = (props) => {
     return (
         <div className="dashInnerUI">
             {isLoader ? <Loader /> : ''}
-            <ContactHead
-                totalCount={contactCount}
+            <AppointmentHead
+                totalCount={appointmentCount}
                 handleSearch={handleSearch}
                 handleKeywordChange={handleKeywordChange}
                 keyword={keyword}
-                openImportContact={handleImportModal}></ContactHead>
+                openImportAppointment={handleImportModal}></AppointmentHead>
             {successMsg &&
                 <SuccessAlert message={successMsg}></SuccessAlert>
             }
@@ -515,16 +515,17 @@ const ContactListing = (props) => {
       <div className="dataTableCell status"><button className="btn">Pending</button></div>
       
    </li>
+   
 
 
 
                     </ul>
                 </div>
             </div>
-            {(contactCount > paginationData.limit) ? <Pagination
+            {(appointmentCount > paginationData.limit) ? <Pagination
                 type="contact"
                 paginationData={paginationData}
-                dataCount={contactCount}
+                dataCount={appointmentCount}
                 callback={fetchContact} /> : ''}
 
         </div>
@@ -534,4 +535,4 @@ const ContactListing = (props) => {
 
 }
 
-export default ContactListing;
+export default AppointmenttListing;
