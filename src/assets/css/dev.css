@@ -3956,9 +3956,9 @@ li.paymentModeLi, li.paymentAmtLi {
 /* Dashboard Img */
 
 .dashInnerStructure.dashboardPage {
-  padding-top: 0;
+  /* padding-top: 0;
   background: #6f8a9d;
-  padding-left: 5%;
+  padding-left: 5%; */
 }
 
 .dashboardWraperImg {
@@ -4279,7 +4279,286 @@ button.btn.btnUserMenu .menuUserDetail span {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.scheduleList > .scheduleRow:not(:first-child) .scheduleRow+.cmnFormCol {
+
+
+
+/* Dashboard Page */
+
+.mrrWraper {
+  flex: 0 0 calc(100% - 390px);
+  padding-top: 30px;
+}
+.mrrContraolsWraper {
+  flex: 0 0 390px;
+  background: #fff;
+  min-height: 100vh;
+  padding-right: 0;
+}
+
+.dashInnerStructure.dashboardPage {
+  flex-direction: inherit;
+  padding-top: 0;
+  display: block;
+}
+
+.dashInnerStructure.dashboardPage .dashInnerUI {
+  flex: 0 0 100%;
+  flex-direction: inherit;
+}
+
+.mrrContraolsWraper .sideMenuHeader h3 {
+  margin-top: 0;
+  font-size: 16px;
+}
+
+.mrrContraolsWraper ul {
+  padding:0 25px;
+}
+
+.mrrContraolsWraper ul li {
+  margin-bottom: 20px;
+}
+
+.mrrContraolsWraper ul li:last-child {
+  margin-bottom: 0px;
+}
+
+.mrrContraolsWraper ul li label span {
+  font-size: 13px;
+  color: #305671;
+}
+
+img.dragImg {
+  float: right;
+  margin-top: 3px;
+}
+img.graphImg {
+  margin: 0 9px 0 6px;
+}
+.dashInnerStructure.dashboardPage .dashboardFooter {
+ padding-right: 0;
+}
+
+.mrrWraper .userListAbout {
+  margin-bottom: 30px;
+}
+
+.widgetWrapers {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  column-gap: 38px;
+  row-gap: 38px;
+  flex-wrap: wrap;
+
+}
+
+.individualWidgwet {
+  /* flex:0 0 30%;
+  padding:20px;
+  border: 1px solid #E9EFF5;
+  background: #FFFFFF;
+  border-radius: 10px;
+  margin-right: 5%;
+  margin-bottom: 40px; */
+  flex: 1 1 calc(33.3% - 38px);
+    padding: 20px 17px;
+    border: 1px solid #E9EFF5;
+    background: #FFFFFF;
+    border-radius: 10px;
+    /* margin-right: 5%; */
+    /* margin-bottom: 40px; */
+    overflow: hidden;
+}
+/* .individualWidgwet:last-child {
+  margin-right: 0;
+} */
+
+.widgetIcon {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.widgetIcon h3 {
+  color: #305671;
+  font-size: 15px;
+  margin-left: 12px;
+  margin-right: 8px;
+}
+
+.widgetIcon figure {
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.dashboardWidgets.formControl select {
+  width: 115px;
+  height: 25px;
+  border: none;
+  background-color: transparent;
+  color: #9BAEBC;
+  min-height: 25px;
+  line-height: 1.4;
+  background-position: calc(100% - 9px) 1px;
+  margin-left: 26px;
+}
+
+.dashboardWidgets.formControl {
+  margin-bottom: 20px;
+}
+
+.currentRevenueWraprt {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+img.currentRevinueIcon {
+  width: 65px;
+  margin-right: 8px;
+}
+
+.currentRevInfo h3 {
+  color: #305671;
+  font-size: 32px;
+}
+
+.currentRevInfo p {
+  color: #7E98AA;
+  font-size: 12px;
+}
+
+.projectedValue {
+  padding: 9px 18px;
+  background: #FABC45;
+  border-radius: 10px;
+  margin-left: auto;
+}
+
+.projectedValue p {
+  color: #fff;
+  font-size: 11px;
+  width: 100%;
+}
+
+.projectedValue h4 {
+  color: #fff;
+  font-size: 21px;
+  font-weight: 600;
+}
+
+.previousRevenueWraper {
+  width: 100%;
+  display: flex;
+  position: relative;
+  align-items: center;
+  border: 1px solid #E2E7EB;
+  border-radius: 10px;
+  padding: 20px 14px;
+}
+
+.previousRevenueWraper img {
+  margin-right: 10px;
+}
+
+.previousRevenueWraper h4 {
+  font-size: 25px;
+  color: #305671;
+}
+
+.previousRevenueWraper p {
+  color: #7E98AA;
+  font-size: 12px;
+}
+
+.previousMonth {
+  color: #D0D6DB;
+  font-size: 11px;
+  position: absolute;
+  bottom: 20px;
+  right: 12px;
+}
+
+.widgetIcon .creatUserBtn {
+  margin-right: 6px;
+  height: 34px;
+  padding: 0 12px;
+}
+
+.widgetIcon .creatUserBtn span {
+  width: 65px;
+}
+
+
+
+progress.progress1 {
+  width: 100%;
+  height: 6px;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+
+progress {
+  -webkit-appearance: none;
+}
+.progress1::-webkit-progress-bar {
+  background-color: #E9EFF5;
+}
+
+.progress1::-webkit-progress-value {
+    background-color: #009B48;
+}
+
+.progress2::-webkit-progress-value {
+    background-color: #ED707A;
+}
+
+
+.barStatus {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding-right: 10px;
+  padding-left: 10px;
+  font-size: 14px;
+  color: #305671;
+  font-weight: 400;
+  margin-bottom: 70px;
+}
+
+.goalsInfo {
+  font-size: 12px;
+  color: #000000;
+  margin-bottom: 2px;
+}
+
+.dashboardWidgets.formControl.revenueGoals {
+  margin-bottom: 10px;
+}
+.gymMembersInfos:first-child {
+  width: calc(50% - 6px);
+  float: left;
+}
+
+.gymMembersInfos:last-child {
+  width: calc(50% - 6px);
+  float: right;
+}
+
+.gymMembersInfos {
+  padding: 20px;
+  border: 1px solid #E2E7EB;
+  border-radius: 5px;
+}
+
+.gymMemberWraper {
+  width: 100%;
+  float: left;
+}.scheduleList > .scheduleRow:not(:first-child) .scheduleRow+.cmnFormCol {
   float: left;
 }
 .scheduleList > .scheduleRow:not(:first-child) .scheduleRow {

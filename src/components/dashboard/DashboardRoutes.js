@@ -18,7 +18,7 @@ const DashboardRouting = (props) => {
        
         <div className="dashInnerStructure dashboardPage">
           <Dashboard/>
-          <DashboardFooter />
+          
         </div>
       </div>
     </React.Fragment>

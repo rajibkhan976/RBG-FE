@@ -42,9 +42,9 @@ const ContactModal = (props) => {
                 {/* <button className={navigation.current == 2 ? "active nNav" : "nNav"} onClick={() => navigation.jump(2)}
                         disabled={props.contactId ? false : true}>Attendance
                 </button> */}
-                {/* <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)}
+                 <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)}
                         disabled={props.contactId ? false : true}>Appointment
-                </button> */}
+                </button> 
                 {contactData && !contactData.isDependent ?
                     <>
                         <button className={navigation.current == 4 ? "active nNav" : "nNav"}
