@@ -375,8 +375,7 @@ const ProductListing = (props) => {
                   <img src={noRecords} className="noRecords" alt="" />
                   <h4>No Products Found</h4>
                   <p>No products have been listed here yet</p>
-                </div>
-                {/* <button className="creatUserBtn" ><img className="plusIcon" src={plus_icon} alt="" /><span>Create the First Contact</span></button> */}
+                </div>                
               </div>
             )}
           </div>

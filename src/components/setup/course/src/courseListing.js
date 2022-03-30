@@ -4,6 +4,7 @@ import percentTag from "../../../../assets/images/percentage_icon.png";
 import list_board_icon from "../../../../assets/images/list_board_icon.svg";
 import proImg1 from "../../../../assets/images/proImg1.png";
 import dot3White from "../../../../assets/images/dot3gray.svg";
+import noRecords from '../../../../assets/images/noRecords.svg';
 import Pagination from "../../../shared/Pagination";
 import ConfirmBox from "../../../shared/confirmBox";
 
@@ -262,11 +263,12 @@ const CourseListing = (props) => {
                 );
               })
             ) : (
-              <div className="createNew">
-                <span>
-                  <img src={list_board_icon} alt="" />
-                  <p>No Program found!</p>
-                </span>
+              <div className="createNew noInfos">
+                <div className="noRecordsImgWraper">
+                  <img src={noRecords} className="noRecords" alt="" />
+                  <h4>No Program Found</h4>
+                  <p>No programs have been listed here yet</p>
+                </div>
               </div>
             )}
           </div>

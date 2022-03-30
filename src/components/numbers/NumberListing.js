@@ -14,6 +14,7 @@ import ConfirmBox from "../shared/confirmBox";
 import { utils } from "../../helpers";
 import moment from "moment";
 import list_board_icon from "../../assets/images/list_board_icon.svg";
+import noRecords from "../../assets/images/noRecords.svg";
 
 const NumberListing = () => {
 
@@ -455,11 +456,12 @@ const NumberListing = () => {
               }
             </ul>
              {!numbers.length && 
-          <div className="createNew">
-              <span>
-                  <img src={list_board_icon} alt="" />
-                  <p>No number found!</p>
-              </span>
+          <div className="createNew noInfos">
+            <div className="noRecordsImgWraper">
+              <img src={noRecords} className="noRecords" alt="" />
+              <h4>No Number Found</h4>
+              <p>No numbers have been listed here yet</p>
+            </div>
           </div>
         } 
           </div>
