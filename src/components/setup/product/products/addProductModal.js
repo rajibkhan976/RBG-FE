@@ -319,10 +319,17 @@ const AddProductModal = (props) => {
                     {/* <button className="addColor active" style={{ backgroundColor: "#834140" }}></button>
                   <button className="addColor" style={{ backgroundColor: "#369ED5" }}></button>
                   <button className="addColor" style={{ backgroundColor: "#797D62" }}></button> */}
+                  {console.log("colorSize::::::>>>>>", colorSize)}
                     {colorSize.colors.map((color, i) => {
                       if (color.type === "single") {
                         return <button className={(productData.colors.indexOf(color.label) != -1) ? "addColor active" : "addColor"}
                           style={{ backgroundColor: color.colorcode }}
+                          onClick={(event) => handleColor(event, color.label)}
+                          key={i}  
+                        ></button>
+                      }
+                      else {
+                        return <button className={(productData.colors.indexOf(color.label) != -1) ? "addColor multiColor active" : "addColor multiColor"}
                           onClick={(event) => handleColor(event, color.label)}
                           key={i}  
                         ></button>

@@ -64,7 +64,8 @@ const ProductListing = (props) => {
     let html = "";
     prop.colors.map((color, index) => {
       if (index + 1 < 3) {
-        html += `<span style="background-color: ${color.colorcode}"></span>`;
+        console.log("prop.colors", prop.colors[0].label);
+        html += color.label === "multi" ?  `<span class="multiColor"></span>`: `<span style="background-color: ${color.colorcode}"></span>`;
       } else {
         if (index + 1 === 4) {
           html += `<div class="colorpaletContainer">

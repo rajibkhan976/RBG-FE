@@ -536,11 +536,11 @@ const ProductTransaction = (props) => {
                                 checked={selectedProduct && selectedProduct.selectedColor !== null && selectedProduct.selectedColor === color}
                               />
                               {/* {console.log(selectedProduct.selectedColor)} */}
-                              <span
+                              {color === "multi" ? <span className="multiColor"></span> : <span
                                 style={{
                                   backgroundColor: color,
                                 }}
-                              ></span>
+                              ></span>}
                             </label>
                           ))}
                         </>
@@ -795,12 +795,13 @@ const ProductTransaction = (props) => {
                               <div className="colorItem">
                                 <label>Color</label>
                                 {/* {console.log("cartItem", cartItem)} */}
-                                <figure
+                                {cartItem.color === "multi" ? <figure
+                                  className="colorFig multiColor"></figure> : <figure
                                   className="colorFig"
                                   style={{
                                     backgroundColor: cartItem.color,
                                   }}
-                                ></figure>
+                                ></figure>}
                               </div>
                               <div className="customizedItemSize">
                                 <label>Size</label>

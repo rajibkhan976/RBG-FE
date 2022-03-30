@@ -2803,3 +2803,6 @@ input[type=number] {
 .labelHeading .requiredSt {
   color: #ED707A;
 }
+.multiColor {
+  background: radial-gradient(50% 50% at 50% 50%, #FF0000 0%, #005DFF 33.9%, #007129 66.5%, #FFFF00 100%) !important;
+}
