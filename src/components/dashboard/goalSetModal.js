@@ -6,11 +6,6 @@ import pluss from "../../../src/assets/images/pluss.svg";
 
 
 const GoalSetModal = (props) => {
-    
-   
-    
-
-    
 
     return (
         <>

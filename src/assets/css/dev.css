@@ -1619,7 +1619,7 @@
   right: -5px;
 }
 .productRightSetUpPanel {
-  z-index: 3;
+  z-index: 9;
   padding-right: 0;
 }
 .innerScroll {
@@ -1982,6 +1982,7 @@ h3.leftSectionHeader {
 button.saveNnewBtn.appExport.expContactBtn {
     width: 92px;
     margin-left: 5px;
+    transform: translateY(0px);
 }
 
 button.saveNnewBtn.appFilter.expContactBtn {
@@ -4286,7 +4287,28 @@ button.btn.btnUserMenu .menuUserDetail span {
 
 .dashInnerStructure.dashboardPage .dashInnerUI .mrrWraper {
   flex-direction: column;
-  height: 91vh;
+  height: calc(100vh - 70px);
+  display: flex;
+  padding-bottom: 20px;
+  padding-right: 30px;
+}
+
+.dashInnerStructure.dashboardPage .dashInnerUI .mrrWraper .widgetWrapers {
+  padding-right: 10px;
+  overflow-y: auto;
+}
+
+
+.dashInnerStructure.dashboardPage .dashInnerUI .mrrWraper .widgetWrapers::-webkit-scrollbar {
+  width: 4px;
+}
+
+.dashInnerStructure.dashboardPage .dashInnerUI .mrrWraper .widgetWrapers::-webkit-scrollbar-track {
+  background-color: #dce4eb;
+}
+
+.dashInnerStructure.dashboardPage .dashInnerUI .mrrWraper .widgetWrapers::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
 }
 
 .mrrWraper {
@@ -4642,10 +4664,13 @@ progress {
 }
 
 .creatUserBtn.createBtn img.plus {
-  margin-left: 0;
+  padding-left: 0;
   margin-right: 14px;
 }
-ul.programInfosUl.paymentOverviews li .informationSpan .infoSpan .tooltiptextInfo.overViewPages {
+
+.dashInnerStructure .dashboardFooter {
+  z-index: 9;
+}ul.programInfosUl.paymentOverviews li .informationSpan .infoSpan .tooltiptextInfo.overViewPages {
   width: 149px;
   margin-left: -96px;
 }
