@@ -7,10 +7,15 @@ import { ProgramServices } from "../../../../../services/transaction/ProgramServ
 import { utils } from "../../../../../helpers";
 import DownPayments from "./DownPayments";
 import moment from "moment";
+import AddCourseModal from "../../../../setup/course/src/addCourseModal";
+import { CourseServices } from "../../../../../services/setup/CourseServices";
 
 const ProgramTransaction = (props) => {
   const [isLoader, setIsLoader] = useState(false);
-  const [addPogramModal, setAddPogramModal] = useState(false);
+
+  const [isAddPogramModal, setIsAddPogramModal] = useState(false);
+  const [categoryData, setCategoryData] = useState([]);
+
   const [chooseCategory, setChooseCategory] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState(null);
   const [programList, setProgramList] = useState([]);
@@ -48,16 +53,42 @@ const ProgramTransaction = (props) => {
   });
 
   const getLatestClone = () => JSON.parse(JSON.stringify(contractData));
-
-
   const addDownPaymentsRef = useRef();
+
+  //Open add program modal
+  const openAddPogramModal = (e) => {
+    e.preventDefault();
+    console.log('open add program modal');
+    setIsAddPogramModal(true);
+  }
+
+  const closeAddCourseModal = (param) => {
+    console.log('Close add Course Modal', param)
+    setIsAddPogramModal(false);
+    if (param === "fetch") {
+      fetchPrograms(true);
+    }
+  }
+
+  const fetchCategories = async () => {
+    try {
+      const hasPermission = utils.hasPermission("course", "read");
+      if (!hasPermission) throw new Error("You do not have permission");
+      const result = await CourseServices.fetchCategory();
+      if (result.length) {
+        setCategoryData(result);
+      }
+    } catch (e) {
+      console.log('Error in fetch categories', e);
+    }
+  };
 
   const chooseCategoryFn = () => {
     setChooseCategory(!chooseCategory);
   };
 
   const selectProgram = (item, index) => {
-    console.log('Program', item);
+    console.log('Program', item, index);
     let durationArray = item.duration.split(" ");
     console.table(durationArray);
     setContractData({
@@ -67,6 +98,7 @@ const ProgramTransaction = (props) => {
       courseImage: item.image,
       duration: durationArray[0],
       durationInterval: durationArray[1],
+      billing_cycle: item.billing_cycle,
       payment_type: item.payment_type,
       amount: item.fees
     });
@@ -86,9 +118,12 @@ const ProgramTransaction = (props) => {
   //Fetch programs
   useEffect(() => {
     fetchPrograms();
+    //Fetch course categories
+    fetchCategories();
   }, []);
 
-  const fetchPrograms = async () => {
+  const fetchPrograms = async (isNewProgram = false) => {
+    console.log('is new', isNewProgram);
     try {
       setIsLoader(true);
       const pageId = utils.getQueryVariable('page');
@@ -97,6 +132,10 @@ const ProgramTransaction = (props) => {
       console.log('fetch programs', fetchProgram);
       if (fetchProgram.courses.length) {
         setProgramList(fetchProgram.courses);
+        //Select first if created new program
+        if(isNewProgram){
+          selectProgram(fetchProgram.courses[0], 0)
+        }
       }
     } catch (e) {
       console.log('Error in fetch programs', e);
@@ -336,226 +375,234 @@ const ProgramTransaction = (props) => {
 
 
   return (
-    <form>
-      <div className="transaction_form products forProducts">
+    <React.Fragment>
+      <form>
+        <div className="transaction_form products forProducts">
 
-        {/* Custom Select Box with inbuild Button starts */ console.log({ programList })}
+          {/* Custom Select Box with inbuild Button starts */ console.log({ programList })}
 
-        <div className="formsection gap">
+          <div className="formsection gap">
 
-          <div className="cmnFormRow">
-            <label className="labelWithInfo">
-              <span className="labelHeading">Select Program</span>
-              <span className="infoSpan">
-                <img src={info_icon} alt="" />
-                <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-              </span>
-            </label>
-
-            <div
-              className={chooseCategory
-                ? "cmnFormField programsTransaction listActive"
-                : (formErrors.courseName ? "cmnFormField programsTransaction errorField" : "cmnFormField programsTransaction")
-              }
-
-            >
-              <span
-                className="cmnFieldStyle selectProg"
-
-                //onChange={(e)=>props.toggleContactListFn(e)}
-                onClick={chooseCategoryFn}
-              >
-                {selectedProgram ? selectedProgram.name : "Select a program"}
-              </span>
-              {chooseCategory && (
-                // {props.toggleContactList.status && (
-                <React.Fragment>
-                  <div className="contactListItems">
-                    {isLoader ? <Loader /> : ''}
-                    {/* <button
-                      className="btn"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        setAddManually(true)
-                        toggleContactListFn(e)
-                        addPogramModalFn()
-                      }}
-                    >+ Add Manually</button> */}
-
-                    <ul>
-                      {programList.length ? programList.map((item, index) => {
-                        return (
-                          <li onClick={() => selectProgram(item, index)} key={index} className={contractData.courseIndex == index ? "active" : ""}>{item.name}</li>
-                        )
-                      }) : <li>No data!</li>
-                      }
-                    </ul>
-                  </div>
-                </React.Fragment>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="formsection gap">
-          <label className="labelWithInfo">
-            <span className="labelHeading">Duration</span>
-            <span className="infoSpan">
-              <img src={info_icon} alt="" />
-              <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-            </span>
-          </label>
-          <span className={(formErrors.duration ? "leftSecTransaction errorField" : "leftSecTransaction")}>
-            <input type="text" className="cmnFieldStyle" onChange={handleDurationChange} value={contractData.duration} />
-          </span>
-          <span className="rightSecTransaction">
-            <select className="selectBox" name="duration_interval" value={contractData.durationInterval} onChange={handelDurationIntervalChange}>
-              <option value="month">Month(s)</option>
-              <option value="year">Year(s)</option>
-            </select>
-          </span>
-        </div>
-
-
-        <div className="formsection gap">
-
-          <span className="leftSecTransaction">
-
-            <label className="labelWithInfo">
-              <span className="labelHeading">Payment Type</span>
-              <span className="infoSpan">
-                <img src={info_icon} />
-                <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-              </span>
-            </label>
-            <select className="selectBox" name="paymentType" value={contractData.payment_type} onChange={handelPaymentTypeChange}>
-              <option value="onetime">Onetime</option>
-              <option value="recurring">Recurring</option>
-            </select>
-          </span>
-          <span className={formErrors.billing_cycle ? "rightSecTransaction errorField" : "rightSecTransaction"}>
-            <label className="labelWithInfo">
-              <span className="labelHeading">Billing Cycle</span>
-              <span className="infoSpan">
-                <img src={props.info_icon} />
-                <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-              </span>
-            </label>
-            <select className="selectBox" name="billingCycle" value={contractData.billing_cycle} onChange={handelBillingCycleChange} disabled={contractData.payment_type === 'onetime'}>
-              <option value="monthly">Monthly</option>
-              <option value="yearly">Yearly</option>
-            </select>
-          </span>
-        </div>
-        <div className="formsection gap">
-          <div className="cmnFormCol">
-            <label className='labelWithInfo'>
-              <span>Tuition Amount</span>
-              <span className="infoSpan">
-                <img src={info_icon} alt="" />
-                <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-              </span>
-            </label>
-            <div className={(formErrors.amount ? "cmnFormField preField errorField" : "cmnFormField preField")}>
-              <div className='unitAmount'>
-                $
-              </div>
-              <input type="text" className="cmnFieldStyle" value={contractData.amount} onChange={handleTutionAmountChange} />
-            </div>
-          </div>
-          <div className="cmnFormCol">
-            <label className='labelWithInfo'>
-              <span>Payment Mode</span>
-              <span className="infoSpan">
-                <img src={info_icon} alt="" />
-                <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-              </span>
-            </label>
-
-            <div className='cmnFormField'>
-              <select className='selectBox' name="paymentMode" value={contractData.default_transaction} onChange={handelPaymentModeChange}>
-                <option value="cash">Cash</option>
-                <option value="online">Online</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div className="formsection gap">
-
-          <div className="leftSecTransaction billWraper">
-            <label className="labelWithInfo firstBillTimeWraper">
-              {/* <span className="labelHeading">First Billing Date</span> */}
-              <label className="labelWithInfo paymentTime firstBillTime programBillings">
-                <span className="labelHeading">I want to Pay Later</span>
-                <label
-                  className={contractData.firstBillingTime ? "toggleBtn active" : "toggleBtn"
-                  }
-                >
-                  <input
-                    type="checkbox"
-                    name="check-communication"
-                    onChange={handelFirstBillingDateToggle}
-                    checked={contractData.firstBillingTime}
-                  />
-                  <span className="toggler"></span>
-                </label>
+            <div className="cmnFormRow">
+              <label className="labelWithInfo">
+                <span className="labelHeading">Select Program</span>
+                <span className="infoSpan">
+                  <img src={info_icon} alt="" />
+                  <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                </span>
               </label>
-              {/* <span className="infoSpan">
+
+              <div
+                className={chooseCategory
+                  ? "cmnFormField programsTransaction listActive"
+                  : (formErrors.courseName ? "cmnFormField programsTransaction errorField" : "cmnFormField programsTransaction")
+                }
+
+              >
+                <span
+                  className="cmnFieldStyle selectProg"
+
+                  //onChange={(e)=>props.toggleContactListFn(e)}
+                  onClick={chooseCategoryFn}
+                >
+                  {selectedProgram ? selectedProgram.name : "Select a program"}
+                </span>
+                {chooseCategory && (
+                  // {props.toggleContactList.status && (
+                  <React.Fragment>
+                    <div className="contactListItems">
+                      <button
+                        className="btn"
+                        onClick={(e) => openAddPogramModal(e)}
+                      >+ Add New Program</button>
+
+                      <ul>
+                      {isLoader ? <Loader /> : ''}
+                        {programList.length ? programList.map((item, index) => {
+                          return (
+                            <li onClick={() => selectProgram(item, index)} key={index} className={contractData.courseIndex == index ? "active" : ""}>{item.name}</li>
+                          )
+                        }) : !isLoader ? <li>No data!</li> : ''
+                        }
+                      </ul>
+                    </div>
+                  </React.Fragment>
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="formsection gap">
+            <label className="labelWithInfo">
+              <span className="labelHeading">Duration</span>
+              <span className="infoSpan">
+                <img src={info_icon} alt="" />
+                <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+              </span>
+            </label>
+            <span className={(formErrors.duration ? "leftSecTransaction errorField" : "leftSecTransaction")}>
+              <input type="text" className="cmnFieldStyle" onChange={handleDurationChange} value={contractData.duration} />
+            </span>
+            <span className="rightSecTransaction">
+              <select className="selectBox" name="duration_interval" value={contractData.durationInterval} onChange={handelDurationIntervalChange}>
+                <option value="month">Month(s)</option>
+                <option value="year">Year(s)</option>
+              </select>
+            </span>
+          </div>
+
+
+          <div className="formsection gap">
+
+            <span className="leftSecTransaction">
+
+              <label className="labelWithInfo">
+                <span className="labelHeading">Payment Type</span>
+                <span className="infoSpan">
+                  <img src={info_icon} />
+                  <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                </span>
+              </label>
+              <select className="selectBox" name="paymentType" value={contractData.payment_type} onChange={handelPaymentTypeChange}>
+                <option value="onetime">Onetime</option>
+                <option value="recurring">Recurring</option>
+              </select>
+            </span>
+            <span className={formErrors.billing_cycle ? "rightSecTransaction errorField" : "rightSecTransaction"}>
+              <label className="labelWithInfo">
+                <span className="labelHeading">Billing Cycle</span>
+                <span className="infoSpan">
+                  <img src={props.info_icon} />
+                  <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                </span>
+              </label>
+              <select className="selectBox" name="billingCycle" value={contractData.billing_cycle} onChange={handelBillingCycleChange} disabled={contractData.payment_type === 'onetime'}>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+              </select>
+            </span>
+          </div>
+          <div className="formsection gap">
+            <div className="cmnFormCol">
+              <label className='labelWithInfo'>
+                <span>Tution Amount</span>
+                <span className="infoSpan">
+                  <img src={info_icon} alt="" />
+                  <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                </span>
+              </label>
+              <div className={(formErrors.amount ? "cmnFormField preField errorField" : "cmnFormField preField")}>
+                <div className='unitAmount'>
+                  $
+                </div>
+                <input type="text" className="cmnFieldStyle" value={contractData.amount} onChange={handleTutionAmountChange} />
+              </div>
+            </div>
+            <div className="cmnFormCol">
+              <label className='labelWithInfo'>
+                <span>Payment Mode</span>
+                <span className="infoSpan">
+                  <img src={info_icon} alt="" />
+                  <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                </span>
+              </label>
+
+              <div className='cmnFormField'>
+                <select className='selectBox' name="paymentMode" value={contractData.default_transaction} onChange={handelPaymentModeChange}>
+                  <option value="cash">Cash</option>
+                  <option value="online">Online</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div className="formsection gap">
+
+            <div className="leftSecTransaction billWraper">
+              <label className="labelWithInfo firstBillTimeWraper">
+                {/* <span className="labelHeading">First Billing Date</span> */}
+                <label className="labelWithInfo paymentTime firstBillTime programBillings">
+                  <span className="labelHeading">I want to Pay Later</span>
+                  <label
+                    className={contractData.firstBillingTime ? "toggleBtn active" : "toggleBtn"
+                    }
+                  >
+                    <input
+                      type="checkbox"
+                      name="check-communication"
+                      onChange={handelFirstBillingDateToggle}
+                      checked={contractData.firstBillingTime}
+                    />
+                    <span className="toggler"></span>
+                  </label>
+                </label>
+                {/* <span className="infoSpan">
                 <img src={info_icon} alt="" />
                 <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
               </span> */}
-            </label>
-            <div className={contractData.firstBillingTime ? "paymentNow" : "paymentNow display"} >
-              <p>1st Billing Date <span>Now</span></p>
+              </label>
+              <div className={contractData.firstBillingTime ? "paymentNow" : "paymentNow display"} >
+                <p>1st Billing Date <span>Now</span></p>
+              </div>
+              <div className={contractData.firstBillingTime ? "paymentNow display" : "paymentNow"} >
+                <input type="date" name="firstBillingDate" placeholder="mm/dd/yyyy" min={contractData.minPaymentDate} onChange={handelFirstBillingDateChange} className="editableInput" value={contractData.paymentDate} />
+              </div>
             </div>
-            <div className={contractData.firstBillingTime ? "paymentNow display" : "paymentNow"} >
-              <input type="date" name="firstBillingDate" placeholder="mm/dd/yyyy" min={contractData.minPaymentDate} onChange={handelFirstBillingDateChange} className="editableInput" value={contractData.paymentDate} />
+            <div className={formErrors.courseStart ? "rightSecTransaction errorField" : "rightSecTransaction"}>
+
+              <label className="labelWithInfo">
+                <span className="labelHeading">Program Start Date</span>
+                <span className="infoSpan">
+                  <img src={info_icon} alt="" />
+                  <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                </span>
+              </label>
+              <input type="date" name="programStartDate" placeholder="mm/dd/yyyy" onChange={handelProgramStartDateChange} className="programStartDate cmnFieldStyle" defaultValue={contractData.courseStart} />
             </div>
           </div>
-          <div className={formErrors.courseStart ? "rightSecTransaction errorField" : "rightSecTransaction"}>
-
-            <label className="labelWithInfo">
-              <span className="labelHeading">Program Start Date</span>
+          <div className="formsection gap autoRenew">
+            <span className="labelWithInfo">
+              <label><div className="customCheckbox"><input type="checkbox" name="autoRenew" onChange={handelAutoRenewChange} checked={contractData.auto_renew} /><span></span></div>Auto Renewal</label>
               <span className="infoSpan">
                 <img src={info_icon} alt="" />
-                <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
+                <span className="tooltiptextInfo">Recurring payment will continue irrespective of duration of the program until it's cancelled.</span>
               </span>
-            </label>
-            <input type="date" name="programStartDate" placeholder="mm/dd/yyyy" onChange={handelProgramStartDateChange} className="programStartDate cmnFieldStyle" defaultValue={contractData.courseStart} />
+            </span>
+          </div>
+          <div className="formsection gap autoRenew">
+            {contractData.nextDueDate ?
+              <div className="autoRenewDate">
+                <img src={bell} alt="" />
+                <p>Next Payment Due Date <span className="renewDate">{contractData.nextDueDate}</span></p>
+              </div>
+              : ''
+            }
+
           </div>
         </div>
-        <div className="formsection gap autoRenew">
-          <span className="labelWithInfo">
-            <label><div className="customCheckbox"><input type="checkbox" name="autoRenew" onChange={handelAutoRenewChange} checked={contractData.auto_renew} /><span></span></div>Auto Renewal</label>
-            <span className="infoSpan">
-              <img src={info_icon} alt="" />
-              <span className="tooltiptextInfo">Recurring payment will continue irrespective of duration of the program until it's cancelled.</span>
-            </span>
-          </span>
+
+        <DownPayments
+          downPaymentsCallback={downPaymentsCallbackFn}
+          ref={addDownPaymentsRef}
+          contractData={contractData}
+        />
+        {/* <button className={props.courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={props.buyCourse}>Buy <img src={aaroww} alt="" /></button> */}
+
+        <div className="continueBuy">
+          <button className="saveNnewBtn" onClick={e => continueToBuy(e)}>Continue to Buy <img src={aaroww} alt="" /></button>
         </div>
-        <div className="formsection gap autoRenew">
-          {contractData.nextDueDate ?
-            <div className="autoRenewDate">
-              <img src={bell} alt="" />
-              <p>Next Payment Due Date <span className="renewDate">{contractData.nextDueDate}</span></p>
-            </div>
-            : ''
-          }
+      </form>
 
-        </div>
-      </div>
-
-      <DownPayments
-        downPaymentsCallback={downPaymentsCallbackFn}
-        ref={addDownPaymentsRef}
-        contractData={contractData}
-      />
-      {/* <button className={props.courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={props.buyCourse}>Buy <img src={aaroww} alt="" /></button> */}
-
-      <div className="continueBuy">
-        <button className="saveNnewBtn" onClick={e => continueToBuy(e)}>Continue to Buy <img src={aaroww} alt="" /></button>
-      </div>
-    </form>
+      {isAddPogramModal &&
+        <AddCourseModal
+          closeCourseModal={(param) => closeAddCourseModal(param)}
+          retriveCourses={() => fetchPrograms()}
+          retrieveCategories={fetchCategories}
+          categories={categoryData}
+          editCourseItem=""
+          inProgramTransation="yes"
+        />
+      }
+    </React.Fragment>
   );
 };
 

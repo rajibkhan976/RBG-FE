@@ -231,52 +231,58 @@ const AddCourseModal = (props) => {
   }
 
   const createValidation = () => {
-      // return true;
-      let bool = true;
-      if (courseData.name === "") {
-        bool = false;
-        setErrorClass(prevState => ({ ...prevState, name: "error", nameMsg: "Please enter a valid program name" }));
-      }
+    // return true;
+    let bool = true;
+    if (courseData.name === "") {
+      bool = false;
+      setErrorClass(prevState => ({ ...prevState, name: "error", nameMsg: "Please enter a valid program name" }));
+    }
 
-      if (courseData.duration === "0") {
-        bool = false;
-        setErrorClass(prevState => ({ ...prevState, duration: "error", durationMsg: "Program duration should never be 0" }));
-      }
+    if (courseData.duration <= 0) {
+      bool = false;
+      setErrorClass(prevState => ({ ...prevState, duration: "error", durationMsg: "Program duration should not be 0 or empty" }));
+    }
 
-      if (courseData.fees === "" || parseFloat(courseData.fees) <= 0) {
-        bool = false;
-        setErrorClass(prevState => ({ ...prevState, fees: "error", feesMsg: "Program fees should not be 0 or empty" }));
-      }
+    if (courseData.fees === "" || parseFloat(courseData.fees) <= 0) {
+      bool = false;
+      setErrorClass(prevState => ({ ...prevState, fees: "error", feesMsg: "Program fees should not be 0 or empty" }));
+    }
+    //5 digit 2 decimal places
+    let twoDecimalregex = /^\d{0,5}(\.\d{1,2})?$/;
+    if (!twoDecimalregex.test(courseData.fees)) {
+      setErrorClass(prevState => ({ ...prevState, fees: "error", feesMsg: "Program fees should not be more than 5 digit 2 decimal places" }));
+    }
 
-      if (courseData.duration == 1 && courseData.duration_months === "month" && courseData.payment_type === "recurring") {
-        bool = false;
-        setErrorClass(prevState => ({ ...prevState, duration: "error", durationMsg: "Recurring program duration should be more than 1 month atleast" }));
-      } else if (courseData.duration_months === "month" && courseData.billing_cycle === "yearly" && courseData.payment_type === "recurring") {
-        bool = false;
-        setErrorClass(prevState => ({ ...prevState, paymentType: "error", paymentTypeMsg: "Recurring yearly billing cycle should have more than a year duration" }));
-      } else if (courseData.duration == 1
-        && courseData.duration_months === "year"
-        && courseData.payment_type === "recurring"
-        && courseData.billing_cycle === "yearly") {
-        // throw new Error("Recurring program duration should be more than 1 year atleast for year billing cycle");
-        bool = false;
-        setErrorClass(prevState => ({ ...prevState, paymentType: "error", paymentTypeMsg: "Recurring program duration should be more than 1 year atleast for year billing cycle" }));
-      }
+    if (courseData.duration == 1 && courseData.duration_months === "month" && courseData.payment_type === "recurring") {
+      bool = false;
+      setErrorClass(prevState => ({ ...prevState, duration: "error", durationMsg: "Recurring program duration should be more than 1 month atleast" }));
+    } else if (courseData.duration_months === "month" && courseData.billing_cycle === "yearly" && courseData.payment_type === "recurring") {
+      bool = false;
+      setErrorClass(prevState => ({ ...prevState, paymentType: "error", paymentTypeMsg: "Recurring yearly billing cycle should have more than a year duration" }));
+    } else if (courseData.duration == 1
+      && courseData.duration_months === "year"
+      && courseData.payment_type === "recurring"
+      && courseData.billing_cycle === "yearly") {
+      // throw new Error("Recurring program duration should be more than 1 year atleast for year billing cycle");
+      bool = false;
+      setErrorClass(prevState => ({ ...prevState, paymentType: "error", paymentTypeMsg: "Recurring program duration should be more than 1 year atleast for year billing cycle" }));
+    }
 
-      if (bool) {
-        setErrorClass({
-          name: "",
-          nameMsg: "",
-          fees: "",
-          feesMsg: "",
-          duration: "",
-          durationMsg: "",
-          paymentType: "",
-          paymentTypeMsg: ""
-        });
-      }
-      // return false;
-      return bool;
+    setTimeout(
+      () => setErrorClass({
+        name: "",
+        nameMsg: "",
+        fees: "",
+        feesMsg: "",
+        duration: "",
+        durationMsg: "",
+        paymentType: "",
+        paymentTypeMsg: ""
+      }),
+      4000
+    );
+
+    return bool;
   }
 
   const handleTaxCheck = (isChecked) => setCourseData({ ...courseData, tax: (isChecked) ? 1 : 0 });
@@ -289,7 +295,7 @@ const AddCourseModal = (props) => {
       {errorMsg &&
         <ErrorAlert message={errorMsg} extraclassName="coursePopupMsg"></ErrorAlert>
       }
-      <div className="modalBackdrop">
+      <div className="modalBackdrop modalProductAdd">
         {isLoader ? <Loader /> : ''}
         <div className="slickModalBody">
           <div className="slickModalHeader">
@@ -305,11 +311,11 @@ const AddCourseModal = (props) => {
               <form method="post" onSubmit={handleSubmit}>
                 <div className="formControl">
                   <label>Select Category</label>
-                  <select name="category" onChange={handleChange}>
+                  <select name="category" onChange={handleChange} value={courseData.category}>
                     {categories.map(cat => {
                       return (
                         <>
-                          <option key={cat._id} value={cat._id} selected={(courseData.category === cat._id) ? "selected" : ""}>{cat.name}</option>
+                          <option key={cat._id + "_cat"} value={cat._id}>{cat.name}</option>
                         </>
                       );
                     })}
@@ -321,6 +327,7 @@ const AddCourseModal = (props) => {
                   <label>Enter Program Name</label>
                   <input type="text" placeholder="Ex: v-shape gym vest" name="courseName"
                     onChange={handleChange}
+                    className="cmnFieldStyle"
                     value={courseData.name} />
                   <p className="errorMsg">{errorClass.nameMsg}</p>
                 </div>
@@ -351,15 +358,17 @@ const AddCourseModal = (props) => {
                 <div className={"formControl " + errorClass.duration}>
                   <label>Duration</label>
                   <div className="formLeft">
-                    <input type="text" name="duration_num"
+                    <input type="text"
+                      className="cmnFieldStyle"
+                      name="duration_num"
                       onChange={handleChange}
                       value={courseData.duration} />
-                      <p className="errorMsg">{errorClass.durationMsg}</p>
+                    <p className="errorMsg">{errorClass.durationMsg}</p>
                   </div>
                   <div className={"formRight " + errorClass.duration}>
-                    <select name="duration_months" onChange={handleChange}>
-                      <option value="month" selected={(courseData.duration_months === "month") ? "selected" : ""}>Month(s)</option>
-                      <option value="year" selected={(courseData.duration_months === "year") ? "selected" : ""}>Year(s)</option>
+                    <select name="duration_months" onChange={handleChange} value={courseData.duration_months}>
+                      <option value="month">Month(s)</option>
+                      <option value="year">Year(s)</option>
                     </select>
                   </div>
                 </div>
@@ -367,19 +376,18 @@ const AddCourseModal = (props) => {
                 <div className={"formControl " + errorClass.paymentType}>
                   <div className="formLeft">
                     <label>Payment Type</label>
-                    <select name="paymentType" onChange={handleChange}>
-                      {paymentType.map(pt => <option key={pt} value={pt.toLowerCase()}
-                        selected={(courseData.payment_type.toLowerCase() === pt.toLowerCase()) ? "selected" : ""}>{pt}</option>)}
+                    <select name="paymentType" className="cmnFieldStyle" onChange={handleChange} value={courseData.payment_type.toLowerCase()}>
+                      {paymentType.map(pt => <option key={pt + "_pt"} value={pt.toLowerCase()}>{pt}</option>)}
                     </select>
-                  <p className="errorMsg">{errorClass.paymentTypeMsg}</p>
+                    <p className="errorMsg">{errorClass.paymentTypeMsg}</p>
                   </div>
 
 
                   <div className="formRight">
                     <label>Billing Cycle</label>
-                    <select className="selectBox" name="billingCycle" onChange={handleChange} disabled={courseData.disabledCycle}>
-                      <option value="monthly" selected={(courseData.billing_cycle === "monthly") ? "selected" : ""}>Monthly</option>
-                      <option value="yearly" selected={(courseData.billing_cycle === "yearly") ? "selected" : ""}>Yearly</option>
+                    <select className="selectBox" name="billingCycle" onChange={handleChange} disabled={courseData.disabledCycle} value={courseData.billing_cycle}>
+                      <option value="monthly">Monthly</option>
+                      <option value="yearly">Yearly</option>
                     </select>
                   </div>
                 </div>
@@ -387,11 +395,11 @@ const AddCourseModal = (props) => {
                 <div className="formControl">
                   <div className="formLeft">
                     <label>Select Age Group</label>
-                    <select name="age_group" onChange={handleChange}>
+                    <select name="age_group" onChange={handleChange} value={courseData.ageGroup}>
                       {ageGroup.map(ag => {
                         return (
                           <>
-                            <option key={ag} value={ag} selected={(courseData.ageGroup === ag) ? "selected" : ""}>{ag}</option>
+                            <option key={ag + "_ag"} value={ag}>{ag}</option>
                           </>
                         );
                       })}
@@ -399,14 +407,14 @@ const AddCourseModal = (props) => {
                     </select>
                   </div>
 
-                  <div className={"formRight programModals" + errorClass.fees}>
+                  <div className={"formRight programModals " + errorClass.fees}>
                     <label>Fees</label>
                     <div className="preField">
                       {/* <span className="smallspan">* default currency is<strong> USD</strong></span> */}
                       <div className="unitAmount">$</div>
                       <input className="cmnFieldStyle" type="text" name="fees" placeholder="Ex: 99" onChange={handleChange} value={courseData.fees} />
                     </div>
-                  <p className="errorMsg">{errorClass.feesMsg}</p>
+                    <p className="errorMsg">{errorClass.feesMsg}</p>
                   </div>
                 </div>
                 {/* <div className="formControl">
@@ -421,13 +429,23 @@ const AddCourseModal = (props) => {
                     </div>
                     Add Sales Tax (10%)</label>
                 </div> */}
-                <div className="modalbtnHolder">
-                  <button type="submit" name="save"
-                    className="saveNnewBtn"
-                    onClick={() => setBtnType("Save")}><span>{(isEditing) ? "Update" : "Save"}</span><img src={arrow_forward} alt="" /></button>
-                  <button type="submit" name="saveNew"
-                    className="saveNnewBtn"
-                    onClick={() => setBtnType("SaveNew")}><span>{(isEditing) ? "Update" : "Save"} &amp; New</span><img src={arrow_forward} alt="" /></button>
+                <div className="modalbtnHolder w-100">
+                  {props.inProgramTransation === "yes" ?
+                    <React.Fragment>
+                      <button type="submit" name="save"
+                        className="saveNnewBtn"
+                        onClick={() => setBtnType("Save")}><span>Save and Select</span><img src={arrow_forward} /></button>
+                    </React.Fragment> :
+                    <React.Fragment>
+                      <button type="submit" name="save"
+                        className="saveNnewBtn"
+                        onClick={() => setBtnType("Save")}><span>{(isEditing) ? "Update" : "Save"}</span><img src={arrow_forward} alt="" /></button>
+                      <button type="submit" name="saveNew"
+                        className="saveNnewBtn"
+                        onClick={() => setBtnType("SaveNew")}><span>{(isEditing) ? "Update" : "Save"} &amp; New</span><img src={arrow_forward} alt="" /></button>
+                    </React.Fragment>
+                  }
+
                 </div>
               </form>
             </Scrollbars>
