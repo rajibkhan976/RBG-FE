@@ -15,7 +15,7 @@ const Attendance = () => {
       </div>
       <div className="transBoday attendencePage">
       <div className="userListBody">
-                <div className="listBody contactListingTable" style={{ 'width': '100%' }}>
+                <div className="listBody contactListingTable attendencePage" style={{ 'width': '100%', 'border-radius': '10px', 'overflow-x': 'hidden' }}>
                   <div className="tableHeader attendencePage">
                     <p>05-16-2021  -  05-22-2021</p>
                     <div className="displayInfosChange">
