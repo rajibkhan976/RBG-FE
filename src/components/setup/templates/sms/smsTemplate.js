@@ -13,7 +13,11 @@ import Pagination from "../../../shared/Pagination";
 import Loader from "../../../shared/Loader";
 // import list_board_icon from "../../../../assets/images/list_board_icon.svg";
 // import { bucketUrl } from "../../../../configuration/config";
-import { ErrorAlert, SuccessAlert, WarningAlert } from "../../../shared/messages";
+import {
+  ErrorAlert,
+  SuccessAlert,
+  WarningAlert,
+} from "../../../shared/messages";
 // import ConfirmBox from "../../../shared/confirmBox";
 import Scrollbars from "react-custom-scrollbars-2";
 
@@ -29,6 +33,7 @@ const SmsTemplate = (props) => {
   const [sortType, setSortType] = useState("asc");
   const [smsModal, setSMSModal] = useState(false);
   const [smsCount, setSMSCount] = useState(0);
+  const smsListingBody = useRef(null)
   const [paginationData, setPaginationData] = useState({
     count: null,
     totalPages: null,
@@ -37,54 +42,65 @@ const SmsTemplate = (props) => {
   });
   const [smsTemplates, setSMSTemplates] = useState([
     {
+      id: 1,
       title: "Welcome Message",
       message:
         "Hello, [fname] [lname] This is a welcome message from Red Belt Gym.",
     },
     {
+      id: 2,
       title: "Onboarding Message",
       message:
         "Hello [fname] [lname], Welcome onboard. We hope you will get an amazing experience and fine…",
     },
     {
+      id: 3,
       title: "Prospect Offer",
       message:
         "Hello, [fname] [lname] Don’t miss out the additional 15% discount on Admission this week.",
     },
     {
+      id: 5,
       title: "Hot Leads 50% Offer",
       message:
         "Hello, [fname] [lname] Here we would like to offer you 50% discount since you have requested to…",
     },
     {
+      id: 6,
       title: "Auto Unsubscribe",
       message:
         "Hello, [fname] [lname] If you do not wish to get any SMS from us in future please click here [link] to…",
     },
     {
+      id: 7,
       title: "General Support Message",
       message:
         "Hello, [fname] [lname] Got a question? Don’t worry we are right here to help you out. Call us at…",
     },
     {
+      id: 8,
       title: "Support Message for Premium Members",
       message:
         "Hello, [fname] [lname] Thanks for being a valuable member of FitBit. We have appointed [d_supp…",
     },
     {
+      id: 9,
       title: "Non-paying members message",
       message:
         "Hello, [fname] [lname] We have noticed that you have failed to make your monthly Gym FEE on…",
     },
     {
+      id: 10,
       title: "Dependent Message",
       message: "Hello, [fname] [lname] Message body",
     },
     {
+      id: 11,
       title: "New Product Launch Message",
       message: "Hello, [fname] [lname] another message body",
     },
     {
+      id: 12,
       title: "Intro Message - General",
       message: "Hello, [fname] [lname] another new Message body",
     },
@@ -94,6 +110,7 @@ const SmsTemplate = (props) => {
   const [editState, setEditstate] = useState(false);
   const [keywordSuggesion, setKeywordSuggesion] = useState(false);
   const [editMsgObj, setEditMsgObj] = useState({
+    id: "",
     title: "",
     message: "",
   });
@@ -103,9 +120,9 @@ const SmsTemplate = (props) => {
   });
   const createTemplateTitle = useRef(null);
   const createTemplateMessage = useRef(null);
-  const createTemplateForm = useRef(null)
-  const messageTextbox = useRef(null)
-  const templateTitle = useRef(null)
+  const createTemplateForm = useRef(null);
+  const messageTextbox = useRef(null);
+  const templateTitle = useRef(null);
 
   const getQueryParams = async () => {
     const keyword = utils.getQueryVariable("search");
@@ -114,7 +131,7 @@ const SmsTemplate = (props) => {
 
     const queryParams = new URLSearchParams();
 
-    console.log("search", keyword);
+    // console.log("search", keyword);
     if (keyword) {
       queryParams.append("search", keyword);
     }
@@ -127,12 +144,12 @@ const SmsTemplate = (props) => {
     return queryParams;
   };
 
-  const [hasError, setHasError] = useState(false)
+  const [hasError, setHasError] = useState(false);
 
   const [errorState, setErrorState] = useState({
     header: "",
-    message: ""
-  })
+    message: "",
+  });
 
   useEffect(() => {
     setSortBy(utils.getQueryVariable("sortBy"));
@@ -143,7 +160,7 @@ const SmsTemplate = (props) => {
    * Update keyword
    */
   const handleKeywordChange = (event) => {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     setKeyword(event.target.value);
   };
 
@@ -180,9 +197,10 @@ const SmsTemplate = (props) => {
   const openModal = () => {
     setIsEdit(false);
     setSMSModal(true);
-    
+
     setActiveMessage(null);
     setEditMsgObj({
+      id: "",
       title: "",
       message: "",
     });
@@ -190,8 +208,8 @@ const SmsTemplate = (props) => {
     setHasError(false);
     setErrorState({
       title: "",
-      message: ""
-    })
+      message: "",
+    });
   };
 
   const handleSortBy = (field) => {
@@ -212,16 +230,16 @@ const SmsTemplate = (props) => {
 
   const getThisMessage = (message, i) => {
     setActiveMessage(
-      activeMessage === null ? i : activeMessage === i ? null : i
+      activeMessage === null ? message.id : activeMessage === message.id ? null : message.id
     );
-    setEditMsgObj({
-      title: smsTemplates[i].title,
-      message: smsTemplates[i].message,
-    });
+    // console.log("activeMessage", activeMessage === null ? message : activeMessage === message ? null : message, "editMsgObj", editMsgObj);
+    setEditMsgObj(smsTemplates.filter(smsEdit => smsEdit.id === message.id)[0]);
     setEditstate(false);
+    setErrorState({
+      title: "",
+      message: "",
+    });
   };
-
-  useEffect(() => {}, [smsTemplates]);
 
   // ADD Keyword to Edit SMS template
   const addKeywordEdit = (e) => {
@@ -231,14 +249,13 @@ const SmsTemplate = (props) => {
     let cursorEnd = textBox.selectionEnd;
     let textValue = textBox.value;
 
-    console.log();
+    // console.log();
 
     try {
-      if (cursorStart || cursorStart == "0"
-      ) {
-        console.log("VIA CURSOR");
+      if (cursorStart || cursorStart == "0") {
+        // console.log("VIA CURSOR");
         var startToText = "";
-        console.log(textBox.selectionStart);
+        // console.log(textBox.selectionStart);
         textBox.value =
           textBox.value.substring(0, cursorStart) +
           " [" +
@@ -251,7 +268,7 @@ const SmsTemplate = (props) => {
           message: textBox.value,
         });
 
-        console.log("editMsgObj", editMsgObj, textBox.value);
+        // console.log("editMsgObj", editMsgObj, textBox.value);
 
         startToText =
           textBox.value.substring(0, cursorStart) +
@@ -263,9 +280,9 @@ const SmsTemplate = (props) => {
           startToText.length + 1,
           startToText.length + 1
         );
-        console.log(startToText.length);
+        // console.log(startToText.length);
       } else {
-        console.log("VIA END POINT");
+        // console.log("VIA END POINT");
 
         textBox.value = textBox.value + " [" + e.target.textContent + "] ";
         setEditMsgObj({
@@ -275,7 +292,7 @@ const SmsTemplate = (props) => {
         textBox.focus();
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 
@@ -287,7 +304,7 @@ const SmsTemplate = (props) => {
         message: e.target.value,
       });
 
-    console.log("editMsgObj", editMsgObj);
+    // console.log("editMsgObj", editMsgObj);
   };
 
   // Add edit template title onchange
@@ -302,20 +319,23 @@ const SmsTemplate = (props) => {
   // Save edit template
   const saveEditstate = (e) => {
     e.preventDefault();
-    if(templateTitle.current.value.trim().length !== 0 && messageTextbox.current.value.trim().length !== 0) {
-      let copyTemplate = smsTemplates;
+    if (
+      templateTitle.current.value.trim().length !== 0 &&
+      messageTextbox.current.value.trim().length !== 0
+    ) {
+      // console.log("editMsgObj...", editMsgObj);
 
-      copyTemplate[activeMessage] = editMsgObj;
-
-      console.log("editMsgObj...", editMsgObj);
-
-      setSMSTemplates(copyTemplate);
+      setSMSTemplates(prevTemplates => prevTemplates.map(el => 
+        el.id === editMsgObj.id ?
+        editMsgObj : el
+      ));
 
       setEditstate(false);
 
       setEditMsgObj({
-        title: smsTemplates[activeMessage].title,
-        message: smsTemplates[activeMessage].message,
+        id: smsTemplates.filter(fltMsg => fltMsg.id === activeMessage)[0].id,
+        title: smsTemplates.filter(fltMsg => fltMsg.id === activeMessage)[0].title,
+        message: smsTemplates.filter(fltMsg => fltMsg.id === activeMessage)[0].message,
       });
 
       setKeywordSuggesion(false);
@@ -323,39 +343,42 @@ const SmsTemplate = (props) => {
       setHasError(false);
       setErrorState({
         title: "",
-        message: ""
-      })
-    }
-    else {
-      if(templateTitle.current.value.trim().length === 0) {
+        message: "",
+      });
+    } else {
+      if (templateTitle.current.value.trim().length === 0) {
         setHasError(true);
         setErrorState({
           ...errorState,
-          title: "Title cannot be blank!"
-        })
+          title: "Title cannot be blank!",
+        });
       }
-      if(messageTextbox.current.value.trim().length === 0) {
+      if (messageTextbox.current.value.trim().length === 0) {
         setHasError(true);
         setErrorState({
           ...errorState,
-          message: "Message cannot be blank!"
-        })
+          message: "Message cannot be blank!",
+        });
       }
-      if(messageTextbox.current.value.trim().length === 0 && templateTitle.current.value.trim().length === 0) {
+      if (
+        messageTextbox.current.value.trim().length === 0 &&
+        templateTitle.current.value.trim().length === 0
+      ) {
         setHasError(true);
         setErrorState({
           title: "Title cannot be blank!",
-          message: "Message cannot be blank!"
-        })
+          message: "Message cannot be blank!",
+        });
       }
     }
   };
 
   const closeModal = () => {
     setSMSModal(false);
-    
+
     setActiveMessage(null);
     setEditMsgObj({
+      id: "",
       title: "",
       message: "",
     });
@@ -363,8 +386,12 @@ const SmsTemplate = (props) => {
     setHasError(false);
     setErrorState({
       title: "",
-      message: ""
-    })
+      message: "",
+    });
+    setAddMsgObj({
+      title: "",
+      message: "",
+    });
   };
 
   // ADD Keyword to New SMS template
@@ -410,45 +437,78 @@ const SmsTemplate = (props) => {
         addTextarea.focus();
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
+    } finally {
+      setErrorState({
+        ...errorMsg,
+        message: "",
+      });
     }
   };
 
   // Add new template message onchange
   const addTemplateTitle = (e) => {
-    createTemplateTitle.current.value.trim().length !== 0 &&
-      setAddMsgObj({
-        ...addMsgObj,
-        title: createTemplateTitle.current.value,
-      })
+    if(createTemplateTitle.current.value.trim().length !== 0) {
+        setAddMsgObj({
+          ...addMsgObj,
+          title: createTemplateTitle.current.value,
+        })
+        setErrorState({
+          ...errorState,
+          title: "",
+        });
+    }
+    else {
+      setErrorState({
+        ...errorState,
+        title: "Title cannot be blank!",
+      });
+    }
   };
 
   // Add new template title onchange
-  const addTemplateMessage = (e) => {    
-    createTemplateMessage.current.value.trim().length !== 0 &&
+  const addTemplateMessage = (e) => {
+    if(createTemplateMessage.current.value.trim().length !== 0) {
       setAddMsgObj({
         ...addMsgObj,
         message: e.target.value,
       });
+      setErrorState({
+        ...errorState,
+        message: "",
+      });
+    } else {
+      setErrorState({
+        ...errorState,
+        message: "Text cannot be blank",
+      });
+    }
   };
 
   // Save new template function
   const saveMessage = (e) => {
     let copyTemplate = smsTemplates;
-    if(createTemplateTitle.current.value.trim().length !== 0 && createTemplateMessage.current.value.trim().length !== 0) {
-      copyTemplate = [...copyTemplate, addMsgObj]
+    if (
+      createTemplateTitle.current.value.trim().length !== 0 &&
+      createTemplateMessage.current.value.trim().length !== 0
+    ) {
+      addMsgObj.id = smsTemplates.length
+
+      // console.log("addMsgObj", addMsgObj);
+
+      copyTemplate = [...copyTemplate, addMsgObj];
 
       setSMSTemplates(copyTemplate);
-          
+
       setAddMsgObj({
         title: "",
         message: "",
-      })
+      });
     } else {
-      console.log(addMsgObj);
+      // console.log(addMsgObj);
       setErrorMsg("Some information missing!");
       setTimeout(() => {
-        setErrorMsg("")
+        setErrorMsg("");
       }, 5000);
     }
   };
@@ -461,17 +521,57 @@ const SmsTemplate = (props) => {
         addMsgObj.title.trim().length !== 0 &&
         addMsgObj.message.trim().length !== 0
       ) {
+        // console.log("here");
+        setIsLoader(true);
         saveMessage(e.target);
         createTemplateForm.current.reset();
+        setSuccessMsg("SMS template saved!");
+        
+        setTimeout(() => {
+          setSuccessMsg("");
+        }, 5000);
+      } else {
+        if (addMsgObj.title.trim().length === 0) {
+          // console.log(addMsgObj);
+          setHasError(true);
+          setErrorState({
+            ...errorState,
+            title: "Title cannot be blank!",
+          });
+        }
+        if (addMsgObj.message.trim().length === 0) {
+          // console.log(addMsgObj);
+          setHasError(true);
+          setErrorState({
+            ...errorState,
+            message: "Message cannot be blank!",
+          });
+        }
+        if (
+          addMsgObj.title.trim().length === 0 &&
+          addMsgObj.message.trim().length === 0
+        ) {
+          // console.log(addMsgObj);
+          setHasError(true);
+          setErrorState({
+            title: "Title cannot be blank!",
+            message: "Message cannot be blank!",
+          });
+        }
       }
     } catch (err) {
-      console.log(err);
+      // console.log(err);
+    } finally {
+      setIsLoader(false);
+      
+      setTimeout(()=> {
+        // console.log("hi", smsListingBody.current.children[0]);
+        smsListingBody.current.children[0].scrollIntoView({
+          inline: "end",
+          behavior: "smooth"
+        })
+      }, 1000)
     }
-        
-    setAddMsgObj({
-      title: "",
-      message: "",
-    })
   };
 
   // Save new template and reset form
@@ -485,10 +585,10 @@ const SmsTemplate = (props) => {
         setIsLoader(true);
         saveMessage(e.target);
         createTemplateForm.current.reset();
-        setSuccessMsg("SMS template saved!")
+        setSuccessMsg("SMS template saved!");
         closeModal(false);
         setTimeout(() => {
-          setSuccessMsg("")
+          setSuccessMsg("");
         }, 5000);
 
         setIsLoader(false);
@@ -496,48 +596,55 @@ const SmsTemplate = (props) => {
         setHasError(false);
         setErrorState({
           title: "",
-          message: ""
-        })
-      }
-      else {
-        if(addMsgObj.title.trim().length === 0) {
-          console.log(addMsgObj);
+          message: "",
+        });
+      } else {
+        if (addMsgObj.title.trim().length === 0) {
+          // console.log(addMsgObj);
           setHasError(true);
           setErrorState({
             ...errorState,
             title: "Title cannot be blank!",
-            message: ""
-          })
+          });
         }
-        if(addMsgObj.message.trim().length === 0) {
-          console.log(addMsgObj);
+        if (addMsgObj.message.trim().length === 0) {
+          // console.log(addMsgObj);
           setHasError(true);
           setErrorState({
             ...errorState,
-            title:"",
-            message: "Message cannot be blank!"
-          })
+            message: "Message cannot be blank!",
+          });
         }
-        if(addMsgObj.title.trim().length === 0 && addMsgObj.message.trim().length === 0) {
-          console.log(addMsgObj);
+        if (
+          addMsgObj.title.trim().length === 0 &&
+          addMsgObj.message.trim().length === 0
+        ) {
+          // console.log(addMsgObj);
           setHasError(true);
           setErrorState({
             title: "Title cannot be blank!",
-            message: "Message cannot be blank!"
-          })
+            message: "Message cannot be blank!",
+          });
         }
       }
     } catch (err) {
       setErrorMsg(err);
       setTimeout(() => {
-        setErrorMsg("")
+        setErrorMsg("");
       }, 5000);
-    }
-    finally{        
+    } finally {
       setAddMsgObj({
         title: "",
         message: "",
-      })
+      });
+      
+      setTimeout(()=> {
+        // console.log("hi", smsListingBody.current.children[0]);
+        smsListingBody.current.children[0].scrollIntoView({
+          block: "end",
+          behavior: "smooth"
+        })
+      }, 1000)
     }
   };
 
@@ -583,40 +690,98 @@ const SmsTemplate = (props) => {
       {warningMsg && <WarningAlert message={warningMsg}></WarningAlert>}
 
       <div className="userListBody smsListing d-flex">
-        <div className="listBody">
-          <ul className="tableListing">
-            <li className="listHeading">
-              <div
-                className={
-                  "messageTitle " +
-                  (sortBy == "title" ? "sort " + sortType : "")
-                }
-                onClick={() => handleSortBy("title")}
-              >
-                Title
-              </div>
-              <div
-                className={
-                  "messageDeet " +
-                  (sortBy == "message" ? "sort " + sortType : "")
-                }
-                onClick={() => handleSortBy("message")}
-              >
-                Message
-              </div>
-            </li>
-            {smsTemplates &&
-              smsTemplates.map((sms, i) => (
-                <li
-                  key={"smsTemplate-" + i}
-                  onClick={() => getThisMessage(sms, i)}
-                  className={activeMessage === i ? "active" : ""}
+        <div className="smsListingBody d-flex f-column">
+          <div className="listBody f-1" ref={smsListingBody}>
+            <ul className="tableListing">
+              <li className="listHeading">
+                <div
+                  className={
+                    "messageTitle " +
+                    (sortBy == "title" ? "sort " + sortType : "")
+                  }
+                  onClick={() => handleSortBy("title")}
                 >
-                  <div className="messageTitle">{sms.title}</div>
-                  <div className="messageDeet">{sms.message}</div>
-                </li>
-              ))}
-          </ul>
+                  Title
+                </div>
+                <div
+                  className={
+                    "messageDeet " +
+                    (sortBy == "message" ? "sort " + sortType : "")
+                  }
+                  onClick={() => handleSortBy("message")}
+                >
+                  Message
+                </div>
+              </li>
+              {smsTemplates &&
+                smsTemplates.map((sms, i) => (
+                  <li
+                    key={"smsTemplate-" + i}
+                    onClick={() => getThisMessage(sms, i)}
+                    className={activeMessage === sms.id ? "active" : ""}
+                  >
+                    <div className="messageTitle">{sms.title}</div>
+                    <div className="messageDeet">{sms.message.length <= 150 ? sms.message : sms.message.substring(0, 150)+"..."}</div>
+                  </li>
+                ))}
+            </ul>
+          </div>
+          {/* <Pagination /> */}
+          {/* PAGINATION UI FOR SHOW */}
+          <div class="paginationOuter">
+            <ul>
+              <li>
+                <button class="btn paginationBtn" disabled="">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 492 492">
+                    <path
+                      d="M198.608,246.104L382.664,62.04c5.068-5.056,7.856-11.816,7.856-19.024c0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12    C361.476,2.792,354.712,0,347.504,0s-13.964,2.792-19.028,7.864L109.328,227.008c-5.084,5.08-7.868,11.868-7.848,19.084    c-0.02,7.248,2.76,14.028,7.848,19.112l218.944,218.932c5.064,5.072,11.82,7.864,19.032,7.864c7.208,0,13.964-2.792,19.032-7.864    l16.124-16.12c10.492-10.492,10.492-27.572,0-38.06L198.608,246.104z"
+                      fill="#305671"
+                    ></path>
+                  </svg>
+                </button>
+              </li>
+              <li id="1">
+                <button class="btn paginationBtn active" value="1">
+                  1
+                </button>
+              </li>
+              <li id="2">
+                <button class="btn paginationBtn" value="2">
+                  2
+                </button>
+              </li>
+              <li id="3">
+                <button class="btn paginationBtn" value="3">
+                  3
+                </button>
+              </li>
+              <li id="4">
+                <button class="btn paginationBtn" value="4">
+                  4
+                </button>
+              </li>
+              <li id="5">
+                <button class="btn paginationBtn" value="5">
+                  5
+                </button>
+              </li>
+              <li class="btn"> … </li>
+              <li>
+                <button class="btn paginationBtn">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 492.004 492.004"
+                  >
+                    <path
+                      d="M382.678,226.804L163.73,7.86C158.666,2.792,151.906,0,144.698,0s-13.968,2.792-19.032,7.86l-16.124,16.12    c-10.492,10.504-10.492,27.576,0,38.064L293.398,245.9l-184.06,184.06c-5.064,5.068-7.86,11.824-7.86,19.028    c0,7.212,2.796,13.968,7.86,19.04l16.124,16.116c5.068,5.068,11.824,7.86,19.032,7.86s13.968-2.792,19.032-7.86L382.678,265    c5.076-5.084,7.864-11.872,7.848-19.088C390.542,238.668,387.754,231.884,382.678,226.804z"
+                      fill="#305671"
+                    ></path>
+                  </svg>
+                </button>
+              </li>
+            </ul>
+          </div>
+          {/* PAGINATION UI FOR SHOW */}
         </div>
 
         <div className="previewSpaceTemplate">
@@ -677,16 +842,28 @@ const SmsTemplate = (props) => {
 
               {activeMessage !== null && (
                 <div className="templateInner">
-                  <header className={hasError && errorState.title !== "" ? "templateHeader error" : "templateHeader"}>
-                    {!editState && smsTemplates[activeMessage].title}
+                  <header
+                    className={
+                      hasError && errorState.title !== ""
+                        ? "templateHeader error"
+                        : "templateHeader"
+                    }
+                  >
+                    {!editState && smsTemplates.filter(sms => sms.id === activeMessage)[0].title}
                     {editState && (
-                      <input
-                        readOnly={editState === true ? false : true}
-                        defaultValue={smsTemplates[activeMessage].title}
-                        onChange={(e) => editTemplateTitle(e)}
-                        id="templateTitle"
-                        ref={templateTitle}
-                      />
+                      <div className="cmnFormRow">
+                        <div className="cmnFormField">
+                          <input
+                            readOnly={editState === true ? false : true}
+                            defaultValue={smsTemplates.filter(sms => sms.id === activeMessage)[0].title}
+                            onChange={(e) => editTemplateTitle(e)}
+                            id="templateTitle"
+                            ref={templateTitle}
+                            tabIndex="1"
+                            className="cmnFieldStyle"
+                          />
+                        </div>
+                      </div>
                     )}
 
                     {!editState && (
@@ -749,21 +926,40 @@ const SmsTemplate = (props) => {
                         </svg>
                       </button>
                     )}
-                    {hasError && errorState.title && <span className="errorMsg">Please give some SMS title.</span>}
+                    {/* {hasError && errorState.title && (
+                      <span className="errorMsg">
+                        Please give some SMS title.
+                      </span>
+                    )} */}
                   </header>
-                  <div className={hasError && errorState.message !== "" ? "bodyEditTemplate error": "bodyEditTemplate"}>
+                  <div
+                    className={
+                      hasError && errorState.message !== ""
+                        ? "bodyEditTemplate error"
+                        : "bodyEditTemplate"
+                    }
+                    style={{
+                      paddingBottom: !editState && "15px"
+                    }}
+                  >
                     {editState === false ? (
                       <div className="textView">
-                        {smsTemplates[activeMessage].message}
+                        {smsTemplates.filter(sms => sms.id === activeMessage)[0].message}
                       </div>
                     ) : (
-                      <textarea
-                        readOnly={editState === true ? false : true}
-                        defaultValue={smsTemplates[activeMessage].message}
-                        onChange={(e) => editTemplateMessage(e)}
-                        id="messageTextbox"
-                        ref={messageTextbox}
-                      ></textarea>
+                      <div className="cmnFormRow f-1">
+                        <div className="cmnFormField h-100">
+                          <textarea
+                            readOnly={editState === true ? false : true}
+                            defaultValue={smsTemplates.filter(sms => sms.id === activeMessage)[0].message}
+                            onChange={(e) => editTemplateMessage(e)}
+                            id="messageTextbox"
+                            ref={messageTextbox}
+                            tabIndex="2"
+                            className="cmnFieldStyle"
+                          ></textarea>
+                        </div>
+                      </div>
                     )}
                     {keywordSuggesion && (
                       <div className="keywordBox">
@@ -808,15 +1004,19 @@ const SmsTemplate = (props) => {
                         </div>
                       </div>
                     )}
-                    {hasError && errorState.title && <span className="errorMsg">Please give some SMS content.</span>}
+                    {/* {hasError && errorState.title && (
+                      <span className="errorMsg">
+                        Please give some SMS content.
+                      </span>
+                    )} */}
                   </div>
-                  <footer
+                  {editState && <footer
                     className="editPageFooter d-flex"
                     style={{
                       backgroundColor: editState && "#fff",
                     }}
                   >
-                    <button className="btn">
+                    {/* <button className="btn">
                       <img
                         src={right_icon}
                         alt="next"
@@ -832,7 +1032,7 @@ const SmsTemplate = (props) => {
                           <img src={right_icon} alt="next" />
                         </button>
                       </>
-                    )}
+                    )} */}
                     {editState && (
                       <button
                         className="btn browseKeywords"
@@ -845,7 +1045,7 @@ const SmsTemplate = (props) => {
                         <img src={browse_keywords} alt="keywords" />
                       </button>
                     )}
-                  </footer>
+                  </footer>}
                 </div>
               )}
             </div>
@@ -875,7 +1075,13 @@ const SmsTemplate = (props) => {
                 )}
               >
                 <form method="post" ref={createTemplateForm}>
-                  <div className={hasError && errorState.title !== "" ? "cmnFormRow error" : "cmnFormRow"}>
+                  <div
+                    className={
+                      hasError && errorState.title !== ""
+                        ? "cmnFormRow error"
+                        : "cmnFormRow"
+                    }
+                  >
                     <label className="cmnFieldName d-flex f-justify-between">
                       Enter Template Title
                     </label>
@@ -888,9 +1094,19 @@ const SmsTemplate = (props) => {
                         onChange={(e) => addTemplateTitle(e)}
                       />
                     </div>
-                    {hasError && errorState.title !== "" && <span className="errorMsg">Please provide some message title!</span>}
+                    {hasError && errorState.title !== "" && (
+                      <span className="errorMsg">
+                        {errorState.title}
+                      </span>
+                    )}
                   </div>
-                  <div className={hasError && errorState.message !== "" ? "cmnFormRow error" : "cmnFormRow"}>
+                  <div
+                    className={
+                      hasError && errorState.message !== ""
+                        ? "cmnFormRow error"
+                        : "cmnFormRow"
+                    }
+                  >
                     <label className="cmnFieldName d-flex f-justify-between">
                       Message
                     </label>
@@ -903,7 +1119,11 @@ const SmsTemplate = (props) => {
                         onChange={(e) => addTemplateMessage(e)}
                       ></textarea>
                     </div>
-                    {hasError && errorState.message !== "" && <span className="errorMsg">Please provide some message content!</span>}
+                    {hasError && errorState.message !== "" && (
+                      <span className="errorMsg">
+                        {errorState.message}
+                      </span>
+                    )}
                     <div className="smsTagsTemplate">
                       <span onClick={(e) => addThisTag(e)}>fname</span>
                       <span onClick={(e) => addThisTag(e)}>lname</span>

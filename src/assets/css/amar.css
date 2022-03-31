@@ -344,9 +344,10 @@
   overflow: auto;
 }
 
-.smsListing .listBody {
+.smsListing .smsListingBody {
   flex: 1 1 auto;
-  max-width: 1077px;
+  max-width: calc(100% - 386px);
+  overflow: hidden;
 }
 
 .userListBody.smsListing {
@@ -431,12 +432,15 @@
 
 .bodyEditTemplate {
   flex: 1 1 auto;
-    overflow: auto;
-    padding: 0 25px 0 43px;
-    font-size: 13px;
-    line-height: 19px;
-    text-align: justify;
-    color: #305671;
+  overflow: auto;
+  padding: 0 25px 0 38px;
+  font-size: 13px;
+  line-height: 19px;
+  text-align: justify;
+  color: #305671;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 .bodyEditTemplate textarea,
 .textView {
@@ -449,6 +453,23 @@
   text-align: justify;
   color: #305671;
   padding-right: 36px;
+  padding-right: 5px;
+  overflow: auto;
+}
+.bodyEditTemplate textarea::-webkit-scrollbar,
+.textView::-webkit-scrollbar {
+  width: 4px;
+}
+
+.bodyEditTemplate textarea::-webkit-scrollbar-track,
+.textView::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.bodyEditTemplate textarea::-webkit-scrollbar-thumb,
+.textView::-webkit-scrollbar-thumb {
+  background-color: #F1A668;
+  border-radius: 15px;
 }
 
 .templateHeader {
@@ -456,11 +477,12 @@
   display: flex;
   justify-content: space-between;
   margin-bottom: 0;
-  padding: 0 25px 0 43px;
-  margin-bottom: 30px;
+  padding: 0 25px 0 38px;
+  margin-bottom: 15px;
   font-size: 13px;
   line-height: 19px;
   color: #305671;
+  line-height: 40px;
 }
 .templateHeader input {
   flex: 1 1 auto;
@@ -2760,13 +2782,19 @@ input[type=number] {
 .contactModal .tabBarArea .loaderOuter {
   position: absolute;
 }
-.formControl .pickColor .addColor {
+.formControl .pickColor .addColor:after {
   background-size: 0;
   background-image: url("../images/done_white.svg");
   background-position: center center;
   background-repeat: no-repeat; 
+  position: absolute;
+  content: '';
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
 }
-.formControl .pickColor .addColor.active {
+.formControl .pickColor .addColor.active:after {
   background-size: 14px;
 }
 .proInfo p a {
@@ -2806,7 +2834,25 @@ input[type=number] {
 .multiColor {
   background: radial-gradient(50% 50% at 50% 50%, #FF0000 0%, #005DFF 33.9%, #007129 66.5%, #FFFF00 100%) !important;
 }
-.modalNewPay .modalbtnHolder .saveNnewBtn {
+.formControl .pickColor .addColor, .formControl .pickSize .size {
+  position: relative;
+}
+.templateHeader .cmnFormRow {
+  margin: 0;
+  width: calc(100% - 25px);
+}
+.templateHeader .cmnFormRow input {
+  width: 100%;
+  height: 40px;
+  padding: 3px 10px;
+  border-radius: 5px;
+}
+.bodyEditTemplate textarea {
+  padding: 12px;
+}
+.bodyEditTemplate .cmnFormRow {
+  margin: 0;
+}.modalNewPay .modalbtnHolder .saveNnewBtn {
   width: auto;
 }.tabBarArea .programsTransaction ul .loaderOuter {
   position: static;
