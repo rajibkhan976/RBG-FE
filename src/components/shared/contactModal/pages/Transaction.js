@@ -920,7 +920,7 @@ const Transaction = (props) => {
               <div className="cell">Program Name</div>
               <div className="cell">Total Amount</div>
               <div className="cell">Contract Duraton</div>
-              <div className="cell">Auto Renuwal</div>
+              <div className="cell">Auto Renewal</div>
               <div className="cell">&nbsp;</div>
             </div>
             :
