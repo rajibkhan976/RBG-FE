@@ -4287,7 +4287,7 @@ button.btn.btnUserMenu .menuUserDetail span {
 
 .dashInnerStructure.dashboardPage .dashInnerUI .mrrWraper {
   flex-direction: column;
-  height: calc(100vh - 70px);
+  /* height: calc(100vh - 70px); */height: 100%;
   display: flex;
   padding-bottom: 20px;
   padding-right: 30px;
@@ -4326,11 +4326,13 @@ button.btn.btnUserMenu .menuUserDetail span {
   flex-direction: inherit;
   padding-top: 0;
   display: block;
+  padding-bottom: 0;
 }
 
 .dashInnerStructure.dashboardPage .dashInnerUI {
   flex: 0 0 100%;
   flex-direction: inherit;
+  height: 100%;
 }
 
 .mrrContraolsWraper .sideMenuHeader h3 {
@@ -4590,7 +4592,7 @@ progress {
 
 .gymMemberWraper {
   width: 100%;
-  float: left;
+  display: inline-block;
 }
 
 .monthlyMembers {
@@ -4783,7 +4785,67 @@ ul.programInfosUl.paymentOverviews li .informationSpan .infoSpan .tooltiptextInf
   border-radius:10px; 
   overflow-x: hidden;
 }
-/* Attendence Contact modal Page  */
+
+ .weeklySpan.infoSpan .tooltiptextInfo, .monthlySpan.infoSpan .tooltiptextInfo {
+  bottom: unset;
+  top: 100%;
+  margin-top: 10px;
+  width: 70px;
+  z-index: 99;
+}
+
+.weeklySpan.infoSpan .tooltiptextInfo:after, .monthlySpan.infoSpan .tooltiptextInfo:after {
+  top: auto;
+  bottom: 100%;
+  transform: scaleY(-1);
+}
+
+.weeklySpan.infoSpan, .monthlySpan.infoSpan {
+  width: auto;
+}
+
+.weeklySpan.infoSpan .tooltiptextInfo {
+  margin-left: -26px;
+    left: 0;
+}
+
+.monthlySpan.infoSpan .tooltiptextInfo {
+  margin-left: -26px;
+    left: 0;
+}
+
+.eyeToolTips.infoSpan {
+  position: absolute;
+  left: -20px;
+  cursor: pointer;
+} 
+
+.eyeToolTips.infoSpan:hover img {
+  opacity: 0.55;
+}
+
+.eyeToolTips.infoSpan .tooltiptextInfo {
+  z-index: 99;
+  width: 132px;
+  left: 0;
+  margin-left: -58px;
+  bottom: 140%;
+}
+.tableListing.appointment li div {
+  height: 52px;
+}
+.attendenceDate, .attendedBy {
+  font-size: 13px;
+  color: #305671;
+  font-weight: 400;
+}
+.attendenceTime span {
+  padding: 4px 12px;
+  background: #305671;
+  color: #fff;
+  font-size: 13px;
+  border-radius: 25px;
+}/* Attendence Contact modal Page  */
 
 .transHeader.attendencePage {
   display: block;

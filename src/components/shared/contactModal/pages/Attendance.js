@@ -1,6 +1,7 @@
 import React from "react";
 import weekly from "../../../../assets/images/weekly.svg";
 import monthly from "../../../../assets/images/monthly.svg";
+import eyes from "../../../../assets/images/attendenceEye.svg";
 
 const Attendance = () => {
   return (
@@ -19,41 +20,79 @@ const Attendance = () => {
                   <div className="tableHeader attendencePage">
                     <p>05-16-2021  -  05-22-2021</p>
                     <div className="displayInfosChange">
-                      <span className="weeklySpan"><img src={weekly} /></span>
-                      <span className="monthlylySpan"><img src={monthly} /></span>
+                      <span className="weeklySpan infoSpan"><img src={weekly} />
+                      <span class="tooltiptextInfo">Weekly</span>
+                      </span>
+                      <span className="monthlySpan infoSpan"><img src={monthly} />
+                      <span class="tooltiptextInfo">Monthly</span>
+                      </span>
                     </div>
                   </div>
                     
                     <ul className="tableListing appointment">
                       <li className="listHeading attendenceTables">
-                          <div className="dataTableCell">Day</div>
-                          <div className="dataTableCell">Check-in</div>
-                          <div className="dataTableCell">Checked-in by</div>
+                          <div className="dataTableCell days">Day</div>
+                          <div className="dataTableCell checkIn">Check-in</div>
+                          <div className="dataTableCell checkedInBy">Checked-in by</div>
                           
                       </li>
 
 
                       <li>
-                          <div className="dataTableCell date"><button className="btn">Sun, 16</button></div>
-                          <div className="dataTableCell email"><button className="btn times">11:32 AM</button></div>
-                          <div className="dataTableCell date"><button className="btn">Self</button></div>
+                          <div className="dataTableCell attendenceDate">Sun, 16</div>
+                          <div className="dataTableCell attendenceTime"><span>11:32 AM</span></div>
+                          <div className="dataTableCell attendedBy">Self</div>
                           
                       </li>
 
 
 
                       <li>
-                      <div className="dataTableCell date"><button className="btn">Mon, 17</button></div>
-                      <div className="dataTableCell email"><button className="btn times">11:25 AM</button></div>
-                          <div className="dataTableCell date"><button className="btn">Self</button></div>
-                          
+                          <div className="dataTableCell attendenceDate">Mon, 17</div>
+                          <div className="dataTableCell attendenceTime"><span>11:32 AM</span></div>
+                          <div className="dataTableCell attendedBy">Self</div>                    
                       </li>
 
                       <li>
-                          <div className="dataTableCell date"><button className="btn">Tue, 18</button></div>
-                          <div className="dataTableCell email"><button className="btn times">11:45 AM</button></div>
-                          <div className="dataTableCell date"><button className="btn">Staff - Alex</button></div>
-                          
+                           <div className="dataTableCell attendenceDate">Tue, 18</div>
+                          <div className="dataTableCell attendenceTime"><span>11:30 AM</span></div>
+                          <div className="dataTableCell attendedBy">
+                            <span className="eyeToolTips infoSpan">
+                              <img src={eyes} />
+                              <span class="tooltiptextInfo">Gave warning on the check-in issue</span>
+                            </span>
+                            Staff - Alex
+                          </div>                          
+                      </li>
+
+                      <li>
+                          <div className="dataTableCell attendenceDate">Wed, 19</div>
+                          <div className="dataTableCell attendenceTime"><span>11:28 AM</span></div>
+                          <div className="dataTableCell attendedBy">Self</div>                    
+                      </li>
+
+                      <li>
+                          <div className="dataTableCell attendenceDate">Thu, 20</div>
+                          <div className="dataTableCell attendenceTime"><span>11:32 AM</span></div>
+                          <div className="dataTableCell attendedBy">Self</div>                    
+                      </li>
+
+                      <li>
+                           <div className="dataTableCell attendenceDate">Fri, 21</div>
+                          <div className="dataTableCell attendenceTime"><span>11:25 AM</span></div>
+                          <div className="dataTableCell attendedBy">
+                            <span className="eyeToolTips infoSpan">
+                              <img src={eyes} />
+                              <span class="tooltiptextInfo">Gave warning on the check-in issue</span>
+                            </span>
+                            Staff - Alena
+                          </div>                          
+                      </li>
+
+                      <li>
+                          <div className="dataTableCell attendenceDate">Sat, 22</div>
+                          <div className="dataTableCell attendenceTime"><span>11:32 AM</span></div>
+                          <div className="dataTableCell attendedBy">Self</div>                    
                       </li>
 
 
