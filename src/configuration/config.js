@@ -1,19 +1,4 @@
-let {
-    apiUrl,
-    hostUrl,
-    baseUrl,
-    socketUrlLocal,
-    socketUrlProd,
-    STAGE
-} = require("./env");
-
 module.exports = {
-    apiUrl: apiUrl,
-    hostUrl: hostUrl,
-    baseUrl: baseUrl,
-    socketUrlLocal: socketUrlLocal,
-    socketUrlProd: socketUrlProd,
-
     //Auth - Role
     loginUrl: "https://"+process.env.REACT_APP_LOGIN+".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/login",
     roleUrl: "https://" + process.env.REACT_APP_ROLE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/role",

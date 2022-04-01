@@ -34,7 +34,7 @@ import moment from "moment-timezone";
 
 // For socket io connection
 //const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlProd;
-const socketUrl = config.socketUrlProd;
+const socketUrl = process.env.REACT_APP_SOCKET_URL;
 const socket = io(socketUrl, {
     transports: ["websocket"],
     origins: "*"
