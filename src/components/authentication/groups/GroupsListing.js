@@ -57,35 +57,14 @@ const GroupListing = (props) => {
 
   const toggleCreateHeader = (e) => {
     if (typeof e._id === "undefined") {
-      const createPermission = Object.keys(permissions).length
-        ? permissions.actions.includes("create")
-        : false;
-      if (createPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
         props.toggleCreate(e);
-      } else {
-        setErrorMsg(responses.permissions.group.create);
-      }
     } else {
-      const createPermission = Object.keys(permissions).length
-        ? permissions.actions.includes("update")
-        : false;
-      if (createPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
         props.toggleCreate(e);
-      } else {
-        setErrorMsg(responses.permissions.group.edit);
-      }
     }
   };
 
   const filterGroups = () => {
-    const readPermission = Object.keys(permissions).length
-      ? permissions.actions.includes("read")
-      : false;
-    if (readPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
-      props.toggleFilter("groups");
-    } else {
-      setErrorMsg(responses.permissions.group.read);
-    }
+    props.toggleFilter("groups");
   };
 
   /**
@@ -202,17 +181,11 @@ const GroupListing = (props) => {
    * @returns
    */
   const fetchGroups = async () => {
-    const readPermission = Object.keys(permissions).length
-      ? await permissions.actions.includes("read")
-      : false;
     let pageId = utils.getQueryVariable("page") || 1;
     let queryParams = await getQueryParams();
 
     try {
       setIsLoader(true);
-      if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
-        throw new Error(responses.permissions.group.read);
-      }
       const result = await GroupServices.fetchGroups(pageId, queryParams);
       if (result) {
         setGroupsData(result.groups);
@@ -286,10 +259,8 @@ const GroupListing = (props) => {
   const handleSearch = (event) => {
     event.preventDefault();
 
-    const readPermission = Object.keys(permissions).length
-      ? permissions.actions.includes("read")
-      : false;
-    if (readPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
+    // const readPermission = true;
+    // if (readPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
       utils.addQueryParameter("page", 1);
       if (keyword) {
         utils.addQueryParameter("search", keyword);
@@ -297,9 +268,9 @@ const GroupListing = (props) => {
         utils.removeQueryParameter("search");
       }
       fetchGroups();
-    } else {
-      setErrorMsg(responses.permissions.group.read);
-    }
+    // } else {
+    //   setErrorMsg(responses.permissions.group.read);
+    // }
   };
 
   /**
@@ -316,9 +287,7 @@ const GroupListing = (props) => {
    */
   const deleteGroup = async (groupId, isConfirmed = null) => {
     try {
-      const deletePermission = !env.ACTIVE_PERMISSION_CHECKING
-        ? true
-        : permissions.actions.includes("delete");
+      const deletePermission = true;
       if (!deletePermission) {
         throw new Error(responses.permissions.group.delete);
       }

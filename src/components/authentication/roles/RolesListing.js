@@ -62,35 +62,14 @@ const RolesListing = (props) => {
     // }
 
     if (typeof e._id === "undefined") {
-      const createPermission = Object.keys(permissions).length
-        ? permissions.actions.includes("create")
-        : false;
-      if (createPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
-        props.toggleCreate(e);
-      } else {
-        setErrorMsg(responses.permissions.group.create);
-      }
+      props.toggleCreate(e);
     } else {
-      const updatePermission = Object.keys(permissions).length
-        ? permissions.actions.includes("update")
-        : false;
-      if (updatePermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
-        props.toggleCreate(e);
-      } else {
-        setErrorMsg(responses.permissions.role.edit);
-      }
+      props.toggleCreate(e);
     }
   };
 
   const filterRoles = () => {
-    const readPermission = Object.keys(permissions).length
-      ? permissions.actions.includes("create")
-      : false;
-    if (readPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
-      props.toggleFilter("roles");
-    } else {
-      setErrorMsg(responses.permissions.role.read);
-    }
+    props.toggleFilter("roles");
   };
 
   useEffect(() => {
@@ -157,18 +136,18 @@ const RolesListing = (props) => {
    * @returns
    */
   const fetchRoles = async () => {
-    const readPermission = Object.keys(permissions).length
-      ? await permissions.actions.includes("read")
-      : false;
-    console.log("Permission", permissions);
+    // const readPermission = Object.keys(permissions).length
+    //   ? await permissions.actions.includes("read")
+    //   : false;
+    // console.log("Permission", permissions);
     let pageId = utils.getQueryVariable("page");
     pageId = pageId ? pageId : 1;
     let queryParams = await getQueryParams();
     try {
       setIsLoader(true);
-      if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
-        throw new Error(responses.permissions.role.read);
-      }
+      // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
+      //   throw new Error(responses.permissions.role.read);
+      // }
       const result = await RoleServices.fetchRoles(pageId, queryParams);
       console.log("Data", result.roles);
       if (result) {
@@ -242,10 +221,6 @@ const RolesListing = (props) => {
    * Handle search functionality
    */
   const handleSearch = (event) => {
-    const searchPermission = Object.keys(permissions).length
-      ? permissions.actions.includes("create")
-      : false;
-    if (searchPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
       event.preventDefault();
 
       utils.addQueryParameter("page", 1);
@@ -255,9 +230,6 @@ const RolesListing = (props) => {
         utils.removeQueryParameter("search");
       }
       fetchRoles();
-    } else {
-      setErrorMsg(responses.permissions.role.read);
-    }
   };
 
   /**
@@ -308,9 +280,7 @@ const RolesListing = (props) => {
    */
   const deleteRole = async (roleId, isConfirmed = null) => {
     // Permission Checking
-    const deletePermission = !env.ACTIVE_PERMISSION_CHECKING
-      ? true
-      : permissions.actions.includes("delete");
+    const deletePermission = true;
     if (deletePermission == false) {
       setErrorMsg(responses.permissions.role.delete);
       return;

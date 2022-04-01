@@ -68,20 +68,20 @@ const UsersListing = (props) => {
 
         if (typeof e._id === "undefined") {
             console.log("I am here")
-            const createPermission = (Object.keys(permissions).length) ? permissions.actions.includes("create") : false;
-            if (createPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
+            // const createPermission = (Object.keys(permissions).length) ? permissions.actions.includes("create") : false;
+            // if (createPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
                 props.toggleCreate(e);
-            } else {
-                setErrorMsg(responses.permissions.user.create);
-            }
+            // } else {
+            //     setErrorMsg(responses.permissions.user.create);
+            // }
         } else {
-            console.log("Here I am")
-            const updatePermission = (Object.keys(permissions).length) ? permissions.actions.includes("update") : false;
-            if (updatePermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
+            // console.log("Here I am")
+            // const updatePermission = (Object.keys(permissions).length) ? permissions.actions.includes("update") : false;
+            // if (updatePermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
                 props.toggleCreate(e);
-            } else {
-                setErrorMsg(responses.permissions.user.edit);
-            }
+            // } else {
+            //     setErrorMsg(responses.permissions.user.edit);
+            // }
         }
     };
 
@@ -90,12 +90,12 @@ const UsersListing = (props) => {
 
 
     const filterUsers = () => {
-        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : ((Object.keys(permissions).length) ? permissions.actions.includes("read") : false);
-        if (readPermission) {
+        // const readPermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : ((Object.keys(permissions).length) ? permissions.actions.includes("read") : false);
+        // if (readPermission) {
             props.toggleFilter("user");
-        } else {
-            setErrorMsg(responses.permissions.user.read);
-        }
+        // } else {
+        //     setErrorMsg(responses.permissions.user.read);
+        // }
     };
 
     /**
@@ -212,15 +212,15 @@ const UsersListing = (props) => {
      */
     const fetchUsers = async () => {
         // const readPermission = await permissions.actions.includes("read");
-        const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
+        // const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
         const pageId = utils.getQueryVariable('page');
         const queryParams = await getQueryParams();
         console.log('queryParams', queryParams.toString())
         try {
             setIsLoader(true);
-            if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
-                throw new Error(responses.permissions.user.read);
-            }
+            // // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
+            //     throw new Error(responses.permissions.user.read);
+            // }
             const result = await UserServices.fetchUsers(pageId, queryParams);
             // .then((result) => {
             console.log('User listing result', result.users);
@@ -294,10 +294,10 @@ const UsersListing = (props) => {
             )
         ) {
             try {
-                const deletePermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : permissions.actions.includes("delete");
-                if (deletePermission === false) {
-                    throw new Error(responses.permissions.user.delete);
-                }
+                // const deletePermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : permissions.actions.includes("delete");
+                // // if (deletePermission === false) {
+                //     throw new Error(responses.permissions.user.delete);
+                // }
                 /**
                  * Check and delete organization along with its owner
                  */
@@ -354,8 +354,8 @@ const UsersListing = (props) => {
     const handleSearch = (event) => {
         event.preventDefault();
 
-        const readPermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : ((Object.keys(permissions).length) ? permissions.actions.includes("read") : false);
-        if (readPermission) {
+        // const readPermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : ((Object.keys(permissions).length) ? permissions.actions.includes("read") : false);
+        // if (readPermission) {
             utils.addQueryParameter('page', 1);
             if (keyword) {
                 utils.addQueryParameter('search', keyword);
@@ -364,9 +364,9 @@ const UsersListing = (props) => {
             }
 
             fetchUsers();
-        } else {
-            setErrorMsg(responses.permissions.user.read);
-        }
+        // } else {
+        //     setErrorMsg(responses.permissions.user.read);
+        // }
 
 
     }
