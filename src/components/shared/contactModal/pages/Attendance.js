@@ -65,7 +65,7 @@ const Attendance = () => {
 
                   {displayWeekly && (
                     
-                    <ul className="tableListing appointment display">
+                    <ul className="tableListing appointment attendence display">
                       <li className="listHeading attendenceTables">
                           <div className="dataTableCell days">Day</div>
                           <div className="dataTableCell checkIn">Check-in</div>

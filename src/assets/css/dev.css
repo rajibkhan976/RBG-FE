@@ -4781,7 +4781,7 @@ ul.programInfosUl.paymentOverviews li .informationSpan .infoSpan .tooltiptextInf
   border: none;
 }
 
-.tableListing.appointment li {
+.tableListing.appointment.attendence li {
   background: #F6F8FA;
 }
 
@@ -4854,7 +4854,7 @@ ul.programInfosUl.paymentOverviews li .informationSpan .infoSpan .tooltiptextInf
   margin-left: -58px;
   bottom: 140%;
 }
-.tableListing.appointment li div {
+.tableListing.appointment.attendence li div {
   height: 52px;
 }
 .attendenceDate, .attendedBy {
@@ -5272,3 +5272,6 @@ margin-right: 18%;
   position: relative;
 }
 /*For Status modal postioning*/
+.contactListingTable .tableListing.appointment.attendenceListing li .dataTableCell::after {
+  display: none;
+}

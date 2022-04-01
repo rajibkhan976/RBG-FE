@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Route, Switch } from "react-router-dom";
-import { ProtectedRoute } from "../../middleware/ProtectedRoute";
-import DashboardFooter from "../shared/FooterDashboard";
-import HeaderDashboard from "../shared/HeaderDashboard";
-import InnerLeftMenu from "../shared/InnerLeftMenu";
-import Appointment from "./Appointment";
+import { ProtectedRoute } from "../../../middleware/ProtectedRoute";
+import DashboardFooter from "../../shared/FooterDashboard";
+import HeaderDashboard from "../../shared/HeaderDashboard";
+import InnerLeftMenu from "../../shared/InnerLeftMenu";
+import Attendence from "./Attendence";
 
 
-const AppointmentRoutes = (props) => {
+const AttendenceRoutes = (props) => {
   return (
     <React.Fragment>
       <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} routeMenu="report"/>
@@ -15,7 +15,7 @@ const AppointmentRoutes = (props) => {
         {/* <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} /> */}
         <div className="dashInnerStructure">
           <Switch>
-            <Route exact path="/appointment" component={Appointment} />
+            <Route exact path="/attendence" component={Attendence} />
           </Switch>
           <DashboardFooter />
         </div>
@@ -24,4 +24,4 @@ const AppointmentRoutes = (props) => {
   );
 }
 
-export default AppointmentRoutes;
+export default AttendenceRoutes;

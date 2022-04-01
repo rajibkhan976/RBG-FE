@@ -18,8 +18,9 @@ import PaymentRouting from "./setup/paymentRouting/paymentRouting"
 import StatusPhasesRouter from "./setup/status_phase/status_phasesRoute";
 import GymDetailsRouter from "./setup/gymDetail/gymDetailsRoute";
 import PersonalDetailsRouter from "./setup/personalDetails/personalDetailsRoute";
-import AppointmentRouter from "./report/AppointmentRoutes";
 import ZapierRouter from "./setup/zapier/zapierRoute";
+import AppointmentRouter from "./report/Appointment/AppointmentRoutes";
+import AttendenceRouter from "./report/Attendence/AttendenceRoutes";
 import HeaderDashboard from "./shared/HeaderDashboard";
 import {UserServices} from "../services/authentication/UserServices";
 import config from "../configuration/config";
@@ -665,6 +666,10 @@ const MainComponent = () => {
                             <Route exact path="/zapier">
                                 <ZapierRouter toggleLeftSubMenu={toggleLeftSubMenu}
                                                   toggleCreate={(e) => toggleCreate(e)}></ZapierRouter>
+                            </Route>
+                            <Route exact path="/attendence">
+                                <AttendenceRouter toggleLeftSubMenu={toggleLeftSubMenu}
+                                                   toggleCreate={(e) => toggleCreate(e)}></AttendenceRouter>
                             </Route>
                             <Route exact path="/" component={() => <Redirect to="/dashboard"/>}/>
                             <Route exact path="*">

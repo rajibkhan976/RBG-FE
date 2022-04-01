@@ -245,7 +245,20 @@ const InnerLeftMenu = (props) => {
                 </NavLink>
               </li>
 
-
+              <li>
+                <NavLink className="leftMenuInnerLink" to="/attendence">
+                  <div className="indicator"></div>
+                  <div className="linkDetails setup">
+                    <p className="linkHeading">Attendence</p>
+                    <p className="linkAbout">Lorem ipsum dolor sit</p>
+                    <button className="btn sidemenuarrow">
+                      <img src={SideMenuArrow} alt="" />
+                    </button>
+                  </div>
+                </NavLink>
+              </li>
+              
+           
             </ul>
             <div className="linkImg">
               <img src={undraw_personal_settings_kihd} alt="" />

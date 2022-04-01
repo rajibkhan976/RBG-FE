@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import * as actionTypes from "../../actions/types";
-import AppointmentHead from './AppointmentHead';
+import * as actionTypes from "../../../actions/types";
+import AttendenceHead from './AttendenceHead';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { ErrorAlert, SuccessAlert } from '../shared/messages';
-import owner_img_1 from '../../../src/assets/images/owner_img_1.png';
-import arrow_forward from '../../../src/assets/images/arrow_forward.svg';
-// import user_icons from '../../../src/assets/images/list_img2.svg';
-import { ContactService } from "../../services/contact/ContactServices";
-import { utils } from "../../helpers";
-import Loader from "../shared/Loader";
-import Pagination from '../shared/Pagination';
-import responses from '../../configuration/responses';
-import env from '../../configuration/env';
+import { ErrorAlert, SuccessAlert } from '../../shared/messages';
+import owner_img_1 from '../../../../src/assets/images/owner_img_1.png';
+import arrow_forward from '../../../../src/assets/images/arrow_forward.svg';
+import previous from '../../../../src/assets/images/previous.svg';
+import next from '../../../../src/assets/images/next.svg';
+// import user_icons from '../../../../src/assets/images/list_img2.svg';
+import { ContactService } from "../../../services/contact/ContactServices";
+import arrowDown from "../../../../src/assets/images/arrowDown.svg";
+import { utils } from "../../../helpers";
+import Loader from "../../shared/Loader";
+import Pagination from '../../shared/Pagination';
+import responses from '../../../configuration/responses';
+import env from '../../../configuration/env';
 
 
-const AppointmenttListing = (props) => {
+const AttendenceListing = (props) => {
     const [tableWidth, setTableWidth] = useState(500);
     const messageDelay = 5000; // ms
     const [contactList, setContactList] = useState([]);
@@ -398,12 +401,12 @@ const AppointmenttListing = (props) => {
     return (
         <div className="dashInnerUI">
             {isLoader ? <Loader /> : ''}
-            <AppointmentHead
+            <AttendenceHead
                 totalCount={appointmentCount}
                 handleSearch={handleSearch}
                 handleKeywordChange={handleKeywordChange}
                 keyword={keyword}
-                openImportAppointment={handleImportModal}></AppointmentHead>
+                openImportAppointment={handleImportModal}></AttendenceHead>
             {successMsg &&
                 <SuccessAlert message={successMsg}></SuccessAlert>
             }
@@ -413,108 +416,144 @@ const AppointmenttListing = (props) => {
             <div className="userListBody">
                 <div className="listBody contactListingTable" style={{ 'width': '100%' }}>
                     
-                    <ul className="tableListing appointment">
+                    <ul className="tableListing appointment attendenceListing">
                     	   <li className="listHeading">
-      <div className="dataTableCell">Contacts</div>
-      <div className="dataTableCell">Email</div>
-      <div className="dataTableCell">Counts</div>
-      <div className="dataTableCell">Latest Date</div>
-      <div className="dataTableCell">Status</div>
-      
-   </li>
+                          <div className="dataTableCell">Gym Members</div>
+                          <div className="dataTableCell">
+                            <div className="attendenceDetailsWraper">
+                              <div className="attendenceFirstRow">
+                                <div className="prevBtn">
+                                  <button><img src={previous} alt="" />Previous Week</button>
+                                </div>
+                                <div className="midSection">
+                                <p>Attendance Week </p>
+                                  <select className="attendenceSelect"
+                                      style={{
+                                          backgroundImage: "url(" + arrowDown + ")",
+                                      }}>
+                                      <option value="">Week 1, Nov 2021</option>
+                                      <option value="">Week 2, Nov 2021</option>
+                                      <option value="">Week 3, Nov 2021</option>
+                                      <option value="">Week 4, Nov 2021</option>
+
+                                      
+                                  </select>
+                                </div>
+                                <div className="nextBtn">
+                                <button>Next Week<img src={next} alt="" /></button>
+                                </div>
+                              </div>
+                              <div className="attendenceSecondRow">
+                                <ul className="attendenceHeaderTable">
+                                  <li>Mon</li>
+                                  <li>Tue</li>
+                                  <li>Wed</li>
+                                  <li>Thu</li>
+                                  <li>Fri</li>
+                                  <li>Sat</li>
+                                  <li>Sun</li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                          {/* <div className="dataTableCell">Counts</div>
+                          <div className="dataTableCell">Latest Date</div> */}
+                          <div className="dataTableCell">Total Days</div>
+                        
+                        </li>
 
 
-   <li>
-      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
-      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-      <div className="dataTableCell count"><button className="btn">09</button></div>
-      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
-      <div className="dataTableCell status"><button className="btn">Pending</button></div>
-      
-   </li>
+                      <li>
+                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
+                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
+                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
+                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        
+                      </li>
 
 
 
-<li>
-      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
-      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-      <div className="dataTableCell count"><button className="btn">09</button></div>
-      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
-      <div className="dataTableCell status"><button className="btn">Pending</button></div>
-      
-   </li>
+                      <li>
+                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
+                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
+                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
+                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        
+                      </li>
 
-   <li>
-      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
-      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-      <div className="dataTableCell count"><button className="btn">09</button></div>
-      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
-      <div className="dataTableCell status"><button className="btn">Pending</button></div>
-      
-   </li>
+                      <li>
+                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
+                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
+                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
+                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        
+                      </li>
 
-   <li>
-      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
-      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-      <div className="dataTableCell count"><button className="btn">09</button></div>
-      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
-      <div className="dataTableCell status"><button className="btn">Pending</button></div>
-      
-   </li>
+                      <li>
+                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
+                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
+                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
+                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        
+                      </li>
 
-   <li>
-      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
-      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-      <div className="dataTableCell count"><button className="btn">09</button></div>
-      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
-      <div className="dataTableCell status"><button className="btn">Pending</button></div>
-      
-   </li>
+                      <li>
+                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
+                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
+                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
+                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        
+                      </li>
 
-   <li>
-      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
-      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-      <div className="dataTableCell count"><button className="btn">09</button></div>
-      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
-      <div className="dataTableCell status"><button className="btn">Pending</button></div>
-      
-   </li>
+                      <li>
+                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
+                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
+                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
+                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        
+                      </li>
 
-   <li>
-      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
-      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-      <div className="dataTableCell count"><button className="btn">09</button></div>
-      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
-      <div className="dataTableCell status"><button className="btn">Pending</button></div>
-      
-   </li>
+                      <li>
+                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
+                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
+                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
+                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        
+                      </li>
 
-   <li>
-      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
-      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-      <div className="dataTableCell count"><button className="btn">09</button></div>
-      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
-      <div className="dataTableCell status"><button className="btn">Pending</button></div>
-      
-   </li>
+                      <li>
+                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
+                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
+                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
+                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        
+                      </li>
 
-   <li>
-      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
-      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-      <div className="dataTableCell count"><button className="btn">09</button></div>
-      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
-      <div className="dataTableCell status"><button className="btn">Pending</button></div>
-      
-   </li>
+                      <li>
+                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
+                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
+                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
+                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        
+                      </li>
 
-   <li>
-      <div className="dataTableCell user"><button className="btn"><span className="tableCellUserImg"><img src={owner_img_1} alt="" /></span> Jonathan Doe</button></div>
-      <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-      <div className="dataTableCell count"><button className="btn">09</button></div>
-      <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div>
-      <div className="dataTableCell status"><button className="btn">Pending</button></div>
-      
-   </li>
+                      <li>
+                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
+                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
+                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
+                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
+                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        
+                      </li>
    
 
 
@@ -535,4 +574,4 @@ const AppointmenttListing = (props) => {
 
 }
 
-export default AppointmenttListing;
+export default AttendenceListing;

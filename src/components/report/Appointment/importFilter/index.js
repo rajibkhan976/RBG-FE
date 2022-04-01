@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 
 import { Steps, Step } from "react-step-builder";
-import arrowDown from "../../../assets/images/arrowDown.svg";
-import arrowRightWhite from "../../../assets/images/arrowRightWhite.svg";
+import arrowDown from "../../../../assets/images/arrowDown.svg";
+import arrowRightWhite from "../../../../assets/images/arrowRightWhite.svg";
 
 
 
