@@ -38,6 +38,18 @@ const EditorComponent = (props) => {
 
   // save edited data as email content
   const editedEmail = (mailValue) => {
+    if(mailValue.length === 0 || mailValue.trim() === ""){
+      setEditHasError(true)
+      setEditErrorState({
+        ...editErrorState,
+        message: "Please provide a proper Email Content!"
+      })
+    } else {
+      setEditErrorState({
+        ...editErrorState,
+        message: ""
+      })
+    }
     setValue(mailValue)
     editorRef.current.setDirty(false);
     setDirty(false)
@@ -231,10 +243,28 @@ const EditorComponent = (props) => {
     }
   }
 
-  useEffect(()=>{
-    console.log("createdValue", createdValue);
-  }, [createdValue])
+  // useEffect(()=>{
+  //   console.log("createdValue", createdValue);
+  // }, [createdValue])
   // add keywords to create email template
+
+  // add error message on edit email header
+  const checkEditTitle = (e) => {
+    if(e.target.value.trim() === "" || e.target.value.length === 0) {   
+      setEditHasError(true)
+
+      setEditErrorState({
+        ...editErrorState,
+        header: "Please give some Title.",
+      })
+    } else {      
+      setEditErrorState({
+        ...editErrorState,
+        header: "",
+      })
+    }
+  }
+  // add error message on edit email header
 
   useEffect(()=>{
     setEmailHeader(props.initialData.header)
@@ -361,7 +391,13 @@ const EditorComponent = (props) => {
       >
         <div className="cmnFormRow">
           <div className={editHasError && editErrorState.header ? "cmnFormField error" : "cmnFormField"}>
-            <input className="headerEmail  btnPadding cmnFieldStyle" defaultValue={props.initialData.header === emailHeader ? props.initialData.header : emailHeader} id="editTemplateHeader" ref={editHeaderRef} />
+            <input 
+              className="headerEmail  btnPadding cmnFieldStyle" 
+              defaultValue={props.initialData.header === emailHeader ? props.initialData.header : emailHeader} 
+              id="editTemplateHeader" 
+              ref={editHeaderRef}
+              onChange={(e)=>checkEditTitle(e)}
+            />
 
             <button
               className="btn browseKeywords"
@@ -420,7 +456,7 @@ const EditorComponent = (props) => {
                 </ul>
               </div>
             </div>}
-            {editHasError && editErrorState.header && <span className="errorMsg">Please give some Title.</span>}
+            {editHasError && editErrorState.header && <span className="errorMsg">{editErrorState.header}</span>}
           </div>
         </div>
         <div className={editHasError && editErrorState.message ? "cmnFormRow f-1 error" : "cmnFormRow f-1"} id="editTextArea">
