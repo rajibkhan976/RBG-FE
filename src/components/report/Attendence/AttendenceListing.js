@@ -883,7 +883,7 @@ const AttendenceListing = (props) => {
 
 
                       <li>
-                        <div className="dataTableCell attendencemember user"><button className="btn"> Jonathan Doe</button></div>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Jonathan DoeJonathan DoeJonathan Doe</button></div>
                         <div className="dataTableCell attendenceRecords">
                           <div className="attendenceRecordWraper">
                             <ul className="attendenceHeaderTable">

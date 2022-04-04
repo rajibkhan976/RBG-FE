@@ -5414,7 +5414,7 @@ min-width: 90.2px;
 }
 
 .userListBody.monthly .attendenceHeaderTable li {
-  min-width: 70px;
+  min-width: 60px;
 }
 
 
@@ -5427,9 +5427,17 @@ min-width: 90.2px;
 }
 
 .monthly .attendenceFirstRow .prevBtn {
-margin-right: 16.5%;
+margin-right: 18%;
 }
 
 .monthly .attendenceFirstRow .nextBtn {
-  margin-left: 16.5%;
+  margin-left: 18%;
+  }
+
+  .userListBody.monthly .tableListing.appointment.attendenceListing li .dataTableCell:first-child .btn {
+    max-width: 148px;
+    text-overflow: ellipsis;
+    overflow:hidden;
+    white-space: nowrap;
+    display: block;
   }
