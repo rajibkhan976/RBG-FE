@@ -298,22 +298,49 @@ const SmsTemplate = (props) => {
 
   // Add edit template message onchange
   const editTemplateMessage = (e) => {
-    messageTextbox.current.value.trim().length !== 0 &&
+
+    if(messageTextbox.current.value.trim().length !== 0) {
       setEditMsgObj({
         ...editMsgObj,
         message: e.target.value,
       });
 
+      setErrorState({
+        ...errorState,
+        message: "",
+      });
+    } else {
+      setHasError(true);
+
+      setErrorState({
+        ...errorState,
+        message: "Message cannot be blank!",
+      });
+    }
     // console.log("editMsgObj", editMsgObj);
   };
 
   // Add edit template title onchange
   const editTemplateTitle = (e) => {
-    templateTitle.current.value.trim().length !== 0 &&
+
+    if(templateTitle.current.value.trim().length !== 0) {
       setEditMsgObj({
         ...editMsgObj,
         title: e.target.value,
       });
+
+      setErrorState({
+        ...errorState,
+        title: "",
+      });
+    } else {
+      setHasError(true);
+
+      setErrorState({
+        ...errorState,
+        title: "Title cannot be blank!",
+      });
+    }
   };
 
   // Save edit template
@@ -346,30 +373,30 @@ const SmsTemplate = (props) => {
         message: "",
       });
     } else {
-      if (templateTitle.current.value.trim().length === 0) {
-        setHasError(true);
-        setErrorState({
-          ...errorState,
-          title: "Title cannot be blank!",
-        });
-      }
-      if (messageTextbox.current.value.trim().length === 0) {
-        setHasError(true);
-        setErrorState({
-          ...errorState,
-          message: "Message cannot be blank!",
-        });
-      }
-      if (
-        messageTextbox.current.value.trim().length === 0 &&
-        templateTitle.current.value.trim().length === 0
-      ) {
-        setHasError(true);
-        setErrorState({
-          title: "Title cannot be blank!",
-          message: "Message cannot be blank!",
-        });
-      }
+      setHasError(true);
+
+      setErrorState({
+        title: templateTitle.current.value.trim().length === 0 ? "Title cannot be blank!" : "",
+        message: messageTextbox.current.value.trim().length === 0 ?"Message cannot be blank!" : "",
+      });
+
+      // if (templateTitle.current.value.trim().length === 0) {
+      //   setErrorState({
+      //     ...errorState,
+      //     title: "Title cannot be blank!",
+      //   });
+      // }
+      // if (messageTextbox.current.value.trim().length === 0) {
+      //   setErrorState({
+      //     ...errorState,
+      //     message: "Message cannot be blank!",
+      //   });
+      // }
+      // if (
+      //   messageTextbox.current.value.trim().length === 0 &&
+      //   templateTitle.current.value.trim().length === 0
+      // ) {
+      // }
     }
   };
 
@@ -863,6 +890,11 @@ const SmsTemplate = (props) => {
                             className="cmnFieldStyle"
                           />
                         </div>
+                        {hasError && errorState.title && (
+                          <span className="errorMsg">
+                          {errorState.title}
+                          </span>
+                        )}
                       </div>
                     )}
 
@@ -947,8 +979,8 @@ const SmsTemplate = (props) => {
                         {smsTemplates.filter(sms => sms.id === activeMessage)[0].message}
                       </div>
                     ) : (
-                      <div className="cmnFormRow f-1">
-                        <div className="cmnFormField h-100">
+                      <div className="cmnFormRow f-1 d-flex f-column">
+                        <div className="cmnFormField f-1">
                           <textarea
                             readOnly={editState === true ? false : true}
                             defaultValue={smsTemplates.filter(sms => sms.id === activeMessage)[0].message}
@@ -959,6 +991,11 @@ const SmsTemplate = (props) => {
                             className="cmnFieldStyle"
                           ></textarea>
                         </div>
+                        {hasError && errorState.message && (
+                          <span className="errorMsg">
+                            {errorState.message}
+                          </span>
+                        )}
                       </div>
                     )}
                     {keywordSuggesion && (

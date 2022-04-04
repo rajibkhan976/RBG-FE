@@ -2909,3 +2909,10 @@ input[type=number] {
 .tox.tox-silver-sink.tox-tinymce-aux {
   z-index: 1000000;
 }
+.bodyEditTemplate .cmnFormRow.d-flex {
+  display: flex;
+}
+.templateHeader > .btn {
+  align-self: start;
+  margin-top: 12px;
+}
