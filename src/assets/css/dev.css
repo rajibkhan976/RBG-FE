@@ -5275,3 +5275,161 @@ margin-right: 18%;
 .contactListingTable .tableListing.appointment.attendenceListing li .dataTableCell::after {
   display: none;
 }
+
+.attendenceFirstRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 11px 12px;
+  background: #9BAEBC;
+  border-radius: 10px 10px 0 0;
+}
+
+.midSection p {
+  color: #305671;
+  font-size: 13px;
+  margin-right: 0px;
+}
+
+.attendenceFirstRow .prevBtn {
+  margin-right: auto;
+}
+
+.attendenceFirstRow .nextBtn {
+  margin-left: auto;
+}
+
+.attendenceSecondRow {
+  width: 100%;
+  display: table;
+  background-color: #D3D9DE;
+  padding: 13px 10px;
+}
+
+.midSection select {
+  height: 18px;
+  border: none;
+  background-color: transparent;
+  color: #305671;
+  min-height: 18px;
+  line-height: 1.4;
+  background-position: calc(100% - 0px) 6px;
+  background-repeat: no-repeat;
+  font-size: 13px;
+  padding: 0px 12px 0 5px;
+}
+
+.midSection {
+  display: flex;
+  align-items: center;
+  color: #305671;
+}
+
+.attendenceFirstRow .prevBtn button, .attendenceFirstRow .nextBtn button {
+  color: #D3D9DE;
+  font-size: 12px;
+  padding: 0;
+  background: transparent;
+  border: none;
+}
+
+.attendenceFirstRow .prevBtn button img {
+  margin-right: 10px;
+}
+
+.attendenceFirstRow .nextBtn button img {
+  margin-left: 10px;
+}
+
+.attendenceHeaderTable {
+  display: table-row;
+}
+
+.attendenceHeaderTable li {
+  display: table-cell;
+  text-align: center;
+  color: #305671;
+  font-size: 13px;
+  font-weight: 400;
+  min-width: 139px;
+}
+
+.tableListing .attendenceHeaderTable li:not(:first-child) {
+  background-color: transparent;
+}
+
+.tableListing.appointment.attendenceListing .listHeading.attendenceHeaderWraper .dataTableCell {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+.tableListing.appointment.attendenceListing li .dataTableCell:first-child {
+  min-width: 150px;
+  position: sticky;
+    left: 0;
+    z-index: 9;
+}
+
+.userListBody.monthly .tableListing.appointment.attendenceListing li .dataTableCell:first-child {
+
+  position: sticky;
+    left: 0;
+    z-index: 9;
+}
+
+.userListBody.monthly .tableListing.appointment.attendenceListing li .dataTableCell:first-child {
+  background: #fff;
+}
+
+.userListBody.monthly .tableListing.appointment.attendenceListing .listHeading.attendenceHeaderWraper .dataTableCell:first-child {
+  background: #f6f8fa;
+}
+
+.tableListing.appointment.attendenceListing li .dataTableCell:last-child {
+  min-width: 120px;
+  text-align: center;
+}  
+
+.userListBody.monthly .tableListing.appointment.attendenceListing li .dataTableCell:last-child {
+  position: sticky;
+  right: -46px;
+  background: #fff;
+    z-index: 9;
+}
+
+
+.userListBody.monthly .tableListing.appointment.attendenceListing .listHeading.attendenceHeaderWraper .dataTableCell:last-child {
+  background: #f6f8fa;
+}
+
+
+.attendenceRecordWraper {
+  width: 100%;
+  display: table;
+  padding: 0 10px;
+}
+
+.userListBody.yearly .attendenceHeaderTable li {
+min-width: 90.2px;
+}
+
+.userListBody.monthly .attendenceHeaderTable li {
+  min-width: 70px;
+}
+
+
+.userListBody.yearly, .userListBody.weekly, .userListBody.daily {
+  display: none;
+}
+
+.tableListing.appointment.attendenceListing li {
+  position: relative;
+}
+
+.monthly .attendenceFirstRow .prevBtn {
+margin-right: 16.5%;
+}
+
+.monthly .attendenceFirstRow .nextBtn {
+  margin-left: 16.5%;
+  }

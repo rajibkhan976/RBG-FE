@@ -11,6 +11,7 @@ import next from '../../../../src/assets/images/next.svg';
 // import user_icons from '../../../../src/assets/images/list_img2.svg';
 import { ContactService } from "../../../services/contact/ContactServices";
 import arrowDown from "../../../../src/assets/images/arrowDown.svg";
+import attendenceFilter from "../../../../src/assets/images/attendenceFilter.svg";
 import { utils } from "../../../helpers";
 import Loader from "../../shared/Loader";
 import Pagination from '../../shared/Pagination';
@@ -413,23 +414,25 @@ const AttendenceListing = (props) => {
             {errorMsg &&
                 <ErrorAlert message={errorMsg}></ErrorAlert>
             }
-            <div className="userListBody">
+
+            {/* Weekly View Display */}
+            <div className="userListBody weekly">
                 <div className="listBody contactListingTable" style={{ 'width': '100%' }}>
                     
                     <ul className="tableListing appointment attendenceListing">
-                    	   <li className="listHeading">
-                          <div className="dataTableCell">Gym Members</div>
-                          <div className="dataTableCell">
+                    	   <li className="listHeading attendenceHeaderWraper">
+                          <div className="dataTableCell attendencemember headers">Gym Members</div>
+                          <div className="dataTableCell attendenceRecordsHeader">
                             <div className="attendenceDetailsWraper">
                               <div className="attendenceFirstRow">
                                 <div className="prevBtn">
                                   <button><img src={previous} alt="" />Previous Week</button>
                                 </div>
                                 <div className="midSection">
-                                <p>Attendance Week </p>
+                                <p>Attendance Week :</p>
                                   <select className="attendenceSelect"
                                       style={{
-                                          backgroundImage: "url(" + arrowDown + ")",
+                                          backgroundImage: "url(" + attendenceFilter + ")",
                                       }}>
                                       <option value="">Week 1, Nov 2021</option>
                                       <option value="">Week 2, Nov 2021</option>
@@ -456,111 +459,1093 @@ const AttendenceListing = (props) => {
                               </div>
                             </div>
                           </div>
-                          {/* <div className="dataTableCell">Counts</div>
-                          <div className="dataTableCell">Latest Date</div> */}
-                          <div className="dataTableCell">Total Days</div>
-                        
+                          <div className="dataTableCell">Total Days</div>                        
                         </li>
 
 
                       <li>
-                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
-                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
-                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
-                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
-                        
-                      </li>
-
-
-
-                      <li>
-                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
-                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
-                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
-                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
-                        
-                      </li>
-
-                      <li>
-                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
-                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
-                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
-                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Jonathan Doe</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>-</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                       
+                        <div className="dataTableCell totalDays"><button className="btn">6</button></div>
                         
                       </li>
 
                       <li>
-                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
-                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
-                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
-                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Richard Nile</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">7</button></div>
                         
                       </li>
 
                       <li>
-                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
-                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
-                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
-                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Milne Poshtula</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>-</li>
+                                  <li>10:00</li>
+                                  <li>-</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">5</button></div>
                         
                       </li>
 
                       <li>
-                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
-                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
-                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
-                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Adam Smith</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>-</li>
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">6</button></div>
                         
                       </li>
 
                       <li>
-                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
-                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
-                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
-                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Claudia Bolton</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>-</li>
+                                  <li>-</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>-</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">4</button></div>
                         
                       </li>
 
                       <li>
-                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
-                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
-                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
-                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Paul Harrish</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">7</button></div>
                         
                       </li>
 
                       <li>
-                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
-                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
-                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
-                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Mathew Warner</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">7</button></div>
                         
                       </li>
 
                       <li>
-                        <div className="dataTableCell user"><button className="btn"> Jonathan Doe</button></div>
-                        <div className="dataTableCell email"><button className="btn">jonathan.doe.tier5@gmail.co.in</button></div>
-                        {/* <div className="dataTableCell count"><button className="btn">09</button></div>
-                        <div className="dataTableCell date"><button className="btn">Dec 12, 2021</button></div> */}
-                        <div className="dataTableCell status"><button className="btn">Pending</button></div>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Ben Carrey</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>-</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">6</button></div>
                         
                       </li>
-   
 
-
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Alex Stokes</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">7</button></div>                        
+                      </li>
 
                     </ul>
                 </div>
             </div>
+
+            {/* Weekly View Display */}
+                          
+
+            {/* Daily View Display */}
+            <div className="userListBody weekly">
+                <div className="listBody contactListingTable" style={{ 'width': '100%' }}>
+                    
+                    <ul className="tableListing appointment attendenceListing">
+                    	   <li className="listHeading attendenceHeaderWraper">
+                          <div className="dataTableCell attendencemember headers">Gym Members</div>
+                          <div className="dataTableCell attendenceRecordsHeader">
+                            <div className="attendenceDetailsWraper">
+                              <div className="attendenceFirstRow">
+                                <div className="prevBtn">
+                                  <button><img src={previous} alt="" />Previous Day</button>
+                                </div>
+                                <div className="midSection">
+                                <p>Attendance Day :</p>
+                                  <select className="attendenceSelect"
+                                      style={{
+                                          backgroundImage: "url(" + attendenceFilter + ")",
+                                      }}>
+                                      <option value=""> 22nd Nov 2021</option>
+                                      <option value=""> 23nd Nov 2021</option>
+                                      <option value=""> 24nd Nov 2021</option>
+                                      <option value=""> 25nd Nov 2021</option>
+
+                                      
+                                  </select>
+                                </div>
+                                <div className="nextBtn">
+                                <button>Next Day<img src={next} alt="" /></button>
+                                </div>
+                              </div>
+                              <div className="attendenceSecondRow">
+                                <ul className="attendenceHeaderTable">
+                                  <li>Mon</li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="dataTableCell"></div>
+                        
+                        </li>
+
+
+                     
+
+
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Jonathan Doe</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                       
+                        <div className="dataTableCell totalDays"></div>  
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Richard Nile</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"></div>  
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Milne Poshtula</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>-</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"></div>  
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Adam Smith</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"></div>  
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Claudia Bolton</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>-</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"></div>  
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Paul Harrish</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"></div>  
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Mathew Warner</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"></div>  
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Ben Carrey</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"></div>  
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Alex Stokes</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"></div>                        
+                      </li>
+                      
+                    </ul>
+                </div>
+            </div>
+            {/* Daily View Display */}
+
+
+            {/* Monthly View Display */}
+              
+            <div className="userListBody monthly">
+                <div className="listBody contactListingTable" style={{ 'width': '100%' }}>
+                    
+                    <ul className="tableListing appointment attendenceListing">
+                    	   <li className="listHeading attendenceHeaderWraper">
+                          <div className="dataTableCell attendencemember headers">Gym Members</div>
+                          <div className="dataTableCell attendenceRecordsHeader">
+                            <div className="attendenceDetailsWraper">
+                              <div className="attendenceFirstRow">
+                                <div className="prevBtn">
+                                  <button><img src={previous} alt="" />Previous Month</button>
+                                </div>
+                                <div className="midSection">
+                                <p>Attendance Month :</p>
+                                  <select className="attendenceSelect"
+                                      style={{
+                                          backgroundImage: "url(" + attendenceFilter + ")",
+                                      }}>
+                                      <option value=""> Sep 2021</option>
+                                      <option value=""> Oct 2021</option>
+                                      <option value=""> Nov 2021</option>
+                                      <option value=""> Dec 2021</option>                                      
+                                  </select>
+                                </div>
+                                <div className="nextBtn">
+                                <button>Next Month<img src={next} alt="" /></button>
+                                </div>
+                              </div>
+                              <div className="attendenceSecondRow">
+                                <ul className="attendenceHeaderTable">
+                                  <li>1</li>
+                                  <li>2</li>
+                                  <li>3</li>
+                                  <li>4</li>
+                                  <li>5</li>
+                                  <li>6</li>
+                                  <li>7</li>
+                                  <li>8</li>
+                                  <li>9</li>
+                                  <li>10</li>
+                                  <li>11</li>
+                                  <li>12</li>
+                                  <li>13</li>
+                                  <li>14</li>
+                                  <li>15</li>
+                                  <li>16</li>
+                                  <li>17</li>
+                                  <li>18</li>
+                                  <li>19</li>
+                                  <li>20</li>
+                                  <li>21</li>
+                                  <li>22</li>
+                                  <li>23</li>
+                                  <li>24</li>
+                                  <li>25</li>
+                                  <li>26</li>
+                                  <li>27</li>
+                                  <li>28</li>
+                                  <li>29</li>
+                                  <li>30</li>
+                                  <li>31</li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="dataTableCell">Total Days</div>                        
+                        </li>
+
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Jonathan Doe</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                </ul>
+                          </div>
+                        </div>
+                       
+                        <div className="dataTableCell totalDays"><button className="btn">288</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Richard Nile</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                          <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">227</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Milne Poshtula</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                          <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">225</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Adam Smith</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                          <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">256</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Claudia Bolton</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                          <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">255</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Paul Harrish</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                              <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">288</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Mathew Warner</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                              <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">288</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Ben Carrey</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                          <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">288</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Alex Stokes</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                          <ul className="attendenceHeaderTable">
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10:00</li>
+                                  <li>10.00</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">255</button></div>                        
+                      </li>
+
+                    </ul>
+                </div>
+            </div>              
+
+            {/* Monthly View Display */}
+
+            {/* Yearly View Display */}
+            <div className="userListBody yearly">
+                <div className="listBody contactListingTable" style={{ 'width': '100%' }}>
+                    
+                    <ul className="tableListing appointment attendenceListing">
+                    	   <li className="listHeading attendenceHeaderWraper">
+                          <div className="dataTableCell attendencemember headers">Gym Members</div>
+                          <div className="dataTableCell attendenceRecordsHeader">
+                            <div className="attendenceDetailsWraper">
+                              <div className="attendenceFirstRow">
+                                <div className="prevBtn">
+                                  <button><img src={previous} alt="" />Previous Year</button>
+                                </div>
+                                <div className="midSection">
+                                <p>Attendance Week :</p>
+                                  <select className="attendenceSelect"
+                                      style={{
+                                          backgroundImage: "url(" + attendenceFilter + ")",
+                                      }}>
+                                      <option value=""> 2021</option>
+                                      <option value="">2019</option>
+                                      <option value=""> 2020</option>
+                                      <option value="">2022</option>                                      
+                                  </select>
+                                </div>
+                                <div className="nextBtn">
+                                <button>Next Year<img src={next} alt="" /></button>
+                                </div>
+                              </div>
+                              <div className="attendenceSecondRow">
+                                <ul className="attendenceHeaderTable">
+                                  <li>Jan</li>
+                                  <li>Feb</li>
+                                  <li>Mar</li>
+                                  <li>Apr</li>
+                                  <li>May</li>
+                                  <li>Jun</li>
+                                  <li>Jul</li>
+                                  <li>Aug</li>
+                                  <li>Sep</li>
+                                  <li>Oct</li>
+                                  <li>Nov</li>
+                                  <li>Dec</li>
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="dataTableCell">Total Days</div>                        
+                        </li>
+
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Jonathan Doe</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                            <ul className="attendenceHeaderTable">
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                </ul>
+                          </div>
+                        </div>
+                       
+                        <div className="dataTableCell totalDays"><button className="btn">288</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Richard Nile</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                          <ul className="attendenceHeaderTable">
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">227</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Milne Poshtula</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                          <ul className="attendenceHeaderTable">
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">225</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Adam Smith</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                          <ul className="attendenceHeaderTable">
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">256</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Claudia Bolton</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                          <ul className="attendenceHeaderTable">
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">255</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Paul Harrish</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                          <ul className="attendenceHeaderTable">
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">288</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Mathew Warner</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                          <ul className="attendenceHeaderTable">
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">288</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Ben Carrey</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                          <ul className="attendenceHeaderTable">
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">288</button></div>
+                        
+                      </li>
+
+                      <li>
+                        <div className="dataTableCell attendencemember user"><button className="btn"> Alex Stokes</button></div>
+                        <div className="dataTableCell attendenceRecords">
+                          <div className="attendenceRecordWraper">
+                          <ul className="attendenceHeaderTable">
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                  <li>24</li>
+                                </ul>
+                          </div>
+                        </div>
+                        <div className="dataTableCell totalDays"><button className="btn">255</button></div>                        
+                      </li>
+
+                    </ul>
+                </div>
+            </div>                        
+            {/* Yearly View Display */}
             {(appointmentCount > paginationData.limit) ? <Pagination
                 type="contact"
                 paginationData={paginationData}
