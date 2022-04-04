@@ -30,6 +30,7 @@ const EmailTemplate = () => {
   const createModalRef = useRef(null);
   const [initialData, setInitialData] = useState([
     {
+      index: 1,
       title: "Product Teaser",
       header: "Making online payment is not hard anymore. Find how!",
       message: `<p>Hey,</p>
@@ -41,6 +42,7 @@ const EmailTemplate = () => {
           <p><span style="color: #55bbc9;"><a style="color: #55bbc9; text-decoration: underline;" title="You wont believe this" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener">Click</a></span><span style="color: #55bbc9;"><a style="color: #55bbc9; text-decoration: underline;" title="You wont believe this" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener"> </a><a style="color: #55bbc9; text-decoration: underline;" title="You wont believe this" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" rel="noopener">here</a></span> to unsubscribe from campaign</p>`,
     },
     {
+      index: 2,
       title: "Rocketman",
       header: "This is mission control",
       message: `<h1>This is Rocketman!</h1>
@@ -49,12 +51,14 @@ const EmailTemplate = () => {
   ]);
 
   const [editEmailObj, setEditEmailObj] = useState({
+    index: 0,
     title: "",
     header: "",
     message: ""
   })
 
   const [newMail, setNewMail] = useState({
+    index: 0,
     title: "",
     header: "",
     message: ""
@@ -172,14 +176,24 @@ const EmailTemplate = () => {
 
   // select message to edit
   const getThisEmail = (email, i) => {
+    console.log("email", email.index);
     setActiveEmail(
-      activeEmail === null ? i : activeEmail === i ? null : i
+      activeEmail === null ? email.index : activeEmail === email.index ? null : email.index
     );
-    setEditEmailObj({
-      title: initialData[i].title,
-      header: initialData[i].header,
-      message: initialData[i].message
+
+    // console.log("::::::::----::::::::", activeEmail === null ? email.index : activeEmail === email.index ? null : email.index);
+
+    // console.log("initialData.filter(eEdit => eEdit.index === eEdit.index)[0]", initialData.filter(eEdit => email.index === eEdit.index)[0]);
+
+    setEditEmailObj(initialData.filter(eEdit => email.index === eEdit.index)[0]);
+
+    setIsEdit(false);
+    setErrorState({
+      title: newMail.title === "" ? "Please enter some Title!" : "",
+      header:newMail.header === "" ? "Please add some Header!" : "",
+      message: newMail.message === "" ? "Please Email content!" : "" 
     })
+    
     setKeyword(null)
     setKeywordSuggesion(false)
   }
@@ -190,19 +204,24 @@ const EmailTemplate = () => {
 
   // set Edited mail template
   const editedEmailTemplate = (email, headerMessage) => {
+    console.log("email, headerMessage::::::::::", email, headerMessage);
     let copyEmailTemplates = initialData;
-    let currentTemplate = initialData[activeEmail];
+    let currentTemplate = copyEmailTemplates.filter(acEmail => acEmail.index === activeEmail)[0];
+
+    console.log("<<<<<initialData>>>>>", currentTemplate);
     
     if(email.length !== 0) {
       currentTemplate = {
+        index: currentTemplate.index,
         title: currentTemplate.title,
         header: headerMessage,
         message: email && email
       }
 
-      copyEmailTemplates[activeEmail] = currentTemplate;
-
-      setInitialData(copyEmailTemplates)
+      setInitialData(prevTemplates => prevTemplates.map(el => 
+        el.index === currentTemplate.index ?
+        currentTemplate : el
+      ));
 
       setSuccessMsg("Email template edited!")
       setTimeout(() => {
@@ -214,12 +233,29 @@ const EmailTemplate = () => {
 
   // set new email message
   const createdEmailTemplate = (email) => {
+    console.log("email", email, "initialData", initialData.length);
+
     setNewMail({
       ...newMail,
+      index: initialData.length+1,
       message: email !== "" && email
     })
 
-    console.log("createdEmailTemplate", email);
+    if (email.trim() !== "") {
+      setHasError(false)
+      
+      setErrorState({
+        ...errorState,
+        message: "" 
+      })
+    } else {
+      setHasError(true)
+      
+      setErrorState({
+        ...errorState,
+        message: "Please Email content!" 
+      })
+    }
   }
   useEffect(()=>{},[newMail])
   // set new email message
@@ -262,7 +298,7 @@ const EmailTemplate = () => {
               startToText.length + 1
             );
 
-            console.log(subjectInput, cursorStart, cursorEnd, textValue);
+            // console.log(subjectInput, cursorStart, cursorEnd, textValue);
         }
         else {
           subjectInput.value = subjectInput.value + " [" + e.target.textContent + "] ";
@@ -288,6 +324,8 @@ const EmailTemplate = () => {
 
     if(newMail.title !== "" && newMail.header !== "" && newMail.message !== "") {
       try {
+        setIsLoader(true)
+
         let copyTemplates = initialData;
             copyTemplates = [...copyTemplates, newMail];
             setInitialData(copyTemplates)
@@ -295,31 +333,43 @@ const EmailTemplate = () => {
             setTimeout(() => {
               setSuccessMsg("")
             }, 5000);
-            console.log(e.target.getAttribute("id"));
-            e.target.getAttribute("id") === "saveNewEmailTemplate" ? setEmailModal(false) : createModalRef.current.reset();;
-            
-            setNewMail({
-              title: "",
-              header: "",
-              message: ""
-            })
+            console.log(e.target.getAttribute("id"), "newMail", newMail);
       } catch (error) {
         console.log(error);
+      } finally {
+        if(e.target.getAttribute("id") === "saveNewEmailTemplate") {
+          setEmailModal(false)
+        }
+        else {
+          createModalRef.current.reset()
+        }
+        
+        setNewMail({
+          title: "",
+          header: "",
+          message: ""
+        })
+        setHasError(false)
+        setErrorState({
+          title: "",
+          header: "",
+          message: ""
+        })
+        setIsLoader(false)
       }
     }
     else {
+      // console.log("newMail", newMail);
       setHasError(true)
       
       setErrorState({
-        title: newMail.title === "" ? "Please enter some Title!" : "",
-        header:newMail.header === "" ? "Please add some Header!" : "",
-        message: newMail.message === "" ? "Please Email content!" : "" 
+        ...errorState,
+        title: newMail.title.trim() === "" && "Please enter some Title!",
+        header: newMail.header.trim() === "" && "Please add some Header!",
+        message: newMail.message.trim() === "" && "Please Email content!" 
       })
     }
   }
-  useEffect(()=>{
-    console.log("errorState", errorState, hasError);
-  },[errorState, hasError])
   // Save new email template
 
   // close create new email modal
@@ -340,6 +390,55 @@ const EmailTemplate = () => {
     })
   };
   // close create new email modal
+
+  // create email header
+  const createEmailHeader = (e) => {
+    setNewMail({
+      ...newMail,
+      header: e.target.value
+    })
+
+    if(e.target.value.trim() !== ""){
+      setHasError(false)
+    
+      setErrorState({
+        ...errorState,
+        header:"",
+      })
+    } else {
+      console.log("IN ELSE HEADER");
+
+      setHasError(true)
+
+      setErrorState({
+        ...errorState,
+        header: "Please enter some header!",
+      })
+    }
+  }
+
+  const createEmailTitle = (e) => {
+    setNewMail({
+      ...newMail,
+      title: e.target.value
+    })
+
+    if(e.target.value.trim() !== ""){
+      setHasError(false)
+    
+      setErrorState({
+        ...errorState,
+        title:"",
+      })
+    } else {
+      setHasError(true)
+
+      setErrorState({
+        ...errorState,
+        title: "Please enter some Title!",
+      })
+    }
+  }
 
   useEffect(() =>{
     setHasError(false)
@@ -393,48 +492,105 @@ const EmailTemplate = () => {
       {warningMsg && <WarningAlert message={warningMsg} />}
 
       <div className="userListBody emailListing d-flex">
-        <div className="listBody">
-          <ul className="tableListing">
-            <li className="listHeading userRole">
-              <div
-                className={
-                  "messageTitle " +
-                  (sortBy == "title" ? "sort " + sortType : "")
-                }
-                onClick={() => handleSortBy("title")}
-              >
-                Title
-              </div>
-              <div
-                className={
-                  "messageDeet " +
-                  (sortBy == "message" ? "sort " + sortType : "")
-                }
-                onClick={() => handleSortBy("message")}
-              >
-                Subject
-              </div>
-            </li>
-            {initialData &&
-              initialData.length > 0 &&
-              initialData.map((emailData, i) => (
-                <li 
-                  key={i}
-                  onClick={(e)=>getThisEmail(emailData, i)}
-                  className={activeEmail === i ? "active" : ""}
+        <div className="emailListingBody d-flex f-column">
+          <div className="listBody f-1">
+            <ul className="tableListing">
+              <li className="listHeading userRole">
+                <div
+                  className={
+                    "messageTitle " +
+                    (sortBy == "title" ? "sort " + sortType : "")
+                  }
+                  onClick={() => handleSortBy("title")}
                 >
-                  <div className="messageTitle">{emailData.title}</div>
-                  <div className="messageDeet">
-                    <p className="messageHeader">
-                      {emailData.header}
-                    </p>
-                    <div className="dataMessageEmail" dangerouslySetInnerHTML={{__html: stringToHTML(emailData.message)}} />
-                  </div>
-                </li>
-              ))}
-          </ul>
-        </div>
-
+                  Title
+                </div>
+                <div
+                  className={
+                    "messageDeet " +
+                    (sortBy == "message" ? "sort " + sortType : "")
+                  }
+                  onClick={() => handleSortBy("message")}
+                >
+                  Subject
+                </div>
+              </li>
+              {initialData &&
+                initialData.length > 0 &&
+                initialData.map((emailData, i) => (
+                  <li 
+                    key={i}
+                    onClick={(e)=>getThisEmail(emailData, i)}
+                    className={activeEmail === emailData.index ? "active" : ""}
+                  >
+                    <div className="messageTitle">{emailData.title}</div>
+                    <div className="messageDeet">
+                      <p className="messageHeader">
+                        {emailData.header}
+                      </p>
+                      <div className="dataMessageEmail" dangerouslySetInnerHTML={{__html: stringToHTML(emailData.message)}} />
+                    </div>
+                  </li>
+                ))}
+            </ul>
+          </div>
+          {/* <Pagination /> */}
+          {/* PAGINATION UI FOR SHOW */}
+          <div class="paginationOuter">
+            <ul>
+              <li>
+                <button class="btn paginationBtn" disabled="">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 492 492">
+                    <path
+                      d="M198.608,246.104L382.664,62.04c5.068-5.056,7.856-11.816,7.856-19.024c0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12    C361.476,2.792,354.712,0,347.504,0s-13.964,2.792-19.028,7.864L109.328,227.008c-5.084,5.08-7.868,11.868-7.848,19.084    c-0.02,7.248,2.76,14.028,7.848,19.112l218.944,218.932c5.064,5.072,11.82,7.864,19.032,7.864c7.208,0,13.964-2.792,19.032-7.864    l16.124-16.12c10.492-10.492,10.492-27.572,0-38.06L198.608,246.104z"
+                      fill="#305671"
+                    ></path>
+                  </svg>
+                </button>
+              </li>
+              <li id="1">
+                <button class="btn paginationBtn active" value="1">
+                  1
+                </button>
+              </li>
+              <li id="2">
+                <button class="btn paginationBtn" value="2">
+                  2
+                </button>
+              </li>
+              <li id="3">
+                <button class="btn paginationBtn" value="3">
+                  3
+                </button>
+              </li>
+              <li id="4">
+                <button class="btn paginationBtn" value="4">
+                  4
+                </button>
+              </li>
+              <li id="5">
+                <button class="btn paginationBtn" value="5">
+                  5
+                </button>
+              </li>
+              <li class="btn"> … </li>
+              <li>
+                <button class="btn paginationBtn">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 492.004 492.004"
+                  >
+                    <path
+                      d="M382.678,226.804L163.73,7.86C158.666,2.792,151.906,0,144.698,0s-13.968,2.792-19.032,7.86l-16.124,16.12    c-10.492,10.504-10.492,27.576,0,38.064L293.398,245.9l-184.06,184.06c-5.064,5.068-7.86,11.824-7.86,19.028    c0,7.212,2.796,13.968,7.86,19.04l16.124,16.116c5.068,5.068,11.824,7.86,19.032,7.86s13.968-2.792,19.032-7.86L382.678,265    c5.076-5.084,7.864-11.872,7.848-19.088C390.542,238.668,387.754,231.884,382.678,226.804z"
+                      fill="#305671"
+                    ></path>
+                  </svg>
+                </button>
+              </li>
+            </ul>
+          </div>
+          {/* PAGINATION UI FOR SHOW */}
+          </div>
         <div className="previewSpaceTemplate">
           <div className="headspaceTemplate d-flex">
             <figure>
@@ -483,9 +639,10 @@ const EmailTemplate = () => {
                   }}
                 >Please select an Email Template to view the preview</p>:
                 <>
+                {/* {console.log("editEmailObj:::::>>>>", editEmailObj)} */}
                   <EditorComponent
                     createNew={false}
-                    initialData={initialData[activeEmail]}
+                    initialData={editEmailObj}
                     editedEmailTemplate={editedEmailTemplate}
                     setActiveEmail={setActiveEmail}
                   />
@@ -524,12 +681,7 @@ const EmailTemplate = () => {
                         className="cmnFieldStyle"
                         placeholder="Title..."
                         id="newEmailTemplateTitle"
-                        onChange={(e)=> {
-                          setNewMail({
-                            ...newMail,
-                            title: e.target.value
-                          })
-                        }}
+                        onChange={(e)=> createEmailTitle(e)}
                       />
                     </div>
                     {hasError && errorState.title && <span className="errorMsg">{errorState.title}</span>}
@@ -544,12 +696,7 @@ const EmailTemplate = () => {
                         placeholder="Header..."
                         id="newEmailTemplateSubject"
                         ref={newEmailTemplateSubject}
-                        onChange={(e)=> {
-                          setNewMail({
-                            ...newMail,
-                            header: e.target.value
-                          })
-                        }}
+                        onChange={(e)=> createEmailHeader(e)}
                       />
                       <button
                         className="btn browseKeywords"

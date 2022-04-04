@@ -300,21 +300,24 @@
 .contactListItems ul::-webkit-scrollbar,
 .userListBody.smsListing .listBody::-webkit-scrollbar,
 .bodyEditTemplate .keywordBox .keywordList::-webkit-scrollbar,
-.slickModalBody .modalForm::-webkit-scrollbar {
+.slickModalBody .modalForm::-webkit-scrollbar,
+.userListBody.emailListing .listBody::-webkit-scrollbar {
   width: 4px;
 }
 
 .contactListItems ul::-webkit-scrollbar-track,
 .userListBody.smsListing .listBody::-webkit-scrollbar-track,
 .bodyEditTemplate .keywordBox .keywordList::-webkit-scrollbar-track,
-.slickModalBody .modalForm::-webkit-scrollbar-track {
+.slickModalBody .modalForm::-webkit-scrollbar-track,
+.userListBody.emailListing .listBody::-webkit-scrollbar-track {
   background-color: #dce4eb;
 }
 
 .contactListItems ul::-webkit-scrollbar-thumb,
 .userListBody.smsListing .listBody::-webkit-scrollbar-thumb,
 .bodyEditTemplate .keywordBox .keywordList::-webkit-scrollbar-thumb,
-.slickModalBody .modalForm::-webkit-scrollbar-thumb {
+.slickModalBody .modalForm::-webkit-scrollbar-thumb,
+.userListBody.emailListing .listBody::-webkit-scrollbar-thumb {
   background-color: #f1a668;
 }
 
@@ -340,7 +343,8 @@
   border-bottom-left-radius: 5px;
 }
 
-.userListBody.smsListing .listBody {
+.userListBody.smsListing .listBody,
+.userListBody.emailListing .listBody {
   overflow: auto;
 }
 
@@ -433,7 +437,7 @@
 .bodyEditTemplate {
   flex: 1 1 auto;
   overflow: auto;
-  padding: 0 25px 0 38px;
+  padding: 0 27px 0 38px;
   font-size: 13px;
   line-height: 19px;
   text-align: justify;
@@ -604,10 +608,10 @@
 .emailListing {
   padding: 0;
 }
-.emailListingPage .listBody {
+/* .emailListingPage .listBody {
   flex: 1 1 auto;
   max-width: calc(100% - 725px);
-}
+} */
 .emailListingPage .templateOuter {
   width: 690px;
   border-radius: 5px;
@@ -622,6 +626,7 @@
 /* Text editor */
 .emailListing  .tox-tinymce {
   border: none;
+  border-radius: 5px;
 }
 .tox .tox-statusbar {
   display: none !important;
@@ -673,7 +678,7 @@
   font-size: 13px;
   line-height: 19px;
   color: #305671;
-  padding-bottom: 12px;
+  padding-bottom: 5px;
   border: none;
   border-bottom: 1px solid #E9EFF5;
   margin-bottom: 15px;
@@ -701,9 +706,6 @@
 }
 .createNewEmailField {
   height: 318px;
-}
-.tox.tox-silver-sink.tox-tinymce-aux {
-  z-index: 999999;
 }
 .modalAddEmail .keywordList button {
   font-size: 13px;
@@ -2426,7 +2428,7 @@ ul.paymentUlInfo li.paymentModeLi {
 }
 
 /* HOT FIX FOR IFRAME ISSUE */
-#root~iframe:last-child {
+#root~iframe {
   display: none !important;
 }
 /* HOT FIX FOR IFRAME ISSUE */
@@ -2852,9 +2854,11 @@ input[type=number] {
 }
 .bodyEditTemplate .cmnFormRow {
   margin: 0;
-}.modalNewPay .modalbtnHolder .saveNnewBtn {
+}
+.modalNewPay .modalbtnHolder .saveNnewBtn {
   width: auto;
-}.tabBarArea .programsTransaction ul .loaderOuter {
+}
+.tabBarArea .programsTransaction ul .loaderOuter {
   position: static;
 }
 
@@ -2889,4 +2893,19 @@ input[type=number] {
 .posSellingForm.contractOverview .billingOverviewSuccess {
   position: absolute;
   top: -65px;
+}
+.tox-edit-area iframe {
+  z-index: initial !important;
+}
+.cmnFormField.error .headerEmail {
+  border-radius: 5px;
+}
+
+.emailListing .emailListingBody {
+  flex: 1 1 auto;
+  max-width: calc(100% - 726px);
+  overflow: hidden;
+}
+.tox.tox-silver-sink.tox-tinymce-aux {
+  z-index: 1000000;
 }

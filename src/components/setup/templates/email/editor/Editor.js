@@ -46,8 +46,9 @@ const EditorComponent = (props) => {
 
   // save new data as email content
   const createEmail = (createValue) => {
+    console.log("createValue in function", createValue);
     setCreatedValue(createValue)
-    props.createdEmailTemplate(createdValue)
+    props.createdEmailTemplate(createValue)
     editorCreateRef.current.setDirty(false);
     setDirty(false)
   }
@@ -249,7 +250,8 @@ const EditorComponent = (props) => {
       <div className={max ? "editorEmailShell h-100 maximize" : "editorEmailShell h-100"} id="createTextArea" ref={createTextArea}>
         {max && <h6>Email Body</h6>}
           <Editor
-              apiKey="91qkaw0vhg0xwousdvvdhjztavstam75oa7th9v5rkrbd31v"
+              apiKey="91qkaw0vhg0xwousdvvdhjztavstam75oa7th9v5rkrbd31v" //API NEEDS TO BE CHANGED; CURRENTLY FREE APIKEY linked with my email
+              statusBar={true}
               onInit={(evt, editor) => (editorCreateRef.current = editor)}
               onDirty={() => setDirty(true)}
               theme="advanced"
@@ -423,7 +425,8 @@ const EditorComponent = (props) => {
         </div>
         <div className={editHasError && editErrorState.message ? "cmnFormRow f-1 error" : "cmnFormRow f-1"} id="editTextArea">
           <Editor
-            apiKey="91qkaw0vhg0xwousdvvdhjztavstam75oa7th9v5rkrbd31v"
+            apiKey="91qkaw0vhg0xwousdvvdhjztavstam75oa7th9v5rkrbd31v" //API NEEDS TO BE CHANGED; CURRENTLY FREE APIKEY linked with my email
+            statusBar={true}
             onInit={(evt, editor) => (editorRef.current = editor)}
             onDirty={() => setDirty(true)}
             theme="advanced"
