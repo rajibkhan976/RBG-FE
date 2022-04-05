@@ -44,6 +44,11 @@ const AttendenceListing = (props) => {
     const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "contact")));
     const dispatch = useDispatch();
     const modalId = useSelector((state) => state.contact.contact_modal_id);
+
+    const [displayState, setDisplayState] = useState("day");
+   
+
+
     useEffect(() => {
         if (modalId === "") {
             fetchContact();
@@ -399,6 +404,8 @@ const AttendenceListing = (props) => {
             setErrorMsg(responses.permissions.contact.import);
         }
     }
+
+    
     return (
         <div className="dashInnerUI">
             {isLoader ? <Loader /> : ''}
@@ -407,7 +414,9 @@ const AttendenceListing = (props) => {
                 handleSearch={handleSearch}
                 handleKeywordChange={handleKeywordChange}
                 keyword={keyword}
-                openImportAppointment={handleImportModal}></AttendenceHead>
+                openImportAppointment={handleImportModal}
+                displayState={displayState}
+                setDisplayState={setDisplayState}></AttendenceHead>
             {successMsg &&
                 <SuccessAlert message={successMsg}></SuccessAlert>
             }
@@ -415,7 +424,14 @@ const AttendenceListing = (props) => {
                 <ErrorAlert message={errorMsg}></ErrorAlert>
             }
 
+
+        {/* {displayState === "day" ? <p>hi Day is selected</p> : ''}
+        {displayState === "week" ? <p>hi week is selected</p> : ''}
+        {displayState === "month" ? <p>hi month is selected</p> : ''}
+        {displayState === "year" ? <p>hi year is selected</p> : ''} */}
+
             {/* Weekly View Display */}
+            {displayState === "week" ?
             <div className="userListBody weekly">
                 <div className="listBody contactListingTable" style={{ 'width': '100%' }}>
                     
@@ -638,11 +654,14 @@ const AttendenceListing = (props) => {
                 </div>
             </div>
 
+            : ''}
+
             {/* Weekly View Display */}
                           
 
             {/* Daily View Display */}
-            <div className="userListBody weekly">
+            {displayState === "day" ?
+            <div className="userListBody daily">
                 <div className="listBody contactListingTable" style={{ 'width': '100%' }}>
                     
                     <ul className="tableListing appointment attendenceListing">
@@ -682,11 +701,6 @@ const AttendenceListing = (props) => {
                           <div className="dataTableCell"></div>
                         
                         </li>
-
-
-                     
-
-
 
                       <li>
                         <div className="dataTableCell attendencemember user"><button className="btn"> Jonathan Doe</button></div>
@@ -808,12 +822,17 @@ const AttendenceListing = (props) => {
                     </ul>
                 </div>
             </div>
+            
+            : ''}
             {/* Daily View Display */}
 
 
             {/* Monthly View Display */}
+
+            {displayState === "month" ?
               
             <div className="userListBody monthly">
+            {/* {displayState} */}
                 <div className="listBody contactListingTable" style={{ 'width': '100%' }}>
                     
                     <ul className="tableListing appointment attendenceListing">
@@ -1273,9 +1292,11 @@ const AttendenceListing = (props) => {
                 </div>
             </div>              
 
-            {/* Monthly View Display */}
+            :''}            
+{/* Monthly View Display */}
 
             {/* Yearly View Display */}
+            {displayState === "year" ?
             <div className="userListBody yearly">
                 <div className="listBody contactListingTable" style={{ 'width': '100%' }}>
                     
@@ -1545,6 +1566,7 @@ const AttendenceListing = (props) => {
                     </ul>
                 </div>
             </div>                        
+            :''}
             {/* Yearly View Display */}
             {(appointmentCount > paginationData.limit) ? <Pagination
                 type="contact"

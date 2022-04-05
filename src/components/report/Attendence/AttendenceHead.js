@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from 'react';
 import download_icon from "../../../../src/assets/images/download_icon.svg";
 import uparrow_icon_grey from "../../../../src/assets/images/uparrow_icon_grey.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
@@ -6,8 +6,9 @@ import monthIcon from "../../../assets/images/month.svg";
 import filter from "../../../assets/images/filter.svg";
 
 const AttendenceHead = (props) => {
+  
   return (
-    <div className="contactHead">
+    <div className="contactHead attendenceListingPage">
       <div className="userListHead">
         <div className="listInfo">
           <ul className="listPath">
@@ -23,17 +24,25 @@ const AttendenceHead = (props) => {
             <select
               style={{
                   backgroundImage: "url(" + arrowDown + ")",
-              }}>
-              <option value="">Day</option>
-              <option value="">Week</option>
-              <option value="">Month</option>
-              <option value="">Year</option>
+              }}
+              value={props.displayState} 
+              onChange={(e)=>{
+                const selectDisplayState = e.target.value;
+                props.setDisplayState(selectDisplayState);
+
+              }}
+              >
+              <option value="day">Day</option>
+              <option value="week">Week</option>
+              <option value="month">Month</option>
+              <option value="year">Year</option>
             </select>
           </div>
           
            <button className="saveNnewBtn appExport expContactBtn">
             <img src={uparrow_icon_grey} alt="" /> Export
           </button>
+          {/* {props.displayState} */}
           
           {/* <button className="saveNnewBtn appFilter expContactBtn" onClick={() => props.openImportAppointment()}>
             Filter <img src={filter} alt="" /> 
