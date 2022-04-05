@@ -122,7 +122,7 @@ const InnerLeftMenu = (props) => {
                   </div>
                 </NavLink>
               </li>
-              {loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'RBG' ? <li>
+              {loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'rbg' ? <li>
                 <NavLink className="leftMenuInnerLink" to="/organizations">
                   <div className="indicator"></div>
                   <div className="linkDetails">
@@ -133,7 +133,7 @@ const InnerLeftMenu = (props) => {
                   </div>
                 </NavLink>
               </li> : ''}
-              {loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'RBG' ? <li>
+              {loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'rbg' ? <li>
                 <NavLink className="leftMenuInnerLink" to="/associations">
                   <div className="indicator"></div>
                   <div className="linkDetails">

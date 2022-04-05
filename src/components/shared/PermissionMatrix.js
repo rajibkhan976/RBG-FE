@@ -179,7 +179,7 @@ const PermissionMatrix = forwardRef((props, ref) => {
                 slug: entity.slug,
                 subEntity: entity.subEntity.map((subEntity, key) => {
                   // console.log('Org checking', { subEntity });
-                  if (subEntity.slug === "organization" && loggedInUser && loggedInUser.organizationCode !== 'RBG') {
+                  if (subEntity.slug === "organization" && loggedInUser && loggedInUser.organizationCode !== 'rbg') {
                     return false;
                   }
                   return {
