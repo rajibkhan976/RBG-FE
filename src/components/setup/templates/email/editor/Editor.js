@@ -396,7 +396,7 @@ const EditorComponent = (props) => {
               defaultValue={props.initialData.header === emailHeader ? props.initialData.header : emailHeader} 
               id="editTemplateHeader" 
               ref={editHeaderRef}
-              onChange={(e)=>checkEditTitle(e)}
+              onInput={(e)=>checkEditTitle(e)}
             />
 
             <button

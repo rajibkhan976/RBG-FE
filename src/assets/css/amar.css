@@ -2916,3 +2916,9 @@ input[type=number] {
   align-self: start;
   margin-top: 12px;
 }
+.emailListing .tableListing li > div {
+  border: none;
+}
+.emailListing .tableListing {
+  border-spacing: 0 4px;
+}
