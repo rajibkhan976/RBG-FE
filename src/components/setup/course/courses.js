@@ -129,7 +129,7 @@ const Courses = () => {
     try {
       const action = (Object.keys(updateObj).length) ? "update" : "create";
       /************ PERMISSION CHECKING (FRONTEND) *******************/
-      const hasPermission = utils.hasPermission("product", action);
+      const hasPermission = utils.hasPermission("course", action);
       if (!hasPermission) throw new Error("You do not have permission");
       /************ PERMISSION CHECKING (FRONTEND) *******************/
       if (categoryData.length) {
