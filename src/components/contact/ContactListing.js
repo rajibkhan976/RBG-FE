@@ -148,9 +148,9 @@ const ContactListing = forwardRef((props, ref) => {
         const queryParams = await getQueryParams();
         try {
             const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
-            if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
-                throw new Error(responses.permissions.automation.read);
-            }
+            // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
+            //     throw new Error(responses.permissions.automation.read);
+            // }
             const result = await ContactService.fetchUsers(pageId, queryParams);
             if (result) {
                 setContactList(result.contacts);
@@ -176,9 +176,9 @@ const ContactListing = forwardRef((props, ref) => {
         setIsLoader(true);
         try {
             const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
-            if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
-                throw new Error("");
-            }
+            // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
+            //     throw new Error("");
+            // }
             const result = await ContactService.fetchColumns();
             if (result) {
                 setListCol(result.columns);
@@ -336,18 +336,14 @@ const ContactListing = forwardRef((props, ref) => {
 
     const handleSearch = (event) => {
         const readPermission = (Object.keys(permissions).length) ? permissions.actions.includes("read") : false;
-        if (readPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
-            event.preventDefault();
-            utils.addQueryParameter('page', 1);
-            if (keyword) {
-                utils.addQueryParameter('search', keyword.trim());
-            } else {
-                utils.removeQueryParameter('search');
-            }
-            fetchContact();
+        event.preventDefault();
+        utils.addQueryParameter('page', 1);
+        if (keyword) {
+            utils.addQueryParameter('search', keyword.trim());
         } else {
-            setErrorMsg(responses.permissions.contact.read);
+            utils.removeQueryParameter('search');
         }
+        fetchContact();
     }
     useEffect(() => {
         setSavedColList(listCol)
