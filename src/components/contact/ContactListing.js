@@ -463,11 +463,13 @@ const ContactListing = forwardRef((props, ref) => {
 
     const handleImportModal = () => {
         const readPermission = (Object.keys(permissions).length) ? permissions.actions.includes("import") : false;
-        if (readPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
-            props.openModal()
-        } else {
-            setErrorMsg(responses.permissions.contact.import);
-        }
+        
+        props.openModal();
+        // if (readPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
+        //     props.openModal()
+        // } else {
+        //     setErrorMsg(responses.permissions.contact.import);
+        // }
     }
     const clearFilter = () => {
         utils.removeQueryParameter('import');
