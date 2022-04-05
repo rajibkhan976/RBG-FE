@@ -43,7 +43,7 @@ const PersonalDetails = (props) => {
         <div className="gymDetails personalPage">
           <div className="gymdetails_left">
             <h3 className="leftSectionHeader">Account Details</h3>
-              <div className="showing_gym_data">
+              <div className="showing_gym_data personalInfos">
                 <div className="gymName">
                   <div className="profilePicture">
                     <span className="profileImgSection">

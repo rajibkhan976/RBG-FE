@@ -870,7 +870,7 @@ const AttendenceListing = (props) => {
                                   <li>6</li>
                                   <li>7</li>
                                   <li>8</li>
-                                  <li>9</li>
+                                  <li className="holiday">9</li>
                                   <li>10</li>
                                   <li>11</li>
                                   <li>12</li>
@@ -914,7 +914,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li>10:00</li>
+                                  <li className="holiday">10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -950,7 +950,7 @@ const AttendenceListing = (props) => {
                         <div className="dataTableCell attendenceRecords">
                           <div className="attendenceRecordWraper">
                           <ul className="attendenceHeaderTable">
-                                  <li>10:00</li>
+                          <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
@@ -958,7 +958,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li>10:00</li>
+                                  <li className="holiday">10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -993,7 +993,7 @@ const AttendenceListing = (props) => {
                         <div className="dataTableCell attendenceRecords">
                           <div className="attendenceRecordWraper">
                           <ul className="attendenceHeaderTable">
-                                  <li>10:00</li>
+                          <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
@@ -1001,7 +1001,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li>10:00</li>
+                                  <li className="holiday">10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -1036,7 +1036,7 @@ const AttendenceListing = (props) => {
                         <div className="dataTableCell attendenceRecords">
                           <div className="attendenceRecordWraper">
                           <ul className="attendenceHeaderTable">
-                                  <li>10:00</li>
+                          <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
@@ -1044,7 +1044,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li>10:00</li>
+                                  <li className="holiday">10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -1079,7 +1079,7 @@ const AttendenceListing = (props) => {
                         <div className="dataTableCell attendenceRecords">
                           <div className="attendenceRecordWraper">
                           <ul className="attendenceHeaderTable">
-                                  <li>10:00</li>
+                          <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
@@ -1087,7 +1087,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li>10:00</li>
+                                  <li className="holiday">10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -1122,7 +1122,7 @@ const AttendenceListing = (props) => {
                         <div className="dataTableCell attendenceRecords">
                           <div className="attendenceRecordWraper">
                               <ul className="attendenceHeaderTable">
-                                  <li>10:00</li>
+                              <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
@@ -1130,7 +1130,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li>10:00</li>
+                                  <li className="holiday">10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -1165,7 +1165,7 @@ const AttendenceListing = (props) => {
                         <div className="dataTableCell attendenceRecords">
                           <div className="attendenceRecordWraper">
                               <ul className="attendenceHeaderTable">
-                                  <li>10:00</li>
+                              <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
@@ -1173,7 +1173,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li>10:00</li>
+                                  <li className="holiday">10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -1208,7 +1208,7 @@ const AttendenceListing = (props) => {
                         <div className="dataTableCell attendenceRecords">
                           <div className="attendenceRecordWraper">
                           <ul className="attendenceHeaderTable">
-                                  <li>10:00</li>
+                          <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
@@ -1216,7 +1216,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li>10:00</li>
+                                  <li className="holiday">10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -1251,7 +1251,7 @@ const AttendenceListing = (props) => {
                         <div className="dataTableCell attendenceRecords">
                           <div className="attendenceRecordWraper">
                           <ul className="attendenceHeaderTable">
-                                  <li>10:00</li>
+                          <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
@@ -1259,7 +1259,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li>10:00</li>
+                                  <li className="holiday">10:00</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>

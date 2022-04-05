@@ -5448,3 +5448,26 @@ margin-right: 18%;
  .attendenceHeaderWraper .dataTableCell {
    padding-top: 0;
  }
+
+ .holiday {
+  opacity: 0.35;
+}
+
+ /* Personal Details fixes */
+
+ .showing_gym_data.personalInfos .profileImgSection {
+  width: 64px;
+  padding: 0;
+ }
+
+ .showing_gym_data.personalInfos .profileImgSection span {
+  padding-left: 0!important;
+  padding-top: 5px;
+  width: 100%!important;
+  font-size: 13px!important;
+  text-align: center;
+  cursor: pointer;
+  color: #55BBC9!important;
+  float: left;
+  width: 100%;
+}
