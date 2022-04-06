@@ -256,8 +256,7 @@ const InnerLeftMenu = (props) => {
                     </button>
                   </div>
                 </NavLink>
-              </li>
-              
+              </li>            
            
             </ul>
             <div className="linkImg">

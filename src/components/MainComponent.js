@@ -605,6 +605,7 @@ const MainComponent = () => {
                                 <DashboardRoutes toggleLeftSubMenu={toggleLeftSubMenu}
                                                  toggleCreate={(e) => toggleCreate(e)}/>
                             </Route>
+                            
                             <Route exact path={["/roles", "/groups", "/users", '/organizations', '/associations']}>
                                 <AuthRoutes toggleLeftSubMenu={toggleLeftSubMenu}
                                             toggleCreate={(e) => toggleCreate(e)}/>
