@@ -388,12 +388,7 @@ const AppointmenttListing = (props) => {
     }
 
     const handleImportModal = () => {
-        const readPermission = (Object.keys(permissions).length) ? permissions.actions.includes("import") : false;
-        if (readPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
-            props.openModal()
-        } else {
-            setErrorMsg(responses.permissions.contact.import);
-        }
+      props.openModal()
     }
     return (
         <div className="dashInnerUI">
