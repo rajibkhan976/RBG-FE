@@ -10273,3 +10273,51 @@ li.listHeadingContacts > div > div.dsc::after {
 .pid .copyTo:hover {
   background-color: rgba(0, 0, 0, 0.1);
 }
+
+/* ........................ status and phases fixing css........................... */
+
+
+.formControl textarea {
+  height: 100px;
+  line-height: 20px;
+  background: #f6f8fa;
+  border: 1px solid #d3d9de;
+  border-radius: 5px;
+  color: var(--darkBlue);
+  font-size: 13px;
+  margin: 5px 0 0px 0;
+  width: 100%;
+}
+
+.statusPhases .formControl label {
+  padding: 3px 0 5px;
+}
+
+.email .tabContent form {
+  height: auto;
+}
+.email .tabsection .tabContent {
+  max-height: 690px;
+}
+
+
+/*Zapier Page Css*/
+
+.apiDisplay {
+  width: 100%;
+  padding: 30px 0;
+}
+.apiDisplay h3 {
+  color: #42657d;
+  font-size: 18px;
+  margin: 20px 0;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.apiDisplay p {
+  font-weight: 400;
+  font-size: 14px;
+  margin: 20px 0;
+  color: #5a7a8f;
+}

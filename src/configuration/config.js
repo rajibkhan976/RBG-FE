@@ -120,4 +120,6 @@ module.exports = {
 
     //Notifications
     notificationUrl: "https://" + process.env.REACT_APP_NOTIFICATION + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/notification",
+
+    zapierKey: 'http://localhost:4000/dev/zapier'
 }  
