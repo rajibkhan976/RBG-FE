@@ -8,8 +8,8 @@ let headers = {
 export const ZapierServices = {
     fetchKey: async () => {
         try {
-            const result = await axios.put(
-                config.zapierKey,{ headers: headers });
+            const result = await axios.get(
+                config.zapierKey + "/fetch-key",{ headers: headers });
             console.log('Fetch zapier services result in async await : ', result);
             return result.data;
         } catch (e) {

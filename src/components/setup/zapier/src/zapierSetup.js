@@ -1,10 +1,13 @@
-import React, {useEffect} from "react";
-import {ZapierServices} from "../../../../services/authentication/ZapierServices";
+import React, {useEffect, useState} from "react";
+import { ZapierServices } from "../../../../services/authentication/ZapierServices";
+
+
 
 const ZapierSetup = (props) => {
+    const [zapierKey, setZapierKey] = useState("");
     const fetchZapierKey = async () => {
-        let zapierKey = ZapierServices.fetchKey();
-        console.log(zapierKey)
+        let zapierResp = await ZapierServices.fetchKey();
+        setZapierKey(zapierResp.key);
     }
     useEffect(() => {
         fetchZapierKey();
@@ -30,7 +33,7 @@ const ZapierSetup = (props) => {
                     <p>https://zapier.com/developer/invite/107874/70e3046f7faaabf0c5a337ecfeec34ca/</p>
 
                     <h3>API Tokens</h3>
-                    <p>88vDNpvDj4K6rCsQABPDdgZgng7dI8JShBznfIFe0zgxuE9vOJBvW2SJHvjth</p>
+                    <p>{ zapierKey }</p>
                 </div>
             </div>
         </>
