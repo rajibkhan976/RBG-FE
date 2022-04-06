@@ -70,7 +70,7 @@ const UsersListing = (props) => {
             console.log("I am here")
             // const createPermission = (Object.keys(permissions).length) ? permissions.actions.includes("create") : false;
             // if (createPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
-                props.toggleCreate(e);
+            props.toggleCreate(e);
             // } else {
             //     setErrorMsg(responses.permissions.user.create);
             // }
@@ -78,7 +78,7 @@ const UsersListing = (props) => {
             // console.log("Here I am")
             // const updatePermission = (Object.keys(permissions).length) ? permissions.actions.includes("update") : false;
             // if (updatePermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
-                props.toggleCreate(e);
+            props.toggleCreate(e);
             // } else {
             //     setErrorMsg(responses.permissions.user.edit);
             // }
@@ -92,7 +92,7 @@ const UsersListing = (props) => {
     const filterUsers = () => {
         // const readPermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : ((Object.keys(permissions).length) ? permissions.actions.includes("read") : false);
         // if (readPermission) {
-            props.toggleFilter("user");
+        props.toggleFilter("user");
         // } else {
         //     setErrorMsg(responses.permissions.user.read);
         // }
@@ -322,6 +322,8 @@ const UsersListing = (props) => {
             } catch (e) {
                 console.log("Error in user delete", e);
                 setErrorMsg(e.message);
+            } finally {
+                setIsDeleted(false);
             }
         } else {
             setIsAlert({
@@ -356,14 +358,14 @@ const UsersListing = (props) => {
 
         // const readPermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : ((Object.keys(permissions).length) ? permissions.actions.includes("read") : false);
         // if (readPermission) {
-            utils.addQueryParameter('page', 1);
-            if (keyword) {
-                utils.addQueryParameter('search', keyword);
-            } else {
-                utils.removeQueryParameter('search');
-            }
+        utils.addQueryParameter('page', 1);
+        if (keyword) {
+            utils.addQueryParameter('search', keyword);
+        } else {
+            utils.removeQueryParameter('search');
+        }
 
-            fetchUsers();
+        fetchUsers();
         // } else {
         //     setErrorMsg(responses.permissions.user.read);
         // }
@@ -601,14 +603,14 @@ const UsersListing = (props) => {
                 //     </span>
                 // </div>
                 <div className="createNew noInfos authentications">
-                  <div className="noRecordsImgWraper">
-                    <img src={noRecords} className="noRecords" alt="" />
-                    <h4>No Users Found</h4>
-                    <p>No users have been listed here yet</p>
-                    {(keyword === '') ?
-                    <button className="creatUserBtn" onClick={toggleCreateHeader}><img className="plusIcon" src={plus_icon} alt="" /><span>Create the First User</span></button>
-                    : ''}
-                  </div>
+                    <div className="noRecordsImgWraper">
+                        <img src={noRecords} className="noRecords" alt="" />
+                        <h4>No Users Found</h4>
+                        <p>No users have been listed here yet</p>
+                        {(keyword === '') ?
+                            <button className="creatUserBtn" onClick={toggleCreateHeader}><img className="plusIcon" src={plus_icon} alt="" /><span>Create the First User</span></button>
+                            : ''}
+                    </div>
                 </div>
             }
         </div>

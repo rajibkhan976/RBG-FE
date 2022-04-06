@@ -326,6 +326,7 @@ const GroupListing = (props) => {
       });
     } finally {
       setIsLoader(false);
+      setIsDeleted(false);
     }
   };
 

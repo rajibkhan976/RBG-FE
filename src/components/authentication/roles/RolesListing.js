@@ -310,6 +310,7 @@ const RolesListing = (props) => {
             id: null,
           });
           setIsLoader(false);
+          setIsDeleted(false);
         });
     } else {
       setIsAlert({
