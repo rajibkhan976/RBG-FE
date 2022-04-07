@@ -46,11 +46,11 @@ const ZapierSetup = (props) => {
                 </div>
                 <div className="apiDisplay">
                     { isLoading ? <Loader/> : ""}
-                    <h3>Zapier Config</h3>
+                    <h3>Zapier invitation link</h3>
                     <p className="pid">{ process.env.REACT_APP_ZAPIER }
                         <button type="button" className="copyTo" onClick={() => copyToClipboard(process.env.REACT_APP_ZAPIER)}/></p>
 
-                    <h3>API Tokens</h3>
+                    <h3>API token</h3>
                     <p className="pid">{ zapierKey } <button type="button" className="copyTo" onClick={() => copyToClipboard(zapierKey)}/></p>
                 </div>
             </div>
