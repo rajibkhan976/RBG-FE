@@ -1,17 +1,33 @@
 import React, {useEffect, useState} from "react";
 import { ZapierServices } from "../../../../services/authentication/ZapierServices";
-
-
+import Loader from "../../../shared/Loader";
+import AlertMessage from "../../../shared/messages/alertMessage";
 
 const ZapierSetup = (props) => {
     const [zapierKey, setZapierKey] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [copyToClipMsg, setCopyToClipMsg] = useState({
+        message: "",
+        type: ""
+    });
+    const closeCopyToClipAlert = () => {
+        setCopyToClipMsg({...copyToClipMsg, message: "", type: ""});
+    };
     const fetchZapierKey = async () => {
+        setIsLoading(true);
         let zapierResp = await ZapierServices.fetchKey();
+        setIsLoading(false);
         setZapierKey(zapierResp.key);
     }
+    const copyToClipboard = (id) => {
+        if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
+            setCopyToClipMsg({ ...copyToClipMsg, message: "Copied to clipboard", type: "success"});
+            return navigator.clipboard.writeText(id);
+        }
+    };
     useEffect(() => {
         fetchZapierKey();
-    }, [])
+    }, []);
     /****************************** FUNCTIONS START **********************************/
     return (
         <>
@@ -29,13 +45,18 @@ const ZapierSetup = (props) => {
                     </div>
                 </div>
                 <div className="apiDisplay">
+                    { isLoading ? <Loader/> : ""}
                     <h3>Zapier Config</h3>
-                    <p>https://zapier.com/developer/invite/107874/70e3046f7faaabf0c5a337ecfeec34ca/</p>
+                    <p className="pid">{ process.env.REACT_APP_ZAPIER }
+                        <button type="button" className="copyTo" onClick={() => copyToClipboard(process.env.REACT_APP_ZAPIER)}/></p>
 
                     <h3>API Tokens</h3>
-                    <p>{ zapierKey }</p>
+                    <p className="pid">{ zapierKey } <button type="button" className="copyTo" onClick={() => copyToClipboard(zapierKey)}/></p>
                 </div>
             </div>
+            { copyToClipMsg.message ?
+                <AlertMessage message={copyToClipMsg.message} type={copyToClipMsg.type} time={2000} close={closeCopyToClipAlert} />
+                : ""}
         </>
     );
 };

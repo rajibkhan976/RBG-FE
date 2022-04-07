@@ -264,6 +264,24 @@ const Setup = (props) => {
                 </div>
               </div>
             </li> */}
+            <li>
+              <div className="listHead">
+                <i>
+                  <img src={SetupIcon8} alt="" />
+                </i>
+                <div>
+                  <h3>
+                    <NavLink
+                        to="/zapier"
+                        onClick={(e) => props.clickedLink(e)}
+                    >
+                      Zapier
+                    </NavLink>
+                  </h3>
+                  <p>Setup zapier app</p>
+                </div>
+              </div>
+            </li>
           </ul>
         </Scrollbars>
       </div>
