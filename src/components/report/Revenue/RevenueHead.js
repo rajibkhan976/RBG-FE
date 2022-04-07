@@ -5,7 +5,8 @@ import arrowDown from "../../../assets/images/arrowDown.svg";
 import monthIcon from "../../../assets/images/month.svg";
 import filter from "../../../assets/images/filter.svg";
 
-const AttendenceHead = (props) => {
+
+const RevenueHead = (props) => {
   return (
     <div className="contactHead">
       <div className="userListHead">
@@ -14,22 +15,11 @@ const AttendenceHead = (props) => {
             <li>Reports</li>
             <li>Attendence</li>
           </ul>
-          <h2 className="inDashboardHeader">Attendence</h2>
+          <h2 className="inDashboardHeader">Revenue</h2>
           <p className="userListAbout">Lorem ipsum dolor sit amet. Semi headline should be here.</p>
         </div>
         <div className="listFeatures">
-          <div className="searchBar appointments formControl">
-           <img className="monthIcons" src={monthIcon} alt="" /> 
-            <select
-              style={{
-                  backgroundImage: "url(" + arrowDown + ")",
-              }}>
-              <option value="">Day</option>
-              <option value="">Week</option>
-              <option value="">Month</option>
-              <option value="">Year</option>
-            </select>
-          </div>
+          
           
            <button className="saveNnewBtn appExport expContactBtn">
             <img src={uparrow_icon_grey} alt="" /> Export
@@ -40,18 +30,9 @@ const AttendenceHead = (props) => {
           </button> */}
         </div>
       </div>
-      <div className="head_ctrlRow">
-        {/* <div className="head_ctrlRow_left">
-                    <button className="saveNnewBtn massUpdateBtn">Mass Update</button>
-                </div> */}
-        <div className="head_ctrlRow_right">
-        
-         
-          
-        </div>
-      </div>
+     
     </div>
   );
 };
 
-export default AttendenceHead;
+export default RevenueHead;

@@ -15,6 +15,7 @@ import dashCal from "../../../src/assets/images/dashCal.svg";
 import GoalSetModal from "./goalSetModal";
 
 
+import arrow1 from "../../assets/images/arrow1.svg";
 import DashboardImg from "../../assets/images/Dashboard.jpg";
 import DashboardImg2 from "../../assets/images/Dashboard.png";
 import arrowLong from "../../assets/images/arrowLong.png";
@@ -122,6 +123,8 @@ const Dashboard = () => {
   ]);
   const [option, setOption] = useState(null);
   const [isLoader, setIsLoader] = useState(false);
+  const [openMonthDrop, setOpenMonthDrop] = useState(false);
+  
   
   useEffect(() => {
     document.title = "Red Belt Gym - Dashboard"
@@ -142,7 +145,10 @@ const Dashboard = () => {
   const toogleActionList = (index) => {
     setOption(index !== option ? index : null);
   };
-
+  
+  const openDropHanler = () => {
+    setOpenMonthDrop(!openMonthDrop);
+  };
   return (
     <>
     <div className="dashInnerUI">
@@ -492,14 +498,32 @@ const Dashboard = () => {
                           <p className="userListAbout">Lorem ispum dolar sit</p>
                       </div>
                       <div className="listFeatures">
-                          <div className="searchBar appointments formControl">
-                              <img className="monthIcons" src={month} alt=""/>
-                              <select >
-                                  <option value="">Month</option>
-                              </select>
-                          </div>
-                          <button className="saveNnewBtn appExport expContactBtn"><img src={uparrow_icon_grey} alt=""/> Export</button>
-                          
+                        <div className="realative">
+                            <button className="searchBar formControl association" onClick={openDropHanler}>
+                                <img className="monthIcons" src={month} alt=""/>
+                                <span>Month</span>
+                                <div className="arrow"><img src={arrow1} alt=""/></div>
+                            </button>
+                            { openMonthDrop &&
+                                <ul className="timeSpanDropDown">
+                                <li>
+                                  <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="monthIcons">
+                                      <path d="M13.8771 2.40328H12.1951V0.988281H10.7951V2.40328H5.18309V0.988281H3.78309V2.40328H2.11809C1.82052 2.40328 1.53514 2.52149 1.32472 2.73191C1.1143 2.94232 0.996094 3.22771 0.996094 3.52528V13.8883C0.995963 14.0357 1.02489 14.1817 1.08121 14.318C1.13754 14.4542 1.22017 14.578 1.32437 14.6823C1.42857 14.7866 1.5523 14.8693 1.68849 14.9258C1.82468 14.9822 1.97067 15.0113 2.11809 15.0113H13.8771C14.0245 15.0113 14.1705 14.9822 14.3067 14.9258C14.4429 14.8693 14.5666 14.7866 14.6708 14.6823C14.775 14.578 14.8576 14.4542 14.914 14.318C14.9703 14.1817 14.9992 14.0357 14.9991 13.8883V3.52528C14.9991 3.22771 14.8809 2.94232 14.6705 2.73191C14.4601 2.52149 14.1747 2.40328 13.8771 2.40328ZM13.5971 13.6083H2.37909V6.59728H13.5971V13.6083ZM13.5971 5.19428H2.37909V3.78828H13.5971V5.19428Z"/>
+                                  </svg>
+                                   <button>Month</button>
+                                </li> 
+                                <li>
+                                  <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="monthIcons">
+                                      <path d="M13.8771 2.40328H12.1951V0.988281H10.7951V2.40328H5.18309V0.988281H3.78309V2.40328H2.11809C1.82052 2.40328 1.53514 2.52149 1.32472 2.73191C1.1143 2.94232 0.996094 3.22771 0.996094 3.52528V13.8883C0.995963 14.0357 1.02489 14.1817 1.08121 14.318C1.13754 14.4542 1.22017 14.578 1.32437 14.6823C1.42857 14.7866 1.5523 14.8693 1.68849 14.9258C1.82468 14.9822 1.97067 15.0113 2.11809 15.0113H13.8771C14.0245 15.0113 14.1705 14.9822 14.3067 14.9258C14.4429 14.8693 14.5666 14.7866 14.6708 14.6823C14.775 14.578 14.8576 14.4542 14.914 14.318C14.9703 14.1817 14.9992 14.0357 14.9991 13.8883V3.52528C14.9991 3.22771 14.8809 2.94232 14.6705 2.73191C14.4601 2.52149 14.1747 2.40328 13.8771 2.40328ZM13.5971 13.6083H2.37909V6.59728H13.5971V13.6083ZM13.5971 5.19428H2.37909V3.78828H13.5971V5.19428Z"/>
+                                  </svg>
+                                  <button>Year</button>
+                                </li> 
+                              </ul>
+                            }
+                            
+                        </div>
+                         
+                          <button className="saveNnewBtn appExport expContactBtn"><img src={uparrow_icon_grey} alt=""/> Export</button>       
                       </div>
                   </div>
               </div>

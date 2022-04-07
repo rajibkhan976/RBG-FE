@@ -4,10 +4,10 @@ import { ProtectedRoute } from "../../../middleware/ProtectedRoute";
 import DashboardFooter from "../../shared/FooterDashboard";
 import HeaderDashboard from "../../shared/HeaderDashboard";
 import InnerLeftMenu from "../../shared/InnerLeftMenu";
-import Attendence from "./Attendence";
+import Revenue from "./Revenue";
 
 
-const AttendenceRoutes = (props) => {
+const RevenueRoutes = (props) => {
   return (
     <React.Fragment>
       <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} routeMenu="report"/>
@@ -15,7 +15,7 @@ const AttendenceRoutes = (props) => {
         {/* <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} /> */}
         <div className="dashInnerStructure">
           <Switch>
-            <Route exact path="/attendence" component={Attendence} />
+            <Route exact path="/revenue" component={Revenue} />
           </Switch>
           <DashboardFooter />
         </div>
@@ -24,4 +24,4 @@ const AttendenceRoutes = (props) => {
   );
 }
 
-export default AttendenceRoutes;
+export default RevenueRoutes;

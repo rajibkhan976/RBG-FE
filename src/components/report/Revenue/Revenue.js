@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import AttendenceListing from "./AttendenceListing";
+import RevenueListing from "./RevenueListing";
 
 import ImportFilter from "./importFilter";
 
-const Attendence = () => {
+const Revenue = () => {
   document.title = "Red Belt Gym - Attendence";
     const [isModal, setIsModal] = useState(false);
     const openModal = () => {
@@ -15,7 +15,7 @@ const Attendence = () => {
     // key={Math.random().toString()}
     return (
     <>
-      <AttendenceListing openModal={() => {openModal()}} modalStatus={isModal}/>
+      <RevenueListing openModal={() => {openModal()}} modalStatus={isModal}/>
         { isModal &&
             <ImportFilter hideModal={() => {hideModal()}} />
         }
@@ -23,4 +23,4 @@ const Attendence = () => {
     );
 };
 
-export default Attendence;
+export default Revenue;

@@ -36,7 +36,7 @@ function LeftMenu(props) {
         <li>
           <NavLink
             className="leftMenuLink"
-            activeClassName="selected"
+            activeClassName="selected nobg"
             to="/dashboard"
             onClick={(e) => props.clickedSetupStatus(e)}
           >
@@ -433,18 +433,19 @@ function LeftMenu(props) {
           </NavLink>
         </li>  */}
          <li className="prototypeLink"> 
-           <NavLink 
+           <NavLink to="/appointment"
            className="leftMenuLink"
-           isActive={() => ["/appointment", "/attendence"]}
-           activeClassName={
-             pathURL === "/appointment" ||
-               pathURL === "/attendence"
-               ? "selected"
-               : ""
-           }
-           to="/appointment"          
-          onClick={(e) => props.clickedSetupStatus(e)}
-              // activeClassName="selected" 
+            
+              isActive={() => ["/appointment", "/attendence", "/revenue"]}
+              activeClassName={
+                  pathURL === "/appointment" ||
+                  pathURL === "/attendence" ||
+                  pathURL === "/revenue"
+                  ? "selected"
+                  : ""
+              }
+
+
            >
             {/* <div className="prototypeBatch">Prototype</div>  */}
              <svg

@@ -21,6 +21,7 @@ import PersonalDetailsRouter from "./setup/personalDetails/personalDetailsRoute"
 import ZapierRouter from "./setup/zapier/zapierRoute";
 import AppointmentRouter from "./report/Appointment/AppointmentRoutes";
 import AttendenceRouter from "./report/Attendence/AttendenceRoutes";
+import RevenueRouter from "./report/Revenue/RevenueRoutes";
 import HeaderDashboard from "./shared/HeaderDashboard";
 import {UserServices} from "../services/authentication/UserServices";
 import config from "../configuration/config";
@@ -671,6 +672,10 @@ const MainComponent = () => {
                             <Route exact path="/attendence">
                                 <AttendenceRouter toggleLeftSubMenu={toggleLeftSubMenu}
                                                    toggleCreate={(e) => toggleCreate(e)}></AttendenceRouter>
+                            </Route>
+                            <Route exact path="/revenue">
+                                <RevenueRouter toggleLeftSubMenu={toggleLeftSubMenu}
+                                                   toggleCreate={(e) => toggleCreate(e)}></RevenueRouter>
                             </Route>
                             <Route exact path="/" component={() => <Redirect to="/dashboard"/>}/>
                             <Route exact path="*">
