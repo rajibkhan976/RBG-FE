@@ -1,26 +1,73 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { ErrorAlert, SuccessAlert } from "../../../messages";
 import card from "../../../../../assets/images/card.svg";
 import bank_active from "../../../../../assets/images/bankActive.svg";
 import bank_inactive from "../../../../../assets/images/banks.svg";
 import cardActive from "../../../../../assets/images/cardActive.svg";
-// import crossTop from "../../../../../assets/images/cross.svg";
-// import payMode from "../../../../../assets/images/paymode.svg";
-// import pluss from "../../../../../assets/images/pluss.svg";.
+import crossTop from "../../../../../assets/images/cross.svg";
+import payMode from "../../../../../assets/images/paymode.svg";
+import pluss from "../../../../../assets/images/pluss.svg";
 import noDataIcon from "../../../../../assets/images/noData_icon.svg"
 import Loader from "../../../Loader";
 
 import { BillingServices } from "../../../../../services/billing/billingServices";
 
+let currentTime = new Date();
+let currentYear = currentTime.getFullYear();
+let currentMonth = currentTime.getMonth() + 1;
+
 const BillingOverview = (props) => {
   {console.log('billing props', props)}
-  //   const [newPayModal, setNewPayModal] = useState(false);
+  const addCardBtn = useRef(null)
+  const addBankBtn = useRef(null)
+  const [newPayModal, setNewPayModal] = useState(false);
   const [cardBankList, setCardBankList] = useState([])
   const [bankList, setBankList] = useState([])
   const [isLoader, setIsLoader] = useState(false);
+  const [addLoader, setAddLoader] = useState(false)
+  const [newPayTab, setNewPayTab] = useState(false)
+  const [cardNumberOn, setCardNumberOn] = useState("");
+  const [cardNumberCheck, setCardNumberCheck] = useState("");
+  const [cardExpairyCheck, setCardExpairyCheck] = useState("");
+  const [successMessage, setSuccessMessage] = useState("")
   const [isPrimary, setIsPrimay] = useState({
     type: 'card',
     billingId: ''
   });
+
+  const [newCardState, setNewCardState] = useState({
+    contact : props.contactId,
+    card_number: '',
+    expiration_year: '',
+    expiration_month: '',
+    cvv: '',
+    cardholder_name: '',
+    status: 'inactive'
+  })
+  const [newBankState, setNewBankState] = useState({
+    contact: props.contactId,
+    routing_number: '',
+    account_number: '',
+    account_holder: '',
+    account_type: '',
+    status: 'inactive'
+  })
+  const [newPayHasError, setNewPayHasError] = useState(false);
+  const [newPayErrors, setNewPayErrors] = useState({
+    contactId: '',
+    status: '',
+    card_number: '',
+    expiration_year: '',
+    expiration_month: '',
+    expiration_date: '',
+    cvv: '',
+    cardholder_name: '',
+    routing_number: '',
+    account_number: '',
+    account_holder: '',
+    account_type: '',
+    card_details_invalid: ''
+  })
 
   const fetchCardBank = async () => {
     let cardBanksList;
@@ -29,7 +76,7 @@ const BillingOverview = (props) => {
       setIsLoader(true);
       let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
       cardBanksList = cardBankResponce;
-      console.log({ cardBankResponce });
+      console.log("cardBankResponce", cardBankResponce);
       if (cardBankResponce) {
         let primaryPaymentSource = cardBankResponce.primary === 'card' ? 'cards' : 'banks';
         //Filter card bank by active
@@ -52,6 +99,8 @@ const BillingOverview = (props) => {
             type: cardBankResponce.primary,
             billingId: filterCardBank[0]._id
           });
+          setNewPayTab(cardBankResponce.primary)
+          console.log("primaryPaymentSource", primaryPaymentSource);
         }
         console.log({ isPrimary });
       }
@@ -77,6 +126,427 @@ const BillingOverview = (props) => {
     }
   };
 
+  const changeAddTab = (type) => {
+    console.log("type", type);
+    setNewPayTab(type)
+  }
+  // CARD NUMBER CHECK
+  const testCardTypeFn = (cardNum) => {
+    let visaPattern = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
+    let visaPatternTwo = /^4\d{3}(| |-)(?:\d{4}\1){2}\d{4}$/;
+    let visaPatternThree = /^4\d{12}(?:\d{3})?$/;
+    let mastPattern = /^(?:5[1-5][0-9]{14})$/;
+    let mastPatternTwo = /^5[1-5]\d{14}$/;
+    let mastPatternThree = /^5[1-5]\d{2}(| |-)(?:\d{4}\1){2}\d{4}$/;
+    let amexPattern = /^(?:3[47][0-9]{13})$/;
+    let amexPatternTwo = /^3[47]\d{13,14}$/;
+    let amexPatternThree = /^3[47]\d{1,2}(| |-)\d{6}\1\d{6}$/;
+    let discPattern = /^(?:6(?:011|5[0-9][0-9])[0-9]{12})$/;
+    let discPatternTwo = /^6(?:011|5\d\d)(| |-)(?:\d{4}\1){2}\d{4}$/
+    let discPatternThree = /^(?:6011\d{12})|(?:65\d{14})$/
+    let isAmex = amexPattern.test(cardNum) === true;
+    let isAmexTwo = amexPatternTwo.test(cardNum) === true;
+    let isAmexThree = amexPatternThree.test(cardNum) === true;
+    let isVisa = visaPattern.test(cardNum) === true;
+    let isVisaTwo = visaPatternTwo.test(cardNum) === true
+    let isVisaThree = visaPatternThree.test(cardNum) === true
+    let isMast = mastPattern.test(cardNum) === true;
+    let isMastTwo = mastPatternTwo.test(cardNum) === true
+    let isMastThree = mastPatternThree.test(cardNum) === true
+    let isDisc = discPattern.test(cardNum) === true;
+    let isDiscTwo = discPatternTwo.test(cardNum) === true
+    let isDiscThree = discPatternThree.test(cardNum) === true
+    let cardString;
+    
+    if (isAmex || isAmexTwo || isAmexThree || isVisa || isVisaTwo || isVisaThree || isMast || isMastThree || isMastTwo || isDisc || isDiscTwo || isDiscThree) {
+      // console.log("IF IN CARD");
+      if (isAmex || isAmexTwo || isAmexThree) {
+        // console.log("IF IN CARD - AMEX");
+        // AMEX-specific logic goes here
+        cardString = "isAmex";
+        setNewPayErrors((errorMessage) => ({
+          ...errorMessage,
+          card_number: "",
+        }));
+        return cardString;
+      } else {
+        if (isAmex || isAmexTwo || isAmexThree){
+          cardString = "isAmex";
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            card_number: "",
+          }));
+          return cardString;
+        }
+        else if (isVisa || isVisaTwo || isVisaThree) {
+          cardString = "isVisa";
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            card_number: "",
+          }));
+          return cardString;
+        }
+        else if (isMast || isMastThree || isMastTwo) {
+        cardString = "isMast";
+        setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            card_number: "",
+          }));
+          return cardString;
+        }
+        else if (isDisc || isDiscTwo || isDiscThree) {
+          cardString = "isDisc";
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            card_number: "",
+          }));
+          return cardString;
+        }
+        else {
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            card_number: "Card number is not valid.",
+          }));
+        }
+      }
+    } else {
+      setNewPayErrors((errorMessage) => ({
+        ...errorMessage,
+        card_number: "Card number is not valid.",
+      }));
+    }
+  };
+  const cardNumberCheckHandler = (e) => {
+    let cardNumber = e.target.value;
+    if (cardNumber.length <= 19) {
+      var formattedCardNumber = cardNumber.replace(/[^\d]/g, "");
+      let cardType = testCardTypeFn(formattedCardNumber);
+      
+      switch (cardType) {
+        case "isAmex":
+          // console.log("TYPE::::", cardType);
+          // AMEX-specific logic goes here
+          formattedCardNumber = formattedCardNumber.substring(0, 15);
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+              card_number: "",
+          }));
+          break;
+        case "isVisa":
+          // console.log("TYPE::::", cardType);
+          formattedCardNumber = formattedCardNumber.substring(0, 16);
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            card_number: "",
+          }));
+          break;
+        case "isMast" || "isDisc":
+          // console.log("TYPE::::", cardType);
+          formattedCardNumber = formattedCardNumber.substring(0, 16);
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            card_number: "",
+          }));
+          break;
+        case "isDisc":
+          // console.log("TYPE::::", cardType);
+          formattedCardNumber = formattedCardNumber.substring(0, 16);
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            card_number: "",
+          }));
+          break;  
+  
+        default:
+          // console.log("cardType", cardType);
+          setNewPayErrors((errorMessage) => ({
+              ...errorMessage,
+              card_number: "Please provide a valid card number.",
+            }));
+          break;
+      }
+      // Split the card number is groups of 4
+      var cardNumberSections = formattedCardNumber.match(/\d{1,4}/g);
+      // console.log("cardNumberSections", cardNumberSections);
+      if (formattedCardNumber.match(/\d{1,4}/g)) {
+        // console.log("formattedCardNumber", formattedCardNumber);
+        formattedCardNumber = cardNumberSections.join("-");
+        setCardNumberCheck(formattedCardNumber);
+        var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");
+        setNewCardState({
+          ...newCardState,
+          card_number: cardNumberChanged
+        });
+        // console.log("errors:::", newPayErrors);
+      }
+      if (e.target.value === "") {
+        setNewCardState({
+          ...newCardState,
+          card_number: ""
+        });
+        setCardNumberCheck('');
+      }
+    }
+  };
+  // CARD NUMBER CHECK
+  // CARD NAME CHECK
+  const cardNameCheckHandler = (e) => {
+    const re = /^[a-zA-Z ]*$/;
+    if (e.target.value === "" || re.test(e.target.value)) {
+      if(e.target.value.length === 0) {
+        setNewCardState({
+          ...newCardState,
+          cardholder_name: e.target.value
+        })
+        setNewPayErrors((errorMessage) => ({
+          ...errorMessage,
+          cardholder_name: "Please enter card holder's name.",
+        }))
+     }
+     else {
+      setNewCardState({
+        ...newCardState,
+        cardholder_name: e.target.value
+      })
+       setNewPayErrors((errorMessage) => ({
+         ...errorMessage,
+         cardholder_name: "",
+       }))
+     }
+    }
+  };
+  // CARD NAME CHECK
+
+  // CARD EXPIRY CHECK
+  const cardExpairyCheckHandler = (e) => {
+    let cardExpairy = e.target.value;
+    
+    if(cardExpairy !=="" && cardExpairy.length){
+      if(cardExpairy[0]>1) 
+      cardExpairy = "0" + cardExpairy[0]
+    }
+    console.log(cardExpairy.length);
+    if(cardExpairy.length === 0 || cardExpairy.length < 7) {
+      setNewPayErrors((errorMessage) => ({
+        ...errorMessage,
+        expiration_date: "Card expiry date is not valid.",
+      }));
+    } else {
+      setNewPayErrors((errorMessage) => ({
+        ...errorMessage,
+        expiration_date: "",
+      }));
+    }
+
+    var formattedCardExpairy = cardExpairy.replace(/[^\d]/g, "");
+    formattedCardExpairy = formattedCardExpairy.substring(0, 6);
+
+    var cardExpairySectionsMonth = formattedCardExpairy.slice(0, 2);
+    var cardExpairySectionsYear = formattedCardExpairy.slice(2, 6);
+
+    if (cardExpairySectionsMonth > 0 && cardExpairySectionsYear > 0) {
+      formattedCardExpairy =
+        cardExpairySectionsMonth + "/" + cardExpairySectionsYear;
+    } else if (formattedCardExpairy <= 2) {
+      formattedCardExpairy = cardExpairySectionsMonth;
+    }
+    setCardExpairyCheck(formattedCardExpairy);
+    setNewCardState({
+      ...newCardState,
+      expiration_month: cardExpairySectionsMonth,
+      expiration_year: cardExpairySectionsYear,
+    });
+  };
+  // CARD EXPIRY CHECK
+
+  // CARD CVV CHECK
+  const cardCvvCheckHandler = (e) => {
+    let cardCvv = e.target.value;
+    var formattedCardCvv = cardCvv.replace(/[^\d]/g, "");
+    formattedCardCvv = formattedCardCvv.substring(0, 3);
+    
+    setNewCardState({
+      ...newCardState,
+      cvv: formattedCardCvv
+    });
+  };
+  // CARD CVV CHECK
+
+  // SAVE NEW CARD
+  
+  const saveNewCard = async (e) => {
+    e.preventDefault()
+    e.target.setAttribute("disabled", true)
+
+    let cardError;
+    let cardPayload;
+
+    const cardExpairyYearCheckFn = () => {
+      let inputYear = newCardState.expiration_year;
+      if (inputYear > currentYear) {
+        return inputYear;
+      } else if (inputYear == currentYear) {
+        if (newCardState.expiration_month > currentMonth) {
+          return inputYear;
+        } else {
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            expiration_date: "Card expiry date is not valid.",
+          }));
+          cardError = true;
+          return false;
+        }
+      }
+      else {
+        setNewPayErrors((errorMessage) => ({
+          ...errorMessage,
+          expiration_date: "Card expiry date is not valid.",
+        }));
+        cardError = true;
+        return false;
+      }
+    };
+  
+    const cardExpairyMonthCheckFn = () => {
+      let inputMonth = newCardState.expiration_month;
+  
+      if (inputMonth > currentMonth) {
+        //console.log(inputMonth);
+        if (inputMonth <= 12) {
+          return inputMonth;
+        } else {
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            expiration_date: "Card expiry date is not valid.",
+          }));
+          cardError = true;
+          return false;
+        }
+      } else if (inputMonth <= currentMonth && inputMonth.length > 0) {
+        if (newCardState.expiration_year > currentYear) {
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            expiration_date: "",
+          }));
+          return inputMonth;
+        } else {
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            expiration_date: "Card expiry date is not valid.",
+          }));
+          cardError = true;
+          return false;
+        }
+      } else if (inputMonth == "00" || inputMonth === 0) {
+        if (inputMonth.length > 0) {
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            expiration_date: "Card expiry date is not valid.",
+          }));
+          cardError = true;
+          return false;
+        } else {
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            expiration_date: "Card expiry date is not valid.",
+          }));
+          cardError = true;
+          return false;
+        }
+      } else {
+        setNewPayErrors((errorMessage) => ({
+          ...errorMessage,
+          expiration_date: "Card expiry date is not valid.",
+        }));
+        cardError = true;
+        return false;
+      }
+    };
+
+    const expiration_year = cardExpairyYearCheckFn();
+    const expiration_month = cardExpairyMonthCheckFn();
+
+    if(newCardState.card_number.trim() === "") {
+      cardError = true;
+
+      setNewPayErrors(errorMessage => ({
+        ...errorMessage,
+        card_number: "Please provide a valid card number."
+      }))
+    }
+    if(newCardState.cardholder_name.trim() === "") {
+      cardError = true;
+
+      setNewPayErrors(errorMessage => ({
+        ...errorMessage,
+        cardholder_name: "Please provide a valid card number."
+      }))
+    }
+    if(newCardState.expiration_month.trim() === "" || newCardState.expiration_year.trim() === "") {
+      cardError = true;
+
+      setNewPayErrors(errorMessage => ({
+        ...errorMessage,
+        expiration_date: "Please provide a valid card number."
+      }))
+    }
+
+    // CREATE NEW CARD PAYLOAD
+    cardPayload = newCardState.card_number.trim() !== "" && expiration_year !== undefined && expiration_month !== undefined && newCardState.cardholder_name.trim() !== "" ? {
+      contact: newCardState.contact,
+      card_number: newCardState.card_number,
+      expiration_year:newCardState.expiration_year,
+      expiration_month: newCardState.expiration_month,
+      cvv: newCardState.cvv.trim() !== "" ? newCardState.cvv : "",
+      cardholder_name: newCardState.cardholder_name,
+      status: "active"
+    } : cardError = true
+
+    console.log("NEW CARD:::", cardPayload);
+
+    if (!cardError) {
+      setAddLoader(true)
+
+        try{
+            await BillingServices.addCard(cardPayload);
+            setNewPayErrors((errorMessage) => ({
+              ...errorMessage,
+              card_details_invalid: "",
+            })); 
+
+            setSuccessMessage("Card successfully added!")
+
+            setTimeout(() => {
+              setSuccessMessage("")
+            }, 2000);
+
+            setNewPayModal(false);
+        } catch (error) {
+          console.log("NEW PAY HAS ERROR");
+          cardError = true;
+          setAddLoader(false)
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            card_details_invalid: error.message,
+          }));
+        } finally {
+          cardError = false;
+          cardPayload = {
+            contact: "",
+            card_number: "",
+            expiration_year: "",
+            expiration_month: "",
+            cvv: "",
+            cardholder_name: "",
+            status: "",
+          };
+          fetchCardBank();
+          setAddLoader(false)
+        }
+    }
+  }
+  // SAVE NEW CARD
+
   useEffect(() => {
     fetchCardBank()
   }, []);
@@ -92,11 +562,14 @@ const BillingOverview = (props) => {
 
   return (
     <>
+    {
+      successMessage !== "" && <SuccessAlert message={successMessage} />
+    }
       <div className={props.isNoCardBankFlagErr ? "cartProductInner productBillingOverview error" : "cartProductInner productBillingOverview"}>
         <header className="informHeader d-flex f-align-center f-justify-between">
           <h5>Billing Overview</h5>
 
-          {/* <button
+          <button
             className="btn addPaymentInfo"
             onClick={(e) => {
               e.preventDefault();
@@ -104,7 +577,7 @@ const BillingOverview = (props) => {
             }}
           >
             + Add
-          </button> */}
+          </button>
         </header>
 
         <div className="bodytransactionForm bodyProductPayModes d-flex f-column">
@@ -216,9 +689,10 @@ const BillingOverview = (props) => {
         </div>
       </div>
 
-      {/* {newPayModal && (
+      {newPayModal && (
         <div className="modalBackdrop modalNewPay">
           {console.log("NEW PAY METHOD:::", isPrimary.type)}
+          {addLoader && <Loader />}
           <div className="slickModalBody">
             <div className="slickModalHeader">
               <button
@@ -246,8 +720,8 @@ const BillingOverview = (props) => {
                     <input
                       type="radio"
                       name="transactionType"
-                      defaultChecked={isPrimaryMethod === "card"}
-                      onChange={(e) => props.setNewPayMethod("card")}
+                      defaultChecked={newPayTab === "card"}
+                      onChange={()=>changeAddTab("card")}
                     />
                     <span></span>
                   </div>{" "}
@@ -258,8 +732,8 @@ const BillingOverview = (props) => {
                     <input
                       type="radio"
                       name="transactionType"
-                      defaultChecked={props.newPayMethod === "bank"}
-                      onChange={(e) => props.setNewPayMethod("bank")}
+                      defaultChecked={newPayTab === "bank"}
+                      onChange={()=>changeAddTab("bank")}
                     />
                     <span></span>
                   </div>{" "}
@@ -267,36 +741,42 @@ const BillingOverview = (props) => {
                 </label>
               </div>
 
-              {props.newPayMethod === "card" && (
+              {newPayTab === "card" && (
                 <div className="posSellingForm">
                   <div className="modalForm">
-                    <form>
-                      <div className="cmnFormRow">
+                    <div className="formBodyNew">
+                    <div className={newPayErrors.card_number !== "" ? "cmnFormRow error" : "cmnFormRow"}>
                         <label>Card Number</label>
                         <div className="cmnFormField">
                           <input
                             className="cmnFieldStyle"
-                            type="number"
+                            type="text"
                             placeholder="xxxx-xxxx-xxxx-xxxx"
                             name=""
+                            onChange={cardNumberCheckHandler}
+                            value={cardNumberCheck}
                           />
                         </div>
+                        {newPayErrors.card_number !== "" && <p className="errorMsg">{newPayErrors.card_number}</p>}
                       </div>
 
-                      <div className="cmnFormRow">
+                      <div className={newPayErrors.cardholder_name !== "" ? "cmnFormRow error" : "cmnFormRow"}>
                         <label>Card Holder Name</label>
                         <div className="cmnFormField">
                           <input
                             type="text"
+                            onChange={cardNameCheckHandler}
                             placeholder="Ex. Adam Smith"
                             className="cmnFieldStyle"
                             name=""
+                            value={newCardState.cardholder_name}                            
                           />
                         </div>
+                        {newPayErrors.cardholder_name !== "" && <p className="errorMsg">{newPayErrors.cardholder_name}</p>}
                       </div>
 
                       <div className="cmnFormRow">
-                        <div className="cmnFormCol">
+                        <div className={newPayErrors.expiration_date !== "" ? "cmnFormCol error" : "cmnFormCol"}>
                           <label>Expiry Date</label>
                           <div className="cmnFormField">
                             <input
@@ -304,35 +784,46 @@ const BillingOverview = (props) => {
                               placeholder="mm/yy"
                               name=""
                               className="cmnFieldStyle"
+                              onChange={cardExpairyCheckHandler}
+                              value={cardExpairyCheck}
                             />
                           </div>
+                          {newPayErrors.expiration_date !== "" && <p className="errorMsg">{newPayErrors.expiration_date}</p>}
                         </div>
                         <div className="cmnFormCol">
                           <label>CVV</label>
-                          <div className="cmnFormField">
+                          <div className={newPayErrors.cvv !== "" ? "cmnFormField error" : "cmnFormField"}>
                             <input
                               type="text"
                               name=""
                               className="cmnFieldStyle"
+                              onChange={cardCvvCheckHandler}
+                              value={newCardState.cvv}
                             />
                           </div>
+                          {newPayErrors.cvv !== "" && <p className="errorMsg">{newPayErrors.cvv}</p>}
                         </div>
                       </div>
 
                       <div className="modalbtnHolder">
-                        <button type="reset" className="saveNnewBtn orangeBtn">
+                        <button 
+                          type="reset" 
+                          className="saveNnewBtn orangeBtn"
+                          onClick={saveNewCard}
+                          ref={addCardBtn}
+                        >
                           <img src={pluss} alt="" /> Add my Card
                         </button>
                       </div>
-                    </form>
+                    </div>
                   </div>
                 </div>
               )}
 
-              {props.newPayMethod === "bank" && (
+              {newPayTab === "bank" && (
                 <div className="posSellingForm">
                   <div className="modalForm">
-                    <form>
+                    <div className="formBodyNew">
                       <div className="cmnFormRow">
                         <label>Account Number</label>
                         <div className="cmnFormField">
@@ -386,19 +877,20 @@ const BillingOverview = (props) => {
                             e.preventDefault();
                             setNewPayModal(true);
                           }}
+                          ref={addBankBtn}
                         >
                           <img src={pluss} alt="" />
                           Add my Bank Account
                         </button>
                       </div>
-                    </form>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
           </div>
         </div>
-      )} */}
+      )}
     </>
   );
 };
