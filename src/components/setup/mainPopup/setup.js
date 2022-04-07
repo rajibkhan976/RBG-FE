@@ -11,6 +11,7 @@ import SetupIcon6 from "../../../assets/images/setupicon6.svg";
 import SetupIcon7 from "../../../assets/images/setupicon7.svg";
 import SetupIcon8 from "../../../assets/images/courses.svg";
 import SetupIcon9 from "../../../assets/images/nn.svg"
+import zapierIcon from "../../../assets/images/zapier.svg"
 
 const Setup = (props) => {
   return (
@@ -267,7 +268,7 @@ const Setup = (props) => {
             <li>
               <div className="listHead">
                 <i>
-                  <img src={SetupIcon8} alt="" />
+                  <img src={zapierIcon} alt="" />
                 </i>
                 <div>
                   <h3>
