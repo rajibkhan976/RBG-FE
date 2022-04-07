@@ -14,6 +14,7 @@ import ProductRouter from "./setup/product/productRoute";
 import NumberRouting from "./numbers/NumberRoute";
 import CourseRouter from "./setup/course/courseRoute";
 import CustomizationRouter from "./setup/customization/customizationsRoute";
+import PaymentRouting from "./setup/paymentRouting/paymentRouting"
 import StatusPhasesRouter from "./setup/status_phase/status_phasesRoute";
 import GymDetailsRouter from "./setup/gymDetail/gymDetailsRoute";
 import PersonalDetailsRouter from "./setup/personalDetails/personalDetailsRoute";
@@ -578,6 +579,10 @@ const MainComponent = () => {
                             <Route exact path="/number-list">
                                 <NumberRouting toggleLeftSubMenu={toggleLeftSubMenu}
                                                toggleCreate={(e) => toggleCreate(e)}></NumberRouting>
+                            </Route>
+                            <Route exact path="/payment-setup">
+                                <PaymentRouting toggleLeftSubMenu={toggleLeftSubMenu}
+                                               toggleCreate={(e) => toggleCreate(e)}></PaymentRouting>
                             </Route>
                             <Route exact path="/customizations">
                                 <CustomizationRouter toggleLeftSubMenu={toggleLeftSubMenu}

@@ -283,6 +283,25 @@ const Setup = (props) => {
                 </div>
               </div>
             </li>
+             
+             <li>
+               <div className="listHead">
+                 <i>
+                   <img src={SetupIcon8} alt="" />
+                 </i>
+                 <div>
+                   <h3>
+                     <NavLink
+                       to="/payment-setup"
+                       onClick={(e) => props.clickedLink(e)}
+                     >
+                       Payment Setup
+                     </NavLink>
+                   </h3>
+                   <p>Set up your payment modes</p>
+                 </div>
+               </div>
+             </li>
           </ul>
         </Scrollbars>
       </div>
