@@ -47,8 +47,8 @@ const ZapierSetup = (props) => {
                 <div className="apiDisplay">
                     { isLoading ? <Loader/> : ""}
                     <h3>Zapier invitation link</h3>
-                    <p className="pid">{ process.env.REACT_APP_ZAPIER }
-                        <button type="button" className="copyTo" onClick={() => copyToClipboard(process.env.REACT_APP_ZAPIER)}/></p>
+                    <p className="pid"><a href={process.env.REACT_APP_ZAPIER_LINK} target="_blank">{ process.env.REACT_APP_ZAPIER_LINK }</a>
+                        <button type="button" className="copyTo" onClick={() => copyToClipboard(process.env.REACT_APP_ZAPIER_LINK)}/></p>
 
                     <h3>API token</h3>
                     <p className="pid">{ zapierKey } <button type="button" className="copyTo" onClick={() => copyToClipboard(zapierKey)}/></p>
