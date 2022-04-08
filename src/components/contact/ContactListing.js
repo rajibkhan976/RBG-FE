@@ -46,24 +46,33 @@ const ContactListing = forwardRef((props, ref) => {
     const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "contact")));
     const dispatch = useDispatch();
     const modalId = useSelector((state) => state.contact.contact_modal_id);
+    const isFirstTime = useSelector((state) => state.contact.isFirstTime);
     const isClicked = useSelector((state) => state.notification.importId);
+    const isMounted = useRef(false);
     useEffect(() => {
         if (isClicked) {
+            console.log('isClicked')
             setHideFilter(false);
             fetchContact();
         }
     }, [isClicked]);
     useEffect(() => {
-        if (modalId === '') {
+        if (modalId === '' && !isFirstTime) {
             fetchContact();
         }
     }, [modalId]);
-
+    useEffect(() => {
+        return () => {
+            dispatch({
+                type: actionTypes.CONTACTS_MODAL_RESET
+            });
+        }
+    })
     let arrangeColRef = useRef();
 
     const checkOutsideClick = (e) => {
         if (arrangeColRef.current.contains(e.target)) {
-            return;
+            return false;
         } else {
             setColModalStatus(false);
             handleClear();

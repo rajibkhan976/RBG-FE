@@ -516,19 +516,6 @@ const MainComponent = () => {
                     }
                 });
             }
-            setNotification(prevState => {
-                return {
-                    ...prevState,
-                    payment: {
-                        data: prevState.payment.data.map((el) => {
-                            el.isRead = true;
-                            return {...el};
-                        }),
-                        page: prevState.payment.page,
-                        totalPage: prevState.payment.totalPage
-                    }
-                }
-            });
         }
     }
 
