@@ -152,7 +152,7 @@ const ProgramTransaction = (props) => {
     setContractData({ ...contractData, billing_cycle: e.target.value });
   }
 
-  //Tution amount change
+  //Tuition amount change
   const handleTutionAmountChange = (e) => {
     e.preventDefault();
     console.log('ta', e.target.value);
@@ -284,20 +284,20 @@ const ProgramTransaction = (props) => {
     //   formErrorsCopy.billing_cycle = "Please modify billing cycle"
     // }
 
-    //Tution amount
+    //Tuition amount
     let regex = /^\d{0,5}(\.\d{1,2})?$/;
     if (!contractData.amount) {
       isError = true;
-      formErrorsCopy.amount = "Please provide the program tution fee."
+      formErrorsCopy.amount = "Please provide the program tuition fee."
     } else if (isNaN(contractData.amount)) {
       isError = true;
       formErrorsCopy.amount = "Numeric value required"
     } else if (contractData.amount <= 0) {
       isError = true;
-      formErrorsCopy.amount = "Tution fee can't be zero."
+      formErrorsCopy.amount = "Tuition fee can't be zero."
     } else if (!regex.test(contractData.amount)) {
       isError = true;
-      formErrorsCopy.amount = "Tution fee can't be more than 2 decimal places."
+      formErrorsCopy.amount = "Tuition fee can't be more than 2 decimal places."
     }
 
     //Program/Course start date
@@ -449,7 +449,7 @@ const ProgramTransaction = (props) => {
         <div className="formsection gap">
           <div className="cmnFormCol">
             <label className='labelWithInfo'>
-              <span>Tution Amount</span>
+              <span>Tuition Amount</span>
               <span className="infoSpan">
                 <img src={info_icon} alt="" />
                 <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
