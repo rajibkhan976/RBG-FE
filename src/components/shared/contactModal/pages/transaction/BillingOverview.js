@@ -11,6 +11,7 @@ import noDataIcon from "../../../../../assets/images/noData_icon.svg"
 import Loader from "../../../Loader";
 
 import { BillingServices } from "../../../../../services/billing/billingServices";
+import { setTimeout } from "timers";
 
 let currentTime = new Date();
 let currentYear = currentTime.getFullYear();
@@ -26,7 +27,7 @@ const BillingOverview = (props) => {
   const [isLoader, setIsLoader] = useState(false);
   const [addLoader, setAddLoader] = useState(false)
   const [newPayTab, setNewPayTab] = useState(false)
-  const [cardNumberOn, setCardNumberOn] = useState("");
+  // const [cardNumberOn, setCardNumberOn] = useState("");
   const [cardNumberCheck, setCardNumberCheck] = useState("");
   const [cardExpairyCheck, setCardExpairyCheck] = useState("");
   const [successMessage, setSuccessMessage] = useState("")
@@ -42,7 +43,7 @@ const BillingOverview = (props) => {
     expiration_month: '',
     cvv: '',
     cardholder_name: '',
-    status: 'inactive'
+    status: 'active'
   })
   const [newBankState, setNewBankState] = useState({
     contact: props.contactId,
@@ -50,7 +51,7 @@ const BillingOverview = (props) => {
     account_number: '',
     account_holder: '',
     account_type: '',
-    status: 'inactive'
+    status: 'active'
   })
   const [newPayHasError, setNewPayHasError] = useState(false);
   const [newPayErrors, setNewPayErrors] = useState({
@@ -66,8 +67,34 @@ const BillingOverview = (props) => {
     account_number: '',
     account_holder: '',
     account_type: '',
-    card_details_invalid: ''
+    card_details_invalid: '',
+    bank_details_invalid: '',
+    primary_invalid: ''
   })
+
+  const makePrimaryMethod = (e, value) => {    
+    if (props.contactId && value) {
+      let payload = {
+        contactID: props.contactId,
+        accountType: value,
+      };
+      
+      try {
+        BillingServices.makePrimary(payload);
+        setIsPrimay({
+          ...isPrimary,
+          type: value
+        });
+      }
+      catch (error) {
+        console.log(error);
+        setNewPayErrors((errorMessage) => ({
+          ...errorMessage,
+          primary_invalid: error.message,
+        }));
+      }
+    }
+  };
 
   const fetchCardBank = async () => {
     let cardBanksList;
@@ -100,13 +127,16 @@ const BillingOverview = (props) => {
             billingId: filterCardBank[0]._id
           });
           setNewPayTab(cardBankResponce.primary)
-          console.log("primaryPaymentSource", primaryPaymentSource);
         }
-        console.log({ isPrimary });
       }
     } catch (error) {
       console.log(error);
     } finally {
+      console.log("accounts loaded!");
+      if((cardBanksList.banks.length === 0 && cardBanksList.cards.length === 0) || (!cardBanksList.primary || cardBanksList.primary === null)) {
+        console.log("here now");
+        setNewPayTab('card')
+      }
       setIsLoader(false);
     }
   };
@@ -231,6 +261,7 @@ const BillingOverview = (props) => {
             ...errorMessage,
               card_number: "",
           }));
+          setNewPayHasError(false)
           break;
         case "isVisa":
           // console.log("TYPE::::", cardType);
@@ -239,6 +270,7 @@ const BillingOverview = (props) => {
             ...errorMessage,
             card_number: "",
           }));
+          setNewPayHasError(false)
           break;
         case "isMast" || "isDisc":
           // console.log("TYPE::::", cardType);
@@ -247,6 +279,7 @@ const BillingOverview = (props) => {
             ...errorMessage,
             card_number: "",
           }));
+          setNewPayHasError(false)
           break;
         case "isDisc":
           // console.log("TYPE::::", cardType);
@@ -255,14 +288,16 @@ const BillingOverview = (props) => {
             ...errorMessage,
             card_number: "",
           }));
+          setNewPayHasError(false)
           break;  
   
         default:
           // console.log("cardType", cardType);
+          setNewPayHasError(true)
           setNewPayErrors((errorMessage) => ({
-              ...errorMessage,
-              card_number: "Please provide a valid card number.",
-            }));
+            ...errorMessage,
+            card_number: "Please provide a valid card number.",
+          }));
           break;
       }
       // Split the card number is groups of 4
@@ -372,11 +407,9 @@ const BillingOverview = (props) => {
   };
   // CARD CVV CHECK
 
-  // SAVE NEW CARD
-  
+  // SAVE NEW CARD  
   const saveNewCard = async (e) => {
     e.preventDefault()
-    e.target.setAttribute("disabled", true)
 
     let cardError;
     let cardPayload;
@@ -473,22 +506,25 @@ const BillingOverview = (props) => {
         ...errorMessage,
         card_number: "Please provide a valid card number."
       }))
+      setNewPayHasError(true)
     }
     if(newCardState.cardholder_name.trim() === "") {
       cardError = true;
 
       setNewPayErrors(errorMessage => ({
         ...errorMessage,
-        cardholder_name: "Please provide a valid card number."
+        cardholder_name: "Please provide a valid card holder's name"
       }))
+      setNewPayHasError(true)
     }
     if(newCardState.expiration_month.trim() === "" || newCardState.expiration_year.trim() === "") {
       cardError = true;
 
       setNewPayErrors(errorMessage => ({
         ...errorMessage,
-        expiration_date: "Please provide a valid card number."
+        expiration_date: "Please provide a valid card expiration date"
       }))
+      setNewPayHasError(true)
     }
 
     // CREATE NEW CARD PAYLOAD
@@ -508,27 +544,36 @@ const BillingOverview = (props) => {
       setAddLoader(true)
 
         try{
-            await BillingServices.addCard(cardPayload);
-            setNewPayErrors((errorMessage) => ({
-              ...errorMessage,
-              card_details_invalid: "",
-            })); 
+            (cardBankList.length == 0 && bankList.length == 0) && makePrimaryMethod(e, "card");
 
-            setSuccessMessage("Card successfully added!")
+            let cardBankResponce = await BillingServices.addCard(cardPayload);
 
-            setTimeout(() => {
-              setSuccessMessage("")
-            }, 2000);
+            if(cardBankResponce){
+              setNewPayErrors((errorMessage) => ({
+                ...errorMessage,
+                card_details_invalid: "",
+              })); 
 
-            setNewPayModal(false);
+              setSuccessMessage("Card successfully added!")
+
+              setTimeout(() => {
+                setSuccessMessage("")
+              }, 2000);
+              setNewPayHasError(false)
+              setNewPayModal(false);
+            }
         } catch (error) {
-          console.log("NEW PAY HAS ERROR");
           cardError = true;
-          setAddLoader(false)
           setNewPayErrors((errorMessage) => ({
             ...errorMessage,
             card_details_invalid: error.message,
           }));
+          setTimeout(()=>{
+            setNewPayErrors((errorMessage) => ({
+              ...errorMessage,
+              card_details_invalid: "",
+            }));
+          },5000)
         } finally {
           cardError = false;
           cardPayload = {
@@ -540,12 +585,257 @@ const BillingOverview = (props) => {
             cardholder_name: "",
             status: "",
           };
+
+          setNewPayErrors({
+            contactId: '',
+            status: '',
+            card_number: '',
+            expiration_year: '',
+            expiration_month: '',
+            expiration_date: '',
+            cvv: '',
+            cardholder_name: '',
+            routing_number: '',
+            account_number: '',
+            account_holder: '',
+            account_type: '',
+            card_details_invalid: '',
+            bank_details_invalid: '',
+            primary_invalid: ''
+          })
+
           fetchCardBank();
           setAddLoader(false)
         }
     }
   }
   // SAVE NEW CARD
+
+  // BANK ACCOUNT CHECK
+  const bankAccountCheckHandler = (e) => {
+    let accountNumber = e.target.value;
+    if(accountNumber.length === 0 || accountNumber.length < 9){
+      setNewPayErrors((errorMessage) => ({
+      ...errorMessage,
+        account_number: "Please provide proper account number.",
+      }));
+    }
+    else {
+      setNewPayErrors((errorMessage) => ({
+      ...errorMessage,
+        account_number: "",
+      }));
+    }
+    var formattedAccountNumber = accountNumber.replace(/[^\d]/g, "");
+    formattedAccountNumber = formattedAccountNumber.substring(0, 12);
+    
+    setNewBankState({
+      ...newBankState,
+      account_number: formattedAccountNumber
+    });
+  };
+  // BANK ACCOUNT CHECK
+
+  // BANK HOLDER NAME CHECK
+  const bankNameCheckHandler = (e) => {
+    const re = /^[a-zA-Z ]*$/;
+    if (e.target.value === "" || re.test(e.target.value)) {
+      if(e.target.value.length === 0) {
+        setNewPayErrors((errorMessage) => ({
+          ...errorMessage,
+          account_holder: "Please enter proper Account holder's name",
+        }));
+      }
+      else {
+        setNewPayErrors((errorMessage) => ({
+          ...errorMessage,
+          account_holder: "",
+        }));
+      }
+      setNewBankState({
+        ...newBankState,
+        account_holder: e.target.value
+      });
+    }
+  };
+  // BANK HOLDER NAME CHECK
+
+  // BANK ROUTING NUMBER CHECK
+  const bankRoutingCheckHandler = (e) => {
+    let bankRouting = e.target.value;
+
+    if(e.target.value.length === 0 || e.target.value.length < 9) {
+      setNewPayErrors((errorMessage) => ({
+        ...errorMessage,
+        routing_number: "Please enter proper Routing",
+      }));
+    }
+    else {
+      setNewPayErrors((errorMessage) => ({
+        ...errorMessage,
+        routing_number: "",
+      }));
+    }
+    var formattedBankRouting = bankRouting.replace(/[^\d]/g, "");
+    formattedBankRouting = formattedBankRouting.substring(0, 9);
+    setNewBankState({
+      ...newBankState,
+      routing_number: formattedBankRouting
+    });
+  };
+  // BANK ROUTING NUMBER CHECK
+
+  // SAVE NEW BANK ACCOUNT
+  const saveNewBank = async (e) => {
+    e.preventDefault();
+
+    let bankError = false;
+
+    if (newBankState.routing_number === "" || newBankState.routing_number < 9) {
+      setNewPayErrors((errorMessage) => ({
+        ...errorMessage,
+        routing_number: "Please enter proper Routing",
+      }));
+      bankError = true
+    } else {
+      setNewPayErrors((errorMessage) => ({
+        ...errorMessage,
+        routing_number: "",
+      }));
+    }
+    if (newBankState.account_holder.trim() === "" || newBankState.account_holder.length === 0) {
+      setNewPayErrors((errorMessage) => ({
+        ...errorMessage,
+        account_holder: "Please enter proper Account holder's name",
+      }));
+      bankError = true
+    } else {
+      setNewPayErrors((errorMessage) => ({
+        ...errorMessage,
+        account_holder: "",
+      }));
+    }
+    console.log("newBankState.account_number", newBankState.account_number, newBankState.account_number.length === 0);
+    if (newBankState.account_number.length === 0) {
+      setNewPayErrors((errorMessage) => ({
+      ...errorMessage,
+        account_number: "Please provide proper account number.",
+      }));
+      bankError = true
+    } else {
+      setNewPayErrors((errorMessage) => ({
+        ...errorMessage,
+        account_number: "",
+      }));
+    }
+
+      let bankPayload = newBankState.routing_number.trim() !== "" && newBankState.account_number.trim() !== "" && newBankState.account_holder.trim() !== "" ? {
+        contact: props.contactId,
+        routing_number:  newBankState.routing_number,
+        account_number: newBankState.account_number,
+        account_holder: newBankState.account_holder,
+        account_type: "checking",
+        status: "active",
+      } : bankError = true
+
+    if (!bankError) {
+      setAddLoader(true)
+      
+      try {
+        (cardBankList.length == 0 && bankList.length == 0) && makePrimaryMethod(e, "bank");
+        const bankResponse = await BillingServices.addBank(bankPayload);
+
+        if(bankResponse){
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            bank_details_invalid: "",
+          })); 
+                  
+          setNewPayModal(false)
+          fetchCardBank();
+        }
+      } catch (error) {
+        setNewPayErrors((errorMessage) => ({
+          ...errorMessage,
+          bank_details_invalid: error.message,
+        }));
+        setTimeout(() => {
+          setNewPayErrors((errorMessage) => ({
+            ...errorMessage,
+            bank_details_invalid: "",
+          }));
+        }, 5000);
+      } finally {
+        bankError = false;
+
+        bankPayload = {
+          contact: props.contactId,
+          routing_number: "",
+          account_number: "",
+          account_holder: "",
+          account_type: "checking",
+          status: "active",
+        };
+        
+        setNewBankState({
+          contact: props.contactId,
+          routing_number: '',
+          account_number: '',
+          account_holder: '',
+          account_type: '',
+          status: 'active'
+        })
+          
+        setNewPayErrors({
+          contactId: '',
+          status: '',
+          card_number: '',
+          expiration_year: '',
+          expiration_month: '',
+          expiration_date: '',
+          cvv: '',
+          cardholder_name: '',
+          routing_number: '',
+          account_number: '',
+          account_holder: '',
+          account_type: '',
+          card_details_invalid: '',
+          bank_details_invalid: '',
+          primary_invalid: ''
+        })
+
+        setAddLoader(false)
+      }
+    }
+  }
+  // SAVE NEW BANK ACCOUNT
+
+  // OPEN NEW PAYMENT MODAL
+  const openNewPaymentModal = (e) => {
+    e.preventDefault();
+    setNewPayModal(true);
+
+    setNewCardState({
+      contact : props.contactId,
+      card_number: '',
+      expiration_year: '',
+      expiration_month: '',
+      cvv: '',
+      cardholder_name: '',
+      status: 'active'
+    })
+    setNewBankState({
+      contact: props.contactId,
+      routing_number: '',
+      account_number: '',
+      account_holder: '',
+      account_type: '',
+      status: 'inactive'
+    })
+    setCardNumberCheck("")
+    setCardExpairyCheck("")
+  }
+  // OPEN NEW PAYMENT MODAL
 
   useEffect(() => {
     fetchCardBank()
@@ -572,8 +862,7 @@ const BillingOverview = (props) => {
           <button
             className="btn addPaymentInfo"
             onClick={(e) => {
-              e.preventDefault();
-              setNewPayModal(true);
+              openNewPaymentModal(e)
             }}
           >
             + Add
@@ -691,7 +980,6 @@ const BillingOverview = (props) => {
 
       {newPayModal && (
         <div className="modalBackdrop modalNewPay">
-          {console.log("NEW PAY METHOD:::", isPrimary.type)}
           {addLoader && <Loader />}
           <div className="slickModalBody">
             <div className="slickModalHeader">
@@ -707,12 +995,18 @@ const BillingOverview = (props) => {
               <div className="circleForIcon">
                 <img src={payMode} alt="" />
               </div>
-              <h3 className="courseModalHeading">Add new billling Option</h3>
+              <h3 className="courseModalHeading">Add new billing Option</h3>
               <p className="courseModalPara">
-                Lorem Ipsum is simply dummy text of the printing
+                Add a Credit card or Bank details for transactions.
               </p>
             </div>
-
+              {
+                newPayErrors.card_details_invalid ? <div className="importCPaymentError d-flex f-align-center f-justify-center">
+                  <p>{newPayErrors.card_details_invalid}</p>
+                </div> : newPayErrors.bank_details_invalid ? <div className="importCPaymentError d-flex f-align-center f-justify-center">
+                  <p>{newPayErrors.bank_details_invalid}</p>
+                </div> : ""
+              }
             <div className="payModalDetails">
               <div className="choosePaymentInfo">
                 <label>
@@ -723,6 +1017,7 @@ const BillingOverview = (props) => {
                       defaultChecked={newPayTab === "card"}
                       onChange={()=>changeAddTab("card")}
                     />
+                    {/* {console.log("in body check:::>>>", newPayTab)} */}
                     <span></span>
                   </div>{" "}
                   Card
@@ -826,38 +1121,47 @@ const BillingOverview = (props) => {
                     <div className="formBodyNew">
                       <div className="cmnFormRow">
                         <label>Account Number</label>
-                        <div className="cmnFormField">
+                        <div className={newPayErrors.account_number ? "cmnFormField error" : "cmnFormField"}>
                           <input
-                            type="number"
+                            type="text"
                             placeholder="xxxx-xxxx-xxxx-xxxx"
                             className="cmnFieldStyle"
                             name=""
+                            onChange={bankAccountCheckHandler}
+                            value={newBankState.account_number}
                           />
                         </div>
+                        {newPayErrors.account_number && <p className="errorMsg">{newPayErrors.account_number}</p>}
                       </div>
 
                       <div className="cmnFormRow">
                         <label>Account Holder Name</label>
-                        <div className="cmnFormField">
+                        <div className={newPayErrors.account_holder ? "cmnFormField error" : "cmnFormField"}>
                           <input
                             type="text"
                             placeholder="Ex. Adam Smith"
                             className="cmnFieldStyle"
                             name=""
+                            onChange={bankNameCheckHandler}
+                            value={newBankState.account_holder}
                           />
                         </div>
+                        {newPayErrors.account_holder && <p className="errorMsg">{newPayErrors.account_holder}</p>}
                       </div>
 
                       <div className="cmnFormRow">
-                        <div className="cmnFormCol">
+                        <div className={newPayErrors.routing_number ? "cmnFormCol error": "cmnFormCol"}>
                           <label>Routing #</label>
                           <div className="cmnFormField">
                             <input
                               type="text"
                               className="cmnFieldStyle"
                               name=""
+                              onChange={bankRoutingCheckHandler}
+                              value={newBankState.routing_number}
                             />
                           </div>
+                        {newPayErrors.routing_number && <p className="errorMsg">{newPayErrors.routing_number}</p>}
                         </div>
                         <div className="cmnFormCol">
                           <label>Account Type</label>
@@ -873,11 +1177,8 @@ const BillingOverview = (props) => {
                         <button
                           type="reset"
                           className="saveNnewBtn orangeBtn"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setNewPayModal(true);
-                          }}
                           ref={addBankBtn}
+                          onClick={saveNewBank}
                         >
                           <img src={pluss} alt="" />
                           Add my Bank Account

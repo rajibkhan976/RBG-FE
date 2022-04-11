@@ -397,9 +397,10 @@ const TransactionChoose = (props) => {
                   : "Make a Transaction"}
             </h3>
             <span>
-              {contractOverview
-                ? "* Explanatory contract text blurb should be here."
-                : "* Explanatory text blurb should be here."}
+              {console.log("choosePOS:::", choosePOS)}
+              {choosePOS
+                ? "Initate a Product transaction"
+                : chooseCourse ? "Initate a Program transaction" : "Choose a type to initiate transaction."}
             </span>
           </div>
         </div>

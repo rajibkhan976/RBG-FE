@@ -550,12 +550,12 @@ const Dependents = (props) => {
             <button className="saveNnewBtn" onClick={() => addDependentModalFn()}>
               Add a Dependent <img src={arrow_forward} alt="" />
             </button>
-            <span>* Explanatory text blurb should be here.</span>
+            <span>Add / Edit a Dependent</span>
           </div>
         )}
         {!dependentList.length &&
           <p className="subheadingTabInner">
-            * Explanatory text blurb should be here.
+            Add a Dependent
           </p>}
 
 
