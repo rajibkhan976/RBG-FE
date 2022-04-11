@@ -18,7 +18,7 @@ let currentYear = currentTime.getFullYear();
 let currentMonth = currentTime.getMonth() + 1;
 
 const BillingOverview = (props) => {
-  {console.log('billing props', props)}
+  // {console.log('billing props', props)}
   const addCardBtn = useRef(null)
   const addBankBtn = useRef(null)
   const [newPayModal, setNewPayModal] = useState(false);
@@ -72,7 +72,7 @@ const BillingOverview = (props) => {
     primary_invalid: ''
   })
 
-  const makePrimaryMethod = (e, value) => {    
+  const makePrimaryMethod = (e, value) => {   
     if (props.contactId && value) {
       let payload = {
         contactID: props.contactId,
@@ -81,10 +81,7 @@ const BillingOverview = (props) => {
       
       try {
         BillingServices.makePrimary(payload);
-        setIsPrimay({
-          ...isPrimary,
-          type: value
-        });
+        console.log("MAKING PRIMARY:::", e, value);
       }
       catch (error) {
         console.log(error);
@@ -92,6 +89,12 @@ const BillingOverview = (props) => {
           ...errorMessage,
           primary_invalid: error.message,
         }));
+      } finally{
+        console.log("MADE PRIMARY");
+        setIsPrimay({
+          type: value,
+          billingId: e
+        });
       }
     }
   };
@@ -103,7 +106,7 @@ const BillingOverview = (props) => {
       setIsLoader(true);
       let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
       cardBanksList = cardBankResponce;
-      console.log("cardBankResponce", cardBankResponce);
+      // console.log("cardBankResponce", cardBankResponce);
       if (cardBankResponce) {
         let primaryPaymentSource = cardBankResponce.primary === 'card' ? 'cards' : 'banks';
         //Filter card bank by active
@@ -544,8 +547,6 @@ const BillingOverview = (props) => {
       setAddLoader(true)
 
         try{
-            (cardBankList.length == 0 && bankList.length == 0) && makePrimaryMethod(e, "card");
-
             let cardBankResponce = await BillingServices.addCard(cardPayload);
 
             if(cardBankResponce){
@@ -561,6 +562,8 @@ const BillingOverview = (props) => {
               }, 2000);
               setNewPayHasError(false)
               setNewPayModal(false);
+              console.log("cardBankResponce", cardBankResponce._id);
+              makePrimaryMethod(cardBankResponce._id, "card");
             }
         } catch (error) {
           cardError = true;
@@ -742,17 +745,23 @@ const BillingOverview = (props) => {
       setAddLoader(true)
       
       try {
-        (cardBankList.length == 0 && bankList.length == 0) && makePrimaryMethod(e, "bank");
-        const bankResponse = await BillingServices.addBank(bankPayload);
+        let bankResponse = await BillingServices.addBank(bankPayload);
 
         if(bankResponse){
           setNewPayErrors((errorMessage) => ({
             ...errorMessage,
             bank_details_invalid: "",
           })); 
+
+          setSuccessMessage("Account successfully added!")
+
+          setTimeout(() => {
+            setSuccessMessage("")
+          }, 2000);
+          setNewPayHasError(false)
                   
           setNewPayModal(false)
-          fetchCardBank();
+          makePrimaryMethod(bankResponse._id, "bank");
         }
       } catch (error) {
         setNewPayErrors((errorMessage) => ({
@@ -805,6 +814,7 @@ const BillingOverview = (props) => {
         })
 
         setAddLoader(false)
+        fetchCardBank();
       }
     }
   }
@@ -897,7 +907,7 @@ const BillingOverview = (props) => {
                   }
                   key={i}
                 >
-                  {/*console.log(":::setNewPay::::", isPrimary)*/}
+                  {console.log(":::setNewPay::::", isPrimary)}
                   <span className="circleRadio">
                     <input
                       type="radio"
@@ -955,10 +965,10 @@ const BillingOverview = (props) => {
                         (isPrimary.billingId === bankItem._id)
                       }
                     />
-                    {/* {console.log(
+                    {console.log(
                       ":::BANK:::",
                       isPrimary.type === "bank" && (isPrimary.billingId === bankItem._id)
-                    )} */}
+                    )}
                     <span></span>
                   </span>
                   <span className="cardImage">
