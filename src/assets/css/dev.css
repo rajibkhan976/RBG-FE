@@ -2744,7 +2744,7 @@ button.delNewDownpayment {
 }
 
 .cmnFormField.programsTransaction.listActive .contactListItems {
-  top: 68px;
+  top: 67px;
 }
 
 .transaction_form.products.forProducts .formsection.gap .cmnFormRow .cmnFormField.programsTransaction .cmnFieldStyle {
@@ -3431,9 +3431,9 @@ label.receivedCash {
   margin-right: 5px;
 }
 
-.cmnFormField.programsTransaction.listActive .contactListItems button.btn {
+/* .cmnFormField.programsTransaction.listActive .contactListItems button.btn {
   margin-bottom: 10px;
-}
+} */
 
 .slickModalBody.paymentFailed .slickModalHeader .circleForIcon {
   border: none;

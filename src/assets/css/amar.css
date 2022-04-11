@@ -2811,3 +2811,21 @@ input[type=number] {
 }.tabBarArea .programsTransaction ul .loaderOuter {
   position: static;
 }
+
+/* BECAUSE NO WAY LEFT */
+.programsTransaction .selectProg {
+  border-radius: 5px !important;
+  border-bottom: 1px solid #d3d9de !important;
+}
+/* BECAUSE NO WAY LEFT */
+.programsTransaction .contactListItems {
+  border-top: 1px solid #d3d9de;
+  border-radius: 5px;
+  box-shadow: 0 3px 15px rgb(0 0 0 / 16%);
+}
+.programsTransaction .contactListItems > .btn {
+  flex: 0 0 40px;
+}
+.autoRenew .labelWithInfo label {
+  font-weight: 400;
+}

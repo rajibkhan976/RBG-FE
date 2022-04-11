@@ -484,7 +484,7 @@ const ProgramTransaction = (props) => {
           <div className="formsection gap">
             <div className="cmnFormCol">
               <label className='labelWithInfo'>
-                <span>Tuition Amount</span>
+                <span className="labelHeading">Tuition Amount</span>
                 <span className="infoSpan">
                   <img src={info_icon} alt="" />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
@@ -499,7 +499,7 @@ const ProgramTransaction = (props) => {
             </div>
             <div className="cmnFormCol">
               <label className='labelWithInfo'>
-                <span>Payment Mode</span>
+                <span className="labelHeading">Payment Mode</span>
                 <span className="infoSpan">
                   <img src={info_icon} alt="" />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
