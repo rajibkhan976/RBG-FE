@@ -869,14 +869,14 @@ const BillingOverview = (props) => {
         <header className="informHeader d-flex f-align-center f-justify-between">
           <h5>Billing Overview</h5>
 
-          <button
+          {!isLoader && <button
             className="btn addPaymentInfo"
             onClick={(e) => {
               openNewPaymentModal(e)
             }}
           >
             + Add
-          </button>
+          </button>}
         </header>
 
         <div className="bodytransactionForm bodyProductPayModes d-flex f-column">
