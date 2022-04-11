@@ -377,8 +377,8 @@ const ContractOverviewTransaction = (props) => {
                   <span className="infoSpan">
                     <img src={help} alt="" />
                     {contractData.payment_type === 'onetime' ?
-                      <span className="tooltiptextInfo"> ${contractData.tuitionAmount} x 1 </span> :
-                      <span className="tooltiptextInfo">${contractData.tuitionAmount} x {contractData.numberOfPayments + ' ' + contractData.billingCycleText + '(s)'}</span>
+                      <span className="tooltiptextInfo overViewPages"> ${contractData.tuitionAmount} x 1 </span> :
+                      <span className="tooltiptextInfo overViewPages">${contractData.tuitionAmount} x {contractData.numberOfPayments + ' ' + contractData.billingCycleText + '(s)'}</span>
                     }
                   </span>&nbsp;&nbsp;${parseFloat(contractData.totalTuitionAmount).toFixed(2)}</div>
               </li>

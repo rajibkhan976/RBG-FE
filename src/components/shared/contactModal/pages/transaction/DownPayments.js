@@ -186,12 +186,12 @@ const DownPayments = forwardRef((props, ref) => {
                             <p className="noDownpaymentText">Down Payment is Disabled</p>
                         </div>
                     </div>
-                    <div className={isDownPayment ? "previewDownpaymentBox display" : "previewDownpaymentBox"
+                    <div className={isDownPayment ? "previewDownpaymentBox programs display" : "previewDownpaymentBox programs"
                     }>
                         {downPaymentElems.map((el, key) => (
                             <div className="newDownpayment_downPaymentWrapers" key={key}>
                                 <div className="downPaymentsCreated">
-                                    <div className="newDownpayment programs buttons">
+                                    <div className="newDownpayment programs buttons programPages">
                                         {console.log('Loop through payments', el, key, downPaymentElems.length)}
                                         {key === 0 ?
 
@@ -216,7 +216,7 @@ const DownPayments = forwardRef((props, ref) => {
                                                     <span className="labelHeading">Title</span>
                                                     <span className="infoSpan">
                                                         <img src={info_icon} alt="" />
-                                                        <span className="tooltiptextInfo">Title for down payment.</span>
+                                                        <span className="tooltiptextInfo programDownpayment">Title for down payment.</span>
                                                     </span>
                                                 </label>
                                                 <input

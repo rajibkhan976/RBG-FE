@@ -3920,8 +3920,8 @@ li.paymentModeLi, li.paymentAmtLi {
 }
 
 .downPaymentsCreated .newDownpayment + .newDownpayment.programs {
-  margin-top:0;
-  border-radius: 0 0 10px 10px;
+  margin-top:8px;
+  border-radius: 10px;
 }
 
 .newDownpayment.programs button.addNewDownpayment {
@@ -4284,4 +4284,25 @@ button.btn.btnUserMenu .menuUserDetail span {
 }
 .scheduleList > .scheduleRow:not(:first-child) .scheduleRow {
     text-align: right;
+}
+
+ul.programInfosUl.paymentOverviews li .informationSpan .infoSpan .tooltiptextInfo.overViewPages {
+  width: 149px;
+  margin-left: -96px;
+}
+
+ul.programInfosUl.paymentOverviews li .informationSpan .infoSpan .tooltiptextInfo.overViewPages::after {
+  left: 62%;
+}
+
+.newDownpayment.programs.buttons.programPages {
+  margin-top: 0;
+}
+
+.infoSpan .tooltiptextInfo.programDownpayment {
+  margin-left: -60px;
+}
+
+.infoSpan .tooltiptextInfo.programDownpayment:after {
+  left: 28%;
 }
