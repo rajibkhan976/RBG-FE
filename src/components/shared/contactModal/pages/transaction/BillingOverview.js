@@ -863,7 +863,7 @@ const BillingOverview = (props) => {
   return (
     <>
     {
-      successMessage !== "" && <SuccessAlert message={successMessage} />
+      successMessage !== "" && <SuccessAlert extraClass="billingOverviewSuccess" message={successMessage} />
     }
       <div className={props.isNoCardBankFlagErr ? "cartProductInner productBillingOverview error" : "cartProductInner productBillingOverview"}>
         <header className="informHeader d-flex f-align-center f-justify-between">
@@ -907,7 +907,7 @@ const BillingOverview = (props) => {
                   }
                   key={i}
                 >
-                  {console.log(":::setNewPay::::", isPrimary)}
+                  {/* {console.log(":::setNewPay::::", isPrimary)} */}
                   <span className="circleRadio">
                     <input
                       type="radio"
@@ -965,10 +965,10 @@ const BillingOverview = (props) => {
                         (isPrimary.billingId === bankItem._id)
                       }
                     />
-                    {console.log(
+                    {/* {console.log(
                       ":::BANK:::",
                       isPrimary.type === "bank" && (isPrimary.billingId === bankItem._id)
-                    )}
+                    )} */}
                     <span></span>
                   </span>
                   <span className="cardImage">

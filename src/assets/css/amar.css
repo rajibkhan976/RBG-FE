@@ -2829,3 +2829,18 @@ input[type=number] {
 .autoRenew .labelWithInfo label {
   font-weight: 400;
 }
+.chooseTransactionWraper > .posSellingForm,
+.posSellingForm.contractOverview {
+  position: relative;
+}
+.chooseTransactionWraper .billingOverviewSuccess {
+  position: absolute;
+  top: -65px;
+}
+.chooseTransactionType {
+  z-index: 1;
+}
+.posSellingForm.contractOverview .billingOverviewSuccess {
+  position: absolute;
+  top: -65px;
+}
