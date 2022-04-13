@@ -543,7 +543,7 @@ const BillingOverview = (props) => {
 
     console.log("NEW CARD:::", cardPayload);
 
-    if (!cardError) {
+    if (!cardError && !newPayHasError) {
       setAddLoader(true)
 
         try{
@@ -564,6 +564,25 @@ const BillingOverview = (props) => {
               setNewPayModal(false);
               console.log("cardBankResponce", cardBankResponce._id);
               makePrimaryMethod(cardBankResponce._id, "card");
+
+              setNewPayErrors({
+                contactId: '',
+                status: '',
+                card_number: '',
+                expiration_year: '',
+                expiration_month: '',
+                expiration_date: '',
+                cvv: '',
+                cardholder_name: '',
+                routing_number: '',
+                account_number: '',
+                account_holder: '',
+                account_type: '',
+                card_details_invalid: '',
+                bank_details_invalid: '',
+                primary_invalid: ''
+              })
+              fetchCardBank();
             }
         } catch (error) {
           cardError = true;
@@ -589,25 +608,6 @@ const BillingOverview = (props) => {
             status: "",
           };
 
-          setNewPayErrors({
-            contactId: '',
-            status: '',
-            card_number: '',
-            expiration_year: '',
-            expiration_month: '',
-            expiration_date: '',
-            cvv: '',
-            cardholder_name: '',
-            routing_number: '',
-            account_number: '',
-            account_holder: '',
-            account_type: '',
-            card_details_invalid: '',
-            bank_details_invalid: '',
-            primary_invalid: ''
-          })
-
-          fetchCardBank();
           setAddLoader(false)
         }
     }
@@ -741,7 +741,7 @@ const BillingOverview = (props) => {
         status: "active",
       } : bankError = true
 
-    if (!bankError) {
+    if (!bankError && !newPayHasError) {
       setAddLoader(true)
       
       try {
@@ -762,6 +762,25 @@ const BillingOverview = (props) => {
                   
           setNewPayModal(false)
           makePrimaryMethod(bankResponse._id, "bank");
+          
+          setNewPayErrors({
+            contactId: '',
+            status: '',
+            card_number: '',
+            expiration_year: '',
+            expiration_month: '',
+            expiration_date: '',
+            cvv: '',
+            cardholder_name: '',
+            routing_number: '',
+            account_number: '',
+            account_holder: '',
+            account_type: '',
+            card_details_invalid: '',
+            bank_details_invalid: '',
+            primary_invalid: ''
+          })
+          fetchCardBank();
         }
       } catch (error) {
         setNewPayErrors((errorMessage) => ({
@@ -794,27 +813,8 @@ const BillingOverview = (props) => {
           account_type: '',
           status: 'active'
         })
-          
-        setNewPayErrors({
-          contactId: '',
-          status: '',
-          card_number: '',
-          expiration_year: '',
-          expiration_month: '',
-          expiration_date: '',
-          cvv: '',
-          cardholder_name: '',
-          routing_number: '',
-          account_number: '',
-          account_holder: '',
-          account_type: '',
-          card_details_invalid: '',
-          bank_details_invalid: '',
-          primary_invalid: ''
-        })
 
         setAddLoader(false)
-        fetchCardBank();
       }
     }
   }
