@@ -10014,6 +10014,9 @@ select.editFormStyle{
   opacity: 0.5;
   transition: all 0.3s ease 0s;
 }
+.notePopIcon.info {
+  background-image: url("../images/infos.svg");
+}
 .notePopContent {
   position: absolute;
   z-index: 5;
@@ -10320,4 +10323,75 @@ li.listHeadingContacts > div > div.dsc::after {
   font-size: 14px;
   margin: 20px 0;
   color: #5a7a8f;
+}
+
+.attendenceFirstRow.revenue {
+  justify-content: center;
+}
+.tableListing.appointment.attendenceListing li .dataTableCell:nth-child(2) {
+  min-width: 150px;
+}
+.dashboardBody .selected.nobg {
+  background: #fff;
+}
+
+
+/* --- Payment Setup CSS --- */
+
+.merchantSetup {
+  width: 554px;
+  float: left;
+  border: 1px solid #E9EFF5;
+  border-radius: 5px;
+  background-color: #fff;
+  position: relative;
+}
+.merchantSetup h3 {
+  font-size: 16px;
+  padding: 18px 38px;
+  color: var(--darkBlue);
+  font-weight: 700;
+  border-bottom: 1px solid #E9EFF5;
+}
+.merchantSetupBody {
+  padding: 30px 38px 20px;
+}
+.merchantSetup .cmnFieldName {
+  font-size: 13px;
+}
+.merchantSetup .email .cmnFieldStyle {
+  width: 324px;
+  float: left;
+}
+.merchantSetup .email button {
+  float: right;
+}
+.merchantSetup .cmnFieldStyle.noId {
+  background: #E9EFF5;
+  color: #9BAEBC;
+  text-align: center;
+  font-size: 12px;
+  line-height: 38px;
+}
+.merchantSetup .cmnFieldStyle.merchantId {
+  background: #E9EFF5;
+  color: var(--darkBlue);
+  text-align: center;
+  font-size: 14px;
+  line-height: 38px;
+  font-weight: bold;
+  letter-spacing: 10px;
+}
+.cmnFormField.fetching .cmnFieldStyle.merchantId {
+  font-size: 12px;
+  letter-spacing: normal;
+  font-weight: 400;
+}
+.merchantSetup .saveMerchantBtn {
+  width: 115px;
+  margin: 20px auto 0;
+}
+.merchantFromError {
+  text-align: center;
+  margin-top: 10px;
 }
