@@ -303,6 +303,24 @@ const Setup = (props) => {
                </div>
              </li>
             ): "" }
+            <li>
+              <div className="listHead">
+                <i>
+                  <img src={SetupIcon8} alt="" />
+                </i>
+                <div>
+                  <h3>
+                    <NavLink
+                        to="/phases-status"
+                        onClick={(e) => props.clickedLink(e)}
+                    >
+                      Status and Phases
+                    </NavLink>
+                  </h3>
+                  <p>Status and Phases</p>
+                </div>
+              </div>
+            </li>
           </ul>
         </Scrollbars>
       </div>

@@ -4306,3 +4306,393 @@ ul.programInfosUl.paymentOverviews li .informationSpan .infoSpan .tooltiptextInf
 .infoSpan .tooltiptextInfo.programDownpayment:after {
   left: 28%;
 }
+
+
+/* Attendence Contact modal Page  */
+
+.transHeader.attendencePage {
+  display: block;
+}
+
+.transHeader.attendencePage p {
+  text-align: center;
+  color: #9BAEBC;
+  font-size: 14px;
+  margin:10px 0;
+}
+.transHeader.attendencePage h3 {
+  color: #305671;
+  font-size: 40px;
+  font-weight: 500;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.tableHeader.attendencePage {
+  background: #305671;
+  text-align: center;
+  color: #fff;
+  padding: 17px 20px;
+  border-radius: 10px 10px 0 0;
+  position: relative;
+}
+
+.tableHeader.attendencePage p {
+  font-size: 14px;
+}
+
+.displayInfosChange {
+  position: absolute;
+  top: 17px;
+  right: 20px;
+}
+
+.displayInfosChange span {
+  cursor: pointer;
+}
+.weeklySpan {
+  margin-right: 15px;
+}
+.transBoday.attendencePage .userListBody {
+  margin-right: 0;
+}
+
+.tableListing.appointment .listHeading.attendenceTables .dataTableCell {
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  height: 50px;
+  background: #9BAEBC;
+  border: none;
+}
+
+.tableListing.appointment.attendence li {
+  background: #F6F8FA;
+}
+
+.tableListing.appointment li:last-child {
+  border-radius: 0 0 10px 10px;
+}
+
+.tableListing.appointment .listHeading.attendenceTables .dataTableCell::after {
+  display: none;
+}
+
+.btn.times {
+  background: #305671;
+  color: #fff;
+  padding: 5px 13px;
+  border-radius: 50px;
+  min-height: 30px;
+  max-height: 30px;
+  font-size: 13px;
+}
+
+.listBody.contactListingTable.attendencePage {
+  width: 100%; 
+  border-radius:10px; 
+  overflow-x: hidden;
+}
+
+ .weeklySpan.infoSpan .tooltiptextInfo, .monthlySpan.infoSpan .tooltiptextInfo {
+  bottom: unset;
+  top: 100%;
+  margin-top: 10px;
+  width: 70px;
+  z-index: 99;
+}
+
+.weeklySpan.infoSpan .tooltiptextInfo:after, .monthlySpan.infoSpan .tooltiptextInfo:after {
+  top: auto;
+  bottom: 100%;
+  transform: scaleY(-1);
+}
+
+.weeklySpan.infoSpan, .monthlySpan.infoSpan {
+  width: auto;
+}
+
+.weeklySpan.infoSpan .tooltiptextInfo {
+  margin-left: -26px;
+    left: 0;
+}
+
+.monthlySpan.infoSpan .tooltiptextInfo {
+  margin-left: -26px;
+    left: 0;
+}
+
+.eyeToolTips.infoSpan {
+  position: absolute;
+  left: -20px;
+  cursor: pointer;
+} 
+
+.eyeToolTips.infoSpan:hover img {
+  opacity: 0.55;
+}
+
+.eyeToolTips.infoSpan .tooltiptextInfo {
+  z-index: 99;
+  width: 132px;
+  left: 0;
+  margin-left: -58px;
+  bottom: 140%;
+}
+.tableListing.appointment.attendence li div {
+  height: 52px;
+}
+.attendenceDate, .attendedBy {
+  font-size: 13px;
+  color: #305671;
+  font-weight: 400;
+}
+.attendenceTime span {
+  padding: 4px 12px;
+  background: #305671;
+  color: #fff;
+  font-size: 13px;
+  border-radius: 25px;
+}
+
+.widgetIcon figure img {
+  width: 32px; cursor: grabbing;
+}
+
+.appointmentDataListing.attendenceDataListing.calenderViewOnly .fc-header-toolbar.fc-toolbar {
+  margin-bottom: 0;
+    position: absolute;
+    width: 88%;
+    top: 10px;
+    left: 15px;
+    background: #305671;
+}
+
+.appointmentDataListing.attendenceDataListing.calenderViewOnly .fc-header-toolbar.fc-toolbar .fc-toolbar-title {
+  color: #fff;
+}
+
+/* Attendence Listing page */
+
+
+.userListBody .attendenceListing .attendenceHeaderWraper .dataTableCell::after {
+  display: none;
+}
+
+.attendenceFirstRow {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 11px 12px;
+  background: #9BAEBC;
+  border-radius: 10px 10px 0 0;
+}
+
+.midSection p {
+  color: #305671;
+  font-size: 13px;
+  margin-right: 0px;
+}
+
+.attendenceFirstRow .prevBtn {
+  margin-right: auto;
+}
+
+.attendenceFirstRow .nextBtn {
+  margin-left: auto;
+}
+
+.attendenceSecondRow {
+  width: 100%;
+  display: table;
+  background-color: #D3D9DE;
+  padding: 13px 10px;
+}
+
+.midSection select {
+  height: 18px;
+  border: none;
+  background-color: transparent;
+  color: #305671;
+  min-height: 18px;
+  line-height: 1.4;
+  background-position: calc(100% - 0px) 6px;
+  background-repeat: no-repeat;
+  font-size: 13px;
+  padding: 0px 12px 0 5px;
+}
+
+.midSection {
+  display: flex;
+  align-items: center;
+  color: #305671;
+}
+
+.attendenceFirstRow .prevBtn button, .attendenceFirstRow .nextBtn button {
+  color: #fff;
+  font-size: 12px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  font-weight: 500;
+}
+.attendenceFirstRow .prevBtn button:hover, .attendenceFirstRow .nextBtn button:hover {
+color: #D3D9DE;
+}
+
+.attendenceFirstRow .prevBtn button img {
+  margin-right: 10px;
+}
+
+.attendenceFirstRow .nextBtn button img {
+  margin-left: 10px;
+}
+
+.attendenceHeaderTable {
+  display: table-row;
+}
+
+.attendenceHeaderTable li {
+  display: table-cell;
+  text-align: center;
+  color: #305671;
+  font-size: 13px;
+  font-weight: 400;
+  min-width: 139px;
+}
+
+.tableListing .attendenceHeaderTable li:not(:first-child) {
+  background-color: transparent;
+}
+
+.attendenceListing .listHeading.attendenceHeaderWraper .dataTableCell {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: none;
+}
+.attendenceListing li .dataTableCell:first-child {
+  min-width: 150px;
+  position: sticky;
+    left: 0;
+    z-index: 9;
+}
+
+.monthly .attendenceListing li .dataTableCell:first-child {
+  position: sticky;
+    left: 0;
+    z-index: 9;
+}
+
+.monthly .attendenceListing li .dataTableCell:first-child {
+  background: #fff;
+}
+
+.monthly .attendenceListing .listHeading.attendenceHeaderWraper .dataTableCell:first-child {
+  background: #f6f8fa;
+}
+
+.attendenceListing li .dataTableCell:last-child {
+  min-width: 120px;
+  text-align: center;
+}  
+
+.monthly .attendenceListing li .dataTableCell:last-child {
+  position: sticky;
+  right: -46px;
+  background: #fff;
+    z-index: 9;
+}
+
+
+.monthly .attendenceListing .listHeading.attendenceHeaderWraper .dataTableCell:last-child {
+  background: #f6f8fa;
+}
+
+
+.attendenceRecordWraper {
+  width: 100%;
+  display: table;
+  padding: 0 10px;
+}
+
+.yearly .attendenceHeaderTable li {
+min-width: 90.2px;
+}
+
+.monthly .attendenceHeaderTable li {
+  min-width: 60px;
+}
+
+
+
+.tableListing.appointment.attendenceListing li {
+  position: relative;
+}
+
+.monthly .attendenceFirstRow .prevBtn {
+margin-right: 18%;
+}
+
+.monthly .attendenceFirstRow .nextBtn {
+  margin-left: 18%;
+  }
+
+  .monthly .attendenceListing li .dataTableCell:first-child .btn {
+    max-width: 148px;
+    text-overflow: ellipsis;
+    overflow:hidden;
+    white-space: nowrap;
+    display: block;
+  }
+  .attendenceListingPage {
+    margin-bottom: 0;
+  }
+
+  .attendenceListingPage .userListHead {
+    margin-bottom: 0;
+  }
+
+ .attendenceHeaderWraper .dataTableCell {
+   padding-top: 0;
+ }
+
+ .holiday {
+  opacity: 0.35;
+}
+
+ /* Personal Details fixes */
+
+ .showing_gym_data.personalInfos .profileImgSection {
+  width: 64px;
+  padding: 0;
+ }
+
+ .showing_gym_data.personalInfos .profileImgSection span {
+  padding-left: 0!important;
+  padding-top: 5px;
+  width: 100%!important;
+  font-size: 13px!important;
+  text-align: center;
+  cursor: pointer;
+  color: #55BBC9!important;
+  float: left;
+  width: 100%;
+}
+
+/* .attendencemember.headers {
+  height: 81.59px;
+  padding-top: 11px;
+  display: flex;
+}
+
+.dataTableCell.totalDayCount {
+  height: 81.59px;
+  display: flex;
+  padding-top: 11px;
+} */
+
+/*For Status modal postioning*/
+.statusPhases .slickModalBody {
+  position: relative;
+}
+/*For Status modal postioning*/

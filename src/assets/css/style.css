@@ -9538,10 +9538,10 @@ button.addOverviewCustomFiel {
 /* Alert message css start */
 
 .alertMessage {
-  position: fixed !important;
+  position: absolute;
   z-index: 99999;
   right: 30px;
-  bottom: 50px;
+  bottom: 30px;
   background: #F3F8FF;
   border: 1px solid #99C0FF;
   border-radius: 5px;
@@ -10395,3 +10395,230 @@ li.listHeadingContacts > div > div.dsc::after {
   text-align: center;
   margin-top: 10px;
 }
+/* ........................ Association Owner css........................... */
+.accosiationDashboard{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 40px;
+}
+.dashInnerStructure.dashboardPage .contactHead {
+  width: 100%;
+  padding-top: 30px;
+}
+.accosiationDashboard .userListBody{
+  margin-right: 0px;
+  padding-right: 30px;
+}
+
+.accosiationDashboard .contactListingTable .tableListing li > div:first-child{
+  padding-left: 35px;
+}
+
+.searchBar.formControl.association {
+  width: 122px;
+  border: 1px solid #9BAEBC;
+}
+.searchBar.formControl.association span{
+  color: #305671;
+  font-size: 13px;
+  position: absolute;
+  top: 9px;
+  left: 37px;
+}
+.searchBar.formControl.association .arrow{
+  position: absolute;
+  top: 7px;
+  right: 14px;
+}
+.timeSpanDropDown{
+  width: 122px;
+  background: #FFFFFF;
+  border-radius: 8px;
+  position: absolute;
+  top: 43px;
+  height: auto;
+  z-index: 100;
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.071);
+}
+.realative {
+  position: relative;
+}
+.timeSpanDropDown li {
+  font-size: 13px;
+  width: 100%;
+  display: inline-block;
+  padding: 0 0 0 40px;
+  line-height: 37px;
+  color: #9BAEBC;
+  position: relative;
+}
+.timeSpanDropDown li img{
+  vertical-align: middle;
+  margin-right: 12px;
+}
+svg.monthIcons {
+  position: absolute;
+  left: 8px;
+  top: 11px;
+}
+.association .monthIcons ,
+.timeSpanDropDown li .monthIcons{
+  left: 14px;
+}
+.timeSpanDropDown li button{
+  padding: 0;
+  background: none;
+  border: none;
+  color: #9BAEBC;
+}
+.timeSpanDropDown li .monthIcons path{
+  fill: #9BAEBC;
+}
+
+
+.attendenceFirstRow.revenue {
+  justify-content: center;
+}
+.tableListing.appointment.attendenceListing li .dataTableCell:nth-child(2) {
+  min-width: 150px;
+}
+.dashboardBody .selected.nobg {
+  background: #fff;
+}
+.tosterCSS {
+  bottom: 70px;
+  background-color: white;
+}
+.productSearchPanel .errorInput {
+  border: 1px solid #c74854;
+  background-color: #fff4f4;
+}
+
+/* THIRD PARTY TOASTER MESSAGE CSS FIXING STARTS........................................... */
+
+.redux-toastr .bottom-right{
+  width: 400px;
+}
+.redux-toastr .toastr .rrt-left-container .rrt-holder {
+  width: 56px !important;
+}
+.redux-toastr .toastr .rrt-middle-container .rrt-title{
+  font-weight: 700;
+  font-size: 14px !important;
+  line-height: 24px;
+}
+.redux-toastr .toastr .rrt-middle-container .rrt-text{
+  font-weight: 500;
+  font-size: 11px;
+  line-height: 100%;
+  line-height: 17px;
+  margin-bottom: 6px;
+}
+.redux-toastr .toastr .rrt-progress-container {
+  margin: 0 -20px -18px -60px !important;
+}
+.redux-toastr .toastr.rrt-light .rrt-progressbar {
+  height: 7px !important;
+}
+
+.redux-toastr .toastr .close-toastr{
+  height: 44%!important;
+  opacity: 1!important;
+}
+.redux-toastr .toastr .close-toastr span{
+  font-size: 15px;
+  font-weight: bold;
+}
+.redux-toastr .toastr.rrt-light.successCss {
+  background-color: #E7FFEC;
+  border: 1px solid #92C99F;
+}
+.redux-toastr .toastr.rrt-light.successCss .rrt-progressbar {
+  background-color: #CAEAD1;
+}
+.redux-toastr .toastr.successCss .close-toastr span{
+  color: #408551;
+}
+.redux-toastr .toastr.successCss .rrt-middle-container .rrt-title{
+  color: #00BA2D;
+}
+.redux-toastr .toastr.successCss .rrt-middle-container .rrt-text{
+  color: #408551;
+}
+
+
+.redux-toastr .toastr.rrt-light.errorCss {
+  background-color: #FFF6F3;
+  border: 1px solid #FFB4A1;
+}
+.redux-toastr .toastr.rrt-light.errorCss .rrt-progressbar {
+  background-color: #FFD5CB;
+}
+.redux-toastr .toastr.errorCss .close-toastr span{
+  color: #874E41;
+}
+.redux-toastr .toastr.errorCss .rrt-middle-container .rrt-title{
+  color: #FF603A;
+}
+.redux-toastr .toastr.errorCss .rrt-middle-container .rrt-text{
+  color: #874E41;
+}
+
+
+.redux-toastr .toastr.rrt-light.infoCss {
+  background-color: #F3F8FF;
+  border: 1px solid #99C0FF;
+}
+.redux-toastr .toastr.rrt-light.infoCss .rrt-progressbar {
+  background-color: #C9DDFC;
+}
+.redux-toastr .toastr.infoCss .close-toastr span{
+  color: #415B85;
+}
+.redux-toastr .toastr.infoCss .rrt-middle-container .rrt-title{
+  color: #2271F0;
+}
+.redux-toastr .toastr.infoCss .rrt-middle-container .rrt-text{
+  color: #415B85;
+}
+
+
+
+.redux-toastr .toastr.rrt-light.warningCss {
+  background-color: #FFFAED;
+  border: 1px solid #FFDA7A;
+}
+.redux-toastr .toastr.rrt-light.warningCss .rrt-progressbar {
+  background-color: #FBEABE;
+}
+.redux-toastr .toastr.warningCss .close-toastr span{
+  color: #8C7742;
+}
+.redux-toastr .toastr.warningCss .rrt-middle-container .rrt-title{
+  color: #EDAB00;
+}
+.redux-toastr .toastr.warningCss .rrt-middle-container .rrt-text{
+  color: #8C7742;
+}
+
+
+.redux-toastr .toastr.rrt-light .toastr-status{
+  display: none;
+}
+.redux-toastr .toastr .rrt-left-container .rrt-holder {
+  margin-top: -29px!important;
+}
+.redux-toastr .toastr.rrt-light,
+.redux-toastr .toastr.rrt-light:hover:not(.rrt-message){
+  box-shadow: 0px 5px 15px rgb(1 37 0 / 15%);
+  border-radius: 10px;
+}
+.redux-toastr .toastr .rrt-left-container {
+  width: 55px !important;
+}
+.redux-toastr .toastr .rrt-middle-container {
+  margin-left: 60px !important;
+}
+/* THIRD PARTY TOASTER MESSAGE CSS FIXING ENDS........................................... */
+

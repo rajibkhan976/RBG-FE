@@ -12,6 +12,7 @@ import verify_icon from "../../../../assets/images/verifyIcon.svg";
 import {ImportContactServices} from "../../../../services/contact/importContact";
 import arrowDown from "../../../../assets/images/arrowDown.svg";
 import moment from "moment-timezone";
+import {PhasesServices} from "../../../../services/contact/phasesServices";
 
 const Overview = (props) => {
     const [formScrollStatus, setFormScrollStatus] = useState(false);
@@ -40,6 +41,10 @@ const Overview = (props) => {
     const [customFieldsError, setCustomFieldsError] = useState({});
     const [customFields, setCustomFields] = useState([]);
     const [toggleCustom, setToggleCustom] = useState([]);
+    const [phases, setPhases] = useState([]);
+    const [status, setStatus] = useState([]);
+    const [selectedStatus, setSelectedStatus] = useState("");
+    const [selectedPhase, setSelectedPhase] = useState("");
     const [basicinfoPhone, setBasicinfoPhone] = useState({
         countryCode: "US",
         dailCode: "+1",
@@ -98,17 +103,25 @@ const Overview = (props) => {
         email: "",
         phone: "",
         fName: "",
-        lName: ""
+        lName: "",
+        phase: "",
+        status: ""
     });
 
     const fetchCountry = async () => {
         let conntryResponse = await ContactService.fetchCountry();
         setPhoneCountryCode(conntryResponse);
     };
-
+    const fetchPhases = async () => {
+        setIsLoader(true);
+        let phases = await PhasesServices.fetchPhases();
+        setIsLoader(false);
+        setPhases(phases.phases);
+    }
     useEffect(() => {
         fetchCustomFields();
         fetchCountry();
+        fetchPhases();
     }, []);
     const fetchCustomFields = async () => {
         let cFileds = await ImportContactServices.fetchCustomFields();
@@ -409,6 +422,10 @@ const Overview = (props) => {
             isError = true;
             formErrorsCopy.lName = "Please fill up Last Name."
         }
+        if (phases !== "" && status === "") {
+            isError = true;
+            formErrorsCopy.status = "Please Select a status."
+        }
         if (!basicinfoEmail && basicinfoPhone.number === "") {
             isError = true;
             formErrorsCopy.email = "Please fill up your email or phone";
@@ -435,7 +452,9 @@ const Overview = (props) => {
                 email: "",
                 phone: "",
                 fName: "",
-                lName: ""
+                lName: "",
+                phase: "",
+                status: ""
             }), 50000);
         } else {
             let payload = {
@@ -457,10 +476,11 @@ const Overview = (props) => {
                 state: basicinfoState ? basicinfoState : "",
                 zip: basicinfoZip ? basicinfoZip : "",
                 country: basicinfoCountry ? basicinfoCountry : "",
-                gender: basicinfoGender ? basicinfoGender : ""
+                gender: basicinfoGender ? basicinfoGender : "",
+                status: selectedStatus ? selectedStatus : "",
+                phase: selectedPhase ? selectedPhase : ""
             }
             let newPayload = Object.assign(payload, customFieldsList);
-            console.log(customFieldsList)
             let contactIdNew = contact ? contact._id : 0;
             try {
                 let updateContact = await ContactService.updateContact(newPayload, contactIdNew);
@@ -585,6 +605,18 @@ const Overview = (props) => {
         setCustomFieldsList(prevState => ({...prevState, [name]: value}));
         setCustomFieldsError(prevState => ({...prevState, [name]: false}));
     }
+    const handlePhaseChange = (event) => {
+        setSelectedPhase(event.target.value);
+        if (event.target.value) {
+            let searchResultPhases = phases.find(ele => ele._id === event.target.value);
+            setStatus(searchResultPhases.statuses)
+        } else {
+            setStatus([]);
+        }
+    }
+    const handleStatusChange = (event) => {
+        setSelectedStatus(event.target.value);
+    }
     useEffect(() => {
         if (successMsg) setTimeout(() => {
             setSuccessMsg("")
@@ -642,7 +674,7 @@ const Overview = (props) => {
                         <div className="cmnFormRow">
                             <div className="cmnFormCol">
                                 <div className="cmnFieldName">
-                                    First name <span class="mandatory">*</span>
+                                    First name <span className="mandatory">*</span>
                                 </div>
                                 <div className={formErrorMsg.fName ? "cmnFormField errorField" : "cmnFormField"}>
                                     <input type="text" className="cmnFieldStyle" defaultValue={basicinfoFname}
@@ -652,7 +684,7 @@ const Overview = (props) => {
                             </div>
                             <div className="cmnFormCol">
                                 <div className="cmnFieldName">
-                                    Last Name <span class="mandatory">*</span>
+                                    Last Name <span className="mandatory">*</span>
                                 </div>
                                 <div className={formErrorMsg.lName ? "cmnFormField errorField" : "cmnFormField"}>
                                     <input type="text" className="cmnFieldStyle" placeholder=""
@@ -674,7 +706,7 @@ const Overview = (props) => {
                             </div>
                             <div className="cmnFormCol">
                                 <div className="cmnFieldName">
-                                    Email <span class="mandatory">*</span>
+                                    Email <span className="mandatory">*</span>
                                 </div>
                                 <div className={formErrorMsg.email ? "cmnFormField errorField" : "cmnFormField"}>
                                     <input type="email" className="cmnFieldStyle" placeholder="Eg. Jon.doe@domain.com"
@@ -733,7 +765,43 @@ const Overview = (props) => {
                                 </div>
                             </div>
                         </div>
+                        <div className="cmnFormRow">
+                            <div className="cmnFormCol">
+                                <div className="cmnFieldName">
+                                    Phase
+                                </div>
+                                <div className={formErrorMsg.phase ? "cmnFormField errorField" : "cmnFormField"}>
+                                    <select name="phase" className="cmnFieldStyle btnSelect" value={selectedPhase} onChange={handlePhaseChange}>
+                                        <option value="">Select a Phase</option>
+                                        {
+                                            phases.map(ele => {
+                                                if (ele.statuses.length) {
+                                                    return (<option value={ele._id}>{ele.name}</option>)
+                                                }
+                                            })
+                                        }
+                                    </select>
+                                    {formErrorMsg.phase ? <p className="errorMsg">{formErrorMsg.phase}</p> : ""}
+                                </div>
+                            </div>
+                            <div className="cmnFormCol">
+                                <div className="cmnFieldName">
+                                    Status
+                                </div>
+                                <div className={formErrorMsg.status ? "cmnFormField errorField" : "cmnFormField"}>
+                                    <select name="status" className="cmnFieldStyle btnSelect" value={selectedStatus} onChange={handleStatusChange}>
+                                        <option value="">Select a Status</option>
+                                        {
+                                            status.map(ele => {
+                                                return (<option value={ele._id}>{ele.name}</option>)
+                                            })
+                                        }
+                                    </select>
+                                    {formErrorMsg.status ? <p className="errorMsg">{formErrorMsg.status}</p> : ""}
+                                </div>
+                            </div>
 
+                        </div>
                         {/* <div className="cmnFormRow">
                         <div className="cmnFormCol">
                             <div className="cmnFieldName">

@@ -1066,7 +1066,7 @@
 .btnSelect {
   justify-content: start;
   padding: 0 50px 0 14px;
-  background-color: #fff;
+  /*background-color: #fff;*/
   background-image: url(../images/arrowDown.svg);
   background-repeat: no-repeat;
   background-position: right 10px center;

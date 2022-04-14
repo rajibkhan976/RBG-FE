@@ -388,7 +388,18 @@ const InnerLeftMenu = (props) => {
                   </NavLink>
                 </li>
               ) : ""}
-
+              <li>
+                <NavLink className="leftMenuInnerLink" to="/phases-status">
+                  <div className="indicator"></div>
+                  <div className="linkDetails setup">
+                    <p className="linkHeading">Status and Phases</p>
+                    <p className="linkAbout">Status and Phases</p>
+                    <button className="btn sidemenuarrow">
+                      <img src={SideMenuArrow} alt="" />
+                    </button>
+                  </div>
+                </NavLink>
+              </li>
               {/* <li>
                 {console.log(pathURL === "/email-template" || pathURL === "/sms-template" || pathURL === "/audio-template")}
                 <NavLink 

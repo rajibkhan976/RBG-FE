@@ -29,6 +29,12 @@ import * as actionTypes from "../actions/types";
 import GetPositionMiddleware from "../actions/GetPosition.middleware";
 import {NotificationServices} from "../services/notification/NotificationServices";
 import moment from "moment-timezone";
+import AlertMessage from "./shared/messages/alertMessage";
+import {toastr} from 'react-redux-toastr'
+import success_alert from "../../src/assets/images/success_alert.svg";
+import info_alert from "../../src/assets/images/info_alert.svg";
+import warning_alert from "../../src/assets/images/warning_alert.svg";
+import error_alert from "../../src/assets/images/error_alert.svg";
 
 // For socket io connection
 //const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlProd;
@@ -57,6 +63,7 @@ const MainComponent = () => {
     const [isNewNotification, setIsNewNotification] = useState(false);
     const [contactId, setContactId] = useState("");
     const [page, setPage] = useState("");
+    const [messages, setMessages] = useState([]);
     const [notificationStructure, setNotificationStructure] = useState({
         payment: {
             totalUnread: 0,
@@ -83,6 +90,8 @@ const MainComponent = () => {
         fullLoading: false
     });
     const [notificationUnread, setNotificationUnread] = useState(0);
+    const messageDelay = 5000; // ms
+    const message = useSelector((state) => state.message);
     const closeNotification = () => {
         setIsNewFeaturesAvailable(false);
     }
@@ -519,7 +528,55 @@ const MainComponent = () => {
             }
         }
     }
-
+    const closeMessage = (sls) => {
+        const newMessages = messages.filter(mes => (mes.message !== sls.message && mes.typeMessage !== sls.typeMessage));
+        setMessages(newMessages);
+    }
+    useEffect(() => {
+        if (message.message) {
+            if (message.typeMessage === 'success') {
+                const toastrOptions = {
+                    className: 'tosterCSS successCss',
+                    timeOut: 5000, // by setting to 0 it will prevent the auto close
+                    showCloseButton: true, // false by default
+                    closeOnToastrClick: true, // false by default, this will close the toastr when user clicks on it
+                    icon: <img src={success_alert}/>,
+                    status: 'success'
+                }
+                toastr.light('Success', message.message, toastrOptions)
+            } else if (message.typeMessage === 'error') {
+                const toastrOptions = {
+                    className: 'tosterCSS errorCss',
+                    timeOut: 5000, // by setting to 0 it will prevent the auto close
+                    showCloseButton: true, // false by default
+                    closeOnToastrClick: true, // false by default, this will close the toastr when user clicks on it
+                    icon: <img src={error_alert}/>,
+                    status: 'error'
+                }
+                toastr.light('Error !', message.message, toastrOptions)
+            } else if (message.typeMessage === 'warning') {
+                const toastrOptions = {
+                    className: 'tosterCSS warningCss',
+                    timeOut: 5000, // by setting to 0 it will prevent the auto close
+                    showCloseButton: true, // false by default
+                    closeOnToastrClick: true, // false by default, this will close the toastr when user clicks on it
+                    icon: <img src={warning_alert}/>,
+                    status: 'warning'
+                }
+                toastr.light('Warning', message.message, toastrOptions)
+            } else {
+                const toastrOptions = {
+                    className: 'tosterCSS infoCss',
+                    timeOut: 5000, // by setting to 0 it will prevent the auto close
+                    showCloseButton: true, // false by default
+                    closeOnToastrClick: true, // false by default, this will close the toastr when user clicks on it
+                    icon: <img src={info_alert}/>,
+                    status: 'info'
+                }
+                toastr.light('Info', message.message, toastrOptions)
+            }
+        }
+    }, [message.message])
     return (
         <>
             <div className="mainComponent">

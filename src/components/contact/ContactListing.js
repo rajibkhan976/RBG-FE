@@ -61,13 +61,13 @@ const ContactListing = forwardRef((props, ref) => {
             fetchContact();
         }
     }, [modalId]);
-    useEffect(() => {
+    /*useEffect(() => {
         return () => {
             dispatch({
                 type: actionTypes.CONTACTS_MODAL_RESET
             });
         }
-    })
+    })*/
     let arrangeColRef = useRef();
 
     const checkOutsideClick = (e) => {

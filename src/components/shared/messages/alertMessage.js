@@ -12,21 +12,25 @@ const AlertMessage = (props) => {
     const [alertHeading, setAlertHeading] = useState(props.type ? props.type : "info");
     const [alertIcon, setAlertIcon] = useState("");
     const [timerLength, setTimerLength] = useState(0);
+    const [alertCount, setAlertCount] = useState(props.index);
    // const [showAlert, setShowAlert] = useState(false);
+    const myStyle = { "bottom": alertCount === 0  ? "20px" : (alertCount * 115) + "px"} ;
 
     useEffect(() => {
-        if(props.type == "success") {
+        if(props.type === "success") {
             setAlertIcon(successIcon);
-        } else if (props.type == "error") {
+        } else if (props.type === "error") {
             setAlertIcon(errorIcon);
-        } else if (props.type == "worning") {
+        } else if (props.type === "warning") {
             setAlertIcon(worningIcon);
         } else {
             setAlertIcon(infoIcon);
         }
         closeAlert();
     }, []);
-
+    useEffect(() => {
+        console.log(props)
+    }, [props]);
     const closeAlert = () => {
         let time = showingTime;
         let timerFn = setInterval(() => {
@@ -34,18 +38,16 @@ const AlertMessage = (props) => {
             if (time <= 0) {
                 clearInterval(timerFn);
                 setTimeout(() => {
-                    props.close();
+                    props.close(props);
                 }, 500);
             }
             time = time - 10;
         }, 10);
     };
-
-
     return (
         <>
             
-            <div className={"alertMessage " + alertType + (timerLength <= 0 ? " hideAlert" : "")}>
+            <div className={"alertMessage " + alertType + (timerLength <= 0 ? " hideAlert " : "")} style={myStyle}>
                 <div className="alertMsgWrap">
                     <button type="button" className="closeAlert" onClick={() => props.close()} ></button>
                     <div className="alertBody">

@@ -9,6 +9,8 @@ import ContactReducer from "./contactReducers";
 import OrganizationReducer from "./organizationReducer";
 import AssociationReducer from "./associationReducer";
 import NotificationReducer from "./notificationReducer";
+import MessageReducer from "./messageReducer";
+import {reducer as toastrReducer} from 'react-redux-toastr'
 
 const rootReducer = combineReducers({
     auth: AuthReducer,
@@ -20,7 +22,9 @@ const rootReducer = combineReducers({
     contact: ContactReducer,
     organization: OrganizationReducer,
     association: AssociationReducer,
-    notification: NotificationReducer
+    notification: NotificationReducer,
+    message: MessageReducer,
+    toastr: toastrReducer
 });
 
 export default rootReducer;
