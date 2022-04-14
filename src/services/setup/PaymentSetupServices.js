@@ -12,13 +12,9 @@ export const PaymentSetupServices = {
             const result = await axios.get(config.paymentSetupUrl + "setup", { headers: headers });
             return result.data;
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
-                console.log(e.response.data.message);
-                throw new Error(e.response.data.message);
-            } else {
-                console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
-            }
+            console.log(e.stack);
+            const msg = (e.response?.data) ? e.response.data.message: "Something went wrong. Please contact support";
+            throw new Error(msg);
 
         }
     },
@@ -28,13 +24,9 @@ export const PaymentSetupServices = {
             const result = await axios.post(config.paymentSetupUrl + "findmerchant", payload, { headers: headers });
             return result.data;
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
-                console.log(e.response.data.message);
-                throw new Error(e.response.data.message);
-            } else {
-                console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
-            }
+            console.log(e.stack);
+            const msg = (e.response?.data) ? e.response.data.message: "Something went wrong. Please contact support";
+            throw new Error(msg);
 
         }
     },
@@ -44,13 +36,9 @@ export const PaymentSetupServices = {
             const result = await axios.put(config.paymentSetupUrl + "setup", payload, { headers: headers });
             return result.data;
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
-                console.log(e.response.data.message);
-                throw new Error(e.response.data.message);
-            } else {
-                console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
-            }
+            console.log(e.stack);
+            const msg = (e.response?.data) ? e.response.data.message: "Something went wrong. Please contact support";
+            throw new Error(msg);
 
         }
     },
