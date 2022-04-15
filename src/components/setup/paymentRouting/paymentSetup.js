@@ -9,8 +9,8 @@ const PaymentSetup = () => {
     const [merchantInfo, setMerchantInfo] = useState({
         paysimpleEmail: "",
         merchantId: "",
-        retryInterval: "",
-        maxRetry: "",
+        retryInterval: "3",
+        maxRetry: "2",
         editAccess: false
     });
     const formRef = useRef();
@@ -83,11 +83,14 @@ const PaymentSetup = () => {
                 console.log("Get merchant id response:::: ", response);
             } else {
                 setMerchantFormError({ ...merchantFromError, paysimpleEmail: "Please enter a valid email id" });
+                setMerchantInfo({ ...merchantInfo, merchantId: "" });
             }
         } catch (e) {
             formData["paysimpleEmail"].value = merchantInfo.paysimpleEmail;
+            formData.getElementsByClassName("merchantId")[0].innerText = "";
             // setMerchantInfo({ ...merchantInfo, paysimpleEmail: "", merchantId: "" });
             setMerchantInfoSaveMsg({ ...merchantInfoSaveMsg, message: e.message, type: "error" });
+            setMerchantInfo({ ...merchantInfo, merchantId: "" });
         } finally {
             setFetchingMerchantid(false);
         }

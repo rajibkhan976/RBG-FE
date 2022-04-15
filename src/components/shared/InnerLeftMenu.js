@@ -374,7 +374,7 @@ const InnerLeftMenu = (props) => {
                   </div>
                 </NavLink>
               </li>
-              {(loggedInUser?.isOrganizationOwner) ? (
+              {(loggedInUser?.isOrganizationOwner === true || loggedInUser.organizationCode === 'rbg') ? (
                 <li>
                   <NavLink className="leftMenuInnerLink" to="/payment-setup">
                     <div className="indicator"></div>

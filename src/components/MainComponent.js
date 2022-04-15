@@ -580,12 +580,10 @@ const MainComponent = () => {
                                 <NumberRouting toggleLeftSubMenu={toggleLeftSubMenu}
                                                toggleCreate={(e) => toggleCreate(e)}></NumberRouting>
                             </Route>
-                            {(loggedInUser?.isOrganizationOwner) ? (
                             <Route exact path="/payment-setup">
                                 <PaymentRouting toggleLeftSubMenu={toggleLeftSubMenu}
                                                toggleCreate={(e) => toggleCreate(e)}></PaymentRouting>
                             </Route>
-                            ):<Redirect to="/dashboard" />}
 
                             <Route exact path="/customizations">
                                 <CustomizationRouter toggleLeftSubMenu={toggleLeftSubMenu}
