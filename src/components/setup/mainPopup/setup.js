@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import React from "react";
+import { useSelector } from 'react-redux';
+import { NavLink } from "react-router-dom";
 import { Scrollbars } from "react-custom-scrollbars-2";
 
-import SetupIcon1 from "../../../assets/images/setupicon1.svg";
 import SetupIcon2 from "../../../assets/images/setupicon2.svg";
 import SetupIcon3 from "../../../assets/images/setupicon3.svg";
-import SetupIcon4 from "../../../assets/images/setupicon4.svg";
 import SetupIcon5 from "../../../assets/images/setupicon5.svg";
 import SetupIcon6 from "../../../assets/images/setupicon6.svg";
-import SetupIcon7 from "../../../assets/images/setupicon7.svg";
 import SetupIcon8 from "../../../assets/images/courses.svg";
+import PaymentSetup from "../../../assets/images/PaymentSetup.svg";
 import SetupIcon9 from "../../../assets/images/nn.svg"
 import zapierIcon from "../../../assets/images/zapier.svg"
 
 const Setup = (props) => {
+  const loggedInUser = useSelector((state) => state.user.data);
   return (
     <>
       <div className="setUpPopUp">
@@ -283,11 +283,11 @@ const Setup = (props) => {
                 </div>
               </div>
             </li>
-             
+            {(loggedInUser?.isOrganizationOwner) ? (
              <li>
                <div className="listHead">
                  <i>
-                   <img src={SetupIcon8} alt="" />
+                   <img src={PaymentSetup} alt="" />
                  </i>
                  <div>
                    <h3>
@@ -302,6 +302,7 @@ const Setup = (props) => {
                  </div>
                </div>
              </li>
+            ): "" }
           </ul>
         </Scrollbars>
       </div>

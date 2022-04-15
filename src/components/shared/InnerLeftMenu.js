@@ -223,7 +223,7 @@ const InnerLeftMenu = (props) => {
             </ul>
           </React.Fragment>
         )
-        case "report":
+      case "report":
         return (
           <React.Fragment>
             <div className="sidebarHeader">
@@ -244,14 +244,14 @@ const InnerLeftMenu = (props) => {
                   </div>
                 </NavLink>
               </li>
-              
-           
+
+
             </ul>
             <div className="linkImg">
               <img src={undraw_personal_settings_kihd} alt="" />
             </div>
           </React.Fragment>
-          )
+        )
       case "setup":
         return (
           <React.Fragment>
@@ -339,7 +339,7 @@ const InnerLeftMenu = (props) => {
                 </NavLink>
               </li>
               <li>
-                <NavLink className="leftMenuInnerLink" to="/customizations"> 
+                <NavLink className="leftMenuInnerLink" to="/customizations">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Customizations</p>
@@ -351,7 +351,7 @@ const InnerLeftMenu = (props) => {
                 </NavLink>
               </li>
               <li>
-                <NavLink className="leftMenuInnerLink" to="/number-list"> 
+                <NavLink className="leftMenuInnerLink" to="/number-list">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Number List</p>
@@ -373,19 +373,22 @@ const InnerLeftMenu = (props) => {
                     </button>
                   </div>
                 </NavLink>
-                </li>
-                <li>
-                <NavLink className="leftMenuInnerLink" to="/payment-setup"> 
-                  <div className="indicator"></div>
-                  <div className="linkDetails setup">
-                    <p className="linkHeading">Payment Setup</p>
-                    <p className="linkAbout">Set up your payment modes</p>
-                    <button className="btn sidemenuarrow">
-                      <img src={SideMenuArrow} alt="" />
-                    </button>
-                  </div>
-                </NavLink>
               </li>
+              {(loggedInUser?.isOrganizationOwner) ? (
+                <li>
+                  <NavLink className="leftMenuInnerLink" to="/payment-setup">
+                    <div className="indicator"></div>
+                    <div className="linkDetails setup">
+                      <p className="linkHeading">Payment Setup</p>
+                      <p className="linkAbout">Set up your payment modes</p>
+                      <button className="btn sidemenuarrow">
+                        <img src={SideMenuArrow} alt="" />
+                      </button>
+                    </div>
+                  </NavLink>
+                </li>
+              ) : ""}
+
               {/* <li>
                 {console.log(pathURL === "/email-template" || pathURL === "/sms-template" || pathURL === "/audio-template")}
                 <NavLink 

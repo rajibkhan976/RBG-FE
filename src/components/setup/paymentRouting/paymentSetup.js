@@ -59,7 +59,7 @@ const PaymentSetup = () => {
                 merchantId: (response.data?.merchantId) ? response.data.merchantId : "",
                 retryInterval: (response.data?.retryInterval) ? response.data.retryInterval : "",
                 maxRetry: (response.data?.retryLimit) ? response.data.retryLimit : "",
-                editAccess: (response?.editAccess) ? response?.editAccess : true
+                editAccess: response?.editAccess
             });
         } catch (e) {
             setMerchantInfoSaveMsg({ message: e.message, type: "error", duration: 5000 });
@@ -277,12 +277,15 @@ const PaymentSetup = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="cmnFormRow">
-                                <button type="button" className={fetchingMerchantid ? "saveNnewBtn saveMerchantBtn disabled" : "saveNnewBtn saveMerchantBtn"} 
-                                onClick={saveMerchantInfo}
-                                disabled={!merchantInfo.editAccess}>Save</button>
-                                {merchantFromError ? <div className="errorMsg merchantFromError">{merchantFromError}</div> : ""}
-                            </div>
+                            {(merchantInfo.editAccess) ? (
+                                <div className="cmnFormRow">
+                                    <button type="button" className={fetchingMerchantid ? "saveNnewBtn saveMerchantBtn disabled" : "saveNnewBtn saveMerchantBtn"} 
+                                    onClick={saveMerchantInfo}
+                                    disabled={!merchantInfo.editAccess}>Save</button>
+                                    {merchantFromError ? <div className="errorMsg merchantFromError">{merchantFromError}</div> : ""}
+                                </div>
+                            ): ''}
+                            
                         </div>
                     </div>
                 </form>
