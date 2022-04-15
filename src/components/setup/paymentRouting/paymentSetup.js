@@ -11,7 +11,7 @@ const PaymentSetup = () => {
         merchantId: "",
         retryInterval: "3",
         maxRetry: "2",
-        editAccess: false
+        editAccess: true
     });
     const formRef = useRef();
     const [merchantFormError, setMerchantFormError] = useState({
@@ -36,7 +36,7 @@ const PaymentSetup = () => {
             merchantId: "",
             retryInterval: "",
             maxRetry: "",
-            editAccess: false
+            editAccess: true
         })
     }, [])
 
@@ -100,7 +100,10 @@ const PaymentSetup = () => {
     const saveMerchantInfo = async () => {
         const formField = formRef.current;
         const paysimpleEmail = formField["paysimpleEmail"].value;
-        const merchantId = formField.getElementsByClassName("merchantId")[0].innerText;
+        // if(Array.isArray(formField.getElementsByClassName("merchantId"))) {
+        //     merchantId = formField.getElementsByClassName("merchantId")[0].innerText;
+        // }
+        const merchantId = (formField.getElementsByClassName("merchantId").length) ? formField.getElementsByClassName("merchantId")[0].innerText : false;
         const retryInterval = formField["retryIntervalData"].value;
         const maxRetry = formField["maxRetry"].value;
         if (validateFields(paysimpleEmail, retryInterval, maxRetry)) {
@@ -280,15 +283,11 @@ const PaymentSetup = () => {
                                     </div>
                                 </div>
                             </div>
-                            {(merchantInfo.editAccess) ? (
                                 <div className="cmnFormRow">
                                     <button type="button" className={fetchingMerchantid ? "saveNnewBtn saveMerchantBtn disabled" : "saveNnewBtn saveMerchantBtn"} 
-                                    onClick={saveMerchantInfo}
-                                    disabled={!merchantInfo.editAccess}>Save</button>
+                                    onClick={saveMerchantInfo}>Save</button>
                                     {merchantFromError ? <div className="errorMsg merchantFromError">{merchantFromError}</div> : ""}
                                 </div>
-                            ): ''}
-                            
                         </div>
                     </div>
                 </form>
