@@ -283,7 +283,7 @@ const Setup = (props) => {
                 </div>
               </div>
             </li>
-            {(loggedInUser?.isOrganizationOwner === true || loggedInUser.organizationCode === 'rbg') ? (
+            {(loggedInUser && (loggedInUser?.isOrganizationOwner === true || loggedInUser.organizationCode === 'rbg')) ? (
              <li>
                <div className="listHead">
                  <i>
