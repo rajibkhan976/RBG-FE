@@ -9,8 +9,8 @@ const PaymentSetup = () => {
     const [merchantInfo, setMerchantInfo] = useState({
         paysimpleEmail: "",
         merchantId: "",
-        retryInterval: "3",
-        maxRetry: "2",
+        retryInterval: "",
+        maxRetry: "",
         editAccess: true
     });
     const formRef = useRef();
@@ -57,8 +57,8 @@ const PaymentSetup = () => {
             setMerchantInfo({
                 paysimpleEmail: (response.data?.paysimpleEmail) ? response.data.paysimpleEmail : "",
                 merchantId: (response.data?.merchantId) ? response.data.merchantId : "",
-                retryInterval: (response.data?.retryInterval) ? response.data.retryInterval : "",
-                maxRetry: (response.data?.retryLimit) ? response.data.retryLimit : "",
+                retryInterval: (response.data?.retryInterval) ? response.data.retryInterval : "3",
+                maxRetry: (response.data?.retryLimit) ? response.data.retryLimit : "2",
                 editAccess: response?.editAccess
             });
         } catch (e) {
