@@ -251,7 +251,7 @@ const StatusPhases = (props) => {
                     </button>
                 </div>
                 <div className="userListBody">
-                    { statuses && statuses.length > 0 ?
+                    { phases && phases.length && statuses && statuses.length > 0 ?
                         <ul className="customtableListing">
                             <li className="listHeading">
                                 <div>Status Name</div>
@@ -266,14 +266,14 @@ const StatusPhases = (props) => {
                                         <div className="bigspace colorFade">{elem.description}</div>
                                         <div className="colorFade">{Moment(elem.createdAt).isValid() ? Moment(elem.createdAt).format('LLL') : elem.createdAt}</div>
                                         <div>
-                                            <label className={elem.status ? "toggleBtn active" : "toggleBtn"}>
+                                            {/*<label className={elem.status ? "toggleBtn active" : "toggleBtn"}>
                                                 <input type="checkbox"
                                                        value={elem.status}
                                                        onChange={() => {
                                                            statusToogle(elem);
                                                        }}/>
                                                 <span className="toggler"></span>
-                                            </label>
+                                            </label>*/}
                                             <div className="info_3dot_icon">
                                                 <button className="btn"
                                                         onClick={() => {
