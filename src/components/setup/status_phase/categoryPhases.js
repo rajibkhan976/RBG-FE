@@ -32,9 +32,9 @@ const CategoryPhases = (props) => {
     const clickPhases = async (event) => {
         event.preventDefault();
         try {
-            if (editPhases !== "") {
+            if (editPhases.trim() !== "") {
                 let payload = {
-                    name: editPhases,
+                    name: editPhases.trim(),
                     id: phasesId
                 }
                 setIsLoader(true);

@@ -35,11 +35,11 @@ const StatusAddField = (props) => {
     const handleStatusSubmit = async (e) => {
         e.preventDefault();
         try {
-            if (statusName !== "" && statusDesc !== "" && statusType !== "") {
+            if (statusName.trim() !== "" && statusDesc.trim() !== "" && statusType !== "") {
                 const payload = {
                     phaseId: statusType,
-                    name: statusName,
-                    desc: statusDesc,
+                    name: statusName.trim(),
+                    desc: statusDesc.trim(),
                     id: statusId,
                     status: true
                 }
