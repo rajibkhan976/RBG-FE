@@ -10494,6 +10494,12 @@ svg.monthIcons {
   background-color: #fff4f4;
 }
 
+.statusModalField.errorInput {
+  border: 1px solid #c74854;
+  background-color: #fff4f4;
+}
+
+
 /* THIRD PARTY TOASTER MESSAGE CSS FIXING STARTS........................................... */
 
 .redux-toastr .bottom-right{

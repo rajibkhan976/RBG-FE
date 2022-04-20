@@ -36,7 +36,7 @@ const StatusAddField = (props) => {
     const handleStatusSubmit = async (e) => {
         e.preventDefault();
         try {
-            if (statusName.trim() !== "" && statusDesc.trim() !== "" && statusType !== "") {
+            if (statusName.trim() !== "" && statusType !== "") {
                 const payload = {
                     phaseId: statusType,
                     name: statusName.trim(),
@@ -83,11 +83,11 @@ const StatusAddField = (props) => {
     const handleStatusSubmitNew = async (e) => {
         e.preventDefault();
         try {
-            if (statusName !== "" && statusDesc !== "" && statusType !== "") {
+            if (statusName.trim() !== "" && statusType !== "") {
                 const payload = {
                     phaseId: statusType,
-                    name: statusName,
-                    desc: statusDesc,
+                    name: statusName.trim(),
+                    desc: statusDesc.trim(),
                     id: statusId,
                     status: statusStatus
                 }
@@ -140,10 +140,10 @@ const StatusAddField = (props) => {
     }, []);
     useEffect(() => {
         if (popMsgsuccess) setTimeout(() => {
-            setPopMsgsuccess("")
+            setPopMsgsuccess(false);
         }, 2000);
         if (popMsgerror) setTimeout(() => {
-            setPopMsgerror("")
+            setPopMsgerror(false);
         }, 2000);
 
     }, [popMsgerror, popMsgsuccess]);
@@ -180,14 +180,13 @@ const StatusAddField = (props) => {
                             </div>
                             <div className="formControl">
                                 <label>Status Name</label>
-                                <input type="text" name="" onChange={addStatusNameHandler} value={statusName}/>
+                                <input type="text" name="" onChange={addStatusNameHandler} value={statusName} className={popMsgerror ? 'statusModalField errorInput' : 'statusModalField'}/>
+                                {popMsgerror ? <span className="errorMsg">Please provide status name.</span> : ""}
                             </div>
                             <div className="formControl">
                                 <label>Status Description</label>
                                 <textarea onChange={addStatusDescHandler} value={statusDesc}> </textarea>
                             </div>
-                            {(popMsgerror === true) &&
-                                <ErrorAlert message="Fill Up all the field" extraclassName="addStatsPopMsg"/>}
                             <div className="modalbtnHolder">
                                 {
                                     statusId ? <>
