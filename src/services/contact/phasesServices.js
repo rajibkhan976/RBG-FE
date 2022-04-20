@@ -12,14 +12,16 @@ export const PhasesServices = {
             console.log('Phases From Service : ', result);
             return result.data;
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                console.log(e.stack);
+                console.log("Error", e.response);
                 throw new Error(e.message + ". Please contact support.");
             }
-            
         }
     },
     savePhases: async(payload) => {
@@ -30,7 +32,16 @@ export const PhasesServices = {
             const result = await axios.post(config.phaseUrl, payload, options);
             return result.data;
         } catch (e) {
-            throw new Error(e.response.data.message);
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
     },
     deletePhases: async (id) => {
@@ -45,11 +56,14 @@ export const PhasesServices = {
                 );
             }
         } catch (e) {
-            if (!typeof e.data === "undefined") {
+            if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                console.log(e.stack);
+                console.log("Error", e.response);
                 throw new Error(e.message + ". Please contact support.");
             }
         }

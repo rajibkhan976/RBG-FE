@@ -25,6 +25,7 @@ const StatusPhases = (props) => {
     const [phases, setPhases] = useState([]);
     const [statuses, setStatuses] = useState([]);
     const [selectedPhase, setSelectedPhase] = useState("");
+    const [showErrorMessage, setShowErrorMessage] = useState(false);
     const [modalValue, setModalValue] = useState({});
     const [isConfirmed, setConfirmed] = useState({
         show: false,
@@ -32,13 +33,36 @@ const StatusPhases = (props) => {
     });
     const dispatch = useDispatch();
     const openAddStatusFieldHandler = (event) =>{
-        setModalValue({});
-        setOpenModal(true);
+        if (phases.length) {
+            setModalValue({});
+            setOpenModal(true);
+        } else {
+            setShowErrorMessage(true);
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: 'Please create a phase first.',
+                typeMessage: 'warning'
+            });
+            setTimeout(() => {
+                setShowErrorMessage(false);
+            }, 100);
+        }
+
     }
     const toggleOptions = (index) => {
         setOption(index !== option ? index : null);
     };
     const statusToogle = async (elem) => {
+        try {
+
+        } catch (e) {
+            setIsLoader(false);
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
+        }
         const payload = {
             phaseId: elem.phaseId,
             name: elem.name,
@@ -68,6 +92,16 @@ const StatusPhases = (props) => {
         setOpenModal(false);
     }
     const fetchPhases = async () => {
+        try {
+
+        } catch (e) {
+            setIsLoader(false);
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
+        }
         setIsLoader(true);
         let phases = await PhasesServices.fetchPhases();
         setIsLoader(false);
@@ -97,26 +131,35 @@ const StatusPhases = (props) => {
                 id: null,
             });
         } else {
-            setConfirmed({
-                show: false,
-                id: null,
-            });
-            setIsLoader(true);
-            await StatusServices.deleteStatus(elem._id);
-            setIsLoader(false);
-            let localPhases = phases;
-            let searchResultPhases = phases.find(ele => ele._id === elem.phaseId);
-            let indexPhases = phases.indexOf(searchResultPhases);
-            let searchResultStatus = searchResultPhases.statuses.find(ele => ele._id === elem._id);
-            let indexStats = searchResultPhases.statuses.indexOf(searchResultStatus);
-            searchResultPhases.statuses.splice(indexStats, 1);
-            localPhases[indexPhases] = searchResultPhases;
-            setPhases(phases);
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: 'Status deleted successfully.',
-                typeMessage: 'success'
-            });
+            try {
+                setConfirmed({
+                    show: false,
+                    id: null,
+                });
+                setIsLoader(true);
+                await StatusServices.deleteStatus(elem._id);
+                setIsLoader(false);
+                let localPhases = phases;
+                let searchResultPhases = phases.find(ele => ele._id === elem.phaseId);
+                let indexPhases = phases.indexOf(searchResultPhases);
+                let searchResultStatus = searchResultPhases.statuses.find(ele => ele._id === elem._id);
+                let indexStats = searchResultPhases.statuses.indexOf(searchResultStatus);
+                searchResultPhases.statuses.splice(indexStats, 1);
+                localPhases[indexPhases] = searchResultPhases;
+                setPhases(phases);
+                dispatch({
+                    type: actionTypes.SHOW_MESSAGE,
+                    message: 'Status deleted successfully.',
+                    typeMessage: 'success'
+                });
+            } catch (e) {
+                setIsLoader(false);
+                dispatch({
+                    type: actionTypes.SHOW_MESSAGE,
+                    message: e.message,
+                    typeMessage: 'error'
+                });
+            }
         }
     }
     const createdStatus = (elem) => {
@@ -146,6 +189,25 @@ const StatusPhases = (props) => {
         localPhases[indexPhases] = searchResultPhases;
         setPhases(phases);
     }
+    const updatePhases = (createPhase, id, name) => {
+        if (id) {
+            let element = phases.map((el) => {
+                if (el._id === id) {
+                    el.name = name;
+                    return {...el};
+                }  else {
+                    return {...el};
+                }
+            });
+            setPhases(element);
+        } else {
+            setPhases([...phases, createPhase]);
+        }
+    }
+    const deletePhase = (elem) => {
+        let element = phases.filter(el => el._id !== elem);
+        setPhases(element);
+    }
     useEffect(() => {
         fetchPhases();
     }, [])
@@ -174,8 +236,7 @@ const StatusPhases = (props) => {
                         <p className="userListAbout">Manage your statuses for the respective phases.</p>
                     </div>
                     <button className="creatUserBtn"
-                            onClick={openAddStatusFieldHandler}
-                    >
+                            onClick={openAddStatusFieldHandler}>
                         <img className="plusIcon" src={plus_icon} alt="" />
                         <span>Add a Status</span>
                     </button>
@@ -242,12 +303,17 @@ const StatusPhases = (props) => {
                                     <h4>No Status Found</h4>
                                     <p>No statuses have been listed here yet</p>
                                 </div>
+                                <button className="creatUserBtn buttonForNoRecord"
+                                        onClick={openAddStatusFieldHandler}>
+                                    <img className="plusIcon" src={plus_icon} alt="" />
+                                    <span>Add a Status</span>
+                                </button>
                             </div>
                         )}
                 </div>
             </div>
 
-            <CategoryPhases phases={phases} changePhase={changePhase} />
+            <CategoryPhases phases={phases} changePhase={changePhase} showErrorMessage={showErrorMessage} updatePhases={updatePhases} deletePhase={deletePhase}/>
             {openModal &&
                 <StatusAddField phases={phases} selectedPhaseId={selectedPhase} modalValue={modalValue} createdStatus={createdStatus}
                                 editStatus={editStatus} closeAddCustomModal={(param) => closeCustomModal(param)}

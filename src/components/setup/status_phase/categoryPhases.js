@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Loader from "../../shared/Loader";
-//import { ErrorAlert, SuccessAlert } from "../../shared/messages";
 import arrowRightWhite from "../../../../src/assets/images/arrowRightWhite.svg";
-import plus_icon from "../../../../src/assets/images/plus_icon.svg";
-import info_3dot_icon from "../../../../src/assets/images/info_3dot_icon.svg";
 import info_3dot_white from "../../../../src/assets/images/info_3dot_white.svg";
-
-
-import StatusAddField from "./statusAddField"
 import {PhasesServices} from "../../../services/contact/phasesServices";
 import * as actionTypes from "../../../actions/types";
 import {useDispatch} from "react-redux";
@@ -37,42 +31,43 @@ const CategoryPhases = (props) => {
     }
     const clickPhases = async (event) => {
         event.preventDefault();
-        if (editPhases !== "") {
-            let payload = {
-                name: editPhases,
-                id: phasesId
-            }
-            setIsLoader(true);
-            let createPhase = await PhasesServices.savePhases(payload);
-            setIsLoader(false);
-            if (phasesId) {
-                dispatch({
-                    type: actionTypes.SHOW_MESSAGE,
-                    message: 'Phase updated successfully.',
-                    typeMessage: 'success'
-                });
-                let element = phases.map((el) => {
-                    if (el._id === phasesId) {
-                        el.name = editPhases;
-                        return {...el};
-                    }  else {
-                        return {...el};
-                    }
-                });
-                setPhases(element);
+        try {
+            if (editPhases !== "") {
+                let payload = {
+                    name: editPhases,
+                    id: phasesId
+                }
+                setIsLoader(true);
+                let createPhase = await PhasesServices.savePhases(payload);
+                setIsLoader(false);
+                props.updatePhases(createPhase, phasesId, editPhases)
+                if (phasesId) {
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: 'Phase updated successfully.',
+                        typeMessage: 'success'
+                    });
+                } else {
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: 'Phase created successfully.',
+                        typeMessage: 'success'
+                    });
+                }
             } else {
-                dispatch({
-                    type: actionTypes.SHOW_MESSAGE,
-                    message: 'Phase created successfully.',
-                    typeMessage: 'success'
-                });
-                setPhases([...phases, createPhase]);
+                setEditPhasesError(true)
             }
-        } else {
-            setEditPhasesError(true)
+            setEditPhases("");
+            setPhasesId(0);
+        } catch (e) {
+            setIsLoader(false);
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
         }
-        setEditPhases("");
-        setPhasesId(0);
+        
     }
     useEffect(() => {
         setTimeout(() => {
@@ -104,16 +99,24 @@ const CategoryPhases = (props) => {
                 show: false,
                 id: null,
             });
-            setIsLoader(true);
-            await PhasesServices.deletePhases(elem);
-            setIsLoader(false);
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: 'Phase deleted successfully.',
-                typeMessage: 'success'
-            });
-            let element = phases.filter(el => el._id !== elem);
-            setPhases(element);
+            try {
+                setIsLoader(true);
+                await PhasesServices.deletePhases(elem);
+                setIsLoader(false);
+                dispatch({
+                    type: actionTypes.SHOW_MESSAGE,
+                    message: 'Phase deleted successfully.',
+                    typeMessage: 'success'
+                });
+                props.deletePhase(elem)
+            } catch (e) {
+                setIsLoader(false);
+                dispatch({
+                    type: actionTypes.SHOW_MESSAGE,
+                    message: e.message,
+                    typeMessage: 'error'
+                });
+            }
         }
     }
     const removeEdit = () => {
@@ -129,6 +132,11 @@ const CategoryPhases = (props) => {
             setSelectedPhaseId(props.phases[0]._id);
         }
     }, [props.phases]);
+    useEffect(() => {
+        if (props.showErrorMessage) {
+            setEditPhasesError(true);
+        }
+    }, [props.showErrorMessage])
     return (
         <>
             {isConfirmed.show ? (
@@ -158,7 +166,7 @@ const CategoryPhases = (props) => {
                         {phases.map((elem, key) => {
                             return (
                                 <li key={elem._id} className={selectedPhaseId === 0 ? (key === 0 ? 'active' : '') :
-                                    (selectedPhaseId === elem._id ? 'active' : '')}><button className="bigListName" onClick={() => showNo(elem)}> {elem.name} {elem.phases_count ? "(" +elem.phases_count+")" : "" } </button>
+                                    (selectedPhaseId === elem._id ? 'active' : '')}><button className="bigListName" onClick={() => showNo(elem)}> {elem.name} {elem.statuses.length ? "(" +elem.statuses.length+")" : "(0)" } </button>
                                     <button className="showList" onClick={() => toggleOptions(key)}>
                                         <img src={info_3dot_white} alt="" />
                                     </button>

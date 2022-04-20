@@ -126,7 +126,9 @@ module.exports = {
     //Payment setup url
     paymentSetupUrl: "https://" + process.env.REACT_APP_PAYMENT_SETUP + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/payment/",
 
-
-    phaseUrl: "https://0gnrmx9lwh.execute-api.us-east-1.amazonaws.com/dev/phases",
-    statusUrl: "https://dbxmdtydge.execute-api.us-east-1.amazonaws.com/dev/status"
+    //Status & Phase URl
+    phaseUrl: "https://" + process.env.REACT_APP_PHASE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/phases",
+    //phaseUrl: "http://localhost:4000/dev/phases",
+    statusUrl: "https://" + process.env.REACT_APP_STATUS + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/status"
+    //statusUrl: "http://localhost:4000/dev/status",
 }  

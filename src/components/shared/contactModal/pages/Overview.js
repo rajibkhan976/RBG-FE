@@ -118,10 +118,21 @@ const Overview = (props) => {
         setIsLoader(false);
         setPhases(phases.phases);
     }
+
     useEffect(() => {
+        if(phases.length && selectedPhase !== ""){
+            let searchResultPhases = phases.find(ele => ele._id === selectedPhase);
+            if (searchResultPhases) {
+                setStatus(searchResultPhases.statuses);
+            }
+        }
+
+    }, [phases]);
+    useEffect(() => {
+        fetchPhases();
         fetchCustomFields();
         fetchCountry();
-        fetchPhases();
+        getContact(props.contactId);
     }, []);
     const fetchCustomFields = async () => {
         let cFileds = await ImportContactServices.fetchCustomFields();
@@ -227,17 +238,14 @@ const Overview = (props) => {
             setBasicinfoState(contact.contact.state);
             setBasicinfoZip(contact.contact.zip);
             setBasicinfoCountry(contact.contact.country);
+            setSelectedPhase(contact.contact.phase);
+            setSelectedStatus(contact.contact.status);
         }
         setIsLoader(false);
         if (props.page > 1) {
             props.jump(props.page)
         }
     }
-
-    useEffect(() => {
-        getContact(props.contactId);
-    }, []);
-
 
     const handelBasicinfoFname = (e) => {
         e.preventDefault();
@@ -422,7 +430,7 @@ const Overview = (props) => {
             isError = true;
             formErrorsCopy.lName = "Please fill up Last Name."
         }
-        if (phases !== "" && status === "") {
+        if (selectedPhase !== "" && (selectedStatus === "" || selectedStatus === undefined)) {
             isError = true;
             formErrorsCopy.status = "Please Select a status."
         }
@@ -607,6 +615,7 @@ const Overview = (props) => {
     }
     const handlePhaseChange = (event) => {
         setSelectedPhase(event.target.value);
+        setFormErrorMsg(prevState => ({...prevState, status: ""}));
         if (event.target.value) {
             let searchResultPhases = phases.find(ele => ele._id === event.target.value);
             setStatus(searchResultPhases.statuses)
@@ -616,6 +625,7 @@ const Overview = (props) => {
     }
     const handleStatusChange = (event) => {
         setSelectedStatus(event.target.value);
+        setFormErrorMsg(prevState => ({...prevState, status: ""}));
     }
     useEffect(() => {
         if (successMsg) setTimeout(() => {

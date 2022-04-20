@@ -11,6 +11,7 @@ import SetupIcon8 from "../../../assets/images/courses.svg";
 import PaymentSetup from "../../../assets/images/PaymentSetup.svg";
 import SetupIcon9 from "../../../assets/images/nn.svg"
 import zapierIcon from "../../../assets/images/zapier.svg"
+import statusPhase from "../../../assets/images/statusPhase.svg"
 
 const Setup = (props) => {
   const loggedInUser = useSelector((state) => state.user.data);
@@ -306,7 +307,7 @@ const Setup = (props) => {
             <li>
               <div className="listHead">
                 <i>
-                  <img src={SetupIcon8} alt="" />
+                  <img src={statusPhase} alt="" />
                 </i>
                 <div>
                   <h3>
@@ -314,10 +315,10 @@ const Setup = (props) => {
                         to="/phases-status"
                         onClick={(e) => props.clickedLink(e)}
                     >
-                      Status and Phases
+                      Status and Phase
                     </NavLink>
                   </h3>
-                  <p>Status and Phases</p>
+                  <p>Status and Phase</p>
                 </div>
               </div>
             </li>

@@ -1,15 +1,13 @@
-import React, {useEffect, useState, useForm} from "react";
+import React, {useEffect, useState} from "react";
 import Loader from "../../shared/Loader";
 import crossTop from "../../../../src/assets/images/cross.svg";
 import arrow_forward from "../../../../src/assets/images/arrow_forward.svg";
 import custom_icon from "../../../../src/assets/images/loading1.svg";
 import ErrorAlert from "../../shared/messages/error"
-import SuccessAlert from "../../shared/messages/success"
 import {Scrollbars} from "react-custom-scrollbars-2";
 import {StatusServices} from "../../../services/contact/StatusServices";
 import * as actionTypes from "../../../actions/types";
 import {useDispatch} from "react-redux";
-import {PhasesServices} from "../../../services/contact/phasesServices";
 
 const StatusAddField = (props) => {
     const [isLoader, setIsLoader] = useState(false);
@@ -36,75 +34,93 @@ const StatusAddField = (props) => {
     };
     const handleStatusSubmit = async (e) => {
         e.preventDefault();
-        if (statusName !== "" && statusDesc !== "" && statusType !== "") {
-            const payload = {
-                phaseId: statusType,
-                name: statusName,
-                desc: statusDesc,
-                id: statusId,
-                status: true
-            }
-            setIsLoader(true);
-            let createStatus = await StatusServices.saveStatus(payload);
-            if (statusId) {
-                props.editStatus(payload);
-                dispatch({
-                    type: actionTypes.SHOW_MESSAGE,
-                    message: 'Status updated successfully',
-                    typeMessage: 'success'
-                });
+        try {
+            if (statusName !== "" && statusDesc !== "" && statusType !== "") {
+                const payload = {
+                    phaseId: statusType,
+                    name: statusName,
+                    desc: statusDesc,
+                    id: statusId,
+                    status: true
+                }
+                setIsLoader(true);
+                let createStatus = await StatusServices.saveStatus(payload);
+                if (statusId) {
+                    props.editStatus(payload);
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: 'Status updated successfully',
+                        typeMessage: 'success'
+                    });
+                } else {
+                    props.createdStatus(createStatus);
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: 'Status created successfully',
+                        typeMessage: 'success'
+                    });
+                }
+                setIsLoader(false);
+                setPopMsgsuccess(true);
+                setStatusName("");
+                setStatusDesc("");
+                setStatusType("");
+                props.closeAddCustomModal()
             } else {
-                props.createdStatus(createStatus);
-                dispatch({
-                    type: actionTypes.SHOW_MESSAGE,
-                    message: 'Status created successfully',
-                    typeMessage: 'success'
-                });
+                setPopMsgerror(true)
             }
+        } catch (e) {
             setIsLoader(false);
-            setPopMsgsuccess(true);
-            setStatusName("");
-            setStatusDesc("");
-            setStatusType("");
-            props.closeAddCustomModal()
-        } else {
-            setPopMsgerror(true)
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
         }
     };
     const handleStatusSubmitNew = async (e) => {
         e.preventDefault();
-        if (statusName !== "" && statusDesc !== "" && statusType !== "") {
-            const payload = {
-                phaseId: statusType,
-                name: statusName,
-                desc: statusDesc,
-                id: statusId,
-                status: true
-            }
-            setIsLoader(true);
-            let createStatus = await StatusServices.saveStatus(payload);
-            if (statusId) {
-                props.editStatus(payload);
-                dispatch({
-                    type: actionTypes.SHOW_MESSAGE,
-                    message: 'Status updated successfully',
-                    typeMessage: 'success'
-                });
+        try {
+            if (statusName !== "" && statusDesc !== "" && statusType !== "") {
+                const payload = {
+                    phaseId: statusType,
+                    name: statusName,
+                    desc: statusDesc,
+                    id: statusId,
+                    status: true
+                }
+                setIsLoader(true);
+                let createStatus = await StatusServices.saveStatus(payload);
+                if (statusId) {
+                    props.editStatus(payload);
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: 'Status updated successfully',
+                        typeMessage: 'success'
+                    });
+                } else {
+                    props.createdStatus(createStatus);
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: 'Status created successfully',
+                        typeMessage: 'success'
+                    });
+                }
+                setIsLoader(false);
+                setPopMsgsuccess(true);
+                setStatusName("");
+                setStatusDesc("");
+                setStatusType("");
             } else {
-                props.createdStatus(createStatus);
-                dispatch({
-                    type: actionTypes.SHOW_MESSAGE,
-                    message: 'Status created successfully',
-                    typeMessage: 'success'
-                });
+                setPopMsgerror(true)
             }
+        } catch (e) {
             setIsLoader(false);
-            setPopMsgsuccess(true);
-            setStatusName("");
-            setStatusDesc("");
-            setStatusType("");
-        } else {
-            setPopMsgerror(true)
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
         }
     };
     useEffect(() => {
@@ -127,6 +143,10 @@ const StatusAddField = (props) => {
         }, 2000);
 
     }, [popMsgerror, popMsgsuccess]);
+    useEffect(() => {
+        console.log(props.phases);
+        setPhases(props.phases);
+    }, [props.phases])
     return (
 
         <div className="modalBackdrop statusPhases">

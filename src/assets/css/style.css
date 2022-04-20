@@ -10621,3 +10621,6 @@ svg.monthIcons {
 }
 /* THIRD PARTY TOASTER MESSAGE CSS FIXING ENDS........................................... */
 
+.dashInnerUI .createNew.noInfos .creatUserBtn.buttonForNoRecord {
+  width: auto;
+}
