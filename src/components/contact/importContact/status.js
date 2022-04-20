@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import { useHistory } from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import fileDoneIcon from "../../../assets/images/fileDoneIcon.svg";
 import fileFail_icon from "../../../assets/images/fileFail_icon.svg";
 import done_white_icon from "../../../assets/images/done_white.svg";
@@ -17,6 +17,7 @@ function Status(props) {
     const [duplicateType, setDuplicateType] = useState("skip");
     const [isLoader, setIsLoader] = useState(false);
     const [importError, setImportError] = useState("");
+    const [importName, setImportName] = useState("");
     const dispatch = useDispatch();
     const fetchDetails = async () => {
         setIsLoader(true);
@@ -26,25 +27,12 @@ function Status(props) {
         });
         setTotalRecord(status.totalRecords);
         setUpdatedRecord(status.duplicateCount);
+        setImportName(status.importName);
         setAddedRecord(status.newRecordCount);
         setErrors(status.erros);
         setDuplicateType(status.duplicateType);
         setImportError(status.importError);
         setIsLoader(false);
-    }
-    const viewRecords = () => {
-        dispatch({
-            type: actionTypes.NOTIFICATION_CLICK_CONTACT,
-            importId: props.importId,
-        });
-        setTimeout(() => {
-            dispatch({
-                type: actionTypes.NOTIFICATION_CLICK_CONTACT,
-                importId: null,
-            });
-        }, 200)
-        history.push(`/contacts?page=1&import=`+props.importId);
-        props.closeModal();
     }
     useEffect(() => {
         fetchDetails()
@@ -77,10 +65,10 @@ function Status(props) {
                                         </figure>
                                         <h3>The selected file has been uploaded successfully.</h3>
                                         {addedRecord ?
-                                        <div className="uploadFileBtn">
+                                        <Link to={"/contacts?page=1&source=imported+via+" + importName}
+                                              onClick={() => setTimeout(() => {window.location.reload()},100)}><div className="uploadFileBtn">
                                             View Records
-                                            <input type="button" onClick={viewRecords}/>
-                                        </div> : ""}
+                                        </div></Link> : ""}
                                     </div>
                                     :
                                     <div className="fileImportBox error">

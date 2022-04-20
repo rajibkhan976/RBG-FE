@@ -1988,7 +1988,7 @@ button.saveNnewBtn.appExport.expContactBtn {
 }
 
 button.saveNnewBtn.appFilter.expContactBtn {
-    margin-left: 20px;
+    margin-left: 20px;transform: translateY(0px);
     width: 82px;
 }
 
@@ -5230,9 +5230,9 @@ margin-right: 18%;
    padding-top: 0;
  }
 
- .attendenceHeaderTable .holidays {
+ /* .holidays {
   opacity: 0.35;
-}
+} */
 
  /* Personal Details fixes */
 
@@ -5451,9 +5451,9 @@ margin-right: 18%;
    padding-top: 0;
  }
 
- .holidays {
+ /* .holidays {
   opacity: 0.35;
-}
+} */
 
  /* Personal Details fixes */
 
@@ -5485,3 +5485,471 @@ margin-right: 18%;
   display: flex;
   padding-top: 11px;
 } */
+
+/* Contact page Status Phase Ui */
+.exportImgs {
+  transform: rotate(180deg);
+  margin-top: 2px;
+}
+
+.contactFilters {
+  display: flex;
+  align-items: end;
+  position: relative;
+  min-height: 65px;
+}
+
+.contactFilters .head_ctrlRow_left {
+  width: calc(100% - 340px);
+}
+
+.contactFilters .head_ctrlRow_right {
+  width:340px;
+  text-align: right;
+}
+
+.pageSelectedInfo {
+  width: 612px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  background: #E9F4FF;
+  border-radius: 5px;
+  padding: 10px 30px;
+  margin: 0 auto;
+  position: absolute;
+  left: 22%;
+  top: -15px;
+}
+.leftPTag {
+  font-size: 14px;
+  color: #87A8C1;
+  font-weight: 400;
+}
+
+.rightPTag {
+  font-size: 14px;
+  font-weight: 500;
+  color: #0093FF;
+  margin-top: 0;
+  margin-left: auto;
+  line-height: 18px;
+}
+
+.allContacts {
+  background: #fff;
+  border: 1px solid #e8eff6;
+  border-radius: 3px;
+}
+
+allContacts.selectNumberDisplay {
+  border: 1px solid #e9f4ff;
+}
+
+.headerselect {
+  top: 0;
+}
+
+/*.allContacts input[type="checkbox"] {*/
+/*  border: none;*/
+/*}*/
+
+.pagesTags {
+  width: 100%;
+  display: block;
+  margin-top: 35px;
+}
+/*.pagesTags.selectedAllCheckBox {*/
+/*  margin-top: 40px;*/
+/*}*/
+
+.contactsTags {
+  width: auto;
+  background: #fff;
+  padding: 7px 12px;
+  border: 1px solid #D0D6DB;
+  display: inline-block;
+  border-radius: 29px;
+  margin-right: 10px;
+  height: 29px;
+  line-height: 9px;
+  position: relative;
+}
+
+.contactsTags:last-child {
+  margin-right: 0;
+}
+
+.pageInfo {
+  color: #305671;
+  font-size: 10px;
+}
+.pageInfo b {
+  margin-right: 3px;
+}
+
+.crossTags {
+  cursor: pointer;
+  margin-left: 14px;
+}
+.crossTags img {
+  width: 10px;
+  height: 10px;
+  vertical-align: unset;
+}
+
+.extraCountsWraper {
+  border: 1px solid #0093FF;
+  border-radius: 50%;
+  height: 29px;
+  width: 29px;
+  padding: 7px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.extraCountsNumbers {
+  margin: 0;
+  font-size: 10px;
+  color: #305671;
+  line-height: 12px;
+}
+
+.clearAlls {
+  background: transparent;
+  border: none;
+}
+
+.allDel {
+  cursor: pointer;
+  font-size: 10px;
+  color: #55BBC9;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.extraTagsWrapers {
+  width: 250px;
+  padding: 10px 8px;
+  background: #FFFFFF;
+  border: 1px solid #D0D6DB;
+  box-sizing: border-box;
+  box-shadow: 0px 20px 40px rgb(0 0 0 / 10%);
+  display: block;
+  z-index: 9;
+  position: absolute;
+  top: 29px;
+  border-radius: 5px;
+  display: none;
+}
+.extraCountsWraper:hover .extraTagsWrapers {
+  display: block;
+}
+.wrapersTags {
+  width: 100%;
+  padding: 5px;
+  text-align: left;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.wrapersTags .contactsTags {
+  margin-bottom: 8px;
+}
+
+.wrapersTags .contactsTags:last-child {
+  margin-bottom: 0;
+}
+
+.wrapersTags::-webkit-scrollbar {
+  width: 2px;
+}
+
+.wrapersTags::-webkit-scrollbar-track {
+  background-color: #dce4eb;
+}
+
+.wrapersTags::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
+}
+.selectAllWraper {
+  display: inline-block;
+  padding: 4px 4px 0 4px;
+  margin-left: 10px;
+  background: #E8EFF6;
+  border: 1px solid #0093FF;
+  box-sizing: border-box;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+}
+
+.allArrow {
+  vertical-align: super;
+}
+
+/* .indselects .allContacts {
+  top: -5px;
+} */
+
+.indselects {
+  margin-left: 18px;
+}
+
+.selectAllDropdown {
+  width: 107px;
+  background: #FFFFFF;
+  box-shadow: 0px 0px 30px rgb(0 0 0 / 15%);
+  border-radius: 5px;
+  padding: 3px;
+  position: absolute;
+  left: 35px;
+  top: 26px;
+}
+
+.selectAllDropdown ul li {
+  color: #9BAEBC;
+  font-weight: 400;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 5px 15px;
+  background: #FFFFFF;
+  border-radius: 5px;
+}
+
+.selectAllDropdown ul li:hover {
+  background: #E9EFF5;
+  color: #305671;
+}
+.selectAllSection {
+  position: relative;
+  display: inline;
+}
+
+.sideMenuInner.importModalContainer.updateContainer {
+  width: 457px;
+}
+.updates {
+  margin-top: 10px;
+}
+
+.innerModalHeader h3.deleteHeading {
+  font-size: 14px;
+  padding: 10px 0 25px 0;
+  color: #305671;
+  font-weight: 500;
+}
+
+.modalForm.appointmentForm.setappointment.successApp.deleteModals {
+  max-height: 155px;
+  overflow: hidden;
+  min-height: 138px;
+}
+
+.deleteSelectedModals {
+  height: 180px;
+}
+
+.modalActionWraper {
+  display: flex;
+  align-items: center;
+  width:90%;
+  margin: 0 auto 10px;
+}
+
+.deletebtns {
+  margin-left: auto;
+  width: 82px;
+  font-size: 14px;
+}
+
+.modalActionWraper .formControl {
+  margin: 0!important;
+}
+
+.modalActionWraper .clearFilter {
+  margin-left: 0;
+  font-size: 14px;
+}
+
+.saveNnewBtn.appFilter.expContactBtn.contactListingsFilterBtn {
+  margin-right: 20px;
+  margin-left: 5px;
+}
+.holidays {
+  opacity: 0.35;
+} 
+
+button.bigListName.phasesNames {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dateRange.pTags {
+  padding-left: 10px;
+}
+.halfDates {
+  padding-left: 15px;
+}
+
+.filterOfContactListing .formField.w-100.appModals.formControl:last-child {
+  margin-bottom: 20px;
+}
+
+.importModalBody.setFilter {
+  padding-top: 0;
+}
+
+.filterOfContactListing .formField {
+  margin-bottom: 5px;
+}
+
+.filterOfContactListing .formControl label {
+  margin-bottom: 0;
+}
+
+.phasesSelection label {
+  padding-top: 0;
+}
+li.dateRangeHeading {
+  padding-top: 10px;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection {
+  margin-bottom: 40px;
+}
+
+.clearFilterBtns {
+  margin-top: 10px;
+}
+
+.dataTableCell.user.userPlusSelect {
+  display: flex;
+  align-items: center;
+}
+.customtableListing li > div {
+  max-width: 32%;
+  /* text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap; */
+}
+
+  .selectStatusSelect {
+    padding-right: 35px;
+  }
+
+  /* Minus CheckBox */
+
+.rightPTag label {
+  display: flex;
+  align-items: center;
+}
+    /* Minus CheckBox */
+
+.rightPTag .customCheckbox {
+    top: 0;
+}
+
+.selectFilters {
+  display: flex;
+  align-items: center;
+}
+
+.statusNames {
+  max-width:95%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  font-weight: 600;
+  color: #305671;
+  font-size: 14px;
+}
+
+.statusNameField {
+  width: 31%;
+}
+
+.statusCounts {
+  color: #fff;
+  margin-left: 15px;
+  padding: 5px 10px;
+  background: #5182A6;
+  border-radius: 15px;
+}
+
+.statusNameWraper {
+  width: 32%;
+}
+
+input.addPhases {
+  padding-right: 32px;
+}
+
+.statusDesc {
+  width: 100%;
+  word-break: break-word;
+  line-height: 1.5em;
+  max-height: 39px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+/*Kallol css at Ujjal's place*/
+
+.checkCutsomInputs input {
+  display: none;
+}
+.checkCutsomInputs span {
+  background-color: #305671;
+  border-color: #305671;
+  width: 17px;
+  height: 17px;
+  margin: 0px 7px 0px 0px;
+  box-sizing: border-box;
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fff;
+  position: relative;
+}
+
+
+
+.checkCutsomInputs span:after {
+  content: "";
+  position: absolute;
+  width: 7px;
+  height: 1px;
+  border: 1px solid #fff;
+  top: 50%;
+  left: 50%;
+  transform: translate(-51%, -51%);
+  -webkit-transform: translate(-51%, -51%);
+  -moz-transform: translate(-51%, -51%);
+  -ms-transform: translate(-51%, -51%);
+  -o-transform: translate(-51%, -51%);
+}
+
+/*Kallol css at Ujjal's place*/
+
+.customCheckbox.allContacts input[type=checkbox]:checked+span, .customCheckbox.allContacts input[type=checkbox][checked]+span {
+  border-radius: 3px;
+
+  background: #0093FF url("../images/tick.svg") no-repeat top 4px center /
+    8px auto;
+  border-color: #0093FF;
+}
+
+.checkCutsomInputs.minusSelectBox span {
+  background-color: #0093FF;
+  border-color: #0093FF;
+}
+
+.dropdownOptions.status .btn svg {
+  margin-top: 4px;
+}

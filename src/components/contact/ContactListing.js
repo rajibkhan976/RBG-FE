@@ -11,11 +11,11 @@ import warning_bell from "../../../src/assets/images/bell.svg"
 import {ContactService} from "../../services/contact/ContactServices";
 import noRecords from '../../../src/assets/images/noRecords.svg';
 import plus_icon from '../../../src/assets/images/plus_icon.svg';
+import arrow from '../../../src/assets/images/arrow1.svg';
+import cross from "../../../src/assets/images/cross.svg";
 import {utils} from "../../helpers";
 import Loader from "../shared/Loader";
 import Pagination from '../shared/Pagination';
-import responses from '../../configuration/responses';
-import env from '../../configuration/env';
 import Moment from 'moment';
 import dependent_white from "../../assets/images/dependent.svg";
 
@@ -28,7 +28,6 @@ const ContactListing = forwardRef((props, ref) => {
     const [listCol, setListCol] = useState([]);
     const [savedColList, setSavedColList] = useState(listCol);
     const [keyword, setKeyword] = useState('');
-    const [checkedColListHead, setCheckedColListHead] = useState([]);
     const [colModalStatus, setColModalStatus] = useState(false);
     const [contactCount, setContactCount] = useState(0);
     const [errorMsg, setErrorMsg] = useState('');
@@ -36,6 +35,7 @@ const ContactListing = forwardRef((props, ref) => {
     const [sortBy, setSortBy] = useState("");
     const [sortType, setSortType] = useState("asc");
     const [hideFilter, setHideFilter] = useState(false);
+    const [filters, setFilters] = useState([]);
     const [paginationData, setPaginationData] = useState({
         count: null,
         totalPages: null,
@@ -48,27 +48,29 @@ const ContactListing = forwardRef((props, ref) => {
     const modalId = useSelector((state) => state.contact.contact_modal_id);
     const isFirstTime = useSelector((state) => state.contact.isFirstTime);
     const isClicked = useSelector((state) => state.notification.importId);
-    const isMounted = useRef(false);
-    useEffect(() => {
-        if (isClicked) {
-            console.log('isClicked')
-            setHideFilter(false);
-            fetchContact();
-        }
-    }, [isClicked]);
-    useEffect(() => {
-        if (modalId === '' && !isFirstTime) {
-            fetchContact();
-        }
-    }, [modalId]);
-    /*useEffect(() => {
-        return () => {
-            dispatch({
-                type: actionTypes.CONTACTS_MODAL_RESET
-            });
-        }
-    })*/
+    const [checkboxes, setCheckboxes] = useState([]);
+    const [selectAllCheckbox, setSelectAllCheckbox] = useState(false);
+    const [selectSingle, setSelectSingle] = useState(false);
+    const [deleteSelectedModal, setDeleteSelectedModal] = useState(false);
+    const [addSelectAll, setAddSelectAll] = useState({
+        status: false,
+    });
     let arrangeColRef = useRef();
+
+    const openFilter = () => {
+        props.openFilter();
+    }
+
+    const addSelectAllFn = () => {
+        setAddSelectAll({
+            ...addSelectAll,
+            status: !addSelectAll.status,
+        });
+    };
+
+    const closeDeleteModal = () => {
+        setDeleteSelectedModal(false);
+    }
 
     const checkOutsideClick = (e) => {
         if (arrangeColRef.current.contains(e.target)) {
@@ -88,71 +90,21 @@ const ContactListing = forwardRef((props, ref) => {
         }
     }
 
-    // useEffect(() => {
-    //     document.addEventListener("click", checkOutsideClick);
-    //     return () => {
-    //         document.removeEventListener("click", checkOutsideClick);
-    //     }
-    // }, []);
-
     const createIndivitualContact = () => {
-      dispatch({
-          type: actionTypes.CONTACTS_MODAL_ID,
-          contact_modal_id: 0,
-      });
+        dispatch({
+            type: actionTypes.CONTACTS_MODAL_ID,
+            contact_modal_id: 0,
+        });
     }
 
     const handelSize = () => {
         setTableWidth(window.innerWidth - 504);
     }
 
-    useEffect(() => {
-        handelSize();
-        const search = utils.getQueryVariable('search');
-        if (search) {
-          setKeyword(decodeURIComponent(search));
-        }
-        const sortByNew = utils.getQueryVariable('sortBy');
-        if (sortByNew) {
-            setSortBy(sortByNew);
-        }
-        const sortTypeNew = utils.getQueryVariable('sortType');
-        if (sortTypeNew) {
-            setSortType(sortTypeNew);
-        }
-    }, []);
-
-    useImperativeHandle(ref, () => ({
-        fetchContactForImportContactModalClose() {
-            fetchContact();
-        },
-    }))
-    
-    useEffect(() => {
-        (async () => {
-            const localSavedCol = localStorage.getItem("storedSavedColList", []);
-            const storedSavedColList = (localSavedCol === null) ? [] : JSON.parse(localSavedCol);
-            if (!storedSavedColList.length) {
-                await fetchColumns();
-                await fetchContact();
-            } else {
-                setListCol(storedSavedColList);
-                setSavedColList(storedSavedColList);
-                await fetchContact();
-            }
-            handleCheckedColListHead();
-        })();
-    }, []);
-
-
-
-    useEffect(() => {
-        if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay);
-        if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay);
-    }, [successMsg, errorMsg])
-
     const fetchContact = async () => {
         setIsLoader(true);
+        setSelectSingle(false);
+        setSelectAllCheckbox(false);
         const pageId = utils.getQueryVariable('page');
         const queryParams = await getQueryParams();
         try {
@@ -164,6 +116,7 @@ const ContactListing = forwardRef((props, ref) => {
             if (result) {
                 setContactList(result.contacts);
                 setContactCount(result.pagination.count);
+                setFilters(result.filterApplied);
                 setPaginationData({
                     ...paginationData,
                     currentPage: result.pagination.currentPage,
@@ -204,13 +157,16 @@ const ContactListing = forwardRef((props, ref) => {
     const getQueryParams = async () => {
         const search = utils.getQueryVariable('search');
         const group = utils.getQueryVariable('group');
-        const fromDate = utils.getQueryVariable('fromDate');
-        const toDate = utils.getQueryVariable('toDate');
         const status = utils.getQueryVariable('status');
         const srtBy = utils.getQueryVariable('sortBy');
         const srtType = utils.getQueryVariable('sortType');
         const cache = utils.getQueryVariable('cache');
         const importId = utils.getQueryVariable('import');
+        const phase = utils.getQueryVariable('phase');
+        const source = utils.getQueryVariable('source');
+        const by = utils.getQueryVariable('createdBy');
+        const fromDate = utils.getQueryVariable('fromDate');
+        const toDate = utils.getQueryVariable('toDate');
 
         const queryParams = new URLSearchParams();
         if (cache) {
@@ -223,8 +179,10 @@ const ContactListing = forwardRef((props, ref) => {
         if (group) {
             queryParams.append("group", group);
         }
-        if (fromDate && toDate) {
+        if (fromDate) {
             queryParams.append('fromDate', fromDate);
+        }
+        if (toDate) {
             queryParams.append('toDate', toDate);
         }
         if (status) {
@@ -239,6 +197,15 @@ const ContactListing = forwardRef((props, ref) => {
         if (importId) {
             queryParams.append("import", importId);
         }
+        if (phase) {
+            queryParams.append("phase", phase);
+        }
+        if (source) {
+            queryParams.append("source", decodeURIComponent(source).replaceAll("+", " "));
+        }
+        if (by) {
+            queryParams.append("createdBy", by);
+        }
         return queryParams;
     }
 
@@ -248,7 +215,6 @@ const ContactListing = forwardRef((props, ref) => {
         for (let i = 0; i < listColData.length; i++) {
             dataList = dataList.concat(listColData[i].id)
         }
-        setCheckedColListHead(dataList);
     }
 
     // a little function to help us with reordering the result
@@ -272,21 +238,31 @@ const ContactListing = forwardRef((props, ref) => {
     }
 
     const handleCheckCol = (e, id) => {
-        setListCol((elms) =>
-            elms.map((el) => {
-                if (el.id === id) {
-                    el.status = e;
-                }
-                return { ...el };
-            })
-        );
+        console.log(e);
+        let selected = listCol.filter(el => el.status).length;
+        if (selected === 1 && !e) {
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: 'You can not uncheck all the fields.',
+                typeMessage: 'error'
+            });
+        } else {
+            setListCol((elms) =>
+                elms.map((el) => {
+                    if (el.id === id) {
+                        el.status = e;
+                    }
+                    return {...el};
+                })
+            );
+        }
     }
 
-    
+
     const handleSave = async () => {
         setIsLoader(true);
         try {
-            const res = await ContactService.saveColumns(JSON.stringify({ columns: listCol }));
+            const res = await ContactService.saveColumns(JSON.stringify({columns: listCol}));
             if (res.status) {
                 setSuccessMsg(res.message);
                 localStorage.setItem("storedSavedColList", JSON.stringify(listCol));
@@ -354,38 +330,294 @@ const ContactListing = forwardRef((props, ref) => {
         }
         fetchContact();
     }
+
+
+    const handleCheckBoxClick = (id) => {
+        setSelectAllCheckbox(false);
+        let selectedOne = false;
+        let cb = checkboxes.map(ele => {
+            if (ele.id === id) {
+                ele.checked = !ele.checked;
+            }
+            return ele;
+        });
+        cb.map(ele => {
+            if (ele.checked) {
+                selectedOne = true;
+            }
+        });
+        if (selectedOne) {
+            setSelectSingle(true);
+        } else {
+            setSelectSingle(false);
+        }
+        setCheckboxes(cb);
+    }
+    const handleCheckAll = () => {
+        let checkForSelected = checkboxes.filter(ele => ele.checked === true);
+        let cb = [];
+        if (checkForSelected.length > 0) {
+            cb = checkboxes.map(ele => {
+                ele.checked = false;
+                return ele;
+            });
+            setSelectAllCheckbox(false);
+            setSelectSingle(false);
+        } else {
+            cb = checkboxes.map(ele => {
+                ele.checked = true;
+                return ele;
+            });
+            setSelectAllCheckbox(true);
+            setSelectSingle(false);
+        }
+        setCheckboxes(cb);
+    }
+
+
+    const openContactModal = (id) => {
+        dispatch({
+            type: actionTypes.CONTACTS_MODAL_ID,
+            contact_modal_id: id,
+        });
+    }
+
+
+    const openUpdateFn = () => {
+        if (selectAllCheckbox || selectSingle) {
+            props.openUpdate();
+        } else {
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: 'Please select at least one contact first.',
+                typeMessage: 'error'
+            });
+        }
+        setAddSelectAll({
+            ...addSelectAll,
+            status: false,
+        });
+    }
+    const deleteSelectedModalFn = () => {
+        if (selectAllCheckbox || selectSingle) {
+            setDeleteSelectedModal(true);
+        } else {
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: 'Please select at least one contact first.',
+                typeMessage: 'error'
+            });
+        }
+        setAddSelectAll({
+            ...addSelectAll,
+            status: false,
+        });
+    };
+    const deleteContacts = async () => {
+        if (selectAllCheckbox || selectSingle) {
+            const pageId = utils.getQueryVariable('page');
+            const queryParams = await getQueryParams();
+            try {
+                let sc = [];
+                if (Array.isArray(checkboxes)) {
+                    sc = checkboxes.filter(el => el.checked).map(el => {
+                        return el.id
+                    });
+                }
+                let payload = {
+                    'all': selectAllCheckbox,
+                    'selected': sc,
+                };
+                setIsLoader(true);
+                await ContactService.deleteSelectedContact(payload, pageId, queryParams);
+                setIsLoader(false);
+                dispatch({
+                    type: actionTypes.SHOW_MESSAGE,
+                    message: 'Contacts Deleted Successfully',
+                    typeMessage: 'success'
+                });
+                setDeleteSelectedModal(false);
+                fetchContact();
+            } catch (e) {
+                dispatch({
+                    type: actionTypes.SHOW_MESSAGE,
+                    message: e.message,
+                    typeMessage: 'error'
+                });
+            }
+        } else {
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: 'Please select at least one contact first.',
+                typeMessage: 'error'
+            });
+        }
+    }
+    const removeFilter = (type) => {
+        if (type === 'all') {
+            clearFilter();
+        } else {
+            utils.removeQueryParameter(type);
+            utils.removeQueryParameter('page');
+            fetchContact();
+        }
+    }
+    const handleImportModal = () => {
+        const readPermission = (Object.keys(permissions).length) ? permissions.actions.includes("import") : false;
+
+        props.openModal();
+        // if (readPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
+        //     props.openModal()
+        // } else {
+        //     setErrorMsg(responses.permissions.contact.import);
+        // }
+    }
+    const clearFilter = () => {
+        utils.removeQueryParameter('import');
+        utils.removeQueryParameter('page');
+        utils.removeQueryParameter('status');
+        utils.removeQueryParameter('phase');
+        utils.removeQueryParameter('source');
+        utils.removeQueryParameter('createdBy');
+        utils.removeQueryParameter('fromDate');
+        utils.removeQueryParameter('toDate');
+        setHideFilter(true);
+        fetchContact();
+    }
+    const selectAllValueAction = (flag) => {
+        props.selectAllCheckboxValue(flag);
+    }
+    useEffect(() => {
+        if (isClicked) {
+            setHideFilter(false);
+            fetchContact();
+        }
+    }, [isClicked]);
+
+    useEffect(() => {
+        if (modalId === '' && !isFirstTime) {
+            fetchContact();
+        }
+    }, [modalId]);
+
+    useEffect(() => {
+        if (props.filterApply) {
+            fetchContact();
+        }
+    }, [props.filterApply]);
+
+    useEffect(() => {
+        if (contactList.length) {
+            let checkboxes = [];
+            contactList.map(ele => {
+                checkboxes.push({
+                    'id': ele._id,
+                    'checked': false
+                })
+            });
+            setCheckboxes(checkboxes);
+        }
+    }, [contactList]);
+
     useEffect(() => {
         setSavedColList(listCol)
-    }, [listCol])
-    const GenerateColumns = () => {
-        return (
-            <li className="listHeadingContacts">
-                {savedColList.filter(filterCondition => filterCondition.status ).map((item, index) => {
-                    return (
-                        <div className="GenerateColumnsCell" key={index}>
-                            <div className={"dataTableCell " +(item.id === sortBy ? (sortType === 'asc' ? 'asc' : "dsc") : "")}
-                                 onClick={() => handleSortBy(item.id)}>{item.name}</div>
-                        </div>
-                    )
-                })}
-            </li>
-        )
-    }
+    }, [listCol]);
+
+    useEffect(() => {
+        if (successMsg) setTimeout(() => {
+            setSuccessMsg("")
+        }, messageDelay);
+        if (errorMsg) setTimeout(() => {
+            setErrorMsg("")
+        }, messageDelay);
+    }, [successMsg, errorMsg]);
+
+    useEffect(() => {
+        handelSize();
+        const search = utils.getQueryVariable('search');
+        if (search) {
+            setKeyword(decodeURIComponent(search));
+        }
+        const sortByNew = utils.getQueryVariable('sortBy');
+        if (sortByNew) {
+            setSortBy(sortByNew);
+        }
+        const sortTypeNew = utils.getQueryVariable('sortType');
+        if (sortTypeNew) {
+            setSortType(sortTypeNew);
+        }
+    }, []);
+
+    useImperativeHandle(ref, () => ({
+        fetchContactForImportContactModalClose() {
+            fetchContact();
+        },
+    }))
+
+    useEffect(() => {
+        (async () => {
+            const localSavedCol = localStorage.getItem("storedSavedColList", []);
+            const storedSavedColList = (localSavedCol === null) ? [] : JSON.parse(localSavedCol);
+            if (!storedSavedColList.length) {
+                await fetchColumns();
+                await fetchContact();
+            } else {
+                setListCol(storedSavedColList);
+                setSavedColList(storedSavedColList);
+                await fetchContact();
+            }
+            handleCheckedColListHead();
+        })();
+    }, []);
+
+    useEffect(() => {
+        props.selectedContacts(checkboxes);
+    }, [checkboxes]);
+
+    useEffect(() => {
+        if (props.fetchContact) {
+            fetchContact();
+        }
+    }, [props.fetchContact]);
+
+    // useEffect(() => {
+    //     document.addEventListener("click", checkOutsideClick);
+    //     return () => {
+    //         document.removeEventListener("click", checkOutsideClick);
+    //     }
+    // }, []);
+
+    /*useEffect(() => {
+        return () => {
+            dispatch({
+                type: actionTypes.CONTACTS_MODAL_RESET
+            });
+        }
+    })*/
 
     const GenerateContacts = () => {
         return contactList.map((ele, i) => {
             let j = 0;
             return (
-                <li key={'contact_'+i}>
-                    {savedColList.filter(filterCondition => filterCondition.status ).map((item, pp) => {
+                <li key={'contact_' + i}>
+                    {savedColList.filter(filterCondition => filterCondition.status).map((item, pp) => {
                         j++;
                         return (
-                            <div className={item.id === "name" ? "dataTableCell user" : "dataTableCell"} key={'dataTableCell_'+i+pp}>
-                                {(j === 1) ? <button className="extraDottedBtn" type="button"></button> : ""}
-                                {(j === 1) && (!ele.isDependent || ele.isDependent === undefined) ? ((ele.payment_error != undefined || ele.course_error != undefined) ? <span className="infoWarning warningSpace"
-                                                                                                                                                                               data-title={(ele.payment_error != undefined ? ele.payment_error : "" ) + ' ' + (ele.course_error != undefined ? ele.course_error : "")}>
-                                        <img src={warning_bell} alt="warning" /></span> : <span className="warningSpace"></span>) : ""}
-                                { ((j === 1) && (ele && ele.isDependent && ele.guardianId) ?  <span className="infoDependent" title="Dependent"><img src={dependent_white} alt="dependent_white" /></span> : "" ) }
+                            <div className={item.id === "name" ? "dataTableCell user userPlusSelect" : "dataTableCell"}
+                                 key={'dataTableCell_' + i + pp}>
+                                {(j === 1) ? <label className="indselects"><span className="customCheckbox allContacts">
+                                    <input type="checkbox"
+                                           checked={checkboxes && checkboxes[i] ? checkboxes[i].checked : false}
+                                           name={"contactId" + ele._id} onChange={() => handleCheckBoxClick(ele._id)}/>
+                                    <span></span></span></label> : ""}
+                                {(j === 1) && (!ele.isDependent || ele.isDependent === undefined) ? ((ele.payment_error != undefined || ele.course_error != undefined) ?
+                                    <span className="infoWarning warningSpace"
+                                          data-title={(ele.payment_error != undefined ? ele.payment_error : "") + ' ' + (ele.course_error != undefined ? ele.course_error : "")}>
+                                        <img src={warning_bell} alt="warning"/></span> :
+                                    <span className="warningSpace"></span>) : ""}
+                                {((j === 1) && (ele && ele.isDependent && ele.guardianId) ?
+                                    <span className="infoDependent" title="Dependent"><img src={dependent_white}
+                                                                                           alt="dependent_white"/></span> : "")}
                                 <button className="btn" onClick={() => openContactModal(ele._id)}>
                                     {(item.id === "name") ? <span className="tableCellUserImg">
                                             <LazyLoadImage
@@ -394,15 +626,16 @@ const ContactListing = forwardRef((props, ref) => {
                                                 alt="avatar"
                                                 effect="blur"
                                                 placeholderSrc={owner_img_1}
+                                                visibleByDefault={true}
                                             />
                                         </span> : ""}
                                     <span className="userNames">
                                         {(item.id === 'mobile' || item.id === 'phone' || item.id === 'dadPhone' || item.id === 'momPhone') ?
-                                            ((ele[item.id] && ele[item.id].dailCode &&  ele[item.id].number !== "") ?
+                                            ((ele[item.id] && ele[item.id].dailCode && ele[item.id].number !== "") ?
                                                 <span className={ele[item.id].is_valid ?
                                                     "number valid" : "number invalid"}>{ele[item.id].dailCode + "-" + ele[item.id].number}</span> :
-                                                "")  : (item.id === 'dob' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LL') :
-                                                (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LLL') : ele[item.id] ))
+                                                "") : (item.id === 'dob' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LL') :
+                                                (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LLL') : ele[item.id]))
                                         }
                                              </span>
                                 </button>
@@ -421,15 +654,6 @@ const ContactListing = forwardRef((props, ref) => {
                     {(provided) => {
                         return (
                             <ul ref={provided.innerRef}>
-                              <li>
-                                                <label>
-                                                    <div className="customCheckbox">
-                                                        <input type="checkbox" />
-                                                        <span></span>
-                                                    </div>
-                                                    <span>Select All</span>
-                                                </label>
-                                            </li>
                                 {listCol.filter(el => el.name.toLowerCase().includes(prop.searchData.toLowerCase())).map((item, index) => (
                                     <Draggable key={item.id} draggableId={item.id} index={index}>
                                         {(provided) => (
@@ -441,7 +665,9 @@ const ContactListing = forwardRef((props, ref) => {
                                             >
                                                 <label>
                                                     <div className="customCheckbox">
-                                                        <input type="checkbox" onChange={(e) => handleCheckCol(e.target.checked, item.id)} checked={item.status} />
+                                                        <input type="checkbox"
+                                                               onChange={(e) => handleCheckCol(e.target.checked, item.id)}
+                                                               checked={item.status}/>
                                                         <span></span>
                                                     </div>
                                                     <span>{item?.name}</span>
@@ -459,32 +685,25 @@ const ContactListing = forwardRef((props, ref) => {
         );
     }
 
-    const openContactModal = (id) => {
-        dispatch({
-            type: actionTypes.CONTACTS_MODAL_ID,
-            contact_modal_id: id,
-        });
+    const GenerateColumns = () => {
+        return (
+            <li className="listHeadingContacts">
+                {savedColList.filter(filterCondition => filterCondition.status).map((item, index) => {
+                    return (
+                        <div className="GenerateColumnsCell" key={index}>
+                            <div
+                                className={"dataTableCell " + (item.id === sortBy ? (sortType === 'asc' ? 'asc' : "dsc") : "")}
+                                onClick={() => handleSortBy(item.id)}>{item.name}</div>
+                        </div>
+                    )
+                })}
+            </li>
+        )
     }
 
-    const handleImportModal = () => {
-        const readPermission = (Object.keys(permissions).length) ? permissions.actions.includes("import") : false;
-        
-        props.openModal();
-        // if (readPermission && env.ACTIVE_PERMISSION_CHECKING === 1) {
-        //     props.openModal()
-        // } else {
-        //     setErrorMsg(responses.permissions.contact.import);
-        // }
-    }
-    const clearFilter = () => {
-        utils.removeQueryParameter('import');
-        utils.removeQueryParameter('page');
-        setHideFilter(true);
-        fetchContact();
-    }
     return (
         <div className="dashInnerUI">
-            {isLoader ? <Loader /> : ''}
+            {isLoader ? <Loader/> : ''}
             <ContactHead
                 totalCount={contactCount}
                 handleSearch={handleSearch}
@@ -493,73 +712,123 @@ const ContactListing = forwardRef((props, ref) => {
                 openImportContact={handleImportModal}
                 isClicked={isClicked}
                 hideFilter={hideFilter}
-                clearFilter={clearFilter}></ContactHead>
+                clearFilter={clearFilter}
+                openFilter={openFilter}
+                selectAllCheckbox={selectAllCheckbox}
+                selectSingle={selectSingle}
+                contactListPageCount={checkboxes.length}
+                filters={filters}
+                removeFilter={removeFilter}
+                selectAll={selectAllValueAction}
+            ></ContactHead>
             {successMsg &&
                 <SuccessAlert message={successMsg}></SuccessAlert>
             }
             {errorMsg &&
                 <ErrorAlert message={errorMsg}></ErrorAlert>
             }
-
-{contactCount ?
-        <>
-            <div className="userListBody">
-
-                <div className="listBody contactListingTable" style={{ 'width': tableWidth }}>
-                    <div className="tableDataConfigArea">
-                        <div className="configColArea" ref={arrangeColRef}>
-                            <button className={colModalStatus ? "configColBtn close" : "configColBtn"} onClick={toggleColModal}></button>
-                            {colModalStatus ?
-                                <div className="configColModal contactPage">
-                                    <div className="configColModalHead">
-                                        <input type="search" placeholder="Search"
-                                            onChange={(event) => setSearchModalVal(event.target.value)}
-                                            value={searchModalVal} />
-                                    </div>
-                                    <div className="configColModalBody">
-                                        <GenerateColumnDraggableModal searchData={searchModalVal} />
-                                    </div>
-                                    <div className="configColModalfooter">
-                                        <button className="saveNnewBtn" onClick={() => handleSave()}>Save <img src={arrow_forward} alt="" /></button>
-                                        <button className="btn-link" onClick={() => handleClear()}>Clear</button>
-                                    </div>
+            {deleteSelectedModal && (
+                <div className="modalDependent modalBackdrop">
+                    <div className="slickModalBody setAppointment deleteSelectedModals">
+                        <div className="modalForm appointmentForm setappointment successApp deleteModals">
+                            <div className="slickModalHeader appointmentModalHeads">
+                                <button className="topCross setApp" onClick={() => closeDeleteModal(false)}>
+                                    <img src={cross} alt=""/>
+                                </button>
+                            </div>
+                            <div className="innerModalHeader">
+                                <h3 className="deleteHeading">Are you sure, you want to delete?</h3>
+                            </div>
+                            <div className="modalActionWraper">
+                                <div className="formField formControl w-50"><span className="clearFilter"
+                                                                                  onClick={() => closeDeleteModal(false)}>Cancel</span>
                                 </div>
-                                : ""}
+                                <div className="formField formControl w-50">
+                                    <button type="submit" className="saveNnewBtn deletebtns" onClick={deleteContacts}>
+                                        <span>Yes</span></button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <ul className="tableListing">
-                        <GenerateColumns />
-                        <GenerateContacts />
-                    </ul>
                 </div>
-            </div>
-            {(contactCount > paginationData.limit) ? <Pagination
-                type="contact"
-                paginationData={paginationData}
-                dataCount={contactCount}
-                callback={fetchContact} /> : ''}
+            )}
+            { contactCount ?
+                <>
+                    <div className="userListBody">
 
-        </> :
-        <div className="createNew noInfos">
-          <div className="noRecordsImgWraper">
-            <img src={noRecords} className="noRecords" alt="" />
-            <h4>No Contacts Found</h4>
-            <p>No contacts have been listed here yet</p>
-          </div>
-          {(keyword === '') ?
-          <button className="creatUserBtn" onClick={() => createIndivitualContact()}>
-            <img className="plusIcon" src={plus_icon} alt="" />
-            <span>Create the First Contact</span>
-          </button> 
-          : ''}
-        </div>
-      }
+                        <div className="listBody contactListingTable" style={{'width': tableWidth}}>
+                            <div className="tableDataConfigArea">
+                                <div className="configColArea selectFilters" ref={arrangeColRef}>
+                                    <button className={colModalStatus ? "configColBtn close" : "configColBtn"}
+                                            onClick={toggleColModal}></button>
+                                    <div className="selectAllSection">
+                                        <div className="selectAllWraper">
+                                            <label><span
+                                                className={selectSingle ? "checkCutsomInputs minusSelectBox" : "customCheckbox allContacts headerselect"}><input
+                                                type="checkbox" name="selectAll" checked={selectAllCheckbox}
+                                                onChange={handleCheckAll}/><span>
+                                  </span></span></label>
+                                            <img src={arrow} className="allArrow" onClick={() => addSelectAllFn()}
+                                                 alt=""/>
+                                        </div>
+                                        {addSelectAll.status && (
+                                            <div className="selectAllDropdown">
+                                                <ul className="">
+                                                    <li onClick={() => openUpdateFn()}>Update</li>
+                                                    <li onClick={() => deleteSelectedModalFn()}>Delete</li>
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </div>
+                                    {colModalStatus ?
+                                        <div className="configColModal contactPage">
+                                            <div className="configColModalHead">
+                                                <input type="search" placeholder="Search"
+                                                       onChange={(event) => setSearchModalVal(event.target.value)}
+                                                       value={searchModalVal}/>
+                                            </div>
+                                            <div className="configColModalBody">
+                                                <GenerateColumnDraggableModal searchData={searchModalVal}/>
+                                            </div>
+                                            <div className="configColModalfooter">
+                                                <button className="saveNnewBtn" onClick={() => handleSave()}>Save <img
+                                                    src={arrow_forward} alt=""/></button>
+                                                <button className="btn-link" onClick={() => handleClear()}>Clear
+                                                </button>
+                                            </div>
+                                        </div>
+                                        : ""}
+                                </div>
+                            </div>
+                            <ul className="tableListing">
+                                <GenerateColumns/>
+                                <GenerateContacts/>
+                            </ul>
+                        </div>
+                    </div>
+                    {(contactCount > paginationData.limit) ? <Pagination
+                        type="contact"
+                        paginationData={paginationData}
+                        dataCount={contactCount}
+                        callback={fetchContact}/> : ''}
 
-
-
+                </> :
+                <div className="createNew noInfos">
+                    <div className="noRecordsImgWraper">
+                        <img src={noRecords} className="noRecords" alt=""/>
+                        <h4>No Contacts Found</h4>
+                        <p>No contacts have been listed here yet</p>
+                    </div>
+                    {(keyword === '' && filters.length === 0) ?
+                        <button className="creatUserBtn" onClick={() => createIndivitualContact()}>
+                            <img className="plusIcon" src={plus_icon} alt=""/>
+                            <span>Create the First Contact</span>
+                        </button>
+                        : ''}
+                </div>
+            }
         </div>
     );
-
 
 
 })

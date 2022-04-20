@@ -15,6 +15,7 @@ import Moment from "moment";
 import ConfirmBox from "../../shared/confirmBox";
 import * as actionTypes from "../../../actions/types";
 import {useDispatch} from "react-redux";
+import { Link } from "react-router-dom";
 
 const StatusPhases = (props) => {
     document.title = "Red Belt Gym - Status and Phase";
@@ -210,7 +211,7 @@ const StatusPhases = (props) => {
             });
             setPhases(element);
         } else {
-            setPhases([...phases, createPhase]);
+            setPhases([createPhase, ...phases]);
         }
     }
     const deletePhase = (elem) => {
@@ -251,19 +252,20 @@ const StatusPhases = (props) => {
                     </button>
                 </div>
                 <div className="userListBody">
-                    { phases && phases.length && statuses && statuses.length > 0 ?
+                    { phases && phases.length && statuses && statuses.filter(ele => ele._id !== undefined).length > 0 ?
                         <ul className="customtableListing">
                             <li className="listHeading">
-                                <div>Status Name</div>
+                                <div className="statusNameField">Status Name</div>
                                 <div className="bigspace">Description</div>
-                                <div>Created at</div>
+                                <div className="createdField">Created at</div>
                                 <div className="vacent"></div>
                             </li>
-                            { statuses.map((elem, key) => {
+                            { statuses.filter(ele => ele._id !== undefined).map((elem, key) => {
                                 return (
                                     <li>
-                                        <div>{elem.name} ({elem.contactCount ? elem.contactCount : 0})</div>
-                                        <div className="bigspace colorFade">{elem.description}</div>
+                                        <div className="statusNameWraper"><span className="statusNames">{elem.name}</span>
+                                            <Link to={"/contacts?status=" + elem._id} ><span className="statusCounts">{elem.contactCount ? elem.contactCount : 0}</span></Link></div>
+                                        <div className="bigspace colorFade"><span className="statusDesc">{elem.description}</span></div>
                                         <div className="colorFade">{Moment(elem.createdAt).isValid() ? Moment(elem.createdAt).format('LLL') : elem.createdAt}</div>
                                         <div>
                                             {/*<label className={elem.status ? "toggleBtn active" : "toggleBtn"}>
@@ -284,7 +286,7 @@ const StatusPhases = (props) => {
                                             </div>
                                             <div className={
                                                 option === key
-                                                    ? "dropdownOptions listOpen"
+                                                    ? "dropdownOptions status listOpen"
                                                     : "listHide"
                                             }>
                                                 <button className="btn btnEdit" onClick={() => openEditStatusModal(elem)}>

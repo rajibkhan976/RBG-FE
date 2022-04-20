@@ -485,8 +485,8 @@ const Overview = (props) => {
                 zip: basicinfoZip ? basicinfoZip : "",
                 country: basicinfoCountry ? basicinfoCountry : "",
                 gender: basicinfoGender ? basicinfoGender : "",
-                status: selectedStatus ? selectedStatus : "",
-                phase: selectedPhase ? selectedPhase : ""
+                status: selectedStatus && selectedPhase ? selectedStatus : "",
+                phase: selectedPhase && selectedStatus ? selectedPhase : ""
             }
             let newPayload = Object.assign(payload, customFieldsList);
             let contactIdNew = contact ? contact._id : 0;
@@ -615,6 +615,7 @@ const Overview = (props) => {
     }
     const handlePhaseChange = (event) => {
         setSelectedPhase(event.target.value);
+        setSelectedStatus("");
         setFormErrorMsg(prevState => ({...prevState, status: ""}));
         if (event.target.value) {
             let searchResultPhases = phases.find(ele => ele._id === event.target.value);
@@ -787,7 +788,7 @@ const Overview = (props) => {
                                             <option value="">Select a Phase</option>
                                             {
                                                 phases.map(ele => {
-                                                    if (ele.statuses.length) {
+                                                    if (ele.statuses.length  && ele.statuses[0]._id !== undefined) {
                                                         return (<option value={ele._id}>{ele.name}</option>)
                                                     }
                                                 })
@@ -805,7 +806,9 @@ const Overview = (props) => {
                                             <option value="">Select a Status</option>
                                             {
                                                 status.map(ele => {
-                                                    return (<option value={ele._id}>{ele.name}</option>)
+                                                    if (ele._id !== undefined) {
+                                                        return (<option value={ele._id}>{ele.name}</option>)
+                                                    }
                                                 })
                                             }
                                         </select>

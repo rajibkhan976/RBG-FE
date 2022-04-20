@@ -40,7 +40,10 @@ const Setup = (props) => {
             <li>
               <div className="listHead">
                 <i>
+                <NavLink
+                      to="/gym-details"onClick={(e) => props.clickedLink(e)}> 
                   <img src={SetupIcon2} alt="" />
+                  </NavLink>
                 </i>
                 <div>
                   <h3>
@@ -48,18 +51,30 @@ const Setup = (props) => {
                       to="/gym-details"onClick={(e) => props.clickedLink(e)}> Gym Details
                     </NavLink>
                    </h3>
-                  <p>Manage your Gym details</p>
+                  <p><NavLink
+                      to="/gym-details"onClick={(e) => props.clickedLink(e)}> Manage your Gym details
+                      </NavLink></p>
                 </div>
               </div>
             </li>
             <li>
               <div className="listHead">
-                <i>
+                <i><NavLink
+                    to="/call-setup"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
                   <img src={SetupIcon3} alt="" />
+                  </NavLink>
                 </i>
                 <div>
-                  <h3>Communication Setup</h3>
-                  <p>Set all kind of communications</p>
+                  <h3><NavLink
+                    to="/call-setup"
+                    onClick={(e) => props.clickedLink(e)}
+                  >Communication Setup</NavLink></h3>
+                  <p><NavLink
+                    to="/call-setup"
+                    onClick={(e) => props.clickedLink(e)}
+                  >Set all kind of communications</NavLink></p>
                 </div>
               </div>
               <ul className="secondListing">
@@ -128,8 +143,12 @@ const Setup = (props) => {
             </li> */}
             <li>
               <div className="listHead">
-                <i>
+                <i><NavLink
+                      to="/products"
+                      onClick={(e) => props.clickedLink(e)}
+                    >
                   <img src={SetupIcon5} alt="" />
+                  </NavLink>
                 </i>
                 <div>
                   <h3>
@@ -140,14 +159,21 @@ const Setup = (props) => {
                       Products
                     </NavLink>
                   </h3>
-                  <p>Manage your POS products</p>
+                  <p><NavLink
+                      to="/products"
+                      onClick={(e) => props.clickedLink(e)}
+                    >Manage your POS products</NavLink></p>
                 </div>
               </div>
             </li>
             <li>
               <div className="listHead">
-                <i>
+                <i><NavLink
+                     to="/customizations"
+                     onClick={(e) => props.clickedLink(e)}
+                    >
                   <img src={SetupIcon6} alt="" />
+                  </NavLink>
                 </i>
                 <div>
                   <h3>
@@ -157,7 +183,10 @@ const Setup = (props) => {
                     >Customizations
                     </NavLink>
                   </h3>
-                  <p>Add Custom fields</p>
+                  <p><NavLink
+                     to="/customizations"
+                     onClick={(e) => props.clickedLink(e)}
+                    >Add Custom fields</NavLink></p>
                 </div>
               </div>
             </li>
@@ -216,8 +245,12 @@ const Setup = (props) => {
             </li> */}
             <li>
               <div className="listHead">
-                <i>
+                <i> <NavLink
+                      to="/number-list"
+                      onClick={(e) => props.clickedLink(e)}
+                    >
                   <img src={SetupIcon9} alt="" />
+                  </NavLink>
                 </i>
                 <div>
                   <h3>
@@ -228,14 +261,21 @@ const Setup = (props) => {
                       Number List
                     </NavLink>
                   </h3>
-                  <p>Assign number to organization</p>
+                  <p> <NavLink
+                      to="/number-list"
+                      onClick={(e) => props.clickedLink(e)}
+                    >Assign number to organization</NavLink></p>
                 </div>
               </div>
             </li>
             <li>
               <div className="listHead">
-                <i>
+                <i><NavLink
+                      to="/courses"
+                      onClick={(e) => props.clickedLink(e)}
+                    >
                   <img src={SetupIcon8} alt="" />
+                  </NavLink>
                 </i>
                 <div>
                   <h3>
@@ -246,7 +286,10 @@ const Setup = (props) => {
                       Programs
                     </NavLink>
                   </h3>
-                  <p>Manage your programs</p>
+                  <p><NavLink
+                      to="/courses"
+                      onClick={(e) => props.clickedLink(e)}
+                    >Manage your programs</NavLink></p>
                 </div>
               </div>
             </li>
@@ -268,8 +311,12 @@ const Setup = (props) => {
             </li> */}
             <li>
               <div className="listHead">
-                <i>
+                <i><NavLink
+                        to="/zapier"
+                        onClick={(e) => props.clickedLink(e)}
+                    >
                   <img src={zapierIcon} alt="" />
+                  </NavLink>
                 </i>
                 <div>
                   <h3>
@@ -280,15 +327,23 @@ const Setup = (props) => {
                       Zapier
                     </NavLink>
                   </h3>
-                  <p>Setup zapier app</p>
+                  <p><NavLink
+                        to="/zapier"
+                        onClick={(e) => props.clickedLink(e)}
+                    >Setup zapier app
+                    </NavLink></p>
                 </div>
               </div>
             </li>
             {(loggedInUser && (loggedInUser?.isOrganizationOwner === true || loggedInUser.organizationCode === 'rbg')) ? (
              <li>
                <div className="listHead">
-                 <i>
+                 <i><NavLink
+                       to="/payment-setup"
+                       onClick={(e) => props.clickedLink(e)}
+                     >
                    <img src={PaymentSetup} alt="" />
+                   </NavLink>
                  </i>
                  <div>
                    <h3>
@@ -299,15 +354,22 @@ const Setup = (props) => {
                        Payment Setup
                      </NavLink>
                    </h3>
-                   <p>Set up your payment modes</p>
+                   <p><NavLink
+                       to="/payment-setup"
+                       onClick={(e) => props.clickedLink(e)}
+                     >Set up your payment modes</NavLink></p>
                  </div>
                </div>
              </li>
             ): "" }
             <li>
               <div className="listHead">
-                <i>
+                <i> <NavLink
+                        to="/phases-status"
+                        onClick={(e) => props.clickedLink(e)}
+                    >
                   <img src={statusPhase} alt="" />
+                  </NavLink>
                 </i>
                 <div>
                   <h3>
@@ -318,7 +380,10 @@ const Setup = (props) => {
                       Status and Phase
                     </NavLink>
                   </h3>
-                  <p>Status and Phase</p>
+                  <p> <NavLink
+                        to="/phases-status"
+                        onClick={(e) => props.clickedLink(e)}
+                    >Manage your contact's status and phase</NavLink></p>
                 </div>
               </div>
             </li>

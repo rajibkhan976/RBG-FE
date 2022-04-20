@@ -18,17 +18,26 @@ const StatusAddField = (props) => {
     const [statusType, setStatusType] = useState("");
     const [statusStatus, setStatusStatus] = useState(true);
 
-    const [popMsgerror, setPopMsgerror] = useState(false);
+    const [popMsgerror, setPopMsgerror] = useState("");
+    const [descError, setDescError] = useState("");
     const [popMsgsuccess, setPopMsgsuccess] = useState(false);
     const [selectedPhase, setSelectedPhase] = useState("");
     const [statusId, setStatusId] = useState("");
     const dispatch = useDispatch();
 
     const addStatusNameHandler = (e) => {
-        setStatusName(e.target.value);
+        if (e.target.value.length > 30) {
+            setPopMsgerror("Max limit for status name reached.");
+        } else {
+            setStatusName(e.target.value);
+        }
     };
     const addStatusDescHandler = (e) => {
-        setStatusDesc(e.target.value);
+        if (e.target.value.length > 100) {
+            setDescError("Max limit for status description reached.")
+        } else {
+            setStatusDesc(e.target.value);
+        }
     };
     const addStatusTypeHandler = (e) => {
         setStatusType(e.target.value);
@@ -69,7 +78,7 @@ const StatusAddField = (props) => {
                 setStatusStatus(true);
                 props.closeAddCustomModal();
             } else {
-                setPopMsgerror(true)
+                setPopMsgerror("Please provide status name.");
             }
         } catch (e) {
             setIsLoader(false);
@@ -112,10 +121,10 @@ const StatusAddField = (props) => {
                 setPopMsgsuccess(true);
                 setStatusName("");
                 setStatusDesc("");
-                setStatusType("");
+                setStatusType(statusType);
                 setStatusStatus(true);
             } else {
-                setPopMsgerror(true)
+                setPopMsgerror("Please provide status name.");
             }
         } catch (e) {
             setIsLoader(false);
@@ -143,10 +152,13 @@ const StatusAddField = (props) => {
             setPopMsgsuccess(false);
         }, 2000);
         if (popMsgerror) setTimeout(() => {
-            setPopMsgerror(false);
+            setPopMsgerror("");
+        }, 2000);
+        if (descError) setTimeout(() => {
+            setDescError("");
         }, 2000);
 
-    }, [popMsgerror, popMsgsuccess]);
+    }, [popMsgerror, popMsgsuccess, descError]);
     useEffect(() => {
         setPhases(props.phases);
     }, [props.phases])
@@ -168,7 +180,7 @@ const StatusAddField = (props) => {
 
                             <div className="formControl">
                                 <label>Select Phase</label>
-                                <select name="category" onChange={addStatusTypeHandler} value={statusType} disabled={!!statusId}>
+                                <select className="selectStatusSelect" name="category" onChange={addStatusTypeHandler} value={statusType} disabled={!!statusId}>
                                     {
                                         phases.map((ele, key) => {
                                             return (
@@ -181,11 +193,12 @@ const StatusAddField = (props) => {
                             <div className="formControl">
                                 <label>Status Name</label>
                                 <input type="text" name="" onChange={addStatusNameHandler} value={statusName} className={popMsgerror ? 'statusModalField errorInput' : 'statusModalField'}/>
-                                {popMsgerror ? <span className="errorMsg">Please provide status name.</span> : ""}
+                                {popMsgerror ? <span className="errorMsg">{popMsgerror}</span> : ""}
                             </div>
                             <div className="formControl">
                                 <label>Status Description</label>
-                                <textarea onChange={addStatusDescHandler} value={statusDesc}> </textarea>
+                                <textarea onChange={addStatusDescHandler} value={statusDesc} className={descError ? 'statusModalField errorInput' : 'statusModalField'}> </textarea>
+                                {descError ? <span className="errorMsg">{descError}</span> : ""}
                             </div>
                             <div className="modalbtnHolder">
                                 {

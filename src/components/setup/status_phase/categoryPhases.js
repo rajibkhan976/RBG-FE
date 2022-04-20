@@ -7,6 +7,7 @@ import * as actionTypes from "../../../actions/types";
 import {useDispatch} from "react-redux";
 import ConfirmBox from "../../shared/confirmBox";
 import cross from "../../../assets/images/cross.svg";
+import { Scrollbars } from "react-custom-scrollbars-2";
 
 const CategoryPhases = (props) => {
     document.title = "Red Belt Gym - Status and Phase";
@@ -26,8 +27,17 @@ const CategoryPhases = (props) => {
         setOption(index !== option ? index : null);
     };
     const handelPhaseCreate = (event) => {
-        setEditPhases(event.target.value);
-        setEditPhasesError(false);
+        if (event.target.value.length > 20) {
+            setEditPhasesError(true);
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: 'Max limit for phase name reached.',
+                typeMessage: 'warning'
+            });
+        } else {
+            setEditPhases(event.target.value);
+            setEditPhasesError(false);
+        }
     }
     const clickPhases = async (event) => {
         event.preventDefault();
@@ -150,12 +160,16 @@ const CategoryPhases = (props) => {
             )}
             <div className="phasesRightSetUpPanel">
                 {isLoader ? <Loader /> : ''}
+                <Scrollbars
+                    renderThumbVertical={(props) => <div className="thumb-vertical" />}
+                >
                 <div className="innerScroll">
                     <h3 className="productListingHeader">Phase</h3>
                     <div className="productSearchPanel" >
                         <form method="post">
                             {phasesId ? <button className="deleteIt" onClick={removeEdit}><img src={cross} alt="" /></button> : ''}
-                            <input type="text" name="phasesName" placeholder="Ex. Phase 1" value={editPhases} onChange={handelPhaseCreate} className={editPhasesError ? "errorInput" : ""}/>
+                            <input type="text" name="phasesName" placeholder="Ex. Phase 1" value={editPhases}
+                                   onChange={handelPhaseCreate} className={editPhasesError ? "errorInput addPhases" : "addPhases"}/>
                             <button className="btn" type="submit" onClick={clickPhases}>{phasesId ? 'Update' : 'Add'} Phases
                                 <img src={arrowRightWhite} alt=""/>
                             </button>
@@ -166,7 +180,7 @@ const CategoryPhases = (props) => {
                         {phases.map((elem, key) => {
                             return (
                                 <li key={elem._id} className={selectedPhaseId === 0 ? (key === 0 ? 'active' : '') :
-                                    (selectedPhaseId === elem._id ? 'active' : '')}><button className="bigListName" onClick={() => showNo(elem)}> {elem.name} {elem.statuses && elem.statuses.length ? "(" +elem.statuses.length+")" : "(0)" } </button>
+                                    (selectedPhaseId === elem._id ? 'active' : '')}><button className="bigListName" onClick={() => showNo(elem)}> {elem.name} {elem.statuses && elem.statuses.filter(ele => ele._id !== undefined).length ? "(" +elem.statuses.length+")" : "(0)" } </button>
                                     <button className="showList" onClick={() => toggleOptions(key)}>
                                         <img src={info_3dot_white} alt="" />
                                     </button>
@@ -194,6 +208,9 @@ const CategoryPhases = (props) => {
 
                     </ul>
                 </div>
+
+                </Scrollbars>
+
             </div>
         </>
     )

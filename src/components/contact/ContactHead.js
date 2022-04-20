@@ -1,15 +1,22 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect,useRef, useState } from "react";
 import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../actions/types";
 import download_icon from "../../../src/assets/images/download_icon.svg";
 import download_cloud_icon from "../../../src/assets/images/download_cloud_icon_white.svg"
 import uparrow_icon_grey from "../../../src/assets/images/uparrow_icon_grey.svg";
 import remove_filter from "../../../src/assets/images/remove_filter.svg"
+import cross from "../../../src/assets/images/cross.svg"
+import filters from "../../../src/assets/images/filter.svg";
 import {utils} from "../../helpers";
 
 const ContactHead = (props) => {
   const dispatch = useDispatch();
   const [filter, setFilter] = useState(false);
+  const [selectAllCheckbox, setSelectAllCheckbox] = useState(false);
+  const [selectSingle, setSelectSingle] = useState(false);
+  const [selectAllContacts, setSelectAllContacts] = useState(false);
+  const [filtersFirst, setFiltersFirst] = useState([]);
+  const [filtersSecond, setFiltersSecond] = useState([]);
   const createIndivitualContact = () => {
     dispatch({
         type: actionTypes.CONTACTS_MODAL_ID,
@@ -32,6 +39,34 @@ const ContactHead = (props) => {
     }
   }, [props.hideFilter]);
 
+  useEffect(() => {
+    setSelectAllContacts(false);
+    setSelectAllCheckbox(props.selectAllCheckbox);
+  }, [props.selectAllCheckbox]);
+
+  useEffect(() => {
+    setSelectSingle(props.selectSingle);
+  }, [props.selectSingle]);
+
+  const openFilterFn = () => {
+    props.openFilter();
+  }
+  useEffect(() => {
+    if (props.filters.length > 3) {
+      setFiltersFirst(props.filters.slice(0, 3));
+      setFiltersSecond(props.filters.slice(3,props.filters.length));
+    } else {
+      setFiltersFirst(props.filters);
+      setFiltersSecond([]);
+    }
+  }, [props.filters])
+  const removeFiler = (type) => {
+    props.removeFilter(type);
+  }
+  const checkAll = () => {
+    props.selectAll(!selectAllContacts);
+    setSelectAllContacts(!selectAllContacts);
+  }
   return (
     <div className="contactHead">
       <div className="userListHead">
@@ -86,6 +121,10 @@ const ContactHead = (props) => {
                 />
               </button> : ""}
 
+              <button className="saveNnewBtn appFilter expContactBtn contactListingsFilterBtn" onClick={() => openFilterFn()}>
+            Filter <img src={filters} alt="" /> 
+          </button>
+
           <button className="creatUserBtn" onClick={() => createIndivitualContact()}>
             <img
               className="plusIcon"
@@ -96,20 +135,73 @@ const ContactHead = (props) => {
           </button>
         </div>
       </div>
-      <div className="head_ctrlRow">
-        {/* <div className="head_ctrlRow_left">
-                    <button className="saveNnewBtn massUpdateBtn">Mass Update</button>
-                </div> */}
+      
+      <div className="head_ctrlRow contactFilters">
+        <div className="head_ctrlRow_left">
+          {
+            selectAllCheckbox ?
+                <div className="pageSelectedInfo">
+                  <p className="leftPTag">All <b>{props.contactListPageCount}</b> contacts on this page are Selected.</p>
+                  <p className="rightPTag">
+                    <label>
+                      <span className="customCheckbox allContacts selectNumberDisplay">
+                        <input type="checkbox" checked={selectAllContacts} onClick={checkAll}/>
+                        <span></span>
+                      </span>Select all &nbsp; <b> { props.totalCount } </b> &nbsp; contacts</label></p>
+                </div> : ""
+          }
+          {
+            filtersFirst.length ?
+                <div className={selectAllCheckbox ? "pagesTags selectedAllCheckBox" : "pagesTags"}>
+                  {
+                    filtersFirst.map((ele, key) => {
+                      return (
+                          <div className="contactsTags" key={key}>
+                            <span className="pageInfo" dangerouslySetInnerHTML={{__html: ele.name}}></span>
+                            <span className="crossTags" onClick={() => removeFiler(ele.type)}><img src={cross} alt="" /></span>
+                          </div>
+                      )
+                    })
+                  }
+                  {
+                    filtersSecond.length ?
+                        <div className="contactsTags extraCountsWraper">
+                          <span className="extraCountsNumbers">{filtersSecond.length}</span>
+                          <div className="extraTagsWrapers">
+
+                            <div className="wrapersTags">
+                              {
+                                filtersSecond.map((elem, key1) => {
+                                  return (
+                                      <div className="contactsTags" key={key1}>
+                                        <span className="pageInfo" dangerouslySetInnerHTML={{__html: elem.name}}></span>
+                                        <span className="crossTags" onClick={() => removeFiler(elem.type)}><img src={cross} alt="" /></span>
+                                      </div>
+                                  )
+                                })
+                              }
+                            </div>
+                          </div>
+                        </div>
+                        : ""
+                  }
+
+                  <div className="contactsTags clearAlls">
+                    <span className="allDel" onClick={() => removeFiler('all')}>Clear All</span>
+                  </div>
+                </div>
+                : ""
+          }
+        </div>
         <div className="head_ctrlRow_right">
           <button
             className="saveNnewBtn impContactBtn"
-            onClick={() => props.openImportContact()}
-          >
+            onClick={() => props.openImportContact()}>
             <img src={download_cloud_icon} alt="" /> Import Contacts
           </button>
-          {/* <button className="saveNnewBtn expContactBtn">
-            <img src={uparrow_icon_grey} alt="" /> Export Contacts
-          </button> */}
+           <button className="saveNnewBtn expContactBtn">
+            <img className="exportImgs" src={uparrow_icon_grey} alt="" /> Export Contacts
+          </button> 
         </div>
       </div>
     </div>

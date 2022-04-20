@@ -18,11 +18,18 @@ export const ContactService = {
             if (result.status === 200) {
                 return result.data;
             } else {
-                console.log(result)
+                throw new Error(result.data.message);
             }
         } catch (e) {
-            // console.log("Service Message", e.response.data.message)
-            throw new Error(e.response.data.message);
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
     },
     fetchColumns: async () => {
@@ -38,7 +45,16 @@ export const ContactService = {
                 throw new Error(result.data.message);
             }
         } catch (e) {
-            throw new Error(e.response.data.message);
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
     },
     saveColumns: async(payload) => {
@@ -56,7 +72,16 @@ export const ContactService = {
                 throw new Error(result.data.message);
             }
         } catch (e) {
-            throw new Error(e.response.data.message);
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
     },
     fetchCountry: async() => {
@@ -72,11 +97,15 @@ export const ContactService = {
                 throw new Error(result.data.message);
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                throw new Error("Please contact support.");
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
             }
         }
     },
@@ -90,10 +119,15 @@ export const ContactService = {
                 throw new Error("There is an error while fetching contact. Please contact support");
             }
         } catch (e) {
-            if(!typeof e.data === undefined) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                throw new Error("Please contact support.");
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
             }
         }
     },
@@ -107,10 +141,15 @@ export const ContactService = {
                 throw new Error("There is an error updating contact. Please contact support");
             }
         } catch (e) {
-            if(e.response && e.response.data !== undefined) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
                 throw new Error(e.response.data);
             } else {
-                throw new Error("Please contact support.");
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
             }
         }
     },
@@ -124,11 +163,15 @@ export const ContactService = {
                 throw new Error("There is an error upload contact picture. Please contact support");
             }
         } catch (e) {
-            console.log('error in upload contact pic', e);
-            if(!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                throw new Error("Please contact support.");
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
             }
         }
     },
@@ -142,10 +185,15 @@ export const ContactService = {
                 throw new Error("There is an error in verify number. Please contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                throw new Error("Please contact support.");
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
             }
         }
     },
@@ -159,10 +207,90 @@ export const ContactService = {
                 throw new Error("There is an error in status import modal. Please contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                throw new Error("Please contact support.");
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+    fetchFilters: async () => {
+        try {
+            const url = config.getContactsUrl + '/fetch-filter-data';
+            const options = {
+                headers: headers
+            };
+            const result = await axios.get(url, options);
+            if (result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error(result.data.message);
+            }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+    updateSelectedContact: async (payload, page = null, queryParams = null) => {
+        try {
+            const url = config.orderUrl + "/update-selected-contacts" + (queryParams ? "?" + queryParams : '');
+            const options = {
+                headers: headers
+            };
+            const result = await axios.post(url, payload, options);
+            if (result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error(result.data.message);
+            }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+    deleteSelectedContact: async (payload, page = null, queryParams = null) => {
+        try {
+            const url = config.orderUrl + "/delete-selected-contacts" + (queryParams ? "?" + queryParams : '');
+            const options = {
+                headers: headers
+            };
+            const result = await axios.post(url, payload, options);
+            if (result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error(result.data.message);
+            }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
             }
         }
     }

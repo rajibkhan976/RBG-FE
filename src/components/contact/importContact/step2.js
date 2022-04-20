@@ -77,6 +77,8 @@ function Step2(props) {
         paymentFrequency: "",
         paymentRemaining: "",
         tuitionAmount: "",
+        status: "",
+        phase: ""
     });
     const [mapError, setMapError] = useState({
         firstName: false,
@@ -122,6 +124,8 @@ function Step2(props) {
         paymentFrequency: false,
         paymentRemaining: false,
         tuitionAmount: false,
+        status: false,
+        phase: false
     })
 
     const handleChangeFields = (selectedOption, field) => {
@@ -284,7 +288,9 @@ function Step2(props) {
                     primaryField: custom.primaryField,
                     key: uploadedKey,
                     importType: importType,
-                    importName: custom.importName
+                    importName: custom.importName,
+                    defaultPhase: custom.defaultPhase,
+                    defaultStatus: custom.defaultStatus
                 }
                 callImportContactApi(payload);
             } else {
@@ -312,7 +318,9 @@ function Step2(props) {
                     primaryField: custom.primaryField,
                     key: uploadedKey,
                     importType: importType,
-                    importName: custom.importName
+                    importName: custom.importName,
+                    defaultPhase: custom.defaultPhase,
+                    defaultStatus: custom.defaultStatus
                 }
                 callImportContactApi(payload);
             }
@@ -497,6 +505,22 @@ function Step2(props) {
                                                     <div className="inFormField">
                                                         <Select name="mobile" value={map.mobile} onChange={(e) =>handleChangeFields(e, 'mobile')}
                                                                 options={options}  isClearable={true} placeholder="Select a header"/>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <div className={"formField w-50 " + (mapError.phase ? 'error warning' : '') }>
+                                                    <label>Phase</label>
+                                                    <div className="inFormField">
+                                                        <Select name="phase" value={map.phase} onChange={(e) =>handleChangeFields(e, 'phase')}
+                                                                options={options}  isClearable={true} placeholder="Select a phase"/>
+                                                    </div>
+                                                </div>
+                                                <div className={"formField w-50 " + (mapError.status ? 'error warning' : '') }>
+                                                    <label>Status</label>
+                                                    <div className="inFormField">
+                                                        <Select name="status" value={map.status} onChange={(e) =>handleChangeFields(e, 'status')}
+                                                                options={options}  isClearable={true} placeholder="Select a status"/>
                                                     </div>
                                                 </div>
                                             </li>

@@ -41,6 +41,7 @@ module.exports = {
     // getContactsUrl: "http://localhost:3001/"+process.env.REACT_APP_ENV+"/contact",
     setColumnUrl: "https://" + process.env.REACT_APP_CONTACT_COLUMNS + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/contact/order",
     getColumnUrl: "https://" + process.env.REACT_APP_CONTACT_COLUMNS + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/contact/order",
+    orderUrl: "https://" + process.env.REACT_APP_CONTACT_COLUMNS + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/contact",
     fetchCountryUrl: "https://" + process.env.REACT_APP_CONTACT_COUNTRY + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/country",
     // Product Category Service API
     fetchCategoryUrl: "https://" + process.env.REACT_APP_PRODUCT_CATEGORY + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/product/categories",

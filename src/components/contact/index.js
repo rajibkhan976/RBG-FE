@@ -14,7 +14,7 @@ function ContactsComponent(props) {
   return (
     <>
       <div className="menuDetails">
-        <figure className="logoSidebar">
+        <figure className="logoSidebar l">
           <img src={SidebarLogo} alt="" />
         </figure>
         <ul>
