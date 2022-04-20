@@ -167,12 +167,21 @@ const StatusPhases = (props) => {
         let localPhases = phases;
         let searchResultPhases = phases.find(ele => ele._id === elem.phaseId);
         let indexPhases = phases.indexOf(searchResultPhases);
-        let searchResultStatus = searchResultPhases.statuses.find(ele => ele._id === elem._id);
-        let indexStats = searchResultPhases.statuses.indexOf(searchResultStatus);
-        searchResultPhases.statuses.push(elem);
-        searchResultPhases.statuses[indexStats] = searchResultStatus;
+        if (searchResultPhases.statuses === undefined) {
+            searchResultPhases.statuses = [];
+            searchResultPhases.statuses[0] = elem
+        } else {
+            let searchResultStatus = searchResultPhases.statuses.find(ele => ele._id === elem._id);
+            let indexStats = searchResultPhases.statuses.indexOf(searchResultStatus);
+            searchResultPhases.statuses.push(elem);
+            searchResultPhases.statuses[indexStats] = searchResultStatus;
+        }
         localPhases[indexPhases] = searchResultPhases;
         setPhases(phases);
+        if (selectedPhase) {
+            let selectedPhaseFilter = localPhases.filter(elem => elem._id === selectedPhase);
+            setStatuses(selectedPhaseFilter[0].statuses);
+        }
     }
     const editStatus = (payload) => {
         setOption(null);
@@ -242,7 +251,7 @@ const StatusPhases = (props) => {
                     </button>
                 </div>
                 <div className="userListBody">
-                    { statuses.length > 0 ?
+                    { statuses && statuses.length > 0 ?
                         <ul className="customtableListing">
                             <li className="listHeading">
                                 <div>Status Name</div>

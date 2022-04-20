@@ -166,7 +166,7 @@ const CategoryPhases = (props) => {
                         {phases.map((elem, key) => {
                             return (
                                 <li key={elem._id} className={selectedPhaseId === 0 ? (key === 0 ? 'active' : '') :
-                                    (selectedPhaseId === elem._id ? 'active' : '')}><button className="bigListName" onClick={() => showNo(elem)}> {elem.name} {elem.statuses.length ? "(" +elem.statuses.length+")" : "(0)" } </button>
+                                    (selectedPhaseId === elem._id ? 'active' : '')}><button className="bigListName" onClick={() => showNo(elem)}> {elem.name} {elem.statuses && elem.statuses.length ? "(" +elem.statuses.length+")" : "(0)" } </button>
                                     <button className="showList" onClick={() => toggleOptions(key)}>
                                         <img src={info_3dot_white} alt="" />
                                     </button>
