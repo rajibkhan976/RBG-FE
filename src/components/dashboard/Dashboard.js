@@ -155,8 +155,8 @@ const Dashboard = () => {
       {/* <a href="javascript:void(0)" target="_blank"> */}
         {/* https://xd.adobe.com/view/3e68ffa8-df37-4768-8446-0f7de594fdf4-6b3b/screen/70c06959-7b7a-469e-9e62-73ea48cc35a3?fullscreen */}
         {/* <span className="prototypeBatch">Prototype</span> */}
-        {/* <h1>Dashboard</h1> */}
-      {/* </a> */}
+        {/* <h1>Dashboard</h1>
+      </a> */}
       {/* {loggedInUser && loggedInUser.isAssociationOwner ? <div className="userListBody">
         <div className="listBody">
           <ul className="tableListing">
@@ -175,9 +175,16 @@ const Dashboard = () => {
           </ul>
         </div>
       </div> : ''} */}
+
+      <div className="dashboardWraperImg">
+         <img src={DashboardImg2} className="dashboardimg" alt="" />
+         {/* <div className="arrowPoint">
+           <img src={arrowLong} alt="" />
+         </div> */}
+      </div>
     
       {/* {//original design here.................................................................................................................................} */}
-       <div className="mrrWraper">
+       {/* <div className="mrrWraper">
        
           <h2 className="inDashboardHeader">Dashboard</h2>
           <p className="userListAbout">Get a clear view of your task</p>
@@ -471,8 +478,8 @@ const Dashboard = () => {
           </div>
         </div>
         <DashboardFooter />
-        </div>
-       <div className="mrrContraolsWraper">
+        </div> */}
+       {/* <div className="mrrContraolsWraper">
            <div className="sideMenuHeader">
             <h3>Controls</h3>
             <p>Lorem ipsum dolor sit amet.</p>
@@ -486,7 +493,7 @@ const Dashboard = () => {
          />
          }
          
-        </div>  
+        </div>   */}
 
         {/* {//association owner type1 design here.................................................................................................................................} */}
            {/* <div className="accosiationDashboard" >

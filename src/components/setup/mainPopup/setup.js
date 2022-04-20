@@ -62,14 +62,14 @@ const Setup = (props) => {
                 </div>
               </div>
               <ul className="secondListing">
-                <li>
+                {/* <li>
                   <NavLink
                     to="/email-setup"
                     onClick={(e) => props.clickedLink(e)}
                   >
                     Email
                   </NavLink>
-                </li> 
+                </li>  */}
                 {/* <li>
                   <NavLink
                     to="/sms-setup"

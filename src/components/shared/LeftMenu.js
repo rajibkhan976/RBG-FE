@@ -432,7 +432,7 @@ function LeftMenu(props) {
             </svg>
           </NavLink>
         </li>  */}
-         <li className="prototypeLink"> 
+         {/* <li className="prototypeLink"> 
            <NavLink to="/appointment"
            className="leftMenuLink"
             
@@ -446,9 +446,9 @@ function LeftMenu(props) {
               }
 
 
-           >
+           > */}
             {/* <div className="prototypeBatch">Prototype</div>  */}
-             <svg
+             {/* <svg
               xmlns="http://www.w3.org/2000/svg"
               width="22.612"
               height="27.5"
@@ -498,10 +498,10 @@ function LeftMenu(props) {
                   </g>
                 </g>
               </g>
-            </svg>
-            <span className="menuName">Report</span>
+            </svg> */}
+            {/* <span className="menuName">Report</span>
           </NavLink>
-        </li> 
+        </li>  */}
       </ul>
       <div className="leftMenuToggle">
         {pathURL !== "/dashboard" ?
