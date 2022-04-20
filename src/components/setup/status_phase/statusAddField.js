@@ -16,6 +16,7 @@ const StatusAddField = (props) => {
     const [statusName, setStatusName] = useState("");
     const [statusDesc, setStatusDesc] = useState("");
     const [statusType, setStatusType] = useState("");
+    const [statusStatus, setStatusStatus] = useState(true);
 
     const [popMsgerror, setPopMsgerror] = useState(false);
     const [popMsgsuccess, setPopMsgsuccess] = useState(false);
@@ -41,7 +42,7 @@ const StatusAddField = (props) => {
                     name: statusName.trim(),
                     desc: statusDesc.trim(),
                     id: statusId,
-                    status: true
+                    status: statusStatus
                 }
                 setIsLoader(true);
                 let createStatus = await StatusServices.saveStatus(payload);
@@ -65,7 +66,8 @@ const StatusAddField = (props) => {
                 setStatusName("");
                 setStatusDesc("");
                 setStatusType("");
-                props.closeAddCustomModal()
+                setStatusStatus(true);
+                props.closeAddCustomModal();
             } else {
                 setPopMsgerror(true)
             }
@@ -87,7 +89,7 @@ const StatusAddField = (props) => {
                     name: statusName,
                     desc: statusDesc,
                     id: statusId,
-                    status: true
+                    status: statusStatus
                 }
                 setIsLoader(true);
                 let createStatus = await StatusServices.saveStatus(payload);
@@ -111,6 +113,7 @@ const StatusAddField = (props) => {
                 setStatusName("");
                 setStatusDesc("");
                 setStatusType("");
+                setStatusStatus(true);
             } else {
                 setPopMsgerror(true)
             }
@@ -132,6 +135,7 @@ const StatusAddField = (props) => {
             setStatusDesc(props.modalValue.description);
             setStatusType(props.modalValue.phaseId);
             setStatusId(props.modalValue._id);
+            setStatusStatus(props.modalValue.status);
         }
     }, []);
     useEffect(() => {
@@ -144,7 +148,6 @@ const StatusAddField = (props) => {
 
     }, [popMsgerror, popMsgsuccess]);
     useEffect(() => {
-        console.log(props.phases);
         setPhases(props.phases);
     }, [props.phases])
     return (
