@@ -168,7 +168,7 @@ const StatusAddField = (props) => {
 
                             <div className="formControl">
                                 <label>Select Phase</label>
-                                <select name="category" onChange={addStatusTypeHandler} value={statusType}>
+                                <select name="category" onChange={addStatusTypeHandler} value={statusType} disabled={!!statusId}>
                                     {
                                         phases.map((ele, key) => {
                                             return (
