@@ -42,9 +42,9 @@
     "eject": "react-scripts eject",
     "deploy": "npm i && npm run build && aws s3 sync build s3://dev.redbeltgym.com",
     "deploy:prod": "npm i && npm run build:prod && aws s3 sync build s3://www.redbeltgym.com",
-    "deploy:one": "npm i && npm run build && aws s3 sync build s3://feature-1",
-    "deploy:two": "npm i && npm run build && aws s3 sync build s3://feature-2",
-    "deploy:three": "npm i && npm run build && aws s3 sync build s3://feature-3",
+    "deploy:one": "npm i && npm run build && aws s3 sync build s3://rbg-fb-1",
+    "deploy:two": "npm i && npm run build && aws s3 sync build s3://rbg-fb-2",
+    "deploy:three": "npm i && npm run build && aws s3 sync build s3://rbg-fb-3",
     "serve": "npm i && npm run build && serve -s build",
     "serve:prod": "npm i && npm run build:prod && serve -s build"
   },
