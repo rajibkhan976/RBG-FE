@@ -262,7 +262,7 @@ const StatusPhases = (props) => {
                             { statuses.map((elem, key) => {
                                 return (
                                     <li>
-                                        <div>{elem.name}</div>
+                                        <div>{elem.name} ({elem.contactCount ? elem.contactCount : 0})</div>
                                         <div className="bigspace colorFade">{elem.description}</div>
                                         <div className="colorFade">{Moment(elem.createdAt).isValid() ? Moment(elem.createdAt).format('LLL') : elem.createdAt}</div>
                                         <div>
