@@ -73,6 +73,7 @@ const Transaction = (props) => {
     message: "",
     type: ""
   });
+  const openItemRef = useRef(null)
   
   
 
@@ -214,6 +215,21 @@ const Transaction = (props) => {
     window.addEventListener('keydown', close)
     return () => window.removeEventListener('keydown', close)
   },[]);
+
+  useEffect(() => {
+    const close = (e) => {
+      e.stopPropagation();
+      
+      if(e.target !== openItemRef.current) {
+        setUpcomingOptIndex(null); 
+        setOldOptIndex();
+        setContractOptIndex(null)
+      }
+    }
+    window.addEventListener('click', close);
+
+    return () => window.removeEventListener('click', close)
+  }, [])
 
 
   const changeTab = (e) => {
@@ -559,7 +575,7 @@ const Transaction = (props) => {
                   </div>
                   <div className="cell action">
                     <div className="moreOpt">
-                      <button type="button" className="moreOptBtn" onClick={() => moreOptOpenUpcoming (index)}></button>
+                      <button type="button" className="moreOptBtn" onClick={() => moreOptOpenUpcoming (index)} ref={upcomingOptIndex === index ? openItemRef : null}></button>
                       <div className={upcomingOptIndex === index ? "optDropdown" : "optDropdown hide"}>
                         <button type="button" className="edit" onClick={() => openCloseEditTransModal (true, item)}>Edit</button> 
                         {item.payment_via === "cash" ? 
@@ -798,7 +814,7 @@ const Transaction = (props) => {
                         <div className="cell action">
                           <div className="moreOpt">
                            
-                          <button type="button" className={checkRefundAmount(item) && item.refunded_amount != Math.abs(item.amount).toFixed(2) ? "moreOptBtn" : "hide"} onClick={() => moreOptOpenOld (index)}></button>
+                          <button type="button" className={checkRefundAmount(item) && item.refunded_amount != Math.abs(item.amount).toFixed(2) ? "moreOptBtn" : "hide"} onClick={() => moreOptOpenOld (index)} ref={oldOptIndex === index ? openItemRef : null}></button>
                             <div className={oldOptIndex === index ? "optDropdown" : "optDropdown hide"}>
                               {item.history && item.history[0].status == "failed" && item.history[0].amount > 0 ?
                                 <button type="button" className="retry" onClick={() => openCloseRetryModal (true, item)}>Retry</button> 
@@ -976,7 +992,7 @@ const Transaction = (props) => {
                   </div>
                   <div className="cell">
                     <div className={item.status == "cancelled" ? "hide" : "moreOpt"}>
-                      <button type="button" className="moreOptBtn" onClick={() => contractOptTgl (index)}></button>
+                      <button type="button" className="moreOptBtn" onClick={() => contractOptTgl (index)} ref={contractOptIndex === index ? openItemRef : null}></button>
                       {contractOptIndex == index ? 
                       <div className="optDropdown">
                         <button type="button" className="cancelPayment" onClick={() => openCancelContractModal (item)}>Cancel</button>
