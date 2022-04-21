@@ -638,6 +638,8 @@ const Overview = (props) => {
 
     return (
         <div className={formScrollStatus ? "contactModalTab expanded" : "contactModalTab"} id="scrollDiv" onScroll={formScroll}>
+        {isLoader ? <Loader/> : ""}
+
             {successMsg &&
                 <div className="contactOverview">
                 <SuccessAlert message={successMsg}></SuccessAlert>
@@ -648,320 +650,179 @@ const Overview = (props) => {
                 <ErrorAlert message={errorMsg}></ErrorAlert>
                 </div>
             }
-            {props.contactId !== 0 &&
-                <div className="overviewList">
-                    <ul>
-                        <li>
-                            <div className="val">0</div>
-                            <p className="label">Touch Points</p>
-                        </li>
-                        <li>
-                            <div className="val">0</div>
-                            <p className="label">Calls</p>
-                        </li>
-                        <li>
-                            <div className="val">0</div>
-                            <p className="label">SMS</p>
-                        </li>
-                        <li>
-                            <div className="val">0</div>
-                            <p className="label">Emails</p>
-                        </li>
-                        <li>
-                            <div className="val">0</div>
-                            <p className="label">Classes attended</p>
-                        </li>
-                    </ul>
-                </div>
-            }
-            <form>
-                <div className="overviewFormWrap overviewInfos">
-                    {isLoader ? <Loader/> : ""}
-                    <div className="overviewForm cmnForm">
-                        <div className="cmnFormHead">
-                            <h3>Basic Info</h3>
-                        </div>
-                        <div className="cmnFormRow">
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    First name <span className="mandatory">*</span>
-                                </div>
-                                <div className={formErrorMsg.fName ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <input type="text" className="cmnFieldStyle" defaultValue={basicinfoFname}
-                                           placeholder="" onChange={handelBasicinfoFname}/>
-                                    {formErrorMsg.fName ? <p className="errorMsg">{formErrorMsg.fName}</p> : ""}
-                                </div>
+            <div className="contactTabScrollContainer">
+                {props.contactId !== 0 &&
+                    <div className="overviewList">
+                        <ul>
+                            <li>
+                                <div className="val">0</div>
+                                <p className="label">Touch Points</p>
+                            </li>
+                            <li>
+                                <div className="val">0</div>
+                                <p className="label">Calls</p>
+                            </li>
+                            <li>
+                                <div className="val">0</div>
+                                <p className="label">SMS</p>
+                            </li>
+                            <li>
+                                <div className="val">0</div>
+                                <p className="label">Emails</p>
+                            </li>
+                            <li>
+                                <div className="val">0</div>
+                                <p className="label">Classes attended</p>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                <form>
+                    <div className="overviewFormWrap overviewInfos">
+                        <div className="overviewForm cmnForm">
+                            <div className="cmnFormHead">
+                                <h3>Basic Info</h3>
                             </div>
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Last Name <span className="mandatory">*</span>
-                                </div>
-                                <div className={formErrorMsg.lName ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <input type="text" className="cmnFieldStyle" placeholder=""
-                                           defaultValue={basicinfoLname} onChange={handelBasicinfoLname}/>
-                                    {formErrorMsg.lName ? <p className="errorMsg">{formErrorMsg.lName}</p> : ""}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="cmnFormRow">
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Date of Birth
-                                </div>
-                                <div className={formErrorMsg.dob ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <input type="date" className="cmnFieldStyle" placeholder="" max={moment().format('YYYY-MM-DD')}
-                                           defaultValue={basicinfoDob} onChange={handelBasicinfoDob}/>
-                                    {formErrorMsg.dob ? <p className="errorMsg">{formErrorMsg.dob}</p> : ""}
-                                </div>
-                            </div>
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Email <span className="mandatory">*</span>
-                                </div>
-                                <div className={formErrorMsg.email ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <input type="email" className="cmnFieldStyle" placeholder="Eg. Jon.doe@domain.com"
-                                           defaultValue={basicinfoEmail} onChange={handelBasicinfoEmail}/>
-                                    {formErrorMsg.email ? <p className="errorMsg">{formErrorMsg.email}</p> : ""}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="cmnFormRow">
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Phone
-                                </div>
-                                <div
-                                    className={formErrorMsg.phone ? "cmnFormField countryCodeField phoneNumberField errorField" : "cmnFormField phoneNumberField countryCodeField"}>
-                                    <div className="countryCode cmnFieldStyle">
-                                        <div className="countryName">{basicinfoPhone.countryCode}</div>
-                                        <div className="daileCode">{basicinfoPhone.dailCode}</div>
-                                        <select className="selectCountry" name="countryCode"
-                                                defaultValue={basicinfoPhone.countryCode}
-                                                onChange={handelBasicinfoPhone}>
-                                            {countrycodeOpt}
-                                        </select>
+                            <div className="cmnFormRow">
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        First name <span className="mandatory">*</span>
                                     </div>
-                                    <input type="phone" className="cmnFieldStyle" name="number"
-                                           placeholder="Eg. (555) 555-1234" value={basicinfoPhone.number}
-                                           onChange={handelBasicinfoPhone}/>
-                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'phone')}>
-                                        <img src={verify_icon} alt=""/> Verify
-                                    </button>
-                                    {formErrorMsg.phone ? <p className="errorMsg">{formErrorMsg.phone}</p> : ""}
-                                </div>
-                            </div>
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Mobile
-                                </div>
-                                <div
-                                    className={formErrorMsg.mobile ? "cmnFormField countryCodeField phoneNumberField errorField" : "cmnFormField phoneNumberField countryCodeField"}>
-                                    <div className="countryCode cmnFieldStyle">
-                                        <div className="countryName">{basicinfoMobilePhone.countryCode}</div>
-                                        <div className="daileCode">{basicinfoMobilePhone.dailCode}</div>
-                                        <select className="selectCountry" name="countryCode"
-                                                defaultValue={basicinfoMobilePhone.countryCode}
-                                                onChange={handelBasicinfoMobilePhone}>
-                                            {countrycodeOpt}
-                                        </select>
+                                    <div className={formErrorMsg.fName ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <input type="text" className="cmnFieldStyle" defaultValue={basicinfoFname}
+                                            placeholder="" onChange={handelBasicinfoFname}/>
+                                        {formErrorMsg.fName ? <p className="errorMsg">{formErrorMsg.fName}</p> : ""}
                                     </div>
-                                    <input type="phone" className="cmnFieldStyle" name="number"
-                                           placeholder="Eg. (555) 555-1234" value={basicinfoMobilePhone.number}
-                                           onChange={handelBasicinfoMobilePhone}/>
-                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'mobile')}>
-                                        <img src={verify_icon} alt=""/> Verify
-                                    </button>
-                                    {formErrorMsg.mobile ? <p className="errorMsg">{formErrorMsg.mobile}</p> : ""}
+                                </div>
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Last Name <span className="mandatory">*</span>
+                                    </div>
+                                    <div className={formErrorMsg.lName ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <input type="text" className="cmnFieldStyle" placeholder=""
+                                            defaultValue={basicinfoLname} onChange={handelBasicinfoLname}/>
+                                        {formErrorMsg.lName ? <p className="errorMsg">{formErrorMsg.lName}</p> : ""}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="cmnFormRow">
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Phase
+                            <div className="cmnFormRow">
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Date of Birth
+                                    </div>
+                                    <div className={formErrorMsg.dob ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <input type="date" className="cmnFieldStyle" placeholder="" max={moment().format('YYYY-MM-DD')}
+                                            defaultValue={basicinfoDob} onChange={handelBasicinfoDob}/>
+                                        {formErrorMsg.dob ? <p className="errorMsg">{formErrorMsg.dob}</p> : ""}
+                                    </div>
                                 </div>
-                                <div className={formErrorMsg.phase ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <select name="phase" className="cmnFieldStyle btnSelect" value={selectedPhase} onChange={handlePhaseChange}>
-                                        <option value="">Select a Phase</option>
-                                        {
-                                            phases.map(ele => {
-                                                if (ele.statuses.length) {
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Email <span className="mandatory">*</span>
+                                    </div>
+                                    <div className={formErrorMsg.email ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <input type="email" className="cmnFieldStyle" placeholder="Eg. Jon.doe@domain.com"
+                                            defaultValue={basicinfoEmail} onChange={handelBasicinfoEmail}/>
+                                        {formErrorMsg.email ? <p className="errorMsg">{formErrorMsg.email}</p> : ""}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="cmnFormRow">
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Phone
+                                    </div>
+                                    <div
+                                        className={formErrorMsg.phone ? "cmnFormField countryCodeField phoneNumberField errorField" : "cmnFormField phoneNumberField countryCodeField"}>
+                                        <div className="countryCode cmnFieldStyle">
+                                            <div className="countryName">{basicinfoPhone.countryCode}</div>
+                                            <div className="daileCode">{basicinfoPhone.dailCode}</div>
+                                            <select className="selectCountry" name="countryCode"
+                                                    defaultValue={basicinfoPhone.countryCode}
+                                                    onChange={handelBasicinfoPhone}>
+                                                {countrycodeOpt}
+                                            </select>
+                                        </div>
+                                        <input type="phone" className="cmnFieldStyle" name="number"
+                                            placeholder="Eg. (555) 555-1234" value={basicinfoPhone.number}
+                                            onChange={handelBasicinfoPhone}/>
+                                        <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'phone')}>
+                                            <img src={verify_icon} alt=""/> Verify
+                                        </button>
+                                        {formErrorMsg.phone ? <p className="errorMsg">{formErrorMsg.phone}</p> : ""}
+                                    </div>
+                                </div>
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Mobile
+                                    </div>
+                                    <div
+                                        className={formErrorMsg.mobile ? "cmnFormField countryCodeField phoneNumberField errorField" : "cmnFormField phoneNumberField countryCodeField"}>
+                                        <div className="countryCode cmnFieldStyle">
+                                            <div className="countryName">{basicinfoMobilePhone.countryCode}</div>
+                                            <div className="daileCode">{basicinfoMobilePhone.dailCode}</div>
+                                            <select className="selectCountry" name="countryCode"
+                                                    defaultValue={basicinfoMobilePhone.countryCode}
+                                                    onChange={handelBasicinfoMobilePhone}>
+                                                {countrycodeOpt}
+                                            </select>
+                                        </div>
+                                        <input type="phone" className="cmnFieldStyle" name="number"
+                                            placeholder="Eg. (555) 555-1234" value={basicinfoMobilePhone.number}
+                                            onChange={handelBasicinfoMobilePhone}/>
+                                        <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'mobile')}>
+                                            <img src={verify_icon} alt=""/> Verify
+                                        </button>
+                                        {formErrorMsg.mobile ? <p className="errorMsg">{formErrorMsg.mobile}</p> : ""}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="cmnFormRow">
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Phase
+                                    </div>
+                                    <div className={formErrorMsg.phase ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <select name="phase" className="cmnFieldStyle btnSelect" value={selectedPhase} onChange={handlePhaseChange}>
+                                            <option value="">Select a Phase</option>
+                                            {
+                                                phases.map(ele => {
+                                                    if (ele.statuses.length) {
+                                                        return (<option value={ele._id}>{ele.name}</option>)
+                                                    }
+                                                })
+                                            }
+                                        </select>
+                                        {formErrorMsg.phase ? <p className="errorMsg">{formErrorMsg.phase}</p> : ""}
+                                    </div>
+                                </div>
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Status
+                                    </div>
+                                    <div className={formErrorMsg.status ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <select name="status" className="cmnFieldStyle btnSelect" value={selectedStatus} onChange={handleStatusChange}>
+                                            <option value="">Select a Status</option>
+                                            {
+                                                status.map(ele => {
                                                     return (<option value={ele._id}>{ele.name}</option>)
-                                                }
-                                            })
-                                        }
-                                    </select>
-                                    {formErrorMsg.phase ? <p className="errorMsg">{formErrorMsg.phase}</p> : ""}
-                                </div>
-                            </div>
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Status
-                                </div>
-                                <div className={formErrorMsg.status ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <select name="status" className="cmnFieldStyle btnSelect" value={selectedStatus} onChange={handleStatusChange}>
-                                        <option value="">Select a Status</option>
-                                        {
-                                            status.map(ele => {
-                                                return (<option value={ele._id}>{ele.name}</option>)
-                                            })
-                                        }
-                                    </select>
-                                    {formErrorMsg.status ? <p className="errorMsg">{formErrorMsg.status}</p> : ""}
-                                </div>
-                            </div>
-
-                        </div>
-                        {/* <div className="cmnFormRow">
-                        <div className="cmnFormCol">
-                            <div className="cmnFieldName">
-                            Full Address
-                            </div>
-                            <div className="cmnFormField">
-                                <textarea className="cmnFieldStyle" placeholder="Eg. The Park Appt, Suit 204, 1/2A Street Name,TX"></textarea>
-                            </div>
-                        </div>
-                        <div className="cmnFormCol">
-                            <div className="cmnFieldName">
-                                Gender
-                            </div>
-                            <div className="cmnFormField radioGroup">
-                                <label className="cmnFormRadioLable">
-                                    <div className="circleRadio">
-                                        <input type="radio" name="gender" value="skip" />
-                                        <span></span>
-                                    </div>
-                                    Male
-                                </label>
-                                <label className="cmnFormRadioLable">
-                                    <div className="circleRadio">
-                                        <input type="radio" name="gender" value="skip" />
-                                        <span></span>
-                                    </div>
-                                    Female
-                                </label>
-                                <label className="cmnFormRadioLable">
-                                    <div className="circleRadio">
-                                        <input type="radio" name="gender" value="skip" />
-                                        <span></span>
-                                    </div>
-                                    Others
-                                </label>
-                            </div>
-
-                            <div className="cmnFieldName bestSizeField">
-                                Belt Size
-                            </div>
-                            <div className="cmnFormField">
-                                <input type="number" className="cmnFieldStyle" />
-                            </div>
-                        </div>
-                    </div> */}
-                    </div>
-                    <div className="overviewForm cmnForm">
-                        <div className="cmnFormHead">
-                            <h3>Work</h3>
-                        </div>
-                        <div className="cmnFormRow">
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Company
-                                </div>
-                                <div className={formErrorMsg.company ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <input type="text" className="cmnFieldStyle" placeholder=""
-                                           defaultValue={basicinfoCompany} onChange={handelBasicinfoCompany}/>
-                                    {formErrorMsg.company ? <p className="errorMsg">{formErrorMsg.company}</p> : ""}
-                                </div>
-                            </div>
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Job Role
-                                </div>
-                                <div className={formErrorMsg.jobRole ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <input type="text" className="cmnFieldStyle" placeholder=""
-                                           defaultValue={basicinfoJobRole} onChange={handelBasicinfoJobRole}/>
-                                    {formErrorMsg.jobRole ? <p className="errorMsg">{formErrorMsg.jobRole}</p> : ""}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="overviewForm cmnForm">
-                        <div className="cmnFormHead">
-                            <h3>Personal</h3>
-                        </div>
-                        <div className="cmnFormRow">
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Mother's Name
-                                </div>
-                                <div className={formErrorMsg.momName ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <input type="text" className="cmnFieldStyle" placeholder=""
-                                           defaultValue={basicinfoMomName} onChange={handelBasicinfoMomName}/>
-                                    {formErrorMsg.momName ? <p className="errorMsg">{formErrorMsg.momName}</p> : ""}
-                                </div>
-                            </div>
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Mother's Phone Number
-                                </div>
-                                <div
-                                    className={formErrorMsg.momPhone ? "cmnFormField countryCodeField phoneNumberField errorField" : "cmnFormField phoneNumberField countryCodeField"}>
-                                    <div className="countryCode cmnFieldStyle">
-                                        <div className="countryName">{basicinfoMomPhone.countryCode}</div>
-                                        <div className="daileCode">{basicinfoMomPhone.dailCode}</div>
-                                        <select className="selectCountry" name="countryCode"
-                                                defaultValue={basicinfoMomPhone.countryCode}
-                                                onChange={handelBasicinfoMomPhone}>
-                                            {countrycodeOpt}
+                                                })
+                                            }
                                         </select>
+                                        {formErrorMsg.status ? <p className="errorMsg">{formErrorMsg.status}</p> : ""}
                                     </div>
-                                    <input type="phone" className="cmnFieldStyle" name="number"
-                                           placeholder="Eg. (555) 555-1234" defaultValue={basicinfoMomPhone.number}
-                                           onChange={handelBasicinfoMomPhone}/>
-                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'momPhone')}>
-                                        <img src={verify_icon} alt=""/> Verify
-                                    </button>
-                                    {formErrorMsg.momPhone ? <p className="errorMsg">{formErrorMsg.momPhone}</p> : ""}
                                 </div>
+
                             </div>
-                        </div>
-                        <div className="cmnFormRow">
+                            {/* <div className="cmnFormRow">
                             <div className="cmnFormCol">
                                 <div className="cmnFieldName">
-                                    Father's Name
+                                Full Address
                                 </div>
-                                <div className={formErrorMsg.dadName ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <input type="text" className="cmnFieldStyle" placeholder=""
-                                           defaultValue={basicinfoDadName} onChange={handelBasicinfoDadName}/>
-                                    {formErrorMsg.dadName ? <p className="errorMsg">{formErrorMsg.dadName}</p> : ""}
+                                <div className="cmnFormField">
+                                    <textarea className="cmnFieldStyle" placeholder="Eg. The Park Appt, Suit 204, 1/2A Street Name,TX"></textarea>
                                 </div>
                             </div>
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Father's Phone Number
-                                </div>
-                                <div
-                                    className={formErrorMsg.dadPhone ? "cmnFormField countryCodeField phoneNumberField errorField" : "cmnFormField phoneNumberField countryCodeField"}>
-                                    <div className="countryCode cmnFieldStyle">
-                                        <div className="countryName">{basicinfoDadPnone.countryCode}</div>
-                                        <div className="daileCode">{basicinfoDadPnone.dailCode}</div>
-                                        <select className="selectCountry" name="countryCode"
-                                                defaultValue={basicinfoDadPnone.countryCode}
-                                                onChange={handelBasicinfoDadPhone}>
-                                            {countrycodeOpt}
-                                        </select>
-                                    </div>
-                                    <input type="phone" className="cmnFieldStyle" name="number"
-                                           placeholder="Eg. (555) 555-1234" defaultValue={basicinfoDadPnone.number}
-                                           onChange={handelBasicinfoDadPhone}/>
-                                    <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'dadPhone')}>
-                                        <img src={verify_icon} alt=""/> Verify
-                                    </button>
-                                    {formErrorMsg.dadPhone ? <p className="errorMsg">{formErrorMsg.dadPhone}</p> : ""}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="cmnFormRow">
                             <div className="cmnFormCol">
                                 <div className="cmnFieldName">
                                     Gender
@@ -969,184 +830,326 @@ const Overview = (props) => {
                                 <div className="cmnFormField radioGroup">
                                     <label className="cmnFormRadioLable">
                                         <div className="circleRadio">
-                                            <input type="radio" name="gender" value="male"
-                                                   checked={basicinfoGender === 'male'}
-                                                   onChange={handelBsicInfoGender}/>
+                                            <input type="radio" name="gender" value="skip" />
                                             <span></span>
                                         </div>
                                         Male
                                     </label>
                                     <label className="cmnFormRadioLable">
                                         <div className="circleRadio">
-                                            <input type="radio" name="gender" value="female"
-                                                   checked={basicinfoGender === 'female'}
-                                                   onChange={handelBsicInfoGender}/>
+                                            <input type="radio" name="gender" value="skip" />
                                             <span></span>
                                         </div>
                                         Female
                                     </label>
                                     <label className="cmnFormRadioLable">
                                         <div className="circleRadio">
-                                            <input type="radio" name="gender" value="others"
-                                                   checked={basicinfoGender === 'others'}
-                                                   onChange={handelBsicInfoGender}/>
+                                            <input type="radio" name="gender" value="skip" />
                                             <span></span>
                                         </div>
                                         Others
                                     </label>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="overviewForm cmnForm">
-                        <div className="cmnFormHead">
-                            <h3>Address</h3>
-                        </div>
-                        <div className="cmnFormRow">
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Address 1
-                                </div>
-                                <div className={formErrorMsg.address1 ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <textarea className="cmnFieldStyle"
-                                              placeholder="Eg. The Park Appt, Suit 204, 1/2A Street Name,TX"
-                                              defaultValue={basicinfoAddress1}
-                                              onChange={handelBasicinfoAddress1}></textarea>
-                                    {formErrorMsg.address1 ? <p className="errorMsg">{formErrorMsg.address1}</p> : ""}
-                                </div>
-                            </div>
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Address 2
-                                </div>
-                                <div className={formErrorMsg.address2 ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <textarea className="cmnFieldStyle"
-                                              placeholder="Eg. The Park Appt, Suit 204, 1/2A Street Name,TX"
-                                              defaultValue={basicinfoAddress2}
-                                              onChange={handelBasicinfoAddress2}></textarea>
-                                    {formErrorMsg.address2 ? <p className="errorMsg">{formErrorMsg.address2}</p> : ""}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="cmnFormRow">
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    City
-                                </div>
-                                <div className={formErrorMsg.city ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <input type="text" className="cmnFieldStyle" placeholder=""
-                                           defaultValue={basicinfoCity} onChange={handelBasicinfoCity}/>
-                                    {formErrorMsg.city ? <p className="errorMsg">{formErrorMsg.city}</p> : ""}
-                                </div>
-                            </div>
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    State
-                                </div>
-                                <div className={formErrorMsg.state ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <input type="text" className="cmnFieldStyle" placeholder=""
-                                           defaultValue={basicinfoState} onChange={handelBasicinfoState}/>
-                                    {formErrorMsg.state ? <p className="errorMsg">{formErrorMsg.state}</p> : ""}
-                                </div>
-                            </div>
-                        </div>
-                        <div className="cmnFormRow">
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Zip
-                                </div>
-                                <div className={formErrorMsg.zip ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <input type="text" className="cmnFieldStyle" placeholder=""
-                                           defaultValue={basicinfoZip} onChange={handelBasicinfoZip}/>
-                                    {formErrorMsg.zip ? <p className="errorMsg">{formErrorMsg.zip}</p> : ""}
-                                </div>
-                            </div>
-                            <div className="cmnFormCol">
-                                <div className="cmnFieldName">
-                                    Country
-                                </div>
-                                <div className={formErrorMsg.country ? "cmnFormField errorField" : "cmnFormField"}>
-                                    <input type="text" className="cmnFieldStyle" placeholder=""
-                                           defaultValue={basicinfoCountry} onChange={handelBasicinfoCountry}/>
-                                    {formErrorMsg.country ? <p className="errorMsg">{formErrorMsg.country}</p> : ""}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="overviewForm cmnForm">
-                        {
-                            customFields.length > 0 &&
-                            <>
-                                <div className="cmnFormHead">
-                                    <h3>Custom Fields</h3>
-                                </div>
-                                {
-                                    customFields.map((row, index) => (
-                                        <div className="cmnFormRow" key={index}>
-                                            { row.map((col, index2) => (
-                                                <div className="cmnFormCol" key={index2}>
-                                                    <div className="cmnFieldName">
-                                                        {col.fieldName}
-                                                    </div>
-                                                    <div className={formErrorMsg.zip ? "cmnFormField errorField" : "cmnFormField"}>
-                                                        {(() => {
-                                                            switch (col.fieldType) {
-                                                                case 'text':
-                                                                    return <input type="text" className="cmnFieldStyle" name={col.alias} placeholder={col.fieldName} pattern={col.fieldRegex}
-                                                                                  defaultValue={contact ? contact[col.alias] : ""} onChange={handlerCustomFieldChange}/>;
-                                                                case 'number':
-                                                                    return <input type="number" className="cmnFieldStyle" name={col.alias} placeholder={col.fieldName} pattern={col.fieldRegex}
-                                                                                  defaultValue={contact ? contact[col.alias] : ""} onChange={handlerCustomFieldChange}/>;
-                                                                case 'email':
-                                                                    return <input type="email" className="cmnFieldStyle" name={col.alias} placeholder={col.fieldName} pattern={col.fieldRegex}
-                                                                                  defaultValue={contact ? contact[col.alias] : ""} onChange={handlerCustomFieldChange}/>;
-                                                                case 'textarea':
-                                                                    return <textarea className="cmnFieldStyle"
-                                                                                     placeholder={col.fieldName}
-                                                                                     name={col.alias}
-                                                                                     defaultValue={contact ? contact[col.alias] : ""} pattern={col.fieldRegex}
-                                                                                     onChange={handlerCustomFieldChange}></textarea>;
-                                                                default:
-                                                                    return <input type="text" className="cmnFieldStyle" name={col.alias} placeholder={col.fieldName} pattern={col.fieldRegex}
-                                                                                  defaultValue={contact ? contact[col.alias] : ""} onChange={handlerCustomFieldChange}/>;
-                                                            }
-                                                        })()}
 
-                                                        {customFieldsError[col.alias] ? <p className="errorMsg">Please give a valid input.</p> : ""}
-                                                    </div>
-                                                </div>
-                                                /*<div className="cmnFormCol-3" key={index2}>
-                                                    <div className={"overviewCustomFieldBox cmnFieldStyle " + (customFieldsError[col.alias] ? 'error' : '') + (toggleCustom[col.alias] ? 'toggleActive' : 'toggleInactive' )}>
-                                                        <span>{col.fieldName}</span>
-                                                        <button className="addOverviewCustomFiel" onClick={(e) => toggleCustomField(e,col.alias, toggleCustom[col.alias])}>
-                                                            {
-                                                                toggleCustom[col.alias] ? <img className="crossIcon" src={cross_icon} alt="" /> : <img className="plusIcon" src={plus_icon} alt="" />
-                                                            }
-                                                        </button>
-                                                        { toggleCustom[col.alias] &&
-                                                            <div className="extraCustonbox">
-                                                                <input type="text" name={col.alias} value={customFieldsList[col.alias]} onChange={handlerCustomFieldChange}/>
-                                                            </div>
-                                                        }
-                                                    </div>
-                                                </div>*/
-                                            )) }
+                                <div className="cmnFieldName bestSizeField">
+                                    Belt Size
+                                </div>
+                                <div className="cmnFormField">
+                                    <input type="number" className="cmnFieldStyle" />
+                                </div>
+                            </div>
+                        </div> */}
+                        </div>
+                        <div className="overviewForm cmnForm">
+                            <div className="cmnFormHead">
+                                <h3>Work</h3>
+                            </div>
+                            <div className="cmnFormRow">
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Company
+                                    </div>
+                                    <div className={formErrorMsg.company ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <input type="text" className="cmnFieldStyle" placeholder=""
+                                            defaultValue={basicinfoCompany} onChange={handelBasicinfoCompany}/>
+                                        {formErrorMsg.company ? <p className="errorMsg">{formErrorMsg.company}</p> : ""}
+                                    </div>
+                                </div>
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Job Role
+                                    </div>
+                                    <div className={formErrorMsg.jobRole ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <input type="text" className="cmnFieldStyle" placeholder=""
+                                            defaultValue={basicinfoJobRole} onChange={handelBasicinfoJobRole}/>
+                                        {formErrorMsg.jobRole ? <p className="errorMsg">{formErrorMsg.jobRole}</p> : ""}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="overviewForm cmnForm">
+                            <div className="cmnFormHead">
+                                <h3>Personal</h3>
+                            </div>
+                            <div className="cmnFormRow">
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Mother's Name
+                                    </div>
+                                    <div className={formErrorMsg.momName ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <input type="text" className="cmnFieldStyle" placeholder=""
+                                            defaultValue={basicinfoMomName} onChange={handelBasicinfoMomName}/>
+                                        {formErrorMsg.momName ? <p className="errorMsg">{formErrorMsg.momName}</p> : ""}
+                                    </div>
+                                </div>
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Mother's Phone Number
+                                    </div>
+                                    <div
+                                        className={formErrorMsg.momPhone ? "cmnFormField countryCodeField phoneNumberField errorField" : "cmnFormField phoneNumberField countryCodeField"}>
+                                        <div className="countryCode cmnFieldStyle">
+                                            <div className="countryName">{basicinfoMomPhone.countryCode}</div>
+                                            <div className="daileCode">{basicinfoMomPhone.dailCode}</div>
+                                            <select className="selectCountry" name="countryCode"
+                                                    defaultValue={basicinfoMomPhone.countryCode}
+                                                    onChange={handelBasicinfoMomPhone}>
+                                                {countrycodeOpt}
+                                            </select>
                                         </div>
-                                    ))
-                                }
-                            </>
-                        }
-                        <div className="cmnFormRow">
-                            <div className="formActBtnWrap">
-                                <button className="saveNnewBtn saveOverview" type="button"
-                                        onClick={(e) => onContactSubmit(e)}> {props.contactId === 0 ? 'Save' : 'Update'} <img src={arrow_forward}
-                                                                                                 alt=""/></button>
-                                <button className="btn-link" onClick={props.closeContactModal}>Cancel</button>
+                                        <input type="phone" className="cmnFieldStyle" name="number"
+                                            placeholder="Eg. (555) 555-1234" defaultValue={basicinfoMomPhone.number}
+                                            onChange={handelBasicinfoMomPhone}/>
+                                        <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'momPhone')}>
+                                            <img src={verify_icon} alt=""/> Verify
+                                        </button>
+                                        {formErrorMsg.momPhone ? <p className="errorMsg">{formErrorMsg.momPhone}</p> : ""}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="cmnFormRow">
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Father's Name
+                                    </div>
+                                    <div className={formErrorMsg.dadName ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <input type="text" className="cmnFieldStyle" placeholder=""
+                                            defaultValue={basicinfoDadName} onChange={handelBasicinfoDadName}/>
+                                        {formErrorMsg.dadName ? <p className="errorMsg">{formErrorMsg.dadName}</p> : ""}
+                                    </div>
+                                </div>
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Father's Phone Number
+                                    </div>
+                                    <div
+                                        className={formErrorMsg.dadPhone ? "cmnFormField countryCodeField phoneNumberField errorField" : "cmnFormField phoneNumberField countryCodeField"}>
+                                        <div className="countryCode cmnFieldStyle">
+                                            <div className="countryName">{basicinfoDadPnone.countryCode}</div>
+                                            <div className="daileCode">{basicinfoDadPnone.dailCode}</div>
+                                            <select className="selectCountry" name="countryCode"
+                                                    defaultValue={basicinfoDadPnone.countryCode}
+                                                    onChange={handelBasicinfoDadPhone}>
+                                                {countrycodeOpt}
+                                            </select>
+                                        </div>
+                                        <input type="phone" className="cmnFieldStyle" name="number"
+                                            placeholder="Eg. (555) 555-1234" defaultValue={basicinfoDadPnone.number}
+                                            onChange={handelBasicinfoDadPhone}/>
+                                        <button className="verifyNumberButton" onClick={(e) => verifyNumber(e,'dadPhone')}>
+                                            <img src={verify_icon} alt=""/> Verify
+                                        </button>
+                                        {formErrorMsg.dadPhone ? <p className="errorMsg">{formErrorMsg.dadPhone}</p> : ""}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="cmnFormRow">
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Gender
+                                    </div>
+                                    <div className="cmnFormField radioGroup">
+                                        <label className="cmnFormRadioLable">
+                                            <div className="circleRadio">
+                                                <input type="radio" name="gender" value="male"
+                                                    checked={basicinfoGender === 'male'}
+                                                    onChange={handelBsicInfoGender}/>
+                                                <span></span>
+                                            </div>
+                                            Male
+                                        </label>
+                                        <label className="cmnFormRadioLable">
+                                            <div className="circleRadio">
+                                                <input type="radio" name="gender" value="female"
+                                                    checked={basicinfoGender === 'female'}
+                                                    onChange={handelBsicInfoGender}/>
+                                                <span></span>
+                                            </div>
+                                            Female
+                                        </label>
+                                        <label className="cmnFormRadioLable">
+                                            <div className="circleRadio">
+                                                <input type="radio" name="gender" value="others"
+                                                    checked={basicinfoGender === 'others'}
+                                                    onChange={handelBsicInfoGender}/>
+                                                <span></span>
+                                            </div>
+                                            Others
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="overviewForm cmnForm">
+                            <div className="cmnFormHead">
+                                <h3>Address</h3>
+                            </div>
+                            <div className="cmnFormRow">
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Address 1
+                                    </div>
+                                    <div className={formErrorMsg.address1 ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <textarea className="cmnFieldStyle"
+                                                placeholder="Eg. The Park Appt, Suit 204, 1/2A Street Name,TX"
+                                                defaultValue={basicinfoAddress1}
+                                                onChange={handelBasicinfoAddress1}></textarea>
+                                        {formErrorMsg.address1 ? <p className="errorMsg">{formErrorMsg.address1}</p> : ""}
+                                    </div>
+                                </div>
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Address 2
+                                    </div>
+                                    <div className={formErrorMsg.address2 ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <textarea className="cmnFieldStyle"
+                                                placeholder="Eg. The Park Appt, Suit 204, 1/2A Street Name,TX"
+                                                defaultValue={basicinfoAddress2}
+                                                onChange={handelBasicinfoAddress2}></textarea>
+                                        {formErrorMsg.address2 ? <p className="errorMsg">{formErrorMsg.address2}</p> : ""}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="cmnFormRow">
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        City
+                                    </div>
+                                    <div className={formErrorMsg.city ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <input type="text" className="cmnFieldStyle" placeholder=""
+                                            defaultValue={basicinfoCity} onChange={handelBasicinfoCity}/>
+                                        {formErrorMsg.city ? <p className="errorMsg">{formErrorMsg.city}</p> : ""}
+                                    </div>
+                                </div>
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        State
+                                    </div>
+                                    <div className={formErrorMsg.state ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <input type="text" className="cmnFieldStyle" placeholder=""
+                                            defaultValue={basicinfoState} onChange={handelBasicinfoState}/>
+                                        {formErrorMsg.state ? <p className="errorMsg">{formErrorMsg.state}</p> : ""}
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="cmnFormRow">
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Zip
+                                    </div>
+                                    <div className={formErrorMsg.zip ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <input type="text" className="cmnFieldStyle" placeholder=""
+                                            defaultValue={basicinfoZip} onChange={handelBasicinfoZip}/>
+                                        {formErrorMsg.zip ? <p className="errorMsg">{formErrorMsg.zip}</p> : ""}
+                                    </div>
+                                </div>
+                                <div className="cmnFormCol">
+                                    <div className="cmnFieldName">
+                                        Country
+                                    </div>
+                                    <div className={formErrorMsg.country ? "cmnFormField errorField" : "cmnFormField"}>
+                                        <input type="text" className="cmnFieldStyle" placeholder=""
+                                            defaultValue={basicinfoCountry} onChange={handelBasicinfoCountry}/>
+                                        {formErrorMsg.country ? <p className="errorMsg">{formErrorMsg.country}</p> : ""}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="overviewForm cmnForm">
+                            {
+                                customFields.length > 0 &&
+                                <>
+                                    <div className="cmnFormHead">
+                                        <h3>Custom Fields</h3>
+                                    </div>
+                                    {
+                                        customFields.map((row, index) => (
+                                            <div className="cmnFormRow" key={index}>
+                                                { row.map((col, index2) => (
+                                                    <div className="cmnFormCol" key={index2}>
+                                                        <div className="cmnFieldName">
+                                                            {col.fieldName}
+                                                        </div>
+                                                        <div className={formErrorMsg.zip ? "cmnFormField errorField" : "cmnFormField"}>
+                                                            {(() => {
+                                                                switch (col.fieldType) {
+                                                                    case 'text':
+                                                                        return <input type="text" className="cmnFieldStyle" name={col.alias} placeholder={col.fieldName} pattern={col.fieldRegex}
+                                                                                    defaultValue={contact ? contact[col.alias] : ""} onChange={handlerCustomFieldChange}/>;
+                                                                    case 'number':
+                                                                        return <input type="number" className="cmnFieldStyle" name={col.alias} placeholder={col.fieldName} pattern={col.fieldRegex}
+                                                                                    defaultValue={contact ? contact[col.alias] : ""} onChange={handlerCustomFieldChange}/>;
+                                                                    case 'email':
+                                                                        return <input type="email" className="cmnFieldStyle" name={col.alias} placeholder={col.fieldName} pattern={col.fieldRegex}
+                                                                                    defaultValue={contact ? contact[col.alias] : ""} onChange={handlerCustomFieldChange}/>;
+                                                                    case 'textarea':
+                                                                        return <textarea className="cmnFieldStyle"
+                                                                                        placeholder={col.fieldName}
+                                                                                        name={col.alias}
+                                                                                        defaultValue={contact ? contact[col.alias] : ""} pattern={col.fieldRegex}
+                                                                                        onChange={handlerCustomFieldChange}></textarea>;
+                                                                    default:
+                                                                        return <input type="text" className="cmnFieldStyle" name={col.alias} placeholder={col.fieldName} pattern={col.fieldRegex}
+                                                                                    defaultValue={contact ? contact[col.alias] : ""} onChange={handlerCustomFieldChange}/>;
+                                                                }
+                                                            })()}
+
+                                                            {customFieldsError[col.alias] ? <p className="errorMsg">Please give a valid input.</p> : ""}
+                                                        </div>
+                                                    </div>
+                                                    /*<div className="cmnFormCol-3" key={index2}>
+                                                        <div className={"overviewCustomFieldBox cmnFieldStyle " + (customFieldsError[col.alias] ? 'error' : '') + (toggleCustom[col.alias] ? 'toggleActive' : 'toggleInactive' )}>
+                                                            <span>{col.fieldName}</span>
+                                                            <button className="addOverviewCustomFiel" onClick={(e) => toggleCustomField(e,col.alias, toggleCustom[col.alias])}>
+                                                                {
+                                                                    toggleCustom[col.alias] ? <img className="crossIcon" src={cross_icon} alt="" /> : <img className="plusIcon" src={plus_icon} alt="" />
+                                                                }
+                                                            </button>
+                                                            { toggleCustom[col.alias] &&
+                                                                <div className="extraCustonbox">
+                                                                    <input type="text" name={col.alias} value={customFieldsList[col.alias]} onChange={handlerCustomFieldChange}/>
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                    </div>*/
+                                                )) }
+                                            </div>
+                                        ))
+                                    }
+                                </>
+                            }
+                            <div className="cmnFormRow">
+                                <div className="formActBtnWrap">
+                                    <button className="saveNnewBtn saveOverview" type="button"
+                                            onClick={(e) => onContactSubmit(e)}> {props.contactId === 0 ? 'Save' : 'Update'} <img src={arrow_forward}
+                                                                                                    alt=""/></button>
+                                    <button className="btn-link" onClick={props.closeContactModal}>Cancel</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     );
 }

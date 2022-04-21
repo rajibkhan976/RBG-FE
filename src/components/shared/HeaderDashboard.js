@@ -75,6 +75,10 @@ function HeaderDashboard(props) {
 
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
+    setStateUserMenu(false);
+    setSetupModalStatus(false);
+
+    setModalMakeCall(false);
   };
 
   const dispatch = useDispatch();
@@ -87,7 +91,11 @@ function HeaderDashboard(props) {
   };
 
   const toggleUserMenu = () => {
-    setStateUserMenu(true);
+    setStateUserMenu(!stateUserMenu);
+    setSetupModalStatus(false);
+    setStateNotifMenu(false);
+
+    setModalMakeCall(false);
   };
   const closeUserMenu = () => {
     setStateUserMenu(false);
@@ -282,11 +290,18 @@ function HeaderDashboard(props) {
 
   const toggleSetup = () => {
     setSetupModalStatus(!setupModalStatus);
+    setStateUserMenu(false);
+    setStateNotifMenu(false);
+
+    setModalMakeCall(false);
   };
   const [modalMakeCall, setModalMakeCall] = useState(false);
   const makeCallModalHandle = () => {
     setModalMakeCall(true);
     setShowActionState(false);
+    setStateUserMenu(false);
+    setSetupModalStatus(false);
+    setStateNotifMenu(false);
   };
   const callModalOffhandler = () => {
     setModalMakeCall(false);
@@ -500,7 +515,7 @@ function HeaderDashboard(props) {
       </div>
 
       {stateUserMenu && (
-        <div className="sideMenuOuter">
+        <div className="sideMenuOuter headeruserMenu">
           <div className="sideMenuInner userModal">
             <div className="modal_call_header">
               <button className="btn btn_empty" onClick={closeUserMenu}><img src={cross_white} alt="" /></button>

@@ -468,16 +468,17 @@ const Transaction = (props) => {
 
   return (
     <>
-      {isRefundLoader ? <Loader /> : ''}
       { successMsg && <AlertMessage type="success" message={successMsg} time={10000} close={closeAlert} /> }
-      <div className="contactTabsInner">
+      <div className="contactTabsInner contactTabsInnerTransaction">
+        <div className="contactTabsScrollSpace">
         <h3 className="headingTabInner">Transactions</h3>
         <div className="transHeader">
           <button className="saveNnewBtn" onClick={props.goToTransaction}>
             Make a Transaction <img src={arrow_forward} alt="" />
           </button>
-          <span>* Manage transaction for Products and Programs</span>
+          <span>Manage transaction for Products and Programs</span>
         </div>
+        {isRefundLoader ? <Loader /> : ''}
         {isLoader ? <Loader /> : ''}
         <div className={transactionList?.pagination?.count > 0 ? "transactionListing" : "hide"}>
           <div className="row head">
@@ -750,7 +751,7 @@ const Transaction = (props) => {
                                     
                                     {item.transaction_for == "product" ? item.history[0].transaction_data.map((product, key) => {
                                       return (
-                                        <li className="itemList">
+                                        <li className="itemList" key={key}>
                                           <h3><span>{key+1 + "."}</span>{product.product}</h3>
                                           <div className="productSpec">
                                             Color: <span className={"productColor " + product.color}></span>
@@ -993,7 +994,7 @@ const Transaction = (props) => {
             : ""}
           </Scrollbars>
         </div>
-
+        </div>
       </div>
       { refundModal && <RefundModal closeModal={() => closeRefundModal ()} 
       amount={refundAmount} 

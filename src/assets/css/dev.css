@@ -1512,10 +1512,12 @@
 .dashInnerStructure {
   position: relative;
 }
-.dashInnerUI .loaderOuter,
+/* .dashInnerUI .loaderOuter,
 .dashInnerStructure .loaderOuter {
   position: absolute;
-}
+} */
+.dashInnerUI .loaderOuter:not(.dashInnerUI > .loaderOuter), 
+.dashInnerStructure .loaderOuter:not(.dashInnerUI > .loaderOuter),
 .sideMenuOuter .loaderOuter {
   position: absolute;
   left: 0;

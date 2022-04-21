@@ -779,8 +779,9 @@ const expiration_month = cardExpairyMonthCheckFn();
 
   return (
     <>
-    {isLoader ? <Loader /> : ""}
-      <div className={props.contact.is_payment_setup_remaining ? "contactTabsInner d-flex f-column" : isLoader ? "contactTabsInner loading" : "contactTabsInner"}>
+        <div className={props.contact.is_payment_setup_remaining ? "contactTabsInner d-flex f-column" : isLoader ? "contactTabsInner loading contactTabsInnerBilling" : "contactTabsInner contactTabsInnerBilling"}>
+        {isLoader ? <Loader /> : ""}
+        <div className="contactTabsScrollSpace">
         <h3 className="headingTabInner">Billing Info</h3>
         <p className="subheadingTabInner">
         Manage your billing details here
@@ -1151,6 +1152,7 @@ const expiration_month = cardExpairyMonthCheckFn();
               <p>Billing details is importing; <br/>Please try again after some time.</p>
             </div>
         }
+        </div>
       </div>
     </>
   );

@@ -227,7 +227,7 @@
   padding: 0;
 }
 
-.modalDependent input[type="date"i]::-webkit-calendar-picker-indicator, .outstandingOverviewProduct .paymentNow input[type="date"i]::-webkit-calendar-picker-indicator {
+.modalDependent input[type="date" i]::-webkit-calendar-picker-indicator, .outstandingOverviewProduct .paymentNow input[type="date" i]::-webkit-calendar-picker-indicator {
   background-image: url("../images/calendar.png");
 }
 
@@ -1844,7 +1844,7 @@ input::-webkit-inner-spin-button {
   max-height: 334px;
 }
 .gridCol .cartProductInner + .cartProductInner {
-  margin-top: 20px;
+  /* margin-top: 20px; */
   flex: 0 0 auto;
 }
 .productPaymentTransaction .chooseTransactionType {
@@ -2606,6 +2606,7 @@ input[type=number] {
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .contactModal .contactTabsInner,
 .contactModal .contactTabsInner .listTab {
@@ -2807,8 +2808,9 @@ input[type=number] {
   line-clamp: 2;
   -webkit-box-orient: vertical;
 }
+.selectBox.disabled,
 .selectBox:disabled {
-  color: #bbb9d1 !important;
+  color: #D0D6DB !important;
   background-image: none;
 }
 .addProgramFrom select {
@@ -2879,20 +2881,17 @@ input[type=number] {
 .autoRenew .labelWithInfo label {
   font-weight: 400;
 }
-.chooseTransactionWraper > .posSellingForm,
+/* .chooseTransactionWraper > .posSellingForm,
 .posSellingForm.contractOverview {
   position: relative;
-}
-.chooseTransactionWraper .billingOverviewSuccess {
+} */
+.chooseTransactionWraper .billingOverviewSuccess,
+.posSellingForm.contractOverview .billingOverviewSuccess {
   position: absolute;
-  top: -65px;
+  top: 23px;
 }
 .chooseTransactionType {
   z-index: 1;
-}
-.posSellingForm.contractOverview .billingOverviewSuccess {
-  position: absolute;
-  top: -65px;
 }
 .tox-edit-area iframe {
   z-index: initial !important;
@@ -2921,4 +2920,154 @@ input[type=number] {
 }
 .emailListing .tableListing {
   border-spacing: 0 4px;
+}
+
+/* UI fixing after merge */
+
+/* SIDE-MENU UI REWORK */
+.sideMenuOuter.headeruserMenu {
+  z-index: 999;
+}
+
+/* TO NULLIFY STYLE LINE 4013 */
+.tabBarArea>div.contactModalTab {
+  height: inherit;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+/* ADDING NEW SCROLLSPACE FOR OVERVIEW TAB */
+.contactTabScrollContainer {
+  height: 100%;
+  overflow: auto;
+}
+
+.contactTabScrollContainer::-webkit-scrollbar,
+.contactTabsScrollSpace::-webkit-scrollbar,
+.contactTabsInnerTransactionChoice .posSellingForm::-webkit-scrollbar,
+.contactTabsInnerTransactionChoice .chooseTransactionWraper::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dependentScrollContainer::-webkit-scrollbar {
+  width: 3px;
+}
+
+.contactTabScrollContainer::-webkit-scrollbar-track,
+.contactTabsScrollSpace::-webkit-scrollbar-track,
+.dependentScrollContainer::-webkit-scrollbar-track,
+.contactTabsInnerTransactionChoice .posSellingForm::-webkit-scrollbar-track,
+.contactTabsInnerTransactionChoice .chooseTransactionWraper::-webkit-scrollbar-track {
+  background-color: #dce4eb;
+}
+
+.contactTabScrollContainer::-webkit-scrollbar-thumb,
+.contactTabsScrollSpace::-webkit-scrollbar-thumb,
+.contactTabsInnerTransactionChoice .posSellingForm::-webkit-scrollbar-thumb,
+.dependentScrollContainer::-webkit-scrollbar-thumb,
+.contactTabsInnerTransactionChoice .chooseTransactionWraper::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
+}
+
+/* TO NULLIFY SET HEIGHT IN STYLE 6980 */
+.tabBarArea .contactTabsInner {
+  overflow: hidden;
+}
+
+.tabBarArea .contactTabsInnerTransaction,
+.tabBarArea .contactTabsInnerBilling,
+.tabBarArea .contactTabsInnerDependents,
+.tabBarArea .contactTabsInnerTransactionChoice {
+  padding-right: 0px;
+}
+
+.contactTabsScrollSpace {
+  padding-right: 34px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.overviewList ul:after {
+  clear: both;
+  content: '';
+  display: table;
+}
+
+.overviewList ul {
+  margin-bottom: 0;
+}
+
+.contactTabsInnerBilling .contactTabsScrollSpace {
+  overflow: auto;
+}
+
+.contactModal .contactTabsInner .listTab {
+  min-height: 100px;
+  height: inherit;
+}
+
+.dependentScrollContainer {
+  flex: 1 1 auto;
+  min-height: 100px;
+  height: inherit;
+  overflow: auto;
+}
+
+.dependentsListing .row.head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #fff;
+}
+
+.contactTabsInnerTransactionChoice .contactTabsScrollSpace {
+  padding-right: 0;
+}
+
+/* TO NULLIFY DEV.CSS 2839 */
+.chooseTransactionWraper.transactionPage.display {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.contactTabsInnerTransactionChoice .posSellingForm {
+  flex: 1 1 auto;
+  overflow: auto;
+  padding-right: 30px;
+}
+
+.chooseTransactionWraper.transactionPage.display .posSellingForm {
+  padding-top: 0;
+  margin-top: 85px;
+}
+
+.paymentTransProduct.chooseTransactionWraper {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1 1 auto;
+}
+
+.gridCol .cartProductInner:not(:last-child) {
+  margin-bottom: 20px;
+}
+.payModalDetails .modalForm {
+  height: inherit;
+}
+.dottedBorder {
+  height: 1px;
+}
+.paymentUlHeader li {
+  line-height: 24px;
+}
+.posSellingForm.contractOverview {
+  align-content: flex-start;
+}
+
+
+.tabBarArea .contactTabsInnerBilling,
+.tabBarArea .contactTabsInnerTransactionChoice {
+  padding-bottom: 0px;
 }

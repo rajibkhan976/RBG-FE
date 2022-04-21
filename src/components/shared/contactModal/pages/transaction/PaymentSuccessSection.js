@@ -47,7 +47,7 @@ const PaymentSuccessSection = (props) => {
 
 
   return (
-    <div className="posSellingForm contractOverview">
+    <div className="posSellingForm contractOverview paymentSuccessFullScreen">
       <div className="successHeader">
         <div className="circleForIcon"><img src={paySuccess} alt="" /></div>
         <h3 className="paySuccessHeading">{successList.length ? "Payment Successful!" : "Contract has been created successfully!"}</h3>

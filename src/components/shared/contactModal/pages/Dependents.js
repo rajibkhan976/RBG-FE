@@ -543,7 +543,8 @@ const Dependents = (props) => {
 
   return (
     <>
-      <div className="contactTabsInner">
+      <div className="contactTabsInner contactTabsInnerDependents">
+        <div className="contactTabsScrollSpace">
         <h3 className="headingTabInner">Dependents</h3>
         {dependentList.length > 0 && (
           <div className="transHeader">
@@ -559,159 +560,162 @@ const Dependents = (props) => {
           </p>}
 
 
-        <div className="dependentsListing">
-          {isLoader ? <Loader /> : ""}
-          {/* {isAlert.show ? (
-            <ConfirmBox
-              callback={(isConfirmed) => archiveDependent(isAlert.id, isConfirmed)}
-              message="Are you sure, you want to archive the dependent?"
-            />
-          ) : (
-            ""
-          )} */}
-          {successMsg && <div className="popupMessage success innerDrawerMessage">
-            <p>{successMsg}</p>
-          </div>}
-          {errorMsg && <div className="popupMessage error innerDrawerMessage">
-            <p>{errorMsg}</p>
-          </div>}
-          {dependentList.length > 0 ? (
-            <>
-              <div className="row head">
-                <div className="cell">Dependent Name</div>
-                <div className="cell">Last Attendance</div>
-                <div className="cell">Active Course</div>
-                <div className="cell">DOB</div>
-              </div>
-              {dependentList.map((dependent, i) => (
-                <>
-                  <div
-                    className={
-                      (dependent.isArchived || (isAlert.show && (isAlert.id === dependent._id))) ? "row archivedDependent" : "row"
-                    }
-                    key={i}
-                  >
-                    <div className="cell">
-                      <div className="d-flex">
-                        <div className="iconCont">
-                          <span>
-                            <img src={icon_dependent} alt="" />
-                          </span>
-                        </div>
-                        <div className="textCont">
-                          <h4>
-                            <em onClick={() => OpenDependentContactModal(dependent._id)} className="dependent-name">{dependent.name ? dependent.name : ((dependent.firstName ? dependent.firstName : '') + ' ' + (dependent.lastName ? dependent.lastName : ''))}</em>
-                            <div className="dndCheckbox">
-                              <span onClick={(e) => toggleDncStatus(dependent._id, i)}>
-                                <img src={dependent.dnc ? dndFalse : dnd} alt={dependent.dnc ? "Do not send notifications" : "Send notifications"} />
-                              </span>
-                            </div>
-                          </h4>
-                          <span className="d-flex">
-                            {dependent.isCommunication && dependent.phone && dependent.phone.dailCode && dependent.phone.number ? dependent.phone.dailCode + dependent.phone.number : ''}
-                            {dependent.phone && dependent.phone.dailCode && dependent.phone.number && dependent.email ? " | " : ''}
-                            <a
-                              className="mailCont"
-                              href={dependent.isCommunication && dependent.email ? "mailto:" + dependent.email : "javascript:void(0)"}
-                            >
+          <div className="dependentScrollContainer">
+            <div className="dependentsListing">
+            {isLoader ? <Loader /> : ""}
+            {/* {isAlert.show ? (
+              <ConfirmBox
+                callback={(isConfirmed) => archiveDependent(isAlert.id, isConfirmed)}
+                message="Are you sure, you want to archive the dependent?"
+              />
+            ) : (
+              ""
+            )} */}
+            {successMsg && <div className="popupMessage success innerDrawerMessage">
+              <p>{successMsg}</p>
+            </div>}
+            {errorMsg && <div className="popupMessage error innerDrawerMessage">
+              <p>{errorMsg}</p>
+            </div>}
+            {dependentList.length > 0 ? (
+              <>
+                <div className="row head">
+                  <div className="cell">Dependent Name</div>
+                  <div className="cell">Last Attendance</div>
+                  <div className="cell">Active Course</div>
+                  <div className="cell">DOB</div>
+                </div>
+                {dependentList.map((dependent, i) => (
+                  <>
+                    <div
+                      className={
+                        (dependent.isArchived || (isAlert.show && (isAlert.id === dependent._id))) ? "row archivedDependent" : "row"
+                      }
+                      key={i}
+                    >
+                      <div className="cell">
+                        <div className="d-flex">
+                          <div className="iconCont">
+                            <span>
+                              <img src={icon_dependent} alt="" />
+                            </span>
+                          </div>
+                          <div className="textCont">
+                            <h4>
+                              <em onClick={() => OpenDependentContactModal(dependent._id)} className="dependent-name">{dependent.name ? dependent.name : ((dependent.firstName ? dependent.firstName : '') + ' ' + (dependent.lastName ? dependent.lastName : ''))}</em>
+                              <div className="dndCheckbox">
+                                <span onClick={(e) => toggleDncStatus(dependent._id, i)}>
+                                  <img src={dependent.dnc ? dndFalse : dnd} alt={dependent.dnc ? "Do not send notifications" : "Send notifications"} />
+                                </span>
+                              </div>
+                            </h4>
+                            <span className="d-flex">
+                              {dependent.isCommunication && dependent.phone && dependent.phone.dailCode && dependent.phone.number ? dependent.phone.dailCode + dependent.phone.number : ''}
+                              {dependent.phone && dependent.phone.dailCode && dependent.phone.number && dependent.email ? " | " : ''}
+                              <a
+                                className="mailCont"
+                                href={dependent.isCommunication && dependent.email ? "mailto:" + dependent.email : "javascript:void(0)"}
+                              >
 
-                              {dependent.isCommunication && dependent.email ? dependent.email : ''}
-                            </a>
-                          </span>
-                          <span className="dependentDoj">{dependent.doj}</span>
+                                {dependent.isCommunication && dependent.email ? dependent.email : ''}
+                              </a>
+                            </span>
+                            <span className="dependentDoj">{dependent.doj}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="cell">
-                      <span className="dependentLast">
-                        {dependent.lastAttend ? dependent.lastAttend : "N/A"}
-                      </span>
-                    </div>
-                    <div className="cell">
-                      <span className="dependentCourse">
-                        {dependent.course ? dependent.course : "N/A"}
-                      </span>
-                    </div>
-                    <div className="cell">
-                      <span className="dependentDob">{dependent.dob}</span>
-                      <button
-                        className="btn optionDependent"
-                        onClick={() => {
-                          toggleOptions(i);
-                        }}>
-                        <img src={dot3gray} alt="" />
-                      </button>
-                      <div
-                        className={
-                          option === i
-                            ? "dropdownOptions listOpen"
-                            : "listHide"
-                        }
-                      >
+                      <div className="cell">
+                        <span className="dependentLast">
+                          {dependent.lastAttend ? dependent.lastAttend : "N/A"}
+                        </span>
+                      </div>
+                      <div className="cell">
+                        <span className="dependentCourse">
+                          {dependent.course ? dependent.course : "N/A"}
+                        </span>
+                      </div>
+                      <div className="cell">
+                        <span className="dependentDob">{dependent.dob}</span>
                         <button
-                          className="btn btnDelete"
+                          className="btn optionDependent"
                           onClick={() => {
-                            archiveDependent(dependent);
-                          }}
-                        >
-                          <span>
-                            <svg
-                              className="deleteIcon"
-                              xmlns="http://www.w3.org/2000/svg"
-                              width="12.347"
-                              height="13.553"
-                              viewBox="0 0 12.347 13.553"
-                            >
-                              <g transform="translate(0.75 0.75)">
-                                <path
-                                  className="a"
-                                  d="M3,6H13.847"
-                                  transform="translate(-3 -3.589)"
-                                />
-                                <path
-                                  className="a"
-                                  d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
-                                  transform="translate(-3.795 -2)"
-                                />
-                                <line
-                                  className="a"
-                                  y2="3"
-                                  transform="translate(4.397 6.113)"
-                                />
-                                <line
-                                  className="a"
-                                  y2="3"
-                                  transform="translate(6.397 6.113)"
-                                />
-                              </g>
-                            </svg>
-                          </span>
-                          Archive
+                            toggleOptions(i);
+                          }}>
+                          <img src={dot3gray} alt="" />
                         </button>
+                        <div
+                          className={
+                            option === i
+                              ? "dropdownOptions listOpen"
+                              : "listHide"
+                          }
+                        >
+                          <button
+                            className="btn btnDelete"
+                            onClick={() => {
+                              archiveDependent(dependent);
+                            }}
+                          >
+                            <span>
+                              <svg
+                                className="deleteIcon"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="12.347"
+                                height="13.553"
+                                viewBox="0 0 12.347 13.553"
+                              >
+                                <g transform="translate(0.75 0.75)">
+                                  <path
+                                    className="a"
+                                    d="M3,6H13.847"
+                                    transform="translate(-3 -3.589)"
+                                  />
+                                  <path
+                                    className="a"
+                                    d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
+                                    transform="translate(-3.795 -2)"
+                                  />
+                                  <line
+                                    className="a"
+                                    y2="3"
+                                    transform="translate(4.397 6.113)"
+                                  />
+                                  <line
+                                    className="a"
+                                    y2="3"
+                                    transform="translate(6.397 6.113)"
+                                  />
+                                </g>
+                              </svg>
+                            </span>
+                            Archive
+                          </button>
+                        </div>
+                        {dependent.isArchived && <div className="archivedMessage">
+                          Archived </div>}
+
+
+                        {isAlert.show && (isAlert.id === dependent._id) && <div className="archivedMessage">
+                          Are you sure you want to archive this Dependents? <div className="buttonsArchived"><button className="btn" onClick={() => archiveDependent(dependent, "yes")}>Yes</button><button className="btn" onClick={() => archiveDependent(dependent, "cancel")}>No</button></div></div>}
                       </div>
-                      {dependent.isArchived && <div className="archivedMessage">
-                        Archived </div>}
-
-
-                      {isAlert.show && (isAlert.id === dependent._id) && <div className="archivedMessage">
-                        Are you sure you want to archive this Dependents? <div className="buttonsArchived"><button className="btn" onClick={() => archiveDependent(dependent, "yes")}>Yes</button><button className="btn" onClick={() => archiveDependent(dependent, "cancel")}>No</button></div></div>}
                     </div>
-                  </div>
-                </>
-              ))}
-            </>
-          ) : (
-            <div className="createNew">
-              <p>This contact doesn’t have a dependent yet.</p>
-              <button
-                className="saveNnewBtn"
-                onClick={() => addDependentModalFn()}
-              >
-                <span>Add a Dependent</span>
-                <img className="" src={arrow_forward} alt="" />
-              </button>
+                  </>
+                ))}
+              </>
+            ) : (
+              <div className="createNew">
+                <p>This contact doesn’t have a dependent yet.</p>
+                <button
+                  className="saveNnewBtn"
+                  onClick={() => addDependentModalFn()}
+                >
+                  <span>Add a Dependent</span>
+                  <img className="" src={arrow_forward} alt="" />
+                </button>
+              </div>
+            )}
             </div>
-          )}
+          </div>
         </div>
       </div>
 

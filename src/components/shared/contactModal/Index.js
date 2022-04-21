@@ -35,7 +35,7 @@ import { uploadFile } from "react-s3";
 const ContactModal = (props) => {
     const Navigation = (navigation) => {
         return (
-            <div>
+            <div className="contactModalStepLinks">
                 <button className={navigation.current == 1 ? "active nNav" : "nNav"}
                         onClick={() => navigation.jump(1)}>Overview
                 </button>

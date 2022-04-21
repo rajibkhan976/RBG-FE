@@ -350,7 +350,8 @@ const TransactionChoose = (props) => {
 
   return (
     <>
-      <div className="contactTabsInner">
+      <div className="contactTabsInner contactTabsInnerTransactionChoice">
+        <div className="contactTabsScrollSpace">
         <div className="transHeader pos">
           {/* <div className={(contractOverview || !productTransactionPayment) ? "backToTransction transactionPage" : "backToTransction transactionPage display"
                                 }>  */}
@@ -508,6 +509,7 @@ const TransactionChoose = (props) => {
             backToTransList={backToTransListFn}
           />
         }
+        </div>
       </div>
     </>
   );
