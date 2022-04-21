@@ -453,9 +453,9 @@ const Overview = (props) => {
         }
         if (isError) {
             setIsLoader(false);
-            setFormErrorMsg(formErrorsCopy);
-            const body = document.querySelector('#scrollDiv');
-            body.scrollTo(0,0)
+            setFormErrorMsg(prevState => ({...prevState, formErrorsCopy}));
+            // const body = document.querySelector('#scrollDiv');
+            // body.scrollTo(0,0)
             setTimeout(() => setFormErrorMsg({
                 email: "",
                 phone: "",
