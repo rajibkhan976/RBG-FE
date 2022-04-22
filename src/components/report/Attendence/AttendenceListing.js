@@ -870,7 +870,7 @@ const AttendenceListing = (props) => {
                                   <li>6</li>
                                   <li>7</li>
                                   <li>8</li>
-                                  <li className="holiday">9</li>
+                                  <li className="holidays">9</li>
                                   <li>10</li>
                                   <li>11</li>
                                   <li>12</li>
@@ -914,7 +914,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li className="holiday">HL</li>
+                                  <li className="holidays">HL</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -958,7 +958,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li className="holiday">HL</li>
+                                  <li className="holidays">HL</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -1001,7 +1001,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li className="holiday">HL</li>
+                                  <li className="holidays">HL</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -1044,7 +1044,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li className="holiday">HL</li>
+                                  <li className="holidays">HL</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -1087,7 +1087,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li className="holiday">HL</li>
+                                  <li className="holidays">HL</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -1130,7 +1130,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li className="holiday">HL</li>
+                                  <li className="holidays">HL</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -1173,7 +1173,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li className="holiday">HL</li>
+                                  <li className="holidays">HL</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -1216,7 +1216,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li className="holiday">HL</li>
+                                  <li className="holidays">HL</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
@@ -1259,7 +1259,7 @@ const AttendenceListing = (props) => {
                                   <li>10:00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>
-                                  <li className="holiday">HL</li>
+                                  <li className="holidays">HL</li>
                                   <li>10.00</li>
                                   <li>10:00</li>
                                   <li>10:00</li>

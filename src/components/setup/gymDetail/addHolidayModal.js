@@ -189,7 +189,7 @@ const handleStatusSubmitNew =(e) =>{
   return (
     <>
      
-      <div className="modalBackdrop holiday">  
+      <div className="modalBackdrop modalAddholiday">  
       { loader && <Loader /> }
       {successMsg &&
         <SuccessAlert message={successMsg} extraclassName="addStatsPopMsg"></SuccessAlert>

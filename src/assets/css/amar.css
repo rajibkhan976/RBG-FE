@@ -2387,19 +2387,19 @@ ul.paymentUlInfo li.paymentModeLi {
 .showHolidayDateValue .show span {
   color: #009F40;
 }
-.holiday .half .flatForm {
+.modalAddholiday .half .flatForm {
   display: flex;
   align-items: center;
   max-width: 100%;
 }
-.holiday .half .flatForm span {
+.modalAddholiday .half .flatForm span {
   margin-right: 12px;
   font-weight: 400;
   font-size: 13px;
   line-height: 20px;
   color: #305671;
 }
-.holiday .half .flatForm input {
+.modalAddholiday .half .flatForm input {
   margin-top: 0;
 }
 .modalForm .formControl:not(.half)+.formControl:not(.half) {
@@ -2408,7 +2408,7 @@ ul.paymentUlInfo li.paymentModeLi {
 .showHolidayDateValue {
   margin-top: 20px;
 }
-.holiday .half label {
+.modalAddholiday .half label {
   padding-bottom: 0;
 }
 .gymDetails .profile .profileUpload {
