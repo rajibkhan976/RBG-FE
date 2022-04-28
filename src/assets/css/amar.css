@@ -3071,3 +3071,81 @@ input[type=number] {
 .tabBarArea .contactTabsInnerTransactionChoice {
   padding-bottom: 0px;
 }
+
+/* Transaction instant pay ui */
+.transactionModal .successHeader {
+  margin: 0;
+  width: 100%;
+}
+.transactionModal .paymentUlHeader .paymentModeHeaderLi {
+  padding-left: 33px;
+}
+.transactionModal .paymentUlInfo {
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+.transactionModal .paymentUlInfo .paymentModeLi {
+  padding-left: 33px;
+}
+.transactionModal .totalPaymentUl:after {
+  clear: both;
+  content: '';
+  display: block;
+}
+.transactionModal .totalPaymentUl {
+  margin-top: 25px;
+  padding-left: 84px;
+}
+.transactionModal .dottedBorder {
+  border-color: #d0d6db;
+}
+.transactionModal .paymentUlInfo .paymentAmtLi {
+  padding-right: 18px;
+}
+.transactionModal .paymentAmtHeaderLi {
+  text-align: right;
+  padding-right: 54px;
+  flex: 1 1 33.3%;
+}
+.transactionModal .paymentUlInfo .paymentAmtLi {
+  flex: 1 1 33.3%;
+}
+.transactionModal .successHeader img {
+  width: inherit;
+  height: auto;
+}
+.transactionModal .successHeader .paySuccessHeading {
+  font-weight: 600;
+}
+.itemTitle {
+  display: flex;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.itemTitle p {
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.transactionModal .paymentUlInfo .transactionIdProduct, 
+.transactionModal .paymentUlHeader li:nth-child(2) {
+  text-align: center;
+}
+
+.transactionSuccssModal .slickModalBody {
+  width: 742px;
+}
+.transactionModal .successHeader .paySuccessHeading p {
+  color: #435e88;
+  font-size: 14px;
+  font-weight: normal;
+  margin-top: 10px;
+  letter-spacing: 1px;
+}
+/* Transaction instant pay ui */

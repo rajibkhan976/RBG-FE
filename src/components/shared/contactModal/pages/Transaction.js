@@ -551,8 +551,8 @@ const Transaction = (props) => {
                         <div className="status">
                           Due
                         </div>
-                        <div>
-                          <span>{item.transaction_for == "product" ? "Product" : "Program"}:</span> “{ item.title }”
+                        <div className="itemTitle">
+                          <span>{item.transaction_for == "product" ? "Product" : "Program"}:</span> <p>“{ item.title }”</p>
                         </div>
                         <div className="pid">
                           <span>PID: </span> {item._id}
@@ -638,8 +638,8 @@ const Transaction = (props) => {
                                   </div>
                                   : "")}
                                 </div>
-                                <div>
-                                  <span>Transaction ID:</span> {element._id}
+                                <div className="itemTitle">
+                                  <span>Transaction ID:</span> <p>{element._id}</p>
                               
                                 </div>
                               </div>
@@ -749,14 +749,15 @@ const Transaction = (props) => {
                                 <div className="editedTag">Edited</div>
                                 : ""}
                               </div>
-                              <div>
+                              <div className="itemTitle">
                                 <span>{item.transaction_for == "course" ? "Program" : "Product"}: </span> 
+                                <p>
                                 {item.transaction_for === "product" ? 
                                  item.history && item.history[0].transaction_data[0].product
                                 :
                                 item.title
                                 }
-                                
+                                </p>
                                 <div className={item.transaction_for == "product" ? "productItemList" : "hide"}>
                                   <div className="productNumber">
                                     {item.history && item.history[0].transaction_data.length > 1 ?
@@ -884,8 +885,8 @@ const Transaction = (props) => {
                                         </div>
                                         : "")}
                                       </div>
-                                      <div>
-                                        <span>Transaction ID:</span> {element._id}
+                                      <div className="itemTitle">
+                                        <span>Transaction ID:</span> <p>{element._id}</p>
                                     
                                       </div>
                                     </div>
@@ -965,8 +966,8 @@ const Transaction = (props) => {
                         <div className="status">
                           {item.status}
                         </div>
-                        <div>
-                          <span>Program:</span> “{item.courseName}”
+                        <div className="itemTitle">
+                          <span>Program:</span> <p>“{item.courseName}”</p>
                         </div>
                       </div>
                     </div>

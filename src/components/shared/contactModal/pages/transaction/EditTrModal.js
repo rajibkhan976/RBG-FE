@@ -5,6 +5,11 @@ import arrowForwardImg from "../../../../../../src/assets/images/arrow_forward.s
 import editForModal from "../../../../../../src/assets/images/editForModal.svg";
 import plus_icon from "../../../../../../src/assets/images/plus_icon.svg";
 import cross_small from "../../../../../../src/assets/images/cross_small.svg";
+import paySuccess from "../../../../../assets/images/paySuccess.png"
+import aaroww from "../../../../../assets/images/arrow_forward.svg"
+import cashSuccess from "../../../../../assets/images/cashSuccess.svg";
+import smallTick from "../../../../../assets/images/smallTick.svg";
+import paidCard from "../../../../../assets/images/paidCrad.svg";
 import Loader from "../../../Loader";
 
 import { BillingServices } from "../../../../../services/billing/billingServices";
@@ -85,6 +90,7 @@ const EditTrModal = (props) => {
     const [cardList, setCardList] = useState([]);
     const [bankList, setBankList] = useState([]);
     const [primaryType, setPrimaryType] = useState(null);
+    const [successfulpay, setSuccessfulpay] = useState('')
 
     useEffect(() => {
         setEditTransFormData({
@@ -672,11 +678,20 @@ const EditTrModal = (props) => {
                     applyForAll: editTransFormData.applyForAll
                 }
                 let updateResp = await TransactionServices.updateTransaction(props.contactId, payload);
-                console.log("updateResp", updateResp)
-                props.setSuccessMsg(updateResp);
-                closeAlert(true);
+
+                console.log(updateResp === new Date().toISOString().split('T')[0]);
+
+                if(updateResp && dueDate === new Date().toISOString().split('T')[0]) {
+                    console.log("updateResp", updateResp)
+                    setSuccessfulpay(updateResp);
+                } 
+                else {
+                    props.setSuccessMsg(updateResp);
+                    closeAlert(true);
+                }
             } catch (e) {
                setAlertMsg({ ...alertMsg, type: "error", "message": e.message, time: 5000 })
+               setSuccessfulpay('');
             } finally {
                 setIsLoader(false);
             }
@@ -685,272 +700,347 @@ const EditTrModal = (props) => {
     }
 
     return (
-        <div className="modalBackdrop transactionModal">
+        <div className={successfulpay.trim() === "" ? "modalBackdrop transactionModal" : "modalBackdrop transactionModal transactionSuccssModal"}>
             <div className="slickModalBody">
-                <div className="slickModalHeader">
-                    <button className="topCross" onClick={() => props.closeModal (false)}><img src={crossImg} alt="" /></button>  
-                    <div className="circleForIcon"><img src={editForModal} alt="" className="small"/></div>
-                    <h3>Edit Transactions</h3>
-                    <p>Lorem Ipsum is simply dummy text of the printing</p>
-                </div>
-                <div className="cmnForm fullWidth">
-                    <form>
-                    {isLoader ? <Loader /> : ""}
-                        <div className="cmnFormRow fullWidth flatForm">
-                            <label className="cmnFieldName">Change Date</label>
-                            <div className="dateHolderDiv">
-                                <label className="labelWithInfo paymentTime">
-                                    <span className="labelHeading">I want to Pay Later</span>
-                                    <label className={paylater ? "toggleBtn active" : "toggleBtn"}>
-                                        <input type="checkbox" name="check-communication" 
-                                           onChange={(e) =>
-                                            e.target.checked
-                                              ? setPaylater(true)
-                                              : setPaylater(false)
-                                          }
-                                        />
-                                        <span className="toggler"></span>
-                                    </label>
-                                </label>
-                                <div className={paylater ? "paymentNow" : "paymentNow display"}><p>Payment date <span>Now</span></p></div>
-                                <div className={paylater ? "paymentNow display" : "paymentNow"} ><input type="date" className="cmnFieldStyle" value={editTransFormData.dueDate} onChange={changeTransDateHandler}/></div>
-                            </div>                            
-                            { (formErrorMsg.dueDate && paylater) &&
-                             <div className="errorMsg">{formErrorMsg.dueDate}</div>
-                            }
+                {successfulpay.trim() === "" && 
+                    <>
+                        <div className="slickModalHeader">
+                            <button className="topCross" onClick={() => props.closeModal (false)}><img src={crossImg} alt="" /></button>  
+                            <div className="circleForIcon"><img src={editForModal} alt="" className="small"/></div>
+                            <h3>Edit Transactions</h3>
+                            <p>Lorem Ipsum is simply dummy text of the printing</p>
                         </div>
-                        <div className="cmnFormRow fullWidth flatForm">
-                            <label className="cmnFieldName">Change Payment Mode</label>
-                            <select className="cmnFieldStyle selectBox" onChange={selectCashOrOnlineHandler} value={editTransFormData.paymentMode}>
-                                <option value="online">Online</option>
-                                <option value="cash">Cash</option>
-                            </select>
-                            { formErrorMsg.paymentMode &&
-                            <div className="errorMsg">{formErrorMsg.paymentMode}</div>
-                            }
-                            {openOnlineBox && 
-                              <div className="onlinePymentboxTrans">
-                                 <div className="head">
-                                     <h3>
-                                         { (editCardDetailsPart || editBankDetailsPart) ? "Add a New Payment Source" : "Payment Source"}                                   
-                                     </h3>
-                                     {editCardPart && <button className="addBtn_style2" onClick={editCardDetailsHandler}>+ Add</button>}
-                                     {editBankPart && <button className="addBtn_style2" onClick={editBankDetailsHandler}>+ Add</button>}
-                                     {editCardDetailsPart && <button className="noFill" onClick={editCardHandler}><img src={cross_small} alt=""/></button>}  
-                                     {editBankDetailsPart && <button className="noFill" onClick={editBankHandler}><img src={cross_small} alt=""/></button>}  
-                                 </div>
-                                 <div className="paymentSourcetabs">
-                                     <div className="tabBtns">
-                                         <button className={(editCardPart || editCardDetailsPart) ? "active" : ""} onClick={editCardHandler}>Card</button>
-                                         <button className={(editBankPart || editBankDetailsPart) ? "active" : ""} onClick={editBankHandler}>Bank</button>       
-                                     </div>
-                                     
-                                         <div className="tabcontent">
-                                            {editCardPart &&
-                                                 <ul>
+                        <div className="cmnForm fullWidth">
+                            <form>
+                            {isLoader ? <Loader /> : ""}
+                                <div className="cmnFormRow fullWidth flatForm">
+                                    <label className="cmnFieldName">Change Date</label>
+                                    <div className="dateHolderDiv">
+                                        <label className="labelWithInfo paymentTime">
+                                            <span className="labelHeading">I want to Pay Later</span>
+                                            <label className={paylater ? "toggleBtn active" : "toggleBtn"}>
+                                                <input type="checkbox" name="check-communication" 
+                                                onChange={(e) =>
+                                                    e.target.checked
+                                                    ? setPaylater(true)
+                                                    : setPaylater(false)
+                                                }
+                                                />
+                                                <span className="toggler"></span>
+                                            </label>
+                                        </label>
+                                        <div className={paylater ? "paymentNow" : "paymentNow display"}><p>Payment date <span>Now</span></p></div>
+                                        <div className={paylater ? "paymentNow display" : "paymentNow"} ><input type="date" className="cmnFieldStyle" value={editTransFormData.dueDate} onChange={changeTransDateHandler}/></div>
+                                    </div>                            
+                                    { (formErrorMsg.dueDate && paylater) &&
+                                    <div className="errorMsg">{formErrorMsg.dueDate}</div>
+                                    }
+                                </div>
+                                <div className="cmnFormRow fullWidth flatForm">
+                                    <label className="cmnFieldName">Change Payment Mode</label>
+                                    <select className="cmnFieldStyle selectBox" onChange={selectCashOrOnlineHandler} value={editTransFormData.paymentMode}>
+                                        <option value="online">Online</option>
+                                        <option value="cash">Cash</option>
+                                    </select>
+                                    { formErrorMsg.paymentMode &&
+                                    <div className="errorMsg">{formErrorMsg.paymentMode}</div>
+                                    }
+                                    {openOnlineBox && 
+                                    <div className="onlinePymentboxTrans">
+                                        <div className="head">
+                                            <h3>
+                                                { (editCardDetailsPart || editBankDetailsPart) ? "Add a New Payment Source" : "Payment Source"}                                   
+                                            </h3>
+                                            {editCardPart && <button className="addBtn_style2" onClick={editCardDetailsHandler}>+ Add</button>}
+                                            {editBankPart && <button className="addBtn_style2" onClick={editBankDetailsHandler}>+ Add</button>}
+                                            {editCardDetailsPart && <button className="noFill" onClick={editCardHandler}><img src={cross_small} alt=""/></button>}  
+                                            {editBankDetailsPart && <button className="noFill" onClick={editBankHandler}><img src={cross_small} alt=""/></button>}  
+                                        </div>
+                                        <div className="paymentSourcetabs">
+                                            <div className="tabBtns">
+                                                <button className={(editCardPart || editCardDetailsPart) ? "active" : ""} onClick={editCardHandler}>Card</button>
+                                                <button className={(editBankPart || editBankDetailsPart) ? "active" : ""} onClick={editBankHandler}>Bank</button>       
+                                            </div>
+                                            
+                                                <div className="tabcontent">
+                                                    {editCardPart &&
+                                                        <ul>
+                                                            
+                                                            {cardList &&
+                                                                    cardList.map((elem, i) => (
+                                                                    
+                                                                        <li className={elem.status === "active" ? "active" : ""} key={i}>
+                                                                            <div className="radio"> 
+                                                                                <div className="circleRadio">     
+                                                                                    <input type="radio" name="radio11" onChange={() => activeCreditCard(elem)} defaultChecked={elem.status === "active" ? "checked" : ""}/>
+                                                                                    <span></span>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div className="img">
+                                                                                <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                    <path d="M18 0H2C0.89 0 0.00999999 0.89 0.00999999 2L0 14C0 15.11 0.89 16 2 16H18C19.11 16 20 15.11 20 14V2C20 0.89 19.11 0 18 0ZM17 14H3C2.45 14 2 13.55 2 13V8H18V13C18 13.55 17.55 14 17 14ZM18 4H2V2H18V4Z" />
+                                                                                </svg>
+                                                                            </div>
+                                                                            <div className="text">
+                                                                                <h3>Creadit Card ending with {elem.last4}</h3>
+                                                                                <p>Expires  {elem.expiration_month} / {elem.expiration_year}</p>
+                                                                            </div>
+                                                                        </li>
+                                                                    )
+                                                                )  
+                                                            }
+                                                        </ul>
+                                                    }
+                                                    {/* edit form for card */}
+                                                    {editCardDetailsPart && 
+                                                        <div className="editform">
+            
+                                                            <div className="editformRow">
+                                                                <label className="editFormLabel">Card Number</label>
+                                                                <input type="text" className="editFormStyle" 
+                                                                placeholder="xxxx-xxxx-xxxx-xxxx"
+                                                                value={addCardFormData.cardNumber}
+                                                                onChange={addCardNumberHandler} 
+                                                                />
+                                                                
+                                                                { addCardformErrorMsg.cardNumber &&
+                                                                        <div className="errorMsg">{addCardformErrorMsg.cardNumber}</div>
+                                                                    }
+                                                            </div>
+                                                            <div className="editformRow">
+                                                                <label className="editFormLabel">Card Holder Name</label>
+                                                                <input type="text" className="editFormStyle" 
+                                                                placeholder="Ex. Adam Smith"
+                                                                value={addCardFormData.cardHolderName}
+                                                                onChange={addCardNameHandler}
+                                                                />
+                                                                { addCardformErrorMsg.cardHolderName &&
+                                                                        <div className="errorMsg">{addCardformErrorMsg.cardHolderName}</div>
+                                                                    }
+                                                            </div>
+                                                            <div className="editformRow">
+                                                                <div className="half">
+                                                                    <label className="editFormLabel">Expiry Date</label>
+                                                                    <input type="text" className="editFormStyle" 
+                                                                    placeholder="mm/yy"
+                                                                    value={addCardFormData.exDate}        
+                                                                    onChange={cardExpiryHandler}
+                                                                    />
+                                                                    { addCardformErrorMsg.exDate &&
+                                                                        <div className="errorMsg">{addCardformErrorMsg.exDate}</div>
+                                                                    }
+                                                                </div>
+                                                                <div className="half">
+                                                                    <label className="editFormLabel">CVV</label>
+                                                                    <input type="text" className="editFormStyle"
+                                                                    onChange={cardcvvHandler}
+                                                                    value={addCardFormData.cvv}        
+                                                                    />
+                                                                    { addCardformErrorMsg.cvv &&
+                                                                        <div className="errorMsg">{addCardformErrorMsg.cvv}</div>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                            <div className="d-flex justify-content-center mt20">
+                                                                <button className="creatUserBtn" onClick={submitCardChangeForm}>
+                                                                    <img className="plusIcon" src={plus_icon} alt=""/><span>Add my Card</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    }
+
+                                                {/* //end condition for card */}
+                                                {editBankPart &&  
+                                                    <ul>
                                                     
-                                                     {cardList &&
-                                                            cardList.map((elem, i) => (
-                                                             
+                                                    {bankList &&
+                                                            bankList.map((elem, i) => (                                                    
                                                                 <li className={elem.status === "active" ? "active" : ""} key={i}>
-                                                                    <div className="radio"> 
-                                                                        <div className="circleRadio">     
-                                                                            <input type="radio" name="radio11" onChange={() => activeCreditCard(elem)} defaultChecked={elem.status === "active" ? "checked" : ""}/>
+                                                                    <div className="radio">
+                                                                        <div className="circleRadio">
+                                                                            <input type="radio" onChange={() => activeCreditCard(elem)} defaultChecked={elem.status === "active" ? "checked" : ""} />
                                                                             <span></span>
-                                                                        </div>
+                                                                        </div>  
                                                                     </div>
                                                                     <div className="img">
-                                                                        <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                            <path d="M18 0H2C0.89 0 0.00999999 0.89 0.00999999 2L0 14C0 15.11 0.89 16 2 16H18C19.11 16 20 15.11 20 14V2C20 0.89 19.11 0 18 0ZM17 14H3C2.45 14 2 13.55 2 13V8H18V13C18 13.55 17.55 14 17 14ZM18 4H2V2H18V4Z" />
+                                                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                            <path d="M7 10H4V17H7V10Z" />
+                                                                            <path d="M13.5 10H10.5V17H13.5V10Z"/>
+                                                                            <path d="M22 19H2V22H22V19Z"/>
+                                                                            <path d="M20 10H17V17H20V10Z"/>
+                                                                            <path d="M12 1L2 6V8H22V6L12 1Z"/>
                                                                         </svg>
                                                                     </div>
                                                                     <div className="text">
-                                                                        <h3>Creadit Card ending with {elem.last4}</h3>
-                                                                        <p>Expires  {elem.expiration_month} / {elem.expiration_year}</p>
+                                                                        <h3>Account number ending with {elem.last4}</h3>
+                                                                        <p>#Routing </p>
                                                                     </div>
                                                                 </li>
                                                             )
-                                                        )  
-                                                     }
-                                                 </ul>
-                                             }
-                                             {/* edit form for card */}
-                                             {editCardDetailsPart && 
-                                                 <div className="editform">
-    
-                                                     <div className="editformRow">
-                                                         <label className="editFormLabel">Card Number</label>
-                                                         <input type="text" className="editFormStyle" 
-                                                           placeholder="xxxx-xxxx-xxxx-xxxx"
-                                                           value={addCardFormData.cardNumber}
-                                                           onChange={addCardNumberHandler} 
-                                                           />
-                                                          
-                                                           { addCardformErrorMsg.cardNumber &&
-                                                                <div className="errorMsg">{addCardformErrorMsg.cardNumber}</div>
-                                                            }
-                                                     </div>
-                                                     <div className="editformRow">
-                                                         <label className="editFormLabel">Card Holder Name</label>
-                                                         <input type="text" className="editFormStyle" 
-                                                           placeholder="Ex. Adam Smith"
-                                                           value={addCardFormData.cardHolderName}
-                                                           onChange={addCardNameHandler}
-                                                         />
-                                                         { addCardformErrorMsg.cardHolderName &&
-                                                                <div className="errorMsg">{addCardformErrorMsg.cardHolderName}</div>
-                                                            }
-                                                     </div>
-                                                     <div className="editformRow">
-                                                         <div className="half">
-                                                             <label className="editFormLabel">Expiry Date</label>
-                                                             <input type="text" className="editFormStyle" 
-                                                               placeholder="mm/yy"
-                                                               value={addCardFormData.exDate}        
-                                                               onChange={cardExpiryHandler}
-                                                             />
-                                                             { addCardformErrorMsg.exDate &&
-                                                                <div className="errorMsg">{addCardformErrorMsg.exDate}</div>
-                                                             }
-                                                         </div>
-                                                         <div className="half">
-                                                             <label className="editFormLabel">CVV</label>
-                                                             <input type="text" className="editFormStyle"
-                                                               onChange={cardcvvHandler}
-                                                               value={addCardFormData.cvv}        
-                                                             />
-                                                             { addCardformErrorMsg.cvv &&
-                                                                <div className="errorMsg">{addCardformErrorMsg.cvv}</div>
-                                                             }
-                                                         </div>
-                                                     </div>
-                                                     <div className="d-flex justify-content-center mt20">
-                                                         <button className="creatUserBtn" onClick={submitCardChangeForm}>
-                                                             <img className="plusIcon" src={plus_icon} alt=""/><span>Add my Card</span>
-                                                         </button>
-                                                     </div>
-                                                 </div>
-                                             }
-
-                                         {/* //end condition for card */}
-                                        {editBankPart &&  
-                                            <ul>
-                                             
-                                              {bankList &&
-                                                    bankList.map((elem, i) => (                                                    
-                                                        <li className={elem.status === "active" ? "active" : ""} key={i}>
-                                                            <div className="radio">
-                                                                <div className="circleRadio">
-                                                                    <input type="radio" onChange={() => activeCreditCard(elem)} defaultChecked={elem.status === "active" ? "checked" : ""} />
-                                                                    <span></span>
-                                                                </div>  
+                                                        )
+                                                    }
+                                                    </ul>
+                                                    }
+                                                    
+                                                    {editBankDetailsPart && 
+                                                        <div className="editform">
+                                                            <div className="editformRow">
+                                                                <label className="editFormLabel">Account Number</label>
+                                                                <input type="text" className="editFormStyle"
+                                                                onChange={addBankNumberHandler}
+                                                                value={addBankFormData.accNumber} 
+                                                                />
+                                                                { addBankformErrorMsg.accNumber &&  
+                                                                        <div className="errorMsg">{addBankformErrorMsg.accNumber}</div>
+                                                                    }
                                                             </div>
-                                                            <div className="img">
-                                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                    <path d="M7 10H4V17H7V10Z" />
-                                                                    <path d="M13.5 10H10.5V17H13.5V10Z"/>
-                                                                    <path d="M22 19H2V22H22V19Z"/>
-                                                                    <path d="M20 10H17V17H20V10Z"/>
-                                                                    <path d="M12 1L2 6V8H22V6L12 1Z"/>
-                                                                </svg>
+                                                            <div className="editformRow">
+                                                                <label className="editFormLabel">Account Holder Name</label>
+                                                                <input type="text" className="editFormStyle"
+                                                                onChange={addBankNameHandler}
+                                                                value={addBankFormData.accHolderName} 
+                                                                />
+                                                                { addBankformErrorMsg.accHolderName &&  
+                                                                        <div className="errorMsg">{addBankformErrorMsg.accHolderName}</div>
+                                                                    }
                                                             </div>
-                                                            <div className="text">
-                                                                <h3>Account number ending with {elem.last4}</h3>
-                                                                <p>#Routing </p>
+                                                            <div className="editformRow">
+                                                                <div className="half">
+                                                                    <label className="editFormLabel">Routing #</label>   
+                                                                    <input type="text" className="editFormStyle" 
+                                                                        onChange={bankRoutingHandler}                                                              
+                                                                        value={addBankFormData.routing}                                                              
+                                                                    />
+                                                                    { addBankformErrorMsg.routing &&  
+                                                                        <div className="errorMsg">{addBankformErrorMsg.routing}</div>
+                                                                    }
+                                                                </div>
+                                                                <div className="half">
+                                                                    <label className="editFormLabel">Account Type</label>
+                                                                    <select className="editFormStyle" 
+                                                                        onChange={bankTypeHandler}  
+                                                                        value={addBankFormData.checking}                                                              
+                                                                    >
+                                                                        <option value="">Select</option>
+                                                                        <option value="Checking">Checking</option>
+                                                                    </select>
+                                                                    { addBankformErrorMsg.checking &&  
+                                                                        <div className="errorMsg">{addBankformErrorMsg.checking}</div>
+                                                                    }
+                                                                </div>
                                                             </div>
-                                                        </li>
-                                                    )
-                                                )
-                                              }
-                                            </ul>
-                                            }
+                                                            <div className="d-flex justify-content-center mt20">
+                                                                <button className="creatUserBtn" onClick={submitBankChangeForm}><img className="plusIcon" src={plus_icon} alt=""/><span>Add my Card</span></button>
+                                                            </div>
+                                                            
+                                                        </div>
+                                                    }
+                                            </div>               
                                             
-                                             {editBankDetailsPart && 
-                                                 <div className="editform">
-                                                     <div className="editformRow">
-                                                         <label className="editFormLabel">Account Number</label>
-                                                         <input type="text" className="editFormStyle"
-                                                           onChange={addBankNumberHandler}
-                                                           value={addBankFormData.accNumber} 
-                                                         />
-                                                          { addBankformErrorMsg.accNumber &&  
-                                                                <div className="errorMsg">{addBankformErrorMsg.accNumber}</div>
-                                                             }
-                                                     </div>
-                                                     <div className="editformRow">
-                                                         <label className="editFormLabel">Account Holder Name</label>
-                                                         <input type="text" className="editFormStyle"
-                                                           onChange={addBankNameHandler}
-                                                           value={addBankFormData.accHolderName} 
-                                                         />
-                                                         { addBankformErrorMsg.accHolderName &&  
-                                                                <div className="errorMsg">{addBankformErrorMsg.accHolderName}</div>
-                                                             }
-                                                     </div>
-                                                     <div className="editformRow">
-                                                         <div className="half">
-                                                             <label className="editFormLabel">Routing #</label>   
-                                                             <input type="text" className="editFormStyle" 
-                                                                onChange={bankRoutingHandler}                                                              
-                                                                value={addBankFormData.routing}                                                              
-                                                             />
-                                                              { addBankformErrorMsg.routing &&  
-                                                                <div className="errorMsg">{addBankformErrorMsg.routing}</div>
-                                                             }
-                                                         </div>
-                                                         <div className="half">
-                                                             <label className="editFormLabel">Account Type</label>
-                                                             <select className="editFormStyle" 
-                                                                onChange={bankTypeHandler}  
-                                                                value={addBankFormData.checking}                                                              
-                                                             >
-                                                                 <option value="">Select</option>
-                                                                 <option value="Checking">Checking</option>
-                                                             </select>
-                                                             { addBankformErrorMsg.checking &&  
-                                                                <div className="errorMsg">{addBankformErrorMsg.checking}</div>
-                                                             }
-                                                         </div>
-                                                     </div>
-                                                     <div className="d-flex justify-content-center mt20">
-                                                         <button className="creatUserBtn" onClick={submitBankChangeForm}><img className="plusIcon" src={plus_icon} alt=""/><span>Add my Card</span></button>
-                                                     </div>
-                                                     
-                                                 </div>
-                                             }
-                                      </div>               
-                                     
-                                  </div> {/* end of tab body */}
-                             </div>  
-                            } 
-                            {/* //total box is ended here  */}
-                            { formErrorMsg.form &&
-                            <div className="errorMsg">{formErrorMsg.form}</div>
-                            }
-                        </div> 
-                       <div className="cmnFormRow fullWidth flatForm">
-                            <label className="cmnFieldName">Change Amount</label>
-                            <div className="cmnFormField preField"><div className="unitAmount">$</div>
-                                 <input type="number" className="cmnFieldStyle" placeholder="300" value={editTransFormData.amount} onChange={changeTransAmountHandler}/>                      
-                            </div>
-                            { formErrorMsg.amount &&
-                            <div className="errorMsg">{formErrorMsg.amount}</div>
-                            }
-                        </div>
-                        <div className="notifyBox">
-                            <label className="d-flex f-align-center">
-                                <div className="customCheckbox">
-                                    <input type="checkbox" name=""  onChange={checkUpdateForAllHandler} />
-                                    <span></span>
+                                        </div> {/* end of tab body */}
+                                    </div>  
+                                    } 
+                                    {/* //total box is ended here  */}
+                                    { formErrorMsg.form &&
+                                    <div className="errorMsg">{formErrorMsg.form}</div>
+                                    }
+                                </div> 
+                            <div className="cmnFormRow fullWidth flatForm">
+                                    <label className="cmnFieldName">Change Amount</label>
+                                    <div className="cmnFormField preField"><div className="unitAmount">$</div>
+                                        <input type="number" className="cmnFieldStyle" placeholder="300" value={editTransFormData.amount} onChange={changeTransAmountHandler}/>                      
+                                    </div>
+                                    { formErrorMsg.amount &&
+                                    <div className="errorMsg">{formErrorMsg.amount}</div>
+                                    }
                                 </div>
-                                <div>I want to update this change for all the upcoming transactions of this subscription</div>
-                            </label>
+                                <div className="notifyBox">
+                                    <label className="d-flex f-align-center">
+                                        <div className="customCheckbox">
+                                            <input type="checkbox" name=""  onChange={checkUpdateForAllHandler} />
+                                            <span></span>
+                                        </div>
+                                        <div>I want to update this change for all the upcoming transactions of this subscription</div>
+                                    </label>
+                                </div>
+                                <div className="btnPlaceMiddle">
+                                    <button className="saveNnewBtn" onClick={editMainFormSubmit}>Submit</button>
+                                </div>    
+                            </form>
                         </div>
-                        <div className="btnPlaceMiddle">
-                            <button className="saveNnewBtn" onClick={editMainFormSubmit}>Submit</button>
-                        </div>    
-                    </form>
-                </div>
+                    </>
+                }
+                {successfulpay.trim() !== "" && 
+                    <>
+                        <div className="slickModalHeader">
+                            <button className="topCross" onClick={() => props.closeModal (false)}><img src={crossImg} alt="" /></button>  
+                        </div>
+                        <div className="successHeader">
+                        <div className="circleForIcon">
+                            <img src={paySuccess} alt="" />
+                        </div>
+                        <h3 className="paySuccessHeading">
+                            Transaction Successful
+                            <p>{successfulpay}</p>
+                        </h3>
+                        </div>
+                        <>
+                        <div className="dottedBorder"></div>
+
+                        <ul className="paymentUlHeader">
+                            <li className="paymentModeHeaderLi">Payment Mode</li>
+                            <li className="paymentIdHeaderLi">Transaction ID</li>
+                            <li className="paymentAmtHeaderLi">Amount</li>
+                        </ul>
+                        </>
+
+                        {editTransFormData.paymentMode !== "online" && 
+                            <ul className="paymentUlInfo">
+                                <li className="paymentModeLi">
+                                <img src={cashSuccess} alt="" />
+                                <p>Cash</p>
+                                </li>
+                                <li className="transactionIdProduct">
+                                    <span>12345678913</span>
+                                </li>
+                                <li className="paymentAmtLi">
+                                <p>$ {editTransFormData.amount}</p>
+                                <img src={smallTick} alt="" />
+                                </li>
+                            </ul>
+                        }
+                        {editTransFormData.paymentMode === "online" && 
+                            <ul className="paymentUlInfo">
+                                <li className="paymentModeLi">
+                                <img src={paidCard} alt="" />
+                                <p>Online</p>
+                                </li>
+                                <li className="transactionIdProduct">
+                                <span>123456789</span>
+                                </li>
+                                <li className="paymentAmtLi">
+                                <p>{editTransFormData.amount}</p>
+                                <img src={smallTick} alt="" />
+                                </li>
+                            </ul>
+                        }
+
+                        <div className="dottedBorder"></div>
+                        <div className="successPageBtn w-100 d-flex f-justify-center">
+                        <button
+                            className="saveNnewBtn"
+                            onClick={()=>
+                                {
+                                    setSuccessfulpay('')
+                                    props.closeModal (false)
+                                }
+                            }
+                        >
+                            Close <img src={aaroww} alt="" />
+                        </button>
+                        </div>
+                    </>
+                    }
             </div>
             {alertMsg.message && <AlertMessage
                 type={alertMsg.type}
