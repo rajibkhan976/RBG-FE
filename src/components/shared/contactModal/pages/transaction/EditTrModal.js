@@ -90,7 +90,7 @@ const EditTrModal = (props) => {
     const [cardList, setCardList] = useState([]);
     const [bankList, setBankList] = useState([]);
     const [primaryType, setPrimaryType] = useState(null);
-    const [successfulpay, setSuccessfulpay] = useState('')
+    const [successfulpay, setSuccessfulpay] = useState({})
 
     useEffect(() => {
         setEditTransFormData({
@@ -679,19 +679,25 @@ const EditTrModal = (props) => {
                 }
                 let updateResp = await TransactionServices.updateTransaction(props.contactId, payload);
 
-                console.log(updateResp === new Date().toISOString().split('T')[0]);
+                // console.log(updateResp === new Date().toISOString().split('T')[0]);
 
                 if(updateResp && dueDate === new Date().toISOString().split('T')[0]) {
-                    console.log("updateResp", updateResp)
-                    setSuccessfulpay(updateResp);
+                    const newSuccess = {
+                        status: updateResp.transaction.status,
+                        mode: updateResp.transaction.payment_via,
+                        amount: updateResp.transaction.amount,
+                        transactionId: updateResp.transaction.transactionId,
+                        message: updateResp.message
+                    }
+                    setSuccessfulpay(newSuccess);
                 } 
                 else {
                     props.setSuccessMsg(updateResp);
-                    closeAlert(true);
+                    // closeAlert(true);
                 }
             } catch (e) {
                setAlertMsg({ ...alertMsg, type: "error", "message": e.message, time: 5000 })
-               setSuccessfulpay('');
+               setSuccessfulpay({});
             } finally {
                 setIsLoader(false);
             }
@@ -700,9 +706,9 @@ const EditTrModal = (props) => {
     }
 
     return (
-        <div className={successfulpay.trim() === "" ? "modalBackdrop transactionModal" : "modalBackdrop transactionModal transactionSuccssModal"}>
+        <div className={(successfulpay.status === undefined || successfulpay.status !== "success") ? "modalBackdrop transactionModal" : "modalBackdrop transactionModal transactionSuccssModal"}>
             <div className="slickModalBody">
-                {successfulpay.trim() === "" && 
+                {successfulpay.status === undefined && 
                     <>
                         <div className="slickModalHeader">
                             <button className="topCross" onClick={() => props.closeModal (false)}><img src={crossImg} alt="" /></button>  
@@ -970,7 +976,7 @@ const EditTrModal = (props) => {
                         </div>
                     </>
                 }
-                {successfulpay.trim() !== "" && 
+                {(successfulpay.status !== undefined && successfulpay.status === "success") &&
                     <>
                         <div className="slickModalHeader">
                             <button className="topCross" onClick={() => props.closeModal (false)}><img src={crossImg} alt="" /></button>  
@@ -981,7 +987,7 @@ const EditTrModal = (props) => {
                         </div>
                         <h3 className="paySuccessHeading">
                             Transaction Successful
-                            <p>{successfulpay}</p>
+                            <p>{successfulpay.message}</p>
                         </h3>
                         </div>
                         <>
@@ -994,36 +1000,19 @@ const EditTrModal = (props) => {
                         </ul>
                         </>
 
-                        {editTransFormData.paymentMode !== "online" && 
-                            <ul className="paymentUlInfo">
-                                <li className="paymentModeLi">
-                                <img src={cashSuccess} alt="" />
-                                <p>Cash</p>
-                                </li>
-                                <li className="transactionIdProduct">
-                                    <span>12345678913</span>
-                                </li>
-                                <li className="paymentAmtLi">
-                                <p>$ {editTransFormData.amount}</p>
-                                <img src={smallTick} alt="" />
-                                </li>
-                            </ul>
-                        }
-                        {editTransFormData.paymentMode === "online" && 
-                            <ul className="paymentUlInfo">
-                                <li className="paymentModeLi">
-                                <img src={paidCard} alt="" />
-                                <p>Online</p>
-                                </li>
-                                <li className="transactionIdProduct">
-                                <span>123456789</span>
-                                </li>
-                                <li className="paymentAmtLi">
-                                <p>{editTransFormData.amount}</p>
-                                <img src={smallTick} alt="" />
-                                </li>
-                            </ul>
-                        }
+                        <ul className="paymentUlInfo">
+                            <li className="paymentModeLi">
+                            <img src={successfulpay.mode === "cash" ? cashSuccess : paidCard} alt="" />
+                            <p>{successfulpay.mode}</p>
+                            </li>
+                            <li className="transactionIdProduct">
+                                <span>{successfulpay.transactionId}</span>
+                            </li>
+                            <li className="paymentAmtLi">
+                            <p>$ {successfulpay.amount}</p>
+                            <img src={smallTick} alt="" />
+                            </li>
+                        </ul>
 
                         <div className="dottedBorder"></div>
                         <div className="successPageBtn w-100 d-flex f-justify-center">
@@ -1031,7 +1020,7 @@ const EditTrModal = (props) => {
                             className="saveNnewBtn"
                             onClick={()=>
                                 {
-                                    setSuccessfulpay('')
+                                    setSuccessfulpay({})
                                     props.closeModal (false)
                                 }
                             }
@@ -1040,7 +1029,7 @@ const EditTrModal = (props) => {
                         </button>
                         </div>
                     </>
-                    }
+                }
             </div>
             {alertMsg.message && <AlertMessage
                 type={alertMsg.type}

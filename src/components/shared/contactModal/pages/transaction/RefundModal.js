@@ -26,7 +26,7 @@ const RefundModal = (props) => {
         otherReason: "",
         confirmRefund: ""
     });
-    const [successfulRefund, setSuccessfulRefund] = useState('')
+    const [successfulRefund, setSuccessfulRefund] = useState(null)
 
 
     const loader = (param) => {
@@ -156,7 +156,7 @@ const RefundModal = (props) => {
         } catch (e) {
             console.log("error:::", e);
             alertMsg(e.message, "error");
-            setSuccessfulRefund('')
+            setSuccessfulRefund(null)
             closeModal();
         } finally {
             loader(false);
@@ -294,7 +294,7 @@ const RefundModal = (props) => {
                         <button
                             className="saveNnewBtn"
                             onClick={() => {
-                                    setSuccessfulRefund('')
+                                    setSuccessfulRefund(null)
                                     closeModal()
                                 }
                             }
