@@ -10,6 +10,8 @@ import aaroww from "../../../../../assets/images/arrow_forward.svg"
 import cashSuccess from "../../../../../assets/images/cashSuccess.svg";
 import smallTick from "../../../../../assets/images/smallTick.svg";
 import paidCard from "../../../../../assets/images/paidCrad.svg";
+import paymentFail from "../../../../../assets/images/paymentFailed.svg";
+import cardFail from "../../../../../assets/images/cardFailed.svg";
 import Loader from "../../../Loader";
 
 import { BillingServices } from "../../../../../services/billing/billingServices";
@@ -696,8 +698,11 @@ const EditTrModal = (props) => {
                     // closeAlert(true);
                 }
             } catch (e) {
-               setAlertMsg({ ...alertMsg, type: "error", "message": e.message, time: 5000 })
-               setSuccessfulpay({});
+                const failedTrans = {
+                    message: e.message
+                };
+            //    setAlertMsg({ ...alertMsg, type: "error", "message": e.message, time: 5000 })
+               setSuccessfulpay(failedTrans);
             } finally {
                 setIsLoader(false);
             }
@@ -708,7 +713,7 @@ const EditTrModal = (props) => {
     return (
         <div className={(successfulpay.status === undefined || successfulpay.status !== "success") ? "modalBackdrop transactionModal" : "modalBackdrop transactionModal transactionSuccssModal"}>
             <div className="slickModalBody">
-                {successfulpay.status === undefined && 
+                {(successfulpay.status === undefined && successfulpay.message === undefined) &&
                     <>
                         <div className="slickModalHeader">
                             <button className="topCross" onClick={() => props.closeModal (false)}><img src={crossImg} alt="" /></button>  
@@ -1029,6 +1034,33 @@ const EditTrModal = (props) => {
                         </button>
                         </div>
                     </>
+                }
+
+                {(successfulpay.status === undefined && successfulpay.message !== undefined) && 
+                    <div className="modalBackdrop modalProductStatus">
+                        <div className="slickModalBody paymentFailed">
+                            <div className="slickModalHeader">
+                            <div className="circleForIcon">
+                                <img src={paymentFail} alt="" />
+                            </div>
+                            <h3 className="courseModalHeading">Payment Failed !</h3>
+                            </div>
+
+                            <div className="payModalDetails">
+                            <img src={cardFail} alt="" />
+                            <p>{successfulpay.message}</p>
+                            </div>
+
+                            <div className="buyBtns failedPayment">
+                            <button
+                                onClick={() => setSuccessfulpay({})}
+                                className="saveNnewBtn"
+                            >
+                                Close
+                            </button>
+                            </div>
+                        </div>
+                    </div>
                 }
             </div>
             {alertMsg.message && <AlertMessage
