@@ -45,6 +45,7 @@
     "deploy:one": "npm i && npm run build && aws s3 sync build s3://rbg-fb-1",
     "deploy:two": "npm i && npm run build && aws s3 sync build s3://rbg-fb-2",
     "deploy:three": "npm i && npm run build && aws s3 sync build s3://rbg-fb-3",
+    "deploy:four": "npm i && npm run build && aws s3 sync build s3://rbg-fb-4",
     "serve": "npm i && npm run build && serve -s build",
     "serve:prod": "npm i && npm run build:prod && serve -s build"
   },
