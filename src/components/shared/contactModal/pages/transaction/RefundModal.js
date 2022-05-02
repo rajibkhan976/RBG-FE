@@ -11,10 +11,11 @@ import paidCard from "../../../../../assets/images/paidCrad.svg";
 import paymentFail from "../../../../../assets/images/paymentFailed.svg";
 import cardFail from "../../../../../assets/images/cardFailed.svg";
 import { TransactionServices } from "../../../../../services/transaction/transactionServices";
+import Loader from "../../../Loader";
 
 
 const RefundModal = (props) => {
-
+    const [refundLoader, setRefundLoader] = useState(false)
     const [refundLimit, setRefundLimit] = useState(props.amount);
     const [refundFormData, setRefundFormData] = useState({
         amount: props.amount,
@@ -32,7 +33,8 @@ const RefundModal = (props) => {
 
 
     const loader = (param) => {
-        props.loader(param);
+        // props.loader(param);
+        setRefundLoader(param)
     };
 
     const closeModal = () => {
@@ -182,6 +184,7 @@ const RefundModal = (props) => {
 
     return (
         <div className={(successfulRefund.status === undefined || successfulRefund.status !== "success") ? "modalBackdrop transactionModal" : "modalBackdrop transactionModal transactionSuccssModal"}>
+            {refundLoader && <Loader />}
             <div className="slickModalBody">
             {(successfulRefund.status === undefined || successfulRefund.status !== "success") &&
                 <>
