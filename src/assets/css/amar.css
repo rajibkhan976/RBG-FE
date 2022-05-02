@@ -3125,13 +3125,14 @@ input[type=number] {
 .itemTitle {
   display: flex;
   max-width: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
   text-overflow: ellipsis;
 }
 .itemTitle p {
   flex: 0 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .transactionModal .paymentUlInfo .transactionIdProduct, 
