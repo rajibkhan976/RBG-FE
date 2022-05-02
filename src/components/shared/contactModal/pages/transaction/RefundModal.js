@@ -8,6 +8,8 @@ import aaroww from "../../../../../assets/images/arrow_forward.svg"
 import cashSuccess from "../../../../../assets/images/cashSuccess.svg";
 import smallTick from "../../../../../assets/images/smallTick.svg";
 import paidCard from "../../../../../assets/images/paidCrad.svg";
+import paymentFail from "../../../../../assets/images/paymentFailed.svg";
+import cardFail from "../../../../../assets/images/cardFailed.svg";
 import { TransactionServices } from "../../../../../services/transaction/transactionServices";
 
 
@@ -26,7 +28,7 @@ const RefundModal = (props) => {
         otherReason: "",
         confirmRefund: ""
     });
-    const [successfulRefund, setSuccessfulRefund] = useState(null)
+    const [successfulRefund, setSuccessfulRefund] = useState({})
 
 
     const loader = (param) => {
@@ -148,16 +150,26 @@ const RefundModal = (props) => {
         loader(true);
         try {
             let rsponse = await TransactionServices.refund(props.contactId, payload);
+            console.log(rsponse);
             if(rsponse){
-                console.log("Refund Response: ", rsponse);
-                alertMsg("Refund transaction successfull", "success");
-                setSuccessfulRefund(rsponse)
+                const newSuccess = {
+                    status: rsponse.transaction.status,
+                    mode: rsponse.transaction.payment_via,
+                    amount: rsponse.transaction.amount,
+                    transactionId: rsponse.transaction.transactionId,
+                    message: rsponse.message
+                }
+                // alertMsg("Refund transaction successfull", "success");
+                setSuccessfulRefund(newSuccess)
             }
         } catch (e) {
             console.log("error:::", e);
-            alertMsg(e.message, "error");
-            setSuccessfulRefund(null)
-            closeModal();
+            const failedTrans = {
+                message: e.message
+            }
+            // alertMsg(e.message, "error");
+            setSuccessfulRefund(failedTrans)
+            // closeModal();
         } finally {
             loader(false);
         }
@@ -169,9 +181,9 @@ const RefundModal = (props) => {
     
 
     return (
-        <div className={successfulRefund.trim() === "" ? "modalBackdrop transactionModal" : "modalBackdrop transactionModal transactionSuccssModal"}>
+        <div className={(successfulRefund.status === undefined || successfulRefund.status !== "success") ? "modalBackdrop transactionModal" : "modalBackdrop transactionModal transactionSuccssModal"}>
             <div className="slickModalBody">
-            {successfulRefund.trim() === "" &&
+            {(successfulRefund.status === undefined || successfulRefund.status !== "success") &&
                 <>
                 <div className="slickModalHeader">
                     <button className="topCross" onClick={closeModal}><img src={crossImg} alt="" /></button>  
@@ -237,7 +249,7 @@ const RefundModal = (props) => {
                     </div>
                     </>
                 }
-                {successfulRefund.trim() !== "" && 
+                {(successfulRefund.status !== undefined && successfulRefund.status === "success") && 
                     <>
                         <div className="slickModalHeader">
                             <button className="topCross" onClick={closeModal}><img src={crossImg} alt="" /></button> 
@@ -248,7 +260,7 @@ const RefundModal = (props) => {
                         </div>
                         <h3 className="paySuccessHeading">
                             Transaction Successful
-                            <p>{successfulRefund}</p>
+                            <p>{successfulRefund.message}</p>
                         </h3>
                         </div>
                         <div className="dottedBorder"></div>
@@ -294,7 +306,7 @@ const RefundModal = (props) => {
                         <button
                             className="saveNnewBtn"
                             onClick={() => {
-                                    setSuccessfulRefund(null)
+                                    setSuccessfulRefund({})
                                     closeModal()
                                 }
                             }
@@ -303,6 +315,33 @@ const RefundModal = (props) => {
                         </button>
                         </div>
                     </>
+                }
+
+                {(successfulRefund.status === undefined && successfulRefund.message !== undefined) && 
+                    <div className="modalBackdrop modalProductStatus">
+                        <div className="slickModalBody paymentFailed">
+                            <div className="slickModalHeader">
+                            <div className="circleForIcon">
+                                <img src={paymentFail} alt="" />
+                            </div>
+                            <h3 className="courseModalHeading">Payment Failed!</h3>
+                            </div>
+
+                            <div className="payModalDetails">
+                            <img src={cardFail} alt="" />
+                            <p>{successfulRefund.message}</p>
+                            </div>
+
+                            <div className="buyBtns failedPayment">
+                            <button
+                                onClick={() => setSuccessfulRefund({})}
+                                className="saveNnewBtn"
+                            >
+                                Close
+                            </button>
+                            </div>
+                        </div>
+                    </div>
                 }
             </div>
         </div>

@@ -3114,7 +3114,8 @@ input[type=number] {
 .transactionModal .paymentUlInfo .paymentAmtLi {
   flex: 1 1 33.3%;
 }
-.transactionModal .successHeader img {
+.transactionModal .successHeader img,
+.modalProductStatus .paymentFailed .circleForIcon img {
   width: inherit;
   height: auto;
 }

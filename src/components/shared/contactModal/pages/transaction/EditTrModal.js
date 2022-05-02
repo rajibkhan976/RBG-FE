@@ -1043,7 +1043,7 @@ const EditTrModal = (props) => {
                             <div className="circleForIcon">
                                 <img src={paymentFail} alt="" />
                             </div>
-                            <h3 className="courseModalHeading">Payment Failed !</h3>
+                            <h3 className="courseModalHeading">Payment Failed!</h3>
                             </div>
 
                             <div className="payModalDetails">
