@@ -894,7 +894,7 @@ const Transaction = (props) => {
                                         : "")}
                                       </div>
                                       <div className="itemTitle">
-                                        <span>Transaction ID:</span> <p>{element._id}</p>
+                                        <span>Transaction ID:&nbsp;</span> <p>{element._id}</p>
                                     
                                       </div>
                                     </div>

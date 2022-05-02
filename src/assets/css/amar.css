@@ -3156,3 +3156,6 @@ input[type=number] {
   box-shadow: none;
   border-color: #c74854;
 }
+.transactionModal .paymentUlInfo .transactionIdProduct {
+  font-weight: 600;
+}
