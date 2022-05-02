@@ -1014,7 +1014,7 @@ const EditTrModal = (props) => {
                                 <span>{successfulpay.transactionId}</span>
                             </li>
                             <li className="paymentAmtLi">
-                            <p>$ {successfulpay.amount}</p>
+                            <p>$ {successfulpay.amount.toFixed(2)}</p>
                             <img src={smallTick} alt="" />
                             </li>
                         </ul>

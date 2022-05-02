@@ -298,7 +298,7 @@ const RefundModal = (props) => {
                             </li>
                             <li className="paymentAmtLi">
                             {/* <p>$ {payMentInfo.onlineAmount.toFixed(2)}</p> */}
-                            <p>$ {successfulRefund.amount}</p>
+                            <p>$ {successfulRefund.amount.toFixed(2)}</p>
                             <img src={smallTick} alt="" />
                             </li>
                         </ul>

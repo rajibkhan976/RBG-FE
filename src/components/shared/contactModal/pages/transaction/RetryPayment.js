@@ -137,7 +137,7 @@ const RetryPayment = (props) => {
                             </li>
                             <li className="paymentAmtLi">
                             {/* <p>$ {payMentInfo.onlineAmount.toFixed(2)}</p> */}
-                            <p>$ {successfulRetry.amount}</p>
+                            <p>$ {successfulRetry.amount.toFixed(2)}</p>
                             <img src={smallTick} alt="" />
                             </li>
                         </ul>
