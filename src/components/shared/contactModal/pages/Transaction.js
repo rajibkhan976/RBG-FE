@@ -141,9 +141,17 @@ const Transaction = (props) => {
   const openCloseEditTransModal = (param, transaction, loadData) => {
     setEditTransaction(transaction);
     setEditTransModal(param);
+    
     if (loadData) {
-      fetchOldTransactions(props.contactId, 1);
-      fetchUpcomingTransactions(props.contactId, 1);
+      setIsLoader(true)
+      try {
+        fetchOldTransactions(props.contactId, 1);
+        fetchUpcomingTransactions(props.contactId, 1);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoader(false)
+      }
     }
   };
 

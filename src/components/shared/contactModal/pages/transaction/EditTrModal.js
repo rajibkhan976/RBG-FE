@@ -705,6 +705,7 @@ const EditTrModal = (props) => {
                setSuccessfulpay(failedTrans);
             } finally {
                 setIsLoader(false);
+                props.closeModal(false, null, true)
             }
         }
              
@@ -719,7 +720,7 @@ const EditTrModal = (props) => {
                             <button className="topCross" onClick={() => props.closeModal (false)}><img src={crossImg} alt="" /></button>  
                             <div className="circleForIcon"><img src={editForModal} alt="" className="small"/></div>
                             <h3>Edit Transactions</h3>
-                            <p>Lorem Ipsum is simply dummy text of the printing</p>
+                            <p>Make changes to a transaction.</p>
                         </div>
                         <div className="cmnForm fullWidth">
                             <form>
