@@ -291,11 +291,11 @@ const RefundModal = (props) => {
                             <p>Online</p>
                             </li>
                             <li className="transactionIdProduct">
-                            <span>123456789</span>
+                            <span>{successfulRefund.transactionId}</span>
                             </li>
                             <li className="paymentAmtLi">
                             {/* <p>$ {payMentInfo.onlineAmount.toFixed(2)}</p> */}
-                            <p>{refundFormData.amount}</p>
+                            <p>$ {successfulRefund.amount}</p>
                             <img src={smallTick} alt="" />
                             </li>
                         </ul>

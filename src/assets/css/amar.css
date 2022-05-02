@@ -3150,3 +3150,8 @@ input[type=number] {
   letter-spacing: 1px;
 }
 /* Transaction instant pay ui */
+
+.cartProductInner.productBillingOverview.error {
+  box-shadow: none;
+  border-color: #c74854;
+}
