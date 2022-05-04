@@ -377,7 +377,7 @@ const Setup = (props) => {
                         to="/phases-status"
                         onClick={(e) => props.clickedLink(e)}
                     >
-                      Status and Phase
+                      Status and Phase <span className="betaTag">Beta</span>
                     </NavLink>
                   </h3>
                   <p> <NavLink

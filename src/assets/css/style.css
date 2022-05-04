@@ -10632,3 +10632,14 @@ svg.monthIcons {
 .dashInnerUI .createNew.noInfos .creatUserBtn.buttonForNoRecord {
   width: auto;
 }
+
+.betaTag {
+  padding: 1px 5px;
+  font-size: 12px;
+  background: linear-gradient(90deg, #ED707A 0%, #F1A768 100%);
+  border-radius: 3px;
+  color: #fff;
+  margin-left: 8px;
+  font-weight: 500;
+  vertical-align: text-bottom;
+}
