@@ -694,8 +694,8 @@ const EditTrModal = (props) => {
                     setSuccessfulpay(newSuccess);
                 } 
                 else {
-                    props.setSuccessMsg(updateResp);
-                    // closeAlert(true);
+                    props.setSuccessMsg(updateResp.message);
+                    closeAlert(true);
                 }
             } catch (e) {
                 const failedTrans = {
@@ -1035,6 +1035,8 @@ const EditTrModal = (props) => {
                         </div>
                     </>
                 }
+
+                {console.log("successfulEDIT::::", successfulpay)}
 
                 {(successfulpay.status === undefined && successfulpay.message !== undefined) && 
                     <div className="modalBackdrop modalProductStatus">

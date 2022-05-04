@@ -3990,7 +3990,8 @@ li:hover .extraDottedBtn {
   padding: 0;
 }
 
-.tabBarArea > div {
+/* .tabBarArea > div { */
+.tabBarArea .contactModalStepLinks {
   background: #f2f7fc;
   position: relative;
   width: 100%;
