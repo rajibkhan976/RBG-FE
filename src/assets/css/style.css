@@ -10633,6 +10633,14 @@ svg.monthIcons {
   width: auto;
 }
 
+.inFormField.permissionMatrix.error .InputsContainer {
+  border: 1px solid #c74854;
+  background:#fff4f4;
+}
+
+.inFormField.permissionMatrix.error .InputsContainer::before {
+  background:#fff4f4;
+}
 .betaTag {
   padding: 1px 5px;
   font-size: 12px;

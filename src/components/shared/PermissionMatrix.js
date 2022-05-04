@@ -16,7 +16,7 @@ const PermissionMatrix = forwardRef((props, ref) => {
   const [editedPermissionData, setEditedPermissionData] = useState([]);
   const [isAllSubActionGlobal, setIsAllSubActionGlobal] = useState([]);
   const [currentActionId, setCurrentActionId] = useState('');
-  const [isSelectAll, setIsSelectAll] = useState(true);
+  const [isSelectAll, setIsSelectAll] = useState(false);
   const [actionType, setActionType] = useState({
     id: null,
     data: null
@@ -75,7 +75,7 @@ const PermissionMatrix = forwardRef((props, ref) => {
   /**
    * Pre populate permission matrix data
    */
-  useEffect(() => {
+  useEffect(async () => {
     if (Array.isArray(props.setPermissionData) && props.setPermissionData.length) {
       console.log('Props permission data ', props.setPermissionData, 'action type id', props.setPermissionData[0].actions[0].actionTypeId);
       let actionTyId = props.setPermissionData[0].actions[0].actionTypeId;
@@ -96,11 +96,12 @@ const PermissionMatrix = forwardRef((props, ref) => {
         })
       });
       // Reflect permission data
-      getEntities();
+      await getEntities();
+      await getActionTypes();
       // setActionType(...actionType, actionType.id : props.setPermissionData[0].actions[0].actionTypeId)
       // getActionTypes();
       setTimeout(() => {
-        getActionTypes();
+        //getActionTypes();
         console.log('execute at last');
       }, 2000);
     }
@@ -273,7 +274,7 @@ const PermissionMatrix = forwardRef((props, ref) => {
           if (result) {
             let actionTypes = result.actionTypes.map((actionType, key) => {
               return {
-                isChecked: editedPermissionData.length ? (editedPermissionData[0].actionTypeId === actionType._id) : (actionType.slug === 'own-data') ? true : false,
+                isChecked: editedPermissionData.length ? (editedPermissionData[0].actionTypeId === actionType._id) : (actionType.slug === 'all-data') ? true : false,
                 _id: actionType._id,
                 name: actionType.name,
                 slug: actionType.slug,
@@ -879,15 +880,25 @@ const PermissionMatrix = forwardRef((props, ref) => {
     })
     return makeActions;
   }
-
+ /* useEffect(() => {
+    if (entityData.length) {
+      let data = entityData.filter(el => el.isChecked);
+      console.log(data, entityData)
+      if (data.length) {
+        setIsSelectAll(false);
+      } else {
+        setIsSelectAll(true);
+      }
+    }
+  }, [entityData]);*/
 
   return (
     <>
       <div className="permission">
         {isLoader ? <Loader /> : ''}
         <p className="permissionHead clearfix">
-          Manage permissions
-          {actionType && actionType.data && actionType.data.map((el, key) => {
+          Manage permissions <span className="mandatory">*</span>
+          {/*{actionType && actionType.data && actionType.data.map((el, key) => {
             return (
               <React.Fragment key={key + "actionTypes"}>
                 <label className="checkCutsom">
@@ -897,13 +908,13 @@ const PermissionMatrix = forwardRef((props, ref) => {
                 </label>
               </React.Fragment>
             );
-          })}
+          })}*/}
         </p>
         <div className="InputsContainer">
           <ul>
             <li className="inputsContainerHead">
               <p>
-                Entity <button className={isSelectAll ? "btn-link" : "btn-link selected"} onClick={(e) => handleSelectAllChange(e)}>{isSelectAll ? 'Select ' : 'Deselect '} All</button>
+                {!isSelectAll ? "Deselect All" : "Select All"} <button className={isSelectAll ? "btn-link" : "btn-link selected"} onClick={(e) => handleSelectAllChange(e)}>{isSelectAll ? 'Select ' : 'Deselect '} All</button>
               </p>
               {actionData && actionData.map((el, key) => {
                 return (
@@ -1051,11 +1062,9 @@ const PermissionMatrix = forwardRef((props, ref) => {
                       })}
                       <ul className="optionMoreInput open show">
                         {entity.subEntity && entity.subEntity.map((subEle, key) => {
-                          // console.log('Sub ent', subEle)
-
                           return (
                             <React.Fragment key={key + "_sub"}>
-                              {subEle ?
+                              {subEle && subEle.slug !== 'role' && subEle.slug !== 'group'?
                                 <li>
                                   <span>{subEle.name}</span>
                                   {subEle.associatedActions && subEle.associatedActions.map((action, key) => {

@@ -89,7 +89,7 @@ const InnerLeftMenu = (props) => {
               </h4>
             </div>
             <ul>
-              <li>
+              {/*<li>
                 <NavLink className="leftMenuInnerLink" to="/roles">
                   <div className="indicator"></div>
                   <div className="linkDetails">
@@ -110,7 +110,7 @@ const InnerLeftMenu = (props) => {
                     <p className="linkAbout">Manage user groups</p>
                   </div>
                 </NavLink>
-              </li>
+              </li>*/}
               <li>
                 <NavLink className="leftMenuInnerLink" to="/users">
                   <div className="indicator"></div>

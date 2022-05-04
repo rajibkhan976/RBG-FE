@@ -132,7 +132,7 @@ function LeftMenu(props) {
                   ? "selected"
                   : ""
               }
-              to="/roles"
+              to="/users"
               onClick={(e) => props.clickedSetupStatus(e)}
             >
               <svg

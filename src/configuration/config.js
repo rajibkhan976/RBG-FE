@@ -17,7 +17,7 @@ module.exports = {
 
     // Auth - org
     orgUrl: "https://" + process.env.REACT_APP_ORG + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/organization",
-
+    //orgUrl: "http://localhost:4000/dev/organization",
     // Auth - Association
     associationUrl: "https://" + process.env.REACT_APP_ASSOCIATION + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/association",
 

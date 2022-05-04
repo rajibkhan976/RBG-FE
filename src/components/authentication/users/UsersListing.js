@@ -434,14 +434,14 @@ const UsersListing = (props) => {
                                         className={"emailID " + (sortBy == "email" ? "sort " + sortType : "")}
                                         onClick={() => handleSortBy("email")}
                                     >Email Id</div>
-                                    <div
+                                    {/*<div
                                         className={"role " + (sortBy == "role" ? "sort " + sortType : "")}
                                         onClick={() => handleSortBy("role")}
                                     >Role</div>
                                     <div
                                         className={"assignedGroup " + (sortBy == "group" ? "sort " + sortType : "")}
                                         onClick={() => handleSortBy("group")}
-                                    >Assigned Group</div>
+                                    >Assigned Group</div>*/}
                                     <div
                                         className="assignedGroup"
                                     >Organization</div>
@@ -481,12 +481,12 @@ const UsersListing = (props) => {
                                                     <div className="emailID">
                                                         <button className="btn">{elem.email}</button>
                                                     </div>
-                                                    <div className="role">
+                                                    {/*<div className="role">
                                                         <button className="btn">{elem.role[0] ? elem.role[0].name : ''}</button>
                                                     </div>
                                                     <div className="assignedGroup">
                                                         <button className="btn">{elem.group[0] ? elem.group[0].name : ''}</button>
-                                                    </div>
+                                                    </div>*/}
                                                     <div className="assignedGroup">
                                                         <button className="btn">{elem.organization ? utils.generateExcerpt(elem.organization.name) : 'N/A'}</button>
                                                     </div>

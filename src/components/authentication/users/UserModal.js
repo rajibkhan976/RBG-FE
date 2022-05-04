@@ -14,6 +14,8 @@ import plus_icon from "../../../assets/images/plus_icon.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
 import { GroupServices } from '../../../services/authentication/GroupServices';
 import AudioHelper from 'twilio-client/es5/twilio/audiohelper';
+import {useDispatch} from "react-redux";
+import * as actionTypes from "../../../actions/types";
 
 
 const UserModal = (props) => {
@@ -51,9 +53,10 @@ const UserModal = (props) => {
         associationName: "",
         associationEmail: "",
         associationDescription: "",
+        permission: ""
     });
-    const [roles, setRoles] = useState(null);
-    const [groups, setGroups] = useState(null);
+    const [roles, setRoles] = useState([]);
+    const [groups, setGroups] = useState([]);
     const [roleId, setRoleId] = useState('');
     const [groupId, setGroupId] = useState('');
     const [editGroupId, setEditGroupId] = useState('');
@@ -72,7 +75,7 @@ const UserModal = (props) => {
         dailCode: "+1",
         number: "1234567890"
     });
-
+    const dispatch = useDispatch();
     const messageDelay = 5000; // ms
     const [associationList, setAssociationList] = useState([]);
     const [associationId, setAssociationId] = useState('');
@@ -113,6 +116,28 @@ const UserModal = (props) => {
         fetchAssociations();
         fetchLoggedUserDetails();
     }, []);
+
+    useEffect(() => {
+        if (roles.length && !editUser) {
+            let defaultedRole = roles.filter(el => el.slug === 'default-role');
+            if (defaultedRole.length) {
+                setRoleId(defaultedRole[0]._id);
+                getGroupsByRoleId(defaultedRole[0]._id);
+            }
+        }
+    }, [roles]);
+
+    useEffect(() => {
+        if (groups.length && !editUser) {
+            let defaultedGroup = groups.filter(el => el.slug === 'default-group');
+            if (defaultedGroup.length) {
+                setGroupId(defaultedGroup[0]._id);
+                setPermissionData(defaultedGroup[0].permissions);
+                //Keep a original copy of permissions data
+                setCopyPermissionData(JSON.parse(JSON.stringify(defaultedGroup[0].permissions)));
+            }
+        }
+    }, [groups]);
 
     /**
      * LoggedIn user details
@@ -159,16 +184,22 @@ const UserModal = (props) => {
     let editUser = props.createButton ? props.createButton : false;
     let temp = [];
 
-    useEffect(() => {
+    useEffect(async () => {
         setImage(editUser.image ? (config.bucketUrl + editUser.image) : null);
         setEditId(editUser._id);
         setFirstName(editUser.firstName);
         setLastName(editUser.lastName);
         if (editUser.prefix) {
             console.log('phone country code', phoneCountryCode);
-            let countyCode = phoneCountryCode && phoneCountryCode.filter(el => { return el.prefix === editUser.prefix });
+            let countyCode = phoneCountryCode && phoneCountryCode.filter(el => {
+                return el.prefix === editUser.prefix
+            });
             let editCountryCode = countyCode[0].code ? (editUser.prefix === '+1' ? "US" : countyCode[0].code) : 'US';
-            setBasicinfoMobilePhone(prevState => ({ ...prevState, dailCode: editUser.prefix, countryCode: editCountryCode }));
+            setBasicinfoMobilePhone(prevState => ({
+                ...prevState,
+                dailCode: editUser.prefix,
+                countryCode: editCountryCode
+            }));
         }
         setPhoneNumber(editUser.phone);
         setEmail(editUser.email);
@@ -234,6 +265,22 @@ const UserModal = (props) => {
             setAssociationName("");
             setAssociationEmail("");
             setAssociationDescription("");
+            if (roles.length && !editUser) {
+                let defaultedRole = roles.filter(el => el.slug === 'default-role');
+                if (defaultedRole.length) {
+                    setRoleId(defaultedRole[0]._id);
+                    await getGroupsByRoleId(defaultedRole[0]._id);
+                }
+            }
+            if (groups.length && !editUser) {
+                let defaultedGroup = groups.filter(el => el.slug === 'default-group');
+                if (defaultedGroup.length) {
+                    setGroupId(defaultedGroup[0]._id);
+                    setPermissionData(defaultedGroup[0].permissions);
+                    //Keep a original copy of permissions data
+                    setCopyPermissionData(JSON.parse(JSON.stringify(defaultedGroup[0].permissions)));
+                }
+            }
         }
 
     }, [editUser]);
@@ -505,15 +552,14 @@ const UserModal = (props) => {
         console.log('Set association id');
     }
 
-
     /**
      * Handle role change 
      * @param {*} event 
      */
     const handleRoleChange = (event) => {
         event.preventDefault();
-        console.log('Role change', event.target.value);
         setRoleId(event.target.value);
+        console.log(event.target.value)
         getGroupsByRoleId(event.target.value);
         // Set permissions to null
         console.log('Set permission data to null')
@@ -591,6 +637,7 @@ const UserModal = (props) => {
                 //Display group name input box
                 setIsModifiedPermission(true);
                 setPermissionData(dataFromChild);
+                setGroupName('default-edited-group-'+(Math.random().toString(36)+'00000000000000000').slice(2, 7));
             } else {
                 //Hide group name input box
                 setIsModifiedPermission(false);
@@ -766,6 +813,11 @@ const UserModal = (props) => {
             isError = true;
             formErrorsCopy.groupName = "Please fillup the group name";
         }
+        console.log(permissionData)
+        if (permissionData.length === 0) {
+            isError = true;
+            formErrorsCopy.permission = "Please provide at least one permission.";
+        }
 
         /**
          * Check the erros flag
@@ -789,6 +841,7 @@ const UserModal = (props) => {
                 associationName: formErrors.associationName,
                 associationEmail: formErrors.associationEmail,
                 associationDescription: formErrors.associationDescription,
+                permission: formErrors.permission
             });
             document.getElementsByClassName('sideMenuBody')[0].scroll({
                 top: 0,
@@ -809,7 +862,8 @@ const UserModal = (props) => {
                     orgDescription: "",
                     associationName: "",
                     associationEmail: "",
-                    associationDescription: ""
+                    associationDescription: "",
+                    permission: ""
                 }), 5000);
         } else {
             /**
@@ -935,7 +989,11 @@ const UserModal = (props) => {
                         if (payload.id) {
                             msg = 'User updated successfully';
                         }
-                        setSuccessMsg(msg);
+                        dispatch({
+                            type: actionTypes.SHOW_MESSAGE,
+                            message: msg,
+                            typeMessage: 'success'
+                        });
                         if (saveAndNew) {
                             console.log('save and new')
                             setSaveAndNew(false);
@@ -1348,7 +1406,7 @@ const UserModal = (props) => {
                                                 </div>
                                             )}
                                         </div>
-                                        <div className="infoField assignRoleGroup">
+                                        {/*<div className="infoField assignRoleGroup">
                                             <p className="infoFieldHead">Assign Role & Group</p>
                                             <div className="infoInputs">
                                                 <ul>
@@ -1361,7 +1419,7 @@ const UserModal = (props) => {
                                                                         backgroundImage: "url(" + arrowDown + ")",
                                                                     }}
                                                                     onChange={handleRoleChange}
-                                                                    value={roleId ? roleId : ''}
+                                                                    value={roleId}
                                                                 >
                                                                     <option value="">Select role</option>
                                                                     {roles ? roles.map((el, key) => {
@@ -1383,7 +1441,7 @@ const UserModal = (props) => {
                                                                         backgroundImage: "url(" + arrowDown + ")",
                                                                     }}
                                                                     onChange={handleGroupChange}
-                                                                    value={(groupId ? groupId : '')}
+                                                                    value={groupId}
                                                                 >
                                                                     <option value="">Select group</option>
                                                                     {groups ? groups.map((el, key) => {
@@ -1399,17 +1457,20 @@ const UserModal = (props) => {
                                                     </li>
                                                 </ul>
                                             </div>
-                                        </div>
+                                        </div>*/}
                                     </div>
-                                    <PermissionMatrix
-                                        getData={getDataFn}
-                                        ref={permissionMatrixRef}
-                                        setPermissionData={permissionData}
-                                    />
+                                    <div className={formErrors.permission ? "inFormField permissionMatrix error" : "inFormField permissionMatrix"}>
+                                        <PermissionMatrix
+                                            getData={getDataFn}
+                                            ref={permissionMatrixRef}
+                                            setPermissionData={permissionData}
+                                        />
+                                    </div>
+                                    {formErrors.permission ? <span className="errorMsg">{formErrors.permission}</span> : ''}
                                     <p className="staredInfo">
                                         * You can customize permissions for this user based on your need.
                                     </p>
-                                    {isModifiedPermission && <div className="newGroupName">
+                                    {/*{isModifiedPermission && <div className="newGroupName">
                                         <div className={formErrors.groupName ? "formField w-50 error" : "formField w-50"}>
                                             <p>Create a new group with the new permissions *</p>
                                             <div className="inFormField">
@@ -1423,7 +1484,7 @@ const UserModal = (props) => {
                                             </div>
                                             {formErrors.groupName ? <span className="errorMsg">{formErrors.groupName}</span> : ''}
                                         </div>
-                                    </div>}
+                                    </div>}*/}
                                     {isEmailNotification && <div className="enableNotification">
                                         <label>
                                             <div className="customCheckbox">
