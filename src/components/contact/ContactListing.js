@@ -762,7 +762,7 @@ const ContactListing = forwardRef((props, ref) => {
                                     <button className={colModalStatus ? "configColBtn close" : "configColBtn"}
                                             onClick={toggleColModal}></button>
                                     <div className="selectAllSection">
-                                        <div className="selectAllWraper">
+                                        <div className={selectSingle ? "selectAllWraper contactPageSelector singleSelect" : "selectAllWraper contactPageSelector withoutEditOption" && selectAllCheckbox ? "selectAllWraper contactPageSelector allSelect" : "selectAllWraper contactPageSelector withoutEditOption"}>
                                             <label><span
                                                 className={selectSingle ? "checkCutsomInputs minusSelectBox" : "customCheckbox allContacts headerselect"}><input
                                                 type="checkbox" name="selectAll" checked={selectAllCheckbox}
