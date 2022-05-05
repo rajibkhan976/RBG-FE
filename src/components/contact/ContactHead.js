@@ -145,7 +145,7 @@ const ContactHead = (props) => {
                   <p className="rightPTag">
                     <label>
                       <span className="customCheckbox allContacts selectNumberDisplay">
-                        <input type="checkbox" checked={selectAllContacts} onClick={checkAll}/>
+                        <input type="checkbox" checked={selectAllContacts} onChange={checkAll}/>
                         <span></span>
                       </span>Select all &nbsp; <b> { props.totalCount } </b> &nbsp; contact(s)</label></p>
                 </div> : ""

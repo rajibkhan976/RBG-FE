@@ -768,8 +768,9 @@ const ContactListing = forwardRef((props, ref) => {
                                                 type="checkbox" name="selectAll" checked={selectAllCheckbox}
                                                 onChange={handleCheckAll}/><span>
                                   </span></span></label>
-                                            <img src={arrow} onClick={() => addSelectAllFn()} className={addSelectAll.status ? "allArrow openEdits" : "allArrow"}
-                                                 alt=""/>
+                                  <span onClick={() => addSelectAllFn()} className={addSelectAll.status ? "allArrow openEdits" : "allArrow"} >
+                                            <img src={arrow} alt=""/>
+                                            </span>
                                         </div>
                                         {addSelectAll.status && (
                                             <div className="selectAllDropdown">
