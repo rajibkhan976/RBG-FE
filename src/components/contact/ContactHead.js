@@ -141,7 +141,7 @@ const ContactHead = (props) => {
           {
             selectAllCheckbox ?
                 <div className="pageSelectedInfo">
-                  <p className="leftPTag">All <b>{props.contactListPageCount}</b> contact(s) on this page are Selected.</p>
+                  <p className="leftPTag">All <b>{props.contactListPageCount}</b> contact(s) on this page are selected.</p>
                   <p className="rightPTag">
                     <label>
                       <span className="customCheckbox allContacts selectNumberDisplay">
