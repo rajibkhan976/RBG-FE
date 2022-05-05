@@ -334,24 +334,28 @@ const ContactListing = forwardRef((props, ref) => {
 
     const handleCheckBoxClick = (id) => {
         setSelectAllCheckbox(false);
-        let selectedOne = false;
+
         let cb = checkboxes.map(ele => {
             if (ele.id === id) {
                 ele.checked = !ele.checked;
             }
             return ele;
         });
-        cb.map(ele => {
+       
+        let cbChecked = checkboxes.filter(ele => {
             if (ele.checked) {
-                selectedOne = true;
-            }
+                return ele;
+            }            
         });
-        if (selectedOne) {
-            setSelectSingle(true);
-        } else {
+        
+        if (cb.length == cbChecked.length) {
+            setSelectAllCheckbox(true);
             setSelectSingle(false);
+        } else if (cb.length){
+            setSelectSingle(true);
         }
-        setCheckboxes(cb);
+        console.log('cb', cb, cbChecked, checkboxes)
+        setCheckboxes(cb);        
     }
     const handleCheckAll = () => {
         let checkForSelected = checkboxes.filter(ele => ele.checked === true);
