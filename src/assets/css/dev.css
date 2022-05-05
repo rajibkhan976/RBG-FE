@@ -5675,9 +5675,9 @@ allContacts.selectNumberDisplay {
 .selectAllWraper {
   display: inline-block;
   padding: 4px 4px 0 4px;
-  margin-left: 10px;
+  margin-left: 8px;
   background: #E8EFF6;
-  border: 1px solid #0093FF;
+  /* border: 1px solid #0093FF; */
   box-sizing: border-box;
   border-radius: 5px;
   cursor: pointer;
@@ -5952,4 +5952,38 @@ input.addPhases {
 
 .dropdownOptions.status .btn svg {
   margin-top: 4px;
+}
+
+/* New css Change Request for Contact Page in status and phase launch */
+
+.withoutEditOption {
+  border: 1px solid transparent;
+  background: transparent;
+}
+.withoutEditOption .allArrow {
+  display: none;
+}
+
+.checkCutsomInputs.minusSelectBox span, .customCheckbox.allContacts.headerselect {
+  margin: 0 16px 0 0;
+}
+
+.allSelect {
+  border: 1px solid #0093FF;
+}
+
+.singleSelect {
+  border: 1px solid #C7DAEB;
+}
+
+.tableListing li .dataTableCell.contactSelects {
+  padding-left: 16px;
+}
+
+.contactPageListing {
+  width: 80px;
+}
+
+img.allArrow.openEdits {
+  transform: rotate(180deg);
 }

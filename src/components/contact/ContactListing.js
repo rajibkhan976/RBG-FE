@@ -603,7 +603,7 @@ const ContactListing = forwardRef((props, ref) => {
                     {savedColList.filter(filterCondition => filterCondition.status).map((item, pp) => {
                         j++;
                         return (
-                            <div className={item.id === "name" ? "dataTableCell user userPlusSelect" : "dataTableCell"}
+                            <div className={item.id === "name" ? "dataTableCell user userPlusSelect contactSelects" : "dataTableCell contactSelects"}
                                  key={'dataTableCell_' + i + pp}>
                                 {(j === 1) ? <label className="indselects"><span className="customCheckbox allContacts">
                                     <input type="checkbox"
@@ -757,7 +757,7 @@ const ContactListing = forwardRef((props, ref) => {
                     <div className="userListBody">
 
                         <div className="listBody contactListingTable" style={{'width': tableWidth}}>
-                            <div className="tableDataConfigArea">
+                            <div className="tableDataConfigArea contactPageListing">
                                 <div className="configColArea selectFilters" ref={arrangeColRef}>
                                     <button className={colModalStatus ? "configColBtn close" : "configColBtn"}
                                             onClick={toggleColModal}></button>
@@ -768,7 +768,7 @@ const ContactListing = forwardRef((props, ref) => {
                                                 type="checkbox" name="selectAll" checked={selectAllCheckbox}
                                                 onChange={handleCheckAll}/><span>
                                   </span></span></label>
-                                            <img src={arrow} className="allArrow" onClick={() => addSelectAllFn()}
+                                            <img src={arrow} onClick={() => addSelectAllFn()} className={addSelectAll.status ? "allArrow openEdits" : "allArrow"}
                                                  alt=""/>
                                         </div>
                                         {addSelectAll.status && (
