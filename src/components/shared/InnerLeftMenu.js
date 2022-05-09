@@ -416,8 +416,8 @@ const InnerLeftMenu = (props) => {
                 <NavLink className="leftMenuInnerLink" to="/phases-status">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
-                    <p className="linkHeading">Status and Phases</p>
-                    <p className="linkAbout">Status and Phases</p>
+                    <p className="linkHeading">Status and Phase</p>
+                    <p className="linkAbout">Manage status and phase</p>
                     <button className="btn sidemenuarrow">
                       <img src={SideMenuArrow} alt="" />
                     </button>
