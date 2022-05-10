@@ -1,8 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { PaymentSetupServices } from '../../../services/setup/PaymentSetupServices';
 import Loader from '../../shared/Loader';
-import AlertMessage from "../../shared/messages/alertMessage";
-
+import * as actionTypes from '../../../actions/types';
+import greenTick from "../../../assets/images/greenTick.svg";
+import greyTick from "../../../assets/images/greyTick.svg";
+import redCross from "../../../assets/images/redCross.svg";
+import greyEdit from "../../../assets/images/greyEdit.svg";
+import Tax from './tax';
+import SubscriptionSetup from './subscriptionSetup';
 
 const PaymentSetup = () => {
     const emailRe = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -11,43 +17,29 @@ const PaymentSetup = () => {
         merchantId: "",
         retryInterval: "",
         maxRetry: "",
-        editAccess: true
+        editAccess: true,
+        hasMerchantId: false
     });
-    const formRef = useRef();
-    const [merchantFormError, setMerchantFormError] = useState({
-        paysimpleEmail: "",
-        merchantId: "",
-        retryInterval: "",
-        maxRetry: ""
-    });
+    const [hasEmail, setHasEmail] = useState(true);
+    const emailRefData = useRef();
     const [loading, setLoading] = useState(false);
-    const [fetchingMerchantid, setFetchingMerchantid] = useState(false);
-    const [merchantFromError, setMerchantFromError] = useState("");
-    const [merchantInfoSaveMsg, setMerchantInfoSaveMsg] = useState({
-        message: "",
-        type: "",
-        duration: 5000
-    });
+    const [merchantFormError, setMerchantFormError] = useState("");
+    const [defaultEmail, setDefaultEmail] = useState("");
+    const [isEditing, setisEditing] = useState(false);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         fetchPaymentSetup();
+        console.log(isEditing);
         return () => setMerchantInfo({
             paysimpleEmail: "",
             merchantId: "",
             retryInterval: "",
             maxRetry: "",
-            editAccess: true
+            editAccess: true,
+            hasMerchantId: false
         })
     }, [])
-
-    useEffect(() => {
-        setTimeout(() => {
-            setMerchantFromError("");
-        }, 3000);
-
-        return () => clearTimeout();
-    }, [merchantFromError]);
-
 
     const fetchPaymentSetup = async () => {
         setLoading(true);
@@ -57,151 +49,106 @@ const PaymentSetup = () => {
             setMerchantInfo({
                 paysimpleEmail: (response.data?.paysimpleEmail) ? response.data.paysimpleEmail : "",
                 merchantId: (response.data?.merchantId) ? response.data.merchantId : "",
-                retryInterval: (response.data?.retryInterval) ? response.data.retryInterval : "3",
-                maxRetry: (response.data?.retryLimit) ? response.data.retryLimit : "2",
-                editAccess: response?.editAccess
+                retryInterval: (response.data?.retryInterval) ? response.data.retryInterval : 3,
+                maxRetry: (response.data?.retryLimit) ? response.data.retryLimit : 2,
+                editAccess: response?.editAccess,
+                hasMerchantId: (response?.hasMerchantId) ? true : false
             });
+            // console.clear()
+            console.log("Paysimple Email", response.data?.paysimpleEmail);
+            const enableEditOnEmptyEmail = (typeof response.data?.paysimpleEmail === "undefined" || response.data?.paysimpleEmail === "") ? false : true;
+            setHasEmail(enableEditOnEmptyEmail);
         } catch (e) {
-            setMerchantInfoSaveMsg({ message: e.message, type: "error", duration: 5000 });
+            // setMerchantInfoSaveMsg({ message: e.message, type: "error", duration: 5000 });
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
         } finally {
             setLoading(false);
         }
     };
 
-    const getMerchantId = async () => {
-        const formData = formRef.current;
-        const paysimpleEmail = formData["paysimpleEmail"].value;
-        // formData["paysimpleEmail"].value = merchantInfo.paysimpleEmail;
+    const saveMerchantInfo = async (e) => {
+        e.preventDefault();
+        const paysimpleEmail = merchantInfo.paysimpleEmail;
+        setMerchantFormError("");
+        setLoading(true);
         try {
-            if (paysimpleEmail) {
-                setFetchingMerchantid(true);
-                const payload = {
-                    paysimpleEmail: paysimpleEmail
-                };
-                const response = await PaymentSetupServices.getMerchantId(payload);
-                setMerchantInfo({ ...merchantInfo, merchantId: (response?.merchantID) ? response.merchantID : "" });
-                console.log("Get merchant id response:::: ", response);
-            } else {
-                setMerchantFormError({ ...merchantFromError, paysimpleEmail: "Please enter a valid email id" });
-                setMerchantInfo({ ...merchantInfo, merchantId: "" });
-            }
-        } catch (e) {
-            formData["paysimpleEmail"].value = merchantInfo.paysimpleEmail;
-            formData.getElementsByClassName("merchantId")[0].innerText = "";
-            // setMerchantInfo({ ...merchantInfo, paysimpleEmail: "", merchantId: "" });
-            setMerchantInfoSaveMsg({ ...merchantInfoSaveMsg, message: e.message, type: "error" });
-            setMerchantInfo({ ...merchantInfo, merchantId: "" });
-        } finally {
-            setFetchingMerchantid(false);
-        }
-
-    };
-
-    const saveMerchantInfo = async () => {
-        const formField = formRef.current;
-        const paysimpleEmail = formField["paysimpleEmail"].value;
-        // if(Array.isArray(formField.getElementsByClassName("merchantId"))) {
-        //     merchantId = formField.getElementsByClassName("merchantId")[0].innerText;
-        // }
-        const merchantId = (formField.getElementsByClassName("merchantId").length) ? formField.getElementsByClassName("merchantId")[0].innerText : false;
-        const retryInterval = formField["retryIntervalData"].value;
-        const maxRetry = formField["maxRetry"].value;
-        if (validateFields(paysimpleEmail, retryInterval, maxRetry)) {
-            setMerchantFromError("");
-            setLoading(true);
-            try {
-                const payload = {
-                    paysimpleEmail: paysimpleEmail,
-                    retryInterval: retryInterval,
-                    maxRetry: maxRetry
-                };
-                if (merchantId) payload.merchantId = merchantId;
-                const response = await PaymentSetupServices.saveMerchantInfo(payload);
-                setMerchantInfoSaveMsg({ ...merchantInfoSaveMsg, message: "Payment setup data updated successfully", type: "success" });
-                console.log("Save merchant info response:::: ", response);
-            } catch (e) {
-                setMerchantInfoSaveMsg({ ...merchantInfoSaveMsg, message: e.message, type: "error" });
-            } finally {
-                setLoading(false);
-            }
-        }
-    };
-
-    const validateFields = (paysimpleEmail, retryInterval, maxRetry) => {
-        let bool = true;
-        if (!paysimpleEmail.length || !emailRe.test(paysimpleEmail)) {
-            bool = false;
-            setMerchantFormError({ ...merchantFormError, paysimpleEmail: "Please enter a valid email id" });
-        } else if (!retryInterval.length || !/^[0-9]+$/.test(retryInterval)) {
-            bool = false;
-            setMerchantFormError({ ...merchantFormError, retryInterval: "Please enter a valid integer number" });
-        } else if (!maxRetry.length || !/^[0-9]+$/.test(maxRetry)) {
-            bool = false;
-            setMerchantFormError({ ...merchantFormError, maxRetry: "Please enter a valid integer number" });
-        } else {
-            bool = true;
-            setMerchantFormError({
-                paysimpleEmail: "",
-                merchantId: "",
-                retryInterval: "",
-                maxRetry: ""
+            const payload = {
+                paysimpleEmail: paysimpleEmail
+            };
+            //if (merchantId) payload.merchantId = merchantId;
+            const response = await PaymentSetupServices.saveMerchantInfo(payload);
+            setHasEmail(true);
+            setMerchantInfo({ ...merchantInfo, editAccess: response.editAccess });
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: response.message,
+                typeMessage: 'success'
             });
+            // setMerchantInfoSaveMsg({ ...merchantInfoSaveMsg, message: "Payment setup data updated successfully", type: "success" });
+            console.log("Save merchant info response:::: ", response);
+        } catch (e) {
+            // setMerchantInfoSaveMsg({ ...merchantInfoSaveMsg, message: e.message, type: "error" });
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
+        } finally {
+            setLoading(false);
+            setisEditing(false);
         }
-        return bool;
-    }
 
-    const closeSaveMerchantAlert = () => {
-        setMerchantInfoSaveMsg({ ...merchantInfoSaveMsg, message: "", type: "" });
+    };
+
+    const paysimpleConnect = async (e) => {
+        e.preventDefault();
+        if (merchantFormError !== "" || merchantInfo.paysimpleEmail === "") return false;
+        const paysimpleEmail = merchantInfo.paysimpleEmail;
+        setLoading(true);
+        try {
+            const payload = {
+                paysimpleEmail: paysimpleEmail,
+                connectPaysimple: true
+            };
+            //if (merchantId) payload.merchantId = merchantId;
+            const response = await PaymentSetupServices.saveMerchantInfo(payload);
+            setMerchantInfo({ ...merchantInfo, hasMerchantId: response.hasMerchantId });
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: response.message,
+                typeMessage: 'success'
+            });
+            // setMerchantInfoSaveMsg({ ...merchantInfoSaveMsg, message: "Payment setup data updated successfully", type: "success" });
+        } catch (e) {
+            // setMerchantInfoSaveMsg({ ...merchantInfoSaveMsg, message: e.message, type: "error" });
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
+        } finally {
+            setLoading(false);
+            setisEditing(false);
+        }
     };
 
     const checkEmail = (e) => {
-        if (emailRe.test(e.target.value)) {
-            setMerchantFormError({ ...merchantFormError, paysimpleEmail: "" });
+        // const paysimpleEmail = merchantInfo.paysimpleEmail;
+        const email = emailRefData.current;
+        if (emailRe.test(email.value)) {
+            setMerchantFormError("");
         } else {
-            setMerchantFormError({ ...merchantFormError, paysimpleEmail: "Please enter a valid email id" });
+            setMerchantFormError("Please enter a valid email id");
         }
+        setMerchantInfo({ ...merchantInfo, paysimpleEmail: e.target.value });
     };
-
-    const retryIntervalHandel = (e) => {
-        const number = e.target.value;
-        const reg = /^[0-9]+$/;
-        // if ((reg.test(number) || number === "") && number !== "0") {
-        //     setMerchantInfo({ ...merchantInfo, retryInterval: number });
-        //     setMerchantFormError({ ...merchantFormError, retryInterval: "" });
-        // } else {
-        //     setMerchantFormError({ ...merchantFormError, retryInterval: "Please enter a valid number" });
-        // }
-
-        if (!reg.test(number) || number <= 0) {
-            console.log("hello");
-            setMerchantFormError({ ...merchantFormError, retryInterval: "Please enter a valid integer number" });
-        } else {
-            setMerchantFormError({ ...merchantFormError, retryInterval: "" });
-        }
-    };
-
-    const maxRetryHandel = (e) => {
-        const number = e.target.value;
-        const reg = /^[0-9]+$/;
-        // if ((reg.test(number) || number === "") && number !== "0") {
-        //     setMerchantInfo({ ...merchantInfo, maxRetry: number });
-        //     setMerchantFormError({ ...merchantFormError, maxRetry: "" });
-        // } else {
-        //     setMerchantFormError({ ...merchantFormError, maxRetry: "Please enter a valid number" });
-        // }
-
-        if (!reg.test(number) || number <= 0) {
-            console.log("hello");
-            setMerchantFormError({ ...merchantFormError, maxRetry: "Please enter a valid integer number" });
-        } else {
-            setMerchantFormError({ ...merchantFormError, maxRetry: "" });
-        }
-    };
-
 
     return (
-        <div className="paymentSetupMainBody">
-            {loading ? <Loader /> : ""}
+        <div className="paymentSetupMainBody" data-testid="paymentsetup">
             <div className="userListHead">
                 <div className="listInfo">
                     <ul className="listPath">
@@ -212,88 +159,61 @@ const PaymentSetup = () => {
                     <p className="userListAbout">Setup Merchant and Billing setup for your Organization </p>
                 </div>
             </div>
-            <div className="paymentSetupBody">
-                <form name='paymentSetupForm' ref={formRef}>
-                    <div className="merchantSetup">
-                        <h3>Merchant Payment Setup</h3>
-                        <div className="merchantSetupBody">
-                            <div className="cmnFormRow">
-                                <label className="cmnFieldName">
-                                    Pay Simple Email ID <span className="mandatory">*</span>
-                                    <div className="notePop">
-                                        <div className="notePopIcon info"></div>
-                                        <div className="notePopContent">
-                                            Email of PaySimple live account. This is required to get the merchant ID for the respective email.
-                                        </div>
-                                    </div>
-                                </label>
-                                <div className={merchantFormError.paysimpleEmail ? "cmnFormField email errorField" : "cmnFormField email"}>
-                                    <input name='paysimpleEmail' className="cmnFieldStyle" type="text" placeholder="Ex. example@email.com"
-                                        defaultValue={merchantInfo.paysimpleEmail} onChange={checkEmail} />
-                                    <button type="button" className={merchantFormError.paysimpleEmail || fetchingMerchantid ? "saveNnewBtn disabled" : "saveNnewBtn"} onClick={getMerchantId}>Get Merchant ID</button>
-                                    {merchantFormError.paysimpleEmail ? <div className="errorMsg">{merchantFormError.paysimpleEmail}</div> : ""}
-                                </div>
-                            </div>
-                            <div className="cmnFormRow">
-                                <label className="cmnFieldName">
-                                    Merchant ID
-                                    <div className="notePop">
-                                        <div className="notePopIcon info"></div>
-                                        <div className="notePopContent">
-                                            Paysimple merchant ID for collecting payments. System retrieves it once PaySimple account is live.
-                                        </div>
-                                    </div>
-                                </label>
-                                <div className={fetchingMerchantid ? "cmnFormField fetching" : "cmnFormField"}>
-                                    <div className={merchantInfo.merchantId ? "cmnFieldStyle merchantId" : "cmnFieldStyle noId"}>
-                                        {fetchingMerchantid ? "Fetching . . ." : (merchantInfo.merchantId ? merchantInfo.merchantId : "Click the button above to get your Merchant ID")}
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="cmnFormRow">
-                                <div className="cmnFormCol">
-                                    <label className="cmnFieldName">
-                                        Retry Interval (Days) <span className="mandatory">*</span>
-                                        <div className="notePop">
-                                            <div className="notePopIcon info"></div>
-                                            <div className="notePopContent">
-                                                Interval in days between two successive retries. Min 1 day.
-                                            </div>
-                                        </div>
-                                    </label>
-                                    <div className={merchantFormError.retryInterval ? "cmnFormField errorField" : "cmnFormField"}>
-                                        <input name='retryIntervalData' type="text" className="cmnFieldStyle" placeholder="Ex. 1" onChange={retryIntervalHandel}
-                                            defaultValue={merchantInfo.retryInterval} />
-                                        {merchantFormError.retryInterval ? <div className="errorMsg">{merchantFormError.retryInterval}</div> : ""}
-                                    </div>
-                                </div>
-                                <div className="cmnFormCol">
-                                    <label className="cmnFieldName">
-                                        Max Number of Retry <span className="mandatory">*</span>
-                                        <div className="notePop">
-                                            <div className="notePopIcon info"></div>
-                                            <div className="notePopContent">
-                                                Maximum number of times system should retry a payment before it declares it as failed.
-                                            </div>
-                                        </div>
-                                    </label>
-                                    <div className={merchantFormError.maxRetry ? "cmnFormField errorField" : "cmnFormField"}>
-                                        <input name='maxRetry' type="text" className="cmnFieldStyle" placeholder="Ex. 3" onChange={maxRetryHandel} defaultValue={merchantInfo.maxRetry} />
-                                        {merchantFormError.maxRetry ? <div className="errorMsg">{merchantFormError.maxRetry}</div> : ""}
-                                    </div>
-                                </div>
-                            </div>
-                                <div className="cmnFormRow">
-                                    <button type="button" className={fetchingMerchantid ? "saveNnewBtn saveMerchantBtn disabled" : "saveNnewBtn saveMerchantBtn"} 
-                                    onClick={saveMerchantInfo}>Save</button>
-                                    {merchantFromError ? <div className="errorMsg merchantFromError">{merchantFromError}</div> : ""}
-                                </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-            {merchantInfoSaveMsg.message ? <AlertMessage type={merchantInfoSaveMsg.type} message={merchantInfoSaveMsg.message} time={merchantInfoSaveMsg.duration} close={closeSaveMerchantAlert} /> : ""}
+            <div className='ps_merchantSetup_outer'>
+                <div className='ps_merchantSetup'>
+                    {loading ? <Loader /> : ""}
+                    <form id='payment-setup' onSubmit={saveMerchantInfo}>
+                        <div className='ps_header'>
+                            <h3>Merchant Payment Setup</h3>
 
+                            {hasEmail && !isEditing ? (
+                                <div className={(merchantInfo.hasMerchantId) ? "paySimpleStat greaentag" : "paySimpleStat"}>
+                                    Account Status
+                                    <tag className={(merchantInfo.hasMerchantId) ? "tag green" : "tag"}>{merchantInfo.hasMerchantId ? "Connected" : "Not Connected"}</tag>
+                                </div>
+                            ) : ''}
+                            <div className='ps_editPan'>
+                                {(isEditing || !hasEmail) ? (
+                                    <button className='round edit'
+                                        type='submit'
+                                        disabled={(merchantFormError !== "" || merchantInfo.paysimpleEmail === "") ? "disabled" : ""}><img src={(merchantFormError !== "" || merchantInfo.paysimpleEmail === "") ? greyTick : greenTick} alt="" /></button>
+                                ) : ''}
+                                {(isEditing) ? (<button className='round delete' onClick={() => {
+                                    setisEditing(false);
+                                    setMerchantFormError("");
+                                    setMerchantInfo({ ...merchantInfo, paysimpleEmail: defaultEmail })
+                                }}><img src={redCross} alt="" /></button>) : ''}
+
+                                {(!merchantInfo.hasMerchantId && !isEditing && hasEmail) ? (<button className='round change' onClick={() => { setisEditing(true); setDefaultEmail(merchantInfo.paysimpleEmail) }}><img src={greyEdit} alt="" /></button>) : ''}
+                            </div>
+                        </div>
+                        <div className='ps_formbody'>
+                            <div className='ps_form'>
+                                <label>Pay Simple Email ID</label>
+                                {(isEditing || !hasEmail) ? (
+                                    <>
+                                        <input name='paysimpleEmail' type="text" placeholder="Ex. example@email.com"
+                                            value={merchantInfo.paysimpleEmail}
+                                            onChange={checkEmail}
+                                            ref={emailRefData}
+                                            className={merchantInfo.paysimpleEmail !== "" && merchantFormError ? "error" : ""} />
+                                        {merchantFormError ? <div className="errorMsg">{merchantFormError}</div> : ""}
+                                    </>
+                                ) : (
+                                    <>
+                                        <div className='ps_text1'>{merchantInfo.paysimpleEmail}</div>
+                                        {!merchantInfo.hasMerchantId ? <button type='button' className='ps_designedBtn' onClick={paysimpleConnect}>Connect to Paysimple</button> : ''}
+
+                                    </>
+                                )}
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <SubscriptionSetup merchantInfo={merchantInfo} />
+                <Tax />
+            </div>
         </div>
     );
 };

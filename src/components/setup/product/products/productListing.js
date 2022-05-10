@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import percentTag from "../../../../assets/images/percentage_icon.png";
-import list_board_icon from "../../../../assets/images/list_board_icon.svg";
 import listView from "../../../../assets/images/listView.svg";
 import dot3White from "../../../../assets/images/dot3gray.svg";
 import proImg1 from "../../../../assets/images/proImg1.png";
@@ -9,7 +8,6 @@ import noRecords from '../../../../assets/images/noRecords.svg';
 import Pagination from "../../../shared/Pagination";
 import ConfirmBox from "../../../shared/confirmBox";
 import Loader from "../../../shared/Loader";
-import { ProductServices } from "../../../../services/setup/ProductServices"
 
 const ProductListing = (props) => {
   document.title = "Red Belt Gym - Products";

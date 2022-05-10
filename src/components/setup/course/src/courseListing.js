@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import plus_icon from "../../../../assets/images/plus_icon.svg";
-import percentTag from "../../../../assets/images/percentage_icon.png";
-import list_board_icon from "../../../../assets/images/list_board_icon.svg";
 import proImg1 from "../../../../assets/images/proImg1.png";
 import dot3White from "../../../../assets/images/dot3gray.svg";
 import noRecords from '../../../../assets/images/noRecords.svg';

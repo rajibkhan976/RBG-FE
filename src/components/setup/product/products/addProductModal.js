@@ -55,15 +55,18 @@ const AddProductModal = (props) => {
   useEffect(() => {
     if (Object.keys(props.editProductItem).length) {
       const updateItem = props.editProductItem;
+      console.clear();
+      console.log(updateItem);
+      console.log(updateItem?.image);
       setProductData({
         category: updateItem.categoryID[0],
         name: updateItem.name,
         colors: updateItem.colors,
         size: updateItem.size,
-        image: updateItem.image,
+        image: updateItem?.image,
         price: updateItem.price,
         id: updateItem._id,
-        imageUrl: config.bucketUrl + updateItem.image,
+        imageUrl: (updateItem?.image) ? config.bucketUrl + updateItem.image : profileAvatar,
         tax: (updateItem.tax) ? updateItem.tax : 0
       });
       setIsEditing(true);
@@ -156,15 +159,16 @@ const AddProductModal = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      // console.log(productData);
       if (createValidation()) {
         setIsLoader(true);
         const data = {
           category: (productData.category) ? productData.category : categories[0]._id,
           name: productData.name,
-          colors: productData.colors,
-          image: productData.image,
+          colors: (productData.colors.length) ? productData.colors : [],
+          image: (productData.image) ? productData.image : "",
           price: productData.price.toString(),
-          size: productData.size,
+          size: (productData.size.length) ? productData.size : [],
           tax: productData.tax.toString()
         };
         // console.log("Data to be updated or added", data);
@@ -226,15 +230,15 @@ const AddProductModal = (props) => {
       setErrorClass(prevState => ({...prevState, name: "error", nameMsg: "Please enter product name"}));
     }
 
-    if(productData.colors.length === 0) {
-      bool = false;
-      setErrorClass(prevState => ({...prevState, colors: "error", colorMsg: "Please choose atleast one color from the available colors"}));
-    }
+    // if(productData.colors.length === 0) {
+    //   bool = false;
+    //   setErrorClass(prevState => ({...prevState, colors: "error", colorMsg: "Please choose atleast one color from the available colors"}));
+    // }
 
-    if(productData.size.length === 0) {
-      bool = false;
-      setErrorClass(prevState => ({...prevState, size: "error", sizeMsg: "Please choose atleast one size from the available sizes"}));
-    }
+    // if(productData.size.length === 0) {
+    //   bool = false;
+    //   setErrorClass(prevState => ({...prevState, size: "error", sizeMsg: "Please choose atleast one size from the available sizes"}));
+    // }
 
     if(productData.price === "" || parseFloat(productData.price) <= 0) {
       bool = false;
