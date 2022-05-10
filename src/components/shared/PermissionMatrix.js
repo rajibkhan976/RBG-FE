@@ -76,15 +76,16 @@ const PermissionMatrix = forwardRef((props, ref) => {
    * Pre populate permission matrix data
    */
   useEffect(async () => {
-    if (Array.isArray(props.setPermissionData) && props.setPermissionData.length) {
-      console.log('Props permission data ', props.setPermissionData, 'action type id', props.setPermissionData[0].actions[0].actionTypeId);
-      let actionTyId = props.setPermissionData[0].actions[0].actionTypeId;
+    console.log('ppppppppppppppppppppppppppppppppppppppppppppppppppppp')
+    if (Array.isArray(props.originalPermission) && props.originalPermission.length) {
+      console.log('Props permission data ', props.originalPermission, 'action type id', props.originalPermission[0].actions[0].actionTypeId);
+      let actionTyId = props.originalPermission[0].actions[0].actionTypeId;
       //Set permissions data
-      setPermissions(props.setPermissionData);
+      setPermissions(props.originalPermission);
       //Empty edited permission data
       setEditedPermissionData([]);
       //Restructure permission data
-      props.setPermissionData.map((permission, key) => {
+      props.originalPermission.map((permission, key) => {
         let associatedActions = [];
         permission.actions.map((action, key) => {
           associatedActions.push(action.actionId);
@@ -98,7 +99,7 @@ const PermissionMatrix = forwardRef((props, ref) => {
       // Reflect permission data
       await getEntities();
       await getActionTypes();
-      // setActionType(...actionType, actionType.id : props.setPermissionData[0].actions[0].actionTypeId)
+      // setActionType(...actionType, actionType.id : props.originalPermission[0].actions[0].actionTypeId)
       // getActionTypes();
       setTimeout(() => {
         //getActionTypes();
@@ -106,7 +107,7 @@ const PermissionMatrix = forwardRef((props, ref) => {
       }, 2000);
     }
 
-  }, [props.setPermissionData]);
+  }, [props.originalPermission]);
 
   /**
    * Execute use effect at last 
@@ -280,7 +281,7 @@ const PermissionMatrix = forwardRef((props, ref) => {
                 slug: actionType.slug,
               }
             });
-            // let currentActionTypeId = Array.isArray(props.setPermissionData) && props.setPermissionData.length ? props.setPermissionData[0].actions[0].actionTypeId : actionTypes[0]._id;
+            // let currentActionTypeId = Array.isArray(props.originalPermission) && props.originalPermission.length ? props.originalPermission[0].actions[0].actionTypeId : actionTypes[0]._id;
             let currentActionTypeId = editedPermissionData.length ? editedPermissionData[0].actionTypeId : actionTypes[0]._id;
             //Set action type checked
             setActionType({

@@ -48,7 +48,7 @@ const UsersListing = (props) => {
         show: false,
         id: null,
     });
-
+    const [time, setTime] = useState(false);
     const handelSize = () => {
         setTableWidth(window.innerWidth - 454);
     }
@@ -57,7 +57,11 @@ const UsersListing = (props) => {
         handelSize();
     }, []);
     const [isDeleted, setIsDeleted] = useState(false);
-
+    useEffect(() => {
+        setTimeout(() => {
+            setTime(true);
+        }, 200)
+    },[])
     const toggleCreateHeader = (e) => {
         // const createPermission = (!env.ACTIVE_PERMISSION_CHECKING)?true:permissions.actions.includes("create");
         // if (createPermission) {
@@ -607,7 +611,7 @@ const UsersListing = (props) => {
                         <img src={noRecords} className="noRecords" alt="" />
                         <h4>No Users Found</h4>
                         <p>No users have been listed here yet</p>
-                        {(keyword === '') ?
+                        {(keyword === '' && time) ?
                             <button className="creatUserBtn" onClick={toggleCreateHeader}><img className="plusIcon" src={plus_icon} alt="" /><span>Create the First User</span></button>
                             : ''}
                     </div>

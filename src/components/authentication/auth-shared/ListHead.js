@@ -2,10 +2,16 @@ import { useLocation } from "react-router-dom";
 
 import filter_icon from "../../../assets/images/filter_icon.svg";
 import plus_icon from "../../../assets/images/plus_icon.svg";
+import {useEffect, useState} from "react";
 
 const ListHead = (props) => {
   const pathURL = useLocation().pathname;
-
+  const [time, setTime] = useState(false);
+  useEffect(() => {
+    setTimeout(() => {
+      setTime(true);
+    }, 200)
+  },[])
   return (
       (pathURL === '/roles' ?
       <div className="userListHead">
@@ -158,10 +164,11 @@ const ListHead = (props) => {
             {/* <p>Filter</p> */}
             <img className="filterIcon" src={filter_icon} alt="" />
           </button>
-          <button className="creatUserBtn" onClick={props.toggleCreateHeader}>
+          {time ? <button className="creatUserBtn" onClick={props.toggleCreateHeader}>
             <img className="plusIcon" src={plus_icon} alt="" />
             <span>Create</span>
-          </button>
+          </button> : ""}
+
         </div>
       </div>
       : pathURL === '/organizations' ?

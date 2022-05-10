@@ -81,7 +81,7 @@ const UserModal = (props) => {
     const [associationId, setAssociationId] = useState('');
     const [saveAndNew, setSaveAndNew] = useState(false);
     const permissionMatrixRef = useRef();
-
+    let editUser = props.createButton && props.createButton._id !== undefined ? props.createButton : false;
     const fetchCountry = async () => {
         let conntryResponse = await ContactService.fetchCountry();
         setPhoneCountryCode(conntryResponse);
@@ -118,18 +118,22 @@ const UserModal = (props) => {
     }, []);
 
     useEffect(() => {
+        console.log('in useeffect', roles.length , editUser)
         if (roles.length && !editUser) {
             let defaultedRole = roles.filter(el => el.slug === 'default-role');
+            console.log('defaultedRole', defaultedRole)
             if (defaultedRole.length) {
                 setRoleId(defaultedRole[0]._id);
                 getGroupsByRoleId(defaultedRole[0]._id);
             }
         }
-    }, [roles]);
+    }, [roles, editUser]);
 
     useEffect(() => {
+        console.log(groups.length && !editUser)
         if (groups.length && !editUser) {
             let defaultedGroup = groups.filter(el => el.slug === 'default-group');
+            console.log('defaultedGroup', defaultedGroup)
             if (defaultedGroup.length) {
                 setGroupId(defaultedGroup[0]._id);
                 setPermissionData(defaultedGroup[0].permissions);
@@ -137,7 +141,7 @@ const UserModal = (props) => {
                 setCopyPermissionData(JSON.parse(JSON.stringify(defaultedGroup[0].permissions)));
             }
         }
-    }, [groups]);
+    }, [groups, editUser]);
 
     /**
      * LoggedIn user details
@@ -181,7 +185,7 @@ const UserModal = (props) => {
         props.setCreateButton(null);
     };
 
-    let editUser = props.createButton ? props.createButton : false;
+
     let temp = [];
 
     useEffect(async () => {
@@ -359,6 +363,7 @@ const UserModal = (props) => {
     const fetchRoles = async (pageId, keyword) => {
         try {
             const result = await RoleServices.fetchRoles(pageId, keyword);
+            console.log('role fertched', result);
             // .then((result) => {
             // console.log('Role drop-down result', result.roles);
             if (result) {
@@ -580,6 +585,13 @@ const UserModal = (props) => {
                         setGroupId('');
                     }
                     setGroups(groups);
+                    let defaultedGroup = groups.filter(el => el.slug === 'default-group');
+                    if (defaultedGroup.length) {
+                        setGroupId(defaultedGroup[0]._id);
+                        setPermissionData(defaultedGroup[0].permissions);
+                        //Keep a original copy of permissions data
+                        setCopyPermissionData(JSON.parse(JSON.stringify(defaultedGroup[0].permissions)));
+                    }
                 }
             } else {
                 setGroups([]);
@@ -1463,7 +1475,7 @@ const UserModal = (props) => {
                                         <PermissionMatrix
                                             getData={getDataFn}
                                             ref={permissionMatrixRef}
-                                            setPermissionData={permissionData}
+                                            originalPermission={permissionData}
                                         />
                                     </div>
                                     {formErrors.permission ? <span className="errorMsg">{formErrors.permission}</span> : ''}
