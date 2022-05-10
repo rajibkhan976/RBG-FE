@@ -142,7 +142,7 @@ const Transaction = (props) => {
     setEditTransaction(transaction);
     setEditTransModal(param);
     
-    if (loadData) {
+    // if (loadData) {
       setIsLoader(true)
       try {
         fetchOldTransactions(props.contactId, 1);
@@ -152,7 +152,7 @@ const Transaction = (props) => {
       } finally {
         setIsLoader(false)
       }
-    }
+    // }
   };
 
   const openCloseCompleteTrans = (param, item) => {
