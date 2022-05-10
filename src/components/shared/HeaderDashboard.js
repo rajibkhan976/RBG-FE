@@ -503,7 +503,7 @@ function HeaderDashboard(props) {
             ></figure>
 
             <div className="menuUserDetail">
-              <span>{loggedInUser && loggedInUser.group}</span>
+              {/*<span>{loggedInUser && loggedInUser.group}</span>*/}
               <h3>{loggedInUser && loggedInUser.name}</h3>
             </div>
             <i>
@@ -528,7 +528,7 @@ function HeaderDashboard(props) {
                 <div className="userContacts">
                   <h3>
                     {loggedInUser && loggedInUser.fullName}
-                    <p>{loggedInUser && loggedInUser.group}</p>
+                    {/*<p>{loggedInUser && loggedInUser.group}</p>*/}
                   </h3>
 
                   {loggedInUser && loggedInUser.phone ? <div className="userPhone">
