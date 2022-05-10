@@ -1436,7 +1436,7 @@ const UserModal = (props) => {
                                     <div className="permissionButtons">
                                         <button className="creatUserBtn createBtn" disabled={processing}>
                                             <img className="plusIcon" src={plus_icon} alt="" />
-                                            <span>{editId ? "Update user" : "Create an user"}</span>
+                                            <span>{editId ? "Update user" : "Create a user"}</span>
                                         </button>
                                         {!editId && <button className="saveNnewBtn" disabled={processing} onClick={handleSaveAndNew}>
                                             <span>Save & New</span>

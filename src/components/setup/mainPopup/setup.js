@@ -74,7 +74,7 @@ const Setup = (props) => {
                   <p><NavLink
                     to="/call-setup"
                     onClick={(e) => props.clickedLink(e)}
-                  >Set all kind of communications</NavLink></p>
+                  >Set up communications</NavLink></p>
                 </div>
               </div>
               <ul className="secondListing">
