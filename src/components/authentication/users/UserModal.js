@@ -81,7 +81,7 @@ const UserModal = (props) => {
     const [associationId, setAssociationId] = useState('');
     const [saveAndNew, setSaveAndNew] = useState(false);
     const permissionMatrixRef = useRef();
-    let editUser = props.createButton && props.createButton._id !== undefined ? props.createButton : false;
+    let editUser = props.createButton ? props.createButton : false;
     const fetchCountry = async () => {
         let conntryResponse = await ContactService.fetchCountry();
         setPhoneCountryCode(conntryResponse);
@@ -119,7 +119,7 @@ const UserModal = (props) => {
 
     useEffect(() => {
         console.log('in useeffect', roles.length , editUser)
-        if (roles.length && !editUser) {
+        if (roles.length && props.createButton && props.createButton._id === undefined) {
             let defaultedRole = roles.filter(el => el.slug === 'default-role');
             console.log('defaultedRole', defaultedRole)
             if (defaultedRole.length) {
@@ -130,7 +130,7 @@ const UserModal = (props) => {
     }, [roles, editUser]);
 
     useEffect(() => {
-        console.log(groups.length && !editUser)
+        console.log(groups.length && props.createButton && props.createButton._id === undefined)
         if (groups.length && !editUser) {
             let defaultedGroup = groups.filter(el => el.slug === 'default-group');
             console.log('defaultedGroup', defaultedGroup)
@@ -246,6 +246,7 @@ const UserModal = (props) => {
         /**
          * Reset permissions
          */
+        console.log(editUser)
         if (!editUser) {
             console.log('Reset permissions', basicinfoMobilePhone);
             setRoleId('');
