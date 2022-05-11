@@ -16,13 +16,14 @@ export const ResetPasswordServices = {
                 throw new Error("There is an error sending reset password link. Please contact support");
             }
         } catch (e) {
-            if (!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
-            } else if(e.response && e.response.data) {
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
                 throw new Error(e.response.data);
             } else {
-                console.log(e.stack);
+                console.log("Error", e.response);
                 throw new Error(e.message + ". Please contact support.");
             }
         }
@@ -36,13 +37,14 @@ export const ResetPasswordServices = {
                 throw new Error("There is an error updating your password. Please contact support");
             }
         } catch (e) {
-            if (!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
-            } else if(e.response && e.response.data) {
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
                 throw new Error(e.response.data);
             } else {
-                console.log(e.stack);
+                console.log("Error", e.response);
                 throw new Error(e.message + ". Please contact support.");
             }
         }

@@ -12,11 +12,14 @@ export const BillingServices = {
       const result = await axios.get(url, { headers: headers });
       return result.data;
     } catch (e) {
-      if (!typeof e.data === "undefined") {
+      if(e.response && e.response.data && e.response.data.message) {
         console.log(e.response.data.message);
         throw new Error(e.response.data.message);
+      } else if(e.response && e.response.data && typeof e.response.data == "string") {
+        console.log(e.response.data);
+        throw new Error(e.response.data);
       } else {
-        console.log(e.stack);
+        console.log("Error", e.response);
         throw new Error(e.message + ". Please contact support.");
       }
     }
@@ -32,15 +35,18 @@ export const BillingServices = {
         return result.data;
       } else {
         throw new Error(
-          "There is an error updating product. Please contact support"
+            "There is an error updating product. Please contact support"
         );
       }
     } catch (e) {
-      if (!typeof e.data === "undefined") {
+      if(e.response && e.response.data && e.response.data.message) {
         console.log(e.response.data.message);
         throw new Error(e.response.data.message);
+      } else if(e.response && e.response.data && typeof e.response.data == "string") {
+        console.log(e.response.data);
+        throw new Error(e.response.data);
       } else {
-        console.log(e.stack);
+        console.log("Error", e.response);
         throw new Error(e.message + ". Please contact support.");
       }
     }
@@ -51,11 +57,14 @@ export const BillingServices = {
       const result = await axios.put(url, payload, { headers: headers });
       return result.data;
     } catch (e) {
-      if (!typeof e.data === "undefined") {
+      if(e.response && e.response.data && e.response.data.message) {
         console.log(e.response.data.message);
         throw new Error(e.response.data.message);
+      } else if(e.response && e.response.data && typeof e.response.data == "string") {
+        console.log(e.response.data);
+        throw new Error(e.response.data);
       } else {
-        console.log(e.stack);
+        console.log("Error", e.response);
         throw new Error(e.message + ". Please contact support.");
       }
     }
@@ -68,14 +77,20 @@ export const BillingServices = {
         return result.data;
       } else {
         throw new Error(
-          "There is an error adding this Card. Please contact support"
+            "There is an error adding this Card. Please contact support"
         );
       }
     } catch (e) {
-      console.log(e.response.data);
-      throw new Error(
-        e.response.data.message
-      )
+      if(e.response && e.response.data && e.response.data.message) {
+        console.log(e.response.data.message);
+        throw new Error(e.response.data.message);
+      } else if(e.response && e.response.data && typeof e.response.data == "string") {
+        console.log(e.response.data);
+        throw new Error(e.response.data);
+      } else {
+        console.log("Error", e.response);
+        throw new Error(e.message + ". Please contact support.");
+      }
     }
   },
   addBank: async (payload) => {
@@ -86,12 +101,20 @@ export const BillingServices = {
         return result.data;
       } else {
         throw new Error(
-          "There is an error adding this Bank Account. Please contact support"
+            "There is an error adding this Bank Account. Please contact support"
         );
       }
     } catch (e) {
-      console.log(e.response.data.message);
-      throw new Error(e.response.data.message);
+      if(e.response && e.response.data && e.response.data.message) {
+        console.log(e.response.data.message);
+        throw new Error(e.response.data.message);
+      } else if(e.response && e.response.data && typeof e.response.data == "string") {
+        console.log(e.response.data);
+        throw new Error(e.response.data);
+      } else {
+        console.log("Error", e.response);
+        throw new Error(e.message + ". Please contact support.");
+      }
     }
   },
   //   editRole: async (payload) => {
@@ -123,15 +146,18 @@ export const BillingServices = {
         return result.data;
       } else {
         throw new Error(
-          "There is an error updating Ringtone. Please contact support"
+            "There is an error updating Ringtone. Please contact support"
         );
       }
     } catch (e) {
-      if (!typeof e.data === "undefined") {
+      if(e.response && e.response.data && e.response.data.message) {
         console.log(e.response.data.message);
         throw new Error(e.response.data.message);
+      } else if(e.response && e.response.data && typeof e.response.data == "string") {
+        console.log(e.response.data);
+        throw new Error(e.response.data);
       } else {
-        console.log(e.stack);
+        console.log("Error", e.response);
         throw new Error(e.message + ". Please contact support.");
       }
     }
@@ -150,15 +176,18 @@ export const BillingServices = {
         return result.data;
       } else {
         throw new Error(
-          "There is an error in Deleting Ringtone. Please contact support"
+            "There is an error in Deleting Ringtone. Please contact support"
         );
       }
     } catch (e) {
-      if (!typeof e.data === "undefined") {
+      if(e.response && e.response.data && e.response.data.message) {
         console.log(e.response.data.message);
         throw new Error(e.response.data.message);
+      } else if(e.response && e.response.data && typeof e.response.data == "string") {
+        console.log(e.response.data);
+        throw new Error(e.response.data);
       } else {
-        console.log(e.stack);
+        console.log("Error", e.response);
         throw new Error(e.message + ". Please contact support.");
       }
     }

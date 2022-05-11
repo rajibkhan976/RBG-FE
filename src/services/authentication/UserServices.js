@@ -22,11 +22,14 @@ export const UserServices = {
                 throw new Error("There is an issue while fetching users. Please contact support.");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                console.log(e.stack);
+                console.log("Error", e.response);
                 throw new Error(e.message + ". Please contact support.");
             }
         }
@@ -51,11 +54,16 @@ export const UserServices = {
                 .then(res => {
                     resolve(res);
                 })
-                .catch(error => {
-                    if (error != null && error.response != null) {
-                        reject(error.response.data.error);
+                .catch(e => {
+                    if(e.response && e.response.data && e.response.data.message) {
+                        console.log(e.response.data.message);
+                        throw new Error(e.response.data.message);
+                    } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                        console.log(e.response.data);
+                        throw new Error(e.response.data);
                     } else {
-                        reject(message.connectionError);
+                        console.log("Error", e.response);
+                        throw new Error(e.message + ". Please contact support.");
                     }
                 });
         });
@@ -77,11 +85,14 @@ export const UserServices = {
                 throw new Error("There is an issue while deleting user. Please contact support.");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                console.log(e.stack);
+                console.log("Error", e.response);
                 throw new Error(e.message + ". Please contact support.");
             }
         }
@@ -149,7 +160,16 @@ export const UserServices = {
                 throw new Error("There is an issue while updating the user. Please contact support.");
             }
         } catch (e) {
-            throw new Error(e.message);
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
     },
 
@@ -163,11 +183,14 @@ export const UserServices = {
             );
             return getGroups.data;
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                console.log(e.stack);
+                console.log("Error", e.response);
                 throw new Error(e.message + ". Please contact support.");
             }
         }
@@ -185,11 +208,14 @@ export const UserServices = {
                 throw new Error("There is an issue while fetching users. Please contact support.");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                console.log(e.stack);
+                console.log("Error", e.response);
                 throw new Error(e.message + ". Please contact support.");
             }
         }
@@ -207,11 +233,14 @@ export const UserServices = {
                 throw new Error("There is an issue while fetching associations. Please contact support.");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                console.log(e.stack);
+                console.log("Error", e.response);
                 throw new Error(e.message + ". Please contact support.");
             }
         }
@@ -229,11 +258,14 @@ export const UserServices = {
                 throw new Error("There is an issue while fetching user details. Please contact support.");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                console.log(e.stack);
+                console.log("Error", e.response);
                 throw new Error(e.message + ". Please contact support.");
             }
         }

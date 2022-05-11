@@ -21,11 +21,14 @@ export const GroupServices = {
                 throw new Error("There was an error fetching the group. Please try to refresh the page or contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                console.log(e.stack);
+                console.log("Error", e.response);
                 throw new Error(e.message + ". Please contact support.");
             }
         }
@@ -41,11 +44,14 @@ export const GroupServices = {
             }
 
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                console.log(e.stack);
+                console.log("Error", e.response);
                 throw new Error(e.message + ". Please contact support.");
             }
         }
@@ -65,11 +71,14 @@ export const GroupServices = {
                 throw new Error("There was an error updating Group. Please try again or contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                console.log(e.stack);
+                console.log("Error", e.response);
                 throw new Error(e.message + ". Please contact support.");
             }
         }
@@ -84,13 +93,14 @@ export const GroupServices = {
                 throw new Error("There was an error deleting Group. Please try again or contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
-            } else if(e.response && e.response.data) {
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
                 throw new Error(e.response.data);
             } else {
-                console.log(e.stack);
+                console.log("Error", e.response);
                 throw new Error(e.message + ". Please contact support.");
             }
         }

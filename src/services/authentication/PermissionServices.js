@@ -22,7 +22,16 @@ export const PermissionServices = {
                 throw new Error("There is an error getting an entity");
             }
         } catch (e) {
-            throw new Error(e.message);
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
     },
 
@@ -40,7 +49,16 @@ export const PermissionServices = {
                 throw new Error("There is an error getting an action");
             }
         } catch (e) {
-            throw new Error(e.message);
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
     },
 
@@ -58,7 +76,16 @@ export const PermissionServices = {
                 throw new Error("There is an error getting an action type");
             }
         } catch (e) {
-            throw new Error(e.message);
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
     }
 };

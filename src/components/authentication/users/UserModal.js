@@ -827,7 +827,6 @@ const UserModal = (props) => {
             isError = true;
             formErrorsCopy.groupName = "Please fillup the group name";
         }
-        console.log(permissionData)
         if (permissionData.length === 0) {
             isError = true;
             formErrorsCopy.permission = "Please provide at least one permission.";
@@ -1013,20 +1012,15 @@ const UserModal = (props) => {
                             setSaveAndNew(false);
                             // resetUserForm();
                             //Open group create modal
-                            setTimeout(() => {
+                            //setTimeout(() => {
                                 props.setCreateButton(null);
                                 props.setCreateButton('users');
-                            },
-                                messageDelay
-                            );
-
+                            //}, messageDelay);
                         } else {
                             console.log('else save and new');
-                            setTimeout(() => {
+                            //setTimeout(() => {
                                 props.setCreateButton(null);
-                            },
-                                messageDelay
-                            );
+                            //}, messageDelay);
                         }
                         // Fetch users
                         fetchUsers(1);
@@ -1055,10 +1049,17 @@ const UserModal = (props) => {
                 setProcessing(false);
                 console.log("In user create", e.message);
                 if (e.response && e.response.status == 403) {
-                    setErrorMsg("You dont have permission to perform this action");
-                }
-                else if (e.message) {
-                    setErrorMsg(e.message);
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: "You dont have permission to perform this action.",
+                        typeMessage: 'error'
+                    });
+                } else if (e.message) {
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: e.message,
+                        typeMessage: 'error'
+                    });
                 }
             } finally {
                 setIsLoader(false);

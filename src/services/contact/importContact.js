@@ -48,10 +48,14 @@ export const ImportContactServices = {
             const result = await axios.get(url, { headers: headers });
             return result.data;
         } catch (e) {
-            if (!typeof e.data === "undefined") {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
             } else {
-                console.log(e.stack);
+                console.log("Error", e.response);
                 throw new Error(e.message + ". Please contact support.");
             }
         }
