@@ -118,7 +118,6 @@ const UserModal = (props) => {
     }, []);
 
     useEffect(() => {
-        console.log('in useeffect', roles.length , editUser)
         if (roles.length && props.createButton && props.createButton._id === undefined) {
             let defaultedRole = roles.filter(el => el.slug === 'default-role');
             console.log('defaultedRole', defaultedRole)
@@ -127,7 +126,7 @@ const UserModal = (props) => {
                 getGroupsByRoleId(defaultedRole[0]._id);
             }
         }
-    }, [roles, editUser]);
+    }, [roles, props.createButton]);
 
     useEffect(() => {
         console.log(groups.length && props.createButton && props.createButton._id === undefined)
@@ -141,7 +140,7 @@ const UserModal = (props) => {
                 setCopyPermissionData(JSON.parse(JSON.stringify(defaultedGroup[0].permissions)));
             }
         }
-    }, [groups, editUser]);
+    }, [groups, props.createButton]);
 
     /**
      * LoggedIn user details
@@ -270,14 +269,14 @@ const UserModal = (props) => {
             setAssociationName("");
             setAssociationEmail("");
             setAssociationDescription("");
-            if (roles.length && !editUser) {
+            if (roles.length && props.createButton && props.createButton._id === undefined) {
                 let defaultedRole = roles.filter(el => el.slug === 'default-role');
                 if (defaultedRole.length) {
                     setRoleId(defaultedRole[0]._id);
                     await getGroupsByRoleId(defaultedRole[0]._id);
                 }
             }
-            if (groups.length && !editUser) {
+            if (groups.length && props.createButton && props.createButton._id === undefined) {
                 let defaultedGroup = groups.filter(el => el.slug === 'default-group');
                 if (defaultedGroup.length) {
                     setGroupId(defaultedGroup[0]._id);
@@ -586,12 +585,14 @@ const UserModal = (props) => {
                         setGroupId('');
                     }
                     setGroups(groups);
-                    let defaultedGroup = groups.filter(el => el.slug === 'default-group');
-                    if (defaultedGroup.length) {
-                        setGroupId(defaultedGroup[0]._id);
-                        setPermissionData(defaultedGroup[0].permissions);
-                        //Keep a original copy of permissions data
-                        setCopyPermissionData(JSON.parse(JSON.stringify(defaultedGroup[0].permissions)));
+                    if (props.createButton && props.createButton._id === undefined) {
+                        let defaultedGroup = groups.filter(el => el.slug === 'default-group');
+                        if (defaultedGroup.length) {
+                            setGroupId(defaultedGroup[0]._id);
+                            setPermissionData(defaultedGroup[0].permissions);
+                            //Keep a original copy of permissions data
+                            setCopyPermissionData(JSON.parse(JSON.stringify(defaultedGroup[0].permissions)));
+                        }
                     }
                 }
             } else {
