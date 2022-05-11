@@ -10,6 +10,8 @@ import {ImportContactServices} from "../../../services/contact/importContact";
 import Loader from "../../shared/Loader";
 import {PhasesServices} from "../../../services/contact/phasesServices";
 import info_icon from "../../../assets/images/infos.svg";
+import {useDispatch} from "react-redux";
+import * as actionTypes from "../../../actions/types";
 
 function Step1(props) {
     const [fileName, setFileName] = useState("Please import file");
@@ -27,6 +29,7 @@ function Step1(props) {
     const [selectedStatus, setSelectedStatus] = useState("");
     const [selectedPhase, setSelectedPhase] = useState("");
     const [statusError, setStatusError] = useState("");
+    const dispatch = useDispatch();
     const getRandomFileName = () => {
         let timestamp = new Date().toISOString().replace(/[-:.]/g,"");
         let random = ("" + Math.random()).substring(2, 8);
@@ -130,27 +133,50 @@ function Step1(props) {
                 'defaultPhase': selectedPhase,
                 'defaultStatus': selectedStatus
             }
-            setIsLoader(true);
-            let uploadedFileResponse = await ImportContactServices.uploadFile(JSON.stringify(payload));
-            setIsLoader(false);
-            if (uploadedFileResponse.data.success) {
-                let headers = uploadedFileResponse.data.headers;
-                let totalRecord = uploadedFileResponse.data.totalRecords;
-                let object = {
-                    file: uploadedFile,
-                    headers: headers,
-                    totalRecords: totalRecord,
-                    duplicate: duplicate,
-                    primaryField: primaryField,
-                    importType: importType,
-                    importName: importName,
-                    defaultPhase: selectedPhase,
-                    defaultStatus: selectedStatus
+            try {
+                setIsLoader(true);
+                let uploadedFileResponse = await ImportContactServices.uploadFile(JSON.stringify(payload));
+                if (uploadedFileResponse.data.success) {
+                    let headers = uploadedFileResponse.data.headers;
+                    let totalRecord = uploadedFileResponse.data.totalRecords;
+                    let object = {
+                        file: uploadedFile,
+                        headers: headers,
+                        totalRecords: totalRecord,
+                        duplicate: duplicate,
+                        primaryField: primaryField,
+                        importType: importType,
+                        importName: importName,
+                        defaultPhase: selectedPhase,
+                        defaultStatus: selectedStatus
+                    }
+                    props.setState('custom', object);
+                    props.next();
+                } else {
+                    console.log("api error ! " + uploadedFileResponse.data.message);
                 }
-                props.setState('custom', object);
-                props.next();
-            } else {
-                console.log("api error ! " + uploadedFileResponse.data.message);
+            } catch (e) {
+                if(e.response && e.response.data && e.response.data.message) {
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: e.response.data.message,
+                        typeMessage: 'error'
+                    });
+                } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: e.response.data,
+                        typeMessage: 'error'
+                    });
+                } else {
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: e.message + ". Please contact support.",
+                        typeMessage: 'error'
+                    });
+                }
+            } finally {
+                setIsLoader(false);
             }
         }
     }

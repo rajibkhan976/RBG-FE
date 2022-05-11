@@ -1047,7 +1047,7 @@ const UserModal = (props) => {
                  * Segregate error by http status
                  */
                 setProcessing(false);
-                console.log("In user create", e.message);
+                console.log("In user create", e);
                 if (e.response && e.response.status == 403) {
                     dispatch({
                         type: actionTypes.SHOW_MESSAGE,
