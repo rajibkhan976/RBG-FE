@@ -940,12 +940,25 @@ const UserModal = (props) => {
                         })
                 } catch (e) {
                     setProcessing(false);
-                    console.log("Error in org create", e)
-                    if (e.response && e.response.status == 403) {
-                        setErrorMsg("You dont have permission to perform this action");
-                    }
-                    else if (e.response && e.response.data.message) {
-                        setErrorMsg(e.response.data.message);
+                    setIsLoader(false);
+                    if(e.response && e.response.data && e.response.data.message) {
+                        dispatch({
+                            type: actionTypes.SHOW_MESSAGE,
+                            message: e.response.data.message,
+                            typeMessage: 'error'
+                        });
+                    } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                        dispatch({
+                            type: actionTypes.SHOW_MESSAGE,
+                            message: e.response.data,
+                            typeMessage: 'error'
+                        });
+                    } else {
+                        dispatch({
+                            type: actionTypes.SHOW_MESSAGE,
+                            message: e.message + ". Please contact support.",
+                            typeMessage: 'error'
+                        });
                     }
                     return false
                 }
