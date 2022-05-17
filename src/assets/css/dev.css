@@ -1906,7 +1906,7 @@ span.profileNameDisplay {
 }
 
 .profileNameDisplayEdits {
-  margin-top: -30px;
+  margin-top: -20px;
   display: flex;
   align-items: center;
 }
@@ -1921,6 +1921,7 @@ span.profileNameDisplay {
   color: #305671;
   font-size: 14px;
   font-weight: 400;
+  min-height: 30px;
 }
 
 .editPersonalDetailsNames:focus, .editPersonalDetailsNames:focus-within, .editPersonalDetailsNames:focus-visible, .editPersonalDetailsNames:visited {
@@ -1936,7 +1937,7 @@ span.profileNameDisplay {
 }
 
 .editPersonalNameSave {
-  margin-right: 35px;
+  margin-right: 5px;
 }
 
 .showing_gym_data .gymName > .profilePicture.personalDetailPage {
@@ -2006,7 +2007,23 @@ h3.leftSectionHeader {
   position: relative;
   cursor: pointer;
 }
+.showing_gym_data .gymName .editPersonalName:hover {
+  background: #E9EFF5;
+}
+.showing_gym_data .gymName .editPersonalNameSave:hover {
+  background: rgb(0 204 82 / 10%);
+}
+.showing_gym_data .gymName .editPersonalNameDelete:hover {
+  background: #f7eded;
+}
 
+.showing_gym_data .gymName .editPersonalName, .showing_gym_data .gymName .editPersonalNameSave, .showing_gym_data .gymName .editPersonalNameDelete {
+  background: transparent;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 12px 0;
+}
 
 .personalDetailPage .profileUpload input[type="file"] {
   height: 64px;
@@ -2014,6 +2031,7 @@ h3.leftSectionHeader {
   line-height: 60px;
   background: none;
   border: none;
+  cursor: pointer;
 }
 .showing_gym_data .gymName > div span.editProfileImgWraper .profileImgSection {
 width: 64px;
@@ -2028,6 +2046,26 @@ justify-content: center;
 pointer-events: none;
 cursor: pointer;
 
+}
+
+
+.showing_gym_data .gymName > div .profileName {
+  padding-left: 5px;
+}
+
+.hoverEffects {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  background: rgb(0 0 0 / 50%);
+  display: flex;
+  flex-wrap: wrap;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  cursor: pointer;
+  
 }
 
 
@@ -3987,7 +4025,7 @@ li.paymentModeLi, li.paymentAmtLi {
   overflow: initial;
 }
 
-.holidayListWrap.appLists:last-child .sideEditOption .dropdownOptions {
+.holidayListWrap.appLists:nth-child(n+5) .sideEditOption .dropdownOptions {
   top: unset;
   bottom: 30px;
 }
@@ -5323,6 +5361,10 @@ margin-right: 18%;
  .showing_gym_data.personalInfos .profileImgSection {
   width: 64px;
   padding: 0;
+ }
+
+ .personalInfos .gymName {
+   height: 99.59px;
  }
 
  .showing_gym_data.personalInfos .profileImgSection span {

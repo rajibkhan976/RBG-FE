@@ -5,6 +5,8 @@ import { ErrorAlert, SuccessAlert } from "../../shared/messages";
 import profileAvatar from "../../../assets/images/camera.svg";
 import arrowRightWhite from "../../../assets/images/arrowRightWhite.svg";
 import listIcon from "../../../assets/images/list_icon.svg";
+import load from "../../../assets/images/loads.svg";
+import cam from "../../../assets/images/cam.svg";
 import saveEdit from "../../../assets/images/saveEdit.svg";
 import delEdit from "../../../assets/images/delEdit.svg";
 import dot3gray from "../../../assets/images/dot3gray.svg";
@@ -16,14 +18,107 @@ import gymLogo from "../../../assets/images/gymLogo.svg";
 // import AddHolidayModal from "./addHolidayModal";
 import config from "../../../configuration/config";
 
-import { GymDetailsServices } from "../../../services/gymDetails/GymDetailsServices";
+
 
 
 const PersonalDetails = (props) => {
 
+  
+  const [file, setFile] = useState(false);
+    function handleFileChange(e) {
+        console.log(e.target.files);
+        setFile(URL.createObjectURL(e.target.files[0]));
+    }
+
+
+  // const initialValues= {currentPassword: "", newPassword: "", confirmNewPassword: ""};
+  // console.log("Type of value" ,typeof initialValues);
+  const [formValues, setformValues] = useState({
+    currentPassword: "", 
+    newPassword: "", 
+    confirmNewPassword: ""
+  });
+  const [formErrors, setformErrors] = useState({});
+  const [isSubmit, setisSubmit] = useState(false);
+
+const handleChange = (e) => {
+  let val = e.target.value;
+  setformValues ({...formValues, currentPassword: val});
+  console.log(formValues)
+};
+
+const handleChangenewPassword = (e) => {
+  let val = e.target.value;
+  setformValues ({...formValues, newPassword: val});
+  console.log(formValues)
+};
+
+const handleChangeConfirmNewPassword = (e) => {
+  let val = e.target.value;
+  setformValues ({...formValues, confirmNewPassword: val});
+  console.log(formValues)
+};
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+  setformErrors(validate(formValues));
+  setisSubmit(true);
+  console.log(formValues);
+};
+
+const validate = (values) => {
+  const errors ={};
+  if (!values.currentPassword && !values.newPassword && values.confirmNewPassword) {
+    errors.currentPassword = "Current Password is required!"
+    errors.newPassword = "Current Password is required!"
+  }
+  
+  if (!values.confirmNewPassword && !values.newPassword && values.currentPassword) {
+    errors.newPassword = "New Password is required!"
+    errors.confirmNewPassword = "New Password is required!"
+    
+  }
+  if (!values.currentPassword && !values.confirmNewPassword && values.newPassword) {
+    errors.confirmNewPassword = "Confirm Password is required!"
+    errors.currentPassword = "Current Password is required!"
+  }
+
+
+
+
+  if (!values.currentPassword && values.newPassword && values.confirmNewPassword) {
+    errors.currentPassword = "Current Password is required!"
+  }
+  
+  if (values.confirmNewPassword && !values.newPassword && values.currentPassword) {
+    errors.newPassword = "New Password is required!"
+    
+    
+  }
+  if (!values.confirmNewPassword && values.currentPassword && values.newPassword) {
+    errors.confirmNewPassword = "Current Password is required!"
+  }
+
+
+  if (values.confirmNewPassword !== values.newPassword) {
+    errors.confirmNewPassword = "Password is not matching!"
+  }
+
+
+  return errors;
+  
+};
+
+useEffect (()=> {
+  console.log(formErrors);
+  if(Object.keys(formErrors).length ===0 && isSubmit){
+    console.log(formValues);}},[formErrors]);
+
   const [toggleEditName, setToggleEditName] = useState({
     status: false,
   });
+
+
 
   const toggleEditNameFn = (e) => {
     e.preventDefault();
@@ -64,18 +159,28 @@ const PersonalDetails = (props) => {
               <div className="showing_gym_data personalInfos">
                 <div className="gymName">
                   <div className="profilePicture personalDetailPage">
-                    <span  className={toggleEditName.status ? "profileImgSection hideThis" : "profileImgSection"}>
-                      <img src={profile_png} className="profileImage" alt="" />
+                    <span className={toggleEditName.status ? "profileImgSection hideThis" : "profileImgSection"}>
+                      <img src={profile_png} className={file ? "profileImage hideThis" : "profileImage"} alt="" />
+                      {file && (
+                      	<>
+                          <img src={file} className="profileImage" alt="" />
+                        </>
+                      )}
                     </span>
                     {toggleEditName.status && (
                       	<>
                           <span className="editProfileImgWraper">
                             <span className="profileUpload">
-                              <input type="file" />
+                              <input type="file" onChange={handleFileChange} />
                             </span>
                             <span className="profileImgSection">
-                              <img src={profile_png} className="profileImage" alt="" />                              
+                              <img src={file} className="profileImage" alt="" /> 
+                              <span className="hoverEffects">
+                                <img src={cam} className="camImg" alt="" />
+                            </span>   
+                                                 
                             </span>
+                            
                           </span>
                         </>
                       )}  
@@ -86,7 +191,7 @@ const PersonalDetails = (props) => {
                     {toggleEditName.status && (
                       	<>
                           <span className="profileNameDisplayEdits">
-                          <input className="editPersonalDetailsNames" defaultValue="Jonathan Doe" type="text" name="" maxlength="30"/>
+                          <input className="editPersonalDetailsNames" defaultValue="Jonathan Doe" type="text" name="" maxlength="29"/>
 
                             <button className="editPersonalNameSave" onClick={() => closeModal()}><img src={saveEdit} alt=""/></button>
                             <button className="editPersonalNameDelete" onClick={() => closeModal()}><img src={delEdit} alt=""/></button>
@@ -118,8 +223,9 @@ const PersonalDetails = (props) => {
               <div className="holidayListHeader">
                 <h3>Basic Settings</h3>                  
               </div>
+              <form onSubmit={handleSubmit}>
               <div className="detailsForm">
-                <form>
+                
                   <div className="formControl">
                     <label>Timezone</label>
                     <select
@@ -140,32 +246,36 @@ const PersonalDetails = (props) => {
                         <option value="">USA</option>                        
                     </select>
                   </div>
-                  
-                </form>
+                
               </div>
 
               <div className="holidayListHeader passwordSection">
                 <h3>Change Password</h3>                  
               </div>
               <div className="detailsForm">
-                <form>
+               
                   <div className="formControl">
                     <label>Current Password</label>
-                   <input type="text" name="" />
+                   <input type="password" name="" defaultvalue={formValues.currentPassword} onChange={handleChange} />
+                   <span className="errorMsg">{formErrors.currentPassword}</span>
                   </div>
+                  
                   <div className="formControl">
                     <label>New Password</label>
-                    <input type="text" name="" />
+                    <input type="password" name="" defaultvalue={formValues.newPassword} onChange={handleChangenewPassword} />
+                    <span className="errorMsg">{formErrors.newPassword}</span>
                   </div>
                   <div className="formControl">
                     <label>Confirm New Password</label>
-                    <input type="text" name="" />
+                    <input type="password" name="" defaultvalue={formValues.confirmNewPassword} onChange={handleChangeConfirmNewPassword} />
+                    <span className="errorMsg">{formErrors.confirmNewPassword}</span>
                   </div>
                   <div className="formControl">
                   <button type="submit" className="saveNnewBtn"><span>Save</span><img src={arrowRightWhite} alt="" /></button>
                   </div>
-                </form>
+                
               </div>
+              </form>
           </div>
         </div>
 
