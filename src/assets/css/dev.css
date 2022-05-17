@@ -1897,8 +1897,50 @@ img.profileImage {
   width: 100%;
 }
 
-span.profileName {
-  margin-top: -20px;
+.profileName {
+  margin-right: 24px;
+} 
+
+span.profileNameDisplay {
+  margin-top: -15px;
+}
+
+.profileNameDisplayEdits {
+  margin-top: -30px;
+  display: flex;
+  align-items: center;
+}
+
+.editPersonalDetailsNames {
+  width: 275px;
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #9BAEBC;
+  border-radius: 0;
+  margin-right: 10px;
+  color: #305671;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.editPersonalDetailsNames:focus, .editPersonalDetailsNames:focus-within, .editPersonalDetailsNames:focus-visible, .editPersonalDetailsNames:visited {
+  border-bottom:  1px solid #0093FF;
+}
+
+.hideThis {
+  display: none;
+}
+
+.showThis {
+  display: block;
+}
+
+.editPersonalNameSave {
+  margin-right: 35px;
+}
+
+.showing_gym_data .gymName > .profilePicture.personalDetailPage {
+  width: 100%;
 }
 
 
@@ -1945,6 +1987,47 @@ h3.leftSectionHeader {
 
 .userListHead.detailsPage {
   margin-bottom: 27px;
+}
+
+/* .editPersonalName {
+  margin-top: -20px;
+} */
+
+.showing_gym_data .gymName > div span.profileUpload {
+  width: 64px;
+  padding: 0;
+  position: relative;
+  opacity: 0;
+}
+.showing_gym_data .gymName > div span.editProfileImgWraper {
+  width: 64px;
+  padding: 0;
+  display: flex;
+  position: relative;
+  cursor: pointer;
+}
+
+
+.personalDetailPage .profileUpload input[type="file"] {
+  height: 64px;
+  width: 64px;
+  line-height: 60px;
+  background: none;
+  border: none;
+}
+.showing_gym_data .gymName > div span.editProfileImgWraper .profileImgSection {
+width: 64px;
+height: 64px;
+border-radius: 50%;
+display: flex;
+flex-wrap: wrap;
+overflow: hidden;
+align-items: center;
+position: absolute;
+justify-content: center;
+pointer-events: none;
+cursor: pointer;
+
 }
 
 
@@ -2128,7 +2211,7 @@ input.cmnFieldStyle.createAppointment {
   padding: 11px 12px;
 }
 
-span.tagLists {
+.tagLists {
     width: 208px;
     position: absolute;
     top: 40px;
@@ -2139,14 +2222,14 @@ span.tagLists {
     border-top: none;
     z-index: 9;
 }
-span.tagLists ul li {
+.tagLists ul li {
   color: #305671;
   font-size: 13px;
   margin: 0px 10px 0 0;
   cursor: pointer;
   width: 100%;
 }
-span.tagLists ul li span {
+.tagLists ul li span {
   float:right;
 }
 
@@ -2179,7 +2262,7 @@ span.tagLists ul li span {
 .tagLi {
   padding: 5px 15px;
 }
-span.tagLists ul li:hover {
+.tagLists ul li:hover {
   background:#9BAEBC;
 }
 
@@ -2421,15 +2504,15 @@ button.fc-prev-button.fc-button.fc-button-primary, button.fc-next-button.fc-butt
   background-color: #f1a668;
 }
 
-span.tagLists ul li span.delTag {
+.tagLists ul li .delTag {
   display: none;
 }
 
-span.tagLists ul li.tagLi.sellected span.delTag {
+.tagLists ul .tagLi.sellected .delTag {
   display: block;
 }
 
-span.tagLists ul li.tagLi.sellected span.addTag {
+.tagLists ul .tagLi.sellected .addTag {
   display: none;
 }
 

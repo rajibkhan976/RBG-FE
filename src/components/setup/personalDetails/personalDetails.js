@@ -5,6 +5,8 @@ import { ErrorAlert, SuccessAlert } from "../../shared/messages";
 import profileAvatar from "../../../assets/images/camera.svg";
 import arrowRightWhite from "../../../assets/images/arrowRightWhite.svg";
 import listIcon from "../../../assets/images/list_icon.svg";
+import saveEdit from "../../../assets/images/saveEdit.svg";
+import delEdit from "../../../assets/images/delEdit.svg";
 import dot3gray from "../../../assets/images/dot3gray.svg";
 import edit_gym from "../../../assets/images/edit_gym.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
@@ -18,6 +20,22 @@ import { GymDetailsServices } from "../../../services/gymDetails/GymDetailsServi
 
 
 const PersonalDetails = (props) => {
+
+  const [toggleEditName, setToggleEditName] = useState({
+    status: false,
+  });
+
+  const toggleEditNameFn = (e) => {
+    e.preventDefault();
+    setToggleEditName({
+      ...toggleEditName,
+      status: !toggleEditName.status,
+    });
+  };
+
+  const closeModal = () => {
+    setToggleEditName(false);
+  };
   
   return (
     <>
@@ -45,22 +63,45 @@ const PersonalDetails = (props) => {
             <h3 className="leftSectionHeader">Account Details</h3>
               <div className="showing_gym_data personalInfos">
                 <div className="gymName">
-                  <div className="profilePicture">
-                    <span className="profileImgSection">
+                  <div className="profilePicture personalDetailPage">
+                    <span  className={toggleEditName.status ? "profileImgSection hideThis" : "profileImgSection"}>
                       <img src={profile_png} className="profileImage" alt="" />
-                      <span>Change</span>
                     </span>
-                      
-                    <span className="profileName">Jonathan Doe</span>
+                    {toggleEditName.status && (
+                      	<>
+                          <span className="editProfileImgWraper">
+                            <span className="profileUpload">
+                              <input type="file" />
+                            </span>
+                            <span className="profileImgSection">
+                              <img src={profile_png} className="profileImage" alt="" />                              
+                            </span>
+                          </span>
+                        </>
+                      )}  
+                    <span className={toggleEditName.status ? "profileNameDisplay hideThis" : "profileNameDisplay"}>
+                      <span className="profileName">Jonathan Doe</span>
+                      <button className="editPersonalName" onClick={(e) => toggleEditNameFn(e)}><img src={edit_gym} alt=""/></button>
+                    </span>
+                    {toggleEditName.status && (
+                      	<>
+                          <span className="profileNameDisplayEdits">
+                          <input className="editPersonalDetailsNames" defaultValue="Jonathan Doe" type="text" name="" maxlength="30"/>
+
+                            <button className="editPersonalNameSave" onClick={() => closeModal()}><img src={saveEdit} alt=""/></button>
+                            <button className="editPersonalNameDelete" onClick={() => closeModal()}><img src={delEdit} alt=""/></button>
+                          </span>
+                        </>
+                      )}  
                   </div>
                  
-                  <button><img src={edit_gym} alt=""/></button>
+                  
                 </div>
                 <div className="gymInfo full">
                   <p className="textType1">Email <span>:</span></p>
                     <p className="textType4">kallol.banerjee@tier5.in</p>
                 </div>
-                <div className="gymInfo full d-flex">
+                {/* <div className="gymInfo full d-flex">
                   <div className="gymInfo half d-flex">
                     <p className="textType1">Plan <span>:</span></p>
                     <p className="textType3">Platinum</p>
@@ -68,7 +109,7 @@ const PersonalDetails = (props) => {
                   <div className="gymInfo half textRight">
                   <button className="common_blue_button">Upgrade <img alt="" src={arrowRightWhite} /></button>
                   </div>
-                </div>
+                </div> */}
               </div>  
           </div>
 
@@ -81,7 +122,6 @@ const PersonalDetails = (props) => {
                 <form>
                   <div className="formControl">
                     <label>Timezone</label>
-                    {/* <input type="text" placeholder="Eg. Republic Day" name="" /> */}
                     <select
                         style={{
                             backgroundImage: "url(" + arrowDown + ")",
@@ -91,8 +131,7 @@ const PersonalDetails = (props) => {
                     </select>
                   </div>
                   <div className="formControl">
-                    <label>Country</label>
-                    {/* <input type="text" placeholder="Eg. Republic Day" name="" /> */}
+                    <label>Select Country</label>
                     <select
                         style={{
                             backgroundImage: "url(" + arrowDown + ")",
@@ -101,17 +140,7 @@ const PersonalDetails = (props) => {
                         <option value="">USA</option>                        
                     </select>
                   </div>
-                  <div className="formControl">
-                    <label>Default Number</label>
-                    {/* <input type="text" placeholder="Eg. Republic Day" name="" /> */}
-                    <select
-                        style={{
-                            backgroundImage: "url(" + arrowDown + ")",
-                        }}>
-                        <option value="">+1-2162386318 [ (216) 238-6318 ]</option>
-                        <option value="">+1-2162386318 [ (216) 238-6318 ]</option>                        
-                    </select>
-                  </div>
+                  
                 </form>
               </div>
 
