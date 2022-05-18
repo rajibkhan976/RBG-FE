@@ -40,14 +40,14 @@
     "build:prod": "env-cmd -f .env.prod react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "deploy": "npm i && npm run build && aws s3 sync build s3://dev.redbeltgym.com",
-    "deploy:prod": "npm i && npm run build:prod && aws s3 sync build s3://www.redbeltgym.com",
-    "deploy:one": "npm i && npm run build && aws s3 sync build s3://rbg-fb-1",
-    "deploy:two": "npm i && npm run build && aws s3 sync build s3://rbg-fb-2",
-    "deploy:three": "npm i && npm run build && aws s3 sync build s3://rbg-fb-3",
-    "deploy:four": "npm i && npm run build && aws s3 sync build s3://rbg-fb-4",
-    "serve": "npm i && npm run build && serve -s build",
-    "serve:prod": "npm i && npm run build:prod && serve -s build"
+    "deploy": "npm i && GENERATE_SOURCEMAP=false npm run build && aws s3 sync build s3://dev.redbeltgym.com",
+    "deploy:prod": "npm i && GENERATE_SOURCEMAP=false npm run build:prod && aws s3 sync build s3://www.redbeltgym.com",
+    "deploy:one": "npm i && GENERATE_SOURCEMAP=false npm run build && aws s3 sync build s3://rbg-fb-1",
+    "deploy:two": "npm i && GENERATE_SOURCEMAP=false npm run build && aws s3 sync build s3://rbg-fb-2",
+    "deploy:three": "npm i && GENERATE_SOURCEMAP=false npm run build && aws s3 sync build s3://rbg-fb-3",
+    "deploy:four": "npm i && GENERATE_SOURCEMAP=false npm run build && aws s3 sync build s3://rbg-fb-4",
+    "serve": "npm i && GENERATE_SOURCEMAP=false npm run build && serve -s build",
+    "serve:prod": "npm i && GENERATE_SOURCEMAP=false npm run build:prod && serve -s build"
   },
   "eslintConfig": {
     "extends": [
