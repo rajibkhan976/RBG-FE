@@ -301,7 +301,8 @@
 .userListBody.smsListing .listBody::-webkit-scrollbar,
 .bodyEditTemplate .keywordBox .keywordList::-webkit-scrollbar,
 .slickModalBody .modalForm::-webkit-scrollbar,
-.userListBody.emailListing .listBody::-webkit-scrollbar {
+.userListBody.emailListing .listBody::-webkit-scrollbar,
+.fc .fc-scroller-liquid-absolute::-webkit-scrollbar {
   width: 4px;
 }
 
@@ -309,7 +310,8 @@
 .userListBody.smsListing .listBody::-webkit-scrollbar-track,
 .bodyEditTemplate .keywordBox .keywordList::-webkit-scrollbar-track,
 .slickModalBody .modalForm::-webkit-scrollbar-track,
-.userListBody.emailListing .listBody::-webkit-scrollbar-track {
+.userListBody.emailListing .listBody::-webkit-scrollbar-track,
+.fc .fc-scroller-liquid-absolute::-webkit-scrollbar-track {
   background-color: #dce4eb;
 }
 
@@ -317,7 +319,8 @@
 .userListBody.smsListing .listBody::-webkit-scrollbar-thumb,
 .bodyEditTemplate .keywordBox .keywordList::-webkit-scrollbar-thumb,
 .slickModalBody .modalForm::-webkit-scrollbar-thumb,
-.userListBody.emailListing .listBody::-webkit-scrollbar-thumb {
+.userListBody.emailListing .listBody::-webkit-scrollbar-thumb,
+.fc .fc-scroller-liquid-absolute::-webkit-scrollbar-thumb {
   background-color: #f1a668;
 }
 
@@ -2979,7 +2982,8 @@ input[type=number] {
 .tabBarArea .contactTabsInnerTransaction,
 .tabBarArea .contactTabsInnerBilling,
 .tabBarArea .contactTabsInnerDependents,
-.tabBarArea .contactTabsInnerTransactionChoice {
+.tabBarArea .contactTabsInnerTransactionChoice,
+.tabBarArea .appointmentPage {
   padding-right: 0px;
 }
 
@@ -3000,7 +3004,8 @@ input[type=number] {
   margin-bottom: 0;
 }
 
-.contactTabsInnerBilling .contactTabsScrollSpace {
+.contactTabsInnerBilling .contactTabsScrollSpace,
+.appointmentPage .contactTabsScrollSpace {
   overflow: auto;
 }
 
@@ -3070,7 +3075,8 @@ input[type=number] {
 
 
 .tabBarArea .contactTabsInnerBilling,
-.tabBarArea .contactTabsInnerTransactionChoice {
+.tabBarArea .contactTabsInnerTransactionChoice,
+.tabBarArea .appointmentPage {
   padding-bottom: 0px;
 }
 
@@ -3199,3 +3205,1171 @@ input[type=number] {
   min-height: 35px;
 }
 /* FOR CHECKING MERCHANT ID */
+.gymHolidayList.header {
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 1;
+}
+
+.innerModalHeader h3 {
+  font-weight: 600;
+}
+
+.tagLists {
+  background: #FFFFFF;
+  box-shadow: 0px 20px 62px rgb(0 0 0 / 25%);
+  border-radius: 10px;
+  /* position: absolute; */
+  position: fixed;
+  z-index: 10;
+  width: 250px;
+  /* right: 0; */
+  /* top: 100%; */
+  height: 100%;
+  max-height: 317px;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  overflow: hidden;
+  margin-top: 2px;
+  left: 50%;
+  top: 50%;
+  transform: translate(165px, 57px);
+}
+.tagLists .searchTag .cmnFieldStyle {
+  border: 1px solid #D0D6DB !important;
+  background-color: #f6f8fa !important;
+  border-radius: 5px;
+  background-image: url('../images/search_icon.svg');
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+.searchTag {
+  flex: 0 1 auto;
+}
+.genScrollBody {
+  padding: 7.5px 0;
+}
+.tagLi {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  color: #9BAEBC;
+  cursor: pointer;
+  padding: 7.5px 14px;
+}
+.tagLi:hover {
+  color: #305671;
+}
+.noTagFig {
+  font-size: 0;
+}
+.noTagsFound {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+.noTagsFound p {
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 16px;
+  color: #9BAEBC;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+.noTagsFound h4 {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  color: #305671;
+  word-break: break-all;
+}
+.noTagsFound .creatUserBtn {
+  font-weight: 600;
+  font-size: 14px;
+  color: #fff;
+}
+.noTagsFound h4 {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  color: #305671;
+  word-break: break-all;
+  margin-bottom: 20px;
+}
+.tagSection:hover path,
+.tagSection.active path {
+  fill: #305671;
+}
+
+.indTags {
+  background: #305671;
+  font-size: 11px;
+  position: relative;
+  min-height: 25px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  padding-right: 10px;
+  padding-left: 5px;
+  margin-right: 8px;
+  margin-left: 8px;
+}
+
+.indTags .closeTag {
+  display: none;
+}
+.indTags:before {
+  content: '';
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  background: #305671;
+  border-radius: 5px;
+  transform: rotate(45deg);
+  right: 100%;
+  margin-right: -14px;
+}
+.labelSelected {
+  max-width: 100%;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.indTags:hover,
+.indTags:hover:before {
+  background-color: #ED707A;
+}
+.indTags:hover .closeTag {
+  display: inline-flex;
+}
+.error .tagSection {
+  background: #ed707a;
+  border-color: #ed707a;
+}
+.error .tagSection path {
+  fill: #fff;
+}
+.setAppointment .errorMsg {
+  clear: both;
+}
+.appTime {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 20px;
+  display: block;
+}
+
+.modalCreateAppointment .appointmentModalHeads {
+  float: none;
+}
+.modalCreateAppointment .setappointment {
+  max-height: inherit;
+  min-height: 1px;
+  height: inherit;
+}
+.modalCreateAppointment .innerAppointmentModalBody {
+  height: auto;
+  max-height: 38vh;
+  float: none;
+}
+.modalCreateAppointment .modalbtnHolder {
+  padding-bottom: 14px;
+}
+.rc-time-picker .rc-time-picker-input {
+  border: none;
+  line-height: 100%;
+  padding-top: 0;
+  padding-bottom: 0;
+  background: transparent;
+  padding-right: 20px;
+}
+.rc-time-picker .rc-time-picker-clear {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  right: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0;
+  background-image: url("../images/cross.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 10px;
+}
+.rc-time-picker .rc-time-picker-clear i {
+  display: none;
+}
+
+/* appointment listing restructure */
+.appointmentModalListing {
+  color: #305671;
+  font-size: 12px;
+  line-height: 18px;
+  margin-top: 35px;
+}
+.modalAppointmentsListing {
+  padding: 15px 10px;
+  align-items: stretch;
+  cursor: pointer;
+  transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.4s;
+  position: relative;
+}
+.appointmentModalListing .cell {
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  word-break: break-word;
+}
+.appListRowWrap .cell:first-child {
+  padding-left: 0;
+}
+.appointmentModalListing .cell:last-child {
+  padding-right: 0;
+}
+.appointmentModalListing .statusCell {
+  flex-basis: 120px;
+  max-width: 120px;
+  flex-grow: 1;
+}
+.appointmentModalListing .setCell {
+  flex-basis: 147px;
+  max-width: 147px;
+}
+.appointmentModalListing .cellAgenda {
+  max-width: 266px;
+  flex-basis: 266px;
+}
+.appointmentModalListing .cellDateNTime {
+  flex-basis: 195px;
+  max-width: 195px;
+}
+.appointmentListingHeader .cell {
+  font-weight: 500;
+}
+.appointmentModalListing .appListRowWrap {
+  margin-bottom: 10px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 10%);
+  background: #FFFFFF;
+  border: 1px solid #C7DAEB;
+  border-radius: 5px;
+}
+.show .modalAppointmentsListing {
+  background: #E9EFF5;
+  border: none;
+  border-radius: 5px 5px 0 0;
+  z-index: 1;
+}
+/* .show.completedRow {
+  background: #F0F5F1;
+  border: 1px solid #D7E8D8;
+  border-radius: 5px;
+}
+.show.canceledRow {
+  background: #FFF4F4;
+  border: 1px solid #F9DEE0;
+  border-radius: 5px;
+} */
+.scheduledRow .appStatusTag {
+  background: #55BBC9;
+}
+.rescheduledRow .appStatusTag {
+  background: #F1A768;
+}
+.completedRow .appStatusTag {
+  background: #009F40;
+}
+.canceledRow .appStatusTag {
+  background: #ED707A;
+}
+.appointmentListingHeader {
+  margin-bottom: 10px;
+  padding: 0 10px;
+}
+.appointmentModalListing .cell .sideEditOption {
+  display: inline-flex;
+  vertical-align: middle;
+}
+.appStatusTag {
+  display: inline-flex;
+  border-radius: 14px;
+  height: 19px;
+  align-items: center;
+  padding: 0 8px;
+  flex: 0 0 auto;
+  text-transform: uppercase;
+  color: #FFFFFF;
+  font-size: 10px;
+  font-weight: 700;
+}
+.icoHolderApp {
+  flex: 0 0 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+}
+.cellDateNTime p {
+  flex-direction: column;
+  display: inline-flex;
+  vertical-align: middle;
+  flex: 1 1 auto;
+  word-break: break-word;
+  font-size: 11px;
+  line-height: 180%;
+  color: #5182A6;
+}
+.scheduledRow .icoHolderApp {background-color: #55BBC9;}
+.rescheduledRow .icoHolderApp {background-color: #F1A768;}
+.completedRow .icoHolderApp {background-color: #009F40;}
+.canceledRow .icoHolderApp {background-color: #ED707A;}
+.appointmentListingHeader .cellDateNTime {
+  padding-left: 40px;
+}
+.appointmentDetails .showMore {
+  background-color: #C7DAEB;
+  height: 20px;
+  display: block;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+/* Edit appointment modal */
+.appointmentEditModal .slickModalBody {
+  padding: 0;
+  background: transparent;
+  box-shadow: 0px 27px 62px rgba(0, 0, 0, 0.25);
+}
+.appointmentEditModal .slickModalHeader {
+  min-height: 50px;
+  background: #305671;
+  border-radius: 10px 10px 0px 0px;
+  padding: 15px;
+  padding-left: 30px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+  color: #C7DAEB;
+}
+.appointmentEditModal .slickModalHeader h4 {
+  display: inline-flex;
+  align-items: center;
+}
+.appointmentEditModal .topCross {
+  position: static;
+  opacity: 0.7;
+}
+.appointmentEditModal .slickModalHeader .appStatusTag {
+  margin-left: 10px;
+}
+.editModalDetails {
+  padding: 20px 30px 33px;
+  background: #fff;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.editInputOpts {
+  margin-left: 10px;
+}
+.confirmEdit:hover {
+
+}
+.cancelEdit:hover {}
+
+.formControl .editInput {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 21px;
+  display: inline-flex;
+  width: auto;
+  margin: 0;
+  flex: 1 1 auto;
+}
+.isEditing .editInput {
+  background: transparent;
+  border-radius: 0;
+  border: none;
+  padding: 0;
+  border-bottom: 1px solid #D0D6DB;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+}
+.formControl .editInput::placeholder {
+  color: #305671;
+}
+.isEditing .editInput {
+  width: 100%;
+}
+.confirmEdit:hover {
+  background: #EDFFF4;
+}
+.cancelEdit:hover {
+  background: #FFF4F4;
+}
+.editInputOpts .inlinle-btn {
+  border-radius: 50%;
+}
+.error .editInput {
+  border-color: #ed707a;
+  color: #ed707a;
+}
+.confirmEdit:disabled {
+  opacity: 0.2;
+}
+.editModalDetails .indTags:not(:hover),
+.editModalDetails .indTags:not(:hover):before {
+  background: #6AAAD9;
+}
+.editModalDetails .indTags {
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 16px;
+}
+.editModalDetails .tagSection {
+  margin-left: 10px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  float: none;
+  height: inherit;
+  align-self: center;
+  margin-top: 5px;
+  width: auto;
+}
+.editModalDetails .labelAppointment {
+  padding: 0;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 18px;
+  color: #9BAEBC;
+  width: auto;
+  margin-right: 15px;
+}
+.textAppointment {
+  font-size: 12px;
+  line-height: 18px;
+  display: inline-flex;
+  font-weight: 600;
+  color: #305671;
+}
+.editModalDetails .formControl + .formControl:not(:nth-child(2)):not(footer) {
+    margin-top: 8px;
+    align-items: center;
+}
+.rescheduleBtn {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 16px;
+}
+.rescheduleBtn:hover span {
+  color: #305671;
+}
+.rescheduleBtn:hover svg path {
+  fill: #305671;
+}
+.editModalDetails .textAppointment + .rescheduleBtn {
+  margin-left: 30px;
+}
+.rescheduleBtn span {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  color: #9BAEBC;
+}
+.rescheduleBtn figure {
+  line-height: 1;
+  margin-right: 5px;
+}
+.rescheduleCount {
+  height: auto;
+  min-height: 21px;
+  border-radius: 30px;
+  vertical-align: middle;
+  margin-left: 14px;
+  font-weight: 600;
+  font-size: 10px;
+  line-height: 15px;
+  color: #FFFFFF;
+}
+.editModalDetails footer.formControl {
+  margin-top: 25px;
+  flex-wrap: wrap;
+}
+.btnCancel {
+  background: #FFF4F4;
+  border: 1px solid #FFCFD2;
+  border-radius: 5px;
+  height: 30px;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 16px;
+  color: #ED707A;
+  padding-inline: 12px 10px;
+}
+.btnCancel:hover,
+.btnCancel.active {
+  background: #ED707A;
+  border-color: #ED707A;
+  color: #fff;
+  filter: saturate(1);
+}
+.btnApprove {
+  background: #EDFFF4;
+  border: 1px solid #9CECBC;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 11px;
+  line-height: 16px;
+  color: #009F40;
+  padding-inline: 12px 10px;
+  height: 30px;
+}
+.btnApprove:hover {
+  background-color: #009F40;
+  border-color: #009F40;
+  color: #fff;
+  filter: saturate(1);
+}
+footer.formControl > .btn {
+  margin-inline: 5px;
+}
+.cancelNote {
+  width: 100%;
+  margin-top: 24px;
+}
+.cancelNote .cmnFieldStyle {
+  background: transparent;
+  border-radius: 0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  transition: all cubic-bezier(0.215, 0.610, 0.355, 1) 0.2s;
+  padding: 0;
+  margin: 0;
+}
+/* .cancelNote .cmnFieldStyle:focus {
+  border-color: #305671;
+} */
+.confirmCancellation {
+  text-align: right;
+  margin-top: 10px;
+}
+.confirmCancellation .btn {
+  padding-inline: 20px;
+  height: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-left: 10px;
+}
+.btnAbortCancellation {
+  background: #F6F8FA;
+  border: 1px solid #D0D6DB;
+  color: #9BAEBC;
+}
+
+.editModalDetails .closeTag {
+  display: inline-flex;
+}
+.contactDetailsheader {
+  width: 100%;
+  align-items: center;
+}
+.rescheduleData {
+  background: #F6F8FA;
+  border: 1px solid #D0D6DB;
+  border-radius: 5px;
+  margin-top: 25px;
+  margin-bottom: 20px;
+}
+.infoDataheaderApp {
+  overflow: hidden;
+  text-align: left;
+}
+.infoDataheaderApp li a {
+  display: flex;
+  align-items: center;
+  color: #9BAEBC;
+  font-size: 11px;
+  font-weight: 500;
+}
+.infoDataheaderApp h4 {
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  color: #FFFFFF;
+}
+.infoDataheaderApp li a figure {
+  width: 12px;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin-right: 9px;
+}
+.confirmEdit {
+  margin-left: auto;
+}
+.rescheduleData header h5 {
+  color: #305671;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 21px;
+}
+.rescheduleData header .inlinle-btn {
+  border-radius: 0;
+  height: calc(100% - 2px);
+}
+.rescheduleData header {
+  height: 40px;
+  align-items: center;
+  padding-inline: 16px 5px;
+  border-bottom: 1px solid #E9EFF5;
+}
+.bodyReschedule {
+  font-size: 0;
+  padding: 10px 15px 13px;
+}
+.bodyReschedule .cmnFormRow {
+  margin-bottom: 0;
+  font-size: 0;
+}
+.bodyReschedule .cmnFormRow + .cmnFormRow {
+  margin-top: 15px;
+}
+.bodyReschedule input, .bodyReschedule textarea {
+  background: #fff;
+  color: #305671;
+  font-size: 13px;
+  line-height: 20px;
+}
+.bodyReschedule .cmnFieldStyle {
+  background: #fff;
+}
+footer.formControl > .btn:disabled,
+.confirmCancellation .btn:disabled {
+  opacity: 0.7;
+}
+.contactDetailsheader .contactImage {
+  flex: 0 0 40px;
+}
+.cancelNote.error input::placeholder {
+  color: #ed707a;
+}
+.appDetail {
+  padding: 18.5px 20px 18.5px 50px;
+  align-items: center;
+  position: relative;
+}
+.appDetail:before {
+  content: '';
+  position: absolute;
+  width: 1px;
+  height: 50%;
+  top: 0;
+  left: 65px;
+  transform: translateY(-50%);
+  background: #F1A768;
+}
+.appDetail p {
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 180%;
+  color: #5182A6;
+  flex: 1 1 auto;
+  max-width: 115px;
+}
+.appDetail .noteResch {
+  flex: 1 1 auto;
+  max-width: 108px;
+  padding: 0 10px;
+}
+.appDetail .rescheduledBy {
+  flex: 1 1 auto;
+  padding: 0 10px;
+  max-width: 147px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-left: auto;
+}
+.noteResch .notePop {
+  left: 0;
+  top: 0;
+}
+.noteResch label {
+  font-weight: 500;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+/* Calendar UI */
+.global-appointment .fc-header-toolbar .fc-toolbar-chunk:first-child button {
+  padding: 0 13px;
+  height: 30px;
+  background: #305671;
+  border-radius: 30px;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 20px;
+  color: #E2EBF2;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+.global-appointment .fc-header-toolbar .fc-toolbar-chunk:nth-child(2) div {
+  display: flex;
+  align-items: center;
+}
+.global-appointment .fc-header-toolbar .fc-prev-button, .global-appointment .fc-header-toolbar .fc-next-button {
+  padding: 0;
+  vertical-align: middle;
+  font-size: 0;
+  line-height: 0;
+  position: relative;
+  transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s;
+}
+.global-appointment .fc-header-toolbar .fc-prev-button:hover:after, .global-appointment .fc-header-toolbar .fc-next-button:hover:after {
+  position: absolute;
+  content: '';
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #305671;
+  width: 200%;
+  height: 200%;
+  z-index: 0;
+  border-radius: 5px;
+  transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s;
+}
+.global-appointment .fc-header-toolbar .fc-prev-button:hover, .global-appointment .fc-header-toolbar .fc-next-button:hover {
+  background-color: #305671;
+}
+.global-appointment .fc-header-toolbar .fc-prev-button .fc-icon, .global-appointment .fc-header-toolbar .fc-next-button .fc-icon {
+  color: #305671;
+  font-size: 15px;
+  position: relative;
+  z-index: 1;
+}
+.global-appointment .fc-header-toolbar .fc-prev-button:hover .fc-icon, .global-appointment .fc-header-toolbar .fc-next-button:hover .fc-icon {
+  color: #ffffff;
+}
+.global-appointment .fc-header-toolbar .fc-toolbar-title {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 27px;
+  color: #305671;
+  display: inline-block;
+  vertical-align: middle;
+  margin-inline: 50px;
+}
+.global-appointment .fc-header-toolbar .fc-button-group {
+  background: #5182A6;
+  height: 30px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.global-appointment .fc-header-toolbar .fc-button-group button {
+  height: 100%;
+  padding: 0 20px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 21px;
+  color: #FFFFFF;
+  text-transform: capitalize;
+  background: transparent;
+  border: none;
+}
+.global-appointment .fc-header-toolbar .fc-button-group button:hover, .global-appointment .fc-header-toolbar .fc-button-group button.fc-button-active {
+  background: #305671;
+}
+.global-appointment .fc table:not(.fc-col-header ) {
+  border: none;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  overflow: hidden;
+}
+.eventItem .fc-event-title {
+  font-weight: 500;
+}
+.global-appointment thead > tr > th {
+  /* background: #9BAEBC; */
+  background: var(--darkBlue);
+  border: none;
+  border-radius: 5px 5px 0 0;
+  height: 45px;
+  vertical-align: middle;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.045em;
+  color: #FFFFFF;
+  position: relative;
+}
+.global-appointment tbody {
+  background: #E9EFF5;
+}
+.global-appointment .fc-theme-standard td {
+  border-color: #9BAEBC;
+  cursor: pointer;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.global-appointment tbody[role=presentation] > tr > td:last-child {
+  border-right: none;
+}
+.global-appointment  tbody[role=presentation] > tr:last-child > td {
+  border-bottom: none;
+}
+.global-appointment .fc-theme-standard td .fc-daygrid-day-top {
+  color: #305671;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1;
+}
+.global-appointment .fc-theme-standard td .fc-day-other {
+  background: #CAD2D8;
+}
+/* .global-appointment .fc-theme-standard .eventDay {
+  background: #fff;
+} */
+.eventItem {
+  /* background: #0093FF; */
+  background-color: var(--darkBlue);
+  border-radius: 3px;
+  padding: 0 8px;
+  /* min-height: 20px; */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  /* font-weight: 500; */
+  font-size: 12px;
+  line-height: 1;
+  color: #FFFFFF;
+}
+.eventItem .fc-event-title {
+  padding: 3px 0;
+}
+.eventItem .fc-daygrid-event-dot, .eventItem .fc-event-time {
+  display: none;
+}
+.eventItem:hover,
+.eventDay .fc-more-link:hover {
+  background: #55bbc9;
+  color: #fff;
+  font-weight: normal;
+  border-color: transparent;
+}
+.eventDay .fc-more-link {
+  padding: 0 8px;
+  /* min-height: 24px; */
+  font-weight: 500;
+  font-size: 12px;
+  /* line-height: 20px; */
+  color: #FFFFFF;
+  background: #55BBC9;
+  border: 1px solid #55BBC9;
+  border-radius: 3px;
+}
+.eventDay .fc-daygrid-day-bottom {
+  text-align: right;
+  margin-top: 2px !important;
+  display: block;
+  padding-inline: 8px;
+}
+.global-appointment .fc .fc-toolbar-ltr {
+  margin-bottom: 20px;
+}
+.appointmentGlobalPage .userListHead {
+  margin-bottom: 40px;
+}
+.appointmentGlobalPage {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.fc .eventDay .eventItem {
+  margin-inline: 8px;
+}
+.global-appointment {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.global-appointment .fc {
+  flex: 1 1 auto;
+  overflow: hidden;
+  height: inherit !important;
+  min-height: 652px;
+}
+.appointmentGlobalPage .userListBody {
+  height: 100%;
+  padding: 0;
+}
+.global-appointment .fc-timeGridWeek-view .fc-col-header-cell:not(:first-child) {
+  background: #5182A6;
+  border-radius: 0;
+}
+.global-appointment .fc-timeGridWeek-view thead th:first-child {
+  background-color: #5182a6;
+}
+.global-appointment .fc-timeGridWeek-view table:not(.fc-col-header) {
+  border: 1px solid #9BAEBC;
+  border-radius: 5px;
+  overflow: hidden;
+  table-layout: fixed;
+}
+.global-appointment .fc-timeGridWeek-view tbody > tr > td:first-child,
+.global-appointment .fc-timeGridWeek-view thead th:first-child,
+.global-appointment tr.fc-scrollgrid-section colgroup col {
+  width: 134px !important;
+  min-width: 134px !important;
+}
+.global-appointment .fc-timeGridWeek-view .fc-scrollgrid-section-body > td {
+  border-right: none;
+  border-bottom: navajowhite;
+}
+.global-appointment .fc-timeGridWeek-view tbody > tr > td:first-child {
+  background: #fff;
+}
+.global-appointment .fc-timeGridWeek-view .fc-timegrid-divider {
+  padding: 0;
+  background: transparent;
+}
+.global-appointment thead .fc-scroller {
+  overflow: visible !important;
+}
+.global-appointment thead > tr:not(.fc-scrollgrid-section-header) > th:first-child {
+  border-bottom: 1px solid #9BAEBC;
+}
+.global-appointment .fc-timeGridWeek-view .fc-scrollgrid-sync-table {
+  border: none;
+}
+.global-appointment .fc .fc-timegrid-axis-cushion {
+  max-width: 100%;
+  text-transform: capitalize;
+}
+.global-appointment .fc-timeGridWeek-view thead > tr:not(.fc-scrollgrid-section-header) > th:first-child {
+  background: #fff;
+  border-top-right-radius: 0;
+}
+.global-appointment .fc-timeGridWeek-view .fc-timegrid-slots .fc-timegrid-slot-label,
+.global-appointment .fc-timeGridDay-view .fc-timegrid-slots .fc-timegrid-slot-label {
+  height: 60px;
+}
+.global-appointment .fc .fc-toolbar-ltr .fc-toolbar-chunk:nth-child(2) {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.global-appointment .fc-timeGridDay-view .fc-col-header .fc-col-header-cell-cushion {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  padding: 0;
+}
+.fc .fc-col-header-cell-cushion {
+  padding: 2px 4px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: none;
+}
+.global-appointment .fc-timeGridDay-view .fc-col-header th.fc-col-header-cell {
+  position: static;
+  background: #5182A6;
+  border-top-left-radius: 0;
+}
+/* .global-appointment .fc-timeGridDay-view .fc-col-header th:first-child {
+  background: #fff;
+  border-top-right-radius: 0;
+} */
+.global-appointment .fc-timeGridDay-view thead > tr > th {
+  background: #5182a6;
+}
+.fc .fc-timegrid-slot-label-cushion {
+  font-size: 14px;
+  line-height: 21px;
+  color: #305671;
+  font-weight: 500;
+}
+.global-appointment .fc-listWeek-view .fc-list-day .fc-list-day-cushion {
+  border-radius: 5px 5px 0 0;
+  background: #5182A6;
+}
+.global-appointment .fc-listWeek-view .fc-list-day .fc-list-day-cushion {
+  border-radius: 5px 5px 0 0;
+  background: #5182A6;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 21px;
+  color: #FFFFFF;
+  text-align: left;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  padding: 0 25px;
+}
+.global-appointment .fc-listWeek-view {
+  border: none;
+}
+.global-appointment .fc-listWeek-view .eventItem + .fc-list-day th {
+  padding-top: 10px;
+  background: transparent;
+  border: none;
+}
+.global-appointment .fc-listWeek-view .eventItem {
+  display: table-row;
+}
+.global-appointment .fc-listWeek-view .eventItem td {
+  border: none !important;
+  border-radius: 0;
+  height: 50px;
+  vertical-align: middle;
+  background-color: #E9EFF5;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 21px;
+  color: #305671;
+}
+.global-appointment .fc-listWeek-view .eventItem:hover td {
+  background-color: initial;
+  font-weight: 400;
+}
+.global-appointment .fc-listWeek-view tbody {
+  background: transparent;
+}
+.global-appointment .fc-listWeek-view .fc-list-table {
+  table-layout: auto;
+}
+.global-appointment .fc-listWeek-view .eventItem td span.fc-list-event-dot {
+  display: none;
+}
+.global-appointment .fc-listWeek-view .eventItem:hover td {
+  color: #fff;
+}
+.global-appointment .fc-listWeek-view .eventItem + .eventItem td {
+  border-top: 1px solid #C7DAEB !important;
+}
+.fc .fc-scroller-liquid-absolute .fc-timegrid-body,
+.fc .fc-scroller-liquid-absolute .fc-timegrid-body table {
+  width: 100% !important;
+}
+.fc .fc-daygrid-event-harness + .fc-daygrid-event-harness {
+  margin-top: 1px !important;
+}
+.global-appointment .fc-theme-standard .fc-day-today {
+  background: linear-gradient(180deg, #CDFBFF 0%, #FFFFFF 100%);
+}
+/* Calendar UI */
+
+.appointmentGlobalPage .modalCreateAppointment .cmnFormRow:first-child .cmnFormField {
+  position: relative;
+}
+.cmnFormField .crossContact {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 40px;
+  width: 40px;
+}
+.modalCreateAppointment .cmnFormRow:first-child .cmnFieldStyle {
+  padding-right: 42px;
+}
+.modalCreateAppointment .errorMsg {
+  clear: both;
+}
+.appointmentGlobalPage .tagLists {
+  margin-top: 38px;
+}
+.tagLists .genScrollBody > div > div:last-child {
+  width: 4px !important;
+}
+.tagLists .genScrollBody .thumb-vertical {
+  background: #f1a668;
+}
+
+/* ADD Manual contact */
+.modalCreateAppointment .cmnFormField.listActive > .cmnFieldStyle {
+  background-color: #fff;
+}
+.appContact figure {
+  width: 30px;
+  flex: 0 0 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #8a8a8a;
+  color: #fff;
+  border-radius: 50%;
+  margin-right: 10px;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+}
+.modalCreateAppointment .appContact {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.appContact {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.appContact span,
+.appContact small {
+  display: block;
+}
+.appContact small {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1;
+  color: #9BAEBC;
+  margin-top: 5px;
+}
+.appContact span {
+  display: block;
+  font-size: 16px;
+  line-height: 1;
+}
+.contactListItems .noContactFound {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  pointer-events: none;
+}
+.appointmentModalListing .statusCell .notePopContent {
+  right: -20px;
+  left: auto;
+}
+
+.appointmentModalListing .statusCell .notePopContent:after {
+  right: 23px;
+}

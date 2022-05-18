@@ -21,7 +21,6 @@ const ContactReducer = (state = initialState, action) => {
             break;
         default:
             newState.count = 0;
-            newState.contact_modal_id = '';
             break;
     }
     return newState;

@@ -144,5 +144,10 @@ module.exports = {
     //Credit management
     creditManagemetnUrl: "https://" + process.env.REACT_APP_CREDIT_MANAGEMENT + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/credit/",
     creditUsageUrl: "https://" + process.env.REACT_APP_CREDIT_USAGE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/credit/",
-
-}  
+    tagUrl: "https://" + process.env.REACT_APP_TAG + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/tag",
+    //tagUrl: "http://localhost:4000/dev/tag",
+    appointmentContactUrl: "https://" + process.env.REACT_APP_CONTACT_APPOINTMENT + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/appointment/contact",
+    //appointmentContactUrl: "http://localhost:4000/dev/appointment/contact",
+    appointmentUrl: "https://" + process.env.REACT_APP_APPOINTMENT + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/appointment",
+    //appointmentUrl: "http://localhost:4000/dev/appointment",
+}

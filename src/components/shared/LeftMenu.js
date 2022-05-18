@@ -502,6 +502,73 @@ function LeftMenu(props) {
             {/* <span className="menuName">Report</span>
           </NavLink>
         </li>  */}
+        <li>
+          <NavLink
+            className="leftMenuLink"
+            activeClassName="selected"
+            to="/appointment-global"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="27.5"
+              height="27.5"
+              viewBox="0 0 27.5 27.5"
+              id="ico-8"
+            >
+              <g transform="translate(-6561.444 -176.302)">
+                <rect
+                  className="a"
+                  width="26"
+                  height="26"
+                  transform="translate(6562.194 177.052)"
+                />
+                <rect
+                  className="a"
+                  width="3.078"
+                  height="3.078"
+                  transform="translate(6564.722 186.703)"
+                />
+                <rect
+                  className="a"
+                  width="3.078"
+                  height="3.078"
+                  transform="translate(6573.376 186.703)"
+                />
+                <rect
+                  className="a"
+                  width="3.078"
+                  height="3.078"
+                  transform="translate(6582.029 186.703)"
+                />
+                <rect
+                  className="a"
+                  width="3.078"
+                  height="3.078"
+                  transform="translate(6564.722 195.222)"
+                />
+                <rect
+                  className="a"
+                  width="3.078"
+                  height="3.078"
+                  transform="translate(6573.376 195.222)"
+                />
+                <rect
+                  className="a"
+                  width="3.078"
+                  height="3.078"
+                  transform="translate(6582.029 195.222)"
+                />
+                <rect
+                  className="a"
+                  width="25.442"
+                  height="21.097"
+                  transform="translate(6562.194 181.397)"
+                />
+              </g>
+            </svg>
+            <span className="menuName">Appointment</span>
+          </NavLink>
+        </li> 
       </ul>
       <div className="leftMenuToggle">
         {pathURL !== "/dashboard" ?

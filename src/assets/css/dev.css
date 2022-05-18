@@ -2542,14 +2542,14 @@ button.fc-prev-button.fc-button.fc-button-primary, button.fc-next-button.fc-butt
   box-shadow: none;
 }
 .fc .fc-button-primary:not(:disabled):active, .fc .fc-button-primary:not(:disabled).fc-button-active {
-  background:transparent;
+  background: #0000005c;
 }
 .fc .fc-button-primary {
-  border-color: transparent!important;
+  border-color: transparent !important;
 }
 
 .fc .fc-button-primary:not(:disabled):active, .fc .fc-button-primary:not(:disabled).fc-button-active {
-  border-color: transparent!important;
+  border-color: #0000005c !important;
 }
 
 .indTags:hover {

@@ -418,6 +418,7 @@ const Overview = (props) => {
 
 
     const onContactSubmit = async (e) => {
+        console.log('here on contact update')
         e.preventDefault();
         setIsLoader(true);
         let formErrorsCopy = formErrorMsg;

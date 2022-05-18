@@ -39,6 +39,7 @@ import warning_alert from "../../src/assets/images/warning_alert.svg";
 import error_alert from "../../src/assets/images/error_alert.svg";
 import CreditRoutes from "./setup/credit/CreditRoutes";
 import RestrictionPackageModal from "./setup/credit/package/RestrictionPackageModal";
+import AppointmentGlobal from "./appointment/AppointmentGlobalRouter";
 
 // For socket io connection
 //const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlProd;
@@ -613,7 +614,7 @@ const MainComponent = () => {
                     className={
                         "dashboardBody d-flex " +
                         (pathURL === '/automation-list' || pathURL === '/automation-builder' ? ' automationBuilderBody ' : '') +
-                        (showInnerleftMenu ? (pathURL !== '/dashboard' ? "openSubmenu" : "") : "")
+                        (showInnerleftMenu ? ((pathURL !== '/dashboard' && pathURL !== '/appointment-global') ? "openSubmenu" : "") : "")
                     }
                 >
                     <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu} clickedSetupStatus={(e) => clickedSetupStatus(e)} />
@@ -708,7 +709,11 @@ const MainComponent = () => {
                                 <RevenueRouter toggleLeftSubMenu={toggleLeftSubMenu}
                                     toggleCreate={(e) => toggleCreate(e)}></RevenueRouter>
                             </Route>
-                            <Route exact path="/" component={() => <Redirect to="/dashboard" />} />
+                            <Route exact path="/appointment-global">
+                                <AppointmentGlobal toggleLeftSubMenu={toggleLeftSubMenu}
+                                                   toggleCreate={(e) => toggleCreate(e)}></AppointmentGlobal>
+                            </Route>
+                            <Route exact path="/" component={() => <Redirect to="/dashboard"/>}/>
                             <Route exact path="*">
                                 <NotFound toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
                             </Route>
