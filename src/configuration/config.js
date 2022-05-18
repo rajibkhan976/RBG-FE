@@ -113,6 +113,10 @@ module.exports = {
     timezoneListURL: process.env.REACT_APP_TIMZONE_URL + '/v2.1/list-time-zone?key=QH5NO9YQKP30&format=json',
     timezoneLatLngUrl: process.env.REACT_APP_TIMZONE_URL + '/v2.1/get-time-zone?key=QH5NO9YQKP30&by=position',
 
+
+    //Country 
+    countryUrl:"https://" + process.env.REACT_APP_COUNTRY + "execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/country",
+
     //Dependents
     dependentUrl: "https://" + process.env.REACT_APP_DEPENDENT + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/contact/dependent/",
 

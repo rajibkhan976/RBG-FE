@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { utils } from "../../../helpers";
 import Loader from "../../shared/Loader";
 import { ErrorAlert, SuccessAlert } from "../../shared/messages";
 import profileAvatar from "../../../assets/images/camera.svg";
 import arrowRightWhite from "../../../assets/images/arrowRightWhite.svg";
 import listIcon from "../../../assets/images/list_icon.svg";
-import load from "../../../assets/images/loads.svg";
+import LoaderImg from "../../../assets/images/loader.gif";
 import cam from "../../../assets/images/cam.svg";
 import saveEdit from "../../../assets/images/saveEdit.svg";
 import delEdit from "../../../assets/images/delEdit.svg";
@@ -17,12 +18,13 @@ import profile_png from "../../../assets/images/profile.png";
 import gymLogo from "../../../assets/images/gymLogo.svg";
 // import AddHolidayModal from "./addHolidayModal";
 import config from "../../../configuration/config";
+import { PersonalDetailsServices } from "../../../services/personalDetails/PersonalDetailsServices";
 
 
 
 
 const PersonalDetails = (props) => {
-
+const [loader,setLoader] = useState(false);
   
   const [file, setFile] = useState(false);
     function handleFileChange(e) {
@@ -30,6 +32,47 @@ const PersonalDetails = (props) => {
         setFile(URL.createObjectURL(e.target.files[0]));
     }
 
+
+    // const [accountName, setAccountName] = useState({
+    //   personalName: ""
+    // });
+    // const [accDetailErrors, setAccDetailErrors] = useState({});
+    // const [isSave, setisSave] = useState(false);
+
+
+    // const handleEditName = (e) => {
+    //   let val = e.target.value;
+    //   setAccountName ({...accountName, personalName: val});
+    //   console.log(accountName);
+    // }
+
+    // const validatePersonalDetail = (values) => {
+    //   const errors ={};
+    //   if (!values.personalName) {
+    //     errors.personalName = "Personal name is required!"
+    //   }  
+    //     return errors;
+      
+    // };
+  
+
+    const closeModalSave = () => {
+      setToggleEditName(false);
+      setLoader(true);
+      setTimeout(() => { setLoader(false); }, 4000);
+
+      // setAccDetailErrors(validatePersonalDetail(accountName));
+      // setisSave(true);
+    };
+
+    // useEffect (()=> {
+    //   console.log(accDetailErrors);
+    //   if(Object.keys(accDetailErrors).length ===0 && isSave){
+    //     console.log(accountName);}},[accDetailErrors]);
+    
+      // const [toggleEditName, setToggleEditName] = useState({
+      //   status: false,
+      // });
 
   // const initialValues= {currentPassword: "", newPassword: "", confirmNewPassword: ""};
   // console.log("Type of value" ,typeof initialValues);
@@ -59,23 +102,24 @@ const handleChangeConfirmNewPassword = (e) => {
   console.log(formValues)
 };
 
+
 const handleSubmit = (e) => {
   e.preventDefault();
   setformErrors(validate(formValues));
   setisSubmit(true);
-  console.log(formValues);
+  //console.log(formValues);
 };
 
 const validate = (values) => {
   const errors ={};
   if (!values.currentPassword && !values.newPassword && values.confirmNewPassword) {
     errors.currentPassword = "Current Password is required!"
-    errors.newPassword = "Current Password is required!"
+    errors.newPassword = "New Password is required!"
   }
   
   if (!values.confirmNewPassword && !values.newPassword && values.currentPassword) {
     errors.newPassword = "New Password is required!"
-    errors.confirmNewPassword = "New Password is required!"
+    errors.confirmNewPassword = "Confirm Password is required!"
     
   }
   if (!values.currentPassword && !values.confirmNewPassword && values.newPassword) {
@@ -128,9 +172,31 @@ useEffect (()=> {
     });
   };
 
-  const closeModal = () => {
+
+
+  const closeModalReject = () => {
     setToggleEditName(false);
+    setFile(false);
   };
+ 
+
+// Setting up Country list
+const [getCountry, setGetCountry] = useState([]);
+
+const getCountryList = async () => {
+  try {
+    const response = await PersonalDetailsServices.fetchCountryDetail();
+    console.log("Country List --", response);
+    //setGetCountry(countryList.names);
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+useEffect(() => {
+  getCountryList();
+}, []);
+  
+
   
   return (
     <>
@@ -150,9 +216,6 @@ useEffect (()=> {
 
 
 
-
-
-
         <div className="gymDetails personalPage">
           <div className="gymdetails_left">
             <h3 className="leftSectionHeader">Account Details</h3>
@@ -164,6 +227,13 @@ useEffect (()=> {
                       {file && (
                       	<>
                           <img src={file} className="profileImage" alt="" />
+                          {loader && (
+                                <>
+                                  <span className="hoverEffects loadings">
+                                    <img src={LoaderImg} className="camImg loadersImg" alt="" />
+                                  </span> 
+                                </>
+                              )}  
                         </>
                       )}
                     </span>
@@ -177,7 +247,9 @@ useEffect (()=> {
                               <img src={file} className="profileImage" alt="" /> 
                               <span className="hoverEffects">
                                 <img src={cam} className="camImg" alt="" />
-                            </span>   
+                              </span> 
+
+                              
                                                  
                             </span>
                             
@@ -191,10 +263,12 @@ useEffect (()=> {
                     {toggleEditName.status && (
                       	<>
                           <span className="profileNameDisplayEdits">
-                          <input className="editPersonalDetailsNames" defaultValue="Jonathan Doe" type="text" name="" maxlength="29"/>
+                          <input className="editPersonalDetailsNames" defaultValue="Jonathan Doe" type="text" name="" maxlength="29" />
+                          {/* onChange={handleEditName} */}
+                          {/* <span className="errorMsg">{accDetailErrors.personalName}</span> */}
 
-                            <button className="editPersonalNameSave" onClick={() => closeModal()}><img src={saveEdit} alt=""/></button>
-                            <button className="editPersonalNameDelete" onClick={() => closeModal()}><img src={delEdit} alt=""/></button>
+                            <button className="editPersonalNameSave" onClick={() => closeModalSave()}><img src={saveEdit} alt=""/></button>
+                            <button className="editPersonalNameDelete" onClick={() => closeModalReject()}><img src={delEdit} alt=""/></button>
                           </span>
                         </>
                       )}  
@@ -242,8 +316,17 @@ useEffect (()=> {
                         style={{
                             backgroundImage: "url(" + arrowDown + ")",
                         }}>
-                        <option value="">India</option>
-                        <option value="">USA</option>                        
+                        <option value="">-</option>
+                    {/* {getCountry ? getCountry.map(zone => {
+                      return (
+                      <option
+                        value={zone.gmtOffset}
+                        data-timezone={zone.zoneName}
+                        selected={(zone.zoneName === gymData?.timezone) ? true : false }
+                        // selected={(parseInt(zone.gmtOffset) === detectedTimezone.gmtOffset) ? true : ""}
+                      >{zone.countryCode} - {zone.zoneName}</option>
+                      );
+                    }) : ''}                      */}
                     </select>
                   </div>
                 
