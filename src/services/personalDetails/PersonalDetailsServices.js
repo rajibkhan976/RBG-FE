@@ -1,5 +1,5 @@
 import axios from "axios";
-import config, { countryUrl } from "../../configuration/config";
+import config, { countryUrl, timezoneListURL, timezoneLatLngUrl } from "../../configuration/config";
 import { message } from "../../helpers";
 
 let headers = {
@@ -23,5 +23,36 @@ export const PersonalDetailsServices = {
             }
 
         }
-    },    
+    },   
+    
+    fetchTimeZoneList: async () => {
+      const url = config.timezoneListURL;
+      const requestOptions = {
+          method: 'GET',
+          redirect: 'follow'
+      };
+      try {
+          const response = await fetch(url, requestOptions);
+          const result = await response.json();
+          return result;
+      } catch (error) {
+          console.log('error', error.response.data);
+          return error.response.data;
+      }
+  },
+  fetchTimeZoneLatLng: async (lat, lng) => {
+      const url = config.timezoneLatLngUrl + "&format=json&lat=" + lat + "&lng=" + lng;
+      const requestOptions = {
+          method: 'GET',
+          redirect: 'follow'
+      };
+      try {
+          const response = await fetch(url, requestOptions);
+          const result = await response.json();
+          return result;
+      } catch (error) {
+          console.log('error', error.response.data);
+          return error.response.data;
+      }
+  },
 };

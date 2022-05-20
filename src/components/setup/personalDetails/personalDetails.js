@@ -180,22 +180,35 @@ useEffect (()=> {
   };
  
 
-// Setting up Country list
+// Setting up Country && list timezone
 const [getCountry, setGetCountry] = useState([]);
+const [timezoneData, setTimezoneData] = useState([]);
 
 const getCountryList = async () => {
   try {
     const response = await PersonalDetailsServices.fetchCountryDetail();
     console.log("Country List --", response);
-    //setGetCountry(countryList.names);
+    setGetCountry(response.name);
+    console.log("CountryNames", setGetCountry.name);
   } catch (e) {
     console.log(e.message);
   }
 };
 useEffect(() => {
   getCountryList();
+  getTimeZoneList();
 }, []);
-  
+ 
+
+const getTimeZoneList = async () => {
+  try {
+    const timezoneList = await PersonalDetailsServices.fetchTimeZoneList();
+    console.log("Timezone List --", timezoneList);
+    setTimezoneData(timezoneList.zones);
+  } catch (e) {
+    console.log(e.message);
+  }
+};
 
   
   return (
@@ -306,8 +319,16 @@ useEffect(() => {
                         style={{
                             backgroundImage: "url(" + arrowDown + ")",
                         }}>
-                        <option value="">IST - Asia/Kolkata (GMT+5:30)</option>
-                        <option value="">GST - Europe/England (GMT+0:00)</option>                        
+                        <option value="">-</option>
+                     {timezoneData ? timezoneData.map(zones => {
+                      // return (
+                      // <option
+                      //   value={timezoneData}
+                      //   data-timezone={timezoneData.zoneName}
+                      //   selected={(timezoneData.zoneName === PersonalDetailsServices?.timezoneList) ? true : false }
+                      // >{timezoneData.countryCode} - {timezoneData.zoneName}</option>
+                      // );
+                    }) : ''}                                     
                     </select>
                   </div>
                   <div className="formControl">
@@ -317,16 +338,15 @@ useEffect(() => {
                             backgroundImage: "url(" + arrowDown + ")",
                         }}>
                         <option value="">-</option>
-                    {/* {getCountry ? getCountry.map(zone => {
+                      {getCountry ? getCountry.map(zone => {
                       return (
                       <option
-                        value={zone.gmtOffset}
-                        data-timezone={zone.zoneName}
-                        selected={(zone.zoneName === gymData?.timezone) ? true : false }
+                        value={zone.setGetCountry}
+                        selected={(zone.setGetCountry === PersonalDetailsServices?.setGetCountry) ? true : false }
                         // selected={(parseInt(zone.gmtOffset) === detectedTimezone.gmtOffset) ? true : ""}
-                      >{zone.countryCode} - {zone.zoneName}</option>
+                      >{zone.setGetCountry}</option>
                       );
-                    }) : ''}                      */}
+                    }) : ''}                     
                     </select>
                   </div>
                 

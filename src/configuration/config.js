@@ -115,7 +115,7 @@ module.exports = {
 
 
     //Country 
-    countryUrl:"https://" + process.env.REACT_APP_COUNTRY + "execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/country",
+    countryUrl:"https://" + process.env.REACT_APP_COUNTRY + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/country",
 
     //Dependents
     dependentUrl: "https://" + process.env.REACT_APP_DEPENDENT + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/contact/dependent/",
