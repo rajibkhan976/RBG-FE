@@ -183,13 +183,13 @@ useEffect (()=> {
 // Setting up Country && list timezone
 const [getCountry, setGetCountry] = useState([]);
 const [timezoneData, setTimezoneData] = useState([]);
+const [personalData, setPersonalData] = useState([]);
 
 const getCountryList = async () => {
   try {
     const response = await PersonalDetailsServices.fetchCountryDetail();
     console.log("Country List --", response);
-    setGetCountry(response.name);
-    console.log("CountryNames", setGetCountry.name);
+    setGetCountry(response);
   } catch (e) {
     console.log(e.message);
   }
@@ -197,6 +197,7 @@ const getCountryList = async () => {
 useEffect(() => {
   getCountryList();
   getTimeZoneList();
+  getPersonalDetailList();
 }, []);
  
 
@@ -205,6 +206,16 @@ const getTimeZoneList = async () => {
     const timezoneList = await PersonalDetailsServices.fetchTimeZoneList();
     console.log("Timezone List --", timezoneList);
     setTimezoneData(timezoneList.zones);
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+
+const getPersonalDetailList = async () => {
+  try {
+    const personalDetailList = await PersonalDetailsServices.fetchPersonalDetail();
+    console.log("Personal Details --", personalDetailList);
+    setPersonalData(personalDetailList);
   } catch (e) {
     console.log(e.message);
   }
@@ -291,7 +302,13 @@ const getTimeZoneList = async () => {
                 </div>
                 <div className="gymInfo full">
                   <p className="textType1">Email <span>:</span></p>
-                    <p className="textType4">kallol.banerjee@tier5.in</p>
+
+                  {personalData ? personalData.map((personalDetails, i) => {
+                      return (                      
+                      <p className="textType4" key={i} >{personalDetails.email}</p>
+                      );
+                    }) : ''}   
+                    
                 </div>
                 {/* <div className="gymInfo full d-flex">
                   <div className="gymInfo half d-flex">
@@ -319,15 +336,15 @@ const getTimeZoneList = async () => {
                         style={{
                             backgroundImage: "url(" + arrowDown + ")",
                         }}>
-                        <option value="">-</option>
-                     {timezoneData ? timezoneData.map(zones => {
-                      // return (
-                      // <option
-                      //   value={timezoneData}
-                      //   data-timezone={timezoneData.zoneName}
-                      //   selected={(timezoneData.zoneName === PersonalDetailsServices?.timezoneList) ? true : false }
-                      // >{timezoneData.countryCode} - {timezoneData.zoneName}</option>
-                      // );
+                        <option value="">Select Timezone</option>
+                     {timezoneData ? timezoneData.map((zones, i) => {
+                      return (
+                      <option key={i} 
+                        value={zones.zoneName}
+                        data-timezone={zones.zoneName}
+                        //selected={(zones.zoneName === PersonalDetailsServices?.zones) ? true : false }
+                      >{zones.countryCode} - {zones.zoneName}</option>
+                      );
                     }) : ''}                                     
                     </select>
                   </div>
@@ -337,14 +354,12 @@ const getTimeZoneList = async () => {
                         style={{
                             backgroundImage: "url(" + arrowDown + ")",
                         }}>
-                        <option value="">-</option>
-                      {getCountry ? getCountry.map(zone => {
+                        <option value="">Select Country</option>
+                      {getCountry ? getCountry.map((countryZones, i) => {
                       return (
-                      <option
-                        value={zone.setGetCountry}
-                        selected={(zone.setGetCountry === PersonalDetailsServices?.setGetCountry) ? true : false }
-                        // selected={(parseInt(zone.gmtOffset) === detectedTimezone.gmtOffset) ? true : ""}
-                      >{zone.setGetCountry}</option>
+                      <option key={i}
+                        value={countryZones._id}                        
+                      >{countryZones.name}</option>
                       );
                     }) : ''}                     
                     </select>

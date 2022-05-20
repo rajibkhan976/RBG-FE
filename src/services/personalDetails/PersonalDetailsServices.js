@@ -1,5 +1,5 @@
 import axios from "axios";
-import config, { countryUrl, timezoneListURL, timezoneLatLngUrl } from "../../configuration/config";
+import config, { countryUrl, personalDetailsUrl, timezoneListURL, timezoneLatLngUrl } from "../../configuration/config";
 import { message } from "../../helpers";
 
 let headers = {
@@ -23,7 +23,26 @@ export const PersonalDetailsServices = {
             }
 
         }
-    },   
+    },
+    
+    
+    fetchPersonalDetail: async () => {
+      try {
+        const url = config.personalDetailsUrl + "/personal-details";
+        const result = await axios.get(url, { headers: headers });
+        console.log('Personal Detail Infos : ', result);
+        return result.data;
+    } catch (e) {
+        if (!typeof e.data === 'undefined') {
+            console.log(e.response.data.message);
+            throw new Error(e.response.data.message);
+        } else {
+            console.log(e.stack);
+            throw new Error(e.message + ". Please contact support.");
+        }
+
+    }
+    },
     
     fetchTimeZoneList: async () => {
       const url = config.timezoneListURL;
@@ -39,7 +58,8 @@ export const PersonalDetailsServices = {
           console.log('error', error.response.data);
           return error.response.data;
       }
-  },
+    },
+
   fetchTimeZoneLatLng: async (lat, lng) => {
       const url = config.timezoneLatLngUrl + "&format=json&lat=" + lat + "&lng=" + lng;
       const requestOptions = {
