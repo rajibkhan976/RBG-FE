@@ -247,7 +247,14 @@ const getPersonalDetailList = async () => {
                 <div className="gymName">
                   <div className="profilePicture personalDetailPage">
                     <span className={toggleEditName.status ? "profileImgSection hideThis" : "profileImgSection"}>
-                      <img src={profile_png} className={file ? "profileImage hideThis" : "profileImage"} alt="" />
+                     
+
+                      {personalData ? personalData.map((personalDetailsImg, i) => {
+                      return (
+                      <img src={personalDetailsImg.image} className={file ? "profileImage hideThis" : "profileImage"} alt="" />
+                      );
+                    }) : <img src={file}  className={file ? "profileImage hideThis" : "profileImage"} alt="" />} 
+
                       {file && (
                       	<>
                           <img src={file} className="profileImage" alt="" />
@@ -281,13 +288,26 @@ const getPersonalDetailList = async () => {
                         </>
                       )}  
                     <span className={toggleEditName.status ? "profileNameDisplay hideThis" : "profileNameDisplay"}>
-                      <span className="profileName">Jonathan Doe</span>
+
+                    {personalData ? personalData.map((personalDetailsNames, i) => {
+                      return (                      
+                        <span className="profileName" key={i} >{personalDetailsNames.firstName} {personalDetailsNames.lastName}</span>
+                      );
+                    }) : ''} 
+
+                      
                       <button className="editPersonalName" onClick={(e) => toggleEditNameFn(e)}><img src={edit_gym} alt=""/></button>
                     </span>
                     {toggleEditName.status && (
                       	<>
                           <span className="profileNameDisplayEdits">
-                          <input className="editPersonalDetailsNames" defaultValue="Jonathan Doe" type="text" name="" maxlength="29" />
+                          {personalData ? personalData.map((personalDetailsNames, i) => {
+                            return (                      
+                             
+                              <input className="editPersonalDetailsNames" key={i}  defaultValue={personalDetailsNames.firstName} type="text" name="" maxlength="29" />
+                            );
+                          }) : ''} 
+                          {/* <input className="editPersonalDetailsNames" defaultValue="Jonathan Doe" type="text" name="" maxlength="29" /> */}
                           {/* onChange={handleEditName} */}
                           {/* <span className="errorMsg">{accDetailErrors.personalName}</span> */}
 
@@ -307,7 +327,7 @@ const getPersonalDetailList = async () => {
                       return (                      
                       <p className="textType4" key={i} >{personalDetails.email}</p>
                       );
-                    }) : ''}   
+                    }) : 'No email provided'}   
                     
                 </div>
                 {/* <div className="gymInfo full d-flex">
