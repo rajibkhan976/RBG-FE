@@ -36,7 +36,7 @@ const SubscriptionSetup = (prop) => {
             maxRetry: prop.merchantInfo?.maxRetry
         });
 
-    }, [prop.merchantInfo])
+    }, [prop.merchantInfo.retryInterval, prop.merchantInfo.maxRetry])
 
     useEffect(() => {
         if (merchantFormError.retryInterval !== "" || merchantFormError.maxRetry !== "") {
