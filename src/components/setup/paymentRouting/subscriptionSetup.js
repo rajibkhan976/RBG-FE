@@ -53,7 +53,7 @@ const SubscriptionSetup = (prop) => {
             setSubscription({ ...subscription, retryInterval: number });
         }
 
-        if (number === "" || !reg.test(number) || number <= 0) {
+        if (number === "" || number <= 0) {
             setMerchantFormError({ ...merchantFormError, retryInterval: "Please enter a valid interval" });
         } else {
             setMerchantFormError({ ...merchantFormError, retryInterval: "" });
@@ -69,7 +69,7 @@ const SubscriptionSetup = (prop) => {
             setSubscription({ ...subscription, maxRetry: number });
         }
 
-        if (number === "" || !reg.test(number) || number <= 0) {
+        if (number === "" || number <= 0) {
             setMerchantFormError({ ...merchantFormError, maxRetry: "Please enter a valid retry" });
         } else {
             setMerchantFormError({ ...merchantFormError, maxRetry: "" });
