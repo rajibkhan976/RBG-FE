@@ -32,82 +32,133 @@ const [loader,setLoader] = useState(false);
         setFile(URL.createObjectURL(e.target.files[0]));
     }
 
+// personal details name validation start
+    const [accountName, setAccountName] = useState({
+      personalName: ""
+    });
+    const [accDetailErrors, setAccDetailErrors] = useState({});
+    const [isSave, setisSave] = useState(false);
 
-    // const [accountName, setAccountName] = useState({
-    //   personalName: ""
-    // });
-    // const [accDetailErrors, setAccDetailErrors] = useState({});
-    // const [isSave, setisSave] = useState(false);
 
+    const handleEditName = (e) => {
+      let val = e.target.value;
+      setAccountName ({...accountName, personalName: val});
+      console.log(accountName);
+    }
 
-    // const handleEditName = (e) => {
-    //   let val = e.target.value;
-    //   setAccountName ({...accountName, personalName: val});
-    //   console.log(accountName);
-    // }
-
-    // const validatePersonalDetail = (values) => {
-    //   const errors ={};
-    //   if (!values.personalName) {
-    //     errors.personalName = "Personal name is required!"
-    //   }  
-    //     return errors;
+    const validatePersonalDetail = (values) => {
+      const errorsDisplay ={};
+      if (!values.personalName) {
+        errorsDisplay.personalName = "Name is required!";        
+      }  
+        return errorsDisplay;
       
-    // };
+    };
   
 
     const closeModalSave = () => {
-      setToggleEditName(false);
-      setLoader(true);
-      setTimeout(() => { setLoader(false); }, 4000);
+      if (accountName.personalName) {
+        setToggleEditName(false);
+      } else {
+        setAccDetailErrors(false);
+        setLoader(true);
+       setTimeout(() => { setLoader(false); }, 4000)
+      }  
+      var spacing = accountName.personalName.indexOf(" ");  // Gets the first index where a space occour
+      var first_name = accountName.personalName.substr(0, spacing); // Gets the first part
+      var last_name = accountName.personalName.substr(spacing + 1);  // Gets the later part
+     console.log("Updated First Name:" , first_name);
 
-      // setAccDetailErrors(validatePersonalDetail(accountName));
-      // setisSave(true);
+     console.log("Updated Last Name:" , last_name);
+      
+
+      
+      // setToggleEditName(false);
+      // setLoader(true);
+      // setTimeout(() => { setLoader(false); }, 4000);
+
+   
     };
 
-    // useEffect (()=> {
-    //   console.log(accDetailErrors);
-    //   if(Object.keys(accDetailErrors).length ===0 && isSave){
-    //     console.log(accountName);}},[accDetailErrors]);
-    
-      // const [toggleEditName, setToggleEditName] = useState({
-      //   status: false,
-      // });
+    const handleNameSubmit = (e) => {
+      e.preventDefault();
+      setAccDetailErrors(validatePersonalDetail(accountName));
+      setisSave(true);
+      //console.log(formValues);
+    };
 
+    useEffect (()=> {
+      console.log(accDetailErrors);
+      if(Object.keys(accDetailErrors).length ===0 && isSave){
+        console.log(accountName);
+      }
+    },[accDetailErrors]);
+    
+ 
+
+    // personal details name validation start
+    
   // const initialValues= {currentPassword: "", newPassword: "", confirmNewPassword: ""};
   // console.log("Type of value" ,typeof initialValues);
   const [formValues, setformValues] = useState({
     currentPassword: "", 
     newPassword: "", 
-    confirmNewPassword: ""
+    confirmNewPassword: "",
+    timezones: "",
+    countryLists: ""
   });
   const [formErrors, setformErrors] = useState({});
   const [isSubmit, setisSubmit] = useState(false);
 
-const handleChange = (e) => {
-  let val = e.target.value;
-  setformValues ({...formValues, currentPassword: val});
-  console.log(formValues)
-};
+// const handleChange = (e) => {
+//   let val = e.target.value;
+//   setformValues ({...formValues, currentPassword: val});
+//   console.log(formValues)
+// };
 
-const handleChangenewPassword = (e) => {
-  let val = e.target.value;
-  setformValues ({...formValues, newPassword: val});
-  console.log(formValues)
-};
+// const handleChangenewPassword = (e) => {
+//   let val = e.target.value;
+//   setformValues ({...formValues, newPassword: val});
+//   console.log(formValues)
+// };
 
-const handleChangeConfirmNewPassword = (e) => {
-  let val = e.target.value;
-  setformValues ({...formValues, confirmNewPassword: val});
-  console.log(formValues)
+// const handleChangeConfirmNewPassword = (e) => {
+//   let val = e.target.value;
+//   setformValues ({...formValues, confirmNewPassword: val});
+//   console.log(formValues)
+// };
+
+// const handleChangeTimezone = (e) => {
+//   let val = e.target.value;
+//   setformValues ({...formValues, timezones: val});
+//   console.log(formValues)
+// };
+
+// const handleChangeCountry = (e) => {
+//   let val = e.target.value;
+//   setformValues ({...formValues, countryLists: val});
+//   console.log(formValues)
+// };
+
+const handleChangeNew = (e) => {
+  const value = e.target.value;
+  const name = e.target.name;
+  // console.log(name, value);
+  setformValues ({...formValues, [name]: value});
+  setformErrors ({...formErrors, [name]: ""});
 };
 
 
 const handleSubmit = (e) => {
   e.preventDefault();
-  setformErrors(validate(formValues));
+  let errorCheck = validate(formValues);
+  console.log(errorCheck);
+  if (Object.keys(errorCheck).length === 0){
+    console.log(formValues);
+  } else {
+    setformErrors(errorCheck);
+  }
   setisSubmit(true);
-  //console.log(formValues);
 };
 
 const validate = (values) => {
@@ -149,6 +200,16 @@ const validate = (values) => {
   }
 
 
+
+  if (!values.timezones) {
+    errors.timezones = "Timezone is required!"
+    
+  }
+  if (!values.countryLists) {
+    errors.countryLists = "Country is required!"
+  }
+
+
   return errors;
   
 };
@@ -164,8 +225,15 @@ useEffect (()=> {
 
 
 
-  const toggleEditNameFn = (e) => {
+  const toggleEditNameFn = (e, personalData) => {
     e.preventDefault();
+    console.log('sadasdsadasd', personalData)
+    if (personalData[0] !== undefined) {
+      setAccountName({
+        ...accountName,
+        personalName: personalData[0].firstName + " " + personalData[0].lastName
+      });
+    }
     setToggleEditName({
       ...toggleEditName,
       status: !toggleEditName.status,
@@ -176,6 +244,7 @@ useEffect (()=> {
 
   const closeModalReject = () => {
     setToggleEditName(false);
+    setAccDetailErrors(false);
     setFile(false);
   };
  
@@ -221,6 +290,15 @@ const getPersonalDetailList = async () => {
   }
 };
 
+
+
+
+
+const submitBasicSettings = (e) => {
+  e.preventDefault();
+  console.log("Click is working",formValues );
+};
+
   
   return (
     <>
@@ -251,7 +329,7 @@ const getPersonalDetailList = async () => {
 
                       {personalData ? personalData.map((personalDetailsImg, i) => {
                       return (
-                      <img src={personalDetailsImg.image} className={file ? "profileImage hideThis" : "profileImage"} alt="" />
+                      <img src={personalDetailsImg.image ? personalDetailsImg.image : ""} className={file ? "profileImage hideThis" : "profileImage"} alt="" />
                       );
                     }) : <img src={file}  className={file ? "profileImage hideThis" : "profileImage"} alt="" />} 
 
@@ -288,7 +366,6 @@ const getPersonalDetailList = async () => {
                         </>
                       )}  
                     <span className={toggleEditName.status ? "profileNameDisplay hideThis" : "profileNameDisplay"}>
-
                     {personalData ? personalData.map((personalDetailsNames, i) => {
                       return (                      
                         <span className="profileName" key={i} >{personalDetailsNames.firstName} {personalDetailsNames.lastName}</span>
@@ -296,24 +373,26 @@ const getPersonalDetailList = async () => {
                     }) : ''} 
 
                       
-                      <button className="editPersonalName" onClick={(e) => toggleEditNameFn(e)}><img src={edit_gym} alt=""/></button>
+                      <button className="editPersonalName" onClick={(e) => toggleEditNameFn(e, personalData)}><img src={edit_gym} alt=""/></button>
                     </span>
                     {toggleEditName.status && (
                       	<>
+                        <form onSubmit={handleNameSubmit}>
                           <span className="profileNameDisplayEdits">
-                          {personalData ? personalData.map((personalDetailsNames, i) => {
+                          {/* {personalData ? personalData.map((personalDetailsNames, i) => {
                             return (                      
                              
                               <input className="editPersonalDetailsNames" key={i}  defaultValue={personalDetailsNames.firstName} type="text" name="" maxlength="29" />
                             );
-                          }) : ''} 
-                          {/* <input className="editPersonalDetailsNames" defaultValue="Jonathan Doe" type="text" name="" maxlength="29" /> */}
-                          {/* onChange={handleEditName} */}
-                          {/* <span className="errorMsg">{accDetailErrors.personalName}</span> */}
+                          }) : ''}  */}
+                           <input className="editPersonalDetailsNames" value={accountName.personalName}  type="text" onChange={handleEditName} name="" /> 
+                        
+                          <span className="errorMsg">{accDetailErrors.personalName}</span> 
 
                             <button className="editPersonalNameSave" onClick={() => closeModalSave()}><img src={saveEdit} alt=""/></button>
                             <button className="editPersonalNameDelete" onClick={() => closeModalReject()}><img src={delEdit} alt=""/></button>
                           </span>
+                          </form>
                         </>
                       )}  
                   </div>
@@ -343,7 +422,7 @@ const getPersonalDetailList = async () => {
           </div>
 
 
-          <div className="gymdetails_right">
+          <div className="gymdetails_right personalDetailsInfosDisplay">
               <div className="holidayListHeader">
                 <h3>Basic Settings</h3>                  
               </div>
@@ -353,9 +432,10 @@ const getPersonalDetailList = async () => {
                   <div className="formControl">
                     <label>Timezone</label>
                     <select
+                        name="timezones"
                         style={{
                             backgroundImage: "url(" + arrowDown + ")",
-                        }}>
+                        }} onChange={handleChangeNew}>
                         <option value="">Select Timezone</option>
                      {timezoneData ? timezoneData.map((zones, i) => {
                       return (
@@ -367,13 +447,15 @@ const getPersonalDetailList = async () => {
                       );
                     }) : ''}                                     
                     </select>
+                    <span className="errorMsg">{formErrors.timezones}</span>
                   </div>
                   <div className="formControl">
                     <label>Select Country</label>
                     <select
+                        name="countryLists"
                         style={{
                             backgroundImage: "url(" + arrowDown + ")",
-                        }}>
+                        }} onChange={handleChangeNew} >
                         <option value="">Select Country</option>
                       {getCountry ? getCountry.map((countryZones, i) => {
                       return (
@@ -383,6 +465,7 @@ const getPersonalDetailList = async () => {
                       );
                     }) : ''}                     
                     </select>
+                    <span className="errorMsg">{formErrors.countryLists}</span>
                   </div>
                 
               </div>
@@ -394,18 +477,18 @@ const getPersonalDetailList = async () => {
                
                   <div className="formControl">
                     <label>Current Password</label>
-                   <input type="password" name="" defaultvalue={formValues.currentPassword} onChange={handleChange} />
+                   <input type="password" name="currentPassword" defaultvalue={formValues.currentPassword} onChange={handleChangeNew} />
                    <span className="errorMsg">{formErrors.currentPassword}</span>
                   </div>
                   
                   <div className="formControl">
                     <label>New Password</label>
-                    <input type="password" name="" defaultvalue={formValues.newPassword} onChange={handleChangenewPassword} />
+                    <input type="password" name="newPassword" defaultvalue={formValues.newPassword} onChange={handleChangeNew} />
                     <span className="errorMsg">{formErrors.newPassword}</span>
                   </div>
                   <div className="formControl">
                     <label>Confirm New Password</label>
-                    <input type="password" name="" defaultvalue={formValues.confirmNewPassword} onChange={handleChangeConfirmNewPassword} />
+                    <input type="password" name="confirmNewPassword" defaultvalue={formValues.confirmNewPassword} onChange={handleChangeNew} />
                     <span className="errorMsg">{formErrors.confirmNewPassword}</span>
                   </div>
                   <div className="formControl">

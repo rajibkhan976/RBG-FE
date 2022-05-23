@@ -32,28 +32,28 @@ const [loader,setLoader] = useState(false);
         setFile(URL.createObjectURL(e.target.files[0]));
     }
 
-// personal details name validation start
-    const [accountName, setAccountName] = useState({
-      personalName: ""
-    });
-    const [accDetailErrors, setAccDetailErrors] = useState({});
-    const [isSave, setisSave] = useState(false);
+
+    // const [accountName, setAccountName] = useState({
+    //   personalName: ""
+    // });
+    // const [accDetailErrors, setAccDetailErrors] = useState({});
+    // const [isSave, setisSave] = useState(false);
 
 
-    const handleEditName = (e) => {
-      let val = e.target.value;
-      setAccountName ({...accountName, personalName: val});
-      console.log(accountName);
-    }
+    // const handleEditName = (e) => {
+    //   let val = e.target.value;
+    //   setAccountName ({...accountName, personalName: val});
+    //   console.log(accountName);
+    // }
 
-    const validatePersonalDetail = (values) => {
-      const errors ={};
-      if (!values.personalName) {
-        errors.personalName = "Personal name is required!"
-      }  
-        return errors;
+    // const validatePersonalDetail = (values) => {
+    //   const errors ={};
+    //   if (!values.personalName) {
+    //     errors.personalName = "Personal name is required!"
+    //   }  
+    //     return errors;
       
-    };
+    // };
   
 
     const closeModalSave = () => {
@@ -61,14 +61,8 @@ const [loader,setLoader] = useState(false);
       setLoader(true);
       setTimeout(() => { setLoader(false); }, 4000);
 
-   
-    };
-
-    const handleNameSubmit = (e) => {
-      e.preventDefault();
-      setAccDetailErrors(validatePersonalDetail(accountName));
-      setisSave(true);
-      //console.log(formValues);
+      // setAccDetailErrors(validatePersonalDetail(accountName));
+      // setisSave(true);
     };
 
     // useEffect (()=> {
@@ -76,10 +70,10 @@ const [loader,setLoader] = useState(false);
     //   if(Object.keys(accDetailErrors).length ===0 && isSave){
     //     console.log(accountName);}},[accDetailErrors]);
     
- 
+      // const [toggleEditName, setToggleEditName] = useState({
+      //   status: false,
+      // });
 
-    // personal details name validation start
-    
   // const initialValues= {currentPassword: "", newPassword: "", confirmNewPassword: ""};
   // console.log("Type of value" ,typeof initialValues);
   const [formValues, setformValues] = useState({
@@ -306,22 +300,20 @@ const getPersonalDetailList = async () => {
                     </span>
                     {toggleEditName.status && (
                       	<>
-                        <form onSubmit={handleNameSubmit}>
                           <span className="profileNameDisplayEdits">
-                          {/* {personalData ? personalData.map((personalDetailsNames, i) => {
+                          {personalData ? personalData.map((personalDetailsNames, i) => {
                             return (                      
                              
                               <input className="editPersonalDetailsNames" key={i}  defaultValue={personalDetailsNames.firstName} type="text" name="" maxlength="29" />
                             );
-                          }) : ''}  */}
-                           <input className="editPersonalDetailsNames" defaultValue="Jonathan Doe" type="text" onChange={handleEditName} name="" maxlength="29" /> 
-                        
-                          <span className="errorMsg">{accDetailErrors.personalName}</span> 
+                          }) : ''} 
+                          {/* <input className="editPersonalDetailsNames" defaultValue="Jonathan Doe" type="text" name="" maxlength="29" /> */}
+                          {/* onChange={handleEditName} */}
+                          {/* <span className="errorMsg">{accDetailErrors.personalName}</span> */}
 
                             <button className="editPersonalNameSave" onClick={() => closeModalSave()}><img src={saveEdit} alt=""/></button>
                             <button className="editPersonalNameDelete" onClick={() => closeModalReject()}><img src={delEdit} alt=""/></button>
                           </span>
-                          </form>
                         </>
                       )}  
                   </div>

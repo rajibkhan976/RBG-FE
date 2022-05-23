@@ -1994,6 +1994,22 @@ h3.leftSectionHeader {
   margin-top: -20px;
 } */
 
+
+.showing_gym_data .gymName > div span.profileNameDisplayEdits {
+  padding-left: 15px;
+  width: 100%;
+  position: relative;
+}
+
+.showing_gym_data .gymName > div span.profileNameDisplayEdits .errorMsg {
+  font-size: 12px;
+    color: #c74854;
+    line-height: 21px;
+  position: absolute;
+  bottom: -15px;
+  left: 0px;
+}
+
 .showing_gym_data .gymName > div span.profileUpload {
   width: 64px;
   padding: 0;
@@ -2048,6 +2064,14 @@ cursor: pointer;
 
 }
 
+.personalDetailsInfosDisplay .formControl {
+  position: relative;
+}
+.personalDetailsInfosDisplay .formControl .errorMsg {
+  position: absolute;
+  bottom: -22px;
+  left: 1px;
+}
 
 .showing_gym_data .gymName > div .profileName {
   padding-left: 5px;
