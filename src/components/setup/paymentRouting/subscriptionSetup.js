@@ -48,32 +48,24 @@ const SubscriptionSetup = (prop) => {
 
     const retryIntervalHandel = (e) => {
         const number = e.target.value;
-        const reg = /^[0-9]+$/;
-        if ((reg.test(number) || number === "") && number.length < 4) {
-            setSubscription({ ...subscription, retryInterval: number });
-        }
-
-        if (number === "" || number <= 0) {
+        const reg = /^[0-9]{1,3}$/;
+        if (number === "" || number < 1 || !reg.test(number)) {
             setMerchantFormError({ ...merchantFormError, retryInterval: "Please enter a valid interval" });
         } else {
             setMerchantFormError({ ...merchantFormError, retryInterval: "" });
         }
+        setSubscription(subscription => ({ ...subscription, retryInterval: (reg.test(number)) ? number:"" }));
     };
 
     const maxRetryHandel = (e) => {
-
         const number = e.target.value;
-        const reg = /^[0-9]+$/;
-
-        if ((reg.test(number) || number === "") && number.length < 4) {
-            setSubscription({ ...subscription, maxRetry: number });
-        }
-
-        if (number === "" || number <= 0) {
+        const reg = /^[0-9]{1,3}$/;
+        if (number === "" || number < 1 || !reg.test(number)) {
             setMerchantFormError({ ...merchantFormError, maxRetry: "Please enter a valid retry" });
         } else {
             setMerchantFormError({ ...merchantFormError, maxRetry: "" });
         }
+        setSubscription(subscription => ({ ...subscription, maxRetry: (reg.test(number)) ? number:"" }));
     };
 
     const subcriptionFormSave = async (e) => {

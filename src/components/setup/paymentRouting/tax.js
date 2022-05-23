@@ -45,15 +45,13 @@ const Tax = () => {
 
     const taxAmountHandle = (e) => {
         const number = e.target.value;
-        const reg = /^[0-9 ]+$/;
-        if (reg.test(number) || number === "") {
-            setTaxData({ ...taxData, tax: number });
-        }
-        if (number === "" || !reg.test(number) || number <= 0) {
-            setShowError("Please enter a valid tax");
+        const reg = /^[0-9]{1,2}$/;
+        if (number === "" || number < 1 || !reg.test(number)) {
+            setShowError("Please enter a valid interval");
         } else {
-            setShowError("");
+            setShowError("" );
         }
+        setTaxData(prevState => ({ ...prevState, tax: (reg.test(number)) ? number:"" }));
     };
 
     const handleSubmit = async (e) => {
@@ -113,6 +111,7 @@ const Tax = () => {
                                 <div className='ps_inputPercent'>
                                     <input
                                         type="text"
+                                        name="tax"
                                         onChange={taxAmountHandle}
                                         value={taxData.tax}
                                         disabled={(taxData.editAccess) ? false : true}
