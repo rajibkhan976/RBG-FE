@@ -49,8 +49,7 @@ const SubscriptionSetup = (prop) => {
     const retryIntervalHandel = (e) => {
         const number = e.target.value;
         const reg = /^[0-9]+$/;
-
-        if (reg.test(number) || number === "") {
+        if ((reg.test(number) || number === "") && number.length < 4) {
             setSubscription({ ...subscription, retryInterval: number });
         }
 
@@ -66,7 +65,7 @@ const SubscriptionSetup = (prop) => {
         const number = e.target.value;
         const reg = /^[0-9]+$/;
 
-        if (reg.test(number) || number === "") {
+        if ((reg.test(number) || number === "") && number.length < 4) {
             setSubscription({ ...subscription, maxRetry: number });
         }
 
