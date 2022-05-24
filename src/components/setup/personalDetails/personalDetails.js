@@ -19,8 +19,8 @@ import gymLogo from "../../../assets/images/gymLogo.svg";
 // import AddHolidayModal from "./addHolidayModal";
 import config from "../../../configuration/config";
 import { PersonalDetailsServices } from "../../../services/personalDetails/PersonalDetailsServices";
-
-
+import {useDispatch} from "react-redux";
+import * as actionTypes from "../../../actions/types";
 
 
 const PersonalDetails = (props) => {
@@ -28,13 +28,40 @@ const [loader,setLoader] = useState(false);
 const [isLoader, setIsLoader] = useState(false);
 const [successMsg, setSuccessMsg] = useState("");
 const [errorMsg, setErrorMsg] = useState("");
-  
+const dispatch = useDispatch();
   const [file, setFile] = useState("");
+  const [fileName, setFileName] = useState("");
     function handleFileChange(e) {
         console.log(e.target.files);
-        setFile(URL.createObjectURL(e.target.files[0]));
+        let fileOrf = e.target.files[0];
+        getBase64(fileOrf).then(result => {
+          setFile(result);
+      }).catch(err => {
+        console.log(err);
+      });
+        setFileName(e.target.files[0].name);
     }
-
+   const getBase64 = file => {
+      return new Promise(resolve => {
+        let fileInfo;
+        let baseURL = "";
+        // Make new FileReader
+        let reader = new FileReader();
+  
+        // Convert the file to base64 text
+        reader.readAsDataURL(file);
+  
+        // on reader load somthing...
+        reader.onload = () => {
+          // Make a fileInfo Object
+          console.log("Called", reader);
+          baseURL = reader.result;
+          console.log(baseURL);
+          resolve(baseURL);
+        };
+        console.log(fileInfo);
+      });
+    };
 // personal details name validation start
     const [accountName, setAccountName] = useState({
       personalName: ""
@@ -71,16 +98,34 @@ const [errorMsg, setErrorMsg] = useState("");
         
         let payload = {
           firstName: first_name,
-          lastName: last_name
+          lastName: last_name,
+          file: file ? file : "",
+          filename: fileName ? fileName : ""
         }
         try {
           let resp = await PersonalDetailsServices.updateAccountDetail(payload);
-          console.log("resp", resp);
-          setSuccessMsg("Personal Details updated successfully");
-          setErrorMsg(e.message);
+          // console.log("resp", resp);
+          // setSuccessMsg("Personal Details updated successfully");
+          // setErrorMsg(e.message);
+
+          console.log("Response of Account Deails", resp);
+          // Success toaster
+          dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: response,
+            typeMessage: 'success'
+          });
+
           // Success toaster
         } catch (e) {
           // Error toaster
+          console.log('ppppppp')
+          // Error toaster
+          dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: e.message,
+            typeMessage: 'error'
+          });
         } finally {
           setIsLoader(false);
         }
@@ -161,10 +206,19 @@ const handleSubmit = async (e) => {
       let response = await PersonalDetailsServices.updateBasicSetting(payload);
       console.log("response of basic settings", response);
       // Success toaster
-      setSuccessMsg("Personal Details updated successfully");
-      setErrorMsg(e.message);
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: response,
+        typeMessage: 'success'
+      });
     } catch (e) {
+      console.log('ppppppp')
       // Error toaster
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: e.message,
+        typeMessage: 'error'
+      });
     } finally {
       setIsLoader(false);
     }
@@ -296,12 +350,6 @@ const getPersonalDetailList = async () => {
   return (
     <>
     {(isLoader) ? <Loader /> : ''}
-    {successMsg &&
-        <SuccessAlert message={successMsg} extraclassName=""></SuccessAlert>
-      }
-      {errorMsg &&
-        <ErrorAlert message={errorMsg} extraclassName=""></ErrorAlert>
-      }
     <div className="dashInnerUI">
         <div className="userListHead detailsPage">
           <div className="listInfo">
@@ -353,7 +401,7 @@ const getPersonalDetailList = async () => {
                               <input type="file" onChange={handleFileChange} />
                             </span>
                             <span className="profileImgSection">
-                              <img src={file} className="profileImage" alt="" /> 
+                              <img src={ file ? file : profile_img} className="profileImage" alt="" /> 
                               <span className="hoverEffects">
                                 <img src={cam} className="camImg" alt="" />
                               </span>                             
