@@ -80,6 +80,9 @@ const dispatch = useDispatch();
       const errorsDisplay ={};
       if (!values.personalName) {
         errorsDisplay.personalName = "Name is required!";        
+      } 
+      if (values.personalName.length >30) {
+        errorsDisplay.personalName = "Name must be within 30 characters";        
       }  
         return errorsDisplay;
       
@@ -104,28 +107,24 @@ const dispatch = useDispatch();
         }
         try {
           let resp = await PersonalDetailsServices.updateAccountDetail(payload);
-          // console.log("resp", resp);
-          // setSuccessMsg("Personal Details updated successfully");
-          // setErrorMsg(e.message);
-
           console.log("Response of Account Deails", resp);
           // Success toaster
           dispatch({
             type: actionTypes.SHOW_MESSAGE,
-            message: response,
+            message: resp,
             typeMessage: 'success'
           });
 
           // Success toaster
         } catch (e) {
           // Error toaster
-          console.log('ppppppp')
-          // Error toaster
+          console.log('Error error error error')          
           dispatch({
             type: actionTypes.SHOW_MESSAGE,
             message: e.message,
             typeMessage: 'error'
           });
+          // Error toaster
         } finally {
           setIsLoader(false);
         }
