@@ -285,7 +285,7 @@ const InnerLeftMenu = (props) => {
               </h4>
             </div>
             <ul>
-              {/* <li>
+             <li>
                 <NavLink className="leftMenuInnerLink" to="/personal-details">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
@@ -296,7 +296,7 @@ const InnerLeftMenu = (props) => {
                     </button>
                   </div>
                 </NavLink>
-              </li> */}
+              </li>
               <li>
                 <NavLink className="leftMenuInnerLink" to="/gym-details">
                   <div className="indicator"></div>

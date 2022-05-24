@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from 'react-redux';
 import { NavLink } from "react-router-dom";
 import { Scrollbars } from "react-custom-scrollbars-2";
-
+import SetupIcon1 from "../../../assets/images/setupicon1.svg";
 import SetupIcon2 from "../../../assets/images/setupicon2.svg";
 import SetupIcon3 from "../../../assets/images/setupicon3.svg";
 import SetupIcon5 from "../../../assets/images/setupicon5.svg";
@@ -24,7 +24,7 @@ const Setup = (props) => {
         >
           <p className="headding1">Set Up </p>
           <ul>
-            {/* <li>
+             <li>
               <div className="listHead">
                 <i>
                   <img src={SetupIcon1} alt="" />
@@ -37,7 +37,7 @@ const Setup = (props) => {
                   <p>Manage your personal details</p>
                 </div>
               </div>
-            </li> */}
+            </li>
             <li>
               <div className="listHead">
                 <i>

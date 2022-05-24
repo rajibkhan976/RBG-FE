@@ -32,14 +32,23 @@ const dispatch = useDispatch();
   const [file, setFile] = useState("");
   const [fileName, setFileName] = useState("");
     function handleFileChange(e) {
-        console.log(e.target.files);
-        let fileOrf = e.target.files[0];
-        getBase64(fileOrf).then(result => {
-          setFile(result);
-      }).catch(err => {
-        console.log(err);
-      });
-        setFileName(e.target.files[0].name);
+        console.log("type of img", e.target.files[0].type);
+        if (e.target.files[0] && e.target.files[0].type === "image/png" || e.target.files[0].type === "image/jpg" || e.target.files[0].type === "image/jpeg") {
+          let fileOrf = e.target.files[0];
+            getBase64(fileOrf).then(result => {
+              setFile(result);
+          }).catch(err => {
+            console.log(err);
+          });
+            setFileName(e.target.files[0].name);
+        } else {
+          dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: "Only JPG,JPEG & PNG format allowed",
+            typeMessage: 'error'
+          });
+        }
+        
     }
    const getBase64 = file => {
       return new Promise(resolve => {
@@ -76,29 +85,33 @@ const dispatch = useDispatch();
       console.log('accountName', accountName);
     }
 
-    const validatePersonalDetail = (values) => {
-      const errorsDisplay ={};
-      if (!values.personalName) {
-        errorsDisplay.personalName = "Name is required!";        
-      } 
+    const validatePersonalDetail = async (values) => {
+      console.log("Name", values.personalName)
+      let errorsDisplay ={};       
       if (values.personalName.length >30) {
+        console.log("length of the name is", values.personalName.length);
         errorsDisplay.personalName = "Name must be within 30 characters";        
       }  
-        return errorsDisplay;
+      if (!values.personalName) {
+        errorsDisplay.personalName = "Name is required!";        
+      }    
+      setAccDetailErrors(errorsDisplay);
+      return errorsDisplay;
       
     };
   
 
-    const personalInfosSave = async (e) => {
-      setIsLoader(true);
-      if (!accountName.personalName) {
-        setAccDetailErrors(validatePersonalDetail(accountName));
-      } else {
+    const personalInfosSave = async (e) => {      
+      let validationResp = await validatePersonalDetail(accountName);
+      console.log("validationResp",validationResp)
+      if (!validationResp.personalName) {
         setToggleEditName(false);
-        var spacing = accountName.personalName.indexOf(" ");  // Gets the first index where a space occour
-        var first_name = accountName.personalName.substr(0, spacing); // Gets the first part
-        var last_name = accountName.personalName.substr(spacing + 1);  // Gets the later part
-        
+
+        var spacing = accountName.personalName.split(" ");  // Gets the first index where a space occour
+        var first_name = spacing[0] // Gets the first part
+        var last_name = spacing[1] ? spacing[1] : "";  // Gets the later part
+
+        setIsLoader(true);
         let payload = {
           firstName: first_name,
           lastName: last_name,
@@ -148,7 +161,7 @@ const dispatch = useDispatch();
       }
     },[accDetailErrors]); 
 
-    // personal details name validation start
+    // personal details name validation end
     
   const [formValues, setformValues] = useState({
     currentPassword: "", 
@@ -307,11 +320,14 @@ const [personalData, setPersonalData] = useState([]);
 
 const getCountryList = async () => {
   try {
+    setIsLoader(true);
     const response = await PersonalDetailsServices.fetchCountryDetail();
     console.log("Country List --", response);
     setGetCountry(response);
   } catch (e) {
     console.log(e.message);
+  }finally {
+    setIsLoader(false);
   }
 };
 useEffect(() => {
@@ -323,11 +339,14 @@ useEffect(() => {
 
 const getTimeZoneList = async () => {
   try {
+    setIsLoader(true);
     const timezoneList = await PersonalDetailsServices.fetchTimeZoneList();
     console.log("Timezone List --", timezoneList);
     setTimezoneData(timezoneList.zones);
   } catch (e) {
     console.log(e.message);
+  }finally {
+    setIsLoader(false);
   }
 };
 
@@ -370,13 +389,15 @@ const getPersonalDetailList = async () => {
             <h3 className="leftSectionHeader">Account Details</h3>
               <div className="showing_gym_data personalInfos">
                 <div className="gymName">
+                
                   <div className="profilePicture personalDetailPage">
                     <span className={toggleEditName.status ? "profileImgSection hideThis" : "profileImgSection"}>
                      
 
                       {personalData ? personalData.map((personalDetailsImg, i) => {
+                        console.log("personalDetailsImg", personalDetailsImg)
                       return (
-                      <img key={"img-" + i} src={personalDetailsImg.image ? personalDetailsImg.image : profile_img} className={file ? "profileImage hideThis" : "profileImage"} alt="" /> 
+                      <img key={"img-" + i} src={personalDetailsImg.image ? config.bucketUrl + personalDetailsImg.image : profile_img} className={file ? "profileImage hideThis" : "profileImage"} alt="" /> 
                       );
                     }) : <img src={profile_img}  className={file ? "profileImage hideThis" : "profileImage"} alt="" />} 
 
