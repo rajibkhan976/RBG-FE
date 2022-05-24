@@ -386,7 +386,7 @@ const getPersonalDetailList = async () => {
             <h2 className="inDashboardHeader">
               Personal Details
             </h2>
-            <p className="userListAbout">Lorem ipsum dolor sit amet. Semi headline should be here.</p>
+            <p className="userListAbout">Manage your personal information.</p>
           </div>
         </div>
 
