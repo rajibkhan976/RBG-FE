@@ -32,19 +32,29 @@ const dispatch = useDispatch();
   const [file, setFile] = useState("");
   const [fileName, setFileName] = useState("");
     function handleFileChange(e) {
-        console.log("type of img", e.target.files[0].type);
+        // console.log("type of img", e.target.files[0].type);
+        // console.log("Size of img", e.target.files[0].size);
         if (e.target.files[0] && e.target.files[0].type === "image/png" || e.target.files[0].type === "image/jpg" || e.target.files[0].type === "image/jpeg") {
-          let fileOrf = e.target.files[0];
+          if ( e.target.files[0].size < 5000000){
+            let fileOrf = e.target.files[0];
             getBase64(fileOrf).then(result => {
               setFile(result);
-          }).catch(err => {
-            console.log(err);
-          });
+              }).catch(err => {
+                console.log(err);
+              });
             setFileName(e.target.files[0].name);
+          } else {
+            dispatch({
+              type: actionTypes.SHOW_MESSAGE,
+              message: "Max size allowed is 4 MB",
+              typeMessage: 'error'
+            });
+          }
+          
         } else {
           dispatch({
             type: actionTypes.SHOW_MESSAGE,
-            message: "Only JPG,JPEG & PNG format allowed",
+            message: "Only JPG,JPEG & PNG format allowed. ",
             typeMessage: 'error'
           });
         }
@@ -320,14 +330,12 @@ const [personalData, setPersonalData] = useState([]);
 
 const getCountryList = async () => {
   try {
-    setIsLoader(true);
+   
     const response = await PersonalDetailsServices.fetchCountryDetail();
     console.log("Country List --", response);
     setGetCountry(response);
   } catch (e) {
     console.log(e.message);
-  }finally {
-    setIsLoader(false);
   }
 };
 useEffect(() => {
