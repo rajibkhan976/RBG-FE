@@ -196,9 +196,9 @@ const handleSubmit = async (e) => {
     }
     
     if(Current_Passwords && New_Passwords && Confirm_NewPasswords) {
-      payload.currentPassowrd = Current_Passwords,
-      payload.newPassowrd = New_Passwords,
-      payload.confirmPassowrd = Confirm_NewPasswords
+      payload.currentPassowrd = Current_Passwords;
+      payload.newPassowrd = New_Passwords;
+      payload.confirmPassowrd = Confirm_NewPasswords;
     }
     
     try {
