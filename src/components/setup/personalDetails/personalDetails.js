@@ -39,6 +39,10 @@ const dispatch = useDispatch();
             let fileOrf = e.target.files[0];
             getBase64(fileOrf).then(result => {
               setFile(result);
+              setEditedName({
+                ...editedName,
+                image: result
+              })
               }).catch(err => {
                 console.log(err);
               });
@@ -85,14 +89,23 @@ const dispatch = useDispatch();
     const [accountName, setAccountName] = useState({
       personalName: ""
     });
+    const [editedName, setEditedName] = useState({
+      personalName: "",
+      image: ""
+    });
     const [accDetailErrors, setAccDetailErrors] = useState({});
     const [isSave, setisSave] = useState(false);
 
 
     const handleEditName = (e) => {
       let val = e.target.value;
-      setAccountName ({personalName: val});
-      console.log('accountName', accountName);
+      // setAccountName ({personalName: val});
+      // console.log('accountName', accountName);
+      setEditedName ({
+        ...editedName,
+        personalName: val
+      });
+      console.log('Edited accountName', editedName);
     }
 
     const validatePersonalDetail = async (values) => {
@@ -112,12 +125,12 @@ const dispatch = useDispatch();
   
 
     const personalInfosSave = async (e) => {      
-      let validationResp = await validatePersonalDetail(accountName);
+      let validationResp = await validatePersonalDetail(editedName);
       console.log("validationResp",validationResp)
       if (!validationResp.personalName) {
         setToggleEditName(false);
 
-        var spacing = accountName.personalName.split(" ");  // Gets the first index where a space occour
+        var spacing = editedName.personalName.split(" ");  // Gets the first index where a space occour
         var first_name = spacing[0] // Gets the first part
         var last_name = spacing[1] ? spacing[1] : "";  // Gets the later part
 
@@ -131,6 +144,11 @@ const dispatch = useDispatch();
         try {
           let resp = await PersonalDetailsServices.updateAccountDetail(payload);
           console.log("Response of Account Deails", resp);
+          setAccountName({
+            ...accountName,
+            personalName: editedName.personalName,
+            image: editedName.image
+          })
           // Success toaster
           dispatch({
             type: actionTypes.SHOW_MESSAGE,
@@ -167,7 +185,7 @@ const dispatch = useDispatch();
     useEffect (()=> {
       console.log(accDetailErrors);
       if(Object.keys(accDetailErrors).length ===0 && isSave){
-        console.log(accountName);
+        console.log(editedName);
       }
     },[accDetailErrors]); 
 
@@ -307,7 +325,11 @@ useEffect (()=> {
   const toggleEditNameFn = (e, personalData) => {
     e.preventDefault();
     console.log('sadasdsadasd', personalData)
-    
+    setEditedName({
+      ...editedName,
+      personalName: personalData[0].firstName + " " + personalData[0].lastName,
+      image: config.bucketUrl + personalData[0].image
+    })
     setToggleEditName({
       ...toggleEditName,
       status: !toggleEditName.status,
@@ -367,6 +389,16 @@ const getPersonalDetailList = async () => {
       ...accountName,
       personalName: personalDetailList[0].firstName + " " + personalDetailList[0].lastName
     });
+
+    // console.log("Displayed Names is:",setAccountName.personalName)
+
+    // setEditedName({
+    //   ...editedName,
+    //   personalName: personalDetailList[0].firstName + " " + personalDetailList[0].lastName
+    // });
+
+    // console.log("Edited Names is:",setEditedName.personalName)
+
     setformValues ({...formValues, country: personalDetailList[0].country, timezones: personalDetailList[0].timezone, countryLists: personalDetailList[0].country._id });
   } catch (e) {
     console.log(e.message);
@@ -429,7 +461,7 @@ const getPersonalDetailList = async () => {
                               <input type="file" onChange={handleFileChange} />
                             </span>
                             <span className="profileImgSection">
-                              <img src={ file ? file : profile_img} className="profileImage" alt="" /> 
+                              <img src={ editedName.image ? editedName.image : profile_img} className="profileImage" alt="" /> 
                               <span className="hoverEffects">
                                 <img src={cam} className="camImg" alt="" />
                               </span>                             
@@ -450,7 +482,8 @@ const getPersonalDetailList = async () => {
                         <form onSubmit={handleNameSubmit}>
                           <span className="profileNameDisplayEdits">
                           
-                           <input className="editPersonalDetailsNames" value={accountName.personalName}  type="text" onChange={handleEditName} name="" /> 
+                           {/* <input className="editPersonalDetailsNames" value={accountName.personalName}  type="text" onChange={handleEditName} name="" />  */}
+                           <input className="editPersonalDetailsNames" value={editedName.personalName}  type="text" onChange={handleEditName} name="" /> 
                         
                           <span className="errorMsg">{accDetailErrors.personalName}</span> 
 
