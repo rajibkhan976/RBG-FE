@@ -528,7 +528,7 @@ const PackagePaymentModal = (props) => {
                     console.log('purchase success', purchasePackage);
                     props.closeModal();
                     props.openPaymentSuccessModal(purchasePackage);
-                    props.fetchPackages();
+                    // props.fetchPackages();
                     //Update org credit point
                     dispatch({
                         type: actionTypes.USER_DATA,
