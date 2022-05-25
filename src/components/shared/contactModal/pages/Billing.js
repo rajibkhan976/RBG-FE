@@ -812,9 +812,10 @@ const expiration_month = cardExpairyMonthCheckFn();
                 successMessage !== "" && <SuccessAlert message={successMessage} />
               }
 
-              {console.log("merchantOptions", merchantOptions, merchantOptions ? merchantOptions.activeFor.indexOf("credit_card") : "")}
-              {/* {merchantOptions ? (merchantOptions.activeFor.indexOf("credit_card") >= 0 && merchantOptions.activeFor.indexOf("ach") >= 0) ? console.log("xxxx") : console.log("uyyy") : ""} */}
-              {merchantOptions ?
+              {/* {console.log("merchantOptions", merchantOptions, merchantOptions ? merchantOptions.activeFor.indexOf("credit_card") : "")} */}
+              
+              {console.log("merchantOptions", merchantOptions.hasId)}
+              {merchantOptions.hasId ?
                 <>
                   <div className="billing_module">
                           <div className="primaryMaker">
@@ -848,7 +849,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                 Add a Card
                               </button>
                             </div>
-                            {(merchantOptions.activeFor.indexOf("credit_card") >= 0 && merchantOptions.activeFor.indexOf("ach") >= 0) || merchantOptions.activeFor.indexOf("credit_card") >= 0 ?
+                            {merchantOptions.activeFor.length === 0 || merchantOptions.activeFor.indexOf("credit_card") >= 0 ?
                               <>
                                     <div className="body">
                                       {cardBankList &&
@@ -1041,7 +1042,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                 Add an Account
                               </button>
                             </div>
-                            {(merchantOptions.activeFor.indexOf("credit_card") >= 0 && merchantOptions.activeFor.indexOf("ach") >= 0) || merchantOptions.activeFor.indexOf("ach") >= 0 ?
+                            {merchantOptions.activeFor.length === 0 || merchantOptions.activeFor.indexOf("ach") >= 0 ?
                               <>
                             <div className="body">
                               {bankList &&
