@@ -1,122 +1,116 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { utils } from "../../../helpers";
 import Loader from "../../shared/Loader";
-import { ErrorAlert, SuccessAlert } from "../../shared/messages";
-import profileAvatar from "../../../assets/images/camera.svg";
 import arrowRightWhite from "../../../assets/images/arrowRightWhite.svg";
-import listIcon from "../../../assets/images/list_icon.svg";
-import LoaderImg from "../../../assets/images/loader.gif";
 import cam from "../../../assets/images/cam.svg";
 import saveEdit from "../../../assets/images/saveEdit.svg";
 import delEdit from "../../../assets/images/delEdit.svg";
-import dot3gray from "../../../assets/images/dot3gray.svg";
 import edit_gym from "../../../assets/images/edit_gym.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
 import profile_img from "../../../assets/images/chooseImg.svg";
-import profile_png from "../../../assets/images/profile.png";
-import gymLogo from "../../../assets/images/gymLogo.svg";
-// import AddHolidayModal from "./addHolidayModal";
 import config from "../../../configuration/config";
 import { PersonalDetailsServices } from "../../../services/personalDetails/PersonalDetailsServices";
 import {useDispatch} from "react-redux";
 import * as actionTypes from "../../../actions/types";
-
+import { useSelector } from "react-redux";
 
 const PersonalDetails = (props) => {
-const [loader,setLoader] = useState(false);
-const [isLoader, setIsLoader] = useState(false);
-const [successMsg, setSuccessMsg] = useState("");
-const [errorMsg, setErrorMsg] = useState("");
-const dispatch = useDispatch();
+  const [isLoader, setIsLoader] = useState(false);
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const dispatch = useDispatch();
   const [file, setFile] = useState("");
   const [fileName, setFileName] = useState("");
-    function handleFileChange(e) {
-        // console.log("type of img", e.target.files[0].type);
-        // console.log("Size of img", e.target.files[0].size);
-        if (e.target.files[0] && e.target.files[0].type === "image/png" || e.target.files[0].type === "image/jpg" || e.target.files[0].type === "image/jpeg") {
-          if ( e.target.files[0].size < 5000000){
-            let fileOrf = e.target.files[0];
-            getBase64(fileOrf).then(result => {
-              setFile(result);
-              setEditedName({
-                ...editedName,
-                image: result
-              })
-              }).catch(err => {
-                console.log(err);
-              });
-            setFileName(e.target.files[0].name);
-          } else {
-            dispatch({
-              type: actionTypes.SHOW_MESSAGE,
-              message: "Max size allowed is 4 MB",
-              typeMessage: 'error'
+  const [getCountry, setGetCountry] = useState([]);
+  const [timezoneData, setTimezoneData] = useState([]);
+  const [personalData, setPersonalData] = useState([]);
+  const [formValues, setformValues] = useState({
+    currentPassword: "", 
+    newPassword: "", 
+    confirmNewPassword: "",
+    timezones: "",
+    countryLists: ""
+  });
+  const [formErrors, setformErrors] = useState({});
+  const [isSubmit, setisSubmit] = useState(false);
+  const [editDetails, setEditDetails] = useState({
+    name: "",
+    image: ""
+  });
+    const [accDetailErrors, setAccDetailErrors] = useState({});
+    const [userData, setUserData] = useState({});
+    const loggedInUser = useSelector((state) => state.user.data);
+
+    useEffect(() => {
+      setUserData(loggedInUser);
+    }, [loggedInUser]);
+
+
+    const handleFileChange = (e) => {
+      if (e.target.files[0] && (e.target.files[0].type === "image/png" || e.target.files[0].type === "image/jpg" || e.target.files[0].type === "image/jpeg")) {
+        if ( e.target.files[0].size < 5000000){
+          let fileOrf = e.target.files[0];
+          getBase64(fileOrf).then(result => {
+            setFile(result);
+            setEditDetails({
+              ...editDetails,
+              image: result
             });
-          }
-          
+            }).catch(err => {
+              console.log(err);
+            });
+          setFileName(e.target.files[0].name);
         } else {
           dispatch({
             type: actionTypes.SHOW_MESSAGE,
-            message: "Only JPG,JPEG & PNG format allowed. ",
+            message: "Max size allowed is 4 MB",
             typeMessage: 'error'
           });
         }
         
-    }
-   const getBase64 = file => {
-      return new Promise(resolve => {
-        let fileInfo;
-        let baseURL = "";
-        // Make new FileReader
-        let reader = new FileReader();
-  
-        // Convert the file to base64 text
-        reader.readAsDataURL(file);
-  
-        // on reader load somthing...
-        reader.onload = () => {
-          // Make a fileInfo Object
-          console.log("Called", reader);
-          baseURL = reader.result;
-          console.log(baseURL);
-          resolve(baseURL);
-        };
-        console.log(fileInfo);
-      });
-    };
-// personal details name validation start
-    const [accountName, setAccountName] = useState({
-      personalName: ""
+      } else {
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: "Only JPG,JPEG & PNG format allowed. ",
+          typeMessage: 'error'
+        });
+      }
+      
+  }
+  const getBase64 = file => {
+    return new Promise(resolve => {
+      let baseURL = "";
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        baseURL = reader.result;
+        resolve(baseURL);
+      };
     });
-    const [editedName, setEditedName] = useState({
-      personalName: "",
-      image: ""
-    });
-    const [accDetailErrors, setAccDetailErrors] = useState({});
-    const [isSave, setisSave] = useState(false);
-
-
+  };
     const handleEditName = (e) => {
       let val = e.target.value;
       // setAccountName ({personalName: val});
       // console.log('accountName', accountName);
-      setEditedName ({
-        ...editedName,
-        personalName: val
+      setEditDetails ({
+        ...editDetails,
+        name: val
       });
-      console.log('Edited accountName', editedName);
+      //console.log('Edited accountName', editedName);
     }
 
     const validatePersonalDetail = async (values) => {
-      console.log("Name", values.personalName)
+      //console.log("Name", values.personalName)
       let errorsDisplay ={};       
-      if (values.personalName.length >30) {
-        console.log("length of the name is", values.personalName.length);
-        errorsDisplay.personalName = "Name must be within 30 characters";        
+      if (values.name.length >30) {
+        //console.log("length of the name is", values.personalName.length);
+        errorsDisplay.name = "Name must be within 30 characters";        
       }  
-      if (!values.personalName) {
-        errorsDisplay.personalName = "Name is required!";        
+      if (values.name.replace(/\s/g, '').length===0) {
+        //console.log("length of the name is", values.personalName.length);
+        errorsDisplay.name = "Ebter proper name.";        
+      }
+      if (!values.name) {
+        errorsDisplay.name = "Name is required!";        
       }    
       setAccDetailErrors(errorsDisplay);
       return errorsDisplay;
@@ -124,19 +118,19 @@ const dispatch = useDispatch();
     };
   
 
-    const personalInfosSave = async (e) => {      
-      let validationResp = await validatePersonalDetail(editedName);
-      console.log("validationResp",validationResp)
-      if (!validationResp.personalName) {
+    const personalInfosSave = async (e) => {
+      e.preventDefault();    
+      let validationResp = await validatePersonalDetail(editDetails);
+      if (!validationResp.name) {
         setToggleEditName(false);
-
+        
         // var spacing = editedName.personalName.split(" ");  // Gets the first index where a space occour
         // var first_name = spacing[0] // Gets the first part
         // var last_name = spacing[1] ? spacing[1] : "";  // Gets the later part
         
-        var spacing = editedName.personalName.indexOf(" "); // Gets the first index where a space occour
-        var first_name = editedName.personalName.substr(0, spacing); // Gets the first part
-        var last_name = editedName.personalName.substr(spacing + 1); // Gets the later part
+        var spacing = editDetails.name.indexOf(" "); // Gets the first index where a space occour
+        var first_name = editDetails.name.substr(0, spacing); // Gets the first part
+        var last_name = editDetails.name.substr(spacing + 1); // Gets the later part
 
         setIsLoader(true);
         let payload = {
@@ -145,14 +139,11 @@ const dispatch = useDispatch();
           file: file ? file : "",
           filename: fileName ? fileName : ""
         }
+        console.log(payload)
         try {
           let resp = await PersonalDetailsServices.updateAccountDetail(payload);
-          console.log("Response of Account Deails", resp);
-          setAccountName({
-            ...accountName,
-            personalName: editedName.personalName,
-            image: editedName.image
-          })
+          //console.log("Response of Account Deails", resp);
+          getPersonalDetailList()
           // Success toaster
           dispatch({
             type: actionTypes.SHOW_MESSAGE,
@@ -163,7 +154,7 @@ const dispatch = useDispatch();
           // Success toaster
         } catch (e) {
           // Error toaster
-          console.log('Error error error error')          
+          //console.log('Error error error error')          
           dispatch({
             type: actionTypes.SHOW_MESSAGE,
             message: e.message,
@@ -179,151 +170,134 @@ const dispatch = useDispatch();
       }
     };
 
-    const handleNameSubmit = (e) => {
-      e.preventDefault();
-      
-      setisSave(true);
-      //console.log(formValues);
-    };
-
-    useEffect (()=> {
-      console.log(accDetailErrors);
-      if(Object.keys(accDetailErrors).length ===0 && isSave){
-        console.log(editedName);
-      }
-    },[accDetailErrors]); 
-
     // personal details name validation end
-    
-  const [formValues, setformValues] = useState({
-    currentPassword: "", 
-    newPassword: "", 
-    confirmNewPassword: "",
-    timezones: "",
-    countryLists: ""
-  });
-  const [formErrors, setformErrors] = useState({});
-  const [isSubmit, setisSubmit] = useState(false);
 
-const handleChangeNew = (e) => {
-  const value = e.target.value;
-  const name = e.target.name;
-  // console.log(name, value);
-  setformValues ({...formValues, [name]: value});
-  setformErrors ({...formErrors, [name]: ""});
-};
+    
 
 
-const handleSubmit = async (e) => {
-  setIsLoader(true);
-  e.preventDefault();
-  let errorCheck = validate(formValues);
-  console.log(errorCheck);
-  if (Object.keys(errorCheck).length === 0){
-    console.log(formValues);
+  const handleChangeNew = (e) => {
+    const value = e.target.value;
+    const name = e.target.name;
+    console.log(name, value);
+    setformValues ({...formValues, [name]: value});
+    setformErrors ({...formErrors, [name]: ""});
+  };
 
 
-    var Time_ZoneCode = formValues.timezones;
-    var Country_Listings = formValues.countryLists;
-    var Current_Passwords = formValues.currentPassword;
-    var New_Passwords = formValues.newPassword;
-    var Confirm_NewPasswords = formValues.confirmNewPassword;
-    
-    // console.log("Updated TimeZone:" , Time_ZoneCode);
-    // console.log("Updated Country:" , Country_Listings);
-    // console.log("Current Password:" , Current_Passwords);
-    // console.log("Updated New Password:" , New_Passwords);
-    // console.log("Updated Confirm Password:" , Confirm_NewPasswords);
-    
-    let payload = {
-      countryId: Country_Listings,
-      timezone: Time_ZoneCode 
-    }
-    
-    if(Current_Passwords && New_Passwords && Confirm_NewPasswords) {
-      payload.currentPassowrd = Current_Passwords;
-      payload.newPassowrd = New_Passwords;
-      payload.confirmPassowrd = Confirm_NewPasswords;
-    }
-    
-    try {
-      let response = await PersonalDetailsServices.updateBasicSetting(payload);
-      console.log("response of basic settings", response);
-      // Success toaster
-      dispatch({
-        type: actionTypes.SHOW_MESSAGE,
-        message: response,
-        typeMessage: 'success'
-      });
-    } catch (e) {
-      console.log('ppppppp')
-      // Error toaster
-      dispatch({
-        type: actionTypes.SHOW_MESSAGE,
-        message: e.message,
-        typeMessage: 'error'
-      });
-    } finally {
+  const handleSubmit = async (e) => {
+    setIsLoader(true);
+    e.preventDefault();
+    let errorCheck = validate(formValues);
+  //console.log(errorCheck);
+    if (Object.keys(errorCheck).length === 0){
+      //console.log(formValues);
+
+
+      var Time_ZoneCode = formValues.timezones;
+      var Country_Listings = formValues.countryLists;
+      var Current_Passwords = formValues.currentPassword;
+      var New_Passwords = formValues.newPassword;
+      var Confirm_NewPasswords = formValues.confirmNewPassword;
+      
+      // console.log("Updated TimeZone:" , Time_ZoneCode);
+      // console.log("Updated Country:" , Country_Listings);
+      // console.log("Current Password:" , Current_Passwords);
+      // console.log("Updated New Password:" , New_Passwords);
+      // console.log("Updated Confirm Password:" , Confirm_NewPasswords);
+      
+      let payload = {
+        countryId: Country_Listings,
+        timezone: Time_ZoneCode 
+      }
+      
+      if(Current_Passwords && New_Passwords && Confirm_NewPasswords) {
+        payload.currentPassowrd = Current_Passwords;
+        payload.newPassowrd = New_Passwords;
+        payload.confirmPassowrd = Confirm_NewPasswords;
+      }
+      
+      try {
+        let response = await PersonalDetailsServices.updateBasicSetting(payload);
+        //console.log("response of basic settings", response);
+        // Success toaster
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: response,
+          typeMessage: 'success'
+        });
+      } catch (e) {
+        //console.log('ppppppp')
+        // Error toaster
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: e.message,
+          typeMessage: 'error'
+        });
+      } finally {
+        setIsLoader(false);
+      }
+    } else {
       setIsLoader(false);
+      setformErrors(errorCheck);
     }
-  } else {
-    setIsLoader(false);
-    setformErrors(errorCheck);
-  }
-  setisSubmit(true);
+    setisSubmit(true);
 
 
 
-};
+  };
 
-const validate = (values) => {
-  console.log("The values are:", values);
-  const errors ={};
-  let passwordValid;
-    passwordValid = values.newPassword.match(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{4,}$/);
-  if (values.newPassword.length < 8) {
-    errors.newPassword = "New password must be of 8 characters"
-  } else if(!passwordValid) {
-    errors.newPassword = "New password mustcontain @/#/!, numeric, character , one upper case, one lower case."
-  }
-  if (!values.currentPassword && !values.newPassword && values.confirmNewPassword) {
-    errors.currentPassword = "Current Password is required!"
-    errors.newPassword = "New Password is required!"
-  }  
-  if (!values.confirmNewPassword && !values.newPassword && values.currentPassword) {
-    errors.newPassword = "New Password is required!"
-    errors.confirmNewPassword = "Confirm Password is required!"    
-  }
-  if (!values.currentPassword && !values.confirmNewPassword && values.newPassword) {
-    errors.confirmNewPassword = "Confirm Password is required!"
-    errors.currentPassword = "Current Password is required!"
-  }
-  if (!values.currentPassword && values.newPassword && values.confirmNewPassword) {
-    errors.currentPassword = "Current Password is required!"
-  }  
-  if (values.confirmNewPassword && !values.newPassword && values.currentPassword) {
-    errors.newPassword = "New Password is required!"   
-  }
-  if (!values.confirmNewPassword && values.currentPassword && values.newPassword) {
-    errors.confirmNewPassword = "Current Password is required!"
-  }
-  if (values.confirmNewPassword !== values.newPassword) {
-    errors.confirmNewPassword = "Password is not matching!"
-  }
+  const validate = (values) => {
+    //console.log("The values are:", values);
+    const errors ={};
+    let passwordValid;
+      passwordValid = values.newPassword.match(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{4,}$/);
+    // if (values.newPassword.length < 8) {
+    //   errors.newPassword = "New password must be of 8 characters"
+    // } 
+    if (!values.currentPassword && !values.newPassword && values.confirmNewPassword) {
+      errors.currentPassword = "Current Password is required!"
+      errors.newPassword = "New Password is required!"
+    }  
+    if (!values.confirmNewPassword && !values.newPassword && values.currentPassword) {
+      errors.newPassword = "New Password is required!"
+      errors.confirmNewPassword = "Confirm Password is required!"    
+    }
+    if (!values.currentPassword && !values.confirmNewPassword && values.newPassword) {
+      errors.confirmNewPassword = "Confirm Password is required!"
+      errors.currentPassword = "Current Password is required!"
+    } else if(!passwordValid && values.currentPassword && values.confirmNewPassword) {
+      errors.newPassword = "New password must contain @/#/!, numeric, character , one upper case, one lower case."
+    } else if(values.newPassword.length < 8 && values.currentPassword && !values.confirmNewPassword) {
+      errors.newPassword = "New password is required and must be of minimum 8 characters."
+    }
+    if (!values.currentPassword && values.newPassword && values.confirmNewPassword) {
+      errors.currentPassword = "Current Password is required!"
+    }  
+    if (values.confirmNewPassword && !values.newPassword && values.currentPassword) {
+      errors.newPassword = "New password is required and must be of minimum 8 characters."   
+    }
+    if (!values.confirmNewPassword && values.currentPassword && values.newPassword) {
+      errors.confirmNewPassword = "Current Password is required!"
+    }
+    if (values.confirmNewPassword !== values.newPassword) {
+      errors.confirmNewPassword = "Password is not matching!"
+    }
 
-  if (!values.timezones) {
-    errors.timezones = "Timezone is required!"    
-  }
-  if (!values.countryLists) {
-    errors.countryLists = "Country is required!"
-  }
-  return errors;  
-};
+    if (!values.timezones) {
+      errors.timezones = "Timezone is required!"    
+    }
+    if (!values.countryLists) {
+      errors.countryLists = "Country is required!"
+    }
+    return errors;  
+  };
 
-useEffect (()=> {
-  console.log(formErrors);
-  if(Object.keys(formErrors).length ===0 && isSubmit){
-    console.log(formValues);}},[formErrors]);
+  useEffect (()=> {
+    //console.log(formErrors);
+    if(Object.keys(formErrors).length ===0 && isSubmit){
+      console.log(formValues);
+    }
+  },[formErrors]);
 
   const [toggleEditName, setToggleEditName] = useState({
     status: false,
@@ -334,14 +308,14 @@ useEffect (()=> {
     if (errorMsg) setTimeout(() => { setErrorMsg("") }, 5000);
   }, [errorMsg, successMsg]);
 
-  const toggleEditNameFn = (e, personalData) => {
+  const toggleEditNameFn = (e) => {
     e.preventDefault();
-    console.log('sadasdsadasd', personalData)
-    setEditedName({
-      ...editedName,
-      personalName: personalData[0].firstName + " " + personalData[0].lastName,
-      image: config.bucketUrl + personalData[0].image
+    setEditDetails({
+      ...editDetails,
+      name: personalData.firstName + " " + personalData.lastName,
+      image: config.bucketUrl + personalData.image
     })
+    // setting the edited value back to that of current value
     setToggleEditName({
       ...toggleEditName,
       status: !toggleEditName.status,
@@ -358,18 +332,16 @@ useEffect (()=> {
  
 
 // Setting up Country && list timezone
-const [getCountry, setGetCountry] = useState([]);
-const [timezoneData, setTimezoneData] = useState([]);
-const [personalData, setPersonalData] = useState([]);
 
 const getCountryList = async () => {
   try {
-   
+    setIsLoader(true);
     const response = await PersonalDetailsServices.fetchCountryDetail();
-    console.log("Country List --", response);
     setGetCountry(response);
   } catch (e) {
     console.log(e.message);
+  } finally {
+    setIsLoader(false);
   }
 };
 useEffect(() => {
@@ -383,7 +355,6 @@ const getTimeZoneList = async () => {
   try {
     setIsLoader(true);
     const timezoneList = await PersonalDetailsServices.fetchTimeZoneList();
-    console.log("Timezone List --", timezoneList);
     setTimezoneData(timezoneList.zones);
   } catch (e) {
     console.log(e.message);
@@ -395,28 +366,25 @@ const getTimeZoneList = async () => {
 const getPersonalDetailList = async () => {
   try {
     const personalDetailList = await PersonalDetailsServices.fetchPersonalDetail();
-    console.log("Personal Details --", personalDetailList);
     setPersonalData(personalDetailList);
-    setAccountName({
-      ...accountName,
-      personalName: personalDetailList[0].firstName + " " + personalDetailList[0].lastName
+    
+    setUserData({
+      ...userData,
+      fullName: personalDetailList.firstName + " " + personalDetailList.lastName,
+      name: personalDetailList.firstName,
+      image: personalDetailList.image      
     });
-
-    // console.log("Displayed Names is:",setAccountName.personalName)
-
-    // setEditedName({
-    //   ...editedName,
-    //   personalName: personalDetailList[0].firstName + " " + personalDetailList[0].lastName
-    // });
-
-    // console.log("Edited Names is:",setEditedName.personalName)
-
-    setformValues ({...formValues, country: personalDetailList[0].country, timezones: personalDetailList[0].timezone, countryLists: personalDetailList[0].country._id });
+    setformValues ({...formValues, country: personalDetailList.country, timezones: personalDetailList.timezone, countryLists: personalDetailList && personalDetailList && personalDetailList.country ? personalDetailList.country._id : "" });
   } catch (e) {
     console.log(e.message);
   }
 };
- 
+//  useEffect(() => {
+//   dispatch({
+//     type: actionTypes.USER_DATA,
+//     data: userData
+//   });
+//  }, [userData])
   return (
     <>
     {(isLoader) ? <Loader /> : ''}
@@ -446,23 +414,12 @@ const getPersonalDetailList = async () => {
                     <span className={toggleEditName.status ? "profileImgSection hideThis" : "profileImgSection"}>
                      
 
-                      {personalData ? personalData.map((personalDetailsImg, i) => {
-                        console.log("personalDetailsImg", personalDetailsImg)
-                      return (
-                      <img key={"img-" + i} src={personalDetailsImg.image ? config.bucketUrl + personalDetailsImg.image : profile_img} className={file ? "profileImage hideThis" : "profileImage"} alt="" /> 
-                      );
-                    }) : <img src={profile_img}  className={file ? "profileImage hideThis" : "profileImage"} alt="" />} 
+                      {personalData.image ? <img src={personalData.image ? config.bucketUrl + personalData.image : profile_img} className={file ? "profileImage hideThis" : "profileImage"} alt="" /> 
+                      : <img src={profile_img}  className={file ? "profileImage hideThis" : "profileImage"} alt="" />} 
 
                       {file && (
                       	<>
-                          <img src={file} className="profileImage" alt="" />
-                          {loader && (
-                                <>
-                                  <span className="hoverEffects loadings">
-                                    <img src={LoaderImg} className="camImg loadersImg" alt="" />
-                                  </span> 
-                                </>
-                              )}  
+                          <img src={file} className="profileImage" alt="" /> 
                         </>
                       )}
                     </span>
@@ -473,7 +430,7 @@ const getPersonalDetailList = async () => {
                               <input type="file" onChange={handleFileChange} />
                             </span>
                             <span className="profileImgSection">
-                              <img src={ editedName.image ? editedName.image : profile_img} className="profileImage" alt="" /> 
+                              <img src={ editDetails.image ? editDetails.image : profile_img} className="profileImage" alt="" /> 
                               <span className="hoverEffects">
                                 <img src={cam} className="camImg" alt="" />
                               </span>                             
@@ -484,39 +441,34 @@ const getPersonalDetailList = async () => {
                         </>
                       )}  
                     <span className={toggleEditName.status ? "profileNameDisplay hideThis" : "profileNameDisplay"}>
-                    <span className="profileName" >{accountName.personalName}</span>
+                    <span className="profileName" >{personalData.firstName + " " + personalData.lastName}</span>
 
                       
-                      <button className="editPersonalName" onClick={(e) => toggleEditNameFn(e, personalData)}><img src={edit_gym} alt=""/></button>
+                      <button className="editPersonalName" onClick={(e) => toggleEditNameFn(e)}><img src={edit_gym} alt=""/></button>
                     </span>
                     {toggleEditName.status && (
                       	<>
-                        <form onSubmit={handleNameSubmit}>
+                        <form>
                           <span className="profileNameDisplayEdits">
                           
                            {/* <input className="editPersonalDetailsNames" value={accountName.personalName}  type="text" onChange={handleEditName} name="" />  */}
-                           <input className="editPersonalDetailsNames" value={editedName.personalName}  type="text" onChange={handleEditName} name="" /> 
+                           <input className="editPersonalDetailsNames" value={editDetails.name}  type="text" onChange={handleEditName} name="" /> 
                         
                           <span className="errorMsg">{accDetailErrors.personalName}</span> 
 
-                            <button className="editPersonalNameSave" onClick={() => personalInfosSave()}><img src={saveEdit} alt=""/></button>
-                            <button className="editPersonalNameDelete" onClick={() => personalInfosReject()}><img src={delEdit} alt=""/></button>
+                            <button className="editPersonalNameSave" onClick={personalInfosSave}><img src={saveEdit} alt=""/></button>
+                            <button className="editPersonalNameDelete" onClick={personalInfosReject}><img src={delEdit} alt=""/></button>
                           </span>
                           </form>
                         </>
                       )}  
                   </div>
-                 
-                  
                 </div>
                 <div className="gymInfo full">
                   <p className="textType1">Email <span>:</span></p>
 
-                  {personalData ? personalData.map((personalDetails, i) => {
-                      return (                      
-                      <p className="textType4" key={i} >{personalDetails.email}</p>
-                      );
-                    }) : 'No email provided'}                       
+                  {personalData ? <p className="textType4" >{personalData.email}</p>
+                     : 'No email provided'}                       
                 </div>
               </div>  
           </div>
@@ -528,24 +480,21 @@ const getPersonalDetailList = async () => {
               </div>
               <form onSubmit={handleSubmit}>
               <div className="detailsForm">
-                
                   <div className="formControl">
                     <label>Timezone</label>
-                    {console.log("personalData", personalData)}
                     <select
                         name="timezones"
                         style={{
                             backgroundImage: "url(" + arrowDown + ")",
                         }} 
+                        value={formValues ? formValues.timezones : ""}
                         onChange={handleChangeNew}
-                        // defaultValue={personalData[0] ? personalData[0].timezone : ""}
                         >
                         <option value="">Select Timezone</option>
                      {timezoneData ? timezoneData.map((zones, i) => {
                       return (
                       <option key={i} 
                         value={zones.zoneName}
-                        selected={(zones.zoneName === (personalData.length && personalData[0].timezone ? personalData[0].timezone : "")) ? true : false }
                       >{zones.countryCode} - {zones.zoneName}</option>
                       );
                     }) : ''}                                     
@@ -559,15 +508,14 @@ const getPersonalDetailList = async () => {
                         style={{
                             backgroundImage: "url(" + arrowDown + ")",
                         }} 
-                        onChange={handleChangeNew} 
-                        // defaultValue={personalData[0] && personalData[0].country ? personalData[0].country._id : ""}
+                        value={formValues ? formValues.countryLists : ""}
+                        onChange={handleChangeNew}
                          >
                         <option value="">Select Country</option>
                       {getCountry ? getCountry.map((country, i) => {
                       return (
                       <option key={i}
-                        value={country._id} 
-                        selected={(country._id === (personalData.length && personalData[0].country._id ? personalData[0].country._id : "")) ? true : false }                                        
+                        value={country._id}                                        
                       >{country.name}</option>
                       );
                     }) : ''}                     

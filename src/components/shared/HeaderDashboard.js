@@ -61,6 +61,9 @@ function HeaderDashboard(props) {
     }
   }, [isClicked]);
   const loggedInUser = useSelector((state) => state.user.data);
+  useEffect(() => {
+    console.log(loggedInUser)
+  }, [loggedInUser])
   const [notification, setNotification] = useState({
     general: {
       data: [],
