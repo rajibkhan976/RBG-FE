@@ -99,17 +99,18 @@ const PersonalDetails = (props) => {
     }
 
     const validatePersonalDetail = async (values) => {
-      //console.log("Name", values.personalName)
+      console.log("Name ids", values)
       let errorsDisplay ={};       
       if (values.name.length >30) {
-        //console.log("length of the name is", values.personalName.length);
+        console.log("length of the name is", values.name);
         errorsDisplay.name = "Name must be within 30 characters";        
       }  
       if (values.name.replace(/\s/g, '').length===0) {
-        //console.log("length of the name is", values.personalName.length);
-        errorsDisplay.name = "Ebter proper name.";        
+        console.log("length of the name is", values.name);
+        errorsDisplay.name = "Enter proper name.";        
       }
       if (!values.name) {
+        console.log("length of the name is", values.name);
         errorsDisplay.name = "Name is required!";        
       }    
       setAccDetailErrors(errorsDisplay);
@@ -127,14 +128,26 @@ const PersonalDetails = (props) => {
         // var spacing = editedName.personalName.split(" ");  // Gets the first index where a space occour
         // var first_name = spacing[0] // Gets the first part
         // var last_name = spacing[1] ? spacing[1] : "";  // Gets the later part
+        var editName = editDetails.name.replace(/^\s+|\s+$/gm,'');
+        if(editName.indexOf(" ") > 0){
+          var spacing = editName.indexOf(" "); // Gets the first index where a space occour
+          console.log("Spacing is :", spacing);
+          var first_name = editName.substr(0, spacing).replace(/^\s+|\s+$/gm,''); // Gets the first part
+          var last_name = editName.substr(spacing + 1).replace(/^\s+|\s+$/gm,''); // Gets the later part
+
+        } else{
+          var first_name = editName.replace(/^\s+|\s+$/gm,'');
+          var last_name = ""; // Gets the later part
+        }
         
-        var spacing = editDetails.name.indexOf(" "); // Gets the first index where a space occour
-        var first_name = editDetails.name.substr(0, spacing); // Gets the first part
-        var last_name = editDetails.name.substr(spacing + 1); // Gets the later part
+        // var spacing = editDetails.name.indexOf(" "); // Gets the first index where a space occour
+        // console.log("Spacing is :", spacing);
+        // var first_name = editDetails.name.substr(0, spacing); // Gets the first part
+        // var last_name = editDetails.name.substr(spacing + 1); // Gets the later part
 
         setIsLoader(true);
         let payload = {
-          firstName: first_name,
+          firstName: first_name ,
           lastName: last_name,
           file: file ? file : "",
           filename: fileName ? fileName : ""
@@ -164,9 +177,6 @@ const PersonalDetails = (props) => {
         } finally {
           setIsLoader(false);
         }
-      
-
-        
       }
     };
 
@@ -454,7 +464,7 @@ const getPersonalDetailList = async () => {
                            {/* <input className="editPersonalDetailsNames" value={accountName.personalName}  type="text" onChange={handleEditName} name="" />  */}
                            <input className="editPersonalDetailsNames" value={editDetails.name}  type="text" onChange={handleEditName} name="" /> 
                         
-                          <span className="errorMsg">{accDetailErrors.personalName}</span> 
+                          <span className="errorMsg">{accDetailErrors.name}</span> 
 
                             <button className="editPersonalNameSave" onClick={personalInfosSave}><img src={saveEdit} alt=""/></button>
                             <button className="editPersonalNameDelete" onClick={personalInfosReject}><img src={delEdit} alt=""/></button>
