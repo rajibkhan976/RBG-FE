@@ -2034,7 +2034,8 @@ input::-webkit-inner-spin-button {
 
 /* Billing fixes */
 .twoBillingCardContainer .billing_module {
-  align-self: flex-end;
+  /* align-self: flex-end; */
+  align-self: flex-start;
 }
 .contactTabsInner.loading {
   overflow: hidden;
@@ -2346,7 +2347,8 @@ ul.paymentUlInfo li.paymentModeLi {
 .flipCardHolder .cardList .body {
   flex: 1 1 auto;
   height: auto;
-  max-height: 387px;
+  /* max-height: 387px; */
+  max-height: 407px;
 }
 .productPaymentTransaction .chooseTransactionType .paymentType:first-child {
   margin-bottom: 0;
@@ -3159,3 +3161,41 @@ input[type=number] {
 .transactionModal .paymentUlInfo .transactionIdProduct {
   font-weight: 600;
 }
+
+/* FOR CHECKING MERCHANT ID */
+.noDetailsFound {
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 18px;
+  text-align: center;
+  color: #F1A768;
+  flex-direction: column;
+  position: static;
+  background: transparent;
+  padding: 0;
+  width: 100%;
+  margin-top: 100px;
+}
+.noDetailsFound figure {
+  line-height: 1;
+  font-size: 0;
+  margin-bottom: 30px;
+}
+.billing_module .noDetailsFound {
+  background: rgb(246 248 250 / 70%);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0;
+  padding: 0 65px;
+}
+.billing_module .primaryMaker {
+  min-height: 35px;
+}
+/* FOR CHECKING MERCHANT ID */
