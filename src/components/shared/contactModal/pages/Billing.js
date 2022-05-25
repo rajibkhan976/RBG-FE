@@ -37,6 +37,10 @@ const Billing = (props) => {
     const [bankNameCheck, setBankNameCheck] = useState("");
     const [bankRoutingCheck, setBankRoutingCheck] = useState("");
     const [successMessage, setSuccessMessage] = useState("")
+    const [merchantOptions, setMerchantOptions] = useState({
+      hasId: false,
+      activeFor: []
+    })
 
     const billingCardContainer = useRef(null)
     const addCardBtn = useRef(null)
@@ -66,6 +70,11 @@ const Billing = (props) => {
       setIsLoader(true);
       let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
       if (cardBankResponce) {
+        // console.log("cardBankResponce.paymentsActivatedFor", cardBankResponce.paymentsActivatedFor);
+        setMerchantOptions({
+          hasId: cardBankResponce.hasMerchantId,
+          activeFor: [...cardBankResponce.paymentsActivatedFor]
+        })
         setCardBankList(cardBankResponce.cards);
         setBankList(cardBankResponce.banks);
         setPrimaryType(cardBankResponce.primary);
@@ -768,6 +777,10 @@ const expiration_month = cardExpairyMonthCheckFn();
       }
     }
   };
+
+  useEffect(()=>{
+    console.log("merchantOptions", merchantOptions);
+  },[merchantOptions])
 
   useEffect(()=>{},[formErrorMsg])
 
