@@ -130,9 +130,13 @@ const dispatch = useDispatch();
       if (!validationResp.personalName) {
         setToggleEditName(false);
 
-        var spacing = editedName.personalName.split(" ");  // Gets the first index where a space occour
-        var first_name = spacing[0] // Gets the first part
-        var last_name = spacing[1] ? spacing[1] : "";  // Gets the later part
+        // var spacing = editedName.personalName.split(" ");  // Gets the first index where a space occour
+        // var first_name = spacing[0] // Gets the first part
+        // var last_name = spacing[1] ? spacing[1] : "";  // Gets the later part
+        
+        var spacing = editedName.personalName.indexOf(" "); // Gets the first index where a space occour
+        var first_name = editedName.personalName.substr(0, spacing); // Gets the first part
+        var last_name = editedName.personalName.substr(spacing + 1); // Gets the later part
 
         setIsLoader(true);
         let payload = {
@@ -275,6 +279,13 @@ const handleSubmit = async (e) => {
 const validate = (values) => {
   console.log("The values are:", values);
   const errors ={};
+  let passwordValid;
+    passwordValid = values.newPassword.match(/^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{4,}$/);
+  if (values.newPassword.length < 8) {
+    errors.newPassword = "New password must be of 8 characters"
+  } else if(!passwordValid) {
+    errors.newPassword = "New password mustcontain @/#/!, numeric, character , one upper case, one lower case."
+  }
   if (!values.currentPassword && !values.newPassword && values.confirmNewPassword) {
     errors.currentPassword = "Current Password is required!"
     errors.newPassword = "New Password is required!"
@@ -299,6 +310,7 @@ const validate = (values) => {
   if (values.confirmNewPassword !== values.newPassword) {
     errors.confirmNewPassword = "Password is not matching!"
   }
+
   if (!values.timezones) {
     errors.timezones = "Timezone is required!"    
   }
