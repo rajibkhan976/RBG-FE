@@ -44,15 +44,21 @@ const Tax = () => {
     };
 
     const taxAmountHandle = (e) => {
-        const number = e.target.value;
-        const reg = /^[0-9]{1,2}$/;
-        if (number === "" || number < 1 || !reg.test(number)) {
-            setShowError("Please enter a valid interval");
+        console.log(e.target.value);
+        const { value } = e.target;
+        const reg = /^\d+(\.\d{1,2})?$/;
+        console.log("Regex", reg.test(value))
+        const isValid = value !== "" && reg.test(value) && value < 100;
+        console.log('isValid', isValid)
+        if(!isValid) {
+            setShowError("Please enter a valid number");
         } else {
-            setShowError("" );
+            setShowError("");
         }
-        setTaxData(prevState => ({ ...prevState, tax: (reg.test(number)) ? number:"" }));
+        setTaxData(prevState => ({ ...prevState, tax: value }));
     };
+
+    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -110,11 +116,10 @@ const Tax = () => {
                             {taxShow &&
                                 <div className='ps_inputPercent'>
                                     <input
-                                        type="text"
+                                        type="number"
                                         name="tax"
                                         onChange={taxAmountHandle}
                                         value={taxData.tax}
-                                        disabled={(taxData.editAccess) ? false : true}
                                         className={showError !== "" ? "error" : ""}
                                     />
                                     <span className='ps_floatLast'>%</span>
