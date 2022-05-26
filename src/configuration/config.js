@@ -101,6 +101,18 @@ module.exports = {
     customizationUrl: "https://" + process.env.REACT_APP_CUSTOMIZATION + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/customization/",
     //customizationUrl: "http://localhost:4000/"+process.env.REACT_APP_ENV+"/customization/",
 
+    // Appointment tag
+    appointmentTag: "https://" + process.env.REACT_APP_TAGS + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/tag/",
+
+    // Age Aroup
+    ageGroup: "https://" + process.env.REACT_APP_AGE_GROUP + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/agegroup/",
+
+    // Age Sizes
+    productSizes: "https://" + process.env.REACT_APP_PRODUCT_SIZES + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/sizes",
+
+    // Product Colors
+    productColors: "https://" + process.env.REACT_APP_PRODUCT_COLORS + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/colors",
+
     //Saletax
     saleTaxUrl: "https://" + process.env.REACT_APP_SALETAX + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/customization/",
 

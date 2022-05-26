@@ -8,6 +8,7 @@ import thunk from "redux-thunk";
 import "./assets/css/style.css";
 import "./assets/css/dev.css";
 import "./assets/css/amar.css";
+import "./assets/css/customizations.css";
 import reportWebVitals from "./reportWebVitals";
 import {BrowserRouter as Router} from "react-router-dom";
 import axios from "axios";

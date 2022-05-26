@@ -223,8 +223,9 @@ const Customizations = (props) => {
   return (
     <>
     {isLoader ? <Loader /> : ''}
-      <div className="dashInnerUI customization">
-        <div className="userListHead customization">
+      
+      <div className="customFieldListing">
+      <div className="userListHead customization">
           <div className="listInfo">
             <ul className="listPath">
               <li>Settings </li>
@@ -243,22 +244,6 @@ const Customizations = (props) => {
             {deleteConfirmBox && <ConfirmBox message="Are you sure, you want to delete this Custom Field?" callback={deleteConfirm} />}
           </div>
         </div>
-        <div className="taxSetup">
-          <h3>Tax Information</h3>
-          <form id="saletaxFrm" onSubmit={handleSubmit}>
-            <label>Enter the Tax amount in %</label>
-            <input placeholder=""
-              type="text"
-              onChange={taxAmountHandle}
-              value={taxData.tax}
-              disabled={(taxData.editAccess) ? false : true} />
-            <button className="common_blue_button" type="submit"
-              disabled={(disableBtn || taxData.editAccess === false) ? true : false}>Update
-              <img src={arrowRightWhite} alt="" /></button>
-          </form>
-        </div>
-      </div>
-      <div className="customFieldListing">
         <div className="customFields">
           <h3>Custom Fields</h3>
           <button className="creatUserBtn"

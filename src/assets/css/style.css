@@ -890,7 +890,7 @@ input:focus + .searchIco #search-ico .a,
 
 .leftMenuInnerLink {
   padding: 15px 0 15px 10px;
-  margin: 0px 25px 0px 25px;
+  margin: 0px 20px 0px 25px;
   display: block;
   position: relative;
   border-bottom: 1px solid #dce4eb;
@@ -8249,7 +8249,7 @@ p.trackName {
   padding: 0 40px 0 0;
 }
 .customFieldListing{
-  width: calc(100% - 470px);
+  width: 100%;
   background: #E9EFF5;
   position: absolute;
   right: 0;
@@ -8305,7 +8305,7 @@ p.trackName {
 }
 
 .customFields{
-  padding: 100px 0 15px;
+  padding: 0 0 15px;
   width: 100%;
   display: flex;
   justify-content: space-between;

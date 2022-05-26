@@ -24,6 +24,7 @@ const InnerLeftMenu = (props) => {
   const loggedInUser = useSelector((state) => state.user.data);
 
   useEffect(() => {
+    console.log("Props",props);
     if (props.automationListItem) {
       setAutomationObject(props.automationListItem)
     }
@@ -372,6 +373,33 @@ const InnerLeftMenu = (props) => {
                       <img src={SideMenuArrow} alt="" />
                     </button>
                   </div>
+                  <ul className="sideSubMenu">
+                    <li>
+                      <NavLink to="/customizations/custom-fields" activeClassName="active">
+                        Custom Fields for Contacts
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/customizations/appointment-tags" activeClassName="active">
+                        Tags
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/customizations/product-color" activeClassName="active">
+                        Product Color
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/customizations/product-sizes" activeClassName="active">
+                        Product Sizes
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink to="/customizations/program-age-groups" activeClassName="active">
+                        Program Age Groups
+                      </NavLink>
+                    </li>
+                  </ul>
                 </NavLink>
               </li>
               <li>

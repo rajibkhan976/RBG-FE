@@ -190,6 +190,52 @@ const Setup = (props) => {
                   >Add Custom fields</NavLink></p>
                 </div>
               </div>
+
+
+              <ul className="secondListing">
+                <li>
+                  <NavLink
+                    to="/customizations/custom-fields"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    Custom Fields for Contacts
+                  </NavLink>
+                </li> 
+                <li>
+                  <NavLink
+                    to="/customizations/appointment-tags"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    Tags
+                  </NavLink>
+                </li> 
+                <li>
+                  <NavLink
+                    to="/customizations/product-color"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    Product Color
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/customizations/product-sizes"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    Product Sizes
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/customizations/program-age-groups"
+                    onClick={(e) => props.clickedLink(e)}
+                  >
+                    Program Age Groups
+                  </NavLink>
+                </li>
+              </ul>
+
+
             </li>
             {/* <li>
               <div className="listHead">
