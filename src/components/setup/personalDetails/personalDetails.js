@@ -353,6 +353,7 @@ const PersonalDetails = (props) => {
   useEffect(() => {
     if (successMsg) setTimeout(() => { setSuccessMsg("") }, 5000);
     if (errorMsg) setTimeout(() => { setErrorMsg("") }, 5000);
+    if (isLoader) setTimeout(() => { setIsLoader(false) }, 8000);
   }, [errorMsg, successMsg]);
 
   const toggleEditNameFn = (e) => {
