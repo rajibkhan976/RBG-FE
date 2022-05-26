@@ -310,7 +310,7 @@ const PersonalDetails = (props) => {
       errors.confirmNewPassword = "Confirm Password is required!"
       errors.currentPassword = "Current Password is required!"
     } else if(!passwordValid && values.currentPassword && values.confirmNewPassword) {
-      errors.newPassword = "New password must contain @/#/!, numeric, character , one upper case, one lower case."
+      errors.newPassword = "New password must contain @/#/!, numeric, character, one upper case, one lower case."
     } else if(values.newPassword.length < 8 && values.currentPassword && !values.confirmNewPassword) {
       errors.newPassword = "New password is required and must be of minimum 8 characters."
     }
