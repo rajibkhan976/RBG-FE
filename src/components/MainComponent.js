@@ -673,7 +673,7 @@ const MainComponent = () => {
                                     toggleCreate={(e) => toggleCreate(e)}></PaymentRouting>
                             </Route>
 
-                            <Route exact path="/customizations">
+                            <Route exact path={["/customizations","/customizations/custom-fields", "/customizations/appointment-tags", "/customizations/program-age-groups", , "/customizations/product-sizes", "/customizations/product-color"]}>
                                 <CustomizationRouter toggleLeftSubMenu={toggleLeftSubMenu}
                                     toggleCreate={(e) => toggleCreate(e)}></CustomizationRouter>
                             </Route>

@@ -122,4 +122,339 @@ export const CustomizationServices = {
             
         }
     },
+    
+    fetchTags: async () => {
+        try {
+            let url = config.appointmentTag + "list?pageId=all";
+            const result = await axios.get(url, { headers: headers });
+            return result.data;
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    createTag: async (payload) => {
+        try {
+            let url = config.appointmentTag;
+            const result = await axios.post(url, payload, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error on create tag. Please contact support");
+            }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    deleteTag: async (id) => {
+        try {
+            let url = config.appointmentTag + id;
+            const result = await axios.delete(url, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error on deleting tag. Please contact support");
+            }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    fetchAgeGroup: async () => {
+        try {
+            let url = config.ageGroup;
+            const result = await axios.get(url, { headers: headers });
+            return result.data;
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    createAgeGroup: async (payload) => {
+        try {
+            let url = config.ageGroup;
+            const result = await axios.post(url, payload, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error on create age group. Please contact support");
+            }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+    
+    editAgeGroup: async (payload, id) => {
+        try {
+            let url = config.ageGroup + id;
+            const result = await axios.put(url, payload, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error on editing age group. Please contact support");
+            }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    deleteAgeGroup: async (id) => {
+        try {
+            let url = config.ageGroup + id;
+            const result = await axios.delete(url, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error on deleting age group. Please contact support");
+            }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    fetchProductSizes: async (id) => {
+        try {
+            let url = config.productSizes;
+            if (id != undefined) {
+                url = url + "?category=" + id;
+            }
+            const result = await axios.get(url, { headers: headers });
+            return result.data;
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    createProductSize: async (payload) => {
+        try {
+            let url = config.productSizes;
+            const result = await axios.post(url, payload, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error on create product sizes. Please contact support");
+            }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    editProductSize: async (payload, id) => {
+        try {
+            let url = config.productSizes + "/" + id;
+            const result = await axios.put(url, payload, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error on editing product sizes. Please contact support");
+            }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    deleteProductSize: async (id) => {
+        try {
+            let url = config.productSizes + "/" + id;
+            const result = await axios.delete(url, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error on deleting product size. Please contact support");
+            }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    fetchProductColors: async (category = null) => {
+        try {
+            let url = config.productColors;
+            if (category) {
+                url = url + "?category=" + category;
+            }
+            const result = await axios.get(url, { headers: headers });
+            return result.data;
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    createProductColor: async (payload) => {
+        try {
+            let url = config.productColors;
+            const result = await axios.post(url, payload, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error on create product colors. Please contact support");
+            }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    editProductColor: async (payload, id) => {
+        try {
+            let url = config.productColors + "/" + id;
+            const result = await axios.put(url, payload, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error on editing product sizes. Please contact support");
+            }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    deleteProductColor: async (id) => {
+        try {
+            let url = config.productColors + "/" + id;
+            const result = await axios.delete(url, { headers: headers });
+            if(result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error("There is an error on deleting product size. Please contact support");
+            }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
 }

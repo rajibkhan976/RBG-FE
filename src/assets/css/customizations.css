@@ -1,0 +1,392 @@
+.cz_body {
+    background-color: #fff;
+    border-radius: 10px;
+    height: calc(100vh - 300px);
+    margin-right: 50px;
+    padding-right: 0;
+}
+
+.cz_tagList {
+    padding: 20px 30px;
+    margin: 10px;
+    height: calc(100vh - 320px);
+    overflow-y: auto;
+}
+
+.cz_tagList::-webkit-scrollbar {
+    width: 6px;
+}
+.cz_tagList::-webkit-scrollbar-track {
+    background-color: #dce4eb;
+}
+.cz_tagList::-webkit-scrollbar-thumb {
+    background-color: #f1a668;
+}
+
+.cz_tag {
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+    height: 25px;
+    background-color: #5182A6;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 23px;
+    padding: 0 25px;
+    border-radius: 3px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+.cz_tag::before {
+    content: "";
+    width: 18px;
+    height: 18px;
+    background-color: #5182A6;
+    border-radius: 3px;
+    position: absolute;
+    z-index: -1;
+    top: 3px;
+    left: -7px;
+    transform: rotate(45deg);
+    transition: all 0.3s ease 0s;
+}
+
+.cz_tag:hover {
+    background-color: #ED707A;
+    padding-left: 10px;
+    padding-right: 40px;
+}
+
+.cz_tag:hover::before {
+    background-color: #ED707A;
+}
+
+.cz_tag button {
+    width: 14px;
+    height: 14px;
+    padding: 0;
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.3s ease 0.1s;
+}
+
+.cz_tag:hover button {
+    opacity: 1;
+}
+
+.createNew.noInfos.cz_noRecord {
+    margin-top: 80px;
+}
+
+.dashInnerUI .createNew.noInfos.cz_noRecord .creatUserBtn {
+    width: 197px;
+}
+
+.cz_addTagModal .slickModalBody .modalForm{
+    height: auto;
+}
+
+.cz_addTagModal .cmnFieldName {
+    font-size: 13px;
+}
+
+.cz_addTagModal .btnGroup {
+    margin: 35px 0 30px;
+}
+
+.cz_tagPage .alertBoxBody p {
+    line-height: 27px;
+}
+
+.dashInnerUI.cz_AgeGroupPage .createNew.noInfos.cz_noRecord .creatUserBtn {
+    width: 244px;
+}
+
+.dashInnerUI.cz_AgeGroupPage .createNew.noInfos.cz_noRecord .creatUserBtn .plusIcon {
+    margin-right: 8px;
+}
+
+.cz_lite {
+    color: #9BAEBC;
+    text-transform: capitalize;
+}
+
+.cz_block {
+    display: block;
+}
+
+.cz_addTagModal select.cmnFieldStyle {
+    background: #f6f8fa url("../images/arrowDown.svg") no-repeat right 5px center;
+}
+
+.cz_listBody {
+    padding-right: 0;
+}
+
+.dashboardElComponent .cz_listBody li.listHeading .cell_xs::after {
+    display: none;
+}
+
+.cz_listBody .listBody {
+    overflow-y: auto;
+    height: calc(100vh - 280px);
+}
+
+.cz_listBody .listBody::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .cz_listBody .listBody::-webkit-scrollbar-track {
+    background-color: #dce4eb;
+}
+
+.cz_listBody .listBody::-webkit-scrollbar-thumb {
+    background-color: #f1a668;
+}
+
+.cz_selectCategory {
+    position: relative;
+    min-height: 35px;
+    height: auto;
+}
+
+.cz_categoryList {
+    position: absolute;
+    width: calc(100% + 2px);
+    max-height: 285px;
+    overflow-y: auto;
+    left: -1px;
+    top: calc(100% + 2px);
+    background-color: #fff;
+    border: 1px solid #D0D6DB;
+    border-radius: 5px;
+    z-index: 10;
+}
+
+.cz_categoryList::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+.cz_categoryList::-webkit-scrollbar-track {
+    background-color: #dce4eb;
+}
+
+.cz_categoryList::-webkit-scrollbar-thumb {
+    background-color: #f1a668;
+}
+
+.cz_categoryList ul {
+    padding: 8px;
+}
+
+.cz_categoryList li {
+    background-color: transparent;
+    color: var(--darkBlue);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease 0s;
+}
+
+.cz_categoryList li:hover {
+    background-color: #E9EFF5;
+}
+
+.cz_selectedCatList li {
+    display: inline-block;
+}
+
+.cz_selectedCatList li .cz_selectedCat {
+    height: 28px;
+    background-color: #55BBC9;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 0 8px;
+    border-radius: 5px;
+    line-height: 28px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+.cz_removeCat {
+    display: inline-block;
+    background: transparent url("../images/cross_w.svg") no-repeat center / 12px 12px;
+    width: 12px;
+    height: 12px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    margin-left: 14px;
+    margin-top: 3px;
+}
+
+.cz_categorySelectSec {
+    margin: 5px;
+}
+
+#cz_catSearchBox {
+    width: 200px;
+    min-height: 28px;
+    height: 28px;
+    padding: 0;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    border: none;
+    background: none;
+    outline: none;
+    font-size: 13px;
+    color: var(--darkBlue);
+}
+
+.cz_selectedCatList li.hide #cz_catSearchBox {
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+
+.cz_addTagModal textarea.cmnFieldStyle {
+    height: 120px;
+}
+
+.cz_addTagModal .slickModalBody .modalForm {
+    max-height: calc(100vh - 300px);
+}
+
+
+
+.cz_noSearchData figure {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 16px;
+}
+
+.cz_noSearchData p {
+    padding: 0 100px;
+    font-size: 11px;
+    color: #9BAEBC;
+    text-align: center;
+}
+
+.cr_searchedKey {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 10px 0 27px;
+}
+
+.cz_noSearchData .creatUserBtn {
+    width: 178px;
+    margin: 0 auto 41px;
+}
+
+.errorField .cz_selectCategory {
+    border: 1px solid #c74854;
+    background-color: #fff4f4;
+}
+
+.cz_filteredCat {
+    margin-top: -30px;
+    margin-bottom: 10px;
+    padding-top: 14px;
+    margin-right: 50px;
+    border-top: 1px solid #D0D6DB;
+}
+
+.cz_filteredCat p {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--darkBlue);
+    padding-right: 20px;
+    display: inline-block;
+}
+
+.cz_filteredCat ul {
+    display: inline-block;
+}
+
+.cz_filteredCat ul li {
+    display: inline-block;
+    height: 30px;
+    padding: 0 12px;
+    background-color: #fff;
+    border: 1px solid #E9EFF5;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+.cz_filteredCat ul li span {
+    color: var(--darkBlue);
+    font-size: 10px;
+    font-weight: 400;
+    line-height: 100%;
+}
+
+.cz_removeFilterCat {
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 12px;
+    height: 12px;
+    padding: 0;
+    margin-left: 14px;
+    padding-top: 2px;
+}
+
+.cz_clearFilter {
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: #55BBC9;
+    font-size: 11px;
+    font-weight: 500;
+    font-style: italic;
+
+}
+
+.cz_ColorProduct .react-colorful {
+    margin-inline: auto;
+}
+.cz_ColorProduct .colorFigure {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px;
+    border: 2px solid #fff;
+    box-shadow: 2px 2px 8px rgb(0 0 0 / 20%);
+}
+.cz_ColorProduct .tableListing li:not(.listheading) .btnDelete {
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0;
+    border-radius: 50%;
+    filter: saturate(1);
+}
+.cz_ColorProduct .tableListing li:not(.listheading) .btnDelete:hover {
+    background-color: #FFF4F4;
+}
+.cz_ColorProduct .tableListing li:not(.listheading) .btnDelete:hover .a {
+    stroke: #ED707A;
+}
+.cz_ColorProduct .cell_xl strong {
+    font-weight: 500;
+}
