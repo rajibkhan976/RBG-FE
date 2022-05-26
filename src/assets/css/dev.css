@@ -1815,7 +1815,7 @@ img.profileImage {
 
 
 .gymDetails.personalPage .gymdetails_left .showing_gym_data {
-  padding-left: 20px;
+  padding-left: 0px;
 }
 
 .gymDetails.personalPage .gymdetails_left .showing_gym_data .gymName {
@@ -1823,12 +1823,14 @@ img.profileImage {
   border-bottom: 1px solid #D3D9DE;
   margin-bottom: 20px;
   padding-right: 15px;
+  padding-left: 20px;
 }
 
 
 .gymDetails.personalPage .gymdetails_left .showing_gym_data .gymInfo.full {
   margin:10px 0 0px 0;
   float: left;
+  padding-left: 20px;
 }
 
 .gymDetails.personalPage .gymdetails_left .showing_gym_data .gymInfo.full.d-flex {
@@ -2075,6 +2077,8 @@ cursor: pointer;
 
 .showing_gym_data .gymName > div .profileName {
   padding-left: 5px;
+  font-size: 16px;
+  font-weight: 400;
 }
 
 .hoverEffects {

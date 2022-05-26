@@ -129,6 +129,7 @@ const PersonalDetails = (props) => {
         // var first_name = spacing[0] // Gets the first part
         // var last_name = spacing[1] ? spacing[1] : "";  // Gets the later part
         var editName = editDetails.name.replace(/^\s+|\s+$/gm,'');
+        console.log("Edited name without space:", editName);
         if(editName.indexOf(" ") > 0){
           var spacing = editName.indexOf(" "); // Gets the first index where a space occour
           console.log("Spacing is :", spacing);
@@ -227,6 +228,13 @@ const PersonalDetails = (props) => {
       }
       
       try {
+
+        // Prior of reseting the values of passwords to blank
+        console.log("Curresnt password prior rest", formValues.currentPassword);
+        console.log("New password after prior", formValues.newPassword);
+        console.log("Confirm password prior rest", formValues.confirmNewPassword);
+        // Prior of reseting the values of passwords to blank
+
         let response = await PersonalDetailsServices.updateBasicSetting(payload);
         //console.log("response of basic settings", response);
         // Success toaster
@@ -244,7 +252,29 @@ const PersonalDetails = (props) => {
           typeMessage: 'error'
         });
       } finally {
+       
+        // Reset the values of passwords to blank
         setIsLoader(false);
+        const tempFormValues = {...formValues};
+        // console.log("tempFormValues 259 ::: :::: ", tempFormValues )
+        tempFormValues.currentPassword="";
+        tempFormValues.newPassword="";
+        tempFormValues.confirmNewPassword="";
+        // console.log("tempFormValues 263 ::: :::: ", tempFormValues )
+        setformValues(tempFormValues)
+        // Reset the values of passwords to blank
+        // setformValues({
+        //   ...formValues,
+        //   currentPassword:null,
+        //   newPassword: null,
+        //   confirmNewPassword:null
+        // })
+
+        // console.log("Curresnt password after rest", formValues.currentPassword);
+        // console.log("New password after rest", formValues.newPassword);
+        // console.log("Confirm password after rest", formValues.confirmNewPassword);
+        
+        
       }
     } else {
       setIsLoader(false);
@@ -255,6 +285,10 @@ const PersonalDetails = (props) => {
 
 
   };
+
+  // useEffect(()=>{
+  //   console.log("formValues")
+  // },[formValues])
 
   const validate = (values) => {
     //console.log("The values are:", values);
@@ -280,6 +314,9 @@ const PersonalDetails = (props) => {
     } else if(values.newPassword.length < 8 && values.currentPassword && !values.confirmNewPassword) {
       errors.newPassword = "New password is required and must be of minimum 8 characters."
     }
+    if (values.currentPassword === values.newPassword) {
+      errors.newPassword = "New password and current cannot be same!"
+    }  
     if (!values.currentPassword && values.newPassword && values.confirmNewPassword) {
       errors.currentPassword = "Current Password is required!"
     }  
@@ -384,6 +421,7 @@ const getPersonalDetailList = async () => {
       name: personalDetailList.firstName,
       image: personalDetailList.image      
     });
+    console.log("formValues :::: ", formValues)
     setformValues ({...formValues, country: personalDetailList.country, timezones: personalDetailList.timezone, countryLists: personalDetailList && personalDetailList && personalDetailList.country ? personalDetailList.country._id : "" });
   } catch (e) {
     console.log(e.message);
@@ -542,18 +580,18 @@ const getPersonalDetailList = async () => {
                
                   <div className="formControl">
                     <label>Current Password</label>
-                   <input type="password" name="currentPassword" defaultValue={formValues.currentPassword} onChange={handleChangeNew} />
+                   <input type="password" name="currentPassword" value={formValues.currentPassword} onChange={handleChangeNew} />
                    <span className="errorMsg">{formErrors.currentPassword}</span>
                   </div>
                   
                   <div className="formControl">
                     <label>New Password</label>
-                    <input type="password" name="newPassword" defaultValue={formValues.newPassword} onChange={handleChangeNew} />
+                    <input type="password" name="newPassword" value={formValues.newPassword} onChange={handleChangeNew} />
                     <span className="errorMsg">{formErrors.newPassword}</span>
                   </div>
                   <div className="formControl">
                     <label>Confirm New Password</label>
-                    <input type="password" name="confirmNewPassword" defaultValue={formValues.confirmNewPassword} onChange={handleChangeNew} />
+                    <input type="password" name="confirmNewPassword" value={formValues.confirmNewPassword} onChange={handleChangeNew} />
                     <span className="errorMsg">{formErrors.confirmNewPassword}</span>
                   </div>
                   <div className="formControl">
