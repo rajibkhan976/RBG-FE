@@ -38,12 +38,6 @@ const PersonalDetails = (props) => {
   });
     const [accDetailErrors, setAccDetailErrors] = useState({});
     const [userData, setUserData] = useState({});
-    const loggedInUser = useSelector((state) => state.user.data);
-
-    useEffect(() => {
-      setUserData(loggedInUser);
-    }, [loggedInUser]);
-
 
     const handleFileChange = (e) => {
       if (e.target.files[0] && (e.target.files[0].type === "image/png" || e.target.files[0].type === "image/jpg" || e.target.files[0].type === "image/jpeg")) {
@@ -370,8 +364,6 @@ const PersonalDetails = (props) => {
     });
   };
 
-
-
   const personalInfosReject = () => {
     setToggleEditName(false);
     setAccDetailErrors(false);
@@ -419,21 +411,27 @@ const getPersonalDetailList = async () => {
     setUserData({
       ...userData,
       fullName: personalDetailList.firstName + " " + personalDetailList.lastName,
-      name: personalDetailList.firstName,
-      image: personalDetailList.image      
+      name: personalDetailList.firstName  + (personalDetailList.lastName ? " "+ personalDetailList.lastName[0].toUpperCase() + "." : ""),
+      image: config.bucketUrl + personalDetailList.image      
     });
     console.log("formValues :::: ", formValues)
-    setformValues ({...formValues, country: personalDetailList.country, timezones: personalDetailList.timezone, countryLists: personalDetailList && personalDetailList && personalDetailList.country ? personalDetailList.country._id : "" });
+    setformValues({
+      ...formValues,
+      country: personalDetailList.country,
+      timezones: personalDetailList.timezone,
+      countryLists: personalDetailList && personalDetailList && personalDetailList.country ? personalDetailList.country._id : ""
+    });
+    
   } catch (e) {
     console.log(e.message);
   }
 };
-//  useEffect(() => {
-//   dispatch({
-//     type: actionTypes.USER_DATA,
-//     data: userData
-//   });
-//  }, [userData])
+  useEffect(() => {
+  dispatch({
+    type: actionTypes.USER_DATA,
+    data: userData
+  });
+ }, [userData])
   return (
     <>
     {(isLoader) ? <Loader /> : ''}

@@ -118,7 +118,8 @@ module.exports = {
     countryUrl:"https://" + process.env.REACT_APP_COUNTRY + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/country",
 
     //Personal Details 
-    personalDetailsUrl: "https://" + process.env.REACT_APP_PERSONALDETAILS + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV,
+    personalDetailsUrl: "https://" + process.env.REACT_APP_PERSONALDETAILS + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV,
+    // personalDetailsUrl: "http://localhost:4000/dev",
 
     //Dependents
     dependentUrl: "https://" + process.env.REACT_APP_DEPENDENT + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/contact/dependent/",

@@ -61,9 +61,6 @@ function HeaderDashboard(props) {
     }
   }, [isClicked]);
   const loggedInUser = useSelector((state) => state.user.data);
-  useEffect(() => {
-    console.log(loggedInUser)
-  }, [loggedInUser])
   const [notification, setNotification] = useState({
     general: {
       data: [],
@@ -522,11 +519,9 @@ function HeaderDashboard(props) {
         )} */}
         <div className="menuUser">
           <button className="btn btnUserMenu" onClick={toggleUserMenu}>
-            <figure
-              style={{
-                backgroundImage: "url(" + (loggedInUser && loggedInUser.image ? loggedInUser.image : UserIcon) + ")",
-              }}
-            ></figure>
+            <figure>
+              <img src={(loggedInUser && loggedInUser.image ? loggedInUser.image : UserIcon)}  alt="profile picture"/>
+            </figure>
 
             <div className="menuUserDetail">
               {/*<span>{loggedInUser && loggedInUser.group}</span>*/}

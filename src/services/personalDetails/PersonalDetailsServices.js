@@ -1,10 +1,5 @@
 import axios from "axios";
-import config, {
-  countryUrl,
-  personalDetailsUrl,
-  timezoneListURL,
-  timezoneLatLngUrl
-} from "../../configuration/config";
+import config from "../../configuration/config";
 import {
   message
 } from "../../helpers";
