@@ -130,6 +130,11 @@ module.exports = {
     //Status & Phase URl
     phaseUrl: "https://" + process.env.REACT_APP_PHASE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/phases",
     //phaseUrl: "http://localhost:4000/dev/phases",
-    statusUrl: "https://" + process.env.REACT_APP_STATUS + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/status"
+    statusUrl: "https://" + process.env.REACT_APP_STATUS + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/status",
     //statusUrl: "http://localhost:4000/dev/status",
+
+    //Credit management
+    creditManagemetnUrl: "https://" + process.env.REACT_APP_CREDIT_MANAGEMENT + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/credit/",
+    creditUsageUrl: "https://" + process.env.REACT_APP_CREDIT_USAGE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/credit/",
+
 }  

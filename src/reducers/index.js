@@ -11,6 +11,7 @@ import AssociationReducer from "./associationReducer";
 import NotificationReducer from "./notificationReducer";
 import MessageReducer from "./messageReducer";
 import {reducer as toastrReducer} from 'react-redux-toastr'
+import creditReducer from "./creditReducer";
 
 const rootReducer = combineReducers({
     auth: AuthReducer,
@@ -24,7 +25,8 @@ const rootReducer = combineReducers({
     association: AssociationReducer,
     notification: NotificationReducer,
     message: MessageReducer,
-    toastr: toastrReducer
+    toastr: toastrReducer,
+    credit: creditReducer
 });
 
 export default rootReducer;

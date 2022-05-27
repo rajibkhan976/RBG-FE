@@ -4,7 +4,7 @@ import Loader from "./Loader";
 
 
 const Pagination = (props) => {
-
+  console.log('pagination component')
   const [pageNumberLimit, setPageNumberLimit] = useState(5);
   const [maxPageNumberLimit, setMaxPageNumberLimit] = useState(5);
   const [minPageNumberLimit, setMinPageNumberLimit] = useState(0);
@@ -156,4 +156,4 @@ const Pagination = (props) => {
   );
 };
 
-export default Pagination;
+export default React.memo(Pagination);

@@ -130,9 +130,89 @@ export const utils = {
         const permissions = JSON.parse(localStorage.getItem('permissions'));
         let bool = false;
         const entityIndex = permissions.findIndex(el => el.entity === entityName);
-        if(entityIndex > -1) {
+        if (entityIndex > -1) {
             bool = permissions[entityIndex].actions.includes(actionName);
         }
         return bool;
+    },
+    //Validate and format card no
+    getValidCreditCard: (cardNumber) => {
+
+        //Allow only 19
+        cardNumber = cardNumber.substr(0, 19).replace(/[^\d ]/g, "");
+        
+        let visaPattern = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
+        let visaPatternTwo = /^4\d{3}(| |-)(?:\d{4}\1){2}\d{4}$/;
+        let visaPatternThree = /^4\d{12}(?:\d{3})?$/;
+        let mastPattern = /^(?:5[1-5][0-9]{14})$/;
+        let mastPatternTwo = /^5[1-5]\d{14}$/;
+        let mastPatternThree = /^5[1-5]\d{2}(| |-)(?:\d{4}\1){2}\d{4}$/;
+        let amexPattern = /^(?:3[47][0-9]{13})$/;
+        let amexPatternTwo = /^3[47]\d{13,14}$/;
+        let amexPatternThree = /^3[47]\d{1,2}(| |-)\d{6}\1\d{6}$/;
+        let discPattern = /^(?:6(?:011|5[0-9][0-9])[0-9]{12})$/;
+        let discPatternTwo = /^6(?:011|5\d\d)(| |-)(?:\d{4}\1){2}\d{4}$/
+        let discPatternThree = /^(?:6011\d{12})|(?:65\d{14})$/
+
+        let isValidCard = amexPattern.test(cardNumber) ||
+            amexPatternTwo.test(cardNumber) ||
+            amexPatternThree.test(cardNumber) ||
+            visaPattern.test(cardNumber) ||
+            visaPatternTwo.test(cardNumber) ||
+            visaPatternThree.test(cardNumber) ||
+            mastPattern.test(cardNumber) ||
+            mastPatternTwo.test(cardNumber) ||
+            mastPatternThree.test(cardNumber) ||
+            discPattern.test(cardNumber) ||
+            discPatternTwo.test(cardNumber) ||
+            discPatternThree.test(cardNumber);
+
+
+        return isValidCard;
+    },
+    getFormattedCardNumber: (cardNumber) => {
+        // Split the card number is groups of 4
+        let formattedCardNumber;
+        let cardNumberSections = cardNumber.match(/\d{1,4}/g);
+        if (cardNumberSections) {
+            formattedCardNumber = cardNumberSections.join("-");
+            console.log("formattedCardNumber", formattedCardNumber);
+            if (formattedCardNumber.length > 19) {
+                formattedCardNumber = formattedCardNumber.substr(0, 19);
+            }
+        }
+        return formattedCardNumber;
+    },
+    validateExpiryDate: (date) => {
+
+        let formattedCardExpairy = date.replace(/[^\d]/g, "");
+        formattedCardExpairy = formattedCardExpairy.substring(0, 6);
+
+        let cardExpairySectionsMonth = formattedCardExpairy.slice(0, 2);
+        let cardExpairySectionsYear = formattedCardExpairy.slice(2, 6);
+
+        let isValid = (cardExpairySectionsMonth.length === 2)
+            && (cardExpairySectionsYear.length === 4)
+        console.log('util is valid date', isValid);
+        return isValid;
+    },
+    getFormattedExpiryDate: (date) => {
+        let formattedCardExpairy = date.replace(/[^\d]/g, "");
+        formattedCardExpairy = formattedCardExpairy.substring(0, 6);
+
+        var cardExpairySectionsMonth = formattedCardExpairy.slice(0, 2);
+        var cardExpairySectionsYear = formattedCardExpairy.slice(2, 6);
+
+        if (cardExpairySectionsMonth > 0 && cardExpairySectionsYear > 0) {
+            formattedCardExpairy =
+                cardExpairySectionsMonth + "/" + cardExpairySectionsYear;
+        } else if (formattedCardExpairy <= 2) {
+            formattedCardExpairy = cardExpairySectionsMonth;
+        }
+
+        console.log('Formatted Exp d', formattedCardExpairy)
+
+        return formattedCardExpairy;
     }
+
 }

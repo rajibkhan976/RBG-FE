@@ -1,0 +1,1360 @@
+.cr_body {
+    display: block;
+    margin-bottom: 18px;
+    padding-right: 46px;
+}
+
+.cr_createPackageModal .cmnFieldName,
+.cr_createPackageModal .cmnFieldStyle,
+.cr_createPackageModal .cmnFieldStyle::placeholder {
+    font-size: 13px;
+}
+
+.cr_createPackageModal .cmnBtn {
+    width: 104px;
+}
+
+.cr_package {
+    width: 445px;
+    margin-right: 23px;
+    margin-bottom: 30px;
+    float: left;
+    background-color: #fff;
+    border: 1px solid #E9EFF5;
+    border-radius: 10px;
+}
+
+.cr_package:nth-child(3n) {
+    margin-right: none;
+}
+
+
+.cr_package.fev {
+    border-color: #ED707A;
+}
+
+.cr_package:nth-child(3n) {
+    margin-right: 0;
+}
+
+.cr_packageHead {
+    display: inline-block;
+    width: 100%;
+    padding: 20px;
+}
+
+.cr_packageHeadLeft {
+    float: left;
+}
+
+.cr_packageHeadLeft h2 {
+    font-size: 20px;
+    color: var(--darkBlue);
+    display: inline-block;
+    margin-right: 14px;
+}
+
+.cr_heartBtn {
+    width: 18px;
+    height: 16px;
+    background: transparent url("../images/heartIconGrey.svg") no-repeat;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.cr_heartBtn.active {
+    background-image: url("../images/heartIconRed.svg");
+}
+
+.cr_packageHeadRight {
+    float: right;
+    margin-top: -6px;
+}
+
+.cr_editPackageBtn,
+.cr_deletePackageBtn {
+    float: left;
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+    background: #ffffff url("../images/editPackageIconGrey.svg") no-repeat center / 13px auto;
+    border-radius: 50%;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.cr_deletePackageBtn {
+    background-image: url("../images/deletePackageIconGrey.svg");
+}
+
+.cr_editPackageBtn:hover {
+    background-color: #F6F8FA;
+    background-image: url("../images/editPackageIconDark.svg");
+}
+
+.cr_deletePackageBtn:hover {
+    background-color: #F6F8FA;
+    background-image: url("../images/deletePackageIconDark.svg");
+}
+
+.toggleBtn.cr_toggleBtn {
+    float: right;
+    margin-left: 14px;
+    top: -5px;
+}
+
+.cr_creditBalance {
+    width: 176px;
+    height: 82px;
+    float: left;
+    box-sizing: border-box;
+    padding: 10px 14px;
+    background-color: #6AAAD9;
+    border-radius: 10px;
+    color: #fff;
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+.cr_creditBalance h3 {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.cr_creditBalance p {
+    font-size: 32px;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+.cr_price {
+    width: 217px;
+    height: 82px;
+    float: right;
+    background-color: #F6F8FA;
+    border: 1px solid #E9EFF5;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-right: 20px;
+}
+
+.cr_price h3 {
+    font-size: 14px;
+    font-weight: 500;
+    color: #9BAEBC;
+}
+
+.cr_price p {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--darkBlue);
+    margin-top: 8px;
+}
+
+.cr_creditSetupBody {
+    width: 828px;
+    margin: 0 auto;
+}
+
+.cr_packageBody {
+    display: inline-block;
+    width: 100%;
+    max-height: calc(100vh - 280px);
+    overflow-y: auto;
+}
+
+.cr_packageBody.cr_orgWoner {
+    overflow: visible;
+}
+
+.cr_packageBody::-webkit-scrollbar {
+    width: 4px;
+}
+
+.cr_packageBody::-webkit-scrollbar-track {
+    background-color: #dce4eb;
+}
+
+.cr_packageBody::-webkit-scrollbar-thumb {
+    background-color: #f1a668;
+}
+
+.cr_creditSetupForm form {
+    height: 100%;
+}
+
+.cr_creditSetupFormWrap {
+    width: 398px;
+    float: left;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 0px 60px rgba(0, 0, 0, 0.05);
+}
+
+.cr_creditSetupFormWrap h2 {
+    border-bottom: 1px solid #E9EFF5;
+    padding: 14px 30px;
+    font-size: 16px;
+    color: var(--darkBlue);
+    font-weight: 600;
+}
+
+.cr_creditSetupForm {
+    padding: 20px 30px;
+    height: 434px;
+}
+
+.cr_creditSetupForm .cmnFieldName {
+    font-size: 13px;
+}
+
+.cr_creditSetupForm .cmnBtn {
+    width: 115px;
+}
+
+.cr_creditLimitFrom {
+    margin-left: 30px;
+}
+
+.cr_packageCard {
+    width: 268px;
+    margin-right: 40px;
+    margin-bottom: 45px;
+    position: relative;
+    background-color: #fff;
+    float: left;
+    border-radius: 10px;
+    box-shadow: 0px 0px 40px rgba(0, 0, 0, 0.05);
+    transition: all 0.5s ease-in 0s;
+}
+
+.cr_packageCard:hover {
+    box-shadow: 0px 27px 62px rgba(0, 0, 0, 0.25);
+}
+
+.cr_packageCardHead {
+    position: relative;
+    text-align: center;
+    color: #fff;
+    border-radius: 10px 10px 0 0;
+    padding: 14px 0;
+}
+
+.cr_packageCardHead::before,
+.cr_packageCardHead::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 268px;
+    height: 120px;
+    border-radius: 10px 10px 0 0;
+    background-color: #5181a4;
+    opacity: 1;
+    transition: all 0.4s ease-in 0.2s;
+}
+
+.cr_packageCardHead::after {
+    background: linear-gradient(268deg, #f1a96a, #ed6e78);
+    z-index: 0;
+    opacity: 0;
+}
+
+.cr_packageCard:hover .cr_packageCardHead::before {
+    opacity: 0;
+}
+
+.cr_packageCard:hover .cr_packageCardHead::after {
+    opacity: 1;
+}
+
+.cr_packageCardHead h2,
+.cr_packageCardHead span {
+    position: relative;
+    z-index: 2;
+    font-size: 14px;
+    opacity: 0.7;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.cr_packageCardHead h2 {
+    text-transform: uppercase;
+}
+
+.cr_packageCardHead .cr_totalCredit {
+    position: relative;
+    z-index: 2;
+    font-size: 36px;
+    font-weight: 700;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+}
+
+.cr_packageCardPriceSec {
+    text-align: center;
+}
+
+.cr_packageCardPriceSec p {
+    font-size: 24px;
+    color: var(--darkBlue);
+    font-weight: 600;
+    line-height: 35px;
+    padding: 20px 0;
+}
+
+.cr_buyNowBtn.saveNnewBtn {
+    position: relative;
+    width: 106px;
+    margin: 0 auto 30px;
+    transition: none;
+}
+
+.cr_buyNowBtn.saveNnewBtn span {
+    position: relative;
+    z-index: 5;
+    font-weight: 600;
+}
+
+.cr_buyNowBtn.saveNnewBtn::before,
+.cr_buyNowBtn.saveNnewBtn::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 106px;
+    height: 40px;
+    border-radius: 5px;
+    background: var(--darkBlue);
+    opacity: 1;
+    transition: all 0.4s ease-in 0s;
+}
+
+.cr_buyNowBtn.saveNnewBtn::after {
+    background: linear-gradient(268deg, #f1a96a, #ed6e78);
+    z-index: 0;
+    opacity: 0;
+}
+
+.cr_packageCard:hover .cr_buyNowBtn.saveNnewBtn::before {
+    opacity: 0;
+}
+
+.cr_packageCard:hover .cr_buyNowBtn.saveNnewBtn::after {
+    opacity: 1;
+}
+
+.cr_offerTag {
+    position: absolute;
+    z-index: 5;
+    left: -31px;
+    top: 11px;
+    transform: rotate(-45deg);
+    width: 112px;
+    height: 32px;
+    background: transparent url("../images/offerTagBg.svg") no-repeat center;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    line-height: 26px;
+}
+
+.cr_packageCard.active .cr_offerTag {
+    display: none;
+}
+
+.cr_packageCard.active .cr_packageCardHead::before,
+.cr_packageCard.active .cr_packageCardHead::after {
+    background: #55BBC9;
+}
+
+.cr_activePackageBtnArea {
+    background-color: #E2FFED;
+    border: 1px solid #B7E9C8;
+    border-radius: 5px;
+    padding: 9px 20px 9px;
+    margin: -10px 20px 20px 20px;
+}
+
+.cr_activePackageBtnLbl {
+    float: left;
+    font-size: 10px;
+    color: #009F40;
+    font-weight: 600;
+    text-align: left;
+    text-transform: uppercase;
+    margin-top: 3px;
+}
+
+.cr_activePackageBtnLbl span {
+    display: block;
+    font-size: 14px;
+    font-weight: 700;
+    padding-top: 5px;
+}
+
+.cr_renewBtn {
+    width: 88px;
+    height: 40px;
+    background-color: #009F40;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: #fff;
+    margin-left: 29px;
+    font-weight: 600;
+}
+
+.cmnFormRow.cr_btnRow {
+    margin-top: auto;
+}
+
+.cr_modalBase {
+    position: fixed;
+    z-index: 999;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(48, 86, 113, 0.6);
+}
+
+.cr_modal {
+    width: 1100px;
+    max-height: 90vh;
+    margin: 0 auto;
+    padding: 30px 0;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 27px 62px rgba(0, 0, 0, 0.25);
+}
+
+.cr_modalHead h2 {
+    font-size: 20px;
+    color: var(--darkBlue);
+    margin-bottom: 30px;
+}
+
+.cr_modalHead {
+    padding: 0 137px;
+    position: relative;
+}
+
+.cr_packageDetails {
+    width: 398px;
+    height: auto;
+    border: 1px solid #E9EFF5;
+    background-color: #FFF;
+    padding: 20px 31px;
+    box-shadow: 0px 29px 60px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.cr_packageDetails h3 {
+    color: #9BAEBC;
+    font-size: 24px;
+    line-height: 36px;
+}
+
+.cr_modalBody {
+    padding: 0 137px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cr_creditPaymetnHolder {
+    margin-top: 22px;
+}
+
+.cr_credit {
+    display: inline-block;
+    color: #009F40;
+    margin-right: 91px;
+}
+
+.cr_payment {
+    display: inline-block;
+    color: #F1A768;
+}
+
+.cr_payment h4,
+.cr_credit h4 {
+    background-color: #FFF3E8;
+    border-radius: 49px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 4px 14px;
+    margin-bottom: 10px;
+    display: inline-block;
+}
+
+.cr_credit h4 {
+    background-color: #DAFFE9;
+}
+
+.cr_payment p,
+.cr_credit p {
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.cr_paymentMethod {
+    width: 398px;
+    height: auto;
+    background-color: #fff;
+    margin-top: 20px;
+    padding-bottom: 23px;
+    border: 1px solid #E9EFF5;
+    box-shadow: 0px 29px 60px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.cr_paymentMethod h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #305671;
+    display: inline-block;
+    padding: 20px 30px;
+}
+
+.cr_addPaymentMethodBtn {
+    float: right;
+    width: 71px;
+    height: 30px;
+    margin: 15px 30px 0 0;
+    background-color: #fff;
+    border: 1px solid #E9EFF5;
+    border-radius: 5px;
+    color: #55BBC9;
+}
+
+.cr_payMethodListWrap {
+    margin: 0 15px;
+    max-height: 467px;
+    overflow: auto;
+    min-height: 277px;
+}
+
+.cr_payMethodListWrap .noDataSec {
+    margin: 30px auto;
+}
+
+.cr_payMethodListWrap::-webkit-scrollbar {
+    width: 4px;
+}
+
+.cr_payMethodListWrap::-webkit-scrollbar-track {
+    background-color: #dce4eb;
+}
+
+.cr_payMethodListWrap::-webkit-scrollbar-thumb {
+    background-color: #f1a668;
+}
+
+.cr_payMethodList {
+    background-color: #F6F8FA;
+    margin: 20px 15px 0;
+    border-radius: 10px;
+    padding: 10px 14px 14px;
+}
+
+.cr_payMethodList:first-child {
+    margin-top: 0;
+}
+
+.cr_payMethodList h3 {
+    padding: 0;
+    font-size: 13px;
+    color: #9BAEBC;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.cr_paymentType {
+    width: 100%;
+    padding: 10px 15px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    border: 1px solid #E9EFF5;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+
+.cr_paymentType+.cr_paymentType {
+    margin-top: 15px;
+    margin-bottom: 0;
+}
+
+.cr_billingOverviewCard {
+    width: 398px;
+    border: 1px solid #E9EFF5;
+    background-color: #FFF;
+    box-shadow: 0px 29px 60px 4px rgb(0 0 0 / 10%);
+    border-radius: 10px;
+}
+
+.cr_billingOverviewCard h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #305671;
+    padding: 20px 30px;
+}
+
+.cr_priceBrakeout {
+    border: 1px solid #E9EFF5;
+    border-radius: 10px;
+    margin: 0 30px 20px;
+}
+
+.cr_brakeoutIist {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed #E9EFF5;
+
+}
+
+.cr_brakeoutIist:last-child {
+    border-bottom: none;
+}
+
+.cr_priceLable,
+.cr_priceVal {
+    padding: 14px 20px;
+    color: #9BAEBC;
+    font-size: 12px;
+    font-weight: 500;
+    display: inline-block;
+}
+
+.cr_priceVal {
+    color: #305671;
+}
+
+.cr_brakeoutIist.total .cr_priceVal {
+    font-size: 20px;
+    font-weight: 600;
+    padding: 10px 20px;
+}
+
+.cr_brakeoutIist.total .cr_priceLable {
+    font-size: 14px;
+}
+
+.cr_payBtn {
+    width: 338px;
+    height: 43px;
+    background: linear-gradient(90deg, #ED707A 0%, #F1A768 100%);
+    border-radius: 5px;
+    margin: 0 auto 30px;
+    display: block;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-weight: 700;
+    color: #FFF;
+}
+
+.cr_payBtn img {
+    margin-left: 14px;
+}
+
+.cr_body {
+    overflow: hidden;
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.cr_body.cr_orgWoner {
+    overflow: visible;
+}
+
+.cr_body .userListBody {
+    padding-right: 30px;
+    margin-right: 0px;
+}
+
+.cr_featureShowStat h3 {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 24px;
+    color: #9BAEBC;
+}
+
+.cr_featureShowStat h3 span {
+    color: #11A750;
+}
+
+.listFeatures .cr_dateInput {
+    background: #FFFFFF;
+    border: 1px solid #E9EFF5;
+    border-radius: 5px;
+    margin: 0px 0 0 10px;
+    font-size: 13px;
+    line-height: 20px;
+    color: #305671;
+    height: 40px;
+}
+
+.cr_list {
+    position: relative;
+}
+
+.cr_list .searchBar.formControl.cr_list_btn {
+    width: 128px;
+    background: #FFFFFF;
+    border: 1px solid #E9EFF5;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #305671;
+    margin: 0;
+    font-size: 13px;
+}
+
+.cr_DropDown {
+    width: 128px;
+    background: #FFFFFF;
+    border-radius: 5px;
+    position: absolute;
+    top: 39px;
+    height: auto;
+    z-index: 100;
+    border: 1px solid #D0D6DB;
+    overflow: hidden;
+}
+
+.cr_DropDown li {
+    font-size: 13px;
+    width: 100%;
+    display: inline-block;
+    padding: 0 0 0 15px;
+    line-height: 32px;
+    color: #9BAEBC;
+    position: relative;
+}
+
+.cr_DropDown li:hover {
+    background: #F6F8FA;
+}
+
+.cr_DropDown li button {
+    padding: 0;
+    background: none;
+    border: none;
+    color: #9BAEBC;
+}
+
+.cr_DropDown li:hover button {
+    color: #305671;
+}
+
+.cr_tableListing .tableListing li>div {
+    min-width: auto;
+}
+
+.cr_tableListing .tableListing li:first-child>div:first-child,
+.cr_tableListing .tableListing li>div:first-child {
+    padding-left: 30px;
+}
+
+.cr_tableListing .tableListing li:first-child>div:last-child,
+.cr_tableListing .tableListing li>div:last-child {
+    padding-right: 30px;
+    text-align: right;
+}
+
+.cr_tableListing .tableListing .cr_successDetails {
+    display: flex;
+    align-items: center;
+}
+
+.cr_tableListing .tableListing .cr_successDetails .text {
+    padding-left: 20px;
+}
+
+.cr_tableListing .tableListing .cr_successDetails .text h3 {
+    font-weight: 700;
+    font-size: 10px;
+    line-height: 15px;
+    color: #11A750;
+}
+
+.cr_tableListing .tableListing .cr_successDetails .text p {
+    font-weight: 700;
+    font-size: 10px;
+    line-height: 15px;
+    color: #305671;
+}
+
+.cr_tableListing .tableListing .cr_successDetails .text p span {
+    font-weight: 400;
+}
+
+.cr_tableListing .tableListing .cr_amount,
+.cr_tableListing .tableListing .cr_td {
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 20px;
+    color: #305671;
+}
+
+.cr_tableListing .tableListing .cr_td {
+    font-weight: 400;
+}
+
+.cr_tableListing .tableListing .cr_date {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20px;
+    color: #9BAEBC;
+}
+
+.cr_tableListing .tableListing .cr_credit {
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 20px;
+    text-align: right;
+}
+
+.cr_tableListing .tableListing .cr_credit .greentxt {
+    color: #11A750;
+}
+
+.cr_tableListing .tableListing .cr_credit .redtxt {
+    color: #ED707A;
+}
+
+.formControl .react-daterange-picker input {
+    margin: 0 !important;
+    border: none;
+    background: transparent;
+    height: 35px;
+    line-height: 35px;
+}
+
+.react-daterange-picker__wrapper {
+    border: none !important;
+    padding-left: 30px;
+    padding-right: 15px;
+}
+
+button.react-daterange-picker__calendar-button.react-daterange-picker__button {
+    position: absolute;
+    left: 8px;
+    background: url("../images/daterangeIcon.svg");
+    height: 15px;
+    width: 15px;
+}
+
+.react-daterange-picker__button svg.react-daterange-picker__calendar-button__icon {
+    display: none;
+}
+
+select.react-daterange-picker__inputGroup__input.react-daterange-picker__inputGroup__month {
+    width: auto;
+    border: none;
+    background: transparent;
+    line-height: 28px;
+    height: 26px;
+    pointer-events: none;
+    margin: 0 !important;
+    appearance: none;
+    width: 30px;
+}
+
+.react-daterange-picker__calendar {
+    z-index: 30 !important;
+}
+
+.react-daterange-picker__button {
+    padding: 4px 2px !important;
+    position: absolute;
+    right: 0px;
+}
+
+.react-daterange-picker__clear-button.react-daterange-picker__button {
+    display: none;
+}
+
+
+
+.cr_payMethodList .editFormStyle {
+    color: var(--darkBlue);
+}
+
+.cr_modal .cr_cross {
+    position: absolute;
+    right: 20px;
+    background: transparent;
+    border: none;
+    z-index: 10;
+}
+
+.cr_modal.small {
+    width: 820px;
+}
+
+.cr_modal.small .cr_modalBody {
+    padding: 0 100px;
+    flex-wrap: wrap;
+}
+
+.cr_modal .cr_successMsg {
+    width: 100%;
+    text-align: center;
+    padding: 20px 10px 30px;
+}
+
+.cr_modal .cr_msgBody {
+    width: 100%;
+}
+
+.cr_successMsg h3 {
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+    color: #009F40;
+    padding: 11px 0 0 0;
+}
+
+.cr_successMsg .cr_creditMsg {
+    Height: 60px;
+    background: #F9FDFF;
+    border: 1px solid #E2F6FB;
+    border-radius: 100px;
+    line-height: 60px;
+    display: inline-block;
+    padding: 0 36px;
+    margin: 33px 0 0;
+    font-size: 18px;
+    text-align: center;
+    color: #F1A768;
+}
+
+.cr_successMsg .cr_creditMsg span {
+    font-weight: 700;
+}
+
+.cr_successMsg .cr_creditMsg img {
+    vertical-align: text-bottom;
+    padding: 0 10px 0 0;
+}
+
+.cr_modal .cr_msgBody {
+    padding: 10px 0 5px 0;
+}
+
+.cr_modalDataTable {
+    margin: 0 0 40px 0;
+    border-top: 1px dashed #D0D6DB;
+    border-bottom: 1px dashed #D0D6DB;
+}
+
+.cr_modalDataTable li {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cr_modalDataTable li>div {
+    font-weight: 500;
+    font-size: 12px;
+    color: #305671;
+    width: 30%;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+
+}
+
+.cr_modalDataTable div.cr_icon {
+    width: 10%;
+    padding: 0 0 0 20px;
+}
+
+.cr_modalDataTable div.cr_icon img {
+    vertical-align: middle;
+}
+
+.cr_modalDataTable li div:last-child {
+    justify-content: right;
+    padding-right: 45px;
+}
+
+.cr_modalDataTable li.cr_mainData div {
+    background: #F1FFF4;
+    border-top: 1px solid #A0D7B6;
+    border-bottom: 1px solid #A0D7B6;
+}
+
+.cr_modalDataTable li.cr_mainData div:first-child {
+    border-radius: 6px 0 0 6px;
+    border-left: 1px solid #A0D7B6;
+    border-top: 1px solid #A0D7B6;
+    border-bottom: 1px solid #A0D7B6;
+}
+
+.cr_modalDataTable li.cr_mainData div:last-child {
+    border-radius: 0 6px 6px 0;
+    border-right: 1px solid #A0D7B6;
+    border-top: 1px solid #A0D7B6;
+    border-bottom: 1px solid #A0D7B6;
+}
+
+.cr_modalDataTable li.cr_mainData div:nth-child(2),
+.cr_modalDataTable li.cr_mainData div:last-child {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.cr_modalDataTable li.cr_final div {
+    font-size: 16px;
+}
+
+.cr_modalDataTable li.cr_final div:last-child {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.cr_payBtn.small {
+    width: auto;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 0 20px;
+}
+
+.cr_successMsg h3.cr_failed {
+    color: #ED707A;
+}
+
+.cr_modalDataTable li.cr_mainData.cr_failed div {
+    background: #FFF4F4;
+    border-top: 1px solid #FFCFD2;
+    border-bottom: 1px solid #FFCFD2;
+}
+
+.cr_modalDataTable li.cr_mainData.cr_failed div:first-child {
+    border-left: 1px solid #FFCFD2;
+    border-top: 1px solid #FFCFD2;
+    border-bottom: 1px solid #FFCFD2;
+}
+
+.cr_modalDataTable li.cr_mainData.cr_failed div:last-child {
+    border-right: 1px solid #FFCFD2;
+    border-top: 1px solid #FFCFD2;
+    border-bottom: 1px solid #FFCFD2;
+}
+
+.cr_backBtn {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: #E9EFF5;
+    left: 70px;
+    top: -10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 50%;
+}
+
+.cr_paymentType.active {
+    border: 1px solid #0093FF;
+}
+
+.cr_paymentMethod .editform {
+    max-height: none;
+}
+
+.cr_payMethodListWrap .editFormStyle {
+    border: 1px solid #d9e3e9;
+    color: var(--darkBlue);
+}
+
+.cr_payMethodListWrap .paymentSourcetabs {
+    padding: 0px 15px;
+}
+
+.cr_payMethodListWrap .editFormStyle.cr_error {
+    border-color: #ED707A;
+    margin-bottom: 5px;
+}
+
+.cr_payMethodListWrap .errorMsg {
+    line-height: 15px;
+}
+
+.cr_payMethodListWrap .paymentSourcetabs .tabBtns button {
+    margin-bottom: -2px;
+}
+
+.cr_modal.cr_restriction {
+    background: linear-gradient(180deg, #FFFFFF 45.9%, #FFF8EB 100%);
+    border: 1px solid #A48548;
+    box-sizing: border-box;
+    box-shadow: 0px 27px 62px rgb(0 0 0 / 25%);
+    width: 1022px;
+}
+
+.cr_modalHead.cr_centerHeadder h2 {
+    font-weight: 700;
+    font-size: 24px !important;
+    line-height: 36px;
+    text-align: center;
+    color: #F1A768;
+    padding: 20px 0;
+}
+
+.cr_modalHead.cr_centerHeadder h2 img {
+    vertical-align: middle;
+}
+
+.cr_restriction .cr_modalBody {
+    padding: 0 65px;
+    flex-wrap: wrap;
+}
+
+.cr_modal.cr_restriction .cr_packageCard:last-child {
+    margin-right: 0;
+}
+
+.cr_transparent_btn {
+    background: transparent;
+    border: 1px solid #A48548;
+    color: #A48548;
+    font-weight: 500;
+    font-size: 14px;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    /* box-shadow: 0px 27px 62px rgba(0, 0, 0, 0.25); */
+    display: flex;
+    padding: 0 20px;
+    align-items: center;
+    min-width: 186px;
+    justify-content: space-between;
+}
+
+.cr_transparent_btn:hover {
+    background: #fff;
+}
+
+.cr_btn_holder {
+    width: 100%;
+    padding: 10px 0 25px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+.cr_modal.cr_restriction .cr_packageBody {
+    width: 100%;
+    padding-top: 10px;
+}
+
+.cr_paymentMethod.cr_error {
+    border-color: #ED707A;
+}
+
+.user_modal_cont .userPlan.cr_noPackage {
+    background: #FFF7F0;
+    border: 1px solid #FFE1C7;
+}
+
+.user_modal_cont .userPlan.cr_noPackage span {
+    font-weight: 500;
+    font-size: 14px;
+    color: #ED707A;
+}
+
+
+.user_modal_cont .userPlan.cr_noPackage button {
+    color: #FFF;
+    padding: 10px 18px;
+    border: none;
+    font-weight: 700;
+    font-size: 13px;
+    border-radius: 5px;
+    transition: 0.5s;
+    background: linear-gradient(90.14deg, var(--c1, #F1A768), var(--c2, #ED707A) 100%, var(--c1, #F1A768)) var(--x, 0)/ 200%;
+}
+
+.user_modal_cont .userPlan.cr_noPackage button:hover {
+    --x: 100%;
+}
+
+.cmnFieldStyle.cr_select {
+    width: 140px;
+    background: #fff url("../images/arrowDown.svg") no-repeat center right 3px;
+    font-size: 13px;
+    border-color: #E9EFF5;
+}
+
+.cr_orgWonerName {
+    background: #F6F8FA url("../images/org_woner_icon.svg") no-repeat left 25px top 22px;
+    border: 1px solid #E9EFF5;
+    border-radius: 5px;
+    padding: 20px 25px 20px 75px;
+}
+
+.user_modal_cont .cr_orgWonerName p {
+    color: #A4BDD0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.user_modal_cont .cr_orgWonerName h3 {
+    color: #5182A6;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 0;
+}
+
+.userModal .user_modal_cont .creditText {
+    border: 1px solid #E9EFF5;
+    padding: 14px 25px;
+    border-radius: 5px;
+    margin: 5px 0;
+}
+
+.user_modal_cont .creditText span {
+    color: #9BAEBC;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.userModal .user_modal_cont .userPlan {
+    background-color: #F9FCFF;
+    border: 1px solid #E9EFF5;
+}
+
+.userModal .user_modal_cont .userPlan span {
+    font-weight: 500;
+}
+
+.userModal .user_modal_cont .userPlan p {
+    font-weight: 700;
+    text-transform: uppercase;
+    background: linear-gradient(268deg, #f1a768 0%, #ed707a 100%) 0% 0% no-repeat padding-box;
+    background-clip: text;
+    -webkit-background-clip: text;
+    text-fill-color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+.cr_userPlan {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cr_userPlanRight button {
+    background: linear-gradient(268deg, #f1a768 0%, #ed707a 100%) 0% 0% no-repeat padding-box;
+    width: 105px;
+    height: 40px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    border-radius: 5px;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.cr_modalDataTable .cr_trxId {
+    width: 235px;
+    padding-right: 0;
+}
+
+.cr_modalDataTable .cr_payMethod {
+    width: 136px;
+}
+
+.cr_noInfos {
+    width: 300px;
+    margin: 100px auto 0;
+    background-color: transparent;
+    display: block;
+    text-align: center;
+}
+
+.cr_noInfos .noRecordsImgWraper img.noRecords {
+    width: 140px;
+    margin-bottom: 15px;
+    margin-top: 6%;
+}
+
+.cr_noInfos .noRecordsImgWraper h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #566570;
+    margin-bottom: 6px;
+}
+
+.cr_noInfos .noRecordsImgWraper p {
+    font-size: 13px;
+    color: #9BAEBC;
+}
+
+
+.cr_restriction .cr_modalBody .cr_modalBody.cr_order_summery {
+    padding: 0 137px;
+}
+
+.cr_packageBody.no_scroll {
+    overflow: visible;
+}
+
+.cr_restriction .cr_orgWoner {
+    width: 100%;
+}
+
+.cr_restriction .cr_packageBody {
+    text-align: center;
+}
+
+.cr_restriction .cr_packageBody .cr_packageCard {
+    display: inline-block;
+    text-align: center;
+    float: none;
+}
+
+.cr_orgWonerScroll {
+    padding: 25px 0 100px 55px;
+}
+
+.cr_paymentFailedMsg {
+    background: #FFF0F1;
+    border: 1px solid #FFCACE;
+    border-radius: 5px;
+    color: #ED707A;
+    font-weight: 500;
+    font-size: 12px;
+    padding: 14px 16px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    min-width: 320px;
+    max-width: 450px;
+    margin-bottom: 30px
+}
+.cr_paymentFailedMsg figure {
+    margin-right: 15px;
+    flex: 0 0 36px;
+}
+.cr_paymentFailedMsg span {
+    line-height: 21px;
+}

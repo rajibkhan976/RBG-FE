@@ -1,6 +1,6 @@
-import React, {useState, lazy, useEffect, useLayoutEffect} from "react";
-import {Redirect, Route, Switch, useLocation} from "react-router-dom";
-import {useDispatch, useSelector} from 'react-redux';
+import React, { useState, lazy, useEffect, useLayoutEffect } from "react";
+import { Redirect, Route, Switch, useLocation } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
 import LeftMenu from "./shared/LeftMenu";
 import DashboardRoutes from "./dashboard/DashboardRoutes"
 import AuthRoutes from "./authentication/AuthRoutes";
@@ -23,20 +23,22 @@ import AppointmentRouter from "./report/Appointment/AppointmentRoutes";
 import AttendenceRouter from "./report/Attendence/AttendenceRoutes";
 import RevenueRouter from "./report/Revenue/RevenueRoutes";
 import HeaderDashboard from "./shared/HeaderDashboard";
-import {UserServices} from "../services/authentication/UserServices";
+import { UserServices } from "../services/authentication/UserServices";
 import config from "../configuration/config";
 import UpdateNotification from "./shared/updateNotifications/UpdateNotification";
-import {io} from "socket.io-client";
+import { io } from "socket.io-client";
 import * as actionTypes from "../actions/types";
 import GetPositionMiddleware from "../actions/GetPosition.middleware";
-import {NotificationServices} from "../services/notification/NotificationServices";
+import { NotificationServices } from "../services/notification/NotificationServices";
 import moment from "moment-timezone";
 import AlertMessage from "./shared/messages/alertMessage";
-import {toastr} from 'react-redux-toastr'
+import { toastr } from 'react-redux-toastr'
 import success_alert from "../../src/assets/images/success_alert.svg";
 import info_alert from "../../src/assets/images/info_alert.svg";
 import warning_alert from "../../src/assets/images/warning_alert.svg";
 import error_alert from "../../src/assets/images/error_alert.svg";
+import CreditRoutes from "./setup/credit/CreditRoutes";
+import RestrictionPackageModal from "./setup/credit/package/RestrictionPackageModal";
 
 // For socket io connection
 //const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlProd;
@@ -54,6 +56,7 @@ const MainComponent = () => {
     const [isLoadingNotification, setIsLoadingNotification] = useState(false);
     const dispatch = useDispatch();
     const loggedInUser = useSelector((state) => state.user.data);
+    const isCreditRestriction = useSelector((state) => state.credit.isRestrictionModal);
     const [notificationPage, setNotificationPage] = useState(1);
     const [isPageIsLoading, setIsPageIsLoading] = useState(false);
     const toggleLeftSubMenu = (status) => {
@@ -94,33 +97,40 @@ const MainComponent = () => {
     const [notificationUnread, setNotificationUnread] = useState(0);
     const messageDelay = 5000; // ms
     const message = useSelector((state) => state.message);
+
     const closeNotification = () => {
         setIsNewFeaturesAvailable(false);
     }
     useEffect(() => {
-        if (true) {
-            // Socket connect
-            socket.on("connect", () => {
-                console.log("socket id", socket.id); // x8WIv7-mJelg7on_ALbx
-                if (loggedInUser) {
-                    console.log('emit connected');
-                    socket.emit("connected", loggedInUser.organizationCode);
-                }
-            });
 
-            //Listen to feature update
-            socket.on("setFeatureUpdateNotification", (data) => {
-                console.log('Display feature update notification');
-                setIsNewFeaturesAvailable(true);
-            });
+        // Socket connect
+        socket.on("connect", () => {
+            console.log("socket id", socket.id); // x8WIv7-mJelg7on_ALbx
+            if (loggedInUser) {
+                console.log('emit connected');
+                socket.emit("connected", loggedInUser.organizationCode);
+            }
+        });
 
-            // socket.emit("getFeatureUpdateNotification");
-        }
+        //Listen to feature update
+        socket.on("setFeatureUpdateNotification", (data) => {
+            console.log('Display feature update notification');
+            setIsNewFeaturesAvailable(true);
+        });
+
+        // socket.emit("getFeatureUpdateNotification");
+
     }, []);
+
+
 
     useEffect(() => {
         //Listen to payment notifications
         socket.off("setNotification").on("setNotification", updateSocketDataForNotification);
+
+        //Listen to credit update
+        socket.on("setCredit", updateCreditDetails);        
+
     }, [loggedInUser]);
 
     useEffect(() => {
@@ -131,6 +141,18 @@ const MainComponent = () => {
             socket.disconnect();
         }
     }, [])
+
+    const updateCreditDetails = async (data) => {
+        
+        let parseData = JSON.parse(data);
+        console.log('Update credit balance', parseData)
+        if (loggedInUser && (parseData.organizationCode === loggedInUser.organizationCode) && parseData.type === 'credit') {
+            dispatch({
+                type: actionTypes.USER_DATA,
+                data: {...loggedInUser, credit: parseData.notification.finalCredit}
+            });
+        }
+    }
 
     const updateSocketDataForNotification = async (data) => {
         let parseData = JSON.parse(data);
@@ -252,7 +274,12 @@ const MainComponent = () => {
                     organization: userDetails.organization ? userDetails.organization.name : '',
                     organizationCode: userDetails.organization ? userDetails.organization.code : '',
                     group: userDetails.group ? userDetails.group.name : '',
-                    isShowPlan: userDetails.organization ? userDetails.organization.parentId !== 0 ? true : false : false
+                    isShowPlan: userDetails.organization ? userDetails.organization.parentId !== 0 ? true : false : false,
+                    credit: userDetails.organization ? userDetails.organization.credit ? userDetails.organization.credit : 0 : 0,
+                    currentPlan: userDetails.organization ? userDetails.organization.package ? userDetails.organization.package.name : '' : '',
+                    isPackage: userDetails.organization ? userDetails.organization.package ? true : false : false,
+                    packageId: userDetails.organization ? userDetails.organization.package ? userDetails.organization.package._id : '' : '',
+                    autoRenewLimit: userDetails.creditUsage ? userDetails.creditUsage.autoRenewLimit ? userDetails.creditUsage.autoRenewLimit : 0 : 0
                 };
                 dispatch({
                     type: actionTypes.USER_DATA,
@@ -273,15 +300,15 @@ const MainComponent = () => {
         await fetchGeneralNotification(1);
     }, []);
     const scrollNotification = (type) => {
-      if (type === 'general') {
-          if (notification.general.page < notification.general.totalPage && !notification.isLoading) {
-              fetchGeneralNotification(notification.general.page + 1);
-          }
-      } else {
-          if (notification.payment.page < notification.payment.totalPage && !notification.isLoading) {
-              fetchPaymentNotification(notification.payment.page + 1);
-          }
-      }
+        if (type === 'general') {
+            if (notification.general.page < notification.general.totalPage && !notification.isLoading) {
+                fetchGeneralNotification(notification.general.page + 1);
+            }
+        } else {
+            if (notification.payment.page < notification.payment.totalPage && !notification.isLoading) {
+                fetchPaymentNotification(notification.payment.page + 1);
+            }
+        }
     }
     const fetchPaymentNotification = async (page) => {
         if (page === 1) {
@@ -324,7 +351,7 @@ const MainComponent = () => {
             });
         }
     }
-    
+
     const fetchGeneralNotification = async (page) => {
         if (page === 1) {
             setNotification(prevState => {
@@ -350,7 +377,7 @@ const MainComponent = () => {
                 return {
                     ...prevState,
                     general: {
-                        data: [ ...prevState.general.data, ...result.notifications],
+                        data: [...prevState.general.data, ...result.notifications],
                         page: page,
                         totalPage: result.pagination.totalPages
                     },
@@ -436,7 +463,7 @@ const MainComponent = () => {
                     general: {
                         data: prevState.general.data.map((el) => {
                             el.isRead = true;
-                            return {...el};
+                            return { ...el };
                         }),
                         page: prevState.general.page,
                         totalPage: prevState.general.totalPage
@@ -444,7 +471,7 @@ const MainComponent = () => {
                     payment: {
                         data: prevState.payment.data.map((el) => {
                             el.isRead = true;
-                            return {...el};
+                            return { ...el };
                         }),
                         page: prevState.payment.page,
                         totalPage: prevState.payment.totalPage
@@ -490,9 +517,9 @@ const MainComponent = () => {
                             data: prevState.payment.data.map((el) => {
                                 if (el.uniqueId === ele.uniqueId) {
                                     el.isRead = true;
-                                    return {...el};
-                                }  else {
-                                    return {...el};
+                                    return { ...el };
+                                } else {
+                                    return { ...el };
                                 }
                             }),
                             page: prevState.payment.page,
@@ -517,9 +544,9 @@ const MainComponent = () => {
                             data: prevState.general.data.map((el) => {
                                 if (el.uniqueId === ele.uniqueId) {
                                     el.isRead = true;
-                                    return {...el};
+                                    return { ...el };
                                 } else {
-                                    return {...el};
+                                    return { ...el };
                                 }
                             }),
                             page: prevState.general.page,
@@ -542,7 +569,7 @@ const MainComponent = () => {
                     timeOut: 5000, // by setting to 0 it will prevent the auto close
                     showCloseButton: true, // false by default
                     closeOnToastrClick: true, // false by default, this will close the toastr when user clicks on it
-                    icon: <img src={success_alert}/>,
+                    icon: <img src={success_alert} />,
                     status: 'success'
                 }
                 toastr.light('Success', message.message, toastrOptions)
@@ -552,7 +579,7 @@ const MainComponent = () => {
                     timeOut: 5000, // by setting to 0 it will prevent the auto close
                     showCloseButton: true, // false by default
                     closeOnToastrClick: true, // false by default, this will close the toastr when user clicks on it
-                    icon: <img src={error_alert}/>,
+                    icon: <img src={error_alert} />,
                     status: 'error'
                 }
                 toastr.light('Error !', message.message, toastrOptions)
@@ -562,7 +589,7 @@ const MainComponent = () => {
                     timeOut: 5000, // by setting to 0 it will prevent the auto close
                     showCloseButton: true, // false by default
                     closeOnToastrClick: true, // false by default, this will close the toastr when user clicks on it
-                    icon: <img src={warning_alert}/>,
+                    icon: <img src={warning_alert} />,
                     status: 'warning'
                 }
                 toastr.light('Warning', message.message, toastrOptions)
@@ -572,7 +599,7 @@ const MainComponent = () => {
                     timeOut: 5000, // by setting to 0 it will prevent the auto close
                     showCloseButton: true, // false by default
                     closeOnToastrClick: true, // false by default, this will close the toastr when user clicks on it
-                    icon: <img src={info_alert}/>,
+                    icon: <img src={info_alert} />,
                     status: 'info'
                 }
                 toastr.light('Info', message.message, toastrOptions)
@@ -589,105 +616,111 @@ const MainComponent = () => {
                         (showInnerleftMenu ? (pathURL !== '/dashboard' ? "openSubmenu" : "") : "")
                     }
                 >
-                    <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu} clickedSetupStatus={(e) => clickedSetupStatus(e)}/>
+                    <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu} clickedSetupStatus={(e) => clickedSetupStatus(e)} />
                     <div className="dashMain">
                         <HeaderDashboard toggleCreate={(e) => toggleCreate(e)} setupMenuState={setupMenuState}
-                                         fetchNotifications={fetchNotifications}
-                                         notificationStructure={notificationStructure}
-                                         notificationUnread={notificationUnread}
-                                         notificationTrigger={isNewNotification}
-                                         notification={notification}
-                                         scrollNotification={(type) => scrollNotification(type)}
-                                         markSingleAsRead={(ele) => markSingleAsRead(ele)}
-                                         markAllAsRead={markAllAsRead}
+                            fetchNotifications={fetchNotifications}
+                            notificationStructure={notificationStructure}
+                            notificationUnread={notificationUnread}
+                            notificationTrigger={isNewNotification}
+                            notification={notification}
+                            scrollNotification={(type) => scrollNotification(type)}
+                            markSingleAsRead={(ele) => markSingleAsRead(ele)}
+                            markAllAsRead={markAllAsRead}
                         />
                         <Switch>
                             <Route exact path="/dashboard">
                                 <DashboardRoutes toggleLeftSubMenu={toggleLeftSubMenu}
-                                                 toggleCreate={(e) => toggleCreate(e)}/>
+                                    toggleCreate={(e) => toggleCreate(e)} />
                             </Route>
-                            
+
                             <Route exact path={["/roles", "/groups", "/users", '/organizations', '/associations']}>
                                 <AuthRoutes toggleLeftSubMenu={toggleLeftSubMenu}
-                                            toggleCreate={(e) => toggleCreate(e)}/>
+                                    toggleCreate={(e) => toggleCreate(e)} />
                             </Route>
                             <Route exact path={["/automation-list", "/automation-builder"]}>
                                 <AutomationRoutes toggleLeftSubMenu={toggleLeftSubMenu}
-                                                  toggleCreate={(e) => toggleCreate(e)}/>
+                                    toggleCreate={(e) => toggleCreate(e)} />
                             </Route>
                             <Route exact path="/contacts">
                                 <ContactRoutes toggleLeftSubMenu={toggleLeftSubMenu}
-                                               toggleCreate={(e) => toggleCreate(e)}/>
+                                    toggleCreate={(e) => toggleCreate(e)} />
                             </Route>
                             <Route exact path={["/call-setup", "/sms-setup", "/email-setup"]}>
                                 <CommunicationRoutes toggleLeftSubMenu={toggleLeftSubMenu}
-                                                     toggleCreate={(e) => toggleCreate(e)}></CommunicationRoutes>
+                                    toggleCreate={(e) => toggleCreate(e)}></CommunicationRoutes>
                             </Route>
                             <Route exact path={["/email-template", "/sms-template", "/audio-template"]}>
                                 <TemplateRoutes toggleLeftSubMenu={toggleLeftSubMenu}
-                                                toggleCreate={(e) => toggleCreate(e)}></TemplateRoutes>
+                                    toggleCreate={(e) => toggleCreate(e)}></TemplateRoutes>
                             </Route>
 
                             <Route exact path="/products">
                                 <ProductRouter toggleLeftSubMenu={toggleLeftSubMenu}
-                                               toggleCreate={(e) => toggleCreate(e)}></ProductRouter>
+                                    toggleCreate={(e) => toggleCreate(e)}></ProductRouter>
                             </Route>
                             <Route exact path="/courses">
                                 <CourseRouter toggleLeftSubMenu={toggleLeftSubMenu}
-                                              toggleCreate={(e) => toggleCreate(e)}></CourseRouter>
+                                    toggleCreate={(e) => toggleCreate(e)}></CourseRouter>
                             </Route>
                             <Route exact path="/number-list">
                                 <NumberRouting toggleLeftSubMenu={toggleLeftSubMenu}
-                                               toggleCreate={(e) => toggleCreate(e)}></NumberRouting>
+                                    toggleCreate={(e) => toggleCreate(e)}></NumberRouting>
                             </Route>
                             <Route exact path="/payment-setup">
                                 <PaymentRouting toggleLeftSubMenu={toggleLeftSubMenu}
-                                               toggleCreate={(e) => toggleCreate(e)}></PaymentRouting>
+                                    toggleCreate={(e) => toggleCreate(e)}></PaymentRouting>
                             </Route>
 
                             <Route exact path="/customizations">
                                 <CustomizationRouter toggleLeftSubMenu={toggleLeftSubMenu}
-                                                     toggleCreate={(e) => toggleCreate(e)}></CustomizationRouter>
+                                    toggleCreate={(e) => toggleCreate(e)}></CustomizationRouter>
                             </Route>
                             <Route exact path="/phases-status">
                                 <StatusPhasesRouter toggleLeftSubMenu={toggleLeftSubMenu}
-                                                    toggleCreate={(e) => toggleCreate(e)}></StatusPhasesRouter>
+                                    toggleCreate={(e) => toggleCreate(e)}></StatusPhasesRouter>
+                            </Route>
+                            <Route exact path={["/package-setup", "/usage-setup", "/credit-details"]}>
+                                <CreditRoutes toggleLeftSubMenu={toggleLeftSubMenu}
+                                    toggleCreate={(e) => toggleCreate(e)}></CreditRoutes>
                             </Route>
                             <Route exact path="/gym-details">
                                 <GymDetailsRouter toggleLeftSubMenu={toggleLeftSubMenu}
-                                                  toggleCreate={(e) => toggleCreate(e)}></GymDetailsRouter>
+                                    toggleCreate={(e) => toggleCreate(e)}></GymDetailsRouter>
                             </Route>
                             <Route exact path="/personal-details">
                                 <PersonalDetailsRouter toggleLeftSubMenu={toggleLeftSubMenu}
-                                                       toggleCreate={(e) => toggleCreate(e)}></PersonalDetailsRouter>
+                                    toggleCreate={(e) => toggleCreate(e)}></PersonalDetailsRouter>
                             </Route>
                             <Route exact path="/appointment">
                                 <AppointmentRouter toggleLeftSubMenu={toggleLeftSubMenu}
-                                                   toggleCreate={(e) => toggleCreate(e)}></AppointmentRouter>
+                                    toggleCreate={(e) => toggleCreate(e)}></AppointmentRouter>
                             </Route>
                             <Route exact path="/zapier">
                                 <ZapierRouter toggleLeftSubMenu={toggleLeftSubMenu}
-                                                  toggleCreate={(e) => toggleCreate(e)}></ZapierRouter>
+                                    toggleCreate={(e) => toggleCreate(e)}></ZapierRouter>
                             </Route>
                             <Route exact path="/attendence">
                                 <AttendenceRouter toggleLeftSubMenu={toggleLeftSubMenu}
-                                                   toggleCreate={(e) => toggleCreate(e)}></AttendenceRouter>
+                                    toggleCreate={(e) => toggleCreate(e)}></AttendenceRouter>
                             </Route>
                             <Route exact path="/revenue">
                                 <RevenueRouter toggleLeftSubMenu={toggleLeftSubMenu}
-                                                   toggleCreate={(e) => toggleCreate(e)}></RevenueRouter>
+                                    toggleCreate={(e) => toggleCreate(e)}></RevenueRouter>
                             </Route>
-                            <Route exact path="/" component={() => <Redirect to="/dashboard"/>}/>
+                            <Route exact path="/" component={() => <Redirect to="/dashboard" />} />
                             <Route exact path="*">
-                                <NotFound toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)}/>
+                                <NotFound toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
                             </Route>
                         </Switch>
                     </div>
                 </div>
             </div>
-            {isShowContact && <ContactModal contactId={contactId} page={page}/>}
+            {isShowContact && <ContactModal contactId={contactId} page={page} />}
 
-            {isNewFeaturesAvailable && <UpdateNotification version="2.10.1" closeNotification={closeNotification}/>}
+            {isNewFeaturesAvailable && <UpdateNotification version="2.10.1" closeNotification={closeNotification} />}
+
+            {isCreditRestriction && <RestrictionPackageModal />}
 
         </>
     );

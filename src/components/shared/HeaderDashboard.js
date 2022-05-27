@@ -31,7 +31,10 @@ import { ImportContactServices } from "../../services/contact/importContact";
 import * as actionTypes from "../../actions/types";
 import { NotificationServices } from "../../services/notification/NotificationServices";
 import Loader from "./Loader";
+import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 const { Device } = require('twilio-client');
+
 
 function HeaderDashboard(props) {
   const [setupModalStatus, setSetupModalStatus] = useState(false);
@@ -122,10 +125,10 @@ function HeaderDashboard(props) {
             incoming: result.ringtone,
           },
         };
-        
+
       } else {
         console.log("Ringtone is blank", result)
-      }   
+      }
       setDevice(device.setup(result.token, conf));
     } catch (e) {
       console.log("error", e);
@@ -297,11 +300,25 @@ function HeaderDashboard(props) {
   };
   const [modalMakeCall, setModalMakeCall] = useState(false);
   const makeCallModalHandle = () => {
-    setModalMakeCall(true);
-    setShowActionState(false);
-    setStateUserMenu(false);
-    setSetupModalStatus(false);
-    setStateNotifMenu(false);
+    console.log('show call modal', loggedInUser.credit, loggedInUser.autoRenewLimit, loggedInUser.credit <= loggedInUser.autoRenewLimit)
+    
+    if (loggedInUser &&
+      loggedInUser.isOrganizationOwner &&
+      loggedInUser.isShowPlan &&
+      (!loggedInUser.isPackage || loggedInUser.credit <= loggedInUser.autoRenewLimit)) {
+      //Show package purchase restriction modal
+      console.log('show restriction modal')
+      dispatch({
+        type: actionTypes.SHOW_CREDIT_RESTRICTION,
+      })
+    } else {
+      //Show call modal
+      setModalMakeCall(true);
+      setShowActionState(false);
+      setStateUserMenu(false);
+      setSetupModalStatus(false);
+      setStateNotifMenu(false);
+    }
   };
   const callModalOffhandler = () => {
     setModalMakeCall(false);
@@ -322,7 +339,7 @@ function HeaderDashboard(props) {
   }, [props.setupMenuState]);
 
   useEffect(() => {
-    if (props.notificationStructure.hasOwnProperty('payment') || props.notificationStructure.hasOwnProperty('general'))  {
+    if (props.notificationStructure.hasOwnProperty('payment') || props.notificationStructure.hasOwnProperty('general')) {
       setNotificationStructure(props.notificationStructure);
     }
   }, [props.notificationStructure]);
@@ -339,6 +356,12 @@ function HeaderDashboard(props) {
   }
   const markAllAsRead = () => {
     props.markAllAsRead();
+  }
+  //Redirect to package
+  let history = useHistory();
+  const redirectToPackagePurchase = () => {
+    setStateUserMenu(false);
+    history.push("/package-setup");
   }
   return (
     <>
@@ -452,7 +475,7 @@ function HeaderDashboard(props) {
           onClick={(e) => toggleNotifications(e)}
         >
           <img src={NotificationIcon} alt="" />
-          {notificationStructure.totalNotification > 0 ? <span>{ notificationStructure.totalNotification }</span> : ""}
+          {notificationStructure.totalNotification > 0 ? <span>{notificationStructure.totalNotification}</span> : ""}
         </button>
         {/* {locationLoaded === "user" && (
           <button
@@ -548,18 +571,31 @@ function HeaderDashboard(props) {
             </div>
             <div className="user_modal_body">
               <div className="user_modal_cont">
-                <p>Organization</p>
-                <h3>{loggedInUser && loggedInUser.organization}</h3>
+                <div className="cr_orgWonerName">
+                  <p>Organization</p>
+                  <h3>{loggedInUser && loggedInUser.organization}</h3>
+                </div>
                 {loggedInUser && loggedInUser.isShowPlan ? <div className="creditText">
                   <span>Credit Balance  </span>
-                  <span className="blue">0</span>
+                  <span className="blue">{loggedInUser.credit.toLocaleString()}</span>
                 </div> : ''}
-                {loggedInUser && loggedInUser.isShowPlan ? <div className="userPlan">
-                  <div>
-                    <span>Current Plan</span>
-                    <p>SILVER</p>
-                  </div>
-                </div> : ''}
+
+                {loggedInUser && loggedInUser.isOrganizationOwner ?
+                  loggedInUser.isShowPlan && loggedInUser.isPackage ?
+                    <div className="userPlan cr_userPlan">
+                      <div className="cr_userPlanLeft">
+                        <span>Current Plan</span>
+                        <p>{loggedInUser.currentPlan}</p>
+                      </div>
+                      <div className="cr_userPlanRight">
+                        <button onClick={redirectToPackagePurchase}>Buy Credits</button>
+                      </div>
+                    </div> :
+                    <div className="userPlan cr_noPackage">
+                      <span>You’re not under any Package !</span>
+                      <button onClick={redirectToPackagePurchase}>GET A PACKAGE</button>
+                    </div>
+                  : ''}
               </div>
               <div className="user_modal_menu">
                 <p> <button> <img src={help_icon} alt="" /> Help</button></p>
@@ -577,9 +613,9 @@ function HeaderDashboard(props) {
       {/* NOTIFICATIONS SIDE MENU */}
       {stateNotifMenu && (
         <Notifications closeModalNotification={closeModalNotification} notificationStructure={notificationStructure}
-                       scrollNotification={(type) => props.scrollNotification(type)}
-                       notificationTrigger={props.notificationTrigger} notification={notification}
-                       markSingleAsRead={(ele) => markSingleAsRead(ele)} markAllAsRead={markAllAsRead}/>
+          scrollNotification={(type) => props.scrollNotification(type)}
+          notificationTrigger={props.notificationTrigger} notification={notification}
+          markSingleAsRead={(ele) => markSingleAsRead(ele)} markAllAsRead={markAllAsRead} />
       )}
       {/* NOTIFICATIONS SIDE MENU */}
 
