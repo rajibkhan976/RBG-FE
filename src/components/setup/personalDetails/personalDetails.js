@@ -308,7 +308,7 @@ const PersonalDetails = (props) => {
     } else if(values.newPassword.length < 8 && values.currentPassword && !values.confirmNewPassword) {
       errors.newPassword = "New password is required and must be of minimum 8 characters."
     }
-    if (values.currentPassword === values.newPassword) {
+    if (values.currentPassword === values.newPassword === values.confirmNewPassword && values.currentPassword.length > 1 && values.newPassword.length > 1) {
       errors.newPassword = "New password and current cannot be same!"
     }  
     if (!values.currentPassword && values.newPassword && values.confirmNewPassword) {
