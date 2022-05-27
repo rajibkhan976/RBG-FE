@@ -83,8 +83,6 @@ const PersonalDetails = (props) => {
   };
     const handleEditName = (e) => {
       let val = e.target.value;
-      // setAccountName ({personalName: val});
-      // console.log('accountName', accountName);
       setEditDetails ({
         ...editDetails,
         name: val
@@ -118,10 +116,6 @@ const PersonalDetails = (props) => {
       let validationResp = await validatePersonalDetail(editDetails);
       if (!validationResp.name) {
         setToggleEditName(false);
-        
-        // var spacing = editedName.personalName.split(" ");  // Gets the first index where a space occour
-        // var first_name = spacing[0] // Gets the first part
-        // var last_name = spacing[1] ? spacing[1] : "";  // Gets the later part
         var editName = editDetails.name.replace(/^\s+|\s+$/gm,'');
         console.log("Edited name without space:", editName);
         if(editName.indexOf(" ") > 0){
@@ -135,11 +129,6 @@ const PersonalDetails = (props) => {
           var last_name = ""; // Gets the later part
         }
         
-        // var spacing = editDetails.name.indexOf(" "); // Gets the first index where a space occour
-        // console.log("Spacing is :", spacing);
-        // var first_name = editDetails.name.substr(0, spacing); // Gets the first part
-        // var last_name = editDetails.name.substr(spacing + 1); // Gets the later part
-
         setIsLoader(true);
         let payload = {
           firstName: first_name ,
@@ -147,10 +136,14 @@ const PersonalDetails = (props) => {
           file: file ? file : "",
           filename: fileName ? fileName : ""
         }
-        console.log(payload)
         try {
-          let resp = await PersonalDetailsServices.updateAccountDetail(payload);
-          //console.log("Response of Account Deails", resp);
+          setPersonalData((prevState) => {
+            return ({
+              ...prevState,
+              firstName: first_name,
+              lastName: last_name
+            })});
+          let resp = await PersonalDetailsServices.updateAccountDetail(payload); 
           getPersonalDetailList()
           // Success toaster
           dispatch({
@@ -193,22 +186,14 @@ const PersonalDetails = (props) => {
     setIsLoader(true);
     e.preventDefault();
     let errorCheck = validate(formValues);
-  //console.log(errorCheck);
-    if (Object.keys(errorCheck).length === 0){
-      //console.log(formValues);
 
+    if (Object.keys(errorCheck).length === 0){
 
       var Time_ZoneCode = formValues.timezones;
       var Country_Listings = formValues.countryLists;
       var Current_Passwords = formValues.currentPassword;
       var New_Passwords = formValues.newPassword;
       var Confirm_NewPasswords = formValues.confirmNewPassword;
-      
-      // console.log("Updated TimeZone:" , Time_ZoneCode);
-      // console.log("Updated Country:" , Country_Listings);
-      // console.log("Current Password:" , Current_Passwords);
-      // console.log("Updated New Password:" , New_Passwords);
-      // console.log("Updated Confirm Password:" , Confirm_NewPasswords);
       
       let payload = {
         countryId: Country_Listings,
@@ -222,11 +207,6 @@ const PersonalDetails = (props) => {
       }
       
       try {
-
-        // Prior of reseting the values of passwords to blank
-        console.log("Curresnt password prior rest", formValues.currentPassword);
-        console.log("New password after prior", formValues.newPassword);
-        console.log("Confirm password prior rest", formValues.confirmNewPassword);
         // Prior of reseting the values of passwords to blank
 
         let response = await PersonalDetailsServices.updateBasicSetting(payload);
@@ -238,7 +218,6 @@ const PersonalDetails = (props) => {
           typeMessage: 'success'
         });
       } catch (e) {
-        //console.log('ppppppp')
         // Error toaster
         dispatch({
           type: actionTypes.SHOW_MESSAGE,
@@ -255,20 +234,7 @@ const PersonalDetails = (props) => {
         tempFormValues.newPassword="";
         tempFormValues.confirmNewPassword="";
         // console.log("tempFormValues 263 ::: :::: ", tempFormValues )
-        setformValues(tempFormValues)
-        // Reset the values of passwords to blank
-        // setformValues({
-        //   ...formValues,
-        //   currentPassword:null,
-        //   newPassword: null,
-        //   confirmNewPassword:null
-        // })
-
-        // console.log("Curresnt password after rest", formValues.currentPassword);
-        // console.log("New password after rest", formValues.newPassword);
-        // console.log("Confirm password after rest", formValues.confirmNewPassword);
-        
-        
+        setformValues(tempFormValues)        
       }
     } else {
       setIsLoader(false);
@@ -276,13 +242,8 @@ const PersonalDetails = (props) => {
     }
     setisSubmit(true);
 
-
-
   };
 
-  // useEffect(()=>{
-  //   console.log("formValues")
-  // },[formValues])
 
   const validate = (values) => {
     //console.log("The values are:", values);
@@ -332,13 +293,6 @@ const PersonalDetails = (props) => {
     }
     return errors;  
   };
-
-  useEffect (()=> {
-    //console.log(formErrors);
-    if(Object.keys(formErrors).length ===0 && isSubmit){
-      console.log(formValues);
-    }
-  },[formErrors]);
 
   const [toggleEditName, setToggleEditName] = useState({
     status: false,
@@ -407,13 +361,17 @@ const getPersonalDetailList = async () => {
   try {
     const personalDetailList = await PersonalDetailsServices.fetchPersonalDetail();
     setPersonalData(personalDetailList);
-    
-    setUserData({
-      ...userData,
+
+    let userReduxData = {
+       ...userData,
       fullName: personalDetailList.firstName + " " + personalDetailList.lastName,
-      name: personalDetailList.firstName  + (personalDetailList.lastName ? " "+ personalDetailList.lastName[0].toUpperCase() + "." : ""),
-      image: config.bucketUrl + personalDetailList.image      
-    });
+      name: personalDetailList.firstName  + (personalDetailList.lastName ? " "+ personalDetailList.lastName[0] + "." : ""),
+    }
+    
+    if (personalDetailList.image) {
+      userReduxData.image = config.bucketUrl + personalDetailList.image;
+    }
+    setUserData(userReduxData);
     console.log("formValues :::: ", formValues)
     setformValues({
       ...formValues,
@@ -488,7 +446,7 @@ const getPersonalDetailList = async () => {
                         </>
                       )}  
                     <span className={toggleEditName.status ? "profileNameDisplay hideThis" : "profileNameDisplay"}>
-                    <span className="profileName" >{personalData.firstName + " " + personalData.lastName}</span>
+                    <span className="profileName" >{personalData.firstName ? personalData.firstName + " " + personalData.lastName : ""}</span>
 
                       
                       <button className="editPersonalName" onClick={(e) => toggleEditNameFn(e)}><img src={edit_gym} alt=""/></button>

@@ -17,7 +17,7 @@ import SettingIcon from "../../assets/images/settings.svg";
 import SettingIconBlue from "../../assets/images/settings_blue.svg";
 import DownloadIcon from "../../assets/images/download.svg";
 import cross_white from "../../assets/images/cross_white.svg";
-import userPhoto from "../../assets/images/userPhoto.png";
+import userPhoto from "../../assets/images/owner_img_1.png";
 import editIcon_white from "../../assets/images/edit_white2.png";
 import phone_call_icon_white from "../../assets/images/phone_call_icon_white.svg";
 import email_icon_white from "../../assets/images/email_icon_white.svg";
