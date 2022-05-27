@@ -16,7 +16,7 @@ const userReducer = (state = initialState, action) => {
       newState.count = action.count;
       break;
     case actionTypes.USER_DATA:
-      newState.data = action.data;
+      newState.data = { ...newState.data, ...action.data };
       break;
     default:
       newState.filter = false;
