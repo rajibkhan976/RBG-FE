@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AuthActions from "../../actions/AuthActions";
 import CreateIcon from "../../assets/images/create.png";
 import NotificationIcon from "../../assets/images/notif.png";
-import UserIcon from "../../assets/images/user.png";
+import UserIcon from "../../assets/images/chooseImg.svg";
 import blueDownArrow from "../../assets/images/blueDownArrow.svg";
 import callIcon1 from "../../assets/images/callicon1.svg";
 import callIcon2 from "../../assets/images/callicon2.svg";
