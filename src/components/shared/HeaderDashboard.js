@@ -541,10 +541,12 @@ function HeaderDashboard(props) {
             <div className="modal_call_header">
               <button className="btn btn_empty" onClick={closeUserMenu}><img src={cross_white} alt="" /></button>
               <div className="user_details">
-                <div className="user_profile" style={{
+                {/* <div className="user_profile" style={{
                   backgroundImage: `url(${loggedInUser && loggedInUser.image ? loggedInUser.image : userPhoto})`
-                }}>
-                  {/* <img src={loggedInUser.image ? loggedInUser.image : userPhoto} alt="avatar" /> */}
+                }}> */}
+                <div className="user_profile">
+                  <img src={loggedInUser.image ? loggedInUser.image : userPhoto} alt="avatar" style={{
+                   height:'100%' }} /> 
                 </div>
                 <div className="userContacts">
                   <h3>
