@@ -39,9 +39,9 @@ const ContactModal = (props) => {
                 <button className={navigation.current == 1 ? "active nNav" : "nNav"}
                         onClick={() => navigation.jump(1)}>Overview
                 </button>
-                {/* <button className={navigation.current == 2 ? "active nNav" : "nNav"} onClick={() => navigation.jump(2)}
+                <button className={navigation.current == 2 ? "active nNav" : "nNav"} onClick={() => navigation.jump(2)}
                         disabled={props.contactId ? false : true}>Attendance
-                </button> */}
+                </button> 
                   <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)}
                         disabled={props.contactId ? false : true}>Appointment
                 </button>
@@ -288,7 +288,7 @@ const ContactModal = (props) => {
                         <Steps config={config}>
                             <Step title="Overview" component={Overview} getContactDetails={getContactDetails} closeContactModal={closeContactModal}
                                 contactId={props.contactId} formScroll={(formScrollStatus) => formScroll(formScrollStatus)} page={props.page}/>
-                            <Step title="Attendance" component={Attendance} />
+                            <Step title="Attendance" component={Attendance} contactId={props.contactId}/>
                             <Step title="Appointment" component={Appointment} contactId={props.contactId} />
                             <Step title="Transaction"
                                 contactId={props.contactId} contact={contactData}

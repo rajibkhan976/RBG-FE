@@ -10841,3 +10841,945 @@ svg.monthIcons {
   border-color: green;
   background: rgba(0, 159, 64, 0.1);
 }
+
+
+
+
+/*.......................... Attendence V2 frontend .................*/
+
+
+.modalcont_header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 15px;
+}
+/* 
+.tableListing.appointment.attendence > div .days, 
+.tableListing.appointment.attendence > div .attendenceDate {
+  min-width: 130px;
+}
+
+.tableListing.appointment.attendence > div .checkIn, 
+.tableListing.appointment.attendence > div .attendenceTime {
+  min-width: 370px;
+}
+.tableListing.appointment.attendence > div .checkedInBy, 
+.tableListing.appointment.attendence > div .attendedBy{
+  min-width: auto;
+}
+
+.attendenceTime span.absent{
+  background: #FFF4F4;
+  border: 1px solid #FF9CA4;
+  color: #ED707A;
+}
+
+.attendenceTime span.holiday{
+  background: #E9EFF5;
+  color: #9BAEBC;
+  border: 1px solid #D0D6DB;
+}
+.tableListing.appointment.attendence .dataTableCell .attendedBy .absent{
+  color: #ED707A;
+}
+.tableListing.appointment.attendence{
+  overflow: auto;
+  visibility: visible;
+  display: table;
+}
+
+.tableListing.appointment.attendence .dataTableCell {
+  background: #F6F8FA;
+}
+.tableListing .listHeading {
+  position: sticky;
+  background: #f6f8fa;
+  top: 0;
+  z-index: 10;
+}
+.tableListing .dataTableCell {
+  display: table-row;
+}
+ */
+
+.accessCode{
+  background: #FFFFFF;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.102);
+  border-radius: 10px;
+  padding: 30px 30px 15px 30px;
+  margin: 0 0 30px 0;
+  width: 100%;
+  min-height: 200px;
+}
+
+.accessCode h3{
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 30px;
+  text-align: center;
+  color: #305671;
+  margin-bottom: 20px;
+}
+.accessCode .code{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin-bottom: 18px;
+}
+.accessCode .code span{
+  background: #ECFDFF;
+  border: 1px solid #D3FAFF;
+  border-radius: 5px;
+  width: 36px;
+  height: 42px;
+  margin-right: 3px;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 30px;
+  color: #55BBC9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.accessCode h3 .tooltiptextInfo{
+  line-height: 18px;
+}
+.copy_button{
+  width: 30px;
+  height: 30px;
+  background: transparent;
+  border-radius: 50%;
+  border: none;
+  margin: 0 0 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 0 0 2px;
+}
+.copy_button:hover{
+  background: #F6F8FA;
+}
+.copy_button:focus{
+  background: #305671;
+}
+.copy_button img{
+  opacity: 0.5;
+}
+.copy_button:hover img{
+  opacity: 1;
+}
+.btn_regenerate{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  line-height: 40px;
+  padding: 0px 18px 0px 15px;
+  background: #D0D6DB;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #FFFFFF;
+  border: none;
+}
+.relative{
+  position: relative;
+}
+.btn_regenerate.gymOwner{
+  background: linear-gradient(90deg, #ED707A 0%, #F1A768 100%);
+  cursor: pointer;
+}
+.justify-center{
+  justify-content: center;
+}
+.btn_regenerate img{
+  margin-right: 10px;
+}
+.copyBtn.infoSpan {
+  width: 100%;
+  display: flex;
+}
+.copy_url_gen{
+  width: 100%;
+  margin: 32px 0 10px 0px;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  color: #55BBC9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.copy_url_gen span{
+  display: flex;
+  align-items: center;
+}
+.copy_url_gen span button{
+  padding: 2px;
+  width: auto;
+  height: auto;
+  background: none;
+  border: none;
+  vertical-align: middle;
+  line-height: 12px;
+  margin-left: 8px;
+}
+
+.accessCode .copyBtn.infoSpan .tooltiptextInfo {
+  width: auto;
+    background-color: #305671;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 129%;
+    height: auto;
+    left: 37%;
+    margin-left: 0;
+    font-size: 10px;
+    font-weight: 400;
+    filter: drop-shadow(0px 10px 30px rgba(0, 0, 0, 0.102));
+}
+.accessCode .copyBtn.infoSpan .tooltiptextInfo::after {
+  border-color: #305671 transparent transparent transparent;
+} 
+
+/* Calendar UI */
+.attendenceContactModal{
+  position: relative;
+}
+.attendenceContactModal .fc-header-toolbar .fc-toolbar-chunk:first-child button {
+  padding: 0 13px;
+  height: 30px;
+  background: #305671;
+  border-radius: 30px;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 20px;
+  color: #E2EBF2;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+.attendenceContactModal .fc-header-toolbar .fc-toolbar-chunk:nth-child(2) div {
+  display: flex;
+  align-items: center;
+}
+.attendenceContactModal .fc-header-toolbar .fc-prev-button, .attendenceContactModal .fc-header-toolbar .fc-next-button {
+  padding: 0;
+  vertical-align: middle;
+  font-size: 0;
+  line-height: 0;
+  position: relative;
+  transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s;
+}
+.attendenceContactModal .fc-header-toolbar .fc-prev-button:hover:after, .attendenceContactModal .fc-header-toolbar .fc-next-button:hover:after {
+  position: absolute;
+  content: '';
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #305671;
+  width: 200%;
+  height: 200%;
+  z-index: 0;
+  border-radius: 5px;
+  transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s;
+}
+.attendenceContactModal .fc-header-toolbar .fc-prev-button:hover, .attendenceContactModal .fc-header-toolbar .fc-next-button:hover {
+  background-color: #305671;
+}
+.attendenceContactModal .fc-header-toolbar .fc-prev-button .fc-icon, 
+.attendenceContactModal .fc-header-toolbar .fc-next-button .fc-icon {
+  color: #fff;
+  font-size: 15px;
+  position: relative;
+  z-index: 1;
+}
+.attendenceContactModal .fc-header-toolbar .fc-prev-button:hover .fc-icon, .attendenceContactModal .fc-header-toolbar .fc-next-button:hover .fc-icon {
+  color: #ffffff;
+}
+.attendenceContactModal .fc-header-toolbar .fc-toolbar-title {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 27px;
+  color: #fff;
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0 20px;
+}
+.attendenceContactModal .fc-header-toolbar .fc-button-group {
+  background: #5182A6;
+  height: 30px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.attendenceContactModal .fc-header-toolbar .fc-button-group button {
+  height: 100%;
+  padding: 0 20px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 21px;
+  color: #FFFFFF;
+  text-transform: capitalize;
+  background: transparent;
+  border: none;
+}
+.attendenceContactModal .fc-header-toolbar .fc-button-group button:hover, .attendenceContactModal .fc-header-toolbar .fc-button-group button.fc-button-active {
+  background: #305671;
+}
+.attendenceContactModal .fc .fc-toolbar.fc-header-toolbar{
+     /* margin-bottom: 0; */
+    /* background: #305671; */
+    /* border-radius: 10px 10px 0 0; */
+    /* padding: 12px 0; */
+    display: none;
+}
+
+
+.attendanceCount{
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 140%;
+  text-align: right;
+  color: #7799B1;
+  position: absolute;
+  right: 20px;
+  top: 17px;
+}
+.attendanceCount span{
+  font-weight: 700;
+  font-size: 14px;
+  color: #C7DAEB;
+}
+.attendenceContactModal .fc-view-harness.fc-view-harness-active {
+  height: 485px !important;
+  overflow: auto;
+}
+
+.attendenceContactModal .fc-theme-standard .fc-list{
+  border-radius: 0 0 10px 10px;
+  padding: 0 10px 0 0;
+  margin-top: 40px;
+  background: #F6F8FA;
+}
+
+.attendenceContactModal .fc .fc-scroller-liquid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.attendenceContactModal .fc .fc-scroller-liquid::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.attendenceContactModal .fc .fc-scroller-liquid::-webkit-scrollbar-thumb {
+  background-color: #D0D6DB;
+}
+.attendanceTableHeader{
+  background: #9BAEBC;
+}
+.attendanceTableHeader table td{
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  padding: 12px 18px;
+}
+.attendanceTableHeader {
+  background: #9BAEBC;
+  position: absolute;
+  top: 52px;
+  z-index: 2;
+}
+.attendanceTableHeader table td.day{
+  width: 20%
+}
+.attendanceTableHeader table td.checkin{
+  width: 54%
+}
+.attendenceContactModal .eyeToolTips.infoSpan .tooltiptextInfo {
+  bottom: 110%;
+}
+.attendenceContactModal .fc-direction-ltr .fc-list-day-side-text {
+  float: left;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  color: #305671;
+}
+.attendenceContactModal .fc-theme-standard td,
+.attendenceContactModal .fc-theme-standard th{
+  border: none;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 32px;
+  color: #305671;
+}
+.attendenceContactModal .fc-theme-standard .fc-list-day-cushion {
+  background: transparent;
+  padding: 16px 14px;
+    line-height: 18px;
+}
+.attendenceContactModal .fc-direction-ltr .fc-list-table .fc-list-event-graphic {
+  display: none;
+}
+.attendenceContactModal .fc-list-event td.fc-list-event-time {
+  display: none;
+}
+.attendenceContactModal .fc td.fc-list-event-title {
+  padding-left: 0px;
+  width: 100%;
+}
+.attendenceContactModal .fc .fc-list-sticky .fc-list-day > *{
+  background: transparent;
+}
+.attendenceContactModal .fc-list-table tbody{
+  display: flex;
+  flex-wrap: wrap;
+}
+.attendenceContactModal .fc-list-event {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+}
+/* .attendenceContactModal .fc-list-day {
+  width: 22%;
+  display: flex;
+  flex-wrap: wrap;
+} */
+.attendenceContactModal .fc-list-event .fc-list-event-time {
+  width: 50%;
+  display: inline-block;
+  padding: 5px 18px;
+}
+.attendenceContactModal .fc-list-event .fc-list-dateTd {
+  width: 20%;
+  display: inline-block;
+  padding: 5px 18px;
+}
+.slickModalHeader p.gap1{
+  padding-top: 10px;
+}
+
+.attendenceContactModal .fc-list-event .fc-list-event-time span {
+  background: #305671;
+  color: #fff;
+  font-size: 13px;
+  height: 29px;
+  display: inline-block;
+  padding: 2px 10px;
+  line-height: 25px;
+  min-width: 70px;
+  width: auto;
+  border-radius: 20px;
+  text-align: center;
+}
+td:has(a.hasAttendance){
+  background-color: #0099ff;
+}
+.attendenceContactModal .fc-list-event .fc-list-event-time span.absent{
+  background: #FFF4F4;
+  border: 1px solid #FF9CA4;
+  color: #ED707A;
+}
+
+.attendenceContactModal .fc-list-event .fc-list-event-time span.holiday{
+  background: #E9EFF5;
+  color: #9BAEBC;
+  border: 1px solid #D0D6DB;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+.attendenceContactModal .fc-list-event .fc-list-event-new-tooltip {
+  width: 8%;
+  position: relative;
+  display: inline-block;
+}
+.attendenceContactModal .fc-list-event .fc-list-checkinByTd {
+  display: inline-block;
+  width: 18%;
+}
+.attendenceContactModal .fc-list-event .fc-list-event-new-tooltip .eyeToolTips.infoSpan {
+  left: auto;
+  right: 12px;
+  top: -18px;
+}
+.attendenceContactModal .customCalendarHeader .noBg {
+  background: none;
+  border: none;
+  margin: 0 20px;
+  line-height: 14px;
+}
+.attendenceContactModal .customCalendarHeader select {
+  line-height: 21px;
+  border: none;
+  min-height: 25px;
+  font-size: 14px;
+  color: #fff;
+  width: 70px;
+  margin: 0 3px;
+  background: transparent url(../images/dropArrow.svg)  80% center no-repeat ;
+}
+.attendenceContactModal .customCalendarHeader select option {
+  background: #305671;
+}
+.attendenceContactModal .tableHeader.attendencePage {
+  padding:12px 20px 13px;
+}
+
+.attendenceContactModal .headMiddle{
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+}
+
+
+
+/* Calendar UI */
+
+/* global attendance Calendar UI */
+.global-attendance .fc-header-toolbar .fc-toolbar-chunk:first-child button {
+  padding: 0 13px;
+  height: 30px;
+  background: #305671;
+  border-radius: 30px;
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 20px;
+  color: #E2EBF2;
+  cursor: pointer;
+  text-transform: capitalize;
+}
+.global-attendance .fc-header-toolbar .fc-toolbar-chunk:nth-child(2) div {
+  display: flex;
+  align-items: center;
+}
+.global-attendance .fc-header-toolbar .fc-prev-button, .global-attendance .fc-header-toolbar .fc-next-button {
+  padding: 0;
+  vertical-align: middle;
+  font-size: 0;
+  line-height: 0;
+  position: relative;
+  transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s;
+}
+.global-attendance .fc-header-toolbar .fc-prev-button:hover:after, .global-attendance .fc-header-toolbar .fc-next-button:hover:after {
+  position: absolute;
+  content: '';
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #305671;
+  width: 200%;
+  height: 200%;
+  z-index: 0;
+  border-radius: 5px;
+  transition: all cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.4s;
+}
+.global-attendance .fc-header-toolbar .fc-prev-button:hover, .global-attendance .fc-header-toolbar .fc-next-button:hover {
+  background-color: #305671;
+}
+.global-attendance .fc-header-toolbar .fc-prev-button .fc-icon, .global-attendance .fc-header-toolbar .fc-next-button .fc-icon {
+  color: #305671;
+  font-size: 15px;
+  position: relative;
+  z-index: 1;
+}
+.global-attendance .fc-header-toolbar .fc-prev-button:hover .fc-icon, .global-attendance .fc-header-toolbar .fc-next-button:hover .fc-icon {
+  color: #ffffff;
+}
+.global-attendance .fc-header-toolbar .fc-toolbar-title {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 27px;
+  color: #305671;
+  display: inline-block;
+  vertical-align: middle;
+  margin-inline: 50px;
+}
+.global-attendance .fc-header-toolbar .fc-button-group {
+  background: #5182A6;
+  height: 30px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.global-attendance .fc-header-toolbar .fc-button-group button {
+  height: 100%;
+  padding: 0 20px;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 21px;
+  color: #FFFFFF;
+  text-transform: capitalize;
+  background: transparent;
+  border: none;
+}
+.global-attendance .fc-header-toolbar .fc-button-group button:hover, .global-attendance .fc-header-toolbar .fc-button-group button.fc-button-active {
+  background: #305671;
+}
+.global-attendance .fc table:not(.fc-col-header ) {
+  border: none;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.global-attendance thead > tr > th {
+  background: #9BAEBC;
+  border: none;
+  border-radius: 5px 5px 0 0;
+  height: 45px;
+  vertical-align: middle;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 21px;
+  letter-spacing: 0.045em;
+  color: #FFFFFF;
+}
+.global-attendance tbody {
+  background: #E9EFF5;
+}
+.global-attendance .fc-theme-standard td {
+  border-color: #9BAEBC;
+  cursor: pointer;
+}
+.global-attendance tbody[role=presentation] > tr > td:last-child {
+  border-right: none;
+}
+.global-attendance  tbody[role=presentation] > tr:last-child > td {
+  border-bottom: none;
+}
+.global-attendance .fc-theme-standard td .fc-daygrid-day-top {
+  color: #305671;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 21px;
+}
+.global-attendance .fc-theme-standard td .fc-day-other {
+  background: #CAD2D8;
+}
+.global-attendance .fc-theme-standard .eventDay {
+  background: #fff;
+}
+.global-attendance .fc-daygrid-event {
+  background: #0093FF;
+  border-radius: 3px;
+  padding: 0 8px;
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 25px;
+  color: #FFFFFF;
+}
+.global-attendance .fc-daygrid-event .fc-daygrid-event-dot, .fc-daygrid-event .fc-event-time {
+  display: none;
+}
+.global-attendance  .fc-daygrid-event:hover,
+.global-attendance .fc-more-link:hover {
+  background: #333;
+  color: #fff;
+  font-weight: normal;
+  border-color: transparent;
+}
+.global-attendance .fc-more-link {
+  padding: 0 8px;
+    min-height: 28px;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 28px;
+    color: #FFFFFF;
+    background: #0093FF;
+    border: 1px solid #0093FF;
+    border-radius: 3px;
+    width: 100%;
+    display: flex;
+}
+.global-attendance .fc-daygrid-day-bottom {
+  text-align: right;
+  margin-top: 5px !important;
+  display: block;
+  padding-inline: 8px;
+}
+.global-attendance .fc .fc-toolbar-ltr {
+  margin-bottom: 20px;
+}
+.global-attendance .fc-more-link .dayCellEvent {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.global-attendance .fc-more-link .dayCellEvent .number{
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 28px;
+}
+/* .appointmentGlobalPage .userListHead {
+  margin-bottom: 40px;
+}
+.appointmentGlobalPage {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.fc .eventDay  {
+  margin-inline: 8px;
+} */
+.global-attendance {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  position: relative;
+}
+.global-attendance .fc {
+  flex: 1 1 auto;
+  overflow: hidden;
+  height: inherit !important;
+  min-height: 652px;
+}
+/* .appointmentGlobalPage .userListBody {
+  height: 100%;
+  padding: 0;
+} */
+.global-attendance .fc-timeGridWeek-view .fc-col-header-cell:not(:first-child) {
+  background: #5182A6;
+  border-radius: 0;
+}
+.global-attendance .fc-timeGridWeek-view thead th:first-child {
+  background-color: #fff;
+}
+.global-attendance .fc-timeGridWeek-view table:not(.fc-col-header) {
+  border: 1px solid #9BAEBC;
+  border-radius: 5px;
+  overflow: hidden;
+  table-layout: fixed;
+}
+.global-attendance .fc-timeGridWeek-view tbody > tr > td:first-child,
+.global-attendance .fc-timeGridWeek-view thead th:first-child,
+.global-attendance tr.fc-scrollgrid-section colgroup col {
+  width: 134px !important;
+  min-width: 134px !important;
+}
+.global-attendance .fc-timeGridWeek-view .fc-scrollgrid-section-body > td {
+  border-right: none;
+  border-bottom: navajowhite;
+}
+.global-attendance .fc-timeGridWeek-view tbody > tr > td:first-child {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 21px;
+  text-align: right;
+  color: #305671;
+  background: #fff;
+}
+.global-attendance .fc-timeGridWeek-view .fc-timegrid-divider {
+  padding: 0;
+  background: transparent;
+}
+.global-attendance .fc-more-popover.eventDay {
+  left: 50% !important;
+  top: 50% !important;
+  transform: translate(-50%, -50%);
+}
+.global-attendance thead .fc-scroller {
+  overflow: visible !important;
+}
+.global-attendance thead > tr:not(.fc-scrollgrid-section-header) > th:first-child {
+  border-bottom: 1px solid #9BAEBC;
+}
+.global-attendance .fc-timeGridWeek-view .fc-scrollgrid-sync-table {
+  border: none;
+}
+
+.global-attendance .fc .fc-daygrid-day-events {
+  bottom: 3px;
+  bottom: 3px;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+.global-attendance .fc-daygrid-dot-event .fc-event-title {
+  flex-grow: 0;
+}
+.global-attendance .smallText {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.global-attendance .fc-daygrid-day-frame.hasPresent{
+background-color: #fff;
+}
+.global-attendance .fc-daygrid-day-frame .hasHoliday{
+  background-image: linear-gradient(135deg, #e9eff5 25%, #ffffff 25%, #ffffff 50%, #e9eff5 50%, #e9eff5 75%, #ffffff 75%, #ffffff 100%);
+  background-size: 14.14px 14.14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  height: 100%;
+  color: #9BAEBC;
+  opacity: 1;
+  }
+.global-attendance .fc .fc-daygrid-day.fc-day-today {
+    background-color: transparent;
+}
+.global-attendance .fc-list-event-graphic{
+  display: none;
+}
+.fc-list-day{
+  display: none;
+}
+.global-attendance .fc-theme-standard .fc-list-event td {
+  background: #fff;
+  padding: 15px 15px;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  color: #305671;
+  border-bottom: 5px solid #f6f8fa;
+  border-top: 5px solid #f6f8fa;
+  vertical-align: middle;
+}
+.global-attendance .fc-theme-standard .fc-listMonth-view .fc-list-table,
+.global-attendance .fc-theme-standard .fc-listDay-view .fc-list-table {
+  table-layout: auto;
+}
+.global-attendance .fc-theme-standard .fc-listMonth-view.fc-list ,
+.global-attendance .fc-theme-standard .fc-listDay-view{
+  border: none;
+  position: relative;
+  top: 39px;
+}
+/* .global-attendance .fc-theme-standard .fc-list-event .fc-list-event-title{
+  display: none;
+} */
+.global-attendance .fc-theme-standard .fc-list-event .fc-list-nameTd{
+  font-size: 14px;
+  font-weight: 500;
+  width: 27%;
+ /*  width: 440px; */
+  display: inline-block;
+}
+.global-attendance .fc-theme-standard .fc-list-event .fc-list-emailTd{
+  width: 20%;
+   /*width: 350px; */
+  display: inline-block;
+}
+.global-attendance .fc-theme-standard .fc-list-event .fc-list-dateTd{
+  width: 14.5%; 
+  /* width: 250px;*/
+  display: inline-block;
+}
+.global-attendance .fc-theme-standard .fc-list-event .fc-list-event-time{
+  font-size: 14px;
+  font-weight: 500;
+  width: 10%;
+  /* width: 200px; */
+  display: inline-block;
+}
+.global-attendance .fc-theme-standard .fc-list-event td.fc-list-event-time{
+  display: none;
+}
+.global-attendance .fc-theme-standard .fc-list-event td.fc-list-event-title {
+  width: 90%;
+}
+.global-attendance .fc-theme-standard .fc-list-event .fc-list-event-new-tooltip {
+  position: relative;
+  width: 7%; 
+  /* width: 76px;*/
+  text-align: right;
+  display: inline-block;
+}
+.global-attendance .fc-theme-standard .fc-list-event .fc-list-checkinByTd{
+   width: 20%;
+  /*width: 276px; */
+  display: inline-block;
+}
+.global-attendance .fc-theme-standard .fc-list-event .fc-list-event-new-tooltip .eyeToolTips.infoSpan {
+  left: auto;
+  right: 16px;
+  top: -16px;
+}
+
+.global-attendance .fc-theme-standard .fc-list-event .avatar{
+  height: 40px;
+  width: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+  border: 0px solid transparent;
+  vertical-align: middle;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.global-attendance  .madeUpTableHeader{
+  height: 35px;
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 34px;
+  color: #305671;
+  display: flex;
+  flex-wrap: wrap;
+  position: absolute;
+  width: 100%;
+  top: 56px;
+  padding: 0 15px;
+  z-index: 2;
+}
+/* .global-attendance .madeUpTableHeader div{
+  padding: 2px 5px;
+}440, 350, 250, 276, 345 */
+.global-attendance .madeUpTableHeader div:nth-child(1){
+  width: 27%;
+ /*  width: 440px; */
+}
+.global-attendance .madeUpTableHeader div:nth-child(2){
+   width: 20%;
+  /*width: 350px; */
+}
+.global-attendance .madeUpTableHeader div:nth-child(3){
+  width: 14.5%; 
+  /* width: 250px;*/
+}
+.global-attendance .madeUpTableHeader div:nth-child(4){
+  width: 17%; 
+ /*  width: 276px;*/
+}
+.global-attendance .madeUpTableHeader div:nth-child(5){
+  width: 20%;
+ /*  width: 345px; */
+}
+
+#ico-10 .a {
+    fill: var(--darkBlue);
+}
+.routeMenu a.selected #ico-10 .a{
+  fill: #ed707a;
+}
+.orangeBtn.clockinBtn.checkedIn {
+  background: #9BAEBC;
+}
+
+
+/* global attendance Calendar UI */
+
+.fc .fc-scroller-liquid .fc-list-event:nth-of-type(2) .eyeToolTips.infoSpan .tooltiptextInfo {
+  bottom: -100%;
+}
+.fc .fc-scroller-liquid .fc-list-event:nth-of-type(2) .infoSpan .tooltiptextInfo::after {
+  top: -23%;
+  border-color: transparent transparent #fff transparent;
+}
+
+.global-attendance .fc-daygrid-day-frame .hasHoliday .fc-event-title {
+  max-width: 90%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: pre;
+  display: inline-block;
+}

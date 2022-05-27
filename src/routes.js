@@ -3,6 +3,7 @@ import { Route, Switch, Redirect, Router } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { UnProtectedRoute } from "./middleware/UnProtectedRoute";
 import { ProtectedRoute } from "./middleware/ProtectedRoute";
+import { PublicRoute } from "./middleware/PublicRoute";
 import { isLoggedIn } from "./services/authentication/AuthServices";
 import MainComponent from './components/MainComponent'
 
@@ -10,6 +11,7 @@ import Login from "./components/authentication/login/Login";
 import ForgetPassword from "./components/authentication/resetPassword/ForgetPassword";
 import ResetPassword from "./components/authentication/resetPassword/ResetPassword";
 import AuthActions from "./actions/AuthActions";
+import MemberComponent from "./components/MemberComponent"
 
 const Routes = () => {
   const logState = useSelector((state) => state.auth.isLoggedIn);
@@ -53,6 +55,14 @@ const Routes = () => {
             return <ResetPassword />;
           }}
         />
+        <PublicRoute
+          exact
+          path="/check-in-portal"
+          component={() => {
+            console.log("Reset Password call");
+            return <MemberComponent />;
+          }}
+        /> 
         <ProtectedRoute
           exact
           path="/"

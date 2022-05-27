@@ -8,11 +8,18 @@ import listIcon from "../../../assets/images/list_icon.svg";
 import dot3gray from "../../../assets/images/dot3gray.svg";
 import edit_gym from "../../../assets/images/edit_gym.svg";
 import gymLogo from "../../../assets/images/gymLogo.svg";
+import copyIcon from "../../../assets/images/copyIcon.svg";
+import infos from "../../../assets/images/infos.svg";
+import regenerate from "../../../assets/images/regenerate.svg";
+import target_blank from "../../../assets/images/target_blank.svg";
+
+
 import AddHolidayModal from "./addHolidayModal";
 import config from "../../../configuration/config";
 import ConfirmBox from "../../shared/confirmBox";
 
 import { GymDetailsServices } from "../../../services/gymDetails/GymDetailsServices";
+import {AttendanceServices} from "../../../services/attendance/attendanceServices";
 import Scrollbars from "react-custom-scrollbars-2";
 
 
@@ -33,12 +40,17 @@ const GymDetails = (props) => {
   // START - Variable set while development --- Jit
   const [isLoader, setIsLoader] = useState(false);
   const [gymData, setGymData] = useState([]);
-  const [editAccess, setEditAccess] = useState(true);
+  const [editAccess, setEditAccess] = useState(false);
   const [holidayData, setHolidayData] = useState([]);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [deleteConfirmBox, setDeleteConfirmBox] = useState(false);
   const [confirmChange, setConfirmChange] = useState(false);
+  const [accessCodeGen, setAccessCodeGen] = useState([]);
+
+  const [copiedText, setCopiedText] = useState(false);
+  const [copiedurl, setCopiedurl] = useState(false);
+
   const [validateMsg, setValidateMsg] = useState({
     name: "",
     contactPerson: "",
@@ -114,11 +126,25 @@ const GymDetails = (props) => {
       console.log(e.message);
     }
   };
-
+  const fetchAccessCode = async () => {
+    try {
+      setIsLoader(true);
+      const accessCodeNumber = await AttendanceServices.fetchAccessCode();
+      console.log("accessCodeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", accessCodeNumber?.accessCode);
+      setAccessCodeGen(accessCodeNumber?.accessCode);
+      console.log("accessCodeeee eeeeeeeeeeeeeeeeee eeeeeeeee",accessCodeGen);  
+    } catch (e) {
+      console.log(e.message);
+     
+    } finally {
+      setIsLoader(false);
+    }
+  };
   useEffect(() => {
     fetchCountry();
     fetchGymDetails();
     getTimeZoneList();
+    fetchAccessCode();
   }, []);
 
   useEffect(() => {
@@ -323,12 +349,41 @@ const GymDetails = (props) => {
     setOption(false);
   };
 
+ const copy = (text) =>{
+    navigator.clipboard.writeText(text);
+    //setCopiedText(true);
+  }
+//const generatedNo ="00";
+const generatedNo = JSON.stringify(accessCodeGen);
+//console.log(typeof generatedNo);
+//console.log("accessCodeGen.accessCode" ,accessCodeGen);
+const codeGentextCopy = generatedNo.split("");
 
 
 
+
+
+const fetchAccessCodeGenerate = async () => {
+  try {
+    setIsLoader(true);
+    const accessCodeNumber = await AttendanceServices.fetchAccessCodeGenerate();
+    console.log("gennnnnnnCCCC", accessCodeNumber?.accessCode);
+    setAccessCodeGen(accessCodeNumber?.accessCode);
+    //console.log("accessCodeeee eeeeeeeeeeeeeeeeee eeeeeeeee",accessCodeGen);  
+  } catch (e) {
+    console.log(e.message);
+   
+  } finally {
+    setIsLoader(false);
+  }
+};
+const regenerateCodeHandler = (e) =>{
+  e.preventDefault();
+  fetchAccessCodeGenerate();  
+}
   return (
     <>
-
+      
       {(isLoader) ? <Loader /> : ''}
       {successMsg &&
         <SuccessAlert message={successMsg} extraclassName=""></SuccessAlert>
@@ -397,6 +452,44 @@ const GymDetails = (props) => {
                   <select disabled>
                     <option>{(gymData?.timezone) ? gymData?.timezone : "-"}</option>
                   </select>
+                </div>
+                <div className="accessCode">
+                  <h3>Access Code 
+                  <span class="infoSpan"><img src={infos} alt=""/><span class="tooltiptextInfo">Access code for gym stuff</span></span>
+                  </h3>
+                  <div className="code">
+                    {
+                      codeGentextCopy.map((elem, key) => {
+                        return (
+                          <span key={key}>{elem}</span>
+                        )
+                      }
+                      )
+                    }
+                    <div className="relative infoSpan">
+                      <button className={copiedText ? "copy_button active" : "copy_button"} onClick={() => {copy(generatedNo);setCopiedText(true);}}><img src={copyIcon} alt=""/></button>
+                      {/* {copiedText && <span class="tooltiptextInfo">Copied</span>} */}
+                    </div>
+                    
+                  </div> 
+                 
+                  <div className="d-flex justify-center copyBtn infoSpan">
+                      <button className={editAccess?"btn_regenerate gymOwner": "btn_regenerate"} onClick={regenerateCodeHandler} 
+                        disabled={editAccess ? "" :"disabled"}
+                      >
+                        <img src={regenerate} alt=""/> Regenerate
+                      </button> {/*//use class "gymOwner" in button for colorful button */}
+                      {!editAccess && <span class="tooltiptextInfo">Regenerate has been disabled</span>}
+                  </div>
+                  <div className="copy_url_gen">
+                    <span>{config.appUrl}/check-in-portal <button onClick={() => window.open(config.appUrl + "/check-in-portal")}><img src={target_blank} alt=""/></button></span>
+                    
+                    <div className="relative infoSpan">
+                      <button className={copiedurl ? "copy_button active" : "copy_button"} onClick={() => {copy(config.appUrl +"/check-in-portal");setCopiedurl(true);}}><img src={copyIcon} alt=""/></button>
+                      {/* {copiedText && <span class="tooltiptextInfo">Copied</span>} */}
+                      
+                    </div>
+                  </div>
                 </div>
               </div>
             }

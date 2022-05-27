@@ -1,155 +1,312 @@
-import React, { useEffect,useRef, useState } from "react";
-import weekly from "../../../../assets/images/weekly.svg";
-import monthly from "../../../../assets/images/monthly.svg";
-import eyes from "../../../../assets/images/attendenceEye.svg";
+import React, { useEffect, useRef, useState } from "react";
 
-import FullCalendar from '@fullcalendar/react' // must go before plugins
-import dayGridPlugin from '@fullcalendar/daygrid' // a plugin!
+import history from "../../../../assets/images/histroy_icon_white.svg";
+import comment from "../../../../assets/images/comment.svg";
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
 
-const Attendance = () => {
+import FullCalendar from '@fullcalendar/react'; // must go before plugins
 
-  const [displayWeekly, setDisplayWeekly] = useState(true);
+import dayGridPlugin from '@fullcalendar/daygrid';// a plugin!
+import timeGridPlugin from '@fullcalendar/timegrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import listPlugin from '@fullcalendar/list'
+import { AttendanceServices } from "../../../../services/attendance/attendanceServices";
+import AddCommentModal from './addCommentModal';
+import cal_arrow1 from "../../../../assets/images/cal_arrow1.svg";
+import cal_arrow2 from "../../../../assets/images/cal_arrow2.svg";
+import dropArrow from "../../../../assets/images/dropArrow.svg";
+import Loader from "../../Loader";
+const moment = extendMoment(Moment);
 
-  const [displayMonthly, setDisplayMonthly] = useState(false);
 
-  const displayWeeklyFn = () => {
-    setDisplayWeekly(true);
-    setDisplayMonthly(false);
-  };
 
-  const displayMonthlyFn = () => {
-    setDisplayWeekly(false);
-    setDisplayMonthly(true);
-  };
+const Attendance = (props) => {
 
-  const [toggleAppView, setToggleAppView] = useState({
-    status: false,
-  });
+  const [displayModal, setDisplayModal] = useState(false);
+  const [contactID, setContactID] = useState("");
+  const [events, setEvents] = useState([]);
+  const [dateRange, setDateRange] = useState(false);
+  const [attendanceCount, setAttendanceCount] = useState(0);
+  const [checkInStatus, setCheckInStatus] = useState(false);
+  const [isTodayHoliday, setIsTodayHoliday] = useState(false);
+  const calenderRef = useRef([]);
+  const listOfMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sep","Oct","Nov","Dec"];
+  const listOfYear = Array(20).fill(2015).map((x, y) => x + y);
+  const [initialDate, setInitialDate] = useState(null);
+  const [isLoader, setIsLoader] = useState(false);
+  const [calendarMonth, setCalendarMonth] = useState(moment().format("M"));
+  const [calendarYear, setCalendarYear] = useState(moment().format("YYYY"));
+  
 
-  const toggleAppViewFn = (e) => {
+  const openCheckInModal = (e) => {
     e.preventDefault();
+    setDisplayModal(true)
+  }
+  const closeHolidayModal = (e) => {
+    setDisplayModal(false)
+  }
 
-    setToggleAppView({
-      ...toggleAppView,
-      status: !toggleAppView.status,      
-    });
-  };
+  const checkInStatusCheck = async () => {
+    let resp = await AttendanceServices.checkInStatus(props.contactId)
+    if (resp.isAlreadyCheckedIn) {
+      setCheckInStatus(true);
+    }
+  }
+
+  useEffect(async () => {
+    checkInStatusCheck();
+  },[]);
+  const fetchAttendances = async () => {
+    try {
+    if (dateRange?.start) {
+      setIsLoader(true);
+      let payload = {
+        fromDate: moment(dateRange.start).format("YYYY-MM-DD"),
+        toDate: moment(dateRange.end).format("YYYY-MM-DD"),
+      }
+      let todayDate = moment().format("YYYY-MM-DD");
+      let attendances = await AttendanceServices.fetchAttendances(payload, props.contactId);
+      let eventArr = [];
+      let attenCount = attendances.attendance.length;
+      setAttendanceCount(attenCount);
+      // Set calander to last attendance date
+      if (attenCount) {
+        setInitialDate(attendances.attendance[attenCount-1].checkedInAt);
+      }
+      for (let atten of attendances.attendance) {
+        let eventObj = {
+          start: moment(atten.checkedInAt).utc().format(),
+          note: atten.note,
+          name: atten.contact.firstName + " " + atten.contact.lastName,
+          email: atten.contact.email,
+          checkInBy: atten.checkedInBy._id && atten.checkedInBy._id === atten.contact._id ? "Staff - " + atten.checkedInBy.firstName : "Self"
+        }
+        eventArr.push(eventObj);
+      }
+      if (attendances.holidays) {
+        for (let holiday of attendances.holidays) { 
+          if (
+            moment(todayDate).isBetween(holiday.fromDate, holiday.toDate) || 
+            moment(todayDate).isSame(holiday.fromDate) ||
+            moment(todayDate).isSame(holiday.toDate) 
+          ) {
+            setIsTodayHoliday(true);
+          }
+          
+          let eventObj = {
+            start: holiday.fromDate,
+            end: holiday.toDate,
+            name: holiday.name,
+            title: holiday.name,
+            isHoliday: true,
+            className: "hasHoliday"
+          }
+          eventArr.push(eventObj);
+        }
+      }
+
+      // Push blank date
+      var range = moment().range(payload.fromDate, payload.toDate);
+      let dateRangeArr = Array.from(range.by('day', { step: 1 }));
+      for (let mDate of dateRangeArr) {
+        let eventObj = {
+          start: mDate.format("YYYY-MM-DD")
+        }
+        let isDateExist = false;
+        for (let ev of eventArr) {
+          if (moment(ev.start).format("YYYY-MM-DD") == eventObj.start) {
+            isDateExist = true;
+          }
+        }
+        if (!isDateExist) {
+          eventArr.push(eventObj);
+        }         
+      }
+
+      setEvents(eventArr);
+      setIsLoader(false);
+    }
+    } catch (e) {
+      setIsLoader(false);
+      console.log("Error", e.message)
+    }
+  }
+  useEffect(async () => {
+    fetchAttendances();
+  }, [dateRange])
+
+  useEffect(async () => {
+    let api = calenderRef.current.getApi()
+    let month = calendarMonth < 10 ? "0" + calendarMonth : calendarMonth;
+    let jumpTo = calendarYear + "-" + month + "-01";
+    api.changeView('listMonth', jumpTo);
+  }, [calendarMonth, calendarYear])
+
+  const handleMonthChange = async (e) => {
+    setDateRange(e);
+  }
+  const handleCalYearChange = (e) => {
+    setCalendarYear(e.target.value);
+  }
+  const handleCalMonthChange = (e) => {
+    setCalendarMonth(e.target.value);
+  }
+  
+  const prevMonth = () => {
+    if (calendarMonth == 1) {
+      setCalendarMonth(12);
+      setCalendarYear(calendarYear - 1);
+    } else {
+      setCalendarMonth(calendarMonth - 1);
+    }
+  }
+  const nextMonth = () => {
+    if (calendarMonth == 12) {
+      setCalendarMonth(1);
+      setCalendarYear(calendarYear + 1);
+    } else {
+      setCalendarMonth(calendarMonth + 1);
+    }
+  }
+
+  const renderEventContent = (e) => {
+    // console.log("Render e", e.event.extendedProps, e)
+
+    if (e.view.type == "listMonth") {
+      let isHoliday = e.event.extendedProps?.isHoliday ? true : false;
+      let eventDate = moment(e.event._instance.range.start).format("ddd, 	DD");
+      let eventTime = moment(e.event._instance.range.start).format("hh:mm A");
+      return (
+        <>
+          {!isHoliday ?
+            <>
+              <span className='fc-list-dateTd'>{eventDate}</span>
+              <span className='fc-list-event-time'>
+                {e.event.extendedProps.checkInBy && 
+                  <span className="norm" > {
+                    eventTime ? eventTime : ''
+                  }</span>
+                }
+              </span>
+              <span className='fc-list-event-new-tooltip'>
+                {e.event.extendedProps.note && <span className="eyeToolTips infoSpan"><img src={comment} /><span className="tooltiptextInfo">{e.event.extendedProps.note}</span></span>}
+              </span>
+              <span className='fc-list-checkinByTd'>{e.event.extendedProps.checkInBy}</span>
+            </>
+            :
+            <>
+              <span className='fc-list-dateTd'>{eventDate}</span>
+              <span className='fc-list-event-time'>
+                <span className="norm holiday" >{e.event.extendedProps.name}</span>
+              </span>
+              <span className='fc-list-event-new-tooltip'></span>
+              <span className='fc-list-checkinByTd'></span>
+            </>
+          }
+
+        </>
+      )
+    }
+   
+  }
+
   return (
     <div className="contactTabsInner appointmentPage attendencePage">
-    <h3 className="headingTabInner">Attendance</h3>
-      {/* <a className="orangeBtn clockinBtn" target="_blank" href="https://xd.adobe.com/view/1a813aee-7ec1-42ca-9093-051ac3823496-4fd2/screen/e557ffd3-ddb5-4ee1-b6b3-f1b5ff024137/?fullscreen">
-        Attendance Screen
-      </a> */}
-      <div className="transHeader attendencePage">
-        <p>Total Classes Attended</p>
-        <h3>86</h3>
+      <div className="modalcont_header">
+        <div className="names">
+          <h3 className="headingTabInner">Attendance</h3>
+          <p className="subheadingTabInner">View monthly attendance data</p>
+        </div>
+        <div className="action"> 
+          {!checkInStatus && !isTodayHoliday? 
+          <button className="orangeBtn clockinBtn" onClick={openCheckInModal}>
+            <img src={history} alt="" /> Check In
+          </button>
+          :
+          <button className="checkedIn orangeBtn clockinBtn" disabled>
+            <img src={history} alt="" /> {isTodayHoliday ? "Check In" : "Checked In"} 
+          </button>
+          }
+        </div>
       </div>
-      <div className="transBoday attendencePage">
-      <div className="userListBody">
-                <div className="listBody contactListingTable attendencePage">
-                  <div className="tableHeader attendencePage">
-                    <p>05-16-2021  -  05-22-2021</p>
-                    <div className="displayInfosChange">
-                      <span onClick={() => displayWeeklyFn()}  className={ displayWeekly.status ? "weeklySpan infoSpan active" : "weeklySpan infoSpan" }>
-                        <img src={weekly} />
-                      <span class="tooltiptextInfo">Weekly</span>
-                      </span>
-                      <span className="monthlySpan infoSpan" onClick={() => displayMonthlyFn()}><img src={monthly} />
-                      <span class="tooltiptextInfo">Monthly</span>
-                      </span>
-                    </div>
-                  </div>
 
-
-                  {/* Display weekly listing attendence */}
-
-                  {displayWeekly && (
-                    
-                    <ul className="tableListing appointment attendence display">
-                      <li className="listHeading attendenceTables">
-                          <div className="dataTableCell days">Day</div>
-                          <div className="dataTableCell checkIn">Check-in</div>
-                          <div className="dataTableCell checkedInBy">Checked-in by</div>
-                          
-                      </li>
-
-
-                      <li>
-                          <div className="dataTableCell attendenceDate">Sun, 16</div>
-                          <div className="dataTableCell attendenceTime"><span>11:32 AM</span></div>
-                          <div className="dataTableCell attendedBy">Self</div>
-                          
-                      </li>
-
-
-
-                      <li>
-                          <div className="dataTableCell attendenceDate">Mon, 17</div>
-                          <div className="dataTableCell attendenceTime"><span>11:32 AM</span></div>
-                          <div className="dataTableCell attendedBy">Self</div>                    
-                      </li>
-
-                      <li>
-                           <div className="dataTableCell attendenceDate">Tue, 18</div>
-                          <div className="dataTableCell attendenceTime"><span>11:30 AM</span></div>
-                          <div className="dataTableCell attendedBy">
-                            <span className="eyeToolTips infoSpan">
-                              <img src={eyes} />
-                              <span class="tooltiptextInfo">Gave warning on the check-in issue</span>
-                            </span>
-                            Staff - Alex
-                          </div>                          
-                      </li>
-
-                      <li>
-                          <div className="dataTableCell attendenceDate">Wed, 19</div>
-                          <div className="dataTableCell attendenceTime"><span>11:28 AM</span></div>
-                          <div className="dataTableCell attendedBy">Self</div>                    
-                      </li>
-
-                      <li>
-                          <div className="dataTableCell attendenceDate">Thu, 20</div>
-                          <div className="dataTableCell attendenceTime"><span>11:32 AM</span></div>
-                          <div className="dataTableCell attendedBy">Self</div>                    
-                      </li>
-
-                      <li>
-                           <div className="dataTableCell attendenceDate">Fri, 21</div>
-                          <div className="dataTableCell attendenceTime"><span>11:25 AM</span></div>
-                          <div className="dataTableCell attendedBy">
-                            <span className="eyeToolTips infoSpan">
-                              <img src={eyes} />
-                              <span class="tooltiptextInfo">Gave warning on the check-in issue</span>
-                            </span>
-                            Staff - Alena
-                          </div>                          
-                      </li>
-
-                      <li>
-                          <div className="dataTableCell attendenceDate">Sat, 22</div>
-                          <div className="dataTableCell attendenceTime"><span>11:32 AM</span></div>
-                          <div className="dataTableCell attendedBy">Self</div>                    
-                      </li>
-                    </ul>
-
-                  )}
-
-                    {/* Display Calender listing attendence */}
-
-                  {displayMonthly && (
-
-                    <div className="appointmentDataListing attendenceDataListing calenderViewOnly display">
-                      <FullCalendar
-                        plugins={[ dayGridPlugin ]}
-                        initialView="dayGridMonth"
-                      />
-                    </div>
-                    )}
-
-                </div>
+      <div className="attendenceContactModal">
+        
+        <div className="attendanceTableHeader">
+          <table>
+            <tr>
+              <td className="day">Day</td>
+              <td className="checkin">Check-in</td>
+              <td className="checkinby">Checked-in by</td>
+            </tr>
+          </table>
+        </div>
+        <div className="customCalendarHeader">
+          <div className="tableHeader attendencePage">
+            <div className="headMiddle">
+               <button className="noBg" onClick={prevMonth}><img src={cal_arrow1} /></button>
+                 <select
+                  value={calendarMonth}
+                  onChange={handleCalMonthChange}
+                 >
+                  {listOfMonth.map((el, key) => {               
+                    return (
+                      <option key={"m" + key} value={key + 1}>{el}</option>
+                      )
+                  })
+                }
+                 </select>
+                 <select
+                  value={calendarYear}
+                  onChange={handleCalYearChange}
+                 >
+                  {listOfYear.map((el, key) => {               
+                    return (
+                      <option key={"y" + key} value={el}>{el}</option>
+                      )
+                  })
+                }
+                 </select>
+               <button className="noBg" onClick={nextMonth}><img src={cal_arrow2} /></button>
             </div>
+            <div className="attendanceCount">Attended  : <span> {attendanceCount} days</span></div>
+          </div>
+        </div>
+        <FullCalendar
+          plugins={[listPlugin]}
+          headerToolbar={{
+            left: '',
+            center: 'prev,title,next',
+            right: ''
+          }}
+          timeZone={"UTC"}
+          listDaySideFormat={false}
+          initialView='listMonth'
+          initialDate={initialDate}
+          events={events}
+          ref={calenderRef}
+          allDay= {true}
+          datesSet={handleMonthChange}
+          eventContent={renderEventContent}
+          noEventsText={""}
+        />
+
+        {isLoader ? <Loader /> : ''}
       </div>
+      {displayModal &&
+        <>
+          <AddCommentModal 
+          closeAddHolidayModal={closeHolidayModal} 
+          contactId={props.contactId} 
+          checkInStatus={setCheckInStatus}
+          fetchAttendances={fetchAttendances}
+          />
+        </>
+      }
     </div>
+
+
   );
 };
 

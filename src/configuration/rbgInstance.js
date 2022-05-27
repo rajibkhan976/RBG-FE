@@ -10,11 +10,17 @@ import axios from 'axios';
 export const rbgInstance = {
  authorizerInterceptor: axios.interceptors.request.use(
     (req) => {
+      
+      const accessCode = localStorage.getItem("accessCode");
       const token = (localStorage.getItem("_token") == null)?"":localStorage.getItem("_token");
       req.headers = {
         ...req.headers,
         Authorization: token
        };
+       // Add header only for member check in portal
+       if (accessCode && req.url.includes("member-portal")) {
+        req.headers['x-access-code'] = accessCode;       
+       } 
       return req;
     },
     (err) => {

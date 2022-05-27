@@ -1,4 +1,5 @@
 module.exports = {
+    appUrl: process.env.REACT_APP_APP_URL,
     //Auth - Role
     loginUrl: "https://"+process.env.REACT_APP_LOGIN+".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/login",
     roleUrl: "https://" + process.env.REACT_APP_ROLE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/role",
@@ -166,4 +167,10 @@ module.exports = {
     //appointmentContactUrl: "http://localhost:4000/dev/appointment/contact",
     appointmentUrl: "https://" + process.env.REACT_APP_APPOINTMENT + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/appointment",
     //appointmentUrl: "http://localhost:4000/dev/appointment",
-}
+    
+    //Attendance Url
+    attendaneUrl: "https://" + process.env.REACT_APP_ATTENDANCE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV,
+    
+    // Member Portal
+    memberCheckInPortal: "https://" + process.env.REACT_APP_MEMBER_CHECKIN_PORTAL + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/member-portal"
+}  
