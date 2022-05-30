@@ -309,7 +309,8 @@ const PersonalDetails = (props) => {
     setEditDetails({
       ...editDetails,
       name: personalData.firstName + " " + personalData.lastName,
-      image: config.bucketUrl + personalData.image
+      // image: config.bucketUrl + personalData.image
+      image: personalData.image ? config.bucketUrl + personalData.image : ""
     })
     // setting the edited value back to that of current value
     setToggleEditName({
