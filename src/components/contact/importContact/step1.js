@@ -153,7 +153,12 @@ function Step1(props) {
                     props.setState('custom', object);
                     props.next();
                 } else {
-                    console.log("api error ! " + uploadedFileResponse.data.message);
+                    console.log('uploadedFileResponse',uploadedFileResponse.data.error);
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: "api error ! " + uploadedFileResponse.data.message + ". Please check and save your file properly first.",
+                        typeMessage: 'error'
+                    });
                 }
             } catch (e) {
                 if(e.response && e.response.data && e.response.data.message) {
