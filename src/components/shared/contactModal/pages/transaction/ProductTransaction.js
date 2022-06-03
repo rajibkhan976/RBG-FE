@@ -303,20 +303,20 @@ const ProductTransaction = (props) => {
         errorStatePlaceholder.price = "Please set proper price!"
         setErrorState(errorStatePlaceholder)
       }
-      if (selectedProduct.selectedColor === undefined || selectedProduct.selectedColor === null) {
-        setHasError(true);
-        localError = true
+      // if (selectedProduct.selectedColor === undefined || selectedProduct.selectedColor === null) {
+      //   setHasError(true);
+      //   localError = true
 
-        errorStatePlaceholder.color = "Please select a color!"
-        setErrorState(errorStatePlaceholder)
-      }
-      if (selectedProduct.selectedSize === undefined || selectedProduct.selectedSize === null) {
-        setHasError(true);
-        localError = true
+      //   errorStatePlaceholder.color = "Please select a color!"
+      //   setErrorState(errorStatePlaceholder)
+      // }
+      // if (selectedProduct.selectedSize === undefined || selectedProduct.selectedSize === null) {
+      //   setHasError(true);
+      //   localError = true
 
-        errorStatePlaceholder.sizes = "Please select a size!"
-        setErrorState(errorStatePlaceholder)
-      }
+      //   errorStatePlaceholder.sizes = "Please select a size!"
+      //   setErrorState(errorStatePlaceholder)
+      // }
       
       if (!localError) {
         let cartItemToAdd = {
@@ -792,6 +792,7 @@ const ProductTransaction = (props) => {
                               </button>
                             </header>
                             <div className="customizedItemDeet">
+                              {cartItem.color != null ? 
                               <div className="colorItem">
                                 <label>Color</label>
                                 {/* {console.log("cartItem", cartItem)} */}
@@ -802,14 +803,17 @@ const ProductTransaction = (props) => {
                                     backgroundColor: cartItem.color,
                                   }}
                                 ></figure>}
-                              </div>
+                              </div> : ""
+                              }
+                              {cartItem.size != null ? 
                               <div className="customizedItemSize">
                                 <label>Size</label>
                                 {/* {console.log("cartItem", cartItem)} */}
                                 <figure className="sizeItem">
                                   {cartItem.size}
                                 </figure>
-                              </div>
+                              </div> : ""  
+                              }
                             </div>
                           </div>
                         </div>
