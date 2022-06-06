@@ -1086,7 +1086,7 @@ const BillingOverview = (props) => {
                           <div className="cmnFormField">
                             <input
                               type="text"
-                              placeholder="mm/yy"
+                              placeholder="mm/yyyy"
                               name=""
                               className="cmnFieldStyle"
                               onChange={cardExpairyCheckHandler}

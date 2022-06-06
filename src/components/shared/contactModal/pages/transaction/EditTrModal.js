@@ -833,7 +833,7 @@ const EditTrModal = (props) => {
                                                                 <div className="half">
                                                                     <label className="editFormLabel">Expiry Date</label>
                                                                     <input type="text" className="editFormStyle" 
-                                                                    placeholder="mm/yy"
+                                                                    placeholder="mm/yyyy"
                                                                     value={addCardFormData.exDate}        
                                                                     onChange={cardExpiryHandler}
                                                                     />

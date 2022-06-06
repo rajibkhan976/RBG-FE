@@ -578,7 +578,7 @@ const ContractOverviewTransaction = (props) => {
                       <div className="d-flex justified-space-between">
                         <div className="formControl half">
                           <label>Expiry Date</label>
-                          <input type="text" placeholder="mm/yy" name="" />
+                          <input type="text" placeholder="mm/yyyy" name="" />
                         </div>
                         <div className="formControl half">
                           <label>CVC</label>
