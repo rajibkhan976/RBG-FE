@@ -147,6 +147,7 @@ const BillingOverview = (props) => {
   // Change default payment method
   const changeDefaultPay = (payItem, type) => {
     try {
+      console.log("isPrimary", isPrimary);
       setIsLoader(true);
       setIsPrimay({
         type: type,
@@ -156,6 +157,7 @@ const BillingOverview = (props) => {
       console.log(error);
     } finally {
       setIsLoader(false);
+      console.log("isPrimary", isPrimary);
     }
   };
 
@@ -908,12 +910,13 @@ const BillingOverview = (props) => {
                   key={i}
                 >
                   {/* {console.log(":::setNewPay::::", isPrimary)} */}
+                  {console.log("isPrimary.type === 'card' && (isPrimary.billingId === cardItem._id)", isPrimary.type === "card" && (isPrimary.billingId === cardItem._id))}
                   <span className="circleRadio">
                     <input
                       type="radio"
                       name="billingTransaction"
                       onChange={() => changeDefaultPay(cardItem, "card")}
-                      checked={
+                      defaultChecked={
                         isPrimary.type === "card" &&
                         (isPrimary.billingId === cardItem._id)
                       }
@@ -960,7 +963,7 @@ const BillingOverview = (props) => {
                       type="radio"
                       name="billingTransaction"
                       onChange={(e) => changeDefaultPay(bankItem, "bank")}
-                      checked={
+                      defaultChecked={
                         isPrimary.type === "bank" &&
                         (isPrimary.billingId === bankItem._id)
                       }
