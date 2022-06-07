@@ -1,26 +1,24 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { utils } from "../../../helpers";
 import { CourseServices } from "../../../services/setup/CourseServices";
 import Loader from "../../shared/Loader";
-import { ErrorAlert, SuccessAlert } from "../../shared/messages";
+// import { ErrorAlert, SuccessAlert } from "../../shared/messages";
 import AddCourseModal from "./src/addCourseModal";
 import CategoryListing from "./src/categories";
 // import ProductFilter from "./src/courseFilter";
 import CourseListing from "./src/courseListing";
-
+import * as actionTypes from "../../../actions/types";
 
 const Courses = () => {
   document.title = "Red Belt Gym - Courses";
-  const messageDelay = 5000; // ms
   // const [createButton, setCreateButton] = useState(null);
   // const [stateFilter, setStateFilter] = useState(null);
-  const [filteredData, setFilteredData] = useState(null);
+  // const [filteredData, setFilteredData] = useState(null);
   const [categoryData, setCategoryData] = useState([]);
   const [isLoaderCat, setIsLoaderCat] = useState(false);
-  const [successMsg, setSuccessMsg] = useState("");
   const [isLoader, setIsLoader] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
-
+  const dispatch = useDispatch();
   const [updateProduct, setUpdateProduct] = useState({});
   const [courseData, setCourseData] = useState([]);
   const [paginationData, setPaginationData] = useState({
@@ -28,10 +26,6 @@ const Courses = () => {
     totalPages: null,
     currentPage: 1,
     limit: 10
-  });
-  const [colorSize, setColorSize] = useState({
-    colors: [],
-    sizes: []
   });
   const [prodFilterModalStatus, setProdFilterModalStatus] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -41,10 +35,10 @@ const Courses = () => {
     fetchCourses();
   }, []);
 
-  useEffect(() => {
-    if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
-    if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
-  }, [successMsg, errorMsg]);
+  // useEffect(() => {
+  //   if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
+  //   if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
+  // }, [successMsg, errorMsg]);
 
   const getQueryParams = async () => {
     const catID = utils.getQueryVariable('catID');
@@ -119,7 +113,12 @@ const Courses = () => {
         });
       }
     } catch (e) {
-      setErrorMsg(e.message);
+      // setErrorMsg(e.message);
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: e.message,
+        typeMessage: 'error'
+      })
     } finally {
       setIsLoader(false);
     }
@@ -136,10 +135,20 @@ const Courses = () => {
         setOpenModal(bool);
         setUpdateProduct(updateObj);
       } else {
-        setErrorMsg("Please add category first");
+        // setErrorMsg("Please add category first");
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: "Please add category first",
+          typeMessage: 'error'
+        })
       }
     } catch (e) {
-      setErrorMsg(e.message);
+      // setErrorMsg(e.message);
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: e.message,
+        typeMessage: 'error'
+      })
     }
   }
 
@@ -151,13 +160,13 @@ const Courses = () => {
     }
   }
 
-  const openFilterModal = () => {
-    setProdFilterModalStatus(true);
-  };
+  // const openFilterModal = () => {
+  //   setProdFilterModalStatus(true);
+  // };
 
-  const closeFilterModal = () => {
-    setProdFilterModalStatus(false);
-  }
+  // const closeFilterModal = () => {
+  //   setProdFilterModalStatus(false);
+  // }
   /**
    * Get user from pagination component
    * @param {*} dataFromChild
@@ -173,13 +182,28 @@ const Courses = () => {
       setIsLoader(true);
       const result = await CourseServices.deleteCourse(courseID);
       if (result) {
-        setSuccessMsg(result);
+        // setSuccessMsg(result);
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: result,
+          typeMessage: 'success'
+        });
         fetchCourses();
       } else {
-        setErrorMsg("Error deleting course. Please try again.");
+        // setErrorMsg("Error deleting course. Please try again.");
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: "Error deleting course. Please try again.",
+          typeMessage: 'error'
+        });
       }
     } catch (e) {
-      setErrorMsg(e.message);
+      // setErrorMsg(e.message);
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: e.message,
+        typeMessage: 'error'
+      });
     } finally {
       setIsLoader(false);
     }
@@ -188,30 +212,45 @@ const Courses = () => {
   return (
     <>
       {isLoader ? <Loader /> : ''}
-      {successMsg &&
+      {/* {successMsg &&
         <SuccessAlert message={successMsg}></SuccessAlert>
       }
       {errorMsg &&
         <ErrorAlert message={errorMsg}></ErrorAlert>
-      }
+      } */}
       <CourseListing
-        openFilterModal={openFilterModal}
         courseData={courseData}
         fetchCourses={(showLoader) => fetchCourses(showLoader)}
         deleteCourse={(courseID) => deleteCourse(courseID)}
         getCategories={fetchCategories}
         paginationData={paginationData}
         openCourseModal={(bool, updateObj) => openCourseModal(bool, updateObj)}
-        successMsg={(msg) => setSuccessMsg(msg)}
-        errorMsg={(msg) => setErrorMsg(msg)}
+        successMsg={(msg) => dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: msg,
+          typeMessage: 'success'
+        })}
+        errorMsg={(msg) => dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: msg,
+          typeMessage: 'error'
+        })}
       />
       <CategoryListing
         isLoader={isLoaderCat}
         setIsLoader={(bool) => setIsLoaderCat(bool)}
         categoryData={categoryData}
         fetchCategories={fetchCategories}
-        successMsg={(msg) => setSuccessMsg(msg)}
-        errorMsg={(msg) => setErrorMsg(msg)}
+        successMsg={(msg) => dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: msg,
+          typeMessage: 'success'
+        })}
+        errorMsg={(msg) => dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: msg,
+          typeMessage: 'error'
+        })}
         getProduct={(showLoader) => fetchCourses(showLoader)} />
 
       {openModal &&

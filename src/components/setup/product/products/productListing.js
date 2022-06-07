@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import percentTag from "../../../../assets/images/percentage_icon.png";
-import listView from "../../../../assets/images/listView.svg";
 import dot3White from "../../../../assets/images/dot3gray.svg";
 import proImg1 from "../../../../assets/images/proImg1.png";
 import noRecords from '../../../../assets/images/noRecords.svg';
@@ -61,8 +60,8 @@ const ProductListing = (props) => {
     // let html = "<p>Color</p>";
     let html = "";
     prop.colors.map((color, index) => {
+      // console.log("Color",color);
       if (index + 1 < 3) {
-        console.log("prop.colors", prop.colors[0].label);
         html += color.label === "multi" ?  `<span class="multiColor"></span>`: `<span style="background-color: ${color.colorcode}"></span>`;
       } else {
         if (index + 1 === 4) {
@@ -70,7 +69,7 @@ const ProductListing = (props) => {
                     <button class="dropIt">+${prop.colors.length - 3}</button>
                     <div class="colorPalet">`;
         }
-        html += `<span style="background-color: ${color.colorcode}"></span>`;
+        html += `<span key={${index}} style="background-color: ${color.colorcode}"></span>`;
         if (index + 1 === prop.colors.length) {
           html += `</div></div>`;
         }
@@ -227,9 +226,9 @@ const ProductListing = (props) => {
             </ul>
           </>} */}
 
-          <button className="btn filterButton" onClick={() => props.openFilterModal()}>
+          {/* <button className="btn filterButton" onClick={() => props.openFilterModal()}>
             <img src={listView} alt="filter" />
-          </button>
+          </button> */}
         </div>
         <div className="productListBody">
           <div className="productListing">
@@ -254,7 +253,7 @@ const ProductListing = (props) => {
                         </div>
                         <div className="proInfo">
                           <p>
-                            <a href="javascript:void(0)">{elem.name}</a>
+                            {elem.name}
                           </p>
                           <div className="d-flex">
                             <h3>${elem.price.toFixed(2)}</h3>
@@ -275,12 +274,11 @@ const ProductListing = (props) => {
                       </div>
                       <div className="productListRight">
                         <div className="chooseSize">
-                          {/* <p>Size</p> */}
-                          {elem.size.map((s) => (
-                            <span>{s}</span>
-                          ))}
+                          {elem.size ? elem.size.map((s, index) => (
+                            <span key={index}>{s.name}</span>
+                          )): ''}
                         </div>
-                        <ShowColors colors={elem.associatedColors} />
+                        <ShowColors colors={elem.colors} />
                         <div className="sideEditOption">
                           <button
                             className="showList"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import modalTopIcon from "../../../../assets/images/setupicon5.svg";
 import crossTop from "../../../../assets/images/cross.svg";
 import profileAvatar from "../../../../assets/images/camera.svg";
@@ -9,6 +9,9 @@ import Loader from "../../../shared/Loader";
 import { ErrorAlert, SuccessAlert } from "../../../shared/messages";
 import config from "../../../../configuration/config";
 import { Scrollbars } from "react-custom-scrollbars-2";
+import { CustomizationServices } from "../../../../services/setup/CustomizationServices";
+import * as actionTypes from "../../../../actions/types";
+import { useDispatch } from "react-redux";
 
 const AddProductModal = (props) => {
   const messageDelay = 5000;
@@ -34,7 +37,7 @@ const AddProductModal = (props) => {
     size: "",
     sizeMsg: "",
     price: "",
-    priceMsg:""
+    priceMsg: ""
   });
   const [categories, setCategories] = useState([]);
   const [colorSize, setColorSize] = useState({
@@ -43,26 +46,31 @@ const AddProductModal = (props) => {
   });
   const [btnType, setBtnType] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    setColorSize(props.getcolorSize);
-  }, []);
+    if (productData.category) {
+      fetchSize();
+      fetchColors();
+    }
+  }, [productData.category]);
 
   useEffect(() => {
     setCategories(props.categories);
+    return (() => {
+      setCategories([]);
+    })
   }, [props.categories]);
 
   useEffect(() => {
     if (Object.keys(props.editProductItem).length) {
       const updateItem = props.editProductItem;
-      console.clear();
-      console.log(updateItem);
-      console.log(updateItem?.image);
+      console.log("Selected Categories", updateItem.categoryID[0]);
       setProductData({
         category: updateItem.categoryID[0],
         name: updateItem.name,
-        colors: updateItem.colors,
-        size: updateItem.size,
+        colors: (updateItem.colors.length) ? updateItem.colors.map(el => el._id) : [],
+        size: (updateItem.size.length) ? updateItem.size.map(el => el._id) : [],
         image: updateItem?.image,
         price: updateItem.price,
         id: updateItem._id,
@@ -70,14 +78,49 @@ const AddProductModal = (props) => {
         tax: (updateItem.tax) ? updateItem.tax : 0
       });
       setIsEditing(true);
-    };
+    } else {
+      setProductData(prevState => ({ ...prevState, category: props.categories[0]._id }))
+    }
 
-  }, [props.editProductItem])
+    return (() => {
+      setProductData({
+        category: "",
+        name: "",
+        colors: [],
+        image: "",
+        price: "",
+        size: [],
+        imageUrl: profileAvatar,
+        tax: 0
+      })
+    })
+  }, [props.editProductItem]);
 
-  useEffect(() => {
-    if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
-    if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
-  }, [successMsg, errorMsg]);
+
+  // useEffect(() => {
+  //   if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
+  //   if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
+  // }, [successMsg, errorMsg]);
+
+  const fetchSize = async () => {
+    try {
+      const res = await CustomizationServices.fetchProductSizes((productData.category) ? productData.category : props.categories[0]._id);
+      console.log(res);
+      setColorSize(prevstate => ({ ...prevstate, sizes: res.sizes }))
+    } catch (e) {
+
+    }
+  };
+
+  const fetchColors = async () => {
+    try {
+      const res = await CustomizationServices.fetchProductColors((productData.category) ? productData.category : props.categories[0]._id);
+      console.log(res);
+      setColorSize(prevstate => ({ ...prevstate, colors: res.colors }))
+    } catch (e) {
+
+    }
+  };
 
   const handleImageUpload = (event) => {
     setProductData({ ...productData, imageUrl: loadImg });
@@ -102,28 +145,27 @@ const AddProductModal = (props) => {
     }
   }
 
-  const handleColor = (e, label) => {
+  const handleColor = (e, color) => {
     e.preventDefault();
     let choosenColors = [...productData.colors];
-    if (choosenColors.indexOf(label) === -1) {
-      choosenColors.push(label);
+    if (choosenColors.indexOf(color._id) === -1) {
+      choosenColors.push(color._id);
     } else {
-      choosenColors = choosenColors.filter(colorlabel => colorlabel !== label);
+      choosenColors = choosenColors.filter(colorlabel => colorlabel !== color._id);
     }
     setProductData({ ...productData, colors: choosenColors });
-    setErrorClass(prevState => ({...prevState, colors: "", colorMsg: ""}));
   }
 
-  const handleSize = (e, label) => {
+  const handleSize = (e, size) => {
     e.preventDefault();
+    console.log("Choose Size", size);
     let choosenSizes = [...productData.size];
-    if (choosenSizes.indexOf(label) === -1) {
-      choosenSizes.push(label);
+    if (choosenSizes.indexOf(size._id) === -1) {
+      choosenSizes.push(size._id);
     } else {
-      choosenSizes = choosenSizes.filter(size => size !== label);
+      choosenSizes = choosenSizes.filter(sizeID => sizeID !== size._id);
     }
     setProductData({ ...productData, size: choosenSizes });
-    setErrorClass(prevState => ({...prevState, size: "", sizeMsg: ""}));
   }
 
   const handleChange = (e) => {
@@ -137,21 +179,21 @@ const AddProductModal = (props) => {
       case "price":
         if (!regex.numericRegex.test(elemValue) && elemValue.split(".")[0].length <= 5) {
           setProductData({ ...productData, price: elemValue.replace(/(\.\d{2})\d+/g, '$1') });
-          setErrorClass(prevState => ({...prevState, price: "", priceMsg: ""}));
+          setErrorClass(prevState => ({ ...prevState, price: "", priceMsg: "" }));
         }
         break;
       case "productName":
         if (!regex.alphaRegex.test(elemValue)) {
           setProductData({ ...productData, name: elemValue });
-          setErrorClass(prevState => ({...prevState, name: "", nameMsg: ""}));
+          setErrorClass(prevState => ({ ...prevState, name: "", nameMsg: "" }));
         }
         break;
       case "category":
         setProductData({ ...productData, category: elemValue });
         break;
 
-        default:
-          break;
+      default:
+        break;
     }
 
   }
@@ -175,12 +217,11 @@ const AddProductModal = (props) => {
         let msg;
         if (productData.id) {
           const updateData = { ...data, id: productData.id };
-          msg = await ProductServices.editProduct(updateData);
-          console.clear();
-          console.log(msg)
-        } else {  
+          const res = await ProductServices.editProduct(updateData)
+          msg = res.message;
+        } else {
           const res = await ProductServices.createProduct(data);
-          console.log("res add new card : ",  res);
+          console.log("res add new card : ", res);
           if (!res._id) {
             setErrorMsg("Error adding product. Please try again");
           } else {
@@ -190,14 +231,24 @@ const AddProductModal = (props) => {
 
         if (btnType !== "SaveNew") {
           console.log("Inisde Save");
-          setSuccessMsg(msg);
+          // setSuccessMsg(msg);
+          dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: msg,
+            typeMessage: 'success'
+          });
 
-          props.getAddedProduct &&props.getAddedProduct(data)
+          props.getAddedProduct && props.getAddedProduct(data)
         } else {
           props.retriveProducts(false);
           props.retrieveCategories();
           console.log("Inside save and new");
-          setSuccessMsg(msg);
+          // setSuccessMsg(msg);
+          dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: msg,
+            typeMessage: 'success'
+          });
           setProductData({
             category: categories[0],
             name: "",
@@ -215,19 +266,24 @@ const AddProductModal = (props) => {
         }, 1000);
       }
     } catch (e) {
-      setErrorMsg(e.message);
+      // setErrorMsg(e.message);
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: e.message,
+        typeMessage: 'error'
+      });
     } finally {
-        setTimeout(function () {
-          setIsLoader(false);
-        }, 1000);
+      setTimeout(function () {
+        setIsLoader(false);
+      }, 1000);
     }
   }
 
   const createValidation = () => {
     let bool = true;
-    if(productData.name === "") {
+    if (productData.name === "") {
       bool = false;
-      setErrorClass(prevState => ({...prevState, name: "error", nameMsg: "Please enter product name"}));
+      setErrorClass(prevState => ({ ...prevState, name: "error", nameMsg: "Please enter product name" }));
     }
 
     // if(productData.colors.length === 0) {
@@ -240,20 +296,20 @@ const AddProductModal = (props) => {
     //   setErrorClass(prevState => ({...prevState, size: "error", sizeMsg: "Please choose atleast one size from the available sizes"}));
     // }
 
-    if(productData.price === "" || parseFloat(productData.price) <= 0) {
+    if (productData.price === "" || parseFloat(productData.price) <= 0) {
       bool = false;
-      setErrorClass(prevState => ({...prevState, price: "error", priceMsg: parseFloat(productData.price) === 0 ? "Price cannot be 0 or blank" :"Please enter the product price"}));
+      setErrorClass(prevState => ({ ...prevState, price: "error", priceMsg: parseFloat(productData.price) === 0 ? "Price cannot be 0 or blank" : "Please enter the product price" }));
     }
 
-    if(bool) {
+    if (bool) {
       setErrorClass({
         name: "",
         nameMsg: "",
-        colors: "", 
+        colors: "",
         colorMsg: "",
         size: "",
         sizeMsg: "",
-        price: "", 
+        price: "",
         priceMsg: ""
       });
     }
@@ -264,12 +320,6 @@ const AddProductModal = (props) => {
 
   return (
     <>
-      {successMsg &&
-        <SuccessAlert message={successMsg} extraclassName="productPopupMsg"></SuccessAlert>
-      }
-      {errorMsg &&
-        <ErrorAlert message={errorMsg} extraclassName="productPopupMsg"></ErrorAlert>
-      }
       <div className="modalBackdrop modalProductAdd">
         {isLoader ? <Loader /> : ''}
         <div className="slickModalBody">
@@ -277,7 +327,7 @@ const AddProductModal = (props) => {
             <button className="topCross" onClick={props.closeAddProductModal}><img src={crossTop} alt="" /></button>
             <div className="circleForIcon"><img src={modalTopIcon} alt="" /></div>
             <h3>{(isEditing) ? "Edit" : "Add a"} Product</h3>
-            {!isEditing ? <p>Choose a category to add a new product below</p>: ""}
+            {!isEditing ? <p>Choose a category to add a new product below</p> : ""}
           </div>
           <div className="modalForm">
             <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />}>
@@ -288,7 +338,7 @@ const AddProductModal = (props) => {
                     {categories.map((cat, i) => {
                       return (
                         <>
-                          <option value={cat._id} defaultValue={(productData.category === cat._id) ? "selected" : ""} key={i}>{cat.name}</option>
+                          <option value={cat._id} defaultValue={(productData.category === cat._id) ? "selected" : ""} key={"category_" + i}>{cat.name}</option>
                         </>
                       );
                     })}
@@ -299,8 +349,8 @@ const AddProductModal = (props) => {
                   <label>Enter Product Name</label>
                   <input type="text" placeholder="Ex: v-shape gym vest" name="productName"
                     onChange={handleChange}
-                    value={productData.name} 
-                    className="cmnFieldStyle"/>
+                    value={productData.name}
+                    className="cmnFieldStyle" />
                   <p className="errorMsg">{errorClass.nameMsg}</p>
                 </div>
                 <div className="formControl">
@@ -323,35 +373,23 @@ const AddProductModal = (props) => {
                     {/* <button className="addColor active" style={{ backgroundColor: "#834140" }}></button>
                   <button className="addColor" style={{ backgroundColor: "#369ED5" }}></button>
                   <button className="addColor" style={{ backgroundColor: "#797D62" }}></button> */}
-                  {console.log("colorSize::::::>>>>>", colorSize)}
-                    {colorSize.colors.map((color, i) => {
-                      if (color.type === "single") {
-                        return <button className={(productData.colors.indexOf(color.label) != -1) ? "addColor active" : "addColor"}
-                          style={{ backgroundColor: color.colorcode }}
-                          onClick={(event) => handleColor(event, color.label)}
-                          key={i}  
-                        ></button>
-                      }
-                      else {
-                        return <button className={(productData.colors.indexOf(color.label) != -1) ? "addColor multiColor active" : "addColor multiColor"}
-                          onClick={(event) => handleColor(event, color.label)}
-                          key={i}  
-                        ></button>
-                      }
-                    })}
+                    {colorSize.colors ? colorSize.colors.map((color, i) => {
+                      return <button className={(productData.colors.indexOf(color._id) != -1) ? "addColor active" : "addColor"}
+                        style={{ backgroundColor: color.colorcode }}
+                        onClick={(event) => handleColor(event, color)}
+                        key={"color_" + i}
+                      ></button>
+                    }) : ''}
                   </div>
                   <p className="errorMsg">{errorClass.colorMsg}</p>
                 </div>
                 <div className={"formControl " + errorClass.size}>
                   <label>Available Sizes</label>
                   <div className="pickSize">
-                    {/* <button className="size active">S</button>
-                  <button className="size active">M</button>
-                  <button className="size">L</button> */}
-                    {colorSize.sizes.map((size, i) => {
-                      return <button className={(productData.size.indexOf(size.size) != -1) ? "size active" : "size"}
-                        onClick={(event) => handleSize(event, size.size)} key={i}>{size.size}</button>
-                    })}
+                    {colorSize.sizes ? colorSize.sizes.map((size, i) => {
+                      return <button className={(productData.size.indexOf(size._id) !== -1) ? "size active" : "size"}
+                        onClick={(event) => handleSize(event, size)} key={"size_" + i}>{size.name}</button>
+                    }) : ''}
                   </div>
                   <p className="errorMsg">{errorClass.sizeMsg}</p>
                 </div>
@@ -371,7 +409,7 @@ const AddProductModal = (props) => {
                           onChange={(e) => handleTaxCheck(e.target.checked)}
                           checked={(productData.tax) ? true : false}
                         />
-                        
+
                         <span></span>
                       </div>
                       Add Sales Tax</label>

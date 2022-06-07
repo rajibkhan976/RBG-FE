@@ -1,20 +1,19 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import modalTopIcon from "../../../../assets/images/setupicon5.svg";
 import crossTop from "../../../../assets/images/cross.svg";
 import profileAvatar from "../../../../assets/images/camera.svg";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import loadImg from "../../../../assets/images/loadImg.gif";
 import Loader from "../../../shared/Loader";
-import { ErrorAlert, SuccessAlert } from "../../../shared/messages";
 import config from "../../../../configuration/config";
 import { CourseServices } from "../../../../services/setup/CourseServices";
 import { Scrollbars } from "react-custom-scrollbars-2";
+import { CustomizationServices } from "../../../../services/setup/CustomizationServices";
+import * as actionTypes from "../../../../actions/types";
+import { useDispatch } from "react-redux";
 
 const AddCourseModal = (props) => {
-  const messageDelay = 5000;
-  const [successMsg, setSuccessMsg] = useState("");
   const [isLoader, setIsLoader] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
   const [courseData, setCourseData] = useState({
     category: "",
     name: "",
@@ -25,17 +24,13 @@ const AddCourseModal = (props) => {
     payment_type: "onetime",
     billing_cycle: "monthly",
     fees: "",
-    ageGroup: "Adults",
+    ageGroup: "",
+    ageGroupId: "",
     imageUrl: profileAvatar,
     tax: 0,
     disabledCycle: true
   });
-  const [ageGroup, setAgeGroup] = useState([
-    "Adults",
-    "Juniors",
-    "LII Dragons",
-    "Teens"
-  ]);
+  const [ageGroup, setAgeGroup] = useState([]);
 
   const [errorClass, setErrorClass] = useState({
     name: "",
@@ -47,11 +42,32 @@ const AddCourseModal = (props) => {
     paymentType: "",
     paymentTypeMsg: ""
   });
+  const dispatch = useDispatch();
 
-  const [paymentType, setpaymentType] = useState([
+  useEffect(() => {
+    fetchAgeGroup();
+  },[]);
+
+  const fetchAgeGroup = async() => {
+    try {
+      const res = await CustomizationServices.fetchAgeGroup();
+      setAgeGroup(res.agegroups);
+      if (!Object.keys(props.editCourseItem).length) {
+        setCourseData((prevState) => ({...prevState, ageGroupId: res.agegroups[0]._id}));
+      }
+    } catch (e) {
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: e.message,
+        typeMessage: 'error'
+      });
+    }
+  }
+
+  const paymentType = [
     "Onetime",
     "Recurring"
-  ]);
+  ];
 
   const [categories, setCategories] = useState([]);
   const [btnType, setBtnType] = useState("");
@@ -67,7 +83,7 @@ const AddCourseModal = (props) => {
       const durationArr = updateItem.duration.split(" ");
       console.log("Update Item", updateItem);
       setCourseData({
-        category: updateItem.categoryID[0],
+        category: updateItem.categoryID,
         name: updateItem.name,
         desc: updateItem.description,
         image: updateItem.image,
@@ -76,7 +92,8 @@ const AddCourseModal = (props) => {
         payment_type: updateItem.payment_type,
         billing_cycle: updateItem.billing_cycle,
         fees: updateItem.fees,
-        ageGroup: updateItem.ageGroup,
+        ageGroup: updateItem?.ageGroup,
+        ageGroupId: updateItem?.ageGroupId,
         id: updateItem._id,
         imageUrl: (updateItem.image) ? config.bucketUrl + updateItem.image : profileAvatar,
         tax: 0,
@@ -86,11 +103,6 @@ const AddCourseModal = (props) => {
     };
 
   }, [props.editCourseItem])
-
-  useEffect(() => {
-    if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
-    if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
-  }, [successMsg, errorMsg]);
 
   const handleImageUpload = (event) => {
     setCourseData({ ...courseData, imageUrl: loadImg });
@@ -160,7 +172,7 @@ const AddCourseModal = (props) => {
         setErrorClass(prevState => ({ ...prevState, paymentType: "", paymentTypeMsg: "" }));
         break;
       case "age_group":
-        setCourseData({ ...courseData, ageGroup: elemValue });
+        setCourseData({ ...courseData, ageGroupId: elemValue });
         break;
     }
   }
@@ -179,8 +191,7 @@ const AddCourseModal = (props) => {
           payment_type: courseData.payment_type,
           billing_cycle: courseData.billing_cycle,
           fees: courseData.fees.toString(),
-          ageGroup: courseData.ageGroup,
-          tax: "0"
+          ageGroup: courseData.ageGroupId
         };
         console.log("Data to be updated or added", data);
         let msg;
@@ -190,22 +201,37 @@ const AddCourseModal = (props) => {
         } else {
           const res = await CourseServices.createCourse(data);
           if (!res._id) {
-            setErrorMsg("Error adding course. Please try again");
+            // setErrorMsg("Error adding course. Please try again");
+            dispatch({
+              type: actionTypes.SHOW_MESSAGE,
+              message: "Error while adding course, Please try again",
+              typeMessage: 'error'
+            });
           } else {
             msg = "Program added successfully";
           }
         }
         if (btnType !== "SaveNew") {
           console.log("Inisde Save");
-          setSuccessMsg(msg);
-          setTimeout(function () {
-            props.closeCourseModal("fetch");
-          }, messageDelay);
+          // setSuccessMsg(msg);
+          dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: msg,
+            typeMessage: 'success'
+          });
+          props.closeCourseModal("fetch");
+          // setTimeout(function () {
+          // }, messageDelay);
         } else {
           props.retriveCourses(false);
           props.retrieveCategories();
           console.log("Inside save and new");
-          setSuccessMsg(msg);
+          // setSuccessMsg(msg);
+          dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: msg,
+            typeMessage: 'success'
+          });
           setCourseData({
             category: "",
             name: "",
@@ -224,7 +250,12 @@ const AddCourseModal = (props) => {
         setBtnType("");
       }
     } catch (e) {
-      setErrorMsg(e.message);
+      // setErrorMsg(e.message);
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: e.message,
+        typeMessage: 'error'
+      });
     } finally {
       setIsLoader(false);
     }
@@ -285,16 +316,10 @@ const AddCourseModal = (props) => {
     return bool;
   }
 
-  const handleTaxCheck = (isChecked) => setCourseData({ ...courseData, tax: (isChecked) ? 1 : 0 });
+  // const handleTaxCheck = (isChecked) => setCourseData({ ...courseData, tax: (isChecked) ? 1 : 0 });
 
   return (
     <>
-      {successMsg &&
-        <SuccessAlert message={successMsg} extraclassName="coursePopupMsg"></SuccessAlert>
-      }
-      {errorMsg &&
-        <ErrorAlert message={errorMsg} extraclassName="coursePopupMsg"></ErrorAlert>
-      }
       <div className="modalBackdrop modalProductAdd">
         {isLoader ? <Loader /> : ''}
         <div className="slickModalBody">
@@ -395,11 +420,11 @@ const AddCourseModal = (props) => {
                 <div className="formControl">
                   <div className="formLeft">
                     <label>Select Age Group</label>
-                    <select name="age_group" onChange={handleChange} value={courseData.ageGroup}>
-                      {ageGroup.map(ag => {
+                    <select name="age_group" onChange={handleChange} value={courseData.ageGroupId}>
+                      {ageGroup.map((ag, index) => {
                         return (
                           <>
-                            <option key={ag + "_ag"} value={ag}>{ag}</option>
+                            <option key={index+ "_ag"} value={ag._id}>{ag.name}</option>
                           </>
                         );
                       })}

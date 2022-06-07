@@ -104,12 +104,13 @@ export const ProductServices = {
             console.log('Products From Service : ', result);
             return result.data;
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(typeof e.response.data.message !== 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {
                 console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
+                // throw new Error(e.message + ". Please contact support.");
+                throw new Error("Something went wrong. Please contact support");
             }
             
         }
@@ -191,13 +192,13 @@ export const ProductServices = {
                 throw new Error("There is an error creating product. Please contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(typeof e.response.data.message !== 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {
                 console.log(e.stack);
                 // throw new Error(e.message + ". Please contact support.");
-                throw new Error(e.response.data);
+                throw new Error("Something went wrong. Please contact support");
             }
         }
     },
@@ -215,12 +216,13 @@ export const ProductServices = {
                 throw new Error("There is an error updating product. Please contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(typeof e.response.data.message !== 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {
                 console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
+                // throw new Error(e.message + ". Please contact support.");
+                throw new Error("Something went wrong. Please contact support");
             }
         }
     },
@@ -238,12 +240,13 @@ export const ProductServices = {
                 throw new Error("There is an error deleting a product. Please contact support");
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
+            if(typeof e.response.data.message !== 'undefined') {
                 console.log(e.response.data.message);
                 throw new Error(e.response.data.message);
             } else {
                 console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
+                // throw new Error(e.message + ". Please contact support.");
+                throw new Error("Something went wrong. Please contact support");
             }
         }
     },

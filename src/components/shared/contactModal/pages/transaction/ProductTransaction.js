@@ -147,7 +147,7 @@ const ProductTransaction = (props) => {
       setShowLoader(true);
       setSelectedProduct({
         ...selectedProduct,
-        selectedColor: e,
+        selectedColor: e.label,
       });
       errorStatPl.color = ""
       setErrorState(errorStatPl);
@@ -165,7 +165,7 @@ const ProductTransaction = (props) => {
       setShowLoader(true);
       setSelectedProduct({
         ...selectedProduct,
-        selectedSize: e,
+        selectedSize: e.name,
       });
       errorStatPl.sizes = ""
       setErrorState(errorStatPl);
@@ -177,6 +177,7 @@ const ProductTransaction = (props) => {
   };
 
   const selectProductToAdd = (item) => {
+    console.log(item);
     const productPlaceholder = item;
           productPlaceholder.selectedColor = null;
           productPlaceholder.selectedSize = null;
@@ -185,7 +186,8 @@ const ProductTransaction = (props) => {
     setSelectedProduct(productPlaceholder);
     console.log("selected product to add :::", productPlaceholder);
     setShowProductList(false);
-    fetchTax()
+    setSalesTax(parseFloat(item.taxPercent))
+    // fetchTax()
   }
 
   const addProduct = (e) => {
@@ -479,15 +481,14 @@ const ProductTransaction = (props) => {
                     </div>
                   </div>
                 </div>
-                <div
-                  className={errorState.color ? "cmnFormRow error" : "cmnFormRow"}
-                >
-                  <label>Color</label>
+
+                <div className={errorState.color ? "cmnFormRow error" : "cmnFormRow"}>
+                  <label>Available Colors</label>
                   <div className="cmnFormField">
                     <div className="colorChoiceProduct">
-                      {!selectedProduct ||
+                      {(!selectedProduct ||
                       selectedProduct === undefined ||
-                      selectedProduct === null ? (
+                      selectedProduct === null)  || !selectedProduct.colors.length ? (
                         <>
                           <label className="colorChoiceItem">
                             <input
@@ -533,14 +534,13 @@ const ProductTransaction = (props) => {
                                 type="radio"
                                 name="select-product-color"
                                 onChange={() => selectedColor(color)}
-                                checked={selectedProduct && selectedProduct.selectedColor !== null && selectedProduct.selectedColor === color}
+                                checked={selectedProduct && selectedProduct.selectedColor !== null && selectedProduct.selectedColor === color.label}
                               />
-                              {/* {console.log(selectedProduct.selectedColor)} */}
-                              {color === "multi" ? <span className="multiColor"></span> : <span
+                              <span
                                 style={{
-                                  backgroundColor: color,
+                                  backgroundColor: color.colorcode,
                                 }}
-                              ></span>}
+                              ></span>
                             </label>
                           ))}
                         </>
@@ -557,7 +557,7 @@ const ProductTransaction = (props) => {
                     <div className="sizeChoiceProduct">
                       {!selectedProduct ||
                       selectedProduct === undefined ||
-                      selectedProduct === null ? (
+                      selectedProduct === null || !selectedProduct.size.length ? (
                         <>
                           <label className="sizeChoiceItem">
                             <input
@@ -596,10 +596,10 @@ const ProductTransaction = (props) => {
                                 type="radio"
                                 name="select-product-size"
                                 onChange={() => selectedSize(size)}
-                                checked={selectedProduct && selectedProduct.selectedSize !== null && selectedProduct.selectedSize === size}
+                                checked={selectedProduct && selectedProduct.selectedSize !== null && selectedProduct.selectedSize === size.name}
                               />
                               {/* {console.log(selectedProduct.selectedSize)} */}
-                              <span>{size}</span>
+                              <span>{size.name}</span>
                             </label>
                           ))
                           }

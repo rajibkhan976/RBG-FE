@@ -135,8 +135,8 @@ const CourseListing = (props) => {
                         </div>
                         <div className="proInfo">
                           <p>
-                            <a href="javascript:void(0)">{elem.name}</a> (
-                            <strong>Age Group:</strong> {elem.ageGroup})
+                            {elem.name} 
+                            {(elem?.ageGroup) ? (<>(<strong>Age Group:</strong> {elem.ageGroup})</>) : ''}
                           </p>
                           <div className="d-flex">
                             <h3>${elem.fees.toFixed(2)}</h3>

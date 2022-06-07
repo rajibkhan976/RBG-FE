@@ -52,6 +52,11 @@ module.exports = {
     createProductUrl: "https://" + process.env.REACT_APP_PRODUCT + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/product/create",
     editProductUrl: "https://" + process.env.REACT_APP_PRODUCT + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/product",
     deleteProductUrl: "https://" + process.env.REACT_APP_PRODUCT + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/product",
+    // fetchProductUrl: "http://localhost:4000/dev/product/list",
+    // productImageUploadUrl: "http://localhost:4000/dev/product/image",
+    // createProductUrl: "http://localhost:4000/dev/product/create",
+    // editProductUrl: "http://localhost:4000/dev/product",
+    // deleteProductUrl: "http://localhost:4000/dev/product",
     colorSizeUrl: "https://" + process.env.REACT_APP_PRODUCT + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/product/colorsize",
     // Course Category Service API
     courseCategoryUrl: "https://" + process.env.REACT_APP_COURSE_CATEGORY + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/course/categories",
@@ -64,6 +69,13 @@ module.exports = {
     editCourseUrl: "https://" + process.env.REACT_APP_COURSE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/course",
     deleteCourseUrl: "https://" + process.env.REACT_APP_COURSE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/course",
     programUrl: "https://" + process.env.REACT_APP_COURSE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/course",
+
+    // fetchCourseUrl: "http://localhost:4000/dev/course/list",
+    // courseImageUploadUrl: "http://localhost:4000/dev/course/image",
+    // createCourseUrl: "http://localhost:4000/dev/course/create",
+    // editCourseUrl: "http://localhost:4000/dev/course",
+    // deleteCourseUrl: "http://localhost:4000/dev/course",
+    // programUrl: "http://localhost:4000/dev/course",
     // Number service
     numberServiceUrl: "https://" + process.env.REACT_APP_NUMBER + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/number",
     // numberServiceUrl: "https://" + api.redbeltgym.com/number",
@@ -124,14 +136,6 @@ module.exports = {
 
     timezoneListURL: process.env.REACT_APP_TIMZONE_URL + '/v2.1/list-time-zone?key=QH5NO9YQKP30&format=json',
     timezoneLatLngUrl: process.env.REACT_APP_TIMZONE_URL + '/v2.1/get-time-zone?key=QH5NO9YQKP30&by=position',
-
-
-    //Country 
-    countryUrl:"https://" + process.env.REACT_APP_COUNTRY + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/country",
-
-    //Personal Details 
-    personalDetailsUrl: "https://" + process.env.REACT_APP_PERSONALDETAILS + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV,
-    // personalDetailsUrl: "http://localhost:4000/dev",
 
     //Dependents
     dependentUrl: "https://" + process.env.REACT_APP_DEPENDENT + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/contact/dependent/",

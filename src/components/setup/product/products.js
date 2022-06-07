@@ -8,7 +8,8 @@ import CategoryListing from "./products/categories";
 import CategoryListing2 from "./products/categories";
 import ProductFilter from "./products/productFilter";
 import ProductListing from "./products/productListing";
-
+import * as actionTypes from "../../../actions/types";
+import { useDispatch } from "react-redux";
 
 
 const Products = () => {
@@ -18,7 +19,7 @@ const Products = () => {
   // const [stateFilter, setStateFilter] = useState(null);
   const [categoryData, setCategoryData] = useState([]);
   const [isLoaderCat, setIsLoaderCat] = useState(false);
-  const [successMsg, setSuccessMsg] = useState("");
+  // const [successMsg, setSuccessMsg] = useState("");
   const [isLoader, setIsLoader] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -36,17 +37,18 @@ const Products = () => {
   });
   const [prodFilterModalStatus, setProdFilterModalStatus] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     fetchCategories();
     fetchProducts();
-    fetchColorSizes();
+    // fetchColorSizes();
   }, []);
 
-  useEffect(() => {
-    if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
-    if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
-  }, [successMsg, errorMsg]);
+  // useEffect(() => {
+  //   if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
+  //   if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
+  // }, [successMsg, errorMsg]);
 
   const getQueryParams = async () => {
     const catID = utils.getQueryVariable('catID');
@@ -125,26 +127,6 @@ const Products = () => {
     }
   };
 
-  const fetchColorSizes = async () => {
-    try {
-      if (!isLoader) setIsLoader(true);
-      /************ PERMISSION CHECKING (FRONTEND) *******************/
-      const hasPermission = utils.hasPermission("product", "read");
-      if (!hasPermission) throw new Error("You do not have permission");
-      /************ PERMISSION CHECKING (FRONTEND) *******************/
-      const result = await ProductServices.fetchColorSizes();
-      setColorSize({
-        colors: result.colors,
-        sizes: result.sizes
-      });
-      console.log("Color Size", colorSize);
-    } catch (e) {
-      setErrorMsg(e.message);
-    } finally {
-      setIsLoader(false);
-    }
-  }
-
 
 
   // const toggleCreate = (e) => {
@@ -215,10 +197,20 @@ const Products = () => {
       setIsLoader(true);
       const result = await ProductServices.deleteProduct(productID);
       if (result) {
-        setSuccessMsg(result);
+        // setSuccessMsg(result.message);
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: result.message,
+          typeMessage: 'success'
+      });
         fetchProducts();
       } else {
-        setErrorMsg("Error deleting product. Please try again.");
+        // setErrorMsg("Error deleting product. Please try again.");
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: `Error deleting product. Please try again`,
+          typeMessage: 'error'
+      });
       }
     } catch (e) {
       setErrorMsg(e.message);
@@ -230,12 +222,12 @@ const Products = () => {
   return (
     <>
       {isLoader ? <Loader /> : ''}
-      {successMsg &&
+      {/* {successMsg &&
         <SuccessAlert message={successMsg}></SuccessAlert>
       }
       {errorMsg &&
         <ErrorAlert message={errorMsg}></ErrorAlert>
-      }
+      } */}
       <ProductListing
         openFilterModal={openFilterModal}
         productData={productData}
@@ -244,16 +236,32 @@ const Products = () => {
         paginationData={paginationData}
         openProductModal={(bool, updateObj) => addProductModal(bool, updateObj)}
         deleteProduct={(productID) => deleteProduct(productID)}
-        successMsg={(msg) => setSuccessMsg(msg)}
-        errorMsg={(msg) => setErrorMsg(msg)}
+        successMsg={(msg) => dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: msg,
+          typeMessage: 'success'
+      })}
+        errorMsg={(msg) => dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: msg,
+          typeMessage: 'error'
+      })}
       />
       <CategoryListing
         isLoader={isLoaderCat}
         setIsLoader={(bool) => setIsLoaderCat(bool)}
         categoryData={categoryData}
         fetchCategories={fetchCategories}
-        successMsg={(msg) => setSuccessMsg(msg)}
-        errorMsg={(msg) => setErrorMsg(msg)}
+        successMsg={(msg) => dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: msg,
+          typeMessage: 'success'
+      })}
+        errorMsg={(msg) => dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: msg,
+          typeMessage: 'error'
+      })}
         getProduct={(showLoader) => fetchProducts(showLoader)} />
 
       {openModal &&
@@ -270,8 +278,16 @@ const Products = () => {
           closeModal={closeFilterModal}
           categories={categoryData}
           getProduct={(showLoader) => fetchProducts(showLoader)}
-          successMsg={(msg) => setSuccessMsg(msg)}
-          errorMsg={(msg) => setErrorMsg(msg)}
+          successMsg={(msg) => dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: msg,
+            typeMessage: 'success'
+        })}
+          errorMsg={(msg) => dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: msg,
+            typeMessage: 'error'
+        })}
           getcolorSize={colorSize}
         />}
     </>
