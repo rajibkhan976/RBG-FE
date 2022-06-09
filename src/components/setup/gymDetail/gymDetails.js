@@ -70,9 +70,9 @@ const GymDetails = (props) => {
       setGymData({...gymData.gymDetails, 
         contactPerson: (gymData.gymDetails?.contactPerson) ? gymData.gymDetails?.contactPerson : gymData.gymDetails?.ownerDetails?.firstName + " " + gymData.gymDetails?.ownerDetails?.lastName,
         contactEmail: (gymData.gymDetails?.contactEmail) ? gymData.gymDetails?.contactEmail : gymData.gymDetails?.ownerDetails?.email,
-        phone: (gymData?.phone) ? gymData?.phone : gymData.gymDetails?.ownerDetails?.phone,
-        countryCode: (gymData?.countryCode) ? gymData?.countryCode : gymData.gymDetails?.ownerDetails?.prefix,
-        country: (gymData.country) ? gymData.country : gymData.gymDetails?.ownerDetails?.countryCode,
+        phone: (gymData?.gymDetails?.phone) ? gymData?.gymDetails?.phone : gymData.gymDetails?.ownerDetails?.phone,
+        countryCode: (gymData?.gymDetails?.countryCode) ? gymData?.gymDetails?.countryCode : gymData.gymDetails?.ownerDetails?.prefix,
+        country: (gymData?.gymDetails?.country) ? gymData?.gymDetails?.country : gymData.gymDetails?.ownerDetails?.countryCode,
       });
       setEditAccess(gymData.editAccess);
       console.log("editAccess:::::::::::::::::::" , editAccess);
@@ -378,7 +378,7 @@ const GymDetails = (props) => {
                 <div className="d-flex">
                   <div className="gymInfo half">
                     <p className="textType1">Contact No.</p>
-                    <p className="textType3">{(gymData?.phone) ? gymData?.phone : "-"}</p>
+                    <p className="textType3">{(gymData?.phone) ? gymData?.countryCode + " " + gymData.phone : "-"}</p>
                   </div>
                   <div className="gymInfo half">
                     <p className="textType1">Contact Email</p>
@@ -489,7 +489,7 @@ const GymDetails = (props) => {
                 </div>
                 <div className="btn-group">
                   <button className="common_blue_button" type="submit"
-                    disabled={(validateMsg.disabled === true || validateMsg.disabledAccess === true || confirmChange === false )  ? true : false}>
+                    disabled={(validateMsg.disabled === true || validateMsg.disabledAccess === true)  ? true : false}>
                     Save <img alt="" src={arrowRightWhite} />
                   </button>
                   <button type="text" className="btn-link" onClick={closeGymDetailsHandler}>Cancel</button>
