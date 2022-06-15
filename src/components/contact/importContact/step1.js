@@ -18,8 +18,8 @@ function Step1(props) {
     const [fileUploadError, setFileUploadError] = useState(false);
     const [fileImportStatus, setFileImportStatus] = useState(false);
     const [duplicate, setDuplicate] = useState('');
-    const [primaryField, setPrimaryField] = useState('');
-    const [importType, setImportType] = useState('data');
+    const [primaryField, setPrimaryField] = useState('both');
+    const [importType, setImportType] = useState('contacts');
     const [uploadedFile, setUploadedFile] = useState('');
     const [importName, setImportName] = useState('');
     const [importNameError, setImportNameError] = useState('');
@@ -193,7 +193,7 @@ function Step1(props) {
     }
     useEffect(() => {
         setDuplicate('skip');
-        setPrimaryField('email');
+        setPrimaryField('both');
         fetchPhases();
     }, []);
     return (
@@ -220,7 +220,7 @@ function Step1(props) {
                                     </div>
                                 </div>
                             </li>
-                            <li>
+                            {/*<li>
                                 <div className="formField w-50">
                                     <label>Import data for</label>
                                     <div className="inFormField">
@@ -240,7 +240,7 @@ function Step1(props) {
                                         </select>
                                     </div>
                                 </div>
-                            </li>
+                            </li>*/}
                             <li>
                                 <div className="formField w-50">
                                     <label>

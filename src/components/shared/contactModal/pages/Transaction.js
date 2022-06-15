@@ -716,18 +716,18 @@ const Transaction = (props) => {
                   //  <div className="indRowWrapers">
 
 
-                  
-                    <div className={item.history && item.history[0].status == "success" ? "row success withHistory" : (item.history[0].status == "failed" && item.history[0].amount > 0 ? "row fail withHistory" : "row success withHistory")} key={index}>
+
+                    <div className={item.history && item.history[0] && item.history[0].status == "success" ? "row success withHistory" : (item.history && item.history[0]  && item.history[0].status == "failed" && item.history[0].amount > 0 ? "row fail withHistory" : "row success withHistory")} key={index}>
                       <div className="cellWraperss">
 
                         <div className="cell particulars">
                           <div className="d-flex">
                             <div className="iconCont">
-                              {item.history && item.history[0].payment_via == "cash" ? 
+                              {item.history && item.history[0] && item.history[0].payment_via == "cash" ?
                               <span>
                                 <img src={cashSmallWhite} alt="" />
                               </span>
-                              : (item.history && item.history[0].payment_via == "bank" ? 
+                              : (item.history && item.history[0] && item.history[0].payment_via == "bank" ?
                                 <span>
                                   <img src={bankSmallWhite} alt="" />
                                 </span>
@@ -746,7 +746,7 @@ const Transaction = (props) => {
                             </div>
                             <div className="textCont">
                               <div className="status">
-                                {item.history && item.history[0].status == "failed" && item.history[0].amount > 0 ? "failed" : "success"}
+                                {item.history && item.history[0] && item.history[0].status == "failed" && item.history[0].amount > 0 ? "failed" : "success"}
                                 {/* {item.history && item.history[0].amount < 0 && item.history[0].status == "success" ? 
                                 <span className="refundedTag">Refunded</span>
                                 : ""} */}
@@ -768,13 +768,13 @@ const Transaction = (props) => {
                                 </p>
                                 <div className={item.transaction_for == "product" ? "productItemList" : "hide"}>
                                   <div className="productNumber">
-                                    {item.history && item.history[0].transaction_data.length > 1 ?
-                                    item.history && item.history[0].transaction_data.length
+                                    {item.history && item.history[0] && item.history[0].transaction_data.length > 1 ?
+                                    item.history && item.history[0] && item.history[0].transaction_data.length
                                     : "1"}
                                   </div>
                                   <ul className="productItems">
                                     
-                                    {item.transaction_for == "product" ? item.history[0].transaction_data.map((product, key) => {
+                                    {item.transaction_for == "product" ? item.history && item.history[0] && item.history[0].transaction_data.map((product, key) => {
                                       return (
                                         <li className="itemList" key={key}>
                                           <h3><span>{key+1 + "."}</span>{product.product}</h3>
@@ -816,7 +816,7 @@ const Transaction = (props) => {
 
                         <div className="cell times">
                           <span className="time">
-                            {moment(item.history && item.history[0].transaction_date, 'YYYY-MM-DD').fromNow()}
+                            {moment(item.history && item.history[0] && item.history[0].transaction_date, 'YYYY-MM-DD').fromNow()}
                           </span>
                         </div>
 
@@ -825,7 +825,7 @@ const Transaction = (props) => {
                            
                           <button type="button" className={checkRefundAmount(item) && item.refunded_amount != Math.abs(item.amount).toFixed(2) ? "moreOptBtn" : "hide"} onClick={() => moreOptOpenOld (index)} ref={oldOptIndex === index ? openItemRef : null}></button>
                             <div className={oldOptIndex === index ? "optDropdown" : "optDropdown hide"}>
-                              {item.history && item.history[0].status == "failed" && item.history[0].amount > 0 ?
+                              {item.history && item.history[0] && item.history[0].status == "failed" && item.history[0].amount > 0 ?
                                 <button type="button" className="retry" onClick={() => openCloseRetryModal (true, item)}>Retry</button> 
                                 :
                                 <button type="button" className="refund" onClick={() => openRefundModal (item)}>Refund</button>
