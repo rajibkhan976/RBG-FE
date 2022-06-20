@@ -7,16 +7,18 @@ import listPlugin from '@fullcalendar/list'
 
 import Attendancehead from './Attendancehead';
 //import * as actionTypes from "../../actions/types";
-//import {useDispatch} from "react-redux";
+import { useSelector } from "react-redux";
 import {AttendanceServices} from "../../services/attendance/attendanceServices";
 import moment from "moment";
 import comment from "../../assets/images/comment.svg";
 import avatarImg from "../../assets/images/profile.png";
+import momentTZ from "moment-timezone";
 
 import Loader from "../shared/Loader";
 
 const AppointmentGlobal = (props) => {
-  
+    
+    const loggedInUser = useSelector((state) => state.user.data);
     const [isLoader, setIsLoader] = useState(false);
     const [events, setEvents] = useState([]);
     const [editAppointment, setEditAppointment] = useState(false)
@@ -32,20 +34,32 @@ const AppointmentGlobal = (props) => {
         listDay: "Day"
     }
     
-
+    useEffect(() => {
+        if (loggedInUser && loggedInUser.organizationTimezone) {
+            setTz(loggedInUser.organizationTimezone)
+        }
+        
+    },[loggedInUser])
      const clickOnDate = (e) => {
         let api = calenderRef.current.getApi()
         api.changeView('listDay', e.dateStr)
      }
+     const [tz, setTz] = useState(( ""));
 
     const renderEventContent = (e) => {
         // console.log("Render e", e.event.extendedProps, e)
+        // if (!e.event._instance.range && e.event._instance.range.start) {
+        //     return false;
+        // }
         if (e.view.type == "listDay" || e.view.type == "listMonth") {
             let isHoliday =  e.event.extendedProps ?. isHoliday ? true : false;
             setMakeHeaderOpen(true);
             
-            let eventDate = moment(e.event._instance.range.start).utc().format("Do MMM YYYY");
-            let eventTime = moment(e.event._instance.range.start).utc().format("hh:mm A");
+            // let eventDate = momentTZ(e.event._instance.range.start).tz(tz).format("ddd, DD");
+            // let eventTime = momentTZ(e.event._instance.range.start).tz(tz).format("hh:mm A");
+
+            let eventDate = moment(e.event.extendedProps.checkedInAt).format("ddd, DD");
+            let eventTime = moment(moment(e.event._instance.range.start)).tz(tz).format("hh:mm A");
             return (
                 <>
                     {!isHoliday ? 
@@ -83,15 +97,16 @@ const AppointmentGlobal = (props) => {
                 
                 let eventArr = []
                 for(let atten of attendances.attendance) {
-                    console.log("date", atten.checkedInAt, moment.utc(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss").format("YYYY-MM-DD HH:mm:ss"))
+                    console.log("date", atten.checkedInAt,"---",tz)
                     let eventObj = {
-                        start: moment.utc(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss").format("YYYY-MM-DD HH:mm:ss"),
+                        start: atten.checkedInAt,
                         note: atten.note,
                         name: atten.contact.firstName + " " + atten.contact.lastName,
                         email: atten.contact.email,
                         checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName,
                         className: "hasAttendance",
-                        backgroundColor: "#fff"
+                        backgroundColor: "#fff",
+                        checkedInAt: atten.checkedInAt
                     }
                     eventArr.push(eventObj);
                 }
@@ -133,6 +148,7 @@ const AppointmentGlobal = (props) => {
         let api = calenderRef.current.getApi()
         api.changeView('listDay', e.date)
     }
+    
     return (
         <div className='dashInnerUI'>
             { isLoader ? <Loader/>: "" }

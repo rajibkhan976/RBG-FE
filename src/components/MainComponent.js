@@ -287,7 +287,8 @@ const MainComponent = () => {
                     currentPlan: userDetails.organization ? userDetails.organization.package ? userDetails.organization.package.name : '' : '',
                     isPackage: userDetails.organization ? userDetails.organization.package ? true : false : false,
                     packageId: userDetails.organization ? userDetails.organization.package ? userDetails.organization.package._id : '' : '',
-                    autoRenewLimit: userDetails.creditUsage ? userDetails.creditUsage.autoRenewLimit ? userDetails.creditUsage.autoRenewLimit : 0 : 0
+                    autoRenewLimit: userDetails.creditUsage ? userDetails.creditUsage.autoRenewLimit ? userDetails.creditUsage.autoRenewLimit : 0 : 0,
+                    organizationTimezone: userDetails.organization ?. timezone ? userDetails.organization.timezone : ""
                 };
                 dispatch({
                     type: actionTypes.USER_DATA,

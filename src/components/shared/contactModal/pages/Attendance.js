@@ -4,7 +4,7 @@ import history from "../../../../assets/images/histroy_icon_white.svg";
 import comment from "../../../../assets/images/comment.svg";
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
-
+import { useSelector } from "react-redux";
 import FullCalendar from '@fullcalendar/react'; // must go before plugins
 
 import dayGridPlugin from '@fullcalendar/daygrid';// a plugin!
@@ -17,7 +17,9 @@ import cal_arrow1 from "../../../../assets/images/cal_arrow1.svg";
 import cal_arrow2 from "../../../../assets/images/cal_arrow2.svg";
 import dropArrow from "../../../../assets/images/dropArrow.svg";
 import Loader from "../../Loader";
+import momentTZ from "moment-timezone";
 const moment = extendMoment(Moment);
+
 
 
 
@@ -37,7 +39,11 @@ const Attendance = (props) => {
   const [isLoader, setIsLoader] = useState(false);
   const [calendarMonth, setCalendarMonth] = useState(moment().format("M"));
   const [calendarYear, setCalendarYear] = useState(moment().format("YYYY"));
+  const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
+  const dateFormat = "YYYY-MM-DD";
   
+  const loggedInUser = useSelector((state) => state.user.data);
+  const [tz, setTz] = useState(( loggedInUser.organizationTimezone || ""));
 
   const openCheckInModal = (e) => {
     e.preventDefault();
@@ -55,6 +61,7 @@ const Attendance = (props) => {
   }
 
   useEffect(async () => {
+    console.log("loggedInUser", loggedInUser)
     checkInStatusCheck();
   },[]);
   const fetchAttendances = async () => {
@@ -62,10 +69,10 @@ const Attendance = (props) => {
     if (dateRange?.start) {
       setIsLoader(true);
       let payload = {
-        fromDate: moment(dateRange.start).format("YYYY-MM-DD"),
-        toDate: moment(dateRange.end).format("YYYY-MM-DD"),
+        fromDate: moment(dateRange.start).add(1, "days").format("YYYY-MM-DD"),
+        toDate: moment(dateRange.end).subtract(1, "days").format("YYYY-MM-DD"),
       }
-      let todayDate = moment().format("YYYY-MM-DD");
+      let todayDate = momentTZ.tz(tz);
       let attendances = await AttendanceServices.fetchAttendances(payload, props.contactId);
       let eventArr = [];
       let attenCount = attendances.attendance.length;
@@ -76,12 +83,14 @@ const Attendance = (props) => {
       }
       for (let atten of attendances.attendance) {
         let eventObj = {
-          start: atten.checkedInAt,
+          start: atten.checkedInAt, //momentTZ.tz( atten.checkedInAt, "YYYY-MM-DD HH:mm:ss", tz).format("YYYY-MM-DD[T]HH:mm:ss[Z]"),
+          checkedInAt: atten.checkedInAt, 
           note: atten.note,
           name: atten.contact.firstName + " " + atten.contact.lastName,
           email: atten.contact.email,
           checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName
         }
+        console.log("event ", eventObj)
         eventArr.push(eventObj);
       }
       if (attendances.holidays) {
@@ -107,11 +116,16 @@ const Attendance = (props) => {
       }
 
       // Push blank date
-      var range = moment().range(payload.fromDate, payload.toDate);
+      console.log("Date >>",payload.fromDate, payload.toDate)
+      // let payload.fromDate
+      var range = moment().range(moment(dateRange.start).add(1, "days"), moment(dateRange.end));
+      console.log("range>>", range)
       let dateRangeArr = Array.from(range.by('day', { step: 1 }));
       for (let mDate of dateRangeArr) {
+        // console.log("date from range", mDate.format("YYYY-MM-DD"))
         let eventObj = {
-          start: mDate.format("YYYY-MM-DD")
+          start: mDate.format("YYYY-MM-DD"),
+          isBlankDate: true
         }
         let isDateExist = false;
         for (let ev of eventArr) {
@@ -120,10 +134,10 @@ const Attendance = (props) => {
           }
         }
         if (!isDateExist) {
-          eventArr.push(eventObj);
+         // eventArr.push(eventObj);
         }         
       }
-
+      console.log("eventArr", eventArr)
       setEvents(eventArr);
       setIsLoader(false);
     }
@@ -156,27 +170,36 @@ const Attendance = (props) => {
   const prevMonth = () => {
     if (calendarMonth == 1) {
       setCalendarMonth(12);
-      setCalendarYear(calendarYear - 1);
+      setCalendarYear(Number(calendarYear) - 1);
     } else {
-      setCalendarMonth(calendarMonth - 1);
+      setCalendarMonth(Number(calendarMonth) - 1);
     }
   }
   const nextMonth = () => {
+    console.log("Next month", calendarMonth)
     if (calendarMonth == 12) {
       setCalendarMonth(1);
-      setCalendarYear(calendarYear + 1);
+      setCalendarYear(Number(calendarYear) + 1);
     } else {
-      setCalendarMonth(calendarMonth + 1);
+      setCalendarMonth(Number(calendarMonth) + 1);
     }
   }
 
   const renderEventContent = (e) => {
     // console.log("Render e", e.event.extendedProps, e)
 
+    if (!e.event._instance.range && e.event._instance.range.start) {
+            return false;
+        }
+
     if (e.view.type == "listMonth") {
       let isHoliday = e.event.extendedProps?.isHoliday ? true : false;
-      let eventDate = moment(e.event._instance.range.start).utc().format("ddd, 	DD");
-      let eventTime = moment(e.event._instance.range.start).utc().format("hh:mm A");
+      let eventDate = moment(momentTZ.tz( e.event._instance.range.start, tz )).format("ddd, DD");
+      let eventTime = moment(momentTZ.tz( e.event._instance.range.start, tz )).format("hh:mm A");
+      if (e.event.extendedProps.checkInBy) {
+        console.log("Render event", e, e.event._instance.range.start,  eventDate, eventTime, "TZ", tz)
+      }
+      
       return (
         <>
           {!isHoliday ?
@@ -211,6 +234,9 @@ const Attendance = (props) => {
    
   }
 
+  const eventsSet = (e) => {
+    console.log("events arr after render", e.event?._def.range.start ? e.event._def.range.start : "Blank")
+  }
   return (
     <div className="contactTabsInner appointmentPage attendencePage">
       <div className="modalcont_header">
@@ -280,13 +306,14 @@ const Attendance = (props) => {
             center: 'prev,title,next',
             right: ''
           }}
-          timeZone={"UTC"}
+          timeZone={tz}
           listDaySideFormat={false}
           initialView='listMonth'
           initialDate={initialDate}
           events={events}
+          eventsSet={eventsSet}
           ref={calenderRef}
-          allDay= {true}
+          allDay= {false}
           datesSet={handleMonthChange}
           eventContent={renderEventContent}
           noEventsText={""}

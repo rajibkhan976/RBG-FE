@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import MemberServices from "../../services/member-portal/memberServices"
 import * as actionTypes from "../../actions/types";
 import moment from "moment";
+import momentTZ from "moment-timezone";
 //import userPhoto from "./images/userPhoto.svg";
  
 const MemberCheckInPortal = (props) => {
@@ -36,6 +37,7 @@ const MemberCheckInPortal = (props) => {
   const [countDwonSecond, setCountDwonSecond] = useState(5);
   const [checkedInDuration, setCheckedInDuration] = useState(null);
   const [autoSuggessionList, setAutoSuggessionList] = useState([]);
+  const [tz, setTz] = useState(localStorage.getItem("orgTimezone") || "");
 
 
   useEffect(() => {
@@ -64,6 +66,8 @@ const MemberCheckInPortal = (props) => {
       localStorage.setItem("orgName", virification.name);
       localStorage.setItem("orgCode", virification.code);
       localStorage.setItem("accessCode", accessInput);
+      localStorage.setItem("orgTimezone", virification.timezone);
+      setTz(virification.timezone)
       setOrgName(virification.name);
       setAccessVerify(true);
 
@@ -111,11 +115,11 @@ const MemberCheckInPortal = (props) => {
   }
 
   const displayCurrentTime = () => {
-    let cTime = moment().utc().format("hh:mm A")
+    let cTime = momentTZ.tz(tz).format("hh:mm A")
     setTime(cTime);
 
   };
-  setTimeout(() => {
+  setInterval(() => {
     displayCurrentTime();
   }, 1000);
 
@@ -410,6 +414,10 @@ const MemberCheckInPortal = (props) => {
           }
 
         </div>
+        <footer className="footerWraper">
+            <p className="masterCompany">RedBeltGym</p>
+            <p className="footerText">&copy; 2022 Red Belt Gym, Inc. All rights reserved</p>
+         </footer>
       </div>
       </React.Fragment>
   )

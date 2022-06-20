@@ -11783,3 +11783,7 @@ background-color: #fff;
   white-space: pre;
   display: inline-block;
 }
+.global-attendance .fc .fc-col-header-cell-cushion {
+  position: static;
+  transform: translate(0,0);
+}
