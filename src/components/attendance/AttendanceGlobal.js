@@ -35,6 +35,7 @@ const AppointmentGlobal = (props) => {
     }
     
     useEffect(() => {
+        console.log("loggedInUser", loggedInUser)
         if (loggedInUser && loggedInUser.organizationTimezone) {
             setTz(loggedInUser.organizationTimezone)
         }
@@ -44,7 +45,7 @@ const AppointmentGlobal = (props) => {
         let api = calenderRef.current.getApi()
         api.changeView('listDay', e.dateStr)
      }
-     const [tz, setTz] = useState(( ""));
+     const [tz, setTz] = useState(("UTC"));
 
     const renderEventContent = (e) => {
         // console.log("Render e", e.event.extendedProps, e)
@@ -54,11 +55,12 @@ const AppointmentGlobal = (props) => {
         if (e.view.type == "listDay" || e.view.type == "listMonth") {
             let isHoliday =  e.event.extendedProps ?. isHoliday ? true : false;
             setMakeHeaderOpen(true);
-            
-            // let eventDate = momentTZ(e.event._instance.range.start).tz(tz).format("ddd, DD");
-            // let eventTime = momentTZ(e.event._instance.range.start).tz(tz).format("hh:mm A");
+            console.log("e.event._instance.range.start", e.event._instance.range.start, "tz", tz)
+            // let eventDate = momentTZ.tz(e.event._instance.range.start, tz).format("ddd, DD");
+            // let eventTime = momentTZ.tz(e.event._instance.range.start, tz).format("hh:mm A");
 
-            let eventDate = moment(e.event.extendedProps.checkedInAt).format("ddd, DD");
+            let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
+            let eventDate = moment(dateSource).format("ddd, DD");
             let eventTime = moment(moment(e.event._instance.range.start)).tz(tz).format("hh:mm A");
             return (
                 <>

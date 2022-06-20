@@ -43,7 +43,15 @@ const Attendance = (props) => {
   const dateFormat = "YYYY-MM-DD";
   
   const loggedInUser = useSelector((state) => state.user.data);
-  const [tz, setTz] = useState(( loggedInUser.organizationTimezone || ""));
+  const [tz, setTz] = useState(("UTC"));
+
+  useEffect(() => {
+    console.log("loggedInUser", loggedInUser)
+    if (loggedInUser && loggedInUser.organizationTimezone) {
+        setTz(loggedInUser.organizationTimezone)
+    }
+    
+},[loggedInUser])
 
   const openCheckInModal = (e) => {
     e.preventDefault();

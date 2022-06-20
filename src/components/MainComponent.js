@@ -25,8 +25,6 @@ import RevenueRouter from "./report/Revenue/RevenueRoutes";
 import HeaderDashboard from "./shared/HeaderDashboard";
 import AttendanceGlobalRouting from "./attendance/AttendanceGlobalRouter";
 //import TabLogin from "./tabLogin/TabLogin";
-
-
 import { UserServices } from "../services/authentication/UserServices";
 import config from "../configuration/config";
 import UpdateNotification from "./shared/updateNotifications/UpdateNotification";
@@ -44,9 +42,6 @@ import error_alert from "../../src/assets/images/error_alert.svg";
 import CreditRoutes from "./setup/credit/CreditRoutes";
 import RestrictionPackageModal from "./setup/credit/package/RestrictionPackageModal";
 import AppointmentGlobal from "./appointment/AppointmentGlobalRouter";
-
-
-
 
 // For socket io connection
 //const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlProd;
@@ -622,7 +617,7 @@ const MainComponent = () => {
                     className={
                         "dashboardBody d-flex " +
                         (pathURL === '/automation-list' || pathURL === '/automation-builder' ? ' automationBuilderBody ' : '') +
-                        (showInnerleftMenu ? ((pathURL !== '/dashboard' && pathURL !== '/appointment-global') ? "openSubmenu" : "") : "")
+                        (showInnerleftMenu ? ((pathURL !== '/dashboard' && pathURL !== '/appointment-global' && pathURL !== '/attendance-global') ? "openSubmenu" : "") : "")
                     }
                 >
                     <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu} clickedSetupStatus={(e) => clickedSetupStatus(e)} />
@@ -717,19 +712,15 @@ const MainComponent = () => {
                                 <RevenueRouter toggleLeftSubMenu={toggleLeftSubMenu}
                                     toggleCreate={(e) => toggleCreate(e)}></RevenueRouter>
                             </Route>
-<<<<<<< HEAD
+                            <Route exact path="/attendance-global">
+                                <AttendanceGlobalRouting toggleLeftSubMenu={toggleLeftSubMenu}
+                                    toggleCreate={(e) => toggleCreate(e)}></AttendanceGlobalRouting>
+                            </Route>
                             <Route exact path="/appointment-global">
                                 <AppointmentGlobal toggleLeftSubMenu={toggleLeftSubMenu}
                                                    toggleCreate={(e) => toggleCreate(e)}></AppointmentGlobal>
                             </Route>
                             <Route exact path="/" component={() => <Redirect to="/dashboard"/>}/>
-=======
-                            <Route exact path="/attendance-global">
-                                <AttendanceGlobalRouting toggleLeftSubMenu={toggleLeftSubMenu}
-                                    toggleCreate={(e) => toggleCreate(e)}></AttendanceGlobalRouting>
-                            </Route>
-                            <Route exact path="/" component={() => <Redirect to="/dashboard" />} />                               
->>>>>>> a61b296b... Attendance V1.0
                             <Route exact path="*">
                                 <NotFound toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
                             </Route>
