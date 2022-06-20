@@ -84,7 +84,6 @@ const ProductColors = () => {
     };
 
     useEffect(() => {
-        setLoading(true);
         fetchProductColors();
         fetchCatList();
         const close = (e) => {
@@ -92,7 +91,6 @@ const ProductColors = () => {
                 setListIndex(null);
             }
         }
-        setLoading(false);
         window.addEventListener('keydown', close);
         return () => window.removeEventListener('keydown', close);
     }, []);
