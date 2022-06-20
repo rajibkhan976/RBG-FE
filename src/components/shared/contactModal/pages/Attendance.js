@@ -76,11 +76,11 @@ const Attendance = (props) => {
       }
       for (let atten of attendances.attendance) {
         let eventObj = {
-          start: moment(atten.checkedInAt).utc().format(),
+          start: atten.checkedInAt,
           note: atten.note,
           name: atten.contact.firstName + " " + atten.contact.lastName,
           email: atten.contact.email,
-          checkInBy: atten.checkedInBy._id && atten.checkedInBy._id === atten.contact._id ? "Staff - " + atten.checkedInBy.firstName : "Self"
+          checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName
         }
         eventArr.push(eventObj);
       }
@@ -175,8 +175,8 @@ const Attendance = (props) => {
 
     if (e.view.type == "listMonth") {
       let isHoliday = e.event.extendedProps?.isHoliday ? true : false;
-      let eventDate = moment(e.event._instance.range.start).format("ddd, 	DD");
-      let eventTime = moment(e.event._instance.range.start).format("hh:mm A");
+      let eventDate = moment(e.event._instance.range.start).utc().format("ddd, 	DD");
+      let eventTime = moment(e.event._instance.range.start).utc().format("hh:mm A");
       return (
         <>
           {!isHoliday ?

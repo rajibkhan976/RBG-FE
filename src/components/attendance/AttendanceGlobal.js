@@ -89,7 +89,7 @@ const AppointmentGlobal = (props) => {
                         note: atten.note,
                         name: atten.contact.firstName + " " + atten.contact.lastName,
                         email: atten.contact.email,
-                        checkInBy: atten.checkedInBy._id && atten.checkedInBy._id === atten.contact._id ? "Staff - " + atten.checkedInBy.firstName : "Self",
+                        checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName,
                         className: "hasAttendance",
                         backgroundColor: "#fff"
                     }

@@ -11427,7 +11427,7 @@ td:has(a.hasAttendance){
   border-bottom-right-radius: 5px;
 }
 .global-attendance thead > tr > th {
-  background: #9BAEBC;
+  background: #305671;
   border: none;
   border-radius: 5px 5px 0 0;
   height: 45px;
@@ -11481,7 +11481,7 @@ td:has(a.hasAttendance){
 }
 .global-attendance  .fc-daygrid-event:hover,
 .global-attendance .fc-more-link:hover {
-  background: #333;
+  background: #55bbc9;
   color: #fff;
   font-weight: normal;
   border-color: transparent;
@@ -11493,15 +11493,15 @@ td:has(a.hasAttendance){
     font-size: 13px;
     line-height: 28px;
     color: #FFFFFF;
-    background: #0093FF;
-    border: 1px solid #0093FF;
+    background: #305671;
+    border: 1px solid #305671;
     border-radius: 3px;
     width: 100%;
     display: flex;
 }
 .global-attendance .fc-daygrid-day-bottom {
   text-align: right;
-  margin-top: 5px !important;
+  /* margin-top: 5px !important; */
   display: block;
   padding-inline: 8px;
 }
@@ -11588,7 +11588,7 @@ td:has(a.hasAttendance){
   overflow: visible !important;
 }
 .global-attendance thead > tr:not(.fc-scrollgrid-section-header) > th:first-child {
-  border-bottom: 1px solid #9BAEBC;
+  border-bottom: 1px solid #305671;
 }
 .global-attendance .fc-timeGridWeek-view .fc-scrollgrid-sync-table {
   border: none;
@@ -11626,7 +11626,7 @@ background-color: #fff;
   opacity: 1;
   }
 .global-attendance .fc .fc-daygrid-day.fc-day-today {
-    background-color: transparent;
+  background: linear-gradient(180deg, #CDFBFF 0%, #FFFFFF 100%);
 }
 .global-attendance .fc-list-event-graphic{
   display: none;
@@ -11769,7 +11769,7 @@ background-color: #fff;
 /* global attendance Calendar UI */
 
 .fc .fc-scroller-liquid .fc-list-event:nth-of-type(2) .eyeToolTips.infoSpan .tooltiptextInfo {
-  bottom: -100%;
+  bottom: -170%;
 }
 .fc .fc-scroller-liquid .fc-list-event:nth-of-type(2) .infoSpan .tooltiptextInfo::after {
   top: -23%;
