@@ -85,7 +85,6 @@ const ProductSizes = () => {
     };
 
     useEffect(() => {
-        setLoading(true);
         fetchProductSizes();
         fetchCatList();
         const close = (e) => {
@@ -93,7 +92,6 @@ const ProductSizes = () => {
                 setListIndex(null);
             }
         }
-        setLoading(false);
         window.addEventListener('keydown', close);
         return () => window.removeEventListener('keydown', close);
     }, []);
