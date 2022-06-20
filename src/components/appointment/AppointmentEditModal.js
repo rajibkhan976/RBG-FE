@@ -91,7 +91,9 @@ const AppointmentEditModal = (props) => {
         await AppointmentServices.addTagToAppointment(props.appointmentEdit._id, {
           tag: tag._id
         });
-        props.selectTags(props.appointmentEdit._id, tag, mode)
+        props.selectTags(props.appointmentEdit._id, tag, mode);
+        tags = tags.filter(addedTag => addedTag != tag._id);
+        tagNames = tagNames.filter(addedTag => addedTag._id != tag._id);
         tags.push(tag._id);
         tagNames.push(tag);
         setIsLoader(false);
@@ -122,6 +124,7 @@ const AppointmentEditModal = (props) => {
         });
       }
     }
+    console.log('tags', tags, tag);
     setEditedTags(tags);
     setEditedTagNames(tagNames);
     setTagListToggle(false);

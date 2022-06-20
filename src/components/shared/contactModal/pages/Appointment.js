@@ -145,6 +145,8 @@ const Appointment = (props) => {
       let tagNames = filteredObj.tagNames;
       let tags = filteredObj.tags;
       if (mode) {
+        tagNames = tagNames.filter(addedTag => addedTag._id != tag._id);
+        tags = tags.filter(addedTag => addedTag != tag._id);
         tagNames.push(tag);
         tags.push(tag._id);
       } else {
@@ -153,6 +155,7 @@ const Appointment = (props) => {
       }
       appointments[index].tags = tags;
       appointments[index].tagNames = tagNames;
+      console.log('appointments', appointments);
       setAppointments(appointments)
     }
   }
