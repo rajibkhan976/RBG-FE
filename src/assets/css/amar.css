@@ -4373,3 +4373,12 @@ footer.formControl > .btn:disabled,
 .appointmentModalListing .statusCell .notePopContent:after {
   right: 23px;
 }
+
+/* EDIT MODAL CHANGES */
+.agendaEdit.error {
+  flex-wrap: wrap;
+}
+
+.agendaEdit.error .editInput {
+  width: inherit;
+}

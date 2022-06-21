@@ -56,22 +56,26 @@ const AppointmentEditModal = (props) => {
       if (agendaRef.current.value.trim() === "") {
         setErrorEdit({ errorEdit, agenda: "Agenda cannot be empty" });
       } else {
-        setIsLoader(true);
-        await AppointmentServices.editAgenda(props.appointmentEdit._id, {
-          agenda: agendaRef.current.value
-        });
-        dispatch({
-          type: actionTypes.SHOW_MESSAGE,
-          message: "Agenda updated successfully.",
-          typeMessage: 'success'
-        });
-        setIsLoader(false);
-        let appoint = props.appointmentEdit;
-        appoint.agenda = agendaRef.current.value;
-        props.updateAppointment(appoint);
-        setEditedAgenda(agendaRef.current.value);
-        setIsEditAgenda(false);
-        setErrorEdit({ errorEdit, agenda: "" });
+        if(agendaRef.current.value.length > 30){
+          setErrorEdit({ errorEdit, agenda: "Agenda cannot be more than 30 characters" });
+        } else {
+          setIsLoader(true);
+          await AppointmentServices.editAgenda(props.appointmentEdit._id, {
+            agenda: agendaRef.current.value
+          });
+          dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: "Agenda updated successfully.",
+            typeMessage: 'success'
+          });
+          setIsLoader(false);
+          let appoint = props.appointmentEdit;
+          appoint.agenda = agendaRef.current.value;
+          props.updateAppointment(appoint);
+          setEditedAgenda(agendaRef.current.value);
+          setIsEditAgenda(false);
+          setErrorEdit({ errorEdit, agenda: "" });
+        }
       }
     } catch (e) {
       setIsLoader(false);
@@ -502,8 +506,8 @@ const AppointmentEditModal = (props) => {
             <div
               className={
                 isEditAgenda
-                  ? `formControl d-flex isEditing ${errorEdit.agenda && errorEdit.agenda.trim() !== "" ? "error" : ""}`
-                  : `formControl d-flex  ${errorEdit.agenda && errorEdit.agenda.trim() !== "" ? "error" : ""}`
+                  ? `formControl agendaEdit d-flex isEditing ${errorEdit.agenda && errorEdit.agenda.trim() !== "" ? "error" : ""}`
+                  : `formControl agendaEdit d-flex  ${errorEdit.agenda && errorEdit.agenda.trim() !== "" ? "error" : ""}`
               }
             >
               <input
@@ -579,6 +583,11 @@ const AppointmentEditModal = (props) => {
                   </>
                 )}
               </div>
+              {errorEdit.agenda && errorEdit.agenda.trim() !== "" ? (
+                <p className="errorMsg">{errorEdit.agenda}</p>
+              ) : (
+                ""
+              )}
             </div>
             <div className="formControl d-flex">
                     <ul>
@@ -654,7 +663,7 @@ const AppointmentEditModal = (props) => {
                   </button>
                 </div>
                 <div className="formControl d-flex">
-                  <label className="labelAppointment">Date:</label>
+                  <label className="labelAppointment">Time:</label>
                   <span className="textAppointment">
                     {props.appointmentEdit.fromTime} -{" "}
                     {props.appointmentEdit.toTime}
