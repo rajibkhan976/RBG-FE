@@ -11536,9 +11536,9 @@ td:has(a.hasAttendance){
 }
 .global-attendance .fc {
   flex: 1 1 auto;
-  overflow: hidden;
+  /* overflow: hidden; */
   height: inherit !important;
-  min-height: 652px;
+  /* min-height: 652px; */
 }
 /* .appointmentGlobalPage .userListBody {
   height: 100%;
