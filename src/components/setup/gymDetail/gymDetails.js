@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loader from "../../shared/Loader";
 import { ErrorAlert, SuccessAlert } from "../../shared/messages";
 import profileAvatar from "../../../assets/images/camera.svg";
@@ -12,7 +12,7 @@ import copyIcon from "../../../assets/images/copyIcon.svg";
 import infos from "../../../assets/images/infos.svg";
 import regenerate from "../../../assets/images/regenerate.svg";
 import target_blank from "../../../assets/images/target_blank.svg";
-
+import * as actionTypes from "../../../actions/types";
 
 import AddHolidayModal from "./addHolidayModal";
 import config from "../../../configuration/config";
@@ -50,7 +50,7 @@ const GymDetails = (props) => {
 
   const [copiedText, setCopiedText] = useState(false);
   const [copiedurl, setCopiedurl] = useState(false);
-
+  const [hasTimezone, setHasTimezone] = useState(false);
   const [validateMsg, setValidateMsg] = useState({
     name: "",
     contactPerson: "",
@@ -71,6 +71,8 @@ const GymDetails = (props) => {
       "prefix": "+1"
     }
   ]);
+  const userData = useSelector((state) => (state.user?.data) ? state.user.data:"");
+  const dispatch = useDispatch();
   // END - Variable set while development --- Jit
   const fetchGymDetails = async () => {
     try {
@@ -89,7 +91,7 @@ const GymDetails = (props) => {
       setEditAccess(gymData.editAccess);
       console.log("editAccess:::::::::::::::::::" , editAccess);
       console.log("gymDetails:::::::::::::::::::" , gymData.gymDetails);
-
+      setHasTimezone((gymData.gymDetails?.timezone)?true:false);
       if(!gymData.gymDetails?.timezone) {
         setGymData(prevState => ({...prevState, 
           timezone: detectedTimezone?.zoneName, 
@@ -226,6 +228,11 @@ const GymDetails = (props) => {
         console.log(payload);
         const updatedData = await GymDetailsServices.gymDetailUpdate(payload);
         setGymData(updatedData);
+        setHasTimezone((gymData.timezone) ? true: false);
+        dispatch({
+          type: actionTypes.USER_DATA,
+          data: {...userData, organizationTimezone: gymData.timezone.toString()}
+        });
         console.log("Updated Data", updatedData);
         setSuccessMsg("Gym details updated successfully");
         setTimeout(() => { setShowEditForm(false) }, 5000);
@@ -453,6 +460,7 @@ const regenerateCodeHandler = (e) =>{
                     <option>{(gymData?.timezone) ? gymData?.timezone : "-"}</option>
                   </select>
                 </div>
+                <div className={hasTimezone ? "hide" : "cz_timezoneWarning"}>The timezone is not saved yet. Please edit the details and save the timezone.</div>
                 <div className="accessCode">
                   <h3>Access Code 
                   <span class="infoSpan"><img src={infos} alt=""/><span class="tooltiptextInfo">Access code for gym stuff</span></span>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import {useDispatch, useSelector} from "react-redux";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import icon_trans from "../../../../assets/images/icon_trans.svg";
 import wwConnect from "../../../../assets/images/wwConnect.svg";
@@ -21,6 +22,7 @@ import Loader from "../../Loader";
 import CompleteTransactionModal from "./transaction/CompleteTransactionModal";
 import ConfirmBox from "../../confirmBox";
 import RetryPayment from "./transaction/RetryPayment";
+import { utils } from "../../../../helpers";
 
 const Transaction = (props) => {
   const [transactionList, setTransactionList] = useState([]);
@@ -57,6 +59,7 @@ const Transaction = (props) => {
   const [retryModal, setRetryModal] = useState(false);
   const [retryAmount, setRetryAmount] = useState();
   const [retryId, setRetryId] = useState();
+  const timezone = useSelector((state) => (state.user?.data?.organizationTimezone) ? state.user.data.organizationTimezone : "UTC");
   const [refundAlertMsg, setRefundAlertMsg] = useState({
     message: "",
     type: ""
@@ -209,6 +212,7 @@ const Transaction = (props) => {
   
 
   useEffect(() => {
+    console.log("Timezone: ", timezone);
     const close = (e) => {
       if(e.keyCode === 27){
         setRefundModal(false);
@@ -418,9 +422,11 @@ const Transaction = (props) => {
   };
 
   const dayLeft = (due_date) => {
-    let payDate = moment(due_date);
-    let today = moment();
+    let payDate = moment(utils.convertUTCToTimezone(due_date ,timezone, "YYYY-MM-DD"));
+    let today = moment().tz(timezone);
     let result = payDate.diff(today, 'days');
+    console.log("paydate: ", payDate);
+    console.log("Result: ", result);
 
     if (result < 31) {
       if (result == 0) {
@@ -433,7 +439,7 @@ const Transaction = (props) => {
         }
       }
     } else {
-      return moment(due_date.split(" ")[0], 'YYYY-MM-DD').format('Do MMM, YYYY')
+      return payDate.format('Do MMM, YYYY')
     }
   };
 
@@ -578,7 +584,9 @@ const Transaction = (props) => {
                 
                   <div className="cell times">
                     <span className="time">
-                      {dayLeft(item.due_date)}
+                      {/* {dayLeft(item.due_date)}<br /> */}
+                      {dayLeft(utils.convertUTCToTimezone(item.due_date ,timezone, "YYYY-MM-DD"))}
+                      {/* {utils.convertUTCToTimezone(item.due_date ,timezone)} */}
                     </span>
                   </div>
                   <div className="cell action">
@@ -816,7 +824,8 @@ const Transaction = (props) => {
 
                         <div className="cell times">
                           <span className="time">
-                            {moment(item.history && item.history[0] && item.history[0].transaction_date, 'YYYY-MM-DD').fromNow()}
+                            {/* {moment(item.history && item.history[0] && item.history[0].transaction_date, 'YYYY-MM-DD').fromNow()} <br /> */}
+                            {moment(utils.convertUTCToTimezone(item.history && item.history[0] && item.history[0].transaction_date, timezone, 'YYYY-MM-DD hh:mm A')).fromNow()}
                           </span>
                         </div>
 
@@ -911,10 +920,13 @@ const Transaction = (props) => {
 
                                 <div className="cell times">
                                   <span className="time">
-                                    {moment(element.transaction_date.split(" ")[1], 'hh:mm A').format('hh:mm A')}
+                                    {/* {moment(element.transaction_date.split(" ")[1], 'hh:mm A').format('hh:mm A')} */}
+                                    {/* {element.transaction_date} <br /><br /> */}
+                                    {utils.convertUTCToTimezone(element.transaction_date ,timezone, 'YYYY-MM-DD,hh:mm A').split(",")[1]}
                                     <span className="historyDate">
                                       {/* {element.transaction_date.split(" ")[0]}  */}
-                                      {moment(element.transaction_date.split(" ")[0], 'YYYY-MM-DD').format('Do MMM, YYYY')}
+                                      {/* {moment(element.transaction_date.split(" ")[0], 'YYYY-MM-DD').format('Do MMM, YYYY')} */}
+                                      {moment(utils.convertUTCToTimezone(element.transaction_date ,timezone, 'YYYY-MM-DD,hh:mm A').split(",")[0]).format('Do MMM, YYYY')}
                                     </span>
                                   </span>
                                 </div>

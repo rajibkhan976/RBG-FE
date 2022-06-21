@@ -213,6 +213,16 @@ export const utils = {
         console.log('Formatted Exp d', formattedCardExpairy)
 
         return formattedCardExpairy;
+    },
+    convertUTCToTimezone(utcDt, timezone = null, dateFormat = "LLL") {
+        const formattedDate = moment(utcDt).format(dateFormat);
+        if(!timezone) return formattedDate;
+        return moment.utc(formattedDate, null).tz(timezone).format(dateFormat);
+    },
+    convertTimezoneToUTC(date, timezone = null, dateFormat = "LLL") {
+        const formattedDate = moment(date).format(dateFormat);
+        if(!timezone) return formattedDate;
+        return moment(formattedDate).tz(timezone).utc().format(dateFormat);
     }
 
 }

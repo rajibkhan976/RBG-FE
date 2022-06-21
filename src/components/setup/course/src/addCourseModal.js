@@ -53,7 +53,8 @@ const AddCourseModal = (props) => {
       const res = await CustomizationServices.fetchAgeGroup();
       setAgeGroup(res.agegroups);
       if (!Object.keys(props.editCourseItem).length) {
-        setCourseData((prevState) => ({...prevState, ageGroupId: res.agegroups[0]._id}));
+        console.log(res.agegroups)
+        setCourseData((prevState) => ({...prevState, ageGroupId: (res.agegroups.length)?res.agegroups[0]._id:""}));
       }
     } catch (e) {
       dispatch({

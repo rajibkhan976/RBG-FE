@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import {useDispatch, useSelector} from "react-redux";
 import CallConfiguration from "./callConfiguration";
 import { RingtoneServices } from "../../../../services/setup/RingtoneServices";
 import { Scrollbars } from "react-custom-scrollbars-2";
@@ -56,6 +57,7 @@ const CallSetup = () => {
     const [sortBy, setSortBy] = useState("");
     const [sortType, setSortType] = useState("asc");
     const [editConfig, setEditConfig] = useState(false);
+    const timezone = useSelector((state) => (state.user?.data?.organizationTimezone) ? state.user.data.organizationTimezone : "UTC");
 
     const ringtineListItem = useRef();
 
@@ -71,6 +73,10 @@ const CallSetup = () => {
     const toggleOptions = (index) => {
         setOption(index !== option ? index : null);
     };
+
+    useEffect(() => {
+      console.log("timezone: ", timezone)
+    }, []);
     
      /**
      * Auto hide success or error message
@@ -832,9 +838,10 @@ const CallSetup = () => {
                                       </div>
                                       <div className="createDate">
                                         <button className="btn">
-                                          {moment(list.createdAt).format(
+                                          {/* {moment(list.createdAt).format(
                                             "MM/DD/YYYY h:mm a"
-                                          )}
+                                          )}<br/> */}
+                                          {utils.convertUTCToTimezone(list.createdAt, timezone, "MM/DD/YYYY h:mm a")}
                                         </button>
                                         <div className="info_3dot_icon">
                                           <button

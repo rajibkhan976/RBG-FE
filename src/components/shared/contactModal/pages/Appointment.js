@@ -24,6 +24,8 @@ import {useDispatch, useSelector} from "react-redux";
 import { AppointmentServices } from "../../../../services/appointment/appointment";
 import { TagServices } from "../../../../services/setup/tagServices";
 import AppointmentEditModal from "../../../appointment/AppointmentEditModal";
+import { utils } from "../../../../helpers";
+import moment from "moment";
 
 const Appointment = (props) => {
   const [isLoader, setIsLoader] = useState(false);
@@ -44,6 +46,7 @@ const Appointment = (props) => {
   const [toggleContactList, setToggleContactList] = useState(false);
   const scrollAppDetail = useRef(null)
   const dispatch = useDispatch();
+  const timezone = useSelector((state) => (state.user?.data?.organizationTimezone) ? state.user.data.organizationTimezone : "UTC");
 
   const [toggleEditList, setToggleEditList] = useState(null);
   const [noteOnHover, setNoteOnHover] = useState(false)
@@ -344,9 +347,14 @@ const Appointment = (props) => {
                           </svg>
                         </figure>
                         <p>
-                          {appointment.date}{" "}
+                          {appointment.date}
                           <strong className="appTime">
                             {appointment.fromTime} - {appointment.toTime}
+                            {/* {
+                            utils.convertUTCToTimezone(moment(appointment.date, "MM/DD/YYYY").format("YYYY-MM-DD") + " " + moment(appointment.fromTime, "hh:mm A").format("hh:mm:ss"), timezone, "YYYY-MM-DD,h:mm A").split(",")[1]
+                            + " - " +
+                            utils.convertUTCToTimezone(moment(appointment.date, "MM/DD/YYYY").format("YYYY-MM-DD") + " " + moment(appointment.toTime, "hh:mm A").format("hh:mm:ss"), timezone, "YYYY-MM-DD,h:mm A").split(",")[1]
+                            } */}
                           </strong>
                         </p>
                       </div>

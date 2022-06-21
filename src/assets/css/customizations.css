@@ -390,3 +390,15 @@
 .cz_ColorProduct .cell_xl strong {
     font-weight: 500;
 }
+
+.cz_timezoneWarning {
+    background: #FFF5ED url("../images/bell.svg") no-repeat left 32px center;
+    border: 1px solid #FFE4CD;
+    border-radius: 5px;
+    padding: 13px 28px 13px 72px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #F1A768;
+    line-height: 17px;
+    margin-bottom: 32px;
+}

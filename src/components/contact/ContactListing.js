@@ -48,6 +48,7 @@ const ContactListing = forwardRef((props, ref) => {
     const modalId = useSelector((state) => state.contact.contact_modal_id);
     const isFirstTime = useSelector((state) => state.contact.isFirstTime);
     const isClicked = useSelector((state) => state.notification.importId);
+    const timezone = useSelector((state) => (state.user?.data?.organizationTimezone) ? state.user.data.organizationTimezone : null);
     const [checkboxes, setCheckboxes] = useState([]);
     const [selectAllCheckbox, setSelectAllCheckbox] = useState(false);
     const [selectSingle, setSelectSingle] = useState(false);
@@ -639,7 +640,7 @@ const ContactListing = forwardRef((props, ref) => {
                                                 <span className={ele[item.id].is_valid ?
                                                     "number valid" : "number invalid"}>{ele[item.id].dailCode + "-" + ele[item.id].number}</span> :
                                                 "") : (item.id === 'dob' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LL') :
-                                                (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LLL') : ele[item.id]))
+                                                (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? utils.convertUTCToTimezone(ele[item.id],timezone) : ele[item.id]))
                                         }
                                              </span>
                                 </button>
