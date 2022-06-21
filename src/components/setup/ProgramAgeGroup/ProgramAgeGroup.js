@@ -223,7 +223,7 @@ const ProgramAgeGroup = () => {
             />}
             {deleteConfirm && 
             <ConfirmBox 
-            message="Are you sure, you want to delete this tag?" 
+            message="Once you delete this one, this will be deleted from associated programs. Are you sure you want to delete?" 
             callback={deleteAgeGroup} 
             />}
         </div>
