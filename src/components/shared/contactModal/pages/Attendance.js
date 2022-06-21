@@ -202,7 +202,8 @@ const Attendance = (props) => {
 
     if (e.view.type == "listMonth") {
       let isHoliday = e.event.extendedProps?.isHoliday ? true : false;
-      let eventDate = moment(momentTZ.tz( e.event._instance.range.start, tz )).format("ddd, DD");
+      let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
+      let eventDate = moment(momentTZ.tz(dateSource,tz)).format("ddd, DD");
       let eventTime = moment(momentTZ.tz( e.event._instance.range.start, tz )).format("hh:mm A");
       if (e.event.extendedProps.checkInBy) {
         console.log("Render event", e, e.event._instance.range.start,  eventDate, eventTime, "TZ", tz)
