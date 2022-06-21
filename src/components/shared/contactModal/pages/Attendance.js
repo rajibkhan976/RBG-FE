@@ -193,6 +193,15 @@ const Attendance = (props) => {
     }
   }
 
+  const convertUTCtoTZ = (date, format) => {
+    let utcDate = momentTZ.tz(date, "UTC");
+    let convertedDate = momentTZ.tz(utcDate, tz);
+    if (format) {
+      convertedDate = convertedDate.format(format);
+    }
+    return convertedDate;
+  }
+
   const renderEventContent = (e) => {
     // console.log("Render e", e.event.extendedProps, e)
 
@@ -203,10 +212,12 @@ const Attendance = (props) => {
     if (e.view.type == "listMonth") {
       let isHoliday = e.event.extendedProps?.isHoliday ? true : false;
       let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
-      let eventDate = moment(momentTZ.tz(dateSource,tz)).format("ddd, DD");
-      let eventTime = moment(momentTZ.tz( e.event._instance.range.start, tz )).format("hh:mm A");
+      let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
+      console.log("TZ", tz)
+      
+      let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
       if (e.event.extendedProps.checkInBy) {
-        console.log("Render event", e, e.event._instance.range.start,  eventDate, eventTime, "TZ", tz)
+        console.log("event dateSource >>>", e.event.extendedProps.checkedInAt, convertUTCtoTZ(e.event.extendedProps.checkedInAt, "YYYY-MM-DD HH:mm:ss"))
       }
       
       return (
