@@ -30,7 +30,7 @@ const Attendance = (props) => {
   const [events, setEvents] = useState([]);
   const [dateRange, setDateRange] = useState(false);
   const [attendanceCount, setAttendanceCount] = useState(0);
-  const [checkInStatus, setCheckInStatus] = useState(false);
+  const [enableCheckIn, setEnableCheckIn] = useState(false);
   const [isTodayHoliday, setIsTodayHoliday] = useState(false);
   const calenderRef = useRef([]);
   const listOfMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sep","Oct","Nov","Dec"];
@@ -64,7 +64,9 @@ const Attendance = (props) => {
   const checkInStatusCheck = async () => {
     let resp = await AttendanceServices.checkInStatus(props.contactId)
     if (resp.isAlreadyCheckedIn) {
-      setCheckInStatus(true);
+      setEnableCheckIn(false);
+    } else {
+      setEnableCheckIn(true);
     }
   }
 
@@ -123,14 +125,10 @@ const Attendance = (props) => {
         }
       }
 
-      // Push blank date
-      console.log("Date >>",payload.fromDate, payload.toDate)
       // let payload.fromDate
-      var range = moment().range(moment(dateRange.start).add(1, "days"), moment(dateRange.end));
-      console.log("range>>", range)
+      var range = moment().range(moment(dateRange.start), moment(dateRange.end));
       let dateRangeArr = Array.from(range.by('day', { step: 1 }));
       for (let mDate of dateRangeArr) {
-        // console.log("date from range", mDate.format("YYYY-MM-DD"))
         let eventObj = {
           start: mDate.format("YYYY-MM-DD"),
           isBlankDate: true
@@ -142,7 +140,7 @@ const Attendance = (props) => {
           }
         }
         if (!isDateExist) {
-         // eventArr.push(eventObj);
+         eventArr.push(eventObj);
         }         
       }
       console.log("eventArr", eventArr)
@@ -199,6 +197,9 @@ const Attendance = (props) => {
     if (format) {
       convertedDate = convertedDate.format(format);
     }
+    console.log("raw date", date)
+    console.log("utcDate", utcDate)
+    console.log("convertedDate", convertedDate)
     return convertedDate;
   }
 
@@ -206,14 +207,13 @@ const Attendance = (props) => {
     // console.log("Render e", e.event.extendedProps, e)
 
     if (!e.event._instance.range && e.event._instance.range.start) {
-            return false;
-        }
+        return false;
+    }
 
     if (e.view.type == "listMonth") {
       let isHoliday = e.event.extendedProps?.isHoliday ? true : false;
       let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
       let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
-      console.log("TZ", tz)
       
       let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
       if (e.event.extendedProps.checkInBy) {
@@ -265,7 +265,7 @@ const Attendance = (props) => {
           <p className="subheadingTabInner">View monthly attendance data</p>
         </div>
         <div className="action"> 
-          {!checkInStatus && !isTodayHoliday? 
+          {enableCheckIn && !isTodayHoliday? 
           <button className="orangeBtn clockinBtn" onClick={openCheckInModal}>
             <img src={history} alt="" /> Check In
           </button>
@@ -326,7 +326,7 @@ const Attendance = (props) => {
             center: 'prev,title,next',
             right: ''
           }}
-          timeZone={tz}
+          // timeZone={tz}
           listDaySideFormat={false}
           initialView='listMonth'
           initialDate={initialDate}
@@ -346,7 +346,7 @@ const Attendance = (props) => {
           <AddCommentModal 
           closeAddHolidayModal={closeHolidayModal} 
           contactId={props.contactId} 
-          checkInStatus={setCheckInStatus}
+          checkInStatus={setEnableCheckIn}
           fetchAttendances={fetchAttendances}
           />
         </>
