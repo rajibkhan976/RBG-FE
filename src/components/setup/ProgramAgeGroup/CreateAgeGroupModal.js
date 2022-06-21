@@ -167,7 +167,7 @@ const CreateAgeGroupModal = (props) => {
                             <input type="text" className="cmnFieldStyle" name="name" value={formData.name} onChange={groupNameHandel} />
                             {formFieldError.name ? <div className="errorMsg">{formFieldError.name}</div> : ""}
                         </div>
-                        <div className="cmnFieldName cz_block">Age</div>
+                        <div className="cmnFieldName cz_block">Age Range</div>
                         <div className="cmnFormRow">
                             <div className={formFieldError.min ? "cmnFormCol errorField" : "cmnFormCol"}>
                                 <label className="cmnFieldName">Min</label>
@@ -188,10 +188,10 @@ const CreateAgeGroupModal = (props) => {
                                 value={formData.max} 
                                 onChange={maxHandel}>
                                     <option value="">Select age</option>
-                                    {formData.min !== "below" ? <option value="below">Above</option> : ""}
+                                    {formData.min !== "below" ? <option value="above">Above</option> : ""}
                                     {maxAgeArr?.map((val, key) => {
                                         return (
-                                            <option value={val}>{val}</option>
+                                            <option key={"max_"+key} value={val}>{val}</option>
                                         )
                                     })}
                                 </select>

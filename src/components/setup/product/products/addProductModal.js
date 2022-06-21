@@ -375,7 +375,7 @@ const AddProductModal = (props) => {
                   <button className="addColor" style={{ backgroundColor: "#797D62" }}></button> */}
                     {colorSize.colors ? colorSize.colors.map((color, i) => {
                       return <button className={(productData.colors.indexOf(color._id) != -1) ? "addColor active" : "addColor"}
-                        style={{ backgroundColor: color.colorcode }}
+                        style={{ backgroundColor: color.colorcode, border: '1px solid rgb(0 0 0 / 20%)', marginRight: '6px' }}
                         onClick={(event) => handleColor(event, color)}
                         key={"color_" + i}
                       ></button>
