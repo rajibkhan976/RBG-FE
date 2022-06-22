@@ -172,5 +172,9 @@ module.exports = {
     attendaneUrl: "https://" + process.env.REACT_APP_ATTENDANCE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV,
     
     // Member Portal
-    memberCheckInPortal: "https://" + process.env.REACT_APP_MEMBER_CHECKIN_PORTAL + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/member-portal"
+    memberCheckInPortal: "https://" + process.env.REACT_APP_MEMBER_CHECKIN_PORTAL + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV + "/member-portal",
+    
+    // Dont remove it
+    personalDetailsUrl: "https://" + process.env.REACT_APP_PERSONALDETAILS + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV,
+
 }  
