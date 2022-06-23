@@ -18,6 +18,9 @@ import Loader from "../shared/Loader";
 import Pagination from '../shared/Pagination';
 import Moment from 'moment';
 import dependent_white from "../../assets/images/dependent.svg";
+import ShowContactTagModal from "../shared/showContactTagModal";
+import TagList from "../appointment/TagList";
+import cross_w from '../../../src/assets/images/cross_w.svg';
 
 
 const ContactListing = forwardRef((props, ref) => {
@@ -56,6 +59,10 @@ const ContactListing = forwardRef((props, ref) => {
     const [addSelectAll, setAddSelectAll] = useState({
         status: false,
     });
+    const [tagList, setTagList] = useState([]);
+    const [selectedContactId, setSelectedContactId] = useState(0);
+    const [openModal, setOpenModal] = useState(false);
+    const [tagListToggle, setTagListToggle] = useState(false);
     let arrangeColRef = useRef();
 
     const openFilter = () => {
@@ -154,7 +161,25 @@ const ContactListing = forwardRef((props, ref) => {
             setIsLoader(false);
         }
     }
-
+    const selectTag = async (tag, mode) => {
+        try {
+            setIsLoader(true);
+            let payload = {
+                tag: tag
+            }
+            let contact = await ContactService.applyRemoveTag(selectedContactId, payload, 'apply');
+            setIsLoader(false);
+            setTagListToggle(false);
+            fetchContact();
+        } catch (e) {
+            setIsLoader(false);
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
+        }
+    }
     const getQueryParams = async () => {
         const search = utils.getQueryVariable('search');
         const group = utils.getQueryVariable('group');
@@ -599,7 +624,28 @@ const ContactListing = forwardRef((props, ref) => {
             });
         }
     })*/
-
+    const removeTag = async (tagId, contactId = null) => {
+        try {
+            setIsLoader(true);
+            let payload = {
+                tag: {
+                    _id: tagId
+                }
+            }
+            let contact = await ContactService.applyRemoveTag(contactId ? contactId : selectedContactId, payload, 'remove');
+            setIsLoader(false);
+            let filteredTags = tagList.filter(el => el._id !== tagId);
+            setTagList(filteredTags);
+            fetchContact();
+        } catch (e) {
+            setIsLoader(false);
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
+        }
+    }
     const GenerateContacts = () => {
         return contactList.map((ele, i) => {
             let j = 0;
@@ -608,7 +654,8 @@ const ContactListing = forwardRef((props, ref) => {
                     {savedColList.filter(filterCondition => filterCondition.status).map((item, pp) => {
                         j++;
                         return (
-                            <div className={item.id === "name" ? "dataTableCell user userPlusSelect contactSelects" : "dataTableCell contactSelects"}
+                            <div className={item.id === "name" ? "dataTableCell user userPlusSelect contactSelects" :
+                                (item.id === "tags" ? "dataTableCell contactSelects tags" : "dataTableCell contactSelects") }
                                  key={'dataTableCell_' + i + pp}>
                                 {(j === 1) ? <label className="indselects"><span className="customCheckbox allContacts">
                                     <input type="checkbox"
@@ -623,8 +670,49 @@ const ContactListing = forwardRef((props, ref) => {
                                 {((j === 1) && (ele && ele.isDependent && ele.guardianId) ?
                                     <span className="infoDependent" title="Dependent"><img src={dependent_white}
                                                                                            alt="dependent_white"/></span> : "")}
-                                <button className="btn" onClick={() => openContactModal(ele._id)}>
-                                    {(item.id === "name") ? <span className="tableCellUserImg">
+                                {
+                                    (item.id === 'tags' ?
+                                        (ele[item.id] !== undefined ? (ele[item.id].length < 3 ?
+                                            <>
+                                                {
+                                                    ele[item.id].slice(0,2).map(el => {
+                                                        return (
+                                                            <span className="contactPageTags">
+                                                                <span className="labelSelected">{el.name}</span>
+                                                        <span className="closeTag" onClick={() => removeTag(el._id, ele._id)}><img
+                                                            src={cross_w}
+                                                            alt=""/></span>
+                                                            </span>
+                                                        )
+                                                    } )
+                                                }
+                                                <button className='contactMoreTag' onClick={() => openContactTagList(ele)}>
+                                                    +
+                                                </button>
+                                            </>
+                                             : <>
+                                                {
+                                                    ele[item.id].slice(0,2).map(el => {
+                                                        return (
+                                                            <span className="contactPageTags">
+                                                                <span className="labelSelected">{el.name}</span>
+                                                                <span className="closeTag" onClick={() => removeTag(el._id, ele._id)}><img
+                                                                    src={cross_w}
+                                                                    alt=""/></span>
+                                                            </span>
+                                                        )
+                                                    })
+                                                }
+                                                <button className='contactMoreTag' onClick={() => openContactTagModal(ele)}>
+                                                    {ele[item.id].length - 2}+
+                                                </button>
+                                                <button className='contactMoreTag' onClick={() => openContactTagList(ele)}>
+                                                    +
+                                                </button>
+                                            </> )  : <button className='contactMoreTag' onClick={() => openContactTagList(ele)}>
+                                                        +
+                                                    </button>)   : <button className="btn" onClick={() => openContactModal(ele._id)}>
+                                            {(item.id === "name") ? <span className="tableCellUserImg">
                                             <LazyLoadImage
                                                 className="thumbImg"
                                                 src={ele.profilePic !== undefined ? ele.profilePic : owner_img_1}
@@ -634,16 +722,17 @@ const ContactListing = forwardRef((props, ref) => {
                                                 visibleByDefault={true}
                                             />
                                         </span> : ""}
-                                    <span className="userNames">
-                                        {(item.id === 'mobile' || item.id === 'phone' || item.id === 'dadPhone' || item.id === 'momPhone') ?
+                                            <span className="userNames">
+                                        {((item.id === 'mobile' || item.id === 'phone' || item.id === 'dadPhone' || item.id === 'momPhone') ?
                                             ((ele[item.id] && ele[item.id].dailCode && ele[item.id].number !== "") ?
                                                 <span className={ele[item.id].is_valid ?
                                                     "number valid" : "number invalid"}>{ele[item.id].dailCode + "-" + ele[item.id].number}</span> :
                                                 "") : (item.id === 'dob' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LL') :
-                                                (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? utils.convertUTCToTimezone(ele[item.id],timezone) : ele[item.id]))
+                                                (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? utils.convertUTCToTimezone(ele[item.id],timezone) : ele[item.id])))
                                         }
                                              </span>
-                                </button>
+                                        </button>)
+                                }
                             </div>
                         )
                     })}
@@ -705,7 +794,19 @@ const ContactListing = forwardRef((props, ref) => {
             </li>
         )
     }
-
+    const openContactTagModal = (contact) => {
+        setOpenModal(true);
+        setTagList(contact.tags);
+        setSelectedContactId(contact._id);
+    }
+    const openContactTagList = (contact) => {
+        setTagListToggle(!tagListToggle);
+        setSelectedContactId(contact._id);
+    }
+    const closeModalHandler = () =>{
+        setOpenModal(false);
+    }
+   
     return (
         <div className="dashInnerUI">
             {isLoader ? <Loader/> : ''}
@@ -833,10 +934,14 @@ const ContactListing = forwardRef((props, ref) => {
                         : ''}
                 </div>
             }
+             {openModal &&
+                 <ShowContactTagModal closeModal={closeModalHandler} removeTag={removeTag} tagList={tagList}/>
+             }
+            <TagList tagListToggle={tagListToggle} selectTag={selectTag}/>
         </div>
     );
 
-
+   
 })
 
 export default ContactListing;

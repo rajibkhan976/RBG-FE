@@ -168,8 +168,12 @@ const TagList = (props) => {
         }
     }
     const handleSearchTag = (e) => {
-        setSearchedTag(e.target.value);
-        fetchTags(1, e.target.value);
+        let value = e.target.value
+        value = value.trim();
+        if (value !== searchedTag) {
+            setSearchedTag(value);
+            fetchTags(1, value);
+        }
     }
     const upcomingTagPageNo = (element) => {
         if (!isScroll && upcomingPagination.totalPages >= upcomingPagination.currentPage) {
@@ -188,7 +192,7 @@ const TagList = (props) => {
                 !titleAppRef.current.contains(e.target)
             ) {
                 setTagListToggle(false);
-                setSearchedTag("")
+                setSearchedTag("");
             }
         };
 

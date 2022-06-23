@@ -176,5 +176,5 @@ module.exports = {
     
     // Dont remove it
     personalDetailsUrl: "https://" + process.env.REACT_APP_PERSONALDETAILS + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV,
-
+    contactTag: "https://" + process.env.REACT_APP_CONTACT_TAG + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV + "/contact",
 }  

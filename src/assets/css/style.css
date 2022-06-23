@@ -3935,7 +3935,8 @@ li:hover .extraDottedBtn {
 }
 
 .userInfoCell {
-  margin-bottom: 12px;
+  margin-bottom: 8px;
+  position: relative;
 }
 
 .userInfoCell:last-child {
@@ -3945,6 +3946,7 @@ li:hover .extraDottedBtn {
 .userInfoCell .infoCellTxt {
   font-size: 14px;
   color: #9baebc;
+  cursor: pointer;
 }
 
 .userInfoCell .cellInfoIcon {
@@ -3961,6 +3963,7 @@ li:hover .extraDottedBtn {
   border-radius: 5px;
   padding: 2px 5px;
   margin-left: 10px;
+  min-width: 18px;
 }
 
 .userInfoCell .addNewTag {
@@ -11191,7 +11194,7 @@ svg.monthIcons {
   background: #9BAEBC;
   position: absolute;
   top: 52px;
-  z-index: 2;
+  z-index: 0;
 }
 .attendanceTableHeader table td.day{
   width: 20%
@@ -11792,4 +11795,109 @@ background-color: #fff;
 .global-attendance .fc .fc-col-header-cell-cushion {
   position: static;
   transform: translate(0,0);
+}
+
+
+
+/* contact tag list ......................................................... */
+
+.userInfoCell .tagLists {
+  right: 0;
+  left: auto;
+  top: 0;
+  transform: translate(0px, 28px);
+  height: 300px;
+  position: absolute;
+}
+.userInfoCell .extraTagNumber.noBg {
+  border: none;
+}
+.tagContainer {
+  max-height: 200px;
+  padding-bottom: 15px;
+  display: inline-block;
+  width: 100%;
+  overflow: auto;
+}
+
+.tagContainer::-webkit-scrollbar {
+  width: 4px;
+}
+
+.tagContainer::-webkit-scrollbar-track {
+  background-color: #dce4eb;
+}
+
+.tagContainer::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
+}
+
+.contactPageTags {
+  background: #6AAAD9;
+    font-size: 11px;
+    position: relative;
+    min-height: 25px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    border-radius: 3px;
+    padding-right: 10px;
+    padding-left: 5px;
+    margin-right: 8px;
+    margin-left: 8px;
+    color: #fff;
+}
+.contactPageTags:before {
+  content: '';
+  position: absolute;
+  height: 19px;
+  width: 20px;
+  background: #6AAAD9;
+  border-radius: 3px;
+  transform: rotate(45deg);
+  right: 100%;
+  margin-right: -11px;
+}
+.contactMoreTag {
+  border: 1px solid #9BAEBC;
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 15px;
+  color: #305671;
+  background: transparent;
+  margin: 2px;
+}
+.notagFound{
+  padding: 20px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 18px;
+  color: #D0D6DB;
+}
+.tableListing li .dataTableCell.contactSelects.tags{
+  min-width: 320px;
+}
+.contactPageTags:hover,
+.contactPageTags:hover:before{
+  background-color: #ED707A;
+}
+.contactPageTags span.closeTag {
+  cursor: pointer;
+  margin-left: 8px;
+  display: none;
+}
+.contactPageTags:hover span.closeTag {
+  display: inline-block;
+  margin-top: 3px;
+}
+
+.dashInnerUI .tagLists {
+  left: calc(50% - 125px);
+  top: calc(50% - 115px);
 }

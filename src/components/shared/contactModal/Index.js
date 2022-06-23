@@ -31,6 +31,8 @@ import config from "../../../configuration/config";
 import dependent_white from "../../../assets/images/dependent.svg"
 import env from "../../../configuration/env";
 import { uploadFile } from "react-s3";
+import TagList from "../../appointment/TagList";
+import ShowContactTagModal from "../showContactTagModal"
 
 const ContactModal = (props) => {
     const Navigation = (navigation) => {
@@ -88,7 +90,14 @@ const ContactModal = (props) => {
             contact_modal_id: '',
         });
     }
-
+     
+    //const [showContactTag, setShowContactTag] = useState(false);
+    const [tagListToggle, setTagListToggle] = useState(false);
+  
+    const [tagList, setTagList] = useState([]);
+    const [openModal, setOpenModal] = useState(false);
+    
+     
     const formScroll = (formScrollStatus) => {
         setStickeyHeadStatus(formScrollStatus);
     };
@@ -99,6 +108,7 @@ const ContactModal = (props) => {
             let firstName = contact.contact.firstName ? contact.contact.firstName : "";
             let lastName = contact.contact.lastName ? contact.contact.lastName : ""
             setContactName(firstName + " " + lastName);
+            setTagList(contact.contact.tags ? contact.contact.tags : [] );
             if (contact.contact.profilePic) {
 
                 setImage(contact.contact.profilePic);
@@ -177,7 +187,59 @@ const ContactModal = (props) => {
             });
         }, 300);
     }
+    
+    const addContactTag = (e) =>{
+        setTagListToggle(!tagListToggle);
+    }
 
+    const selectTag = async (tag, mode) => {
+        try {
+            setIsLoader(true);
+            let payload = {
+                tag: tag
+            }
+            let contact = await ContactService.applyRemoveTag(props.contactId, payload, 'apply');
+            setIsLoader(false);
+            setTagListToggle(false);
+            setTagList([...tagList, tag]);
+            console.log("tagList", tagList, contact)
+        } catch (e) {
+            setIsLoader(false);
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
+        }
+    }
+    const openContactTagModal = () => {
+        setOpenModal(true);
+      }
+    const closeModalHandler = () =>{
+        setOpenModal(false);
+    }
+    const removeTag = async (tagId) => {
+        try {
+            setIsLoader(true);
+            let payload = {
+                tag: {
+                    _id: tagId
+                }
+            }
+            let contact = await ContactService.applyRemoveTag(props.contactId, payload, 'remove');
+            setIsLoader(false);
+            let filteredTags = tagList.filter(el => el._id !== tagId);
+            setTagList(filteredTags);
+            console.log("tagList", tagList, contact)
+        } catch (e) {
+            setIsLoader(false);
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
+        }
+    }
     return (
         <>
             <div className="modal contactModal">
@@ -249,8 +311,8 @@ const ContactModal = (props) => {
                                         <p className="logTime">Last attended 19 hrs ago</p>
                                     </div> */}
                                 </div>
-                                {/* <div className="bottomRightArea">
-                                    <div className="bottomRightAreaCol firstCol">
+                                { <div className="bottomRightArea">
+                                    {/* <div className="bottomRightAreaCol firstCol">
                                         {(contactData && contactData.jobRole) &&
                                             <div className="userInfoCell jobRole">
                                                 <span className="cellInfoIcon">
@@ -267,20 +329,40 @@ const ContactModal = (props) => {
                                                 <span className="infoCellTxt">{ contactData.contactType }</span>
                                             </div>
                                         }
-                                    </div>
+                                    </div> */}
                                     <div className="bottomRightAreaCol tags">
-                                        <div className="userInfoCell">
+                                        {tagList.length ?
+                                            <div className="userInfoCell">
                                             <span className="cellInfoIcon">
                                                 <img src={tag_icon_white} alt=""/>
                                             </span>
-                                            <span className="infoCellTxt">Tag One, Tag Two, Tag Three</span>
-                                            <span className="extraTagNumber">+5</span>
-                                        </div>
+                                                <span className="infoCellTxt" onClick={openContactTagModal}>
+                                            {0 < tagList.length && tagList.map((tag, key) => (
+                                                key <= 2 && <span key={key}>{tag.name}{( key < (tagList.length - 1) && key < 2) && <>,</>} </span>
+                                            ))
+                                            }
+                                            </span>
+                                                {tagList.length > 3 &&
+                                                    <button className="extraTagNumber noBg"
+                                                            onClick={()=>openContactTagModal()}
+                                                    >+{tagList.length - 3}</button>
+                                                }
+
+                                            </div>
+                                            : ""}
+
                                         <div className="userInfoCell">
-                                            <button className="addNewTag">+ Add Tag</button>
+                                            <button className="addNewTag " onClick={addContactTag}>+ Add Tag</button>
+                                            {tagListToggle &&
+                                                <>
+                                                    <TagList tagListToggle={tagListToggle} selectTag={selectTag}/>
+                                                </>
+                                            }
                                         </div>
+                                        
+                                        
                                     </div>
-                                </div> */}
+                                </div> }
                             </div>
                         }
                     </div>
@@ -302,6 +384,7 @@ const ContactModal = (props) => {
                 </div>
                 <div className="modalOverlay" onClick={closeContactModal}></div>
             </div>
+          {openModal && <ShowContactTagModal closeModal={closeModalHandler} removeTag={removeTag} tagList={tagList}/>}
         </>
     );
 }
