@@ -11337,7 +11337,9 @@ td:has(a.hasAttendance){
   width: 100%;
   justify-content: center;
 }
-
+.tabBarArea .appointmentPage.attendencePage {
+  padding-right: 30px;
+}
 
 
 /* Calendar UI */
