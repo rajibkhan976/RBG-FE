@@ -11,7 +11,7 @@ let headers = {
 export const PersonalDetailsServices = {
   fetchCountryDetail: async () => {
     try {
-      const url = config.countryUrl;
+      const url = config.fetchCountryUrl;
       const result = await axios.get(url, {
         headers: headers
       });

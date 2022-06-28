@@ -471,9 +471,9 @@ const getPersonalDetailList = async () => {
                   </div>
                 </div>
                 <div className="gymInfo full">
-                  <p className="textType1">Email <span>:</span></p>
+                  <p className="textType1" style={{display: "block"}}>Email <span>:</span></p>
 
-                  {personalData ? <p className="textType4" >{personalData.email}</p>
+                  {personalData ? <p className="textType4" style={{display: "block"}}>{personalData.email}</p>
                      : 'No email provided'}                       
                 </div>
               </div>  
