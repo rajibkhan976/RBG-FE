@@ -21,13 +21,11 @@ const PersonalDetails = (props) => {
   const [file, setFile] = useState("");
   const [fileName, setFileName] = useState("");
   const [getCountry, setGetCountry] = useState([]);
-  const [timezoneData, setTimezoneData] = useState([]);
   const [personalData, setPersonalData] = useState([]);
   const [formValues, setformValues] = useState({
     currentPassword: "", 
     newPassword: "", 
     confirmNewPassword: "",
-    timezones: "",
     countryLists: ""
   });
   const [formErrors, setformErrors] = useState({});
@@ -187,17 +185,15 @@ const PersonalDetails = (props) => {
     e.preventDefault();
     let errorCheck = validate(formValues);
 
-    if (Object.keys(errorCheck).length === 0){
-
-      var Time_ZoneCode = formValues.timezones;
+    if (Object.keys(errorCheck).length === 0) {
+      
       var Country_Listings = formValues.countryLists;
       var Current_Passwords = formValues.currentPassword;
       var New_Passwords = formValues.newPassword;
       var Confirm_NewPasswords = formValues.confirmNewPassword;
       
       let payload = {
-        countryId: Country_Listings,
-        timezone: Time_ZoneCode 
+        countryId: Country_Listings
       }
       
       if(Current_Passwords && New_Passwords && Confirm_NewPasswords) {
@@ -285,9 +281,6 @@ const PersonalDetails = (props) => {
       errors.confirmNewPassword = "Password is not matching!"
     }
 
-    if (!values.timezones) {
-      errors.timezones = "Timezone is required!"    
-    }
     if (!values.countryLists) {
       errors.countryLists = "Country is required!"
     }
@@ -341,22 +334,8 @@ const getCountryList = async () => {
 };
 useEffect(() => {
   getCountryList();
-  getTimeZoneList();
   getPersonalDetailList();
 }, []);
- 
-
-const getTimeZoneList = async () => {
-  try {
-    setIsLoader(true);
-    const timezoneList = await PersonalDetailsServices.fetchTimeZoneList();
-    setTimezoneData(timezoneList.zones);
-  } catch (e) {
-    console.log(e.message);
-  }finally {
-    setIsLoader(false);
-  }
-};
 
 const getPersonalDetailList = async () => {
   try {
@@ -377,7 +356,6 @@ const getPersonalDetailList = async () => {
     setformValues({
       ...formValues,
       country: personalDetailList.country,
-      timezones: personalDetailList.timezone,
       countryLists: personalDetailList && personalDetailList && personalDetailList.country ? personalDetailList.country._id : ""
     });
     
@@ -486,27 +464,6 @@ const getPersonalDetailList = async () => {
               </div>
               <form onSubmit={handleSubmit}>
               <div className="detailsForm">
-                  <div className="formControl">
-                    <label>Timezone</label>
-                    <select
-                        name="timezones"
-                        style={{
-                            backgroundImage: "url(" + arrowDown + ")",
-                        }} 
-                        value={formValues ? formValues.timezones : ""}
-                        onChange={handleChangeNew}
-                        >
-                        <option value="">Select Timezone</option>
-                     {timezoneData ? timezoneData.map((zones, i) => {
-                      return (
-                      <option key={i} 
-                        value={zones.zoneName}
-                      >{zones.countryCode} - {zones.zoneName}</option>
-                      );
-                    }) : ''}                                     
-                    </select>
-                    <span className="errorMsg">{formErrors.timezones}</span>
-                  </div>
                   <div className="formControl">
                     <label>Select Country</label>
                     <select
