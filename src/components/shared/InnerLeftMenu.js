@@ -24,7 +24,7 @@ const InnerLeftMenu = (props) => {
   const loggedInUser = useSelector((state) => state.user.data);
 
   useEffect(() => {
-    console.log("Props",props);
+    console.log("Props", props);
     if (props.automationListItem) {
       setAutomationObject(props.automationListItem)
     }
@@ -286,7 +286,7 @@ const InnerLeftMenu = (props) => {
               </h4>
             </div>
             <ul>
-             <li>
+              <li>
                 <NavLink className="leftMenuInnerLink" to="/personal-details">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
@@ -500,31 +500,31 @@ const InnerLeftMenu = (props) => {
                   </div>
                 </NavLink>
               </li> */}
-              {(loggedInUser && ((loggedInUser.isOrganizationOwner && loggedInUser.organizationCode !== 'rbg') || loggedInUser.organizationCode == 'rbg'))  ?
-              <li>
-                <NavLink className={(pathURL === "/package-setup" || pathURL === "/usage-setup" || pathURL === "/credit-details") ? "leftMenuInnerLink active" : "leftMenuInnerLink"} to={loggedInUser.organizationCode == 'rbg' ? "/package-setup" : "/credit-details"}>
-                  <div className="indicator"></div>
-                  <div className="linkDetails setup">
-                    <p className="linkHeading">Credit</p>
-                    <p className="linkAbout">Credit Management</p>
-                    <button className="btn sidemenuarrow">
-                      <img src={SideMenuArrow} alt="" />
-                    </button>
-                  </div>
-                  <ul className="sideSubMenu">
-                    {loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'rbg' ? <li>
-                      <NavLink to="/package-setup" activeClassName="active">
-                        Package Setup
-                      </NavLink>
-                    </li> : ''}
-                    {loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'rbg' ? <li>
-                      <NavLink to="/usage-setup" activeClassName="active">
-                        Credit Setup
-                      </NavLink>
-                    </li> : ''}
-                  </ul>
-                </NavLink>
-              </li> : ''}
+              {(loggedInUser && ((loggedInUser.isOrganizationOwner && loggedInUser.organizationCode !== 'rbg') || loggedInUser.organizationCode == 'rbg')) ?
+                <li>
+                  <NavLink className={(pathURL === "/package-setup" || pathURL === "/usage-setup" || pathURL === "/credit-details") ? "leftMenuInnerLink active" : "leftMenuInnerLink"} to={loggedInUser.organizationCode == 'rbg' ? "/package-setup" : "/credit-details"}>
+                    <div className="indicator"></div>
+                    <div className="linkDetails setup">
+                      <p className="linkHeading">Credit Management</p>
+                      <p className="linkAbout">{loggedInUser.organizationCode === 'rbg' ? 'Manage credit' : 'Credit Report'}</p>
+                      <button className="btn sidemenuarrow">
+                        <img src={SideMenuArrow} alt="" />
+                      </button>
+                    </div>
+                    <ul className="sideSubMenu">
+                      {loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'rbg' ? <li>
+                        <NavLink to="/package-setup" activeClassName="active">
+                          Package Setup
+                        </NavLink>
+                      </li> : ''}
+                      {loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'rbg' ? <li>
+                        <NavLink to="/usage-setup" activeClassName="active">
+                          Credit Setup
+                        </NavLink>
+                      </li> : ''}
+                    </ul>
+                  </NavLink>
+                </li> : ''}
             </ul>
             <div className="linkImg">
               <img src={undraw_personal_settings_kihd} alt="" />

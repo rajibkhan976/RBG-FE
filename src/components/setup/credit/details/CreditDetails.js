@@ -162,7 +162,7 @@ const CreditDetails = () => {
                         <p className="userListAbout">Credit history Report for your Organization</p>
                     </div>
                     <div className="cr_featureShowStat">
-                        <h3>Credit Balance : <span> {loggedInUser ? loggedInUser.credit.toLocaleString() : 0}</span></h3>
+                        <h3>Credit Balance : <span> {loggedInUser ? loggedInUser.credit ? loggedInUser.credit.toLocaleString() : 0 : 0}</span></h3>
                     </div>
                     <div className="listFeatures">
 

@@ -435,7 +435,7 @@ const Setup = (props) => {
               </div>
             </li>
             <li>
-              {(loggedInUser && ((loggedInUser.isOrganizationOwner && loggedInUser.organizationCode !== 'rbg') || loggedInUser.organizationCode == 'rbg')) ?
+              {(loggedInUser && loggedInUser.organizationCode == 'rbg') ?
 
                 <div className="listHead">
                   <i>

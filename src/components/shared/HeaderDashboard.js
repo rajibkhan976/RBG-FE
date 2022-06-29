@@ -301,7 +301,7 @@ function HeaderDashboard(props) {
   const [modalMakeCall, setModalMakeCall] = useState(false);
   const makeCallModalHandle = () => {
     console.log('show call modal', loggedInUser.credit, loggedInUser.autoRenewLimit, loggedInUser.credit <= loggedInUser.autoRenewLimit)
-    
+
     if (loggedInUser &&
       loggedInUser.isOrganizationOwner &&
       loggedInUser.isShowPlan &&
@@ -363,6 +363,13 @@ function HeaderDashboard(props) {
     setStateUserMenu(false);
     history.push("/package-setup");
   }
+
+  //Redirect to package
+  const redirectToCreditLogs = () => {
+    setStateUserMenu(false);
+    history.push("/credit-details");
+  }
+
   return (
     <>
       <div className="dashboardHeader">
@@ -520,7 +527,7 @@ function HeaderDashboard(props) {
         <div className="menuUser">
           <button className="btn btnUserMenu" onClick={toggleUserMenu}>
             <figure>
-              <img src={(loggedInUser && loggedInUser.image ? loggedInUser.image : UserIcon)}  alt="profile picture"/>
+              <img src={(loggedInUser && loggedInUser.image ? loggedInUser.image : UserIcon)} alt="profile picture" />
             </figure>
 
             <div className="menuUserDetail">
@@ -546,7 +553,8 @@ function HeaderDashboard(props) {
                 }}> */}
                 <div className="user_profile">
                   <img src={loggedInUser.image ? loggedInUser.image : userPhoto} alt="avatar" style={{
-                   height:'100%' }} /> 
+                    height: '100%'
+                  }} />
                 </div>
                 <div className="userContacts">
                   <h3>
@@ -577,7 +585,10 @@ function HeaderDashboard(props) {
                 </div>
                 {loggedInUser && loggedInUser.isShowPlan ? <div className="creditText">
                   <span>Credit Balance  </span>
-                  <span className="blue">{loggedInUser.credit.toLocaleString()}</span>
+                  {loggedInUser.isOrganizationOwner && loggedInUser.credit ?
+                    <span className="blue cr_balance" onClick={redirectToCreditLogs}>{loggedInUser.credit.toLocaleString()}</span> :
+                    <span className="blue">{loggedInUser.credit.toLocaleString()}</span>
+                  }
                 </div> : ''}
 
                 {loggedInUser && loggedInUser.isOrganizationOwner ?

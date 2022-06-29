@@ -1358,3 +1358,12 @@ select.react-daterange-picker__inputGroup__input.react-daterange-picker__inputGr
 .cr_paymentFailedMsg span {
     line-height: 21px;
 }
+
+.user_modal_cont .creditText .cr_balance {
+    text-decoration: underline;
+}
+
+.user_modal_cont .creditText .cr_balance:hover {
+    color: #46c8d3;
+    cursor: pointer;
+}
