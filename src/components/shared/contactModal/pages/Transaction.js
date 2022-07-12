@@ -422,12 +422,13 @@ const Transaction = (props) => {
   };
 
   const dayLeft = (due_date) => {
-    let payDate = moment(utils.convertUTCToTimezone(due_date ,timezone, "YYYY-MM-DD"));
-    let today = moment().tz(timezone);
-    let result = payDate.diff(today, 'days');
-    console.log("paydate: ", payDate);
-    console.log("Result: ", result);
+    console.log('Initial due date', due_date);
+    let payDate = moment(due_date, "YYYY-MM-DD");
+    let today = moment().startOf('day');
 
+    //Difference in number of days
+    let result = moment.duration(payDate.diff(today)).asDays();
+    
     if (result < 31) {
       if (result == 0) {
         return "Today"
@@ -439,7 +440,7 @@ const Transaction = (props) => {
         }
       }
     } else {
-      return payDate.format('Do MMM, YYYY')
+      return moment(due_date.split(" ")[0], 'YYYY-MM-DD').format('Do MMM, YYYY')
     }
   };
 
