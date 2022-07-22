@@ -849,48 +849,49 @@ const expiration_month = cardExpairyMonthCheckFn();
                                 Add a Card
                               </button>
                             </div>
-                            {merchantOptions.activeFor.length === 0 || merchantOptions.activeFor.indexOf("credit_card") >= 0 ?
-                              <>
-                                    <div className="body">
-                                      {cardBankList &&
-                                          cardBankList.map((creditCard, i) => (
-                                              <div
-                                                  key={i}
-                                                  className={
-                                                    creditCard.status === "active"
-                                                        ? "list active"
-                                                        : "list"
+
+                            <div className="body">
+                                {cardBankList &&
+                                    cardBankList.map((creditCard, i) => (
+                                        <div
+                                            key={i}
+                                            className={
+                                              creditCard.status === "active"
+                                                  ? "list active"
+                                                  : "list"
+                                            }
+                                        >
+                                          <label className="leftside">
+                                            <div className="circleRadio">
+                                              <input
+                                                  type="radio"
+                                                  name="credit"
+                                                  onChange={() => activeCreditCard(creditCard)}
+                                                  defaultChecked={
+                                                    creditCard.status === "active" ? true : false
                                                   }
-                                              >
-                                                <label className="leftside">
-                                                  <div className="circleRadio">
-                                                    <input
-                                                        type="radio"
-                                                        name="credit"
-                                                        onChange={() => activeCreditCard(creditCard)}
-                                                        defaultChecked={
-                                                          creditCard.status === "active" ? true : false
-                                                        }
-                                                        id={i}
-                                                    />
-                                                    <span></span>
-                                                  </div>
-                                                  {" "}
-                                                  {creditCard.checkIt ? "Active" : ""}
-                                                </label>
-                                                <div className="rightside">
-                                                  <p>
-                                                    <span>Card Number</span>
-                                                    XXXXXXXXXXXX{creditCard.last4}{" "}
-                                                  </p>
-                                                  <p className="diff">
-                                                    <span>Expiry</span>
-                                                    {`${creditCard.expiration_month} / ${creditCard.expiration_year}`}
-                                                  </p>
-                                                </div>
-                                              </div>
-                                          ))}
-                                    </div>
+                                                  id={i}
+                                              />
+                                              <span></span>
+                                            </div>
+                                            {" "}
+                                            {creditCard.checkIt ? "Active" : ""}
+                                          </label>
+                                          <div className="rightside">
+                                            <p>
+                                              <span>Card Number</span>
+                                              XXXXXXXXXXXX{creditCard.last4}{" "}
+                                            </p>
+                                            <p className="diff">
+                                              <span>Expiry</span>
+                                              {`${creditCard.expiration_month} / ${creditCard.expiration_year}`}
+                                            </p>
+                                          </div>
+                                        </div>
+                                    ))}
+                              </div>
+                            {/* {merchantOptions.activeFor.length === 0 || merchantOptions.activeFor.indexOf("credit_card") >= 0 ?
+                              <>
                               </> : <div className="body">
                                   <div className="noDetailsFound">
                                   <figure>
@@ -903,7 +904,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                   </p>
                                 </div>
                               </div>
-                              }
+                              } */}
                           </div>
                           <div
                               className={newCardAnnim ? "addInList show" : "addInList hide"}
@@ -1042,8 +1043,6 @@ const expiration_month = cardExpairyMonthCheckFn();
                                 Add an Account
                               </button>
                             </div>
-                            {merchantOptions.activeFor.length === 0 || merchantOptions.activeFor.indexOf("ach") >= 0 ?
-                              <>
                             <div className="body">
                               {bankList &&
                                   bankList.map((bank, i) => (
@@ -1081,6 +1080,8 @@ const expiration_month = cardExpairyMonthCheckFn();
                                       </div>
                                   ))}
                             </div>
+                            {/* {merchantOptions.activeFor.length === 0 || merchantOptions.activeFor.indexOf("ach") >= 0 ?
+                              <>
                             </> : <div className="body"><div className="noDetailsFound">
                                   <figure>
                                     <svg width="34" height="29" viewBox="0 0 34 29" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1092,7 +1093,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                               </p>
                             </div>
                             </div> 
-                            }
+                            } */}
                           </div>
 
                           <div
