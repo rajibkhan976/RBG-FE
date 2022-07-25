@@ -52,9 +52,7 @@ const Setup = (props) => {
                       to="/gym-details" onClick={(e) => props.clickedLink(e)}> Gym Details
                     </NavLink>
                   </h3>
-                  <p><NavLink
-                    to="/gym-details" onClick={(e) => props.clickedLink(e)}> Manage your Gym details
-                  </NavLink></p>
+                  <p>Manage your Gym details</p>
                 </div>
               </div>
             </li>
@@ -72,10 +70,7 @@ const Setup = (props) => {
                     to="/call-setup"
                     onClick={(e) => props.clickedLink(e)}
                   >Communication Setup</NavLink></h3>
-                  <p><NavLink
-                    to="/call-setup"
-                    onClick={(e) => props.clickedLink(e)}
-                  >Set up communications</NavLink></p>
+                  <p>Set up communications</p>
                 </div>
               </div>
               <ul className="secondListing">
@@ -160,10 +155,7 @@ const Setup = (props) => {
                       Products
                     </NavLink>
                   </h3>
-                  <p><NavLink
-                    to="/products"
-                    onClick={(e) => props.clickedLink(e)}
-                  >Manage your POS products</NavLink></p>
+                  <p>Manage your POS products</p>
                 </div>
               </div>
             </li>
@@ -184,10 +176,7 @@ const Setup = (props) => {
                     >Customizations
                     </NavLink>
                   </h3>
-                  <p><NavLink
-                    to="/customizations"
-                    onClick={(e) => props.clickedLink(e)}
-                  >Add Custom fields</NavLink></p>
+                  <p>Add Custom fields</p>
                 </div>
               </div>
 
@@ -316,10 +305,7 @@ const Setup = (props) => {
                       Number List
                     </NavLink>
                   </h3>
-                  <p> <NavLink
-                    to="/number-list"
-                    onClick={(e) => props.clickedLink(e)}
-                  >Assign number to organization</NavLink></p>
+                  <p>Assign number to organization</p>
                 </div>
               </div>
             </li>
@@ -341,10 +327,7 @@ const Setup = (props) => {
                       Programs
                     </NavLink>
                   </h3>
-                  <p><NavLink
-                    to="/courses"
-                    onClick={(e) => props.clickedLink(e)}
-                  >Manage your programs</NavLink></p>
+                  <p>Manage your programs</p>
                 </div>
               </div>
             </li>
@@ -382,11 +365,7 @@ const Setup = (props) => {
                       Zapier
                     </NavLink>
                   </h3>
-                  <p><NavLink
-                    to="/zapier"
-                    onClick={(e) => props.clickedLink(e)}
-                  >Setup zapier app
-                  </NavLink></p>
+                  <p>Setup zapier app</p>
                 </div>
               </div>
             </li>
@@ -409,10 +388,7 @@ const Setup = (props) => {
                         Payment Setup
                       </NavLink>
                     </h3>
-                    <p><NavLink
-                      to="/payment-setup"
-                      onClick={(e) => props.clickedLink(e)}
-                    >Set up your payment modes</NavLink></p>
+                    <p>Set up your payment modes</p>
                   </div>
                 </div>
               </li>
@@ -435,10 +411,7 @@ const Setup = (props) => {
                       Status and Phase
                     </NavLink>
                   </h3>
-                  <p> <NavLink
-                    to="/phases-status"
-                    onClick={(e) => props.clickedLink(e)}
-                  >Manage your contact's status and phase</NavLink></p>
+                  <p>Manage your contact's status and phase</p>
                 </div>
               </div>
             </li>
