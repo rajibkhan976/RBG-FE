@@ -377,6 +377,7 @@ const ProductListing = (props) => {
             )}
           </div>
         </div>
+        {console.log("Product Pagination",props.paginationData)}
         {props.paginationData.count > props.paginationData.limit ? (
           <Pagination
             paginationData={props.paginationData}

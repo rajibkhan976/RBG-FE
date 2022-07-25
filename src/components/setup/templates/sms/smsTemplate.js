@@ -1,38 +1,45 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useDispatch } from "react-redux";
 
-import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import plus_icon from "../../../../assets/images/plus_icon.svg";
 import right_icon from "../../../../assets/images/right.svg";
 import browse_keywords from "../../../../assets/images/icon_browse_keywords.svg";
 import info_3dot_icon from "../../../../assets/images/info_3dot_icon.svg";
+import Loader from "../../../shared/Loader"
 import cross from "../../../../assets/images/cross.svg";
 import sms_template from "../../../../assets/images/sms-template.svg";
+import arrow_forward from "../../../../assets/images/arrow_forward.svg";
+import list_board_icon from "../../../../assets/images/list_board_icon.svg";
 import { utils } from "../../../../helpers";
-// import moment from "moment";
 import Pagination from "../../../shared/Pagination";
-import Loader from "../../../shared/Loader";
-// import list_board_icon from "../../../../assets/images/list_board_icon.svg";
-// import { bucketUrl } from "../../../../configuration/config";
+import ConfirmBox from "../../../shared/confirmBox"
 import {
   ErrorAlert,
   SuccessAlert,
   WarningAlert,
 } from "../../../shared/messages";
-// import ConfirmBox from "../../../shared/confirmBox";
+import * as actionTypes from "../../../../actions/types";
+
+import { SMSServices } from "../../../../services/template/SMSServices";
 import Scrollbars from "react-custom-scrollbars-2";
 
 const SmsTemplate = (props) => {
+  const dispatch = useDispatch();
+  const prevMessageBlock = useRef(null)
+  const nextMessageBlock = useRef(null)
   const [isLoader, setIsLoader] = useState(false);
+  const [addSMSLoader, setAddSMSLoader] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const [warningMsg, setWarningMsg] = useState("");
   const [keyword, setKeyword] = useState(null);
-  const [option, setOption] = useState(null);
+  // const [option, setOption] = useState(null);
   const [sortBy, setSortBy] = useState("");
   const [isEdit, setIsEdit] = useState(false);
   const [sortType, setSortType] = useState("asc");
   const [smsModal, setSMSModal] = useState(false);
   const [smsCount, setSMSCount] = useState(0);
+  const [smsPaginate, setSMSPaginate] = useState(null)
   const smsListingBody = useRef(null)
   const [paginationData, setPaginationData] = useState({
     count: null,
@@ -40,90 +47,27 @@ const SmsTemplate = (props) => {
     currentPage: 1,
     limit: 10,
   });
-  const [smsTemplates, setSMSTemplates] = useState([
-    {
-      id: 1,
-      title: "Welcome Message",
-      message:
-        "Hello, [fname] [lname] This is a welcome message from Red Belt Gym.",
-    },
-    {
-      id: 2,
-      title: "Onboarding Message",
-      message:
-        "Hello [fname] [lname], Welcome onboard. We hope you will get an amazing experience and fine…",
-    },
-    {
-      id: 3,
-      title: "Prospect Offer",
-      message:
-        "Hello, [fname] [lname] Don’t miss out the additional 15% discount on Admission this week.",
-    },
-    {
-      id: 5,
-      title: "Hot Leads 50% Offer",
-      message:
-        "Hello, [fname] [lname] Here we would like to offer you 50% discount since you have requested to…",
-    },
-    {
-      id: 6,
-      title: "Auto Unsubscribe",
-      message:
-        "Hello, [fname] [lname] If you do not wish to get any SMS from us in future please click here [link] to…",
-    },
-    {
-      id: 7,
-      title: "General Support Message",
-      message:
-        "Hello, [fname] [lname] Got a question? Don’t worry we are right here to help you out. Call us at…",
-    },
-    {
-      id: 8,
-      title: "Support Message for Premium Members",
-      message:
-        "Hello, [fname] [lname] Thanks for being a valuable member of FitBit. We have appointed [d_supp…",
-    },
-    {
-      id: 9,
-      title: "Non-paying members message",
-      message:
-        "Hello, [fname] [lname] We have noticed that you have failed to make your monthly Gym FEE on…",
-    },
-    {
-      id: 10,
-      title: "Dependent Message",
-      message: "Hello, [fname] [lname] Message body",
-    },
-    {
-      id: 11,
-      title: "New Product Launch Message",
-      message: "Hello, [fname] [lname] another message body",
-    },
-    {
-      id: 12,
-      title: "Intro Message - General",
-      message: "Hello, [fname] [lname] another new Message body",
-    },
-  ]);
-
+  const [smsTemplates, setSMSTemplates] = useState([]);
+  const [smsTags, setSmsTags] = useState([])
+  const [searchTagString, setSearchTagString] = useState("")
+  const [editOption, setEditOption] = useState(null)
   const [activeMessage, setActiveMessage] = useState(null);
   const [editState, setEditstate] = useState(false);
   const [keywordSuggesion, setKeywordSuggesion] = useState(false);
-  const [editMsgObj, setEditMsgObj] = useState({
-    id: "",
-    title: "",
-    message: "",
-  });
+  const [editMsgObj, setEditMsgObj] = useState({});
   const [addMsgObj, setAddMsgObj] = useState({
     title: "",
     message: "",
   });
+  const [titleLimit, setTitleLimit] = useState(0);
+  // const [messageLimit, setMessageLimit] = useState(0);
+  const [deleteConfirm, setDeleteConfirm] = useState(false)
+  const [deleteId, setDeleteId] = useState(null)
   const createTemplateTitle = useRef(null);
   const createTemplateMessage = useRef(null);
   const createTemplateForm = useRef(null);
   const messageTextbox = useRef(null);
   const templateTitle = useRef(null);
-
   const getQueryParams = async () => {
     const keyword = utils.getQueryVariable("search");
     const srtBy = utils.getQueryVariable("sortBy");
@@ -144,17 +88,54 @@ const SmsTemplate = (props) => {
     return queryParams;
   };
 
+  const fetchSMS = useCallback(async () => {
+    let pageId = utils.getQueryVariable("page") || 1;
+    let queryParams = await getQueryParams();
+    try {
+      setIsLoader(true);
+      const result = await SMSServices.fetchSms(pageId, queryParams);
+      if (result) {
+        setSMSTemplates(result.templates);
+        setSMSCount(result.pagination.count);
+        setPaginationData({
+          ...paginationData,
+          currentPage: result.pagination.currentPage,
+          totalPages: result.pagination.totalPages,
+        });
+      }
+    } catch (e) {
+      setIsLoader(false);
+      console.log("Error in SMS template listing", e);
+      setErrorMsg(e.message);
+    } finally {
+      setIsLoader(false);
+    }
+  }, []);
+
+  const fetchSMSTags = async () => {
+    try {
+      const result = await SMSServices.fetchSMSTags()
+      if(result) {
+        // console.log("result", result);
+        setSmsTags(result)
+      }
+    } catch (error) {
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: error.message,
+        typeMessage: 'error'
+      });
+    } finally {
+      addSMSLoader ? setAddSMSLoader(false) : setAddSMSLoader(false)
+    }
+  }
+
   const [hasError, setHasError] = useState(false);
 
   const [errorState, setErrorState] = useState({
     header: "",
     message: "",
   });
-
-  useEffect(() => {
-    setSortBy(utils.getQueryVariable("sortBy"));
-    setSortType(utils.getQueryVariable("sortType"));
-  }, []);
 
   /**
    * Update keyword
@@ -177,7 +158,7 @@ const SmsTemplate = (props) => {
    * Handle options toggle
    */
   const toggleOptions = (index) => {
-    setOption(index !== option ? index : null);
+    setEditOption(index !== editOption ? index : null);
   };
 
   /**
@@ -195,15 +176,13 @@ const SmsTemplate = (props) => {
   };
 
   const openModal = () => {
+    setAddSMSLoader(true)
+    fetchSMSTags()
     setIsEdit(false);
     setSMSModal(true);
 
     setActiveMessage(null);
-    setEditMsgObj({
-      id: "",
-      title: "",
-      message: "",
-    });
+    setEditMsgObj();
 
     setHasError(false);
     setErrorState({
@@ -226,19 +205,22 @@ const SmsTemplate = (props) => {
     setSortType(type);
     utils.addQueryParameter("sortBy", field);
     utils.addQueryParameter("sortType", type);
+    fetchSMS()
   };
 
   const getThisMessage = (message, i) => {
+    paginateSMS(160, message.message)
+    setEditOption(null)
     setActiveMessage(
-      activeMessage === null ? message.id : activeMessage === message.id ? null : message.id
+      activeMessage == null ? message._id : activeMessage == message._id ? null : message._id
     );
-    // console.log("activeMessage", activeMessage === null ? message : activeMessage === message ? null : message, "editMsgObj", editMsgObj);
-    setEditMsgObj(smsTemplates.filter(smsEdit => smsEdit.id === message.id)[0]);
+    setEditMsgObj(activeMessage === null ? message : activeMessage == message._id ? {} : message);
     setEditstate(false);
     setErrorState({
       title: "",
       message: "",
     });
+    fetchSMSTags();
   };
 
   // ADD Keyword to Edit SMS template
@@ -291,6 +273,12 @@ const SmsTemplate = (props) => {
         });
         textBox.focus();
       }
+
+      setHasError(false)
+      setErrorState({
+        ...errorState,
+        message: ""
+      })
     } catch (err) {
       // console.log(err);
     }
@@ -304,7 +292,7 @@ const SmsTemplate = (props) => {
         ...editMsgObj,
         message: e.target.value,
       });
-
+      setHasError(false)
       setErrorState({
         ...errorState,
         message: "",
@@ -322,17 +310,41 @@ const SmsTemplate = (props) => {
 
   // Add edit template title onchange
   const editTemplateTitle = (e) => {
-
+    // if (titleLimit < 23) {
+    //   setAddMsgObj({
+    //     ...addMsgObj,
+    //     title: createTemplateTitle.current.value,
+    //   })
+    //   setErrorState({
+    //     ...errorState,
+    //     title: "",
+    //   });
+    // } else {
+    //   e.target.value = e.target.value.slice(0, 23);
+    // }
     if(templateTitle.current.value.trim().length !== 0) {
-      setEditMsgObj({
-        ...editMsgObj,
-        title: e.target.value,
-      });
+      console.log("titleLimit", titleLimit);
+      if (titleLimit < 23) {
+        setEditMsgObj({
+          ...editMsgObj,
+          title: e.target.value,
+        });
 
-      setErrorState({
-        ...errorState,
-        title: "",
-      });
+        setHasError(false);
+        setErrorState({
+          ...errorState,
+          title: "",
+        });
+      }
+      else {
+        setHasError(true);  
+        setErrorState({
+          ...errorState,
+          title: "Title cannot be more than 22 characters.",
+        });
+          e.target.value = e.target.value.slice(0, 23);
+      }
+      setTitleLimit(e.target.value.length)
     } else {
       setHasError(true);
 
@@ -344,34 +356,42 @@ const SmsTemplate = (props) => {
   };
 
   // Save edit template
-  const saveEditstate = (e) => {
+  const saveEditstate = async (e) => {
     e.preventDefault();
+    console.log("editMsgObj, activeMessage", editMsgObj, activeMessage);
     if (
       templateTitle.current.value.trim().length !== 0 &&
       messageTextbox.current.value.trim().length !== 0
     ) {
-      // console.log("editMsgObj...", editMsgObj);
+      setIsLoader(true);
+      try {
+        // console.log("editMsgObj", editMsgObj);
+        const result = await SMSServices.editTemplate(editMsgObj, activeMessage);
+        // console.log("result EDIT::::", result);
 
-      setSMSTemplates(prevTemplates => prevTemplates.map(el => 
-        el.id === editMsgObj.id ?
-        editMsgObj : el
-      ));
+        if(result) {
+          setKeywordSuggesion(false);
+          
+          setEditMsgObj();
+          setActiveMessage(null)
 
-      setEditstate(false);
+          setSMSTemplates(prevTemplates => prevTemplates.map(el => 
+            el._id === editMsgObj._id ?
+            editMsgObj : el
+          ));
 
-      setEditMsgObj({
-        id: smsTemplates.filter(fltMsg => fltMsg.id === activeMessage)[0].id,
-        title: smsTemplates.filter(fltMsg => fltMsg.id === activeMessage)[0].title,
-        message: smsTemplates.filter(fltMsg => fltMsg.id === activeMessage)[0].message,
-      });
+          setEditstate(false);
 
-      setKeywordSuggesion(false);
-
-      setHasError(false);
-      setErrorState({
-        title: "",
-        message: "",
-      });
+          setHasError(false);
+          setErrorState({
+            title: "",
+            message: "",
+          });
+          setIsLoader(false);
+        }
+      } catch (error) {
+        setIsLoader(true);
+      }
     } else {
       setHasError(true);
 
@@ -379,24 +399,6 @@ const SmsTemplate = (props) => {
         title: templateTitle.current.value.trim().length === 0 ? "Title cannot be blank!" : "",
         message: messageTextbox.current.value.trim().length === 0 ?"Message cannot be blank!" : "",
       });
-
-      // if (templateTitle.current.value.trim().length === 0) {
-      //   setErrorState({
-      //     ...errorState,
-      //     title: "Title cannot be blank!",
-      //   });
-      // }
-      // if (messageTextbox.current.value.trim().length === 0) {
-      //   setErrorState({
-      //     ...errorState,
-      //     message: "Message cannot be blank!",
-      //   });
-      // }
-      // if (
-      //   messageTextbox.current.value.trim().length === 0 &&
-      //   templateTitle.current.value.trim().length === 0
-      // ) {
-      // }
     }
   };
 
@@ -404,11 +406,7 @@ const SmsTemplate = (props) => {
     setSMSModal(false);
 
     setActiveMessage(null);
-    setEditMsgObj({
-      id: "",
-      title: "",
-      message: "",
-    });
+    setEditMsgObj();
 
     setHasError(false);
     setErrorState({
@@ -423,59 +421,67 @@ const SmsTemplate = (props) => {
 
   // ADD Keyword to New SMS template
   const addThisTag = (e) => {
+    e.preventDefault()
+    // let compareText = " ["+e.target.textContent+"] ";
+    // console.log("message", messageLimit);
     let addTextarea = createTemplateMessage.current;
     let cursorStart = addTextarea.selectionStart;
     let cursorEnd = addTextarea.selectionEnd;
     let textValue = addTextarea.value;
+    
+    // if(compareText.length <= (159 - parseInt(messageLimit))) {
+      // console.log("parseInt(messageLimit) + parseInt(compareText)", parseInt(messageLimit), compareText.toString().length)
+      try {
+        // setMessageLimit(parseInt(messageLimit) + parseInt(compareText.toString().length))
+        if (cursorStart || cursorStart == "0") {
+          var startToText = "";
 
-    try {
-      if (cursorStart || cursorStart == "0") {
-        var startToText = "";
+          addTextarea.value =
+            addTextarea.value.substring(0, cursorStart) +
+            " [" +
+            e.target.textContent +
+            "] " +
+            addTextarea.value.substring(cursorEnd, textValue.length);
 
-        addTextarea.value =
-          addTextarea.value.substring(0, cursorStart) +
-          " [" +
-          e.target.textContent +
-          "] " +
-          addTextarea.value.substring(cursorEnd, textValue.length);
+          setAddMsgObj({
+            ...addMsgObj,
+            message: addTextarea.value,
+          });
 
-        setAddMsgObj({
-          ...addMsgObj,
-          message: addTextarea.value,
+          startToText =
+            addTextarea.value.substring(0, cursorStart) +
+            "[" +
+            e.target.textContent +
+            "]";
+          addTextarea.focus();
+          addTextarea.setSelectionRange(
+            startToText.length + 1,
+            startToText.length + 1
+          );
+        } else {
+          addTextarea.value =
+            addTextarea.value + " [" + e.target.textContent + "] ";
+          setAddMsgObj({
+            ...addMsgObj,
+            message: addTextarea.value,
+          });
+          addTextarea.focus();
+        }
+      } catch (err) {
+        // console.log(err);
+      } finally {
+        setErrorState({
+          ...errorMsg,
+          message: "",
         });
-
-        startToText =
-          addTextarea.value.substring(0, cursorStart) +
-          "[" +
-          e.target.textContent +
-          "]";
-        addTextarea.focus();
-        addTextarea.setSelectionRange(
-          startToText.length + 1,
-          startToText.length + 1
-        );
-      } else {
-        addTextarea.value =
-          addTextarea.value + " [" + e.target.textContent + "] ";
-        setAddMsgObj({
-          ...addMsgObj,
-          message: addTextarea.value,
-        });
-        addTextarea.focus();
       }
-    } catch (err) {
-      // console.log(err);
-    } finally {
-      setErrorState({
-        ...errorMsg,
-        message: "",
-      });
-    }
+    // }
   };
 
   // Add new template message onchange
   const addTemplateTitle = (e) => {
     if(createTemplateTitle.current.value.trim().length !== 0) {
+      if (titleLimit < 23) {
         setAddMsgObj({
           ...addMsgObj,
           title: createTemplateTitle.current.value,
@@ -484,6 +490,10 @@ const SmsTemplate = (props) => {
           ...errorState,
           title: "",
         });
+      } else {
+        e.target.value = e.target.value.slice(0, 23);
+      }
+      setTitleLimit(e.target.value.length)
     }
     else {
       setErrorState({
@@ -496,14 +506,20 @@ const SmsTemplate = (props) => {
   // Add new template title onchange
   const addTemplateMessage = (e) => {
     if(createTemplateMessage.current.value.trim().length !== 0) {
-      setAddMsgObj({
-        ...addMsgObj,
-        message: e.target.value,
-      });
-      setErrorState({
-        ...errorState,
-        message: "",
-      });
+      // if (messageLimit <= 159) {
+        setAddMsgObj({
+          ...addMsgObj,
+          message: e.target.value,
+        });
+        setErrorState({
+          ...errorState,
+          message: "",
+        });
+        console.log("e.target.value.length", e.target.value.length);
+      // } else {
+      //   e.target.value = e.target.value.slice(0, 159);
+      // }
+      // setMessageLimit(e.target.value.length)
     } else {
       setErrorState({
         ...errorState,
@@ -513,26 +529,33 @@ const SmsTemplate = (props) => {
   };
 
   // Save new template function
-  const saveMessage = (e) => {
+  const saveMessage = async (e) => {
+    setIsLoader(true)
     let copyTemplate = smsTemplates;
     if (
       createTemplateTitle.current.value.trim().length !== 0 &&
       createTemplateMessage.current.value.trim().length !== 0
     ) {
-      addMsgObj.id = smsTemplates.length
-
-      // console.log("addMsgObj", addMsgObj);
-
-      copyTemplate = [...copyTemplate, addMsgObj];
-
-      setSMSTemplates(copyTemplate);
-
-      setAddMsgObj({
-        title: "",
-        message: "",
-      });
+      try {
+        const result = await SMSServices.createTemplate(addMsgObj);
+        
+        if(result){
+          copyTemplate = [result, ...copyTemplate];
+    
+          setSMSTemplates(copyTemplate);
+    
+          setAddMsgObj({
+            title: "",
+            message: "",
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoader(false)
+      }
     } else {
-      // console.log(addMsgObj);
+      setIsLoader(false)
       setErrorMsg("Some information missing!");
       setTimeout(() => {
         setErrorMsg("");
@@ -543,8 +566,9 @@ const SmsTemplate = (props) => {
   // Save new template and close modal
   const saveandNew = (e) => {
     e.preventDefault();
+    // console.log(titleLimit, messageLimit);
     try {
-      if (
+      if (titleLimit <= 23 && addMsgObj &&
         addMsgObj.title.trim().length !== 0 &&
         addMsgObj.message.trim().length !== 0
       ) {
@@ -552,13 +576,34 @@ const SmsTemplate = (props) => {
         setIsLoader(true);
         saveMessage(e.target);
         createTemplateForm.current.reset();
-        setSuccessMsg("SMS template saved!");
-        
-        setTimeout(() => {
-          setSuccessMsg("");
-        }, 5000);
+
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: 'SMS template saved!',
+          typeMessage: 'success'
+        });
+
+        setAddMsgObj({
+          title: "",
+          message: "",
+        });
+        fetchSMS()
       } else {
-        if (addMsgObj.title.trim().length === 0) {
+        if(titleLimit > 23) {
+          setHasError(true);
+          setErrorState({
+            ...errorState,
+            title: "Title cannot be more than 23 characters!",
+          });
+        }
+        // if(messageLimit > 159) {
+        //   setHasError(true);
+        //   setErrorState({
+        //     ...errorState,
+        //     message: "Message cannot be more than 159 characters!",
+        //   });
+        // }
+        if (addMsgObj && addMsgObj.title.trim().length === 0) {
           // console.log(addMsgObj);
           setHasError(true);
           setErrorState({
@@ -566,7 +611,7 @@ const SmsTemplate = (props) => {
             title: "Title cannot be blank!",
           });
         }
-        if (addMsgObj.message.trim().length === 0) {
+        if (addMsgObj && addMsgObj.message.trim().length === 0) {
           // console.log(addMsgObj);
           setHasError(true);
           setErrorState({
@@ -574,7 +619,7 @@ const SmsTemplate = (props) => {
             message: "Message cannot be blank!",
           });
         }
-        if (
+        if (addMsgObj && 
           addMsgObj.title.trim().length === 0 &&
           addMsgObj.message.trim().length === 0
         ) {
@@ -591,13 +636,6 @@ const SmsTemplate = (props) => {
     } finally {
       setIsLoader(false);
       
-      setTimeout(()=> {
-        // console.log("hi", smsListingBody.current.children[0]);
-        smsListingBody.current.children[0].scrollIntoView({
-          inline: "end",
-          behavior: "smooth"
-        })
-      }, 1000)
     }
   };
 
@@ -605,18 +643,16 @@ const SmsTemplate = (props) => {
   const saveSMSTemplate = (e) => {
     e.preventDefault();
     try {
-      if (
+      // console.log("addMsgObj",  addMsgObj.title.trim().length !== 0 &&
+      // addMsgObj.message.trim().length !== 0);
+      if (titleLimit <= 23 && addMsgObj &&
         addMsgObj.title.trim().length !== 0 &&
         addMsgObj.message.trim().length !== 0
       ) {
         setIsLoader(true);
         saveMessage(e.target);
         createTemplateForm.current.reset();
-        setSuccessMsg("SMS template saved!");
         closeModal(false);
-        setTimeout(() => {
-          setSuccessMsg("");
-        }, 5000);
 
         setIsLoader(false);
 
@@ -625,24 +661,49 @@ const SmsTemplate = (props) => {
           title: "",
           message: "",
         });
+      
+        dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: 'SMS Template created successfully!',
+            typeMessage: 'success'
+        });
+        setAddMsgObj({
+          title: "",
+          message: "",
+        });
+        fetchSMS()
       } else {
-        if (addMsgObj.title.trim().length === 0) {
-          // console.log(addMsgObj);
+        if(titleLimit > 23) {
+          setHasError(true);
+          setErrorState({
+            ...errorState,
+            title: "Title cannot be more than 23 characters!",
+          });
+        }
+        // if(messageLimit > 159) {
+        //   setHasError(true);
+        //   setErrorState({
+        //     ...errorState,
+        //     message: "Message cannot be more than 159 characters!",
+        //   });
+        // }
+        if (addMsgObj && addMsgObj.title.trim().length === 0) {
+          // console.log(addMsgObj.title);
           setHasError(true);
           setErrorState({
             ...errorState,
             title: "Title cannot be blank!",
           });
         }
-        if (addMsgObj.message.trim().length === 0) {
-          // console.log(addMsgObj);
+        if (addMsgObj && addMsgObj.message.trim().length === 0) {
+          // console.log(addMsgObj.message);
           setHasError(true);
           setErrorState({
             ...errorState,
             message: "Message cannot be blank!",
           });
         }
-        if (
+        if (addMsgObj && 
           addMsgObj.title.trim().length === 0 &&
           addMsgObj.message.trim().length === 0
         ) {
@@ -660,24 +721,152 @@ const SmsTemplate = (props) => {
         setErrorMsg("");
       }, 5000);
     } finally {
-      setAddMsgObj({
-        title: "",
-        message: "",
-      });
-      
-      setTimeout(()=> {
-        // console.log("hi", smsListingBody.current.children[0]);
-        smsListingBody.current.children[0].scrollIntoView({
-          block: "end",
-          behavior: "smooth"
-        })
-      }, 1000)
     }
   };
 
-  useEffect(() => {}, [addMsgObj, errorState, hasError]);
+  const deleteSMS = async (smsId) => {
+    setIsLoader(true)
+    let copyTemplates = [...smsTemplates];
 
-  const paginationCallbackHandle = () => {};
+    try {
+      const result = await SMSServices.deleteTemplate(smsId)
+      if(result) {
+        copyTemplates = copyTemplates.filter(msg => msg._id !== smsId);
+        console.log("copyTemplates", copyTemplates);
+        setSMSTemplates(copyTemplates)
+        dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: 'SMS Template deleted successfully!',
+            typeMessage: 'success'
+        });
+        fetchSMS()
+      }
+    } catch (error) {
+      dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: error.message,
+          typeMessage: 'error'
+      });
+    } finally {
+      setIsLoader(false)
+    }
+  }
+
+  const confirmMessageDelete = (messageConfirmation) => {
+    if(messageConfirmation == "yes") {
+      try{
+        deleteSMS(deleteId)
+        setEditOption(null)
+        setDeleteConfirm(false)
+      } catch (error) {
+        dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: error.message,
+            typeMessage: 'error'
+        });
+      }
+    }
+    if(messageConfirmation == "cancel") {
+      setDeleteId(null)
+      setDeleteConfirm(false)
+      setEditOption(null)
+    }
+  }
+
+  const paginateSMS = (n,str) => {
+    let arr = str?.split(' ');
+    let result=[]
+    let subStr=arr[0]
+    let textObjects = []
+
+    for(let i = 1; i < arr.length; i++){
+        let word = arr[i]
+        if(subStr.length + word.length + 1 <= n){
+            subStr = subStr + ' ' + word
+        }
+        else{
+            result.push(subStr);
+            subStr = word
+        }
+    }
+    if(subStr.length){
+      result.push(subStr)
+    }
+
+    setSMSPaginate({
+      pages: result.length,
+      textObjects: result,
+      selected: 0
+    })
+    console.log("result", result);
+    // return result
+}
+
+  // const paginateSMS = (data) => {
+  //   let messageClone = data.message;
+  //   let pagesSMS = messageClone.length / 160 > 0 ? parseInt(messageClone.length / 160) : 0;
+  //   let textObjects = []
+
+  //   if(pagesSMS > 0) {
+  //     let startIndex = 0;
+  //     let lastIndex = 160;
+
+  //     for (let index = 0; index <= pagesSMS; index++) {
+  //       console.log(startIndex, lastIndex);
+  //       let textItem = {}
+  //           textItem.pageId = index;
+  //           textItem.selected = index == 0 ? true : false
+            
+  //           textItem.content = messageClone.slice(
+  //             startIndex,
+  //             lastIndex == 160
+  //               ? messageClone.slice(0, 160).lastIndexOf(" ") < 160
+  //                 ? messageClone.slice(0, 160).lastIndexOf(" ")
+  //                 : lastIndex
+  //               : messageClone.slice(startIndex, lastIndex).lastIndexOf(" ") < lastIndex ? messageClone.slice(startIndex, lastIndex).lastIndexOf(" ") : lastIndex
+  //           );
+        
+  //       startIndex = lastIndex == 160 ? (messageClone.slice(0,160).lastIndexOf(" ") < 160 ? parseInt(startIndex) + messageClone.slice(0,160).lastIndexOf(" ") : parseInt(startIndex) + 160) : parseInt(startIndex) + 160;
+
+  //       lastIndex = lastIndex == 160 ? messageClone.slice(0,160).lastIndexOf(" ") < 160 ? parseInt(lastIndex) + messageClone.slice(0,160).lastIndexOf(" ") : parseInt(lastIndex) + 160 : parseInt(lastIndex) + 160;
+
+  //       textObjects = [...textObjects, textItem]
+  //     }
+      
+  //     setSMSPaginate({
+  //       pages: pagesSMS,
+  //       textObjects: textObjects
+  //     })
+  //   }
+  //   else {
+  //     setSMSPaginate(null)
+  //   }
+  // }
+
+  const changeSMSBlock = (e) => {
+    e.preventDefault();
+    let smsPaginatePlaceholder = {...smsPaginate}
+    const activePage = smsPaginatePlaceholder.selected;
+
+    if(e.target == prevMessageBlock.current){
+      smsPaginatePlaceholder.selected = activePage - 1
+    }
+    if(e.target == nextMessageBlock.current) {
+      smsPaginatePlaceholder.selected = activePage + 1
+    }
+
+    setSMSPaginate(smsPaginatePlaceholder)
+  }
+
+  useEffect(()=>{
+    console.log("paginate", smsPaginate);
+  }, [smsPaginate])
+
+  useEffect(() => {
+    setSortBy(utils.getQueryVariable("sortBy"));
+    setSortType(utils.getQueryVariable("sortType"));
+    fetchSMS()
+  }, []);
 
   return (
     <div className="dashInnerUI smsListingPage">
@@ -699,7 +888,7 @@ const SmsTemplate = (props) => {
               <input
                 type="search"
                 name="search"
-                placeholder="Search SMS templates"
+                placeholder="Search SMS Templates"
                 autoComplete="off"
                 onChange={handleKeywordChange}
               />
@@ -719,95 +908,127 @@ const SmsTemplate = (props) => {
       <div className="userListBody smsListing d-flex">
         <div className="smsListingBody d-flex f-column">
           <div className="listBody f-1" ref={smsListingBody}>
-            <ul className="tableListing">
-              <li className="listHeading">
-                <div
-                  className={
-                    "messageTitle " +
-                    (sortBy == "title" ? "sort " + sortType : "")
-                  }
-                  onClick={() => handleSortBy("title")}
-                >
-                  Title
-                </div>
-                <div
-                  className={
-                    "messageDeet " +
-                    (sortBy == "message" ? "sort " + sortType : "")
-                  }
-                  onClick={() => handleSortBy("message")}
-                >
-                  Message
-                </div>
-              </li>
-              {smsTemplates &&
-                smsTemplates.map((sms, i) => (
-                  <li
-                    key={"smsTemplate-" + i}
-                    onClick={() => getThisMessage(sms, i)}
-                    className={activeMessage === sms.id ? "active" : ""}
+            {smsTemplates && smsTemplates.length > 0 ? 
+              <ul className="tableListing">
+                <li className="listHeading">
+                  <div
+                    className={
+                      "messageTitle " +
+                      (sortBy == "title" ? "sort " + sortType : "")
+                    }
+                    onClick={() => handleSortBy("title")}
                   >
-                    <div className="messageTitle">{sms.title}</div>
-                    <div className="messageDeet">{sms.message.length <= 150 ? sms.message : sms.message.substring(0, 150)+"..."}</div>
-                  </li>
-                ))}
-            </ul>
-          </div>
+                    Title
+                  </div>
+                  <div
+                    className={
+                      "messageDeet " +
+                      (sortBy == "message" ? "sort " + sortType : "")
+                    }
+                    onClick={() => handleSortBy("message")}
+                  >
+                    Message
+                  </div>
+                  <div className="optionMessage">
+                    
+                  </div>
+                </li>
+                {smsTemplates &&
+                  smsTemplates.filter(sms => keyword != null ? ((sms.message.includes(keyword.trim()) || sms.title.includes(keyword.trim())) ? sms : '') : sms).map((sms, i) => (
+                    <li
+                      key={"smsTemplate-" + i}
+                      className={activeMessage === sms._id ? "active" : ""}
+                    >
+                      <div className="messageTitle"
+                        onClick={() => {
+                          getThisMessage(sms, i);
+                          setKeywordSuggesion(false);
+                        }}
+                      >{sms.title}</div>
+                      <div className="messageDeet"
+                        onClick={() => {
+                          getThisMessage(sms, i)
+                          setKeywordSuggesion(false);
+                        }}
+                      >{sms.message.length <= 150 ? sms.message : sms.message.substring(0, 150)+"..."}</div>
+                      <div className="optionMessage">
+                        <button
+                            className="btn"
+                            onClick={() => {
+                                toggleOptions(sms._id);
+                            }}
+                        >
+                            <img src={info_3dot_icon} alt="" />
+                        </button>
+                        <div
+                            className={
+                              sms._id === editOption ? "dropdownOptions listOpen bumberLists" : "listHide"
+                            }
+                        >
+                            <button className="btn "
+                            onClick={(e) => {
+                              e.preventDefault()
+                              setDeleteId(sms._id)
+                              setDeleteConfirm(true);
+                              setActiveMessage(null);
+                            }}>
+                                <span>
+                                  <svg
+                                    className="deleteIcon"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="12.347"
+                                    height="13.553"
+                                    viewBox="0 0 12.347 13.553"
+                                  >
+                                    <g transform="translate(0.75 0.75)">
+                                      <path
+                                        className="a"
+                                        d="M3,6H13.847"
+                                        transform="translate(-3 -3.589)"
+                                      />
+                                      <path
+                                        className="a"
+                                        d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
+                                        transform="translate(-3.795 -2)"
+                                      />
+                                      <line
+                                        className="a"
+                                        y2="3"
+                                        transform="translate(4.397 6.113)"
+                                      />
+                                      <line
+                                        className="a"
+                                        y2="3"
+                                        transform="translate(6.397 6.113)"
+                                      />
+                                    </g>
+                                  </svg>
+                                </span>
+                                Delete
+                            </button>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+              </ul> : <div className="createNew">
+                  <span>
+                      <img src={list_board_icon} alt="" />
+                      <p>No SMS Template found!</p>
+                  </span>
+              </div>
+                  }
+            </div>
           {/* <Pagination /> */}
-          {/* PAGINATION UI FOR SHOW */}
-          <div class="paginationOuter">
-            <ul>
-              <li>
-                <button class="btn paginationBtn" disabled="">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 492 492">
-                    <path
-                      d="M198.608,246.104L382.664,62.04c5.068-5.056,7.856-11.816,7.856-19.024c0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12    C361.476,2.792,354.712,0,347.504,0s-13.964,2.792-19.028,7.864L109.328,227.008c-5.084,5.08-7.868,11.868-7.848,19.084    c-0.02,7.248,2.76,14.028,7.848,19.112l218.944,218.932c5.064,5.072,11.82,7.864,19.032,7.864c7.208,0,13.964-2.792,19.032-7.864    l16.124-16.12c10.492-10.492,10.492-27.572,0-38.06L198.608,246.104z"
-                      fill="#305671"
-                    ></path>
-                  </svg>
-                </button>
-              </li>
-              <li id="1">
-                <button class="btn paginationBtn active" value="1">
-                  1
-                </button>
-              </li>
-              <li id="2">
-                <button class="btn paginationBtn" value="2">
-                  2
-                </button>
-              </li>
-              <li id="3">
-                <button class="btn paginationBtn" value="3">
-                  3
-                </button>
-              </li>
-              <li id="4">
-                <button class="btn paginationBtn" value="4">
-                  4
-                </button>
-              </li>
-              <li id="5">
-                <button class="btn paginationBtn" value="5">
-                  5
-                </button>
-              </li>
-              <li class="btn"> … </li>
-              <li>
-                <button class="btn paginationBtn">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 492.004 492.004"
-                  >
-                    <path
-                      d="M382.678,226.804L163.73,7.86C158.666,2.792,151.906,0,144.698,0s-13.968,2.792-19.032,7.86l-16.124,16.12    c-10.492,10.504-10.492,27.576,0,38.064L293.398,245.9l-184.06,184.06c-5.064,5.068-7.86,11.824-7.86,19.028    c0,7.212,2.796,13.968,7.86,19.04l16.124,16.116c5.068,5.068,11.824,7.86,19.032,7.86s13.968-2.792,19.032-7.86L382.678,265    c5.076-5.084,7.864-11.872,7.848-19.088C390.542,238.668,387.754,231.884,382.678,226.804z"
-                      fill="#305671"
-                    ></path>
-                  </svg>
-                </button>
-              </li>
-            </ul>
-          </div>
+          {/* PAGINATION UI FOR SHOW */}     
+          {smsCount > paginationData.limit ? 
+            <Pagination
+                type="sms-template"
+                paginationData={paginationData}
+                dataCount={smsCount}
+                callback={fetchSMS}
+            /> : 
+            ''
+          }
           {/* PAGINATION UI FOR SHOW */}
         </div>
 
@@ -867,7 +1088,7 @@ const SmsTemplate = (props) => {
                 </p>
               )}
 
-              {activeMessage !== null && (
+              {activeMessage && activeMessage !== null && (
                 <div className="templateInner">
                   <header
                     className={
@@ -876,13 +1097,13 @@ const SmsTemplate = (props) => {
                         : "templateHeader"
                     }
                   >
-                    {!editState && smsTemplates.filter(sms => sms.id === activeMessage)[0].title}
+                    {!editState && <p>{smsTemplates.filter(sms => sms._id === activeMessage)[0].title}</p>}
                     {editState && (
                       <div className="cmnFormRow">
                         <div className="cmnFormField">
                           <input
                             readOnly={editState === true ? false : true}
-                            defaultValue={smsTemplates.filter(sms => sms.id === activeMessage)[0].title}
+                            defaultValue={smsTemplates.filter(sms => sms._id === activeMessage)[0].title}
                             onChange={(e) => editTemplateTitle(e)}
                             id="templateTitle"
                             ref={templateTitle}
@@ -929,7 +1150,7 @@ const SmsTemplate = (props) => {
                     )}
 
                     {editState && (
-                      <button className="btn" onClick={(e) => saveEditstate(e)}>
+                      <button disabled={hasError} className="btn" onClick={(e) => saveEditstate(e)}>
                         <svg
                           width="16"
                           height="17"
@@ -976,14 +1197,15 @@ const SmsTemplate = (props) => {
                   >
                     {editState === false ? (
                       <div className="textView">
-                        {smsTemplates.filter(sms => sms.id === activeMessage)[0].message}
+                        {/* {smsTemplates.filter(sms => sms._id === activeMessage)[0].message} */}
+                        {smsPaginate?.pages && smsPaginate.textObjects[smsPaginate.selected]}
                       </div>
                     ) : (
                       <div className="cmnFormRow f-1 d-flex f-column">
                         <div className="cmnFormField f-1">
                           <textarea
                             readOnly={editState === true ? false : true}
-                            defaultValue={smsTemplates.filter(sms => sms.id === activeMessage)[0].message}
+                            defaultValue={smsTemplates.filter(sms => sms._id === activeMessage)[0].message}
                             onChange={(e) => editTemplateMessage(e)}
                             id="messageTextbox"
                             ref={messageTextbox}
@@ -1002,41 +1224,28 @@ const SmsTemplate = (props) => {
                       <div className="keywordBox">
                         <div className="searchKeyword">
                           <div className="searchKeyBox">
-                            <input type="text" />
+                            <input type="text" onChange={e => setSearchTagString(e.target.value)} />
                           </div>
                           <div className="cancelKeySearch">
                             <button
-                              onClick={() => setKeywordSuggesion(false)}
+                              onClick={() => {
+                                  setKeywordSuggesion(false)
+                                  setSearchTagString("")
+                                }}
                             ></button>
                           </div>
                         </div>
                         <div className="keywordList">
                           <ul>
-                            <li>
-                              <button onClick={(e) => addKeywordEdit(e)}>
-                                First Name
-                              </button>
-                            </li>
-                            <li>
-                              <button onClick={(e) => addKeywordEdit(e)}>
-                                Last Name
-                              </button>
-                            </li>
-                            <li>
-                              <button onClick={(e) => addKeywordEdit(e)}>
-                                Address
-                              </button>
-                            </li>
-                            <li>
-                              <button onClick={(e) => addKeywordEdit(e)}>
-                                City
-                              </button>
-                            </li>
-                            <li>
-                              <button onClick={(e) => addKeywordEdit(e)}>
-                                Country
-                              </button>
-                            </li>
+                              {
+                                smsTags.filter(smsTag => smsTag.id.indexOf(searchTagString) >= 0).map((tagItem, i) =>  (
+                                  <li key={"keyField"+i}>
+                                    <button onClick={(e) => addKeywordEdit(e, tagItem.id)}>
+                                      {tagItem.id}
+                                    </button>
+                                  </li>
+                                ))
+                              }
                           </ul>
                         </div>
                       </div>
@@ -1047,29 +1256,39 @@ const SmsTemplate = (props) => {
                       </span>
                     )} */}
                   </div>
-                  {editState && <footer
+                  <footer
                     className="editPageFooter d-flex"
                     style={{
                       backgroundColor: editState && "#fff",
                     }}
                   >
-                    {/* <button className="btn">
-                      <img
-                        src={right_icon}
-                        alt="next"
-                        style={{
-                          transform: "scaleX(-1)",
-                        }}
-                      />
-                    </button>
-                    {!editState && (
+                    {smsPaginate?.pages ? 
                       <>
-                        <span>Page 1 of 2</span>
-                        <button className="btn">
+                        {smsPaginate && smsPaginate.selected != 0 ? <button 
+                          className="btn"
+                          ref={prevMessageBlock}
+                          onClick={(e)=>changeSMSBlock(e)}
+                        >
+                          <img
+                            src={right_icon}
+                            alt="next"
+                            style={{
+                              transform: "scaleX(-1)",
+                            }}
+                          />
+                        </button> : ""}
+                        <span>Page {smsPaginate && parseInt(smsPaginate.selected)+1} of {(smsPaginate && smsPaginate.pages) ? parseInt(smsPaginate.pages) : ""}</span>
+                          {console.log("smsPaginate.selected", smsPaginate.selected, "smsPaginate.pages", smsPaginate.pages)}
+                        {(smsPaginate && smsPaginate.selected != smsPaginate.pages - 1) ? <button 
+                          className="btn"
+                          ref={nextMessageBlock}
+                          onClick={(e)=>changeSMSBlock(e)}
+                        >
                           <img src={right_icon} alt="next" />
-                        </button>
+                        </button> : ""}
                       </>
-                    )} */}
+                      : ""
+                    }
                     {editState && (
                       <button
                         className="btn browseKeywords"
@@ -1082,7 +1301,7 @@ const SmsTemplate = (props) => {
                         <img src={browse_keywords} alt="keywords" />
                       </button>
                     )}
-                  </footer>}
+                  </footer>
                 </div>
               )}
             </div>
@@ -1090,118 +1309,113 @@ const SmsTemplate = (props) => {
           </div>
         </div>
       </div>
-
       {smsModal && (
         <div className="modalDependent modalBackdrop">
-          {isLoader ? <Loader /> : ""}
-          <div className="slickModalBody">
-            <div className="slickModalHeader">
-              <button className="topCross" onClick={() => closeModal(false)}>
-                <img src={cross} alt="" />
-              </button>
-              <div className="circleForIcon">
-                <img src={sms_template} alt="" />
-              </div>
-              <h3>Add an SMS Template</h3>
-              <p>Fill out below details to create a new SMS Template</p>
+        {addSMSLoader ? <Loader /> : ""}
+        <div className="slickModalBody">
+          <div className="slickModalHeader">
+            <button className="topCross" onClick={() => closeModal(false)}>
+              <img src={cross} alt="" />
+            </button>
+            <div className="circleForIcon">
+              <img src={sms_template} alt="" />
             </div>
-            <div className="modalForm">
-              <Scrollbars
-                renderThumbVertical={(props) => (
-                  <div className="thumb-vertical" />
-                )}
-              >
-                <form method="post" ref={createTemplateForm}>
-                  <div
-                    className={
-                      hasError && errorState.title !== ""
-                        ? "cmnFormRow error"
-                        : "cmnFormRow"
-                    }
-                  >
-                    <label className="cmnFieldName d-flex f-justify-between">
-                      Enter Template Title
-                    </label>
-                    <div className="cmnFormField">
-                      <input
-                        className="cmnFieldStyle"
-                        placeholder="Title..."
-                        id="newTemplateTitle"
-                        ref={createTemplateTitle}
-                        onChange={(e) => addTemplateTitle(e)}
-                      />
-                    </div>
-                    {hasError && errorState.title !== "" && (
-                      <span className="errorMsg">
-                        {errorState.title}
-                      </span>
-                    )}
+            <h3>Add an SMS Template</h3>
+            <p>Fill out below details to create a new SMS Template</p>
+          </div>
+          <div className="modalForm">
+            <Scrollbars
+              renderThumbVertical={(props) => (
+                <div className="thumb-vertical" />
+              )}
+            >
+              <form method="post" ref={createTemplateForm}>
+                <div
+                  className={
+                    hasError && errorState.title !== ""
+                      ? "cmnFormRow error"
+                      : "cmnFormRow"
+                  }
+                >
+                  <label className="cmnFieldName d-flex f-justify-between">
+                    Enter Template Title
+                  </label>
+                  <div className="cmnFormField">
+                    <input
+                      className="cmnFieldStyle"
+                      placeholder="Title..."
+                      id="newTemplateTitle"
+                      ref={createTemplateTitle}
+                      onChange={(e) => addTemplateTitle(e)}
+                    />
                   </div>
-                  <div
-                    className={
-                      hasError && errorState.message !== ""
-                        ? "cmnFormRow error"
-                        : "cmnFormRow"
-                    }
-                  >
-                    <label className="cmnFieldName d-flex f-justify-between">
-                      Message
-                    </label>
-                    <div className="cmnFormField">
-                      <textarea
-                        className="cmnFieldStyle"
-                        placeholder="Message"
-                        id="newTemplateMessage"
-                        ref={createTemplateMessage}
-                        onChange={(e) => addTemplateMessage(e)}
-                      ></textarea>
-                    </div>
-                    {hasError && errorState.message !== "" && (
-                      <span className="errorMsg">
-                        {errorState.message}
-                      </span>
-                    )}
-                    <div className="smsTagsTemplate">
-                      <span onClick={(e) => addThisTag(e)}>fname</span>
-                      <span onClick={(e) => addThisTag(e)}>lname</span>
-                      <span onClick={(e) => addThisTag(e)}>name</span>
-                      <span onClick={(e) => addThisTag(e)}>company_name</span>
-                      <span onClick={(e) => addThisTag(e)}>website</span>
-                      <span onClick={(e) => addThisTag(e)}>phone</span>
-                      <span onClick={(e) => addThisTag(e)}>facebook_link</span>
-                      <span onClick={(e) => addThisTag(e)}>twitter_link</span>
-                      <span onClick={(e) => addThisTag(e)}>email_id</span>
-                      <span onClick={(e) => addThisTag(e)}>address</span>
-                    </div>
+                  {hasError && errorState.title !== "" && (
+                    <span className="errorMsg">
+                      {errorState.title}
+                    </span>
+                  )}
+                </div>
+                <div
+                  className={
+                    hasError && errorState.message !== ""
+                      ? "cmnFormRow error"
+                      : "cmnFormRow"
+                  }
+                >
+                  <label className="cmnFieldName d-flex f-justify-between">
+                    Message
+                  </label>
+                  <div className="cmnFormField">
+                    <textarea
+                      className="cmnFieldStyle"
+                      placeholder="Message"
+                      id="newTemplateMessage"
+                      ref={createTemplateMessage}
+                      onChange={(e) => addTemplateMessage(e)}
+                    ></textarea>
                   </div>
+                  {hasError && errorState.message !== "" && (
+                    <span className="errorMsg">
+                      {errorState.message}
+                    </span>
+                  )}
+                  <div className="smsTagsTemplate">  
+                  {/* .filter(smsTag => smsTag.id.indexOf(searchTagString) >= 0)                   */}
+                    {
+                      smsTags.map((tagItem, i) =>  (
+                        <button key={"tagItem-"+i} className="tagsSMSCreate" onClick={(e) => addThisTag(e, tagItem.id)}>
+                          {tagItem.id}
+                        </button>
+                      ))
+                    }
+                  </div>
+                </div>
 
-                  <div className="modalbtnHolder w-100">
-                    <button
-                      className=" saveNnewBtn"
-                      onClick={(e) => saveSMSTemplate(e)}
-                    >
-                      Save <img src={arrow_forward} alt="" />
-                    </button>
-                    <button
-                      className=" saveNnewBtn"
-                      onClick={(e) => saveandNew(e)}
-                    >
-                      Save & New <img src={arrow_forward} alt="" />
-                    </button>
-                  </div>
-                </form>
-              </Scrollbars>
-            </div>
+                <div className="modalbtnHolder w-100">
+                  <button
+                    className=" saveNnewBtn"
+                    onClick={(e) => saveSMSTemplate(e)}
+                  >
+                    Save <img src={arrow_forward} alt="" />
+                  </button>
+                  <button
+                    className=" saveNnewBtn"
+                    onClick={(e) => saveandNew(e)}
+                  >
+                    Save & New <img src={arrow_forward} alt="" />
+                  </button>
+                </div>
+              </form>
+            </Scrollbars>
           </div>
         </div>
+      </div>
       )}
-
-      {/* <Pagination
-              type="sms-template"
-              paginationData={paginationData}
-              dataCount={smsCount}
-              callback={paginationCallbackHandle}
-            /> */}
+      {deleteConfirm && 
+        <ConfirmBox 
+          callback={confirmMessageDelete} 
+        />
+      }
     </div>
   );
 };

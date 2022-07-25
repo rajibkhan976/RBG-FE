@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Notifications from "./Notifications";
 import Setup from "../setup/mainPopup/setup";
 import CallModal from "./callModal";
+import SmsModal from "./smsModal"
 import { useDispatch, useSelector } from "react-redux";
 import AuthActions from "../../actions/AuthActions";
 import CreateIcon from "../../assets/images/create.png";
@@ -54,6 +55,7 @@ function HeaderDashboard(props) {
     reset,
     pause
   } = useStopwatch({ autoStart: false });
+  const [modalMakeSms, setModalMakeSms] = useState(false)
   const isClicked = useSelector((state) => state.notification.importId);
   useEffect(() => {
     if (isClicked) {
@@ -320,8 +322,29 @@ function HeaderDashboard(props) {
       setStateNotifMenu(false);
     }
   };
+  const makeSMSModalHandle = () => {
+    if (loggedInUser &&
+      loggedInUser.isOrganizationOwner &&
+      loggedInUser.isShowPlan &&
+      (!loggedInUser.isPackage || loggedInUser.credit <= loggedInUser.autoRenewLimit)) {
+      //Show package purchase restriction modal
+      console.log('show restriction modal')
+      dispatch({
+        type: actionTypes.SHOW_CREDIT_RESTRICTION,
+      })
+    } else {
+      setModalMakeSms(true);
+      setShowActionState(false);
+      setStateUserMenu(false);
+      setSetupModalStatus(false);
+      setStateNotifMenu(false);
+    }
+  };
   const callModalOffhandler = () => {
     setModalMakeCall(false);
+  };
+  const smsModalOffhandler = () => {
+    setModalMakeSms(false);
   };
   const makeOutgoingCall = (to) => {
     setDeviceMessage("Establishing Call..");
@@ -408,12 +431,12 @@ function HeaderDashboard(props) {
                   className="actionName"
                 >Call</span>
               </button>
-              {/* <button className="listDropBtn" 
-              onClick={tglActionList}
+              <button className="listDropBtn"
+                onClick={tglActionList}
               >
                 <img src={blueDownArrow} alt="" />
-              </button> */}
-              {/* {showActionState ? (
+              </button>
+              {showActionState ? (
                 <div className="leftBtnList">
                   <ul>
                     <li className="active">
@@ -429,24 +452,29 @@ function HeaderDashboard(props) {
                       <span className="actionName">Call</span>
                     </li>
                     <li>
-                      <input type="radio" name="ces" value="sms" />
+                      <input 
+                        type="radio" 
+                        name="ces" 
+                        value="sms" 
+                        onClick={makeSMSModalHandle}
+                      />
                       <span className="callBtn violet">
                         <img src={sms_icon} alt="" />
                       </span>
                       <span className="actionName">SMS</span>
                     </li>
-                    <li>
+                    {/* <li>
                       <input type="radio" name="ces" value="email" />
                       <span className="callBtn blue">
                         <img src={email_icon} alt="" />
                       </span>
                       <span className="actionName">Email</span>
-                    </li>
+                    </li> */}
                   </ul>
                 </div>
               ) : (
                 ""
-              )} */}
+              )}
             </div>
           </div>
           <div className="rightDetails">
@@ -635,6 +663,14 @@ function HeaderDashboard(props) {
       {modalMakeCall && (
         <CallModal
           callModalOff={callModalOffhandler}
+          makeOutgoingCall={makeOutgoingCall}
+          device={device}
+        />
+      )}
+
+      {modalMakeSms && (
+        <SmsModal
+          smsModalOff={smsModalOffhandler}
           makeOutgoingCall={makeOutgoingCall}
           device={device}
         />

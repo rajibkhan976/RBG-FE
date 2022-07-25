@@ -11796,7 +11796,12 @@ background-color: #fff;
   position: static;
   transform: translate(0,0);
 }
-
+.listCell .greenAutomation {
+  color: green;
+}
+.listCell .redAutomation {
+  color: red;
+}
 
 
 /* contact tag list ......................................................... */
@@ -11900,4 +11905,18 @@ background-color: #fff;
 .dashInnerUI .tagLists {
   left: calc(50% - 125px);
   top: calc(50% - 115px);
+}
+
+.overviewTable .listHead.auto_history {
+  top: 82px;
+  background-color: #f6f8fa;
+}
+.overviewFilter.auto_history {
+  padding: 20px 0;
+  background-color: #f6f8fa;
+  border-top: 1px solid #ededed;
+  border-bottom: 1px solid #ededed;
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }

@@ -323,5 +323,30 @@ export const ContactService = {
                 throw new Error(e.message + ". Please contact support.");
             }
         }
-    }
+    },
+    fetchFields: async () => {
+        try {
+            const url = config.contactFetchFields;
+            const options = {
+                headers: headers
+            };
+            const result = await axios.get(url, options);
+            if (result.status === 200) {
+                return result.data;
+            } else {
+                throw new Error(result.data.message);
+            }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
 };

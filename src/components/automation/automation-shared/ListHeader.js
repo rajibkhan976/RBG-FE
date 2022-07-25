@@ -1,8 +1,12 @@
-import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useLocation, useRouteMatch } from "react-router-dom";
 import plus_icon from "../../../assets/images/plus_icon.svg";
+import { utils } from "../../../helpers";
 
 const ListHeader = (props) => {
+  const automationDetails = useRouteMatch('/automation-details/:automationId');
   const pathURL = useLocation().pathname;
+  const timezone = useSelector((state) => (state.user?.data?.organizationTimezone) ? state.user.data.organizationTimezone : "UTC");
   return (
     <>
       {pathURL === "/automation-list" && (
@@ -27,7 +31,7 @@ const ListHeader = (props) => {
           </div>
         </div>
       )}
-      {pathURL === "automation-details" && (
+      {automationDetails !== null && automationDetails?.isExact ? (
         <div className="userListHead">
           <div className="listInfo">
             <ul className="listPath">
@@ -42,13 +46,13 @@ const ListHeader = (props) => {
                 </li>
                 <li>
                   <span>Created On</span>
-                  <h4>{props.createdOn}</h4>
+                  <h4>{utils.convertUTCToTimezone(props.createdOn, timezone, "LLL")}</h4>
                 </li>
               </ul>
             </div>
           </div>
         </div>
-      )}
+      ):''}
     </>
   );
 };

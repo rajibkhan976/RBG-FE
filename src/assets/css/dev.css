@@ -232,8 +232,8 @@
 }
 
 .dndnode {
-  width: 63px;
-  height: 63px;
+ /* width: 63px;
+  height: 63px;*/
   display: inline-flex;
   float: left;
   align-items: center;
@@ -247,26 +247,26 @@
   user-select: none;
 }
 
-.triggerNodes .dndnode {
+/*.triggerNodes .dndnode {
   background: #5570c9;
-  /*DEFAULT BG COLOR*/
+  !*DEFAULT BG COLOR*!
   border-radius: 50%;
-}
+}*/
 
-.filterNodes .dndnode {
+/*.filterNodes .dndnode {
   position: relative;
-  overflow: hidden;
+  !*overflow: hidden;*!
   border-radius: 25px;
   -webkit-border-radius: 25px;
   -moz-border-radius: 25px;
   -ms-border-radius: 25px;
   -o-border-radius: 25px;
-}
+}*/
 
-.filterNodes .dndnode:after {
+/*.filterNodes .dndnode:after {
   background: #305671;
-  /*DEFAULT BG COLOR*/
-  content: " ";
+  !*DEFAULT BG COLOR*!
+  !*content: " ";*!
   height: 100%;
   position: absolute;
   width: 100%;
@@ -276,11 +276,12 @@
   -o-transform: rotate(45deg);
   transform: rotate(45deg);
   z-index: -1;
-}
+}*/
 
+/*
 .actionNodes .dndnode {
   background: #009dff;
-  /*DEFAULT BG COLOR*/
+  !*DEFAULT BG COLOR*!
 }
 .actionNodes .smsNode {
   background: #6c22b5;
@@ -293,6 +294,7 @@
   max-width: 29px;
   max-height: 29px;
 }
+*/
 
 .filterBuilder .a {
   fill: none;
@@ -1175,8 +1177,8 @@
 
 .errorMsg {
   display: block;
-  font-size: 12px;
-  color: #c74854;
+  font-size: 12px !important;
+  color: #c74854 !important;
   line-height: 21px;
 }
 
@@ -4140,8 +4142,8 @@ li.paymentModeLi, li.paymentAmtLi {
 
 .dashInnerStructure.dashboardPage {
   padding-top: 0;
-  background: #6f8a9d;
-  padding-left: 0;
+  
+  padding-left: 40px;
 }
 
 .dashboardWraperImg {
@@ -4464,7 +4466,6 @@ button.btn.btnUserMenu .menuUserDetail span {
 }
 
 
-
 /* Dashboard Page */
 
 .dashInnerStructure.dashboardPage .dashInnerUI .mrrWraper {
@@ -4473,11 +4474,23 @@ button.btn.btnUserMenu .menuUserDetail span {
   display: flex;
   padding-bottom: 20px;
   padding-right: 30px;
+  flex-basis:100%;
+  position: relative;
+}
+
+.expanDashboard {
+  position: absolute;
+  right: 30px;
+  top: 40px;
+  cursor: pointer;
 }
 
 .dashInnerStructure.dashboardPage .dashInnerUI .mrrWraper .widgetWrapers {
   padding-right: 10px;
   overflow-y: auto;
+  padding-left: 184px;
+  padding-right: 220px;
+  padding-bottom: 25px;
 }
 
 
@@ -4497,10 +4510,8 @@ button.btn.btnUserMenu .menuUserDetail span {
   flex: 0 0 calc(100% - 390px);
   padding-top: 25px;
 }
-.mrrContraolsWraper {
-  flex: 0 0 390px;
+.dashboardSideBar {
   background: #fff;
-  min-height: 100vh;
   padding-right: 0;
 }
 
@@ -4517,26 +4528,31 @@ button.btn.btnUserMenu .menuUserDetail span {
   height: 100%;
 }
 
-.mrrContraolsWraper .sideMenuHeader h3 {
+.dashboardSideBar .sideMenuHeader h3 {
   margin-top: 0;
   font-size: 16px;
 }
 
-.mrrContraolsWraper ul {
-  padding:0 25px;
+.dashboardSideBar ul {
+  padding:30px 25px 0 25px;
 }
 
-.mrrContraolsWraper ul li {
-  margin-bottom: 20px;
+.dashboardSideBar ul li {
+  margin-bottom: 30px;
 }
 
-.mrrContraolsWraper ul li:last-child {
+.dashboardSideBar ul li .customCheckbox {
+  margin-right: 18px;
+}
+
+.dashboardSideBar ul li:last-child {
   margin-bottom: 0px;
 }
 
-.mrrContraolsWraper ul li label span {
-  font-size: 13px;
+.dashboardSideBar ul li label span {
+  font-size: 15px;
   color: #305671;
+  font-weight: 600;
 }
 
 img.dragImg {
@@ -4572,15 +4588,16 @@ img.graphImg {
   border-radius: 10px;
   margin-right: 5%;
   margin-bottom: 40px; */
-  flex: 1 1 calc(33.3% - 38px);
-    padding: 17px 17px;
+  flex: 0 0 calc(33.3% - 38px);
+    padding: 20px 25px;
     border: 1px solid #E9EFF5;
     background: #FFFFFF;
     border-radius: 10px;
     /* margin-right: 5%; */
     /* margin-bottom: 40px; */
     overflow: hidden;
-    height: 342px;
+    height: 294px;
+    box-shadow: 0px 2px 5px rgb(48 86 113 / 20%);
 }
 /* .individualWidgwet:last-child {
   margin-right: 0;
@@ -4593,16 +4610,16 @@ img.graphImg {
 }
 
 .widgetIcon h3 {
-  color: #305671;
+  color: #5182A6;
   font-size: 15px;
-  margin-left: 6px;
+  margin-left: 15px;
   margin-right: 6px;
 }
 
 .widgetIcon figure {
   margin-left: auto;
   /* cursor: pointer; */
-  width: 32px;min-width: 32px;
+  /* width: 32px;min-width: 32px; */
 }
 
 .dashboardWidgets.formControl select {
@@ -4614,11 +4631,12 @@ img.graphImg {
   min-height: 25px;
   line-height: 1.4;
   background-position: calc(100% - 9px) 1px;
-  margin-left: 26px;
+  margin-left: 30px;
+  font-weight: 500;
 }
 
 .dashboardWidgets.formControl {
-  margin-bottom: 20px;
+  margin-bottom: 25px;
 }
 
 .currentRevenueWraprt {
@@ -4667,31 +4685,116 @@ img.currentRevinueIcon {
   display: flex;
   position: relative;
   align-items: center;
-  border: 1px solid #E2E7EB;
+  border: 1px solid #E4ECF3;
   border-radius: 10px;
-  padding: 20px 14px;
+  padding: 14px 18px;
+  margin-bottom: 30px;
 }
 
 .previousRevenueWraper img {
-  margin-right: 10px;
+  margin-right: 15px;
 }
 
 .previousRevenueWraper h4 {
   font-size: 25px;
-  color: #305671; font-weight: 600;
+  color: #5182A6; font-weight: 600;
 }
 
 .previousRevenueWraper p {
-  color: #7E98AA;
+  color: #5182A6;
   font-size: 12px;
+  margin-top: 3px;
+}
+.previousRevenueWraper p span.monthInformations {
+  color: #D0D6DB  ;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+span.editSpansDashboard {
+  margin-left: 5px;
+  margin-bottom: 3px;
+  cursor: pointer;
+}
+
+.previousRevenueWraper.secondRow {
+  margin-bottom: 0;
+  border: none;
+  padding: 0;
+}
+
+.previousRevenueWraper.secondRow .previousRevenueInfo {
+  padding-left: 22px;
+}
+
+.previousRevenueWraper.secondRow a  {
+  width: 100%;
+  color: #36CDE2;
+  font-weight: 600;
+  text-align: center;
+  font-size: 15px;
+  margin-top: 18px;
+}
+
+.previousRevenueWraper.secondRow a img {
+  margin-left: 8px;
+}
+
+.previousRevenueWraper.secondRow .creatUserBtn {
+  width: 100%;
+  padding: 0;
+  margin-top: 12px;
+  text-align: center;
+}
+
+.previousRevenueWraper.secondRow .creatUserBtn span {
+  width: 100%;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.previousRevenueWraper.secondRow .previousRevenueInfo h4 {
+  font-size: 22px;
+}
+
+.previousRevenueWraper.secondRow .previousRevenueInfo p {
+  margin-top: 8px;
+  color: #9BAEBC ;
+}
+
+span.editSpansDashboard img {
+  width: 17px;
 }
 
 .previousMonth {
-  color: #D0D6DB;
-  font-size: 11px;
+  font-size: 13px;
   position: absolute;
-  bottom: 20px;
-  right: 12px;
+  bottom: 24px;
+  right: 15px;
+  padding: 8px 14px 6px 14px;
+  font-weight: 500;
+}
+
+.previousMonth img {
+  margin-right: 0;
+  margin-top: 1px;
+  margin-left: 4px;
+}
+
+.profits {
+  background-color: #E5FFF0;
+  color: #00CC52;
+  border-radius: 100px;
 }
 
 .widgetIcon .creatUserBtn {
@@ -4877,6 +4980,130 @@ ul.programInfosUl.paymentOverviews li .informationSpan .infoSpan .tooltiptextInf
   left: 28%;
 }
 
+
+.currentPreviousState {
+  display: flex;
+  /* align-items: center; */
+}
+
+.currentPreviousState .currentStatus {
+  width: 58%;
+}
+
+.currentPreviousState .previousStatus {
+  width: 38%;
+  margin-left: auto;
+  text-align: center;
+  display: block;
+  color: #fff;
+  background: #6AAAD9;
+}
+
+.currentPreviousState .previousStatus .previousRevenueInfo h4, .currentPreviousState .previousStatus .previousRevenueInfo p {
+  color: #fff!important;
+}
+.settingGoals {
+  width: 100%;
+}
+button.subitGoals {
+  background: #305671;
+  color: #fff;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  font-size: 14px;
+  width: 76px;
+  margin-left: 10px;
+  cursor: pointer;
+  height: 32px;
+}
+
+button.cancelGoals {
+  background: #fff;
+  color: #305671;
+  padding: 4px 10px;
+  border: 1px solid #9BAEBC;
+  border-radius: 5px;
+  font-weight: 500;
+  font-size: 14px;
+  width: 76px;
+  margin:0 0 0 10px;
+  cursor: pointer;
+  height: 32px;
+}
+
+button.cancelGoals:hover {
+  border: 1px solid #305671;
+}
+
+.settinggoalsP {
+  color: #5182A6;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.settinggoalsP .editSpansDashboard {
+  margin-left: 15px;
+}
+
+.goalsInputs {
+  /* display: flex;
+  align-items: center; */
+  width: 100%;
+  float: left;
+}
+
+.goalsInputs input {
+  border: none;
+    border-bottom: 1px solid #c9d5df;
+    border-radius: 0;
+    width: calc(100% - 172px);
+    color: #305671;
+    font-size: 12px;
+    min-height: 32px;
+    padding-bottom: 0;
+}
+span.goalSetRatio {
+  float: right;
+  margin-top: 4px;
+}
+
+.subitGoals:disabled {
+  background-color: #D0D6DB;
+}
+
+.percentValue {
+  color: #626262c7;
+  font-weight: 600;
+  font-size: 12px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.w3-light-grey {
+  color: #000;
+  background-color: #E9EFF5;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.w3-green {
+  color: #E9EFF5;
+    background-color: #7adf7e;
+    border-radius: 5px;
+    animation: progress 1500ms ease-in;
+}
+	/* Animating the progress bar by
+		initially starting from 0*/
+		@keyframes progress {
+			from {
+				width: 0;
+			}
+		}
 
 /* Attendence Contact modal Page  */
 
@@ -5171,7 +5398,7 @@ ul.programInfosUl.paymentOverviews li .informationSpan .infoSpan .tooltiptextInf
 }
 
 .widgetIcon figure img {
-  width: 32px; cursor: grabbing;
+  width: 24px; height: auto; cursor: grabbing;
 }
 
 .appointmentDataListing.attendenceDataListing.calenderViewOnly .fc-header-toolbar.fc-toolbar {
@@ -5186,9 +5413,7 @@ ul.programInfosUl.paymentOverviews li .informationSpan .infoSpan .tooltiptextInf
 .appointmentDataListing.attendenceDataListing.calenderViewOnly .fc-header-toolbar.fc-toolbar .fc-toolbar-title {
   color: #fff;
 }
-.widgetIcon figure img {
-  width: 32px; cursor: grabbing;
-}
+
 
 .appointmentDataListing.attendenceDataListing.calenderViewOnly .fc-header-toolbar.fc-toolbar {
   margin-bottom: 0;
@@ -6174,4 +6399,262 @@ input.addPhases {
 
 .allArrow.openEdits img {
   transform: rotate(180deg);
+}
+
+
+/* skeleton LOader for Dashboard */
+
+.emptyvalue .currentStatus .previousRevenueInfo {
+  width: 75%;
+}
+
+.emptyvalue .statusFigure img {
+  display: none;
+}
+
+.emptyvalue .previousRevenueInfo h4, .emptyvalue .previousRevenueInfo p, .emptyvalue .statusFigure span, .emptyvalue .widgetIcon h3, .emptyvalue .dashFig span, .emptyvalue .previousRevenueWraper.secondRow .emptyLoading, .emptyvalue span.emptyLoading.topDashboardSelector {
+  background-color: #f4f4f4;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: placeHolderShimmer;
+  animation-timing-function: linear;
+  background: linear-gradient(to right, #fff 8%, #e5e5e5 38%, #f4f4f4 54%);
+  background-size: 1000px 640px;
+  border-radius: 3px;
+} 
+.emptyvalue .previousRevenueInfo h4, .emptyvalue .previousRevenueInfo p, .emptyvalue .statusFigure span, .emptyvalue .widgetIcon h3, .emptyvalue .previousRevenueWraper.secondRow .emptyLoading, .emptyvalue span.emptyLoading.topDashboardSelector {
+  animation-duration: 2.2s;
+}
+
+.emptyvalue .dashFig span {
+  animation-duration: 2.9s;
+}
+
+ .previousRevenueInfo h4 {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 30px;
+    width: 100%;
+    float: left;
+}
+
+.emptyvalue .secondRow .previousRevenueInfo h4 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 26.39px;
+  width: 40%;
+}
+.statusFigure span { 
+  display: none;
+}
+
+.emptyvalue .widgetIcon figure.dashFig img {
+  display: none;
+}
+.emptyvalue .widgetIcon figure.dashFig svg {
+  display: none;
+}
+ figure.dashFig span {
+  display: none;
+}
+.emptyvalue .dashFig {
+  float: left;
+  width: 28px;
+  height: 27.95px;
+}
+.emptyvalue .dashFig span {
+  height: 23.99px;
+  width: 23.99px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 50%;
+  display: block;
+}
+
+
+.emptyvalue .statusFigure span {
+  height: 40.99px;
+  width: 40.99px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-right: 10px;
+  border-radius: 50%;
+  display: block;
+}
+
+.emptyvalue .widgetIcon h3 {
+  height: 17.99px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 85%;
+  float: left;
+}
+
+.widgetIcon figure.dashFig {
+  margin-left: 0;
+}
+
+.emptyvalue .previousRevenueWraper {
+  height: 76.13px;
+  background: #fff;
+}
+.emptyvalue .previousRevenueInfo p {
+  float: left;
+    height: 14.39px;
+    width: 100%;
+}
+.emptyvalue .editSpansDashboard {
+  display: none;
+}
+
+.emptyvalue .widhetInfoWraper .widgetIcon {
+  display: block;
+  width: 100%;
+  float: left;
+  height: 27.95px;
+}
+
+.emptyvalue .dashboardWidgets.formControl {
+  visibility: hidden;
+  height: 53.95px;
+}
+
+.emptyLoading {
+  display: none;
+}
+
+.emptyvalue .previousRevenueWraper.secondRow a {
+  display: none;
+}
+
+.emptyvalue .previousRevenueWraper.secondRow .emptyLoading {
+  display: block;
+  width: 92%;
+  height: 17.99px;
+  margin-left: 15px;
+}
+
+.emptyvalue .previousRevenueWraper .previousRevenueInfo {
+  width: 95%;
+}
+
+.emptyvalue button.creatUserBtn {
+  display: none;
+}
+
+.emptyvalue .previousRevenueWraper.secondRow p {
+  display: none;
+}
+
+.emptyvalue .previousRevenueWraper.secondRow .emptyLoading.secondP {
+  float: left;
+  width: 100%;
+  margin-top: 5px;
+  margin-left: 0;
+}
+
+span.emptyLoading.topDashboardSelector {
+  display: none;
+}
+
+.emptyvalue span.emptyLoading.topDashboardSelector {
+  display: block!important;
+  width: 35%;
+  height: 12px;
+  float: left;
+  margin-top: 6px;
+  margin-left: 15px;
+}
+
+.emptyvalue .previousRevenueInfo p.firstChild {
+  display: none!important;
+}
+
+.secondChild {
+  display: none;
+}
+.emptyvalue .widgetIcon h3.firstChild {
+  display: none!important;
+}
+
+.emptyvalue .previousRevenueInfo p.secondChild {
+  display: block!important;
+}
+
+.emptyvalue .widgetIcon h3.secondChild {
+  display: block!important;
+}
+
+.emptyvalue .previousRevenueInfo h4.firstChild {
+ display: none;
+}
+
+.emptyvalue .previousRevenueInfo h4.secondChild {
+  display: block!important;
+}
+
+
+.emptyvalue .dashboardWidgets.formControl select {
+  display: none;
+}
+
+.emptyvalue .widgetIcon h3.firstChild {
+  display: none!important;
+}
+
+.emptyvalue .previousMonth.firstChild {
+  display: none!important;
+}
+.emptyvalue .previousMonth.secondChild {
+  display: block!important;
+}
+
+.previousMonth.loss img {
+  margin-right: 0;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: 4px;
+}
+
+.previousMonth.loss {
+  background-color: #FFF1F1;
+  color: #ED707A;
+  border-radius: 100px;
+  padding: 6px 14px 5px 14px;
+  display: flex;
+  align-items: center;
+}
+.previousRevenueWraper.previousStatus{
+ padding: 14px 14px;
+}
+.previousRevenueWraper.previousStatus h4{
+  font-size: 20px;
+}
+
+.dashFig svg path {
+  fill:#5182A6;
+}
+.dndnode img {
+  max-width: 29px;
+  max-height: 29px;
+}
+
+
+
+/* Red progressbar Css */
+
+.w3-red {
+  color: #E9EFF5;
+    background-color: #ed707a;
+    border-radius: 5px;
+    animation: progress 1500ms ease-in;
+}
+
+.emptyvalue .w3-light-grey {
+  display: none;
+}
+
+.emptyvalue .previousRevenueWraper.secondRow {
+  width: 100%;
+  display: block;
 }

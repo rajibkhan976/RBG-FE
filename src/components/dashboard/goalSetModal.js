@@ -1,6 +1,8 @@
 import React, { useState, useLayoutEffect, useEffect } from "react";
 import arrow_forward from "../../../src/assets/images/arrow_forward.svg";
 import pluss from "../../../src/assets/images/pluss.svg";
+import drag from '../../../src/assets/images/drag.svg';
+import line_chart from '../../../src/assets/images/line-chart.svg';
 
 //import Loader2 from "../../../";
 
@@ -11,13 +13,17 @@ const GoalSetModal = (props) => {
         <>
             <div className="sideMenuOuter filterUserMenu">
                
-                <div className="sideMenuInner">
+                <div className="sideMenuInner dashboardSideBar">
                     <button className="btn btn-closeSideMenu" onClick={props.closeModal}><span></span><span></span></button>
-                    <div className="sideMenuHeader">
+                    {/* <div className="sideMenuHeader">
                         <h3 className="liteHeading">MRR Goal Set</h3>
                         <p className="sideMenuPara">It is a long established fact that a reader will be readable content of a page when looking at its layout.</p>
-                    </div>
-                    <div className="sideMenuBody">
+                    </div> */}
+                    <div className="sideMenuHeader">
+            <h3>Widget Customization</h3>
+            {/* <p>Lorem ipsum dolor sit amet.</p> */}
+          </div>
+                    {/* <div className="sideMenuBody">
                         <form className="formBody" >
                             
                         <div className="formField w-100 appModals formControl">
@@ -36,7 +42,124 @@ const GoalSetModal = (props) => {
                                 </div>
 
                         </form>
-                    </div>
+                    </div> */}
+
+
+
+
+
+
+<ul>
+            <li>
+              <label>
+                  <div className="customCheckbox">
+                      <input type="checkbox"/>
+                      <span></span>
+                  </div>
+                  
+                  <span>Monthly Recurring Revenue Growth</span>
+                  <img src={drag} className="dragImg"  />
+              </label>
+            </li>
+            <li>
+              <label>
+                  <div className="customCheckbox">
+                      <input type="checkbox"/>
+                      <span></span>
+                  </div>
+                  
+                  <span>Monthly Recurring Revenue Growth</span>
+                  <img src={drag} className="dragImg"  />
+              </label>
+            </li>
+            <li>
+              <label>
+                  <div className="customCheckbox">
+                      <input type="checkbox"/>
+                      <span></span>
+                  </div>
+                  
+                  <span>Monthly Recurring Revenue Growth</span>
+                  <img src={drag} className="dragImg"  />
+              </label>
+            </li>
+            <li>
+              <label>
+                  <div className="customCheckbox">
+                      <input type="checkbox"/>
+                      <span></span>
+                  </div>
+                  
+                  <span>Monthly Recurring Revenue Growth</span>
+                  <img src={drag} className="dragImg"  />
+              </label>
+            </li>
+            <li>
+              <label>
+                  <div className="customCheckbox">
+                      <input type="checkbox"/>
+                      <span></span>
+                  </div>
+                  
+                  <span>Monthly Recurring Revenue Growth</span>
+                  <img src={drag} className="dragImg"  />
+              </label>
+            </li>
+            <li>
+              <label>
+                  <div className="customCheckbox">
+                      <input type="checkbox"/>
+                      <span></span>
+                  </div>
+                  
+                  <span>Monthly Recurring Revenue Growth</span>
+                  <img src={drag} className="dragImg"  />
+              </label>
+            </li>
+            <li>
+              <label>
+                  <div className="customCheckbox">
+                      <input type="checkbox"/>
+                      <span></span>
+                  </div>
+                  
+                  <span>Monthly Recurring Revenue Growth</span>
+                  <img src={drag} className="dragImg"  />
+              </label>
+            </li>
+            <li>
+              <label>
+                  <div className="customCheckbox">
+                      <input type="checkbox"/>
+                      <span></span>
+                  </div>
+                 
+                  <span>Monthly Recurring Revenue Growth</span>
+                  <img src={drag} className="dragImg"  />
+              </label>
+            </li>
+            <li>
+              <label>
+                  <div className="customCheckbox">
+                      <input type="checkbox"/>
+                      <span></span>
+                  </div>
+                  
+                  <span>Monthly Recurring Revenue Growth</span>
+                  <img src={drag} className="dragImg"  />
+              </label>
+            </li>
+          </ul>
+
+
+
+
+
+
+
+
+
+
                 </div>
             </div>
         </>

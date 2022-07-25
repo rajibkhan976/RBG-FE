@@ -311,7 +311,11 @@ const InnerLeftMenu = (props) => {
                 </NavLink>
               </li>
               <li>
-                <NavLink className="leftMenuInnerLink" to="/call-setup" activeClassName="active">
+                <NavLink 
+                  className={(pathURL === "/sms-setup" || pathURL === "/call-setup") ? "leftMenuInnerLink active" : "leftMenuInnerLink"} 
+                  to="/call-setup" 
+                  activeClassName="active"
+                >
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
                     <p className="linkHeading">Communication Setup</p>
@@ -325,12 +329,12 @@ const InnerLeftMenu = (props) => {
                       <NavLink to="/email-setup" activeClassName="active">
                         Email
                       </NavLink>
-                    </li>
+                    </li> */}
                     <li>
                       <NavLink to="/sms-setup" activeClassName="active">
                         SMS
                       </NavLink>
-                    </li> */}
+                    </li>
                     <li>
                       <NavLink to="/call-setup" activeClassName="active">
                         Call
@@ -452,11 +456,11 @@ const InnerLeftMenu = (props) => {
                   </div>
                 </NavLink>
               </li>
-              {/* <li>
-                {console.log(pathURL === "/email-template" || pathURL === "/sms-template" || pathURL === "/audio-template")}
+              <li>
+                {/* {console.log(pathURL === "/email-template" || pathURL === "/sms-template" || pathURL === "/audio-template")} */}
                 <NavLink 
                   className={(pathURL === "/email-template" || pathURL === "/sms-template" || pathURL === "/audio-template") ? "leftMenuInnerLink active" : "leftMenuInnerLink"} 
-                  to="/email-template" 
+                  to="/sms-template" 
                   activeClassName="active">
                   <div className="indicator"></div>
                   <div className="linkDetails setup">
@@ -467,11 +471,11 @@ const InnerLeftMenu = (props) => {
                     </button>
                   </div>
                   <ul className="sideSubMenu">
-                    <li>
+                    {/* <li>
                       <NavLink to="/email-template" activeClassName="active">
                          Email
                       </NavLink>
-                    </li>
+                    </li> */}
                     <li>
                       <NavLink to="/sms-template" activeClassName="active">
                          SMS
@@ -482,12 +486,12 @@ const InnerLeftMenu = (props) => {
                         Audio
                       </NavLink>
                     </li>
-                    <li><a href="javascript:void(0)">RVM</a></li>
-                    <li><a href="javascript:void(0)">Sales Bridge</a></li>
+                    {/* <li><a href="javascript:void(0)">RVM</a></li>
+                    <li><a href="javascript:void(0)">Sales Bridge</a></li> */}
                   </ul>
                 </NavLink>
 
-              </li> */}
+              </li>
               {/* <li>
                 <NavLink className="leftMenuInnerLink" to="/phases-status"> 
                   <div className="indicator"></div>

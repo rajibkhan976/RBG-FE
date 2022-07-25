@@ -87,14 +87,14 @@ const Setup = (props) => {
                     Email
                   </NavLink>
                 </li>  */}
-                {/* <li>
+                <li>
                   <NavLink
                     to="/sms-setup"
                     onClick={(e) => props.clickedLink(e)}
                   >
                     SMS
                   </NavLink>
-                </li> */}
+                </li>
                 <li>
                   <NavLink
                     to="/call-setup"
@@ -237,10 +237,18 @@ const Setup = (props) => {
 
 
             </li>
-            {/* <li>
+            <li>
               <div className="listHead">
                 <i>
-                  <img src={SetupIcon7} alt="" />
+                <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M28 0H0V2H28V0Z" fill="#305671"/>
+                  <path d="M28 26H0V28H28V26Z" fill="#305671"/>
+                  <path d="M2 28L2 0L0 0L0 28H2Z" fill="#305671"/>
+                  <path d="M28 28V0L26 0V28H28Z" fill="#305671"/>
+                  <path d="M15 18L15 0L13 0L13 18H15Z" fill="#305671"/>
+                  <path d="M26 16H2V18H26V16Z" fill="#305671"/>
+                </svg>
+
                 </i>
                 <div>
                   <h3>Templates</h3>
@@ -248,14 +256,14 @@ const Setup = (props) => {
                 </div>
               </div>
               <ul className="secondListing">
-                <li>
+                {/* <li>
                   <NavLink
                     to="/email-template"
                     onClick={(e) => props.clickedLink(e)}
                   >
                     Email
                   </NavLink>
-                </li>
+                </li> */}
                 <li>
                   <NavLink
                     to="/sms-template"
@@ -272,7 +280,7 @@ const Setup = (props) => {
                     Audio
                   </NavLink>
                 </li>
-                <li>
+                {/* <li>
                   <a
                     href="javascript:void(0)"
                     onClick={(e) => props.clickedLink(e)}
@@ -287,9 +295,9 @@ const Setup = (props) => {
                   >
                     Sales Bridge
                   </a>
-                </li>
+                </li> */}
               </ul>
-            </li> */}
+            </li>
             <li>
               <div className="listHead">
                 <i> <NavLink

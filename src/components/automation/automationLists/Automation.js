@@ -1,10 +1,11 @@
 import React, { useState, lazy, Suspense } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 // import AutomationBuilder from "./automationcanvas/AutomationBuilder";
 import AutomationDetails from "../automationDetails/AutomationDetails";
 
 import Loader from "../../shared/Loader";
-const AutomationLists = lazy(() => import("./AutomationLists"));
+/*const AutomationLists = lazy(() => import("./AutomationLists"));*/
+import AutomationLists from "./AutomationLists";
 const AutomationBuilder = lazy(() =>
   import("../automationcanvas/AutomationBuilder")
 );
@@ -34,19 +35,19 @@ const Automation = (props) => {
     setAutomationElement(e);
   };
 
+  const automationDetails = useRouteMatch('/automation-details/:automationId');
+
   return (
     <>
           {pathURL === "/automation-list" ? (
             <>
-              <Suspense fallback={<Loader />}>
-                <AutomationLists
+              <AutomationLists
                   toggleFilter={toggleFilter}
                   toggleCreate={toggleCreate}
                   automationListObject={automationListObject}
-                  automationElementSet={automationElementSet}
-                  key={Math.random().toString()}
-                />
-              </Suspense>
+                  setAutomationObj={(elem) => setAutomationListItem(elem)}
+                  automationElementSet={(elem) => automationElementSet(elem)}
+              />
             </>
           ) : pathURL === "/automation-builder" ? (
             <>
@@ -57,13 +58,11 @@ const Automation = (props) => {
                 />
               </Suspense>
             </>
-          ) : pathURL === "/automation-details" ? (
+          ) : automationDetails !== null && automationDetails?.isExact ? (
             <>
-              <AutomationDetails automationListItem={automationListItem} />
+              <AutomationDetails automationElement={automationListItem} />
             </>
-          ) : (
-            ""
-          )}
+          ): ''}
     </>
   );
 };

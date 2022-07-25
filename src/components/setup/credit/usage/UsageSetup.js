@@ -30,8 +30,8 @@ const UsageSetup = () => {
             if (typeof response.creditUsage === 'object') {
                 const { call, sms, buyNumber, autoRenewLimit } = response.creditUsage;
                 usageForm.current['callCreditUsage'].value = call;
-                if(isDisplay){
-                    usageForm.current['smsCreditUsage'].value = sms;
+                usageForm.current['smsCreditUsage'].value = sms;
+                if (isDisplay) {
                     usageForm.current['buyNumberCreditUsage'].value = buyNumber;
                 }
                 limitForm.current['autoRenewLimit'].value = autoRenewLimit;
@@ -74,13 +74,11 @@ const UsageSetup = () => {
 
     //Sms usage
     const handleSmsCreditUsage = () => {
-        if (isDisplay) {
-            let checkSmsUsage = checkUsageErr(usageForm.current['smsCreditUsage'].value, 'sms');
-            setFormErrors({
-                ...formErrors,
-                sms: checkSmsUsage
-            })
-        }
+        let checkSmsUsage = checkUsageErr(usageForm.current['smsCreditUsage'].value, 'sms');
+        setFormErrors({
+            ...formErrors,
+            sms: checkSmsUsage
+        })
     }
 
     //Buy number usage
@@ -107,15 +105,16 @@ const UsageSetup = () => {
             formErrorsCopy.call = checkCallUsage;
         }
 
+        //Sms usage
+        let checkSmsUsage = checkUsageErr(usageForm.current['smsCreditUsage'].value, 'sms');
+        if (checkSmsUsage) {
+            isError = true;
+            formErrorsCopy.sms = checkSmsUsage;
+        }
+
 
         if (isDisplay) {
-            //Sms usage
-            let checkSmsUsage = checkUsageErr(usageForm.current['smsCreditUsage'].value, 'sms');
-            if (checkSmsUsage) {
-                isError = true;
-                formErrorsCopy.sms = checkSmsUsage;
-            }
-
+            
             //Buy number usage
             let checkBuyNumberUsage = checkUsageErr(usageForm.current['buyNumberCreditUsage'].value, 'buy number');
             if (checkSmsUsage) {
@@ -145,9 +144,9 @@ const UsageSetup = () => {
             console.log('submit the form');
             let payload = {
                 call: Number(usageForm.current['callCreditUsage'].value),
+                sms: Number(usageForm.current['smsCreditUsage'].value)
             }
-            if(isDisplay) {
-                payload.sms = Number(usageForm.current['smsCreditUsage'].value);
+            if (isDisplay) {
                 payload.buyNumber = Number(usageForm.current['buyNumberCreditUsage'].value);
             }
             setIsLoader(true);
@@ -265,14 +264,13 @@ const UsageSetup = () => {
                                         <p className="errorMsg">{formErrors.call}</p>
                                     ) : null}
                                 </div>
-                                {isDisplay ?
-                                    <div className={formErrors.sms ? "cmnFormRow errorField" : "cmnFormRow"}>
-                                        <label className="cmnFieldName">SMS  (Per Sms)</label>
-                                        <input type="text" name="smsCreditUsage" className="cmnFieldStyle" placeholder="Ex. 3" onChange={handleSmsCreditUsage} />
-                                        {formErrors.sms ? (
-                                            <p className="errorMsg">{formErrors.sms}</p>
-                                        ) : null}
-                                    </div> : ''}
+                                <div className={formErrors.sms ? "cmnFormRow errorField" : "cmnFormRow"}>
+                                    <label className="cmnFieldName">SMS  (Per Sms)</label>
+                                    <input type="text" name="smsCreditUsage" className="cmnFieldStyle" placeholder="Ex. 3" onChange={handleSmsCreditUsage} />
+                                    {formErrors.sms ? (
+                                        <p className="errorMsg">{formErrors.sms}</p>
+                                    ) : null}
+                                </div>
                                 {isDisplay ?
                                     <div className={formErrors.buyNumber ? "cmnFormRow errorField" : "cmnFormRow"}>
                                         <label className="cmnFieldName">Buy Number  (Per Number)</label>

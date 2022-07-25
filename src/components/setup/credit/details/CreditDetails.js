@@ -23,6 +23,8 @@ const CreditDetails = () => {
     const [sortBy, setSortBy] = useState("");
     const [sortType, setSortType] = useState("asc");
     const isDisplay = false;
+    const timezone = useSelector((state) => (state.user?.data?.organizationTimezone) ? state.user.data.organizationTimezone : "UTC");
+    console.log(timezone);
 
 
     const loggedInUser = useSelector((store) => store.user.data);
@@ -169,7 +171,7 @@ const CreditDetails = () => {
                         <select className="cmnFieldStyle cr_select" onChange={handleServiceChange}>
                             <option value="all">All</option>
                             <option value="call">Call</option>
-                            {isDisplay ? <option value="sms">SMS</option> : ''}
+                            <option value="sms">SMS</option>
                             <option value="point-credited">Points Credited</option>
                         </select>
                         <div className="cr_dateInput formControl">
@@ -209,10 +211,10 @@ const CreditDetails = () => {
                                                 {item.type === "credit" ? item.transaction_id : "N/A"}
                                             </div>
                                             <div className="cr_date">
-                                                {moment(item.createdAt.split(" ")[0], 'YYYY-MM-DD').format('Do MMM, YYYY')}
+                                                {moment.utc(item.createdAt, null).tz(timezone).format('Do MMM, YYYY')}
                                             </div>
                                             <div className="cr_date">
-                                                {moment(item.createdAt.split(" ")[1], 'hh:mm A').format('hh:mm A')}
+                                                {moment.utc(item.createdAt, null).tz(timezone).format('hh:mm A')}
                                             </div>
                                             <div className="cr_credit">
                                                 <span className={item.type === "credit" ? "greentxt" : "redtxt"}>{item.type === "credit" ? "+" + item.credit : "-" + item.credit}</span>

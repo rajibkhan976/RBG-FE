@@ -32,6 +32,9 @@ module.exports = {
     automationWebhookUrl: "https://" + process.env.REACT_APP_AUTOMATION_WEBHOOK + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV,
     automationAslUrl: "https://" + process.env.REACT_APP_AUTOMATION_ASL + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV,
     // Delete Automation
+    // Automation History
+    automationHistoryUrl: "https://" + process.env.REACT_APP_AUTOMATION_HISTORY + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/automation/history",
+    // automationHistoryUrl: "http://localhost:4000/dev/automation/history",
     // inner left menu api service
     innerLeftMenuApiUrl: "https://" + process.env.REACT_APP_INNERLEFT + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/inner-left-menu",
     // Import Contact
@@ -177,4 +180,26 @@ module.exports = {
     // Dont remove it
     personalDetailsUrl: "https://" + process.env.REACT_APP_PERSONALDETAILS + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV,
     contactTag: "https://" + process.env.REACT_APP_CONTACT_TAG + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV + "/contact",
+  
+
+    // SMS Template
+    fetchSmsUrl: "https://" + process.env.REACT_APP_SMS_TEMPLATE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/sms/list",
+    smsUploadUrl: "https://" + process.env.REACT_APP_SMS_TEMPLATE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/sms",
+    smsEditUrl: "https://" + process.env.REACT_APP_SMS_TEMPLATE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/sms",
+    smsDeleteUrl: "https://" + process.env.REACT_APP_SMS_TEMPLATE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/sms",
+
+    // SMS Config
+    smsConfigUrl: "https://" + process.env.REACT_APP_SMS_CONFIG + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/communication/sms",
+
+    // SMS Tags
+    fetchSMSTags: "https://" + process.env.REACT_APP_SMS_TAGS + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/sms/tags",
+
+    // Global SMS
+    sendSMS: "https://" + process.env.REACT_APP_SMS_TAGS + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/sms/send",
+    //Dashboard -
+    dashboardWidgetsUrl :  "https://" + process.env.REACT_APP_DASHBOARD + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/widgets/",
+    
+    //Dashboard_goals
+    dashboardWidgetGoalUrl : "https://" +process.env.REACT_APP_DASHBOARD_GOAL + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/widgets/",
+    contactFetchFields: "https://" + process.env.REACT_APP_CONTACT_FETCH_FIELDS + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV + "/contact/field"
 }  

@@ -1,5 +1,5 @@
 import React, { useState, lazy, useEffect, useLayoutEffect } from "react";
-import { Redirect, Route, Switch, useLocation } from "react-router-dom";
+import { Redirect, Route, Switch, useLocation, useRouteMatch } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import LeftMenu from "./shared/LeftMenu";
 import DashboardRoutes from "./dashboard/DashboardRoutes"
@@ -609,7 +609,16 @@ const MainComponent = () => {
                 toastr.light('Info', message.message, toastrOptions)
             }
         }
-    }, [message.message])
+    }, [message.message]);
+
+    var autoMatchUrl = useRouteMatch('/automation-details/:automationId');
+   // console.log(autoMatchUrl);
+    var gj = "";
+    
+    if (autoMatchUrl != null){
+        gj = autoMatchUrl.url; 
+    }
+    
     return (
         <>
             <div className="mainComponent">
@@ -617,7 +626,7 @@ const MainComponent = () => {
                     className={
                         "dashboardBody d-flex " +
                         (pathURL === '/automation-list' || pathURL === '/automation-builder' ? ' automationBuilderBody ' : '') +
-                        (showInnerleftMenu ? ((pathURL !== '/dashboard' && pathURL !== '/appointment-global' && pathURL !== '/attendance-global') ? "openSubmenu" : "") : "")
+                        (showInnerleftMenu ? ((pathURL !== '/dashboard' && pathURL !== '/appointment-global' && pathURL !== '/attendance-global' && pathURL !== gj) ? "openSubmenu" : "") : "")
                     }
                 >
                     <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu} clickedSetupStatus={(e) => clickedSetupStatus(e)} />
@@ -642,7 +651,7 @@ const MainComponent = () => {
                                 <AuthRoutes toggleLeftSubMenu={toggleLeftSubMenu}
                                     toggleCreate={(e) => toggleCreate(e)} />
                             </Route>
-                            <Route exact path={["/automation-list", "/automation-builder"]}>
+                            <Route exact path={["/automation-list", "/automation-builder", "/automation-details/:automationId"]}>
                                 <AutomationRoutes toggleLeftSubMenu={toggleLeftSubMenu}
                                     toggleCreate={(e) => toggleCreate(e)} />
                             </Route>

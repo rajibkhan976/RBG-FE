@@ -1,5 +1,8 @@
 import axios from "axios";
 import config from "../../configuration/config";
+let headers = {
+    "Content-Type": "application/json",
+};
 
 export const AutomationServices = {
     getAsl: async (payload) => {
@@ -28,6 +31,7 @@ export const AutomationServices = {
     },
     generateUrl: async (payload) => {
         try {
+            console.log(config.automationWebhookUrl + '/automation/webhook/generate')
             let configAxios = {
                 method: 'post',
                 url: config.automationWebhookUrl + '/automation/webhook/generate',
@@ -235,6 +239,44 @@ export const AutomationServices = {
             } else {
                 throw new Error(res.data.message)
             }
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+    fetchTagStatusPhase: async () => {
+        try {
+            const url = config.automationBasicUrl + "/automation/fetch-details-tags-status-phase";
+            const result = await axios.get(url, { headers: headers });
+            return result.data;
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+    fetchHistory: async (automationID, page, queryParams = null) => {
+        try {
+            let url = config.automationHistoryUrl + `/${page}?automationId=${automationID}`;
+            url += (queryParams) ? "&" + queryParams : '';
+            // const url = config.automationHistoryUrl + "?search=62d070bfae66400009db4ba2";
+            const res = await axios.get(url);
+            return res.data;
         } catch (e) {
             if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);

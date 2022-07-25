@@ -33,7 +33,7 @@ const AutomationRoutes = (props) => {
         {/* <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} /> */}
         <div className="dashInnerStructure">
           <Switch>
-            <Route exact path={["/automation-list", "/automation-builder", "/automation-details"]} component={Automation} />
+            <Route exact path={["/automation-list", "/automation-builder", "/automation-details/:automationId"]} component={Automation} />
             {/* <Route path={["*"]} component={NotFound} /> */}
           </Switch>
           <DashboardFooter />

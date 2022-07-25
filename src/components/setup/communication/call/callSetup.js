@@ -451,6 +451,7 @@ const CallSetup = () => {
                     </div> : ""
                 }
             </div>
+            {console.log("numberObj", numberObj)}
             {
               Object.keys(numberObj).length ?
               <div className="userListBody callListingTable">

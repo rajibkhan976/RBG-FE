@@ -275,8 +275,8 @@ function LeftMenu(props) {
               </a> */}
             {/* </Link> */}
           {/* </li> : ""} */}
-        {false && permissions && permissions.findIndex(p => p.entity === "automation") >= 0 ?
-          <li>
+        {/*{permissions && permissions.findIndex(p => p.entity === "automation") >= 0 ?*/}
+          {/*<li>
             <NavLink
               className="leftMenuLink"
               isActive={() => ["/automation-list", "/automation-builder"]}
@@ -307,7 +307,7 @@ function LeftMenu(props) {
               </svg>
               <span className="menuName">Automation</span>
             </NavLink>
-          </li> : ""}
+          </li>*/} {/*: ""}*/}
         {permissions && permissions.findIndex(p => p.entity === "contact") >= 0 ?
           <li>
             <NavLink

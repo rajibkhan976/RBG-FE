@@ -93,8 +93,8 @@ const Attendance = (props) => {
       }
       for (let atten of attendances.attendance) {
         let eventObj = {
-          start: atten.checkedInAt, //momentTZ.tz( atten.checkedInAt, "YYYY-MM-DD HH:mm:ss", tz).format("YYYY-MM-DD[T]HH:mm:ss[Z]"),
-          checkedInAt: atten.checkedInAt, 
+          start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
+          checkedInAt: convertUTCtoTZ(atten.checkedInAt), 
           note: atten.note,
           name: atten.contact.firstName + " " + atten.contact.lastName,
           email: atten.contact.email,
@@ -114,7 +114,7 @@ const Attendance = (props) => {
           }
           
           let eventObj = {
-            start: holiday.fromDate,
+            start:  holiday.fromDate,
             end: holiday.toDate,
             name: holiday.name,
             title: holiday.name,

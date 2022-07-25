@@ -15,6 +15,8 @@ import ConfirmBox from "../../shared/confirmBox";
 import { ErrorAlert, SuccessAlert } from "../../shared/messages";
 import responses from "../../../configuration/responses";
 import env from "../../../configuration/env";
+import { useHistory } from "react-router-dom";
+
 
 const AutomationLists = (props) => {
   // USEEFFECT() Life cycle hook
@@ -59,6 +61,7 @@ const AutomationLists = (props) => {
   }, [successMsg, errorMsg])
 
   const dispatch = useDispatch();
+  const history = useHistory()
 
   const fetchAutomations = async () => {
     try {
@@ -78,26 +81,25 @@ const AutomationLists = (props) => {
         pageID,
         queryParams
       );
-
-      if (automationLists.data.success) {
-        setAutomationData({
-          data: automationLists.data.data,
-          count: automationLists.data.pagination.count,
-        });
-        dispatch({
-          type: actionTypes.AUTOMATION_COUNT,
-          count: automationLists.data.pagination.count,
-        });
-        setPaginationData({
-          ...paginationData,
-          currentPage: automationLists.data.pagination.currentPage,
-          totalPages: automationLists.data.pagination.totalPages,
-        });
-      } else {
-        console.log("api error ! " + automationLists.data.message);
-      }
+      setAutomationData({
+        data: automationLists.data.data,
+        count: automationLists.data.pagination.count,
+      });
+      dispatch({
+        type: actionTypes.AUTOMATION_COUNT,
+        count: automationLists.data.pagination.count,
+      });
+      setPaginationData({
+        ...paginationData,
+        currentPage: automationLists.data.pagination.currentPage,
+        totalPages: automationLists.data.pagination.totalPages,
+      });
     } catch (e) {
-      setErrorMsg(e.message);
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: e.message,
+        typeMessage: 'error'
+      });
     } finally {
       setIsLoader(false);
     }
@@ -145,48 +147,51 @@ const AutomationLists = (props) => {
     try {
       data[0].status = data[0].status ? false : true;
       if (data[0].status) {
-        let payload = { element: elem.blueprint };
+        let payload = {
+          element: elem.blueprint,
+          name: elem.name,
+          id: elem._id
+        };
         let asl = await AutomationServices.getAsl(JSON.stringify(payload));
+        console.log(asl.data.success)
         if (asl.data.success) {
           let payloadArn = { id: elem._id, arn: asl.data.data, status: true };
           let updateArn = await AutomationServices.updateArn(
             JSON.stringify(payloadArn)
           );
-          if (updateArn.data.success) {
-            console.log("respnse updated");
-            setSuccessMsg("Automation status updated successfully");
-          } else {
-            console.log("api error ! " + updateArn.data.message);
-            setErrorMsg(updateArn.data.message);
-          }
+          fetchAutomations();
+          dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: "Automation status updated successfully",
+            typeMessage: 'success'
+          });
         } else {
-          console.log("api error ! " + asl.data.message);
-          setErrorMsg(asl.data.message);
+          fetchAutomations();
+          dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: asl.data.message,
+            typeMessage: 'error'
+          });
         }
       } else {
         let payloadArn = { id: elem._id };
         let updateArn = await AutomationServices.deleteArn(
           JSON.stringify(payloadArn)
         );
-        if (updateArn.data.success) {
-          console.log("respnse updated");
-          setSuccessMsg("Automation status updated successfully");
-        } else {
-          setErrorMsg(updateArn.data.message);
-        }
+        fetchAutomations();
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: "Automation status updated successfully",
+          typeMessage: 'success'
+        });
       }
-      const newStatus = autoData.map((el, i) => {
-        if (el._id === e) {
-          return data[0];
-        } else return el;
-      });
-      setAutomationData({
-        data: newStatus,
-        count: automationData.count,
-      });
     } catch (e) {
-      console.log("Error Response")
-      setErrorMsg(e.message);
+      fetchAutomations();
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: e.message,
+        typeMessage: 'error'
+      });
     } finally {
       setIsLoader(false);
     }
@@ -198,7 +203,11 @@ const AutomationLists = (props) => {
       props.automationElementSet(elem);
       props.toggleCreate("automation");
     } else {
-      setErrorMsg(responses.permissions.automation.edit);
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: responses.permissions.automation.edit,
+        typeMessage: 'error'
+      });
     }
 
   };
@@ -232,11 +241,18 @@ const AutomationLists = (props) => {
           setIsLoader(true);
           // Call delete automation service
           const res = await AutomationServices.deleteAutomation(automationID);
-          console.log("Delete Response", res);
           if (res.status === 200) {
-            setSuccessMsg(res.message);
+            dispatch({
+              type: actionTypes.SHOW_MESSAGE,
+              message: res.message,
+              typeMessage: 'success'
+            });
           } else {
-            setErrorMsg(res.message);
+            dispatch({
+              type: actionTypes.SHOW_MESSAGE,
+              message: res.message,
+              typeMessage: 'error'
+            });
           }
           // Reduce the count
           const newCount = automationData.count - 1;
@@ -256,10 +272,11 @@ const AutomationLists = (props) => {
         });
       }
     } catch (e) {
-      // Alert for any exception. [Later need to change in error component];
-      // window.alert(e.message);
-      console.log("Error Listing Automation", e);
-      setErrorMsg(e.message)
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: e.message,
+        typeMessage: 'error'
+      });
     } finally {
       // Disable the loader
       setIsLoader(false);
@@ -300,13 +317,13 @@ const AutomationLists = (props) => {
   };
 
   const toggleCreateHeader = () => {
-    const createAutomation = (Object.keys(permissions).length) ? permissions.actions.includes("create") : false;
-    if (createAutomation && env.ACTIVE_PERMISSION_CHECKING === 1) {
+    // const createAutomation = (Object.keys(permissions).length) ? permissions.actions.includes("create") : false;
+    // if (createAutomation && env.ACTIVE_PERMISSION_CHECKING === 1) {
       props.automationElementSet({});
       props.toggleCreate("automation");
-    } else {
-        setErrorMsg(responses.permissions.automation.create);
-    }
+    // } else {
+    //     setErrorMsg(responses.permissions.automation.create);
+    // }
   };
 
   useEffect(() => {
@@ -339,6 +356,12 @@ const AutomationLists = (props) => {
         count: automationData.count,
       });
     }
+  };
+
+  const handleClick = (elem) => {
+    props.setAutomationObj(elem);
+    history.push('./automation-details/' + elem._id);
+    
   }
 
   return (
@@ -387,9 +410,9 @@ const AutomationLists = (props) => {
               >
                 Status <button className="shortTable"></button>
               </div>
-              <div className="listCell cellWidth_15">
+              {/* <div className="listCell cellWidth_15">
                 # of people completed <button className="shortTable"></button>
-              </div>
+              </div> */}
               <div
                 className={
                   sort?.sortBy == "user"
@@ -418,7 +441,7 @@ const AutomationLists = (props) => {
                 return (
                   <>
                     <div className="listRow" key={elem._id}>
-                      <div className="listCell cellWidth_30">
+                      <div className="listCell cellWidth_30" onClick={() => handleClick(elem)}>
                         <div className="rowImage">
                           <img src={flash_red} alt="" />
                         </div>
@@ -435,11 +458,11 @@ const AutomationLists = (props) => {
                         </p>
                       </div>
                       <div className="listCell cellWidth_10">
-                        <p className={elem.status ? "green" : "red"}>
+                        <p className={elem.status ? "greenAutomation" : "redAutomation"}>
                           {elem.status ? "Published" : "Draft"}
                         </p>
                       </div>
-                      <div className="listCell cellWidth_15">
+                      {/* <div className="listCell cellWidth_15">
                         <div className="progressBar">
                           <div className="bar">
                             <div
@@ -458,7 +481,7 @@ const AutomationLists = (props) => {
                             <span>{elem.totalforCompletion}</span>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                       <div className="listCell cellWidth_15">
                         <p>
                           {elem.created_by_user.firstName +
@@ -499,7 +522,7 @@ const AutomationLists = (props) => {
                               bottom: dropdownPos === "top" ? "100%" : "auto",
                             }}
                           >
-                            <button className="btn btnClone">
+                            {/*<button className="btn btnClone">
                               <span>
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -513,7 +536,7 @@ const AutomationLists = (props) => {
                                 </svg>
                               </span>
                               Clone
-                            </button>
+                            </button>*/}
                             <button
                               className="btn btnEdit"
                               onClick={(el) => automationEdit(elem)}

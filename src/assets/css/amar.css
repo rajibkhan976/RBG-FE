@@ -336,8 +336,8 @@
 /* Templates */
 .messageDeet {
   width: auto;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
+  /* border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px; */
 }
 
 .messageTitle {
@@ -587,7 +587,7 @@
   flex-wrap: wrap;
   margin-top: 15px;
 }
-.smsTagsTemplate span {
+.tagsSMSCreate {
   padding: 0 6px;
   height: 30px;
   font-size: 13px;
@@ -600,8 +600,9 @@
   align-items: center;
   margin-bottom: 5px;
   border-radius: 3px;
+  border: none;
 }
-.smsTagsTemplate span:hover {
+.tagsSMSCreate:hover {
   background-color: transparent;
   color: #9BAEBC;
 }
@@ -1040,6 +1041,7 @@
 /* Dependent toggle menu */
 .templateHeader {
   border: 1px solid transparent;
+  flex: 0 0 42px;
 }
 .templateHeader.error input,
 .bodyEditTemplate.error textarea {
@@ -3239,9 +3241,9 @@ input[type=number] {
   transform: translate(165px, 57px);
 }
 .tagLists .searchTag .cmnFieldStyle {
-  border: 1px solid #D0D6DB !important;
-  background-color: #f6f8fa !important;
-  border-radius: 5px;
+  /*border: 1px solid #D0D6DB !important;*/
+  /*background-color: #f6f8fa !important;*/
+  /*border-radius: 5px;*/
   background-image: url('../images/search_icon.svg');
   background-repeat: no-repeat;
   background-position: right 14px center;
@@ -4382,4 +4384,248 @@ footer.formControl > .btn:disabled,
 
 .agendaEdit.error .editInput {
   width: inherit;
+}
+/* SMS  */
+.smsListing .bodyEditTemplate {
+  overflow: hidden;
+}
+.bodyEditTemplate .cmnFormRow {
+  overflow: hidden;
+}
+.smsListing .bodyEditTemplate .cmnFormRow {
+  overflow: auto;
+}
+.optionMessage:after {
+  content: none !important;
+}
+.optionMessage {
+  text-align: center;
+  width: 50px;
+  min-width: 50px !important;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+.tableListing li.active .optionMessage {
+  background: #fff;
+}
+.optionMessage > .btn {
+  width: 100%;
+}
+.smsListingPage .createNew {
+  margin-top: 40px;
+}
+.smsListingBody .messageTitle {
+  max-width: 225px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.smsListing ul.tableListing {
+  table-layout: fixed;
+}
+.messageDeet {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* SMS  */
+
+/* SMS CONFIG */
+.dashInnerUI .smsConfigListingTable .createNew .creatUserBtn {
+  width: inherit;
+}
+.smsConfigModal {
+  width: 820px;
+}
+.smsConfigModal .countryCode {
+  display: flex;
+  flex-direction: column;
+}
+.smsConfigModal .countryName,
+.smsConfigModal .daileCode {
+  flex: 1 0 auto;
+}
+.smsConfigModal footer .cmnBtn * {
+  pointer-events: none;
+}
+.smsConfigModal .customCheckbox input[type="checkbox"] + span {
+  display: block;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid #9baebc;
+  border-radius: 2px;
+}
+.smsConfigModal .customCheckbox input[type="checkbox"]:checked + span {
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: var(--darkBlue) url("../images/tick.svg") no-repeat top 4px center /
+    8px auto;
+  border-color: var(--darkBlue);
+}
+.smsConfigListingTable .tableListing .statusToggleCell {
+  width: 175px;
+  min-width: 1px;
+}
+.smsConfigListingTable .userName {
+  min-width: inherit;
+  width: auto;
+}
+.smsConfigListingTable .tableListing .createDate {
+  min-width: inherit;
+  width: 100px;
+}
+.smsConfigListingTable .listHeading .createDate:after {
+  content: none !important;
+}
+/* SMS CONFIG */
+
+/* SMS TEMPLATE MODIF */
+.templateHeader p {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.templateHeader .btn:disabled {
+  opacity: 0.4;
+}
+
+.editPageFooter .btn * {
+  pointer-events: none;
+}
+.editPageFooter {
+  flex: 0 0 39px;
+}
+/* SMS TEMPLATE MODIF */
+
+/* GLOBAL SMS */
+.sideMenuInner.smsGlobal {
+  width: 665px;
+  max-width: 100%;
+}
+.modalMakeSmsBody {
+  background-color: #fff;
+  padding: 0px 90px 10px;
+  position: relative;
+  margin-bottom: 45px;
+  overflow: auto;
+}
+
+.numberFromContact .linkType {
+  display: inline-flex;
+}
+.modalMakeSmsBody .slice:not(:first-child) label {
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  color: #305671;
+}
+.modalMakeSmsBody .slice label span {
+  color: #9BAEBC;
+}
+.makeSmsForm {
+  width: 100%;
+  padding: 30px 0;
+}
+.makeSmsForm label {
+  color: #305671;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 0 0 12px 0;
+  width: 100%;
+  display: block;
+}
+.makeSmsForm .cmnFormField {
+  position: relative;
+}
+.makeSmsForm .browseKeywords {
+  right: 5px;
+  bottom: 5px;
+  transition: none;
+}
+.makeSmsForm textarea.cmnFieldStyle {
+  margin-bottom: 0;
+}
+.makeSmsForm .keywordBox {
+  display: flex;
+  flex-direction: column;
+  bottom: 5px;
+  top: auto;
+  right: 5px;
+}
+.makeSmsForm .searchKeyword {
+  order: 2;
+  border-top: 1px solid #d3d9de;
+  border-bottom: none;
+}
+.makeSmsForm .keywordList {
+  max-height: 150px;
+  overflow: auto;
+}
+/* GLOBAL SMS */
+
+
+/* SMS CONFIG BUG FIX */
+.smsConfigModal .cmnFormRow.full_width .countryCodeField {
+  width: 100%;
+  margin-right: 0;
+}
+.numberForCall .errorMsg {
+  line-height: 1;
+}
+
+.smsGlobal .numberForCall.error {
+  border-color: #ed707a;
+  background-color: #fff4f4;
+}
+.smsGlobal .numberForCall.error .countryCode {
+  border-color: transparent;
+}
+.makeSmsForm .cmnFormField.upload {
+  margin: 0;
+}
+.smsConfigListingTable .tableListing .statusToggleCell {
+  cursor: default;
+}
+.smsConfigListingTable .tableListing .statusToggleCell:after {
+  content: none !important;
+}
+.makeSmsForm .slice .upload input {
+  height: 100%;
+  line-height: 34px;
+  min-height: 1px;
+  padding-top: 0;
+  padding-bottom: 0;
+  cursor: pointer;
+  padding-right: 30px;
+}
+
+.getContactsforMsg .cmnFormField {
+  position: relative;
+}
+.getContactsforMsg .noContactFound {
+  padding: 20px 20px;
+  text-align: center;
+  font-size: 13px;
+  background: #f6f8fa;
+  border: 1px solid #d3d9de;
+  border-top: transparent;
+  border-radius: 5px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  color: #305671;
+}
+.getContactsforMsg .contactListItems {
+  height: auto;
+  max-height: 182px;
+}
+.getContactsforMsg .contactListItems li {
+    display: flex;
+}
+.getContactsforMsg .contactListItems li p {
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+.makeSmsForm .cmnFormField.error .browseKeywords {
+  bottom: 26px;
 }

@@ -18,6 +18,7 @@ const TagList = (props) => {
     const [searchedTag, setSearchedTag] = useState("");
     const [tagListToggle, setTagListToggle] = useState(props.tagListToggle);
     const [upcomingPagination, setUpcomingPagination ] = useState({});
+    const [tagNameError, setTagNameError ] = useState(false);
     const titleAppRef = useRef(null);
     const [selectedTags, setSelectedTags] = useState([]);
     const tagFilter = () => {
@@ -133,6 +134,16 @@ const TagList = (props) => {
             } finally {
                 fetchTags(tagsPage)
             }
+        } else {
+            setTagNameError(true);
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: 'Please provide tag name',
+                typeMessage: 'error'
+            });
+            setTimeout(() => {
+                setTagNameError(false);
+            }, 3000)
         }
     }
     const checkThisTag = (tag, mode) => {
@@ -211,10 +222,10 @@ const TagList = (props) => {
     return (
         <>
             {tagListToggle ? <div className="tagLists" ref={titleAppRef} > {/* style={{top: tagTop - 15}}*/}
-                <div className="searchTag cmnFormField">
+                <div className={tagNameError ? "searchTag cmnFormField errorField" : "searchTag cmnFormField"}>
                     <input
                         type="search"
-                        placeholder="Search"
+                        placeholder="Search or create tag"
                         className="cmnFieldStyle"
                         ref={searchInputTag}
                         onChange={handleSearchTag}
