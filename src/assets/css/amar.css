@@ -4629,3 +4629,7 @@ footer.formControl > .btn:disabled,
 .makeSmsForm .cmnFormField.error .browseKeywords {
   bottom: 26px;
 }
+
+.smsListingPage .nosearchFound{
+  margin-top: 0
+}

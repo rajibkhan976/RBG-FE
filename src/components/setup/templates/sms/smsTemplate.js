@@ -1016,7 +1016,16 @@ const SmsTemplate = (props) => {
                       <p>No SMS Template found!</p>
                   </span>
               </div>
-                  }
+                  }                 
+
+                {smsTemplates?.length>0 && smsTemplates.filter(sms => keyword != null ? ((sms.message.includes(keyword.trim()) || sms.title.includes(keyword.trim())) ? sms : '') : sms).length == 0 && 
+                <div className="createNew nosearchFound">
+                  <span>
+                    <img src={list_board_icon} alt="" />
+                    <p>No SMS Template found!</p>
+                  </span>
+                </div>
+                }
             </div>
           {/* <Pagination /> */}
           {/* PAGINATION UI FOR SHOW */}     
