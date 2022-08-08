@@ -6675,6 +6675,7 @@ span.emptyLoading.topDashboardSelector {
   display: block;
 }
 
+<<<<<<< HEAD
 /*delete and edit button position change*/
 .btnDeleteNode{left: inherit;}
 .react-flow__node-fieldActionTrigger .btnEditNode {right: 10px;}
@@ -6688,4 +6689,15 @@ span.emptyLoading.topDashboardSelector {
 .react-flow__node-actionStatusPhaseUpdate .btnDeleteNode{bottom: 39px;}
 
 
-/*.btnDeleteNode{bottom: 18px;}*/
+.downloadInvoiceBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--darkBlue) url("../images/download_icon.svg") no-repeat center / 50%;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  position: absolute;
+  right: -38px;
+  bottom: 26px;
+}
