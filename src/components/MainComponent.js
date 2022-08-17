@@ -33,7 +33,6 @@ import * as actionTypes from "../actions/types";
 import GetPositionMiddleware from "../actions/GetPosition.middleware";
 import { NotificationServices } from "../services/notification/NotificationServices";
 import moment from "moment-timezone";
-import AlertMessage from "./shared/messages/alertMessage";
 import { toastr } from 'react-redux-toastr'
 import success_alert from "../../src/assets/images/success_alert.svg";
 import info_alert from "../../src/assets/images/info_alert.svg";

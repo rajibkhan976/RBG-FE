@@ -270,6 +270,7 @@ export const AutomationServices = {
             }
         }
     },
+    
     fetchHistory: async (automationID, page, queryParams = null) => {
         try {
             let url = config.automationHistoryUrl + `/${page}?automationId=${automationID}`;
@@ -277,6 +278,51 @@ export const AutomationServices = {
             // const url = config.automationHistoryUrl + "?search=62d070bfae66400009db4ba2";
             const res = await axios.get(url);
             return res.data;
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
+    fetchHistoryCount: async (automationID) => {
+        try {
+            let url = config.automationHistoryUrl + `/count?automationId=${automationID}`;
+            const res = await axios.get(url);
+            return res.data;
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+    refreshHistory: async (historyId) => {
+        try {
+            let configAxios = {
+                method: 'post',
+                url: config.automationHistoryUrl + '/refresh',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data: {
+                    historyId: historyId
+                }
+            };
+            return axios(configAxios);
         } catch (e) {
             if(e.response && e.response.data && e.response.data.message) {
                 console.log(e.response.data.message);

@@ -7,8 +7,7 @@ import {
 
 import './ButtonEdge.css';
 
-export default function CustomEdge({
-                                       id,
+export default function CustomEdge({id,
                                        sourceX,
                                        sourceY,
                                        targetX,
@@ -61,6 +60,7 @@ export default function CustomEdge({
                 <button
                     className="edgebutton"
                     onClick={() => onEdgeClick(id)}
+                    style={{display: "none"}}
                 >
                     ×
                 </button>

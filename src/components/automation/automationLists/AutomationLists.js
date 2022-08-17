@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 // import { NavLink } from "react-router-dom";
 import flash_red from "../../../assets/images/flash_red.svg";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
@@ -15,7 +15,7 @@ import ConfirmBox from "../../shared/confirmBox";
 import { ErrorAlert, SuccessAlert } from "../../shared/messages";
 import responses from "../../../configuration/responses";
 import env from "../../../configuration/env";
-import { useHistory } from "react-router-dom";
+import {NavLink, Redirect, useHistory} from "react-router-dom";
 
 
 const AutomationLists = (props) => {
@@ -63,7 +63,7 @@ const AutomationLists = (props) => {
   const dispatch = useDispatch();
   const history = useHistory()
 
-  const fetchAutomations = async () => {
+  const fetchAutomations = useCallback(async () => {
     try {
       const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
       if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
@@ -103,7 +103,7 @@ const AutomationLists = (props) => {
     } finally {
       setIsLoader(false);
     }
-  };
+  },[]);
 
   const passAutomationItem = (e) => {
     props.automationListObject(e);
@@ -360,7 +360,7 @@ const AutomationLists = (props) => {
 
   const handleClick = (elem) => {
     props.setAutomationObj(elem);
-    history.push('./automation-details/' + elem._id);
+    history.push();
     
   }
 
@@ -441,7 +441,8 @@ const AutomationLists = (props) => {
                 return (
                   <>
                     <div className="listRow" key={elem._id}>
-                      <div className="listCell cellWidth_30" onClick={() => handleClick(elem)}>
+                      <div className="listCell cellWidth_30">
+                        <NavLink to={'./automation-details/' + elem._id}>
                         <div className="rowImage">
                           <img src={flash_red} alt="" />
                         </div>
@@ -456,6 +457,7 @@ const AutomationLists = (props) => {
                             {elem.name}
                           </span>
                         </p>
+                        </NavLink>
                       </div>
                       <div className="listCell cellWidth_10">
                         <p className={elem.status ? "greenAutomation" : "redAutomation"}>

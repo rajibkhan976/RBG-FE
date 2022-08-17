@@ -10,9 +10,6 @@ const automationReducer = (state = initialState, action) => {
         case actionTypes.AUTOMATION_COUNT:
             newState.count = action.count;
             break;
-        default:
-            newState.count = 0;
-            break;
     }
     return newState;
 };

@@ -38,7 +38,7 @@ const ListHeader = (props) => {
               <li>Automation</li>
             </ul>
             <h2 className="inDashboardHeader">{props.autoName}</h2>
-            <div className="automationShortInfo">
+            {/*<div className="automationShortInfo">
               <ul>
                 <li>
                   <span>Created By</span>
@@ -49,7 +49,7 @@ const ListHeader = (props) => {
                   <h4>{utils.convertUTCToTimezone(props.createdOn, timezone, "LLL")}</h4>
                 </li>
               </ul>
-            </div>
+            </div>*/}
           </div>
         </div>
       ):''}

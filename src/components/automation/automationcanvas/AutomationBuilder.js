@@ -4,7 +4,7 @@ import ReactFlow, {
   addEdge,
   removeElements,
   updateEdge,
-  Controls,
+  Controls, isEdge,
 } from "react-flow-renderer";
 import { useDispatch } from "react-redux";
 import "./automation.css";
@@ -67,6 +67,7 @@ const AutomationBuilder = (props) => {
   const [subjectError, setSubjectError] = useState(false);
   const [bodyEmail, setBodyEmail] = useState('');
   const [bodyEmailError, setBodyEmailError] = useState(false);
+  const [disableTrigger, setDisableTrigger] = useState(false);
   const [nodeEmailId, setNodeEmailId] = useState(false);
   const [triggerNodeId, setTriggerNodeId] = useState(0);
   const [fieldTriggerNodeId, setFieldTriggerNodeId] = useState(0);
@@ -152,7 +153,7 @@ const AutomationBuilder = (props) => {
         );
         thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
 
-        deleteButton.classList.add(
+        /*deleteButton.classList.add(
           "btn",
           "btnDeleteNode",
           thisNodeType.toLowerCase() + "-Deletebtn"
@@ -160,7 +161,7 @@ const AutomationBuilder = (props) => {
         deleteButton.addEventListener("click", (event) =>
           deleteNode(event, node)
         );
-        thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);
+        thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);*/
         break;
       case "FieldActionTrigger":
         editButton.classList.add(
@@ -169,7 +170,7 @@ const AutomationBuilder = (props) => {
           thisNodeType.toLowerCase() + "-Editbtn"
         );
         editButton.style.cssText = `
-          background:#fff;border:1px solid #434345;padding:3.5px;width:24px;height:24px;border-radius:50%;position:absolute;top:0;right:0;transition:all cubic-bezier(.215,.61,.355,1) .4s;-webkit-transition:all cubic-bezier(.215,.61,.355,1) .4s;-moz-transition:all cubic-bezier(.215,.61,.355,1) .4s;-ms-transition:all cubic-bezier(.215,.61,.355,1) .4s;-o-transition:all cubic-bezier(.215,.61,.355,1) .4s
+          background:#fff;border:1px solid #434345;padding:3.5px;width:24px;height:24px;border-radius:50%;position:absolute;top:0;transition:all cubic-bezier(.215,.61,.355,1) .4s;-webkit-transition:all cubic-bezier(.215,.61,.355,1) .4s;-moz-transition:all cubic-bezier(.215,.61,.355,1) .4s;-ms-transition:all cubic-bezier(.215,.61,.355,1) .4s;-o-transition:all cubic-bezier(.215,.61,.355,1) .4s
         `;
         editButton.innerHTML =
           '<svg style="fill:#434345;-webkit-appearance:none;backface-visibility:hidden;-webkit-backface-visibility:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.377 14.378" className="automationCog"><g transform="translate(-7.826 -7.824)"><circle className="a" cx="1.239" cy="1.239" r="1.239" transform="translate(13.775 13.774)"/><path className="a" d="M21.911,13.785l-1.732-.325a5.346,5.346,0,0,0-.414-1l1-1.465a.372.372,0,0,0-.043-.456L19.489,9.3a.372.372,0,0,0-.456-.043l-1.465,1a5.359,5.359,0,0,0-1.033-.422l-.323-1.723a.373.373,0,0,0-.352-.292H14.112a.372.372,0,0,0-.352.292l-.326,1.74a5.341,5.341,0,0,0-.991.414L11,9.28a.372.372,0,0,0-.456.043L9.3,10.559a.372.372,0,0,0-.043.456l1,1.456a5.369,5.369,0,0,0-.408.991l-1.732.324a.373.373,0,0,0-.292.352v1.748a.373.373,0,0,0,.292.352l1.731.324a5.357,5.357,0,0,0,.417,1.011l-.985,1.44a.372.372,0,0,0,.043.456L10.558,20.7a.372.372,0,0,0,.456.043l1.439-.985a5.378,5.378,0,0,0,.981.409l.326,1.74a.373.373,0,0,0,.352.292H15.86a.373.373,0,0,0,.352-.292l.323-1.724a5.4,5.4,0,0,0,1.022-.417l1.458,1a.372.372,0,0,0,.456-.043l1.236-1.235a.372.372,0,0,0,.043-.456l-.992-1.449a5.357,5.357,0,0,0,.423-1.023l1.73-.324a.373.373,0,0,0,.292-.352V14.137A.373.373,0,0,0,21.911,13.785Zm-6.9,4.227a3,3,0,1,1,3-3A3,3,0,0,1,15.014,18.012Z" transform="translate(0)"/></g></svg>';
@@ -179,7 +180,7 @@ const AutomationBuilder = (props) => {
         );
         thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
 
-        deleteButton.classList.add(
+      /*  deleteButton.classList.add(
           "btn",
           "btnDeleteNode",
           thisNodeType.toLowerCase() + "-Deletebtn"
@@ -187,7 +188,7 @@ const AutomationBuilder = (props) => {
         deleteButton.addEventListener("click", (event) =>
           deleteNode(event, node)
         );
-        thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);
+        thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);*/
         break;
 
       case "Filter":
@@ -401,7 +402,6 @@ const AutomationBuilder = (props) => {
     setAutomationModal("actionMessage");
   };
   const actionStatusPhaseEdit = (e, n) => {
-    console.log(e, n)
     setStatus(n.data.status);
     setPhase(n.data.phase);
     setStatusPhaseNodeId(n.id);
@@ -446,7 +446,6 @@ const AutomationBuilder = (props) => {
     }
   };
   const fieldTriggerSetting = async (e, n) => {
-    console.log(n)
     setModule(n.data.module);
     setEvent(n.data.event);
     setFieldTriggerNodeId(n.id);
@@ -509,7 +508,16 @@ const AutomationBuilder = (props) => {
   }
   const handleDelayChange = (event) => {
     event.preventDefault();
-    setDelayTime(event.target.value);
+    let value = event.target.value;
+    if (isNaN(value) || value < 0 ) {
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: "Only numeric value allowed.",
+        typeMessage: 'error'
+      });
+    } else {
+      setDelayTime(event.target.value);
+    }
   }
   const handleDelayTypeChange = (event) => {
     event.preventDefault();
@@ -543,14 +551,14 @@ const AutomationBuilder = (props) => {
       const edge = getEdgeId();
       await setElements((els) =>
         addEdge(
-          { ...params, id: edge, type: edgeType, animated: true, data: { onRemove: onEdgeClick } },
+          { ...params, id: edge, type: edgeType, animated: true, data: { onRemove: onEdgeClick }},
           els
         )
       );
       const updatedElem = [...elements];
       updatedElem.forEach((el) => {
         if (params.source === el.id) {
-          el.data.nodes.next = [...el.data.nodes.next, params.target];
+          el.data.nodes.next = [params.target];
         }
         if (params.target === el.id) {
           el.data.nodes.previous = params.source;
@@ -584,44 +592,26 @@ const AutomationBuilder = (props) => {
   };
   const onElementsRemove = (elementsToRemove) => {
     if (elementsToRemove.length) {
-      if (
-        elementsToRemove[0].data !== undefined && (
-          elementsToRemove[0].data.nodes.previous === "" ||
-          elementsToRemove[0].data.nodes.next.length === 0
-        )) {
-        setElements((els) => removeElements(elementsToRemove, els));
-        return;
-      }
-      const nextElemArr = elementsToRemove[0].data.nodes.next;
-      const currentID = elementsToRemove[0].id;
-      const updatedElem = [...elements];
-      const getElementObject = (id) => {
-        return elements.filter((el) => el.id === id)[0];
-      };
-      const previousElem = getElementObject(
-        elementsToRemove[0].data.nodes.previous
-      );
-      previousElem.data.nodes.next = previousElem.data.nodes.next.filter(
-        (e) => e !== currentID.toString()
-      );
-      updatedElem.forEach((el) => {
-        if (el.id === previousElem.id) {
-          el = previousElem;
+      let elementId = elementsToRemove[0].id;
+      let updatedElem = [...elements];
+      let deletedIds = [];
+      deletedIds.push(elementId);
+      updatedElem.map(el => {
+        if (el.type === "buttonedge" && (el.source === elementId || el.target === elementId)) {
+          deletedIds.push(el.id)
         }
       });
-
-      if (nextElemArr.length) {
-        nextElemArr.forEach((el) => {
-          updatedElem.forEach((e) => {
-            if (e.id === el) {
-              e.data.nodes.previous = "";
-            }
-          });
-        });
-      }
-      setTimeout(() => {
-        setElements((els) => removeElements(elementsToRemove, updatedElem));
+      updatedElem = updatedElem.filter(el => !deletedIds.includes(el.id));
+      updatedElem.map(elem => {
+        if (elem && elem.data && elem.data.nodes && elem.data.nodes && elem.data.nodes.previous && elem.data.nodes.previous.includes(elementId)) {
+          elem.data.nodes.previous = "";
+        }
+        if (elem && elem.data && elem.data.nodes && elem.data.nodes && elem.data.nodes.next && elem.data.nodes.next.includes(elementId)) {
+          let value2 = elem.data.nodes.next;
+          elem.data.nodes.next = value2.filter(fil => fil !== elementId);
+        }
       });
+      setElements(updatedElem);
     }
   };
   const deleteNode = async (e, elm) => {
@@ -709,7 +699,6 @@ const AutomationBuilder = (props) => {
     }
   };
   const saveStatusPhase = (nodeId, status, phase) => {
-    console.log(nodeId, status, phase)
     setElements((elms) =>
         elms.map((el) => {
           if (el.id === nodeId) {
@@ -752,13 +741,14 @@ const AutomationBuilder = (props) => {
   };
   const saveAutomation = async () => {
     try {
-      if (!automationName) {
+      if (!automationName.trim()) {
         setAutomationNameError('bounce');
         removeClass();
       } else {
         const bluePrintElem = elements.filter(
           (el) => typeof el.source == "undefined"
         );
+        console.log("bluePrintElem", bluePrintElem)
         const brokenElem = bluePrintElem.find((el) => {
           if (
               ((el.type !== "fieldActionTrigger" && el.data.nodes.previous === "") && (el.type !== "trigger" && el.data.nodes.previous === "")) ||
@@ -843,6 +833,27 @@ const AutomationBuilder = (props) => {
       x: event.clientX - reactFlowBounds.left,
       y: event.clientY - reactFlowBounds.top,
     });
+    let filteredElements = elements.filter(el => (el.type === 'trigger' || el.type === 'fieldActionTrigger'));
+    if (filteredElements.length) {
+      if (type === 'trigger' || type === 'fieldActionTrigger') {
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: "One automation can have only one trigger.",
+          typeMessage: 'error'
+        });
+        return false;
+      }
+    } else {
+      if (type === 'actionDelay' || type === 'actionStatusPhaseUpdate' || type === 'filter') {
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: "Please pull a trigger first.",
+          typeMessage: 'error'
+        });
+        return false;
+      }
+    }
+    console.log('here')
     if (type === 'trigger') {
       newNode = {
         id: getNodeId(type),
@@ -859,14 +870,13 @@ const AutomationBuilder = (props) => {
       setElements((es) => es.concat(newNode));
       generateUrlOfWebhook(newNode.id);
     } else if (type === 'fieldActionTrigger') {
-      console.log(`${types[type]}`)
       newNode = {
         id: getNodeId(type),
         type,
         position,
         data: {
           label: `${types[type]}`,
-          nodes: { next: [], previous: "" },
+          nodes: {next: [], previous: ""},
           module: 'contact',
           event: {
             create: false,
@@ -1160,7 +1170,6 @@ const AutomationBuilder = (props) => {
           break;
       }
     } else {
-      console.log('there', field, text);
       switch (field) {
         case 'messageTo':
           setTo(to + " [" + text + "] ");
@@ -1276,6 +1285,8 @@ const AutomationBuilder = (props) => {
               switch (name) {
                 case 'field':
                   con.field = event.target.value;
+                  con.value = "";
+                  con.condition = "";
                   con.filedValue = event.target.options[event.target.selectedIndex].dataset.fieldtype
                   break;
                 case 'condition':
@@ -1294,10 +1305,22 @@ const AutomationBuilder = (props) => {
     );
   }
   const onEdgeClick = (id) => {
-    let elems = [{
-      id: id
-    }];
-    setElements((els) => removeElements(elems, elements));
+    console.log("automationId", props.automationElement._id)
+    if (/*!props.automationElement._id*/ false) {
+      if (id) {
+        let updatedElem = [...elements];
+        updatedElem = updatedElem.filter(el => el.id !== id);
+
+        setElements(updatedElem);
+      }
+    } else {
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: "We are not supporting remove connection on edit as of now. Please delete node  if you need to remove any connection.",
+        typeMessage: 'error'
+      });
+    }
+
   };
   const fetchTagStatusPhase = async () => {
     try {
@@ -1313,6 +1336,7 @@ const AutomationBuilder = (props) => {
       });
     }
   }
+
   useEffect(() => {
     if (Object.keys(props.automationElement).length) {
       setElements(props.automationElement.blueprint);
@@ -1323,6 +1347,17 @@ const AutomationBuilder = (props) => {
       setIdOriginalNode(props.automationElement.nodeId);
       setIdEdge(props.automationElement.edgeId);
       setIdOriginalEdge(props.automationElement.edgeId);
+      setElements((elms) =>
+          elms.map((el) => {
+            if (isEdge(el)) {
+              el.data = {onRemove: onEdgeClick}
+            }
+            if (el.id === filterId) {
+              el.data.and = filterAnd;
+            }
+            return { ...el };
+          })
+      );
     }
     fetchTagStatusPhase();
   }, [props.automationElement]);
@@ -1647,15 +1682,27 @@ const AutomationBuilder = (props) => {
                                                   </select>
                                                 </div>
                                                 <div className="inputField field_2">
-                                                  <select name="" id="" value={con.condition} onChange={(e) => handelFilterFieldChange('condition', value.index, con.and, e)}>
-                                                    <option value="">Please Select</option>
-                                                    <option value="StringEquals"> = (String)</option>
-                                                    <option value="NumericEquals"> = (Numeric)</option>
-                                                    {/*<option value="NumericGreaterThan"> > (Numeric)</option>
-                                                    <option value="NumericGreaterThanEquals"> >= (Numeric)</option>
-                                                    <option value="NumericLessThan"> &#60; (Numeric)</option>
-                                                    <option value="NumericLessThanEquals"> &#60;= (Numeric)</option>*/}
-                                                  </select>
+                                                  {(() => {
+                                                    if (con.filedValue === 'number') {
+                                                      return (
+                                                          <select name="" id="" value={con.condition} onChange={(e) => handelFilterFieldChange('condition', value.index, con.and, e)}>
+                                                            <option value="">Please Select</option>
+                                                            <option value="NumericEquals"> =</option>
+                                                            <option value="NumericGreaterThan"> > </option>
+                                                            <option value="NumericGreaterThanEquals"> >= </option>
+                                                            <option value="NumericLessThan"> &#60; </option>
+                                                            <option value="NumericLessThanEquals"> &#60;= </option>
+                                                          </select>
+                                                      )
+                                                    } else{
+                                                      return (
+                                                          <select name="" id="" value={con.condition} onChange={(e) => handelFilterFieldChange('condition', value.index, con.and, e)}>
+                                                            <option value="">Please Select</option>
+                                                            <option value="StringEquals"> = </option>
+                                                          </select>
+                                                      )
+                                                    }
+                                                  })()}
                                                 </div>
                                                 <div className="inputField field_3">
                                                   {(() => {

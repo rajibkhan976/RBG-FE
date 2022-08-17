@@ -130,6 +130,7 @@ const ContactListing = forwardRef((props, ref) => {
                     currentPage: result.pagination.currentPage,
                     totalPages: result.pagination.totalPages
                 });
+                console.log(result.pagination.count)
                 dispatch({
                     type: actionTypes.CONTACTS_COUNT,
                     count: result.pagination.count,

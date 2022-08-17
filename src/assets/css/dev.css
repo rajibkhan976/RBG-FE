@@ -944,10 +944,26 @@
 
 .tabDetailsList li {
   display: inline-flex;
+  position: relative;
 }
 
 .tabDetailsList li + li {
   margin-left: 95px;
+}
+
+.tabDetailsList li::after {
+  content: "Beta";
+  font-size: 10px;
+  line-height: 16px;
+  text-align: center;
+  position: absolute;
+  top: 20px;
+  right: -36px;
+  width: 30px;
+  height: 16px;
+  background: var(--darkBlue);
+  color: #fff;
+  border-radius: 3px;
 }
 
 .statsDetails {
@@ -1446,8 +1462,8 @@
 }
 
 .btnDeleteNode {
-  left: calc(50% - 10px);
-  bottom: -8px;
+    left: 76px;
+    bottom: 28px;
 }
 
 .btnEditNode {
@@ -6658,3 +6674,18 @@ span.emptyLoading.topDashboardSelector {
   width: 100%;
   display: block;
 }
+
+/*delete and edit button position change*/
+.btnDeleteNode{left: inherit;}
+.react-flow__node-fieldActionTrigger .btnEditNode {right: 10px;}
+.react-flow__node-filter .btnEditNode, .react-flow__node-filter .btnDeleteNode{ right: 0px;}
+.react-flow__node-filter .btnDeleteNode{bottom: 28px;}
+
+.react-flow__node-actionDelay .btnEditNode, .react-flow__node-actionDelay .btnDeleteNode{right: -12px ;}
+.react-flow__node-actionDelay .btnDeleteNode{bottom: 18px ;}
+
+.react-flow__node-actionStatusPhaseUpdate .btnEditNode, .react-flow__node-actionStatusPhaseUpdate .btnDeleteNode{right: -12px; }
+.react-flow__node-actionStatusPhaseUpdate .btnDeleteNode{bottom: 39px;}
+
+
+/*.btnDeleteNode{bottom: 18px;}*/

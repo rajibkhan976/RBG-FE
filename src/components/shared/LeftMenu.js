@@ -128,7 +128,7 @@ function LeftMenu(props) {
                   pathURL === "/groups" ||
                   pathURL === "/users" ||
                   pathURL === "/organizations" ||
-                  pathURL === "/associations" 
+                  pathURL === "/associations"
                   ? "selected"
                   : ""
               }
@@ -276,7 +276,7 @@ function LeftMenu(props) {
             {/* </Link> */}
           {/* </li> : ""} */}
         {/*{permissions && permissions.findIndex(p => p.entity === "automation") >= 0 ?*/}
-          {/*<li>
+          <li>
             <NavLink
               className="leftMenuLink"
               isActive={() => ["/automation-list", "/automation-builder"]}
@@ -307,7 +307,7 @@ function LeftMenu(props) {
               </svg>
               <span className="menuName">Automation</span>
             </NavLink>
-          </li>*/} {/*: ""}*/}
+          </li> {/*: ""}*/}
         {permissions && permissions.findIndex(p => p.entity === "contact") >= 0 ?
           <li>
             <NavLink
@@ -432,7 +432,7 @@ function LeftMenu(props) {
             </svg>
           </NavLink>
         </li>  */}
-         {/* <li className="prototypeLink"> 
+         {/* <li className="prototypeLink">
            <NavLink to="/appointment"
            className="leftMenuLink"
             
@@ -568,7 +568,7 @@ function LeftMenu(props) {
             </svg>
             <span className="menuName">Appointment</span>
           </NavLink>
-        </li> 
+        </li>
         <li>
           <NavLink activeClassName="selected nobg"
             to="/attendance-global"

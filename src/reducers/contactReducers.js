@@ -20,7 +20,7 @@ const ContactReducer = (state = initialState, action) => {
             newState.isFirstTime = true;
             break;
         default:
-            newState.count = 0;
+            // newState.count = 0;
             // newState.contact_modal_id = '';
             break;
     }
