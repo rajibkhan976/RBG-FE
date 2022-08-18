@@ -12,3 +12,9 @@
     - Automation V1.0
 # HOTFIX V1.0.3
     - Automation fix url issue
+# HOTFIX V1.0.4
+    - Automation fix history database
+# Invoice V1.0.0
+    - Download invoice option
+# Hotfix V1.0.5
+    - Fixed prod url issue for tag
