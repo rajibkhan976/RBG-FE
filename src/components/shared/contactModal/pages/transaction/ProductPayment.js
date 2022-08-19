@@ -248,7 +248,7 @@ const ProductPayment = (props) => {
             setProductPaymentFailed(true);
         }
       } catch (error) {
-        setPaymentFailed(error);
+        setPaymentFailed(error.message);
         setProductPaymentFailed(true);
       } finally {
         setErrorMsg("")

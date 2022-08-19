@@ -18,3 +18,5 @@
     - Download invoice option
 # Hotfix V1.0.5
     - Fixed prod url issue for tag
+# Hotfix Product Transaction V1.0.0
+    - Fixed product cash transaction blank screen issue

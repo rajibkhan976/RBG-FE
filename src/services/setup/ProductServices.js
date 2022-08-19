@@ -265,11 +265,12 @@ export const ProductServices = {
                 throw new Error(result);
             }
         } catch (e) {
-            if(!typeof e.data === 'undefined') {
-                throw new Error(e.response.data.message);
-            } else {
-                throw new Error(e.message + ". Please contact support.");
-            }
+            throw e.response.data
+            // if(!typeof e.data === 'undefined') {
+            //     throw new Error(e.response.data.message);
+            // } else {
+            //     throw new Error(e.message + ". Please contact support.");
+            // }
         }
     }
 };
