@@ -10,3 +10,4 @@
     - Status and phase trigger
 # Automation Hotfix V1.0.1
     - Fix css issues
+    - Fixed customization submenu link issue.

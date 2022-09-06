@@ -12048,3 +12048,52 @@ background-color: #fff;
 }
 
 
+
+
+/* dashboard changes here ...................................... */
+
+.widgetIcon {
+  flex-wrap: wrap;
+}
+.editSpansDashboard {
+  width: 24px;
+}
+.widgetIcon h3 {
+  max-width: calc(100% - 40px);
+  word-break: break-all;
+}
+.widgetIcon .title {
+  max-width: calc(100% - 60px);
+  display: flex;
+  width: 85%;
+}
+.dashboardWidgets.formControl select {
+  width: auto !important;
+  background-position: calc(100% + 6px) 1px !important;
+  margin-right: 11px;
+  padding-right: 17px;
+}
+/* .widhetInfoWraper {
+  height: 100%;
+  overflow: auto;
+  padding-right: 2px;
+}
+
+.widhetInfoWraper::-webkit-scrollbar {
+  width: 4px;
+}
+
+.widhetInfoWraper::-webkit-scrollbar-track {
+  background-color: #dce4eb;
+}
+
+.widhetInfoWraper::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
+} */
+.widgetIcon figure {
+  margin-bottom: auto;
+}
+
+.emptyvalue .widgetIcon figure:last-child{
+ display: none;
+}

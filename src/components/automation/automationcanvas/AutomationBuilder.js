@@ -1336,7 +1336,6 @@ const AutomationBuilder = (props) => {
       });
     }
   }
-
   useEffect(() => {
     if (Object.keys(props.automationElement).length) {
       setElements(props.automationElement.blueprint);
@@ -1688,8 +1687,8 @@ const AutomationBuilder = (props) => {
                                                           <select name="" id="" value={con.condition} onChange={(e) => handelFilterFieldChange('condition', value.index, con.and, e)}>
                                                             <option value="">Please Select</option>
                                                             <option value="NumericEquals"> =</option>
-                                                            <option value="NumericGreaterThan"> > </option>
-                                                            <option value="NumericGreaterThanEquals"> >= </option>
+                                                            <option value="NumericGreaterThan">&#62; </option>
+                                                            <option value="NumericGreaterThanEquals"> &#62;= </option>
                                                             <option value="NumericLessThan"> &#60; </option>
                                                             <option value="NumericLessThanEquals"> &#60;= </option>
                                                           </select>

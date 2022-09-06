@@ -1,28 +1,45 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import drag from '../../../src/assets/images/drag.svg';
-import line_chart from '../../../src/assets/images/line-chart.svg';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 const DashboardControls = (props) => {
-	const loadWidgetControls = () => {
+	const ref = useRef()
+	const onDragEnd = (result) => {
+		if (!result.destination) {
+			return;
+		}
+		console.log(props)
+		let sorting = {
+			oldIndex : result.source.index,
+			newIndex : result.destination.index
+		}
+		props.onSortEnd(sorting)
+		console.log("reorderin", result)
+	}
+	const loadWidgetControls = (provided) => {
 		if (props.widgetList.length > 0) {
 			return props.widgetList.map((widget, i) => {
 				return (
-					<>
+					<Draggable key={widget.id} draggableId={widget.id} index={i}>
+						 {(provided, snapshot) => (
+						<>
 						{widget.isOrganizationOwner &&
-						props.loggedInUser?.isOrganizationOwner == true ? (
-							<li key={i}>
+							props.loggedInUser?.isOrganizationOwner == true ? (
+							<li ref={provided.innerRef}
+								{...provided.draggableProps}
+								 key={i}>
 								<label>
 									<div className='customCheckbox'>
 										<input
 											type='checkbox'
-											defaultChecked={widget.shouldDisplay}
+											defaultChecked={widget.display}
 											onClick={() => props.updateWidgetControl(widget.name)}
 										/>
 										<span></span>
 									</div>
 
 									<span>{widget.name}</span>
-									{/* <img src={drag} className='dragImg' /> */}
+									<img {...provided.dragHandleProps} src={drag} className='dragImg' />
 								</label>
 							</li>
 						) : (
@@ -30,25 +47,29 @@ const DashboardControls = (props) => {
 						)}
 
 						{widget.isOrganizationOwner != true ? (
-							<li key={i}>
+							<li ref={provided.innerRef}
+								{...provided.draggableProps}
+								 key={i}>
 								<label>
 									<div className='customCheckbox'>
 										<input
 											type='checkbox'
-											defaultChecked={widget.shouldDisplay}
+											defaultChecked={widget.display}
 											onClick={() => props.updateWidgetControl(widget.name)}
 										/>
 										<span></span>
 									</div>
 
 									<span>{widget.name}</span>
-									{/* <img src={drag} className='dragImg' /> */}
+									<img {...provided.dragHandleProps} src={drag} className='dragImg' />
 								</label>
 							</li>
 						) : (
 							''
 						)}
-					</>
+						</>
+						 )}
+					</Draggable>
 				);
 			});
 		} else {
@@ -67,10 +88,23 @@ const DashboardControls = (props) => {
 						<h3>Widget Customization</h3>
 						{/* <p>Lorem ipsum dolor sit amet.</p> */}
 					</div>
-					<ul>{loadWidgetControls()}</ul>
+					<DragDropContext onDragEnd={onDragEnd}>
+						<Droppable droppableId="dropPlate">
+							{(provided) => {
+								return (
+									<ul ref={provided.innerRef}>{loadWidgetControls(provided)}
+
+										{provided.placeholder}
+									</ul>
+								)
+							}}
+						</Droppable>
+
+					</DragDropContext>
 				</div>
 			</div>
 		</>
-	);
+	)
+
 };
 export default DashboardControls;

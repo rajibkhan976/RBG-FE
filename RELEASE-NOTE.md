@@ -20,3 +20,6 @@
     - Fixed prod url issue for tag
 # Hotfix Product Transaction V1.0.0
     - Fixed product cash transaction blank screen issue
+# RELEASE v1.0.2
+ - Dashboard v1.2
+    - Dashboard V1.1.0

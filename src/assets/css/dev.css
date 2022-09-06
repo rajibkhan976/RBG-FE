@@ -4653,7 +4653,15 @@ img.graphImg {
 
 .dashboardWidgets.formControl {
   margin-bottom: 25px;
+  float: left;
 }
+.widhetInfoWraperEdit{
+  margin-bottom: 15px;
+  display: inline-block;
+}
+.editSpansDashboard{border:0px; background-color: transparent;}
+.widhetInfoWraperEdit h4{font-weight:500; font-size: 15px; color: #59acd7; margin-bottom: 25px;}
+
 
 .currentRevenueWraprt {
   display: flex;
@@ -5000,6 +5008,7 @@ ul.programInfosUl.paymentOverviews li .informationSpan .infoSpan .tooltiptextInf
 .currentPreviousState {
   display: flex;
   /* align-items: center; */
+  float:left;
 }
 
 .currentPreviousState .currentStatus {
@@ -6675,7 +6684,7 @@ span.emptyLoading.topDashboardSelector {
   display: block;
 }
 
-<<<<<<< HEAD
+
 /*delete and edit button position change*/
 .btnDeleteNode{left: inherit;}
 .react-flow__node-fieldActionTrigger .btnEditNode {right: 10px;}
@@ -6701,3 +6710,11 @@ span.emptyLoading.topDashboardSelector {
   right: -38px;
   bottom: 26px;
 }
+
+/* dashboard css */
+.dashInnerStructure.dashboardPage .dashInnerUI .mrrWraper .widgetWrapers > div{
+  flex: 0 0 calc((100% - 76px) / 3);
+}
+.widgetWrapers .individualWidgwet .editings{border:0px; border-radius: 0px; background-color: transparent;}
+.widgetWrapers .individualWidgwet:hover{box-shadow: 0px 2px 20px rgb(48 86 113 / 15%)}
+

@@ -204,6 +204,9 @@ module.exports = {
     contactFetchFields: "https://" + process.env.REACT_APP_CONTACT_FETCH_FIELDS + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV + "/contact/field",
 
     // Invoice
-    invoiceUrl: `https://${process.env.REACT_APP_INVOICE}.execute-api.us-east-1.amazonaws.com/${process.env.REACT_APP_ENV}/contact/transactions/downloadInvoice`
+    invoiceUrl: `https://${process.env.REACT_APP_INVOICE}.execute-api.us-east-1.amazonaws.com/${process.env.REACT_APP_ENV}/contact/transactions/downloadInvoice`,
     // invoiceUrl: "http://localhost:4000/dev/contact/transactions/downloadInvoice"
+    //Dashboard widgets (drag n drop)
+    dashboardWidgetsPosition : "https://" +process.env.REACT_APP_DASHBOARD_SAVE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/widgets/",
+
 }  
