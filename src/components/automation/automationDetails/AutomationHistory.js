@@ -70,7 +70,6 @@ export default function AutomationHistory(props) {
 
         return queryParams;
     }
-
     const handleFromDate = (e) => {
         const { value } = e.target;
         setFilterData(prevState => ({ ...prevState, fromDate: value }));
@@ -206,6 +205,9 @@ export default function AutomationHistory(props) {
                         </div>
                         <div className="listCell cellWidth_15">
                             Completed Date
+                        </div>
+                        <div className="listCell cellWidth_5">
+                            &nbsp;
                         </div>
                     </div>
 

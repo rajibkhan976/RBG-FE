@@ -21,54 +21,54 @@ const DashboardControls = (props) => {
 			return props.widgetList.map((widget, i) => {
 				return (
 					<Draggable key={widget.id} draggableId={widget.id} index={i}>
-						 {(provided, snapshot) => (
-						<>
-						{widget.isOrganizationOwner &&
-							props.loggedInUser?.isOrganizationOwner == true ? (
-							<li ref={provided.innerRef}
-								{...provided.draggableProps}
-								 key={i}>
-								<label>
-									<div className='customCheckbox'>
-										<input
-											type='checkbox'
-											defaultChecked={widget.display}
-											onClick={() => props.updateWidgetControl(widget.name)}
-										/>
-										<span></span>
-									</div>
+						{(provided, snapshot) => (
+							<>
+								{widget.isOrganizationOwner &&
+								props.loggedInUser?.isOrganizationOwner == true ? (
+									<li ref={provided.innerRef}
+										{...provided.draggableProps}
+										key={i}>
+										<label>
+											<div className='customCheckbox'>
+												<input
+													type='checkbox'
+													defaultChecked={widget.display}
+													onClick={() => props.updateWidgetControl(widget.name)}
+												/>
+												<span></span>
+											</div>
 
-									<span>{widget.name}</span>
-									<img {...provided.dragHandleProps} src={drag} className='dragImg' />
-								</label>
-							</li>
-						) : (
-							''
+											<span>{widget.name}</span>
+											<img {...provided.dragHandleProps} src={drag} className='dragImg' />
+										</label>
+									</li>
+								) : (
+									''
+								)}
+
+								{widget.isOrganizationOwner != true ? (
+									<li ref={provided.innerRef}
+										{...provided.draggableProps}
+										key={i}>
+										<label>
+											<div className='customCheckbox'>
+												<input
+													type='checkbox'
+													defaultChecked={widget.display}
+													onClick={() => props.updateWidgetControl(widget.name)}
+												/>
+												<span></span>
+											</div>
+
+											<span>{widget.name}</span>
+											<img {...provided.dragHandleProps} src={drag} className='dragImg' />
+										</label>
+									</li>
+								) : (
+									''
+								)}
+							</>
 						)}
-
-						{widget.isOrganizationOwner != true ? (
-							<li ref={provided.innerRef}
-								{...provided.draggableProps}
-								 key={i}>
-								<label>
-									<div className='customCheckbox'>
-										<input
-											type='checkbox'
-											defaultChecked={widget.display}
-											onClick={() => props.updateWidgetControl(widget.name)}
-										/>
-										<span></span>
-									</div>
-
-									<span>{widget.name}</span>
-									<img {...provided.dragHandleProps} src={drag} className='dragImg' />
-								</label>
-							</li>
-						) : (
-							''
-						)}
-						</>
-						 )}
 					</Draggable>
 				);
 			});

@@ -6683,8 +6683,6 @@ span.emptyLoading.topDashboardSelector {
   width: 100%;
   display: block;
 }
-
-
 /*delete and edit button position change*/
 .btnDeleteNode{left: inherit;}
 .react-flow__node-fieldActionTrigger .btnEditNode {right: 10px;}
@@ -6696,7 +6694,6 @@ span.emptyLoading.topDashboardSelector {
 
 .react-flow__node-actionStatusPhaseUpdate .btnEditNode, .react-flow__node-actionStatusPhaseUpdate .btnDeleteNode{right: -12px; }
 .react-flow__node-actionStatusPhaseUpdate .btnDeleteNode{bottom: 39px;}
-
 
 .downloadInvoiceBtn {
   width: 28px;
@@ -6717,4 +6714,3 @@ span.emptyLoading.topDashboardSelector {
 }
 .widgetWrapers .individualWidgwet .editings{border:0px; border-radius: 0px; background-color: transparent;}
 .widgetWrapers .individualWidgwet:hover{box-shadow: 0px 2px 20px rgb(48 86 113 / 15%)}
-

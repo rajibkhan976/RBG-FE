@@ -70,6 +70,10 @@ const Attendance = (props) => {
     }
   }
 
+  const disableCheckBtn = () => {
+    setEnableCheckIn(false);
+  }
+
   useEffect(async () => {
     console.log("loggedInUser", loggedInUser)
     checkInStatusCheck();
@@ -79,8 +83,8 @@ const Attendance = (props) => {
     if (dateRange?.start) {
       setIsLoader(true);
       let payload = {
-        fromDate: moment(dateRange.start).add(1, "days").format("YYYY-MM-DD"),
-        toDate: moment(dateRange.end).subtract(1, "days").format("YYYY-MM-DD"),
+        fromDate: moment(dateRange.start).tz(tz).add(1, "days").format("YYYY-MM-DD"),
+        toDate: moment(dateRange.end).tz(tz).subtract(1, "days").format("YYYY-MM-DD"),
       }
       let todayDate = momentTZ.tz(tz);
       let attendances = await AttendanceServices.fetchAttendances(payload, props.contactId);
@@ -103,45 +107,37 @@ const Attendance = (props) => {
         console.log("event ", eventObj)
         eventArr.push(eventObj);
       }
-      if (attendances.holidays) {
-        for (let holiday of attendances.holidays) { 
-          if (
-            moment(todayDate).isBetween(holiday.fromDate, holiday.toDate) || 
-            moment(todayDate).isSame(holiday.fromDate) ||
-            moment(todayDate).isSame(holiday.toDate) 
-          ) {
-            setIsTodayHoliday(true);
-          }
-          
-          let eventObj = {
-            start:  holiday.fromDate,
-            end: holiday.toDate,
-            name: holiday.name,
-            title: holiday.name,
-            isHoliday: true,
-            className: "hasHoliday"
-          }
-          eventArr.push(eventObj);
-        }
-      }
-
       // let payload.fromDate
       var range = moment().range(moment(dateRange.start), moment(dateRange.end));
       let dateRangeArr = Array.from(range.by('day', { step: 1 }));
       for (let mDate of dateRangeArr) {
+
         let eventObj = {
           start: mDate.format("YYYY-MM-DD"),
           isBlankDate: true
         }
-        let isDateExist = false;
-        for (let ev of eventArr) {
-          if (moment(ev.start).format("YYYY-MM-DD") == eventObj.start) {
-            isDateExist = true;
+
+        // Holiday filter
+        if (attendances.holidays) {
+          for (let holiday of attendances.holidays) {
+            if (
+              moment(mDate).isBetween(holiday.fromDate, holiday.toDate) ||
+              moment(mDate).isSame(holiday.fromDate) ||
+              moment(mDate).isSame(holiday.toDate)
+            ) {            
+              eventObj = {
+                start: mDate.format("YYYY-MM-DD"),
+                name: holiday.name,
+                title: holiday.name,
+                isHoliday: true,
+                className: "hasHoliday"
+              }
+                
+            }
           }
-        }
-        if (!isDateExist) {
-         eventArr.push(eventObj);
-        }         
+        }  
+        eventArr.push(eventObj);
+              
       }
       console.log("eventArr", eventArr)
       setEvents(eventArr);
@@ -214,6 +210,12 @@ const Attendance = (props) => {
       let isHoliday = e.event.extendedProps?.isHoliday ? true : false;
       let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
       let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
+
+      if (isHoliday) {
+        eventDate = moment(e.event._instance.range.start).format("ddd, DD");
+      }
+      
+      console.log("dateSource", eventDate)
       
       let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
       if (e.event.extendedProps.checkInBy) {
@@ -226,7 +228,7 @@ const Attendance = (props) => {
             <>
               <span className='fc-list-dateTd'>{eventDate}</span>
               <span className='fc-list-event-time'>
-                {e.event.extendedProps.checkInBy && 
+                {e.event.extendedProps.checkInBy &&
                   <span className="norm" > {
                     eventTime ? eventTime : ''
                   }</span>
@@ -250,6 +252,7 @@ const Attendance = (props) => {
 
         </>
       )
+      
     }
    
   }
@@ -346,7 +349,7 @@ const Attendance = (props) => {
           <AddCommentModal 
           closeAddHolidayModal={closeHolidayModal} 
           contactId={props.contactId} 
-          checkInStatus={setEnableCheckIn}
+          checkInStatus={disableCheckBtn}
           fetchAttendances={fetchAttendances}
           />
         </>

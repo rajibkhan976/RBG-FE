@@ -21,5 +21,7 @@
 # Hotfix Product Transaction V1.0.0
     - Fixed product cash transaction blank screen issue
 # RELEASE v1.0.2
- - Dashboard v1.2
+    - Dashboard v1.2
     - Dashboard V1.1.0
+# HOTFIX V1.0.6
+    - Automation Hotfix V1.0.1

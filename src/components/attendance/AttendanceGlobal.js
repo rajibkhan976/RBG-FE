@@ -25,6 +25,7 @@ const AppointmentGlobal = (props) => {
     const [makeHeaderOpen, setMakeHeaderOpen] = useState(false)
     const calenderRef = useRef([]);
     const [dateRange, setDateRange] = useState(false);
+    const [tz, setTz] = useState(("UTC"));
     const headerToolbar = {
         left: 'today',
         center: 'prev,title,next',
@@ -37,6 +38,7 @@ const AppointmentGlobal = (props) => {
     useEffect(() => {
         console.log("loggedInUser", loggedInUser)
         if (loggedInUser && loggedInUser.organizationTimezone) {
+            console.log("set tz")
             setTz(loggedInUser.organizationTimezone)
         }
         
@@ -45,13 +47,14 @@ const AppointmentGlobal = (props) => {
         let api = calenderRef.current.getApi()
         api.changeView('listDay', e.dateStr)
      }
-     const [tz, setTz] = useState(("UTC"));
+     
 
     const renderEventContent = (e) => {
         // console.log("Render e", e.event.extendedProps, e)
         // if (!e.event._instance.range && e.event._instance.range.start) {
         //     return false;
         // }
+        console.log("renderEventContent called", e.view.type)
         if (e.view.type == "listDay" || e.view.type == "listMonth") {
             let isHoliday =  e.event.extendedProps ?. isHoliday ? true : false;
             setMakeHeaderOpen(true);
@@ -60,8 +63,9 @@ const AppointmentGlobal = (props) => {
             // let eventTime = momentTZ.tz(e.event._instance.range.start, tz).format("hh:mm A");
 
             let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
-            let eventDate = moment(dateSource).format("ddd, DD");
-            let eventTime = moment(moment(e.event._instance.range.start)).tz(tz).format("hh:mm A");
+            let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
+            let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
+            
             return (
                 <>
                     {!isHoliday ? 
@@ -88,9 +92,22 @@ const AppointmentGlobal = (props) => {
         }
      
     }
+
+    const convertUTCtoTZ = (date, format) => {
+        let utcDate = momentTZ.tz(date, "UTC");
+        let convertedDate = momentTZ.tz(utcDate, tz);
+        if (format) {
+            convertedDate = convertedDate.format(format);
+        }
+        console.log("raw date", date)
+        console.log("utcDate", utcDate)
+        console.log("convertedDate", convertedDate)
+        return convertedDate;
+    }
+    
     useEffect(async () => {
         try {
-            if (dateRange ?. start) {  
+            if (tz !== "UTC" && dateRange?.start) { 
                 let payload = {
                     fromDate: moment(dateRange.start).format("YYYY-MM-DD"),
                     toDate: moment(dateRange.end).format("YYYY-MM-DD"),
@@ -99,16 +116,15 @@ const AppointmentGlobal = (props) => {
                 
                 let eventArr = []
                 for(let atten of attendances.attendance) {
-                    console.log("date", atten.checkedInAt,"---",tz)
                     let eventObj = {
-                        start: atten.checkedInAt,
+                        start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
                         note: atten.note,
                         name: atten.contact.firstName + " " + atten.contact.lastName,
                         email: atten.contact.email,
                         checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName,
                         className: "hasAttendance",
                         backgroundColor: "#fff",
-                        checkedInAt: atten.checkedInAt
+                        checkedInAt: convertUTCtoTZ(atten.checkedInAt)
                     }
                     eventArr.push(eventObj);
                 }
@@ -126,17 +142,19 @@ const AppointmentGlobal = (props) => {
                     }
                 }
             // console.log("eventArr", eventArr)
-            setEvents(eventArr);
+                setEvents(eventArr);
             }
         } catch (e) {
-            console.log("error in set event", e.message)
+            console.log("error in set event", e.message);
+            setIsLoader(false);
 
         }
-    }, [dateRange])
+    }, [dateRange, tz])
 
     const handleMonthChange = async (e) => {
         setDateRange(e);
     }
+
 
     const moreLinkContent = (e) => {
         return (
@@ -166,7 +184,6 @@ const AppointmentGlobal = (props) => {
                         <div>Checked-in by</div>
                     </div>}
                     <FullCalendar
-                        timeZone={"UTC"}
                         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
                         headerToolbar={headerToolbar}
                         buttonText={buttonText}

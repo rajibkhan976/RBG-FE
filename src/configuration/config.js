@@ -172,7 +172,7 @@ module.exports = {
     //appointmentUrl: "http://localhost:4000/dev/appointment",
     
     //Attendance Url
-    attendaneUrl: "https://" + process.env.REACT_APP_ATTENDANCE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV,
+    attendaneUrl: "https://" + process.env.REACT_APP_ATTENDANCE + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV,
     
     // Member Portal
     memberCheckInPortal: "https://" + process.env.REACT_APP_MEMBER_CHECKIN_PORTAL + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV + "/member-portal",
@@ -208,5 +208,4 @@ module.exports = {
     // invoiceUrl: "http://localhost:4000/dev/contact/transactions/downloadInvoice"
     //Dashboard widgets (drag n drop)
     dashboardWidgetsPosition : "https://" +process.env.REACT_APP_DASHBOARD_SAVE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/widgets/",
-
 }  

@@ -429,8 +429,6 @@ const Transaction = (props) => {
     let payDate = moment(due_date, "YYYY-MM-DD");
     let today = moment().startOf('day');
 
-
-
     //Difference in number of days
     let result = moment.duration(payDate.diff(today)).asDays();
     

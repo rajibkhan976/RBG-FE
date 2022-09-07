@@ -270,7 +270,6 @@ export const AutomationServices = {
             }
         }
     },
-    
     fetchHistory: async (automationID, page, queryParams = null) => {
         try {
             let url = config.automationHistoryUrl + `/${page}?automationId=${automationID}`;

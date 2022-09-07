@@ -361,7 +361,6 @@ const AutomationLists = (props) => {
   const handleClick = (elem) => {
     props.setAutomationObj(elem);
     history.push();
-    
   }
 
   return (

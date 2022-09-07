@@ -189,23 +189,23 @@ export const DashboardServices = {
     }
   },
   setGoal: async (payload) => {
-      try {
-         const url = config.dashboardWidgetGoalUrl + `goal`
-            const result = await axios.put(url, payload, { headers: headers });
-            if (result.status === 200) {
-                return result.data;
-            } else {
-                throw new Error("There is an error updating Goal. Please contact support");
-            }
-        } catch (e) {
-            if (!typeof e.data === 'undefined') {
-                console.log(e.response.data.message);
-                throw new Error(e.response.data.message);
-            } else {
-                console.log(e.stack);
-                throw new Error(e.message + ". Please contact support.");
-            }
-        }
+    try {
+      const url = config.dashboardWidgetGoalUrl + `goal`
+      const result = await axios.put(url, payload, { headers: headers });
+      if (result.status === 200) {
+        return result.data;
+      } else {
+        throw new Error("There is an error updating Goal. Please contact support");
+      }
+    } catch (e) {
+      if (!typeof e.data === 'undefined') {
+        console.log(e.response.data.message);
+        throw new Error(e.response.data.message);
+      } else {
+        console.log(e.stack);
+        throw new Error(e.message + ". Please contact support.");
+      }
+    }
   },
   fetchWidgetsPostion: async () => {
     try {
@@ -217,7 +217,6 @@ export const DashboardServices = {
         console.log(e.response.data.message);
         let errorMessage = e.response.data.message
         return errorMessage
-
         throw new Error(e.response.data.message);
       } else if(e.response && e.response.data && typeof e.response.data == "string") {
         let errorMessage = e.response.data
@@ -233,25 +232,24 @@ export const DashboardServices = {
       }
     }
   },
-    
+
   setWidgetsPostion: async (payload) => {
     try {
       const url = config.dashboardWidgetsPosition + `details`
       const result = await axios.put(url, payload, { headers: headers });
       if (result.status === 200) {
-          return result.data;
+        return result.data;
       } else {
-          throw new Error("There is an error updating Goal. Please contact support");
+        throw new Error("There is an error updating Goal. Please contact support");
       }
-  } catch (e) {
+    } catch (e) {
       if (!typeof e.data === 'undefined') {
-          console.log(e.response.data.message);
-          throw new Error(e.response.data.message);
+        console.log(e.response.data.message);
+        throw new Error(e.response.data.message);
       } else {
-          console.log(e.stack);
-          throw new Error(e.message + ". Please contact support.");
+        console.log(e.stack);
+        throw new Error(e.message + ". Please contact support.");
       }
+    }
   }
-}
-  
 }

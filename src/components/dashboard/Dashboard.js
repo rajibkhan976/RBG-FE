@@ -157,7 +157,7 @@ const Dashboard = () => {
 			"defaultSelectedMonth": "August"
 		}
 	]
-	
+
 
 	const [widgetCustomizationList, setUpdateWidgetControls] = useState(
 		defaultCustomizations
@@ -165,21 +165,21 @@ const Dashboard = () => {
 
 
 
-	 const updateWidgetDefaultDate = (selectedMonthInNumber, index) => {
+	const updateWidgetDefaultDate = (selectedMonthInNumber, index) => {
 		console.log("udpated month",	selectedMonthInNumber,index)
 		setUpdateWidgetControls(
 			[...widgetCustomizationList],
 			(widgetCustomizationList[index].defaultSelectedMonth =
 				months[selectedMonthInNumber])
 		);
-	 }
+	}
 
-	 const updateWidgetName = (name,index) =>{
+	const updateWidgetName = (name,index) =>{
 		setUpdateWidgetControls(
 			[...widgetCustomizationList],
 			(widgetCustomizationList[index].name =name)
 		);
-	 }
+	}
 
 	// update widget control from Dashboard control
 	const updateWidgetControl = (name) => {
@@ -199,10 +199,10 @@ const Dashboard = () => {
 		},30000)
 		localStorage.setItem(loggedInUser.email, syncInterval)
 		localStorage.setItem(loggedInUser.email+'_widgetsPosition',JSON.stringify(updatedControls))
-	
+
 	};
 
-	
+
 
 
 
@@ -233,13 +233,13 @@ const Dashboard = () => {
 		setIsLoader(false);
 
 		let dashboardPositions = dashboardCustomizations.data.widget_details
-			if(dashboardPositions.length){
-				dashboardPositions.map((x=>{
-					x.defaultSelectedMonth =  months[moment().month()]
-				}))
-				console.log("finallly",dashboardPositions)
-				setUpdateWidgetControls(dashboardPositions)
-			}
+		if(dashboardPositions.length){
+			dashboardPositions.map((x=>{
+				x.defaultSelectedMonth =  months[moment().month()]
+			}))
+			console.log("finallly",dashboardPositions)
+			setUpdateWidgetControls(dashboardPositions)
+		}
 	};
 
 
@@ -258,20 +258,20 @@ const Dashboard = () => {
 		let updatedWidgetList =  localStorage.getItem(loggedInUser?.email+'_widgetsPosition')
 		console.log("updatedWidfwrliar",updatedWidgetList,updatedWidgetList!='undefined'  && updatedWidgetList!=null)
 		if(updatedWidgetList!='undefined' && updatedWidgetList!=null){
-			
+
 			DashboardServices.setWidgetsPostion(JSON.parse(updatedWidgetList))
 			localStorage.setItem(loggedInUser.email+'_widgetsPosition',undefined)
-			}
+		}
 	}
 	//Component will un mount hook - Save any changes made to Dashboard to backend before moving to other Tabs
 	useEffect( ()=>{
 		return  function cleanup(){
-					storeInfoToBackend(loggedInUser)
-			}
-},[loggedInUser])
+			storeInfoToBackend(loggedInUser)
+		}
+	},[loggedInUser])
 	const syncWithBackend = (widgetsInfo) => {
 		if(localStorage.getItem(loggedInUser.email)!=undefined && localStorage.getItem(loggedInUser.email)){
-		
+
 			clearInterval(localStorage.getItem(loggedInUser.email))
 		}
 		let syncInterval  = setTimeout(async()=>{
@@ -283,7 +283,7 @@ const Dashboard = () => {
 	}
 	const onSortEnd = async ({ oldIndex, newIndex }) => {
 		console.log('Sorting...');
-		
+
 		if(JSON.stringify(widgetCustomizationList) === JSON.stringify(arrayMove(widgetCustomizationList, oldIndex, newIndex))){
 			console.log("same to same")
 		}else{
@@ -292,7 +292,7 @@ const Dashboard = () => {
 			);
 			console.log("Syncing started",widgetCustomizationList)
 			syncWithBackend(arrayMove(widgetCustomizationList, oldIndex, newIndex))
-			
+
 		}
 		// setItems(arrayMove(items, oldIndex, newIndex));
 	};
@@ -309,7 +309,7 @@ const Dashboard = () => {
 					loggedInUser?.isAssociationOwner == null ? (
 						<div className='dashboardWraperImg'>
 							<img src={DashboardImg2} className='dashboardimg' alt='' />
-				
+
 						</div>
 					) : (
 						<div className='dashInnerUI'>
@@ -321,7 +321,7 @@ const Dashboard = () => {
 									onClick={() => openFilterModal()}
 								>
 									<img src={expandDashboard} alt='' />
-									
+
 								</div>
 
 								<DashboardSortableWidgetList

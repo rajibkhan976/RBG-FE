@@ -5257,7 +5257,7 @@ button.saveOverview img {
   box-sizing: border-box;
   border: none;
   height: 4px;
-  background: 305671;
+  background: #305671;
   border-radius: 8px;
   height: 10px;
   background-color: transparent;
@@ -11252,7 +11252,7 @@ svg.monthIcons {
   flex-wrap: wrap;
 } */
 .attendenceContactModal .fc-list-event .fc-list-event-time {
-  width: 50%;
+  width: 52%;
   display: inline-block;
   padding: 5px 18px;
 }
@@ -12046,9 +12046,6 @@ background-color: #fff;
 .react-flow__handle-right{
   top: 40% !important;
 }
-
-
-
 
 /* dashboard changes here ...................................... */
 
