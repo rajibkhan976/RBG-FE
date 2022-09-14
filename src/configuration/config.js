@@ -208,5 +208,5 @@ module.exports = {
     //Dashboard widgets (drag n drop)
     dashboardWidgetsPosition : "https://" +process.env.REACT_APP_DASHBOARD_SAVE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/widgets/",
     // Global transaction history  
-    transactionGlobalHistotyUrl : "https://" + process.env.REACT_APP_TRANSACTION + ".execute-api.us-east-1.amazonaws.com/dev/contact/transactions/list/",
+    transactionGlobalHistotyUrl : "https://" + process.env.REACT_APP_TRANSACTION + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/contact/transactions/list/",
 }  
