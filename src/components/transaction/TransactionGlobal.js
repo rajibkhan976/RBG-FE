@@ -258,11 +258,11 @@ const TransactionGlobal = (props) => {
                                         <button className='noBg'><span className='blueTxt'>{tHistory.contact && tHistory.contact._id ? tHistory?.contact?.email : tHistory?.contactDeleted.email}</span></button>
                                     </div>
                                     <div class="listCell cellWidth_15">
-                                        <span className='doomed'> 
+                                        <span className='doomed'>
                                         {/* {moment(tHistory?.transaction_date.split(" ")[1], 'hh:mm A').format('hh:mm A')} */}
-                                        {moment(utils.convertUTCToTimezone(tHistory?.createdAt, timezone, 'YYYY-MM-DD hh:mm A')).format('hh:mm A')}
+                                        {moment(utils.convertUTCToTimezone(tHistory?.last_transaction_date, timezone, 'YYYY-MM-DD HH:mm:ss')).format('hh:mm A')}
                                          ,</span>
-                                        &nbsp;{moment(utils.convertUTCToTimezone(tHistory?.createdAt, timezone, 'YYYY-MM-DD hh:mm A')).format('Do MMM, YYYY')}
+                                        &nbsp;{moment(utils.convertUTCToTimezone(tHistory?.last_transaction_date, timezone, 'YYYY-MM-DD HH:mm:ss')).format('Do MMM, YYYY')}
                                     </div>
                                     <div class="listCell cellWidth_15"><span className='spanned'>{tHistory?._id}</span></div>
                                     <div class="listCell cellWidth_10">
@@ -326,8 +326,8 @@ const TransactionGlobal = (props) => {
                                                     </div>
                                                     <div className='listCell time'>
                                                         <span className='doomed'>
-                                                            {moment(utils.convertUTCToTimezone(historylist?.transaction_date, timezone, 'YYYY-MM-DD hh:mm A')).format('hh:mm A')} ,</span>
-                                                        &nbsp;{moment(utils.convertUTCToTimezone(historylist?.transaction_date, timezone, 'YYYY-MM-DD hh:mm A')).format('Do MMM, YYYY')}
+                                                            {moment(utils.convertUTCToTimezone(historylist?.transaction_date, timezone, 'YYYY-MM-DD HH:mm:ss')).format('hh:mm A')} ,</span>
+                                                        &nbsp;{moment(utils.convertUTCToTimezone(historylist?.transaction_date, timezone, 'YYYY-MM-DD HH:mm:ss')).format('Do MMM, YYYY')}
                                                     </div>
                                                     <div className='listCell id'><span className='spanned'>{historylist._id}</span></div>
                                                     <div className='listCell value'><span className='boldTxt'>${Math.abs(historylist.amount).toFixed(2)}</span></div>
