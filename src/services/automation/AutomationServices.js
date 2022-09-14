@@ -290,7 +290,6 @@ export const AutomationServices = {
             }
         }
     },
-
     fetchHistoryCount: async (automationID) => {
         try {
             let url = config.automationHistoryUrl + `/count?automationId=${automationID}`;

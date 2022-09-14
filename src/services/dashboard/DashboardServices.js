@@ -232,7 +232,6 @@ export const DashboardServices = {
       }
     }
   },
-
   setWidgetsPostion: async (payload) => {
     try {
       const url = config.dashboardWidgetsPosition + `details`

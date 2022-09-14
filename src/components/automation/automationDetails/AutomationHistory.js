@@ -70,6 +70,10 @@ export default function AutomationHistory(props) {
 
         return queryParams;
     }
+    const paginationCallbackHandle = useCallback(() => {
+        props.fetchHistory();
+    }, []);
+
     const handleFromDate = (e) => {
         const { value } = e.target;
         setFilterData(prevState => ({ ...prevState, fromDate: value }));
@@ -251,6 +255,7 @@ export default function AutomationHistory(props) {
                                                     ></div>
                                                 </div>
                                             </div>
+
                                         </div>*/}
                                         <div className="listCell cellWidth_20" onClick={() => toggleDetails(i)}>
                                             <span

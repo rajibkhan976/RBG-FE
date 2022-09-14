@@ -18,18 +18,11 @@ import moment from 'moment';
 import profits from '../../../src/assets/images/profits.svg';
 import loss from '../../../src/assets/images/loss.svg';
 import appDash from '../../../src/assets/images/appDash.svg';
-
 import React, { useState, useEffect, useRef } from 'react';
-
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
-
 const WidgetSortableListItem = SortableElement((props) => {
 	// widget templates
-
 	const arWidget = (widget, index) => {
-
-		 
-
 		return (
 			<div
 				className={
@@ -41,7 +34,6 @@ const WidgetSortableListItem = SortableElement((props) => {
 				<div className='widhetInfoWraper'>
 					{!props.changeNameStatus.changeARevenueName ? (
 						<div className='widgetIcon'>
-							
 							<figure className='dashFig'>
 								{widget.id == 'additional-revenue' ? (
 									<img src={additionalRevenueIcon} />
@@ -72,8 +64,7 @@ const WidgetSortableListItem = SortableElement((props) => {
 					) : (
 						''
 					)}
-
-{props.changeNameStatus.changeARevenueName ? (
+					{props.changeNameStatus.changeARevenueName ? (
 						<div className='widhetInfoWraperEdit'>
 							<h4>Edit name</h4>
 							<div className='goalsInputs'>
@@ -106,22 +97,22 @@ const WidgetSortableListItem = SortableElement((props) => {
 								</button>
 							</div>
 						</div>
-					) :(
-					<div className='formField w-100 dashboardWidgets formControl'>
-						{props.selectMonthDropdown('Additional Revenue', index)}
+					) : (
+						<div className='formField w-100 dashboardWidgets formControl'>
+							{props.selectMonthDropdown('Additional Revenue', index)}
 
-						<select
-							style={{
-								backgroundImage: 'url(' + arrowDown + ')',
-								marginLeft: 0,
-								marginTop: 0,
-								width: '70px',
-								paddingLeft: '0px',
-							}}
-						>
-							<option value=''>2022</option>
-						</select>
-					</div>
+							<select
+								style={{
+									backgroundImage: 'url(' + arrowDown + ')',
+									marginLeft: 0,
+									marginTop: 0,
+									width: '70px',
+									paddingLeft: '0px',
+								}}
+							>
+								<option value=''>2022</option>
+							</select>
+						</div>
 					)}
 					<div className='previousRevenueWraper'>
 						<figure className='statusFigure'>
@@ -199,34 +190,33 @@ const WidgetSortableListItem = SortableElement((props) => {
 				}
 			>
 				<div className='widhetInfoWraper'>
-				{!props.changeNameStatus.changeAshowedName ? (
+					{!props.changeNameStatus.changeAshowedName ? (
 
-<div className='widgetIcon'>
-<figure className='dashFig'>
-	<img src={appointmentShowedIcon} />
+						<div className='widgetIcon'>
+							<figure className='dashFig'>
+								<img src={appointmentShowedIcon} />
 
-	<span></span>
-</figure>
-<div className='title'>
-	<h3 className='firstChild'>{widget.name}</h3>
-	<h3 className='secondChild'></h3>
-	<span className='emptyheadingName'></span>
-	<span class='emptyLoading topDashboardSelector'></span>
-	<button className='editSpansDashboard' 	onClick={() => {
-										props.editName(widget.id, widget.name, index);
-									}}>
-		<img src={editings} className='editings' />
-	</button>
-</div>
-<figure>
-	<img src={Dragable} className='dragable' />
-</figure>
-</div>
+								<span></span>
+							</figure>
+							<div className='title'>
+								<h3 className='firstChild'>{widget.name}</h3>
+								<h3 className='secondChild'></h3>
+								<span className='emptyheadingName'></span>
+								<span class='emptyLoading topDashboardSelector'></span>
+								<button className='editSpansDashboard' onClick={() => {
+									props.editName(widget.id, widget.name, index);
+								}}>
+									<img src={editings} className='editings' />
+								</button>
+							</div>
+							<figure>
+								<img src={Dragable} className='dragable' />
+							</figure>
+						</div>
 					) : (
 						''
 					)}
-
-{props.changeNameStatus.changeAshowedName ? (
+					{props.changeNameStatus.changeAshowedName ? (
 						<div className='widhetInfoWraperEdit'>
 							<h4>Edit name</h4>
 							<div className='goalsInputs'>
@@ -377,8 +367,7 @@ const WidgetSortableListItem = SortableElement((props) => {
 										<div className='w3-light-grey'>
 											<div
 												className={
-													props.appointmentsShowedInfo.progress?.status ==
-													'down'
+													props.appointmentsShowedInfo.progress?.status == 'down'
 														? 'w3-red'
 														: 'w3-green'
 												}
@@ -440,8 +429,7 @@ const WidgetSortableListItem = SortableElement((props) => {
 					) : (
 						''
 					)}
-
-{props.changeNameStatus.changeACancelledName ? (
+					{props.changeNameStatus.changeACancelledName ? (
 						<div className='widhetInfoWraperEdit'>
 							<h4>Edit name</h4>
 							<div className='goalsInputs'>
@@ -562,9 +550,6 @@ const WidgetSortableListItem = SortableElement((props) => {
 				) : (
 					''
 				)}
-
-			
-				
 					{props.changeNameStatus.changeAScheduledName ? (
 						<div className='widhetInfoWraperEdit'>
 							<h4>Edit name</h4>
@@ -689,7 +674,7 @@ const WidgetSortableListItem = SortableElement((props) => {
 					) : (
 						''
 					)}
-{props.changeNameStatus.changeRetentionName ? (
+					{props.changeNameStatus.changeRetentionName ? (
 						<div className='widhetInfoWraperEdit'>
 							<h4>Edit name</h4>
 							<div className='goalsInputs'>
@@ -1079,7 +1064,6 @@ const DashboardSortableWidgetList = SortableContainer(
 		};
 
 		const selectMonthDropdown = (widgetName, index) => {
-			console.log("default month",widgetName,widgets[index].defaultSelectedMonth)
 			return (
 				<select
 					name={widgetName}
@@ -1123,7 +1107,6 @@ const DashboardSortableWidgetList = SortableContainer(
 		};
 
 		const onSelectDaysChange = (wname, retention = false) => {
-			console.log("selected day ",selectedDay[wname])
 			if (!retention) {
 				return (
 					<select
@@ -1134,7 +1117,6 @@ const DashboardSortableWidgetList = SortableContainer(
 							width: '90px',
 						}}
 						value={selectedDay[wname]}
-				
 					>
 						<option value='0'>Today</option>
 						<option value='1'>Yesterday</option>
@@ -1757,49 +1739,53 @@ const DashboardSortableWidgetList = SortableContainer(
 		return (
 			<>
 				<div className='widgetWrapers'>
-					{console.log('widgets', widgets)}
-					{widgets.map((widget, index) => {
-						if (widget.display) {
-							return (
-								<>
-									{/* {console.log("widget isOrgOwner",widget.isOrganizationOwner,"loggedUser",loggedInUser)} */}
-									<WidgetSortableListItem
-										axis='xy'
-										key={index}
-										index={index}
-										widget={widget}
-										mRRGInfo={mRRGInfo}
-										isMRRGLoading={isMRRGLoading}
-										i={index}
-										selectMonthDropdown={selectMonthDropdown}
-										additionalRevenueInfo={additionalRevenueInfo}
-										isARloading={isARloading}
-										appointmentsScheduledInfo={appointmentsScheduledInfo}
-										isASLoading={isASLoading}
-										isAShowedLoading={isAShowedLoading}
-										isACloading={isACloading}
-										isNCloading={isNCloading}
-										isRetentionloading={isRetentionloading}
-										onSelectDaysChange={onSelectDaysChange}
-										newContactsInfo={newContactsInfo}
-										retentionInfo={retentionInfo}
-										appointmentsCancelledInfo={appointmentsCancelledInfo}
-										appointmentsShowedInfo={appointmentsShowedInfo}
-										setGoal={setGoal}
-										setGoals={setGoals}
-										handleGoalChange={handleGoalChange}
-										aShowedGoal={aShowedGoal}
-										saveGoalsFn={saveGoalsFn}
-										testClick={testClick}
-										editName={editName}
-										changeNameStatus={changeNameStatus}
-										updateWidgetName={updateWidgetName}
-										saveName={saveName}
-									/>
-								</>
-							);
-						}
-					})}
+					<div className='widgetContent'>
+
+
+						{console.log('widgets', widgets)}
+						{widgets.map((widget, index) => {
+							if (widget.display) {
+								return (
+									<>
+										{/* {console.log("widget isOrgOwner",widget.isOrganizationOwner,"loggedUser",loggedInUser)} */}
+										<WidgetSortableListItem
+											axis='xy'
+											key={index}
+											index={index}
+											widget={widget}
+											mRRGInfo={mRRGInfo}
+											isMRRGLoading={isMRRGLoading}
+											i={index}
+											selectMonthDropdown={selectMonthDropdown}
+											additionalRevenueInfo={additionalRevenueInfo}
+											isARloading={isARloading}
+											appointmentsScheduledInfo={appointmentsScheduledInfo}
+											isASLoading={isASLoading}
+											isAShowedLoading={isAShowedLoading}
+											isACloading={isACloading}
+											isNCloading={isNCloading}
+											isRetentionloading={isRetentionloading}
+											onSelectDaysChange={onSelectDaysChange}
+											newContactsInfo={newContactsInfo}
+											retentionInfo={retentionInfo}
+											appointmentsCancelledInfo={appointmentsCancelledInfo}
+											appointmentsShowedInfo={appointmentsShowedInfo}
+											setGoal={setGoal}
+											setGoals={setGoals}
+											handleGoalChange={handleGoalChange}
+											aShowedGoal={aShowedGoal}
+											saveGoalsFn={saveGoalsFn}
+											testClick={testClick}
+											editName={editName}
+											changeNameStatus={changeNameStatus}
+											updateWidgetName={updateWidgetName}
+											saveName={saveName}
+										/>
+									</>
+								);
+							}
+						})}
+					</div>
 				</div>
 			</>
 		);

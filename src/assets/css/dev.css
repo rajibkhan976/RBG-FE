@@ -1605,9 +1605,7 @@
   max-width: 35px;
 }
 
-.headerSearch .searchIco {
-  left: 40px;
-}
+
 
 .headerCallToAction,
 .sideMenuOuter {
@@ -4158,8 +4156,7 @@ li.paymentModeLi, li.paymentAmtLi {
 
 .dashInnerStructure.dashboardPage {
   padding-top: 0;
-  
-  padding-left: 40px;
+  padding-left: 0px;
 }
 
 .dashboardWraperImg {
@@ -4197,6 +4194,10 @@ li.paymentModeLi, li.paymentAmtLi {
 .menuUser {
   width: 248px;
 }
+.menuUser i{
+  margin-left: 18px;
+}
+.menuUser i img{width: 12px;}
 
 @media only screen and (max-width: 2150px) and (min-width: 1950px) {
   .arrowPoint {
@@ -4490,6 +4491,7 @@ button.btn.btnUserMenu .menuUserDetail span {
   display: flex;
   padding-bottom: 20px;
   padding-right: 30px;
+  padding-left: 30px;
   flex-basis:100%;
   position: relative;
 }
@@ -4502,12 +4504,10 @@ button.btn.btnUserMenu .menuUserDetail span {
 }
 
 .dashInnerStructure.dashboardPage .dashInnerUI .mrrWraper .widgetWrapers {
-  padding-right: 10px;
   overflow-y: auto;
-  padding-left: 184px;
-  padding-right: 220px;
   padding-bottom: 25px;
 }
+
 
 
 .dashInnerStructure.dashboardPage .dashInnerUI .mrrWraper .widgetWrapers::-webkit-scrollbar {
@@ -4564,13 +4564,24 @@ button.btn.btnUserMenu .menuUserDetail span {
 .dashboardSideBar ul li:last-child {
   margin-bottom: 0px;
 }
-
+.dashboardSideBar ul li label{
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
 .dashboardSideBar ul li label span {
   font-size: 15px;
   color: #305671;
   font-weight: 600;
+  word-break: break-all;
+  margin-right: 18px;
+  text-align: left;
+  flex: 0 0 83%;
 }
-
+.dashboardSideBar ul li img{
+  width: 16px;
+}
 img.dragImg {
   float: right;
   margin-top: 3px; cursor: grabbing;
@@ -4586,14 +4597,20 @@ img.graphImg {
   margin-bottom: 30px;
 }
 
-.widgetWrapers {
+.widgetWrapers .widgetContent{
   width: 100%;
   display: flex;
   align-items: flex-start;
   column-gap: 38px;
   row-gap: 38px;
   flex-wrap: wrap;
+  margin: 0 auto;
+  width: calc(100% - 21.5%);
+  /* padding: 0% 11%; */
 
+}
+.dashInnerStructure.dashboardPage .dashInnerUI .mrrWraper .widgetWrapers .widgetContent > div{
+  flex: 0 0 calc((100% - 76px) / 3);
 }
 
 .individualWidgwet {
@@ -6712,5 +6729,7 @@ span.emptyLoading.topDashboardSelector {
 .dashInnerStructure.dashboardPage .dashInnerUI .mrrWraper .widgetWrapers > div{
   flex: 0 0 calc((100% - 76px) / 3);
 }
+
+/* dashboard css */
 .widgetWrapers .individualWidgwet .editings{border:0px; border-radius: 0px; background-color: transparent;}
 .widgetWrapers .individualWidgwet:hover{box-shadow: 0px 2px 20px rgb(48 86 113 / 15%)}

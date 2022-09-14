@@ -7,6 +7,7 @@ import {createStore, applyMiddleware, compose} from "redux";
 import thunk from "redux-thunk";
 import "./assets/css/style.css";
 import "./assets/css/dev.css";
+import "./assets/css/responsive.css";
 import "./assets/css/amar.css";
 import "./assets/css/customizations.css";
 import reportWebVitals from "./reportWebVitals";

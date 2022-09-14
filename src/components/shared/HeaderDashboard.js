@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Notifications from "./Notifications";
 import Setup from "../setup/mainPopup/setup";
 import CallModal from "./callModal";
@@ -77,6 +77,8 @@ function HeaderDashboard(props) {
     isLoading: false,
     fullLoading: false
   });
+
+
 
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
@@ -356,6 +358,7 @@ function HeaderDashboard(props) {
   const clickedLink = (e) => {
     e.target && setSetupModalStatus(!setupModalStatus);
   }
+  
 
   useEffect(() => {
     props.setupMenuState && setSetupModalStatus(false)
@@ -369,6 +372,7 @@ function HeaderDashboard(props) {
 
   useEffect(() => {
     setNotification(props.notification);
+    
   }, [props.notification]);
 
   const closeModalNotification = () => {
@@ -393,11 +397,49 @@ function HeaderDashboard(props) {
     history.push("/credit-details");
   }
 
+
+  // search click
+  const [searchClick, setSearchClick] = useState(false);
+  
+  const ref = useRef(null);
+  const { onClickOutside } = props;
+  useEffect(()=>{
+    document.addEventListener("keydown", escFunction, false);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("keydown", escFunction, false);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClickOutside])
+  
+  const handleChange = ()=>{
+    if(searchClick == false){
+      setSearchClick(true);
+      
+    }
+    else{
+      setSearchClick(false);
+    }
+  }
+  const escFunction = (event)=>{
+    if (event.key === "Escape" || event.keyCode === 27) {
+      console.log(event);
+      setSearchClick(false);
+    }
+  }
+  const handleClickOutside = (event)=>{
+    // console.log(event);
+    if (ref.current && !ref.current.contains(event.target)) {
+      setSearchClick(false);
+    }
+
+  }
+
   return (
     <>
-      <div className="dashboardHeader">
-        <div className="headerSearch d-flex">
-          <input type="search" placeholder="Search" />
+      <div className="dashboardHeader" ref={ref}>
+        {/* <div className={searchClick ? 'headerSearch d-flex fullSearchBox' : 'headerSearch d-flex'}>
+          <input type="search" placeholder="Search" onClick={handleChange}/>
           <span className="searchIco">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -419,7 +461,7 @@ function HeaderDashboard(props) {
               </g>
             </svg>
           </span>
-        </div>
+        </div> */}
         <div className="headerCallToAction">
           <div className="leftListArea">
             <div className="leftList">
@@ -478,8 +520,11 @@ function HeaderDashboard(props) {
             </div>
           </div>
           <div className="rightDetails">
-            <p>{deviceMessage}</p>
-
+            <div className="phoneDetails">
+              <p className="ready">{deviceMessage}</p>
+              {/* <p className="call">Incoming Call</p> */}
+              {/* <a href="tel:+1 234 567 8901">+1 234 567 8901</a> */}
+            </div>
             <div className="d-flex">
               <button className="btn callBtn green" onClick={acceptConnection}>
                 <img src={callIcon2} alt="" />

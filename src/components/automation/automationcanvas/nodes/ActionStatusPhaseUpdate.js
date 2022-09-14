@@ -6,7 +6,6 @@ export default memo(({ data }) => {
     const style = {
 
     }
-    console.log("data in status and phase", data)
     return (
         <React.Fragment>
             <Handle

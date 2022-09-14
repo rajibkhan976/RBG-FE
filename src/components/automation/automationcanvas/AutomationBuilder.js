@@ -748,7 +748,6 @@ const AutomationBuilder = (props) => {
         const bluePrintElem = elements.filter(
           (el) => typeof el.source == "undefined"
         );
-        console.log("bluePrintElem", bluePrintElem)
         const brokenElem = bluePrintElem.find((el) => {
           if (
               ((el.type !== "fieldActionTrigger" && el.data.nodes.previous === "") && (el.type !== "trigger" && el.data.nodes.previous === "")) ||

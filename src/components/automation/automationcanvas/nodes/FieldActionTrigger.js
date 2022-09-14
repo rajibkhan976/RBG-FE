@@ -6,7 +6,6 @@ export default memo(({ data }) => {
     const style = {
 
     }
-    console.log("data in trigger", data)
     return (
         <React.Fragment>
             <Handle

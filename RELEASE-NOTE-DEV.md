@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Automation History V1.3.2
     - As per discussion with Subha, removed the timezone and showing the date only so that filter can work.
     - As per discussion with Subha, removed the timezone and showing the date only so that filter can work.
@@ -18,3 +19,5 @@
     - Generate tax invoice pdf
 # Hotfix Product Transaction V1.0.0
     - Fixed product cash transaction blank screen issue
+# HOTFIX V1.0.1
+    - Fixed customization submenu link issue.

@@ -2514,12 +2514,19 @@ li.listHeading > div.dsc::after {
 }
 .headerSearch input[type="search"] {
   background: transparent;
-  pointer-events: none;
-  color: transparent;
-  visibility: hidden;
+  /* pointer-events: none; */
+  color: #000000;
+  /* visibility: hidden; */
+  padding-left: 35px;
+  box-sizing: border-box;
+  padding-right: 0px;
+}
+.headerSearch input[type="search"]:focus ~ .searchIco svg path{background:#000000; fill: #F2A769; stroke: #F2A769;}
+.headerSearch .searchIco {
+  display: block;
 }
 .headerSearch .searchIco {
-  display: none;
+  left: 0px;
 }
 
 /* fix from home */

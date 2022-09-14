@@ -27,3 +27,6 @@
     - Automation Hotfix V1.0.1
 # RELEASE v1.0.3
     - Global transaction V1.0.0
+# RELEASE V1.0.4
+    - Dashboard V1.3.0
+    - Dashboard V1.1.0
