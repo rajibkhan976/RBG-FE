@@ -41,6 +41,7 @@ const Pagination = (props) => {
   const renderPageNumbers = pageNumbers.map(number => {
 
     if (number <= maxPageNumberLimit && number > minPageNumberLimit) {
+      console.log(props.paginationData.currentPage);
       return (
         <li
           key={number}

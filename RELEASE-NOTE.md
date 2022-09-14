@@ -25,3 +25,5 @@
     - Dashboard V1.1.0
 # HOTFIX V1.0.6
     - Automation Hotfix V1.0.1
+# RELEASE v1.0.3
+    - Global transaction V1.0.0

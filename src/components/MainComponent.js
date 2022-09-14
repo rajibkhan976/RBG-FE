@@ -41,6 +41,7 @@ import error_alert from "../../src/assets/images/error_alert.svg";
 import CreditRoutes from "./setup/credit/CreditRoutes";
 import RestrictionPackageModal from "./setup/credit/package/RestrictionPackageModal";
 import AppointmentGlobal from "./appointment/AppointmentGlobalRouter";
+import TransactionGlobalRouter from "./transaction/TransactionGlobalRouter";
 
 // For socket io connection
 //const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlProd;
@@ -625,7 +626,7 @@ const MainComponent = () => {
                     className={
                         "dashboardBody d-flex " +
                         (pathURL === '/automation-list' || pathURL === '/automation-builder' ? ' automationBuilderBody ' : '') +
-                        (showInnerleftMenu ? ((pathURL !== '/dashboard' && pathURL !== '/appointment-global' && pathURL !== '/attendance-global' && pathURL !== gj) ? "openSubmenu" : "") : "")
+                        (showInnerleftMenu ? ((pathURL !== '/dashboard' && pathURL !== '/appointment-global' && pathURL !== '/attendance-global' && pathURL !== gj && pathURL !== '/transaction-global') ? "openSubmenu" : "") : "")
                     }
                 >
                     <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu} clickedSetupStatus={(e) => clickedSetupStatus(e)} />
@@ -727,6 +728,10 @@ const MainComponent = () => {
                             <Route exact path="/appointment-global">
                                 <AppointmentGlobal toggleLeftSubMenu={toggleLeftSubMenu}
                                                    toggleCreate={(e) => toggleCreate(e)}></AppointmentGlobal>
+                            </Route>
+                            <Route exact path="/transaction-global">
+                                <TransactionGlobalRouter toggleLeftSubMenu={toggleLeftSubMenu}
+                                                   toggleCreate={(e) => toggleCreate(e)}></TransactionGlobalRouter>
                             </Route>
                             <Route exact path="/" component={() => <Redirect to="/dashboard"/>}/>
                             <Route exact path="*">

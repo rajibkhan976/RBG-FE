@@ -190,7 +190,7 @@ export default function PDFDocument(props) {
                     </div>
                     <div style={styles.main}>
                         <div style={styles.text2}>Bill To,</div>
-                        <div style={styles.text3}> {contact.firstName + " " + contact.lastName}</div>
+                        <div style={styles.text3}> {contact.firstName ? contact.firstName : "" + " " + contact.lastName ? contact.lastName : ""}</div>
                         <div style={styles.text4}> {contact.email}</div>
                         <div style={styles.text4}> {(contact.phone?.number) ? contact.phone.dailCode + "-" + contact.phone?.number : ""}</div>
                         {(!isRefund) ? (

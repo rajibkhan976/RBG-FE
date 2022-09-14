@@ -581,6 +581,21 @@ function LeftMenu(props) {
             <span className="menuName">Attendance</span>
           </NavLink>
         </li>
+        
+        <li>
+          <NavLink activeClassName="selected nobg"
+            to="/transaction-global"
+            onClick={(e) => props.clickedSetupStatus(e)}
+          >
+            <svg width="33" height="33" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg" id="ico-12">
+                <path className="a" d="M27.5 9.68V23.32C27.5 25.41 27.3075 26.895 26.8125 27.9538C26.8125 27.9675 26.7987 27.995 26.785 28.0088C26.4825 28.3938 26.0838 28.5863 25.6163 28.5863C24.8875 28.5863 24.0075 28.105 23.0588 27.0875C21.9313 25.8775 20.1987 25.9737 19.2087 27.2937L17.82 29.1363C17.27 29.8788 16.5412 30.25 15.8125 30.25C15.0838 30.25 14.355 29.8788 13.805 29.1363L12.4025 27.28C11.4263 25.9738 9.70749 25.8775 8.57999 27.0737L8.56622 27.0875C7.01247 28.7513 5.63753 28.9988 4.84003 28.0088C4.82628 27.995 4.8125 27.9675 4.8125 27.9538C4.3175 26.895 4.125 25.41 4.125 23.32V9.68C4.125 7.59 4.3175 6.105 4.8125 5.04625C4.8125 5.0325 4.81253 5.01875 4.84003 5.005C5.62378 4.00125 7.01247 4.24875 8.56622 5.9125L8.57999 5.92625C9.70749 7.1225 11.4263 7.02625 12.4025 5.72L13.805 3.86375C14.355 3.12125 15.0838 2.75 15.8125 2.75C16.5412 2.75 17.27 3.12125 17.82 3.86375L19.2087 5.70625C20.1987 7.02625 21.9313 7.1225 23.0588 5.9125C24.0075 4.895 24.8875 4.41375 25.6163 4.41375C26.0838 4.41375 26.4825 4.62 26.785 5.005C26.8125 5.01875 26.8125 5.0325 26.8125 5.04625C27.3075 6.105 27.5 7.59 27.5 9.68Z"  stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path className="a" d="M11 14.0938H22" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path className="a" d="M11 18.9062H19.25" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+
+            <span className="menuName">Transaction</span>
+          </NavLink>
+        </li>
       </ul>
       <div className="leftMenuToggle">
         {pathURL !== "/dashboard" ?
