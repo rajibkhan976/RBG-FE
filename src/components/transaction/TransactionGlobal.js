@@ -251,11 +251,12 @@ const TransactionGlobal = (props) => {
                                         { tHistory.contact && tHistory.contact._id ?
                                             <button className='noBg commonColor'> {tHistory?.contact?.firstName} {tHistory?.contact?.lastName}</button> :
                                             <button className='noBg commonColor'> {tHistory?.contactDeleted?.firstName} {tHistory?.contactDeleted?.lastName}</button>
+
                                         }
 
                                     </div>
                                     <div class="listCell cellWidth_15">
-                                        <button className='noBg'><span className='blueTxt'>{tHistory.contact && tHistory.contact._id ? tHistory?.contact?.email : tHistory?.contactDeleted.email}</span></button>
+                                        <button className='noBg'><span className='blueTxt'>{tHistory.contact && tHistory.contact._id ? tHistory?.contact?.email : tHistory?.contactDeleted?.email}</span></button>
                                     </div>
                                     <div class="listCell cellWidth_15">
                                         <span className='doomed'>
@@ -345,10 +346,13 @@ const TransactionGlobal = (props) => {
                                                         </button>
                                                     </div>
                                                     <div className='listCell download'>
-                                                     <PDFDownloadLink document={<PDFDocument key={key1} transactionData={historylist} contact={tHistory?.contact._id !== undefined ? tHistory?.contact : tHistory.contactDeleted } org={org}
-                                                           transactionDate={utils.convertUTCToTimezone(historylist.transaction_date, timezone, 'LLL')} />} fileName={"Invoice_"+historylist.transactionId+".pdf"}>
-                                                        <button type="button" className='dwnLD'><img src={download}/></button>
-                                                        </PDFDownloadLink>
+                                                        {
+                                                            (tHistory?.contact._id !== undefined || tHistory?.contactDeleted !== undefined) ?
+                                                                <PDFDownloadLink document={<PDFDocument key={key1} transactionData={historylist} contact={tHistory?.contact._id !== undefined ? tHistory?.contact : (tHistory?.contactDeleted !== undefined ? tHistory?.contactDeleted : {}) } org={org}
+                                                                                                        transactionDate={utils.convertUTCToTimezone(historylist.transaction_date, timezone, 'LLL')} />} fileName={"Invoice_"+historylist.transactionId+".pdf"}>
+                                                                    <button type="button" className='dwnLD'><img src={download}/></button>
+                                                                </PDFDownloadLink> : ""
+                                                        }
                                                     </div>
                                                 </div>
                                                 </>

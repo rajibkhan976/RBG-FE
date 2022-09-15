@@ -32,3 +32,5 @@
     - Dashboard V1.1.0
 # HOTFIX V1.0.7
     - Dashboard responsive
+# HOTFIX V1.0.8
+    - Fix tranaction bug
