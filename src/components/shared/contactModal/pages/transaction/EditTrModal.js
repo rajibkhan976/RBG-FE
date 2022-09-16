@@ -165,7 +165,10 @@ const EditTrModal = (props) => {
         setAddBtnClicked(true) ;
     }
 
+    const [cardId, setCardId] = useState(null);
+
     const activeCreditCard = async (cardBank) => {
+        setCardId(cardBank._id);
         setIsLoader(true)
     
         let cardData = {
@@ -372,7 +375,7 @@ const EditTrModal = (props) => {
         let val = e.target.value;
         var formattedCardCvv = val.replace(/[^\d]/g, "");
         formattedCardCvv = formattedCardCvv.substring(0, 3);
-        addCardfieldErrorCheck.checkcardcvv(formattedCardCvv);
+        // addCardfieldErrorCheck.checkcardcvv(formattedCardCvv);
     }
 
     const addCardfieldErrorCheck = {
@@ -401,14 +404,14 @@ const EditTrModal = (props) => {
                 setAddCardFormErrorMsg(prevState => ({...prevState, exDate: ""}));
             }
         },
-        checkcardcvv: (val) => {
-            setAddCardFormData({...addCardFormData, cvv: val});
-            if (!val) {
-                setAddCardFormErrorMsg(prevState => ({...prevState, cvv: "Please enter CVV"}));
-            } else {
-                setAddCardFormErrorMsg(prevState => ({...prevState, cvv: ""}));
-            }
-        }
+        // checkcardcvv: (val) => {
+        //     setAddCardFormData({...addCardFormData, cvv: val});
+        //     if (!val) {
+        //         setAddCardFormErrorMsg(prevState => ({...prevState, cvv: "Please enter CVV"}));
+        //     } else {
+        //         setAddCardFormErrorMsg(prevState => ({...prevState, cvv: ""}));
+        //     }
+        // }
     }
   
 
@@ -417,7 +420,7 @@ const EditTrModal = (props) => {
         addCardfieldErrorCheck.checkcardNumber(addCardFormData.cardNumber);
         addCardfieldErrorCheck.checkcardName(addCardFormData.cardHolderName);
         addCardfieldErrorCheck.checkcardExp(addCardFormData.exDate);
-        addCardfieldErrorCheck.checkcardcvv(addCardFormData.cvv);       
+        // addCardfieldErrorCheck.checkcardcvv(addCardFormData.cvv);       
         //setAddBtnClicked(true) ;
 
         if(addCardFormData.cardNumber === "" && addCardFormData.cardHolderName === "" && addCardFormData.exDate === "" && addCardFormData.cvv !== ""){
@@ -677,7 +680,8 @@ const EditTrModal = (props) => {
                     amount: editTransFormData.amount,
                     payment_via: editTransFormData.paymentMode,
                     due_date: dueDate,
-                    applyForAll: editTransFormData.applyForAll
+                    applyForAll: editTransFormData.applyForAll,
+                    billingId: cardId
                 }
                 let updateResp = await TransactionServices.updateTransaction(props.contactId, payload);
 

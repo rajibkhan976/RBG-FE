@@ -8,7 +8,8 @@ const TransactionHead = (props) => {
   const sarchHandler = (e) =>{
     setSearcField(e.target.value);
   }
-  const searchClick = () => {
+  const searchClick = (e) => {
+    e.preventDefault(); 
       if (searcField) {
           utils.addQueryParameter('search', searcField);
       } else {
@@ -39,7 +40,7 @@ const TransactionHead = (props) => {
       </div>
       <div className="listFeatures">
           <div className="searchBar">
-            <form>
+            <form onSubmit={searchClick}>
               <input type="search" name="search" placeholder="Search Contacts" autoComplete="off" value={searcField} onChange={sarchHandler}/>
               <button className="searchIcon" type="button"  onClick={searchClick}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="19.069" height="19" viewBox="0 0 19.069 19" id="search-ico"><g transform="translate(-1.5 -1.5)">

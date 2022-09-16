@@ -12390,3 +12390,17 @@ background-color: #fff;
   text-transform: capitalize;
   cursor: auto;
 }
+.ps_editPan .round {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.ps_editPan .round::after {
+  top: -1px;
+  left: -8px;
+}
+
+.ps_editPan .round.delete:after {
+display: none;
+}
