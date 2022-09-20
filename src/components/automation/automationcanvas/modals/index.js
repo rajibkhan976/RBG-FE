@@ -1,10 +1,10 @@
-import email from "./email";
-import message from "./message";
+import Email from "./email";
+import Message from "./message";
 import Filter from "./filter";
-import trigger from "./trigger";
+import WebhookTrigger from "./WebhookTrigger";
 export {
-    email,
-    message,
+    Email,
+    Message,
     Filter,
-    trigger
+    WebhookTrigger
 };

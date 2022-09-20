@@ -1481,9 +1481,9 @@
 .actionNodeSMS {
   background: #6c22b5;
 }
-.actionNodeDelay {
+/*.actionNodeDelay {
   background: #05d3f8;
-}
+}*/
 .delaySettingModal {
   width: 400px;
 }
@@ -1518,12 +1518,12 @@
 .actionNodeSMS .smsNode .b {
   stroke: #ffffff;
 }
-.actionNode.actionNodeSMS {
+/*.actionNode.actionNodeSMS {
   background-color: #6c22b5;
-}
-.actionNode.actionNodeDelay {
+}*/
+/*.actionNode.actionNodeDelay {
   background-color: #05d3f8;
-}
+}*/
 /* SMS FIX */
 
 /* IF LOADER IS SET TO APPEAR ONLY INSIDE */

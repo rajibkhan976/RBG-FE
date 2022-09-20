@@ -4,7 +4,16 @@ import ReactFlow, {
 } from "react-flow-renderer";
 import "./../automationcanvas/automation.css";
 import Loader from "../../shared/Loader";
-import { FilterNode, TriggerNode, ActionEmail, ActionMessage, ActionDelay, FieldActionTrigger, ActionStatusPhaseUpdate } from "./../automationcanvas/nodes";
+import {
+    FilterNode,
+    TriggerNode,
+    ActionEmail,
+    ActionMessage,
+    ActionDelay,
+    FieldActionTrigger,
+    ActionStatusPhaseUpdate,
+    AppointmentTrigger, AttendanceTrigger, TransactionTrigger, ActionApplyTag, ActionRemoveTag
+} from "./../automationcanvas/nodes";
 import { AutomationServices } from "../../../services/automation/AutomationServices";
 
 export default function AutomationOverview(props) {
@@ -14,12 +23,17 @@ export default function AutomationOverview(props) {
     const edgeTypes = "straight";
     const nodeTypes = {
         trigger: TriggerNode,
+        appointmentTrigger: AppointmentTrigger,
+        attendanceTrigger: AttendanceTrigger,
+        transactionTrigger: TransactionTrigger,
+        actionApplyTag: ActionApplyTag,
+        actionRemoveTag: ActionRemoveTag,
         filter: FilterNode,
         actionEmail: ActionEmail,
         actionMessage: ActionMessage,
         actionDelay: ActionDelay,
         fieldActionTrigger: FieldActionTrigger,
-        actionStatusPhaseUpdate: ActionStatusPhaseUpdate
+        actionStatusPhaseUpdate: ActionStatusPhaseUpdate,
     };
     const [nodeMetrics, setNodeMetrics] = useState({})
     const onLoad = async (_reactFlowInstance) => {

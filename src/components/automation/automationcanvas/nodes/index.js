@@ -6,6 +6,11 @@ import ActionEmail from "./ActionEmail";
 import ActionDelay from "./ActionDelay";
 import FieldActionTrigger from "./FieldActionTrigger";
 import ActionStatusPhaseUpdate from "./ActionStatusPhaseUpdate";
+import AppointmentTrigger from "./AppointmentTrigger";
+import AttendanceTrigger from "./AttendanceTrigger";
+import TransactionTrigger from "./TransactionTrigger";
+import ActionApplyTag from "./ActionApplyTag";
+import ActionRemoveTag from "./ActionRemoveTag";
 export {
     FilterNode,
     TriggerNode,
@@ -14,5 +19,10 @@ export {
     ActionEmail,
     ActionDelay,
     FieldActionTrigger,
-    ActionStatusPhaseUpdate
+    ActionStatusPhaseUpdate,
+    AppointmentTrigger,
+    ActionRemoveTag,
+    ActionApplyTag,
+    TransactionTrigger,
+    AttendanceTrigger
 };

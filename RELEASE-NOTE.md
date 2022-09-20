@@ -37,3 +37,5 @@
 # HOTFIX V1.0.9
     - Fix tranaction bug
     - Fixed reload issue
+# RELEASE V1.0.5
+    - Automation V2

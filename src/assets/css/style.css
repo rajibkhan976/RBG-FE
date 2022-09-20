@@ -6597,6 +6597,10 @@ p.trackName {
   overflow: hidden;
   font-family: "Poppins", sans-serif;
 }
+.keywordBoxSMS {
+  top: unset;
+  bottom: 0px;
+}
 .searchKeyword {
   display: inline-block;
   width: 100%;
@@ -6672,6 +6676,9 @@ p.trackName {
   position: absolute;
   bottom: 58px;
   right: 3px;
+}
+.browseKeywordsSMS {
+  bottom: 3px;
 }
 .makeCallForm .toggleBtn {
   width: 40px !important;
@@ -12402,5 +12409,135 @@ background-color: #fff;
 }
 
 .ps_editPan .round.delete:after {
-display: none;
+  display: none;
+}
+.tagSettingModal .formBody .formBodyContainer {
+  min-height: 300px;
+}
+.tagSettingModal .formBody .formBodyContainer .saveButton {
+  margin-bottom: -144px;
+}
+
+
+/* // some fixing for contact modal header camera  */
+
+.userImageWrap .editUserImg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3px 6px 4px;
+}
+
+/* //automation contact modal */
+
+.appointmentListingHeader.noPadding{
+  padding: 0;
+}
+.automationListingContactModal,
+.automationHeaderContactModal{
+  display: flex;
+  flex-wrap: wrap;
+}
+.automationListingContactModal .cell,
+.automationHeaderContactModal .cell{
+  display: flex;
+  align-items: center;
+  word-break: break-word;
+  flex-wrap: wrap;
+}
+
+.automationHeaderContactModal .cell{
+  font-size: 13px;
+  line-height: 20px;
+  font-weight: 500;
+  color: var(--darkBlue);
+  padding: 16px 13px;
+
+}
+.automationListingContactModal .cell:first-child,
+.automationHeaderContactModal .cell:first-child{
+  width: 50%;
+}
+.automationListingContactModal .cell:last-child,
+.automationHeaderContactModal .cell:last-child{
+  width: 5%;
+}
+.automationListingContactModal .cell:nth-child(2),
+.automationHeaderContactModal .cell:nth-child(2){
+  width: 20%;
+}
+.automationListingContactModal .cell:nth-child(3),
+.automationHeaderContactModal .cell:nth-child(3){
+  width: 25%;
+}
+
+.automationListingContactModal .cell .nameTxt{
+  width: calc(100% - 35px);
+}
+.automationListingContactModal .cell{
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  color: #305671;
+  padding: 16px 13px;
+}
+.automationListingContactModal{
+  margin: 0 0 4px;
+  background: #F6F8FA;
+  border-radius: 4px;
+}
+.automationListingContactModal.complete{
+  background: #F0F5F1;
+}
+.automationListingContactModal .cell img{
+  padding-right: 12px;
+}
+
+.automationListingContactModal .cell .smallProgressor{
+  Width:80px;
+  Height:6px;
+  border-radius: 4px;
+  background: #E9EFF5;
+  margin-left: 10px;
+  padding: 0;
+  display: flex;
+}
+.automationListingContactModal .cell .smallProgressor .bar{
+  Height:6px;
+  border-radius: 4px;
+  background: #ED707A;
+}
+.automationListingContactModal .cell .progressTxt{
+  color: #FD9C68;
+}
+.automationListingContactModal .cell .completeTxt{
+  color: #46D35C;
+}
+.automationListingContactModal .sideEditOption button{
+  border: none;
+  background: transparent;
+}
+.automationListingContactModal .sideEditOption button img{
+  padding-right: 0px;
+}
+.dropdownOptions.big{
+  width: 250px;
+}
+.automationListingContactModal .dropdownOptions .btn svg .a{
+  fill: #9BAEBC;
+  stroke: none;
+}
+.automationListingContactModal .dropdownOptions .btn:hover svg .a{
+  fill: var(--darkBlue);
+  stroke: none;
+}
+.automationListingContactModal .dropdownOptions .btn span {
+  max-width: 14px;
+}
+.automationListingContactModal .dropdownOptions .btn span svg{
+  max-width:none;
+}
+.inFormField .keywordList {
+  max-height: 150px;
+  overflow: auto;
 }

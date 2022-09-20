@@ -333,5 +333,23 @@ export const AutomationServices = {
                 throw new Error(e.message + ". Please contact support.");
             }
         }
+    },
+    fetchContactAutomations: async (contactId) => {
+        try {
+            let url = config.automationBasicUrl + `/automation/contact/list/${contactId}`;
+            const res = await axios.get(url);
+            return res.data;
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
     }
 };

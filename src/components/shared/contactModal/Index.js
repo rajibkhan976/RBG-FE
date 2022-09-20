@@ -7,6 +7,7 @@ import Loader from "../Loader";
 import Billing from "./pages/Billing";
 import Dependents from "./pages/Dependents";
 import Appointment from "./pages/Appointment";
+import Automation from "./pages/Automation";
 import {Step, Steps, NavigationComponentProps} from "react-step-builder";
 import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../../actions/types";
@@ -44,8 +45,11 @@ const ContactModal = (props) => {
                 <button className={navigation.current == 2 ? "active nNav" : "nNav"} onClick={() => navigation.jump(2)}
                         disabled={props.contactId ? false : true}>Attendance
                 </button> 
-                  <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)}
+                <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)}
                         disabled={props.contactId ? false : true}>Appointment
+                </button>
+                <button className={navigation.current == 7 ? "active nNav" : "nNav"} onClick={() => navigation.jump(7)}
+                        disabled={props.contactId ? false : true}>Automation
                 </button>
                 {contactData && !contactData.isDependent ?
                     <>
@@ -377,8 +381,11 @@ const ContactModal = (props) => {
                                 backToTransList={backToTransListHandler}
                                 goToTransaction={goToTransactionHandler}
                                 component={goToTransactionClicked ? TransactionChoose : Transaction} />
+
                             <Step title="Billing" component={Billing} contact={contactData} contactId={props.contactId} />
                             <Step title="Dependents" component={Dependents} contactId={props.contactId} />
+                            
+                            <Step title="Automation" component={Automation} contactId={props.contactId} />
                         </Steps>
                     </div>
                 </div>

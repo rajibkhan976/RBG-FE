@@ -3,30 +3,29 @@ import ReactFlow, {
   ReactFlowProvider,
   addEdge,
   removeElements,
-  updateEdge,
   Controls, isEdge,
 } from "react-flow-renderer";
 import { useDispatch } from "react-redux";
 import "./automation.css";
-import { FilterNode, TriggerNode, ActionEmail, ActionMessage, ActionDelay, FieldActionTrigger, ActionStatusPhaseUpdate } from "./nodes";
+import { FilterNode, TriggerNode, ActionEmail, ActionMessage, ActionDelay, FieldActionTrigger, ActionStatusPhaseUpdate,
+  AppointmentTrigger, AttendanceTrigger, TransactionTrigger, ActionRemoveTag, ActionApplyTag } from "./nodes";
 import { CustomEdge } from './edges';
-import { Filter } from "./modals/filter";
-import closewhite24dp from "../../../assets/images/close_white_24dp.svg";
-import chevron_right_white_24dp from "../../../assets/images/chevron_right_white_24dp.svg";
 import resetIcon from "../../../assets/images/resetIcon.svg";
-import blueSettingIcon from "../../../assets/images/blueSettingIcon.svg";
 import plus_icon from "../../../assets/images/plus_icon.svg";
 import Loader from "../../shared/Loader";
 import { AutomationServices } from "../../../services/automation/AutomationServices";
-import edit_grey from "../../../assets/images/edit_grey.svg";
-import trashIcon from "../../../assets/images/iconfinder_trash-2_2561228.svg";
-import whiteAddIcon from "../../../assets/images/add_white_24dp.svg";
-import whiteSlash from "../../../assets/images/remove_white_24dp.svg";
 import * as actionTypes from "../../../actions/types";
+import Message from "./modals/message";
+import Email from "./modals/email";
+import Delay from "./modals/delay";
+import Filter from "./modals/filter";
 import WebhookTrigger from "./modals/WebhookTrigger";
 import FieldTrigger from "./modals/FieldTrigger";
 import ActionStatusPhaseModal from "./modals/ActionStatusPhase"
-import cressIcon from "../../../assets/images/white_cross_roundedCorner.svg";
+import AttendanceTriggerSetting from "./modals/AttendanceTriggerSetting"
+import TagModal from "./modals/TagModal";
+import AppointmentTriggerSetting from "./modals/AppointmentTriggerSetting"
+import TransactionTriggerSetting from "./modals/TransactionTriggerSetting"
 
 const AutomationBuilder = (props) => {
   const reactFlowWrapper = useRef(null);
@@ -67,10 +66,10 @@ const AutomationBuilder = (props) => {
   const [subjectError, setSubjectError] = useState(false);
   const [bodyEmail, setBodyEmail] = useState('');
   const [bodyEmailError, setBodyEmailError] = useState(false);
-  const [disableTrigger, setDisableTrigger] = useState(false);
   const [nodeEmailId, setNodeEmailId] = useState(false);
   const [triggerNodeId, setTriggerNodeId] = useState(0);
   const [fieldTriggerNodeId, setFieldTriggerNodeId] = useState(0);
+  const [tagNodeId, setTagNodeId] = useState(0);
   const [cursorElement, setCursorElement] = useState(false);
   const [filterConditions, setFilterConditions] = useState([]);
   const [filterAnd, setFilterAnd] = useState(0);
@@ -96,14 +95,18 @@ const AutomationBuilder = (props) => {
   const edgeType = 'buttonedge';
   const nodeTypes = {
     trigger: TriggerNode,
+    appointmentTrigger: AppointmentTrigger,
+    attendanceTrigger: AttendanceTrigger,
+    transactionTrigger: TransactionTrigger,
+    actionApplyTag: ActionApplyTag,
+    actionRemoveTag: ActionRemoveTag,
     filter: FilterNode,
     actionEmail: ActionEmail,
     actionMessage: ActionMessage,
     actionDelay: ActionDelay,
     fieldActionTrigger: FieldActionTrigger,
-    actionStatusPhaseUpdate: ActionStatusPhaseUpdate
+    actionStatusPhaseUpdate: ActionStatusPhaseUpdate,
   };
-
   const onNodeMouseEnter = (event, node) => {
     const thisNodeTarget = event.target;
     const thisNodeType = node.data.label;
@@ -112,7 +115,7 @@ const AutomationBuilder = (props) => {
       document.querySelectorAll(".btnEditNode").length > -1
     ) {
       for (
-        var i = 0;
+        let i = 0;
         i < document.querySelectorAll(".btnEditNode").length;
         i++
       ) {
@@ -125,7 +128,7 @@ const AutomationBuilder = (props) => {
       document.querySelectorAll(".btnDeleteNode").length > -1
     ) {
       for (
-        var i = 0;
+        let i = 0;
         i < document.querySelectorAll(".btnDeleteNode").length;
         i++
       ) {
@@ -134,202 +137,112 @@ const AutomationBuilder = (props) => {
     }
 
     const editButton = document.createElement("button");
-    const deleteButton = document.createElement("button");
-    switch (thisNodeType) {
-      case "Trigger":
-        editButton.classList.add(
-          "btn",
-          "btnEditNode",
-          thisNodeType.toLowerCase() + "-Editbtn"
-        );
-        editButton.style.cssText = `
+    editButton.classList.add(
+        "btn",
+        "btnEditNode",
+        thisNodeType.toLowerCase() + "-Editbtn"
+    );
+    editButton.style.cssText = `
           background:#fff;border:1px solid #434345;padding:3.5px;width:24px;height:24px;border-radius:50%;position:absolute;top:0;right:0;transition:all cubic-bezier(.215,.61,.355,1) .4s;-webkit-transition:all cubic-bezier(.215,.61,.355,1) .4s;-moz-transition:all cubic-bezier(.215,.61,.355,1) .4s;-ms-transition:all cubic-bezier(.215,.61,.355,1) .4s;-o-transition:all cubic-bezier(.215,.61,.355,1) .4s
         `;
-        editButton.innerHTML =
-          '<svg style="fill:#434345;-webkit-appearance:none;backface-visibility:hidden;-webkit-backface-visibility:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.377 14.378" className="automationCog"><g transform="translate(-7.826 -7.824)"><circle className="a" cx="1.239" cy="1.239" r="1.239" transform="translate(13.775 13.774)"/><path className="a" d="M21.911,13.785l-1.732-.325a5.346,5.346,0,0,0-.414-1l1-1.465a.372.372,0,0,0-.043-.456L19.489,9.3a.372.372,0,0,0-.456-.043l-1.465,1a5.359,5.359,0,0,0-1.033-.422l-.323-1.723a.373.373,0,0,0-.352-.292H14.112a.372.372,0,0,0-.352.292l-.326,1.74a5.341,5.341,0,0,0-.991.414L11,9.28a.372.372,0,0,0-.456.043L9.3,10.559a.372.372,0,0,0-.043.456l1,1.456a5.369,5.369,0,0,0-.408.991l-1.732.324a.373.373,0,0,0-.292.352v1.748a.373.373,0,0,0,.292.352l1.731.324a5.357,5.357,0,0,0,.417,1.011l-.985,1.44a.372.372,0,0,0,.043.456L10.558,20.7a.372.372,0,0,0,.456.043l1.439-.985a5.378,5.378,0,0,0,.981.409l.326,1.74a.373.373,0,0,0,.352.292H15.86a.373.373,0,0,0,.352-.292l.323-1.724a5.4,5.4,0,0,0,1.022-.417l1.458,1a.372.372,0,0,0,.456-.043l1.236-1.235a.372.372,0,0,0,.043-.456l-.992-1.449a5.357,5.357,0,0,0,.423-1.023l1.73-.324a.373.373,0,0,0,.292-.352V14.137A.373.373,0,0,0,21.911,13.785Zm-6.9,4.227a3,3,0,1,1,3-3A3,3,0,0,1,15.014,18.012Z" transform="translate(0)"/></g></svg>';
-
+    editButton.innerHTML =
+        '<svg style="fill:#434345;-webkit-appearance:none;backface-visibility:hidden;-webkit-backface-visibility:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.377 14.378" className="automationCog"><g transform="translate(-7.826 -7.824)"><circle className="a" cx="1.239" cy="1.239" r="1.239" transform="translate(13.775 13.774)"/><path className="a" d="M21.911,13.785l-1.732-.325a5.346,5.346,0,0,0-.414-1l1-1.465a.372.372,0,0,0-.043-.456L19.489,9.3a.372.372,0,0,0-.456-.043l-1.465,1a5.359,5.359,0,0,0-1.033-.422l-.323-1.723a.373.373,0,0,0-.352-.292H14.112a.372.372,0,0,0-.352.292l-.326,1.74a5.341,5.341,0,0,0-.991.414L11,9.28a.372.372,0,0,0-.456.043L9.3,10.559a.372.372,0,0,0-.043.456l1,1.456a5.369,5.369,0,0,0-.408.991l-1.732.324a.373.373,0,0,0-.292.352v1.748a.373.373,0,0,0,.292.352l1.731.324a5.357,5.357,0,0,0,.417,1.011l-.985,1.44a.372.372,0,0,0,.043.456L10.558,20.7a.372.372,0,0,0,.456.043l1.439-.985a5.378,5.378,0,0,0,.981.409l.326,1.74a.373.373,0,0,0,.352.292H15.86a.373.373,0,0,0,.352-.292l.323-1.724a5.4,5.4,0,0,0,1.022-.417l1.458,1a.372.372,0,0,0,.456-.043l1.236-1.235a.372.372,0,0,0,.043-.456l-.992-1.449a5.357,5.357,0,0,0,.423-1.023l1.73-.324a.373.373,0,0,0,.292-.352V14.137A.373.373,0,0,0,21.911,13.785Zm-6.9,4.227a3,3,0,1,1,3-3A3,3,0,0,1,15.014,18.012Z" transform="translate(0)"/></g></svg>';
+    const deleteButton = document.createElement("button");
+    deleteButton.classList.add(
+        "btn",
+        "btnDeleteNode",
+        thisNodeType.toLowerCase() + "-Deletebtn"
+    );
+    deleteButton.addEventListener("click", (event) =>
+        deleteNode(event, node)
+    );
+    switch (thisNodeType) {
+      case "Trigger":
         editButton.addEventListener("click", (event) =>
           webhookTriggerSetting(event, node)
         );
         thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
-
-        /*deleteButton.classList.add(
-          "btn",
-          "btnDeleteNode",
-          thisNodeType.toLowerCase() + "-Deletebtn"
-        );
-        deleteButton.addEventListener("click", (event) =>
-          deleteNode(event, node)
-        );
-        thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);*/
+        /*thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);*/
         break;
       case "FieldActionTrigger":
-        editButton.classList.add(
-          "btn",
-          "btnEditNode",
-          thisNodeType.toLowerCase() + "-Editbtn"
-        );
-        editButton.style.cssText = `
-          background:#fff;border:1px solid #434345;padding:3.5px;width:24px;height:24px;border-radius:50%;position:absolute;top:0;transition:all cubic-bezier(.215,.61,.355,1) .4s;-webkit-transition:all cubic-bezier(.215,.61,.355,1) .4s;-moz-transition:all cubic-bezier(.215,.61,.355,1) .4s;-ms-transition:all cubic-bezier(.215,.61,.355,1) .4s;-o-transition:all cubic-bezier(.215,.61,.355,1) .4s
-        `;
-        editButton.innerHTML =
-          '<svg style="fill:#434345;-webkit-appearance:none;backface-visibility:hidden;-webkit-backface-visibility:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.377 14.378" className="automationCog"><g transform="translate(-7.826 -7.824)"><circle className="a" cx="1.239" cy="1.239" r="1.239" transform="translate(13.775 13.774)"/><path className="a" d="M21.911,13.785l-1.732-.325a5.346,5.346,0,0,0-.414-1l1-1.465a.372.372,0,0,0-.043-.456L19.489,9.3a.372.372,0,0,0-.456-.043l-1.465,1a5.359,5.359,0,0,0-1.033-.422l-.323-1.723a.373.373,0,0,0-.352-.292H14.112a.372.372,0,0,0-.352.292l-.326,1.74a5.341,5.341,0,0,0-.991.414L11,9.28a.372.372,0,0,0-.456.043L9.3,10.559a.372.372,0,0,0-.043.456l1,1.456a5.369,5.369,0,0,0-.408.991l-1.732.324a.373.373,0,0,0-.292.352v1.748a.373.373,0,0,0,.292.352l1.731.324a5.357,5.357,0,0,0,.417,1.011l-.985,1.44a.372.372,0,0,0,.043.456L10.558,20.7a.372.372,0,0,0,.456.043l1.439-.985a5.378,5.378,0,0,0,.981.409l.326,1.74a.373.373,0,0,0,.352.292H15.86a.373.373,0,0,0,.352-.292l.323-1.724a5.4,5.4,0,0,0,1.022-.417l1.458,1a.372.372,0,0,0,.456-.043l1.236-1.235a.372.372,0,0,0,.043-.456l-.992-1.449a5.357,5.357,0,0,0,.423-1.023l1.73-.324a.373.373,0,0,0,.292-.352V14.137A.373.373,0,0,0,21.911,13.785Zm-6.9,4.227a3,3,0,1,1,3-3A3,3,0,0,1,15.014,18.012Z" transform="translate(0)"/></g></svg>';
-
         editButton.addEventListener("click", (event) =>
           fieldTriggerSetting(event, node)
         );
         thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
-
-      /*  deleteButton.classList.add(
-          "btn",
-          "btnDeleteNode",
-          thisNodeType.toLowerCase() + "-Deletebtn"
-        );
-        deleteButton.addEventListener("click", (event) =>
-          deleteNode(event, node)
-        );
-        thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);*/
+      /*thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);*/
         break;
-
-      case "Filter":
-        editButton.classList.add(
-          "btn",
-          "btnEditNode",
-          thisNodeType.toLowerCase() + "-Editbtn"
+      case "AppointmentTrigger":
+        editButton.addEventListener("click", (event) =>
+            appointmentTriggerSetting(event, node)
         );
-        editButton.style.cssText = `
-          background:#fff;border:1px solid #434345;padding:3.5px;width:24px;height:24px;border-radius:50%;position:absolute;top:0;right:0;transition:all cubic-bezier(.215,.61,.355,1) .4s;-webkit-transition:all cubic-bezier(.215,.61,.355,1) .4s;-moz-transition:all cubic-bezier(.215,.61,.355,1) .4s;-ms-transition:all cubic-bezier(.215,.61,.355,1) .4s;-o-transition:all cubic-bezier(.215,.61,.355,1) .4s
-        `;
-        editButton.innerHTML =
-          '<svg style="fill:#434345;-webkit-appearance:none;backface-visibility:hidden;-webkit-backface-visibility:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.377 14.378" className="automationCog"><g transform="translate(-7.826 -7.824)"><circle className="a" cx="1.239" cy="1.239" r="1.239" transform="translate(13.775 13.774)"/><path className="a" d="M21.911,13.785l-1.732-.325a5.346,5.346,0,0,0-.414-1l1-1.465a.372.372,0,0,0-.043-.456L19.489,9.3a.372.372,0,0,0-.456-.043l-1.465,1a5.359,5.359,0,0,0-1.033-.422l-.323-1.723a.373.373,0,0,0-.352-.292H14.112a.372.372,0,0,0-.352.292l-.326,1.74a5.341,5.341,0,0,0-.991.414L11,9.28a.372.372,0,0,0-.456.043L9.3,10.559a.372.372,0,0,0-.043.456l1,1.456a5.369,5.369,0,0,0-.408.991l-1.732.324a.373.373,0,0,0-.292.352v1.748a.373.373,0,0,0,.292.352l1.731.324a5.357,5.357,0,0,0,.417,1.011l-.985,1.44a.372.372,0,0,0,.043.456L10.558,20.7a.372.372,0,0,0,.456.043l1.439-.985a5.378,5.378,0,0,0,.981.409l.326,1.74a.373.373,0,0,0,.352.292H15.86a.373.373,0,0,0,.352-.292l.323-1.724a5.4,5.4,0,0,0,1.022-.417l1.458,1a.372.372,0,0,0,.456-.043l1.236-1.235a.372.372,0,0,0,.043-.456l-.992-1.449a5.357,5.357,0,0,0,.423-1.023l1.73-.324a.373.373,0,0,0,.292-.352V14.137A.373.373,0,0,0,21.911,13.785Zm-6.9,4.227a3,3,0,1,1,3-3A3,3,0,0,1,15.014,18.012Z" transform="translate(0)"/></g></svg>';
-
+        thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
+        /*thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);*/
+        break;
+      case "AttendanceTrigger":
+        editButton.addEventListener("click", (event) =>
+            attendanceTriggerSetting(event, node)
+        );
+        thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
+        /*thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);*/
+        break;
+      case "TransactionTrigger":
+        editButton.addEventListener("click", (event) =>
+            transactionTriggerSetting(event, node)
+        );
+        thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
+        /*thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);*/
+        break;
+      case "Filter":
         editButton.addEventListener("click", (event) =>
           filterEdit(event, node)
         );
         thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
-
-        deleteButton.classList.add(
-          "btn",
-          "btnDeleteNode",
-          thisNodeType.toLowerCase() + "-Deletebtn"
-        );
-        deleteButton.addEventListener("click", (event) =>
-          deleteNode(event, node)
-        );
         thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);
         break;
 
       case "ActionEmail":
-        editButton.classList.add(
-          "btn",
-          "btnEditNode",
-          thisNodeType.toLowerCase() + "-Editbtn"
-        );
-        editButton.style.cssText = `
-          background:#fff;border:1px solid #434345;padding:3.5px;width:24px;height:24px;border-radius:50%;position:absolute;top:-10px;right:-10px;transition:all cubic-bezier(.215,.61,.355,1) .4s;-webkit-transition:all cubic-bezier(.215,.61,.355,1) .4s;-moz-transition:all cubic-bezier(.215,.61,.355,1) .4s;-ms-transition:all cubic-bezier(.215,.61,.355,1) .4s;-o-transition:all cubic-bezier(.215,.61,.355,1) .4s
-        `;
-        editButton.innerHTML =
-          '<svg style="fill:#434345;-webkit-appearance:none;backface-visibility:hidden;-webkit-backface-visibility:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.377 14.378" className="automationCog"><g transform="translate(-7.826 -7.824)"><circle className="a" cx="1.239" cy="1.239" r="1.239" transform="translate(13.775 13.774)"/><path className="a" d="M21.911,13.785l-1.732-.325a5.346,5.346,0,0,0-.414-1l1-1.465a.372.372,0,0,0-.043-.456L19.489,9.3a.372.372,0,0,0-.456-.043l-1.465,1a5.359,5.359,0,0,0-1.033-.422l-.323-1.723a.373.373,0,0,0-.352-.292H14.112a.372.372,0,0,0-.352.292l-.326,1.74a5.341,5.341,0,0,0-.991.414L11,9.28a.372.372,0,0,0-.456.043L9.3,10.559a.372.372,0,0,0-.043.456l1,1.456a5.369,5.369,0,0,0-.408.991l-1.732.324a.373.373,0,0,0-.292.352v1.748a.373.373,0,0,0,.292.352l1.731.324a5.357,5.357,0,0,0,.417,1.011l-.985,1.44a.372.372,0,0,0,.043.456L10.558,20.7a.372.372,0,0,0,.456.043l1.439-.985a5.378,5.378,0,0,0,.981.409l.326,1.74a.373.373,0,0,0,.352.292H15.86a.373.373,0,0,0,.352-.292l.323-1.724a5.4,5.4,0,0,0,1.022-.417l1.458,1a.372.372,0,0,0,.456-.043l1.236-1.235a.372.372,0,0,0,.043-.456l-.992-1.449a5.357,5.357,0,0,0,.423-1.023l1.73-.324a.373.373,0,0,0,.292-.352V14.137A.373.373,0,0,0,21.911,13.785Zm-6.9,4.227a3,3,0,1,1,3-3A3,3,0,0,1,15.014,18.012Z" transform="translate(0)"/></g></svg>';
-
         editButton.addEventListener("click", (event) =>
           actionEdit(event, node)
         );
         thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
-
-        deleteButton.classList.add(
-          "btn",
-          "btnDeleteNode",
-          thisNodeType.toLowerCase() + "-Deletebtn"
-        );
-        deleteButton.addEventListener("click", (event) =>
-          deleteNode(event, node)
-        );
         thisNodeTarget.closest(".react-flow__node-actionEmail").appendChild(deleteButton);
         break;
 
       case "ActionMessage":
-        editButton.classList.add(
-          "btn",
-          "btnEditNode",
-          thisNodeType.toLowerCase() + "-Editbtn"
-        );
-        editButton.style.cssText = `
-          background:#fff;border:1px solid #434345;padding:3.5px;width:24px;height:24px;border-radius:50%;position:absolute;top:-10px;right:-10px;transition:all cubic-bezier(.215,.61,.355,1) .4s;-webkit-transition:all cubic-bezier(.215,.61,.355,1) .4s;-moz-transition:all cubic-bezier(.215,.61,.355,1) .4s;-ms-transition:all cubic-bezier(.215,.61,.355,1) .4s;-o-transition:all cubic-bezier(.215,.61,.355,1) .4s
-        `;
-        editButton.innerHTML =
-          '<svg style="fill:#434345;-webkit-appearance:none;backface-visibility:hidden;-webkit-backface-visibility:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.377 14.378" className="automationCog"><g transform="translate(-7.826 -7.824)"><circle className="a" cx="1.239" cy="1.239" r="1.239" transform="translate(13.775 13.774)"/><path className="a" d="M21.911,13.785l-1.732-.325a5.346,5.346,0,0,0-.414-1l1-1.465a.372.372,0,0,0-.043-.456L19.489,9.3a.372.372,0,0,0-.456-.043l-1.465,1a5.359,5.359,0,0,0-1.033-.422l-.323-1.723a.373.373,0,0,0-.352-.292H14.112a.372.372,0,0,0-.352.292l-.326,1.74a5.341,5.341,0,0,0-.991.414L11,9.28a.372.372,0,0,0-.456.043L9.3,10.559a.372.372,0,0,0-.043.456l1,1.456a5.369,5.369,0,0,0-.408.991l-1.732.324a.373.373,0,0,0-.292.352v1.748a.373.373,0,0,0,.292.352l1.731.324a5.357,5.357,0,0,0,.417,1.011l-.985,1.44a.372.372,0,0,0,.043.456L10.558,20.7a.372.372,0,0,0,.456.043l1.439-.985a5.378,5.378,0,0,0,.981.409l.326,1.74a.373.373,0,0,0,.352.292H15.86a.373.373,0,0,0,.352-.292l.323-1.724a5.4,5.4,0,0,0,1.022-.417l1.458,1a.372.372,0,0,0,.456-.043l1.236-1.235a.372.372,0,0,0,.043-.456l-.992-1.449a5.357,5.357,0,0,0,.423-1.023l1.73-.324a.373.373,0,0,0,.292-.352V14.137A.373.373,0,0,0,21.911,13.785Zm-6.9,4.227a3,3,0,1,1,3-3A3,3,0,0,1,15.014,18.012Z" transform="translate(0)"/></g></svg>';
-
         editButton.addEventListener("click", (event) =>
           actionMessageEdit(event, node)
         );
         thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
-
-        deleteButton.classList.add(
-          "btn",
-          "btnDeleteNode",
-          thisNodeType.toLowerCase() + "-Deletebtn"
-        );
-        deleteButton.addEventListener("click", (event) =>
-          deleteNode(event, node)
-        );
         thisNodeTarget.closest(".react-flow__node-actionMessage").appendChild(deleteButton);
         break;
       case "ActionStatusPhaseUpdate":
-        editButton.classList.add(
-            "btn",
-            "btnEditNode",
-            thisNodeType.toLowerCase() + "-Editbtn"
-        );
-        editButton.style.cssText = `
-            background:#fff;border:1px solid #434345;padding:3.5px;width:24px;height:24px;border-radius:50%;position:absolute;top:-10px;right:-10px;transition:all cubic-bezier(.215,.61,.355,1) .4s;-webkit-transition:all cubic-bezier(.215,.61,.355,1) .4s;-moz-transition:all cubic-bezier(.215,.61,.355,1) .4s;-ms-transition:all cubic-bezier(.215,.61,.355,1) .4s;-o-transition:all cubic-bezier(.215,.61,.355,1) .4s
-          `;
-        editButton.innerHTML =
-            '<svg style="fill:#434345;-webkit-appearance:none;backface-visibility:hidden;-webkit-backface-visibility:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.377 14.378" className="automationCog"><g transform="translate(-7.826 -7.824)"><circle className="a" cx="1.239" cy="1.239" r="1.239" transform="translate(13.775 13.774)"/><path className="a" d="M21.911,13.785l-1.732-.325a5.346,5.346,0,0,0-.414-1l1-1.465a.372.372,0,0,0-.043-.456L19.489,9.3a.372.372,0,0,0-.456-.043l-1.465,1a5.359,5.359,0,0,0-1.033-.422l-.323-1.723a.373.373,0,0,0-.352-.292H14.112a.372.372,0,0,0-.352.292l-.326,1.74a5.341,5.341,0,0,0-.991.414L11,9.28a.372.372,0,0,0-.456.043L9.3,10.559a.372.372,0,0,0-.043.456l1,1.456a5.369,5.369,0,0,0-.408.991l-1.732.324a.373.373,0,0,0-.292.352v1.748a.373.373,0,0,0,.292.352l1.731.324a5.357,5.357,0,0,0,.417,1.011l-.985,1.44a.372.372,0,0,0,.043.456L10.558,20.7a.372.372,0,0,0,.456.043l1.439-.985a5.378,5.378,0,0,0,.981.409l.326,1.74a.373.373,0,0,0,.352.292H15.86a.373.373,0,0,0,.352-.292l.323-1.724a5.4,5.4,0,0,0,1.022-.417l1.458,1a.372.372,0,0,0,.456-.043l1.236-1.235a.372.372,0,0,0,.043-.456l-.992-1.449a5.357,5.357,0,0,0,.423-1.023l1.73-.324a.373.373,0,0,0,.292-.352V14.137A.373.373,0,0,0,21.911,13.785Zm-6.9,4.227a3,3,0,1,1,3-3A3,3,0,0,1,15.014,18.012Z" transform="translate(0)"/></g></svg>';
-
         editButton.addEventListener("click", (event) =>
             actionStatusPhaseEdit(event, node)
         );
         thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
-
-        deleteButton.classList.add(
-            "btn",
-            "btnDeleteNode",
-            thisNodeType.toLowerCase() + "-Deletebtn"
-        );
-        deleteButton.addEventListener("click", (event) =>
-            deleteNode(event, node)
-        );
         thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);
         break;
-
       case "ActionDelay":
-        editButton.classList.add(
-          "btn",
-          "btnEditNode",
-          thisNodeType.toLowerCase() + "-Editbtn"
-        );
-        editButton.style.cssText = `
-            background:#fff;border:1px solid #434345;padding:3.5px;width:24px;height:24px;border-radius:50%;position:absolute;top:-10px;right:-10px;transition:all cubic-bezier(.215,.61,.355,1) .4s;-webkit-transition:all cubic-bezier(.215,.61,.355,1) .4s;-moz-transition:all cubic-bezier(.215,.61,.355,1) .4s;-ms-transition:all cubic-bezier(.215,.61,.355,1) .4s;-o-transition:all cubic-bezier(.215,.61,.355,1) .4s
-          `;
-        editButton.innerHTML =
-          '<svg style="fill:#434345;-webkit-appearance:none;backface-visibility:hidden;-webkit-backface-visibility:hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14.377 14.378" className="automationCog"><g transform="translate(-7.826 -7.824)"><circle className="a" cx="1.239" cy="1.239" r="1.239" transform="translate(13.775 13.774)"/><path className="a" d="M21.911,13.785l-1.732-.325a5.346,5.346,0,0,0-.414-1l1-1.465a.372.372,0,0,0-.043-.456L19.489,9.3a.372.372,0,0,0-.456-.043l-1.465,1a5.359,5.359,0,0,0-1.033-.422l-.323-1.723a.373.373,0,0,0-.352-.292H14.112a.372.372,0,0,0-.352.292l-.326,1.74a5.341,5.341,0,0,0-.991.414L11,9.28a.372.372,0,0,0-.456.043L9.3,10.559a.372.372,0,0,0-.043.456l1,1.456a5.369,5.369,0,0,0-.408.991l-1.732.324a.373.373,0,0,0-.292.352v1.748a.373.373,0,0,0,.292.352l1.731.324a5.357,5.357,0,0,0,.417,1.011l-.985,1.44a.372.372,0,0,0,.043.456L10.558,20.7a.372.372,0,0,0,.456.043l1.439-.985a5.378,5.378,0,0,0,.981.409l.326,1.74a.373.373,0,0,0,.352.292H15.86a.373.373,0,0,0,.352-.292l.323-1.724a5.4,5.4,0,0,0,1.022-.417l1.458,1a.372.372,0,0,0,.456-.043l1.236-1.235a.372.372,0,0,0,.043-.456l-.992-1.449a5.357,5.357,0,0,0,.423-1.023l1.73-.324a.373.373,0,0,0,.292-.352V14.137A.373.373,0,0,0,21.911,13.785Zm-6.9,4.227a3,3,0,1,1,3-3A3,3,0,0,1,15.014,18.012Z" transform="translate(0)"/></g></svg>';
-
         editButton.addEventListener("click", (event) =>
           actionDelayEdit(event, node)
         );
         thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
-
-        deleteButton.classList.add(
-          "btn",
-          "btnDeleteNode",
-          thisNodeType.toLowerCase() + "-Deletebtn"
-        );
-        deleteButton.addEventListener("click", (event) =>
-          deleteNode(event, node)
-        );
         thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);
         break;
-
+      case "ActionRemoveTag":
+        editButton.addEventListener("click", (event) =>
+            actionRemoveTag(event, node)
+        );
+        thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
+        thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);
+        break;
+      case "ActionApplyTag":
+        editButton.addEventListener("click", (event) =>
+            actionApplyTag(event, node)
+        );
+        thisNodeTarget.closest(".react-flow__node").appendChild(editButton);
+        thisNodeTarget.closest(".react-flow__node").appendChild(deleteButton);
+        break;
       default:
         break;
     }
@@ -423,6 +336,15 @@ const AutomationBuilder = (props) => {
     }
     setAutomationModal("actionDelay");
   };
+  const actionApplyTag = (e, n) => {
+    setTagNodeId(n);
+    console.log(e, n);
+    setAutomationModal("actionApplyTag");
+  };
+  const actionRemoveTag = (e, n) => {
+    setTagNodeId(n);
+    setAutomationModal("actionRemoveTag");
+  };
   const refreshWebhook = async (id, nodeI) => {
     setWebhookData([]);
     if (id) {
@@ -435,6 +357,8 @@ const AutomationBuilder = (props) => {
         setElements((elms) =>
           elms.map((el) => {
             if (el.id === nodeI) {
+              el.data.data = fetchFields.data.data;
+            } else {
               el.data.data = fetchFields.data.data;
             }
             return { ...el };
@@ -450,6 +374,24 @@ const AutomationBuilder = (props) => {
     setEvent(n.data.event);
     setFieldTriggerNodeId(n.id);
     setAutomationModal("fieldTrigger");
+  };
+  const appointmentTriggerSetting = async (e, n) => {
+    setModule(n.data.module);
+    setEvent(n.data.event);
+    setFieldTriggerNodeId(n.id);
+    setAutomationModal("appointmentTrigger");
+  };
+  const attendanceTriggerSetting = async (e, n) => {
+    setModule(n.data.module);
+    setEvent(n.data.event);
+    setFieldTriggerNodeId(n.id);
+    setAutomationModal("attendanceTrigger");
+  };
+  const transactionTriggerSetting = async (e, n) => {
+    setModule(n.data.module);
+    setEvent(n.data.event);
+    setFieldTriggerNodeId(n.id);
+    setAutomationModal("transactionTrigger");
   };
   const webhookTriggerSetting = async (e, n) => {
     setAutomationUrl(n.data.url);
@@ -469,6 +411,8 @@ const AutomationBuilder = (props) => {
             el.data.module = module;
             el.data.event = event;
             el.data.data = fields
+          } else {
+            el.data.data = fields;
           }
           return { ...el };
         })
@@ -495,6 +439,10 @@ const AutomationBuilder = (props) => {
     event.preventDefault();
     setCursorElement(event);
     setBody(event.target.value);
+  }
+  const handleBodyChangeTags = (value) => {
+    setCursorElement(value);
+    setBody(value);
   }
   const handleSubjectChange = (event) => {
     event.preventDefault();
@@ -647,10 +595,6 @@ const AutomationBuilder = (props) => {
   };
   const saveMessage = async () => {
     let count = 0;
-    if (!to) {
-      setToError('bounce');
-      count = count + 1;
-    }
     if (!body) {
       setBodyError('bounce');
       count = count + 1;
@@ -660,7 +604,6 @@ const AutomationBuilder = (props) => {
       setElements((elms) =>
         elms.map((el) => {
           if (el.id === nId) {
-            el.data.to = to;
             el.data.body = body;
           }
           return { ...el };
@@ -698,6 +641,17 @@ const AutomationBuilder = (props) => {
       closeFilterModal();
     }
   };
+  const saveTag = (id, selected) => {
+    setElements((elms) =>
+        elms.map((el) => {
+          if (el.id === id) {
+            el.data.tag = selected;
+          }
+          return { ...el };
+        })
+    );
+    closeFilterModal();
+  }
   const saveStatusPhase = (nodeId, status, phase) => {
     setElements((elms) =>
         elms.map((el) => {
@@ -750,16 +704,38 @@ const AutomationBuilder = (props) => {
         );
         const brokenElem = bluePrintElem.find((el) => {
           if (
-              ((el.type !== "fieldActionTrigger" && el.data.nodes.previous === "") && (el.type !== "trigger" && el.data.nodes.previous === "")) ||
-              ((el.type === "fieldActionTrigger" && el.data.nodes.next.length === 0) && (el.type === "trigger" && el.data.nodes.next.length === 0))
+            ((el.type !== "fieldActionTrigger" && el.data.nodes.previous === "") && (el.type !== "trigger" && el.data.nodes.previous === ""))
+            && (el.type !== "attendanceTrigger" && el.data.nodes.previous === "") 
+            && (el.type !== "appointmentTrigger" && el.data.nodes.previous === "")
+            && (el.type !== "transactionTrigger" && el.data.nodes.previous === "")
+            ||
+            (
+              (el.type === "fieldActionTrigger" && el.data.nodes.next.length === 0)
+              && (el.type === "trigger" && el.data.nodes.next.length === 0)
+              && (el.type === "attendanceTrigger" && el.data.nodes.next.length === 0)
+              && (el.type === "appointmentTrigger" && el.data.nodes.next.length === 0)
+              && (el.type === "transactionTrigger" && el.data.nodes.next.length === 0)
+            )
+
           ) {
             return el;
           }
         });
+        console.log("broken elem", brokenElem)
         if (typeof brokenElem == "undefined") {
           let payload = { name: automationName, id: automationId, nodeId: idNode, edgeId: idEdge, blueprint: elements };
           setIsLoader(true);
-          let response = await AutomationServices.saveAutomation(JSON.stringify(payload));
+          try {
+            if (automationId) {
+              let payloadArn = { id: automationId };
+              await AutomationServices.deleteArn(
+                  JSON.stringify(payloadArn)
+              );
+            }
+          } catch (e) {
+            console.log(e);
+          }
+          await AutomationServices.saveAutomation(JSON.stringify(payload));
           setIsLoader(false);
           props.toggleCreateAutomation('automation-list');
           dispatch({
@@ -818,12 +794,17 @@ const AutomationBuilder = (props) => {
     event.preventDefault();
     const types = {
       trigger: "Trigger",
+      appointmentTrigger: "AppointmentTrigger",
+      attendanceTrigger: "AttendanceTrigger",
+      transactionTrigger: "TransactionTrigger",
       actionEmail: "ActionEmail",
       filter: "Filter",
       actionMessage: "ActionMessage",
       actionDelay: "ActionDelay",
       fieldActionTrigger: "FieldActionTrigger",
-      actionStatusPhaseUpdate: "ActionStatusPhaseUpdate"
+      actionStatusPhaseUpdate: "ActionStatusPhaseUpdate",
+      actionApplyTag: "ActionApplyTag",
+      actionRemoveTag: "ActionRemoveTag",
     };
     let newNode = {};
     const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
@@ -832,9 +813,11 @@ const AutomationBuilder = (props) => {
       x: event.clientX - reactFlowBounds.left,
       y: event.clientY - reactFlowBounds.top,
     });
-    let filteredElements = elements.filter(el => (el.type === 'trigger' || el.type === 'fieldActionTrigger'));
+    let filteredElements = elements.filter(el => (el.type === 'trigger' || el.type === 'fieldActionTrigger' || el.type === 'appointmentTrigger' ||
+      el.type === 'attendanceTrigger' || el.type === 'transactionTrigger'));
     if (filteredElements.length) {
-      if (type === 'trigger' || type === 'fieldActionTrigger') {
+      if (type === 'trigger' || type === 'fieldActionTrigger' || type === 'appointmentTrigger' ||
+          type === 'attendanceTrigger' || type === 'transactionTrigger' ) {
         dispatch({
           type: actionTypes.SHOW_MESSAGE,
           message: "One automation can have only one trigger.",
@@ -843,7 +826,8 @@ const AutomationBuilder = (props) => {
         return false;
       }
     } else {
-      if (type === 'actionDelay' || type === 'actionStatusPhaseUpdate' || type === 'filter') {
+      if (type === 'actionDelay' || type === 'actionStatusPhaseUpdate' || type === 'filter' || type === 'actionApplyTag'
+          || type === 'actionRemoveTag' || type === 'actionMessage') {
         dispatch({
           type: actionTypes.SHOW_MESSAGE,
           message: "Please pull a trigger first.",
@@ -881,6 +865,58 @@ const AutomationBuilder = (props) => {
             create: false,
             update: false,
             delete: false
+          },
+          data: {}
+        },
+      };
+      setElements((es) => es.concat(newNode));
+    } else if (type === 'attendanceTrigger') {
+      newNode = {
+        id: getNodeId(type),
+        type,
+        position,
+        data: {
+          label: `${types[type]}`,
+          nodes: { next: [], previous: "" },
+          module: 'attendance',
+          event: {
+            checkIn: false
+          },
+          data: {}
+        },
+      };
+      setElements((es) => es.concat(newNode));
+    } else if (type === 'appointmentTrigger') {
+      newNode = {
+        id: getNodeId(type),
+        type,
+        position,
+        data: {
+          label: `${types[type]}`,
+          nodes: { next: [], previous: "" },
+          module: 'appointment',
+          event: {
+            appointmentCanceled: false,
+            appointmentCompleted: false,
+            appointmentRescheduled: false,
+            appointmentCreate: false,
+          },
+          data: {}
+        },
+      };
+      setElements((es) => es.concat(newNode));
+    } else if (type === 'transactionTrigger') {
+      newNode = {
+        id: getNodeId(type),
+        type,
+        position,
+        data: {
+          label: `${types[type]}`,
+          nodes: { next: [], previous: "" },
+          module: 'transaction',
+          event: {
+            transactionSuccess: false,
+            transactionFailed: false
           },
           data: {}
         },
@@ -944,6 +980,32 @@ const AutomationBuilder = (props) => {
         },
       };
       setElements((es) => es.concat(newNode));
+    } else if (type === 'actionApplyTag') {
+      newNode = {
+        id: getNodeId(type),
+        type,
+        position,
+        data: {
+          label: `${types[type]}`,
+          nodes: { next: [], previous: "" },
+          arn: process.env.REACT_APP_ACTION_APPLY_TAG,
+          tag: ""
+        },
+      };
+      setElements((es) => es.concat(newNode));
+    } else if (type === 'actionRemoveTag') {
+      newNode = {
+        id: getNodeId(type),
+        type,
+        position,
+        data: {
+          label: `${types[type]}`,
+          nodes: { next: [], previous: "" },
+          arn: process.env.REACT_APP_ACTION_REMOVE_TAG,
+          tag: ""
+        },
+      };
+      setElements((es) => es.concat(newNode));
     } else {
       newNode = {
         id: getNodeId(type),
@@ -973,31 +1035,18 @@ const AutomationBuilder = (props) => {
     let sourceType = source.substring(0, sourcePosition);
     const targetPosition = target.indexOf("-");
     let targetType = target.substring(0, targetPosition);
-    if (sourceType === 'fieldActionTrigger') {
+    if (sourceType === 'fieldActionTrigger'
+      || sourceType === 'attendanceTrigger'
+      || sourceType === 'transactionTrigger'
+      || sourceType === 'appointmentTrigger') {
       sourceType = 'trigger';
     }
-    if (sourceType === 'actionMessage') {
+    if (sourceType === 'actionMessage' || sourceType === 'actionEmail' || sourceType === 'actionDelay' ||
+        sourceType === 'actionStatusPhaseUpdate' || sourceType === 'actionApplyTag' || sourceType === 'actionRemoveTag') {
       sourceType = 'action';
     }
-    if (targetType === 'actionMessage') {
-      targetType = 'action';
-    }
-    if (sourceType === 'actionEmail') {
-      sourceType = 'action';
-    }
-    if (targetType === 'actionEmail') {
-      targetType = 'action';
-    }
-    if (sourceType === 'actionDelay') {
-      sourceType = 'action';
-    }
-    if (targetType === 'actionDelay') {
-      targetType = 'action';
-    }
-    if (sourceType === 'actionStatusPhaseUpdate') {
-      sourceType = 'action';
-    }
-    if (targetType === 'actionStatusPhaseUpdate') {
+    if (targetType === 'actionMessage' || targetType === 'actionEmail' || targetType === 'actionDelay' ||
+        targetType === 'actionStatusPhaseUpdate' || targetType === 'actionApplyTag' || targetType === 'actionRemoveTag') {
       targetType = 'action';
     }
     let returnType = false;
@@ -1405,393 +1454,71 @@ const AutomationBuilder = (props) => {
               <Controls />
             </ReactFlow>
           </div>
-          {automationModal != null ? (automationModal === 'actionStatusPhase' ?
-              <ActionStatusPhaseModal closeFilterModal={closeFilterModal} nodeId={statusPhaseNodeId} status={status} phase={phase} saveStatusPhase={saveStatusPhase}/>
-              : (automationModal === 'fieldTrigger' ?
-            <FieldTrigger
-              closeFilterModal={closeFilterModal} nodeId={fieldTriggerNodeId} module={module} event={event}
-              saveFieldtrigger={saveFieldtrigger}
-            />
-            : (automationModal === 'webhookTrigger' ?
-                      <div className="automationModal filterModal triggerSetting">
-                        <div className="nodeSettingModal">
-                          <div className="formHead">
-                            <div className="heading">
-                              <p>Trigger Settings</p>
-                            </div>
-                            <div className="closeButton">
-                              <button onClick={closeFilterModal}>
-                                <img src={closewhite24dp} alt="Close Filter Modal"/>
-                              </button>
-                            </div>
-                          </div>
-                          <div className="formBody">
-                            <div className="formBodyContainer">
-                              <div className="formFieldsArea">
-                                <div className="inputField">
-                                  <label htmlFor="">webhook URL</label>
-                                  <div className="inFormField d-flex">
-                                    <input type="text" name="webhook-url" id="webhook-url" value={automationUrl} onClick={() => onClickCopy(automationUrl)} readOnly={true}/>
-                                    <button className="refreshFieldsBtn" onClick={() => refreshWebhook(automationUrlId, triggerNodeId)}></button>
-                                  </div>
-                                </div>
-                                {/* <div className="inputField">
-                            <button className="refreshFieldsBtn" onClick={() => refreshWebhook(automationUrlId, triggerNodeId)}>Refresh Fields</button>
-                          </div> */}
-                                {Object.keys(webhookData).length ?
-                                    <div className="webhookDataFields">
-                                      <h5>
-                                        <figure>
-                                          <svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" strokeWidth="2" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M13 6h3a2 2 0 0 1 2 2v7"/><line x1="6" x2="6" y1="9" y2="21"/></svg>
-                                        </figure>
-                                        Request</h5>
-                                      <div className="listpayloads">
-                                        <ul>
-                                          {Object.keys(webhookData).length ? (
-                                              Object.keys(webhookData).map((value, key) => (
-                                                  <li>
-                                                    <p><span>{value}:</span><span>{webhookData[value]}</span>{key === 0 ? "" : " "}</p>
-                                                  </li>
-                                              ))
-                                          ) : ""
-                                          }
-                                        </ul>
-                                      </div>
-                                    </div>
-                                    : ""}
-                              </div>
-                              <div className="saveButton">
-                                <button onClick={closeFilterModal}>Save <img src={chevron_right_white_24dp} alt=""/></button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-            : (automationModal === 'actionMessage' ?
-              <div className="automationModal filterModal">
-                <div className="nodeSettingModal">
-                  <div className="formHead">
-                    <div className="heading">
-                      <p>Message Settings</p>
-                    </div>
-                    <div className="closeButton">
-                      <button onClick={closeFilterModal}>
-                        <img src={closewhite24dp} alt="Close Filter Modal" />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="formBody">
-                    <div className="formBodyContainer">
-                      <div className="emailDetails">
-                        <div className="inputField">
-                          <label htmlFor="">To</label>
-                          <div className="inFormField">
-                            <input className={`icon ${toError}`} type="text" name="messageTo" id="" value={to} onChange={handleToChange} onClick={handleToChange} />
-                            <button className="toggleTags" onClick={(e) => toggletoMail(e)}></button>
-                          </div>
-                          <div className="messageTagTo">
-                            <h6>Select Option(s)</h6>
-                            {Object.keys(messageData).length ? (
-                              Object.keys(messageData).map((value, key) => (
-                                <button onClick={() => copyTag(value, 'messageTo')}>{value}</button>
-                              ))
-                            ) : ""
-                            }
-                          </div>
-                        </div>
-                        <div className="inputField">
-                          <label htmlFor="">Body</label>
-                          <div className="inFormField">
-                            <textarea className={`${bodyError}`} name="messageBody" onChange={handleBodyChange} onClick={handleBodyChange} value={body}>{body}</textarea>
-                          </div>
-                          <div className="messageTagBody">
-                            {Object.keys(messageData).length ? (
-                              Object.keys(messageData).map((value, key) => (
-                                <button onClick={() => copyTag(value, 'messageBody')}>{value}</button>
-                              ))
-                            ) : ""
-                            }
-                          </div>
-                        </div>
-                      </div>
-                      <div className="saveButton">
-                        <button onClick={saveMessage}>Save <img src={chevron_right_white_24dp} alt="" /></button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-              : (automationModal === 'actionEmail' ?
-                <div className="automationModal filterModal">
-                  <div className="nodeSettingModal">
-                    <div className="formHead">
-                      <div className="heading">
-                        <p>Email Settings</p>
-                      </div>
-                      <div className="closeButton">
-                        <button onClick={closeFilterModal}>
-                          <img src={closewhite24dp} alt="Close Filter Modal" />
-                        </button>
-                      </div>
-                    </div>
-                    <div className="formBody">
-                      <div className="formBodyContainer">
-                        <div className="emailDetails">
-                          <div className="inputField">
-                            <label htmlFor="subject">Subject</label>
-                            <div className="inFormField subjectField">
-                              <input className={`icon ${subjectError}`} type="text" name="subject" id="subject" value={subject} onChange={handleSubjectChange} onClick={handleSubjectChange} />
-                              <button className="toggleTags" onClick={(e) => toggletoMail(e)}></button>
-                            </div>
-                            <div className="emailTagSubject">
-                              <h6>Select Option(s)</h6>
-                              {Object.keys(emailData).length ? (
-                                Object.keys(emailData).map((value, key) => (
-                                  <button onClick={() => copyTag(value, 'subject')}>{value}</button>
-                                ))
-                              ) : ""
-                              }
-                            </div>
-                          </div>
-                          <div className="inputField">
-                            <label htmlFor="toEmail">To</label>
-                            <div className="inFormField">
-                              <input className={`icon ${toEmailError}`} type="text" name="toEmail" id="toEmail" value={toEmail} onChange={handleToEmailChange} onClick={handleToEmailChange} />
-                              <button className="toggleTags" onClick={(e) => toggletoMail(e)}></button>
-                            </div>
-                            <div className="emailTagToEmail">
-                              <h6>Select Option(s)</h6>
-                              {Object.keys(emailData).length ? (
-                                Object.keys(emailData).map((value, key) => (
-                                  <button onClick={() => copyTag(value, 'toEmail')}>{value}</button>
-                                ))
-                              ) : ""
-                              }
-                            </div>
-                          </div>
-                          <div className="inputField">
-                            <label htmlFor="bodyEmail">Body</label>
-                            <div className="inFormField">
-                              <textarea className={`icon ${bodyEmailError}`} name="bodyEmail" id="bodyEmail" onChange={handleBodyEmailChange}
-                                onClick={handleBodyEmailChange} value={bodyEmail}>{bodyEmail}</textarea>
-                            </div>
-                            <div className="emailTagEmailBody">
-                              {Object.keys(emailData).length ? (
-                                Object.keys(emailData).map((value, key) => (
-                                  <button onClick={() => copyTag(value, 'bodyEmail')}>{value}</button>
-                                ))
-                              ) : ""
-                              }
-                            </div>
-                          </div>
-                        </div>
-                        <div className="saveButton">
-                          <button onClick={saveEmail}>Save <img src={chevron_right_white_24dp} alt="" /></button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                </div>
-                : (automationModal === 'actionDelay' ?
-                  <div className="automationModal filterModal">
-                    <div className="nodeSettingModal delaySettingModal">
-                      <div className="formHead">
-                        <div className="heading">
-                          <p>Delay Settings</p>
-                        </div>
-                        <div className="closeButton">
-                          <button onClick={closeFilterModal}>
-                            <img src={closewhite24dp} alt="Close Filter Modal" />
-                          </button>
-                        </div>
-                      </div>
-                      <div className="formBody">
-                        <div className="formBodyContainer">
-                          <div className="emailDetails delayDetails">
-                            <div className="inputField">
-                              <label htmlFor="delayTm">Set Delay</label>
-                              <div className="inFormField d-flex">
-                                <input className={`formField ${delayDataError}`} type="number" name="delayTm" id="delayTm" value={delayTime} onChange={handleDelayChange} />
-                                <select className="formField" value={delayType} onChange={handleDelayTypeChange}>
-                                  <option value="day">Days</option>
-                                  <option value="hours">Hours</option>
-                                  <option value="minutes">Minutes</option>
-                                </select>
-                              </div>
-                            </div>
-                          </div>
-                          <div className="saveButton">
-                            <button onClick={saveDelay}>Save <img src={chevron_right_white_24dp} alt="" /></button> {/*onClick={saveDelay}*/}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  : (automationModal === 'filter' ?
-                    <div className="automationModal filterModal">
-                      <div className="nodeSettingModal filterSetting">
-                        <div className="formHead">
-                          <div className="heading">
-                            <p>Filter Settings</p>
-                          </div>
-                          <div className="closeButton">
-                            <button className="closeFilterModal" onClick={closeFilterModal}>
-                              <img src={closewhite24dp} alt="" />
-                            </button>
-                          </div>
-                        </div>
-                        <div className="formBody">
-                          <div className="formBodyContainer">
-                            <div className="nameArea">
-                              <div className="editRules">
-                                <p>Edit Rules</p>
-                              </div>
-                            </div>
-                            <div className="formFieldsArea">
-                              <label htmlFor="">Only continue if</label>
-                              <div className="formFields">
-                                {filterConditions.length ? (filterConditions.map((value, index) => {
-                                  return (
-                                    <>
-                                      {index > 0 ?
-                                        <div className="addFormFieldsButton orButton">
-                                          <button>
-                                            <span className="addFields"><img src={whiteSlash} alt="" /></span>
-                                            or
-                                          </button>
-                                        </div>
-                                        : ""}
-                                      {
-                                        value.conditions.length ? value.conditions.map((con) => {
-                                          return (
-                                            <>
-                                              <div className={`formFields1`}>
-                                                <div className={`inputField field_1`}>
-                                                  <select name="" id="" value={con.field} onChange={(e) => handelFilterFieldChange('field', value.index, con.and, e)}>
-                                                    <option value="">Please Select</option>
-                                                    {Object.keys(filterData).length ? (
-                                                      Object.keys(filterData).map((value, key) => (
-                                                        <option value={value} data-fieldType={filterData[value]}>{value}</option>
-                                                      ))
-                                                    ) : ""
-                                                    }
-                                                  </select>
-                                                </div>
-                                                <div className="inputField field_2">
-                                                  {(() => {
-                                                    if (con.filedValue === 'number') {
-                                                      return (
-                                                          <select name="" id="" value={con.condition} onChange={(e) => handelFilterFieldChange('condition', value.index, con.and, e)}>
-                                                            <option value="">Please Select</option>
-                                                            <option value="NumericEquals"> =</option>
-                                                            <option value="NumericGreaterThan">&#62; </option>
-                                                            <option value="NumericGreaterThanEquals"> &#62;= </option>
-                                                            <option value="NumericLessThan"> &#60; </option>
-                                                            <option value="NumericLessThanEquals"> &#60;= </option>
-                                                          </select>
-                                                      )
-                                                    } else{
-                                                      return (
-                                                          <select name="" id="" value={con.condition} onChange={(e) => handelFilterFieldChange('condition', value.index, con.and, e)}>
-                                                            <option value="">Please Select</option>
-                                                            <option value="StringEquals"> = </option>
-                                                          </select>
-                                                      )
-                                                    }
-                                                  })()}
-                                                </div>
-                                                <div className="inputField field_3">
-                                                  {(() => {
-                                                    if (con.field === "tags") {
-                                                      return (
-                                                          <select name="" id="" value={con.value} onChange={(e) => handelFilterFieldChange('value', value.index, con.and, e)} >
-                                                            <option value="">Select tag</option>
-                                                            {tags.map((item, index) => {
-                                                              return (
-                                                                  <option value={item._id}>{item.name}</option>
-                                                              )})
-                                                            }
-                                                          </select>
-                                                      )
-                                                    } else if (con.field === "status") {
-                                                      return (
-                                                          <select name="" id="" value={con.value} onChange={(e) => handelFilterFieldChange('value', value.index, con.and, e)} >
-                                                            <option value="">Select status</option>
-                                                            {statusList.map((item, index) => {
-                                                              return (
-                                                                  <option value={item._id}>{item.name} ({item.phaseDetails.name})</option>
-                                                              )})
-                                                            }
-                                                          </select>
-                                                      )
-                                                    } else if (con.field === "phase") {
-                                                      return (
-                                                          <select name="" id="" value={con.value} onChange={(e) => handelFilterFieldChange('value', value.index, con.and, e)} >
-                                                            <option value="">Select phase</option>
-                                                            {phaseList.map((item, index) => {
-                                                              return (
-                                                                  <option value={item._id}>{item.name}</option>
-                                                              )})
-                                                            }
-                                                          </select>
-                                                      )
-                                                    } else if (con.field === "gender") {
-                                                      return (
-                                                          <select name="" id="" value={con.value} onChange={(e) => handelFilterFieldChange('value', value.index, con.and, e)} >
-                                                            <option value="">Select gender</option>
-                                                            <option value="male">Male</option>
-                                                            <option value="female">Female</option>
-                                                            <option value="others">Others</option>
-                                                          </select>
-                                                      )
-                                                    } else {
-                                                      return (
-                                                          <input type={con.filedValue ? con.filedValue : "text"} name="" id="" value={con.value} onChange={(e) => handelFilterFieldChange('value', value.index, con.and, e)} />
-                                                      )
-                                                    }
-                                                  })()}
-                                                </div>
-                                                {
-                                                  (con.and === 1 && value.index === 0) ?
-                                                    "" :
-                                                    <div className="deleteButton">
-                                                      <button onClick={() => deleteNodeFiler(con, value.index)}><img src={trashIcon} alt="" /></button>
-                                                    </div>
-                                                }
-                                              </div>
-                                            </>
-                                          )
-                                        }) : ""
-                                      }
-                                      <div className="addFormFieldsButton">
-                                        <button onClick={() => addAnd(index)}>
-                                          <span className="addFields"><img src={whiteAddIcon} alt="" /></span>
-                                          And
-                                        </button>
-                                      </div>
-                                    </>
-                                  )
-                                })) : ""}
-                                <div className="addOrButton">
-                                  <div className="addFormFieldsButton orButton">
-                                    <button onClick={() => addOr()}>
-                                      <span className="addFields"><img src={whiteSlash} alt="" /></span>
-                                      or
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <div className="saveButton updateButton">
-                              <button onClick={updateFilterData}>Update <img src={chevron_right_white_24dp} alt="" /></button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    : ""))))))) : ""}
+          {(() => {
+            switch(automationModal) {
+              case 'actionStatusPhase':
+                return <ActionStatusPhaseModal closeFilterModal={closeFilterModal} nodeId={statusPhaseNodeId}
+                                               status={status} phase={phase} saveStatusPhase={saveStatusPhase}/>
+              case 'fieldTrigger':
+                return <FieldTrigger closeFilterModal={closeFilterModal} nodeId={fieldTriggerNodeId} module={module}
+                  event={event} saveFieldtrigger={saveFieldtrigger} />
+              case 'attendanceTrigger':
+                return <AttendanceTriggerSetting
+                  closeFilterModal={closeFilterModal}
+                  nodeId={fieldTriggerNodeId}
+                  module={module}
+                  event={event}
+                  saveFieldtrigger={saveFieldtrigger}
+                />
+              case 'appointmentTrigger':
+                return <AppointmentTriggerSetting
+                  closeFilterModal={closeFilterModal}
+                  nodeId={fieldTriggerNodeId}
+                  module={module}
+                  event={event}
+                  saveFieldtrigger={saveFieldtrigger}
+                />
+              case 'transactionTrigger':
+                return <TransactionTriggerSetting
+                  closeFilterModal={closeFilterModal}
+                  nodeId={fieldTriggerNodeId}
+                  module={module}
+                  event={event}
+                  saveFieldtrigger={saveFieldtrigger}
+                />
+              case 'webhookTrigger':
+                return <WebhookTrigger closeFilterModal={closeFilterModal} automationUrl={automationUrl}
+                                       onClickCopy={onClickCopy} refreshWebhook={refreshWebhook}
+                                       webhookData={webhookData} automationUrlId={automationUrlId}
+                                       triggerNodeId={triggerNodeId}/>
+              case 'actionMessage':
+                return <Message closeFilterModal={closeFilterModal} triggerNodeId={triggerNodeId}
+                                messageData={messageData} copyTag={copyTag} toggletoMail={toggletoMail}
+                                handleToChange={handleToChange} to={to} toError={toError} bodyError={bodyError}
+                                handleBodyChange={handleBodyChange} body={body} saveMessage={saveMessage} handleBodyChangeTags={handleBodyChangeTags}/>
+              case 'actionEmail':
+                return <Email closeFilterModal={closeFilterModal} triggerNodeId={triggerNodeId} saveEmail={saveEmail}
+                              copyTag={copyTag} emailData={emailData} bodyEmail={bodyEmail}
+                              handleBodyEmailChange={handleBodyEmailChange} bodyEmailError={bodyEmailError}
+                              subjectError={subjectError} toggletoMail={toggletoMail} subject={subject}
+                              handleSubjectChange={handleSubjectChange} toEmailError={toEmailError} toEmail={toEmail} handleToEmailChange={handleToEmailChange}/>
+              case 'actionDelay':
+                return <Delay closeFilterModal={closeFilterModal} triggerNodeId={triggerNodeId} saveDelay={saveDelay}
+                              handleDelayTypeChange={handleDelayTypeChange} delayType={delayType}
+                              handleDelayChange={handleDelayChange} delayTime={delayTime} delayDataError={delayDataError}/>
+              case 'filter':
+                return <Filter closeFilterModal={closeFilterModal} triggerNodeId={triggerNodeId}
+                               filterConditions={filterConditions} handelFilterFieldChange={handelFilterFieldChange}
+                               filterData={filterData} tags={tags} statusList={statusList} phaseList={phaseList}
+                               deleteNodeFiler={deleteNodeFiler} addAnd={addAnd} addOr={addOr} updateFilterData={updateFilterData}/>
+              case 'actionApplyTag':
+                return <TagModal tagModalType="Apply" closeFilterModal={closeFilterModal} saveTag={saveTag} elem={tagNodeId}/>
+              case 'actionRemoveTag':
+                return <TagModal tagModalType="Remove" closeFilterModal={closeFilterModal} saveTag={saveTag} elem={tagNodeId}/>
+              default:
+                return ""
+            }
+          })()}
         </ReactFlowProvider>
       </div>
     </>
