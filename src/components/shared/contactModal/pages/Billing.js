@@ -36,6 +36,7 @@ const Billing = (props) => {
     const [bankAccountCheck, setBankAccountCheck] = useState("");
     const [bankNameCheck, setBankNameCheck] = useState("");
     const [bankRoutingCheck, setBankRoutingCheck] = useState("");
+    const [bankAccountType, setBankAccountType] = useState("checking");
     const [successMessage, setSuccessMessage] = useState("")
     const [merchantOptions, setMerchantOptions] = useState({
       hasId: false,
@@ -56,7 +57,8 @@ const Billing = (props) => {
       bank_routing_err: "",
       bank_acc_Err: "",
       bank_name_Err: "",
-      card_details_invalid: ""
+      card_details_invalid: "",
+      bank_account_type: ""
     });
 
   //   const [cardBankLoader, setCardBankLoader] = useState();
@@ -111,7 +113,8 @@ const Billing = (props) => {
       bank_acc_Err: "",
       bank_name_Err: "",
       card_details_invalid: "",
-      bank_details_invalid: ""
+      bank_details_invalid: "",
+      bank_account_type: ""
     });
     hideNewCardHandler2()
   };
@@ -129,7 +132,8 @@ const Billing = (props) => {
       bank_acc_Err: "",
       bank_name_Err: "",
       card_details_invalid: "",
-      bank_details_invalid: ""
+      bank_details_invalid: "",
+      bank_account_type: ""
     });
   };
 
@@ -139,7 +143,7 @@ const Billing = (props) => {
     setBankAccountCheck("");
     setBankNameCheck("");
     setBankRoutingCheck("");
-
+    setBankAccountType("checking");
     setFormErrorMsg({
       card_num_Err: "",
       card_name_Err: "",
@@ -149,7 +153,8 @@ const Billing = (props) => {
       bank_acc_Err: "",
       bank_name_Err: "",
       card_details_invalid: "",
-      bank_details_invalid: ""
+      bank_details_invalid: "",
+      bank_account_type: ""
     });
     hideNewCardHandler()
   };
@@ -166,7 +171,8 @@ const Billing = (props) => {
       bank_acc_Err: "",
       bank_name_Err: "",
       card_details_invalid: "",
-      bank_details_invalid: ""
+      bank_details_invalid: "",
+      bank_account_type: ""
     });
   };
 
@@ -421,7 +427,8 @@ const Billing = (props) => {
 
   const bankAccountCheckHandler = (e) => {
     let accountNumber = e.target.value;
-    if(accountNumber.length === 0 || accountNumber.length < 9){
+    console.log(accountNumber.length)
+    if(accountNumber.length === 0 || accountNumber.length < 3 || accountNumber.length > 20){
       setFormErrorMsg((errorMessage) => ({
       ...errorMessage,
         bank_acc_Err: "Please provide proper account number.",
@@ -434,7 +441,7 @@ const Billing = (props) => {
       }));
     }
     var formattedAccountNumber = accountNumber.replace(/[^\d]/g, "");
-    formattedAccountNumber = formattedAccountNumber.substring(0, 12);
+    /*formattedAccountNumber = formattedAccountNumber.substring(0, 12);*/
     setBankAccountCheck(formattedAccountNumber);
   };
 
@@ -475,7 +482,22 @@ const Billing = (props) => {
     formattedBankRouting = formattedBankRouting.substring(0, 9);
     setBankRoutingCheck(formattedBankRouting);
   };
-
+  const bankAccountTypeHandler = (e) => {
+    let accountType = e.target.value;
+    if(accountType === "") {
+      setFormErrorMsg((errorMessage) => ({
+        ...errorMessage,
+        bank_account_type: "Please enter proper account type",
+      }));
+    }
+    else {
+      setFormErrorMsg((errorMessage) => ({
+        ...errorMessage,
+        bank_account_type: "",
+      }));
+    }
+    setBankAccountType(accountType);
+  }
   const saveCardData = async (e) => {
     e.preventDefault();
     
@@ -708,20 +730,32 @@ const expiration_month = cardExpairyMonthCheckFn();
         bank_acc_Err: "",
       }));
     }
+    if (!bankAccountType === "") {
+      setFormErrorMsg((errorMessage) => ({
+        ...errorMessage,
+        bank_account_type: "Please provide proper account account type.",
+      }));
+      bankError = true
+    } else {
+      setFormErrorMsg((errorMessage) => ({
+        ...errorMessage,
+        bank_account_type: "",
+      }));
+    }
 
       let bankPayload = bankRoutingCheck.trim() !== "" && bankAccountCheck.trim() !== "" && bankNameCheck.trim() !== "" ? {
         contact: props.contactId,
         routing_number:  bankRoutingCheck,
         account_number: bankAccountCheck,
         account_holder: bankNameCheck,
-        account_type: "checking",
+        account_type: bankAccountType,
         status: bankList && bankList.length > 0 ? bankActivationCheckText : "active",
       } : bankError = true
 
     if (!bankError) {
       setIsLoader(true)
       try {
-        (cardBankList.length == 0 && bankList.length == 0) && makePrimaryMethod(e, "bank");
+        (cardBankList.length === 0 && bankList.length === 0) && makePrimaryMethod(e, "bank");
         await BillingServices.addBank(bankPayload);
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
@@ -747,6 +781,7 @@ const expiration_month = cardExpairyMonthCheckFn();
           account_type: "checking",
           status: "inactive",
         };
+        setBankAccountType("checking");
         addBankForm.current.reset()
         fetchCardBank();
       }
@@ -1179,9 +1214,12 @@ const expiration_month = cardExpairyMonthCheckFn();
                                   </div>
                                   <div className="half formModule">
                                     <label>Account Type</label>
-                                    <select className="selectBox">
-                                      <option>Checking</option>
+                                    <select className="selectBox" onChange={bankAccountTypeHandler} value={bankAccountType}>
+                                      <option value="checking">Checking</option>
+                                      <option value="savings">Savings</option>
+                                      <option value="business_checking">Business Checking</option>
                                     </select>
+                                    {formErrorMsg.bank_account_type && <p className="errorMsg">{formErrorMsg.bank_account_type}</p>}
                                   </div>
                                 </div>
 
