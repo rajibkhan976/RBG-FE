@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, {useEffect, useRef, useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import cardIcon from "../../../../assets/images/card.svg";
 import bankIcon from "../../../../assets/images/banks.svg";
 import arrowForward from "../../../../assets/images/arrow_forward.svg";
@@ -7,10 +7,10 @@ import plus_icon from "../../../../assets/images/plus_icon.svg";
 import cross_icon from "../../../../assets/images/cross_icon.svg";
 import backBlackArrow from "../../../../assets/images/backBlackArrow.svg";
 import noDataIcon from "../../../../assets/images/noData_icon.svg"
-import { CreditManagementServices } from '../../../../services/setup/CreditManagementServices';
+import {CreditManagementServices} from '../../../../services/setup/CreditManagementServices';
 import Loader from '../../../shared/Loader';
 import * as actionTypes from "../../../../actions/types";
-import { utils } from '../../../../helpers';
+import {utils} from '../../../../helpers';
 
 
 const initialCardState = {
@@ -25,6 +25,7 @@ const initialBankState = {
     bankAccountNumber: "",
     bankHolderName: "",
     routingNumber: "",
+    accountType: ""
 }
 
 const PackagePaymentModal = (props) => {
@@ -306,7 +307,7 @@ const PackagePaymentModal = (props) => {
     //Account number
     const checkAccountNumberErr = accountNumber => {
 
-        return accountNumber.trim().length === 0 || accountNumber.trim().length < 9
+        return accountNumber.trim().length === 0 || accountNumber.trim().length < 3 || accountNumber.trim().length > 20
             ? "Account number is not valid" : ""
     }
 
@@ -342,9 +343,7 @@ const PackagePaymentModal = (props) => {
         })
 
         //Format
-        let formattedAccountNumber = bankForm.current['bankAccountNumber'].value.replace(/[^\d]/g, "");
-        formattedAccountNumber = formattedAccountNumber.substring(0, 12);
-        bankForm.current['bankAccountNumber'].value = formattedAccountNumber;
+        bankForm.current['bankAccountNumber'].value = bankForm.current['bankAccountNumber'].value.replace(/[^\d]/g, "");
     }
 
     const handleBankHolderNameChange = () => {
@@ -369,7 +368,21 @@ const PackagePaymentModal = (props) => {
 
     }
 
-
+    const bankAccountTypeHandler = (e) => {
+        let accountType = e.target.value;
+        if (accountType === "") {
+            setFormErrors((errorMessage) => ({
+                ...errorMessage,
+                accountType: "Please enter proper account type",
+            }));
+        } else {
+            setFormErrors((errorMessage) => ({
+                ...errorMessage,
+                bank_account_type: "",
+            }));
+        }
+        bankForm.current['bankAccountType'].value = accountType;
+    }
 
     //Validate card form
     const validateBankForm = () => {
@@ -398,7 +411,10 @@ const PackagePaymentModal = (props) => {
             isError = true;
             formErrorsCopy.routingNumber = checkRoutingNumber;
         }
-
+        if (!bankForm.current['bankAccountType'].value === "") {
+            isError = true;
+            formErrorsCopy.accountType = bankForm.current['bankAccountType'].value;
+        }
 
         //Set errors
         setFormErrors({
@@ -406,6 +422,7 @@ const PackagePaymentModal = (props) => {
             bankAccountNumber: formErrorsCopy.bankAccountNumber,
             bankHolderName: formErrorsCopy.bankHolderName,
             routingNumber: formErrorsCopy.routingNumber,
+            accountType: formErrorsCopy.accountType
         });
 
         return !isError;
@@ -751,17 +768,21 @@ const PackagePaymentModal = (props) => {
                                                                         <input type="text" name="bankRoutingNumber" className={formErrors.routingNumber ? "editFormStyle cr_error" : "editFormStyle"} placeholder="XXXXXXXX"
                                                                             onChange={handleBankRoutingNumberChange}
                                                                         />
+                                                                        {formErrors.routingNumber ? (
+                                                                            <p className="errorMsg">{formErrors.routingNumber}</p>
+                                                                        ) : null}
                                                                     </div>
                                                                     <div className="half">
                                                                         <label className="editFormLabel">Account Type</label>
                                                                         <select className="editFormStyle" name="bankAccountType"
-                                                                        >
+                                                                                onChange={bankAccountTypeHandler}>
                                                                             <option value="checking">Checking</option>
+                                                                            <option value="savings">Savings</option>
+                                                                            <option value="business_checking">Business Checking</option>
                                                                         </select>
+                                                                        {formErrors.bank_account_type &&
+                                                                            <p className="errorMsg">{formErrors.bank_account_type}</p>}
                                                                     </div>
-                                                                    {formErrors.routingNumber ? (
-                                                                        <p className="errorMsg">{formErrors.routingNumber}</p>
-                                                                    ) : null}
                                                                 </div>
                                                                 <div className="d-flex justify-content-center mt20">
                                                                     <button className="creatUserBtn" onClick={saveBank}>
