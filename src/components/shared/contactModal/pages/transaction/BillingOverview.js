@@ -51,6 +51,7 @@ const BillingOverview = (props) => {
         account_number: '',
         account_holder: '',
         account_type: 'checking',
+        company_name: '',
         status: 'active'
     });
     const [newPayHasError, setNewPayHasError] = useState(false);
@@ -70,7 +71,8 @@ const BillingOverview = (props) => {
         card_details_invalid: '',
         bank_details_invalid: '',
         primary_invalid: '',
-        bank_account_type: ''
+        bank_account_type: '',
+        company_name: ''
     });
 
     const makePrimaryMethod = (e, value) => {
@@ -577,7 +579,8 @@ const BillingOverview = (props) => {
                         card_details_invalid: '',
                         bank_details_invalid: '',
                         primary_invalid: '',
-                        bank_account_type: ''
+                        bank_account_type: '',
+                        company_name: ''
                     })
                     fetchCardBank();
                 }
@@ -680,6 +683,28 @@ const BillingOverview = (props) => {
     };
     // BANK ROUTING NUMBER CHECK
 
+    const companyNameHandeler = (e) => {
+        let name = e.target.value;
+        if (name === "") {
+            setNewPayErrors((errorMessage) => ({
+                ...errorMessage,
+                company_name: "Please enter company name",
+            }));
+        } else {
+            setNewPayErrors((errorMessage) => ({
+                ...errorMessage,
+                company_name: "",
+            }));
+        }
+        setNewBankState({
+            ...newBankState,
+            company_name: name
+        });
+        console.log("newBankState: ", newBankState);
+    }
+
+
+
     // SAVE NEW BANK ACCOUNT
     const saveNewBank = async (e) => {
         e.preventDefault();
@@ -735,12 +760,42 @@ const BillingOverview = (props) => {
                 bank_account_type: "",
             }));
         }
+        if (newBankState.account_type === "business_checking" && newBankState.company_name === "") {
+            setNewPayErrors((errorMessage) => ({
+                ...errorMessage,
+                company_name: "Please enter company name.",
+            }));
+            bankError = true
+        } else {
+            setNewPayErrors((errorMessage) => ({
+                ...errorMessage,
+                company_name: "",
+            }));
+        }
+
+        let company_name = e.target.value;
+        if (company_name === "") {
+            setNewPayErrors((errorMessage) => ({
+                ...errorMessage,
+                company_name: "Please enter company name",
+            }));
+        } else {
+            setNewPayErrors((errorMessage) => ({
+                ...errorMessage,
+                company_name: "",
+            }));
+        }
+        
+
+        console.log("Bank state: ", newBankState);
+
         let bankPayload = newBankState.routing_number.trim() !== "" && newBankState.account_number.trim() !== "" && newBankState.account_holder.trim() !== "" ? {
             contact: props.contactId,
             routing_number: newBankState.routing_number,
             account_number: newBankState.account_number,
             account_holder: newBankState.account_holder,
             account_type: newBankState.account_type,
+            company_name: newBankState.company_name,
             status: "active",
         } : bankError = true
 
@@ -782,7 +837,8 @@ const BillingOverview = (props) => {
                         card_details_invalid: '',
                         bank_details_invalid: '',
                         primary_invalid: '',
-                        bank_account_type: ''
+                        bank_account_type: '',
+                        company_name: ''
                     })
                     fetchCardBank();
                 }
@@ -805,7 +861,7 @@ const BillingOverview = (props) => {
                     routing_number: "",
                     account_number: "",
                     account_holder: "",
-                    account_type: "checking",
+                    account_type: "",
                     status: "active",
                 };
 
@@ -814,7 +870,7 @@ const BillingOverview = (props) => {
                     routing_number: '',
                     account_number: '',
                     account_holder: '',
-                    account_type: '',
+                    account_type: 'checking',
                     status: 'active'
                 })
 
@@ -843,7 +899,7 @@ const BillingOverview = (props) => {
             routing_number: '',
             account_number: '',
             account_holder: '',
-            account_type: '',
+            account_type: 'checking',
             status: 'inactive'
         })
         setCardNumberCheck("")
@@ -863,11 +919,21 @@ const BillingOverview = (props) => {
                 bank_account_type: "",
             }));
         }
-        setNewBankState({
-            ...newBankState,
+        setNewBankState((previousState) => ({
+            ...previousState,
             account_type: accountType
-        });
+        }));
+        if (accountType != "business_checking") {
+            setNewBankState({
+                ...newBankState,
+                account_type: accountType,
+                company_name: ""
+            });
+        }
     }
+
+    
+
     useEffect(() => {
         fetchCardBank()
     }, []);
@@ -1220,7 +1286,8 @@ const BillingOverview = (props) => {
                                                     <div className="cmnFormField">
                                                         <select className="cmnFieldStyle selectBox"
                                                                 onChange={bankAccountTypeHandler}
-                                                                value={newBankState.account_type}>
+                                                                // value={newBankState.account_type}
+                                                                >
                                                             <option value="checking">Checking</option>
                                                             <option value="savings">Savings</option>
                                                             <option value="business_checking">Business Checking</option>
@@ -1230,6 +1297,25 @@ const BillingOverview = (props) => {
                                                     </div>
                                                 </div>
                                             </div>
+                                            
+                                            { newBankState.account_type === "business_checking" ? 
+                                            <div className="cmnFormRow">
+                                                <label>Company Name</label>
+                                                <div
+                                                    className={newPayErrors.company_name ? "cmnFormField error" : "cmnFormField"}>
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Company name"
+                                                        className="cmnFieldStyle"
+                                                        name=""
+                                                        value={newBankState.company_name} 
+                                                        onChange={companyNameHandeler}
+                                                    />
+                                                </div>
+                                                {newPayErrors.company_name &&
+                                                    <p className="errorMsg">{newPayErrors.company_name}</p>}
+                                            </div>
+                                            : "" }
 
                                             <div className="modalbtnHolder">
                                                 <button
@@ -1238,7 +1324,7 @@ const BillingOverview = (props) => {
                                                     ref={addBankBtn}
                                                     onClick={saveNewBank}
                                                 >
-                                                    <img src={pluss} alt=""/>
+                                                    <img src={pluss} alt=""/> &nbsp;
                                                     Add my Bank Account
                                                 </button>
                                             </div>
