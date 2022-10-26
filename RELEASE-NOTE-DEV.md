@@ -21,3 +21,5 @@
     - Fixed product cash transaction blank screen issue
 # HOTFIX V1.0.1
     - Fixed customization submenu link issue.
+# HOTFIX V1.0.2
+    - Billing add bank compnay name option added.

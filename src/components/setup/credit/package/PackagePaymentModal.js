@@ -25,7 +25,8 @@ const initialBankState = {
     bankAccountNumber: "",
     bankHolderName: "",
     routingNumber: "",
-    accountType: ""
+    accountType: "",
+    company_name: ""
 }
 
 const PackagePaymentModal = (props) => {
@@ -65,6 +66,7 @@ const PackagePaymentModal = (props) => {
     useEffect(() => {
         //Fetch cards & banks
         fetchCardBank();
+        console.log("bankForm : ", bankForm);
     }, [])
 
     const fetchCardBank = async () => {
@@ -382,6 +384,42 @@ const PackagePaymentModal = (props) => {
             }));
         }
         bankForm.current['bankAccountType'].value = accountType;
+
+        if (accountType !== "business_checking") {
+            bankForm.current['company_name'].value = "";
+        }
+    }
+
+    const companyNameHandel = (e) => {
+        let company = e.target.value;
+        if (company === "") {
+            setFormErrors((errorMessage) => ({
+                ...errorMessage,
+                company_name: "Please enter company name",
+            }));
+        } else {
+            setFormErrors((errorMessage) => ({
+                ...errorMessage,
+                company_name: "",
+            }));
+        }
+        bankForm.current['company_name'].value = company;
+    }
+
+    const companyNameErr = (val) => {
+        if (bankForm.current['bankAccountType'].value === "business_checking" && val === "") {
+            setFormErrors((errorMessage) => ({
+                ...errorMessage,
+                company_name: "Please enter company name",
+            }));
+            return true
+        } else {
+            setFormErrors((errorMessage) => ({
+                ...errorMessage,
+                company_name: "",
+            }));
+            return false;
+        }
     }
 
     //Validate card form
@@ -411,10 +449,18 @@ const PackagePaymentModal = (props) => {
             isError = true;
             formErrorsCopy.routingNumber = checkRoutingNumber;
         }
-        if (!bankForm.current['bankAccountType'].value === "") {
+        
+        //Company name
+        let checkCompanyName = companyNameErr(bankForm.current['company_name'].value);
+        if (checkCompanyName) {
             isError = true;
-            formErrorsCopy.accountType = bankForm.current['bankAccountType'].value;
+            formErrorsCopy.company_name = "Please enter company name";
         }
+        // if (!bankForm.current['company_name'].value === "") {
+        //     isError = true;
+            
+        //     formErrorsCopy.company_name = bankForm.current['company_name'].value;
+        // }
 
         //Set errors
         setFormErrors({
@@ -422,7 +468,8 @@ const PackagePaymentModal = (props) => {
             bankAccountNumber: formErrorsCopy.bankAccountNumber,
             bankHolderName: formErrorsCopy.bankHolderName,
             routingNumber: formErrorsCopy.routingNumber,
-            accountType: formErrorsCopy.accountType
+            accountType: formErrorsCopy.accountType,
+            company_name: formErrorsCopy.company_name
         });
 
         return !isError;
@@ -430,7 +477,7 @@ const PackagePaymentModal = (props) => {
 
     //Save bank
     const saveBank = async (e) => {
-        console.log('save bank');
+        console.log('save bank', bankForm.current["bankAccountNumber"]);
         e.preventDefault();
 
         let isValid = validateBankForm();
@@ -444,6 +491,7 @@ const PackagePaymentModal = (props) => {
                 account_holder: bankForm.current['bankHolderName'].value,
                 routing_number: bankForm.current['bankRoutingNumber'].value,
                 account_type: bankForm.current['bankAccountType'].value,
+                company_name: bankForm.current['company_name'].value
             }
 
             setIsLoader(true);
@@ -724,6 +772,7 @@ const PackagePaymentModal = (props) => {
                                                                         <p className="errorMsg">{formErrors.cardExpiryDate}</p>
                                                                     ) : null}
                                                                 </div>
+                                                                
                                                                 <div className="d-flex justify-content-center mt20">
                                                                     <button type="button" className="creatUserBtn" onClick={saveCard}>
                                                                         <img className="plusIcon" src={plus_icon} alt="" /><span>Add my Card</span>
@@ -740,7 +789,7 @@ const PackagePaymentModal = (props) => {
                                                                         Account Number
                                                                         <span className="mandatory"> *</span>
                                                                     </label>
-                                                                    <input type="text" name="bankAccountNumber" className={formErrors.bankAccountNumber ? "editFormStyle cr_error" : "editFormStyle"} placeholder="XXXXXXXXXXXX"
+                                                                    <input type="text" name="bankAccountNumber" autocomplete="off" className={formErrors.bankAccountNumber ? "editFormStyle cr_error" : "editFormStyle"} placeholder="XXXXXXXXXXXX"
                                                                         onChange={handleBankAccountNumberChange}
                                                                     />
                                                                     {formErrors.bankAccountNumber ? (
@@ -752,7 +801,7 @@ const PackagePaymentModal = (props) => {
                                                                         Account Holder Name
                                                                         <span className="mandatory"> *</span>
                                                                     </label>
-                                                                    <input type="text" name="bankHolderName" className={formErrors.bankHolderName ? "editFormStyle cr_error" : "editFormStyle"} placeholder="Ex. Adam Smith"
+                                                                    <input type="text" name="bankHolderName" autocomplete="off" className={formErrors.bankHolderName ? "editFormStyle cr_error" : "editFormStyle"} placeholder="Ex. Adam Smith"
                                                                         onChange={handleBankHolderNameChange}
                                                                     />
                                                                     {formErrors.bankHolderName ? (
@@ -765,7 +814,7 @@ const PackagePaymentModal = (props) => {
                                                                             Routing #
                                                                             <span className="mandatory"> *</span>
                                                                         </label>
-                                                                        <input type="text" name="bankRoutingNumber" className={formErrors.routingNumber ? "editFormStyle cr_error" : "editFormStyle"} placeholder="XXXXXXXX"
+                                                                        <input type="text" name="bankRoutingNumber" autocomplete="off" className={formErrors.routingNumber ? "editFormStyle cr_error" : "editFormStyle"} placeholder="XXXXXXXX"
                                                                             onChange={handleBankRoutingNumberChange}
                                                                         />
                                                                         {formErrors.routingNumber ? (
@@ -783,6 +832,20 @@ const PackagePaymentModal = (props) => {
                                                                         {formErrors.bank_account_type &&
                                                                             <p className="errorMsg">{formErrors.bank_account_type}</p>}
                                                                     </div>
+                                                                </div>
+                                                                
+                                                                <div className={bankForm.current ? (bankForm.current["bankAccountType"].value == "business_checking" ? "editformRow" : "hide") : "hide"}>
+                                                                    <label className="editFormLabel">
+                                                                        Company Name 
+                                                                        <span className="mandatory"> *</span>
+                                                                    </label>
+                                                                    <input type="text" name="company_name" autocomplete="off" className={formErrors.company_name ? "editFormStyle cr_error" : "editFormStyle"}
+                                                                        placeholder="Company name"
+                                                                        onChange={companyNameHandel}
+                                                                    />
+                                                                    {formErrors.company_name ? (
+                                                                        <p className="errorMsg">{formErrors.company_name}</p>
+                                                                    ) : null}
                                                                 </div>
                                                                 <div className="d-flex justify-content-center mt20">
                                                                     <button className="creatUserBtn" onClick={saveBank}>

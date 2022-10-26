@@ -37,7 +37,8 @@ const Billing = (props) => {
     const [bankNameCheck, setBankNameCheck] = useState("");
     const [bankRoutingCheck, setBankRoutingCheck] = useState("");
     const [bankAccountType, setBankAccountType] = useState("checking");
-    const [successMessage, setSuccessMessage] = useState("")
+    const [companyName, setCompanyName] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
     const [merchantOptions, setMerchantOptions] = useState({
       hasId: false,
       activeFor: []
@@ -58,7 +59,8 @@ const Billing = (props) => {
       bank_acc_Err: "",
       bank_name_Err: "",
       card_details_invalid: "",
-      bank_account_type: ""
+      bank_account_type: "",
+      company_name: ""
     });
 
   //   const [cardBankLoader, setCardBankLoader] = useState();
@@ -114,7 +116,8 @@ const Billing = (props) => {
       bank_name_Err: "",
       card_details_invalid: "",
       bank_details_invalid: "",
-      bank_account_type: ""
+      bank_account_type: "",
+      company_name: ""
     });
     hideNewCardHandler2()
   };
@@ -133,7 +136,8 @@ const Billing = (props) => {
       bank_name_Err: "",
       card_details_invalid: "",
       bank_details_invalid: "",
-      bank_account_type: ""
+      bank_account_type: "",
+      company_name: ""
     });
   };
 
@@ -154,7 +158,8 @@ const Billing = (props) => {
       bank_name_Err: "",
       card_details_invalid: "",
       bank_details_invalid: "",
-      bank_account_type: ""
+      bank_account_type: "",
+      company_name: ""
     });
     hideNewCardHandler()
   };
@@ -172,7 +177,8 @@ const Billing = (props) => {
       bank_name_Err: "",
       card_details_invalid: "",
       bank_details_invalid: "",
-      bank_account_type: ""
+      bank_account_type: "",
+      company_name: ""
     });
   };
 
@@ -498,6 +504,24 @@ const Billing = (props) => {
     }
     setBankAccountType(accountType);
   }
+
+  const companyNameHandel = (e) => {
+    let company = e.target.value;
+    if(companyName === "") {
+      setFormErrorMsg((errorMessage) => ({
+        ...errorMessage,
+        company_name: "Please enter company name",
+      }));
+    }
+    else {
+      setFormErrorMsg((errorMessage) => ({
+        ...errorMessage,
+        company_name: "",
+      }));
+    }
+    setCompanyName(company);
+  }
+
   const saveCardData = async (e) => {
     e.preventDefault();
     
@@ -742,6 +766,20 @@ const expiration_month = cardExpairyMonthCheckFn();
         bank_account_type: "",
       }));
     }
+      if (bankAccountType === "business_checking") {
+        if (companyName === "") {
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            company_name: "Please enter company name.",
+          }));
+          bankError = true
+        } else {
+          setFormErrorMsg((errorMessage) => ({
+            ...errorMessage,
+            company_name: "",
+        }));
+      }
+    }
 
       let bankPayload = bankRoutingCheck.trim() !== "" && bankAccountCheck.trim() !== "" && bankNameCheck.trim() !== "" ? {
         contact: props.contactId,
@@ -749,6 +787,7 @@ const expiration_month = cardExpairyMonthCheckFn();
         account_number: bankAccountCheck,
         account_holder: bankNameCheck,
         account_type: bankAccountType,
+        company_name: companyName,
         status: bankList && bankList.length > 0 ? bankActivationCheckText : "active",
       } : bankError = true
 
@@ -1144,7 +1183,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                               <img src={bank} alt=""/>
                               <h3>Add a Bank Account</h3>
                             </div>
-                            <div className="addingForm">
+                            <div className="addingForm bank">
                               <form ref={addBankForm}>
                                 <div className="formModule">
                                   <label>Account Number</label>
@@ -1203,7 +1242,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                   {formErrorMsg.bank_name_Err && <p className="errorMsg">{formErrorMsg.bank_name_Err}</p>}
                                 </div>
                                 <div className="halfDivForm">
-                                  <div className="half formModule">
+                                  <div className="half formModule routing">
                                     <label>Routing #</label>
                                     <input
                                         type="text"
@@ -1212,7 +1251,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                     />
                                     {formErrorMsg.bank_routing_err && <p className="errorMsg">{formErrorMsg.bank_routing_err}</p>}
                                   </div>
-                                  <div className="half formModule">
+                                  <div className="half formModule acType">
                                     <label>Account Type</label>
                                     <select className="selectBox" onChange={bankAccountTypeHandler} value={bankAccountType}>
                                       <option value="checking">Checking</option>
@@ -1222,7 +1261,18 @@ const expiration_month = cardExpairyMonthCheckFn();
                                     {formErrorMsg.bank_account_type && <p className="errorMsg">{formErrorMsg.bank_account_type}</p>}
                                   </div>
                                 </div>
-
+                                {bankAccountType == "business_checking" ?
+                                <div className="formModule">
+                                  <label>Company Name</label>
+                                  <input
+                                      type="text"
+                                      placeholder="Enter company name"
+                                      onChange={companyNameHandel}
+                                      value={companyName}
+                                  />
+                                  {formErrorMsg.company_name && <p className="errorMsg">{formErrorMsg.company_name}</p>}
+                                </div>
+                                : "" }
                                 <div className="text-center">
                                   <button className="orangeBtn" onClick={saveBankData} ref={addBankBtn} disabled={isLoader}>
                                     <img src={plus} alt=""/> Add my Bank Account
