@@ -7486,6 +7486,21 @@ p.trackName {
   top: -5px;
   line-height: 10px;
 }
+.addingForm.bank {
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 10px;
+  width: 323px;
+}
+.addingForm.bank::-webkit-scrollbar {
+  width: 6px;
+}
+.addingForm.bank::-webkit-scrollbar-track {
+  background-color: #dce4eb;
+}
+.addingForm.bank::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
+}
 .flipCardHolder {
   perspective: 800px;
 }
@@ -12540,4 +12555,11 @@ background-color: #fff;
 .inFormField .keywordList {
   max-height: 150px;
   overflow: auto;
+}
+
+.formModule.half.routing {
+  width: 42%;
+}
+.formModule.half.acType {
+  width: 54%;
 }
