@@ -74,14 +74,14 @@ const Setup = (props) => {
                 </div>
               </div>
               <ul className="secondListing">
-                {/* <li>
+              {loggedInUser && loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in' ?    <li>
                   <NavLink
                     to="/email-setup"
                     onClick={(e) => props.clickedLink(e)}
                   >
                     Email
                   </NavLink>
-                </li>  */}
+                </li> :""}
                 <li>
                   <NavLink
                     to="/sms-setup"
@@ -245,14 +245,14 @@ const Setup = (props) => {
                 </div>
               </div>
               <ul className="secondListing">
-                {/* <li>
+                <li>
                   <NavLink
                     to="/email-template"
                     onClick={(e) => props.clickedLink(e)}
                   >
                     Email
                   </NavLink>
-                </li> */}
+                </li>
                 <li>
                   <NavLink
                     to="/sms-template"

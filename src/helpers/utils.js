@@ -140,7 +140,7 @@ export const utils = {
 
         //Allow only 19
         cardNumber = cardNumber.substr(0, 19).replace(/[^\d ]/g, "");
-        
+
         let visaPattern = /^(?:4[0-9]{12}(?:[0-9]{3})?)$/;
         let visaPatternTwo = /^4\d{3}(| |-)(?:\d{4}\1){2}\d{4}$/;
         let visaPatternThree = /^4\d{12}(?:\d{3})?$/;
@@ -216,13 +216,19 @@ export const utils = {
     },
     convertUTCToTimezone(utcDt, timezone = null, dateFormat = "LLL") {
         const formattedDate = moment(utcDt).format(dateFormat);
-        if(!timezone) return formattedDate;
+        if (!timezone) return formattedDate;
         return moment.utc(formattedDate, null).tz(timezone).format(dateFormat);
     },
     convertTimezoneToUTC(date, timezone = null, dateFormat = "LLL") {
         const formattedDate = moment(date).format(dateFormat);
-        if(!timezone) return formattedDate;
+        if (!timezone) return formattedDate;
         return moment(formattedDate).tz(timezone).utc().format(dateFormat);
+    },
+    encodeHTML: (html) => {
+        return Buffer.from(html).toString('base64');
+    },
+    decodeHTML: (encodedStr) => {
+        return Buffer.from(encodedStr, 'base64').toString();
     }
 
 }

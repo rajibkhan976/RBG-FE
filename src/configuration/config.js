@@ -209,4 +209,9 @@ module.exports = {
     dashboardWidgetsPosition : "https://" +process.env.REACT_APP_DASHBOARD_SAVE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/widgets/",
     // Global transaction history  
     transactionGlobalHistotyUrl : "https://" + process.env.REACT_APP_TRANSACTION + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/contact/transactions/list/",
+
+    // global Email
+    emailSetupUrl: 'https://'+process.env.REACT_APP_EMAIL_SETUP+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/communication/email/',
+    emailTemplateUrl : 'https://'+process.env.REACT_APP_EMAIL_TEMPLATE+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+ '/email/',
+    globalEmailSend : 'https://'+process.env.REACT_APP_EMAIL_GLOBAL+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+ '/email/send',
 }  
