@@ -23,3 +23,5 @@
     - Fixed customization submenu link issue.
 # HOTFIX V1.0.2
     - Billing add bank compnay name option added.
+# EMAIL V1.0.0
+    - Email setup and template and global send mail

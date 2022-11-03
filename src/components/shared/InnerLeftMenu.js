@@ -22,7 +22,7 @@ const InnerLeftMenu = (props) => {
   const contactCount = useSelector((state) => state.contact.count);
   const dispatch = useDispatch();
   const loggedInUser = useSelector((state) => state.user.data);
-
+  
   useEffect(() => {
     console.log("Props", props);
     if (props.automationListItem) {
@@ -77,7 +77,7 @@ const InnerLeftMenu = (props) => {
       // throw new Error(e);
     }
   }
-
+  console.log("useeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeer",loggedInUser);
   const RenderMenu = (prop) => {
     switch (prop.menuType) {
       case "auth":
@@ -312,7 +312,7 @@ const InnerLeftMenu = (props) => {
               </li>
               <li>
                 <NavLink 
-                  className={(pathURL === "/sms-setup" || pathURL === "/call-setup") ? "leftMenuInnerLink active" : "leftMenuInnerLink"} 
+                  className={(pathURL === "/sms-setup" || pathURL === "/call-setup" || pathURL === "/email-setup") ? "leftMenuInnerLink active" : "leftMenuInnerLink"} 
                   to="/call-setup" 
                   activeClassName="active"
                 >
@@ -325,11 +325,11 @@ const InnerLeftMenu = (props) => {
                     </button>
                   </div>
                   <ul className="sideSubMenu">
-                    {/* <li>
+                  {loggedInUser && loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in' ?<li>
                       <NavLink to="/email-setup" activeClassName="active">
                         Email
                       </NavLink>
-                    </li> */}
+                    </li> : ""}
                     <li>
                       <NavLink to="/sms-setup" activeClassName="active">
                         SMS
@@ -471,11 +471,11 @@ const InnerLeftMenu = (props) => {
                     </button>
                   </div>
                   <ul className="sideSubMenu">
-                    {/* <li>
+                    <li>
                       <NavLink to="/email-template" activeClassName="active">
                          Email
                       </NavLink>
-                    </li> */}
+                    </li> 
                     <li>
                       <NavLink to="/sms-template" activeClassName="active">
                          SMS
