@@ -25,3 +25,5 @@
     - Billing add bank compnay name option added.
 # EMAIL V1.0.0
     - Email setup and template and global send mail
+# HOTFIX V1.0.3
+    - Card number 14 to 19 digit validated and CVV 3 to 4 digit validated

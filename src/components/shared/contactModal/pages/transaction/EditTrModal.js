@@ -32,7 +32,7 @@ const EditTrModal = (props) => {
     
     const [cardExpairyMonthCheck, setCardExpairyMonthCheck] = useState("");
     const [cardExpairyYearCheck, setCardExpairyYearCheck] = useState("");
-    const [cardNumberOn, setCardNumberOn] = useState("");    
+    const [cardNumberOn, setCardNumberOn] = useState("");   
 
     const [openOnlineBox, setOpenOnlineBox] = useState(false);
     const [paylater, setPaylater] = useState(false);
@@ -277,62 +277,12 @@ const EditTrModal = (props) => {
 
      const addCardNumberHandler = (e) =>{
         let val = e.target.value;
-        if (val.length <= 19) {
+        if (val.length < 24) {
             var formattedCardNumber = val.replace(/[^\d]/g, "");
-            let cardType = testCardTypeFn(formattedCardNumber);
-            
-            switch (cardType) {
-              case "isAmex":
-                console.log("TYPE::::", cardType);
-                // AMEX-specific logic goes here
-                formattedCardNumber = formattedCardNumber.substring(0, 15);
-                setFormErrorMsg((errorMessage) => ({
-                  ...errorMessage,
-                    card_num_Err: "",
-                }));
-                break;
-      
-              case "isVisa":
-                console.log("TYPE::::", cardType);
-                formattedCardNumber = formattedCardNumber.substring(0, 16);
-                setFormErrorMsg((errorMessage) => ({
-                  ...errorMessage,
-                  card_num_Err: "",
-                }));
-                break;
-      
-              case "isMast" || "isDisc":
-                console.log("TYPE::::", cardType);
-                formattedCardNumber = formattedCardNumber.substring(0, 16);
-                setFormErrorMsg((errorMessage) => ({
-                  ...errorMessage,
-                  card_num_Err: "",
-                }));
-                break;
-      
-              case "isDisc":
-                console.log("TYPE::::", cardType);
-                formattedCardNumber = formattedCardNumber.substring(0, 16);
-                setFormErrorMsg((errorMessage) => ({
-                  ...errorMessage,
-                  card_num_Err: "",
-                }));
-                break;  
-        
-              default:
-                console.log("cardType", cardType);
-                setFormErrorMsg((errorMessage) => ({
-                    ...errorMessage,
-                    card_num_Err: "Please provide a valid card number.",
-                  }));
-                break;
-            }
-      
-            // Split the card number is groups of 4
             var cardNumberSections = formattedCardNumber.match(/\d{1,4}/g);
-            if (formattedCardNumber.match(/\d{1,4}/g)) {
+            if (cardNumberSections) {
               //console.log("formattedCardNumber", formattedCardNumber);
-              formattedCardNumber = cardNumberSections.join("-");
+              formattedCardNumber = cardNumberSections.join(" ");
               addCardfieldErrorCheck.checkcardNumber(formattedCardNumber);
               var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");
               setCardNumberOn(cardNumberChanged);
@@ -374,16 +324,17 @@ const EditTrModal = (props) => {
     const cardcvvHandler = (e) =>{
         let val = e.target.value;
         var formattedCardCvv = val.replace(/[^\d]/g, "");
-        formattedCardCvv = formattedCardCvv.substring(0, 3);
-        // addCardfieldErrorCheck.checkcardcvv(formattedCardCvv);
+        formattedCardCvv = formattedCardCvv.substring(0, 4);
+        addCardfieldErrorCheck.checkcardcvv(formattedCardCvv);
+       // setAddCardFormData({...addCardFormData, cvv: formattedCardCvv})
     }
 
     const addCardfieldErrorCheck = {
 
         checkcardNumber: (val) => {
             setAddCardFormData({...addCardFormData, cardNumber: val});
-            if (!val) {
-                setAddCardFormErrorMsg(prevState => ({...prevState, cardNumber: "Please enter Card Number"}));
+            if (!val || val.length < 17) {
+                setAddCardFormErrorMsg(prevState => ({...prevState, cardNumber: "Please enter a valid card number"}));
             } else {
                 setAddCardFormErrorMsg(prevState => ({...prevState, cardNumber: ""}));
             }
@@ -404,14 +355,14 @@ const EditTrModal = (props) => {
                 setAddCardFormErrorMsg(prevState => ({...prevState, exDate: ""}));
             }
         },
-        // checkcardcvv: (val) => {
-        //     setAddCardFormData({...addCardFormData, cvv: val});
-        //     if (!val) {
-        //         setAddCardFormErrorMsg(prevState => ({...prevState, cvv: "Please enter CVV"}));
-        //     } else {
-        //         setAddCardFormErrorMsg(prevState => ({...prevState, cvv: ""}));
-        //     }
-        // }
+        checkcardcvv: (val) => {
+            setAddCardFormData({...addCardFormData, cvv: val});
+            if (val.length > 0 && val.length < 3) {
+                setAddCardFormErrorMsg(prevState => ({...prevState, cvv: "CVV should be 3 or 4 digits"}));
+            } else {
+                setAddCardFormErrorMsg(prevState => ({...prevState, cvv: ""}));
+            }
+        }
     }
   
 
@@ -420,10 +371,10 @@ const EditTrModal = (props) => {
         addCardfieldErrorCheck.checkcardNumber(addCardFormData.cardNumber);
         addCardfieldErrorCheck.checkcardName(addCardFormData.cardHolderName);
         addCardfieldErrorCheck.checkcardExp(addCardFormData.exDate);
-        // addCardfieldErrorCheck.checkcardcvv(addCardFormData.cvv);       
+        addCardfieldErrorCheck.checkcardcvv(addCardFormData.cvv);       
         //setAddBtnClicked(true) ;
 
-        if(addCardFormData.cardNumber === "" && addCardFormData.cardHolderName === "" && addCardFormData.exDate === "" && addCardFormData.cvv !== ""){
+        if(addCardFormData.cardNumber === "" || addCardFormData.cardNumber.length < 17 || addCardFormData.cardHolderName === "" || addCardFormData.exDate === "" || (addCardFormData.cvv.length && addCardFormData.cvv.length < 3)){
             setCheckingForCard(false);
         } else{
             setCheckingForCard(true);
@@ -431,13 +382,14 @@ const EditTrModal = (props) => {
         console.log("cardExpairySectionsMonth",cardExpairyMonthCheck);
         let cardPayload =  {
             contact: props.contactId,
-            card_number: addCardFormData.cardNumber.split("-").join(""),
+            card_number: addCardFormData.cardNumber.split(" ").join(""),
             expiration_year: cardExpairyYearCheck,
             expiration_month: cardExpairyMonthCheck,
             cvv: addCardFormData.cvv.trim() !== "" ? addCardFormData.cvv : "",
             cardholder_name: addCardFormData.cardHolderName,
             status: "inactive",
           }
+          if(checkingForCard) {
         try {
             await BillingServices.addCard(cardPayload);
             // setFormErrorMsg((errorMessage) => ({
@@ -465,12 +417,14 @@ const EditTrModal = (props) => {
               cardholder_name: "",
               status: "",
             };
+
             fetchCardBank();
             console.log("FINISHED");
             setEditCardDetailsPart(false);
             setEditCardPart(true);
             
           }
+        }
     }
 
     const addBankNumberHandler = (e) =>{
@@ -811,9 +765,12 @@ const EditTrModal = (props) => {
                                                         <div className="editform">
             
                                                             <div className="editformRow">
-                                                                <label className="editFormLabel">Card Number</label>
+                                                                <label className="editFormLabel">
+                                                                    Card Number 
+                                                                    <span className="mandatory"> *</span>
+                                                                </label>
                                                                 <input type="text" className="editFormStyle" 
-                                                                placeholder="xxxx-xxxx-xxxx-xxxx"
+                                                                placeholder="xxxx xxxx xxxx xxxx"
                                                                 value={addCardFormData.cardNumber}
                                                                 onChange={addCardNumberHandler} 
                                                                 />
@@ -823,7 +780,10 @@ const EditTrModal = (props) => {
                                                                     }
                                                             </div>
                                                             <div className="editformRow">
-                                                                <label className="editFormLabel">Card Holder Name</label>
+                                                                <label className="editFormLabel">
+                                                                    Card Holder Name
+                                                                    <span className="mandatory"> *</span>
+                                                                    </label>
                                                                 <input type="text" className="editFormStyle" 
                                                                 placeholder="Ex. Adam Smith"
                                                                 value={addCardFormData.cardHolderName}
@@ -835,7 +795,10 @@ const EditTrModal = (props) => {
                                                             </div>
                                                             <div className="editformRow">
                                                                 <div className="half">
-                                                                    <label className="editFormLabel">Expiry Date</label>
+                                                                    <label className="editFormLabel">
+                                                                        Expiry Date
+                                                                        <span className="mandatory"> *</span>
+                                                                    </label>
                                                                     <input type="text" className="editFormStyle" 
                                                                     placeholder="mm/yyyy"
                                                                     value={addCardFormData.exDate}        
@@ -937,7 +900,9 @@ const EditTrModal = (props) => {
                                                                         value={addBankFormData.checking}                                                              
                                                                     >
                                                                         <option value="">Select</option>
-                                                                        <option value="Checking">Checking</option>
+                                                                        <option value="checking">Checking</option>
+                                                                        <option value="saving">Savings</option>
+                                                                        <option value="business_checking">Business Checking</option>
                                                                     </select>
                                                                     { addBankformErrorMsg.checking &&  
                                                                         <div className="errorMsg">{addBankformErrorMsg.checking}</div>
