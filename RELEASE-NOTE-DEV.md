@@ -27,3 +27,5 @@
     - Email setup and template and global send mail
 # HOTFIX V1.0.3
     - Card number 14 to 19 digit validated and CVV 3 to 4 digit validated
+# HOTFIX V1.0.4
+    - Filtering some tags from tag list and search feature on tags

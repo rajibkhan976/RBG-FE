@@ -29,8 +29,8 @@ const EmailSetup = () => {
     const [validateMsg, setValidateMsg] = useState({
         "host": "",
         "port": "",
-        "user": "",
-        "pass": "",
+        "uSetup": "",
+        "pSetup": "",
     });
     const [showConfidBtn, setShowConfidBtn] = useState(false);
 
@@ -126,6 +126,53 @@ const EmailSetup = () => {
     useEffect(async () => {
         await fetchEmail();
     }, []);
+
+    const fieldHostHandler = (e) =>{
+        setEmailData({
+            ...emailData,
+            host : e.target.value,
+        }); 
+        if(e.target.value.length === 0){
+            setValidateMsg({...validateMsg, host: "Please enter a valid host"});
+        }else{
+            setValidateMsg({...validateMsg, host: ""});
+        }
+    };
+    const fieldPortHandler = (e) =>{
+        const portType = /^[0-9]{3}$/;
+        setEmailData({
+            ...emailData,
+            port : e.target.value,
+        }); 
+        if(!portType.test(e.target.value)){
+            setValidateMsg({...validateMsg, port: "Please enter a valid port of 3 digit"});
+        }else{
+            setValidateMsg({...validateMsg, port: ""});
+        }
+    };
+    const fieldUserHandler = (e) =>{
+        let emailRegex = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i;
+        setEmailData({
+            ...emailData,
+            user : e.target.value,
+        }); 
+        if(!e.target.value.match(emailRegex)){
+            setValidateMsg({...validateMsg, uSetup: "Please enter a user"});
+        }else{
+            setValidateMsg({...validateMsg, uSetup: ""});
+        }
+    };
+    const fieldPassHandler = (e) =>{
+        setEmailData({
+            ...emailData,
+            pass : e.target.value,
+        }); 
+        if(e.target.value.length === 0){
+            setValidateMsg({...validateMsg, pSetup: "Please enter a valid host"});
+        }else{
+            setValidateMsg({...validateMsg, pSetup: ""});
+        }
+    };
     const validateField = (e) => {
         let emailRegex = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i;
         const portType = /^[0-9]{3}$/;
@@ -150,11 +197,11 @@ const EmailSetup = () => {
         if (name === "port" && !portType.test(value)) {
             setValidateMsg({...validateMsg, port: "Please enter a valid port of 3 digit"});
         }
-        if (name === "user" && !value.match(emailRegex)) {
+        if (name === "userSetup" && !value.match(emailRegex)) {
             setValidateMsg({...validateMsg, user: "Please enter a valid user name"});
         }
-        if (name === "pass" && value.length === 0) {
-            setValidateMsg({...validateMsg, pass: "Please enter a valid password"});
+        if (name === "passSetup" && value.length === 0) {
+            setValidateMsg({...validateMsg, pass: "Please enter a password"});
         }
     }
     const handleSubmit = async (e) => {
@@ -179,14 +226,14 @@ const EmailSetup = () => {
             if (!emailData.user) {
                 setValidateMsg(previousState => ({
                     ...previousState,
-                    user: "Please enter a user name",
+                    userSetup: "Please enter a user name",
                 }));
                 validationError = true;
             }
             if (!emailData.pass) {
                 setValidateMsg(previousState => ({
                     ...previousState,
-                    pass: "Please enter a password"
+                    passSetup: "Please enter a password"
                 }));
                 validationError = true;
             }
@@ -330,7 +377,9 @@ const EmailSetup = () => {
                                             <input type="text" className="cmnFieldStyle"
                                                    name="host"
                                                    value={emailData?.host === undefined ? "" : emailData?.host}
-                                                   onChange={validateField}/>
+                                                   //onChange={validateField}
+                                                   onChange={fieldHostHandler}
+                                                   />
                                         </div>
                                         <div className="errorMsg">{validateMsg?.host}</div>
                                     </div>
@@ -339,7 +388,7 @@ const EmailSetup = () => {
                                         <div className="cmnFormField">
                                             <input type="text" className="cmnFieldStyle"
                                                    value={emailData.port ? emailData.port : ""}
-                                                   onChange={validateField}
+                                                   onChange={fieldPortHandler}
                                                    name="port"
                                             />
                                         </div>
@@ -348,34 +397,36 @@ const EmailSetup = () => {
                                 </div>
 
                                 <div className="cmnFormRow">
-                                    <div className={validateMsg?.user ? "cmnFormCol error" : "cmnFormCol"}>
+                                    <div className={validateMsg?.uSetup ? "cmnFormCol error" : "cmnFormCol"}>
                                         <div className="cmnFieldName1">Mail Username</div>
                                         <div className="cmnFormField">
 
                                             <input type="text" className="cmnFieldStyle"
                                                    value={emailData?.user}
-                                                   onChange={validateField}
-                                                   name="user"
-                                                  // autoComplete="off"
-                                                  // secureTextEntry={true}
-                                                  //  textContentType="oneTimeCode"
+                                                   onChange={fieldUserHandler}
+                                                   name="uSetup"
+                                                   autocomplete="nope"
+                                                   //autoComplete="off"
+                                                //    secureTextEntry={true}
+                                                //    textContentType="oneTimeCode"
                                             />
                                         </div>
-                                        <div className="errorMsg">{validateMsg?.user}</div>
+                                        <div className="errorMsg">{validateMsg?.uSetup}</div>
                                     </div>
-                                    <div className={validateMsg?.pass ? "cmnFormCol error" : "cmnFormCol"}>
+                                    <div className={validateMsg?.pSetup ? "cmnFormCol error" : "cmnFormCol"}>
                                         <div className="cmnFieldName1">Mail Password</div>
                                         <div className="cmnFormField">
                                             <input type="password" className="cmnFieldStyle"
                                                    value={emailData?.pass}
-                                                   onChange={validateField}
-                                                   name="pass"
-                                                  // autoComplete="off"
-                                                 //  secureTextEntry={true}
-                                                   // textContentType="oneTimeCode"
+                                                   onChange={fieldPassHandler}
+                                                   name="pSetup"
+                                                   autocomplete="new-password"
+                                                //    autoComplete="off"
+                                                //    secureTextEntry={true}
+                                                //    textContentType="oneTimeCode"
                                             />
                                         </div>
-                                        <div className="errorMsg">{validateMsg?.pass}</div>
+                                        <div className="errorMsg">{validateMsg?.pSetup}</div>
                                     </div>
                                 </div>
                                 <button className="cmnBtn"
