@@ -586,10 +586,11 @@ const EmailModal = (props) => {
                                        value={emailData.subject}
                                 />
                                 <button className="btn browseKeywords"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            setKeywordSuggesion(true);
-                                        }}
+                                    type='button'
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setKeywordSuggesion(true);
+                                    }}
                                 >
                                     <img src={icon_browse_keywords} alt="keywords"/>
                                 </button>
@@ -599,12 +600,16 @@ const EmailModal = (props) => {
                                             <div className="searchKeyBox">
                                                 <input
                                                     type="text"
-                                                    //onChange={(e) => setSearchTagString(e.target.value)}
+                                                    onChange={(e) => setSearchTagString(e.target.value)}
+                                                    onKeyPress={e => {
+                                                        if (e.key === 'Enter') e.preventDefault();
+                                                    }}
                                                 />
                                             </div>
                                             <div className="cancelKeySearch">
                                                 <button
-                                                    onClick={() => setKeywordSuggesion(false)}
+                                                    onClick={() => {setKeywordSuggesion(false)
+                                                            setSearchTagString("")}}
                                                 ></button>
                                             </div>
                                         </div>
@@ -614,11 +619,16 @@ const EmailModal = (props) => {
                                                     .filter(
                                                         (smsTag) =>
                                                             smsTag.id.indexOf(searchTagString) >= 0 
-                                                                && smsTag.id !== "tags"
-                                                                && smsTag.id !== "phone" 
-                                                                && smsTag.id !== "mobile" 
-                                                                && smsTag.id !== "momCellPhone" 
-                                                                && smsTag.id !== "dadCellPhone"
+                                                            && smsTag.id !== "tags"
+                                                            && smsTag.id !== "phone" 
+                                                            && smsTag.id !== "mobile" 
+                                                            && smsTag.id !== "momCellPhone" 
+                                                            && smsTag.id !== "dadCellPhone"
+                                                            && smsTag.id !== "createdBy"
+                                                            && smsTag.id !== "createdAt"
+                                                            && smsTag.id !== "statusName"
+                                                            && smsTag.id !== "phaseName"
+                                                            && smsTag.id !== "contactType"
                                                     )
                                                     .map((tagItem, i) => (
                                                         <li key={"keyField" + i}>

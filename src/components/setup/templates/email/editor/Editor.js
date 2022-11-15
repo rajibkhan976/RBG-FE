@@ -58,6 +58,9 @@ const EditorComponent = (props) => {
     const [isLoader, setIsLoader] = useState(false);
     const [emailTags, setEmailTags] = useState([]);
     const [searchTagString, setSearchTagString] = useState("");
+    const [searchTagStringEditSub, setSearchTagStringEditSub] = useState("");
+    const [searchTagStringEditTemp, setSearchTagStringEditTemp] = useState("");
+    const [searchTagStringSend, setSearchTagStringSend] = useState("");
 
 
     const fetchEmailTags = async () => {
@@ -274,7 +277,7 @@ const EditorComponent = (props) => {
             sel = win.getSelection();
             if (sel.rangeCount) {
                 range = sel.getRangeAt( e.target.textContent);
-                 range.insertNode(document.createTextNode(" [" + e.target.textContent + "] "));
+                range.insertNode(document.createTextNode(" [" + e.target.textContent + "] "));
              
                 sel.collapseToEnd();
 
@@ -308,9 +311,6 @@ const EditorComponent = (props) => {
             sel = win.getSelection();
             if (sel.rangeCount) {
                 range = sel.getRangeAt(0);
-
-                
-
                 range.insertNode(document.createTextNode(" [" + e.target.textContent + "] "));
                 sel.collapseToEnd();
                 //console.log("editorCreateRef.current.getContent()", editorCreateRef.current.getContent());
@@ -325,7 +325,41 @@ const EditorComponent = (props) => {
             props.createdEmailTemplate(editorCreateRef.current.getContent())
         }
     }
+    
+    // add keywords to send email template
+    const editKeywordSendEmail = (e) => {
+        e.preventDefault();
+        let iframeEdit = editorRef.current;
+        let cursorStart = iframeEdit.selectionStart;
+        let cursorEnd = iframeEdit.selectionEnd;
+        let iframeEditBody = (iframeEdit.contentDocument || iframeEdit.contentWindow.document).body;
 
+        let doc = iframeEditBody.ownerDocument || iframeEditBody.document;
+        let win = doc.defaultView || doc.parentWindow;
+        let sel, range;
+        
+        if (win.getSelection) {
+            sel = win.getSelection();
+            if (sel.rangeCount) {
+                range = sel.getRangeAt( e.target.textContent);
+                range.insertNode(document.createTextNode(" [" + e.target.textContent + "] "));
+             
+                sel.collapseToEnd();
+
+                
+                console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjj", range);
+                setValue(editorRef.current.getContent())
+                props.globalTemplateValue(editorRef.current.getContent())
+            }
+        } else if (document.selection && document.selection.createRange) {
+            range = document.selection.createRange();
+            range.text = " [" + e.target.textContent + "] ";
+            setValue(editorRef.current.getContent())
+            props.globalTemplateValue(editorRef.current.getContent())
+
+            console.log('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii', range);
+        }
+    }
   
 
     // add error message on edit email header
@@ -438,13 +472,14 @@ const EditorComponent = (props) => {
                     <div className="createEmailButtons">
                         <button
                             className="inlinle-btn browseKeywords createBrowseKeywords"
+                            type="button"
                             style={{
                                 marginRight: "0",
                                 padding: "0",
                             }}
                             onClick={(e) => {
                                 setKeywordSuggesion(false)
-                                setKeywordTextSuggesion(!keywordTextSuggesion)
+                                setKeywordTextSuggesion(true)
                                 e.preventDefault()
                             }
                             }
@@ -455,11 +490,17 @@ const EditorComponent = (props) => {
                         {keywordTextSuggesion && <div className="keywordBox keywordsCreateText">
                             <div className="searchKeyword">
                                 <div className="searchKeyBox">
-                                    <input type="text" />
+                                    <input type="text" 
+                                        onChange={(e) => setSearchTagString(e.target.value)}
+                                        onKeyPress={e => {
+                                            if (e.key === 'Enter') e.preventDefault();
+                                        }}
+                                    />
                                 </div>
                                 <div className="cancelKeySearch">
                                     <button
-                                        onClick={() => setKeywordTextSuggesion(false)}
+                                        onClick={() => {setKeywordTextSuggesion(false)
+                                            setSearchTagString("")}}
                                     ></button>
                                 </div>
                             </div>
@@ -467,11 +508,17 @@ const EditorComponent = (props) => {
                                 <ul>
                                       {emailTags
                                         .filter((smsTag) => smsTag.id.indexOf(searchTagString) >= 0 
-                                                    && smsTag.id !== "tags" 
-                                                    && smsTag.id !== "phone" 
-                                                    && smsTag.id !== "mobile" 
-                                                    && smsTag.id !== "momCellPhone" 
-                                                    && smsTag.id !== "dadCellPhone") 
+                                            && smsTag.id !== "tags"
+                                            && smsTag.id !== "phone" 
+                                            && smsTag.id !== "mobile" 
+                                            && smsTag.id !== "momCellPhone" 
+                                            && smsTag.id !== "dadCellPhone"
+                                            && smsTag.id !== "createdBy"
+                                            && smsTag.id !== "createdAt"
+                                            && smsTag.id !== "statusName"
+                                            && smsTag.id !== "phaseName"
+                                            && smsTag.id !== "contactType"
+                                        ) 
                                         .map((tagItem, i) => (
                                             <li key={"keyField" + i}>
                                             <button
@@ -488,6 +535,7 @@ const EditorComponent = (props) => {
                         </div>}
                         <button
                             className="inlinle-btn btnMaximize"
+                            type="button"
                             onClick={(e) => {
                                 e.preventDefault()
                                 setMax(!max)
@@ -532,6 +580,7 @@ const EditorComponent = (props) => {
 
                             <button
                                 className="btn browseKeywords"
+                                type="button"
                                 style={{
                                     marginRight: "0",
                                     padding: "0",
@@ -548,11 +597,17 @@ const EditorComponent = (props) => {
                             {keywordSuggesion && <div className="keywordBox">
                                 <div className="searchKeyword">
                                     <div className="searchKeyBox">
-                                        <input type="text" />
+                                        <input type="text" 
+                                            onChange={(e) => setSearchTagStringEditSub(e.target.value)}
+                                            onKeyPress={e => {
+                                                if (e.key === 'Enter') e.preventDefault();
+                                            }}
+                                        />
                                     </div>
                                     <div className="cancelKeySearch">
                                         <button
-                                            onClick={() => setKeywordSuggesion(false)}
+                                            onClick={() => {setKeywordSuggesion(false)
+                                                setSearchTagStringEditSub("")}}
                                         ></button>
                                     </div>
                                 </div>
@@ -562,12 +617,18 @@ const EditorComponent = (props) => {
                                     {emailTags
                                         .filter(
                                             (smsTag) =>
-                                            smsTag.id.indexOf(searchTagString) >= 0 
+                                            smsTag.id.indexOf(searchTagStringEditSub) >= 0 
                                                 && smsTag.id !== "tags"
                                                 && smsTag.id !== "phone" 
                                                 && smsTag.id !== "mobile" 
                                                 && smsTag.id !== "momCellPhone" 
-                                                && smsTag.id !== "dadCellPhone") 
+                                                && smsTag.id !== "dadCellPhone"
+                                                && smsTag.id !== "createdBy"
+                                                && smsTag.id !== "createdAt"
+                                                && smsTag.id !== "statusName"
+                                                && smsTag.id !== "phaseName"
+                                                && smsTag.id !== "contactType"
+                                            ) 
                                         .map((tagItem, i) => (
                                             <li key={"keyField" + i}>
                                             <button
@@ -637,7 +698,7 @@ const EditorComponent = (props) => {
                                   var file = this.files[0];
                             
                                   var reader = new FileReader();
-                                  reader.onload = function () {
+                                  reader.onload = function (tinymce) {
                                     /*
                                       Note: Now we need to register the blob in TinyMCEs image blob
                                       registry. In the next release this part hopefully won't be
@@ -645,6 +706,7 @@ const EditorComponent = (props) => {
                                     */
                                     var id = 'blobid' + (new Date()).getTime();
                                     //var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
+                                    //crossOriginIsolated.log("Editor", tinymce)
                                     var blobCache =  Editor.activeEditor.blobCache;
                                     var base64 = reader.result.split(',')[1];
                                     console.log("base64base64base64base64", blobCache,base64);
@@ -659,20 +721,21 @@ const EditorComponent = (props) => {
                             
                                 input.click();
                               },
-                             // images_upload_handler: example_image_upload_handler,
+                              images_upload_handler: example_image_upload_handler,
                             }}
                         />
 
 
                         <button
                             className="inlinle-btn browseKeywords editBrowseKeywords"
+                            type="button"
                             style={{
                                 marginRight: "0",
                                 padding: "0",
                             }}
                             onClick={(e) => {
                                 setKeywordSuggesion(false)
-                                setKeywordTextSuggesion(!keywordTextSuggesion)
+                                setKeywordTextSuggesion(true)
                                 e.preventDefault()
                             }
                             }
@@ -683,11 +746,16 @@ const EditorComponent = (props) => {
                         {keywordTextSuggesion && <div className="keywordBox keywordsEditText">
                             <div className="searchKeyword">
                                 <div className="searchKeyBox">
-                                    <input type="text" />
+                                    <input type="text" 
+                                    onChange={(e) => setSearchTagStringEditTemp(e.target.value)}
+                                    onKeyPress={e => {
+                                        if (e.key === 'Enter') e.preventDefault();
+                                    }}/>
                                 </div>
                                 <div className="cancelKeySearch">
                                     <button
-                                        onClick={() => setKeywordTextSuggesion(false)}
+                                        onClick={() => {setKeywordTextSuggesion(false)
+                                            setSearchTagStringEditTemp("")}}
                                     ></button>
                                 </div>
                             </div>
@@ -696,14 +764,18 @@ const EditorComponent = (props) => {
                                     {emailTags
                                         .filter(
                                             (smsTag) =>
-                                            smsTag.id.indexOf(searchTagString) >= 0 
+                                            smsTag.id.indexOf(searchTagStringEditTemp) >= 0 
                                                 && smsTag.id !== "tags"
                                                 && smsTag.id !== "phone" 
                                                 && smsTag.id !== "mobile" 
                                                 && smsTag.id !== "momCellPhone" 
-                                                && smsTag.id !== "dadCellPhone") 
-                                        
-                                        .map((tagItem, i) => (
+                                                && smsTag.id !== "dadCellPhone"
+                                                && smsTag.id !== "createdBy"
+                                                && smsTag.id !== "createdAt"
+                                                && smsTag.id !== "statusName"
+                                                && smsTag.id !== "phaseName"
+                                                && smsTag.id !== "contactType"
+                                            ).map((tagItem, i) => (
                                             <li key={"keyField" + i}>
                                                <button
                                                 onClick={(e) =>
@@ -761,13 +833,13 @@ const EditorComponent = (props) => {
 
                                         autosave_interval: "10s",
                                         save_enablewhendirty: true,
-                                        relative_urls: false,
                                         remove_script_host : false,
                                         document_base_url: base_url,
                                     }}
                                 />
                                 <div className="createEmailButtons">
                                     <button
+                                        type='button'
                                         className="inlinle-btn browseKeywords createBrowseKeywords"
                                         style={{
                                             marginRight: "0",
@@ -775,7 +847,7 @@ const EditorComponent = (props) => {
                                         }}
                                         onClick={(e) => {
                                             setKeywordSuggesion(false)
-                                            setKeywordTextSuggesion(!keywordTextSuggesion)
+                                            setKeywordTextSuggesion(true)
                                             e.preventDefault()
                                         }
                                         }
@@ -786,31 +858,42 @@ const EditorComponent = (props) => {
                                     {keywordTextSuggesion && <div className="keywordBox keywordsCreateText">
                                         <div className="searchKeyword">
                                             <div className="searchKeyBox">
-                                                <input type="text" />
+                                                <input type="text" 
+                                                    onChange={(e) => setSearchTagStringSend(e.target.value)}
+                                                    onKeyPress={e => {
+                                                        if (e.key === 'Enter') e.preventDefault();
+                                                    }}
+                                                />
                                             </div>
                                             <div className="cancelKeySearch">
                                                 <button
-                                                    onClick={() => setKeywordTextSuggesion(false)}
+                                                    onClick={() => {setKeywordTextSuggesion(false)
+                                                        setSearchTagStringSend("")}}
                                                 ></button>
                                             </div>
                                         </div>
                                         <div className="keywordList">
-                                            <ul>
-                                                
+                                            <ul>                                             
                                                 {emailTags
                                                     .filter(
                                                         (smsTag) =>
-                                                        smsTag.id.indexOf(searchTagString) >= 0 
+                                                        smsTag.id.indexOf(searchTagStringSend) >= 0 
                                                             && smsTag.id !== "tags"
                                                             && smsTag.id !== "phone" 
                                                             && smsTag.id !== "mobile" 
                                                             && smsTag.id !== "momCellPhone" 
-                                                            && smsTag.id !== "dadCellPhone") 
+                                                            && smsTag.id !== "dadCellPhone"
+                                                            && smsTag.id !== "createdBy"
+                                                            && smsTag.id !== "createdAt"
+                                                            && smsTag.id !== "statusName"
+                                                            && smsTag.id !== "phaseName"
+                                                            && smsTag.id !== "contactType"
+                                                        ) 
                                                     .map((tagItem, i) => (
                                                         <li key={"keyField" + i}>
                                                         <button
                                                             onClick={(e) =>
-                                                                editKeywordTextEmail(e, tagItem.id)
+                                                                editKeywordSendEmail(e, tagItem.id)
                                                             }
                                                         >
                                                             {tagItem.id}
@@ -822,6 +905,7 @@ const EditorComponent = (props) => {
                                     </div>}
                                     <button
                                         className="inlinle-btn btnMaximize"
+                                        type="button"
                                         onClick={(e) => {
                                             e.preventDefault()
                                             setMax(!max)

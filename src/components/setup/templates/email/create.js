@@ -18,7 +18,7 @@ const CreateTemplate = (props) => {
     const newEmailTemplateSubject = useRef(null)
 
     const [isLoader, setIsLoader] = useState(false);
-    const [keywordSuggesion, setKeywordSuggesion] = useState(false);
+    const [keywordSuggesionCreateSub, setKeywordSuggesionCreateSub] = useState(false);
     const [smsTags, setSmsTags] = useState([]);
     const [searchTagString, setSearchTagString] = useState("");
     const [emailData, setEmailData] = useState({
@@ -239,23 +239,47 @@ const CreateTemplate = (props) => {
             "subject": emailData.subject,
             "template": utils.encodeHTML(emailData.template)
         }
-        await createNewTemplate(payload);
-        //props.updateList(true);
-        setValidateMsg({
-            ...validateMsg,
-            "title": "",
-            "subject": "",
-            "template": ""
-          });
-        setEmailData({
-            ...emailData,
-            "title": "",
-            "subject": "",
-            "template": ""
-          });
+        if(emailData.title === "" && emailData.subject === "" &&  utils.encodeHTML(emailData.template) === ""){
+            setValidateMsg({ ...validateMsg, 
+                subject: "Please enter a subject", 
+                title: "Please enter a title" ,
+                template : "Please enter a template" 
+              });
+        }else if(emailData.title === ""){
+            setValidateMsg({ ...validateMsg, 
+                title: "Please enter a title" ,
+              });
+        }else if(emailData.subject === ""){
+            setValidateMsg({ ...validateMsg, 
+                subject: "Please enter a subject" ,
+              });
+        }else if(emailData.template === ""){
+            setValidateMsg({ ...validateMsg, 
+                template: "Please enter a template" ,
+              });
+        }else{
+            await createNewTemplate(payload);
+            //props.updateList(true);
+            setValidateMsg({
+                ...validateMsg,
+                "title": "",
+                "subject": "",
+                "template": ""
+              });
+              setEmailData({
+                ...emailData,
+                "title": "",
+                "subject": "",
+                "template": ""
+              });
+    
+            props.closeModal(false);
+            props.openModal(true);
+           // props.updateList(true);
 
-        props.closeModal(false);
-        props.openModal(true)  
+        }
+         
+        
     }
 
 
@@ -321,18 +345,19 @@ const CreateTemplate = (props) => {
                                     />
                                     <button
                                         className="btn browseKeywords"
+                                        type='button'
                                         style={{
                                             marginRight: "0",
                                             padding: "0",
                                         }}
                                         onClick={(e) => {
                                             e.preventDefault();
-                                            setKeywordSuggesion(true);
+                                            setKeywordSuggesionCreateSub(true);
                                         }}
                                     >
                                         <img src={browse_keywords} alt="keywords" />
                                     </button>
-                                    {keywordSuggesion ? 
+                                    {keywordSuggesionCreateSub ? 
                                      //keyWordList() 
                                         <div className="keywordBox">
                                             <div className="searchKeyword">
@@ -340,11 +365,15 @@ const CreateTemplate = (props) => {
                                                     <input
                                                         type="text"
                                                         onChange={(e) => setSearchTagString(e.target.value)}
+                                                        onKeyPress={e => {
+                                                            if (e.key === 'Enter') e.preventDefault();
+                                                          }}
                                                     />
                                                 </div>
                                                 <div className="cancelKeySearch">
                                                     <button
-                                                        onClick={() => setKeywordSuggesion(false)}
+                                                        onClick={() => {setKeywordSuggesionCreateSub(false)
+                                                            setSearchTagString("")}}
                                                     ></button>
                                                 </div>
                                             </div>
@@ -359,6 +388,11 @@ const CreateTemplate = (props) => {
                                                                 && smsTag.id !== "mobile" 
                                                                 && smsTag.id !== "momCellPhone" 
                                                                 && smsTag.id !== "dadCellPhone"
+                                                                && smsTag.id !== "createdBy"
+                                                                && smsTag.id !== "createdAt"
+                                                                && smsTag.id !== "statusName"
+                                                                && smsTag.id !== "phaseName"
+                                                                && smsTag.id !== "contactType"
                                                         )
                                                         .map((tagItem, i) => (
                                                             <li key={"keyField" + i}>
