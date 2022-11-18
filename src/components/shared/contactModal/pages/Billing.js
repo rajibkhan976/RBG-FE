@@ -292,62 +292,13 @@ const Billing = (props) => {
 
   const cardNumberCheckHandler = (e) => {
     let cardNumber = e.target.value;
-    if (cardNumber.length <= 19) {
+    if (cardNumber.length < 24) {
       var formattedCardNumber = cardNumber.replace(/[^\d]/g, "");
-      let cardType = testCardTypeFn(formattedCardNumber);
-      
-      switch (cardType) {
-        case "isAmex":
-          console.log("TYPE::::", cardType);
-          // AMEX-specific logic goes here
-          formattedCardNumber = formattedCardNumber.substring(0, 15);
-          setFormErrorMsg((errorMessage) => ({
-            ...errorMessage,
-              card_num_Err: "",
-          }));
-          break;
-
-        case "isVisa":
-          console.log("TYPE::::", cardType);
-          formattedCardNumber = formattedCardNumber.substring(0, 16);
-          setFormErrorMsg((errorMessage) => ({
-            ...errorMessage,
-            card_num_Err: "",
-          }));
-          break;
-
-        case "isMast" || "isDisc":
-          console.log("TYPE::::", cardType);
-          formattedCardNumber = formattedCardNumber.substring(0, 16);
-          setFormErrorMsg((errorMessage) => ({
-            ...errorMessage,
-            card_num_Err: "",
-          }));
-          break;
-
-        case "isDisc":
-          console.log("TYPE::::", cardType);
-          formattedCardNumber = formattedCardNumber.substring(0, 16);
-          setFormErrorMsg((errorMessage) => ({
-            ...errorMessage,
-            card_num_Err: "",
-          }));
-          break;  
-  
-        default:
-          console.log("cardType", cardType);
-          setFormErrorMsg((errorMessage) => ({
-              ...errorMessage,
-              card_num_Err: "Please provide a valid card number.",
-            }));
-          break;
-      }
 
       // Split the card number is groups of 4
       var cardNumberSections = formattedCardNumber.match(/\d{1,4}/g);
       if (formattedCardNumber.match(/\d{1,4}/g)) {
-        console.log("formattedCardNumber", formattedCardNumber);
-        formattedCardNumber = cardNumberSections.join("-");
+        formattedCardNumber = cardNumberSections.join(" ");
         setCardNumberCheck(formattedCardNumber);
         var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");
         setCardNumberOn(cardNumberChanged);
@@ -355,6 +306,13 @@ const Billing = (props) => {
       if (e.target.value === "") {
         setCardNumberCheck("");
       }
+    }
+
+    if(cardNumber.length > 17) {
+      setFormErrorMsg((errorMessage) => ({
+        ...errorMessage,
+        card_num_Err: "",
+      }));
     }
   };
 
@@ -418,7 +376,7 @@ const Billing = (props) => {
   const cardCvvCheckHandler = (e) => {
     let cardCvv = e.target.value;
     var formattedCardCvv = cardCvv.replace(/[^\d]/g, "");
-    formattedCardCvv = formattedCardCvv.substring(0, 3);
+    formattedCardCvv = formattedCardCvv.substring(0, 4);
     
     setCardCvvCheck(formattedCardCvv);
   };
@@ -527,7 +485,7 @@ const Billing = (props) => {
     
     let cardError = false;
     console.log(cardNumberCheck, formErrorMsg.card_num_Err);
-    if (!cardNumberCheck || formErrorMsg.card_num_Err) {
+    if (!cardNumberCheck || formErrorMsg.card_num_Err || cardNumberCheck.length < 17) {
       setFormErrorMsg((errorMessage) => ({
         ...errorMessage,
         card_num_Err: "Please provide a valid card number.",
@@ -664,7 +622,7 @@ const expiration_month = cardExpairyMonthCheckFn();
 
     let cardPayload = cardNumberOn.trim() !== "" && expiration_year !== undefined && expiration_month !== undefined && cardNameCheck.trim() !== "" ? {
       contact: props.contactId,
-      card_number: cardNumberOn,
+      card_number: cardNumberOn.split(" ").join(""),
       expiration_year:expiration_year,
       expiration_month: expiration_month,
       cvv: cardCvvCheck.trim() !== "" ? cardCvvCheck : "",
@@ -1001,7 +959,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                     <input
                                         type="text"
                                         className="creditCardText"
-                                        placeholder="xxxx-xxxx-xxxx-xxxx"
+                                        placeholder="xxxx xxxx xxxx xxxx"
                                         onChange={cardNumberCheckHandler}
                                         value={cardNumberCheck}
                                     />

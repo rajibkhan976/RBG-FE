@@ -250,65 +250,14 @@ const BillingOverview = (props) => {
         }
     };
     const cardNumberCheckHandler = (e) => {
-        let cardNumber = e.target.value;
-        if (cardNumber.length <= 19) {
-            var formattedCardNumber = cardNumber.replace(/[^\d]/g, "");
-            let cardType = testCardTypeFn(formattedCardNumber);
+        let val = e.target.value;
+        if (val.length < 24) {
+            var formattedCardNumber = val.replace(/[^\d]/g, "");
 
-            switch (cardType) {
-                case "isAmex":
-                    // console.log("TYPE::::", cardType);
-                    // AMEX-specific logic goes here
-                    formattedCardNumber = formattedCardNumber.substring(0, 15);
-                    setNewPayErrors((errorMessage) => ({
-                        ...errorMessage,
-                        card_number: "",
-                    }));
-                    setNewPayHasError(false)
-                    break;
-                case "isVisa":
-                    // console.log("TYPE::::", cardType);
-                    formattedCardNumber = formattedCardNumber.substring(0, 16);
-                    setNewPayErrors((errorMessage) => ({
-                        ...errorMessage,
-                        card_number: "",
-                    }));
-                    setNewPayHasError(false)
-                    break;
-                case "isMast" || "isDisc":
-                    // console.log("TYPE::::", cardType);
-                    formattedCardNumber = formattedCardNumber.substring(0, 16);
-                    setNewPayErrors((errorMessage) => ({
-                        ...errorMessage,
-                        card_number: "",
-                    }));
-                    setNewPayHasError(false)
-                    break;
-                case "isDisc":
-                    // console.log("TYPE::::", cardType);
-                    formattedCardNumber = formattedCardNumber.substring(0, 16);
-                    setNewPayErrors((errorMessage) => ({
-                        ...errorMessage,
-                        card_number: "",
-                    }));
-                    setNewPayHasError(false)
-                    break;
-
-                default:
-                    // console.log("cardType", cardType);
-                    setNewPayHasError(true)
-                    setNewPayErrors((errorMessage) => ({
-                        ...errorMessage,
-                        card_number: "Please provide a valid card number.",
-                    }));
-                    break;
-            }
-            // Split the card number is groups of 4
             var cardNumberSections = formattedCardNumber.match(/\d{1,4}/g);
-            // console.log("cardNumberSections", cardNumberSections);
-            if (formattedCardNumber.match(/\d{1,4}/g)) {
+            if (cardNumberSections) {
                 // console.log("formattedCardNumber", formattedCardNumber);
-                formattedCardNumber = cardNumberSections.join("-");
+                formattedCardNumber = cardNumberSections.join(" ");
                 setCardNumberCheck(formattedCardNumber);
                 var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");
                 setNewCardState({
@@ -324,6 +273,14 @@ const BillingOverview = (props) => {
                 });
                 setCardNumberCheck('');
             }
+        }
+
+        if (val.length > 16) {
+            setNewPayErrors(errorMessage => ({
+                ...errorMessage,
+                card_number: ""
+            }))
+            setNewPayHasError(false);
         }
     };
     // CARD NUMBER CHECK
@@ -400,7 +357,7 @@ const BillingOverview = (props) => {
     const cardCvvCheckHandler = (e) => {
         let cardCvv = e.target.value;
         var formattedCardCvv = cardCvv.replace(/[^\d]/g, "");
-        formattedCardCvv = formattedCardCvv.substring(0, 3);
+        formattedCardCvv = formattedCardCvv.substring(0, 4);
 
         setNewCardState({
             ...newCardState,
@@ -500,7 +457,7 @@ const BillingOverview = (props) => {
         const expiration_year = cardExpairyYearCheckFn();
         const expiration_month = cardExpairyMonthCheckFn();
 
-        if (newCardState.card_number.trim() === "") {
+        if (newCardState.card_number.length < 17) {
             cardError = true;
 
             setNewPayErrors(errorMessage => ({
@@ -508,6 +465,13 @@ const BillingOverview = (props) => {
                 card_number: "Please provide a valid card number."
             }))
             setNewPayHasError(true)
+        } else {
+            cardError = false;
+            setNewPayErrors(errorMessage => ({
+                ...errorMessage,
+                card_number: ""
+            }))
+            setNewPayHasError(false);
         }
         if (newCardState.cardholder_name.trim() === "") {
             cardError = true;
@@ -531,7 +495,7 @@ const BillingOverview = (props) => {
         // CREATE NEW CARD PAYLOAD
         cardPayload = newCardState.card_number.trim() !== "" && expiration_year !== undefined && expiration_month !== undefined && newCardState.cardholder_name.trim() !== "" ? {
             contact: newCardState.contact,
-            card_number: newCardState.card_number,
+            card_number: newCardState.card_number.split(" ").join(""),
             expiration_year: newCardState.expiration_year,
             expiration_month: newCardState.expiration_month,
             cvv: newCardState.cvv.trim() !== "" ? newCardState.cvv : "",
@@ -1151,7 +1115,7 @@ const BillingOverview = (props) => {
                                                     <input
                                                         className="cmnFieldStyle"
                                                         type="text"
-                                                        placeholder="xxxx-xxxx-xxxx-xxxx"
+                                                        placeholder="xxxx xxxx xxxx xxxx"
                                                         name=""
                                                         onChange={cardNumberCheckHandler}
                                                         value={cardNumberCheck}

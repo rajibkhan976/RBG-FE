@@ -41,7 +41,8 @@ const PackagePaymentModal = (props) => {
     const [orgBillingId, setOrgBillingId] = useState(null);
     const dispatch = useDispatch();
     const loggedInUser = useSelector((state) => state.user.data);
-
+    const [cardNumber, setCardNumber] = useState("");
+    const [cvv, setCvv] = useState("");
 
 
     const cardForm = useRef();
@@ -102,18 +103,48 @@ const PackagePaymentModal = (props) => {
     }
 
     //Credit card number
-    const handleCreditCardChange = () => {
-        let checkCardNumber = checkCardNumberErr(cardForm.current['cardNumber'].value);
-        setFormErrors({
-            ...formErrors,
-            cardNumber: checkCardNumber
-        })
+    const handleCreditCardChange = (e) => {
+        // let checkCardNumber = checkCardNumberErr(cardForm.current['cardNumber'].value);
+        // setFormErrors({
+        //     ...formErrors,
+        //     cardNumber: checkCardNumber
+        // })
+        // //Format
+        // let formattedCC = utils.getFormattedCardNumber(cardForm.current['cardNumber'].value);
+        // if (formattedCC) {
+        //     cardForm.current['cardNumber'].value = formattedCC;
+        // }
 
-        //Format
-        let formattedCC = utils.getFormattedCardNumber(cardForm.current['cardNumber'].value);
-        if (formattedCC) {
-            cardForm.current['cardNumber'].value = formattedCC;
-        }
+        let val = cardForm.current['cardNumber'].value;
+        if (val.length < 24) {
+            var formattedCardNumber = val.replace(/[^\d]/g, "");
+            var cardNumberSections = formattedCardNumber.match(/\d{1,4}/g);
+            if (cardNumberSections) {
+              formattedCardNumber = cardNumberSections.join(" ");
+              setCardNumber(formattedCardNumber);
+              if (!val) {
+                setFormErrors({
+                    ...formErrors,
+                    cardNumber: "Please enter Card Number"
+                })
+              } else {
+                setFormErrors({
+                    ...formErrors,
+                    cardNumber: ""
+                })
+              }
+              var cardNumberChanged = formattedCardNumber.replace(/[^\d ]/g, "");
+              cardForm.current['cardNumber'].value = cardNumberChanged;
+            } else {
+                setCardNumber("");
+            }
+            if (val === "") {
+                setFormErrors({
+                    ...formErrors,
+                    cardNumber: ""
+                })
+            }
+          }
     }
 
     //Credit card holder name
@@ -140,10 +171,13 @@ const PackagePaymentModal = (props) => {
 
     //Credit card expiry date
     const handleCardCvvChange = () => {
-        let checkCardCvv = checkCardCvvErr(cardForm.current['cvv'].value);
+        let val = cardForm.current['cvv'].value;
+        var formattedCardCvv = val.replace(/[^\d]/g, "");
+        formattedCardCvv = formattedCardCvv.substring(0, 4);
+        setCvv(formattedCardCvv);
         setFormErrors({
             ...formErrors,
-            cardCvv: checkCardCvv
+            cardCvv: ""
         })
     }
 
@@ -216,10 +250,9 @@ const PackagePaymentModal = (props) => {
 
 
         //Card number
-        let checkCardNumber = checkCardNumberErr(cardForm.current['cardNumber'].value);
-        if (checkCardNumber) {
+        if (cardForm.current['cardNumber'].value.length < 17) {
             isError = true;
-            formErrorsCopy.cardNumber = checkCardNumber;
+            formErrorsCopy.cardNumber = "Please enter card number";
         }
 
         //Card holder name
@@ -237,10 +270,10 @@ const PackagePaymentModal = (props) => {
         }
 
         //Card CVV
-        let checkCardCvv = checkCardCvvErr(cardForm.current['cvv'].value);
-        if (checkCardCvv) {
+        let cardCvv = cardForm.current['cvv'].value;
+        if (cardCvv.length && cardCvv.length < 3) {
             isError = true;
-            formErrorsCopy.cardCvv = checkCardCvv;
+            formErrorsCopy.cardCvv = "CVV should be 3 or 4 digits";
         }
 
         //Set errors
@@ -265,7 +298,7 @@ const PackagePaymentModal = (props) => {
             console.log('submit the form');
             let expiryDate = cardForm.current['cardExpiryDate'].value.split("/");
             let payload = {
-                card_number: cardForm.current['cardNumber'].value.replace(/[^\d ]/g, ""),
+                card_number: cardForm.current['cardNumber'].value.split(" ").join(""),
                 expiration_year: expiryDate[1],
                 expiration_month: expiryDate[0],
                 cvv: cardForm.current['cvv'].value,
@@ -727,8 +760,9 @@ const PackagePaymentModal = (props) => {
                                                                         <span className="mandatory"> *</span>
                                                                     </label>
                                                                     <input type="text" name="cardNumber" className={formErrors.cardNumber ? "editFormStyle cr_error" : "editFormStyle"}
-                                                                        placeholder="xxxx-xxxx-xxxx-xxxx"
-                                                                        onChange={handleCreditCardChange}
+                                                                        placeholder="xxxx xxxx xxxx xxxx"
+                                                                        onChange={handleCreditCardChange} 
+                                                                        value={cardNumber}
                                                                     />
                                                                     {formErrors.cardNumber ? (
                                                                         <p className="errorMsg">{formErrors.cardNumber}</p>
@@ -763,7 +797,8 @@ const PackagePaymentModal = (props) => {
                                                                     <div className="half">
                                                                         <label className="editFormLabel">CVV</label>
                                                                         <input type="text" name="cvv" className={formErrors.cardCvv ? "editFormStyle cr_error" : "editFormStyle"}
-                                                                            onChange={handleCardCvvChange}
+                                                                            onChange={handleCardCvvChange} 
+                                                                            value={cvv}
                                                                         />
                                                                         {formErrors.cardCvv ? (
                                                                             <p className="errorMsg">{formErrors.cardCvv}</p>

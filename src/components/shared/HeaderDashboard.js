@@ -3,6 +3,7 @@ import Notifications from "./Notifications";
 import Setup from "../setup/mainPopup/setup";
 import CallModal from "./callModal";
 import SmsModal from "./smsModal"
+import EmailModal from "./emailModal"
 import { useDispatch, useSelector } from "react-redux";
 import AuthActions from "../../actions/AuthActions";
 import CreateIcon from "../../assets/images/create.png";
@@ -56,7 +57,9 @@ function HeaderDashboard(props) {
     reset,
     pause
   } = useStopwatch({ autoStart: false });
-  const [modalMakeSms, setModalMakeSms] = useState(false)
+  const [modalMakeSms, setModalMakeSms] = useState(false);
+  const [modalMakeEmail, setModalMakeEamil] = useState(false);
+
   const isClicked = useSelector((state) => state.notification.importId);
   useEffect(() => {
     if (isClicked) {
@@ -395,7 +398,13 @@ function HeaderDashboard(props) {
       To: to,
     });
   };
-
+  const makeEmailModalHandle = () =>{
+    setModalMakeEamil(true);
+    setShowActionState(false);
+  }
+  const emailModalOffhandler = () =>{
+    setModalMakeEamil(false);
+  }
   const clickedLink = (e) => {
     e.target && setSetupModalStatus(!setupModalStatus);
   }
@@ -555,13 +564,18 @@ const closeDialog = ()=>{
                       </span>
                       <span className="actionName">SMS</span>
                     </li>
-                    {/* <li>
-                      <input type="radio" name="ces" value="email" />
+                    <li>
+                      <input 
+                        type="radio" 
+                        name="ces" 
+                        value="email" 
+                        onClick={makeEmailModalHandle}
+                      />
                       <span className="callBtn blue">
                         <img src={email_icon} alt="" />
                       </span>
                       <span className="actionName">Email</span>
-                    </li> */}
+                    </li>
                   </ul>
                 </div>
               ) : (
@@ -771,6 +785,12 @@ const closeDialog = ()=>{
           device={device}
         />
       )}
+
+      {modalMakeEmail &&
+        <EmailModal
+        emailModalOff={emailModalOffhandler}
+        />
+      }
     </>
   );
 }
