@@ -2941,7 +2941,8 @@ input[type=number] {
 
 /* SIDE-MENU UI REWORK */
 .sideMenuOuter.headeruserMenu {
-  z-index: 999;
+  z-index: 1;
+  width: 95.5%;
 }
 
 /* TO NULLIFY STYLE LINE 4013 */

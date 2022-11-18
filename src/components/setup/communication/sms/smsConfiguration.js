@@ -264,6 +264,7 @@ const fetchCountry = async () => {
   },[])
     return (
       <div className="sideMenuOuter">
+        <div className="dialogBg" onClick={props.closeModal}></div>
       {configLoader ? <Loader /> : ''}
         <div className="sideMenuInner smsConfigModal">
           {/* {isLoader ? <Loader /> : ""} */}

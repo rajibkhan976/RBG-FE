@@ -10,6 +10,7 @@ const Filter = (props) => {
     return (
         <React.Fragment>
             <div className="automationModal filterModal">
+                <div className='automationModalBg' onClick={props.closeFilterModal}></div>
                 <div className="nodeSettingModal filterSetting">
                     <div className="formHead">
                         <div className="heading">

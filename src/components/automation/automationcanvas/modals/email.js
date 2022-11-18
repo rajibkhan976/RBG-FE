@@ -5,7 +5,7 @@ import chevron_right_white_24dp from "../../../../assets/images/chevron_right_wh
 const Email = (props) => {
     return (
         <React.Fragment>
-            <div className="automationModal filterModal">
+            <div className="automationModal filterModal s">
                 <div className="nodeSettingModal">
                     <div className="formHead">
                         <div className="heading">

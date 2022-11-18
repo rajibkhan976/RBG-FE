@@ -4,11 +4,17 @@
 	.widgetWrapers .widgetContent {
 		width: calc(100% - 17.5%);
 	}
+	.sideMenuOuter.headeruserMenu, .automationModal, .sideMenuOuter, .alertBackscreen, .modalOverlay, .modalBackdrop{
+		width: 95.2%;
+	}
 }
 
 @media (max-width:1700px) {
 	.widgetWrapers .widgetContent {
 		width: calc(100% - 13.5%);
+	}
+	.sideMenuOuter.headeruserMenu, .automationModal, .sideMenuOuter, .alertBackscreen, .modalOverlay, .modalBackdrop{
+		width: 95%;
 	}
 }
 
@@ -16,35 +22,46 @@
 	.widgetWrapers .widgetContent {
 		width: calc(100% - 9.5%);
 	}
+	.sideMenuOuter.headeruserMenu, .automationModal, .sideMenuOuter, .alertBackscreen, .modalOverlay, .modalBackdrop{
+		width: 93.6%;
+	}
+	.customtableListing li{display: flex;}
+	.setUpPopUp{padding: 35px 35px 35px 70px;}
 }
 
 @media (max-width:1280px) {
 	.widgetWrapers .widgetContent {
 		width: calc(100% - 5.5%);
 	}
-}
-
-@media (max-width:1280px) {
-
 	.headerSearch {
 		margin-left: 12px;
 	}
-
+	
 	.dashboardHeader .menuUser {
 		width: 105px;
 	}
-
-
+	
+	
 	.widgetWrapers .widgetContent {
 		justify-content: space-between;
 		column-gap: 0px;
 		row-gap: 10px;
 		width: calc(100% - 2.5%);
 	}
-
+	
 	.dashInnerStructure.dashboardPage .dashInnerUI .mrrWraper .widgetWrapers .widgetContent>div {
 		flex-basis: calc((100% - 13px) / 2);
+	
+	}
+	.sideMenuOuter.headeruserMenu, .automationModal, .sideMenuOuter, .alertBackscreen, .modalOverlay, .modalBackdrop{
+		width: 92.6%;
+	}
 
+	.setUpPopUp {
+		padding: 35px 35px 35px 35px;
+	}
+	.setUpPopUp ul li{
+		width: calc(100% / 3);
 	}
 }
 
@@ -52,13 +69,20 @@
 	.widgetWrapers .widgetContent {
 		width: calc(100% - 0%);
 	}
+	.sideMenuOuter.headeruserMenu, .automationModal, .sideMenuOuter, .alertBackscreen, .modalOverlay, .modalBackdrop{
+		width: 92%;
+	}
 }
 
 @media (max-width:1024px) {
 	.headerSearch {
 		flex: 1 1 20%;
 	}
-
+	.sideMenuOuter.headeruserMenu, .automationModal, .sideMenuOuter, .alertBackscreen, .modalOverlay, .modalBackdrop {
+		width: 91.5%;
+	}
+	.gymDetails{padding-right: 30px;}
+	.dashInnerStructure{padding-left: 30px;}
 }
 
 @media (max-width:991px) {
@@ -153,6 +177,12 @@
 		width: 20px;
 		padding-left: 5px;
 	}
+	.sideMenuOuter.headeruserMenu, .automationModal, .sideMenuOuter, .alertBackscreen, .modalOverlay, .modalBackdrop {
+		width: 89.8%;
+	}
+	.setUpPopUp ul li{
+		width: calc(100% / 2);
+	}
 }
 
 @media (max-width:800px) {
@@ -179,13 +209,18 @@
 		width: 14px;
 	}
 	.menuUser i{margin-left: 0px;}
+	.sideMenuOuter.headeruserMenu, .automationModal, .sideMenuOuter, .alertBackscreen, .modalOverlay, .modalBackdrop {
+		width: 89.2%;
+	  }
 }
 
 @media (max-width:768px) {
 	.widgetIcon h3 {
 		width: 162px;
 	}
-
+	.sideMenuOuter.headeruserMenu, .automationModal, .sideMenuOuter, .alertBackscreen, .modalOverlay, .modalBackdrop {
+		width: 88.5%;
+	  }
 }
 
 @media (max-width:720px) {

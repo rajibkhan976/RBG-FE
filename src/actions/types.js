@@ -6,6 +6,10 @@ export const LOGOUT = "LOGOUT";
 export const ROLE_COUNT = "ROLE_COUNT";
 // Group
 export const GROUP_COUNT = "GROUP_COUNT";
+// modal
+export const MODAL_COUNT_INCREMENT = "MODAL_COUNT_INCREMENT";
+export const MODAL_COUNT_DECREMENT = "MODAL_COUNT_DECREMENT";
+export const COUNTABLE = 0;
 // User
 export const USER_COUNT = "USER_COUNT";
 export const USER_DATA = "USER_DATA";
@@ -35,3 +39,10 @@ export const MESSAGE = "MESSAGE";
 //Credit
 export const SHOW_CREDIT_RESTRICTION = "SHOW_CREDIT_RESTRICTION";
 export const HIDE_CREDIT_RESTRICTION = "HIDE_CREDIT_RESTRICTION";
+
+export const OPEN_HEADER_MODAL = "OPEN_HEADER_MODAL";
+export const CLOSE_HEADER_MODAL = "CLOSE_HEADER_MODAL";
+export const OPEN_BODY_MODAL = "OPEN_BODY_MODAL";
+export const CLOSE_BODY_MODAL = "CLOSE_BODY_MODAL";
+export const OPEN_USER_MODAL = "OPEN_USER_MODAL";
+export const CLOSE_USER_MODAL = "CLOSE_USER_MODAL";

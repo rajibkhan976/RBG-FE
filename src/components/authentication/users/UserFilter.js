@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { utils } from "../../../helpers";
 import { UserServices } from "../../../services/authentication/UserServices";
 import Loader from "../../shared/Loader";
@@ -20,7 +20,8 @@ const UserFilter = (props) => {
         props.setStateFilter(null);
     };
     const dispatch = useDispatch();
-
+    let zIndexBody = useSelector((state) => state.modal.zIndexBody);
+    console.log(zIndexBody);
     /**
      * Handle group change
      * @param {*} event 
@@ -99,6 +100,7 @@ const UserFilter = (props) => {
         <>
             {props.stateFilter !== null && (
                 <div className="sideMenuOuter filterUserMenu">
+                    <div className="dialogBg" onClick={(e) => closeSideMenu(e)}></div>
                     {isLoader ? <Loader /> : ''}
                     <div className="sideMenuInner">
                         <button

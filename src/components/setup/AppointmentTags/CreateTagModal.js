@@ -60,6 +60,7 @@ const CreateTagModal = (props) => {
 
     return (
         <div className="modalBackdrop cz_addTagModal">
+            <div className="modalBackdropBg" onClick={props.closeModal}></div>
             <div className="slickModalBody">
                 <div className="slickModalHeader">
                     <button className="topCross" onClick={props.closeModal}>

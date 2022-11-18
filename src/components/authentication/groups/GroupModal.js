@@ -286,6 +286,7 @@ const GroupModal = (props) => {
         <>
             {props.createButton !== null && (
                 <div className="sideMenuOuter createSideModal sideGroups">
+                    <div className="dialogBg" onClick={(e) => closeSideMenu(e)}></div>
                     {isLoader ? <Loader /> : ''}
                     <div className="sideMenuInner">
                         <button

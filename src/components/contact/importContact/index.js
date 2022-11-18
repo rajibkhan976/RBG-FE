@@ -12,6 +12,7 @@ function ImportContact(props) {
     return (
         <>
             <div className="sideMenuOuter" id="import_Modal">
+            <div className="dialogBg" onClick={() => closeModal()}></div>
                 <div className="sideMenuInner importModalContainer">
                     <div className="sideMenuHeader">
                         <h3>Import Contacts</h3>

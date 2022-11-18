@@ -219,6 +219,10 @@ const Dashboard = () => {
 
 	const openFilterModal = () => {
 		setProdFilterModalStatus(true);
+		dispatch({
+			type: actionTypes.MODAL_COUNT_INCREMENT,
+			area: 'bodyModal'
+		})
 	};
 
 	const closeFilterModal = () => {
@@ -296,6 +300,8 @@ const Dashboard = () => {
 		}
 		// setItems(arrayMove(items, oldIndex, newIndex));
 	};
+
+
 
 
 	return (

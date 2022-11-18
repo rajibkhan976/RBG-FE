@@ -250,6 +250,7 @@ useEffect(()=>{
 
      return(
         <div className="modalBackdrop">
+            <div className="dialogBg" onClick={closeModal}></div>
             {isLoader ? <Loader /> : ''}
             {successMsg &&
               <SuccessAlert message={successMsg} extraclassName="pullUp" />

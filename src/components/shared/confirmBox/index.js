@@ -7,7 +7,7 @@ const ConfirmBox = (props) => {
     }
     return (
         <div className="customAlert">
-            <div className="alertBackscreen"></div>
+            <div className="alertBackscreen" onClick={() => confirmed("cancel")}></div>
             <div className="alertBox">
                 <div className="alertBoxHead">
                     <button className="btn btn-closeSideMenu" onClick={() => confirmed("cancel")}><span></span><span></span></button>

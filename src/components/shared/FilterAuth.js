@@ -1,14 +1,15 @@
 import arrow_forward from "../../assets/images/arrow_forward.svg";
 import arrowDown from "../../assets/images/arrowDown.svg";
-
+import { useDispatch, useSelector } from 'react-redux';
 const Filter = (props) => {
   const closeSideMenu = (e) => {
     e.preventDefault();
     props.setStateFilter(null);
   };
-
+  let zIndexBody = useSelector((state) => state.modal.zIndexBody);
   return props.stateFilter === "user" ? (
-    <div className="sideMenuOuter filterUserMenu">
+    <div className="sideMenuOuter filterUserMenu" >
+      <div className="dialogBg" onClick={(e) => closeSideMenu(e)}></div>
       <div className="sideMenuInner">
         <button
           className="btn btn-closeSideMenu"
@@ -68,6 +69,7 @@ const Filter = (props) => {
     </div>
   ) : props.stateFilter === "groups" ? (
     <div className="sideMenuOuter filterGroupsMenu">
+      <div className="dialogBg" onClick={(e) => closeSideMenu(e)}></div>
       <div className="sideMenuInner">
         <button
           className="btn btn-closeSideMenu"
@@ -84,6 +86,7 @@ const Filter = (props) => {
     </div>
   ) : props.stateFilter === "roles" ? (
     <div className="sideMenuOuter filterRolesMenu">
+      <div className="dialogBg" onClick={(e) => closeSideMenu(e)}></div>
       <div className="sideMenuInner">
         <button
           className="btn btn-closeSideMenu"

@@ -1,9 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import drag from '../../../src/assets/images/drag.svg';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { useDispatch, useSelector } from "react-redux";
 
 const DashboardControls = (props) => {
-	const ref = useRef()
+	const ref = useRef();
+	let zIndexBody = useSelector((state) => state.modal.zIndexBody);
+  	
 	const onDragEnd = (result) => {
 		if (!result.destination) {
 			return;
@@ -78,7 +81,8 @@ const DashboardControls = (props) => {
 	};
 	return (
 		<>
-			<div className='sideMenuOuter filterUserMenu'>
+			<div className='sideMenuOuter filterUserMenu' >
+			<div className="dialogBg" onClick={props.closeModal}></div>
 				<div className='sideMenuInner dashboardSideBar'>
 					<button className='btn btn-closeSideMenu' onClick={props.closeModal}>
 						<span></span>

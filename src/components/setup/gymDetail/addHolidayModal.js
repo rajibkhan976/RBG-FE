@@ -41,7 +41,11 @@ const AddHolidayModal = (props) => {
         name: e.target.value
       });
   };
+  
+
+  const [dateStatus, setDatastatus] = useState(false);
   const holidayStarthandler = (e) =>{
+
     setHoliday({
       ...holiday,
       fromDate: e.target.value,
@@ -184,12 +188,20 @@ const handleStatusSubmitNew =(e) =>{
     console.log(holiday.name, ",,,,", holiday.fromDate,",,,,,,", holiday.toDate) ;
     console.log(holiday.name, "holiday.fromDate.typeOF", typeof(holiday.fromDate),"holiday.toDate.typeOF", typeof(holiday.toDate)) ;
 };
-
+  const disablePastDate = () => {
+    const today = new Date();
+    const dd = String(today.getDate() + 1).padStart(2, "0");
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+    const yyyy = today.getFullYear();
+    console.log(dd, mm, yyyy);
+    return yyyy + "-" + mm + "-" + dd;
+  };
 
   return (
     <>
      
-      <div className="modalBackdrop modalAddholiday">  
+      <div className="modalBackdrop modalAddholiday"> 
+      <div className="modalBackdropBg" onClick={props.closeAddHolidayModal}></div> 
       { loader && <Loader /> }
       {successMsg &&
         <SuccessAlert message={successMsg} extraclassName="addStatsPopMsg"></SuccessAlert>
@@ -219,7 +231,9 @@ const handleStatusSubmitNew =(e) =>{
                 <label>Choose a date</label>
                 <div className="flatForm">
                   <span>From</span>
-                  <input type="date"  name="" value={holiday.fromDate} onChange={holidayStarthandler}/>
+                  <input type="date"  name="" value={holiday.fromDate} onChange={holidayStarthandler} 
+                  // min={disablePastDate()} 
+                  max={holiday.toDate}/>
                 </div> 
                 {modalPopMsgerror2 && <div className="errorMsg">Please fill up the start date</div>}
               </div>
@@ -227,7 +241,7 @@ const handleStatusSubmitNew =(e) =>{
                 <label></label> 
                 <div className="flatForm">
                   <span>To</span>
-                  <input type="date"  name="" value={holiday.toDate} onChange={holidayEndhandler}/>  
+                  <input type="date"  name="" value={holiday.toDate} onChange={holidayEndhandler} min={holiday.fromDate} />  
                 </div>
                 {modalPopMsgerror3 &&  <div className="errorMsg">Please fill up the end date</div>} 
               </div>

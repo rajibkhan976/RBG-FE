@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch , useSelector} from "react-redux";
 import * as actionTypes from "../../../actions/types";
 import noData_search_icon from "../../../assets/images/noData_search_icon.svg";
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
@@ -17,7 +17,7 @@ const FilterColorModal = (props) => {
     const [formError, setFormError] = useState(null);
     const dispatch = useDispatch();
     const ref = useRef();
-
+    let zIndexBody = useSelector((state) => state.modal.zIndexBody);
     useEffect(() => {
         const category = decodeURIComponent(utils.getQueryVariable("category"));
         if(category !== "false") {
@@ -99,6 +99,7 @@ const FilterColorModal = (props) => {
 
     return (
         <div className="sideMenuOuter filterUserMenu">
+            <div className="dialogBg" onClick={closeModal}></div>
             <div className="sideMenuInner">
                 <button className="btn btn-closeSideMenu" onClick={closeModal}>
                     <span></span><span></span>

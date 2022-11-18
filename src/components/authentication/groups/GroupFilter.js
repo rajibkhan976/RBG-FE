@@ -5,14 +5,15 @@ import Loader from "../../shared/Loader";
 
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
 // import arrowDown from "../../../assets/images/arrowDown.svg";
-
+import { useDispatch, useSelector } from 'react-redux';
 const GroupFilter = (props) => {
     const [group, setGroup] = useState('');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
     const [status, setStatus] = useState('');
     const [isLoader, setIsLoader] = useState(false);
-
+    
+    let zIndexBody = useSelector((state) => state.modal.zIndexBody);
     const closeSideMenu = (e) => {
         e.preventDefault();
         props.setStateFilter(null);
@@ -127,12 +128,13 @@ const GroupFilter = (props) => {
         utils.removeQueryParameter('status');
         fetchGroups(1);
     }
-
+    
     return (
         <>
             {props.stateFilter !== null && (
                 <div className="sideMenuOuter filterUserMenu">
                     {isLoader ? <Loader /> : ''}
+                    <div className="dialogBg" onClick={(e) => closeSideMenu(e)}></div>
                     <div className="sideMenuInner">
                         <button
                             className="btn btn-closeSideMenu"
