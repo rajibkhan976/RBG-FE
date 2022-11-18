@@ -154,6 +154,7 @@ function ImportFilter(props) {
     return (
         <>
             <div className="sideMenuOuter" id="import_Modal">
+                <div className="dialogBg" onClick={() => closeFilter()}></div>
                 <div className="sideMenuInner importModalContainer updateContainer">
                     {isLoader ? <Loader/> : ''}
                     <div className="sideMenuHeader">

@@ -23,3 +23,5 @@
     - Fixed customization submenu link issue.
 # HOTFIX V1.0.2
     - Billing add bank compnay name option added.
+# HOTFIX V1.0.0
+    - Modal modification bug fixed.

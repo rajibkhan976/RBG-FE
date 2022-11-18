@@ -9,7 +9,7 @@ import updown from "../../assets/images/updown.png";
 import { utils } from "../../helpers";
 import { SMSServices } from "../../services/template/SMSServices";
 import {DependentServices} from "../../services/contact/DependentServices";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as actionTypes from "../../actions/types";
 import env from "../../configuration/env";
 import { uploadFile } from "react-s3";
@@ -66,6 +66,14 @@ const SmsModal = (props) => {
       number: "",
       phone: ""
   });
+  let zIndexSms = useSelector((state) => state.modal.zIndexSms);
+  console.log("Initial State in header",zIndexSms);
+  // let zIndexCall = useSelector((state) => state.modal.zIndexCall);
+  // console.log("Initial State in header", zIndexCall);
+
+
+
+
   const fetchCountry = async () => {
     let conntryResponse = await ContactService.fetchCountry();
     setPhoneCountryCode(conntryResponse);
@@ -555,8 +563,12 @@ useEffect(() => {
     fetchContacts()
 }, []);
 
+  
+
+
  return (
-   <div className="sideMenuOuter">
+   <div className="sideMenuOuter" style={{zIndex: zIndexSms}}>
+    <div className="dialogBg" onClick={props.smsModalOff}></div>
      {isLoader ? <Loader /> : ""}
 
      <div className="sideMenuInner smsGlobal">

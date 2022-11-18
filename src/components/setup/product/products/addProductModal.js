@@ -321,6 +321,7 @@ const AddProductModal = (props) => {
   return (
     <>
       <div className="modalBackdrop modalProductAdd">
+        <div className="dialogBg" onClick={props.closeAddProductModal}></div>
         {isLoader ? <Loader /> : ''}
         <div className="slickModalBody">
           <div className="slickModalHeader">
@@ -347,7 +348,7 @@ const AddProductModal = (props) => {
                 </div>
                 <div className={"formControl " + errorClass.name}>
                   <label>Enter Product Name</label>
-                  <input type="text" placeholder="Ex: v-shape gym vest" name="productName"
+                  <input type="text" placeholder="Ex: Jujutsu program" name="productName"
                     onChange={handleChange}
                     value={productData.name}
                     className="cmnFieldStyle" />

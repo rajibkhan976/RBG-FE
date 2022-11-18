@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useReducer, Component } from "react";
 import Notifications from "./Notifications";
 import Setup from "../setup/mainPopup/setup";
 import CallModal from "./callModal";
@@ -29,13 +29,14 @@ import logout_icon from "../../assets/images/logout_icon.svg";
 import { CallSetupService } from "../../services/setup/callSetupServices";
 import { useStopwatch } from 'react-timer-hook';
 import { ImportContactServices } from "../../services/contact/importContact";
+import modalReducer from "../../reducers/modalReducer";
+
 import * as actionTypes from "../../actions/types";
 import { NotificationServices } from "../../services/notification/NotificationServices";
 import Loader from "./Loader";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 const { Device } = require('twilio-client');
-
 
 function HeaderDashboard(props) {
   const [setupModalStatus, setSetupModalStatus] = useState(false);
@@ -77,18 +78,36 @@ function HeaderDashboard(props) {
     isLoading: false,
     fullLoading: false
   });
+  const dispatch = useDispatch();
+
+
+
+
+  let zIndexUser = useSelector((state) => state.modal.zIndexUser);
+  console.log("Initial State in header",zIndexUser);
+
+  // const [zindexState, dispatchs] = useReducer(modalReducer, initialState);
+
+
 
 
 
   const toggleNotifications = (e) => {
     setStateNotifMenu(!stateNotifMenu);
-    setStateUserMenu(false);
-    setSetupModalStatus(false);
+    // setStateUserMenu(false);
+    // setSetupModalStatus(false);
 
-    setModalMakeCall(false);
+    // setModalMakeCall(false);
+
+    dispatch({ 
+      type: actionTypes.MODAL_COUNT_INCREMENT,
+      area: 'notification'
+    });
+
+    // console.log("Dispatched value in heaeder",zindexState);
+    
   };
 
-  const dispatch = useDispatch();
   const logOut = () => {
     dispatch(AuthActions.logout());
   };
@@ -99,10 +118,15 @@ function HeaderDashboard(props) {
 
   const toggleUserMenu = () => {
     setStateUserMenu(!stateUserMenu);
-    setSetupModalStatus(false);
-    setStateNotifMenu(false);
+    // setSetupModalStatus(false);
+    // setStateNotifMenu(false);
 
-    setModalMakeCall(false);
+    // setModalMakeCall(false);
+    // setModalMakeSms(false);
+    dispatch({ 
+      type: actionTypes.MODAL_COUNT_INCREMENT,
+      area: 'user'
+    });
   };
   const closeUserMenu = () => {
     setStateUserMenu(false);
@@ -297,10 +321,14 @@ function HeaderDashboard(props) {
 
   const toggleSetup = () => {
     setSetupModalStatus(!setupModalStatus);
-    setStateUserMenu(false);
-    setStateNotifMenu(false);
+    // setStateUserMenu(false);
+    // setStateNotifMenu(false);
 
-    setModalMakeCall(false);
+    // setModalMakeCall(false);
+    dispatch({
+      type: actionTypes.MODAL_COUNT_INCREMENT,
+      area: 'setting'
+    })
   };
   const [modalMakeCall, setModalMakeCall] = useState(false);
   const makeCallModalHandle = () => {
@@ -319,9 +347,15 @@ function HeaderDashboard(props) {
       //Show call modal
       setModalMakeCall(true);
       setShowActionState(false);
-      setStateUserMenu(false);
-      setSetupModalStatus(false);
-      setStateNotifMenu(false);
+      // setStateUserMenu(false);
+      // setSetupModalStatus(false);
+      // setStateNotifMenu(false);
+      // setModalMakeSms(false);
+
+      dispatch({ 
+        type: actionTypes.MODAL_COUNT_INCREMENT,
+        area: 'call'
+      });
     }
   };
   const makeSMSModalHandle = () => {
@@ -337,9 +371,16 @@ function HeaderDashboard(props) {
     } else {
       setModalMakeSms(true);
       setShowActionState(false);
-      setStateUserMenu(false);
-      setSetupModalStatus(false);
-      setStateNotifMenu(false);
+      // setStateUserMenu(false);
+      // setSetupModalStatus(false);
+      // setStateNotifMenu(false);
+      // setModalMakeCall(false);
+
+      dispatch({ 
+        type: actionTypes.MODAL_COUNT_INCREMENT,
+        area: 'sms'
+      });
+      
     }
   };
   const callModalOffhandler = () => {
@@ -428,12 +469,21 @@ function HeaderDashboard(props) {
     }
   }
   const handleClickOutside = (event)=>{
-    // console.log(event);
+    console.log(event);
     if (ref.current && !ref.current.contains(event.target)) {
       setSearchClick(false);
+      // alert("click");
     }
 
   }
+
+// out side click dialog close
+const closeDialog = ()=>{
+  setStateUserMenu(false);
+}
+
+
+
 
   return (
     <>
@@ -616,7 +666,8 @@ function HeaderDashboard(props) {
       </div>
 
       {stateUserMenu && (
-        <div className="sideMenuOuter headeruserMenu">
+        <div className="sideMenuOuter headeruserMenu" style={{zIndex: zIndexUser}}>
+          <div className="dialogBg" onClick={toggleUserMenu}></div>
           <div className="sideMenuInner userModal">
             <div className="modal_call_header">
               <button className="btn btn_empty" onClick={closeUserMenu}><img src={cross_white} alt="" /></button>

@@ -148,6 +148,7 @@ function Update(props) {
     return (
         <>
             <div className="sideMenuOuter" id="import_Modal">
+                <div className="dialogBg" onClick={() => closeUpdate()}></div>
                 <div className="sideMenuInner importModalContainer updateContainer">
                     <div className="sideMenuHeader">
                         <h3>Update</h3>

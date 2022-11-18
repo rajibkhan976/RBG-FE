@@ -180,6 +180,7 @@ const BuyAndAssignNumber = (props) => {
 
   return (
     <div className="sideMenuOuter">
+      <div className="dialogBg" onClick={props.closeModal}></div>
       <div className="sideMenuInner buyNumberModal">
       {isLoader ? <Loader /> : ''}
         <button className="btn btn-closeSideMenu" onClick={props.closeModal}>

@@ -6,13 +6,13 @@ import line_chart from '../../../src/assets/images/line-chart.svg';
 
 //import Loader2 from "../../../";
 
-
+import { useDispatch, useSelector } from 'react-redux';
 const GoalSetModal = (props) => {
-
+    let zIndexBody = useSelector((state) => state.modal.zIndexBody);
     return (
         <>
             <div className="sideMenuOuter filterUserMenu">
-               
+            <div className="dialogBg" onClick={props.closeModal}></div>
                 <div className="sideMenuInner dashboardSideBar">
                     <button className="btn btn-closeSideMenu" onClick={props.closeModal}><span></span><span></span></button>
                     {/* <div className="sideMenuHeader">

@@ -729,6 +729,7 @@ const CreateAppointment = (props) => {
 
     return (
         <div className="modalBackdrop modalCreateAppointment">
+            <div className="modalBackdropBg" onClick={() => props.setCreateAppointmentModal(false)}></div>
             {isLoader && <Loader/>}
             {successMsg && <SuccessAlert message={successMsg}></SuccessAlert>}
             {errorMsg && <ErrorAlert message={errorMsg}></ErrorAlert>}

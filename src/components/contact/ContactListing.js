@@ -836,6 +836,7 @@ const ContactListing = forwardRef((props, ref) => {
             }
             {deleteSelectedModal && (
                 <div className="modalDependent modalBackdrop">
+                    <div className="modalBackdropBg" onClick={() => closeDeleteModal(false)}></div>
                     <div className="slickModalBody setAppointment deleteSelectedModals">
                         <div className="modalForm appointmentForm setappointment successApp deleteModals">
                             <div className="slickModalHeader appointmentModalHeads">

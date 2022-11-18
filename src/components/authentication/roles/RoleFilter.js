@@ -5,6 +5,7 @@ import Loader from "../../shared/Loader";
 
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
+import { useDispatch, useSelector } from 'react-redux';
 
 const RoleFilter = (props) => {
     const [fromDate, setFromDate] = useState('');
@@ -18,7 +19,7 @@ const RoleFilter = (props) => {
         toDate: "",
         fromDate: ""
     });
-
+    let zIndexBody = useSelector((state) => state.modal.zIndexBody);
     useEffect(() => {
         /**
          * Get page id and keyword from URL
@@ -158,6 +159,7 @@ const RoleFilter = (props) => {
         <>
             {props.stateFilter !== null && (
                 <div className="sideMenuOuter filterUserMenu">
+                    <div className="dialogBg" onClick={(e) => closeSideMenu(e)}></div>
                     {isLoader ? <Loader /> : ''}
 
                     <div className="sideMenuInner">

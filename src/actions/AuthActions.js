@@ -32,7 +32,6 @@ const login = (email, password) => {
         });
     };
 };
-
 const logout = () => {
     return dispatch => {
         userLogout();

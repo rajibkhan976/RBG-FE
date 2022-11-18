@@ -262,12 +262,12 @@ const StatusPhases = (props) => {
                             </li>
                             { statuses.filter(ele => ele._id !== undefined).map((elem, key) => {
                                 return (
-                                    <li>
+                                    <li className="listTable">
                                         <div className="statusNameWraper"><span className="statusNames">{elem.name}</span>
                                             <Link to={"/contacts?status=" + elem._id} ><span className="statusCounts">{elem.contactCount ? elem.contactCount : 0}</span></Link></div>
                                         <div className="bigspace colorFade"><span className="statusDesc">{elem.description}</span></div>
                                         <div className="colorFade">{Moment(elem.createdAt).isValid() ? Moment(elem.createdAt).format('LLL') : elem.createdAt}</div>
-                                        <div>
+                                        <div className="action">
                                             {/*<label className={elem.status ? "toggleBtn active" : "toggleBtn"}>
                                                 <input type="checkbox"
                                                        value={elem.status}

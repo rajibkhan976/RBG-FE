@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect, useEffect } from "react";
 import arrowForward from "../../../../assets/images/arrow_forward.svg";
 import { utils } from "../../../../helpers";
 import Loader2 from "../../../shared/Loader2";
-
+import { useDispatch, useSelector } from 'react-redux';
 
 const ProductFilter = (props) => {
     const thumbsize = 2;
@@ -25,7 +25,7 @@ const ProductFilter = (props) => {
         setColorSize(props.getcolorSize);
         setDefaultParams();
     }, []);
-
+    let zIndexBody = useSelector((state) => state.modal.zIndexBody);
     
 
     const setDefaultParams = () => {
@@ -243,7 +243,8 @@ const ProductFilter = (props) => {
 
     return (
         <>
-            <div className="sideMenuOuter filterUserMenu">
+            <div className="sideMenuOuter filterUserMenu"  >
+            <div className="dialogBg" onClick={props.closeModal}></div>
                 {isLoader ? <Loader2 /> : ''}
                 <div className="sideMenuInner">
                     <button className="btn btn-closeSideMenu" onClick={props.closeModal}><span></span><span></span></button>

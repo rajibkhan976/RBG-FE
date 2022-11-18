@@ -225,7 +225,8 @@ const CreatePackageModal = (props) => {
     }
 
     return (
-        <div className="modalBackdrop cr_createPackageModal">
+        <div className="modalBackdrop cr_createPackageModal"  onClick={props.closeModal}>
+            <div className="dialogBg"></div>
             {console.log('In render', editId)}
             {isLoader ? <Loader /> : ""}
             <div className="slickModalBody">

@@ -241,6 +241,7 @@ const RoleModal = (props) => {
     <>
       {props.createButton !== null && (
         <div className="sideMenuOuter createSideModal sideRoles">
+          <div className="dialogBg" onClick={(e) => closeSideMenu(e)}></div>
           <div className="sideMenuInner">
             <button
               className="btn btn-closeSideMenu"

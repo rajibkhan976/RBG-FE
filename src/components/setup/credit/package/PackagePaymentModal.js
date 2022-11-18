@@ -621,6 +621,7 @@ const PackagePaymentModal = (props) => {
     return (
         <React.Fragment>
             <div className="cr_modalBase">
+                <div className="cr_modalBase_Bg" onClick={() => props.closeModal()}></div>
                 {isLoader ? <Loader /> : ""}
                 <div className="cr_modal">
                     <button className='cr_cross' onClick={() => props.closeModal()} ><img src={cross_icon} alt="" /></button>

@@ -3,15 +3,36 @@ import { useLocation } from "react-router-dom";
 import filter_icon from "../../../assets/images/filter_icon.svg";
 import plus_icon from "../../../assets/images/plus_icon.svg";
 import {useEffect, useState} from "react";
+import { useDispatch, useSelector } from "react-redux";
+import * as actionTypes from "../../../actions/types";
+
 
 const ListHead = (props) => {
   const pathURL = useLocation().pathname;
   const [time, setTime] = useState(false);
+  const dispatch = useDispatch();
+
   useEffect(() => {
     setTimeout(() => {
       setTime(true);
     }, 200)
-  },[])
+  },[]);
+
+  const filterRoles = ()=>{
+    return props.filterRoles
+  }
+  const creatUser = ()=>{
+    dispatch({type: actionTypes.MODAL_COUNT_INCREMENT, area: 'bodyModal'});
+  }
+  const dispatchFun = ()=>{
+    filterRoles();
+    creatUser();
+  }
+
+
+
+
+  
   return (
       (pathURL === '/roles' ?
       <div className="userListHead">
@@ -57,7 +78,7 @@ const ListHead = (props) => {
               </button>
             </form>
           </div>
-          <button className="btn btn-filter" onClick={props.filterRoles}>
+          <button className="btn btn-filter" onClick={dispatchFun}>
             {/* <p>Filter</p> */}
             <img className="filterIcon" src={filter_icon} alt="" />
           </button>

@@ -1320,6 +1320,7 @@ const SmsTemplate = (props) => {
       </div>
       {smsModal && (
         <div className="modalDependent modalBackdrop">
+          <div className="modalBackdropBg" onClick={() => closeModal(false)}></div>
         {addSMSLoader ? <Loader /> : ""}
         <div className="slickModalBody">
           <div className="slickModalHeader">

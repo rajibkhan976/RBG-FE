@@ -67,6 +67,7 @@ const ActionStatusPhaseModal = (props) => {
     return (
         <div className="automationModal filterModal">
             {isLoader ? <Loader /> : ""}
+            <div className='automationModalBg' onClick={props.closeFilterModal}></div>
             <div className="nodeSettingModal statusPhaseSettingModal">
                 <div className="formHead">
                     <div className="heading">

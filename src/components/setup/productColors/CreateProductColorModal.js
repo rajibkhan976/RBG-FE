@@ -267,6 +267,7 @@ const CreateProductColorModal = (props) => {
 
     return (
         <div className="modalBackdrop cz_addTagModal">
+            <div className="modalBackdropBg" onClick={closeModal}></div>
             <div className="slickModalBody">
                 <div className="slickModalHeader">
                     <button className="topCross" onClick={closeModal}>

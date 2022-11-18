@@ -14,9 +14,8 @@ import plus_icon from "../../../assets/images/plus_icon.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
 import { GroupServices } from '../../../services/authentication/GroupServices';
 import AudioHelper from 'twilio-client/es5/twilio/audiohelper';
-import {useDispatch} from "react-redux";
+import {useDispatch , useSelector} from "react-redux";
 import * as actionTypes from "../../../actions/types";
-
 
 const UserModal = (props) => {
     const [image, setImage] = useState(null);
@@ -87,6 +86,7 @@ const UserModal = (props) => {
         setPhoneCountryCode(conntryResponse);
         console.log("country");
     };
+    let zIndexBody = useSelector((state) => state.modal.zIndexBody);
 
     /**
      * Auto hide success or error message
@@ -178,10 +178,20 @@ const UserModal = (props) => {
         }
         setBasicinfoMobilePhone(prevState => ({ ...prevState, [name]: value }));
     };
-
+    // const bodyModal = useSelector((state) => state.modal.bodyModal);
     const closeSideMenu = (e) => {
         e.preventDefault();
         props.setCreateButton(null);
+
+        // if(bodyModal) {
+        //     dispatch({
+        //       type: actionTypes.CLOSE_BODY_MODAL
+        //     })
+        //   } else {
+        //     dispatch({
+        //       type: actionTypes.OPEN_BODY_MODAL
+        //     })
+        //   }
     };
 
 
@@ -1089,7 +1099,8 @@ const UserModal = (props) => {
     return (
         <>
             {props.createButton !== null && (
-                <div className="sideMenuOuter createSideModal sideUser">
+                <div className="sideMenuOuter createSideModal sideUser" style={{zIndex: zIndexBody}}>
+                    <div className="dialogBg" onClick={(e) => closeSideMenu(e)}></div>
                     <div className="sideMenuInner">
                         {isLoader ? <Loader /> : ''}
                         <button
