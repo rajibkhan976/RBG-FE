@@ -5,9 +5,10 @@ import { utils } from "../../../../helpers";
 import { ProductServices } from "../../../../services/setup/ProductServices";
 import Loader from "../../../shared/Loader";
 import Loader2 from "../../../shared/Loader2";
-
+import { useDispatch, useSelector } from 'react-redux';
 
 const ProductFilter = (props) => {
+    let zIndexBody = useSelector((state) => state.modal.zIndexBody);
     const thumbsize = 14;
     const [isLoader, setIsLoader] = useState(false);
     const [colorSize, setColorSize] = useState({
@@ -232,6 +233,7 @@ const ProductFilter = (props) => {
         <>
             
             <div className="sideMenuOuter filterUserMenu">
+            <div className="dialogBg" onClick={props.closeModal}></div>
                 {isLoader ? <Loader2 /> : ''}
                 <div className="sideMenuInner">
                     <button className="btn btn-closeSideMenu" onClick={props.closeModal}><span></span><span></span></button>

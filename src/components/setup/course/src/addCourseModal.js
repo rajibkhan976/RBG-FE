@@ -40,7 +40,8 @@ const AddCourseModal = (props) => {
     duration: "",
     durationMsg: "",
     paymentType: "",
-    paymentTypeMsg: ""
+    paymentTypeMsg: "",
+    ageGroupIdMsg: ""
   });
   const dispatch = useDispatch();
 
@@ -48,12 +49,26 @@ const AddCourseModal = (props) => {
     fetchAgeGroup();
   },[]);
 
+  let customOption = {
+      _id: "default",
+      createdAt: "0",
+      createdBy: "0",
+      max: "0",
+      min: "0",
+      name: "Select option",
+      orgId: "0",
+      updatedAt: "0",
+      updatedBy: "0",
+  }
   const fetchAgeGroup = async() => {
     try {
       const res = await CustomizationServices.fetchAgeGroup();
       setAgeGroup(res.agegroups);
+      // alert("age group");
+      
       if (!Object.keys(props.editCourseItem).length) {
-        console.log(res.agegroups)
+        res.agegroups.splice(0,0,customOption);
+        console.log(res.agegroups);
         setCourseData((prevState) => ({...prevState, ageGroupId: (res.agegroups.length)?res.agegroups[0]._id:""}));
       }
     } catch (e) {
@@ -174,11 +189,13 @@ const AddCourseModal = (props) => {
         break;
       case "age_group":
         setCourseData({ ...courseData, ageGroupId: elemValue });
+        setErrorClass(prevState=> ({ ...prevState, ageGroupId: "", ageGroupIdMsg:""}));
         break;
     }
   }
 
   const handleSubmit = async (e) => {
+    console.log(e);
     e.preventDefault();
     setIsLoader(true);
     try {
@@ -263,13 +280,18 @@ const AddCourseModal = (props) => {
   }
 
   const createValidation = () => {
+    
     // return true;
     let bool = true;
     if (courseData.name === "") {
       bool = false;
       setErrorClass(prevState => ({ ...prevState, name: "error", nameMsg: "Please enter a valid program name" }));
     }
-
+    console.log(courseData.ageGroupId);
+    if(courseData.ageGroupId === 'default'){
+      // alert("age group id");
+      setErrorClass(prevState =>({...prevState, ageGroupId: "error", ageGroupIdMsg: "Please select any age group"}))
+    }
     if (courseData.duration <= 0) {
       bool = false;
       setErrorClass(prevState => ({ ...prevState, duration: "error", durationMsg: "Program duration should not be 0 or empty" }));
@@ -309,7 +331,8 @@ const AddCourseModal = (props) => {
         duration: "",
         durationMsg: "",
         paymentType: "",
-        paymentTypeMsg: ""
+        paymentTypeMsg: "",
+        ageGroupIdMsg: ""        
       }),
       4000
     );
@@ -322,6 +345,7 @@ const AddCourseModal = (props) => {
   return (
     <>
       <div className="modalBackdrop modalProductAdd">
+      <div className="dialogBg" onClick={props.closeCourseModal}></div>
         {isLoader ? <Loader /> : ''}
         <div className="slickModalBody">
           <div className="slickModalHeader">
@@ -351,7 +375,7 @@ const AddCourseModal = (props) => {
 
                 <div className={"formControl " + errorClass.name}>
                   <label>Enter Program Name</label>
-                  <input type="text" placeholder="Ex: v-shape gym vest" name="courseName"
+                  <input type="text" placeholder="Ex: Jujutsu program" name="courseName"
                     onChange={handleChange}
                     className="cmnFieldStyle"
                     value={courseData.name} />
@@ -421,16 +445,35 @@ const AddCourseModal = (props) => {
                 <div className="formControl">
                   <div className="formLeft">
                     <label>Select Age Group</label>
-                    <select name="age_group" onChange={handleChange} value={courseData.ageGroupId}>
+                        {/* <select
+                          name="age_group"
+                          value={courseData.ageGroupId}
+                          defaultValue={"default"}
+                          onChange={handleChange}
+                        >
+                          <option value={"default"}>Choose an option</option>
+                          {ageGroup.map((ag, index)=>{
+                            return(
+                              <>
+                              <option key={index} value={ag._id}>{ag.name}</option>
+                              </>
+                              
+                            )
+                          })}
+                        </select> */}
+              
+                    
+                    <select name="age_group" onChange={handleChange} value={courseData.ageGroupId} defaultValue={"default"}>
                       {ageGroup.map((ag, index) => {
                         return (
                           <>
-                            <option key={index+ "_ag"} value={ag._id}>{ag.name}</option>
+                            <option key={index+ "_ag"} value={ag._id}>{ag.name}</option>                         
                           </>
                         );
-                      })}
-
+                      })
+                      }
                     </select>
+                    <p className="errorMsg">{errorClass.ageGroupIdMsg}</p>
                   </div>
 
                   <div className={"formRight programModals " + errorClass.fees}>

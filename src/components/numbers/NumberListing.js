@@ -272,7 +272,7 @@ const NumberListing = () => {
                     type="search"
                     name=""
                     id=""
-                    placeholder="Search groups"
+                    placeholder="Search organization"
                     onChange={handleKeywordChange}
                     autoComplete="off"
                     value={keyword}

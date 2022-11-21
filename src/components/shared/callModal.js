@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useReducer } from "react";
 import { ContactService } from "../../services/contact/ContactServices";
 import lineUser from "../../assets/images/lineUser.svg";
 import makeCall from "../../assets/images/makeACall.svg";
@@ -7,10 +7,14 @@ import whiteCross from "../../assets/images/cross_white.svg";
 import hand from "../../assets/images/hand.svg";
 import searchicon from "../../assets/images/search_icon.svg";
 import iconBrowse from "../../assets/images/icon_browse_keywords.svg";
+import modalReducer from "../../reducers/modalReducer";
+import {useDispatch, useSelector} from 'react-redux';
+
+
 
 
 const CallModal = (props) => {
-
+  
   const fetchCountry = async () => {
     let conntryResponse = await ContactService.fetchCountry();
     setPhoneCountryCode(conntryResponse);
@@ -20,7 +24,7 @@ const CallModal = (props) => {
 useEffect(() => {
     fetchCountry();
 }, []);
-
+const dispatch = useDispatch();
   const [phoneCountryCode, setPhoneCountryCode] = useState([]);
   const [number, setNumber] = useState([]);
   const countrycodeOpt = phoneCountryCode ? phoneCountryCode.map((el, key) => {
@@ -75,8 +79,13 @@ const makeCall = () => {
     props.makeOutgoingCall(basicinfoMobilePhone.dailCode + number);
     props.callModalOff();
 }
+  let zIndexCall = useSelector((state) => state.modal.zIndexCall);
+  console.log("Initial State in header", zIndexCall);
+
+
  return(
-    <div className="sideMenuOuter">
+    <div className="sideMenuOuter" style={{zIndex: zIndexCall}}>
+    <div className="dialogBg" onClick={props.callModalOff}></div>
     <div className="sideMenuInner makeCall">
       <div className="modal_call_header">
        <button className="btn btn_empty" onClick={props.callModalOff}><img src={whiteCross} alt=""/></button>

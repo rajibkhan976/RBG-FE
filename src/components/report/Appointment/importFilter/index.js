@@ -13,6 +13,7 @@ function ImportFilter(props) {
     return (
         <>
             <div className="sideMenuOuter" id="import_Modal">
+            <div className="dialogBg" onClick={() => closeModal()}></div>
                 <div className="sideMenuInner importModalContainer appointmentListing">
                     <div className="sideMenuHeader">
                         <h3>Apply Filter</h3>

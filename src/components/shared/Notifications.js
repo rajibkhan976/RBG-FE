@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useReducer} from "react";
 import {useDispatch, useSelector} from 'react-redux';
 import * as actionTypes from "../../actions/types";
 import BackArrow from "../../assets/images/back-arrow.png";
@@ -8,7 +8,7 @@ import Loader from "./Loader";
 import moment from "moment-timezone";
 import Status from "../contact/importContact/status";
 import smallLoaderImg from "../../assets/images/loader.gif";
-
+import modalReducer from "../../reducers/modalReducer";
 
 const Notifications = (props) => {
     let [detailNotification, setDetailNotification] = useState(null);
@@ -18,6 +18,7 @@ const Notifications = (props) => {
     const [notificationsListing, setNotificationListing] = useState([]);
     const [notificationsType, setNotificationType] = useState(null);
     const dispatch = useDispatch();
+    const initialState = useSelector((state) => state.modal);
     const [notification, setNotification] = useState({
         general: {
             data: [],
@@ -32,6 +33,11 @@ const Notifications = (props) => {
         isLoading: false,
         fullLoading: false
     });
+
+    const zindexState = useSelector((state)=>state);
+    console.log("notification:", zindexState);
+   
+    
     const goBackToNotificationListing = () => {
         setDetailNotification(null);
         setNotificationType(null);
@@ -88,12 +94,14 @@ const Notifications = (props) => {
     const showTimeDiff = (e) => {
         return moment.tz(e.createdAt, "Europe/London").fromNow()
     }
-
+    // const modalsStoreCount = useSelector((state) => state.modal.count);
+    // console.log(modalsStoreCount);
     useEffect(() => {
         setNotification(props.notification)
     }, [props.notification])
     return (
-        <div className="sideMenuOuter notificationsMenu">
+        <div className="sideMenuOuter notificationsMenu"  style={{zIndex: initialState.zIndexNotification}}>
+            <div className="dialogBg" onClick={props.closeModalNotification}></div>
             <div className="sideMenuInner">
                 <div className="sideMenuHeader">
                     <h3>

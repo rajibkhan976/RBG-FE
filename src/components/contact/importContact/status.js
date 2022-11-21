@@ -40,6 +40,7 @@ function Status(props) {
     return (
         <>
             <div className="sideMenuOuter" id="import_Modal">
+            <div className="dialogBg" onClick={props.closeModal}></div>
                 <div className="sideMenuInner importModalContainer">
                     {isLoader ? <Loader /> : ""}
                     <div className="sideMenuHeader">

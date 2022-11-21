@@ -59,6 +59,7 @@ const RestrictionPackageModal = (props) => {
 
     return (
         <div className="cr_modalBase">
+            <div className="cr_modalBase_Bg" onClick={() => props.closeModal()}></div>
             {isLoader ? <Loader /> : ""}
             <div className="cr_modal cr_restriction">
                 <button className='cr_cross' onClick={closeModal} ><img src={cross_icon} alt="" /></button>

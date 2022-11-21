@@ -290,6 +290,7 @@ const AddAppointmentModal = (props) => {
 
   return (
     <div className="modalCreateAppointment modalBackdrop">
+      <div class="modalBackdropBg" onClick={() => props.closeModal(false)}></div>
       <div className="slickModalBody setAppointment">
         <div className="modalForm appointmentForm setappointment">
           <div className="slickModalHeader appointmentModalHeads">

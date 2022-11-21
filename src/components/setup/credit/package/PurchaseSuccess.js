@@ -43,6 +43,7 @@ const PurchaseSuccess = (props) => {
 
     return (
         <div className="cr_modalBase">
+            <div className="cr_modalBase_Bg" onClick={() => props.closeModal()}></div>
             <div className="cr_modal small">
                 <button className='cr_cross' onClick={closeRestrictionModal} ><img src={cross_icon} alt="" /></button>
                 <div className="cr_modalBody">

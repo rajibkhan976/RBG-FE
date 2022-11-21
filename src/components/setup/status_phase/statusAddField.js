@@ -165,6 +165,7 @@ const StatusAddField = (props) => {
     return (
 
         <div className="modalBackdrop statusPhases">
+            <div className="modalBackdropBg" onClick={props.closeAddCustomModal}></div>
             <div className="slickModalBody">
                 {isLoader ? <Loader /> : ''}
                 <div className="slickModalHeader">

@@ -506,6 +506,7 @@ const CallConfiguration = (props) => {
 
     return (
       <div className="sideMenuOuter">
+        <div className="dialogBg" onClick={props.closeModal}></div>
         <div className="sideMenuInner callConfigModal">
           {isLoader ? <Loader /> : ""}
           <button className="btn btn-closeSideMenu" onClick={props.closeModal}>

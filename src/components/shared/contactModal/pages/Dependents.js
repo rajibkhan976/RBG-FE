@@ -721,6 +721,7 @@ const Dependents = (props) => {
 
       {addDependentModal && (
         <div className="modalDependent modalBackdrop">
+          <div className="modalBackdropBg" onClick={() => closeModal(false)}></div>
           {isLoader ? <Loader /> : ""}
           <div className="slickModalBody">
             <div className="slickModalHeader">

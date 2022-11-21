@@ -529,6 +529,8 @@ video {
   align-items: center;
   margin-left: 288px;
   justify-content: flex-end;
+  position: relative;
+  z-index: 9999;
 }
 
 .buttonNotifications {
@@ -709,7 +711,7 @@ input:focus + .searchIco #search-ico .a,
 
 .menuDetails {
   position: absolute;
-  z-index: 2;
+  z-index: 1;
   top: 0;
   left: -300px;
   bottom: 0;
@@ -735,19 +737,39 @@ input:focus + .searchIco #search-ico .a,
 
 .sideMenuOuter {
   position: fixed;
-  top: 0;
+  top: 70px;
   bottom: 0;
   right: 0;
-  left: 0;
-  z-index: 99;
-  background: rgb(48 86 113 / 20%);
+  left: inherit;
+  z-index: 1;
+  /* background: rgb(48 86 113 / 20%); */
   opacity: 1;
   transition: all 1s ease 0s;
+  width: 95.5%;
+}
+.dialogBg{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgb(48 86 113 / 20%);
+  top:0px;
+  left:0px;
+  z-index: -1;
 }
 .sideMenuOuter.hideSlide {
   opacity: 0;
   right: -100%;
 }
+.sideMenuOuter.headeruserMenu{
+  left: inherit;
+}
+.sideMenuOuter.filterUserMenu{
+  right: 0px;
+  left: inherit;
+}
+
+
+
 .createSideModal .sideMenuInner {
   width: 100%;
   max-width: 680px;
@@ -1114,8 +1136,9 @@ input:focus + .searchIco #search-ico .a,
   overflow: auto;
   position: relative;
   margin-right: 46px;
+  z-index: 1;
 }
-
+.dashboardElComponent .userListBody{z-index: 0;}
 .tableListing li {
   display: table-row;
 }
@@ -1969,7 +1992,7 @@ img.dropDownIcon {
   position: sticky;
   background: #f6f8fa;
   top: 0;
-  z-index: 10;
+  z-index: 1;
 }
 
 .paginationOuter .btn svg {
@@ -2387,7 +2410,7 @@ img.dropDownIcon {
   width: 606px;
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 40%;
   transform: translate(-50%, -50%);
 }
 
@@ -3353,16 +3376,17 @@ span.userProfilePic img {
 
 .alertBackscreen {
   position: fixed;
-  z-index: 120;
-  left: 0;
-  top: 0;
-  width: 100%;
+  z-index: 70;
+  /* left: 0; */
+  right: 0px;
+  top: 70px;
+  width: 95.5%;
   height: 100%;
   background: rgb(48 86 113 / 20%);
 }
 .alertBox {
   position: fixed;
-  z-index: 140;
+  z-index: 70;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -3681,8 +3705,8 @@ li:hover .extraDottedBtn {
 
 .modalContainer {
   position: fixed;
-  z-index: 999;
-  top: 0;
+  z-index: 100;
+  top: 70px;
   right: 0;
   width: 820px;
   height: 100%;
@@ -3691,10 +3715,11 @@ li:hover .extraDottedBtn {
 
 .modalOverlay {
   position: fixed;
-  z-index: 990;
-  top: 0;
-  left: 0;
-  width: 100%;
+  z-index: 99;
+  top: 70px;
+  left: inherit;
+  right: 0px;
+  width: 95.5%;
   height: 100%;
   background: rgb(48 86 113 / 20%);
 }
@@ -3704,7 +3729,7 @@ li:hover .extraDottedBtn {
   position: relative;
   display: inline-block;
   width: 100%;
-  padding-bottom: 23px;
+  padding-bottom: 10px;
 }
 .modal.contactModal .contactModalHeader.stickey {
   padding-bottom: 5px;
@@ -3878,10 +3903,7 @@ li:hover .extraDottedBtn {
   width: 637px;
   box-sizing: border-box;
   margin-right: 32px;
-  margin-top: -20px;
-}
-
-.clockinArea {
+  margin-top: -35px;
 }
 
 .orangeBtn {
@@ -4042,11 +4064,10 @@ li:hover .extraDottedBtn {
   display: inline-block;
   width: 100%;
 }
-
 .overviewList ul {
   display: block;
   width: 700px;
-  margin: 41px auto 50px;
+  margin: 15px auto 0px;
 }
 
 .overviewList li {
@@ -4079,7 +4100,7 @@ li:hover .extraDottedBtn {
 }
 
 .overviewFormWrap {
-  margin-top: 40px;
+  margin-top: 15px;
 }
 .overviewForm {
   margin-bottom: 30px;
@@ -5351,21 +5372,29 @@ button.saveOverview img {
 }
 
 .modalBackdrop {
-  width: 100%;
+  width: 95.5%;
   min-height: 100vh;
   position: fixed;
-  top: 0;
+  top: 70px;
   bottom: 0;
-  left: 0;
+  /* left: 0; */
   right: 0;
-  z-index: 9999;
-  background: rgb(48 86 113 / 90%);
+  z-index: 99;
   display: flex;
   flex-wrap: wrap;
   align-content: center;
   justify-content: center;
   height: auto;
   overflow: auto;
+}
+.modalBackdropBg{
+  position: absolute;
+  background: rgb(48 86 113 / 90%);
+  top:0px;
+  left:0px;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
 
 .slickModalBody {
@@ -5375,6 +5404,8 @@ button.saveOverview img {
   background: #fff;
   padding: 35px 27px;
   max-width: calc(100% - 20px);
+  position: relative;
+  top: -35px;
 }
 
 .slickModalHeader {
@@ -6225,14 +6256,14 @@ p.trackName {
 
 .modal_mid_wrap {
   position: fixed;
-  z-index: 999;
-  left: 0;
-  top: 0;
-  width: 100%;
+  z-index: 70;
+  right: 0;
+  top: 70px;
+  width: 96%;
   height: 100%;
 }
 .modal_mid_overlay {
-  position: fixed;
+  position: absolute;
   left: 0;
   top: 0;
   width: 100%;
@@ -8304,6 +8335,10 @@ p.trackName {
   padding: 60px 38px;
   overflow: auto;
 }
+.customFieldListing .customtableListing li:not(.listHeading){display: flex; align-items: center; flex-wrap: wrap;}
+.customFieldListing .customtableListing li:not(.listHeading) > div{
+  width: calc(100% / 5);
+}
 .taxSetup{
   width: 100%;
   padding: 0px 0 0 0;
@@ -8378,12 +8413,14 @@ li.listHeading > div.vacent:after{
 
 .customtableListing li {
   display: flex;
+  display: inline-block;
   flex-wrap: wrap;
   justify-content: space-between;
   background-color: #fff;
   border-radius: 5px;
   margin-bottom: 5px;
   align-items: center;
+  width: 100%;
 }
 .customtableListing li > div {
   font-size: 13px;
@@ -8392,7 +8429,7 @@ li.listHeading > div.vacent:after{
   position: relative;
   display: flex;
   min-height: 60px;
-  min-width: 160px;
+  /* min-width: 160px; */
   align-items: center;
 }
 .customtableListing li.listHeading > div {
@@ -8402,8 +8439,11 @@ li.listHeading > div.vacent:after{
   min-height: 40px;
   cursor: pointer;
   position: relative;
+  float: left;
 }
-
+.customtableListing li.listTable > div{
+  float: left;
+}
 .customtableListing .toggleBtn {
   margin-top: 0;
 }
@@ -8521,7 +8561,7 @@ li.listHeading > div.sortOff:after {
 }
 
 .phases li .bigspace{
-  width: 400px;
+  /* width: 400px; */
 }
 .phases li .colorFade{
   color: #9BAEBC;

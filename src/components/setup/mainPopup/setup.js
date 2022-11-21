@@ -16,9 +16,10 @@ import creditIcon from "../../../assets/images/credit_management_icon.svg"
 
 const Setup = (props) => {
   const loggedInUser = useSelector((state) => state.user.data);
+  const zIndexSetting = useSelector((state)=> state.modal.zIndexSetting);
   return (
     <>
-      <div className="setUpPopUp">
+      <div className="setUpPopUp" style={{zIndex: zIndexSetting}}>
         <Scrollbars
           renderThumbVertical={(props) => <div className="thumb-vertical" />}
         >

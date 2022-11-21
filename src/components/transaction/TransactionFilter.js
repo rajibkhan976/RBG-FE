@@ -76,6 +76,7 @@ function ImportTransactionFilter(props) {
     return (
         <>
             <div className="sideMenuOuter" id="import_Modal">
+                <div className="dialogBg" onClick={props.closeFilter}></div>
                 <div className="sideMenuInner importModalContainer updateContainer">
                     {isLoader ? <Loader/> : ''}
                     <div className="sideMenuHeader">

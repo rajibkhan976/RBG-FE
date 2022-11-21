@@ -67,6 +67,7 @@ const AppointmentTriggerSetting = (props) => {
     return (
         <React.Fragment>
             <div className="automationModal filterModal triggerSetting">
+                <div className="automationModalBg" onClick={props.closeFilterModal}></div>
                 <div className="nodeSettingModal">
                     <div className="formHead">
                         <div className="heading">
