@@ -6,6 +6,7 @@ const initialState = {
   zIndexNotification: 0,
   zIndexCall : 0,
   zIndexSms: 0,
+  zIndexEmail: 0,
   zIndexBody: 0,
   zIndexSetting: 0,
 }
@@ -29,7 +30,11 @@ const modalReducer = (state = initialState, action) => {
       }else if(action.area === 'sms'){
         newState.zIndexSms = state.zIndex + 1;
         newState.zIndex = state.zIndexSms
-      }else if(action.area === 'bodyModal'){
+      }else if(action.area === 'email'){
+        newState.zIndexEmail = state.zIndex + 1;
+        newState.zIndex = state.zIndexEmail
+      }
+      else if(action.area === 'bodyModal'){
         newState.zIndexBody = state.zIndex + 1;
         newState.zIndex = state.zIndexBody;
       }
