@@ -30,3 +30,5 @@
     - Card number 14 to 19 digit validated and CVV 3 to 4 digit validated
 # HOTFIX V1.0.7
     - Filtering some tags from tag list and search feature on tags
+# HOTFIX V1.0.8
+    - Email Modal modification bug fixed.

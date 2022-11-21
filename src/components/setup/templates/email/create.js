@@ -294,6 +294,7 @@ const CreateTemplate = (props) => {
 
     return (
         <div className="modalAddEmail modalBackdrop">
+            <div class="modalBackdropBg" onClick={() => props.closeModal(false)}></div>
             {isLoader ? <Loader /> : ""}
             <div className="slickModalBody">
                 <div className="slickModalHeader">

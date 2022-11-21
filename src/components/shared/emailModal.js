@@ -13,6 +13,9 @@ import * as actionTypes from "../../actions/types";
 import Loader from "./Loader";
 import EditorComponent from "../setup/templates/email/editor/Editor";
 import {EmailServices} from "../../services/setup/EmailServices";
+import { useSelector } from "react-redux";
+
+
 
 const initialDependentState = {
     name: "",
@@ -423,9 +426,13 @@ const EmailModal = (props) => {
 
 //   };
 
+let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
+//   console.log("Initial State in header",zIndexEmail);
+
 
     return (
-        <div className="sideMenuOuter">
+        <div className="sideMenuOuter" style={{zIndex: zIndexEmail}}>
+            <div className="dialogBg" onClick={props.emailModalOff}></div>
             {isLoader ? <Loader/> : ""}
             {/* {successMsg && <SuccessAlert message={successMsg}></SuccessAlert>}
       {errorMsg && <ErrorAlert message={errorMsg}></ErrorAlert>}

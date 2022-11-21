@@ -572,6 +572,7 @@ useEffect(() => {
      {isLoader ? <Loader /> : ""}
 
      <div className="sideMenuInner smsGlobal">
+      
        <div className="modal_call_header">
          <button className="btn btn_empty" onClick={props.smsModalOff}>
            <img src={whiteCross} alt="" />

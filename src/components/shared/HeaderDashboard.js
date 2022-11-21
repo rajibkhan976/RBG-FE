@@ -401,6 +401,10 @@ function HeaderDashboard(props) {
   const makeEmailModalHandle = () =>{
     setModalMakeEamil(true);
     setShowActionState(false);
+    dispatch({
+      type: actionTypes.MODAL_COUNT_INCREMENT,
+      area: 'email'
+    })
   }
   const emailModalOffhandler = () =>{
     setModalMakeEamil(false);

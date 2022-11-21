@@ -2376,7 +2376,7 @@ form.dsiplay.none {
 }
 
 .topCross.setApp {
-  right: -6px;
+  right: 0px;
     top: 2px;
     z-index: 9;
 }
