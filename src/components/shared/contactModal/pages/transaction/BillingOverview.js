@@ -12,8 +12,8 @@ import Loader from "../../../Loader";
 
 import {BillingServices} from "../../../../../services/billing/billingServices";
 import {setTimeout} from "timers";
-import { useSelector } from "react-redux";
-
+import { useSelector, useDispatch } from "react-redux";
+import * as actionTypes from "../../../../../actions/types";
 let currentTime = new Date();
 let currentYear = currentTime.getFullYear();
 let currentMonth = currentTime.getMonth() + 1;
@@ -36,7 +36,7 @@ const BillingOverview = (props) => {
         type: 'card',
         billingId: ''
     });
-
+    const dispatch = useDispatch();
     const [newCardState, setNewCardState] = useState({
         contact: props.contactId,
         card_number: '',
@@ -926,7 +926,11 @@ const BillingOverview = (props) => {
                     {!isLoader && <button
                         className="btn addPaymentInfo"
                         onClick={(e) => {
-                            openNewPaymentModal(e)
+                            openNewPaymentModal(e);
+                            dispatch({
+                                type: actionTypes.MODAL_COUNT_INCREMENT,
+                                area: 'bodyModal'
+                            })                            
                         }}
                     >
                         + Add
@@ -1047,6 +1051,10 @@ const BillingOverview = (props) => {
             {newPayModal && (
                 <div className="modalBackdrop modalNewPay" style={{zIndex: zIndexBody}} >
                     {addLoader && <Loader/>}
+                    <div className="modalBackdropBg" onClick={(e) => {
+                                    e.preventDefault();
+                                    setNewPayModal(false);
+                                }}></div>
                     <div className="slickModalBody">
                         <div className="slickModalHeader">
                             <button
