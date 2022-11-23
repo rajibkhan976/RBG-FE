@@ -58,7 +58,8 @@ const RetryPayment = (props) => {
 
     return (
         <div className={(successfulRetry.status === undefined || successfulRetry.status !== "success") ? "modalBackdrop transactionModal" : "modalBackdrop transactionModal transactionSuccssModal"}>
-            {loader && <Loader />}            
+            {loader && <Loader />}
+            <div className="modalBackdropBg" onClick={() => props.closeModal (false)}></div>        
             <div className="slickModalBody">
             {(successfulRetry.status === undefined || successfulRetry.status !== "success") &&
                 <>

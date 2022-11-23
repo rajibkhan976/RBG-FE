@@ -6,6 +6,8 @@ import PackagePaymentModal from "./PackagePaymentModal";
 import PurchaseSuccess from './PurchaseSuccess';
 import PurchaseFailed from './PurchaseFailed';
 import noReconrsImg from "../../../../assets/images/noRecords.svg";
+import { useDispatch } from 'react-redux';
+import * as actionTypes from "../../../../actions/types";
 
 
 const PackagePurchase = (props) => {
@@ -16,7 +18,7 @@ const PackagePurchase = (props) => {
     const [purchaseFailedMsg, setPurchaseFailedMsg] = useState(null);
 
     const loggedInUser = useSelector((state) => state.user.data);
-
+    const dispatch = useDispatch();
     const openModalhandler = (selectedPackage) => {
         //Filter selected package
         setSendPackageData(selectedPackage);
@@ -75,7 +77,7 @@ const PackagePurchase = (props) => {
                                 <div className="cr_packageCardPriceSec">
                                     <p>${element.price.toFixed(2)}</p>
                                     {props.currentCreditPackageId !== element._id ?
-                                        <button type="button" className="cr_buyNowBtn saveNnewBtn" onClick={() => openModalhandler(element)}><span>BUY NOW</span></button>
+                                        <button type="button" className="cr_buyNowBtn saveNnewBtn" onClick={() => {openModalhandler(element); dispatch({type: actionTypes.MODAL_COUNT_INCREMENT, area: 'firstEmail'})}}><span>BUY NOW</span></button>
                                         :
                                         <div className="cr_activePackageBtnArea">
                                             <div className="cr_activePackageBtnLbl">

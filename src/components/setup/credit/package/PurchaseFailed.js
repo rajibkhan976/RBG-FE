@@ -6,7 +6,7 @@ import { useHistory } from "react-router-dom";
 import cardFail from "../../../../assets/images/cardFailed.svg";
 import * as actionTypes from "../../../../actions/types";
 import { useDispatch } from "react-redux";
-
+import { useSelector } from "react-redux";
 
 
 const PurchaseFailed = (props) => {
@@ -21,9 +21,11 @@ const PurchaseFailed = (props) => {
             type: actionTypes.HIDE_CREDIT_RESTRICTION,
         })
     }
+    let zIndexFirstEmail = useSelector((state) =>state.modal.zIndexFirstEmail);
+    console.log(zIndexFirstEmail);
 
     return (
-        <div className="cr_modalBase">
+        <div className="cr_modalBase" style={{zIndex: zIndexFirstEmail}}>
             <div className="cr_modalBase_Bg" onClick={() => props.closeModal()}></div>
             <div className="cr_modal small">
                 <button className='cr_cross' onClick={() => props.closeModal()} ><img src={cross_icon} alt="" /></button>

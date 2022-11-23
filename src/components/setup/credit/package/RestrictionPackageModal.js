@@ -8,6 +8,7 @@ import PackagePurchase from './PackagePurchase';
 import { CreditManagementServices } from '../../../../services/setup/CreditManagementServices';
 import Loader from '../../../shared/Loader';
 import * as actionTypes from "../../../../actions/types";
+import { useSelector } from "react-redux";
 
 const RestrictionPackageModal = (props) => {
 
@@ -17,6 +18,8 @@ const RestrictionPackageModal = (props) => {
     let history = useHistory();
     const dispatch = useDispatch();
 
+    let zIndexFirstEmail = useSelector((state) =>state.modal.zIndexFirstEmail);
+    console.log(zIndexFirstEmail);
 
     const fetchPackages = async () => {
         try {
@@ -56,10 +59,10 @@ const RestrictionPackageModal = (props) => {
             type : actionTypes.HIDE_CREDIT_RESTRICTION,
         })
     }
-
+    
     return (
-        <div className="cr_modalBase">
-            <div className="cr_modalBase_Bg" onClick={() => props.closeModal()}></div>
+        <div className="cr_modalBase" style={{zIndex: zIndexFirstEmail}}>
+            <div className="cr_modalBase_Bg" onClick={closeModal}></div>
             {isLoader ? <Loader /> : ""}
             <div className="cr_modal cr_restriction">
                 <button className='cr_cross' onClick={closeModal} ><img src={cross_icon} alt="" /></button>

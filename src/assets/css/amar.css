@@ -2956,6 +2956,7 @@ input[type=number] {
 .contactTabScrollContainer {
   height: 100%;
   overflow: auto;
+  padding-bottom: 30px;
 }
 
 .contactTabScrollContainer::-webkit-scrollbar,

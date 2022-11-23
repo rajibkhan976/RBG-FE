@@ -9,6 +9,7 @@ const initialState = {
   zIndexEmail: 0,
   zIndexBody: 0,
   zIndexSetting: 0,
+  zIndexFirstEmail: 0
 }
 
 const modalReducer = (state = initialState, action) => {
@@ -33,6 +34,9 @@ const modalReducer = (state = initialState, action) => {
       }else if(action.area === 'email'){
         newState.zIndexEmail = state.zIndex + 1;
         newState.zIndex = state.zIndexEmail
+      }else if(action.area === 'firstEmail'){
+        newState.zIndexFirstEmail = state.zIndex + 1;
+        newState.zIndex = state.zIndexFirstEmail
       }
       else if(action.area === 'bodyModal'){
         newState.zIndexBody = state.zIndex + 1;

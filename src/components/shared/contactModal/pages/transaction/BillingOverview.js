@@ -12,6 +12,7 @@ import Loader from "../../../Loader";
 
 import {BillingServices} from "../../../../../services/billing/billingServices";
 import {setTimeout} from "timers";
+import { useSelector } from "react-redux";
 
 let currentTime = new Date();
 let currentYear = currentTime.getFullYear();
@@ -910,6 +911,7 @@ const BillingOverview = (props) => {
         props.changeDefaultPay(isPrimary);
     };
 
+    let zIndexBody = useSelector((state) => state.modal.zIndexBody);
 
     return (
         <>
@@ -1043,7 +1045,7 @@ const BillingOverview = (props) => {
             </div>
 
             {newPayModal && (
-                <div className="modalBackdrop modalNewPay">
+                <div className="modalBackdrop modalNewPay" style={{zIndex: zIndexBody}} >
                     {addLoader && <Loader/>}
                     <div className="slickModalBody">
                         <div className="slickModalHeader">
