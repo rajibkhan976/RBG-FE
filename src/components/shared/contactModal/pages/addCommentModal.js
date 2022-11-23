@@ -51,8 +51,9 @@ const AddCommentModal = (props) => {
   return (
     <>     
       <div className="modalBackdrop ">  
+        <div className="modalBackdropBg" onClick={props.closeAddHolidayModal}></div>
         <div className="slickModalBody">
-        
+
           <div className="slickModalHeader">
             <button className="topCross" onClick={props.closeAddHolidayModal}><img src={crossTop} alt="" /></button>
             <div className="circleForIcon"><img src={refreshTime} alt="" /></div>

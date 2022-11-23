@@ -34,3 +34,5 @@
     - Email Modal modification bug fixed.
 # HOTFIX V1.0.9
     - Footer, loging page offer text removed. Modal modification CR done.
+# HOTFIX V1.1.0
+    - Contact modal product add new billing modal outside chick modal close implemented.
