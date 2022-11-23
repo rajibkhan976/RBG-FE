@@ -345,7 +345,11 @@ function HeaderDashboard(props) {
       console.log('show restriction modal')
       dispatch({
         type: actionTypes.SHOW_CREDIT_RESTRICTION,
-      })
+      });
+      dispatch({
+        type: actionTypes.MODAL_COUNT_INCREMENT,
+        area: 'firstEmail'
+      });
     } else {
       //Show call modal
       setModalMakeCall(true);
@@ -354,7 +358,7 @@ function HeaderDashboard(props) {
       // setSetupModalStatus(false);
       // setStateNotifMenu(false);
       // setModalMakeSms(false);
-
+      console.log('show restriction modal3')
       dispatch({ 
         type: actionTypes.MODAL_COUNT_INCREMENT,
         area: 'call'
@@ -362,15 +366,21 @@ function HeaderDashboard(props) {
     }
   };
   const makeSMSModalHandle = () => {
+    // alert("czxcz");
+    console.log('show restriction modal-01')
     if (loggedInUser &&
       loggedInUser.isOrganizationOwner &&
       loggedInUser.isShowPlan &&
       (!loggedInUser.isPackage || loggedInUser.credit <= loggedInUser.autoRenewLimit)) {
       //Show package purchase restriction modal
-      console.log('show restriction modal')
+      console.log('show restriction modal');
       dispatch({
         type: actionTypes.SHOW_CREDIT_RESTRICTION,
-      })
+      });
+      dispatch({
+        type: actionTypes.MODAL_COUNT_INCREMENT,
+        area: 'firstEmail'
+      });
     } else {
       setModalMakeSms(true);
       setShowActionState(false);
@@ -378,12 +388,10 @@ function HeaderDashboard(props) {
       // setSetupModalStatus(false);
       // setStateNotifMenu(false);
       // setModalMakeCall(false);
-
       dispatch({ 
         type: actionTypes.MODAL_COUNT_INCREMENT,
         area: 'sms'
       });
-      
     }
   };
   const callModalOffhandler = () => {

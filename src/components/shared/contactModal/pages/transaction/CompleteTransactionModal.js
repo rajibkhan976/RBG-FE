@@ -66,6 +66,7 @@ const CompleteTransactionModal = (props) => {
 
     return (
         <div className="modalBackdrop transactionModal">
+            <div className="modalBackdropBg" onClick={() => props.closeModal ("close")}></div>
             {loader && <Loader />}
             
             <div className="slickModalBody">

@@ -789,6 +789,7 @@ input:focus + .searchIco #search-ico .a,
   background: #fff;
   display: flex;
   flex-direction: column;
+  padding-bottom: 30px;
 }
 
 .notificationsMenu .sideMenuInner {
@@ -4715,6 +4716,7 @@ button.saveOverview img {
 .dashboardFooter {
   position: relative;
   z-index: 2;
+  display: none;
 }
 
 .productListingHeader {
@@ -7981,6 +7983,7 @@ p.trackName {
   left: 70px;
   padding: 20px;
   width: 100%;
+  display: none;
 }
 .loginLeftPart .login_left_text h2 {
   color: #ffffff;
@@ -9599,7 +9602,7 @@ button.addOverviewCustomFiel {
 }
 
 .tabBarArea > div.transactionModal {
-  background: rgb(48 86 113 / 90%);
+  /* background: rgb(48 86 113 / 90%); */
   position: fixed;
 }
 .transactionModal .circleForIcon img {
