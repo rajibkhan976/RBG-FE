@@ -648,12 +648,12 @@ const PackagePaymentModal = (props) => {
             }
         }
     }
-
-
+    let zIndexFirstEmail = useSelector((state) =>state.modal.zIndexFirstEmail);
+    console.log(zIndexFirstEmail);
 
     return (
         <React.Fragment>
-            <div className="cr_modalBase">
+            <div className="cr_modalBase" style={{zIndex: zIndexFirstEmail}}>
                 <div className="cr_modalBase_Bg" onClick={() => props.closeModal()}></div>
                 {isLoader ? <Loader /> : ""}
                 <div className="cr_modal">

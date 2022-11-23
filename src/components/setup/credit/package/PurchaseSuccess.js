@@ -39,11 +39,12 @@ const PurchaseSuccess = (props) => {
         }
     }
 
-
+    let zIndexFirstEmail = useSelector((state) =>state.modal.zIndexFirstEmail);
+    console.log(zIndexFirstEmail);
 
     return (
-        <div className="cr_modalBase">
-            <div className="cr_modalBase_Bg" onClick={() => props.closeModal()}></div>
+        <div className="cr_modalBase" style={{zIndex: zIndexFirstEmail}}>
+            <div className="cr_modalBase_Bg" onClick={closeRestrictionModal}></div>
             <div className="cr_modal small">
                 <button className='cr_cross' onClick={closeRestrictionModal} ><img src={cross_icon} alt="" /></button>
                 <div className="cr_modalBody">

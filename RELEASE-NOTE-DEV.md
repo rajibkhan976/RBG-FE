@@ -32,3 +32,5 @@
     - Filtering some tags from tag list and search feature on tags
 # HOTFIX V1.0.8
     - Email Modal modification bug fixed.
+# HOTFIX V1.0.9
+    - Footer, loging page offer text removed. Modal modification CR done.

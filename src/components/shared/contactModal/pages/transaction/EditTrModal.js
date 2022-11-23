@@ -670,6 +670,7 @@ const EditTrModal = (props) => {
 
     return (
         <div className={(successfulpay.status === undefined || successfulpay.status !== "success") ? "modalBackdrop transactionModal" : "modalBackdrop transactionModal transactionSuccssModal"}>
+            <div className="modalBackdropBg" onClick={() => props.closeModal (false)}></div>
             <div className="slickModalBody">
                 {(successfulpay.status === undefined && successfulpay.message === undefined) &&
                     <>

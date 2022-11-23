@@ -185,6 +185,7 @@ const RefundModal = (props) => {
     return (
         <div className={(successfulRefund.status === undefined || successfulRefund.status !== "success") ? "modalBackdrop transactionModal" : "modalBackdrop transactionModal transactionSuccssModal"}>
             {refundLoader && <Loader />}
+            <div className="modalBackdropBg" onClick={closeModal}></div>
             <div className="slickModalBody">
             {(successfulRefund.status === undefined || successfulRefund.status !== "success") &&
                 <>
