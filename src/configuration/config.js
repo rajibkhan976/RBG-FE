@@ -214,4 +214,10 @@ module.exports = {
     emailSetupUrl: 'https://'+process.env.REACT_APP_EMAIL_SETUP+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/communication/email/',
     emailTemplateUrl : 'https://'+process.env.REACT_APP_EMAIL_TEMPLATE+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+ '/email/',
     globalEmailSend : 'https://'+process.env.REACT_APP_EMAIL_GLOBAL+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+ '/email/send',
+
+    //Note on contact modal
+    noteContactModalUrl: 'https://'+process.env.REACT_APP_CONTACT_MODAL_NOTE+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/contact/notes',
+
+
+
 }  
