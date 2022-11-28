@@ -121,7 +121,7 @@ function HeaderDashboard(props) {
 
   const toggleUserMenu = () => {
     setStateUserMenu(!stateUserMenu);
-    // setSetupModalStatus(false);
+    setSetupModalStatus(false);
     // setStateNotifMenu(false);
 
     // setModalMakeCall(false);

@@ -42,4 +42,5 @@
 # HOTFIX V1.1.1
     - Contact modal slider menu background is changed
 
-    
+# HOTFIX V1.1.2
+    - Create new packages modal issue fixed and Whenever you click profile model that time notification model would be close.
