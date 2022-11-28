@@ -8,6 +8,7 @@ import Billing from "./pages/Billing";
 import Dependents from "./pages/Dependents";
 import Appointment from "./pages/Appointment";
 import Automation from "./pages/Automation";
+import Notes from "./pages/notes/Notes";
 import {Step, Steps, NavigationComponentProps} from "react-step-builder";
 import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../../actions/types";
@@ -23,22 +24,33 @@ import email_icon_white from "../../../assets/images/email_icon_white.svg";
 import histroy_icon_white from "../../../assets/images/histroy_icon_white.svg";
 import user_icon_white from "../../../assets/images/user_icon_white.svg";
 import tag_icon_white from "../../../assets/images/tag_icon_white.svg";
+import threedot from "../../../assets/images/info_3dot_icon.svg";
 import battery_icon_white from "../../../assets/images/battery_icon_white.svg";
 import exchange_icon_white from "../../../assets/images/exchange_icon_white.svg";
 import pager_icon_white from "../../../assets/images/pager_icon_white.svg";
 import note_icon_white from "../../../assets/images/note_icon_white.svg";
 import { UserServices } from "../../../services/authentication/UserServices";
 import config from "../../../configuration/config";
-import dependent_white from "../../../assets/images/dependent.svg"
+import dependent_white from "../../../assets/images/dependent.svg";
+import menuArrow1 from "../../../assets/images/cal_arrow1.svg";
+import menuArrow2 from "../../../assets/images/cal_arrow2.svg";
 import env from "../../../configuration/env";
 import { uploadFile } from "react-s3";
 import TagList from "../../appointment/TagList";
 import ShowContactTagModal from "../showContactTagModal"
 
 const ContactModal = (props) => {
+
+    const scrollRefSide = useRef();
     const Navigation = (navigation) => {
         return (
-            <div className="contactModalStepLinks">
+            <>
+            <button className="tabMenuLeft" onClick={menuLeftPressHandler} ><img src={menuArrow1}/></button>
+
+            <div className="contactModalStepLinks"  ref={scrollRefSide}
+            >
+                <div className="innertabMenu" id="menuScroller" >
+
                 <button className={navigation.current == 1 ? "active nNav" : "nNav"}
                         onClick={() => navigation.jump(1)}>Overview
                 </button>
@@ -51,6 +63,7 @@ const ContactModal = (props) => {
                 <button className={navigation.current == 7 ? "active nNav" : "nNav"} onClick={() => navigation.jump(7)}
                         disabled={props.contactId ? false : true}>Automation
                 </button>
+                
                 {contactData && !contactData.isDependent ?
                     <>
                         <button className={navigation.current == 4 ? "active nNav" : "nNav"}
@@ -66,9 +79,45 @@ const ContactModal = (props) => {
                         </button>
                     </>
                     : ''}
+                     <button className={navigation.current == 8 ? "active nNav" : "nNav"} onClick={() => navigation.jump(8)}
+                        disabled={props.contactId ? false : true}>Notes
+                    </button> 
+                {/* {contactData && !contactData.isDependent ?
+                   <>
+                   <button className="noFill" onClick={showExtraMenuHandler}><img src={threedot}/></button>  
+                    {showExtraMenu && <div className="extraTabMenu">
+                        <button className={navigation.current == 8 ? "active nNav" : "nNav"} 
+                                            onClick={() =>{ navigation.jump(8);setShowExtraMenu(false)}}
+                                disabled={props.contactId ? false : true}>Notes
+                        </button>
+                        
+                    </div>}
+                    </>   
+                :
+                    <>
+                    <button className={navigation.current == 8 ? "active nNav" : "nNav"} onClick={() => navigation.jump(8)}
+                        disabled={props.contactId ? false : true}>Notes
+                    </button> 
+                    </>
+                } */}
+                
             </div>
+                
+                
+            </div>
+                <button className="tabMenuRight"onClick={menuRightPressHandler}><img src={menuArrow2}/></button>
+
+            </>
         );
     }
+    const [showExtraMenu, setShowExtraMenu] = useState(false);
+
+    const showExtraMenuHandler = (e) =>{
+        e.preventDefault();
+        setShowExtraMenu(!showExtraMenu);
+    }
+
+
 
     const config = {
         navigation: {
@@ -101,11 +150,20 @@ const ContactModal = (props) => {
     const [tagList, setTagList] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     
-     
+    const [menuLeftShift, setMenuLeftShift] = useState(0);
+    const [menurightShift, setMenuRightShift] = useState(0);
     const formScroll = (formScrollStatus) => {
         setStickeyHeadStatus(formScrollStatus);
     };
-
+    
+    const menuLeftPressHandler =(e) =>{
+        e.preventDefault();
+        scrollRefSide.current.scrollLeft -= 40;
+    }
+    const menuRightPressHandler =(e) =>{
+        e.preventDefault();
+        scrollRefSide.current.scrollLeft += 40;
+    }
     const getContactDetails = (contact) => {
         if (contact && contact.contact) {
             setContactData(contact.contact);
@@ -386,6 +444,7 @@ const ContactModal = (props) => {
                             <Step title="Dependents" component={Dependents} contactId={props.contactId} />
                             
                             <Step title="Automation" component={Automation} contactId={props.contactId} />
+                            <Step title="Note" component={Notes} contactId={props.contactId} />
                         </Steps>
                     </div>
                 </div>
