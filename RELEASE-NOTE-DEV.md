@@ -39,7 +39,7 @@
 # NOTES V1.0.0
     - Contact Note module Implemented
     
-# NOTES HOT FIX V1.0.0
+# HOTFIX V1.1.1
     - Contact modal slider menu background is changed
 
     
