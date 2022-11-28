@@ -12959,5 +12959,16 @@ background-color: #fff;
 }
 
 
+/* NOTE HOTFIX */
 
-
+.outertabMenu {
+  background: #f2f7fc;
+  display: list-item;
+  flex-wrap: wrap;
+  position: absolute;
+  
+  top: 0px;
+  width: 100%;
+  left: 0;
+  height: 63px;
+}
