@@ -36,3 +36,5 @@
     - Footer, loging page offer text removed. Modal modification CR done.
 # HOTFIX V1.1.0
     - Contact modal product add new billing modal outside chick modal close implemented.
+# NOTES V1.0.0
+    - Contact Note module Implemented
