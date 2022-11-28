@@ -44,7 +44,7 @@ const ContactModal = (props) => {
     const scrollRefSide = useRef();
     const Navigation = (navigation) => {
         return (
-            <>
+            <div className="outertabMenu">
             <button className="tabMenuLeft" onClick={menuLeftPressHandler} ><img src={menuArrow1}/></button>
 
             <div className="contactModalStepLinks"  ref={scrollRefSide}
@@ -107,7 +107,7 @@ const ContactModal = (props) => {
             </div>
                 <button className="tabMenuRight"onClick={menuRightPressHandler}><img src={menuArrow2}/></button>
 
-            </>
+            </div>
         );
     }
     const [showExtraMenu, setShowExtraMenu] = useState(false);

@@ -38,3 +38,8 @@
     - Contact modal product add new billing modal outside chick modal close implemented.
 # NOTES V1.0.0
     - Contact Note module Implemented
+    
+# HOTFIX V1.1.1
+    - Contact modal slider menu background is changed
+
+    
