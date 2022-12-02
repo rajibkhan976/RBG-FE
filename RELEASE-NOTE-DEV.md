@@ -47,3 +47,6 @@
 
 # HOTFIX V1.1.3
     - Some QI fixing in note module.
+# Overdue V1.0.0
+    - Overdue Transactions Incorporation in Global and Contact
+    - Fixed some bugs in Transactions

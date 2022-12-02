@@ -9491,7 +9491,7 @@ button.addOverviewCustomFiel {
   border: none;
   cursor: pointer;
   height: 50px;
-  padding: 0 20px;
+  padding: 0 18px;
   border-bottom: 2px solid transparent;
   transition: all 0.5s ease 0s;
 }
@@ -13006,4 +13006,13 @@ background-color: #fff;
   .notesListingBodyOuter {
     height: 230px;
   }
+}
+.modal.contactModal .tabBarArea .contactTabsInner{
+  margin-bottom: 50px !important;
+  overflow-y: scroll !important;
+  padding-bottom: 50px !important;
+  }
+
+.dropdownTransGlobal.listOpen.globalTransactionList {
+  overflow-x: inherit;
 }

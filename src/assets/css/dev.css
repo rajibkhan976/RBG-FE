@@ -3918,7 +3918,7 @@ li.paymentModeLi, li.paymentAmtLi {
 
 .cellWrapers.historyInnerInfo .cell.particulars .textCont {
   width:100%;
-  padding-left: 30px;
+  padding-left: 25px;
 }
 
 .cellWrapers.success.historyInnerInfo .cell.particulars .iconCont span {
@@ -4000,6 +4000,8 @@ li.paymentModeLi, li.paymentAmtLi {
 
 .cellWrapers.historyInnerInfo .cell.particulars div span {
   color: #345973;
+  margin-right: 4px;
+  display: inline-block;
 }
 
 
@@ -4064,6 +4066,13 @@ li.paymentModeLi, li.paymentAmtLi {
   background: #F5F9FD;
   border: 1px solid #E9F1F9;
 }
+.transactionListing .row.due.warning {
+  background: #fff5ed;
+  border: 1px solid #E9F1F9;
+  margin-bottom: 5px;
+  border-radius: 5px;
+}
+
 .transactionListing .row.due .showMore {
   background: #E9F1F9;
 }
