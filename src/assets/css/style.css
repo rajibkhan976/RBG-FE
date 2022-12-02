@@ -12819,8 +12819,9 @@ background-color: #fff;
 }
 .notesListing .notesListingBody .cell {
   font-weight: 400;
-  padding: 18px 25px;
+  padding: 8px 25px;
   line-height: 21px;
+  align-items: center;
 }
 /* .notesListing .notesListingBody .cell:first-child {
   padding-left: 0;
@@ -12831,9 +12832,9 @@ background-color: #fff;
 .notesListing .desc {
   max-width: 45%;
   flex-basis: 45%;
-  display: flex;
-  align-items: flex-start;
+  display: flex;  
 }
+
 .notesListing .creBy{
   max-width: 33%;
   flex-basis: 33%;
@@ -12858,7 +12859,7 @@ background-color: #fff;
 .notesListingBodyOuter{
   width: 100%;
   overflow: auto;
-  max-height: 375px;
+  max-height: 445px;
   padding-right: 6px;
 }
 
@@ -12901,7 +12902,7 @@ background-color: #fff;
 .tabBarArea .contactModalStepLinks {
   position: absolute;
   padding: 0 10px;
-  overflow: auto;
+  overflow: hidden;
   display: flex;
   top: 0;
   left: 25px;
@@ -12921,9 +12922,9 @@ background-color: #fff;
     padding-left: 25px;
 }
 .tabBarArea > div .nNav {
-  padding: 14px 14px 20px;
-    height: 47px;
-    margin-bottom: 5px;
+  padding: 14px 15px 20px;
+  height: 100%;
+  margin-bottom: 5px;
 }
 .tabMenuRight,
 .tabMenuLeft{
@@ -12954,8 +12955,10 @@ background-color: #fff;
   background-color: transparent;
 }
 .tabBarArea .contactModalStepLinks .innertabMenu{
- width: 100%;
- display: flex;
+  width: 100%;
+  display: flex;
+  height: 63px;
+  justify-content: flex-start;
 }
 
 
@@ -12963,12 +12966,44 @@ background-color: #fff;
 
 .outertabMenu {
   background: #f2f7fc;
-  display: list-item;
+  display: flex;
   flex-wrap: wrap;
   position: absolute;
-  
   top: 0px;
   width: 100%;
   left: 0;
   height: 63px;
+}
+.notesListing .desc >div{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: flex-start;
+  overflow: auto;
+}
+.notesListing .desc >div::-webkit-scrollbar {
+  width: 4px;
+}
+
+.notesListing .desc >div::-webkit-scrollbar-track {
+  background-color: #eee;
+}
+
+.notesListing .desc >div::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
+}
+.tabBarArea .contactModalStepLinks .innertabMenu.toRight{
+  justify-content: flex-end;
+}
+.notesListing .notesListingBody .desc{
+  min-height: 60px;
+  padding: 10px 25px;
+  max-height: 80px;
+}
+
+
+@media (max-width:1366px){
+  .notesListingBodyOuter {
+    height: 230px;
+  }
 }
