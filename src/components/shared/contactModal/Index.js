@@ -43,14 +43,15 @@ const ContactModal = (props) => {
 
     const scrollRefSide = useRef();
     const Navigation = (navigation) => {
+       
         return (
             <div className="outertabMenu">
             <button className="tabMenuLeft" onClick={menuLeftPressHandler} ><img src={menuArrow1}/></button>
 
             <div className="contactModalStepLinks"  ref={scrollRefSide}
             >
-                <div className="innertabMenu" id="menuScroller" >
-
+                {/* <div className={navigation.current == 8 ? (menuShift ? "innertabMenu toRight": "innertabMenu" ): "innertabMenu"} id="menuScroller" > */}
+                <div className={menuShift ? "innertabMenu toRight" : "innertabMenu"}> 
                 <button className={navigation.current == 1 ? "active nNav" : "nNav"}
                         onClick={() => navigation.jump(1)}>Overview
                 </button>
@@ -102,12 +103,17 @@ const ContactModal = (props) => {
                 } */}
                 
             </div>
-                
+                {/* {
+                     navigation.current == 8 &&
+                        scrollRefSide.current.scrollLeft += 0
+                    console.log(scrollRefSide.current);
+                } */}
                 
             </div>
                 <button className="tabMenuRight"onClick={menuRightPressHandler}><img src={menuArrow2}/></button>
 
             </div>
+            
         );
     }
     const [showExtraMenu, setShowExtraMenu] = useState(false);
@@ -150,20 +156,23 @@ const ContactModal = (props) => {
     const [tagList, setTagList] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     
-    const [menuLeftShift, setMenuLeftShift] = useState(0);
-    const [menurightShift, setMenuRightShift] = useState(0);
+    const [menuShift, setMenuShift] = useState(null);
+
     const formScroll = (formScrollStatus) => {
         setStickeyHeadStatus(formScrollStatus);
     };
     
     const menuLeftPressHandler =(e) =>{
         e.preventDefault();
-        scrollRefSide.current.scrollLeft -= 40;
+        scrollRefSide.current.scrollLeft -= 50;
+        setMenuShift(false);    
     }
     const menuRightPressHandler =(e) =>{
         e.preventDefault();
-        scrollRefSide.current.scrollLeft += 40;
+        scrollRefSide.current.scrollLeft += 50;
+        setMenuShift(true);
     }
+
     const getContactDetails = (contact) => {
         if (contact && contact.contact) {
             setContactData(contact.contact);
