@@ -44,3 +44,6 @@
 
 # HOTFIX V1.1.2
     - Create new packages modal issue fixed and Whenever you click profile model that time notification model would be close.
+
+# HOTFIX V1.1.3
+    - Some QI fixing in note module.

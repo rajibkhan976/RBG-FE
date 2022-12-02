@@ -74,7 +74,7 @@ setTimeout(() => {
           <h3 className="headingTabInner">Notes</h3>
           <div className="notesHeaders"> 
             <button className="saveNnewBtn" onClick={openAddNoteModal}>Add a Note <img src={arrow_forward} alt=""/></button>
-            <p className="subheadingTabInner"> Manage notes for this contact.</p> 
+            <p className="subheadingTabInner"> Manage notes for this contact</p> 
           </div> 
         </div>    
       </div>
@@ -94,10 +94,12 @@ setTimeout(() => {
                  
 
                   return(
-                    <div className="notesListingBody d-flex">
+                    <div className="notesListingBody d-flex" key={key}>
                       <div className="cell desc">
-                        <span className="icon"><img src={note} alt=""/></span>
-                        <p>{elem.note}</p>
+                        <div className="d-flex">
+                          <span className="icon"><img src={note} alt=""/></span>
+                          <p>{elem.note}</p>
+                        </div>     
                       </div>
                       <div className="cell creBy">{elem.createdBy}</div>
                       <div className="cell creOn">{dateForamt}</div>
@@ -107,7 +109,7 @@ setTimeout(() => {
               : 
                 <div className="appListsWrap">
                   <div className="noDataFound">
-                    <span><span>This contact doesn’t have any Note yet.</span></span>
+                    <span><span>This contact doesn’t have any note yet</span></span>
                   </div>
                 </div>
             }

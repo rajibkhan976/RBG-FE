@@ -63,24 +63,24 @@ const AddNotesModal = (props) => {
       {isLoader && <Loader/>}
 
       <div className="modalBackdrop addNote">  
-        <div className="modalBackdropBg"></div>
+        <div className="modalBackdropBg" onClick={props.closeAddNoteModal}></div>
         <div className="slickModalBody">
         
           <div className="slickModalHeader">
             <button className="topCross" onClick={props.closeAddNoteModal}><img src={crossTop} alt="" /></button>
             <div className="circleForIcon"><img src={note} alt="" /></div>
             <h3>Add Note</h3>
-            <p className="gap1">Please enter notes for this contact.</p>
+            <p className="gap1">Please enter notes for this contact</p>
           </div>
           <div className="modalForm auto">
             <form >    
            
               <div className="formControl">
-                <label>Note Description </label>
+                <label>Note </label>
                 <textarea 
                   value ={noteAdd} 
                   onChange={notetexthandler}
-                  placeholder='Eg. Martial Art Course Demo'
+                  placeholder='Write your note here'
                   >
                   </textarea>
                 <div className="errorMsg">{noteAddError}</div>
