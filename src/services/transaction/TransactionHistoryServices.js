@@ -11,7 +11,7 @@ let headers = {
 export const TransactionHistoryServices = {
     fetchTransHistoryList: async (filterString, pageNo) => {
         try {
-            let url = config.transactionGlobalHistotyUrl;   
+            let url = config.transactionUrl + "transactions/list/";   
             if(filterString){
                 url = url + pageNo + "?" + filterString ;
             console.log("url1",url);

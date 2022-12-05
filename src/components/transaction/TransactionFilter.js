@@ -98,6 +98,7 @@ function ImportTransactionFilter(props) {
                                                 <option >Select </option>
                                                 <option >success</option>
                                                 <option >failed</option>
+                                                <option >overdue</option>
                                               
                                             </select>
                                         </div>
@@ -141,7 +142,7 @@ function ImportTransactionFilter(props) {
                                         <div className="formField w-50 appflex durationWraper">
                                             <label>To</label>
                                             <div className="inFormField duration">
-                                                <input type="date" placeholder="dd/mm/yyyy" name="" value={selectedTo} onChange={selectToHandler} />
+                                                <input type="date" placeholder="dd/mm/yyyy" name="" value={selectedTo} onChange={selectToHandler} min={selectedFrom}/>
                                             </div>
                                         </div>
                                     </li>
