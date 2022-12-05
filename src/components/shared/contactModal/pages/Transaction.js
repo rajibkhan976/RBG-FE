@@ -25,6 +25,7 @@ import RetryPayment from "./transaction/RetryPayment";
 import { utils } from "../../../../helpers";
 import PDFDocument from "../pdf/pdfdocument";
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const Transaction = (props) => {
   const [transactionList, setTransactionList] = useState([]);
@@ -79,7 +80,12 @@ const Transaction = (props) => {
     message: "",
     type: ""
   });
-  const openItemRef = useRef(null)
+  const openItemRef = useRef(null);
+  // Overdue Transactions
+  const [overdueTransactionList, setOverdueTransactionList] = useState([]);
+  const [overduePagination, setOverduePagination] = useState({});
+  const overdueOptRef = useRef();
+  const [overdueOptIndex, setOverdueOptIndex] = useState();
 
 
 
@@ -153,6 +159,7 @@ const Transaction = (props) => {
     try {
       fetchOldTransactions(props.contactId, 1);
       fetchUpcomingTransactions(props.contactId, 1);
+      fetchOverdueTransactions(props.contactId, 1);
     } catch (error) {
       console.log(error);
     } finally {
@@ -174,6 +181,7 @@ const Transaction = (props) => {
       setCompleteTransModal(false);
       fetchUpcomingTransactions(props.contactId, 1);
       fetchOldTransactions(props.contactId, 1);
+      fetchOverdueTransactions(props.contactId, 1);
       setActiveTab(1);
     }
 
@@ -394,6 +402,9 @@ const Transaction = (props) => {
     if (oldOptRef.current.contains(e.target)) {
       return;
     }
+    if (overdueOptRef.current.contains(e.target)) {
+      return;
+    }
     if (contractRef.current.contains(e.target)) {
       return;
     }
@@ -416,14 +427,6 @@ const Transaction = (props) => {
     })
   };
 
-
-  const copyToClipboard = (id) => {
-    if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
-      setCopyToClipMsg({ ...copyToClipMsg, message: "PID copied to clipboard", type: "success" });
-      return navigator.clipboard.writeText(id);
-    }
-  };
-
   const dayLeft = (due_date) => {
     console.log('Initial due date', due_date);
     let payDate = moment(due_date, "YYYY-MM-DD");
@@ -431,7 +434,7 @@ const Transaction = (props) => {
 
     //Difference in number of days
     let result = moment.duration(payDate.diff(today)).asDays();
-    
+
     if (result < 31) {
       if (result == 0) {
         return "Today"
@@ -455,6 +458,7 @@ const Transaction = (props) => {
     fetchOldTransactions(props.contactId, 1);
     fetchUpcomingTransactions(props.contactId, 1);
     fetchContract(props.contactId, 1);
+    fetchOverdueTransactions(props.contactId, 1);
     console.log(props.contactId);
 
     document.addEventListener("mousedown", checkOutsideClick);
@@ -506,9 +510,9 @@ const Transaction = (props) => {
       const transactionData = { ...elem, orgCode: org.organizationCode };
       const organizationData = { name: org.organization };
       const contactData = props.contact;
-      const html = (transactionData.transaction_for === "product") ? 
-      await getProductPDFHTML([transactionData], contactData, organizationData) :
-      await getCoursePDFHTML([transactionData], contactData, organizationData);
+      const html = (transactionData.transaction_for === "product") ?
+        await getProductPDFHTML([transactionData], contactData, organizationData) :
+        await getCoursePDFHTML([transactionData], contactData, organizationData);
     } catch (e) {
     } finally {
       // setIsLoader(false);
@@ -699,7 +703,7 @@ const Transaction = (props) => {
                             <td class="left" style="width: 20%;color: #305671; 
                                background-color: #fff;   
                                font-size: 0.8em;
-                               padding: 1.2em 1em;text-align: left;">${el.transactionId}</td>
+                               padding: 1.2em 1em;text-align: left;">${(el.transactionId) ? el.transactionId : el.transaction_id}</td>
                             <td style="width: 15%;color: #305671; 
                                background-color: #fff;   
                                text-align: right;    
@@ -859,7 +863,7 @@ const Transaction = (props) => {
                          </tr>
                       </thead>
                       <tbody>
-                         ${txn[0].transaction_data.map((el, index) => {
+                         ${txn[0]?.transaction_data.map((el, index) => {
       const price = (!isRefund) ? Number((el?.price * el?.qnty)) : txn[0].amount;
       subTotal = (!isRefund) ? subTotal + price : txn[0].amount;
       return (
@@ -988,7 +992,7 @@ const Transaction = (props) => {
                             <td class="left" style="width: 20%;color: #305671; 
                                background-color: #fff;   
                                font-size: 0.8em;
-                               padding: 1.2em 1em;text-align: left;">${el.transactionId}</td>
+                               padding: 1.2em 1em;text-align: left;">${(el.transactionId) ? el.transactionId : el.transaction_id}</td>
                             <td style="width: 15%;color: #305671; 
                                background-color: #fff;   
                                text-align: right;    
@@ -1034,6 +1038,67 @@ const Transaction = (props) => {
     return await html;
   };
 
+  // Overdue Transactions
+  const overdueListPageNo = (e) => {
+    if (!isScroll) {
+      let scrollHeight = e.target.scrollHeight;
+      let scrollTop = e.target.scrollTop;
+      if (scrollTop > (scrollHeight / 2)) {
+        if (overduePagination.currentPage < overduePagination.totalPages) {
+          fetchOverdueTransactions(props.contactId, (overduePagination.currentPage + 1));
+        }
+        ;
+      }
+    }
+  };
+
+  const fetchOverdueTransactions = async (contactId, pageNumber) => {
+    try {
+      setIsScroll(true);
+      setIsLoaderScroll(true);
+      const response = await TransactionServices.fetchOverdueTransactions(contactId, pageNumber);
+      setIsScroll(false);
+      if (response.pagination.currentPage == 1) {
+        setOverdueTransactionList(response.transactions);
+      } else {
+        setOverdueTransactionList([...overdueTransactionList, ...response.transactions]);
+      }
+      setOverduePagination(response.pagination);
+      console.log("Overdue transaction response ", response);
+    } catch (e) {
+
+    } finally {
+      setIsLoaderScroll(false);
+    }
+  };
+
+  const openCloseEditTransOverdueModal = (param, transaction, loadData) => {
+    setEditTransaction(transaction);
+    setEditTransModal(param);
+
+    // if (loadData) {
+    setIsLoader(true)
+    try {
+      fetchOldTransactions(props.contactId, 1);
+      fetchUpcomingTransactions(props.contactId, 1);
+      fetchOverdueTransactions(props.contactId, 1);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoader(false);
+
+    }
+    // }
+  };
+
+  const moreOptOpenOverDue = (index) => {
+    setOverdueOptIndex(index !== overdueOptIndex ? index : null);
+    if (overdueOptIndex != null) {
+      setOverdueOptIndex(null);
+    }
+  };
+  // Overdue Transactions
+
   return (
     <>
       {successMsg && <AlertMessage type="success" message={successMsg} time={10000} close={closeAlert} />}
@@ -1061,10 +1126,11 @@ const Transaction = (props) => {
             <ul>
               <li><button type="button" value="0" onClick={changeTab} className={activeTab == 0 ? "active" : ""}>Upcoming Transactions</button></li>
               <li><button type="button" value="1" onClick={changeTab} className={activeTab == 1 ? "active" : ""}>Old Transactions</button></li>
-              <li><button type="button" value="2" onClick={changeTab} className={activeTab == 2 ? "active" : ""}>Contract Transactions</button></li>
+              <li><button type="button" value="2" onClick={changeTab} className={activeTab == 2 ? "active" : ""}>Overdue Transactions</button></li>
+              <li><button type="button" value="3" onClick={changeTab} className={activeTab == 3 ? "active" : ""}>Contract Transactions</button></li>
             </ul>
           </div>
-
+          {/* Upcoming Transactions */}
           <div className={activeTab == 0 ? "listTab active" : "listTab"}>
             <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={upcomingListPageNo}>
               <div className="transactionListing dueTransactions" ref={upcomingOptRef}>
@@ -1108,7 +1174,10 @@ const Transaction = (props) => {
                               </div>
                               <div className="pid">
                                 <span>PID: </span> {item._id}
-                                <button type="button" className="copyTo" onClick={() => copyToClipboard(item._id)}></button>
+                                <CopyToClipboard text={item._id}
+                                  onCopy={() => setCopyToClipMsg({ ...copyToClipMsg, message: "PID copied to clipboard", type: "success" })}>
+                                  <span className="copyTo" title="Click to Copy"></span>
+                                </CopyToClipboard>
                               </div>
                             </div>
                           </div>
@@ -1153,7 +1222,7 @@ const Transaction = (props) => {
                           <div className="showDetails">
                             {item.history && item.history.map((element, key) => {
                               return (
-                                <div key={"oldhistory" + key} className={element.status == "failed" ? "cellWrapers fail historyInnerInfo" : (element.amount < 0 ? "cellWrapers success refunded historyInnerInfo" : "cellWrapers success historyInnerInfo")}>
+                                <div key={"oldhistory" + key} className={element.status !== "success" ? "cellWrapers fail historyInnerInfo" : (element.amount < 0 ? "cellWrapers success refunded historyInnerInfo" : "cellWrapers success historyInnerInfo")}>
                                   <div className="cell particulars">
                                     <div className="d-flex">
                                       <div className="iconCont">
@@ -1173,7 +1242,7 @@ const Transaction = (props) => {
                                       </div>
                                       <div className="textCont">
                                         <div className="status">
-                                          {element.status == "failed" ? "failed" : (element.amount < 0 ? "refunded" : "successful")}
+                                          {(element.status !== "success") ? "failed" : (element.amount < 0 ? "refunded" : "successful")}
                                           {element.amount < 0 ?
                                             <div className="notePop">
                                               <div className="notePopIcon"></div>
@@ -1182,7 +1251,7 @@ const Transaction = (props) => {
                                                 {element.note}
                                               </div>
                                             </div>
-                                            : (element.status == "failed" && element.payment_resp.outcome.description ?
+                                            : (element.status !== "success" && element.payment_resp.outcome.description ?
                                               <div className="notePop">
                                                 <div className="notePopIcon"></div>
                                                 <div className="notePopContent">
@@ -1193,7 +1262,7 @@ const Transaction = (props) => {
                                               : "")}
                                         </div>
                                         <div className="itemTitle">
-                                          <span>Transaction ID:</span> <p>{element._id}</p>
+                                          <span>Transaction ID:</span> <p>{element.transactionId || element.transaction_id}</p>
 
                                         </div>
                                       </div>
@@ -1237,7 +1306,7 @@ const Transaction = (props) => {
               </div>
             </Scrollbars>
           </div>
-
+          {/* Old Transactions */}
           <div className={activeTab == 1 ? "listTab active" : "listTab"}>
             <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={oldListPageNo}>
               <div className="transactionListing oldTransactions" ref={oldOptRef}>
@@ -1308,7 +1377,7 @@ const Transaction = (props) => {
                                 <span>{item.transaction_for == "course" ? "Program" : "Product"}: </span>
                                 <p>
                                   {item.transaction_for === "product" ?
-                                    item.history && item.history[0].transaction_data[0].product
+                                    item.history && item.history[0]?.transaction_data[0]?.product
                                     :
                                     item.title
                                   }
@@ -1339,7 +1408,10 @@ const Transaction = (props) => {
                               </div>
                               <div className="pid">
                                 <span>PID: </span> {item._id}
-                                <button type="button" className="copyTo" onClick={() => copyToClipboard(item._id)}></button>
+                                <CopyToClipboard text={item._id}
+                                  onCopy={() => setCopyToClipMsg({ ...copyToClipMsg, message: "PID copied to clipboard", type: "success" })}>
+                                  <span className="copyTo" title="Click to Copy"></span>
+                                </CopyToClipboard>
                               </div>
                             </div>
                           </div>
@@ -1378,7 +1450,7 @@ const Transaction = (props) => {
                                 :
                                 <button type="button" className="refund" onClick={() => openRefundModal(item)}>Refund</button>
                               }
-                              {/* <button type="button" className="history">History</button> */}
+                              {/* <button type="button" className="refund" onClick={() => openRefundModal(item)}>Refund</button> */}
                             </div>
                           </div>
                         </div>
@@ -1442,7 +1514,7 @@ const Transaction = (props) => {
                                               : "")}
                                         </div>
                                         <div className="itemTitle">
-                                          <span>Transaction ID:&nbsp;</span> <p>{element._id}</p>
+                                          <span>Transaction ID:&nbsp;</span> <p>{(element.transactionId) ? element.transactionId : element.transaction_id}</p>
 
                                         </div>
                                       </div>
@@ -1469,13 +1541,14 @@ const Transaction = (props) => {
                                       </span>
                                     </span>
                                   </div>
-                                  <PDFDownloadLink
-                                    document={<PDFDocument key={index} transactionData={element} contact={props.contact} org={org} transactionDate={utils.convertUTCToTimezone(element.transaction_date, timezone, 'LLL')} />}
-                                    fileName={"Invoice_"+element.transactionId+".pdf"}
-                                  >
-                                    <button type="button" className="downloadInvoiceBtn" title="Download invoice"></button>
-                                  </PDFDownloadLink>
-                                  
+                                  {element.status !== "failed" &&
+                                    <PDFDownloadLink
+                                      document={<PDFDocument key={index} transactionData={element} contact={props.contact} org={org} transactionDate={utils.convertUTCToTimezone(element.transaction_date, timezone, 'LLL')} />}
+                                      fileName={"Invoice_" + (element.transactionId) ? element.transactionId : element.transaction_id + ".pdf"}
+                                    >
+                                      <button type="button" className="downloadInvoiceBtn" title="Download invoice"></button>
+                                    </PDFDownloadLink>
+                                  }
                                 </div>
                               )
                             })}
@@ -1496,7 +1569,109 @@ const Transaction = (props) => {
               </div>
             </Scrollbars>
           </div>
+          {/* Overdue Transactions */}
           <div className={activeTab == 2 ? "listTab active" : "listTab"}>
+            <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={overdueListPageNo}>
+              <div className="transactionListing oldTransactions" ref={overdueOptRef}>
+                {overdueTransactionList.length ?
+                  <div className="row head">
+                    <div className="cell particulars">Particulars</div>
+                    <div className="cell amt">Amount</div>
+                    <div className="cell times">&nbsp;</div>
+                    <div className="cell action">&nbsp;</div>
+                  </div>
+                  :
+                  <div className={isLoaderScroll ? "hide" : "noDataSec"}>
+                    <img src={noDataIcon} alt="" />
+                    <h2>No Transaction Found</h2>
+                    <p>No transaction have been created yet</p>
+                  </div>
+                }
+                {overdueTransactionList && overdueTransactionList.length > 0 ? overdueTransactionList.map((item, index) => {
+                  return (
+                    <div className="row due warning" key={index}>
+                      <div className="cellWraperss">
+
+                        <div className="cell particulars">
+                          <div className="d-flex">
+                            <div className="iconCont">
+                              {item?.payment_via === "cash" ?
+                                <span>
+                                  <img src={cashSmallWhite} alt="" />
+                                </span>
+                                :
+                                <span>
+                                  <img src={cardSmallWhite} alt="" />
+                                </span>
+                              }
+                            </div>
+                            <div className="textCont">
+                              <div className="status">Overdue</div>
+                              <div className="itemTitle">
+                                <span>{item.transaction_for == "course" ? "Program" : "Product"}: </span>
+                                <p>
+                                  {item.transaction_for === "product" ?
+                                    item.history && item.history[0]?.transaction_data[0]?.product
+                                    :
+                                    item.title
+                                  }
+                                </p>
+                                <div className={item.transaction_for == "product" ? "productItemList" : "hide"}>
+                                  <div className="productNumber">
+                                    {item.history && item.history[0] && item.history[0].transaction_data.length > 1 ?
+                                      item.history && item.history[0] && item.history[0].transaction_data.length
+                                      : "1"}
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="pid">
+                                <span>PID: </span> {item._id}
+                                <CopyToClipboard text={item._id}
+                                  onCopy={() => setCopyToClipMsg({ ...copyToClipMsg, message: "PID copied to clipboard", type: "success" })}>
+                                  <span className="copyTo" title="Click to Copy"></span>
+                                </CopyToClipboard>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="cell amt">
+                          <div className="amount" >
+                            <span className="tutionAmt">{item.type == "tuiton_fees" ? "Tuition Fees" : (item.type == "downpayment" ? "Downpayment" : "Outstanding")}</span>
+                            <p>{"$" + parseFloat(Math.abs(item.amount)).toFixed(2)}</p>
+                          </div>
+                        </div>
+
+                        <div className="cell times">
+                          <span className="time">
+                            {moment(utils.convertUTCToTimezone(item.due_date, timezone, 'YYYY-MM-DD hh:mm A')).fromNow()}
+                          </span>
+                        </div>
+
+                        <div className="cell action">
+                          <div className="moreOpt">
+
+                            <button type="button" className="moreOptBtn" onClick={() => moreOptOpenOverDue(index)} ref={overdueOptIndex === index ? openItemRef : null}></button>
+                            <div className={overdueOptIndex === index ? "optDropdown" : "optDropdown hide"}>
+                              <button type="button" className="edit" onClick={() => openCloseEditTransOverdueModal(true, item)}>Edit</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )
+                }) : ""}
+
+                {isLoaderScroll ?
+                  <div className="bottomLoader">
+                  </div>
+                  : ""}
+              </div>
+            </Scrollbars>
+          </div>
+
+          {/* Contract Transactions */}
+          <div className={activeTab == 3 ? "listTab active" : "listTab"}>
             <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={contractListPageNo}>
               <div className="transactionListing" ref={contractRef}>
                 {contract && contract.length ?

@@ -32,7 +32,7 @@ const TransactionHead = (props) => {
           <li>Dashboard</li>
           <li>Global Transaction</li>
         </ul>
-        <h2 className="inDashboardHeader">Transaction List (<span>{props.transactionCount}</span>)</h2>
+        <h2 className="inDashboardHeader">Transaction List (<span>{props.transactionCount || 0}</span>)</h2>
         <p className="userListAbout">
            See all your transaction history
         </p>
