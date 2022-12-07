@@ -50,3 +50,6 @@
 # Overdue V1.0.0
     - Overdue Transactions Incorporation in Global and Contact
     - Fixed some bugs in Transactions
+
+# SCRIPT V1.0.0
+    - clarity ms script add
