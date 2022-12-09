@@ -50,3 +50,6 @@
 # Overdue V1.0.0
     - Overdue Transactions Incorporation in Global and Contact
     - Fixed some bugs in Transactions
+
+# HOTFIX V1.1.4
+    - Billing card and bank make primary select issue fixed
