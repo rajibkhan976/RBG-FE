@@ -702,7 +702,7 @@ const PackagePaymentModal = (props) => {
                                                                                 <img src={cardIcon} alt="card" />
                                                                             </span>
                                                                             <span className="paymentModuleInfos">
-                                                                                <span className="accNumber">Credit Card ending with <strong>{card.last4}</strong></span>
+                                                                                <span className="accNumber">Credit Card ending with <strong>{card?.last4}</strong></span>
                                                                                 <span className="accinfod">Expires {card.expiration_month}/{card.expiration_year}</span>
                                                                             </span>
                                                                         </label>
