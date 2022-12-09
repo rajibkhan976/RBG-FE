@@ -192,7 +192,7 @@ const DownPayments = forwardRef((props, ref) => {
                             <div className="newDownpayment_downPaymentWrapers" key={key}>
                                 <div className="downPaymentsCreated">
                                     <div className="newDownpayment programs buttons programPages">
-                                        {console.log('Loop through payments', el, key, downPaymentElems.length)}
+                                        
                                         {key === 0 ?
 
                                             <button className="addNewDownpayment" onClick={addDownpaymentFn}>+ Add more Downpayments</button> : ''

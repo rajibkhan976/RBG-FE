@@ -177,7 +177,7 @@ const AddCourseModal = (props) => {
         }
         break;
       case "duration_months":
-        setCourseData({ ...courseData, duration_months: elemValue });
+        setCourseData({ ...courseData, duration_months: elemValue, billing_cycle: (elemValue == "week" ? "weekly" : (elemValue == "month" ? "monthly" : "yearly")) });
         break;
       case "paymentType":
         setCourseData({ ...courseData, payment_type: elemValue, disabledCycle: (elemValue === "onetime") ? true : false });
@@ -417,6 +417,7 @@ const AddCourseModal = (props) => {
                   </div>
                   <div className={"formRight " + errorClass.duration}>
                     <select name="duration_months" onChange={handleChange} value={courseData.duration_months}>
+                      <option value="week">Week(s)</option>
                       <option value="month">Month(s)</option>
                       <option value="year">Year(s)</option>
                     </select>
@@ -435,10 +436,21 @@ const AddCourseModal = (props) => {
 
                   <div className="formRight">
                     <label>Billing Cycle</label>
-                    <select className="selectBox" name="billingCycle" onChange={handleChange} disabled={courseData.disabledCycle} value={courseData.billing_cycle}>
+                    <select className="selectBox" name="billingCycle" onChange={handleChange} disabled={courseData.disabledCycle || courseData.duration_months == "month" || courseData.duration_months == "week"} value={courseData.billing_cycle}>
+                      <option value="Weekly">Weekly</option>
                       <option value="monthly">Monthly</option>
                       <option value="yearly">Yearly</option>
                     </select>
+                    {/* {courseData.duration_months == "month" ?
+                    <select className="selectBox" name="billingCycle" onChange={handleChange} disabled={courseData.disabledCycle} value={courseData.billing_cycle}>
+                      <option value="monthly">Monthly</option>
+                    </select>
+                    : "" }
+                    {courseData.duration_months == "week" ?
+                    <select className="selectBox" name="billingCycle" onChange={handleChange} disabled={courseData.disabledCycle} value={courseData.billing_cycle}>
+                      <option value="Weekly">Weekly</option>
+                    </select>
+                    : "" } */}
                   </div>
                 </div>
 

@@ -53,3 +53,5 @@
 
 # SCRIPT V1.0.0
     - clarity ms script add
+# HOTFIX V1.1.4
+    - Billing card and bank make primary select issue fixed

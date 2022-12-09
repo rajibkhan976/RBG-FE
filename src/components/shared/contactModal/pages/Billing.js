@@ -6,6 +6,7 @@ import plus from "../../../../assets/images/plus_icon.svg";
 import { ErrorAlert, SuccessAlert } from "../../messages";
 import Loader from "../../Loader";
 //import axios from "axios";
+import ConfirmBox from "../../confirmBox";
 
 import { BillingServices } from "../../../../services/billing/billingServices";
 //import { billingUrl } from "../../../../configuration/config";
@@ -15,6 +16,8 @@ let currentYear = currentTime.getFullYear();
 let currentMonth = currentTime.getMonth() + 1;
 
 const Billing = (props) => {
+  const [confirmPopup, setConfirmPopup] = useState(false);
+  const [changePaymentValue, setChangePaymentValue] = useState("");
   const [listCardAnnim, setListCardAnnim] = useState(true);
   const [newCardAnnim, setNewCardAnnim] = useState(false);
   const [listBankAnnim, setListBankAnnim] = useState(true);
@@ -785,7 +788,7 @@ const expiration_month = cardExpairyMonthCheckFn();
     }
   };
 
-  const makePrimaryMethod = (e, value) => {
+  const makePrimaryMethod = (value) => {
     setIsLoader(true);
     
     if (props.contactId && value) {
@@ -805,10 +808,25 @@ const expiration_month = cardExpairyMonthCheckFn();
           bank_details_invalid: error.message,
         }));
       } finally {
-        setIsLoader(false)
+        setIsLoader(false);
+        setConfirmPopup(false);
       }
     }
   };
+
+  const changePaymentMethod = (confirmation) => {
+    if (confirmation == "yes") {
+      makePrimaryMethod(changePaymentValue);
+    } else {
+      setConfirmPopup(false);
+    }
+    setChangePaymentValue(null);
+  };
+
+  const openChangePayModal = (value) => {
+    setConfirmPopup(true);
+    setChangePaymentValue(value);
+  }
 
   useEffect(()=>{
     console.log("merchantOptions", merchantOptions);
@@ -824,6 +842,13 @@ const expiration_month = cardExpairyMonthCheckFn();
 
   return (
     <>
+    {confirmPopup ?
+        <ConfirmBox
+          callback={(isConfirmed) => changePaymentMethod(isConfirmed)} 
+          message="Are you sure, you want to change your primary paymant method?"
+        />
+       : ""
+      }
         <div className={props.contact.is_payment_setup_remaining ? "contactTabsInner d-flex f-column" : isLoader ? "contactTabsInner loading contactTabsInnerBilling" : "contactTabsInner contactTabsInnerBilling"}>
         {isLoader ? <Loader /> : ""}
         <div className="contactTabsScrollSpace">
@@ -850,14 +875,13 @@ const expiration_month = cardExpairyMonthCheckFn();
               {merchantOptions.hasId ?
                 <>
                   <div className="billing_module">
-                          <div className="primaryMaker">
+                          <div className="primaryMaker" onClick={() => openChangePayModal("card")}>
                         {cardBankList && cardBankList.length > 0 &&
                             <label>
                               <div className="circleRadio">
                                 <input
                                     type="radio"
                                     name="primary"
-                                    onChange={(e) => makePrimaryMethod(e, "card")}
                                     defaultChecked={primaryType === "card" ? true : false}
                                 />
                                 <span></span>
@@ -1044,14 +1068,13 @@ const expiration_month = cardExpairyMonthCheckFn();
                   </div>
                   
                   <div className="billing_module">
-                        <div className="primaryMaker">
+                        <div className="primaryMaker" onClick={() => openChangePayModal("bank")}>
                       {bankList && bankList.length > 0 && 
                           <label>
                             <div className="circleRadio">
                               <input
                                   type="radio"
                                   name="primary"
-                                  onChange={(e) => makePrimaryMethod(e, "bank")}
                                   defaultChecked={primaryType === "bank" ? true : false}
                               />
                               <span></span>
@@ -1101,7 +1124,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                         <div className="rightside">
                                           <p>
                                             <span>Account Number</span>
-                                            XXXXXXXXXXXX{bank.last4}
+                                            XXXXXXXXXXXX{bank?.last4}
                                           </p>
                                           <p className="diff">
                                             <span>Routing #</span>

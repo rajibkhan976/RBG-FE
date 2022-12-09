@@ -3564,7 +3564,7 @@ label.receivedCash {
   padding: 10px 14px;
 }
 .billingAmt {
-  flex: 1 1 60%;
+  flex: 1 1 48%;
 }
 
 .buyBtns {

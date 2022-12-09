@@ -317,7 +317,7 @@ export default function PDFDocument(props) {
                                             (<td style={styles.bigfooterTD}>
                                                 <div style={styles.bigfooterP}>
                                                     <span style={styles.bigfooterSpan}>{(txn[0].payment_resp.hasOwnProperty("bank_account")) ? "Bank Details:" : "Credit Card Details:"}:</span>
-                                                    XXXX{(txn[0].payment_resp.hasOwnProperty("bank_account")) ? txn[0].payment_resp.bank_account.last4 : txn[0].payment_resp.card.last4}
+                                                    XXXX{(txn[0].payment_resp.hasOwnProperty("bank_account")) ? txn[0].payment_resp.bank_account?.last4 : txn[0].payment_resp.card?.last4}
                                                 </div>
                                                 <div style={styles.bigfooterP}>
                                                     <span style={styles.bigfooterSpan}>{(txn[0].payment_resp.hasOwnProperty("bank_account")) ? "Routing Number:" : "Expiry Date:"} </span>
