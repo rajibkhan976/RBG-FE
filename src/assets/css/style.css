@@ -7258,6 +7258,10 @@ p.trackName {
   font-size: 13px;
 }
 
+.billing_module .primaryMaker label {
+  pointer-events: none;
+}
+
 .flipCardHolder {
   display: flex;
   position: relative;
@@ -13015,4 +13019,7 @@ background-color: #fff;
 
 .dropdownTransGlobal.listOpen.globalTransactionList {
   overflow-x: inherit;
+}
+.cmnFormField.companyName {
+  width: 100%;
 }

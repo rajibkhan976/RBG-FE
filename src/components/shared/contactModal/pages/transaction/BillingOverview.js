@@ -109,23 +109,26 @@ const BillingOverview = (props) => {
             setIsLoader(true);
             let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
             cardBanksList = cardBankResponce;
-            // console.log("cardBankResponce", cardBankResponce);
+             console.log("cardBankResponce", cardBankResponce);
             if (cardBankResponce) {
                 let primaryPaymentSource = cardBankResponce.primary === 'card' ? 'cards' : 'banks';
                 //Filter card bank by active
                 let filterCardBank = cardBankResponce[primaryPaymentSource].filter(obj => {
                     return obj.status === 'active'
                 });
+                console.log("1");
                 //Sort cards
                 if (cardBankResponce.cards) {
                     let sortedCards = cardBankResponce.cards.sort(el => (el.status === "active") ? -1 : 1)
                     setCardBankList(sortedCards);
                 }
+                console.log("2");
                 //Sort banks
                 if (cardBankResponce.banks) {
                     let sortedBanks = cardBankResponce.banks.sort(el => (el.status === "active") ? -1 : 1)
                     setBankList(sortedBanks);
                 }
+                console.log("3");
                 //Set primary data
                 if (filterCardBank) {
                     setIsPrimay({
@@ -134,9 +137,10 @@ const BillingOverview = (props) => {
                     });
                     setNewPayTab(cardBankResponce.primary)
                 }
+                console.log("4");
             }
         } catch (error) {
-            console.log(error);
+            console.log(error.displayErrors());
         } finally {
             console.log("accounts loaded!");
             if ((cardBanksList.banks.length === 0 && cardBanksList.cards.length === 0) || (!cardBanksList.primary || cardBanksList.primary === null)) {
@@ -149,6 +153,7 @@ const BillingOverview = (props) => {
 
     // Change default payment method
     const changeDefaultPay = (payItem, type) => {
+        console.log("checked: ", payItem, type);
         try {
             console.log("isPrimary", isPrimary);
             setIsLoader(true);
@@ -547,7 +552,10 @@ const BillingOverview = (props) => {
                         bank_account_type: '',
                         company_name: ''
                     })
-                    fetchCardBank();
+                    setTimeout(() => {
+                        console.log("Fuck this Line from card");
+                        fetchCardBank();
+                    }, 200)
                 }
             } catch (error) {
                 cardError = true;
@@ -805,7 +813,11 @@ const BillingOverview = (props) => {
                         bank_account_type: '',
                         company_name: ''
                     })
-                    fetchCardBank();
+                    setTimeout(() => {
+                        console.log("Fuck this Line");
+                        fetchCardBank();
+                    }, 200)
+                    
                 }
             } catch (error) {
                 setNewPayErrors((errorMessage) => ({
@@ -969,7 +981,7 @@ const BillingOverview = (props) => {
                     <input
                         type="radio"
                         name="billingTransaction"
-                        onChange={() => changeDefaultPay(cardItem, "card")}
+                        onClick={() => changeDefaultPay(cardItem, "card")}
                         defaultChecked={
                             isPrimary.type === "card" &&
                             (isPrimary.billingId === cardItem._id)
@@ -983,7 +995,7 @@ const BillingOverview = (props) => {
                   </span>
                                     <span className="paymentModuleInfos">
                     <span className="accNumber">
-                      Credit Card ending with <strong>{cardItem.last4}</strong>
+                      Credit Card ending with <strong>{cardItem?.last4}</strong>
                     </span>
                     <span className="accinfod">
                       Expires {cardItem.expiration_month}/
@@ -1017,7 +1029,7 @@ const BillingOverview = (props) => {
                     <input
                         type="radio"
                         name="billingTransaction"
-                        onChange={(e) => changeDefaultPay(bankItem, "bank")}
+                        onClick={(e) => changeDefaultPay(bankItem, "bank")}
                         defaultChecked={
                             isPrimary.type === "bank" &&
                             (isPrimary.billingId === bankItem._id)
@@ -1036,7 +1048,7 @@ const BillingOverview = (props) => {
                   </span>
                                     <span className="paymentModuleInfos">
                     <span className="accNumber">
-                      Bank account ending with <strong>{bankItem.last4}</strong>
+                      Bank account ending with <strong>{bankItem?.last4}</strong>
                     </span>
                     <span className="accinfod">
                       Routing Number {bankItem.routing_number}

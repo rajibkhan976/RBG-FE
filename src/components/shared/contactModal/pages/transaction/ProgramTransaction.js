@@ -28,9 +28,9 @@ const ProgramTransaction = (props) => {
     courseImage: "",
     amount: "",
     duration: "",
-    durationInterval: "month",
+    durationInterval: "Year",
     payment_type: "onetime",
-    billing_cycle: "monthly",
+    billing_cycle: "Yearly",
     courseStart: "",
     numberOfPayments: 1,
     paymentDate: moment().format("YYYY-MM-DD"),
@@ -98,12 +98,13 @@ const ProgramTransaction = (props) => {
       courseImage: item.image,
       duration: durationArray[0],
       durationInterval: durationArray[1],
-      billing_cycle: item.billing_cycle,
+      billing_cycle: durationArray[1] == "week" ? "weekly" : (durationArray[1] == "month" ? "monthly" : "yearly"),
       payment_type: item.payment_type,
       amount: item.fees
     });
     setSelectedProgram(item);
     setChooseCategory(false);
+    console.log("Duration:::: ", durationArray[1])
   };
 
   //Update current program state
@@ -122,6 +123,13 @@ const ProgramTransaction = (props) => {
     fetchCategories();
   }, []);
 
+
+  useEffect(() => {
+    console.log(contractData)
+  }, [contractData]);
+
+
+  
   const fetchPrograms = async (isNewProgram = false) => {
     console.log('is new', isNewProgram);
     try {
@@ -171,10 +179,16 @@ const ProgramTransaction = (props) => {
 
   //Duration interval change
   const handelDurationIntervalChange = (e) => {
-    e.preventDefault();
-    console.log('di', e.target.value);
-    let durationInterval = e.target.value;
-    setContractData({ ...contractData, durationInterval: durationInterval });
+    const durationInterval = e.target.value;
+    const cycle = durationInterval == "week" ? "weekly" : (durationInterval == "month" ? "monthly" : "yearly");
+    setContractData(prevState => {
+      return {
+        ...prevState,
+        durationInterval: durationInterval,
+        billing_cycle: cycle
+      }
+    })
+    console.log("Duration: ", cycle);
   }
 
   //Payment type change
@@ -183,12 +197,16 @@ const ProgramTransaction = (props) => {
     console.log('pt', e.target.value);
     setContractData({ ...contractData, payment_type: e.target.value });
   }
-
+  
   //Payment type change
   const handelBillingCycleChange = (e) => {
-    e.preventDefault();
-    console.log('bc', e.target.value);
-    setContractData({ ...contractData, billing_cycle: e.target.value });
+    console.log("dasdasdaasdasd", e.target.value)
+    setContractData(prevState => {
+      return { 
+        ...prevState, 
+        billing_cycle: e.target.value
+      }
+    });
   }
 
   //Tuition amount change
@@ -237,6 +255,7 @@ const ProgramTransaction = (props) => {
 
   //Count no of payments
   useEffect(() => {
+    console.log("In effect")
     if (contractData.duration) {
       let nextDueDate = "";
       let noOfPayments = 1;
@@ -248,8 +267,14 @@ const ProgramTransaction = (props) => {
          * duration : 6 years
          * billing cycle : monthly
          */
-        if (contractData.durationInterval === 'year' && contractData.billing_cycle === 'monthly') {
-          noOfPayments = contractData.duration * 12;
+        if (contractData.durationInterval === 'year') {
+          if (contractData.billing_cycle === 'monthly') {
+            noOfPayments = contractData.duration * 12;
+          } else if (contractData.billing_cycle === 'weekly') {
+            noOfPayments = contractData.duration * 52;
+          } else {
+            noOfPayments = contractData.duration * 1;
+          }
         } else {
           noOfPayments = contractData.duration * 1;
         }
@@ -258,10 +283,17 @@ const ProgramTransaction = (props) => {
         console.log('reset nDD call')
         nextDueDate = ""
       }
-      setContractData({ ...contractData, nextDueDate: nextDueDate, numberOfPayments: noOfPayments });
+      setContractData(prevState => {
+        return { 
+          ...prevState, 
+          nextDueDate: nextDueDate, 
+          numberOfPayments: noOfPayments 
+        }
+      });
     }
   }, [
     contractData.duration,
+    contractData.durationInterval,
     contractData.billing_cycle,
     contractData.payment_type,
     contractData.firstBillingTime,
@@ -273,7 +305,8 @@ const ProgramTransaction = (props) => {
   const continueToBuy = (e) => {
     e.preventDefault();
 
-
+    console.log('herereererererererererererere', contractData)
+    //return false;
     let formErrorsCopy = formErrors;
     let isError = false;
 
@@ -309,12 +342,12 @@ const ProgramTransaction = (props) => {
     }
 
     //Duration interval
-    if (contractData.durationInterval === 'month' &&
-      contractData.billing_cycle === 'yearly' &&
-      contractData.payment_type === 'recurring') {
-      isError = true;
-      formErrorsCopy.billing_cycle = "Please modify billing cycle"
-    }
+    // if (contractData.durationInterval === 'month' &&
+    //   contractData.billing_cycle === 'yearly' &&
+    //   contractData.payment_type === 'recurring') {
+    //   isError = true;
+    //   formErrorsCopy.billing_cycle = "Please modify billing cycle"
+    // }
 
     // if (contractData.durationInterval === 'month' &&
     //   contractData.billing_cycle === 'yearly' &&
@@ -379,8 +412,6 @@ const ProgramTransaction = (props) => {
       <form>
         <div className="transaction_form products forProducts">
 
-          {/* Custom Select Box with inbuild Button starts */ console.log({ programList })}
-
           <div className="formsection gap">
 
             <div className="cmnFormRow">
@@ -444,6 +475,7 @@ const ProgramTransaction = (props) => {
             </span>
             <span className="rightSecTransaction">
               <select className="selectBox" name="duration_interval" value={contractData.durationInterval} onChange={handelDurationIntervalChange}>
+              <option value="week">Week(s)</option>
                 <option value="month">Month(s)</option>
                 <option value="year">Year(s)</option>
               </select>
@@ -475,7 +507,9 @@ const ProgramTransaction = (props) => {
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                 </span>
               </label>
-              <select className="selectBox" name="billingCycle" value={contractData.billing_cycle} onChange={handelBillingCycleChange} disabled={contractData.payment_type === 'onetime'}>
+              <select className="selectBox" name="billingCycle" value={contractData.billing_cycle} onChange={handelBillingCycleChange} 
+              disabled={contractData.payment_type === 'onetime' || contractData.durationInterval === 'week' || contractData.durationInterval === 'month' }>
+                <option value="weekly">Weekly</option>
                 <option value="monthly">Monthly</option>
                 <option value="yearly">Yearly</option>
               </select>
@@ -588,7 +622,7 @@ const ProgramTransaction = (props) => {
         {/* <button className={props.courseSelected ? "saveNnewBtn" : "saveNnewBtn disabled"} onClick={props.buyCourse}>Buy <img src={aaroww} alt="" /></button> */}
 
         <div className="continueBuy">
-          <button className="saveNnewBtn" onClick={e => continueToBuy(e)}>Continue to Buy <img src={aaroww} alt="" /></button>
+          <button className="saveNnewBtn" onClick={(e) => continueToBuy(e)}>Continue to Buy <img src={aaroww} alt="" /></button>
         </div>
       </form>
 

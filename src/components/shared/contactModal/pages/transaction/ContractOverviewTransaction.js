@@ -200,7 +200,7 @@ const ContractOverviewTransaction = (props) => {
       courseName: props.programContractData.courseName,
       courseImage: props.programContractData.courseImage,
       duration: props.programContractData.duration + ' ' + utils.capitalizeFirst(props.programContractData.durationInterval) + '(s)',
-      billingCycleText: props.programContractData.billing_cycle === 'monthly' ? 'Month' : 'Year',
+      billingCycleText: props.programContractData.billing_cycle === 'monthly' ? 'Month' : (props.programContractData.billing_cycle === 'weekly' ? 'Week' : 'Year'),
       auto_renew_text: props.programContractData.auto_renew ? 'ON' : 'OFF',
       auto_renew: props.programContractData.auto_renew,
       totalDownPayment: totalDownPayment,
@@ -426,7 +426,7 @@ const ContractOverviewTransaction = (props) => {
                   </div>
                 </div>
                 <div className="downpaymentsPayDetails">
-                  <div className="payDate instalments">Payment Remaing <b>{contractData.remainingPaymentCount}</b></div>
+                  <div className="payDate instalments">Payment Remaining <b>{contractData.remainingPaymentCount}</b></div>
                   <div className="payDate instalmentDate">
                     <img src={payDate} alt="" /> {contractData.nextDueDate ? utils.standardDateFormat(contractData.nextDueDate) : utils.standardDateFormat(contractData.paymentDate)}
                   </div>
