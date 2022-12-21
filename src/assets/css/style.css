@@ -13023,3 +13023,13 @@ background-color: #fff;
 .cmnFormField.companyName {
   width: 100%;
 }
+/* Email CR work for the account where the user is not done the setup date 19th Dec*/
+.showSetupMsg {
+  position: absolute;
+  top: 60px;
+  color: #ff7474;
+}
+.cmnBtn:disabled{
+  opacity: 0.4;
+  cursor:no-drop;
+}
