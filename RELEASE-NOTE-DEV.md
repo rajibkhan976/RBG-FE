@@ -51,6 +51,8 @@
     - Overdue Transactions Incorporation in Global and Contact
     - Fixed some bugs in Transactions
 
+# SCRIPT V1.0.0
+    - clarity ms script add
 # HOTFIX V1.1.4
     - Billing card and bank make primary select issue fixed
 
@@ -58,4 +60,4 @@
     - Email cr changes pushed and deployed in this version
 
 # HOTFIX V1.1.5
-    - Invoice pdf tax amount issue fixed
+    - Invoice pdf tax amount issue fixed 
