@@ -56,3 +56,6 @@
 
 # EMAIL CR V1.0
     - Email cr changes pushed and deployed in this version
+
+# HOTFIX V1.1.5
+    - Invoice pdf tax amount issue fixed
