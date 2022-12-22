@@ -12,7 +12,7 @@ import * as actionTypes from "../../actions/types";
 
 const InnerLeftMenu = (props) => {
   const pathURL = useLocation().pathname;
-  const [automationObject, setAutomationObject] = useState({});
+  const [automationObject, setAutomationObject] = useState({}); 
   const rolesStoreCount = useSelector((state) => state.role.count);
   const groupsStoreCount = useSelector((state) => state.group.count);
   const usersStoreCount = useSelector((state) => state.user.count);
@@ -325,7 +325,9 @@ const InnerLeftMenu = (props) => {
                     </button>
                   </div>
                   <ul className="sideSubMenu">
-                  {loggedInUser && loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in' ?<li>
+                  {loggedInUser && ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in') ||
+                                     (loggedInUser.isOrganizationOwner && loggedInUser.isOrganizationOwner === true))
+                   ?<li>
                       <NavLink to="/email-setup" activeClassName="active">
                         Email
                       </NavLink>

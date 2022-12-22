@@ -38,4 +38,9 @@
     - Fix tranaction bug
     - Fixed reload issue
 # RELEASE V1.0.5
+<<<<<<< HEAD
+    - Automation V2 
+=======
     - Automation V2
+    
+>>>>>>> develop
