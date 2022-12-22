@@ -164,6 +164,14 @@ export default function PDFDocument(props) {
         const transactionDate = moment(txn[0].transaction_date).format("LLL");
         const isRefund = (txn[0].amount < 0) ? true : false;
         // const transactionDate = txn[0].transaction_date;
+        // const downpayment = txn[0].transaction_type;
+        let totalTax = 0;
+        if (txn[0].transaction_for === "product") {
+            txn[0].transaction_data?.forEach(ele => {
+                totalTax = totalTax + ele.taxAmount;
+            }); 
+        }
+        
         let subTotal = 0;
         return (<html lang="en">
             <head>
@@ -193,7 +201,7 @@ export default function PDFDocument(props) {
                         <div style={styles.text3}> {contact.firstName ? contact.firstName : "" + " " + contact.lastName ? contact.lastName : ""}</div>
                         <div style={styles.text4}> {contact.email}</div>
                         <div style={styles.text4}> {(contact.phone?.number) ? contact.phone.dailCode + "-" + contact.phone?.number : ""}</div>
-                        {(!isRefund) ? (
+                        {((!isRefund) && (txn[0].transaction_type != "downpayment")) ? (
                             <div style={styles.tableWrapper}>
                                 {txn[0].transaction_for === "product" ?
                                     (
@@ -239,14 +247,14 @@ export default function PDFDocument(props) {
                                                     <td style={styles.tableQTD}>&nbsp;</td>
                                                     <td style={styles.tableQTD}>Tax  :</td>
                                                     <td style={styles.tableQTD}>&nbsp;</td>
-                                                    <td style={styles.tableQTD}> {(!isRefund) ? "$" + (txn[0].amount - subTotal).toFixed(2) : "-"}</td>
+                                                    <td style={styles.tableQTD}> {"$" + totalTax}</td>
                                                 </tr>
                                                 <tr style={styles.total}>
                                                     <td style={styles.tableQTD}>&nbsp;</td>
                                                     <td style={styles.tableQTD}>&nbsp;</td>
                                                     <td style={styles.tableQTD}>&nbsp;</td>
                                                     <td style={styles.tableQTD}>&nbsp;</td>
-                                                    <td style={styles.tableQTD}>Total  :</td>
+                                                    <td style={styles.tableQTD}>Total:</td>
                                                     <td style={styles.tableQTD}>&nbsp;</td>
                                                     <td style={styles.tableQTD}>${(txn[0].amount).toFixed(2)}</td>
                                                 </tr>
@@ -289,7 +297,7 @@ export default function PDFDocument(props) {
                                         <th style={styles.tableQTH}>Description</th>
                                         <th style={styles.tableQTH}>Payment Mode</th>
                                         <th style={styles.tableQTH}>Transaction ID</th>
-                                        <th style={styles.tableQTH}>Total </th>
+                                        <th style={styles.tableQTH}>Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>

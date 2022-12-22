@@ -329,7 +329,7 @@ const ProductTransaction = (props) => {
             qnty: selectedProduct.qnty,
             image: config.bucketUrl+selectedProduct.image,
             name: selectedProduct.name,
-            tax: (selectedProduct.tax === 1 || selectedProduct.tax === "1") ? true : false
+            tax: (selectedProduct.tax === 1 || selectedProduct.tax === "1") ? true : false,
         }
         setCartState([...cartState, cartItemToAdd]);
         setErrorState({
