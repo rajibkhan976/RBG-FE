@@ -70,7 +70,12 @@ const EmailModal = (props) => {
 
     const [emailSend, setEmailSend] = useState(false);
     const [changedTemplate, setChangedTemplate] = useState("");
-
+    const [emailSetupData, setEmailSetupData] = useState({
+        "host": "",
+        "port": "",
+        "user": "",
+        "pass": "",
+    });
 
     const emailGlobalSend = async (payload) => {
         try {
@@ -131,10 +136,28 @@ const EmailModal = (props) => {
             });
         }
     }
+    const fetchEmail = async () => {
+        try {
+            setIsLoader(true);
+            const result = await EmailServices.fetchSetupEmail();
+            if (result) {
+                setEmailSetupData(result);
+            }
+        } catch (e) {
+            setIsLoader(false);
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
+        } finally {
+            setIsLoader(false);
+        }
+    };
     useEffect(() => {
         fetchTemplateList();
-        fetchEmailTags()
-
+        fetchEmailTags();
+        fetchEmail();
     }, []);
 
 
@@ -246,7 +269,7 @@ const EmailModal = (props) => {
         // console.log("emailbody",emailBody);
         setEmailDatasubject(elem.title);
         setTemplateToogle(false);
-        setTempSelected(true);
+        setTempSelected(true); 
         console.log(tempSelected);
     }
 
@@ -256,8 +279,7 @@ const EmailModal = (props) => {
         e.preventDefault();
         const subject = emailData.subject;
         // console.log("Changed", changedTemplate);
-        let template = changedTemplate;
-        //console.log("Global Template",subject);
+        let template = changedTemplate; 
 
         let payload = {
             "email": emailData.email,
@@ -427,7 +449,8 @@ const EmailModal = (props) => {
 //   };
 
 let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
-//   console.log("Initial State in header",zIndexEmail);
+ // console.log("Initial State in header",zIndexEmail);
+  console.log("sssssssssssssssssssssssssssss",emailSetupData.user);
 
 
     return (
@@ -445,6 +468,7 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                     </button>
                     <h3>Send Email</h3>
                     <p>Enter email id</p>
+                    <div className="showSetupMsg">{emailSetupData.user === undefined ? "You can't send mail as the email setup is not done" :""}</div>
                     <div className={validateMsg.email ? "numberForCall error" : "numberForCall"}>
                         <input type="email"
                                placeholder="Eg. richardnile@rbg.com" className="emailInput"
@@ -674,8 +698,9 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                             </div>
                         </div>
                         <div class="slice text-center">
-                            <button class="cmnBtn" onClick={sendGlobalEmail}>Send Email <img src={arrow_forward}
-                                                                                             alt=""/></button>
+                            <button class="cmnBtn" onClick={sendGlobalEmail}
+                               disabled={emailSetupData.user === undefined ? "disabled":""}
+                            >Send Email <img src={arrow_forward} alt=""/></button>
                         </div>
                     </div>
                 </div>

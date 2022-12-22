@@ -41,12 +41,12 @@ const Setup = (props) => {
               </li>
               <li>
                 <div className="listHead">
-                  <i>
+                  <i><img src={SetupIcon2} alt="" /></i>
                     <NavLink
                       to="/gym-details" onClick={(e) => props.clickedLink(e)}>
-                      <img src={SetupIcon2} alt="" />
+                      
                     </NavLink>
-                  </i>
+                  
                   <div>
                     <h3>
                       <NavLink
@@ -57,50 +57,61 @@ const Setup = (props) => {
                   </div>
                 </div>
               </li>
+
+
+              
               <li>
                 <div className="listHead">
-                  <i><NavLink
-                    to="/call-setup"
-                    onClick={(e) => props.clickedLink(e)}
-                  >
-                    <img src={SetupIcon3} alt="" />
-                  </NavLink>
-                  </i>
-                  <div>
-                    <h3><NavLink
-                      to="/call-setup"
-                      onClick={(e) => props.clickedLink(e)}
-                    >Communication Setup</NavLink></h3>
-                    <p>Set up communications</p>
-                  </div>
+                <i><NavLink
+                to="/call-setup"
+                onClick={(e) => props.clickedLink(e)}
+                >
+                <img src={SetupIcon3} alt="" />
+                </NavLink>
+                </i>
+                <div>
+                <h3><NavLink
+                to="/call-setup"
+                onClick={(e) => props.clickedLink(e)}
+                >Communication Setup</NavLink></h3>
+                <p>Set up communications</p>
+                </div>
                 </div>
                 <ul className="secondListing">
-                {loggedInUser && loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in' ?    <li>
-                    <NavLink
-                      to="/email-setup"
-                      onClick={(e) => props.clickedLink(e)}
-                    >
-                      Email
-                    </NavLink>
-                  </li> :""}
-                  <li>
-                    <NavLink
-                      to="/sms-setup"
-                      onClick={(e) => props.clickedLink(e)}
-                    >
-                      SMS
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to="/call-setup"
-                      onClick={(e) => props.clickedLink(e)}
-                    >
-                      Call
-                    </NavLink>
-                  </li>
+                {loggedInUser && ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in') ||
+                              (loggedInUser.isOrganizationOwner && loggedInUser.isOrganizationOwner === true))
+                ? <li>
+                <NavLink
+                to="/email-setup"
+                onClick={(e) => props.clickedLink(e)}
+                >
+                Email
+                </NavLink>
+                </li> :""}
+                <li>
+                <NavLink
+                to="/sms-setup"
+                onClick={(e) => props.clickedLink(e)}
+                >
+                SMS
+                </NavLink>
+                </li>
+                <li>
+                <NavLink
+                to="/call-setup"
+                onClick={(e) => props.clickedLink(e)}
+                >
+                Call
+                </NavLink>
+                </li>
                 </ul>
-              </li>
+                </li>
+
+
+
+
+
+           
               {/* <li>
                 <div className="listHead">
                   <i>

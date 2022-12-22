@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
 import Loader from "../../../shared/Loader";
 import {ErrorAlert, SuccessAlert} from "../../../shared/messages";
-import {useDispatch} from "react-redux";
+import {useSelector, useDispatch } from "react-redux";
 import * as actionTypes from "../../../../actions/types";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import {EmailServices} from "../../../../services/setup/EmailServices";
+import { isLoggedIn } from "../../../../services/authentication/AuthServices";
 
 const EmailSetup = () => {
     const dispatch = useDispatch();
@@ -19,6 +20,11 @@ const EmailSetup = () => {
 
     const [successMsg, setSuccessMsg] = useState("");
     const [errorMsg, setErrorMsg] = useState("");
+    const loggedInUser = useSelector((state) => state.user.data);
+
+   // const [loggedInUserState, setloggedInUserState] = useState(loggedInUser);
+
+    //console.log("dddddddddddd ffffffffffffffff fffffffffffffff",loggedInUser.email);
 
     const [emailData, setEmailData] = useState({
         "host": "",
@@ -74,7 +80,7 @@ const EmailSetup = () => {
             dispatch({
                 type: actionTypes.SHOW_MESSAGE,
                 message: e.message,
-                typeMessage: 'error'
+                typeMessage: (e.message==="Nothing to update. Please make some changes and update")?'warning':'error'
             });
         } finally {
             setIsLoader(false);
@@ -88,17 +94,21 @@ const EmailSetup = () => {
                 host: 'smtp.gmail.com',
 
             });
+            setValidateMsg({...validateMsg, host: ""});
         } else if (e.target.value === 'sendgrid') {
             setEmailData({
                 ...emailData,
                 host: 'smtp.sendgrid.net',
             });
+            setValidateMsg({...validateMsg, host: ""});
+
         } else {
             setEmailData({
                 ...emailData,
                 host: '',
 
             });
+            setValidateMsg({...validateMsg, host: "Please enter a valid host"});
         }
 
     }
@@ -109,7 +119,7 @@ const EmailSetup = () => {
 
             dispatch({
                 type: actionTypes.SHOW_MESSAGE,
-                message: result.message,
+                message: "Test email sent succesfully",
                 typeMessage: 'success'
             });
         } catch (e) {
@@ -123,10 +133,32 @@ const EmailSetup = () => {
         }
     };
 
-    useEffect(async () => {
-        await fetchEmail();
-    }, []);
+    //  useEffect(async () => {
+    //      await fetchEmail();
+    //  }, []);
 
+    useEffect(() => {
+        if (loggedInUser && Object.keys(loggedInUser).length > 0) {
+            console.log("loogged in user", loggedInUser, Object.keys(loggedInUser).length);
+
+            if((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in') ||
+            (loggedInUser.isOrganizationOwner && loggedInUser.isOrganizationOwner === true)){
+                console.log("I am in if: ", loggedInUser)
+                fetchEmail();
+            } else {
+                
+                console.log("I am in else: ", loggedInUser)
+                dispatch({
+                    type: actionTypes.SHOW_MESSAGE,
+                    message:  "You don't have the authorization to see this page",
+                    typeMessage: 'error'
+                }); 
+            }
+        }
+    }, [loggedInUser])
+
+    
+    
     const fieldHostHandler = (e) =>{
         setEmailData({
             ...emailData,
@@ -168,7 +200,7 @@ const EmailSetup = () => {
             pass : e.target.value,
         }); 
         if(e.target.value.length === 0){
-            setValidateMsg({...validateMsg, pSetup: "Please enter a valid host"});
+            setValidateMsg({...validateMsg, pSetup: "Please enter a valid password"});
         }else{
             setValidateMsg({...validateMsg, pSetup: ""});
         }
@@ -197,11 +229,11 @@ const EmailSetup = () => {
         if (name === "port" && !portType.test(value)) {
             setValidateMsg({...validateMsg, port: "Please enter a valid port of 3 digit"});
         }
-        if (name === "userSetup" && !value.match(emailRegex)) {
-            setValidateMsg({...validateMsg, user: "Please enter a valid user name"});
+        if (name === "uSetup" && !value.match(emailRegex)) {
+            setValidateMsg({...validateMsg, uSetup: "Please enter a valid user name"});
         }
-        if (name === "passSetup" && value.length === 0) {
-            setValidateMsg({...validateMsg, pass: "Please enter a password"});
+        if (name === "pSetup" && value.length === 0) {
+            setValidateMsg({...validateMsg, pSetup: "Please enter a password"});
         }
     }
     const handleSubmit = async (e) => {
@@ -226,14 +258,14 @@ const EmailSetup = () => {
             if (!emailData.user) {
                 setValidateMsg(previousState => ({
                     ...previousState,
-                    userSetup: "Please enter a user name",
+                    uSetup: "Please enter a user name",
                 }));
                 validationError = true;
             }
             if (!emailData.pass) {
                 setValidateMsg(previousState => ({
                     ...previousState,
-                    passSetup: "Please enter a password"
+                    pSetup: "Please enter a password"
                 }));
                 validationError = true;
             }
@@ -429,12 +461,15 @@ const EmailSetup = () => {
                                         <div className="errorMsg">{validateMsg?.pSetup}</div>
                                     </div>
                                 </div>
-                                <button className="cmnBtn"
+                                {loggedInUser && ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in') ||
+                                    (loggedInUser.isOrganizationOwner && loggedInUser.isOrganizationOwner === true)) &&
+                                    <button className="cmnBtn"
                                         type="button"
                                         onClick={handleSubmit}
                                 >
                                     <span>Save</span><img src={arrow_forward} alt=""/>
                                 </button>
+                                }
                             </form>
                             <div className="cmnFormRow mt-2">
                                 <div className="cmnFieldName1">Test Configuration</div>
@@ -458,15 +493,22 @@ const EmailSetup = () => {
                                     <span>Test SMTP Email Configuration</span><img src={arrow_forward} alt=""/>
                                 </button>
                             } */}
-                            {((emailData?.host === "" && emailData?.port === "" && emailData?.user === "" && emailData?.pass === "") ||
-                                (emailData?.host === undefined || emailData?.port === undefined || emailData?.user === undefined || emailData?.pass === undefined)) ?
-                                "" :
-                                <button className="cmnBtn"
-                                        onClick={handleConfigEmail}
-                                >
+                            
+                              {
+                              (loggedInUser && ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in') ||
+                              (loggedInUser.isOrganizationOwner && loggedInUser.isOrganizationOwner === true)) )? 
+                            
+                                ((emailData?.host === "" && emailData?.port === "" && emailData?.user === "" && emailData?.pass === "") ||
+                                    (emailData?.host === undefined || emailData?.port === undefined || emailData?.user === undefined || emailData?.pass === undefined)) ?
+                                    "" :
+                                    <button className="cmnBtn"
+                                            onClick={handleConfigEmail}
+                                    >
 
-                                    <span>Test SMTP Email Configuration</span><img src={arrow_forward} alt=""/>
-                                </button>
+                                        <span>Test SMTP Email Configuration</span><img src={arrow_forward} alt=""/>
+                                    </button>  
+                                    :
+                                    ""
 
                             }
                         </div>

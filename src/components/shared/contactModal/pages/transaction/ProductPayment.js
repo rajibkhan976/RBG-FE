@@ -100,7 +100,9 @@ const ProductPayment = (props) => {
         totalTaxPlaceholder
       );
 
-      console.log("TAxED AMOUNT", modifiedCartState, taxtAmt, modifiedCartState.filter((cartItem, i) => cartItem.tax === 1));
+      
+
+      console.log("TAxED AMOUNT", taxtAmt);
 
       setTotalAmt(parseFloat(sumAmt));
       setTotalTaxAmt(parseFloat(taxtAmt));
@@ -159,12 +161,23 @@ const ProductPayment = (props) => {
         }
         // console.log(outStandingPlaceholder);
 
-        cartItems.forEach((cartItem, index) => {
-          const cartItemss = {...cartItem}
-          delete cartItemss.image;
-          delete cartItemss.name;
-          delete cartItemss.tax;
-          return cartItemss;
+        // cartItems.forEach((cartItem, index) => {
+        //   const cartItemss = {...cartItem, totalTaxAmount: (cartItem.price * cartItem.qnty * (props.salesTax / 100))}
+        //   delete cartItemss.image;
+        //   delete cartItemss.name;
+        //   delete cartItemss.tax;
+        //   return cartItemss;
+        // });
+
+        cartItems = cartItems.map((items) => {
+          let taxAmount = 0;
+          if(items.tax) {
+            taxAmount = parseFloat(((items.price*items.qnty)*props.salesTax/100).toFixed(2));
+          }
+          return {
+            ...items,
+            taxAmount: taxAmount
+          }
         });
 
         console.log("cartItems from bill now", cartItems);
