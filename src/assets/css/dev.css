@@ -4077,6 +4077,10 @@ li.paymentModeLi, li.paymentAmtLi {
   background: #E9F1F9;
 }
 
+.transactionListing .row.due .warning {
+  background: #ffecdcbf;
+}
+
 .transactionListing.dueTransactions .row.due .cell {
   background: transparent;
 }

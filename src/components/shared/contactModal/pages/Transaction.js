@@ -86,6 +86,7 @@ const Transaction = (props) => {
   const [overduePagination, setOverduePagination] = useState({});
   const overdueOptRef = useRef();
   const [overdueOptIndex, setOverdueOptIndex] = useState();
+  const [overdueHistoryIndex, setOverdueHistoryIndex] = useState(null);
 
 
 
@@ -297,7 +298,7 @@ const Transaction = (props) => {
         setOldTransactionList([...oldTransactionList, ...response.transactions]);
       }
       setOldPagination(response.pagination);
-      console.log("Old transaction response ", response);
+      // console.log("Old transaction response ", response);
     } catch (e) {
 
     } finally {
@@ -317,7 +318,7 @@ const Transaction = (props) => {
       }
       setIsScroll(false);
       setUpcomingPagination(response.pagination);
-      console.log("Upcoming transaction response ", response);
+      // console.log("Upcoming transaction response ", response);
     } catch (e) {
 
     } finally {
@@ -428,7 +429,7 @@ const Transaction = (props) => {
   };
 
   const dayLeft = (due_date) => {
-    console.log('Initial due date', due_date);
+    // console.log('Initial due date', due_date);
     let payDate = moment(due_date, "YYYY-MM-DD");
     let today = moment().startOf('day');
 
@@ -503,540 +504,540 @@ const Transaction = (props) => {
     return showTime;
   };
 
-  const downloadInvoice = async (elem) => {
-    // setIsLoader(true);
-    console.log("download function")
-    try {
-      const transactionData = { ...elem, orgCode: org.organizationCode };
-      const organizationData = { name: org.organization };
-      const contactData = props.contact;
-      const html = (transactionData.transaction_for === "product") ?
-        await getProductPDFHTML([transactionData], contactData, organizationData) :
-        await getCoursePDFHTML([transactionData], contactData, organizationData);
-    } catch (e) {
-    } finally {
-      // setIsLoader(false);
-    }
-  }
+  // const downloadInvoice = async (elem) => {
+  //   // setIsLoader(true);
+  //   console.log("download function")
+  //   try {
+  //     const transactionData = { ...elem, orgCode: org.organizationCode };
+  //     const organizationData = { name: org.organization };
+  //     const contactData = props.contact;
+  //     const html = (transactionData.transaction_for === "product") ?
+  //       await getProductPDFHTML([transactionData], contactData, organizationData) :
+  //       await getCoursePDFHTML([transactionData], contactData, organizationData);
+  //   } catch (e) {
+  //   } finally {
+  //     // setIsLoader(false);
+  //   }
+  // }
 
-  const getCoursePDFHTML = async (txn, contact, org) => {
-    const date = new Date();
-    const transactionDate = moment(txn[0].transaction_date).format("LLL");
-    const isRefund = (txn[0].amount < 0) ? true : false;
+  // const getCoursePDFHTML = async (txn, contact, org) => {
+  //   const date = new Date();
+  //   const transactionDate = moment(txn[0].transaction_date).format("LLL");
+  //   const isRefund = (txn[0].amount < 0) ? true : false;
 
-    let html = `<!DOCTYPE html>
-    <html lang="en">
-       <head>
-          <link rel="preconnect" href="https://fonts.googleapis.com">
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-          <link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-          <script>
-          document.body.onload = function() {
-            html2canvas(document.querySelector(".container")).then(canvas => {
-              document.body.appendChild(canvas)
-            });
-          };
-          </script>
-          <style>
-             * {
-             box-sizing: border-box;
-             font-family: 'PT Serif', serif;
-             color: #305671;
-             }
-             .tableQ tbody tr:nth-child(even) td{
-             background-color: #F5FAFF;      
-             }
-          </style>
-       </head>
-       <body style="box-sizing: border-box;
-          font-family: 'PT Serif', serif;
-          color: #305671;
-          padding: 0;
-          margin: 0;">
-          <div class="container" style="box-sizing:border-box;width: 100%;padding: 10px 10px 10px 10px;position: relative;">
-             <div class="header" style="box-sizing: border-box;font-family: 'PT Serif', serif;color: #305671;width: 100%;padding: 0px 20px;margin: 0;border-bottom: 1px solid rgba(48, 86, 113, 0.5);margin-bottom: 3em;">
-                <h2 style="font-weight: 700;
-                   font-size: 1.6em;
-                   line-height: 2em;
-                   text-align: center;
-                   text-decoration-line: underline;">Tax Invoice</h2>
-                <table class="table" border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
-                   <tr>
-                      <td class="left" style="text-align: left;">
-                         <div class="org" style="font-weight: 700;
-                            font-size: 1.2em;
-                            line-height: 2em;">${org.name}</div>
-                      </td>
-                      <td class="right" style="text-align: right;">
-                         <p class="text1" style="font-weight: 700;
-                            font-size: 0.8em;
-                            line-height: 1em;">Invoice Number : <span style="font-weight: 400;"> ${txn[0]._id}</span></p>
-                         <p class="text1" style="font-weight: 700;
-                            font-size: 0.8em;
-                            line-height: 1em;">Date : <span style="font-weight: 400;"> ${transactionDate} </span></p>
-                      </td>
-                   </tr>
-                </table>
-             </div>
-             <div class="main" style="box-sizing: border-box;font-family: 'PT Serif', serif;color: #305671;padding: 0;margin: 0;">
-                <div class="text2 gap1" style="padding-left: 20px;font-size: 0.7em;
-                   padding-bottom: 0.9em;">Bill To,</div>
-                <div class="text3 gap1" style="padding-left: 20px;font-size: 1.29em;
-                   line-height: 1.2em;
-                   font-weight: 700;
-                   padding-bottom: 0.5em;">${contact.firstName + " " + contact.lastName}</div>
-                <div class="text4 gap1" style="padding-left: 20px;font-size: 0.9em;
-                   line-height: 1em;
-                   color: #97AAB8;
-                   padding-bottom: 0.5em;">${contact.email}</div>
-                <div class="text4 gap1" style="padding-left: 20px;font-size: 0.9em;
-                   line-height: 1em;
-                   color: #97AAB8;
-                   padding-bottom: 0.5em;">${contact.phone?.dailCode + "-" + contact.phone?.number}</div>
-                <div class="tableWrapper" style="margin-top: 3em;">
-                   <table class="tableQ" border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
-                      <thead style="width: 100%;">
-                         <tr>
-                            <th style="width: 4%;background-color: #305671; 
-                               color: #fff;
-                               font-weight: 700;  
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;padding-left: 20px;">No.</th>
-                            <th style="width: 35%;background-color: #305671; 
-                               color: #fff;
-                               font-weight: 700;  
-                               font-size: 0.8em;
-                               text-align: left;
-                               padding: 1.2em 1em;">Program Name</th>
-                            <th style="width: 35%;background-color: #305671; 
-                               color: #fff;
-                               font-weight: 700;  
-                               text-align: left;    
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;">Program Start</th>
-                            <th style="width: 26%;background-color: #305671; 
-                               color: #fff;
-                               font-weight: 700;  
-                               text-align: right;    
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;padding-right: 20px;">Price</th>
-                         </tr>
-                      </thead>
-                      <tbody>
-                         <tr>
-                            <td style="width: 4%;color: #305671; 
-                               background-color: #fff;   
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;padding-left: 20px;">1.</td>
-                            <td style="width: 35%;color: #305671; 
-                               background-color: #fff;   
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;">${txn[0].transaction_data.course}</td>
-                            <td style="width: 35%;color: #305671; 
-                               background-color: #fff;   
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;">${moment(txn[0].transaction_data.course_start).format("LL")}</td>
-                            <td style="width: 26%;color: #305671; 
-                               background-color: #fff;   
-                               text-align: right;    
-                               font-size: 1em;
-                               padding: 1.2em 1em;padding-right: 20px;">$${txn[0].amount}</td>
-                         </tr>
-                      </tbody>
-                      <tfoot>
-                         <tr>
-                            <td colspan="3" style="font-weight: bold;
-                               border-top: 1px solid rgba(48, 86, 113, 0.5);
-                               text-align: right; 
-                               padding: 1.2em 1em;    
-                               font-size: 0.8em;">Total  :</td>
-                            <td colspan="1" style="font-weight: bold;
-                               border-top: 1px solid rgba(48, 86, 113, 0.5);
-                               text-align: right; 
-                               padding: 1.2em 1em;    
-                               font-size: 0.8em;padding-right: 20px;">$${txn[0].amount}</td>
-                         </tr>
-                      </tfoot>
-                   </table>
-                </div>
-                <div class="tableWrapper" style="margin-top: 3em;">
-                   <table class="tableQ" border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
-                      <thead style="width: 100%;">
-                         <tr>
-                            <th style="width: 30%; background-color: #305671 !important; 
-                               color: #fff;
-                               font-weight: 700;    
-                               font-size: 0.8em;
-                               text-align: left;
-                               padding: 1.2em 1em;padding-left: 20px;">Description</th>
-                            <th style="width: 35%;background-color: #305671 !important; 
-                               color: #fff;
-                               font-weight: 700;  
-                               font-size: 0.8em;
-                               text-align: left;
-                               padding: 1.2em 1em;">Payment Mode</th>
-                            <th class="left" style="width: 20%;background-color: #305671 !important; 
-                               color: #fff;
-                               font-weight: 700;  
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;text-align: left;">Transaction ID</th>
-                            <th style="width: 15%;background-color: #305671 !important; 
-                               color: #fff;
-                               font-weight: 700;  
-                               text-align: right;    
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;padding-right: 20px;">Total </th>
-                         </tr>
-                      </thead>
-                      <tbody>
-                         ${txn.map(el => (
-      `<tr>
-                            <td style="width: 30%;color: #305671; 
-                               background-color: #fff; 
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;padding-left: 20px;">${(!isRefund) ? (el.transaction_type === "tuiton_fees") ? "Tuition Fees" : el.transaction_type.charAt(0).toUpperCase() + el.transaction_type.slice(1) : el.note}</td>
-                            <td style="width: 35%;color: #305671; 
-                               background-color: #fff;  
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;">${el.payment_via.charAt(0).toUpperCase() + el.payment_via.slice(1)}</td>
-                            <td class="left" style="width: 20%;color: #305671; 
-                               background-color: #fff;   
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;text-align: left;">${(el.transactionId) ? el.transactionId : el.transaction_id}</td>
-                            <td style="width: 15%;color: #305671; 
-                               background-color: #fff;   
-                               text-align: right;    
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;padding-right: 20px;">$${el.amount}</td>
-                         </tr>
-                         `))}
-                      </tbody>
-                      <tfoot>
-                         <tr class="bigfooter">
-                            ${(txn[0].payment_via !== "cash" && !isRefund) ? (`
-                            <td class="left" style="font-weight: bold; padding: 1.2em 1em;padding-left: 20px; text-align: left;font-size: 0.7em;">
-                               <p> <span style="color: #97AAB8;">${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? "Bank Details:" : "Credit Card Details:"}:</span>  XXXX${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? txn[0].payment_resp.bank_account.last4 : txn[0].payment_resp.card.last4}</p>
-                               <p> <span style="color: #97AAB8;">${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? "Routing Number:" : "Expiry Date:"} </span> ${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? txn[0].payment_resp.bank_account.routing_number : txn[0].payment_resp.card.expiration_month + "/" + txn[0].payment_resp.card.expiration_year}</p>
-                            </td>
-                            `) : (`
-                            <td class="left" style="font-weight: bold; padding: 1.2em 1em;padding-left: 20px; text-align: left;font-size: 0.7em;">${(isRefund) ? "Refunded via original Method" : txn[0].payment_via}</td>
-                            `)}
-                            <td style="text-align: left;font-weight: bold;
-                               text-align: right; 
-                               padding: 1.2em 1em;    
-                               font-size: 0.8em;">&nbsp;</td>
-                            <td class="text6 left" style="font-weight: bold;
-                               padding: 1.2em 1em;    
-                               font-size: 1em;">Total ${(isRefund) ? "Refunded" : "Paid"} :</td>
-                            <td class="text6" style="font-weight: bold;
-                               text-align: right; 
-                               padding: 1.2em 1em;    
-                               font-size: 1em;">$${txn[0].amount}</td>
-                         </tr>
-                      </tfoot>
-                   </table>
-                </div>
-             </div>
-             <div class="footer" style="width: 100%;padding: 10px 10px 10px 10px; box-sizing: border-box;font-family: 'PT Serif', serif;">
-                <p class="text7" style="color: #97AAB8; font-size: 0.8em;">Note : This is a digitally generated document and does not require any signature.</p>
-                <p class="text8" style="font-size: 0.8em;border-top: 1px solid #ddd;padding-top: 10px;">© redbeltgym.com ${date.getFullYear()}</p>
-             </div>
-          </div>
-       </body>
-    </html>`;
-    return await html;
-  };
+  //   let html = `<!DOCTYPE html>
+  //   <html lang="en">
+  //      <head>
+  //         <link rel="preconnect" href="https://fonts.googleapis.com">
+  //         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  //         <link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
+  //         <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoeqMV/TJlSKda6FXzoEyYGjTe+vXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  //         <script>
+  //         document.body.onload = function() {
+  //           html2canvas(document.querySelector(".container")).then(canvas => {
+  //             document.body.appendChild(canvas)
+  //           });
+  //         };
+  //         </script>
+  //         <style>
+  //            * {
+  //            box-sizing: border-box;
+  //            font-family: 'PT Serif', serif;
+  //            color: #305671;
+  //            }
+  //            .tableQ tbody tr:nth-child(even) td{
+  //            background-color: #F5FAFF;      
+  //            }
+  //         </style>
+  //      </head>
+  //      <body style="box-sizing: border-box;
+  //         font-family: 'PT Serif', serif;
+  //         color: #305671;
+  //         padding: 0;
+  //         margin: 0;">
+  //         <div class="container" style="box-sizing:border-box;width: 100%;padding: 10px 10px 10px 10px;position: relative;">
+  //            <div class="header" style="box-sizing: border-box;font-family: 'PT Serif', serif;color: #305671;width: 100%;padding: 0px 20px;margin: 0;border-bottom: 1px solid rgba(48, 86, 113, 0.5);margin-bottom: 3em;">
+  //               <h2 style="font-weight: 700;
+  //                  font-size: 1.6em;
+  //                  line-height: 2em;
+  //                  text-align: center;
+  //                  text-decoration-line: underline;">Tax Invoice</h2>
+  //               <table class="table" border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
+  //                  <tr>
+  //                     <td class="left" style="text-align: left;">
+  //                        <div class="org" style="font-weight: 700;
+  //                           font-size: 1.2em;
+  //                           line-height: 2em;">${org.name}</div>
+  //                     </td>
+  //                     <td class="right" style="text-align: right;">
+  //                        <p class="text1" style="font-weight: 700;
+  //                           font-size: 0.8em;
+  //                           line-height: 1em;">Invoice Number : <span style="font-weight: 400;"> ${txn[0]._id}</span></p>
+  //                        <p class="text1" style="font-weight: 700;
+  //                           font-size: 0.8em;
+  //                           line-height: 1em;">Date : <span style="font-weight: 400;"> ${transactionDate} </span></p>
+  //                     </td>
+  //                  </tr>
+  //               </table>
+  //            </div>
+  //            <div class="main" style="box-sizing: border-box;font-family: 'PT Serif', serif;color: #305671;padding: 0;margin: 0;">
+  //               <div class="text2 gap1" style="padding-left: 20px;font-size: 0.7em;
+  //                  padding-bottom: 0.9em;">Bill To,</div>
+  //               <div class="text3 gap1" style="padding-left: 20px;font-size: 1.29em;
+  //                  line-height: 1.2em;
+  //                  font-weight: 700;
+  //                  padding-bottom: 0.5em;">${contact.firstName + " " + contact.lastName}</div>
+  //               <div class="text4 gap1" style="padding-left: 20px;font-size: 0.9em;
+  //                  line-height: 1em;
+  //                  color: #97AAB8;
+  //                  padding-bottom: 0.5em;">${contact.email}</div>
+  //               <div class="text4 gap1" style="padding-left: 20px;font-size: 0.9em;
+  //                  line-height: 1em;
+  //                  color: #97AAB8;
+  //                  padding-bottom: 0.5em;">${contact.phone?.dailCode + "-" + contact.phone?.number}</div>
+  //               <div class="tableWrapper" style="margin-top: 3em;">
+  //                  <table class="tableQ" border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
+  //                     <thead style="width: 100%;">
+  //                        <tr>
+  //                           <th style="width: 4%;background-color: #305671; 
+  //                              color: #fff;
+  //                              font-weight: 700;  
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;padding-left: 20px;">No.</th>
+  //                           <th style="width: 35%;background-color: #305671; 
+  //                              color: #fff;
+  //                              font-weight: 700;  
+  //                              font-size: 0.8em;
+  //                              text-align: left;
+  //                              padding: 1.2em 1em;">Program Name</th>
+  //                           <th style="width: 35%;background-color: #305671; 
+  //                              color: #fff;
+  //                              font-weight: 700;  
+  //                              text-align: left;    
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;">Program Start</th>
+  //                           <th style="width: 26%;background-color: #305671; 
+  //                              color: #fff;
+  //                              font-weight: 700;  
+  //                              text-align: right;    
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;padding-right: 20px;">Price</th>
+  //                        </tr>
+  //                     </thead>
+  //                     <tbody>
+  //                        <tr>
+  //                           <td style="width: 4%;color: #305671; 
+  //                              background-color: #fff;   
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;padding-left: 20px;">1.</td>
+  //                           <td style="width: 35%;color: #305671; 
+  //                              background-color: #fff;   
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;">${txn[0].transaction_data.course}</td>
+  //                           <td style="width: 35%;color: #305671; 
+  //                              background-color: #fff;   
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;">${moment(txn[0].transaction_data.course_start).format("LL")}</td>
+  //                           <td style="width: 26%;color: #305671; 
+  //                              background-color: #fff;   
+  //                              text-align: right;    
+  //                              font-size: 1em;
+  //                              padding: 1.2em 1em;padding-right: 20px;">$${txn[0].amount}</td>
+  //                        </tr>
+  //                     </tbody>
+  //                     <tfoot>
+  //                        <tr>
+  //                           <td colspan="3" style="font-weight: bold;
+  //                              border-top: 1px solid rgba(48, 86, 113, 0.5);
+  //                              text-align: right; 
+  //                              padding: 1.2em 1em;    
+  //                              font-size: 0.8em;">Total  :</td>
+  //                           <td colspan="1" style="font-weight: bold;
+  //                              border-top: 1px solid rgba(48, 86, 113, 0.5);
+  //                              text-align: right; 
+  //                              padding: 1.2em 1em;    
+  //                              font-size: 0.8em;padding-right: 20px;">$${txn[0].amount}</td>
+  //                        </tr>
+  //                     </tfoot>
+  //                  </table>
+  //               </div>
+  //               <div class="tableWrapper" style="margin-top: 3em;">
+  //                  <table class="tableQ" border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
+  //                     <thead style="width: 100%;">
+  //                        <tr>
+  //                           <th style="width: 30%; background-color: #305671 !important; 
+  //                              color: #fff;
+  //                              font-weight: 700;    
+  //                              font-size: 0.8em;
+  //                              text-align: left;
+  //                              padding: 1.2em 1em;padding-left: 20px;">Description</th>
+  //                           <th style="width: 35%;background-color: #305671 !important; 
+  //                              color: #fff;
+  //                              font-weight: 700;  
+  //                              font-size: 0.8em;
+  //                              text-align: left;
+  //                              padding: 1.2em 1em;">Payment Mode</th>
+  //                           <th class="left" style="width: 20%;background-color: #305671 !important; 
+  //                              color: #fff;
+  //                              font-weight: 700;  
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;text-align: left;">Transaction ID</th>
+  //                           <th style="width: 15%;background-color: #305671 !important; 
+  //                              color: #fff;
+  //                              font-weight: 700;  
+  //                              text-align: right;    
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;padding-right: 20px;">Total </th>
+  //                        </tr>
+  //                     </thead>
+  //                     <tbody>
+  //                        ${txn.map(el => (
+  //     `<tr>
+  //                           <td style="width: 30%;color: #305671; 
+  //                              background-color: #fff; 
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;padding-left: 20px;">${(!isRefund) ? (el.transaction_type === "tuiton_fees") ? "Tuition Fees" : el.transaction_type.charAt(0).toUpperCase() + el.transaction_type.slice(1) : el.note}</td>
+  //                           <td style="width: 35%;color: #305671; 
+  //                              background-color: #fff;  
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;">${el.payment_via.charAt(0).toUpperCase() + el.payment_via.slice(1)}</td>
+  //                           <td class="left" style="width: 20%;color: #305671; 
+  //                              background-color: #fff;   
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;text-align: left;">${(el.transactionId) ? el.transactionId : el.transaction_id}</td>
+  //                           <td style="width: 15%;color: #305671; 
+  //                              background-color: #fff;   
+  //                              text-align: right;    
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;padding-right: 20px;">$${el.amount}</td>
+  //                        </tr>
+  //                        `))}
+  //                     </tbody>
+  //                     <tfoot>
+  //                        <tr class="bigfooter">
+  //                           ${(txn[0].payment_via !== "cash" && !isRefund) ? (`
+  //                           <td class="left" style="font-weight: bold; padding: 1.2em 1em;padding-left: 20px; text-align: left;font-size: 0.7em;">
+  //                              <p> <span style="color: #97AAB8;">${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? "Bank Details:" : "Credit Card Details:"}:</span>  XXXX${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? txn[0].payment_resp.bank_account.last4 : txn[0].payment_resp.card.last4}</p>
+  //                              <p> <span style="color: #97AAB8;">${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? "Routing Number:" : "Expiry Date:"} </span> ${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? txn[0].payment_resp.bank_account.routing_number : txn[0].payment_resp.card.expiration_month + "/" + txn[0].payment_resp.card.expiration_year}</p>
+  //                           </td>
+  //                           `) : (`
+  //                           <td class="left" style="font-weight: bold; padding: 1.2em 1em;padding-left: 20px; text-align: left;font-size: 0.7em;">${(isRefund) ? "Refunded via original Method" : txn[0].payment_via}</td>
+  //                           `)}
+  //                           <td style="text-align: left;font-weight: bold;
+  //                              text-align: right; 
+  //                              padding: 1.2em 1em;    
+  //                              font-size: 0.8em;">&nbsp;</td>
+  //                           <td class="text6 left" style="font-weight: bold;
+  //                              padding: 1.2em 1em;    
+  //                              font-size: 1em;">Total ${(isRefund) ? "Refunded" : "Paid"} :</td>
+  //                           <td class="text6" style="font-weight: bold;
+  //                              text-align: right; 
+  //                              padding: 1.2em 1em;    
+  //                              font-size: 1em;">$${txn[0].amount}</td>
+  //                        </tr>
+  //                     </tfoot>
+  //                  </table>
+  //               </div>
+  //            </div>
+  //            <div class="footer" style="width: 100%;padding: 10px 10px 10px 10px; box-sizing: border-box;font-family: 'PT Serif', serif;">
+  //               <p class="text7" style="color: #97AAB8; font-size: 0.8em;">Note : This is a digitally generated document and does not require any signature.</p>
+  //               <p class="text8" style="font-size: 0.8em;border-top: 1px solid #ddd;padding-top: 10px;">© redbeltgym.com ${date.getFullYear()}</p>
+  //            </div>
+  //         </div>
+  //      </body>
+  //   </html>`;
+  //   return await html;
+  // };
 
-  const getProductPDFHTML = async (txn, contact, org) => {
-    const date = new Date();
-    const transactionDate = moment(txn[0].transaction_date).format("LLL");
-    const isRefund = (txn[0].amount < 0) ? true : false;
-    // const transactionDate = txn[0].transaction_date;
-    let subTotal = 0;
-    let html = `<!DOCTYPE html>
-    <html lang="en">
-       <head>
-          <link rel="preconnect" href="https://fonts.googleapis.com">
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-          <link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
-          <style>
-             * {
-             box-sizing: border-box;
-             font-family: 'PT Serif', serif;
-             color: #305671;
-             }
-             .tableQ tbody tr:nth-child(even) td{
-             background-color: #F5FAFF;      
-             }
-          </style>
-       </head>
-       <body style="box-sizing: border-box;
-          font-family: 'PT Serif', serif;
-          color: #305671;
-          padding: 0;
-          margin: 0;">
-          <div class="container" style="box-sizing:border-box;width: 100%;padding: 10px 10px 10px 10px;position: relative;">
-             <div class="header" style="box-sizing: border-box;font-family: 'PT Serif', serif;color: #305671;width: 100%;padding: 0px 20px;margin: 0;border-bottom: 1px solid rgba(48, 86, 113, 0.5);margin-bottom: 3em;">
-                <h2 style="font-weight: 700;
-                   font-size: 1.6em;
-                   line-height: 2em;
-                   text-align: center;
-                   text-decoration-line: underline;">Tax Invoice</h2>
-                <table class="table" border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
-                   <tr>
-                      <td class="left" style="text-align: left;">
-                         <div class="org" style="font-weight: 700;
-                            font-size: 1.2em;
-                            line-height: 2em;">${org.name}</div>
-                      </td>
-                      <td class="right" style="text-align: right;">
-                         <p class="text1" style="font-weight: 700;
-                            font-size: 0.8em;
-                            line-height: 1em;">Invoice Number : <span style="font-weight: 400;"> ${txn[0]._id}</span></p>
-                         <p class="text1" style="font-weight: 700;
-                            font-size: 0.8em;
-                            line-height: 1em;">Date : <span style="font-weight: 400;"> ${transactionDate} </span></p>
-                      </td>
-                   </tr>
-                </table>
-             </div>
-             <div class="main" style="box-sizing: border-box;font-family: 'PT Serif', serif;color: #305671;padding: 0;margin: 0;">
-                <div class="text2 gap1" style="padding-left: 20px;font-size: 0.7em;
-                   padding-bottom: 0.9em;">Bill To,</div>
-                <div class="text3 gap1" style="padding-left: 20px;font-size: 1.29em;
-                   line-height: 1.2em;
-                   font-weight: 700;
-                   padding-bottom: 0.5em;">${contact.firstName + " " + contact.lastName}</div>
-                <div class="text4 gap1" style="padding-left: 20px;font-size: 0.9em;
-                   line-height: 1em;
-                   color: #97AAB8;
-                   padding-bottom: 0.5em;">${contact.email}</div>
-                <div class="text4 gap1" style="padding-left: 20px;font-size: 0.9em;
-                   line-height: 1em;
-                   color: #97AAB8;
-                   padding-bottom: 0.5em;">${(contact.phone?.number) ? contact.phone.dailCode + "-" + contact.phone?.number : ""}</div>
-                <div class="tableWrapper" style="margin-top: 3em;">
-                   <table class="tableQ" border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
-                      <thead style="width: 100%;">
-                         <tr>
-                            <th style="width: 4%;background-color: #305671; 
-                               color: #fff;
-                               font-weight: 700;   
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;padding-left: 20px;">No.</th>
-                            <th style="width: 42%;background-color: #305671; 
-                               color: #fff;
-                               font-weight: 700;   
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;">Description</th>
-                            <th style="width: 8%;background-color: #305671; 
-                               color: #fff;
-                               font-weight: 700;  
-                               text-align: right;    
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;">Color</th>
-                            <th style="width: 8%;background-color: #305671; 
-                               color: #fff;
-                               font-weight: 700;  
-                               text-align: right;    
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;">Size</th>
-                            <th style="width: 15%;background-color: #305671; 
-                               color: #fff;
-                               font-weight: 700;  
-                               text-align: right;    
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;">Price</th>
-                            <th style="width: 8%;background-color: #305671; 
-                               color: #fff;
-                               font-weight: 700;  
-                               text-align: right;    
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;">Qty</th>
-                            <th style="width: 15%;background-color: #305671; 
-                               color: #fff;
-                               font-weight: 700;  
-                               text-align: right;    
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;padding-right: 20px;">Total</th>
-                         </tr>
-                      </thead>
-                      <tbody>
-                         ${txn[0]?.transaction_data.map((el, index) => {
-      const price = (!isRefund) ? Number((el?.price * el?.qnty)) : txn[0].amount;
-      subTotal = (!isRefund) ? subTotal + price : txn[0].amount;
-      return (
-        `<tr>
-                                  <td style="width: 4%;color: #305671; 
-                                     background-color: #fff;   
-                                     font-size: 0.8em;
-                                     padding: 1.2em 1em;padding-left: 20px;">${index + 1}.</td>
-                                  <td style="width: 42%;color: #305671; 
-                                     background-color: #fff;   
-                                     font-size: 0.8em;
-                                     text-align: center;
-                                     padding: 1.2em 1em;">${(!isRefund) ? el.product : "Refund for " + el.product}</td>
-                                  <td style="width: 8%;color: #305671; 
-                                     background-color: #fff;   
-                                     text-align: right;    
-                                     font-size: 0.8em;
-                                     padding: 1.2em 1em;">${el?.color || "-"}</td>
-                                  <td style="width: 8%;color: #305671; 
-                                     background-color: #fff;   
-                                     text-align: right;    
-                                     font-size: 0.8em;
-                                     padding: 1.2em 1em;">${el?.size || "-"}</td>
-                                  <td style="width: 15%;color: #305671; 
-                                     background-color: #fff;   
-                                     text-align: right;    
-                                     font-size: 0.8em;
-                                     padding: 1.2em 1em;">${(!isRefund) ? "$" + el?.price : "-"}</td>
-                                  <td style="width: 8%;color: #305671; 
-                                     background-color: #fff;   
-                                     text-align: right;    
-                                     font-size: 0.8em;
-                                     padding: 1.2em 1em;">${(!isRefund) ? el?.qnty : "-"}</td>
-                                  <td style="width: 15%;color: #305671; 
-                                     background-color: #fff;   
-                                     text-align: right;    
-                                     font-size: 0.8em;
-                                     padding: 1.2em 1em;padding-right: 20px;">$${price.toFixed(2)}</td>
-                            </tr>`
-      );
-    })}
-                         <tr class="total">
-                            <td colspan="5" style="color: #305671; 
-                               background-color: #fff;   
-                               text-align: right;    
-                               font-size: 0.8em;
-                               padding: 0.5em 1em;">Sub Total  :</td>
-                            <td colspan="2" style="color: #305671; 
-                               background-color: #fff;   
-                               text-align: right;    
-                               font-size: 0.8em;
-                               padding: 0.5em 1em;padding-right: 20px;">$${subTotal.toFixed(2)}</td>
-                         </tr>
-                         <tr class="total">
-                            <td colspan="5" style="color: #305671; 
-                               background-color: #fff;   
-                               text-align: right;    
-                               font-size: 0.8em;
-                               padding: 0.5em 1em;">Tax  :</td>
-                            <td colspan="2" style="color: #305671; 
-                               background-color: #fff;   
-                               text-align: right;    
-                               font-size: 0.8em;
-                               padding: 0.5em 1em;padding-right: 20px;">${(!isRefund) ? "$" + (txn[0].amount - subTotal).toFixed(2) : "-"}</td>
-                         </tr>
-                      </tbody>
-                      <tfoot>
-                         <tr>
-                            <td colspan="5" style="font-weight: bold;
-                               border-top: 1px solid rgba(48, 86, 113, 0.5);
-                               text-align: right; 
-                               padding: 1.2em 1em;    
-                               font-size: 0.8em;">Total  :</td>
-                            <td colspan="2" style="font-weight: bold;
-                               border-top: 1px solid rgba(48, 86, 113, 0.5);
-                               text-align: right; 
-                               padding: 1.2em 1em;    
-                               font-size: 0.8em;padding-right: 20px;">$${(txn[0].amount).toFixed(2)}</td>
-                         </tr>
-                      </tfoot>
-                   </table>
-                </div>
-                <div class="tableWrapper" style="margin-top: 3em;">
-                   <table class="tableQ" border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
-                      <thead style="width: 100%;">
-                         <tr>
-                            <th style="width: 30%; background-color: #305671 !important; 
-                               color: #fff;
-                               font-weight: 700;    
-                               font-size: 0.8em;
-                               text-align: left;
-                               padding: 1.2em 1em;padding-left: 20px;">Description</th>
-                            <th style="width: 35%;background-color: #305671 !important; 
-                               color: #fff;
-                               font-weight: 700;  
-                               font-size: 0.8em;
-                               text-align: left;
-                               padding: 1.2em 1em;">Payment Mode</th>
-                            <th class="left" style="width: 20%;background-color: #305671 !important; 
-                               color: #fff;
-                               font-weight: 700;  
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;text-align: left;">Transaction ID</th>
-                            <th style="width: 15%;background-color: #305671 !important; 
-                               color: #fff;
-                               font-weight: 700;  
-                               text-align: right;    
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;padding-right: 20px;">Total </th>
-                         </tr>
-                      </thead>
-                      <tbody>
-                         ${txn.map(el => {
-      const desc = (!isRefund) ? (el.transaction_type === "tuiton_fees") ? "Tuition Fees" : el.transaction_type.charAt(0).toUpperCase() + el.transaction_type.slice(1) : el.note;
-      return (
-        `
-                         <tr>
-                            <td style="width: 30%;color: #305671; 
-                               background-color: #fff; 
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;padding-left: 20px;">${desc}</td>
-                            <td style="width: 35%;color: #305671; 
-                               background-color: #fff;  
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;">${el.payment_via.charAt(0).toUpperCase() + el.payment_via.slice(1)}</td>
-                            <td class="left" style="width: 20%;color: #305671; 
-                               background-color: #fff;   
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;text-align: left;">${(el.transactionId) ? el.transactionId : el.transaction_id}</td>
-                            <td style="width: 15%;color: #305671; 
-                               background-color: #fff;   
-                               text-align: right;    
-                               font-size: 0.8em;
-                               padding: 1.2em 1em;padding-right: 20px;">$${el.amount.toFixed(2)}</td>
-                         </tr>
-                         `
-      )
-    })}
-                      </tbody>
-                      <tfoot>
-                         <tr class="bigfooter">
-                            ${(txn[0].payment_via !== "cash" && !isRefund) ?
-        (`
-                            <td class="left" style="font-weight: bold; padding: 1.2em 1em;padding-left: 20px; text-align: left; font-size: 0.7em;">
-                               <p> <span style="color: #97AAB8;">${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? "Bank Details:" : "Credit Card Details:"}:</span>  XXXX${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? txn[0].payment_resp.bank_account.last4 : txn[0].payment_resp.card.last4}</p>
-                               <p> <span style="color: #97AAB8;">${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? "Routing Number:" : "Expiry Date:"} </span> ${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? txn[0].payment_resp.bank_account.routing_number : txn[0].payment_resp.card.expiration_month + "/" + txn[0].payment_resp.card.expiration_year}</p>
-                            </td>
-                            `) :
-        (`
-                            <td class="left" style="font-weight: bold; padding: 1.2em 1em;padding-left: 20px; text-align: left; font-size: 0.7em;">${(isRefund) ? "Refunded via original method" : ""}</td>
-                            `)}
-                            <td style="text-align: left;font-weight: bold; text-align: right; padding: 1.2em 1em; font-size: 0.8em;">&nbsp;</td>
-                            <td class="text6 left" style="font-weight: bold;
-                               padding: 1.2em 1em;    
-                               font-size: 1em;">${(isRefund) ? "Total Refunded" : "Total Paid"} :</td>
-                            <td class="text6" style="font-weight: bold;
-                               text-align: right; 
-                               padding: 1.2em 1em;    
-                               font-size: 1em;">$${txn[0].amount.toFixed(2)}</td>
-                         </tr>
-                      </tfoot>
-                   </table>
-                </div>
-             </div>
-             <div class="footer" style="width: 100%;padding: 10px 10px 10px 10px; box-sizing: border-box;font-family: 'PT Serif', serif;">
-                <p class="text7" style="color: #97AAB8; font-size: 0.8em;">Note : This is a digitally generated document and does not require any signature.</p>
-                <p class="text8" style="font-size: 0.8em;border-top: 1px solid #ddd;padding-top: 10px;">© redbeltgym.com ${date.getFullYear()}</p>
-             </div>
-          </div>
-       </body>
-    </html>`;
-    return await html;
-  };
+  // const getProductPDFHTML = async (txn, contact, org) => {
+  //   const date = new Date();
+  //   const transactionDate = moment(txn[0].transaction_date).format("LLL");
+  //   const isRefund = (txn[0].amount < 0) ? true : false;
+  //   // const transactionDate = txn[0].transaction_date;
+  //   let subTotal = 0;
+  //   let html = `<!DOCTYPE html>
+  //   <html lang="en">
+  //      <head>
+  //         <link rel="preconnect" href="https://fonts.googleapis.com">
+  //         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  //         <link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&display=swap" rel="stylesheet">
+  //         <style>
+  //            * {
+  //            box-sizing: border-box;
+  //            font-family: 'PT Serif', serif;
+  //            color: #305671;
+  //            }
+  //            .tableQ tbody tr:nth-child(even) td{
+  //            background-color: #F5FAFF;      
+  //            }
+  //         </style>
+  //      </head>
+  //      <body style="box-sizing: border-box;
+  //         font-family: 'PT Serif', serif;
+  //         color: #305671;
+  //         padding: 0;
+  //         margin: 0;">
+  //         <div class="container" style="box-sizing:border-box;width: 100%;padding: 10px 10px 10px 10px;position: relative;">
+  //            <div class="header" style="box-sizing: border-box;font-family: 'PT Serif', serif;color: #305671;width: 100%;padding: 0px 20px;margin: 0;border-bottom: 1px solid rgba(48, 86, 113, 0.5);margin-bottom: 3em;">
+  //               <h2 style="font-weight: 700;
+  //                  font-size: 1.6em;
+  //                  line-height: 2em;
+  //                  text-align: center;
+  //                  text-decoration-line: underline;">Tax Invoice</h2>
+  //               <table class="table" border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
+  //                  <tr>
+  //                     <td class="left" style="text-align: left;">
+  //                        <div class="org" style="font-weight: 700;
+  //                           font-size: 1.2em;
+  //                           line-height: 2em;">${org.name}</div>
+  //                     </td>
+  //                     <td class="right" style="text-align: right;">
+  //                        <p class="text1" style="font-weight: 700;
+  //                           font-size: 0.8em;
+  //                           line-height: 1em;">Invoice Number : <span style="font-weight: 400;"> ${txn[0]._id}</span></p>
+  //                        <p class="text1" style="font-weight: 700;
+  //                           font-size: 0.8em;
+  //                           line-height: 1em;">Date : <span style="font-weight: 400;"> ${transactionDate} </span></p>
+  //                     </td>
+  //                  </tr>
+  //               </table>
+  //            </div>
+  //            <div class="main" style="box-sizing: border-box;font-family: 'PT Serif', serif;color: #305671;padding: 0;margin: 0;">
+  //               <div class="text2 gap1" style="padding-left: 20px;font-size: 0.7em;
+  //                  padding-bottom: 0.9em;">Bill To,</div>
+  //               <div class="text3 gap1" style="padding-left: 20px;font-size: 1.29em;
+  //                  line-height: 1.2em;
+  //                  font-weight: 700;
+  //                  padding-bottom: 0.5em;">${contact.firstName + " " + contact.lastName}</div>
+  //               <div class="text4 gap1" style="padding-left: 20px;font-size: 0.9em;
+  //                  line-height: 1em;
+  //                  color: #97AAB8;
+  //                  padding-bottom: 0.5em;">${contact.email}</div>
+  //               <div class="text4 gap1" style="padding-left: 20px;font-size: 0.9em;
+  //                  line-height: 1em;
+  //                  color: #97AAB8;
+  //                  padding-bottom: 0.5em;">${(contact.phone?.number) ? contact.phone.dailCode + "-" + contact.phone?.number : ""}</div>
+  //               <div class="tableWrapper" style="margin-top: 3em;">
+  //                  <table class="tableQ" border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
+  //                     <thead style="width: 100%;">
+  //                        <tr>
+  //                           <th style="width: 4%;background-color: #305671; 
+  //                              color: #fff;
+  //                              font-weight: 700;   
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;padding-left: 20px;">No.</th>
+  //                           <th style="width: 42%;background-color: #305671; 
+  //                              color: #fff;
+  //                              font-weight: 700;   
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;">Description</th>
+  //                           <th style="width: 8%;background-color: #305671; 
+  //                              color: #fff;
+  //                              font-weight: 700;  
+  //                              text-align: right;    
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;">Color</th>
+  //                           <th style="width: 8%;background-color: #305671; 
+  //                              color: #fff;
+  //                              font-weight: 700;  
+  //                              text-align: right;    
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;">Size</th>
+  //                           <th style="width: 15%;background-color: #305671; 
+  //                              color: #fff;
+  //                              font-weight: 700;  
+  //                              text-align: right;    
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;">Price</th>
+  //                           <th style="width: 8%;background-color: #305671; 
+  //                              color: #fff;
+  //                              font-weight: 700;  
+  //                              text-align: right;    
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;">Qty</th>
+  //                           <th style="width: 15%;background-color: #305671; 
+  //                              color: #fff;
+  //                              font-weight: 700;  
+  //                              text-align: right;    
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;padding-right: 20px;">Total</th>
+  //                        </tr>
+  //                     </thead>
+  //                     <tbody>
+  //                        ${txn[0]?.transaction_data.map((el, index) => {
+  //     const price = (!isRefund) ? Number((el?.price * el?.qnty)) : txn[0].amount;
+  //     subTotal = (!isRefund) ? subTotal + price : txn[0].amount;
+  //     return (
+  //       `<tr>
+  //                                 <td style="width: 4%;color: #305671; 
+  //                                    background-color: #fff;   
+  //                                    font-size: 0.8em;
+  //                                    padding: 1.2em 1em;padding-left: 20px;">${index + 1}.</td>
+  //                                 <td style="width: 42%;color: #305671; 
+  //                                    background-color: #fff;   
+  //                                    font-size: 0.8em;
+  //                                    text-align: center;
+  //                                    padding: 1.2em 1em;">${(!isRefund) ? el.product : "Refund for " + el.product}</td>
+  //                                 <td style="width: 8%;color: #305671; 
+  //                                    background-color: #fff;   
+  //                                    text-align: right;    
+  //                                    font-size: 0.8em;
+  //                                    padding: 1.2em 1em;">${el?.color || "-"}</td>
+  //                                 <td style="width: 8%;color: #305671; 
+  //                                    background-color: #fff;   
+  //                                    text-align: right;    
+  //                                    font-size: 0.8em;
+  //                                    padding: 1.2em 1em;">${el?.size || "-"}</td>
+  //                                 <td style="width: 15%;color: #305671; 
+  //                                    background-color: #fff;   
+  //                                    text-align: right;    
+  //                                    font-size: 0.8em;
+  //                                    padding: 1.2em 1em;">${(!isRefund) ? "$" + el?.price : "-"}</td>
+  //                                 <td style="width: 8%;color: #305671; 
+  //                                    background-color: #fff;   
+  //                                    text-align: right;    
+  //                                    font-size: 0.8em;
+  //                                    padding: 1.2em 1em;">${(!isRefund) ? el?.qnty : "-"}</td>
+  //                                 <td style="width: 15%;color: #305671; 
+  //                                    background-color: #fff;   
+  //                                    text-align: right;    
+  //                                    font-size: 0.8em;
+  //                                    padding: 1.2em 1em;padding-right: 20px;">$${price.toFixed(2)}</td>
+  //                           </tr>`
+  //     );
+  //   })}
+  //                        <tr class="total">
+  //                           <td colspan="5" style="color: #305671; 
+  //                              background-color: #fff;   
+  //                              text-align: right;    
+  //                              font-size: 0.8em;
+  //                              padding: 0.5em 1em;">Sub Total  :</td>
+  //                           <td colspan="2" style="color: #305671; 
+  //                              background-color: #fff;   
+  //                              text-align: right;    
+  //                              font-size: 0.8em;
+  //                              padding: 0.5em 1em;padding-right: 20px;">$${subTotal.toFixed(2)}</td>
+  //                        </tr>
+  //                        <tr class="total">
+  //                           <td colspan="5" style="color: #305671; 
+  //                              background-color: #fff;   
+  //                              text-align: right;    
+  //                              font-size: 0.8em;
+  //                              padding: 0.5em 1em;">Tax  :</td>
+  //                           <td colspan="2" style="color: #305671; 
+  //                              background-color: #fff;   
+  //                              text-align: right;    
+  //                              font-size: 0.8em;
+  //                              padding: 0.5em 1em;padding-right: 20px;">${(!isRefund) ? "$" + (txn[0].amount - subTotal).toFixed(2) : "-"}</td>
+  //                        </tr>
+  //                     </tbody>
+  //                     <tfoot>
+  //                        <tr>
+  //                           <td colspan="5" style="font-weight: bold;
+  //                              border-top: 1px solid rgba(48, 86, 113, 0.5);
+  //                              text-align: right; 
+  //                              padding: 1.2em 1em;    
+  //                              font-size: 0.8em;">Total  :</td>
+  //                           <td colspan="2" style="font-weight: bold;
+  //                              border-top: 1px solid rgba(48, 86, 113, 0.5);
+  //                              text-align: right; 
+  //                              padding: 1.2em 1em;    
+  //                              font-size: 0.8em;padding-right: 20px;">$${(txn[0].amount).toFixed(2)}</td>
+  //                        </tr>
+  //                     </tfoot>
+  //                  </table>
+  //               </div>
+  //               <div class="tableWrapper" style="margin-top: 3em;">
+  //                  <table class="tableQ" border="0" cellspacing="0" cellpadding="0" style="width: 100%;">
+  //                     <thead style="width: 100%;">
+  //                        <tr>
+  //                           <th style="width: 30%; background-color: #305671 !important; 
+  //                              color: #fff;
+  //                              font-weight: 700;    
+  //                              font-size: 0.8em;
+  //                              text-align: left;
+  //                              padding: 1.2em 1em;padding-left: 20px;">Description</th>
+  //                           <th style="width: 35%;background-color: #305671 !important; 
+  //                              color: #fff;
+  //                              font-weight: 700;  
+  //                              font-size: 0.8em;
+  //                              text-align: left;
+  //                              padding: 1.2em 1em;">Payment Mode</th>
+  //                           <th class="left" style="width: 20%;background-color: #305671 !important; 
+  //                              color: #fff;
+  //                              font-weight: 700;  
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;text-align: left;">Transaction ID</th>
+  //                           <th style="width: 15%;background-color: #305671 !important; 
+  //                              color: #fff;
+  //                              font-weight: 700;  
+  //                              text-align: right;    
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;padding-right: 20px;">Total </th>
+  //                        </tr>
+  //                     </thead>
+  //                     <tbody>
+  //                        ${txn.map(el => {
+  //     const desc = (!isRefund) ? (el.transaction_type === "tuiton_fees") ? "Tuition Fees" : el.transaction_type.charAt(0).toUpperCase() + el.transaction_type.slice(1) : el.note;
+  //     return (
+  //       `
+  //                        <tr>
+  //                           <td style="width: 30%;color: #305671; 
+  //                              background-color: #fff; 
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;padding-left: 20px;">${desc}</td>
+  //                           <td style="width: 35%;color: #305671; 
+  //                              background-color: #fff;  
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;">${el.payment_via.charAt(0).toUpperCase() + el.payment_via.slice(1)}</td>
+  //                           <td class="left" style="width: 20%;color: #305671; 
+  //                              background-color: #fff;   
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;text-align: left;">${(el.transactionId) ? el.transactionId : el.transaction_id}</td>
+  //                           <td style="width: 15%;color: #305671; 
+  //                              background-color: #fff;   
+  //                              text-align: right;    
+  //                              font-size: 0.8em;
+  //                              padding: 1.2em 1em;padding-right: 20px;">$${el.amount.toFixed(2)}</td>
+  //                        </tr>
+  //                        `
+  //     )
+  //   })}
+  //                     </tbody>
+  //                     <tfoot>
+  //                        <tr class="bigfooter">
+  //                           ${(txn[0].payment_via !== "cash" && !isRefund) ?
+  //       (`
+  //                           <td class="left" style="font-weight: bold; padding: 1.2em 1em;padding-left: 20px; text-align: left; font-size: 0.7em;">
+  //                              <p> <span style="color: #97AAB8;">${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? "Bank Details:" : "Credit Card Details:"}:</span>  XXXX${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? txn[0].payment_resp.bank_account.last4 : txn[0].payment_resp.card.last4}</p>
+  //                              <p> <span style="color: #97AAB8;">${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? "Routing Number:" : "Expiry Date:"} </span> ${(txn[0].payment_resp.hasOwnProperty("bank_account")) ? txn[0].payment_resp.bank_account.routing_number : txn[0].payment_resp.card.expiration_month + "/" + txn[0].payment_resp.card.expiration_year}</p>
+  //                           </td>
+  //                           `) :
+  //       (`
+  //                           <td class="left" style="font-weight: bold; padding: 1.2em 1em;padding-left: 20px; text-align: left; font-size: 0.7em;">${(isRefund) ? "Refunded via original method" : ""}</td>
+  //                           `)}
+  //                           <td style="text-align: left;font-weight: bold; text-align: right; padding: 1.2em 1em; font-size: 0.8em;">&nbsp;</td>
+  //                           <td class="text6 left" style="font-weight: bold;
+  //                              padding: 1.2em 1em;    
+  //                              font-size: 1em;">${(isRefund) ? "Total Refunded" : "Total Paid"} :</td>
+  //                           <td class="text6" style="font-weight: bold;
+  //                              text-align: right; 
+  //                              padding: 1.2em 1em;    
+  //                              font-size: 1em;">$${txn[0].amount.toFixed(2)}</td>
+  //                        </tr>
+  //                     </tfoot>
+  //                  </table>
+  //               </div>
+  //            </div>
+  //            <div class="footer" style="width: 100%;padding: 10px 10px 10px 10px; box-sizing: border-box;font-family: 'PT Serif', serif;">
+  //               <p class="text7" style="color: #97AAB8; font-size: 0.8em;">Note : This is a digitally generated document and does not require any signature.</p>
+  //               <p class="text8" style="font-size: 0.8em;border-top: 1px solid #ddd;padding-top: 10px;">© redbeltgym.com ${date.getFullYear()}</p>
+  //            </div>
+  //         </div>
+  //      </body>
+  //   </html>`;
+  //   return await html;
+  // };
 
   // Overdue Transactions
   const overdueListPageNo = (e) => {
@@ -1064,7 +1065,7 @@ const Transaction = (props) => {
         setOverdueTransactionList([...overdueTransactionList, ...response.transactions]);
       }
       setOverduePagination(response.pagination);
-      console.log("Overdue transaction response ", response);
+      // console.log("Overdue transaction response ", response);
     } catch (e) {
 
     } finally {
@@ -1095,6 +1096,14 @@ const Transaction = (props) => {
     setOverdueOptIndex(index !== overdueOptIndex ? index : null);
     if (overdueOptIndex != null) {
       setOverdueOptIndex(null);
+    }
+  };
+
+  const showOverdueTrxHistory = (index) => {
+    if (overdueHistoryIndex === index) {
+      setOverdueHistoryIndex(null);
+    } else {
+      setOverdueHistoryIndex(index);
     }
   };
   // Overdue Transactions
@@ -1329,13 +1338,8 @@ const Transaction = (props) => {
                 {/* </div> */}
                 {oldTransactionList && oldTransactionList.length > 0 ? oldTransactionList.map((item, index) => {
                   return (
-                    //  <div className="indRowWrapers">
-
-
-
-                    <div className={item.history && item.history[0] && item.history[0].status == "success" ? "row success withHistory" : (item.history && item.history[0] && item.history[0].status == "failed" && item.history[0].amount > 0 ? "row fail withHistory" : "row success withHistory")} key={index}>
+                    <div className={item.history && item.history[0] && item.history[0].status == "success" ? "row success withHistory" : (item.history && item.history[0] && item.history[0].status !== "success" && item.history[0].amount > 0 ? "row fail withHistory" : "row success withHistory")} key={index}>
                       <div className="cellWraperss">
-
                         <div className="cell particulars">
                           <div className="d-flex">
                             <div className="iconCont">
@@ -1362,7 +1366,7 @@ const Transaction = (props) => {
                             </div>
                             <div className="textCont">
                               <div className="status">
-                                {item.history && item.history[0] && item.history[0].status == "failed" && item.history[0].amount > 0 ? "failed" : "success"}
+                                {item.history && item.history[0] && item.history[0].status !== "success" && item.history[0].amount > 0 ? "failed" : "success"}
                                 {/* {item.history && item.history[0].amount < 0 && item.history[0].status == "success" ? 
                                 <span className="refundedTag">Refunded</span>
                                 : ""} */}
@@ -1445,7 +1449,7 @@ const Transaction = (props) => {
 
                             <button type="button" className={checkRefundAmount(item) && item.refunded_amount != Math.abs(item.amount).toFixed(2) ? "moreOptBtn" : "hide"} onClick={() => moreOptOpenOld(index)} ref={oldOptIndex === index ? openItemRef : null}></button>
                             <div className={oldOptIndex === index ? "optDropdown" : "optDropdown hide"}>
-                              {item.history && item.history[0] && item.history[0].status == "failed" && item.history[0].amount > 0 ?
+                              {item.history && item.history[0] && item.history[0].status !== "success" && item.history[0].amount > 0 ?
                                 <button type="button" className="retry" onClick={() => openCloseRetryModal(true, item)}>Retry</button>
                                 :
                                 <button type="button" className="refund" onClick={() => openRefundModal(item)}>Refund</button>
@@ -1466,7 +1470,7 @@ const Transaction = (props) => {
                           <div className="showDetails">
                             {item.history && item.history.map((element, key) => {
                               return (
-                                <div key={"oldhistory" + key} className={element.status == "failed" || element.status == "declined" ? "cellWrapers fail historyInnerInfo" : (element.amount < 0 ? "cellWrapers success refunded historyInnerInfo" : "cellWrapers success historyInnerInfo")}>
+                                <div key={"oldhistory" + key} className={element.status !== "success" ? "cellWrapers fail historyInnerInfo" : (element.amount < 0 ? "cellWrapers success refunded historyInnerInfo" : "cellWrapers success historyInnerInfo")}>
                                   <div className="cell particulars">
                                     <div className="d-flex">
                                       <div className="iconCont">
@@ -1486,7 +1490,7 @@ const Transaction = (props) => {
                                       </div>
                                       <div className="textCont">
                                         <div className="status">
-                                          {element.status == "failed" ? "failed" : (element.status == "declined" ? "declined" : (element.amount < 0 ? "refunded" : "successful"))}
+                                          {element.status !== "success" ? "failed" : (element.amount < 0 ? "refunded" : "successful")}
                                           {element.note && element.note != "" ?
                                             <div className="notePop">
                                               <div className="notePopIcon"></div>
@@ -1495,7 +1499,7 @@ const Transaction = (props) => {
                                                   <span>{element.amount < 0 ? "Reason: " : "Note: "}</span>
                                                   {element.note}
                                                 </p>
-                                                {element.status == "failed" && element.payment_resp.outcome.description ?
+                                                {element.status !== "success" && element.payment_resp.outcome.description ?
                                                   <p>
                                                     <span>Failed reason: </span>
                                                     {element.payment_resp.outcome.description}
@@ -1504,7 +1508,7 @@ const Transaction = (props) => {
 
                                               </div>
                                             </div>
-                                            : (element.status == "declined" || element.status == "failed" && element.payment_resp.outcome ?
+                                            : (element.status !== "success" && element.payment_resp.outcome ?
                                               <div className="notePop">
                                                 <div className="notePopIcon"></div>
                                                 <div className="notePopContent">
@@ -1541,7 +1545,7 @@ const Transaction = (props) => {
                                       </span>
                                     </span>
                                   </div>
-                                  {element.status !== "failed" &&
+                                  {(element.status === "success") &&
                                     <PDFDownloadLink
                                       document={<PDFDocument key={index} transactionData={element} contact={props.contact} org={org} transactionDate={utils.convertUTCToTimezone(element.transaction_date, timezone, 'LLL')} />}
                                       fileName={"Invoice_" + (element.transactionId) ? element.transactionId : element.transaction_id + ".pdf"}
@@ -1558,7 +1562,6 @@ const Transaction = (props) => {
                           : ""}
                       </div>
                     </div>
-
                   )
                 }) : ""}
 
@@ -1606,7 +1609,25 @@ const Transaction = (props) => {
                               }
                             </div>
                             <div className="textCont">
-                              <div className="status">Overdue</div>
+                            <div className="status">Overdue 
+                            {(item.history.length) ? (
+                                <div className="notePop" style={{color: "black"}}>
+                                  <div className="notePopIcon"></div>
+                                  <div className="notePopContent">
+                                    <span>Failed reason: </span> 
+                                    <span style={{color: '#9baebc', fontWeight: "normal"}}>Maximum number of retry limit exceeded</span>
+                                  </div>
+                                </div>
+                              ) : (
+                                  <div className="notePop" style={{color: "black"}}>
+                                    <div className="notePopIcon"></div>
+                                    <div className="notePopContent">
+                                      <span>Failed reason: </span> 
+                                      <span style={{color: '#9baebc', fontWeight: "normal"}}>System Failure</span>
+                                    </div>
+                                  </div>
+                              )}
+                              </div>
                               <div className="itemTitle">
                                 <span>{item.transaction_for == "course" ? "Program" : "Product"}: </span>
                                 <p>
@@ -1657,6 +1678,108 @@ const Transaction = (props) => {
                             </div>
                           </div>
                         </div>
+                        <div className="cellWrapers historyDetails">
+                        {(item.history.length) ? (
+                          <div className={overdueHistoryIndex == index ? "showMore hide" : "showMore warning"} onClick={() => showOverdueTrxHistory(index)}>
+                            <img src={dropVector} alt="" />
+                          </div>
+                        ):""}
+
+                        {overdueHistoryIndex == index ?
+                          <div className="showDetails">
+                            {item.history && item.history.map((element, key) => {
+                              return (
+                                <div key={"oldhistory" + key} className={element.status !== "success" ? "cellWrapers fail historyInnerInfo" : (element.amount < 0 ? "cellWrapers success refunded historyInnerInfo" : "cellWrapers success historyInnerInfo")}>
+                                  <div className="cell particulars">
+                                    <div className="d-flex">
+                                      <div className="iconCont">
+                                        <span>
+                                          {element.amount < 0 ?
+                                            <img src={refundIcon} alt="" />
+                                            : (element.payment_via == "cash" ?
+                                              <img src={cashSmallWhite} alt="" />
+                                              : (element.payment_via == "bank" ?
+                                                <img src={bankSmallWhite} alt="" />
+                                                :
+                                                <img src={cardSmallWhite} alt="" />
+                                              )
+                                            )
+                                          }
+                                        </span>
+                                      </div>
+                                      <div className="textCont">
+                                        <div className="status">
+                                          {element.status !== "success" ? "failed" : (element.amount < 0 ? "refunded" : "successful")}
+                                          {element.note && element.note != "" ?
+                                            <div className="notePop">
+                                              <div className="notePopIcon"></div>
+                                              <div className="notePopContent">
+                                                <p>
+                                                  <span>{element.amount < 0 ? "Reason: " : "Note: "}</span>
+                                                  {element.note}
+                                                </p>
+                                                {element.status !== "success" && element.payment_resp.outcome.description ?
+                                                  <p>
+                                                    <span>Failed reason: </span>
+                                                    {element.payment_resp.outcome.description}
+                                                  </p>
+                                                  : ""}
+
+                                              </div>
+                                            </div>
+                                            : (element.status !== "success" && element.payment_resp.outcome ?
+                                              <div className="notePop">
+                                                <div className="notePopIcon"></div>
+                                                <div className="notePopContent">
+                                                  <span>Failed reason: </span> {element.payment_resp.outcome.description}
+                                                </div>
+                                              </div>
+                                              : "")}
+                                        </div>
+                                        <div className="itemTitle">
+                                          <span>Transaction ID:&nbsp;</span> <p>{(element.transactionId) ? element.transactionId : element.transaction_id}</p>
+
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div className="cell amt">
+                                    <div className="amount" >
+                                      {/* $ {calculateTotalTransactionAmount(element.transaction_data)} */}
+                                      {/* ${(element.transaction_data?.amount)?element.transaction_data.amount : element.transaction_data[0].price} */}
+                                      $ {Math.abs(element.amount).toFixed(2)}
+                                    </div>
+                                  </div>
+
+                                  <div className="cell times">
+                                    <span className="time">
+                                      {/* {moment(element.transaction_date.split(" ")[1], 'hh:mm A').format('hh:mm A')} */}
+                                      {/* {element.transaction_date} <br /><br /> */}
+                                      {utils.convertUTCToTimezone(element.transaction_date, timezone, 'YYYY-MM-DD,hh:mm A').split(",")[1]}
+                                      <span className="historyDate">
+                                        {/* {element.transaction_date.split(" ")[0]}  */}
+                                        {/* {moment(element.transaction_date.split(" ")[0], 'YYYY-MM-DD').format('Do MMM, YYYY')} */}
+                                        {moment(utils.convertUTCToTimezone(element.transaction_date, timezone, 'YYYY-MM-DD,hh:mm A').split(",")[0]).format('Do MMM, YYYY')}
+                                      </span>
+                                    </span>
+                                  </div>
+                                  {(element.status === "success") &&
+                                    <PDFDownloadLink
+                                      document={<PDFDocument key={index} transactionData={element} contact={props.contact} org={org} transactionDate={utils.convertUTCToTimezone(element.transaction_date, timezone, 'LLL')} />}
+                                      fileName={"Invoice_" + (element.transactionId) ? element.transactionId : element.transaction_id + ".pdf"}
+                                    >
+                                      <button type="button" className="downloadInvoiceBtn" title="Download invoice"></button>
+                                    </PDFDownloadLink>
+                                  }
+                                </div>
+                              )
+                            })}
+
+                          </div>
+
+                          : ""}
+                      </div>
                       </div>
                     </div>
                   )

@@ -61,3 +61,8 @@
 
 # HOTFIX V1.1.5
     - Invoice pdf tax amount issue fixed 
+# SCRIPT V1.0.0
+    - clarity ms script add
+# HOTFIX: Transactions V2.0.0
+    - Global Transactions
+    - Contact Transactions
