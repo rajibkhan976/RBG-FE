@@ -7,6 +7,7 @@ import arrowDown from "../../assets/images/arrowDown.svg";
 import owner_img_1 from "../../assets/images/owner_img_1.png";
 import cash from "../../assets/images/cash2.svg";
 import card from "../../assets/images/card2.svg";
+import bank from "../../assets/images/bank2.svg";
 import refund from "../../assets/images/refund_icon_white.svg";
 import download from "../../assets/images/download2.svg";
 import noRecords from "../../assets/images/noRecords.svg";
@@ -127,11 +128,11 @@ const TransactionGlobal = (props) => {
     }
 
     useEffect(() => {
-        fetchTransHistoryList("1");
+        const pageNo = utils.getQueryVariable("page") || 1;
+        fetchTransHistoryList(pageNo);
     }, [modalId]);
 
     const getFilterStr = () => {
-
         console.log('dasdasdas')
         fetchTransHistoryList("1");
         setShowFilter(false);
@@ -139,7 +140,7 @@ const TransactionGlobal = (props) => {
 
     const paginationCallbackHandle = () => {
         let pageNo = utils.getQueryVariable("page");
-        fetchTransHistoryList();
+        fetchTransHistoryList(pageNo);
     };
 
     const clearFilter = () => {
@@ -148,9 +149,8 @@ const TransactionGlobal = (props) => {
         utils.removeQueryParameter('contact');
         utils.removeQueryParameter('fromDate');
         utils.removeQueryParameter('toDate');
-
-        fetchTransHistoryList(null, 1);
         utils.addQueryParameter("page", 1);
+        fetchTransHistoryList(1);
         setShowFilter(false);
 
 
@@ -269,7 +269,7 @@ const TransactionGlobal = (props) => {
                                                         {tHistory.status == "completed" ? "Success" : (tHistory.status === "active" ? "Failed" : tHistory.status)}</button>
                                                 </div>
                                                 <div class="listCell cellWidth_5 center">
-                                                    {tHistory?.history && tHistory.status !== "overdue" &&
+                                                    {tHistory?.history.length > 0 &&
                                                         <button className='noBg' onClick={() => { toggleOptions(key); }}><img src={arrowDown} className={option === key && "rotateround"} /></button>
                                                     }
 
@@ -289,7 +289,7 @@ const TransactionGlobal = (props) => {
                                                                     <div className='icons'>
                                                                         <span className={historylist.amount < 0 && historylist.status === "success" ? "round refund" :
                                                                             (historylist.status === "success" ? "round succes" : "round fail")}>
-                                                                            <img src={historylist.amount < 0 && historylist.status === "success" ? refund : (historylist.payment_via === "cash" ? cash : card)} />
+                                                                                <img src={historylist.amount < 0 && historylist.status === "success" ? refund : (historylist.payment_via === "cash" ? cash : historylist.payment_via === "bank" ? bank: card)} />
                                                                         </span>
                                                                     </div>
                                                                     <div className='listCell time'>

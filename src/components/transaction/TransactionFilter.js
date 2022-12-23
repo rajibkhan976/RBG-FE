@@ -60,6 +60,7 @@ function ImportTransactionFilter(props) {
             utils.removeQueryParameter('toDate');
         }
         
+        utils.addQueryParameter("page", 1);
         
 
         props.getFilterStr();
@@ -96,9 +97,10 @@ function ImportTransactionFilter(props) {
                                                         backgroundImage: "url(" + arrowDown + ")",
                                                     }}>
                                                 <option >Select </option>
-                                                <option >success</option>
-                                                <option >failed</option>
-                                                <option >overdue</option>
+                                                <option value="success">Success</option>
+                                                <option value="failed">Failed</option>
+                                                <option value="refund">Refund</option>
+                                                <option value="overdue">Overdue</option>
                                               
                                             </select>
                                         </div>
