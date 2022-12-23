@@ -490,7 +490,7 @@ function HeaderDashboard(props) {
     }
   }
   const handleClickOutside = (event)=>{
-    console.log(event);
+    // console.log(event);
     if (ref.current && !ref.current.contains(event.target)) {
       setSearchClick(false);
       // alert("click");

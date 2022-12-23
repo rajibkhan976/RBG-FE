@@ -229,6 +229,15 @@ export const utils = {
     },
     decodeHTML: (encodedStr) => {
         return Buffer.from(encodedStr, 'base64').toString();
+    },
+    dateDiff: (toDate, fromDate = null) => {
+        const startDate = fromDate || moment();
+        const endDate = moment(toDate);
+        const difference = startDate.diff(endDate, 'days');
+        return {
+            isUpcoming: (Math.sign(difference) === -1) ? true : false,
+            difference: Math.abs(difference)
+        };
     }
 
 }
