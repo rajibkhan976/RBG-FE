@@ -172,7 +172,8 @@ const EmailModal = (props) => {
             if (cursorStart || cursorStart == "0"
             ) {
                 var startToText = "";
-                subjectInput.value =
+                if(emailData.subject.length < 250){
+                    subjectInput.value =
                     subjectInput.value.substring(0, cursorStart) +
                     " [" +
                     e.target.textContent +
@@ -198,8 +199,10 @@ const EmailModal = (props) => {
                     startToText.length + 1,
                     startToText.length + 1
                 );
+            }
+          
 
-                // console.log(subjectInput, cursorStart, cursorEnd, textValue);
+             // console.log(subjectInput, cursorStart, cursorEnd, textValue);
             } else {
                 subjectInput.value = subjectInput.value + " [" + e.target.textContent + "] ";
 
@@ -615,6 +618,7 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                        id="newEmailTemplateSubject"
                                        ref={newEmailTemplateSubject}
                                        value={emailData.subject}
+                                       maxLength={250}
                                 />
                                 <button className="btn browseKeywords"
                                     type='button'

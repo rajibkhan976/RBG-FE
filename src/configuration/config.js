@@ -220,6 +220,9 @@ module.exports = {
     //Note on contact modal
     noteContactModalUrl: 'https://'+process.env.REACT_APP_CONTACT_MODAL_NOTE+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/contact/notes',
 
+    //communication log
+    communicationListUrl: 'https://'+process.env.REACT_APP_COMMUNICATION_LOG+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/communication/log',
+    inboxListUrl: 'https://'+process.env.REACT_APP_COMMUNICATION_LOG+'execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/communication/contact/log',
 
 
 }  

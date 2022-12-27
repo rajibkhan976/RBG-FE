@@ -1,4 +1,4 @@
-import Pagination from "../../../shared/Pagination";
+import Pagination from "../../../shared/Pagination"; 
 import React, {useEffect, useState} from "react";
 import {utils} from "../../../../helpers";
 import {EmailServices} from "../../../../services/setup/EmailServices";

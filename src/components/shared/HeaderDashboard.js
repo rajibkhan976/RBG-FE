@@ -23,6 +23,8 @@ import userPhoto from "../../assets/images/owner_img_1.png";
 import editIcon_white from "../../assets/images/edit_white2.png";
 import phone_call_icon_white from "../../assets/images/phone_call_icon_white.svg";
 import email_icon_white from "../../assets/images/email_icon_white.svg";
+import download_call_blue from "../../assets/images/download_call_blue.svg";
+
 import speaker_icon2 from "../../assets/images/speaker_icon2.svg";
 import help_icon from "../../assets/images/help_icon.svg";
 import headset_icon from "../../assets/images/headset_icon.svg";
@@ -35,7 +37,7 @@ import modalReducer from "../../reducers/modalReducer";
 import * as actionTypes from "../../actions/types";
 import { NotificationServices } from "../../services/notification/NotificationServices";
 import Loader from "./Loader";
-import { Link } from "react-router-dom";
+import { Link ,useLocation} from "react-router-dom";
 import { useHistory } from "react-router-dom";
 const { Device } = require('twilio-client');
 
@@ -91,6 +93,7 @@ function HeaderDashboard(props) {
 
   // const [zindexState, dispatchs] = useReducer(modalReducer, initialState);
 
+  const [communicationActive, setCommunicationActive] = useState(false);
 
 
 
@@ -264,6 +267,7 @@ function HeaderDashboard(props) {
 
     device.on("ready", (device) => {
       setDeviceMessage("Ready");
+      props.setDevice(device)
       pause();
     });
     device.on("connect", async (connection) => {
@@ -503,7 +507,7 @@ const closeDialog = ()=>{
   setStateUserMenu(false);
 }
 
-
+const pathURL = useLocation().pathname;
 
 
   return (
@@ -611,11 +615,14 @@ const closeDialog = ()=>{
             </div>
           </div>
         </div>
-        {/* <a href="https://xd.adobe.com/view/f428f5e1-01d0-4d64-a79c-482c686b1e38-a17b/screen/438f7332-a65e-4dd8-937b-b10284d5c189?fullscreen" target="_blank">
-          <button className="btn buttonHeaderIcons">
-            <img src={DownloadIcon} alt="" />
+        <Link to="/communicationLog">
+          
+          <button className={pathURL === "/communicationLog" ? "btn buttonHeaderIcons active": "btn buttonHeaderIcons "}
+                onClick={()=>setCommunicationActive(true)}
+               >
+              <img src={pathURL === "/communicationLog" ? download_call_blue : DownloadIcon} alt="" />
           </button>
-        </a> */}
+        </Link>
         <button
           className={
             setupModalStatus

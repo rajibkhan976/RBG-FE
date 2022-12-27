@@ -42,6 +42,7 @@ import CreditRoutes from "./setup/credit/CreditRoutes";
 import RestrictionPackageModal from "./setup/credit/package/RestrictionPackageModal";
 import AppointmentGlobal from "./appointment/AppointmentGlobalRouter";
 import TransactionGlobalRouter from "./transaction/TransactionGlobalRouter";
+import CommunicationLogRoutes from "./communicationLog/CommunicationLogRoutes";
 
 // For socket io connection
 //const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlProd;
@@ -100,9 +101,10 @@ const MainComponent = () => {
     const [notificationUnread, setNotificationUnread] = useState(0);
     const messageDelay = 5000; // ms
     const message = useSelector((state) => state.message);
-
-    const closeNotification = () => {
-        setIsNewFeaturesAvailable(false);
+    const [device, setDevice] = useState({});
+    const setDeviceData = (device) => {
+        console.log(device)
+        setDevice(device);
     }
     useEffect(() => {
 
@@ -220,6 +222,9 @@ const MainComponent = () => {
         }
     }, [isNewNotification])
     const modalId = useSelector((state) => state.contact.contact_modal_id);
+    const modalIdAlis = useSelector((state) => state);
+    console.log("modalIdAlis", modalId);
+    console.log("modalIdAlis", modalIdAlis);
     useEffect(async () => {
         let page = 1;
         if (typeof modalId === 'object') {
@@ -618,7 +623,9 @@ const MainComponent = () => {
     if (autoMatchUrl != null){
         gj = autoMatchUrl.url; 
     }
-    
+    const closeNotification = () => {
+        setIsNewFeaturesAvailable(false);
+    }
     return (
         <>
             <div className="mainComponent">
@@ -626,7 +633,7 @@ const MainComponent = () => {
                     className={
                         "dashboardBody d-flex " +
                         (pathURL === '/automation-list' || pathURL === '/automation-builder' ? ' automationBuilderBody ' : '') +
-                        (showInnerleftMenu ? ((pathURL !== '/dashboard' && pathURL !== '/appointment-global' && pathURL !== '/attendance-global' && pathURL !== gj && pathURL !== '/transaction-global') ? "openSubmenu" : "") : "")
+                        (showInnerleftMenu ? ((pathURL !== '/dashboard' && pathURL !== '/appointment-global' && pathURL !== '/attendance-global' && pathURL !== gj && pathURL !== '/transaction-global' && pathURL.toLowerCase()!=='/communicationlog') ? "openSubmenu" : "") : "")
                     }
                 >
                     <LeftMenu toggleLeftSubMenu={toggleLeftSubMenu} clickedSetupStatus={(e) => clickedSetupStatus(e)} />
@@ -640,6 +647,7 @@ const MainComponent = () => {
                             scrollNotification={(type) => scrollNotification(type)}
                             markSingleAsRead={(ele) => markSingleAsRead(ele)}
                             markAllAsRead={markAllAsRead}
+                            setDevice={setDeviceData}
                         />
                         <Switch>
                             <Route exact path="/dashboard">
@@ -734,6 +742,10 @@ const MainComponent = () => {
                                                    toggleCreate={(e) => toggleCreate(e)}></TransactionGlobalRouter>
                             </Route>
                             <Route exact path="/" component={() => <Redirect to="/dashboard"/>}/>
+                            <Route exact path="/communicationLog">
+                                <CommunicationLogRoutes toggleLeftSubMenu={toggleLeftSubMenu}
+                                    toggleCreate={(e) => toggleCreate(e)}></CommunicationLogRoutes>
+                            </Route>
                             <Route exact path="*">
                                 <NotFound toggleLeftSubMenu={toggleLeftSubMenu} toggleCreate={(e) => toggleCreate(e)} />
                             </Route>
@@ -745,7 +757,7 @@ const MainComponent = () => {
                     </div>
                 </div>
             </div>
-            {isShowContact && <ContactModal contactId={contactId} page={page} />}
+            {isShowContact && <ContactModal contactId={contactId} page={page} device={device}/>}
 
             {isNewFeaturesAvailable && <UpdateNotification version="2.10.1" closeNotification={closeNotification} />}
 
