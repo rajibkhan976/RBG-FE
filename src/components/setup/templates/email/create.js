@@ -63,34 +63,37 @@ const CreateTemplate = (props) => {
             if (cursorStart || cursorStart == "0"
             ) {
                 var startToText = "";
-                subjectInput.value =
-                subjectInput.value.substring(0, cursorStart) +
-                " [" +
-                e.target.textContent +
-                "] " +
-                subjectInput.value.substring(cursorEnd, textValue.length);
-    
-                // setNewMail({
-                //   ...newMail,
-                //   subject: subjectInput.value
-                // })
-                setEmailData({
-                  ...emailData,
-                  subject: subjectInput.value
-                })
-                startToText =
-                subjectInput.value.substring(0, cursorStart) +
-                  "[" +
-                  e.target.textContent +
-                  "]";
-    
-                subjectInput.focus();
-                subjectInput.setSelectionRange(
-                  startToText.length + 1,
-                  startToText.length + 1
-                );
-    
-                // console.log(subjectInput, cursorStart, cursorEnd, textValue);
+                    if(emailData.subject.length < 250){
+                        subjectInput.value =
+                        subjectInput.value.substring(0, cursorStart) +
+                        " [" +
+                        e.target.textContent +
+                        "] " +
+                        subjectInput.value.substring(cursorEnd, textValue.length);
+
+                    // setNewMail({
+                    //   ...newMail,
+                    //   subject: subjectInput.value
+                    // })
+                    setEmailData({
+                        ...emailData,
+                        subject: subjectInput.value
+                    })
+                    startToText =
+                        subjectInput.value.substring(0, cursorStart) +
+                        "[" +
+                        e.target.textContent +
+                        "]";
+
+                    subjectInput.focus();
+                    subjectInput.setSelectionRange(
+                        startToText.length + 1,
+                        startToText.length + 1
+                    );
+                }
+          
+
+             // console.log(subjectInput, cursorStart, cursorEnd, textValue);
             }
             else {
               subjectInput.value = subjectInput.value + " [" + e.target.textContent + "] ";
@@ -343,6 +346,7 @@ const CreateTemplate = (props) => {
                                         ref={newEmailTemplateSubject}  
                                         name="subject"
                                         value={emailData.subject}
+                                        maxLength={250}
                                     />
                                     <button
                                         className="btn browseKeywords"

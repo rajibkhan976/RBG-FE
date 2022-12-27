@@ -329,6 +329,7 @@ const EditorComponent = (props) => {
     // add keywords to send email template
     const editKeywordSendEmail = (e) => {
         e.preventDefault();
+        console.log("function target:: ", e.target.textContent);
         let iframeEdit = editorRef.current;
         let cursorStart = iframeEdit.selectionStart;
         let cursorEnd = iframeEdit.selectionEnd;
@@ -360,8 +361,12 @@ const EditorComponent = (props) => {
             console.log('iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii', range);
         }
     }
-  
+    // useEffect(() => {
+    //     setValue("") ;
+    //     console.log('vssssssssssssssssssssssssssssssssssssgvsdgvvvvvvvvvvv', value);
 
+    // }, [props.setEmailSend])
+ 
     // add error message on edit email header
     const checkEditTitle = (e) => {
         if (e.target.value.trim() === "" || e.target.value.length === 0) {
@@ -808,14 +813,14 @@ const EditorComponent = (props) => {
                                 id="createTextArea"
                                 ref={createTextArea}>
                                 {max && <h6>Email Body</h6>}
-                                {console.log(props.setTempSelected)}
+                                {console.log(props.setTempSelected, "setEmailSend" , props.setEmailSend)}
                                 <Editor
                                     apiKey="u8o9qjaz9gdqhefua3zs1lyixgg709tgzlqredwdnd0452z0"
                                     statusBar={true}
                                     onInit={(evt, editor) => (editorRef.current = editor)}
                                     onDirty={() => setDirty(true)}
                                     theme="advanced"
-                                    onEditorChange={(newText) => props.globalTemplateValue(newText)}
+                                    onEditorChange={ (newText) => props.globalTemplateValue(newText)}
                                     initialValue={props.setTempSelected && utils.decodeHTML(emailTemplate.template)}
                                     init={{
                                         height: "100%",
@@ -888,6 +893,9 @@ const EditorComponent = (props) => {
                                                             && smsTag.id !== "statusName"
                                                             && smsTag.id !== "phaseName"
                                                             && smsTag.id !== "contactType"
+                                                            && smsTag.id !== "ageGroup"
+                                                            && smsTag.id !== "sourceDetail"
+                                                            && smsTag.id !== "onTrial"
                                                         ) 
                                                     .map((tagItem, i) => (
                                                         <li key={"keyField" + i}>

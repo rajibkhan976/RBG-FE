@@ -66,3 +66,5 @@
 # HOTFIX: Transactions V2.0.0
     - Global Transactions
     - Contact Transactions
+# COMMUNICATION LOG V1.0.0
+    - Log list and inbox in contact modal

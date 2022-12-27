@@ -71,6 +71,7 @@ function ImportTransactionFilter(props) {
         setSelectItem(utils?.getQueryVariable("item"));
         setSelectName(utils?.getQueryVariable("contact"));
         setSelectedTo(utils?.getQueryVariable("toDate"));
+        console.log(utils?.getQueryVariable("toDate"));
         setSelectedFrom(utils?.getQueryVariable("fromDate"));
     }, []);
         
