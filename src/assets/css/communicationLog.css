@@ -1,0 +1,547 @@
+
+/* communication log */
+
+.comLogRight{
+  padding-right: 50px;
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.comLogRight .cmnFormField.radioGroup label {
+  font-size: 13px; 
+}
+
+.fieldNameRadio{
+  font-size: 13px;
+  color: var(--darkBlue);
+  width: 100%;
+  font-weight: 500;
+}
+.noBgButton {
+  background: none;
+  border: none;
+  line-height: 30px;
+}
+.communicationList{
+  padding-top: 25px;
+}
+.tableListing li > div:first-child.iconType {
+  min-width: 40px;
+  padding: 0 0 0 16px;
+}
+.tableListing li > div .comLogText{
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 20px;
+  color: #305671; 
+}
+
+.roundIconBase{
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #ddd;
+}
+.roundIconBase.darkblue{
+  background-color: #5570C9;
+}
+.roundIconBase.red{
+  background-color: #ED4755;
+}
+.roundIconBase.violet{
+  background-color: #6C22B5;
+}
+.roundIconBase.blue{
+  background-color: #009DFF;
+}
+.roundIconBase.liteblue{
+  background-color: #3EBCFF;
+}
+.roundIconBase.semiDarkBlue{
+  background-color: #1877F2;
+}
+.iconType .roundIconBase img{
+  width: auto;
+}
+.tableListing li > div.widthAuto {
+  min-width: 31px;
+  position: relative;
+}
+button.skytext{
+  color: #55BBC9;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  width: 62px;
+  justify-content: space-between;
+}
+.skytext{
+  color: #55BBC9;
+  font-size: 13px;
+}
+
+.tableListing li > div .doomed{
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  color: #9BAEBC;
+}
+.tableListing li > div .redTxt{
+  font-weight: 400;
+  font-size: 13px;
+  line-height: 20px;
+  color: #ED4755;
+}
+
+.tableListing li > div .comLogText img {
+  vertical-align: middle;
+}
+.tableListing.noHeader li:first-child {
+  background-color: #fff;
+}
+.tableListing li.space {
+  height: 80px;
+}
+.tableListing li > div.dateCommunication{
+  min-width: 150px;
+}
+.tableListing li > div.nameCommunication{
+  min-width: 390px;
+  cursor: pointer;
+}
+.tableListing li > div.detailCommunication{
+  min-width: 460px;
+}
+
+.listFeatures.rightSpace{
+  padding-right: 28px;
+}
+.saveNnewBtn.appFilter.expContactBtn.communicationBtnfilter {
+  margin-right: 20px;
+  margin-left: 5px;
+  border: 1px solid #C7DAEB;
+}
+.filterCommunication {
+  margin: 0 46px 0px 0;
+  border-top: 1px solid #ddd;
+  padding-top: 11px;
+}
+
+.halfDates.dateRange{
+  padding-left: 0px; 
+}
+
+.lastLiApp.btnLi{
+  padding-top: 30px;
+}
+.userListHead.lessGap{
+  margin-bottom: 30px;
+}
+
+.communicationList .info_3dot_icon {
+  top: calc(50% + -12px);
+  transform: none;
+}
+
+.communicationList .info_3dot_icon .dropdownOptions {
+  right: -3px;
+}
+
+
+
+/* ...................................inbox design.................... */
+
+/* .contactModal .contactTabsInner.inboxPage {
+  position: relative;
+  overflow: auto;
+  display: grid;
+  grid-auto-rows: min-content;
+  padding-bottom: 130px;
+} */
+.inboxPage {
+  position: relative;
+  overflow: auto;
+  display: grid;
+  grid-auto-rows: min-content;
+  padding-bottom: 130px;
+}
+.inboxChat{
+  padding: 20px 16px;
+  width: 62%;
+  margin-bottom: 30px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.incomingChat{ 
+  background: rgb(62 166 180 / 12%);
+  border-radius: 0 20px 20px 20px;
+  justify-self: flex-start;
+}
+
+.outgoingChat{
+  background: #DDEEFF;
+  border-radius: 20px 20px 0 20px;
+  justify-self: flex-end;
+}
+
+
+.inboxChat .msgTypeIcon{
+  width: 26px;
+  margin-right: 4px;
+}
+.inboxChat .txtArea{
+  width: calc(100% - 30px);
+}
+.inboxChat .txtArea h3 {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--darkBlue);
+  margin-bottom: 10px;
+}
+
+.inboxChat .info{
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--darkBlue);
+  display: flex;
+}
+.inboxChat .info span{
+  margin-right: 23px;
+  display: flex;
+  align-items: center;
+}
+.inboxChat .info span img{
+  margin-right: 5px;
+}
+.inboxChat .emailBody{
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: justify;
+  color: var(--darkBlue);
+  padding: 8px 0 20px 0;
+}
+.recording{
+  width: 70%;
+  margin: 0 0 15px 4px;
+  border: 1px solid #83828217;
+  border-radius: 5px;
+}
+
+.inboxChat .audio-player,
+.inboxChat .volume .volumeButton,
+.inboxChat .playerBody {
+  background: transparent;
+}
+.editingPanel{
+  position: absolute;
+  bottom: 70px;
+  left: 0;
+  width: 100%;
+  background: #FFFFFF;
+  max-height: 75%;
+  overflow: auto;
+}
+.editingPanel::-webkit-scrollbar {
+  width: 6px;
+}
+.editingPanel::-webkit-scrollbar-track {
+  background-color: #dce4eb;
+}
+.editingPanel::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
+}
+.editPanelHeader{
+  background: #F2F7FC;
+  height: 60px;
+  padding: 10px 32px;
+  border-top: 1px solid #DFE6ED;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.editPanelHeader .doomedTxt{
+  font-size: 14px;
+  line-height: 21px;
+  color: #9BAEBC;
+  padding: 0 30px 0 0;
+}
+.outLinedBtn{
+  background: transparent;
+  border: 1px solid #9BAEBC;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 13px;
+  font-weight: 400;
+  font-size: 13px;
+  color: #9BAEBC;
+  border-radius: 5px;
+  margin-right: 20px;
+}
+.outLinedBtn svg{
+  margin-right: 7px;
+}
+.outLinedBtn svg path{
+  stroke: #9BAEBC;
+}
+.outLinedBtn:hover:not(.active:hover){
+  background: var(--darkBlue);
+  border: 1px solid var(--darkBlue);
+  color: #fff;
+}
+.outLinedBtn:hover:not(.active:hover) svg path{
+  stroke: #fff;
+}
+.editPanelHeader .slideDown{
+  position: absolute;
+  right: 14px;
+  top: 16px;
+  background: transparent;
+  border: none;
+  display: inline-block;
+}
+.outLinedBtn.active{
+  border: 1px solid transparent;
+  position: relative;
+  color: #ED707A;
+}
+.outLinedBtn.active::after{
+  content: "";
+  width: 100%;
+  background: #ED707A;
+  height: 1px;
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+}
+.outLinedBtn.active svg path{
+  stroke: #ED707A;
+}
+.slideDown.none{
+  display: none;
+}
+.editFormBody{
+  padding: 0 54px;
+  overflow: auto;
+  height: auto;
+}
+.formBody{
+  padding: 30px 0;
+  min-height: 385px;
+}
+.editFormBody::-webkit-scrollbar {
+  width: 6px;
+}
+.editFormBody::-webkit-scrollbar-track {
+  background-color: #dce4eb;
+}
+.editFormBody::-webkit-scrollbar-thumb {
+  background-color: #f1a668;
+}
+.formBody .formSlice{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 22px;
+  align-items: center;
+}
+.formBody .formSlice .label{
+  width: 145px;
+  font-size: 13px;
+  line-height: 20px;
+  color: #305671;
+}
+.formBody .formSlice .cmnFieldStyle {
+  width: 52%;
+  font-size: 13px;
+}
+.formBody .formSlice select.cmnFieldStyle {
+  background: #f6f8fa url("../images/arrowDown.svg") 98% 64% no-repeat;
+}
+.formBody .formSlice textarea.cmnFieldStyle {
+  height: 100px;
+  width: 100%;
+}
+.textAreaHolder{
+  width: calc(100% - 145px);
+  position: relative;
+}
+.textAreaHolder .noBg{
+    position: absolute;
+    bottom: 3px;
+    right: 10px;
+    border: none;
+    background: none;
+}
+
+.msginfoTxt{
+  padding: 10px 0 0;
+  font-size: 10px;
+  line-height: 15px;
+  color: #9BAEBC;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.formBody .formSlice .saveNnewBtn{
+  width: 80px;
+}
+.formBody .formSlice .callOptions{
+  margin-top: 25px ;
+ 
+}
+.formBody .formSlice .callBtn{
+  Width: 180px;
+  Height: 40px;
+  line-height: 40px;
+  background: #46D35C;
+  border-radius: 5px;
+  color: #fff;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.formBody .formSlice .callBtn svg{
+  margin-right: 10px;
+}
+.formBody .formSlice .callBtn svg path{
+  stroke: #fff;
+}
+
+.formBody .formSlice .cmnFormField.radioGroup label {
+  margin-top: 0px;
+  font-size: 13px;
+}
+.formBody .formSlice .cmnFieldStyle.fitIn {
+  width: 100%;
+  padding-right: 37px;
+}
+.textAreaHolder.fitin button {
+  bottom: 11px;
+  right: 10px;
+}
+.formBody .formSlice.top{
+  align-items: flex-start;
+}
+.textAreaHolder .editorEmailShell:not(.maximize) {
+  width: 567px;
+  position: relative;
+  top: 0;
+  left: 0;
+  transform: translate(0, 0);
+  height: 450px;
+}
+
+.textAreaHolder .editorEmailShell .createEmailButtons {
+  position: relative;
+  bottom: 7px;
+  right: 0;
+  z-index: 1;
+  padding: 10px;
+  background: #F6F8FA;
+  border-radius: 0 0 4px 4px;
+  border: 1px solid #ddd;
+}
+.formSlice .cmnFormField.email{
+  width: calc(100% - 145px);
+  position: relative;
+}
+
+.communicationList .userListBody { 
+  height: 66vh;
+  overflow: visible;
+}
+.communicationList .userListBody .listBody{
+  height: inherit;
+}
+.communicationList .tableListing li:first-child > div:first-child.iconType {
+  padding: 0 0 0 16px;
+}
+.communicationList .userListBody .tableListing{
+  overflow: visible;
+}
+
+.showTemplateName li {
+  padding: 4px 10px;
+  font-size: 13px;
+  color: #305671;
+}
+
+.cmnFieldStyle.fitIn.error{
+  border: 1px solid #ed707a;
+}
+.editingPanel .textAreaHolder.fitin .browseKeywords {
+  bottom: auto;
+  top: 11px;
+  right: 10px;
+}
+
+.editingPanel .top.formSlice {
+  align-items: flex-start;
+}
+.editingPanel .top.formSlice .label{
+  margin-top: 10px;
+}
+.textAreaHolder .holder{
+  width: 100%;
+  position: relative;
+}
+.keywordBox .keywordList {
+  max-height: 224px;
+  overflow: auto;
+}
+.errorMsg.space{
+  padding-left: 20px;
+}
+.formSlice .saveNnewBtn:disabled{
+ opacity: 0.3;
+}
+.inboxChat .txtArea button.noBg {
+  padding: 18px 0 18px 0px;
+  font-size: 12px;
+  color: #ED707A;
+}
+.inboxChat .txtArea .areaOfText {
+  max-height: 135px;
+  overflow: hidden;
+}
+.slickModalBody.bigInbox{
+  width: 950px;
+}
+.modalForm.showMSG {
+  padding-left: 40px;
+  font-size: 12px;
+  color: #305671;
+  line-height: 22px;
+  position: relative;
+}
+.modalForm.showMSG h1,
+.modalForm.showMSG h2,
+.modalForm.showMSG h3{
+  padding: 10px 0;
+  font-size: 14px;
+}
+.modalForm.showMSG p {
+  padding: 10px 0;
+}
+.modalForm.showMSG .msgTypeIcon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px;
+  left: 8px;
+  position: absolute;
+  top: 11px;
+}
+.inboxChat .emailBody * {
+  line-height: 1;
+  margin: 2px 0 5px;
+} 

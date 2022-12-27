@@ -261,16 +261,16 @@ const Transaction = (props) => {
   };
 
   const upcomingListPageNo = (e) => {
-    if (!isScroll) {
-      let scrollHeight = e.target.scrollHeight;
-      let scrollTop = e.target.scrollTop;
-      if (scrollTop > (scrollHeight / 2)) {
-        if (upcomingPagination.currentPage < upcomingPagination.totalPages) {
-          fetchUpcomingTransactions(props.contactId, (upcomingPagination.currentPage + 1));
-        }
-        ;
-      }
-    }
+    // if (!isScroll) {
+    //   let scrollHeight = e.target.scrollHeight;
+    //   let scrollTop = e.target.scrollTop;
+    //   if (scrollTop > (scrollHeight / 2)) {
+    //     if (upcomingPagination.currentPage < upcomingPagination.totalPages) {
+    //       fetchUpcomingTransactions(props.contactId, (upcomingPagination.currentPage + 1));
+    //     }
+    //     ;
+    //   }
+    // }
   };
 
   const oldListPageNo = (e) => {

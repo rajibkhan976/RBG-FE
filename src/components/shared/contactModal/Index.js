@@ -9,6 +9,7 @@ import Dependents from "./pages/Dependents";
 import Appointment from "./pages/Appointment";
 import Automation from "./pages/Automation";
 import Notes from "./pages/notes/Notes";
+import Inbox from "./pages/inbox/Inbox";
 import {Step, Steps, NavigationComponentProps} from "react-step-builder";
 import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../../actions/types";
@@ -55,12 +56,16 @@ const ContactModal = (props) => {
                 <button className={navigation.current == 1 ? "active nNav" : "nNav"}
                         onClick={() => navigation.jump(1)}>Overview
                 </button>
+                <button className={navigation.current == 9 ? "active nNav" : "nNav"} onClick={() => navigation.jump(9)}
+                        disabled={props.contactId ? false : true}>Inbox
+                </button> 
                 <button className={navigation.current == 2 ? "active nNav" : "nNav"} onClick={() => navigation.jump(2)}
                         disabled={props.contactId ? false : true}>Attendance
                 </button> 
                 <button className={navigation.current == 3 ? "active nNav" : "nNav"} onClick={() => navigation.jump(3)}
                         disabled={props.contactId ? false : true}>Appointment
                 </button>
+                
                 <button className={navigation.current == 7 ? "active nNav" : "nNav"} onClick={() => navigation.jump(7)}
                         disabled={props.contactId ? false : true}>Automation
                 </button>
@@ -83,6 +88,7 @@ const ContactModal = (props) => {
                      <button className={navigation.current == 8 ? "active nNav" : "nNav"} onClick={() => navigation.jump(8)}
                         disabled={props.contactId ? false : true}>Notes
                     </button> 
+                    
                 {/* {contactData && !contactData.isDependent ?
                    <>
                    <button className="noFill" onClick={showExtraMenuHandler}><img src={threedot}/></button>  
@@ -124,7 +130,6 @@ const ContactModal = (props) => {
     }
 
 
-
     const config = {
         navigation: {
             component: Navigation,
@@ -149,7 +154,11 @@ const ContactModal = (props) => {
             contact_modal_id: '',
         });
     }
-     
+    const [device, setDevice] = useState(props.device);
+    useEffect(() => {
+        console.log("device222222", device)
+      setDevice(props.device);
+    }, [props.device]);
     //const [showContactTag, setShowContactTag] = useState(false);
     const [tagListToggle, setTagListToggle] = useState(false);
   
@@ -454,6 +463,7 @@ const ContactModal = (props) => {
                             
                             <Step title="Automation" component={Automation} contactId={props.contactId} />
                             <Step title="Note" component={Notes} contactId={props.contactId} />
+                            <Step title="Inbox" component={Inbox} contactId={props.contactId} contact={contactData} device={device}/>
                         </Steps>
                     </div>
                 </div>
