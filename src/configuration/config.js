@@ -222,7 +222,7 @@ module.exports = {
 
     //communication log
     communicationListUrl: 'https://'+process.env.REACT_APP_COMMUNICATION_LOG+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/communication/log',
-    inboxListUrl: 'https://'+process.env.REACT_APP_COMMUNICATION_LOG+'execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/communication/contact/log',
+    inboxListUrl: 'https://'+process.env.REACT_APP_COMMUNICATION_LOG+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/communication/contact/log',
 
 
 }  
