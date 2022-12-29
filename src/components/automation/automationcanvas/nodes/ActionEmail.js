@@ -15,8 +15,13 @@ export default memo(({ data }) => {
                 style={{ background: '#555', border: '4px solid #FFF' }}
             />
             <div style={style} className="actionNode actionNodeEmail">
-                {/* {data.label} */}
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24.663 18.539" className="triggerAction"><g transform="translate(-0.15 -4.15)"><path className="a" d="M11.716,21.839H1V5H23.963v7.654"></path><path className="a" d="M1,5l11.481,8.42L23.963,5"></path><path className="a" d="M25,18l3.062,3.062L25,24.123" transform="translate(-5.63 -3.049)"></path><line className="a" x1="7" transform="translate(15 18)"></line></g></svg>
+                <svg width="100" height="100" viewBox="0 0 63 63" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M53 0H10C4.47715 0 0 4.47715 0 10V53C0 58.5228 4.47715 63 10 63H53C58.5228 63 63 58.5228 63 53V10C63 4.47715 58.5228 0 53 0Z" fill="#BF974A"/>
+                    <path d="M30.716 39.839H20V23H42.963V30.654" stroke="#FFE7B9" stroke-width="1.7" stroke-linejoin="round"/>
+                    <path d="M20 23L31.481 31.42L42.963 23" stroke="#FFE7B9" stroke-width="1.7" stroke-linejoin="round"/>
+                    <path d="M38.3701 32.951L41.4321 36.013L38.3701 39.074" stroke="#FFE7B9" stroke-width="1.7" stroke-linejoin="round"/>
+                    <path d="M41 36H34" stroke="#FFE7B9" stroke-width="1.7" stroke-linejoin="round"/>
+                </svg>
             </div>
             <Handle
                 type="source"
@@ -24,8 +29,8 @@ export default memo(({ data }) => {
                 style={{ background: '#555', border: '4px solid #FFF' }}
             />
             <span className='autoTitle'>Email</span>
-            { data.metrics ? 
-                 <span className='metric'>                  <span>zxcxz</span>
+            { data.metrics ?
+                <span className='metric'>
                  <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M9.46953 5.99636C8.70117 5.98803 7.94358 6.17743 7.26953 6.54636C7.79141 7.01616 8.22581 7.57481 8.55253 8.19636L8.61353 8.31836V9.66236H13.5005V8.43936C13.1216 7.6981 12.5439 7.07695 11.8319 6.64547C11.12 6.214 10.302 5.98924 9.46953 5.99636Z" fill="black"/>
                       <path d="M9.5 4.5C10.8807 4.5 12 3.60457 12 2.5C12 1.39543 10.8807 0.5 9.5 0.5C8.11929 0.5 7 1.39543 7 2.5C7 3.60457 8.11929 4.5 9.5 4.5Z" fill="black"/>
@@ -34,7 +39,7 @@ export default memo(({ data }) => {
 
                  <span>{data.metrics.success}</span>
                </span>
-            : ""}
+                : ""}
         </React.Fragment>
     );
 });

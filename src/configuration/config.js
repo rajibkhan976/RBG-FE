@@ -208,10 +208,8 @@ module.exports = {
     //Dashboard widgets (drag n drop)
     dashboardWidgetsPosition : "https://" +process.env.REACT_APP_DASHBOARD_SAVE + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/widgets/",
 
-    // Global transaction history  
-    // transactionGlobalHistotyUrl : "https://" + process.env.REACT_APP_TRANSACTION + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/contact/transactions/list/",
-    // transactionGlobalHistotyUrl : "http://localhost:4000/dev/contact/transactions/list/",
-
+    // Global transaction history
+    transactionGlobalHistotyUrl : "https://" + process.env.REACT_APP_TRANSACTION + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/contact/transactions/list/",
     // global Email
     emailSetupUrl: 'https://'+process.env.REACT_APP_EMAIL_SETUP+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/communication/email/',
     emailTemplateUrl : 'https://'+process.env.REACT_APP_EMAIL_TEMPLATE+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+ '/email/',
@@ -219,10 +217,9 @@ module.exports = {
 
     //Note on contact modal
     noteContactModalUrl: 'https://'+process.env.REACT_APP_CONTACT_MODAL_NOTE+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/contact/notes',
-
     //communication log
     communicationListUrl: 'https://'+process.env.REACT_APP_COMMUNICATION_LOG+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/communication/log',
     inboxListUrl: 'https://'+process.env.REACT_APP_COMMUNICATION_LOG+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/communication/contact/log',
-
-
+    // Notification Group
+    notificationGroup: "https://" + process.env.REACT_APP_NOTIFICATION_GROUP + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV + "/notification-group/",
 }  

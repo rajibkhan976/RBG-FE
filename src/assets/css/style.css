@@ -1119,7 +1119,7 @@ input:focus + .searchIco #search-ico .a,
   align-items: center;
   justify-content: space-between;
   flex-direction: row;
-  font-size: 0;
+  /* font-size: 0; */
   padding: 0 20px;
 }
 
@@ -2429,7 +2429,7 @@ img.dropDownIcon {
   margin: 0;
   color: #fff;
   font-size: 20px;
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .nodeSettingModal .closeButton button {
@@ -2443,11 +2443,11 @@ img.dropDownIcon {
 }
 
 .nodeSettingModal .formBodyContainer {
-  padding: 20px 30px;
+  padding: 20px 30px 0px;
   width: 100%;
   overflow-y: auto;
   box-sizing: border-box;
-  max-height: calc(100vh - 90px);
+  /* max-height: calc(100vh - 90px); */
 }
 
 .nodeSettingModal .formBodyContainer::-webkit-scrollbar {
@@ -2526,10 +2526,39 @@ img.dropDownIcon {
 .nodeSettingModal .inputField label {
   color: var(--darkBlue);
   font-size: 13px;
+  margin-bottom: 12px;
+  display: inline-block;
+  font-weight: 600;
+}
+.nodeSettingModal .emailDetails .css-qc6sy-singleValue{
+  font-size: 13px;
+  color: #305671;
+}
+.nodeSettingModal .emailDetails .css-6j8wv5-Input{
+  padding-top: 0px;
+  padding-bottom: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 .nodeSettingModal .emailDetails {
   margin-top: 10px;
   width: 100%;
+}
+.nodeSettingModal .css-14el2xx-placeholder{
+  font-size: 12px;
+}
+.nodeSettingModal .emailDetails .css-1hb7zxy-IndicatorsContainer svg{
+  height: 100%;
+}
+.nodeSettingModal .emailDetails .css-1s2u09g-control{
+  background: #f6f8fa;
+}
+.nodeSettingModal .emailDetails .css-lpahdxg-control:hover{
+  border-color: transparent !important;
+}
+.nodeSettingModal .emailDetails .css-319lph-ValueContainer{
+  padding-top: 0px;
+  padding-bottom: 0px;
 }
 .nodeSettingModal .inputSubject {
   width: 100%;
@@ -2562,6 +2591,13 @@ img.dropDownIcon {
   padding: 0px 42px 0 15px;
   margin-top: 10px;
 }
+.nodeSettingModal .inputField.subjectInputField{
+  position: relative;
+}
+.nodeSettingModal .inputField .browseKeywords{
+  bottom: 11px;
+  right: 11px;
+}
 .nodeSettingModal .inputField input {
   width: 100%;
   height: 40px;
@@ -2575,6 +2611,7 @@ img.dropDownIcon {
   outline: none;
   box-sizing: border-box;
   background: #f6f8fa;
+  margin-top: 0px;
 }
 .nodeSettingModal .inputField input::placeholder {
   color: #9baebc;
@@ -2697,8 +2734,15 @@ img.dropDownIcon {
 
 .nodeSettingModal .formFieldsArea label {
   color: var(--darkBlue);
-  font-size: 13px;
+  font-size: 16px;
+  display: inline-block;
 }
+.nodeSettingModal .formFieldsArea > div > label, .nodeSettingModal .formFieldsArea > label{
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+.formFieldsArea ul.flex{display: flex; flex-wrap: wrap; margin-bottom: 30px;}
+.formFieldsArea ul.flex li{flex:0 0 50%;}
 .nodeSettingModal .formFields {
   margin-top: 10px;
   margin-bottom: 10px;
@@ -4737,6 +4781,7 @@ button.saveOverview img {
   position: relative;
   width: 100%;
 }
+.productSearchPanel.error input{border-color: #ed4755;}
 .productSearchPanel form {
   width: 100%;
 }
@@ -8560,6 +8605,7 @@ li.listHeading > div.sortOff:after {
   padding: 60px 38px;
   overflow: auto;
 }
+.phasesRightSetUpPanel .productSearchPanel .error{color: #ed4755; font-size: 12px; margin-top: 5px;}
 .phases li .listHeading {
   position: sticky;
   background: transparent;
@@ -8579,6 +8625,9 @@ li.listHeading > div.sortOff:after {
 
 .userListHead.phases {
   padding-right: 20px;
+}
+.dashInnerUI.phases .customtableListing li:not(.listHeading) div:last-child{
+  max-width: 12%;
 }
 .customtableListing li.listHeading{
   background-color: transparent;
@@ -8893,7 +8942,7 @@ li.listHeading > div.sortOff:after {
   /* filter: blur(1px); */
   background-color: #ddd;
   cursor: no-drop;
-} */
+}
 .showing_gym_data .gymName .logo_profile {
   width: 80px;
   height: 80px;
@@ -12476,7 +12525,7 @@ background-color: #fff;
   display: none;
 }
 .tagSettingModal .formBody .formBodyContainer {
-  min-height: 300px;
+  min-height: 350px;
 }
 .tagSettingModal .formBody .formBodyContainer .saveButton {
   margin-bottom: -144px;
@@ -13033,3 +13082,363 @@ background-color: #fff;
   opacity: 0.4;
   cursor:no-drop;
 }
+/* 13/10/22 suman css */
+/* custom checkbox */
+.cusCheckBox{
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.cusCheckBox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+.cusCheckBox .checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  background-color: transparent;
+  border:1px solid #305671;
+  border-radius: 3px;
+}
+.cusCheckBox.custonRadio .checkmark{
+  border-radius: 50%;
+}
+/* On mouse-over, add a grey background color */
+.cusCheckBox:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.cusCheckBox input:checked ~ .checkmark {
+  background-color: #305671;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.cusCheckBox .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.cusCheckBox input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.cusCheckBox .checkmark:after {
+  left: 5px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+
+.multiSelect .css-1rhbuit-multiValue{
+  background-color: #6AAAD9;
+  position: relative;
+  margin-left: 10px;
+}
+.multiSelect .css-1rhbuit-multiValue:after{
+  content: '';
+  position: absolute;
+  left: -7px;
+  top: 2px;
+  width: 17px;
+  height: 9px;
+  border: 8.5px solid #6AAAD9;
+  border-top-color: transparent;
+  border-left-color: transparent;
+  border-radius: 5px;
+  transform: rotate(135deg);
+}
+.multiSelect .css-1rhbuit-multiValue > div{
+  color: #ffffff;
+}
+.multiSelect .css-xb97g8{
+  cursor: pointer;
+}
+.multiSelect .css-xb97g8:hover{
+  background-color: transparent !important;
+  
+}
+.multiSelect .css-tj5bde-Svg{
+  border:1px solid #ffffff;
+  border-radius: 50%;
+}
+
+.noData{text-align: center;}
+.noData p{
+  font-size: 11px;
+  color: #9BAEBC;
+  line-height: 12px;
+  margin-bottom: 0px;
+}
+.noData img{
+  margin-bottom: 17px;
+}
+.noData button{
+  display: table;
+  margin:0 auto;
+  margin-top:17px;
+  color: #fff;
+  font-weight: 600;
+}
+.noData h3{
+  color: #305671;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 17px 0px;
+}
+.css-26l3qy-menu{box-shadow: 0px 0px 0px #ffffff !important; border:0px !important; margin: 0px !important;   }
+.css-26l3qy-menu > div{padding: 0px !important; margin: 0px !important; border:1px solid #dddddd !important; max-height: 300px !important;}
+.noData{
+  border:1px solid #dddddd !important;
+  background-color: #ffffff !important;
+  padding: 30px 0px;
+  border-radius: 5px;
+  box-shadow: 0px 5px 5px 10px #f1f1f1;
+}
+.addTagFromContainer.formBodyContainer{overflow: inherit}
+
+
+.transactionModal.nodeSettingModal .formBodyContainer{overflow-y: inherit;}
+.upCommingFormField{display: flex; align-items: center; justify-content: space-between; border:1px solid #D3D9DE; border-radius: 5px; margin-bottom: 48px;}
+.upCommingFormField .formControl{flex:0 0 80%;}
+.upCommingFormField input{border:0px; height: 40px; background-color: transparent; height: 40px; margin-top: 0px;}
+.upCommingFormField .upCommingSelect{flex:0 0 20%; border:0px solid transparent; font-size: 14px; height: 40px; border-left: 1px solid #D3D9DE; padding-left: 10px;}
+.upCommingFormField .upCommingSelect > div{border:0px;}
+.upCommingFormField .upCommingSelect .css-6j8wv5-Input{padding: 0px; margin: 0px;}
+.upCommingFormField  .css-319lph-ValueContainer{padding:0px !important;}
+.upCommingFormField  .css-1okebmr-indicatorSeparator{display: none;}
+.css-lpahdxg-control{box-shadow: 0px 0px 1px #ffffff !important;}
+.inFormField .multiSelect .css-1s2u09g-control, .inFormField .multiSelect .css-1pahdxg-control{height: inherit !important;}
+/* Trigger tag setting */
+.listTag{margin-bottom: 30px;}
+.tagTriggerSetting{margin-bottom: 98px;}
+.listTag li{margin-bottom: 20px;}
+.listTag label{margin-bottom: 0px;}
+.tagTriggerSetting{margin-bottom: 98px;}
+.automationActionSetting .listTag{margin-bottom: 98px;}
+.automationActionSetting .formBodyContainer{overflow-y: inherit;}
+/* notification module */
+.dashInnerUI.notification{
+  width: calc(100% - 470px);
+}
+.userListBody.notificationBody{padding-right: 0px; margin-right: 0px;}
+.userListBody.notificationBody .createNew.noInfos{margin-right: 0px;}
+
+.notiOption{width: 100%; }
+.notiOption li{flex:0 0 50%; }
+.notiOption li label{width: 100%; padding-left: 30px !important; padding-top: 0px !important; display: inline-block;}
+.userAddModalForm .formControl label{margin-bottom: 15px; padding: 0px;}
+
+.userAddModalForm .selectStatusSelect{width: 100%;}
+.userAddModalForm .contactOption{display: flex;}
+
+
+.customSelect{width: 100%;}
+.selectOption{ display: flex; align-items: center;}
+.customSelect .thumb{width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background-color: #dddddd; margin-right:10px; color: #ffffff; font-size: 12px; overflow: hidden;}
+.customSelect .thumb img{max-width: 100%; width: 100%;}
+.selectOption .name{font-size: 16px; color: #305671; margin: 0px; line-height: 20px;}
+.selectOption .email{font-size: 12px; color: #9BAEBC; margin: 0px; line-height: 15px;}
+.customSelect .css-9gakcf-option{background-color: transparent !important;}
+.customSelect .css-14el2xx-placeholder{font-size:14px;}
+.userAddModalForm .modalbtnHolder{margin-top: 70px;}
+.userAddModal .slickModalBody .modalForm{overflow: inherit; max-height: 34vh;}
+/* .userAddModal.modalBackdrop .slickModalBody{height: 100%;} */
+.css-qc6sy-singleValue .selectOption .thumb{display: none;}
+.userAddModal .formControl .error{font-size: 12px; color: #ed4755; margin-top: 0px;}
+
+.modalBackdrop.userAddModal.editUserModel .modalForm.userAddModalForm{max-height: 22vh;}
+.slickModalBody.editSlick .modalForm.userAddModalForm{max-height: 22vh;}
+.customSelect .css-1hb7zxy-IndicatorsContainer div{height: inherit;}
+.customSelect .css-319lph-ValueContainer{padding: 0px 8px;}
+.customtableListing.notificationGroupList .listHeading div{min-width: inherit; max-width: inherit;}
+.customtableListing.notificationGroupList .listHeading div:nth-child(1), .customtableListing.notificationGroupList li:not(.listHeading) div:nth-child(1){flex:0 0 25%;}
+.customtableListing.notificationGroupList .listHeading div:nth-child(2), .customtableListing.notificationGroupList li:not(.listHeading) div:nth-child(2){ flex:0 0 20%;}
+.customtableListing.notificationGroupList .listHeading div:nth-child(3), .customtableListing.notificationGroupList li:not(.listHeading) div:nth-child(3){ flex:0 0 25%;}
+.customtableListing.notificationGroupList .listHeading div:nth-child(4), .customtableListing.notificationGroupList li:not(.listHeading) div:nth-child(4){ flex: 0 0 20%;}
+.customtableListing.notificationGroupList .listHeading div:nth-child(5), .customtableListing.notificationGroupList li:not(.listHeading) div:nth-child(5){flex:0 0 10%;}
+.customtableListing.notificationGroupList li:not(.listHeading) div{min-width: inherit; max-width: inherit;}
+.notification .userListBody{padding-right: 0px; margin-right: 0px;}
+.customtableListing.notificationGroupList .cusCheckBox input:checked ~ .checkmark{background-color: #0093FF;}
+.customtableListing.notificationGroupList .cusCheckBox .checkmark{border-color: #0093FF; width:16px; height: 16px;}
+.customtableListing.notificationGroupList .cusCheckBox .checkmark:after{left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 9px;}
+  .customtableListing.notificationGroupList .statusEmail{color: #55BBC9;}
+  .customtableListing.notificationGroupList button{background-color: transparent; border:0px;}
+  .statusNameWraper .thumbImage{width: 40px; height: 40px; border-radius: 50%; margin-right: 15px; margin-left: 20px; overflow: hidden;}
+  .customtableListing.notificationGroupList li:not(.listHeading){margin-bottom: 10px;}
+.customtableListing.notificationGroupList .listHeading .statusNameField{display: flex;}
+.customtableListing.notificationGroupList .listHeading .statusNameField .cusCheckBox{margin-bottom: 0px; font-size: 12px; padding-left:0px;}
+.customtableListing.notificationGroupList .listHeading .cusCheckBox .checkmark{top: 5px;}
+.customtableListing.notificationGroupList .listHeading .headerCheckBox{border-radius: 5px; border:1px solid #0093FF; min-height: 28px; padding-left: 5px; margin-right: 15px; position: relative;}
+.customtableListing.notificationGroupList .listHeading .headerCheckBox .btn{float: right; padding: 5px 9px;}
+.customtableListing.notificationGroupList .listHeading .headerCheckBox .btn img{width: 12px; height:18px;}
+.customtableListing.notificationGroupList .listHeading .headerCheckBox .cusCheckBox{float: left;}
+.customtableListing.notificationGroupList .listHeading .dropdownOptions{right: inherit; left:0px;}
+.customtableListing.notificationGroupList .dropdownOptions{top:100%;}
+.customtableListing.notificationGroupList .statusEmail{word-break: break-all;}
+
+/* notification group checkbox */
+.customtableListing.notificationGroupList .cusCheckBox.allSelect{border:0px;}
+.customtableListing.notificationGroupList .listHeading .cusCheckBox .checkmark input{opacity: 0;}
+.customtableListing.notificationGroupList .listHeading .cusCheckBox .checkmark:after {
+  left: 5px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  content:"";
+  position: absolute;
+}
+.customtableListing.notificationGroupList .listHeading .cusCheckBox .checkmark::after{
+  left: 5px;
+  top: 2px;
+  width: 5px;
+  height: 9px;
+}
+.customtableListing.notificationGroupList li:not(.listHeading) .cusCheckBox .checkmark{
+   top:-3px;
+   left:4px;
+}
+.customtableListing.notificationGroupList .listHeading .cusCheckBox.singleSelect{border:0px;}
+.customtableListing.notificationGroupList .listHeading .cusCheckBox.singleSelect .checkmark{background-color: #0093FF;}
+.customtableListing.notificationGroupList .listHeading .cusCheckBox.singleSelect .checkmark::before{
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 2px;
+  background-color: #ffffff;
+  top: 6px;
+  left: 3px;
+}
+.customtableListing.notificationGroupList .headerCheckBox .cusCheckBox.withoutEditOption{}
+
+
+/* Notification group setting */
+.notificationGroupTags.nodeSettingModal{width: 80%; top:30%;}
+.notificationGroupTags.nodeSettingModal .formBodyContainer{overflow: inherit;}
+.notificationGroupTags.nodeSettingModal .formBodyContainer p{color: #305671; font-size: 16px; margin-bottom: 20px; font-weight: 600;}
+.notificationGroupTags.nodeSettingModal .formBodyContainer label{ font-size: 13px; color: #305671; margin-bottom: 9px; display: inline-block;}
+.notificationGroupTags.nodeSettingModal{width: 80%; top:46.2%;}
+.notificationGroupTags.nodeSettingModal .formBodyContainer{overflow: initial; display: inline-block; max-height: 100%;}
+.notificationGroupTags.nodeSettingModal .formBody{display: inline-block; width:100%; overflow-y: scroll;  max-height: 620px; padding-bottom: 32px;}
+.notificationGroupTags.nodeSettingModal .formBodyContainer p.title{color: #305671; font-size: 16px; margin-bottom: 20px; font-weight: 600;}
+.notificationGroupTags.nodeSettingModal .formBodyContainer label{ font-size: 13px; color: #305671; margin-bottom: 9px; display: inline-block;}
+.notificationSelectOption{border-radius: 5px; border:1px solid #D3D9DE; background-color: #F6F8FA; padding: 10px; padding: 30px 10px; position: absolute; width: 100%; top:100%; z-index: 3;}
+.notificationSelectOption h5{color: #305671; font-size: 14px; font-weight: 600; margin-left: 20px; margin-bottom:15px;}
+.notificationSelectOption ul{width: 100%; display: inline-block; }
+.notificationSelectOption ul.groupOption{border-bottom:1px solid #D3D9DE; margin-bottom:30px; padding-bottom: 30px;}
+.notificationSelectOption ul.groupOption > p{margin-left: 20px;}
+.notificationSelectOption ul.groupOption li{width: 100%; padding: 15px; display: flex; align-items: center; border-radius: 5px; cursor: pointer;}
+.notificationSelectOption ul.groupOption li:hover, .notificationSelectOption ul.userOption li:hover{background-color: #E5ECF2;}
+.notificationSelectOption ul.groupOption li .thum{margin-right: 15px;}
+.notificationSelectOption ul.groupOption li p{font-size: 13px; font-weight: 600; margin-bottom:0px; color: #305671;}
+.notificationSelectOption ul.groupOption li p span{background-color: #D3D9DE; padding: 4px 15px; font-size: 12px; display: inline-block; border-radius: 35px; margin-left: 20px;}
+.notificationSelectOption .userOption li{width:100%; }
+.notificationSelectOption ul.userOption li{display: flex; align-items: center;}
+.notiGroupSelect .css-1n7v3ny-option{background-color: transparent;}
+.notiGroupSelect .css-1n7v3ny-option{background-color: transparent;}
+.notiGroupSelect .notificationSelectOption{border-bottom:1px solid #D3D9DE;}
+/* .notiGroupSelect .css-4ljt47-MenuList .notificationSelectOption:last-child{border-bottom: 0px;} */
+
+.notificationSelectOption ul.userOption li{display: flex; align-items: center; padding: 11px 23px; border-radius: 5px; cursor: pointer;}
+.notificationSelectOption ul.userOption li div{flex: 0 0 calc(100% / 3)}
+.notificationSelectOption ul.userOption li .profile{display: flex; align-items: center;}
+.notificationSelectOption ul.userOption li .profile p{margin-bottom: 0px; color: #305671; font-size: 13px; font-weight: 400;}
+.notificationSelectOption ul.userOption li .profile .thum{width: 40px; height: 40px; overflow: hidden; border-radius: 50%; flex: 0 0 40px; margin-right: 15px;}
+.notificationSelectOption ul.userOption li .profile .thum img{max-width: 100%; width: 100%;}
+.notificationSelectOption ul.userOption li a{font-size: 13px; color: #55BBC9;}
+.notificationSelectOption ul.userOption li .email a{color: #55BBC9;}
+.notificationSelectOption ul.userOption li .phone a{color: #305671;}
+
+.noResult{padding: 84px 0px; background-color: #F6F8FA; text-align: center; border: 1px solid #D3D9DE; position: absolute; top:100%; width: 100%; border-radius: 5px; z-index: 3;}
+.noResult p{color: #9BAEBC; font-size: 12px; }
+.noResult h4{color: #305671; font-size: 16px; margin-bottom: 10px;}
+.notiGroupSelect{width:100%; border:1px solid #D3D9DE; border-radius: 5px; height: 55px;}
+
+
+.notificationGroupTags .notificationEmail{ width: 50%; float: left; padding: 20px; border-right: 1px solid #F6F8FA;}
+.notificationGroupTags .notificationEmail .emailTemplateForm{ background-color: #F6F8FA; padding: 20px 29px; display: inline-block;}
+.notificationGroupTags .notificationEmail .sendEmail{width: 100%; }
+.notificationGroupTags .notificationEmail .sendEmail{width: 100%; margin-bottom: 20px;}
+.notificationGroupTags .notificationEmail .sendEmail label{font-size: 16px; color: #305671; font-weight: 400;}
+.notificationGroupTags .notificationEmail .sendEmail label span{background-color: #305671 !important; border-color: #305671 !important;}
+.notificationGroupTags .notificationEmail .emailTemplateForm .cmnFormCol{width: 100%; margin-bottom: 20px;}
+.notificationGroupTags .notificationEmail .emailTemplateForm .cmnFormCol .cmnFieldName{font-weight: 500;}
+.notificationGroupTags .notificationEmail .emailTemplateForm .cmnFormCol .cmnFieldName span{color: #9BAEBC;}
+.notificationGroupTags .notificationEmail .emailTemplateForm .cmnFormCol.subject{position: relative;}
+.notificationGroupTags .notificationEmail .emailTemplateForm .cmnFormCol.editor{margin-bottom: 0px;}
+.notificationGroupTags .notificationEmail .emailTemplateForm .createInfo{margin-bottom: 20px;}
+.notificationGroupTags .notificationEmail .emailTemplateForm .createInfo h6{font-weight: 500; font-size: 13px; color: #305671; margin-bottom: 9px;}
+.notificationGroupTags .notificationEmail .emailTemplateForm .createInfo p{color: #305671; font-size: 11px; font-weight: 400;}
+.notificationGroupTags .notificationSms textarea{height: 160px;}
+.notificationGroupTags .cmnFormField{position: relative;}
+.notificationGroupTags .tagBtn{position: absolute; top:8px; right: 11px; padding: 0px; background-color: transparent; border: 0px;}
+.notificationGroupTags .tagBtn img{width: 25px; height: 25px;}
+.notificationGroupTags .tagBtn img, .bigIcon img{width: 25px; height: 25px;}
+.notificationGroupTags .tagBtn, .bigIcon, .tagIcon{position: absolute; top:8px; right: 11px; padding: 0px; background-color: transparent; border: 0px;}
+.notificationGroupTags .bigIcon img, .tagIcon img{width: 25px; height: 25px;}
+.bigIcon, .tagIcon{background-color: transparent;}
+.tagIcon{top:inherit; bottom: 0px;}
+.bigIcon {top: inherit; bottom: 0px; right:50px;}
+/* .notificationGroupTags .cmnFormField{} */
+.notificationGroupTags .tagBtn, .bigIcon, .tagIcon{position: absolute; top:8px; right: 11px; padding: 10px 10px; background-color: transparent; border: 0px;}
+.notificationGroupTags .tagBtn{top:30px;}
+.notificationGroupTags .bigIcon img, .tagBtn img{width: 25px; height: 25px;}
+.tagIcon img, .tagBtn img{height: 20px;}
+.notificationGroupTags .bigIcon, .notificationGroupTags .tagIcon{background-color: transparent; transition: 0.5s;}
+.tagIcon{top:inherit; bottom: 0px;}
+.bigIcon {top: inherit; bottom: 0px; right:50px;}
+
+
+.notificationGroupTags .emailTemplateForm .smallTextBox{transition: 0.5s; position: relative;}
+.notificationGroupTags .emailTemplateForm .bigTextbox{transform: scaleY(1.2) scaleX(1.2); z-index: 999; transition: 0.5s; position: relative;}
+.notificationGroupTags .emailTemplateForm .bigTextbox textarea{height: 200px;}
+.notificationGroupTags .emailTemplateForm .bigTextbox .tagIcon{display: none;}
+.notificationGroupTags .emailTemplateForm .bigTextbox .bigIcon{right: 10px;}
+.notificationGroupTags .tags{ background-color: #fff; border:1px solid #D3D9DE; border-radius: 5px;}
+.notificationGroupTags .tags ul{padding: 10px;}
+.notificationGroupTags .tags li{padding: 10px 10px; border-radius: 5px; font-size: 14px; color: #305671; font-weight: 500;}
+.notificationGroupTags .tags li:hover{background-color: #E5ECF2;}
+
+.notificationInput, .notificationSearch{position: relative;}
+.notificationInput .positionSet{position: absolute; top:10px; right: 10px; padding: 10px; border:0px; background-color: #ffffff;}
+.searchResult .cz_tagList{padding: 0px; margin:0px; margin-top: 19px;}
+
+.searchResult .cz_tagList{padding: 0px; margin:0px; margin-top: 19px; height: 100%;}
+.searchResult .cz_tagList .cz_tag{border-radius: 35px; background-color: #305671; height: 30px; padding-top: 3px;}
+.searchResult .cz_tagList .cz_tag:before{display: none;}
+.searchResult .cz_tagList .cz_tag button{top:7px;}
+.notificationGroupTags .btnGroup{float: left; width: 100%; text-align: center;}
+.notificationGroupTags .btnGroup button{padding:0px 30px;}
+/* .notificationGroupTags .notificationSearch .searchResult ul{display: flex; align-items: center; margin-top:19px;}
+.notificationGroupTags .notificationSearch .searchResult ul li{background-color: #55BBC9; font-size: 13px; color: #ffffff; padding: 4px 10px; border-radius: 35px; margin-right: 25px;} */
+
+.dashInnerStructure .userPageLoader .loaderOuter{position: fixed !important;}

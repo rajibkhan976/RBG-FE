@@ -1,12 +1,168 @@
-import React, { memo, useState } from 'react';
+import React, {memo, useEffect, useRef, useState} from 'react';
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
 import chevron_right_white_24dp from "../../../../assets/images/chevron_right_white_24dp.svg";
+import Select from "react-select";
+import icon_browse_keywords from "../../../../assets/images/icon_browse_keywords.svg";
+import EditorComponent from "../../../setup/templates/email/editor/Editor";
+import {EmailServices} from "../../../../services/setup/EmailServices";
+import Loader from "../../../shared/Loader";
+import {useDispatch} from "react-redux";
+import * as actionTypes from "../../../../actions/types";
+import {SMSServices} from "../../../../services/template/SMSServices";
+
 
 const Email = (props) => {
+    const dispatch = useDispatch();
+    const newEmailTemplateSubject = useRef(null)
+    const [isLoader, setIsLoader] = useState(false);
+    const [selectedEmailTemplate, setSelectedEmailTemplate] = useState("");
+    const [subjectKeywordSuggesion, setSubjectKeywordSuggesion] = useState(false);
+    const [emailTemplateToggle, setEmailTemplateToggle] = useState(false);
+    const [emailTags, setEmailTags] = useState([]);
+    const [searchTagString, setSearchTagString] = useState("");
+    const [emailData, setEmailData] = useState({
+        "_id": "",
+        "email": "",
+        "subject": "",
+        "template": ""
+    });
+    const [options, setOptions] = useState([]);
+    useEffect(async () => {
+        await fetchEmailTags();
+        await fetchTemplateList();
+    }, []);
+    const getQueryParams = async () => {
+        return new URLSearchParams();
+    };
+    const fetchTemplateList = async () => {
+        const pageId = "all";
+        const queryParams = await getQueryParams();
+        try {
+            setIsLoader(true);
+            const result = await EmailServices.fetchEmailTemplateList(pageId, queryParams);
+            if (result) {
+                let op = []
+                result.templates.map(el => {
+                    op.push({value: el._id, label: el.title, data: el})
+                });
+                setOptions(op);
+            }
+        } catch (e) {
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message + ". Please check your email configuration.",
+                typeMessage: 'error'
+            });
+        } finally {
+            setIsLoader(false);
+        }
+    };
+    const fetchEmailTags = async () => {
+        try {
+            const result = await SMSServices.fetchSMSTags()
+            if (result) {
+                setEmailTags(result)
+            }
+        } catch (error) {
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: error.message,
+                typeMessage: 'error'
+            });
+        }
+    }
+    const selectStyles = {
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isSelected ? "#305671" : "white",
+            color: state.isSelected ? "white" : "#305671",
+            fontSize: "13px"
+        }),
+    };
+
+    const emailTemplateChangeHandler = (e) => {
+        setEmailData(e.data);
+        setSelectedEmailTemplate(e);
+    }
+
+    const addSubjectKeyword = () => { }
+    const newEmailTemplateHandeler = (e) => {
+        if(e.target.checked){
+            setEmailTemplateToggle(true);
+        }else{
+            setEmailTemplateToggle(false);
+        }
+    }
+    const emailBodyHandler = (email) => {
+        console.log(email)
+    }
+    const saveEmailSettingHandler = () => {}
+    const addKeywordEmail = (e) => {
+        e.preventDefault()
+        let subjectInput = newEmailTemplateSubject.current;
+        let cursorStart = subjectInput.selectionStart;
+        let cursorEnd = subjectInput.selectionEnd;
+        let textValue = subjectInput.value;
+
+        try {
+            if (cursorStart || cursorStart == "0"
+            ) {
+                var startToText = "";
+                subjectInput.value =
+                    subjectInput.value.substring(0, cursorStart) +
+                    " [" +
+                    e.target.textContent +
+                    "] " +
+                    subjectInput.value.substring(cursorEnd, textValue.length);
+
+                // setNewMail({
+                //   ...newMail,
+                //   subject: subjectInput.value
+                // })
+                setEmailData({
+                    ...emailData,
+                    subject: subjectInput.value
+                })
+                startToText =
+                    subjectInput.value.substring(0, cursorStart) +
+                    "[" +
+                    e.target.textContent +
+                    "]";
+
+                subjectInput.focus();
+                subjectInput.setSelectionRange(
+                    startToText.length + 1,
+                    startToText.length + 1
+                );
+
+                // console.log(subjectInput, cursorStart, cursorEnd, textValue);
+            } else {
+                subjectInput.value = subjectInput.value + " [" + e.target.textContent + "] ";
+
+                // setNewMail({
+                //   ...newMail,
+                //   subject: subjectInput.value
+                // })
+                setEmailData({
+                    ...emailData,
+                    subject: subjectInput.value
+                })
+                subjectInput.focus();
+            }
+        } catch (err) {
+            console.log();
+        }
+    }
+    const createdEmailTemplate = (template) =>{
+        setEmailData({
+            ...emailData,
+            template: template
+        })
+    }
     return (
         <React.Fragment>
-            <div className="automationModal filterModal s">
-                <div className="nodeSettingModal">
+            <div className="automationModal">
+                <div className="nodeSettingModal nodeEmailModal">
                     <div className="formHead">
                         <div className="heading">
                             <p>Email Settings</p>
@@ -18,60 +174,124 @@ const Email = (props) => {
                         </div>
                     </div>
                     <div className="formBody">
+                        {isLoader ? <Loader /> : ''}
                         <div className="formBodyContainer">
                             <div className="emailDetails">
                                 <div className="inputField">
-                                    <label htmlFor="subject">Subject</label>
-                                    <div className="inFormField subjectField">
-                                        <input className={`icon ${props.subjectError}`} type="text" name="subject"
-                                               id="subject" value={props.subject} onChange={props.handleSubjectChange} onClick={props.handleSubjectChange} />
-                                        <button className="toggleTags" onClick={(e) => props.toggletoMail(e)}></button>
-                                    </div>
-                                    <div className="emailTagSubject">
-                                        <h6>Select Option(s)</h6>
-                                        {Object.keys(props.emailData).length ? (
-                                            Object.keys(props.emailData).map((value, key) => (
-                                                <button onClick={() => props.copyTag(value, 'subject')}>{value}</button>
-                                            ))
-                                        ) : ""
-                                        }
+                                    <label>Email template</label>
+                                    <Select name="template" value={selectedEmailTemplate} styles={selectStyles}
+                                            onChange={(e) => emailTemplateChangeHandler(e)} options={options} placeholder="Choose a email template" />
+                                </div>
+                                <div className="inputField subjectInputField">
+                                    <label>Subject</label>
+                                    <div className="cmnFormField globalSms">
+                                        <input className="subject" type="text" placeholder="Enter email subject" id="newEmailTemplateSubject" value={emailData.subject}
+                                               ref={newEmailTemplateSubject} />
+                                        <button className="btn browseKeywords"
+                                                type='button'
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    setSubjectKeywordSuggesion(true);
+                                                }}
+                                        >
+                                            <img src={icon_browse_keywords} alt="keywords" />
+                                        </button>
+                                        {subjectKeywordSuggesion && (
+                                            <div className="keywordBox">
+                                                <div className="searchKeyword">
+                                                    <div className="searchKeyBox">
+                                                        <input
+                                                            type="text"
+                                                            onChange={(e) => setSearchTagString(e.target.value)}
+                                                            onKeyPress={e => {
+                                                                if (e.key === 'Enter') e.preventDefault();
+                                                            }}
+                                                        />
+                                                    </div>
+                                                    <div className="cancelKeySearch">
+                                                        <button
+                                                            onClick={() => {setSubjectKeywordSuggesion(false)
+                                                                setSearchTagString("")}}
+                                                        ></button>
+                                                    </div>
+                                                </div>
+                                                <div className="keywordList">
+                                                    <ul>
+                                                        {emailTags
+                                                            .filter(
+                                                                (smsTag) =>
+                                                                    smsTag.id.indexOf(searchTagString) >= 0
+                                                                    && smsTag.id !== "tags"
+                                                                    && smsTag.id !== "phone"
+                                                                    && smsTag.id !== "mobile"
+                                                                    && smsTag.id !== "momCellPhone"
+                                                                    && smsTag.id !== "dadCellPhone"
+                                                                    && smsTag.id !== "createdBy"
+                                                                    && smsTag.id !== "createdAt"
+                                                                    && smsTag.id !== "statusName"
+                                                                    && smsTag.id !== "phaseName"
+                                                                    && smsTag.id !== "contactType"
+                                                            )
+                                                            .map((tagItem, i) => (
+                                                                <li key={"keyField" + i}>
+                                                                    <button
+                                                                        onClick={(e) =>
+                                                                            addKeywordEmail(e, tagItem.id)
+                                                                        }
+                                                                    >
+                                                                        {tagItem.id}
+                                                                    </button>
+                                                                </li>
+                                                            ))}
+                                                    </ul>
+                                                </div>
+                                                <div className=''>
+                                                    <div className="searchKeyword">
+                                                        <div className="searchKeyBox">
+                                                            <input
+                                                                type="text"
+                                                                // onChange={(e) => setSearchTagString(e.target.value)}
+                                                                onKeyPress={e => {
+                                                                    if (e.key === 'Enter') e.preventDefault();
+                                                                }}
+                                                            />
+                                                        </div>
+                                                        <div className="cancelKeySearch">
+                                                            <button
+                                                                onClick={() => {
+                                                                    setSubjectKeywordSuggesion(false)
+                                                                }}
+                                                            ></button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-                                <div className="inputField">
-                                    <label htmlFor="toEmail">To</label>
-                                    <div className="inFormField">
-                                        <input className={`icon ${props.toEmailError}`} type="text" name="toEmail"
-                                               id="toEmail" value={props.toEmail} onChange={props.handleToEmailChange} onClick={props.handleToEmailChange} />
-                                        <button className="toggleTags" onClick={(e) => props.toggletoMail(e)}></button>
-                                    </div>
-                                    <div className="emailTagToEmail">
-                                        <h6>Select Option(s)</h6>
-                                        {Object.keys(props.emailData).length ? (
-                                            Object.keys(props.emailData).map((value, key) => (
-                                                <button onClick={() => props.copyTag(value, 'toEmail')}>{value}</button>
-                                            ))
-                                        ) : ""
-                                        }
+                                <div className="inputField emailBodyInputField">
+                                    <label>Email Body</label>
+                                    <div className="cmnFormField globalSms">
+                                        <EditorComponent
+                                            initialData={emailData ? emailData : emailData.template}
+                                            editorToPreview={(newData)=>emailBodyHandler(newData)}
+                                            createdEmailTemplate ={(template) => createdEmailTemplate(template)}
+                                        />
                                     </div>
                                 </div>
-                                <div className="inputField">
-                                    <label htmlFor="bodyEmail">Body</label>
-                                    <div className="inFormField">
-                              <textarea className={`icon ${props.bodyEmailError}`} name="bodyEmail" id="bodyEmail" onChange={props.handleBodyEmailChange}
-                                        onClick={props.handleBodyEmailChange} value={props.bodyEmail}>{props.bodyEmail}</textarea>
-                                    </div>
-                                    <div className="emailTagEmailBody">
-                                        {Object.keys(props.emailData).length ? (
-                                            Object.keys(props.emailData).map((value, key) => (
-                                                <button onClick={() => props.copyTag(value, 'bodyEmail')}>{value}</button>
-                                            ))
-                                        ) : ""
-                                        }
-                                    </div>
+
+                                {/*<div className="inputField checkEmailTemplate">
+                                    <label><span className='customCheckbox'><input type="checkbox" value="transactionFailed" onChange={(e)=>newEmailTemplateHandeler(e)}/><span></span></span>Save as a new Email Template?</label>
                                 </div>
+                                {
+                                    emailTemplateToggle &&
+                                    <div className="inputField">
+                                        <input className="template" type="text" placeholder="Enter template name" />
+                                    </div>
+                                }*/}
                             </div>
                             <div className="saveButton">
-                                <button onClick={props.saveEmail}>Save <img src={chevron_right_white_24dp} alt="" /></button>
+                                <button onClick={saveEmailSettingHandler}>Save <img src={chevron_right_white_24dp} alt="" /></button>
                             </div>
                         </div>
                     </div>
