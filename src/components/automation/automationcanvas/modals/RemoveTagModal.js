@@ -7,7 +7,7 @@ import * as actionTypes from "../../../../actions/types";
 import { useDispatch } from "react-redux";
 import Loader from "../../../shared/Loader";
 import searchIcon from "../../../../assets/images/search-group.svg";
-const TagModal = (props) => {
+const RemoveTagModal = (props) => {
     const dispatch = useDispatch();
     const [selectedTag, setSelectedTag] = useState("");
     const [options, setOptions] = useState([]);
@@ -92,16 +92,14 @@ const TagModal = (props) => {
 
         );
     };
-
     return (
         <React.Fragment>
             <div className="automationModal filterModal">
-            <div className='automationModalBg' onClick={props.closeFilterModal}></div>
                 <div className="nodeSettingModal tagSettingModal">
                     <div className="formHead">
                         <div className="heading">
                             {/* <p>{props.tagModalType} Tag Settingss</p> */}
-                            <p>Add Tags</p>
+                            <p>Remove tags</p>
                         </div>
                         <div className="closeButton">
                             <button onClick={props.closeFilterModal}>
@@ -143,4 +141,4 @@ const TagModal = (props) => {
         </React.Fragment>
     );
 };
-export default TagModal;
+export default RemoveTagModal;

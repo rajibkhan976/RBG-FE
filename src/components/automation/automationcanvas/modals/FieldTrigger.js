@@ -75,7 +75,7 @@ const FieldTrigger = (props) => {
                                 <div className="">
                                     <label htmlFor="">Events</label>
                                     <div><label><input type="checkbox" value="create" defaultChecked={events.create} onChange={changeEvent} /> On create </label></div>
-                                    <div><label><input type="checkbox" value="update" defaultChecked={events.update} onChange={changeEvent} /> On update </label></div>
+                                    {/*<div><label><input type="checkbox" value="update" defaultChecked={events.update} onChange={changeEvent} /> On update </label></div>*/}
                                     <div><label><input type="checkbox" value="delete" defaultChecked={events.delete} onChange={changeEvent} /> On delete </label></div>
                                 </div>
                             </div>

@@ -79,12 +79,12 @@
 }
 
 .sidebarHeader {
-  padding: 26px 0;
+  padding: 18px 0 14px 0px;
   margin: 0 25px;
   position: relative;
   border-bottom: 1px solid #dce4eb;
 }
-
+.innerMenuScroll .sidebarHeader.d-flex:nth-child(3), .innerMenuScroll .sidebarHeader.d-flex:nth-child(5){border-top: 1px solid #dce4eb;}
 /* .menuDetails .sidebarHeader:not(:nth-child(2)) {
     border-top: 1px solid #DCE4EB;
 } */
@@ -92,14 +92,14 @@
 .menuDetails ul li:first-child .leftMenuInnerLink {
   border-top: none;
 }
-
+.sidebarHeader{justify-content: space-between;}
 .sidebarHeader h4 {
   font-size: 16px;
   line-height: 23px;
   color: #305671;
   padding-right: 40px;
 }
-
+.sidebarHeader button img{width: 30px;}
 .sidebarHeader .arrowIcon {
   top: 50%;
   right: 10px;
@@ -235,11 +235,12 @@
  /* width: 63px;
   height: 63px;*/
   display: inline-flex;
-  float: left;
+  /*float: left;*/
   align-items: center;
   justify-content: center;
   color: #fff;
   cursor: pointer;
+  min-height: 64px;
 }
 
 .dndnode * {
@@ -1084,8 +1085,7 @@
   right: 0px;
   bottom: 0;
   background: rgba(48, 86, 113, 20%);
-  z-index: 70;
-  width: 95.5%;
+  z-index: 999;
 }
 
 /* ------------------- */
@@ -1254,7 +1254,7 @@
   margin-top: 0;
   margin-right: 12px;
 }
-.triggerSetting .inFormField {
+.triggerSetting .inFormField, .automationActionSetting .inFormField {
   margin-top: 10px;
 }
 .triggerSetting .inFormField input {
@@ -6308,6 +6308,7 @@ li.dateRangeHeading {
 }
 .customtableListing li > div {
   width: calc(100% / 4);
+  max-width: 30%;
   /* text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap; */

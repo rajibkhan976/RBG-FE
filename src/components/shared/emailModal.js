@@ -549,13 +549,6 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                                                     )},${Math.floor(Math.random() * 256)})`,
                                                                 }}
                                                             >
-                                                                {console.log(
-                                                                    `rgb(${Math.floor(
-                                                                        Math.random() * 256
-                                                                    )},${Math.floor(
-                                                                        Math.random() * 256
-                                                                    )},${Math.floor(Math.random() * 256)})`
-                                                                )}
                                                                 {contact.firstName ? contact.firstName[0] : ""}
                                                                 {contact.lastName ? contact.lastName[0] : ""}
                                                             </figure>
@@ -696,8 +689,6 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                     setTempSelected={tempSelected}
                                     setEmailSend={emailSend}
                                 />
-                                {console.log("emailData", emailData, tempSelected)}
-
                                 <div className="errorMsg">{validateMsg.template}</div>
                             </div>
                         </div>

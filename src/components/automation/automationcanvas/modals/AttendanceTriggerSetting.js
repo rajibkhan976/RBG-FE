@@ -1,9 +1,9 @@
 import React, {memo, useEffect, useState} from 'react';
-import { useDispatch } from "react-redux";
+import {useDispatch} from "react-redux";
 import * as actionTypes from "../../../../actions/types";
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
 import chevron_right_white_24dp from "../../../../assets/images/chevron_right_white_24dp.svg";
-import {ContactService} from "../../../../services/contact/ContactServices";
+import { ContactService } from "../../../../services/contact/ContactServices";
 import Loader from "../../../shared/Loader";
 
 const AttendanceTriggerSetting = (props) => {
@@ -13,18 +13,22 @@ const AttendanceTriggerSetting = (props) => {
     const [events, setEvents] = useState(props.event ? props.event : {
         create: false,
         update: false,
-        delete: false
+        delete: false,
+        lastAttended: false,
+        day: "1"
     });
     const [nodeId, setNodeId] = useState(props.nodeId);
 
     const changeEvent = async (e) => {
         events[e.target.value] = e.target.checked;
     }
-
+    const changeDay = (e) => {
+        events['day'] = e.target.value;
+    }
     const saveSettings = async (e) => {
         try {
             let fields = {'fname': 'text', 'lname': 'text', 'phone': 'numeric', 'email': 'email'} // Sample
-            if (events.checkIn) {
+            if (events.checkIn || events.lastAttended) {
                 setIsLoader(true);
                 let fieldsApiResponse = await ContactService.fetchFields();
                 setIsLoader(false);
@@ -59,15 +63,15 @@ const AttendanceTriggerSetting = (props) => {
                         </div>
                         <div className="closeButton">
                             <button onClick={props.closeFilterModal}>
-                                <img src={closewhite24dp} alt="Close Filter Modal"/>
+                                <img src={closewhite24dp} alt="Close Filter Modal" />
                             </button>
                         </div>
                     </div>
                     <div className="formBody">
-                        {isLoader ? <Loader /> : ""}
+                        {isLoader ? <Loader/> : ""}
                         <div className="formBodyContainer">
                             <div className="formFieldsArea">
-                               {/* <div className="inputField">
+                                {/* <div className="inputField">
                                     <label htmlFor="">Module</label>
                                     <select name="" id="">
                                         <option value="">Contact</option>
@@ -75,11 +79,25 @@ const AttendanceTriggerSetting = (props) => {
                                 </div>*/}
                                 <div className="">
                                     <label htmlFor="">Events</label>
-                                    <div><label><input type="checkbox" value="checkIn" defaultChecked={events.checkIn} onChange={changeEvent} /> On Check In </label></div>
+                                    <div><label><input type="checkbox" value="checkIn" defaultChecked={events.checkIn}
+                                                       onChange={changeEvent}/> On Check In </label></div>
+                                    <div><label><input type="checkbox" value="lastAttended" defaultChecked={events.lastAttended}
+                                                       onChange={changeEvent}/> Last attended in &nbsp;
+                                        <select value={events.day} onChange={changeDay} >
+                                            {(() => {
+                                                let options = [];
+                                                for (let i = 1; i < 31; i++) {
+                                                    options.push(<option value={i}>{i}</option>);
+                                                }
+                                                return options;
+                                            })()}
+                                        </select>
+                                        &nbsp; days ago </label></div>
                                 </div>
                             </div>
                             <div className="saveButton">
-                                <button onClick={saveSettings}>Save <img src={chevron_right_white_24dp} alt=""/></button>
+                                <button onClick={saveSettings}>Save <img src={chevron_right_white_24dp} alt=""/>
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -43,6 +43,7 @@ import RestrictionPackageModal from "./setup/credit/package/RestrictionPackageMo
 import AppointmentGlobal from "./appointment/AppointmentGlobalRouter";
 import TransactionGlobalRouter from "./transaction/TransactionGlobalRouter";
 import CommunicationLogRoutes from "./communicationLog/CommunicationLogRoutes";
+import NotificationGroupRouter from "./setup/notification_group/notification_groupRouter"
 
 // For socket io connection
 //const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlProd;
@@ -51,7 +52,6 @@ const socket = io(socketUrl, {
     transports: ["websocket"],
     origins: "*"
 });
-
 const MainComponent = () => {
     const pathURL = useLocation().pathname;
     const [showInnerleftMenu, setshowInnerleftMenu] = useState(true);
@@ -700,6 +700,13 @@ const MainComponent = () => {
                             <Route exact path="/phases-status">
                                 <StatusPhasesRouter toggleLeftSubMenu={toggleLeftSubMenu}
                                     toggleCreate={(e) => toggleCreate(e)}></StatusPhasesRouter>
+                            </Route>
+                            <Route exact path="/notification-group">
+                                <NotificationGroupRouter 
+                                    toggleLeftSubMenu={toggleLeftSubMenu} 
+                                    toggleCreate={(e) => toggleCreate(e)}
+                                >
+                                </NotificationGroupRouter>
                             </Route>
                             <Route exact path={["/package-setup", "/usage-setup", "/credit-details"]}>
                                 <CreditRoutes toggleLeftSubMenu={toggleLeftSubMenu}

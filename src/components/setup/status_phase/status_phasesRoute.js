@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 
 import Loader from "../../shared/Loader";
 //import { ErrorAlert, SuccessAlert } from "../../shared/messages";
@@ -17,17 +17,17 @@ const StatusPhasesRouter = (props) => {
     }
     //const [filteredData, setFilteredData] = useState(null);
     return (
-          <>
-          <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} routeMenu="setup" reRender={(id) => renderID(id)} />
-              <div className="dashboardElComponent">
-                  {/* <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} /> */}
-                  <div className="dashInnerStructure">
-                  <Route path="/phases-status" component={StatusPhases} />
-                  <DashboardFooter />
-                  </div>
-              </div>
-          </>  
-      )
+        <>
+            <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} routeMenu="setup" reRender={(id) => renderID(id)} />
+            <div className="dashboardElComponent">
+                {/* <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} /> */}
+                <div className="dashInnerStructure">
+                    <Route path="/phases-status" component={StatusPhases} />
+                    <DashboardFooter />
+                </div>
+            </div>
+        </>
+    )
 };
 
 export default StatusPhasesRouter;

@@ -93,7 +93,7 @@ const CategoryPhases = (props) => {
         setPhasesId(elem._id);
     }
     const deletePhase = async (elem, isConfirmed = null) => {
-        setOption(null);
+        setOption(false);
         if (isConfirmed == null && elem._id) {
             setConfirmed({
                 show: true,

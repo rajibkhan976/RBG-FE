@@ -402,6 +402,7 @@ const ContactListing = forwardRef((props, ref) => {
             setSelectAllCheckbox(true);
             setSelectSingle(false);
         }
+        console.log(cb);    
         setCheckboxes(cb);
     }
 
