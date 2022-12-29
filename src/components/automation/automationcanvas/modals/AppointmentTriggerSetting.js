@@ -1,9 +1,9 @@
 import React, {memo, useEffect, useState} from 'react';
-import { useDispatch } from "react-redux";
+import {useDispatch} from "react-redux";
 import * as actionTypes from "../../../../actions/types";
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
 import chevron_right_white_24dp from "../../../../assets/images/chevron_right_white_24dp.svg";
-import {ContactService} from "../../../../services/contact/ContactServices";
+import { ContactService } from "../../../../services/contact/ContactServices";
 import Loader from "../../../shared/Loader";
 
 const AppointmentTriggerSetting = (props) => {
@@ -14,21 +14,28 @@ const AppointmentTriggerSetting = (props) => {
         appointmentCreate: false,
         appointmentCanceled: false,
         appointmentRescheduled: false,
-        appointmentCompleted: false
+        appointmentCompleted: false,
+        appointmentMissed: false,
+        appointmentDayBefore: false,
+        day: "1"
     });
     const [nodeId, setNodeId] = useState(props.nodeId);
 
     const changeEvent = async (e) => {
         events[e.target.value] = e.target.checked;
     }
-
+    const changeDay = (e) => {
+        events['day'] = e.target.value;
+    }
     const saveSettings = async (e) => {
         try {
-            let fields = {'fname': 'text', 'lname': 'text', 'phone': 'numeric', 'email': 'email'} // Sample
+            let fields = { 'fname': 'text', 'lname': 'text', 'phone': 'numeric', 'email': 'email' } // Sample
             if (events.appointmentCreate
                 || events.appointmentCanceled
                 || events.appointmentRescheduled
                 || events.appointmentCompleted
+                || events.appointmentMissed
+                || events.appointmentDayBefore
             ) {
                 setIsLoader(true);
                 let fieldsApiResponse = await ContactService.fetchFields();
@@ -75,30 +82,51 @@ const AppointmentTriggerSetting = (props) => {
                         </div>
                         <div className="closeButton">
                             <button onClick={props.closeFilterModal}>
-                                <img src={closewhite24dp} alt="Close Filter Modal"/>
+                                <img src={closewhite24dp} alt="Close Filter Modal" />
                             </button>
                         </div>
                     </div>
                     <div className="formBody">
-                        {isLoader ? <Loader /> : ""}
+                        {isLoader ? <Loader/> : ""}
                         <div className="formBodyContainer">
                             <div className="formFieldsArea">
-                               {/* <div className="inputField">
-                                    <label htmlFor="">Module</label>
-                                    <select name="" id="">
-                                        <option value="">Contact</option>
-                                    </select>
-                                </div>*/}
                                 <div className="">
                                     <label htmlFor="">Events</label>
-                                    <div><label><input type="checkbox" value="appointmentCreate" defaultChecked={events.appointmentCreate} onChange={changeEvent} /> On Create </label></div>
-                                    <div><label><input type="checkbox" value="appointmentCanceled" defaultChecked={events.appointmentCanceled} onChange={changeEvent} /> On Cancel </label></div>
-                                    <div><label><input type="checkbox" value="appointmentRescheduled" defaultChecked={events.appointmentRescheduled} onChange={changeEvent} /> On Re-schedule </label></div>
-                                    <div><label><input type="checkbox" value="appointmentCompleted" defaultChecked={events.appointmentCompleted} onChange={changeEvent} /> On Complete </label></div>
+                                    <div><label><input type="checkbox" value="appointmentCreate"
+                                                       defaultChecked={events.appointmentCreate}
+                                                       onChange={changeEvent}/> On Create </label></div>
+                                    <div><label><input type="checkbox" value="appointmentCanceled"
+                                                       defaultChecked={events.appointmentCanceled}
+                                                       onChange={changeEvent}/> On Cancel </label></div>
+                                    <div><label><input type="checkbox" value="appointmentRescheduled"
+                                                       defaultChecked={events.appointmentRescheduled}
+                                                       onChange={changeEvent}/> On Re-schedule </label></div>
+                                    <div><label><input type="checkbox" value="appointmentCompleted"
+                                                       defaultChecked={events.appointmentCompleted}
+                                                       onChange={changeEvent}/> On Complete </label></div>
+                                    <div><label><input type="checkbox" value="appointmentMissed"
+                                                       defaultChecked={events.appointmentMissed}
+                                                       onChange={changeEvent}/> On Missed </label></div>
+                                    <div><label><input type="checkbox" value="appointmentDayBefore"
+                                                       defaultChecked={events.appointmentDayBefore}
+                                                       onChange={changeEvent}/>
+                                        &nbsp; On &nbsp;
+                                        <select value={events.day} onChange={changeDay} >
+                                            {(() => {
+                                                let options = [];
+                                                for (let i = 1; i < 31; i++) {
+                                                    options.push(<option value={i}>{i}</option>);
+                                                }
+                                                return options;
+                                            })()}
+                                        </select>
+                                        &nbsp; days before
+                                    </label></div>
                                 </div>
                             </div>
                             <div className="saveButton">
-                                <button onClick={saveSettings}>Save <img src={chevron_right_white_24dp} alt=""/></button>
+                                <button onClick={saveSettings}>Save <img src={chevron_right_white_24dp} alt=""/>
+                                </button>
                             </div>
                         </div>
                     </div>

@@ -9,8 +9,12 @@ import ActionStatusPhaseUpdate from "./ActionStatusPhaseUpdate";
 import AppointmentTrigger from "./AppointmentTrigger";
 import AttendanceTrigger from "./AttendanceTrigger";
 import TransactionTrigger from "./TransactionTrigger";
+import TagTrigger from "./TagTrigger";
 import ActionApplyTag from "./ActionApplyTag";
 import ActionRemoveTag from "./ActionRemoveTag";
+import AutomationTag from "./AutomationTag";
+import NotificationTag from "./NotificationTag";
+import NotificationGroupTag from "./NotificationGroupTag";
 export {
     FilterNode,
     TriggerNode,
@@ -22,7 +26,11 @@ export {
     ActionStatusPhaseUpdate,
     AppointmentTrigger,
     ActionRemoveTag,
+    AutomationTag,
+    NotificationTag,
     ActionApplyTag,
     TransactionTrigger,
-    AttendanceTrigger
+    AttendanceTrigger,
+    TagTrigger,
+    NotificationGroupTag
 };

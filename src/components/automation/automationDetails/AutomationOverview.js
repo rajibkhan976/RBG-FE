@@ -12,7 +12,7 @@ import {
     ActionDelay,
     FieldActionTrigger,
     ActionStatusPhaseUpdate,
-    AppointmentTrigger, AttendanceTrigger, TransactionTrigger, ActionApplyTag, ActionRemoveTag
+    AppointmentTrigger, AttendanceTrigger, TransactionTrigger, ActionApplyTag, ActionRemoveTag, AutomationTag, TagTrigger, NotificationTag
 } from "./../automationcanvas/nodes";
 import { AutomationServices } from "../../../services/automation/AutomationServices";
 
@@ -26,8 +26,12 @@ export default function AutomationOverview(props) {
         appointmentTrigger: AppointmentTrigger,
         attendanceTrigger: AttendanceTrigger,
         transactionTrigger: TransactionTrigger,
+        tagTrigger: TagTrigger,
         actionApplyTag: ActionApplyTag,
         actionRemoveTag: ActionRemoveTag,
+        automationTag: AutomationTag,
+        notificationTag: NotificationTag,
+       // notificationGroupTag: NotificationGroupTag,
         filter: FilterNode,
         actionEmail: ActionEmail,
         actionMessage: ActionMessage,

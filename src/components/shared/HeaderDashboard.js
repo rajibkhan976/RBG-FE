@@ -17,6 +17,7 @@ import sms_icon from "../../assets/images/sms_icon.svg";
 import email_icon from "../../assets/images/email_icon.svg";
 import SettingIcon from "../../assets/images/settings.svg";
 import SettingIconBlue from "../../assets/images/settings_blue.svg";
+import PlusIconFill from "../../assets/images/plus-icon.svg";
 import DownloadIcon from "../../assets/images/download.svg";
 import cross_white from "../../assets/images/cross_white.svg";
 import userPhoto from "../../assets/images/owner_img_1.png";
@@ -633,6 +634,9 @@ const pathURL = useLocation().pathname;
         >
           <img src={setupModalStatus ? SettingIconBlue : SettingIcon} alt="" />
         </button>
+        {/* <button className="setupModalStatus active btn">
+          <img src={PlusIconFill} />
+        </button> */}
         <button
           className="btn buttonNotifications"
           onClick={(e) => toggleNotifications(e)}

@@ -813,7 +813,6 @@ const EditorComponent = (props) => {
                                 id="createTextArea"
                                 ref={createTextArea}>
                                 {max && <h6>Email Body</h6>}
-                                {console.log(props.setTempSelected, "setEmailSend" , props.setEmailSend)}
                                 <Editor
                                     apiKey="u8o9qjaz9gdqhefua3zs1lyixgg709tgzlqredwdnd0452z0"
                                     statusBar={true}

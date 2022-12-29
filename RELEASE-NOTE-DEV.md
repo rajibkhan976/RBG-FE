@@ -68,3 +68,5 @@
     - Contact Transactions
 # COMMUNICATION LOG V1.0.0
     - Log list and inbox in contact modal
+# Automation V3.0.0
+    - Automation V3 with all schedulers
