@@ -545,3 +545,7 @@ button.skytext{
   line-height: 1;
   margin: 2px 0 5px;
 } 
+.contactModal .tabBarArea .loaderOuter {
+  position: absolute;
+  min-height: 100vh;
+}

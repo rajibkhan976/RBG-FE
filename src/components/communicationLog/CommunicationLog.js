@@ -116,12 +116,12 @@ const CommunicationLog = (props) => {
             queryParams.append("direction", direction);
         }
 		if (fromDate) {
-            //queryParams.append("fromDate",  decodeURIComponent(fromDate.replaceAll(":","%3A")));
-            queryParams.append("fromDate",  fromDate);
+            let fromDateUrl = new Date(fromDate + " 00:00:00 UTC");
+            queryParams.append("fromDate",  fromDateUrl.toISOString());
         }
 		if (toDate) {
-            //queryParams.append("toDate",  decodeURIComponent(toDate.replaceAll(":","%3A")));
-            queryParams.append("toDate", toDate);
+			let toDateUrl = new Date(toDate + " 23:59:59 UTC");
+            queryParams.append("toDate", toDateUrl.toISOString());
         }
         return queryParams;
     };
@@ -268,7 +268,7 @@ const CommunicationLog = (props) => {
 					     <span class="pageInfo">From date : { moment(decodeURIComponent(selectFromdate.replaceAll(":","%3A"))).format('YYYY-MM-DD')}</span>
 						 <span class="crossTags" onClick={removeFromdate}><img src={cross} alt=""/></span>
 					</div>
-				}	
+				}	 
 				{selectTodate &&
 					<div class="contactsTags">
 					     <span class="pageInfo">To date : {moment(decodeURIComponent(selectTodate.replaceAll(":","%3A"))).format('YYYY-MM-DD')}</span>
