@@ -13442,3 +13442,6 @@ background-color: #fff;
 .notificationGroupTags .notificationSearch .searchResult ul li{background-color: #55BBC9; font-size: 13px; color: #ffffff; padding: 4px 10px; border-radius: 35px; margin-right: 25px;} */
 
 .dashInnerStructure .userPageLoader .loaderOuter{position: fixed !important;}
+.formBodyContainerDiv .inputFieldEvent {
+  width: 70px;
+}

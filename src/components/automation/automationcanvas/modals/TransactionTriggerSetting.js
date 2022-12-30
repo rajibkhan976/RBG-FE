@@ -32,7 +32,7 @@ const TransactionTriggerSetting = (props) => {
     const [upCommingDaysStatus, setUpCommingDaysStatus] = useState(false);
     const changeEvent = async (e) => {
         events[e.target.value] = e.target.checked;
-        if(e.target.value == "transactionUpcoming"){
+        if(e.target.value === "transactionUpcoming"){
             if(e.target.checked){
                 // alert("transactionUpcoming");
                 setUpCommingDaysStatus(true);
@@ -49,12 +49,32 @@ const TransactionTriggerSetting = (props) => {
           })
     }
     const changeDay = (e) => {
-        events['day'] = e.target.value;
+        if (e.target.value < 101 && e.target.value > 0) {
+            setEvents(prevState => {
+                return {
+                    ...prevState,
+                    day: e.target.value
+                }
+            });
+            events['day'] = e.target.value;
+        } else {
+            setEvents(prevState => {
+                return {
+                    ...prevState,
+                    day: e.target.value
+                }
+            });
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: 'Please input a number between 1 to 100',
+                typeMessage: 'error'
+            });
+        }
     }
     const saveSettings = async (e) => {
         try {
             let fields = {'fname': 'text', 'lname': 'text', 'phone': 'numeric', 'email': 'email'} // Sample
-            if (events.transactionSuccess || events.transactionFailed || events.transactionBefore) {
+            if (events.transactionSuccess || events.transactionFailed || (events.transactionBefore && events.day > 0 && events.day < 101)) {
                 setIsLoader(true);
                 let fieldsApiResponse = await ContactService.fetchFields();
                 setIsLoader(false);
@@ -112,7 +132,7 @@ const TransactionTriggerSetting = (props) => {
                                         <option value="">Contact</option>
                                     </select>
                                 </div>*/}
-                                <div className="">
+                                <div className="formBodyContainerDiv">
                                     <label htmlFor="">Events</label>
                                     <div><label><input type="checkbox" value="transactionSuccess"
                                                        defaultChecked={events.transactionSuccess}
@@ -123,15 +143,7 @@ const TransactionTriggerSetting = (props) => {
                                     <div><label><input type="checkbox" value="transactionBefore"
                                                        defaultChecked={events.transactionBefore}
                                                        onChange={changeEvent}/> On &nbsp;
-                                        <select value={events.day} onChange={changeDay} >
-                                            {(() => {
-                                                let options = [];
-                                                for (let i = 1; i < 31; i++) {
-                                                    options.push(<option value={i}>{i}</option>);
-                                                }
-                                                return options;
-                                            })()}
-                                        </select>
+                                        <input type="number" className="inputFieldEvent" value={events.day} onChange={changeDay} placeholder="Ex: 5"/>
                                         &nbsp; Days before </label></div>
                                 </div>
                             </div>

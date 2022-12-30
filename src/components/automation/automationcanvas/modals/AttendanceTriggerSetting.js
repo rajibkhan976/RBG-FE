@@ -23,12 +23,32 @@ const AttendanceTriggerSetting = (props) => {
         events[e.target.value] = e.target.checked;
     }
     const changeDay = (e) => {
-        events['day'] = e.target.value;
+        if (e.target.value < 101 && e.target.value > 0) {
+            setEvents(prevState => {
+                return {
+                    ...prevState,
+                    day: e.target.value
+                }
+            });
+            events['day'] = e.target.value;
+        } else {
+            setEvents(prevState => {
+                return {
+                    ...prevState,
+                    day: e.target.value
+                }
+            });
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: 'Please input a number between 1 to 100',
+                typeMessage: 'error'
+            });
+        }
     }
     const saveSettings = async (e) => {
         try {
             let fields = {'fname': 'text', 'lname': 'text', 'phone': 'numeric', 'email': 'email'} // Sample
-            if (events.checkIn || events.lastAttended) {
+            if ((events.checkIn || (events.lastAttended && events.day > 0 && events.day < 101))) {
                 setIsLoader(true);
                 let fieldsApiResponse = await ContactService.fetchFields();
                 setIsLoader(false);
@@ -77,21 +97,13 @@ const AttendanceTriggerSetting = (props) => {
                                         <option value="">Contact</option>
                                     </select>
                                 </div>*/}
-                                <div className="">
+                                <div className="formBodyContainerDiv">
                                     <label htmlFor="">Events</label>
                                     <div><label><input type="checkbox" value="checkIn" defaultChecked={events.checkIn}
                                                        onChange={changeEvent}/> On Check In </label></div>
                                     <div><label><input type="checkbox" value="lastAttended" defaultChecked={events.lastAttended}
                                                        onChange={changeEvent}/> Last attended in &nbsp;
-                                        <select value={events.day} onChange={changeDay} >
-                                            {(() => {
-                                                let options = [];
-                                                for (let i = 1; i < 31; i++) {
-                                                    options.push(<option value={i}>{i}</option>);
-                                                }
-                                                return options;
-                                            })()}
-                                        </select>
+                                        <input type="number" className="inputFieldEvent" value={events.day} onChange={changeDay} placeholder="Ex: 5"/>
                                         &nbsp; days ago </label></div>
                                 </div>
                             </div>
