@@ -72,3 +72,5 @@
     - Automation V3 with all schedulers
 # HOTFIX V1.1.6
     - Communication log QI/FI issues    
+# Automation V3.0.3
+    - Fixed automation email

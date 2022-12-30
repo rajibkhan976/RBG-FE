@@ -132,7 +132,7 @@ const Sidebar = () => {
         <button className="btn"><img src={rightArrow} /></button>
       </div>
       <div className="dndNodes actionNodes">
-{/*                <div
+        <div
           className="dndnode emailNode"
           onDragStart={(event) => onDragStart(event, "actionEmail")}
           draggable
@@ -147,7 +147,7 @@ const Sidebar = () => {
           <div className="nodeNameTooltip">
             Email
           </div>
-        </div>*/}
+        </div>
 
         <div
           className="dndnode delayNode"
