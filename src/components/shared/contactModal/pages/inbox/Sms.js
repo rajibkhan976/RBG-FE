@@ -194,9 +194,9 @@ const submitMessage = (e) =>{
  // console.log("payload.to",);
   if(smsData.body === ""){
     setSmsDataErr({...smsDataErr,err : "Write a msg here"})
-  }else if(payload.to === "" ){
+  }else if((contactGenData?.phone?.full_number || "")   === "" ){
     setSmsDataErr({...smsDataErr,errNumber : "To send SMS you must save a mobile or phone number first"})
-  }else if(!phNumber.test(payload.to)){
+  }else if(!phNumber.test((contactGenData?.phone?.full_number || ""))){
    setSmsDataErr({...smsDataErr,errNumber : "It is not a valid number"})
  }else{
     smsSend(payload);
