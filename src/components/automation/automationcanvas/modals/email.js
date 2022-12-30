@@ -9,22 +9,23 @@ import Loader from "../../../shared/Loader";
 import {useDispatch} from "react-redux";
 import * as actionTypes from "../../../../actions/types";
 import {SMSServices} from "../../../../services/template/SMSServices";
+import {utils} from "../../../../helpers";
 
 
 const Email = (props) => {
     const dispatch = useDispatch();
     const newEmailTemplateSubject = useRef(null)
     const [isLoader, setIsLoader] = useState(false);
-    const [selectedEmailTemplate, setSelectedEmailTemplate] = useState("");
+    const [selectedEmailTemplate, setSelectedEmailTemplate] = useState(props.selectedTemplate);
     const [subjectKeywordSuggesion, setSubjectKeywordSuggesion] = useState(false);
-    const [emailTemplateToggle, setEmailTemplateToggle] = useState(false);
     const [emailTags, setEmailTags] = useState([]);
+    const [changedTemplate, setChangedTemplate] = useState(props.body);
     const [searchTagString, setSearchTagString] = useState("");
     const [emailData, setEmailData] = useState({
         "_id": "",
         "email": "",
-        "subject": "",
-        "template": ""
+        "subject": props.subject,
+        "template": utils.encodeHTML(props.body)
     });
     const [options, setOptions] = useState([]);
     useEffect(async () => {
@@ -81,22 +82,25 @@ const Email = (props) => {
     };
 
     const emailTemplateChangeHandler = (e) => {
+        e.data._id = "";
         setEmailData(e.data);
+        setChangedTemplate(utils.decodeHTML(e.data.template));
         setSelectedEmailTemplate(e);
-    }
-
-    const addSubjectKeyword = () => { }
-    const newEmailTemplateHandeler = (e) => {
-        if(e.target.checked){
-            setEmailTemplateToggle(true);
-        }else{
-            setEmailTemplateToggle(false);
-        }
     }
     const emailBodyHandler = (email) => {
         console.log(email)
     }
-    const saveEmailSettingHandler = () => {}
+    const saveEmailSettingHandler = () => {
+        if (changedTemplate && emailData.subject) {
+            props.saveEmail(changedTemplate, emailData.subject, selectedEmailTemplate)
+        } else {
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: "Please fill up email body and subject field.",
+                typeMessage: 'error'
+            });
+        }
+    }
     const addKeywordEmail = (e) => {
         e.preventDefault()
         let subjectInput = newEmailTemplateSubject.current;
@@ -159,6 +163,12 @@ const Email = (props) => {
             template: template
         })
     }
+    const handleEmailSubject = (e) => {
+        setEmailData({
+            ...emailData,
+            subject: e.target.value
+        })
+    }
     return (
         <React.Fragment>
             <div className="automationModal">
@@ -185,7 +195,7 @@ const Email = (props) => {
                                 <div className="inputField subjectInputField">
                                     <label>Subject</label>
                                     <div className="cmnFormField globalSms">
-                                        <input className="subject" type="text" placeholder="Enter email subject" id="newEmailTemplateSubject" value={emailData.subject}
+                                        <input className="subject" type="text" placeholder="Enter email subject" id="newEmailTemplateSubject" onChange={handleEmailSubject} value={emailData.subject}
                                                ref={newEmailTemplateSubject} />
                                         <button className="btn browseKeywords"
                                                 type='button'
@@ -273,8 +283,10 @@ const Email = (props) => {
                                     <label>Email Body</label>
                                     <div className="cmnFormField globalSms">
                                         <EditorComponent
+                                            setTempSelected={true}
                                             initialData={emailData ? emailData : emailData.template}
                                             editorToPreview={(newData)=>emailBodyHandler(newData)}
+                                            globalTemplateValue={(template) => setChangedTemplate(template)}
                                             createdEmailTemplate ={(template) => createdEmailTemplate(template)}
                                         />
                                     </div>

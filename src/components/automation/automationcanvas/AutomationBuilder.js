@@ -84,6 +84,7 @@ const AutomationBuilder = (props) => {
     const [subject, setSubject] = useState('');
     const [subjectError, setSubjectError] = useState(false);
     const [bodyEmail, setBodyEmail] = useState('');
+    const [emailTemplateId, setEmailTemplateId] = useState('');
     const [bodyEmailError, setBodyEmailError] = useState(false);
     const [nodeEmailId, setNodeEmailId] = useState(false);
     const [triggerNodeId, setTriggerNodeId] = useState(0);
@@ -340,9 +341,9 @@ const AutomationBuilder = (props) => {
         setAutomationModal("filter");
     };
     const actionEdit = (e, n) => {
-        setToEmail(n.data.to);
         setSubject(n.data.subject);
         setBodyEmail(n.data.body);
+        setEmailTemplateId(n.data.template);
         setNodeEmailId(n.id);
         if (n.data.data !== undefined) {
             setEmailData(n.data.data);
@@ -749,17 +750,13 @@ const AutomationBuilder = (props) => {
         );
         closeFilterModal();
     }
-    const saveEmail = async () => {
+    const saveEmail = async (template, subject, templateId) => {
         let count = 0;
-        if (!toEmail) {
-            setToEmailError('bounce');
-            count = count + 1;
-        }
         if (!subject) {
             setSubjectError('bounce');
             count = count + 1;
         }
-        if (!bodyEmail) {
+        if (!template) {
             setBodyEmailError('bounce');
             count = count + 1;
         }
@@ -768,9 +765,9 @@ const AutomationBuilder = (props) => {
             setElements((elms) =>
                 elms.map((el) => {
                     if (el.id === nodeEmailId) {
-                        el.data.to = toEmail;
                         el.data.subject = subject;
-                        el.data.body = bodyEmail;
+                        el.data.body = template;
+                        el.data.template = templateId;
                     }
                     return {...el};
                 })
@@ -1060,9 +1057,9 @@ const AutomationBuilder = (props) => {
                     nodes: {next: [], previous: ""},
                     arn: process.env.REACT_APP_ACTION_EMAIL,
                     template: '',
-                    to: '',
                     subject: '',
-                    body: ''
+                    body: '',
+                    to: ''
                 },
             };
             setElements((es) => es.concat(newNode));
@@ -1668,13 +1665,7 @@ const AutomationBuilder = (props) => {
                                                 saveMessage={saveMessage} handleBodyChangeTags={handleBodyChangeTags}/>
                             case 'actionEmail':
                                 return <Email closeFilterModal={closeFilterModal} triggerNodeId={triggerNodeId}
-                                              saveEmail={saveEmail}
-                                              copyTag={copyTag} emailData={emailData} bodyEmail={bodyEmail}
-                                              handleBodyEmailChange={handleBodyEmailChange}
-                                              bodyEmailError={bodyEmailError}
-                                              subjectError={subjectError} toggletoMail={toggletoMail} subject={subject}
-                                              handleSubjectChange={handleSubjectChange} toEmailError={toEmailError}
-                                              toEmail={toEmail} handleToEmailChange={handleToEmailChange}/>
+                                              saveEmail={saveEmail} subject={subject} body={bodyEmail} selectedTemplate={emailTemplateId}/>
                             case 'actionDelay':
                                 return <Delay closeFilterModal={closeFilterModal} triggerNodeId={triggerNodeId}
                                               saveDelay={saveDelay}
