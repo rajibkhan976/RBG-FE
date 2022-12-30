@@ -98,9 +98,9 @@ const Inbox = (props) => {
     let subject = data.subject; 
     let template = utils.decodeHTML(data.template); 
     keys.map(el => {
-      subject = subject.replace('[' + el + ']', contactGenData && contactGenData[el] ? contactGenData[el] : "");
+      subject = subject.replaceAll('[' + el + ']', contactGenData && contactGenData[el] ? contactGenData[el] : "");
       subject = subject.replace(/  +/g, ' ');
-      template = template.replace('[' + el + ']', contactGenData && contactGenData[el] ? contactGenData[el] : "");
+      template = template.replaceAll('[' + el + ']', contactGenData && contactGenData[el] ? contactGenData[el] : "");
       template = template.replace(/  +/g, ' ');
     });
     setnewEmailData(current => [
@@ -120,8 +120,11 @@ const Inbox = (props) => {
     const keys = Object.keys(contactGenData);
     let body = data.body;
     keys.map(el => {
-      body = body.replace('[' + el + ']', contactGenData && contactGenData[el] ? contactGenData[el] : "");
+     // body = body.replace("[" + el + "]" , contactGenData && contactGenData[el] ? contactGenData[el] : "");
+
+      body = body.replaceAll("[" + el + "]", contactGenData && contactGenData[el] ? contactGenData[el] : "");
       body = body.replace(/  +/g, ' ');
+      console.log(body);
     });
     setnewEmailData(current => [
        {...newEmailData,
@@ -297,7 +300,7 @@ const Inbox = (props) => {
        })
        
     }
-      {  contactLogData && contactLogData.length > 0 &&
+    {contactLogData && contactLogData.length > 0 &&
         contactLogData.map((elem, key)=>{
           return(
             <div className={elem.direction === "inbound" ? "inboxChat incomingChat" : "inboxChat outgoingChat"}  key={key}>

@@ -30,13 +30,11 @@ function CommunicationLogFilter(props) {
         setSelectedType(event.target.value);
     }
     const handleToChange = (event) => {
-        const datee = new Date(event.target.value + " 23:59 UTC");
-        setSelectedTo(datee.toISOString());
+        setSelectedTo(event.target.value);
+      
     }
-    const handleFromChange = (event) => {
-        const datee = new Date(event.target.value)
-        setSelectedFrom(datee.toISOString());
-        console.log(selectedFrom);
+    const handleFromChange = (event) => {     
+        setSelectedFrom(event.target.value);
     }
     const applyFilter = (event) => {
         event.preventDefault();
@@ -77,7 +75,7 @@ function CommunicationLogFilter(props) {
                 typeMessage: 'warning'
             });
         }
-        
+       
     }
     setTimeout(() => {
         props.clickedOnFilter(clickedOnFilter);
@@ -85,7 +83,7 @@ function CommunicationLogFilter(props) {
                  props.hideFilter();
              }
        // console.log("ssssssssssssssssssss", clickedOnFilter);     
-      }, 500);
+      }, 500); 
       
     const clearFilter = () => {
         setSelectedDirection("");
@@ -95,24 +93,32 @@ function CommunicationLogFilter(props) {
         utils.removeQueryParameter('fromDate');
         utils.removeQueryParameter('toDate');
         setClickedOnFilter(true); 
-    }
+    } 
 
 
-    // useEffect(() => {
-    //     setSelectedDirection(utils?.getQueryVariable("direction"));
-    //     setSelectedType(utils?.getQueryVariable("type"));
-    //     const dateTo = utils?.getQueryVariable("toDate");
-    //     const dateFrom = utils?.getQueryVariable("fromDate");
-    //     //console.log( moment(dateFrom.replaceAll("%3A",":")).format('YYYY-MM-DD') , moment(dateTo.replaceAll("%3A",":")).format('YYYY-MM-DD'));
-    //     //if(dateTo){
-    //     setSelectedTo(moment(dateTo?.replaceAll("%3A",":")).format('YYYY-MM-DD'));
+    useEffect(() => {
 
-    //     //}
-    //     //if(dateFrom){
-    //         setSelectedFrom(moment(dateFrom?.replaceAll("%3A",":")).format('YYYY-MM-DD'));
+        setSelectedDirection(utils?.getQueryVariable("direction"));
+        setSelectedType(utils?.getQueryVariable("type"));
+        setSelectedTo( utils?.getQueryVariable("toDate"));
+        setSelectedFrom( utils?.getQueryVariable("fromDate"));
+        //const dateTo = utils?.getQueryVariable("toDate");
+       // const dateFrom = utils?.getQueryVariable("fromDate");
 
-    //     //}
-    // }, []);
+      //  console.log(dateTo && moment(dateTo.slice(0, 10)).format('DD-MM-YYYY'));
+       // console.log(dateFrom && moment(dateFrom.slice(0, 10)).format('DD-MM-YYYY'));
+        
+        //console.log( moment(dateFrom.replaceAll("%3A",":")).format('YYYY-MM-DD') , moment(dateTo.replaceAll("%3A",":")).format('YYYY-MM-DD'));
+        //if(dateTo){
+       // setSelectedTo(moment(dateTo?.replaceAll("%3A",":")).format('YYYY-MM-DD'));
+
+        //}
+        //if(dateFrom){
+       //utils?.getQueryVariable("fromDate") &&  setSelectedFrom( moment(utils?.getQueryVariable("fromDate").slice(0, 10)).format('DD-MM-YYYY'));
+
+        //}
+        //console.log("SelectedFrom", selectedFrom)
+    }, []);
 
 
 
@@ -166,14 +172,20 @@ function CommunicationLogFilter(props) {
                                         <div className="formField w-50 appflex durationWraper">
                                             <label>From</label>
                                             <div className="inFormField duration">
-                                                <input type="date" placeholder="dd/mm/yyyy" name="" onChange={handleFromChange}/>
+                                                <input type="date" placeholder="dd/mm/yyyy" name="" 
+                                                onChange={handleFromChange}
+                                                value={selectedFrom}
+                                                />
 
                                             </div>
                                         </div>
                                         <div className="formField w-50 appflex durationWraper">
                                             <label>To</label>
                                             <div className="inFormField duration">
-                                            <input type="date" placeholder="dd/mm/yyyy" name="" onChange={handleToChange}/>
+                                            <input type="date" placeholder="dd/mm/yyyy" name="" 
+                                            onChange={handleToChange}
+                                            value={selectedTo}
+                                            />
 
                                             </div>
                                         </div>
