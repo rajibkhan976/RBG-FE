@@ -75,24 +75,6 @@ const TagModal = (props) => {
         }
         fetchTags();
     }, []);
-    const NoOptionsMessage = props => {
-        return (
-            <div>
-                {closeMessage &&
-                    <components.NoOptionsMessage {...props}>
-                        <div className="noData">
-                            <img src={searchIcon} />
-                            <p>Sorry! we couldn’t find any match. you can create a new Tag</p>
-                            <h3>"{selectValue}"</h3>
-                            <button className="creatUserBtn" onClick={() => createOption(selectValue)}>+ Create Tag</button>
-                        </div>
-                    </components.NoOptionsMessage>
-                }
-            </div>
-
-        );
-    };
-
     return (
         <React.Fragment>
             <div className="automationModal filterModal">
@@ -128,7 +110,6 @@ const TagModal = (props) => {
                                             isClearable={true}
                                             placeholder="Select a Tag"
                                             maxMenuHeight={215}
-                                            components={{ NoOptionsMessage }}
                                         />
                                     </div>
                                 </div>

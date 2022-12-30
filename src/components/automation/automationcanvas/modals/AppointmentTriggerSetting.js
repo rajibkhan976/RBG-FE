@@ -25,7 +25,27 @@ const AppointmentTriggerSetting = (props) => {
         events[e.target.value] = e.target.checked;
     }
     const changeDay = (e) => {
-        events['day'] = e.target.value;
+        if (e.target.value < 101 && e.target.value > 0) {
+            setEvents(prevState => {
+                return {
+                    ...prevState,
+                    day: e.target.value
+                }
+            });
+            events['day'] = e.target.value;
+        } else {
+            setEvents(prevState => {
+                return {
+                    ...prevState,
+                    day: e.target.value
+                }
+            });
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: 'Please input a number between 1 to 100',
+                typeMessage: 'error'
+            });
+        }
     }
     const saveSettings = async (e) => {
         try {
@@ -35,7 +55,7 @@ const AppointmentTriggerSetting = (props) => {
                 || events.appointmentRescheduled
                 || events.appointmentCompleted
                 || events.appointmentMissed
-                || events.appointmentDayBefore
+                || (events.appointmentDayBefore && events.day > 0 && events.day < 101)
             ) {
                 setIsLoader(true);
                 let fieldsApiResponse = await ContactService.fetchFields();
@@ -90,7 +110,7 @@ const AppointmentTriggerSetting = (props) => {
                         {isLoader ? <Loader/> : ""}
                         <div className="formBodyContainer">
                             <div className="formFieldsArea">
-                                <div className="">
+                                <div className="formBodyContainerDiv">
                                     <label htmlFor="">Events</label>
                                     <div><label><input type="checkbox" value="appointmentCreate"
                                                        defaultChecked={events.appointmentCreate}
@@ -111,15 +131,7 @@ const AppointmentTriggerSetting = (props) => {
                                                        defaultChecked={events.appointmentDayBefore}
                                                        onChange={changeEvent}/>
                                         &nbsp; On &nbsp;
-                                        <select value={events.day} onChange={changeDay} >
-                                            {(() => {
-                                                let options = [];
-                                                for (let i = 1; i < 31; i++) {
-                                                    options.push(<option value={i}>{i}</option>);
-                                                }
-                                                return options;
-                                            })()}
-                                        </select>
+                                        <input type="number" className="inputFieldEvent" value={events.day} onChange={changeDay} placeholder="Ex: 5"/>
                                         &nbsp; days before
                                     </label></div>
                                 </div>
