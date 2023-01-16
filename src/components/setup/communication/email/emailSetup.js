@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Loader from "../../../shared/Loader";
-import {ErrorAlert, SuccessAlert} from "../../../shared/messages";
-import {useSelector, useDispatch } from "react-redux";
+import { ErrorAlert, SuccessAlert } from "../../../shared/messages";
+import { useSelector, useDispatch } from "react-redux";
 import * as actionTypes from "../../../../actions/types";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
-import {EmailServices} from "../../../../services/setup/EmailServices";
+import { EmailServices } from "../../../../services/setup/EmailServices";
 import { isLoggedIn } from "../../../../services/authentication/AuthServices";
 
 const EmailSetup = () => {
@@ -13,7 +13,7 @@ const EmailSetup = () => {
     const [active, setActive] = useState(types[0]);
     const [radioCheck, setRadioCheck] = useState(false);
     const [isLoader, setIsLoader] = useState(false);
-
+    const emailRegex = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i;
     const [smtpType, setSmtpType] = useState("google");
     const [configuration, setConfiguration] = useState("");
     const [configError, setConfigError] = useState(false);
@@ -22,18 +22,20 @@ const EmailSetup = () => {
     const [errorMsg, setErrorMsg] = useState("");
     const loggedInUser = useSelector((state) => state.user.data);
 
-   // const [loggedInUserState, setloggedInUserState] = useState(loggedInUser);
+    // const [loggedInUserState, setloggedInUserState] = useState(loggedInUser);
 
     //console.log("dddddddddddd ffffffffffffffff fffffffffffffff",loggedInUser.email);
 
     const [emailData, setEmailData] = useState({
         "host": "",
+        "from": "",
         "port": "",
         "user": "",
         "pass": "",
     });
     const [validateMsg, setValidateMsg] = useState({
         "host": "",
+        "from": "",
         "port": "",
         "uSetup": "",
         "pSetup": "",
@@ -44,14 +46,16 @@ const EmailSetup = () => {
         try {
             setIsLoader(true);
             const result = await EmailServices.fetchSetupEmail();
-            if (result.host === 'smtp.gmail.com') {
-                setSmtpType('google');
-            } else if (result.host === 'smtp.sendgrid.net') {
-                setSmtpType('sendgrid');
-            } else {
-                setSmtpType('others');
+            if (result) {
+                if (result.host === 'smtp.gmail.com') {
+                    setSmtpType('google');
+                } else if (result.host === 'smtp.sendgrid.net') {
+                    setSmtpType('sendgrid');
+                } else {
+                    setSmtpType('others');
+                }
+                setEmailData({...result, from: result?.from || (emailRegex.test(result?.user) ? result?.user : "")});
             }
-            setEmailData(result);
         } catch (e) {
             dispatch({
                 type: actionTypes.SHOW_MESSAGE,
@@ -77,7 +81,7 @@ const EmailSetup = () => {
             dispatch({
                 type: actionTypes.SHOW_MESSAGE,
                 message: e.message,
-                typeMessage: (e.message==="Nothing to update. Please make some changes and update")?'warning':'error'
+                typeMessage: (e.message === "Nothing to update. Please make some changes and update") ? 'warning' : 'error'
             });
         } finally {
             setIsLoader(false);
@@ -91,13 +95,13 @@ const EmailSetup = () => {
                 host: 'smtp.gmail.com',
 
             });
-            setValidateMsg({...validateMsg, host: ""});
+            setValidateMsg({ ...validateMsg, host: "" });
         } else if (e.target.value === 'sendgrid') {
             setEmailData({
                 ...emailData,
                 host: 'smtp.sendgrid.net',
             });
-            setValidateMsg({...validateMsg, host: ""});
+            setValidateMsg({ ...validateMsg, host: "" });
 
         } else {
             setEmailData({
@@ -105,10 +109,11 @@ const EmailSetup = () => {
                 host: '',
 
             });
-            setValidateMsg({...validateMsg, host: "Please enter a valid host"});
+            setValidateMsg({ ...validateMsg, host: "Please enter a valid host" });
         }
 
     }
+
     const emailConfig = async (payload) => {
         try {
             setIsLoader(true);
@@ -138,68 +143,87 @@ const EmailSetup = () => {
         if (loggedInUser && Object.keys(loggedInUser).length > 0) {
             console.log("loogged in user", loggedInUser, Object.keys(loggedInUser).length);
 
-            if((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in') ||
-            (loggedInUser.isOrganizationOwner && loggedInUser.isOrganizationOwner === true)){
+            if ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in') ||
+                (loggedInUser.isOrganizationOwner && loggedInUser.isOrganizationOwner === true)) {
                 console.log("I am in if: ", loggedInUser)
                 fetchEmail();
             } else {
-                
+
                 console.log("I am in else: ", loggedInUser)
                 dispatch({
                     type: actionTypes.SHOW_MESSAGE,
-                    message:  "You don't have the authorization to see this page",
+                    message: "You don't have the authorization to see this page",
                     typeMessage: 'error'
-                }); 
+                });
             }
         }
     }, [loggedInUser])
 
-    
-    
-    const fieldHostHandler = (e) =>{
+
+
+    const fieldHostHandler = (e) => {
         setEmailData({
             ...emailData,
-            host : e.target.value,
-        }); 
-        if(e.target.value.length === 0){
-            setValidateMsg({...validateMsg, host: "Please enter a valid host"});
-        }else{
-            setValidateMsg({...validateMsg, host: ""});
+            host: e.target.value,
+        });
+        if (e.target.value.length === 0) {
+            setValidateMsg({ ...validateMsg, host: "Please enter a valid host" });
+        } else {
+            setValidateMsg({ ...validateMsg, host: "" });
         }
     };
-    const fieldPortHandler = (e) =>{
-        const portType = /^[0-9]{3}$/;
+    const fromEmailHandler = (e) => {
         setEmailData({
             ...emailData,
-            port : e.target.value,
-        }); 
-        if(!portType.test(e.target.value)){
-            setValidateMsg({...validateMsg, port: "Please enter a valid port of 3 digit"});
-        }else{
-            setValidateMsg({...validateMsg, port: ""});
+            from: e.target.value,
+        });
+        if (e.target.value && !emailRegex.test(e.target.value)) {
+            setValidateMsg({ ...validateMsg, from: "Please enter a valid email address" });
+        } else {
+            setValidateMsg({ ...validateMsg, from: "" });
         }
     };
-    const fieldUserHandler = (e) =>{
-        let emailRegex = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i;
+    const fieldPortHandler = (e) => {
+        const portType = /^[0-9]{2,4}$/;
         setEmailData({
             ...emailData,
-            user : e.target.value,
-        }); 
-        if(!e.target.value.match(emailRegex)){
-            setValidateMsg({...validateMsg, uSetup: "Please enter a user"});
-        }else{
-            setValidateMsg({...validateMsg, uSetup: ""});
+            port: e.target.value,
+        });
+        if (!portType.test(e.target.value)) {
+            setValidateMsg({ ...validateMsg, port: "Please enter a valid port" });
+        } else {
+            setValidateMsg({ ...validateMsg, port: "" });
         }
     };
-    const fieldPassHandler = (e) =>{
+    const fieldUserHandler = (e) => {
         setEmailData({
             ...emailData,
-            pass : e.target.value,
-        }); 
-        if(e.target.value.length === 0){
-            setValidateMsg({...validateMsg, pSetup: "Please enter a valid password"});
-        }else{
-            setValidateMsg({...validateMsg, pSetup: ""});
+            user: e.target.value,
+        });
+        if (!e.target.value) {
+            setValidateMsg({ ...validateMsg, uSetup: "Please enter a valid mail username" });
+        } else {
+            console.log("Hello", emailData?.from)
+            setValidateMsg({ ...validateMsg, uSetup: "" });
+        }
+    };
+    const fieldUserOnBlurHandler = (e) => {
+        if (!emailData?.from && e.target.value.match(emailRegex)) {
+            console.clear();
+            console.log("I am here");
+            setEmailData(prevState => ({ ...prevState, from: e.target.value }));
+            setValidateMsg({ ...validateMsg, from: "" });
+        }
+    };
+    const fieldPassHandler = (e) => {
+        setEmailData({
+            ...emailData,
+            pass: e.target.value,
+        });
+        if (e.target.value.length === 0) {
+            setValidateMsg({ ...validateMsg, pSetup: "Please enter a valid password" });
+        } else {
+            setValidateMsg({ ...validateMsg, pSetup: "" });
         }
     };
     const validateField = (e) => {
@@ -214,23 +238,23 @@ const EmailSetup = () => {
         setEmailData({
             ...emailData,
             [name]: value,
-        }); 
+        });
         // setEmailData(prevState => ({
         //     ...prevState,
         //     [name]: value,
         // }));
 
         if (name === "host" && value.length === 0) {
-            setValidateMsg({...validateMsg, host: "Please enter a valid host"});
+            setValidateMsg({ ...validateMsg, host: "Please enter a valid host" });
         }
         if (name === "port" && !portType.test(value)) {
-            setValidateMsg({...validateMsg, port: "Please enter a valid port of 3 digit"});
+            setValidateMsg({ ...validateMsg, port: "Please enter a valid port of 3 digit" });
         }
         if (name === "uSetup" && !value.match(emailRegex)) {
-            setValidateMsg({...validateMsg, uSetup: "Please enter a valid user name"});
+            setValidateMsg({ ...validateMsg, uSetup: "Please enter a valid user name" });
         }
         if (name === "pSetup" && value.length === 0) {
-            setValidateMsg({...validateMsg, pSetup: "Please enter a password"});
+            setValidateMsg({ ...validateMsg, pSetup: "Please enter a password" });
         }
     }
     const handleSubmit = async (e) => {
@@ -245,10 +269,19 @@ const EmailSetup = () => {
                 }));
                 validationError = true;
             }
+
+            if (!emailData.from) {
+                setValidateMsg(previousState => ({
+                    ...previousState,
+                    from: "Please enter from email address",
+                }));
+                validationError = true;
+            }
+
             if (!emailData.port) {
                 setValidateMsg(previousState => ({
                     ...previousState,
-                    port: "Please enter a valid port of 3 digit",
+                    port: "Please enter a valid port",
                 }));
                 validationError = true;
             }
@@ -268,8 +301,10 @@ const EmailSetup = () => {
             }
             if (!validationError) {
                 let payload = {
+                    "type": (smtpType === "sendgrid") ? "sendgrid" : "smtp",
                     "host": emailData?.host,
-                    "port": parseInt(emailData?.port),
+                    "from": emailData?.from,
+                    "port": Number(emailData?.port),
                     "user": emailData?.user,
                     "pass": emailData?.pass,
                 };
@@ -309,7 +344,7 @@ const EmailSetup = () => {
     }
     return (
         <>
-            {(isLoader) ? <Loader/> : ''}
+            {(isLoader) ? <Loader /> : ''}
 
 
             <div className="dashInnerUI customization">
@@ -384,41 +419,50 @@ const EmailSetup = () => {
                             <h3>SMTP Set up</h3>
                             <form method="post"
                                 //onSubmit={handleSubmit}
-                                  autoComplete="off"
+                                autoComplete="off"
                             >
                                 <div className="cmnFormRow">
 
                                     <div className="cmnFieldName1">SMTP Type</div>
                                     <div className="cmnFormField">
                                         <select className="cmnFieldStyle btnSelect" value={smtpType}
-                                                onChange={smtpTypeHandler}>
-                                            <option value="google">Google</option>
-                                            <option value="sendgrid">Send Grid</option>
-                                            <option value="others">Other</option>
+                                            onChange={smtpTypeHandler}>
+                                            <option value="smtp">Google</option>
+                                            {/* <option value="sendgrid">Send Grid</option> */}
                                         </select>
                                     </div>
-
                                 </div>
+                                <div className="cmnFormRow">
+                                    <div className="cmnFieldName1">From Email</div>
+                                    <div className={validateMsg?.from ? "cmnFormField error": "cmnFormField"}>
+                                        <input type="text" className="cmnFieldStyle" name="from"
+                                            value={emailData?.from || ""}
+                                            onChange={fromEmailHandler}
+                                        />
+                                    </div>
+                                    <div className="errorMsg">{validateMsg?.from}</div>
+                                </div>
+
                                 <div className="cmnFormRow">
                                     <div className={validateMsg?.host ? "cmnFormCol error" : "cmnFormCol"}>
                                         <div className="cmnFieldName1">Mail Host</div>
                                         <div className="cmnFormField">
                                             <input type="text" className="cmnFieldStyle"
-                                                   name="host"
-                                                   value={emailData?.host === undefined ? "" : emailData?.host}
-                                                   //onChange={validateField}
-                                                   onChange={fieldHostHandler}
-                                                   />
+                                                name="host"
+                                                value={emailData?.host === undefined ? "" : emailData?.host}
+                                                //onChange={validateField}
+                                                onChange={fieldHostHandler}
+                                            />
                                         </div>
                                         <div className="errorMsg">{validateMsg?.host}</div>
                                     </div>
                                     <div className={validateMsg?.port ? "cmnFormCol error" : "cmnFormCol"}>
                                         <div className="cmnFieldName1">Mail Port</div>
                                         <div className="cmnFormField">
-                                            <input type="text" className="cmnFieldStyle"
-                                                   value={emailData.port ? emailData.port : ""}
-                                                   onChange={fieldPortHandler}
-                                                   name="port"
+                                            <input type="number" className="cmnFieldStyle"
+                                                value={emailData.port ? emailData.port : ""}
+                                                onChange={fieldPortHandler}
+                                                name="port"
                                             />
                                         </div>
                                         <div className="errorMsg">{validateMsg?.port}</div>
@@ -431,13 +475,14 @@ const EmailSetup = () => {
                                         <div className="cmnFormField">
 
                                             <input type="text" className="cmnFieldStyle"
-                                                   value={emailData?.user}
-                                                   onChange={fieldUserHandler}
-                                                   name="uSetup"
-                                                   autocomplete="nope"
-                                                   //autoComplete="off"
-                                                //    secureTextEntry={true}
-                                                //    textContentType="oneTimeCode"
+                                                value={emailData?.user}
+                                                onChange={fieldUserHandler}
+                                                onBlur={fieldUserOnBlurHandler}
+                                                name="uSetup"
+                                                autocomplete="nope"
+                                            //autoComplete="off"
+                                            //    secureTextEntry={true}
+                                            //    textContentType="oneTimeCode"
                                             />
                                         </div>
                                         <div className="errorMsg">{validateMsg?.uSetup}</div>
@@ -446,13 +491,13 @@ const EmailSetup = () => {
                                         <div className="cmnFieldName1">Mail Password</div>
                                         <div className="cmnFormField">
                                             <input type="password" className="cmnFieldStyle"
-                                                   value={emailData?.pass}
-                                                   onChange={fieldPassHandler}
-                                                   name="pSetup"
-                                                   autocomplete="new-password"
-                                                //    autoComplete="off"
-                                                //    secureTextEntry={true}
-                                                //    textContentType="oneTimeCode"
+                                                value={emailData?.pass}
+                                                onChange={fieldPassHandler}
+                                                name="pSetup"
+                                                autocomplete="new-password"
+                                            //    autoComplete="off"
+                                            //    secureTextEntry={true}
+                                            //    textContentType="oneTimeCode"
                                             />
                                         </div>
                                         <div className="errorMsg">{validateMsg?.pSetup}</div>
@@ -463,19 +508,19 @@ const EmailSetup = () => {
                                     <button className="cmnBtn"
                                         type="button"
                                         onClick={handleSubmit}
-                                >
-                                    <span>Save</span><img src={arrow_forward} alt=""/>
-                                </button>
+                                    >
+                                        <span>Save</span><img src={arrow_forward} alt="" />
+                                    </button>
                                 }
                             </form>
                             <div className="cmnFormRow mt-2">
                                 <div className="cmnFieldName1">Test Configuration</div>
                                 <div className={configError ? "cmnFormField error" : "cmnFormField"}>
                                     <input type="text" className="cmnFieldStyle"
-                                           placeholder="Please enter a valid email address"
-                                           value={configuration}
-                                           name="emailID"
-                                           onChange={configurationHandler}/>
+                                        placeholder="Please enter a valid email address"
+                                        value={configuration}
+                                        name="emailID"
+                                        onChange={configurationHandler} />
                                 </div>
                                 {configError ?
                                     <div className="errorMsg"> Please enter a Email address for testing</div> : " "}
@@ -490,20 +535,20 @@ const EmailSetup = () => {
                                     <span>Test SMTP Email Configuration</span><img src={arrow_forward} alt=""/>
                                 </button>
                             } */}
-                            
-                              {
-                              (loggedInUser && ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in') ||
-                              (loggedInUser.isOrganizationOwner && loggedInUser.isOrganizationOwner === true)) )? 
-                            
-                                ((emailData?.host === "" && emailData?.port === "" && emailData?.user === "" && emailData?.pass === "") ||
-                                    (emailData?.host === undefined || emailData?.port === undefined || emailData?.user === undefined || emailData?.pass === undefined)) ?
-                                    "" :
-                                    <button className="cmnBtn"
-                                            onClick={handleConfigEmail}
-                                    >
 
-                                        <span>Test SMTP Email Configuration</span><img src={arrow_forward} alt=""/>
-                                    </button>  
+                            {
+                                (loggedInUser && ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in') ||
+                                    (loggedInUser.isOrganizationOwner && loggedInUser.isOrganizationOwner === true))) ?
+
+                                    ((emailData?.host === "" && emailData?.port === "" && emailData?.user === "" && emailData?.pass === "") ||
+                                        (emailData?.host === undefined || emailData?.port === undefined || emailData?.user === undefined || emailData?.pass === undefined)) ?
+                                        "" :
+                                        <button className="cmnBtn"
+                                            onClick={handleConfigEmail}
+                                        >
+
+                                            <span>Test SMTP Email Configuration</span><img src={arrow_forward} alt="" />
+                                        </button>
                                     :
                                     ""
 
