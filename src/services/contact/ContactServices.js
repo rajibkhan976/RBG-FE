@@ -155,7 +155,7 @@ export const ContactService = {
     },
     uploadProfilePic: async (payload) => {
         try {
-            let url = config.getContactsUrl + '/uploadImage'
+            let url = config.contactsUrlRevised + '/uploadImage'
             const result = await axios.put(url, payload, { headers: headers });
             if(result.status === 200) {
                 return result.data;
@@ -199,7 +199,7 @@ export const ContactService = {
     },
     showStatusOfImport: async (payload) => {
         try {
-            let url = config.getContactsUrl + '/fetch-status-import'
+            let url = config.contactsUrlRevised + '/fetch-status-import'
             const result = await axios.post(url, payload, { headers: headers });
             if(result.status === 200) {
                 return result.data;
@@ -221,7 +221,7 @@ export const ContactService = {
     },
     fetchFilters: async () => {
         try {
-            const url = config.getContactsUrl + '/fetch-filter-data';
+            const url = config.contactsUrlRevised + '/fetch-filter-data';
             const options = {
                 headers: headers
             };
@@ -327,7 +327,7 @@ export const ContactService = {
     fetchFields: async () => {
         try {
             const url = config.contactFetchFields;
-            const options = {
+            const options = { 
                 headers: headers
             };
             const result = await axios.get(url, options);
@@ -349,4 +349,6 @@ export const ContactService = {
             }
         }
     },
+
+    
 };

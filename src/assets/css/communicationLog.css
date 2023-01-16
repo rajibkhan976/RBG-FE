@@ -107,7 +107,7 @@ button.skytext{
   height: 80px;
 }
 .tableListing li > div.dateCommunication{
-  min-width: 150px;
+  min-width: 180px;
 }
 .tableListing li > div.nameCommunication{
   min-width: 390px;
@@ -161,13 +161,13 @@ button.skytext{
   display: grid;
   grid-auto-rows: min-content;
   padding-bottom: 130px;
-} */
+} */  
 .inboxPage {
   position: relative;
   overflow: auto;
   display: grid;
   grid-auto-rows: min-content;
-  padding-bottom: 130px;
+  padding-bottom: 12px;
 }
 .inboxChat{
   padding: 20px 16px;
@@ -209,6 +209,7 @@ button.skytext{
   line-height: 16px;
   color: var(--darkBlue);
   display: flex;
+  padding-top: 12px;
 }
 .inboxChat .info span{
   margin-right: 23px;
@@ -224,7 +225,7 @@ button.skytext{
   line-height: 15px;
   text-align: justify;
   color: var(--darkBlue);
-  padding: 8px 0 20px 0;
+  padding: 0px 0 20px 0;
 }
 .recording{
   width: 70%;
@@ -506,7 +507,7 @@ button.skytext{
  opacity: 0.3;
 }
 .inboxChat .txtArea button.noBg {
-  padding: 18px 0 18px 0px;
+  padding: 10px 0 7px 0px;
   font-size: 12px;
   color: #ED707A;
 }
@@ -547,5 +548,56 @@ button.skytext{
 } 
 .contactModal .tabBarArea .loaderOuter {
   position: absolute;
-  min-height: 100vh;
+  /* min-height: 100vh; */
+  height: 710px;
+}
+
+.editingPanel .keywordBox{
+  height: 256px;
+}
+
+.editingPanel .keywordBox .keywordList{
+  height: 200px;
+}
+
+.inboxPage::-webkit-scrollbar {
+  width: 3px;
+}
+
+.inboxPage::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.inboxPage::-webkit-scrollbar-thumb {
+  background-color: #dddbda;
+}
+
+.noMoredata{
+  color: #9baebc;
+    font-size: 13px;
+    text-align: center;
+    padding: 20px;
+}
+.goData{
+  color: #9baebc;
+  position: fixed;
+  right: 40px;
+  bottom: 70px;
+  z-index: 60;
+  padding: 3px 15px 3px 16px;
+  border: 1px solid #9baebc;
+  background: #fff;
+  border-radius: 30px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+.communicationList .appListsWrap {
+  width: 100%;
+  display: block;
+  position: absolute;
+}
+
+.goData img{
+  width: 19px;
 }

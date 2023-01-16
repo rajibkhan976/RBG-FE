@@ -51,6 +51,7 @@ const CommunicationLog = (props) => {
     const [selectType, setSelectType] = useState("");
 	const [selectTodate, setSelectTodate] = useState("");
     const [selectFromdate, setSelectFromdate] = useState("");
+  	const [scrolledPosition, setScrolledPosition] = useState(true);
     
 
 
@@ -71,7 +72,7 @@ const CommunicationLog = (props) => {
 		try {
 			setIsLoader(true);
 			setIsScroll(true);
-      		setIsLoaderScroll(true);
+      		//setIsLoaderScroll(true);
 			const result = await communicationLogServices.fetchCommLog(pageId, queryParams);
 			if (result) {
 				//setLogList(result.data);
@@ -79,7 +80,15 @@ const CommunicationLog = (props) => {
 				if (result.pagination.page == "1") {
 					setLogList(result.data);
 				  } else {
+			        console.log("page", result.pagination.page,"data length", result.data.length);
+
+					if(result.data.length === 0){
+						setScrolledPosition(false);
+						//console.log("scrolledPosition", scrolledPosition);
+					}
 					setLogList([...logList, ...result.data]);
+			       // console.log("gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",logList);
+					//console.log("scrolledPosition", scrolledPosition);
 				  }
 				setPaginationData({
                     ...paginationData,
@@ -89,13 +98,13 @@ const CommunicationLog = (props) => {
 					totalCount: result.pagination.totalCount
                 });
 			}
-			setIsScroll(false);
-
+	
 		} catch (e) {
 	
 		} finally {
 			setIsLoader(false);
-			setIsLoaderScroll(false);
+			//setIsLoaderScroll(false);
+			setIsScroll(false);
 		}
 	};
 	const getQueryParams = async () => {
@@ -104,6 +113,10 @@ const CommunicationLog = (props) => {
         const direction = utils.getQueryVariable("direction");
         const toDate = utils.getQueryVariable("toDate");
         const fromDate = utils.getQueryVariable("fromDate");
+   
+//console.log("toDate",toDate, "change", moment(toDate).format('YYYY-MM-DD'));
+
+// /2023-01-02 , 05 October 2011
 
         const queryParams = new URLSearchParams();
         if (keyword) {
@@ -116,12 +129,28 @@ const CommunicationLog = (props) => {
             queryParams.append("direction", direction);
         }
 		if (fromDate) {
-            let fromDateUrl = new Date(fromDate + " 00:00:00 UTC");
-            queryParams.append("fromDate",  fromDateUrl.toISOString());
+
+			var m = moment(new Date(fromDate)).utcOffset(0);
+			m.set({hour:0,minute:0,second:0,millisecond:0})
+			m.toISOString()
+			m.format()
+			console.log("dummy",m.toISOString())
+
+
+            //let fromDateUrl = new Date(fromDate + " 00:00:00 UTC");
+			//console.log("from date url",fromDateUrl)
+			//console.log("moment forma",moment(fromDate).format())
+            queryParams.append("fromDate",  m.toISOString());
+			//console.log("iso string defulat", fromDateUrl.toISOString())
         }
 		if (toDate) {
-			let toDateUrl = new Date(toDate + " 23:59:59 UTC");
-            queryParams.append("toDate", toDateUrl.toISOString());
+			//let toDateUrl = new Date(toDate + " 23:59:59 UTC");
+			var m = moment(new Date(toDate)).utcOffset(0);
+			m.set({hour:23,minute:59,second:59,millisecond:0})
+			m.toISOString()
+			m.format()
+			console.log("dummy",m.toISOString())
+            queryParams.append("toDate", m.toISOString());
         }
         return queryParams;
     };
@@ -133,12 +162,14 @@ const CommunicationLog = (props) => {
 		  let scrollHeight = e.target.scrollHeight;
 		  let scrollTop = e.target.scrollTop;
 			console.log("scrollHeightdddddddddddddddddddddddddd", scrollHeight, "scrollTopddddddddddddddddddd", scrollTop);
-
-		  if (scrollTop > (scrollHeight / 5)) {
-			if(logList.length === 10){
+		  //if (scrollTop > (scrollHeight / 5)) {
+			//if(logList.length === 10){
 				
-				fetchCommunicationLogList( parseInt(paginationData.page) + 1 );
-			}
+			//}
+		  //}
+		  if (scrollTop > 140 && scrolledPosition) {
+			//console.log("scrolledPosition", scrolledPosition);	
+			fetchCommunicationLogList( parseInt(paginationData.page) + 1 );		
 		  }
 		}
 	  };
@@ -238,7 +269,7 @@ const CommunicationLog = (props) => {
 				contact_modal_id: {
 					"id": elem.contact_id,
 				},
-			}, 100);
+			}, 100); 
 		})
 	}
 
@@ -282,12 +313,13 @@ const CommunicationLog = (props) => {
 		<div className='communicationList'>
 			<div class="userListBody">
 			    <div class="listBody" style={{}}>
-				<Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} onScroll={listPageNo}>
-					<ul class="tableListing noHeader" ref={comLogRef} >
+				<Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />} ref={comLogRef} onScroll={listPageNo}>
+					<ul class="tableListing noHeader" >
 						{ 
 						 (logList && logList.length > 0) ? 
+						 <>{
 							logList.map((elem,key) => {
-								const month = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+								const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 								const newdate = new Date(elem.updated_at);
 								const dateForamt = month[newdate.getMonth()] +" " + newdate.getDate() + ",  "  + newdate.getFullYear();
 								const startDate = moment(elem.updated_at).format('h:mm A');
@@ -339,7 +371,10 @@ const CommunicationLog = (props) => {
 
 								)														
 							})
-
+							}
+							<div className="appListsWrap">
+								<div className="noMoredata">No more communication Found </div></div>
+						 </>	
 						 :
 						   <div className="appListsWrap">
 								<div className="noDataFound">

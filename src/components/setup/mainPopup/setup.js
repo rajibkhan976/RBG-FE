@@ -41,12 +41,13 @@ const Setup = (props) => {
               </li>
               <li>
                 <div className="listHead">
-                  <i><img src={SetupIcon2} alt="" /></i>
+                  <i>
                     <NavLink
                         to="/gym-details" onClick={(e) => props.clickedLink(e)}>
                       <img src={SetupIcon2} alt="" />
                     </NavLink>
-                  
+                  </i>
+              
                   <div>
                     <h3>
                       <NavLink
