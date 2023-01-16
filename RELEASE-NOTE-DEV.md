@@ -80,3 +80,6 @@
     - Communication log hot fix      
 # HOTFIX V1.1.9   
     - Communication log hot fix       
+# HOTFIX - Email V3.0.0
+    - From email incorporated for Sendgrid implementation
+    - Sendgrid option not provided in smtp type as per instruction from higher authority
