@@ -35,6 +35,7 @@ const Sms = (props) => {
   const [templateToogle, setTemplateToogle] = useState(false);
   const [smsDatasubject, setSmsDatasubject] = useState("");
   const [searchTagString, setSearchTagString] = useState("");
+  const [backError, setBackError] = useState(false);
 
   const [smsData, setSmsData] = useState( {
     body : "",
@@ -78,7 +79,8 @@ const Sms = (props) => {
   };
 
   const smsSend = async (payload) => {
-    try {
+    return new Promise(async (resolve,reject)=>{
+      try {
         setIsLoader(true);
         let result = await SMSServices.sendSMS(payload);
         dispatch({
@@ -86,16 +88,30 @@ const Sms = (props) => {
             message: "SMS sent successfully",
             typeMessage: 'success'
         });
+        resolve(true)
+        //setBackError(false);
+        //console.log(backError);
     } catch (e) {
         dispatch({
             type: actionTypes.SHOW_MESSAGE,
             message: e.message ,
             typeMessage: 'error'
         });
+       // setBackError(true);
+       if(e.message !== ""){
+       // alert("")
+        resolve(false)
+        //setBackError(true)
+       }else{
+        resolve(true)
+       // setBackError(false);
+       }
     } finally {
         setIsLoader(false);
         props.closePanel(false)
     }
+    })
+    
   };
 
 
@@ -183,7 +199,7 @@ useEffect(() => {
   fetchSMSTags()
 }, []);
 
-const submitMessage = (e) =>{
+const submitMessage = async (e) =>{
   e.preventDefault();
   var phNumber = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
   let payload = {
@@ -199,24 +215,48 @@ const submitMessage = (e) =>{
   }else if(!phNumber.test((contactGenData?.phone?.full_number || ""))){
    setSmsDataErr({...smsDataErr,errNumber : "It is not a valid number"})
  }else{
-    smsSend(payload);
-    props.smsPlaceholdingData(payload)
+    let result = await smsSend (payload);
+    //console.log("resultttttttttttttttttttt", result);
+      if(result === true){
+        props.smsPlaceholdingData(payload)
+      }
+    
     setSmsDataErr({...smsDataErr,err : ""})
   }
 
 } 
 
 
+function useOutsideAlerter(ref) {
+  useEffect(() => {
+    /**
+     * Alert if clicked on outside of element
+     */
+    function handleClickOutside(event) {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setKeywordSuggesion(false)
+      }
+    }
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      // Unbind the event listener on clean up
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [ref]);
+}
 
 
-
+const keywordRef = useRef(null);
+  
+useOutsideAlerter(keywordRef);
 
 
 
   return (
     <>
        {isLoader ? <Loader/> : ""}
-       <div className="formBody">
+       <div className="formBody" >
         <form>
                   <div className="formSlice top">
                       <div className="label">Template</div>
@@ -241,7 +281,7 @@ const submitMessage = (e) =>{
                                               </li>
                                           )
                                       ) :
-                                      <li className="listCentered">No Email template Found</li>
+                                      <li className="listCentered">No SMS template Found</li>
 
                                   }
                               </ul>}
@@ -265,7 +305,7 @@ const submitMessage = (e) =>{
                           }><img src={browsTextarea}/></button>
                       
                            {keywordSuggesion && (
-                                    <div className="keywordBox">
+                                    <div className="keywordBox" ref={keywordRef}>
                                         <div className="searchKeyword">
                                             <div className="searchKeyBox">
                                                 <input
@@ -281,14 +321,14 @@ const submitMessage = (e) =>{
                                                     onClick={() => {setKeywordSuggesion(false)
                                                             setSearchTagString("")}}
                                                 ></button>
-                                            </div>
+                                            </div> 
                                         </div>
                                         <div className="keywordList">
                                             <ul> 
                                                 {smsTags
                                                     .filter(
                                                         (smsTag) =>
-                                                            smsTag.id.indexOf(searchTagString) >= 0 
+                                                            smsTag.id.toLowerCase().indexOf(searchTagString)>= 0 
                                                             && smsTag.id !== "tags"
                                                             && smsTag.id !== "phone" 
                                                             && smsTag.id !== "mobile" 

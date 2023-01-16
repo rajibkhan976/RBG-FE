@@ -17,9 +17,10 @@ function CommunicationLogFilter(props) {
     const [isLoader, setIsLoader] = useState(false);
     const [selectedDirection, setSelectedDirection] = useState(false);
     const [selectedType, setSelectedType] = useState(false);
-    const [selectedTo, setSelectedTo] = useState(false);
-    const [selectedFrom, setSelectedFrom] = useState(false);
+    const [selectedTo, setSelectedTo] = useState("");
+    const [selectedFrom, setSelectedFrom] = useState("");
     const [clickedOnFilter, setClickedOnFilter] = useState(false);
+    const [error, setError] = useState("");
     
      
 
@@ -30,53 +31,74 @@ function CommunicationLogFilter(props) {
         setSelectedType(event.target.value);
     }
     const handleToChange = (event) => {
+        let toDate = new Date(event.target.value);
+        const dayNow = new Date();
+        
         setSelectedTo(event.target.value);
-      
+        if(Math.ceil(dayNow - toDate) >= 0){
+            setError("")
+        }
     }
-    const handleFromChange = (event) => {     
+    const handleFromChange = (event) => {    
+        let fromDate = new Date(event.target.value);
+        const dayNow = new Date(); 
         setSelectedFrom(event.target.value);
+        if(Math.ceil(dayNow - fromDate) >= 0){
+            setError("")
+        }
     }
+
     const applyFilter = (event) => {
         event.preventDefault();
-        if (selectedDirection) {
-            utils.addQueryParameter('direction', selectedDirection);
-        // } else {
-        //     utils.removeQueryParameter('direction')
-        }
-        if (selectedType) {
-            utils.addQueryParameter('type', selectedType);
-        // } else {
-        //     utils.removeQueryParameter('type')
-        }
-        if (selectedFrom) {
-            utils.addQueryParameter('fromDate', selectedFrom);
-        // } else {
-        //      utils.removeQueryParameter('fromDate')
-        }
-        if (selectedTo) {
-            utils.addQueryParameter('toDate', selectedTo);
-        // } else {
-        //     utils.removeQueryParameter('toDate')
-        }
-        if (selectedDirection || selectedType || selectedFrom || selectedTo ) {
-            // let filter = [];
-            // if(selectedDirection){
-            //     filter.push(selectedDirection)
-            // }
-            // if(selectedType){
-            //     filter.push(selectedType)
-            // }
-            //props.filterSection(filter);
-            setClickedOnFilter(true);         
-        }else{ 
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: 'Please select any filter first.',
-                typeMessage: 'warning'
-            });
+        let toDate = new Date(selectedTo);
+        let fromDate = new Date(selectedFrom);
+        const dayNow = new Date();
+
+        
+        
+            if(Math.ceil(toDate - fromDate) < 0){
+                setError("Please choose To-Date on or after From-Date")
+            }else if(Math.ceil(dayNow - fromDate) < 0){
+                setError("Please choose a date that is today or previous");
+            } else {
+
+                if (selectedDirection) {
+                    utils.addQueryParameter('direction', selectedDirection);
+                // } else {
+                //     utils.removeQueryParameter('direction')
+                }
+                if (selectedType) {
+                    utils.addQueryParameter('type', selectedType);
+                // } else {
+                //     utils.removeQueryParameter('type')
+                }
+                if (selectedFrom) {
+                    utils.addQueryParameter('fromDate', selectedFrom);
+                // } else {
+                //      utils.removeQueryParameter('fromDate')
+                }
+                if (selectedTo) {
+                    utils.addQueryParameter('toDate', selectedTo);
+
+                // } else {
+                //     utils.removeQueryParameter('toDate')
+                }
+                if (selectedDirection || selectedType || selectedFrom || selectedTo ) {
+                    setClickedOnFilter(true);   
+
+                }else{ 
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: 'Please select any filter first.',
+                        typeMessage: 'warning'
+                    });
+                }
+
+
+            }      
         }
        
-    }
+    
     setTimeout(() => {
         props.clickedOnFilter(clickedOnFilter);
          if(clickedOnFilter){
@@ -102,22 +124,7 @@ function CommunicationLogFilter(props) {
         setSelectedType(utils?.getQueryVariable("type"));
         setSelectedTo( utils?.getQueryVariable("toDate"));
         setSelectedFrom( utils?.getQueryVariable("fromDate"));
-        //const dateTo = utils?.getQueryVariable("toDate");
-       // const dateFrom = utils?.getQueryVariable("fromDate");
-
-      //  console.log(dateTo && moment(dateTo.slice(0, 10)).format('DD-MM-YYYY'));
-       // console.log(dateFrom && moment(dateFrom.slice(0, 10)).format('DD-MM-YYYY'));
-        
-        //console.log( moment(dateFrom.replaceAll("%3A",":")).format('YYYY-MM-DD') , moment(dateTo.replaceAll("%3A",":")).format('YYYY-MM-DD'));
-        //if(dateTo){
-       // setSelectedTo(moment(dateTo?.replaceAll("%3A",":")).format('YYYY-MM-DD'));
-
-        //}
-        //if(dateFrom){
-       //utils?.getQueryVariable("fromDate") &&  setSelectedFrom( moment(utils?.getQueryVariable("fromDate").slice(0, 10)).format('DD-MM-YYYY'));
-
-        //}
-        //console.log("SelectedFrom", selectedFrom)
+   
     }, []);
 
 
@@ -190,6 +197,7 @@ function CommunicationLogFilter(props) {
                                             </div>
                                         </div>
                                     </li>
+                                    <div className="errorMsg">{error}</div>
                                   
                                     <li className="lastLiApp btnLi">
                                         <div className="formField formControl w-50 appflex">

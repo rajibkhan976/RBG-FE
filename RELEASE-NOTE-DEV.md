@@ -74,3 +74,5 @@
     - Communication log QI/FI issues    
 # Automation V3.0.3
     - Fixed automation email
+# HOTFIX V1.1.7    
+    - Communication log hot fix    

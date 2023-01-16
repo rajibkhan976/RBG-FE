@@ -90,26 +90,35 @@ const fetchTemplateList = async () => {
 };
 
 const emailGlobalSend = async (payload) => {
-  try {
-      setIsLoader(true);
-      let result = await EmailServices.emailGlobalSend(payload);
-      //setSuccessMsg(result.message);
-      dispatch({
-          type: actionTypes.SHOW_MESSAGE,
-          message: result.message,
-          typeMessage: 'success'
-      });
-  } catch (e) {
-      //setErrorMsg(e.message);
-      dispatch({
-          type: actionTypes.SHOW_MESSAGE,
-          message: e.message + ". Please check your email configuration.",
-          typeMessage: 'error'
-      });
-  } finally {
-      setIsLoader(false);
-      props.closePanel(false)
-  }
+    return new Promise(async (resolve,reject)=>{
+        try {
+            setIsLoader(true);
+            let result = await EmailServices.emailGlobalSend(payload);
+            //setSuccessMsg(result.message);
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: result.message,
+                typeMessage: 'success'
+            });
+            resolve(true)
+        } catch (e) {
+            //setErrorMsg(e.message);
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message + ". Please check your email configuration.",
+                typeMessage: 'error'
+            });
+            // setBackError(true);
+            if(e.message !== ""){
+                resolve(false)
+                }else{
+                resolve(true)
+            }
+        } finally {
+            setIsLoader(false);
+            props.closePanel(false)
+        }
+    })
 };
 
 useEffect(() => {
@@ -220,7 +229,7 @@ useEffect(() => {
   setChangedTemplate(utils.decodeHTML(emailData.template));
 }, [emailData.template])
 
-const sendGlobalEmail = (e) => {
+const sendGlobalEmail = async (e) => {
   console.log("Edited email body: ", emailData.template);
   e.preventDefault();
   const subject = emailData.subject;
@@ -260,7 +269,7 @@ const sendGlobalEmail = (e) => {
         });
   } else {
       
-      emailGlobalSend(payload);
+    let result = await emailGlobalSend(payload);
       setEmailData({
           "_id": "",
           "email": "", 
@@ -276,11 +285,38 @@ const sendGlobalEmail = (e) => {
       setTempSelected(false);
       setEmailDatasubject("");
       //setEmailSend(true);
-      props.emailplaceholdingData(payload)
+      console.log("resultttttttttttttttttttt", result);
+
+      if(result === true){ 
+        props.emailplaceholdingData(payload)
+      }
   } 
   
 }
 
+function useOutsideAlerter(ref) {
+    useEffect(() => {
+      /**
+       * Alert if clicked on outside of element
+       */
+      function handleClickOutside(event) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setKeywordSuggesion(false)
+        }
+      }
+      // Bind the event listener
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  }
+  
+  
+  const keywordRef = useRef(null);
+    
+  useOutsideAlerter(keywordRef);
 
   return (
    
@@ -332,7 +368,7 @@ const sendGlobalEmail = (e) => {
                                     <img src={browsTextarea} alt="keywords"/>
                                 </button>
                                 {keywordSuggesion && (
-                                    <div className="keywordBox">
+                                    <div className="keywordBox" ref={keywordRef}>
                                         <div className="searchKeyword">
                                             <div className="searchKeyBox">
                                                 <input
@@ -349,13 +385,13 @@ const sendGlobalEmail = (e) => {
                                                             setSearchTagString("")}}
                                                 ></button>
                                             </div>
-                                        </div>
+                                        </div> 
                                         <div className="keywordList">
-                                            <ul>
+                                            <ul> 
                                                 {emailTags
                                                     .filter(
                                                         (smsTag) =>
-                                                            smsTag.id.indexOf(searchTagString) >= 0 
+                                                            smsTag.id.toLowerCase().indexOf(searchTagString) >= 0 
                                                             && smsTag.id !== "tags"
                                                             && smsTag.id !== "phone" 
                                                             && smsTag.id !== "mobile" 

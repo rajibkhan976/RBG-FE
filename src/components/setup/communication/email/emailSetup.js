@@ -44,18 +44,15 @@ const EmailSetup = () => {
         try {
             setIsLoader(true);
             const result = await EmailServices.fetchSetupEmail();
-            if (result) {
-                if (result.host === 'smtp.gmail.com') {
-                    setSmtpType('google');
-                } else if (result.host === 'smtp.sendgrid.net') {
-                    setSmtpType('sendgrid');
-                } else {
-                    setSmtpType('others');
-                }
-                setEmailData(result);
+            if (result.host === 'smtp.gmail.com') {
+                setSmtpType('google');
+            } else if (result.host === 'smtp.sendgrid.net') {
+                setSmtpType('sendgrid');
+            } else {
+                setSmtpType('others');
             }
+            setEmailData(result);
         } catch (e) {
-            setIsLoader(false);
             dispatch({
                 type: actionTypes.SHOW_MESSAGE,
                 message: e.message,

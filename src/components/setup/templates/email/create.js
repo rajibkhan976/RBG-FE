@@ -286,7 +286,29 @@ const CreateTemplate = (props) => {
     }
 
 
-
+    function useOutsideAlerter(ref) {
+        useEffect(() => {
+          /**
+           * Alert if clicked on outside of element
+           */
+          function handleClickOutside(event) {
+            if (ref.current && !ref.current.contains(event.target)) {
+                setKeywordSuggesionCreateSub(false)
+            }
+          }
+          // Bind the event listener
+          document.addEventListener("mousedown", handleClickOutside);
+          return () => {
+            // Unbind the event listener on clean up
+            document.removeEventListener("mousedown", handleClickOutside);
+          };
+        }, [ref]);
+      }
+      
+      
+      const keywordRef = useRef(null);
+        
+      useOutsideAlerter(keywordRef);
 
 
 
@@ -364,7 +386,7 @@ const CreateTemplate = (props) => {
                                     </button>
                                     {keywordSuggesionCreateSub ? 
                                      //keyWordList() 
-                                        <div className="keywordBox">
+                                        <div className="keywordBox" ref={keywordRef}>
                                             <div className="searchKeyword">
                                                 <div className="searchKeyBox">
                                                     <input
@@ -387,7 +409,7 @@ const CreateTemplate = (props) => {
                                                     {smsTags
                                                         .filter(
                                                             (smsTag) =>
-                                                                smsTag.id.indexOf(searchTagString) >= 0 
+                                                                smsTag.id.toLowerCase().indexOf(searchTagString) >= 0 
                                                                 && smsTag.id !== "tags"
                                                                 && smsTag.id !== "phone" 
                                                                 && smsTag.id !== "mobile" 
@@ -398,6 +420,9 @@ const CreateTemplate = (props) => {
                                                                 && smsTag.id !== "statusName"
                                                                 && smsTag.id !== "phaseName"
                                                                 && smsTag.id !== "contactType"
+                                                                && smsTag.id !== "ageGroup"
+                                                                && smsTag.id !== "sourceDetail"
+                                                                && smsTag.id !== "onTrial"
                                                         )
                                                         .map((tagItem, i) => (
                                                             <li key={"keyField" + i}>
