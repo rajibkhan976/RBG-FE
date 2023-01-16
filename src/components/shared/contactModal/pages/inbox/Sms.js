@@ -202,6 +202,7 @@ useEffect(() => {
 const submitMessage = async (e) =>{
   e.preventDefault();
   var phNumber = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+  console.log("phNumber.test((contactGenData?.phone?.full_number", phNumber.test(contactGenData?.phone?.full_number))
   let payload = {
     body : smsData.body,
     mediaUrl : "",
@@ -213,8 +214,9 @@ const submitMessage = async (e) =>{
   }else if((contactGenData?.phone?.full_number || "")   === "" ){
     setSmsDataErr({...smsDataErr,errNumber : "To send SMS you must save a mobile or phone number first"})
   }else if(!phNumber.test((contactGenData?.phone?.full_number || ""))){
-   setSmsDataErr({...smsDataErr,errNumber : "It is not a valid number"})
- }else{
+    
+    setSmsDataErr({...smsDataErr,errNumber : "It is not a valid number"})
+  }else{
     let result = await smsSend (payload);
     //console.log("resultttttttttttttttttttt", result);
       if(result === true){
@@ -255,6 +257,7 @@ useOutsideAlerter(keywordRef);
 
   return (
     <>
+
        {isLoader ? <Loader/> : ""}
        <div className="formBody" >
         <form>
@@ -371,13 +374,13 @@ useOutsideAlerter(keywordRef);
                       <div className="label">&nbsp;</div>
                       
                       <button type="button" class="saveNnewBtn"
-                          disabled={contactGenData?.phone?.full_number ? "" : "disabled"}
+                          disabled={contactGenData?.phone?.full_number || !smsDataErr.errNumber? "" : "disabled"}
                           onClick={submitMessage}
                       ><span>Send</span><img src={arrowRightWhite} alt=""/></button>
                       {contactGenData?.phone?.full_number ? "" : <div className="errorMsg space">Sending SMS is disabled now, to enable it save a phone number first</div>}
                         
 
-                         {/* <div className="errorMsg space">{smsDataErr.errNumber}</div>   */}
+                        <div className="errorMsg space">{smsDataErr.errNumber}</div> 
 
                   </div>
 

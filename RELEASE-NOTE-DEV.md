@@ -78,3 +78,5 @@
     - Communication log hot fix    
 # HOTFIX V1.1.8    
     - Communication log hot fix      
+# HOTFIX V1.1.9   
+    - Communication log hot fix       

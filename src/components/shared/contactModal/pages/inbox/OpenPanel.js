@@ -61,7 +61,7 @@ useEffect(() => {
     setCallPanel(false);
     setEmailPanel(false);
   }
-  //console.log(props)
+ // console.log(props)
   const editCallHandler = (e) =>{
     //setCallPanel(true);
     setSmsPanel(false);
