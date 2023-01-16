@@ -716,7 +716,7 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                         </div>
                         <div class="slice text-center">
                             <button class="cmnBtn" onClick={sendGlobalEmail}
-                               disabled={emailSetupData.user === undefined ? "disabled":""}
+                               disabled={!emailSetupData ? "disabled":""}
                             >Send Email <img src={arrow_forward} alt=""/></button>
                         </div>
                     </div>

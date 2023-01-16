@@ -226,6 +226,7 @@ button.skytext{
   text-align: justify;
   color: var(--darkBlue);
   padding: 0px 0 20px 0;
+  word-break: break-all;
 }
 .recording{
   width: 70%;
