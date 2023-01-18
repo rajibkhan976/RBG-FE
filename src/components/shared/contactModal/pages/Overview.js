@@ -427,7 +427,9 @@ const Overview = (props) => {
 
 
     const onContactSubmit = async (e) => {
-        console.log('here on contact update')
+        console.log('here on contact update');
+        console.log("selectedPhase", selectedPhase, "selectedStatus", selectedStatus);
+
         e.preventDefault();
         setIsLoader(true);
         let formErrorsCopy = formErrorMsg;
@@ -440,9 +442,10 @@ const Overview = (props) => {
             isError = true;
             formErrorsCopy.lName = "Please fill up Last Name."
         }
-        if (selectedPhase !== "" && (selectedStatus === "" || selectedStatus === undefined)) {
+        if (( selectedPhase !== undefined && selectedPhase !== "" )   && (selectedStatus === "" || selectedStatus === undefined)) {
+            alert("hey");
             isError = true;
-            formErrorsCopy.status = "Please Select a status."
+            formErrorsCopy.status = "Please Select a status.";
         }
         if (!basicinfoEmail && basicinfoPhone.number === "") {
             isError = true;

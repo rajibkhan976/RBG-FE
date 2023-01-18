@@ -201,6 +201,7 @@ button.skytext{
   font-size: 14px;
   color: var(--darkBlue);
   margin-bottom: 10px;
+  word-break: break-all;
 }
 
 .inboxChat .info{
@@ -513,7 +514,7 @@ button.skytext{
   color: #ED707A;
 }
 .inboxChat .txtArea .areaOfText {
-  max-height: 135px;
+  max-height: 115px;
   overflow: hidden;
 }
 .slickModalBody.bigInbox{
@@ -601,4 +602,29 @@ button.skytext{
 
 .goData img{
   width: 19px;
+}
+.communicationList .userListBody .tableListing li {
+  cursor: pointer;
+}
+.searchBar.commlog {
+  width: 450px;
+}
+.inDashboardHeader .infoSpan {
+  transform: translate(11px, -1px);
+}
+
+.commLog .infoSpan .tooltiptextInfo{
+  margin-left: -20px;
+    top: 28px;
+    width: 340px;
+    bottom: auto;
+    line-height: 16px;
+    padding: 5px 6px;
+
+}
+.commLog .infoSpan .tooltiptextInfo::after {
+  top: -10px;
+  left: 16px;
+  margin-left: -5px;
+  border-color: transparent transparent #fff transparent;
 }

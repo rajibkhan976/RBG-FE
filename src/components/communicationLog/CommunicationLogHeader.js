@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useRef } from 'react';
 
+import info_icon from "../../assets/images/infos.svg";
 
 import filter from "../../assets/images/filter.svg";
 import {utils} from "../../helpers";
@@ -41,21 +42,30 @@ setTimeout(() => {
           <li>Communication Log </li>  
           <li>All</li>
         </ul>
-        <h2 className="inDashboardHeader">Communication Log 
-        {/* <span>({props.countCommLog})</span> */}
+        <h2 className="inDashboardHeader commLog">Communication Log 
+        <span>({props.countCommLog})</span> 
+        <span className="infoSpan">
+                  <img src={info_icon} alt="" />
+                  <span className="tooltiptextInfo">Communication log right now only showing Incoming & Outgoing SMS, Outgoing Email. Very soon we will add Incoming & Outgoing Calls, Incoming Email</span>
+                </span>
         </h2>
         <p className="userListAbout">
            Listing of Communication Log for your Organization 
         </p>
+        
       </div> 
+      
+
+
+
 
          <div class="listFeatures rightSpace">
-            <div class="searchBar  searchbar2">
+            <div class="searchBar commlog  searchbar2">
                 <form onSubmit={handleSearch}>
                             <input
                                 type="search"
                                 name="search"
-                                placeholder="Search"
+                                placeholder="Search by From / To, SMS and Email Subject"
                                 autoComplete="off"
                                 onChange={handleKeywordChange}
                                 value={keyword}

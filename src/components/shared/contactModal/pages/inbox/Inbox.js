@@ -317,22 +317,24 @@ const goToListBottom = (e) =>{
                 <div className="areaOfText">
                 {
                   elem.log_type === "SMS" ?   
-                  <h3>{elem.data?.message}.</h3>
+                  <h3>{elem.data.message.slice(0, 280)}</h3>
                   : 
                   <>
+                  {/* <span>{ elem.data?.subject.length + utils.decodeHTML(elem.data?.template).length}</span> */}
                   <h3>Sub: {elem.data?.subject}</h3>
-                  <div className="emailBody" dangerouslySetInnerHTML={{__html: elem.data?.template}}>
+                  <div className="emailBody" dangerouslySetInnerHTML={{__html: elem.data?.template.trim().slice(0, 280 - elem.data?.subject.length)}}>
                    
                   </div>
+                  
                   </>
                 }
                </div>
                 {
                
                
-               ((elem.data?.template) ? utils.decodeHTML(elem.data?.template).trim().length : "" )+
-               ((elem.data?.subject) ? elem.data?.subject.trim().length : "") > 280 ? <button onClick={()=>showBigMail(elem.data, elem.log_type, elem.direction)} className="noBg">load more</button> :                
-               elem.data?.message && elem.data?.message.trim().length > 280 ? <button onClick={()=>showBigMail(elem.data, elem.log_type, elem.direction)}  className="noBg">load more</button> :
+               ((elem.data?.template) ? utils.decodeHTML(elem.data?.template).length : "" )+
+               ((elem.data?.subject) ? elem.data?.subject.length : "") > 267 ? <button onClick={()=>showBigMail(elem.data, elem.log_type, elem.direction)} className="noBg">read more</button> :                
+               elem.data?.message && elem.data?.message.length > 280 ? <button onClick={()=>showBigMail(elem.data, elem.log_type, elem.direction)}  className="noBg">read more</button> :
                ""
 
                 }
@@ -363,18 +365,18 @@ const goToListBottom = (e) =>{
                   elem.log_type === "EMAIL" ?
                   <>
                   <h3>Sub: {elem.subject}</h3>
-                  <div className="emailBody" dangerouslySetInnerHTML={{__html :elem.template }}>
-                   {/* {utils.decodeHTML(elem.template)} */}
+                  <div className="emailBody" dangerouslySetInnerHTML={{__html: elem?.template.trim().slice(0, 280 - elem?.subject.length)}}>
+                   {/* {utils.decodeHTML(elem.template)} */ }
                   </div>
                   </>
                  :
-                  <h3>{elem.message}</h3>
+                  <h3>{elem.message.slice(0, 280)}</h3>
                 }
                 </div>
                 {
                ((elem.template) ? utils.decodeHTML(elem.template).trim().length : "" ) +
-               ((elem.subject) ? elem.subject.trim().length : "") > 280 ? <button onClick={()=>showBigMailStatic(elem, elem.log_type)} className="noBg">load more</button> :                
-               elem?.message && elem.message.trim().length > 280 ? <button onClick={()=>showBigMailStatic(elem.message, elem.log_type)}  className="noBg">load more</button> :
+               ((elem.subject) ? elem.subject.trim().length : "") > 267 ? <button onClick={()=>showBigMailStatic(elem, elem.log_type)} className="noBg">read more</button> :                
+               elem?.message && elem.message.trim().length > 280 ? <button onClick={()=>showBigMailStatic(elem.message, elem.log_type)}  className="noBg">read more</button> :
                ""
 
                 }

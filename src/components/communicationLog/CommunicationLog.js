@@ -27,7 +27,6 @@ import Pagination from "../shared/Pagination";
 import { Scrollbars } from "react-custom-scrollbars-2";
 
 
-
 const CommunicationLog = (props) => {
     const dispatch = useDispatch();
 
@@ -167,10 +166,13 @@ const CommunicationLog = (props) => {
 				
 			//}
 		  //}
-		  if (scrollTop > 140 && scrolledPosition) {
-			//console.log("scrolledPosition", scrolledPosition);	
-			fetchCommunicationLogList( parseInt(paginationData.page) + 1 );		
-		  }
+		  if (scrollTop > 140 ) {
+			//if(scrolledPosition){
+			fetchCommunicationLogList( parseInt(paginationData.page) + 1 ); 
+			
+			//}
+			}
+			
 		}
 	  };
 
@@ -277,7 +279,7 @@ const CommunicationLog = (props) => {
 	  <>
 	  {isLoader ? <Loader/> :""}
 	  	<CommunicationLogHeader showFilter={showFilter} 
-		   //countCommLog={paginationData.totalCount} 
+		   countCommLog={paginationData.totalCount} 
 		   clickOnSearch={(data)=>clickOnSearch(data)}
 		/>
 		
@@ -324,7 +326,9 @@ const CommunicationLog = (props) => {
 								const dateForamt = month[newdate.getMonth()] +" " + newdate.getDate() + ",  "  + newdate.getFullYear();
 								const startDate = moment(elem.updated_at).format('h:mm A');
 								return(
-									<li className='space' key={key}>
+									<li className='space' key={key}
+									onClick={() => openContactModal(elem)}
+									>
 										<div className='iconType'>
 											<div className={elem.log_type === "SMS" ? 'roundIconBase violet' : elem.log_type === "EMAIL" ? 'roundIconBase blue' : 'roundIconBase '}>
 											<img src={
@@ -333,9 +337,7 @@ const CommunicationLog = (props) => {
 											} alt=""/>
 											</div>
 										</div>
-										<div className='nameCommunication' 
-										  onClick={() => openContactModal(elem)}
-										  >
+										<div className='nameCommunication' >
 											<span class="comLogText">{elem.direction === "outbound"? "To" : "From"}: {elem.contact_name} {elem.alias_ref && "(" + elem.alias_ref + ")"}</span>
 										</div>
 										<div>
@@ -348,15 +350,15 @@ const CommunicationLog = (props) => {
 											</span> */}
 											{elem.direction === "outbound" ? 
 											   <>
-											   <span class="comLogText">
+											    <span class="comLogText">
 												   <span className='skytext'>{elem.gym_account_name} </span> send {elem.log_type === "SMS" ? "a " + elem.log_type : "an " + elem.log_type} 
-												   <span className='doomed'> "{elem.log_type === "SMS" ? elem.data.message : elem.log_type === "EMAIL" ? elem.data.subject: ""}"</span>
-											   </span>
+												   <span className='doomed'> "{elem.log_type === "SMS" ?  (elem.data.message.length > 160 ? (elem.data.message.slice(0, 160) + "..."): elem.data.message ): elem.log_type === "EMAIL" ? (elem.data.subject.length > 160 ? (elem.data.subject.slice(0, 160) + "..."): elem.data.subject): ""}"</span>
+												</span>
 											   </>
 												:
 												<span class="comLogText">
 												  Received  {elem.log_type === "SMS" ? "a " + elem.log_type : "an " + elem.log_type} <span className='doomed'>from</span> {elem.from} 
-												  <span className='doomed'> "{elem.log_type === "SMS" ? elem.data.message : elem.log_type === "EMAIL" ? elem.data.subject: ""}"</span>
+												  <span className='doomed'> "{elem.log_type === "SMS" ? (elem.data.message.length > 160 ? (elem.data.message.slice(0, 160) + "..."): elem.data.message ): elem.log_type === "EMAIL" ?  (elem.data.subject.length > 160 ? (elem.data.subject.slice(0, 160) + "..."): elem.data.subject): ""}"</span>
 											    </span>
 										    }
 
