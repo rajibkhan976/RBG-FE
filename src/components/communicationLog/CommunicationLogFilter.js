@@ -110,11 +110,13 @@ function CommunicationLogFilter(props) {
     const clearFilter = () => {
         setSelectedDirection("");
         setSelectedType("");
-        utils.removeQueryParameter('direction')
-        utils.removeQueryParameter('type');
-        utils.removeQueryParameter('fromDate');
-        utils.removeQueryParameter('toDate');
-        setClickedOnFilter(true); 
+        setSelectedTo("");
+        setSelectedFrom("");
+        // utils.removeQueryParameter('direction')
+        // utils.removeQueryParameter('type');
+        // utils.removeQueryParameter('fromDate');
+        // utils.removeQueryParameter('toDate');
+        // setClickedOnFilter(true); 
     } 
 
 
