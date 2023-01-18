@@ -28,6 +28,7 @@ const EmailModal = (props) => {
 
     const contactSelect = useRef(null)
     const newEmailTemplateSubject = useRef(null)
+    const keywordRef = useRef(null);
 
     const [isLoader, setIsLoader] = useState(false)
     const [imgLoader, setImgLoader] = useState(false)
@@ -70,12 +71,7 @@ const EmailModal = (props) => {
 
     const [emailSend, setEmailSend] = useState(false);
     const [changedTemplate, setChangedTemplate] = useState("");
-    const [emailSetupData, setEmailSetupData] = useState({
-        "host": "",
-        "port": "",
-        "user": "",
-        "pass": "",
-    });
+    const [emailSetupData, setEmailSetupData] = useState(false);
 
     const emailGlobalSend = async (payload) => {
         try {
@@ -138,21 +134,11 @@ const EmailModal = (props) => {
     }
     const fetchEmail = async () => {
         try {
-            setIsLoader(true);
-            const result = await EmailServices.fetchSetupEmail();
-            if (result) {
-                setEmailSetupData(result);
-            }
+            await EmailServices.fetchSetupEmail();
+            setEmailSetupData(true);
         } catch (e) {
-            setIsLoader(false);
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: e.message,
-                typeMessage: 'error'
-            });
-        } finally {
-            setIsLoader(false);
-        }
+            setEmailSetupData(false);
+        } 
     };
     useEffect(() => {
         fetchTemplateList();
@@ -431,6 +417,10 @@ const EmailModal = (props) => {
             ...emailData,
             "email": contact.email
         })
+        setValidateMsg({
+            ...validateMsg,
+            email: "",
+        });
         // setErrorObj({
         //   ...errorObj,
         //   to: ""
@@ -456,6 +446,35 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
   console.log("sssssssssssssssssssssssssssss",emailSetupData.user);
 
 
+
+  function useOutsideAlerter(ref) {
+    useEffect(() => {
+      /**
+       * Alert if clicked on outside of element
+       */
+      function handleClickOutside(event) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setKeywordSuggesion(false)
+        }
+      }
+      // Bind the event listener
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  }
+  
+    
+  useOutsideAlerter(keywordRef);
+
+
+
+
+
+
+
     return (
         <div className="sideMenuOuter" style={{zIndex: zIndexEmail}}>
             <div className="dialogBg" onClick={props.emailModalOff}></div>
@@ -471,7 +490,7 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                     </button>
                     <h3>Send Email</h3>
                     <p>Enter email id</p>
-                    <div className="showSetupMsg">{emailSetupData.user === undefined ? "You can't send mail as the email setup is not done" :""}</div>
+                    <div className="showSetupMsg">{!emailSetupData ? "You can't send mail as the email setup is not done" :""}</div>
                     <div className={validateMsg.email ? "numberForCall error" : "numberForCall"}>
                         <input type="email"
                                placeholder="Eg. richardnile@rbg.com" className="emailInput"
@@ -623,7 +642,7 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                     <img src={icon_browse_keywords} alt="keywords"/>
                                 </button>
                                 {keywordSuggesion && (
-                                    <div className="keywordBox">
+                                    <div className="keywordBox" ref={keywordRef}>
                                         <div className="searchKeyword">
                                             <div className="searchKeyBox">
                                                 <input
@@ -646,7 +665,7 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                                 {emailTags
                                                     .filter(
                                                         (smsTag) =>
-                                                            smsTag.id.indexOf(searchTagString) >= 0 
+                                                            smsTag.id.toLowerCase().indexOf(searchTagString) >= 0 
                                                             && smsTag.id !== "tags"
                                                             && smsTag.id !== "phone" 
                                                             && smsTag.id !== "mobile" 
@@ -657,6 +676,9 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                                             && smsTag.id !== "statusName"
                                                             && smsTag.id !== "phaseName"
                                                             && smsTag.id !== "contactType"
+                                                            && smsTag.id !== "ageGroup"
+                                                            && smsTag.id !== "sourceDetail"
+                                                            && smsTag.id !== "onTrial"
                                                     )
                                                     .map((tagItem, i) => (
                                                         <li key={"keyField" + i}>
@@ -694,7 +716,7 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                         </div>
                         <div class="slice text-center">
                             <button class="cmnBtn" onClick={sendGlobalEmail}
-                               disabled={emailSetupData.user === undefined ? "disabled":""}
+                               disabled={!emailSetupData ? "disabled":""}
                             >Send Email <img src={arrow_forward} alt=""/></button>
                         </div>
                     </div>

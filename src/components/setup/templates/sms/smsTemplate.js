@@ -868,6 +868,31 @@ const SmsTemplate = (props) => {
     fetchSMS()
   }, []);
 
+
+  function useOutsideAlerter(ref) {
+    useEffect(() => {
+      /**
+       * Alert if clicked on outside of element
+       */
+      function handleClickOutside(event) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setKeywordSuggesion(false)
+        }
+      }
+      // Bind the event listener
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  }
+  
+  
+  const keywordRef = useRef(null);
+    
+  useOutsideAlerter(keywordRef);
+
   return (
     <div className="dashInnerUI smsListingPage">
       {isLoader ? <Loader /> : ""}
@@ -1230,7 +1255,7 @@ const SmsTemplate = (props) => {
                       </div>
                     )}
                     {keywordSuggesion && (
-                      <div className="keywordBox">
+                      <div className="keywordBox" ref={keywordRef}>
                         <div className="searchKeyword">
                           <div className="searchKeyBox">
                             <input type="text" onChange={e => setSearchTagString(e.target.value)} />
@@ -1244,10 +1269,26 @@ const SmsTemplate = (props) => {
                             ></button>
                           </div>
                         </div>
-                        <div className="keywordList">
+                        <div className="keywordList" >
                           <ul>
                               {
-                                smsTags.filter(smsTag => smsTag.id.indexOf(searchTagString) >= 0).map((tagItem, i) =>  (
+                                smsTags
+                                  .filter((smsTag)=> 
+                                    smsTag.id.toLowerCase().indexOf(searchTagString) >= 0 
+                                    && smsTag.id !== "tags"
+                                    && smsTag.id !== "phone" 
+                                    && smsTag.id !== "mobile" 
+                                    && smsTag.id !== "momCellPhone" 
+                                    && smsTag.id !== "dadCellPhone"
+                                    && smsTag.id !== "createdBy"
+                                    && smsTag.id !== "createdAt"
+                                    && smsTag.id !== "statusName"
+                                    && smsTag.id !== "phaseName"
+                                    && smsTag.id !== "contactType"
+                                    && smsTag.id !== "ageGroup"
+                                    && smsTag.id !== "sourceDetail"
+                                    && smsTag.id !== "onTrial"
+                                    ).map((tagItem, i) =>  (
                                   <li key={"keyField"+i}>
                                     <button onClick={(e) => addKeywordEdit(e, tagItem.id)}>
                                       {tagItem.id}
@@ -1392,7 +1433,23 @@ const SmsTemplate = (props) => {
                   <div className="smsTagsTemplate">  
                   {/* .filter(smsTag => smsTag.id.indexOf(searchTagString) >= 0)                   */}
                     {
-                      smsTags.map((tagItem, i) =>  (
+                      smsTags
+                      .filter(
+                        (smsTag) =>
+                            smsTag.id !== "tags"
+                            && smsTag.id !== "phone" 
+                            && smsTag.id !== "mobile" 
+                            && smsTag.id !== "momCellPhone" 
+                            && smsTag.id !== "dadCellPhone"
+                            && smsTag.id !== "createdBy"
+                            && smsTag.id !== "createdAt"
+                            && smsTag.id !== "statusName"
+                            && smsTag.id !== "phaseName"
+                            && smsTag.id !== "contactType"
+                            && smsTag.id !== "ageGroup"
+                            && smsTag.id !== "sourceDetail"
+                            && smsTag.id !== "onTrial"
+                    ).map((tagItem, i) =>  (
                         <button key={"tagItem-"+i} className="tagsSMSCreate" onClick={(e) => addThisTag(e, tagItem.id)}>
                           {tagItem.id}
                         </button>

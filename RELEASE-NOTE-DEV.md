@@ -74,3 +74,14 @@
     - Communication log QI/FI issues    
 # Automation V3.0.3
     - Fixed automation email
+# HOTFIX V1.1.7    
+    - Communication log hot fix    
+# HOTFIX V1.1.8    
+    - Communication log hot fix      
+# HOTFIX V1.1.9   
+    - Communication log hot fix       
+# HOTFIX - Email V3.0.0
+    - From email incorporated for Sendgrid implementation
+    - Sendgrid option not provided in smtp type as per instruction from higher authority
+# HOTFIX V1.2.0   
+    - Communication log hot fix and other other fixes         

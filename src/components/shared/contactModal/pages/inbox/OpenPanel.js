@@ -34,6 +34,23 @@ const OpenPanel = (props) => {
   const [emailPanel, setEmailPanel] = useState(false);
   const [contactGenData, setContactgendata] = useState(props.contactGenData);
   const [device, setDevice] = useState(props?.device);
+
+  const [emailSetupData, setEmailSetupData] = useState(false);
+
+const fetchEmail = async () => {
+  try {
+      await EmailServices.fetchSetupEmail();
+      setEmailSetupData(true);
+  } catch (e) {
+    setEmailSetupData(false);
+  }
+};
+useEffect(() => {
+  fetchEmail();
+}, []);
+
+
+
   useEffect(() => {
     console.log("device", device)
     setDevice(props?.device);
@@ -44,7 +61,7 @@ const OpenPanel = (props) => {
     setCallPanel(false);
     setEmailPanel(false);
   }
-  //console.log(props)
+ // console.log(props)
   const editCallHandler = (e) =>{
     //setCallPanel(true);
     setSmsPanel(false);
@@ -78,13 +95,17 @@ const OpenPanel = (props) => {
  const smsPlaceholdingData = (data)=>{
   props.smsPlaceholdingData(data)
 }
+//console.log("_status", device._status);
+
 
   return (
-    <>
+    <> 
      <div className="editingPanel">
         <div className="editPanelHeader">
           <div className="doomedTxt">Choose a response type</div>
-          <button className={smsPanel ? "outLinedBtn active" : "outLinedBtn"} onClick={editSmsHandler}>
+          <button className={smsPanel ? "outLinedBtn active" : "outLinedBtn"} onClick={editSmsHandler}
+            disabled={((contactGenData?.phone?.full_number || "")   === "" ) || ("status" in device && device.status()) != 'ready' ? "disabled" : ""}
+          >
             <svg width="20" height="19" viewBox="0 0 20 19" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M11 12.5H16" stroke="none" stroke-width="1.2" stroke-miterlimit="10" stroke-linejoin="round"/>
               <path d="M14 17.5C16.7614 17.5 19 15.2614 19 12.5C19 9.73858 16.7614 7.5 14 7.5C11.2386 7.5 9 9.73858 9 12.5C9 15.2614 11.2386 17.5 14 17.5Z" stroke="none" stroke-width="1.2" stroke-miterlimit="10" stroke-linejoin="round"/>
@@ -103,7 +124,10 @@ const OpenPanel = (props) => {
             </svg>
             Call
           </button>
-          <button className={emailPanel ? "outLinedBtn active" : "outLinedBtn"} onClick={editEmailHandler}>
+          
+          <button className={emailPanel ? "outLinedBtn active" : "outLinedBtn"} onClick={editEmailHandler}
+             disabled={!emailSetupData || (contactGenData?.email === "" ) ? "disabled" :""}
+           >
             <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M9.39948 14.4143H1.14648V1.44531H18.8325V7.34531" stroke="none" stroke-width="1.2" stroke-linejoin="round"/>
               <path d="M1.14648 1.44531L9.98948 7.93031L18.8325 1.44531" stroke="none" stroke-width="1.2" stroke-linejoin="round"/>

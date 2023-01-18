@@ -42,6 +42,8 @@ module.exports = {
     //importContactUrl: 'http://localhost:4000/"+process.env.REACT_APP_ENV+"/contact',
     // Contact Service API service
     getContactsUrl: "https://" + process.env.REACT_APP_CONTACT + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/contact",
+    contactsUrlRevised: "https://" + process.env.REACT_APP_CONTACT_REVISED + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/contact",
+
     // getContactsUrl: "http://localhost:3001/"+process.env.REACT_APP_ENV+"/contact",
     setColumnUrl: "https://" + process.env.REACT_APP_CONTACT_COLUMNS + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/contact/order",
     getColumnUrl: "https://" + process.env.REACT_APP_CONTACT_COLUMNS + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/contact/order",
