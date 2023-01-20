@@ -85,3 +85,5 @@
     - Sendgrid option not provided in smtp type as per instruction from higher authority
 # HOTFIX V1.2.0   
     - Communication log hot fix and other other fixes         
+# HOTFIX V1.2.1   
+    - Communication log hot fix in loader and scroll         
