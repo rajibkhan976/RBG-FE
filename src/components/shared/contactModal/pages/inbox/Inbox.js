@@ -44,9 +44,9 @@ const Inbox = (props) => {
   }, [props.device]);
 
   const [paginationData, setPaginationData] = useState({
-		offset: 0, 
-		limit: 10, 
-		page: "1", 
+		offset: 0,
+		limit: 10,
+		page: "1",
 		totalCount: null
     });
 
@@ -68,7 +68,7 @@ const Inbox = (props) => {
 	 		setIsScroll(true);
      // setIsLoaderScroll(true);
 	 		const result = await communicationLogServices.fetchInboxLog(pageId, contact_id);
-				
+
       if (result.pagination.page == "1") {
         setContactLogData(result.data.logs);
        // console.log("page 1", result.data.logs);
@@ -80,9 +80,9 @@ const Inbox = (props) => {
       }
       setPaginationData({
         ...paginationData,
-        offset: result.pagination.offset, 
-        limit: result.pagination.limit, 
-        page: result.pagination.page, 
+        offset: result.pagination.offset,
+        limit: result.pagination.limit,
+        page: result.pagination.page,
         totalCount: result.pagination.totalCount
       });
       setScrolledPosition(comLogRef.current.scrollHeight);
@@ -96,32 +96,32 @@ const Inbox = (props) => {
       }
 
 	 	} catch (e) {
-	
+
 	 	} finally {
-      
-      
+
+
       setIsScroll(false);
 	 	setIsLoader(false);
 	 	//setIsLoaderScroll(false);
 	 	}
 	 };
-  
+
   //console.log( props.contactId);
 
-  
+
 
   const emailplaceholdingData = (data)=>{
-   // props.emailplaceholdingData(data) 
+   // props.emailplaceholdingData(data)
     var date = new Date();
     const keys = Object.keys(contactGenData);
-    let subject = data.subject; 
-    let template = utils.decodeHTML(data.template); 
+    let subject = data.subject;
+    let template = utils.decodeHTML(data.template);
     keys.map(el => {
       subject = subject.replaceAll('[' + el + ']', contactGenData && contactGenData[el] ? contactGenData[el] : "");
       subject = subject.replace(/  +/g, ' ');
       template = template.replaceAll('[' + el + ']', contactGenData && contactGenData[el] ? contactGenData[el] : "");
       template = template.replace(/  +/g, ' ');
-    }); 
+    });
     setnewEmailData(current => [
       {
         ...newEmailData,
@@ -131,7 +131,7 @@ const Inbox = (props) => {
         date:  moment( date).format('MMM Do YYYY h:mm A')
       }
       , ...current])
-    //console.log("to add data in the list for email" , newEmailData); 
+    //console.log("to add data in the list for email" , newEmailData);
     comLogRef.current.scrollTop = comLogRef.current.scrollHeight - comLogRef.current.clientHeight
   }
   const smsPlaceholdingData = (data)=>{
@@ -146,7 +146,7 @@ const Inbox = (props) => {
       body = body.replace(/  +/g, ' ');
       console.log(body);
     });
-    
+
     setnewEmailData(current => [
        {...newEmailData,
          log_type: "SMS",
@@ -160,10 +160,10 @@ const Inbox = (props) => {
 
  useEffect(() => {
   fetchInboxLogList(1);
-  }, []); 
+  }, []);
 
 
-  
+
   const showBigMail = (data, type, direction) =>{
     if(type === "SMS"){
       console.log(data.message);
@@ -201,7 +201,7 @@ const Inbox = (props) => {
       type : "",
     })
   }
-  
+
   const showBigMailStatic = (data, type) =>{
    // console.log("jhhhhhhhhhhhhhhhhhhhhhhhhhh", data);
     console.log(data);
@@ -238,7 +238,7 @@ const Inbox = (props) => {
 
 	// 	  if (scrollTop < 260 ) {
   //       //if(contactLogData.length === 10){
-  //         if (isScroll) {       
+  //         if (isScroll) {
   //         fetchInboxLogList( parseInt(paginationData.page) + 1 );
   //         }
   //       //}
@@ -248,7 +248,7 @@ const Inbox = (props) => {
 
 
   const scrollHandel = (inboxDiv) => {
-    
+
     if(!isScroll) {
       setClientHeight(comLogRef.current?.clientHeight);
       setScrolledHeight(comLogRef.current?.scrollHeight)
@@ -256,50 +256,61 @@ const Inbox = (props) => {
       console.log("scrolledTop: ", scrolledTop  , "scrolledHeight"   , scrolledHeight, "clientHeight", clientHeight );
 
         if(comLogRef.current.scrollTop <  260) {
-          
+
           if(paginationData.totalCount <= paginationData.page*10 ){
             console.log ("No more data found")
           }else{
             fetchInboxLogList( parseInt(paginationData.page) + 1 );
           }
         }
-      
-      
+
+
     }
-    
+
   }
   // const loader = useDataLoader(scrollHandel, contactLogData, setContactLogData);
   // useChatScroll(comLogRef, contactLogData, loader);
   // useEffect(() => {
   //   const inboxDiv = comLogRef.current;
   //   inboxDiv.addEventListener("scroll", scrollHandel);
-  // }, [ scrollHandel]); 
- 
+  // }, [ scrollHandel]);
+
 
 
 const goToListBottom = (e) =>{
   comLogRef.current.scrollTop = comLogRef.current.scrollHeight - comLogRef.current.clientHeight ;
-
 }
 
- 
+// function badStringReplace (tempData, titleData) {
+//   //var newdata = tempData.slice(0, 280 - titleData);
+//   var newdata = "<p>golomolu</p"
+//   const lastCh = newdata.charAt(newdata.length - 1);
+//   //var setOfShit = ["<","</","</p","</h1","</h", "</ul", "</u","</ol", "</o", "</li", "</l","</ul"];
+//   if(lastCh !== ">"){
+//    var newdata1 = newdata.split("<");
+//        newdata1.pop();
+//     console.log(newdata1).join(" ");
+
+//   }
+// }
+// badStringReplace();
 
   return (
     <>
-    {isLoader ? <Loader/> :""} 
-    
+    {isLoader ? <Loader/> :""}
 
-   
+
+
    <div className="contactTabsInner" >
-   
+
     <div className="inboxPage" ref={comLogRef} style={{height: "100%", width: "100%"}} onScroll={scrollHandel}>
-  
+
     {
-    (scrolledHeight> 2500 && 
+    (scrolledHeight> 2500 &&
       scrolledTop <= scrolledHeight - clientHeight - 800 )
       ?
-      
-     <button className="goData" onClick={goToListBottom}>Jump to latest Messages <img src={arrowDown}/> </button> 
+
+     <button className="goData" onClick={goToListBottom}>Jump to latest Messages <img src={arrowDown}/> </button>
       : ""
     }
     {contactLogData && contactLogData.length > 0 &&
@@ -316,29 +327,30 @@ const goToListBottom = (e) =>{
               <div className="txtArea">
                 <div className="areaOfText">
                 {
-                  elem.log_type === "SMS" ?   
+                  elem.log_type === "SMS" ?
                   <h3>{elem.data.message.slice(0, 280)}</h3>
-                  : 
+                  :
                   <>
                   {/* <span>{ elem.data?.subject.length + utils.decodeHTML(elem.data?.template).length}</span> */}
                   <h3>Sub: {elem.data?.subject}</h3>
-                  <div className="emailBody" dangerouslySetInnerHTML={{__html: elem.data?.template.trim().slice(0, 280 - elem.data?.subject.length)}}>
-                   
+
+                  <div className="emailBody" dangerouslySetInnerHTML={{__html: elem.data?.template.slice(0, 280 - elem.data?.subject.length)}}>
+                    {/* {console.log(elem.data?.template.slice(0, 280 - elem.data?.subject.length))} */}
                   </div>
-                  
+
                   </>
                 }
                </div>
                 {
-               
-               
+
+
                ((elem.data?.template) ? utils.decodeHTML(elem.data?.template).length : "" )+
-               ((elem.data?.subject) ? elem.data?.subject.length : "") > 267 ? <button onClick={()=>showBigMail(elem.data, elem.log_type, elem.direction)} className="noBg">read more</button> :                
+               ((elem.data?.subject) ? elem.data?.subject.length : "") > 267 ? <button onClick={()=>showBigMail(elem.data, elem.log_type, elem.direction)} className="noBg">read more</button> :
                elem.data?.message && elem.data?.message.length > 280 ? <button onClick={()=>showBigMail(elem.data, elem.log_type, elem.direction)}  className="noBg">read more</button> :
                ""
 
                 }
-                
+
                 <div className="info">
                   {/* <span><img src={smallPh}/>({elem.from}) SMS NUMBER.</span> */}
                   <span><img src={smalCalendar}/>{ moment(elem.updated_at).format('MMM Do YYYY h:mm A')}</span>
@@ -347,11 +359,11 @@ const goToListBottom = (e) =>{
             </div>
           )
         })
-  
+
       }
       {
        ( newEmailData.length> 0) &&
-       
+
         newEmailData.slice(0).reverse().map((elem, key)=>{
         return(
           <div className="inboxChat outgoingChat" key={key}>
@@ -375,24 +387,24 @@ const goToListBottom = (e) =>{
                 </div>
                 {
                ((elem.template) ? utils.decodeHTML(elem.template).trim().length : "" ) +
-               ((elem.subject) ? elem.subject.trim().length : "") > 267 ? <button onClick={()=>showBigMailStatic(elem, elem.log_type)} className="noBg">read more</button> :                
+               ((elem.subject) ? elem.subject.trim().length : "") > 264 ? <button onClick={()=>showBigMailStatic(elem, elem.log_type)} className="noBg">read more</button> :
                elem?.message && elem.message.trim().length > 280 ? <button onClick={()=>showBigMailStatic(elem.message, elem.log_type)}  className="noBg">read more</button> :
                ""
 
                 }
-                
+
                   <div className="info">
                     {/* <span><img src={smallPh}/>({elem.from}) SMS NUMBER.</span> */}
                     <span><img src={smalCalendar}/>{ elem.date}</span>
                   </div>
-                
+
               </div>
             </div>
         )
        })
-       
+
     }
-   
+
         {contactLogData && contactLogData.length === 0 && newEmailData.length === 0 &&
           <div className="appListsWrap">
           <div className="noDataFound">
@@ -401,11 +413,11 @@ const goToListBottom = (e) =>{
         </div>
         }
     </div>
-  
-  
 
 
-    
+
+
+
 
       </div>
 
@@ -421,7 +433,7 @@ const goToListBottom = (e) =>{
       closeModal={closeModal}
       contentShowInModal = {contentShowInModal}
     />
-    }  
+    }
      </>
   );
 };

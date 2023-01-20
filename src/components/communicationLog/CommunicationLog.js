@@ -50,7 +50,8 @@ const CommunicationLog = (props) => {
     const [selectType, setSelectType] = useState("");
 	const [selectTodate, setSelectTodate] = useState("");
     const [selectFromdate, setSelectFromdate] = useState("");
-  	const [scrolledPosition, setScrolledPosition] = useState(true);
+  	const [dataLenght, setDataLenght] = useState(true);
+    const [scrolledPosition, setScrolledPosition] = useState(null);
     
 
 
@@ -78,17 +79,25 @@ const CommunicationLog = (props) => {
 			    //console.log("gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",logList);
 				if (result.pagination.page == "1") {
 					setLogList(result.data);
-				  } else {
 			        console.log("page", result.pagination.page,"data length", result.data.length);
 
-					if(result.data.length === 0){
-						setScrolledPosition(false);
-						//console.log("scrolledPosition", scrolledPosition);
-					}
+				} else {
+			        console.log("page", result.pagination.page,"data length", result.data.length);					
 					setLogList([...logList, ...result.data]);
-			       // console.log("gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",logList);
-					//console.log("scrolledPosition", scrolledPosition);
-				  }
+			  
+				}
+				if(result.data.length === 0){
+					setDataLenght(false);
+					//console.log("dataLenght", dataLenght);
+				}else{
+					setDataLenght(true)
+				}
+				setScrolledPosition(comLogRef.current.scrollHeight);
+
+				if(result.pagination.page != "1"){
+					comLogRef.current.scrollTop  = ( comLogRef.current.scrollHeight - scrolledPosition ) - 200;
+					console.log("scroll data: ", comLogRef.current.scrollTop);
+				}
 				setPaginationData({
                     ...paginationData,
                     offset: result.pagination.offset, 
@@ -106,6 +115,7 @@ const CommunicationLog = (props) => {
 			setIsScroll(false);
 		}
 	};
+
 	const getQueryParams = async () => {
         const keyword = utils.getQueryVariable("search");
         const type = utils.getQueryVariable("type");
@@ -160,17 +170,19 @@ const CommunicationLog = (props) => {
 		if (!isScroll) {
 		  let scrollHeight = e.target.scrollHeight;
 		  let scrollTop = e.target.scrollTop;
-			console.log("scrollHeightdddddddddddddddddddddddddd", scrollHeight, "scrollTopddddddddddddddddddd", scrollTop);
-		  //if (scrollTop > (scrollHeight / 5)) {
-			//if(logList.length === 10){
-				
+		  let clientHeight = e.target.clientHeight;
+		  let maxScroll = scrollHeight - clientHeight;
+			console.log("scrollHeightdddddddddddddddddddddddddd", scrollHeight, "scrollTopddddddddddddddddddd", scrollTop, e.target.clientHeight);
+			//if (scrollTop > (scrollHeight / 5)) {
+				//if(logList.length === 10){
+					
+				//}
 			//}
-		  //}
-		  if (scrollTop > 140 ) {
-			//if(scrolledPosition){
-			fetchCommunicationLogList( parseInt(paginationData.page) + 1 ); 
-			
-			//}
+		  if ((maxScroll - scrollTop) < 100) {
+			console.log("dataLenght", dataLenght);
+				if(dataLenght){
+					fetchCommunicationLogList( parseInt(paginationData.page) + 1 ); 
+				}
 			}
 			
 		}
@@ -210,7 +222,7 @@ const CommunicationLog = (props) => {
         const type = utils.getQueryVariable("type");
 		setSelectType(type);
 
-        console.log("type",selectType);
+       // console.log("type",selectType);
     },[utils.getQueryVariable("type")]);
 
 	useEffect(() => {
