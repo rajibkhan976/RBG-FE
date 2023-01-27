@@ -443,7 +443,6 @@ const Overview = (props) => {
             formErrorsCopy.lName = "Please fill up Last Name."
         }
         if (( selectedPhase !== undefined && selectedPhase !== "" )   && (selectedStatus === "" || selectedStatus === undefined)) {
-            alert("hey");
             isError = true;
             formErrorsCopy.status = "Please Select a status.";
         }
