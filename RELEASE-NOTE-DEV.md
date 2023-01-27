@@ -86,4 +86,6 @@
 # HOTFIX V1.2.0   
     - Communication log hot fix and other other fixes         
 # HOTFIX V1.2.1   
-    - Communication log hot fix in loader and scroll         
+    - Communication log hot fix in loader and scroll    
+# HOTFIX V1.2.2
+    - Alert removed from contact modal     
