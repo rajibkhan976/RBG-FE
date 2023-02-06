@@ -64,6 +64,10 @@ const ContactListing = forwardRef((props, ref) => {
     const [openModal, setOpenModal] = useState(false);
     const [tagListToggle, setTagListToggle] = useState(false);
     let arrangeColRef = useRef();
+    const [showAction, setShowAction] = useState(false);
+    const [actionStatus, setActionStatus] = useState(false);
+    const [searchContactList, setSearchContactList] = useState([]);
+
 
     const openFilter = () => {
         props.openFilter();
@@ -359,7 +363,7 @@ const ContactListing = forwardRef((props, ref) => {
     }
 
 
-    const handleCheckBoxClick = (id) => {
+    const handleCheckBoxClick = (id, event) => {
         setSelectAllCheckbox(false);
 
         let cb = checkboxes.map(ele => {
@@ -371,9 +375,13 @@ const ContactListing = forwardRef((props, ref) => {
        
         let cbChecked = checkboxes.filter(ele => {
             if (ele.checked) {
+                setShowAction(true);
                 return ele;
             }            
         });
+        if(cbChecked.length === 0){
+            setShowAction(false);
+        }
         
         if (cb.length == cbChecked.length) {
             setSelectAllCheckbox(true);
@@ -381,8 +389,28 @@ const ContactListing = forwardRef((props, ref) => {
         } else if (cb.length){
             setSelectSingle(true);
         }
-        console.log('cb', cb, cbChecked, checkboxes)
-        setCheckboxes(cb);        
+        // console.log('cb', cb, cbChecked, checkboxes)
+        setCheckboxes(cb);
+        console.log(event.target.checked);
+
+        // const filterContactData = checkboxes.find((item)=>item.checked === true);
+        // console.log(filterContactData);
+        // setSearchContactList([...searchContactList, filterContactData]);
+        // console.log(searchContactList);
+
+
+        if(cbChecked.length !== 0 && !event.target.checked){
+            cbChecked.filter((ele, i)=>{
+                if(ele.id === id){
+                    console.log(i);
+                    return cbChecked.splice(i, 1);
+                }
+            });
+        }
+        // props.searchContactList(cbChecked);
+        // let allData = [];
+        // allData.push(JSON.stringify(cbChecked));
+        // window.localStorage.setItem("searchContactList", allData.push(JSON.stringify(cbChecked)))
     }
     const handleCheckAll = () => {
         let checkForSelected = checkboxes.filter(ele => ele.checked === true);
@@ -402,6 +430,13 @@ const ContactListing = forwardRef((props, ref) => {
             setSelectAllCheckbox(true);
             setSelectSingle(false);
         }
+        cb.every((item)=>{
+            if(item.checked === true){
+                setShowAction(true);
+            }else{
+                setShowAction(false);
+            }
+        })
         console.log(cb);    
         setCheckboxes(cb);
     }
@@ -515,6 +550,16 @@ const ContactListing = forwardRef((props, ref) => {
         utils.removeQueryParameter('toDate');
         setHideFilter(true);
         fetchContact();
+    }
+    const openBulkSmsHandler = ()=>{
+        props.setBulkSmsOpenModal();
+    }
+    
+    const openBulkEmailHandler=()=>{
+        props.setBulkEmailOpenModal();
+    }
+    const openBulkAutomationHandler=()=>{
+        props.setBulkAutomationOpenModal();
     }
     const selectAllValueAction = (flag) => {
         props.selectAllCheckboxValue(flag);
@@ -662,7 +707,7 @@ const ContactListing = forwardRef((props, ref) => {
                                 {(j === 1) ? <label className="indselects"><span className="customCheckbox allContacts">
                                     <input type="checkbox"
                                            checked={checkboxes && checkboxes[i] ? checkboxes[i].checked : false}
-                                           name={"contactId" + ele._id} onChange={() => handleCheckBoxClick(ele._id)}/>
+                                           name={"contactId" + ele._id} onChange={(event) => handleCheckBoxClick(ele._id, event)}/>
                                     <span></span></span></label> : ""}
                                 {(j === 1) && (!ele.isDependent || ele.isDependent === undefined) ? ((ele.payment_error != undefined || ele.course_error != undefined) ?
                                     <span className="infoWarning warningSpace"
@@ -808,6 +853,16 @@ const ContactListing = forwardRef((props, ref) => {
     const closeModalHandler = () =>{
         setOpenModal(false);
     }
+    const sendActionData = (data) => {
+        // console.log(data);
+        // setActionStatus(data);
+        if(data && addSelectAll.status){
+            setAddSelectAll({
+                ...addSelectAll,
+                status: !addSelectAll.status,
+            });
+        }
+      }
    
     return (
         <div className="dashInnerUI">
@@ -828,6 +883,12 @@ const ContactListing = forwardRef((props, ref) => {
                 filters={filters}
                 removeFilter={removeFilter}
                 selectAll={selectAllValueAction}
+                openBulkSmsHandler={openBulkSmsHandler}
+                openBulkEmailHandler={openBulkEmailHandler}
+                openBulkAutomationHandler={openBulkAutomationHandler}
+                showAction={showAction}
+                addSelectAll={addSelectAll}
+                sendActionData={sendActionData}         
             ></ContactHead>
             {successMsg &&
                 <SuccessAlert message={successMsg}></SuccessAlert>
