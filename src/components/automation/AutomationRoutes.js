@@ -24,9 +24,7 @@ const AutomationRoutes = (props) => {
         setRoleMenu("automationDetails");
         break;
     }
-    // console.log("MENU TYPE", roleMenu);
   }, [location.pathname])
-  console.log("locationnnnnnnnnnnnnnnnnnn", location.pathname);
   return (
     <React.Fragment>
       <div className="menuDetails lessLeftMenu">

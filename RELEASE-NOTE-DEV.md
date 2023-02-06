@@ -92,3 +92,6 @@
 
 # BULK EMAIL AND SMS V1.0.0
     - Bulk email and SMS is completed
+
+# BULK EMAIL AND SMS V1.0.1
+    - Console log removed from AutomationRoutes.js
