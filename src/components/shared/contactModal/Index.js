@@ -35,10 +35,13 @@ import config from "../../../configuration/config";
 import dependent_white from "../../../assets/images/dependent.svg";
 import menuArrow1 from "../../../assets/images/cal_arrow1.svg";
 import menuArrow2 from "../../../assets/images/cal_arrow2.svg";
+import popIn from "../../../assets/images/popIn.svg";
+import popOut from "../../../assets/images/popOut.svg";
 import env from "../../../configuration/env";
 import { uploadFile } from "react-s3";
 import TagList from "../../appointment/TagList";
 import ShowContactTagModal from "../showContactTagModal"
+
 
 const ContactModal = (props) => {
 
@@ -143,6 +146,9 @@ const ContactModal = (props) => {
         firstName: "",
         lastName: ""
     });
+    const [showBottomPart, setShowBottomPart] = useState(false);
+
+
     const [ltv, setLtv] = useState("Calculating...");
     const [image, setImage] = useState("");
     const inputFile = useRef(null)
@@ -325,41 +331,58 @@ const ContactModal = (props) => {
             <div className="modal contactModal">
                 {isLoader ? <Loader/> : ""}
                 <div className="modalContainer">
-                    <div className={stickeyHeadStatus ? "contactModalHeader stickey" : "contactModalHeader"}>
-                        <div className="contactModalHeaderTopSec">
+                    <div className={stickeyHeadStatus ? "contactModalHeader stickey newBg" : "contactModalHeader newBg"}>
+                        <div className="contactModalHeaderTopSec spaceFixing">
+                            <div className="contactModalTopLeft">
+                                <div className="userImageWrap">
+                                    <span className="userImage">
+                                        <img src={image} alt=""/>
+                                    </span>
+                                    <input type='file' id='file' ref={inputFile} onChange={uploadImage}
+                                            style={{display: 'none'}}/>
+                                    <button className="editUserImg" onClick={handelChangeContactImage}>
+                                        <img src={camera_icon} alt=""/>
+                                    </button>
+                                </div>
+                                <div className="userName" title={contactName}>
+                                    {contactName.length > 20 ? contactName.substring(0, 20) + "..." : contactName}
+                                </div>
+                            </div>
+                            <div className="contactModalTopRight">
+                               {!showBottomPart && <div className="actionBtns"
+                                >
+                                   {(contactData && contactData.email) && 
+                                    <button className="roundBlue"> <img src={email_icon_white} alt=""/>
+                                    <span className="tooltiptextInfo">{contactData.email}</span>
+                                    </button>}
+                                    {(contactData && contactData.phone && contactData.phone.number) &&
+                                    <button className="roundBlue"><img src={phone_call_icon_white} alt=""/>
+                                    <span className="tooltiptextInfo">{contactData.phone && contactData.phone.dailCode && contactData.phone.number ?
+                                                    contactData.phone.dailCode + "-" + contactData.phone.number : ""}</span>
 
-                            <div className="modalCtrl">
-                                <button className="minimize">
-                                    <img src={minimize_icon} alt=""/>
-                                </button>
+                                    </button>}
+                                </div>}
+                                <div className="ltValue">
+                                    <header>Life Time Value :</header>
+                                    <span>USD { ltv }</span>
+                                </div>
+                                {showBottomPart && <button className="noBg pop"
+                                   onClick={()=>setShowBottomPart(false)}
+                                >
+                                     <img src={popIn} alt=""/>
+                                </button>}
+                               { !showBottomPart && <button className="noBg pop"
+                                   onClick={()=>setShowBottomPart(true)}
+                                >
+                                     <img src={popOut} alt=""/>
+                                </button>}
                                 <button className="closeModal" onClick={() => closeContactModal()}>
                                     <img src={cross_white} alt=""/>
                                 </button>
                             </div>
-                            {props.contactId !== 0 &&
-                                <div className="userInfoArea">
-                                    <div className="userImageWrap">
-                                      <span className="userImage">
-                                          <img src={image} alt=""/>
-                                      </span>
-                                        <input type='file' id='file' ref={inputFile} onChange={uploadImage}
-                                               style={{display: 'none'}}/>
-                                        <button className="editUserImg" onClick={handelChangeContactImage}>
-                                            <img src={camera_icon} alt=""/>
-                                        </button>
-                                    </div>
-                                    <div className="userName" title={contactName}>
-                                        {contactName.length > 20 ? contactName.substring(0, 20) + "..." : contactName}
-                                    </div>
-                                    <div className="ltValue">
-                                        <header>Life Time Value :</header>
-                                        <span>USD { ltv }</span>
-                                    </div>
-                                </div>
-                            }
                         </div>
-                        {props.contactId !== 0 &&
-                            <div className="contactModalHeaderBottomSec">
+                        {props.contactId !== 0 && showBottomPart &&
+                            <div className="contactModalHeaderBottomSec spaceFixing">
                                 <div className="bottomLeftArea">
                                     {contactData && contactData.isDependent && contactData.guardianInfo ?
                                         <div className="userDependents"
@@ -444,6 +467,7 @@ const ContactModal = (props) => {
                                     </div>
                                 </div> }
                             </div>
+                            
                         }
                     </div>
                     <div className="tabBarArea">

@@ -201,9 +201,9 @@ const ContactHead = (props) => {
             onClick={() => props.openImportContact()}>
             <img src={download_cloud_icon} alt="" /> Import Contacts
           </button>
-           <button className="saveNnewBtn expContactBtn">
+           {/* <button className="saveNnewBtn expContactBtn">
             <img className="exportImgs" src={uparrow_icon_grey} alt="" /> Export Contacts
-          </button> 
+          </button>  */}
         </div>
       </div>
     </div>

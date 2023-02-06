@@ -543,15 +543,19 @@ const InnerLeftMenu = (props) => {
   };
 
   return (
-    <div className={pathURL === "/number-list" ? "menuDetails numberlist" : "menuDetails"}>
-      <figure className="logoSidebar">
-        <img src={SidebarLogo} alt="" />
-      </figure>
+    <>
+      {pathURL == "/automation-list" ? "" :
+      <div className={pathURL === "/number-list" ? "menuDetails numberlist" : "menuDetails"}>
+        <figure className="logoSidebar">
+          <img src={SidebarLogo} alt="" />
+        </figure>
 
-      <div className="innerMenuScroll">
-        <RenderMenu menuType={props.routeMenu} />
+        <div className="innerMenuScroll">
+          <RenderMenu menuType={props.routeMenu} />
+        </div>
       </div>
-    </div>
+      }
+    </>
   );
 };
 
