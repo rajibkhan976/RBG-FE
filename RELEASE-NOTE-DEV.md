@@ -89,3 +89,6 @@
     - Communication log hot fix in loader and scroll    
 # HOTFIX V1.2.2
     - Alert removed from contact modal     
+
+# BULK EMAIL AND SMS V1.0.0
+    - Bulk email and SMS is completed

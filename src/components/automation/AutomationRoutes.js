@@ -5,6 +5,7 @@ import HeaderDashboard from "../shared/HeaderDashboard";
 import { Route, Switch, useLocation } from "react-router-dom";
 import DashboardFooter from "../shared/FooterDashboard";
 import NotFound from "../shared/NotFound";
+import SidebarLogo from "../../assets/images/logo_128_28.svg";
 
 const AutomationRoutes = (props) => {
   document.title = "Red Belt Gym - Automations";
@@ -25,11 +26,16 @@ const AutomationRoutes = (props) => {
     }
     // console.log("MENU TYPE", roleMenu);
   }, [location.pathname])
-  
+  console.log("locationnnnnnnnnnnnnnnnnnn", location.pathname);
   return (
     <React.Fragment>
+      <div className="menuDetails lessLeftMenu">
+        <figure className="logoSidebar">
+          <img src={SidebarLogo} alt="" />
+        </figure>
+      </div>
       <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} routeMenu={roleMenu} />
-      <div className="dashboardElComponent">
+      <div className={location.pathname === "/automation-list" ? "dashboardElComponent fullWithContainer" : "dashboardElComponent"}>
         {/* <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} /> */}
         <div className="dashInnerStructure">
           <Switch>

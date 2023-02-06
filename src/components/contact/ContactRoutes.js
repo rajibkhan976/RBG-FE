@@ -5,13 +5,18 @@ import DashboardFooter from "../shared/FooterDashboard";
 import HeaderDashboard from "../shared/HeaderDashboard";
 import InnerLeftMenu from "../shared/InnerLeftMenu";
 import contact from "./contact";
-
+import SidebarLogo from "../../assets/images/logo_128_28.svg";
 
 const ContactRoutes = (props) => {
   return (
     <React.Fragment>
-      <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} routeMenu="contact"/>
-      <div className="dashboardElComponent">
+      <div className="menuDetails lessLeftMenu">
+        <figure className="logoSidebar">
+          <img src={SidebarLogo} alt="" />
+        </figure>
+      </div>
+      {/* <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} routeMenu="contact"/> */}
+      <div className="dashboardElComponent fullWithContainer">
         {/* <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} /> */}
         <div className="dashInnerStructure">
           <Switch>

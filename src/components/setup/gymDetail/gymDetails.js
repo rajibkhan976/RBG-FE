@@ -455,10 +455,15 @@ const regenerateCodeHandler = (e) =>{
                       </div>
                   </div> */}
                 <div className="formControl timezone gymInfo">
-                  <p className="textType1">Timezone</p>
+                  <label className="cmnFieldName timezoneLbl">Timezone</label>
                   <select disabled>
                     <option>{(gymData?.timezone) ? gymData?.timezone : "-"}</option>
                   </select>
+                </div>
+                <div className="lineBreak"></div>
+                <div className="formControl timezone gymInfo">
+                  <label className="cmnFieldName timezoneLbl">Organization Email <span class="infoSpan"><img src={infos} alt=""/><span class="tooltiptextInfo">It will be use for Email sending purpose from this platform as 'From'</span></span></label>
+                  <input type="text" value={gymData.contactEmail} disabled />
                 </div>
                 <div className={hasTimezone ? "hide" : "cz_timezoneWarning"}>The timezone is not saved yet. Please edit the details and save the timezone.</div>
                 <div className="accessCode">
@@ -562,7 +567,7 @@ const regenerateCodeHandler = (e) =>{
                   <div className="errorMsg">{validateMsg.phone}</div>
                 </div>
                 <div className="formControl">
-                  <label>Contact Email</label>
+                  <label>Organization Email</label>
                   <input type="text" placeholder="Ex. admin@fitbit.come" name="contactEmail"
                     value={gymData?.contactEmail}
                     onChange={validateField} />

@@ -152,11 +152,9 @@ const makeCall = () => {
         </div>
       </div>
       <div className="modalMakeCallBody">
-        <div className="text-right"><a href="javascript:void(0)" className="linkType">
+        {/* <div className="text-right"><a href="javascript:void(0)" className="linkType">
           <img src={lineUser} alt=""/> Choose from Contacts</a>
-        </div>
-
-          
+        </div> */}
         <div className="makeCallForm">
  
             <div className="slice">

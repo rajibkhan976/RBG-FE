@@ -4378,7 +4378,7 @@ button.saveOverview img {
   background-image: url("../images/menu_collapse_icon.svg");
 }
 
-.tableListing li.owerInfo .userName button span {
+.tableListing li.owerInfo .userName span {
   display: inline-block;
   width: 44px;
   height: 44px;
@@ -13444,4 +13444,33 @@ background-color: #fff;
 .dashInnerStructure .userPageLoader .loaderOuter{position: fixed !important;}
 .formBodyContainerDiv .inputFieldEvent {
   width: 70px;
+}
+
+
+
+
+/* Quality improvement */
+.menuDetails.lessLeftMenu{
+  height: 69px;
+}
+.dashboardElComponent.fullWithContainer{
+  padding-left: 0px;
+}
+.dashboardElComponent.fullWithContainer .userListBody{
+  width: 100% !important;
+}
+.dashboardBody.automationBuilderBody .listCell{cursor: inherit;}
+.menuDetails.automationBlank{
+  height: 60px;
+}
+
+label.cmnFieldName.timezoneLbl {
+  text-align: left;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.lineBreak {
+  border-bottom: 1px solid #D3D9DE;
+  margin: 40px 0 30px;
 }
