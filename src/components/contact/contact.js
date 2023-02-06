@@ -106,11 +106,7 @@ const Contact = (props) => {
             setEmailSetupData(true);
         } catch (e) {
             setEmailSetupData(false);
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: e.message,
-                typeMessage: 'error'
-            });
+            
         } 
     };
     useEffect(()=>{
