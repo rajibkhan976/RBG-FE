@@ -374,13 +374,16 @@ const ContactListing = forwardRef((props, ref) => {
         });
        
         let cbChecked = checkboxes.filter(ele => {
+            
             if (ele.checked) {
                 setShowAction(true);
                 return ele;
-            }            
+            }   
         });
-        if(cbChecked.length === 0){
+        console.log("checkbox length: ", cbChecked);
+        if(cbChecked.length === 0 || undefined){
             setShowAction(false);
+            setSelectAllCheckbox(false);
         }
         
         if (cb.length == cbChecked.length) {
@@ -406,6 +409,11 @@ const ContactListing = forwardRef((props, ref) => {
                     return cbChecked.splice(i, 1);
                 }
             });
+        }
+
+        let checkForSelected = checkboxes.filter(ele => ele.checked === true);
+        if (checkForSelected.length > 0) {
+            setSelectAllCheckbox(false);
         }
         // props.searchContactList(cbChecked);
         // let allData = [];

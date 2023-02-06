@@ -98,3 +98,6 @@
 
 # BULK EMAIL AND SMS V1.0.2
     - Bug solved in dev
+
+# BULK EMAIL AND SMS V1.0.3
+    - Bug solved in dev for email configaration
