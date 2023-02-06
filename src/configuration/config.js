@@ -224,4 +224,6 @@ module.exports = {
     inboxListUrl: 'https://'+process.env.REACT_APP_COMMUNICATION_LOG+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/communication/contact/log',
     // Notification Group
     notificationGroup: "https://" + process.env.REACT_APP_NOTIFICATION_GROUP + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV + "/notification-group/",
+
+    bulkContact: "https://" + process.env.REACT_APP_BULK + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV + "/contact/bulkservice",
 }  

@@ -95,3 +95,6 @@
 
 # BULK EMAIL AND SMS V1.0.1
     - Console log removed from AutomationRoutes.js
+
+# BULK EMAIL AND SMS V1.0.2
+    - Bug solved in dev

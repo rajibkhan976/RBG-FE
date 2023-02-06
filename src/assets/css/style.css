@@ -3528,7 +3528,7 @@ span.userProfilePic img {
   margin-bottom: 18px;
 }
 .contactHead .userListHead {
-  margin-bottom: 23px;
+  margin-bottom: 25px;
 }
 .head_ctrlRow {
   display: inline-block;
@@ -13444,6 +13444,251 @@ background-color: #fff;
 .dashInnerStructure .userPageLoader .loaderOuter{position: fixed !important;}
 .formBodyContainerDiv .inputFieldEvent {
   width: 70px;
+}
+
+/* bulk email and bulk sms */
+.action{
+  position: relative;
+  display: inline-block;
+}
+.action button{
+  background-color: transparent;
+  border:1px solid #305671;
+  font-size: 13px;
+  color: #305671;
+  padding: 10px 16px;
+  border-radius: 5px;
+}
+.action button img{
+  width: 12px;
+  margin-left: 13px;
+}
+.action .dropdown{
+  position: absolute;
+  background-color: #fff;
+  border-radius: 5px;
+  z-index: 2;
+}
+.action ul.dropdown {
+  min-width: 190px;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.071);
+  margin-top: 6px;
+}
+.action ul.dropdown li{
+  width: 100%;
+}
+.action ul.dropdown li button{
+  background-color: transparent;
+  border:0px !important;
+  padding: 10px 18px;
+  width: 100%;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #9BAEBC;
+  border-radius: 0px;
+  border-bottom: 1px solid #E9EFF5 !important;
+}
+.action ul.dropdown li button img{
+  width: 24px;
+  margin-left: 0px;
+  margin-right: 10px;
+}
+.action ul.dropdown li button:hover{
+  background-color: #305671;
+  border-bottom-color: #003c45;
+  color: #ffffff;
+}
+.action ul.dropdown li button img.hover{
+  display: none;
+}
+.action ul.dropdown li button:hover img{
+  display: none;
+}
+.action ul.dropdown li button:hover img.hover{
+  display: block;
+}
+.action ul.dropdown li:nth-of-type(3n) button img{
+  width: 20px;
+}
+.configColArea.selectFilters .selectAllSection{
+  align-items: center;
+}
+.configColArea.selectFilters .selectAllSection .selectAllWraper{
+  display: flex;
+  align-items: center;
+  padding: 3px 4px 1px 4px;
+}
+.configColArea.selectFilters .selectAllSection .allArrow{
+  display: flex;
+  line-height: inherit;
+  /* margin-left: 10px; */
+  flex: 0 0 15px;
+  padding-left: 5px;
+}
+.configColArea.selectFilters .selectAllSection .allArrow img{
+  flex: 0 0 16px;
+}
+.bulkSmsModel.sideMenuInner{
+  width: 457px;
+  max-width: 100%;
+}
+.bulkSmsModel.sideMenuInner .bulkModalBody{
+  padding: 0px 30px;
+  margin-top: 35px;
+  max-height: 750px;
+  overflow-y: scroll;
+}
+.bulkSmsModel.sideMenuInner .sideMenuHeader{
+  padding-bottom: 0px;
+}
+.bulkSmsModel.sideMenuInner label{
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  width: 100%;
+  display: inline-block;
+}
+.bulkSmsModel.sideMenuInner label span{
+  color: #9BAEBC;
+}
+.bulkSmsModel.sideMenuInner .slice .upload{
+  margin: 0px;
+}
+.bulkSmsModel.sideMenuInner .slice .upload input[type="file"]::placeholder{
+  padding-left: 50px !important;
+}
+.bulkSmsModel.sideMenuInner .slice .cmnFormField{
+  position: relative;
+}
+.bulkSmsModel.sideMenuInner .slice .cmnFormField textarea{
+  margin-bottom: 0px;
+}
+.bulkSmsModel.sideMenuInner .slice .cmnFormField .browseKeywords{
+  bottom: 0px;
+  right: 6px;
+}
+.bulkEmailModel.sideMenuInner .slice .cmnFormField .browseKeywords{
+  bottom: 11px;
+  right:10px;
+}
+.bulkSmsModel.sideMenuInner .slice .cmnFormField .cmnFieldStyle{
+  background-color: #ffffff;
+}
+.bulkSmsModel.sideMenuInner .slice .cmnFormField .cmnFieldStyle::placeholder{
+  color: #7993A6;
+  font-size: 14px;
+}
+.bulkSmsModel.sideMenuInner .slice textarea{
+  margin-top: 20px;
+}
+.bulkSmsModel.sideMenuInner .sideMenuHeader h3{
+  margin-top: 0px;
+}
+.bulkSmsModel.sideMenuInner .cmnBtn{
+  margin-top: 54px;
+}
+.bulkSmsModel.sideMenuInner .cmnBtn img{
+  margin-left: 8px;
+  padding-right: 0px;
+}
+.bulkSmsModel.sideMenuInner .editorEmailShell:not(.maximize){
+  position: relative;
+  top: 0;
+  left: 0;
+  transform: translate(0, 0);
+  width: 100%;
+  border-radius: 4px;
+}
+.bulkSmsModel.sideMenuInner .editorEmailShell{
+  /* height: inherit; */
+}
+.bulkSmsModel.sideMenuInner .slice textarea{
+  /* height: 90vh; */
+}
+.bulkEmailModel.bulkSmsModel.sideMenuInner .editorEmailShell{
+  height: 318px;
+}
+
+.bulkSmsModel.sideMenuInner .editorEmailShell.maximize textarea{
+  height: 90vh !important;
+}
+.bulkSmsModel.sideMenuInner .editorEmailShell{
+  height: 100%;
+}
+.bulkSmsModel.sideMenuInner .editorEmailShell.maximize{
+  height: 80vh;
+}
+
+.bulkSmsModel.sideMenuInner .btnMaximize{
+  /* position: absolute; */
+  margin-right: 20px;
+}
+.bulkSmsModel.sideMenuInner .actions{
+  position: absolute !important;
+  bottom: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  z-index: 9;
+  width:100%;
+  bottom: 6px;
+  right: 6px;
+}
+.sideMenuInner.bulkSmsModel.bulkEmailModel .btnMaximize{
+  margin-right: 10px;
+}
+.bulkSmsModel.sideMenuInner .actions .browseKeywords{
+  position: relative;
+}
+.bulkSmsModel.sideMenuInner .actions .browseKeywords img{
+  width: 22px;
+}
+.bulkSmsModel.sideMenuInner  .editorEmailShell.maximize .actions{
+  bottom: 35px;
+  right: 15px;
+}
+.bulkSmsModel.sideMenuInner  .editorEmailShell.maximize .actions .btn.browseKeywords{
+  display: none;
+}
+.bulkEmailModel .cmnFormField.globalSms .cmnFormRow{margin-bottom: 0px;}
+p.showSetupMsg{font-size: 12px; color: red; padding-left: 25px;}
+
+.bulkSmsModel .error .editorEmailShell{
+  border:0px;
+  background-color: transparent;
+}
+.sideMenuInner.bulkSmsModel.bulkEmailModel .error .editorEmailShell {
+  border:1px solid red;
+  background-color: transparent;
+}
+.sideMenuInner.bulkSmsModel.bulkEmailModel .btnSelect span{
+  width: 100%;
+}
+.sideMenuInner.bulkSmsModel.bulkEmailModel .btnSelect{
+  padding-right: 37px;
+}
+.sideMenuInner.bulkSmsModel.bulkEmailModel .slice input.email{
+  padding-right: 40px;
+}
+.contactHead .head_ctrlRow{
+  min-height: 80px;
+}
+.contactHead .pagesTags{
+  position: absolute;
+  /* left: 11%; */
+  margin-top: 0px;
+  margin-bottom: 0px;
+  top:-7px;
+}
+.contactHead .pagesTags .contactsTags{
+  margin-bottom: 25px;
+}
+.contactHead .contactFilters{
+  align-items: flex-end;
 }
 
 

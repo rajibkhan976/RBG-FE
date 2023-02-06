@@ -9,6 +9,14 @@ import cross from "../../../src/assets/images/cross.svg"
 import filters from "../../../src/assets/images/filter.svg";
 import {utils} from "../../helpers";
 
+import action_arrow from "../../../src/assets/images/action-arrow-icon.svg";
+import action_sms from "../../../src/assets/images/action_sms_icon.svg";
+import action_sms_hover from "../../../src/assets/images/action_sms_icon_hover.svg"
+import action_email from "../../../src/assets/images/action_email_icon.svg";
+import action_email_hover from "../../../src/assets/images/action_email_icon_hover.svg";
+import action_automation from "../../../src/assets/images/action-automation-icon.svg";
+import action_automation_hover from "../../../src/assets/images/action_automation_icon_hover.svg";
+
 const ContactHead = (props) => {
   const dispatch = useDispatch();
   const [filter, setFilter] = useState(false);
@@ -17,6 +25,9 @@ const ContactHead = (props) => {
   const [selectAllContacts, setSelectAllContacts] = useState(false);
   const [filtersFirst, setFiltersFirst] = useState([]);
   const [filtersSecond, setFiltersSecond] = useState([]);
+  const [actionTrigger, setActionTrigger] = useState(false);
+  const actionTriggerRef = useRef(null);
+  const [filterClear, setFilterClear] = useState(false);
   const createIndivitualContact = () => {
     dispatch({
         type: actionTypes.CONTACTS_MODAL_ID,
@@ -61,12 +72,42 @@ const ContactHead = (props) => {
     }
   }, [props.filters])
   const removeFiler = (type) => {
+    
+    console.log("filter close type", type);
     props.removeFilter(type);
+    // if(type === 'all'){
+    //   setFilterClear(true);
+    //   console.log("filter clear", filterClear);
+    // }
   }
   const checkAll = () => {
     props.selectAll(!selectAllContacts);
     setSelectAllContacts(!selectAllContacts);
   }
+  const actionHandelar = ()=>{
+    // console.log(actionTrigger);
+    if(actionTrigger === false){
+      setActionTrigger(true);
+      props.sendActionData(true);
+    }else{
+      setActionTrigger(false);
+      props.sendActionData(false);
+    }
+  }
+  const handleOutsideClick = (event)=>{
+    if (actionTriggerRef.current && !actionTriggerRef.current.contains(event.target)) {
+      // console.log(event);
+      setActionTrigger(false);
+    }
+  }
+  useEffect(() => {
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+}, [actionTriggerRef]);
+useEffect(()=>{
+  console.log(props.searchContactList);
+})
+
   return (
     <div className="contactHead">
       <div className="userListHead">
@@ -193,6 +234,19 @@ const ContactHead = (props) => {
                   </div>
                 </div>
                 : ""
+          }
+          { props.showAction || props.totalCount > props.contactListPageCount && selectAllCheckbox ?
+            <div className="action" ref={actionTriggerRef}>
+              <button onClick={actionHandelar}>Actions <img src={action_arrow} /></button>
+              {actionTrigger && !props.addSelectAll.status &&
+                <ul className="dropdown">
+                  <li><button onClick={props.openBulkSmsHandler}><img src={action_sms} /><img className="hover" src={action_sms_hover}/>Send SMS</button></li>
+                  <li><button onClick={props.openBulkEmailHandler}><img src={action_email} /><img className="hover" src={action_email_hover}/>Send Email</button></li>
+                  {/* <li><button onClick={props.openBulkAutomationHandler}><img src={action_automation} /><img className="hover" src={action_automation_hover} />Add to Automation</button></li> */}
+                </ul>
+              }
+            </div>
+           : ""
           }
         </div>
         <div className="head_ctrlRow_right">
