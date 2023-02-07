@@ -92,7 +92,6 @@ const BulkEmail = (props) => {
         setEmailDatasubject(elem.title);
         setTemplateToogle(false);
         setTempSelected(true);
-
         if (!emailData.title !== "" && elem.subject !== "" && elem.template !== "") {
             setEmailValidation({
                 "email": "",
