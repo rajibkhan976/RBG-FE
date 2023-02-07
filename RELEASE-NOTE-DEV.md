@@ -101,3 +101,6 @@
 
 # BULK EMAIL AND SMS V1.0.3
     - Bug solved in dev for email configaration
+
+# BULK EMAIL AND SMS V1.0.4
+    - Email template deselect potion added

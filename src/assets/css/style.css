@@ -6531,18 +6531,18 @@ p.trackName {
   line-height: 30px;
 }
 .slice .upload span {
-  width: 95px;
+  width: 75px;
   height: 32px;
   background: #d3d9de;
   border: 1px solid #d3d9de;
   border-radius: 5px;
-  font-size: 13px;
+  font-size: 11px;
   letter-spacing: 0px;
   color: #305671;
   position: absolute;
   left: 3px;
   top: 3px;
-  padding: 3px 5px;
+  padding: 3px 3px;
   text-align: center;
   line-height: 23px;
 }
@@ -12688,7 +12688,7 @@ background-color: #fff;
     padding-right: 30px;
     width: 100%;
     background: #f6f8fa;
-    color: #9baebc;
+    color: #94a7b5;
     font-size: 13px;
     border: 1px solid #D3D9DE;
 }

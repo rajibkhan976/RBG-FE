@@ -93,7 +93,6 @@ const BulkEmail = (props) => {
         setTemplateToogle(false);
         setTempSelected(true);
 
-        console.log(emailData.template !== "", elem.subject, elem.title);
         if (!emailData.title !== "" && elem.subject !== "" && elem.template !== "") {
             setEmailValidation({
                 "email": "",
@@ -102,6 +101,7 @@ const BulkEmail = (props) => {
             })
         }
     }
+   
 
     // Subject
     const emailSendHandler = (e) => {
@@ -115,9 +115,9 @@ const BulkEmail = (props) => {
             [name]: value,
         });
         if (name === "subject" && value.length === 0) {
-            setEmailValidation({ ...emailValidation, subject: "Please enter a subject" });
+            setEmailValidation({ ...emailValidation, subject: "Please enter an email subject" });
         } else if (name === "template" && value.length === 0) {
-            setEmailValidation({ ...emailValidation, template: "Please enter a email body" });
+            setEmailValidation({ ...emailValidation, template: "Please enter an email body" });
 
         } else if (name === "email" && !emailRegex.test(value)) {
             setEmailValidation({ ...emailValidation, email: "Please enter a valid Email" });
@@ -128,6 +128,20 @@ const BulkEmail = (props) => {
                 "template": ""
             });
         }
+    }
+     // deleselected email template
+     const deselectingTemplate = ()=>{
+        console.log(emailData);
+        setEmailData({
+            ...emailData,
+            "subject": "",
+            "template": "",
+        });
+        setTempSelected(false);
+        setEmailDatasubject("");
+        setTemplateToogle(false);
+        setChangedTemplate("");
+        setFirstTimeErrorMsg(false);
     }
     const addKeywordEmail = (e) => {
         // console.log();
@@ -237,7 +251,7 @@ const BulkEmail = (props) => {
             setEmailValidation(
                 {
                     ...emailValidation,
-                    subject: "Please enter a subject",
+                    subject: "Please enter an email subject",
                 }
             )
         }
@@ -245,14 +259,14 @@ const BulkEmail = (props) => {
             setEmailValidation(
                 {
                     ...emailValidation,
-                    template: "Please enter a email body",
+                    template: "Please enter an email body",
                 }
             )
         } 
         else if (payload.template === "") {
             setEmailValidation({
                 ...emailValidation,
-                template: "Please enter a email body"
+                template: "Please enter an email body"
             })
             console.log("I am in else if")
         }
@@ -325,6 +339,8 @@ const BulkEmail = (props) => {
     //         setFirstTimeLoadEditor(false)
     //     }
     // }
+
+    
     useEffect(()=>{
         setFirstTimeErrorMsg(true);
     },[changedTemplate]);
@@ -333,7 +349,7 @@ const BulkEmail = (props) => {
         if(changedTemplate == "" && firstTimeErrorMsg){
             setEmailValidation({
                 ...emailValidation,
-                template: "Please enter a email body"
+                template: "Please enter an email body"
             });
         }else{
             setEmailValidation({
@@ -342,6 +358,8 @@ const BulkEmail = (props) => {
             });
         }
     }, [changedTemplate])
+
+
     return (
         <>
             {isLoader ? <Loader /> : ""}
@@ -366,6 +384,7 @@ const BulkEmail = (props) => {
                                         </div>
                                         {templateToggle &&
                                             <ul className="showTemplateName">
+                                                <li onClick={(e) => deselectingTemplate()}>Select Template</li>
                                                 {
                                                     (emailTempData.templates &&
                                                         emailTempData.templates.length > 0) ?
@@ -471,11 +490,11 @@ const BulkEmail = (props) => {
                                         <EditorComponent
                                             globalTemplateValue={(template) => setChangedTemplate(template)}
                                             initialData={emailData ? emailData : emailData.template}
-                                            setTempSelected={tempSelected}
+                                            setTempSelected={true}
                                             setEmailSend={emailSend}
                                         />
-                                        {/* <div className="errorMsg">{changedTemplate === "" && firstTimeErrorMsg  ? "Write some message" : ""}</div> */}
                                         <div className="errorMsg">{emailValidation.template}</div>
+                                        {/* <div className="errorMsg">{changedTemplate === "" && firstTimeErrorMsg  ? "Write some message" : ""}</div> */}
                                     </div>
                                 </div>
                                 <div class="slice text-center">
