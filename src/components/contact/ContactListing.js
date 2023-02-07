@@ -380,7 +380,6 @@ const ContactListing = forwardRef((props, ref) => {
                 return ele;
             }   
         });
-        console.log("checkbox length: ", cbChecked);
         if(cbChecked.length === 0 || undefined){
             setShowAction(false);
             setSelectAllCheckbox(false);
