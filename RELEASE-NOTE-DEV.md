@@ -104,3 +104,6 @@
 
 # BULK EMAIL AND SMS V1.0.4
     - Email template deselect potion added
+
+# BULK EMAIL AND SMS V1.0.4
+    - Email template chose file UI issue fixed

@@ -6546,6 +6546,67 @@ p.trackName {
   text-align: center;
   line-height: 23px;
 }
+/* Chrome 29+ */
+/* @media screen and (-webkit-min-device-pixel-ratio:0)
+  and (min-resolution:.001dpcm) {
+    .slice .upload span{
+      width: 95px;
+      padding: 3px 5px;
+      font-size: 12px;
+    }
+} */
+
+/* Chrome 22-28 */
+/* @media screen and(-webkit-min-device-pixel-ratio:0) {
+  .slice .upload span{
+    width: 95px;
+    padding: 3px 5px;
+    font-size: 12px;
+  }
+} */
+/* chrome */
+@media screen and (-webkit-min-device-pixel-ratio: 0) and (min-resolution: 0.001dpcm) {
+  .slice .upload span{
+    width: 95px;
+    padding: 3px 5px;
+    font-size: 12px;
+  }
+}
+/** Mozilla Firefox */
+@-moz-document url-prefix() {
+  .slice .upload span{
+    width: 75px;
+    padding: 3px 3px;
+    font-size: 11px;
+  }
+}
+/** Safari */
+@media not all and (min-resolution: 0.001dpcm) {
+  .slice .upload span{
+    width: 75px;
+    padding: 3px 3px;
+    font-size: 11px;
+  }
+}
+/** Internet Explorer */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  .slice .upload span{
+    width: 75px;
+    padding: 3px 3px;
+    font-size: 11px;
+  }
+  }
+  
+  /** Microsoft Edge */
+  @supports (-ms-ime-align: auto) {
+    .slice .upload span{
+      width: 75px;
+      padding: 3px 3px;
+      font-size: 11px;
+    }
+  }
+
+
 .slice textarea {
   height: 200px;
   background: #f6f8fa;
