@@ -6575,7 +6575,7 @@ p.trackName {
 /** Mozilla Firefox */
 @-moz-document url-prefix() {
   .slice .upload span{
-    width: 75px;
+    width: 78px;
     padding: 3px 3px;
     font-size: 11px;
   }
@@ -6610,7 +6610,7 @@ p.trackName {
 .slice textarea {
   height: 200px;
   background: #f6f8fa;
-  border: 1px solid #d3d9de;
+  border: 1px solid #CCCCCC;
   border-radius: 5px;
   width: 100%;
   padding: 10px;
@@ -13400,7 +13400,11 @@ background-color: #fff;
   left: 3px;
 }
 .customtableListing.notificationGroupList .headerCheckBox .cusCheckBox.withoutEditOption{}
-
+.selectAllWraper.contactPageSelector.withoutEditOption .checkCutsomInputs span{
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
 
 /* Notification group setting */
 .notificationGroupTags.nodeSettingModal{width: 80%; top:30%;}
@@ -13630,7 +13634,7 @@ background-color: #fff;
 }
 .bulkSmsModel.sideMenuInner .slice .cmnFormField .browseKeywords{
   bottom: 0px;
-  right: 6px;
+  right: 20px;
 }
 .bulkEmailModel.sideMenuInner .slice .cmnFormField .browseKeywords{
   bottom: 11px;
@@ -13686,7 +13690,7 @@ background-color: #fff;
 
 .bulkSmsModel.sideMenuInner .btnMaximize{
   /* position: absolute; */
-  margin-right: 20px;
+  margin-right: 10px;
 }
 .bulkSmsModel.sideMenuInner .actions{
   position: absolute !important;
@@ -13694,7 +13698,7 @@ background-color: #fff;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  z-index: 9;
+  z-index: 1;
   width:100%;
   bottom: 6px;
   right: 6px;
@@ -13708,12 +13712,12 @@ background-color: #fff;
 .bulkSmsModel.sideMenuInner .actions .browseKeywords img{
   width: 22px;
 }
-.bulkSmsModel.sideMenuInner  .editorEmailShell.maximize .actions{
+/* .bulkSmsModel.sideMenuInner  .editorEmailShell.maximize .actions{
   bottom: 35px;
   right: 15px;
-}
+} */
 .bulkSmsModel.sideMenuInner  .editorEmailShell.maximize .actions .btn.browseKeywords{
-  display: none;
+  display: block;
 }
 .bulkEmailModel .cmnFormField.globalSms .cmnFormRow{margin-bottom: 0px;}
 p.showSetupMsg{font-size: 12px; color: red; padding-left: 25px;}
@@ -13735,6 +13739,17 @@ p.showSetupMsg{font-size: 12px; color: red; padding-left: 25px;}
 .sideMenuInner.bulkSmsModel.bulkEmailModel .slice input.email{
   padding-right: 40px;
 }
+.bulkSmsModel.sideMenuInner .maximize textarea{margin-top: 0px;}
+.bulkSmsModel.sideMenuInner .maximize .actions{
+  min-height: 40px;
+  background-color: #F6F8FA;
+  right:21px;
+  bottom: 25px;
+  width: 96.4%;
+  border-radius: 0px 0px 5px 5px;
+  border-top: 1px solid #d3d9de;
+}
+
 .contactHead .head_ctrlRow{
   min-height: 80px;
 }
@@ -13751,7 +13766,45 @@ p.showSetupMsg{font-size: 12px; color: red; padding-left: 25px;}
 .contactHead .contactFilters{
   align-items: flex-end;
 }
+.bulkSmsModel.sideMenuInner .maximize .keywordBox{
+  width: 279px;
+  top:54%;
+  right:-170px;
+}
+.sideMenuInner.bulkSmsModel.bulkEmailModel .maximize .keywordBox{
+  top:0px;
+  height: 300px;
+  top:inherit;
+  bottom: 80%;
+}
+.bulkSmsModel.sideMenuInner .editorEmailShell{
+  z-index: 2;
 
+}
+.bulkSmsModel.sideMenuInner .maximize .keywordBox .searchKeyword{
+  display: flex;
+  padding-right: 10px;
+}
+.bulkSmsModel.sideMenuInner .maximize .actions img, .sideMenuInner.bulkSmsModel.bulkEmailModel .maximize .createEmailButtons .createBrowseKeywords img{
+  width: 27px;
+  height: 24px;
+}
+.sideMenuInner.bulkSmsModel.bulkEmailModel .maximize .createEmailButtons .createBrowseKeywords{
+  margin-top: 2px;
+}
+.bulkSmsModel.sideMenuInner .maximize .actions svg, .sideMenuInner.bulkSmsModel.bulkEmailModel .maximize .createEmailButtons .btnMaximize svg{
+  width: 23px;
+  height: 21px;
+}
+.bulkSmsModel.sideMenuInner .maximize .btnMaximize{
+  margin-top: -0px;
+}
+.bulkSmsModel.sideMenuInner .maximize .browseKeywords{
+  margin-top: 4px;
+}
+.sideMenuInner.bulkSmsModel.bulkEmailModel .createEmailButtons .createBrowseKeywords img{
+  width: 24px;
+}
 
 
 

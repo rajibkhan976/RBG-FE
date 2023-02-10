@@ -55,6 +55,7 @@ const ContactListing = forwardRef((props, ref) => {
     const [checkboxes, setCheckboxes] = useState([]);
     const [selectAllCheckbox, setSelectAllCheckbox] = useState(false);
     const [selectSingle, setSelectSingle] = useState(false);
+    // const [unselectSingle, setUnselectSingle] = useState(false);
     const [deleteSelectedModal, setDeleteSelectedModal] = useState(false);
     const [addSelectAll, setAddSelectAll] = useState({
         status: false,
@@ -65,9 +66,10 @@ const ContactListing = forwardRef((props, ref) => {
     const [tagListToggle, setTagListToggle] = useState(false);
     let arrangeColRef = useRef();
     const [showAction, setShowAction] = useState(false);
-    const [actionStatus, setActionStatus] = useState(false);
+    // const [actionStatus, setActionStatus] = useState(false);
     const [searchContactList, setSearchContactList] = useState([]);
-
+    const [singleContact, setSingleContact] = useState();
+    // const [oneContactObj, setOneContacrObj] = useState([]);
 
     const openFilter = () => {
         props.openFilter();
@@ -134,7 +136,7 @@ const ContactListing = forwardRef((props, ref) => {
                     currentPage: result.pagination.currentPage,
                     totalPages: result.pagination.totalPages
                 });
-                console.log(result.pagination.count)
+                // console.log(result.pagination.count)
                 dispatch({
                     type: actionTypes.CONTACTS_COUNT,
                     count: result.pagination.count,
@@ -269,7 +271,7 @@ const ContactListing = forwardRef((props, ref) => {
     }
 
     const handleCheckCol = (e, id) => {
-        console.log(e);
+        // console.log(e);
         let selected = listCol.filter(el => el.status).length;
         if (selected === 1 && !e) {
             dispatch({
@@ -363,26 +365,40 @@ const ContactListing = forwardRef((props, ref) => {
     }
 
 
-    const handleCheckBoxClick = (id, event) => {
+    const handleCheckBoxClick = (id, event, item) => {
         setSelectAllCheckbox(false);
-
+        console.log("one contact item", item);
+        console.log("mobile number", item.mobile?.number, "father number", item.dadPhone?.number, "phone number", item.mobile?.number, "mother number", item.momPhone?.number);
         let cb = checkboxes.map(ele => {
             if (ele.id === id) {
                 ele.checked = !ele.checked;
             }
             return ele;
         });
-       
+       //console.log("total array", cb);
         let cbChecked = checkboxes.filter(ele => {
             
             if (ele.checked) {
                 setShowAction(true);
                 return ele;
-            }   
+            }       
         });
-        if(cbChecked.length === 0 || undefined){
+        console.log("which one you are selected", cbChecked);
+        let singleContactSelect = cbChecked.filter((ele, index)=>{
+            if(cbChecked.length === 1){
+                console.log("Index", index);
+                return ele;
+            }else{
+                return false
+            }
+            
+        })
+        
+        console.log("contact listing only one contact", singleContactSelect);
+
+        if(cbChecked.length === 0){
             setShowAction(false);
-            setSelectAllCheckbox(false);
+            // setUnselectSingle(false);
         }
         
         if (cb.length == cbChecked.length) {
@@ -391,34 +407,36 @@ const ContactListing = forwardRef((props, ref) => {
         } else if (cb.length){
             setSelectSingle(true);
         }
-        // console.log('cb', cb, cbChecked, checkboxes)
         setCheckboxes(cb);
-        console.log(event.target.checked);
+        setSingleContact(singleContactSelect);
+
+
+        // console.log(event.target.checked);
 
         // const filterContactData = checkboxes.find((item)=>item.checked === true);
-        // console.log(filterContactData);
+        // // console.log(filterContactData);
         // setSearchContactList([...searchContactList, filterContactData]);
-        // console.log(searchContactList);
+        // // console.log(searchContactList);
 
 
         if(cbChecked.length !== 0 && !event.target.checked){
             cbChecked.filter((ele, i)=>{
                 if(ele.id === id){
-                    console.log(i);
+                    // console.log(i);
                     return cbChecked.splice(i, 1);
                 }
             });
         }
 
-        let checkForSelected = checkboxes.filter(ele => ele.checked === true);
-        if (checkForSelected.length > 0) {
-            setSelectAllCheckbox(false);
-        }
         // props.searchContactList(cbChecked);
         // let allData = [];
         // allData.push(JSON.stringify(cbChecked));
         // window.localStorage.setItem("searchContactList", allData.push(JSON.stringify(cbChecked)))
     }
+    // useEffect(() => {
+    //     props.setSingleContact(singleContact);
+    // }, [checkboxes]);
+
     const handleCheckAll = () => {
         let checkForSelected = checkboxes.filter(ele => ele.checked === true);
         let cb = [];
@@ -444,7 +462,7 @@ const ContactListing = forwardRef((props, ref) => {
                 setShowAction(false);
             }
         })
-        console.log(cb);    
+        // console.log(cb);    
         setCheckboxes(cb);
     }
 
@@ -559,11 +577,41 @@ const ContactListing = forwardRef((props, ref) => {
         fetchContact();
     }
     const openBulkSmsHandler = ()=>{
-        props.setBulkSmsOpenModal();
+        // console.log("SMS check phone number", singleContact, singleContact.length);
+
+        if(singleContact[0]?.phoneNo !== "") {
+            props.setBulkSmsOpenModal();
+        }
+        else if(singleContact.length === 0){
+            props.setBulkSmsOpenModal();
+        }
+        else{
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: "no phone number is there",
+                typeMessage: 'error'
+            });
+        }
+        
+        
     }
     
     const openBulkEmailHandler=()=>{
-        props.setBulkEmailOpenModal();
+        // console.log("Email check phone number", singleContact);
+        if(singleContact[0]?.emailId !== ""){
+            props.setBulkEmailOpenModal();
+        }
+        else if(singleContact.length === 0){
+            props.setBulkEmailOpenModal();
+        }
+        else{
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: "no email id is there",
+                typeMessage: 'error'
+            });
+        }
+        
     }
     const openBulkAutomationHandler=()=>{
         props.setBulkAutomationOpenModal();
@@ -594,9 +642,13 @@ const ContactListing = forwardRef((props, ref) => {
         if (contactList.length) {
             let checkboxes = [];
             contactList.map(ele => {
+                // console.log("all mobile number", ele.phone.number);
+                // setOneContacrObj(ele);
                 checkboxes.push({
                     'id': ele._id,
-                    'checked': false
+                    'checked': false,
+                    'emailId': ele.email,
+                    'phoneNo': ele.phone?.number || ele.dadPhone?.number || ele.momPhone?.number || ele.mobile?.number
                 })
             });
             setCheckboxes(checkboxes);
@@ -664,6 +716,7 @@ const ContactListing = forwardRef((props, ref) => {
         }
     }, [props.fetchContact]);
 
+
     // useEffect(() => {
     //     document.addEventListener("click", checkOutsideClick);
     //     return () => {
@@ -678,6 +731,41 @@ const ContactListing = forwardRef((props, ref) => {
             });
         }
     })*/
+    useEffect(()=>{
+        // console.log("props in contact listing", props.unCheckCloseFun);
+        if(props.unCheckCloseFun){
+            setSelectAllCheckbox(false);
+            setSelectSingle(false);
+            setShowAction(false);
+            // setActionStatus(true);
+            let checkForSelected = checkboxes.filter(ele => ele.checked === true);
+            // console.log(checkForSelected);
+            let cb = [];
+            if (checkForSelected.length > 0) {
+                cb = checkboxes.map(ele => {
+                    ele.checked = false;
+                    return ele;
+                });
+                setSelectAllCheckbox(false);
+                setSelectSingle(false);
+            }
+            // cb.every((item)=>{
+            //     if(item.checked === false){
+            //         // console.log(cb);
+                    
+            //     }
+            // })
+            setCheckboxes(cb);
+        }
+    }, [props.unCheckCloseFun]);
+
+    // useEffect(() => {
+    //     if (actionStatus) {
+    //         setTimeout(() => {
+    //             setActionStatus(false)
+    //         }, 200)
+    //     }
+    // }, [actionStatus])
     const removeTag = async (tagId, contactId = null) => {
         try {
             setIsLoader(true);
@@ -714,7 +802,7 @@ const ContactListing = forwardRef((props, ref) => {
                                 {(j === 1) ? <label className="indselects"><span className="customCheckbox allContacts">
                                     <input type="checkbox"
                                            checked={checkboxes && checkboxes[i] ? checkboxes[i].checked : false}
-                                           name={"contactId" + ele._id} onChange={(event) => handleCheckBoxClick(ele._id, event)}/>
+                                           name={"contactId" + ele._id} onChange={(event) => handleCheckBoxClick(ele._id, event, ele)}/>
                                     <span></span></span></label> : ""}
                                 {(j === 1) && (!ele.isDependent || ele.isDependent === undefined) ? ((ele.payment_error != undefined || ele.course_error != undefined) ?
                                     <span className="infoWarning warningSpace"
@@ -776,7 +864,7 @@ const ContactListing = forwardRef((props, ref) => {
                                                 visibleByDefault={true}
                                             />
                                         </span> : ""}
-                                            <span className="userNames">
+                                            <span className="userNames mobile">
                                         {((item.id === 'mobile' || item.id === 'phone' || item.id === 'dadPhone' || item.id === 'momPhone') ?
                                             ((ele[item.id] && ele[item.id].dailCode && ele[item.id].number !== "") ?
                                                 <span className={ele[item.id].is_valid ?
@@ -861,7 +949,7 @@ const ContactListing = forwardRef((props, ref) => {
         setOpenModal(false);
     }
     const sendActionData = (data) => {
-        // console.log(data);
+        // // console.log(data);
         // setActionStatus(data);
         if(data && addSelectAll.status){
             setAddSelectAll({
@@ -895,7 +983,9 @@ const ContactListing = forwardRef((props, ref) => {
                 openBulkAutomationHandler={openBulkAutomationHandler}
                 showAction={showAction}
                 addSelectAll={addSelectAll}
-                sendActionData={sendActionData}         
+                sendActionData={sendActionData}
+                // actionStatusFun={actionStatus}
+                // singleContact={singleContact}
             ></ContactHead>
             {successMsg &&
                 <SuccessAlert message={successMsg}></SuccessAlert>
@@ -939,7 +1029,7 @@ const ContactListing = forwardRef((props, ref) => {
                                     <button className={colModalStatus ? "configColBtn close" : "configColBtn"}
                                             onClick={toggleColModal}></button>
                                     <div className="selectAllSection">
-                                        <div className={selectSingle ? "selectAllWraper contactPageSelector singleSelect" : "selectAllWraper contactPageSelector withoutEditOption" && selectAllCheckbox ? "selectAllWraper contactPageSelector allSelect" : "selectAllWraper contactPageSelector withoutEditOption"}>
+                                        <div className={selectSingle && showAction ? "selectAllWraper contactPageSelector singleSelect" : "selectAllWraper contactPageSelector withoutEditOption" && selectAllCheckbox ? "selectAllWraper contactPageSelector allSelect" : "selectAllWraper contactPageSelector withoutEditOption"}>
                                             <label><span
                                                 className={selectSingle ? "checkCutsomInputs minusSelectBox" : "customCheckbox allContacts headerselect"}><input
                                                 type="checkbox" name="selectAll" checked={selectAllCheckbox}
