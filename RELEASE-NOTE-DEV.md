@@ -110,3 +110,6 @@
 
 # QI PHASE 1 V1.0.0
     - QI issue fixing in whole platform phase 1
+
+# QI PHASE 1 V1.0.1
+    - QI issue fixing in phase 1 for some design conflict in action button
