@@ -113,3 +113,6 @@
 
 # QI PHASE 1 V1.0.1
     - QI issue fixing in phase 1 for some design conflict in action button
+
+# QI PHASE 1 V1.0.2
+    - QI issue fixing in phase 1 for some UAT changes    
