@@ -262,7 +262,21 @@ const EmailModal = (props) => {
         console.log(tempSelected);
     }
 
+    // const deselectingTemplate = (e) =>{
+    //     setEmailData({
+    //         ...emailData,
+    //         "subject": "",
+    //         "template": "",
+    //     });
+    //     setTempSelected(false); 
+    //     setEmailDatasubject("");  
+    //     setTemplateToogle(false);
+    //     setChangedTemplate("");
+    //     console.log("Edited email body: ", emailData.template);
+    //     console.log("changedTemplate", changedTemplate);
 
+    // }
+    
     const sendGlobalEmail = (e) => {
         console.log("Edited email body: ", emailData.template);
         e.preventDefault();
@@ -443,7 +457,7 @@ const EmailModal = (props) => {
 
 let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
  // console.log("Initial State in header",zIndexEmail);
-  console.log("sssssssssssssssssssssssssssss",emailSetupData.user);
+  //console.log("sssssssssssssssssssssssssssss",emailSetupData.user);
 
 
 
@@ -468,7 +482,6 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
   
     
   useOutsideAlerter(keywordRef);
-
 
 
 
@@ -606,9 +619,14 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                 </div>
                                 {templateToogle &&
                                     <ul className="showTemplateName">
+                                        {/* <li 
+                                          onClick={(e) => deselectingTemplate()}
+                                          >
+                                              Select template
+                                        </li> */}
                                         {
                                             (emailTempData.templates &&
-                                            emailTempData.templates.length > 0 ) ?
+                                            emailTempData.templates.length > 0 ) ? 
                                             emailTempData.templates.map((elem, i) => (
                                                     <li key={i}
                                                         onClick={(e) => sendingTemplateDetails(e, elem)}>{elem.title}</li>
@@ -708,7 +726,7 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                 <EditorComponent
                                     globalTemplateValue={(template) => setChangedTemplate(template)}
                                     initialData={emailData ? emailData : emailData.template}
-                                    setTempSelected={tempSelected}
+                                    setTempSelected={true}
                                     setEmailSend={emailSend}
                                 />
                                 <div className="errorMsg">{validateMsg.template}</div>

@@ -684,8 +684,8 @@ input:focus + .searchIco #search-ico .a,
 }
 
 .dashInnerUI {
-  /* padding-right: 46px; */
-  /* overflow: auto; */
+  padding-right: 46px;
+  overflow: auto; 
   overflow: hidden;
   flex: 1 1 auto;
   display: flex;

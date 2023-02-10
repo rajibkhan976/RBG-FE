@@ -112,10 +112,10 @@ useEffect(()=>{
     <div className="contactHead">
       <div className="userListHead">
         <div className="listInfo">
-          <ul className="listPath">
+          {/* <ul className="listPath">
             <li>Contacts</li>
             <li>My Contacts</li>
-          </ul>
+          </ul> */}
           <h2 className="inDashboardHeader">Contacts List ({props.totalCount})</h2>
           <p className="userListAbout">Create, import &amp; manage your contacts</p>
         </div>

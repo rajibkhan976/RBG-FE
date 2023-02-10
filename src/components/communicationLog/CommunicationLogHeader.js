@@ -38,10 +38,10 @@ setTimeout(() => {
     
     <div className="userListHead lessGap">
       <div className="listInfo">
-        <ul className="listPath">
+        {/* <ul className="listPath">
           <li>Communication Log </li>  
           <li>All</li>
-        </ul>
+        </ul> */}
         <h2 className="inDashboardHeader commLog">Communication Log 
         <span>({props.countCommLog})</span> 
         <span className="infoSpan">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useReducer } from "react";
+import React, { useEffect, useState, useReducer , useRef} from "react";
 import { ContactService } from "../../services/contact/ContactServices";
 import lineUser from "../../assets/images/lineUser.svg";
 import makeCall from "../../assets/images/makeACall.svg";
@@ -9,9 +9,14 @@ import searchicon from "../../assets/images/search_icon.svg";
 import iconBrowse from "../../assets/images/icon_browse_keywords.svg";
 import modalReducer from "../../reducers/modalReducer";
 import {useDispatch, useSelector} from 'react-redux';
+import {DependentServices} from "../../services/contact/DependentServices";
+import cross from "../../assets/images/cross.svg";
+import updown from "../../assets/images/updown.png";
 
-
-
+const initialDependentState = {
+  name: "",
+  contactId: "",
+};
 
 const CallModal = (props) => {
   
@@ -20,23 +25,24 @@ const CallModal = (props) => {
     setPhoneCountryCode(conntryResponse);
     console.log(conntryResponse, "country");
 };
+const contactSelect = useRef(null)
 
 useEffect(() => {
     fetchCountry();
 }, []);
 const dispatch = useDispatch();
-  const [phoneCountryCode, setPhoneCountryCode] = useState([]);
-  const [number, setNumber] = useState([]);
-  const countrycodeOpt = phoneCountryCode ? phoneCountryCode.map((el, key) => {
+const [phoneCountryCode, setPhoneCountryCode] = useState([]);
+const [number, setNumber] = useState([]);
+const countrycodeOpt = phoneCountryCode ? phoneCountryCode.map((el, key) => {
       return (
           <option value={el.code} data-dailcode={el.prefix} key={key} >{el.code} ({el.prefix})</option>
       )
   }) : '';
-    const [basicinfoMobilePhone, setBasicinfoMobilePhone] = useState({
-        countryCode: "USA",
-        dailCode: "+1",
-        number: "1234567890"
-    });
+  const [basicinfoMobilePhone, setBasicinfoMobilePhone] = useState({
+      countryCode: "USA",
+      dailCode: "+1",
+      number: "1234567890"
+  });
   const handelBasicinfoMobilePhon = (event) => {
     const {name, value} = event.target;
     if(name == "countryCode"){
@@ -48,12 +54,36 @@ const dispatch = useDispatch();
     setBasicinfoMobilePhone(prevState => ({...prevState, [name]: value}));
 
 };
+const [toggleContactList, setToggleContactList] = useState({
+  status: false,
+  contacts: [],
+  isCross: false,
+});
+const [editMsgObj, setEditMsgObj] = useState({
+to: "",
+body: "",
+mediaUrl: ""
+});
+const [errorObj, setErrorObj] = useState({
+to: "",
+body: ""
+})
 
-const [callSuggetion, setCallSuggetion] = useState(false);
-const openCallSuggestionHandler = (e) =>{
-  setNumber(e.target.value);
-  //setCallSuggetion(true)
+const [isDisabled, setIsDisabled] = useState(false);
+const [processing, setProcessing] = useState(false);
+
+const [dependant, setDependant] = useState({
+    ...initialDependentState,
+});
+
+const fetchContacts = async () => {
+  let response = await ContactService.fetchUsers()
+  console.log(response);
 }
+const [callSuggetion, setCallSuggetion] = useState(false);
+const [contactOptions, setContactOptions] = useState(false)
+
+
 const closeCallSugession = () =>{
   setCallSuggetion(false)
 }
@@ -76,11 +106,177 @@ const hideNextPartHandler = () =>{
   setOpenOtherPart(false);
 }
 const makeCall = () => {
-    props.makeOutgoingCall(basicinfoMobilePhone.dailCode + number);
+  console.log("dasdasdasdasdsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss", basicinfoMobilePhone)
+    props.makeOutgoingCall(basicinfoMobilePhone.dailCode + basicinfoMobilePhone.phone);
     props.callModalOff();
 }
   let zIndexCall = useSelector((state) => state.modal.zIndexCall);
   console.log("Initial State in header", zIndexCall);
+
+
+//choose from contact
+// const openCallSuggestionHandler = (e) =>{
+//   setNumber(e.target.value);
+//   //setCallSuggetion(true)
+// }
+const openCallSuggestionHandler = (e) =>{
+    console.log("event e.target.value ::: ", e.target.value, e.target.value.trim());
+    const regexOfNumber = /^[0-9]{0,25}$/im
+ 
+    if(!e.target.value.match(regexOfNumber)){
+      // setErrorObj({
+      //   ...errorObj,
+      //   to: "Please enter a valid contact number"
+      // });
+      return;
+    }
+    else {
+      setErrorObj({
+        ...errorObj,
+        to: ""
+      })
+    }
+    setNumber(e.target.value);
+    setBasicinfoMobilePhone({
+      ...basicinfoMobilePhone,
+      phone: e.target.value
+    })
+    setEditMsgObj({
+      ...editMsgObj,
+      to: basicinfoMobilePhone.dailCode + e.target.value
+    })
+    setContactOptions(false)
+    setToggleContactList({
+      status: false,
+      contacts: [],
+      isCross: false,
+    });
+    setDependant({
+      ...initialDependentState,
+    })
+  }
+
+  const handleContactName = async (e) => {
+    e.preventDefault();
+
+    if (e.target.value.trim() !== "") {
+      
+    }
+    //Set dependant name
+    setDependant({...dependant, name: e.target.value});
+
+    //Name character limit
+    if (e.target.value.length >= 30) {
+        //Length 30 char limit
+        console.log("char checking");
+        setIsDisabled(true);
+    }
+    //Name special character checking
+    let isSpecialCharacterformat = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
+    if (isSpecialCharacterformat.test(e.target.value)) {
+        console.log("Special checkig");
+        
+        setIsDisabled(true);
+    }
+    if (
+        e.target.value.length >= 3 &&
+        e.target.value.length <= 30 &&
+        !isSpecialCharacterformat.test(e.target.value)
+    ) {
+        try {
+            setProcessing(true);
+            let operationMethod = "searchContacts";
+            let payload = {
+                guardianId: 0,
+                keyword: e.target.value,
+            };
+            await DependentServices[operationMethod](payload).then((result) => {
+                setToggleContactList({
+                    ...toggleContactList,
+                    contacts: result.contacts,
+                    status: true,
+                });
+                // if (result && result.contacts.length) {
+                // }
+            });
+        } catch (e) {
+            console.log("Error in contact search: ", e);
+        } finally {
+            setProcessing(false);
+            setIsDisabled(false);
+        }
+    }
+
+    if(e.target.value.trim() == "") {
+        setToggleContactList({
+            status: false,
+            contacts: [],
+            isCross: false,
+        });
+    }
+}
+const resetContactName = (e) => {
+  e.preventDefault();
+  
+  setDependant({name: "", contactId: ""});
+  
+  setToggleContactList({
+      ...toggleContactList,
+      status: false,
+      contacts: [],
+      isCross: false,
+  });
+  setEditMsgObj({
+    ...editMsgObj,
+    to: ""
+  })
+
+  setBasicinfoMobilePhone({
+    countryCode: "USA",
+    dailCode: "+1",
+    number: "",
+    phone: ""
+  })
+};
+const handleContactSelect = (e, contact) => {
+// console.log(contact.phone.number);
+  setEditMsgObj({
+    ...editMsgObj,
+    to: contact.phone.full_number
+  })
+
+  setBasicinfoMobilePhone({
+    ...basicinfoMobilePhone,
+    dailCode: contact.phone.dailCode,
+    countryCode: contact.phone.countryCode,
+    phone: contact.phone.number
+  })
+  
+  setDependant({
+      name: contact.firstName + " " + (contact.lastName ? contact.lastName : ""),
+      contactId: contact._id,
+  });
+  
+  setToggleContactList({
+      ...toggleContactList,
+      status: false,
+      contacts: [],
+      isCross: true,
+  });
+
+  setContactOptions(false)
+  
+  setErrorObj({
+    ...errorObj,
+    to: ""
+  })
+};
+
+
+
+
+
+
 
 
  return(
@@ -97,67 +293,125 @@ const makeCall = () => {
                 <div className="countryCode cmnFieldStyle">
                     <div className="countryName">{basicinfoMobilePhone.countryCode}</div>
                     <div className="daileCode">{basicinfoMobilePhone.dailCode}</div>
-                    <select className="selectCountry" name="countryCode" defaultValue={basicinfoMobilePhone.countryCode} onChange={handelBasicinfoMobilePhon}>
+                    <select className="selectCountry" name="countryCode" 
+                       defaultValue={basicinfoMobilePhone.countryCode} 
+                       onChange={handelBasicinfoMobilePhon}>
                         {countrycodeOpt}
                     </select>
                 </div>
             </div>
             <div className="rightSide">
-              <input type="text" placeholder="Eg. 5555551234" onChange={openCallSuggestionHandler}/>
+              <input type="text" 
+               value={basicinfoMobilePhone.phone}
+               placeholder="Eg. 5555551234" onChange={openCallSuggestionHandler}/>
             </div>
-            {/* {callSuggetion && 
-                <div className="callSuggessionBox">
-                  <div className="searchCall">
-                    <img src={searchicon} alt=""/>
-                    <input type="search"/>
-                    <div className="cancelKeySearch">
-                        <button onClick={closeCallSugession}></button>
-                    </div>
-                  </div>
-                  <ul>
-                  <li><button>
-                          <div className="profilePic">SE</div>
-                          <div className="profileName">Sabbir Mustaque</div>
-                          <div className="number">+1 222 333 4444</div>
-                      </button></li>
-                      <li><button>
-                          <div className="profilePic">SE</div>
-                          <div className="profileName">Sabbir Mustaque</div>
-                          <div className="number">+1 222 333 4444</div>
-                      </button></li>
-                      <li><button>
-                          <div className="profilePic">SE</div>
-                          <div className="profileName">Sabbir Mustaque</div>
-                          <div className="number">+1 222 333 4444</div>
-                      </button></li>
-                      <li><button>
-                          <div className="profilePic">SE</div>
-                          <div className="profileName">Sabbir Mustaque</div>
-                          <div className="number">+1 222 333 4444</div>
-                      </button></li>
-                      <li><button>
-                          <div className="profilePic">SE</div>
-                          <div className="profileName">Sabbir Mustaque</div>
-                          <div className="number">+1 222 333 4444</div>
-                      </button></li>
-                      <li><button>
-                          <div className="profilePic">SE</div>
-                          <div className="profileName">Sabbir Mustaque</div>
-                          <div className="number">+1 222 333 4444</div>
-                      </button></li>
-                  </ul>
-                </div>
-            } */}
+            
           </form>
         </div>
       </div>
       <div className="modalMakeCallBody">
-        {/* <div className="text-right"><a href="javascript:void(0)" className="linkType">
-          <img src={lineUser} alt=""/> Choose from Contacts</a>
-        </div> */}
+        <div className="numberFromContact text-right">
+        <button
+             className="btn linkType"
+             onClick={(e) => setContactOptions(!contactOptions)}
+           >
+             <img src={lineUser} alt="" /> {contactOptions ? "Close Contact Search" : "Choose from Contacts"}
+           </button>
+        </div>
+
+        {contactOptions && (
+           <div className="getContactsforMsg" ref={contactSelect}>
+             <div
+               className={
+                 toggleContactList.status
+                   ? `cmnFormField listActive`
+                   : `cmnFormField`
+               }
+             >
+               <input
+                 className={processing ? "cmnFieldStyle loading" : "cmnFieldStyle"}
+                 type="text"
+                 style={{
+                   backgroundImage: toggleContactList.status
+                     ? `url(${updown})`
+                     : "",
+                 }}
+                 placeholder="Eg. Name"
+                 onChange={(e) => handleContactName(e)}
+                 value={dependant.name ? dependant.name : ""}
+                 disabled={toggleContactList.isCross}
+               />
+               {toggleContactList.isCross ? (
+                 <button
+                   className="btn crossContact"
+                   onClick={(e) => resetContactName(e)}
+                 >
+                   <img src={cross} alt="cross" />
+                 </button>
+               ) : (
+                 ""
+               )}
+               {toggleContactList.status && (
+                 <>
+                 {/* .filter(contactItem => contactItem.phone && contactItem.phone.number.trim() != "") */}
+                 {toggleContactList.contacts.filter(contactItem => contactItem.phone && contactItem.phone.number.trim() != "").length > 0 ? (
+                   <div className="contactListItems">
+                     <ul>
+                         {toggleContactList.contacts.filter(contactItem => contactItem.phone && contactItem.phone.number.trim() != "").map((contact) => (
+                           <li
+                             key={contact._id}
+                             data-id={contact._id}
+                             onClick={(e) => {
+                               handleContactSelect(e, contact);
+                             }}
+                             className="appContact"
+                           >
+                             <figure
+                               style={{
+                                 backgroundColor: `rgb(${Math.floor(
+                                   Math.random() * 256
+                                 )},${Math.floor(
+                                   Math.random() * 256
+                                 )},${Math.floor(Math.random() * 256)})`,
+                               }}
+                             >
+                               {console.log(
+                                 `rgb(${Math.floor(
+                                   Math.random() * 256
+                                 )},${Math.floor(
+                                   Math.random() * 256
+                                 )},${Math.floor(Math.random() * 256)})`
+                               )}
+                               {contact.firstName ? contact.firstName[0] : ""}
+                               {contact.lastName ? contact.lastName[0] : ""}
+                             </figure>
+                             <p>
+                               <span>
+                                 {(contact.firstName ? contact.firstName : "") +
+                                   " " +
+                                   (contact.lastName ? contact.lastName : "")}
+                               </span>
+                               {contact.email ? (
+                                 <small>{contact.email}</small>
+                               ) : (
+                                 ""
+                               )}
+                             </p>
+                           </li>
+                         ))}
+                     </ul>
+                   </div>
+                   ) : (
+                     <div className="noContactFound">No Contact Found</div>
+                   )}
+                 </>
+               )}
+             </div>
+           </div>
+         )}
         <div className="makeCallForm">
  
-            <div className="slice">
+            {/* <div className="slice">
               <label>Select Call Type</label>
               <div className="radioPlace">
                 <label>
@@ -248,7 +502,7 @@ const makeCall = () => {
                                 <li><button>First Name</button></li>
                                 <li><button>Last Name</button></li>
                                 <li><button>Address</button></li>
-                                <li><button>City</button></li>
+                                <li><button>City</button></li>  
                                 <li><button>Country</button></li>
                             </ul>
                         </div>
@@ -257,7 +511,7 @@ const makeCall = () => {
                   
                 </div>
               </div> 
-             }
+             } */}
                 <div className="text-center">
                   <button className="makeAcallBtn" onClick={makeCall} ><img src={makeCall2} alt=""/></button>
                 </div>

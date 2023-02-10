@@ -30,7 +30,7 @@ const ListHead = (props) => {
   }
 
 
-
+  const loggedInUser = useSelector((state) => state.user.data);
 
   
   return (
@@ -145,10 +145,11 @@ const ListHead = (props) => {
       : pathURL === '/users' ?
       <div className="userListHead">
         <div className="listInfo">
+        { (loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'rbg')  ? 
           <ul className="listPath">
             <li>Users & Controls</li>
             <li>Users</li>
-          </ul>
+          </ul> :""}
           <h2 className="inDashboardHeader">Users ({props.usersCount})</h2>
           <p className="userListAbout">
             Create & manage multiple sub-users with different access
@@ -195,10 +196,11 @@ const ListHead = (props) => {
       : pathURL === '/organizations' ?
       <div className="userListHead">
         <div className="listInfo">
-          <ul className="listPath">
+         
+         <ul className="listPath">
             <li>Users & Controls</li>
             <li>Organizations</li>
-          </ul>
+          </ul> 
           <h2 className="inDashboardHeader">Organizations ({props.organizationsCount})</h2>
           <p className="userListAbout">
             Manage Organizations

@@ -107,3 +107,6 @@
 
 # BULK EMAIL AND SMS V1.0.4
     - Email template chose file UI issue fixed
+
+# QI PHASE 1 V1.0.0
+    - QI issue fixing in whole platform phase 1
