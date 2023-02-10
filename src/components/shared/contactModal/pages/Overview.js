@@ -664,7 +664,7 @@ const Overview = (props) => {
                 </div>
             }
             <div className="contactTabScrollContainer">
-                {props.contactId !== 0 &&
+                {/* {props.contactId !== 0 &&
                     <div className="overviewList">
                         <ul>
                             <li>
@@ -689,7 +689,7 @@ const Overview = (props) => {
                             </li>
                         </ul>
                     </div>
-                }
+                } */}
                 <form>
                     <div className="overviewFormWrap overviewInfos">
                         <div className="overviewForm cmnForm">
