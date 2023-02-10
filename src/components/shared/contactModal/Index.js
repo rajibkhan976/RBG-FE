@@ -10,7 +10,7 @@ import Appointment from "./pages/Appointment";
 import Automation from "./pages/Automation";
 import Notes from "./pages/notes/Notes";
 import Inbox from "./pages/inbox/Inbox";
-import {Step, Steps, NavigationComponentProps} from "react-step-builder";
+import {Step, Steps,useSteps, NavigationComponentProps} from "react-step-builder";
 import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../../actions/types";
 import {ContactService} from "../../../services/contact/ContactServices";
@@ -46,8 +46,14 @@ import ShowContactTagModal from "../showContactTagModal"
 const ContactModal = (props) => {
 
     const scrollRefSide = useRef();
+
+    // const ActionBtn = (actionBtn) =>{
+    //        return (
+            
+    //        )
+    // }
     const Navigation = (navigation) => {
-       
+        
         return (
             <div className="outertabMenu">
             <button className="tabMenuLeft" onClick={menuLeftPressHandler} ><img src={menuArrow1}/></button>
@@ -131,13 +137,18 @@ const ContactModal = (props) => {
         e.preventDefault();
         setShowExtraMenu(!showExtraMenu);
     }
-
+    
 
     const config = {
         navigation: {
             component: Navigation,
             location: "before"
         }
+        // },
+        // actionBtn : {
+        //     component: ActionBtn,
+        //     location: "after"
+        // }
     };
     const [stickeyHeadStatus, setStickeyHeadStatus] = useState(false);
     const [contactName, setContactName] = useState("");
@@ -160,6 +171,23 @@ const ContactModal = (props) => {
             contact_modal_id: '',
         });
     }
+    const openContactModal = (id) => {
+		dispatch({
+			type: actionTypes.CONTACTS_MODAL_ID,
+			contact_modal_id: {
+				"id": id,
+				 "page": 5
+			},
+		});
+		setTimeout(() => {
+			dispatch({
+				type: actionTypes.CONTACTS_MODAL_ID,
+				contact_modal_id: {
+                    "id": id,
+				},
+			}, 100); 
+		})
+	}
     const [device, setDevice] = useState(props.device);
     useEffect(() => {
         console.log("device222222", device)
@@ -326,6 +354,10 @@ const ContactModal = (props) => {
             });
         }
     }
+   // console.log("config.navigation.component.jump(9)config.navigation.component.jump(9)", config.navigation.jump(9));
+
+
+   // const { prev, next, jump } = useSteps();
     return (
         <>
             <div className="modal contactModal">
@@ -349,19 +381,27 @@ const ContactModal = (props) => {
                                 </div>
                             </div>
                             <div className="contactModalTopRight">
-                               {!showBottomPart && <div className="actionBtns"
-                                >
-                                   {(contactData && contactData.email) && 
-                                    <button className="roundBlue"> <img src={email_icon_white} alt=""/>
-                                    <span className="tooltiptextInfo">{contactData.email}</span>
-                                    </button>}
-                                    {(contactData && contactData.phone && contactData.phone.number) &&
-                                    <button className="roundBlue"><img src={phone_call_icon_white} alt=""/>
-                                    <span className="tooltiptextInfo">{contactData.phone && contactData.phone.dailCode && contactData.phone.number ?
-                                                    contactData.phone.dailCode + "-" + contactData.phone.number : ""}</span>
-
-                                    </button>}
-                                </div>}
+                               {!showBottomPart && 
+                               <div className="actionBtns"
+                               >
+                               {(contactData && contactData.email) && 
+                                   <button className="roundBlue"
+                                  //onClick={() => actionBtn.jump(9)}
+                   
+                                   > <img src={email_icon_white} alt=""/>
+                                   <span className="tooltiptextInfo">{contactData.email.slice(0,40)+(contactData.email.length> 40 ? "...": "")}</span>
+                                   </button>}
+                                   {(contactData && contactData.phone && contactData.phone.number) &&
+                                   <button className="roundBlue"
+                                   //onClick={() => openContactModal(contactData._id)}
+                                   //onClick={() => actionBtn.jump(9)}
+                                   ><img src={phone_call_icon_white} alt=""/>
+                                   <span className="tooltiptextInfo">{contactData.phone && contactData.phone.dailCode && contactData.phone.number ?
+                                                   contactData.phone.dailCode + "-" + contactData.phone.number.slice(0,12) + (contactData.phone.number.length > 12 ? "..." : "") : ""}</span>
+                   
+                                   </button>}
+                               </div>
+                               }
                                 <div className="ltValue">
                                     <header>Life Time Value :</header>
                                     <span>USD { ltv }</span>
@@ -403,7 +443,7 @@ const ContactModal = (props) => {
                                         {(contactData && contactData.email) &&
                                             <div className="userEmail overviewModal">
                                                 <img src={email_icon_white} alt=""/>
-                                                <a href={`mailto:${contactData.email}`} className="mailToEmail">{contactData.email}</a>
+                                                <a  className="mailToEmail">{contactData.email}</a>
                                             </div>
                                         }
                                     </div>

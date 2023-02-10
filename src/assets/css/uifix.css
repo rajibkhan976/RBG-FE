@@ -31,7 +31,7 @@
   width: auto;
   min-width: none;
   color: #fff;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
   text-align: left;
   text-transform: capitalize;
@@ -93,7 +93,7 @@
 .actionBtns .roundBlue .tooltiptextInfo {
   visibility: hidden;
   width: auto;
-  min-width: 119px;
+  min-width: 135px;
   background-color: #fff;
   color: #9baebc;
   text-align: center;
@@ -122,8 +122,59 @@
 }
 .chooseTransactionWraper.transactionPage.display .posSellingForm {
   margin-bottom: 0px !important;
+  padding-bottom: 50px;
 }
 
 .bodytransaction .cmnFormRow {
   margin-bottom: 16px;
+}
+
+
+.productTransaction .createNew ,
+.continueBuy{
+  flex: 1 1 100%;
+  display: flex;
+  height: auto;
+  position: absolute;
+  width: 100%;
+  bottom: 20px;
+  left: 0;
+  background: #fff;
+}
+
+.continueBuy button.saveNnewBtn {
+  margin: 17px auto;
+  width: 160px;
+}
+
+/* .overviewForm .formActBtnWrap {
+  width: 100%;
+  bottom: 70px;
+  margin: 0;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
+  background: #fff;
+} */
+
+.userContacts .userEmail.overviewModal .mailToEmail {
+  float: none;
+  cursor: auto;
+}
+.userContacts .userPhone img, .userContacts .userEmail img {
+  margin-right: 10px !important;
+}
+
+.userContacts .userEmail.overviewModal,
+.userContacts .userPhone {
+    width: 100%;
+    display: flex;
+}
+.userContacts .userPhone span{
+  white-space: nowrap;
+  float: left;
+  width: 236px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

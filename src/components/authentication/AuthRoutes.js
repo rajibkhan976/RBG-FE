@@ -28,7 +28,9 @@ const AuthRoutes = (props) => {
       { loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'rbg' &&
         <InnerLeftMenu toggleLeftSubMenu={props.toggleLeftSubMenu} routeMenu="auth" reRender={(id) => renderID(id)} />
       }
-      <div className="dashboardElComponent fullWithContainer">
+      <div className={(loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'rbg')  ? "dashboardElComponent": "dashboardElComponent fullWithContainer"} 
+
+           >
         {/* <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} /> */}
         <div className="dashInnerStructure">
           <Route path="/roles" component={Roles} />

@@ -12,10 +12,10 @@ const ListHeader = (props) => {
       {pathURL === "/automation-list" && (
         <div className="userListHead">
           <div className="listInfo">
-            <ul className="listPath">
+            {/* <ul className="listPath">
               <li>Automation</li>
               <li>Listing</li>
-            </ul>
+            </ul> */}
             <h2 className="inDashboardHeader">
               List of automations <span>({props.automationData.count})</span>
             </h2>
@@ -34,9 +34,9 @@ const ListHeader = (props) => {
       {automationDetails !== null && automationDetails?.isExact ? (
         <div className="userListHead">
           <div className="listInfo">
-            <ul className="listPath">
+            {/* <ul className="listPath">
               <li>Automation</li>
-            </ul>
+            </ul> */}
             <h2 className="inDashboardHeader">{props.autoName}</h2>
             {/*<div className="automationShortInfo">
               <ul>

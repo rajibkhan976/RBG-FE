@@ -8,6 +8,7 @@ import { UserServices } from "../../../services/authentication/UserServices";
 import { OrganizationServices } from "../../../services/authentication/OrganizationServices";
 import { utils } from "../../../helpers";
 import Loader from "../../shared/Loader";
+import { useLocation } from "react-router-dom";
 import config from "../../../configuration/config";
 import * as actionTypes from "../../../actions/types";
 import { ErrorAlert, SuccessAlert } from '../../shared/messages';
@@ -52,6 +53,7 @@ const UsersListing = (props) => {
     const handelSize = () => {
         setTableWidth(window.innerWidth - 454);
     }
+    const pathURL = useLocation().pathname;
 
     useEffect(() => {
         handelSize();
@@ -415,14 +417,16 @@ const UsersListing = (props) => {
                 keyword={keyword}
             />
             {successMsg &&
-                <SuccessAlert message={successMsg}></SuccessAlert>
+                <SuccessAlert message={successMsg}></SuccessAlert> 
             }
             {errorMsg &&
                 <ErrorAlert message={errorMsg}></ErrorAlert>
             }
             {usersCount ?
                 <>
-                    <div className="userListBody" style={{ 'width': tableWidth }}>
+                    <div className="userListBody" 
+                    style={{ 'width': ((pathURL === "/users" || pathURL === "/organizations" || pathURL === "/associations") ? "auto" : tableWidth) }}
+                    >
                         <div className="listBody">
                             <ul className="tableListing">
                                 <li className="listHeading">
