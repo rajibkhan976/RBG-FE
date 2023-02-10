@@ -69,18 +69,19 @@ const BulkEmail = (props) => {
             setIsLoader(true);
             const result = await EmailServices.fetchEmailTemplateList(pageId, queryParams);
             if (result) {
+                // console.log("email template", result.templates);
                 setEmailTempData(result);
             }
         } catch (e) {
             setIsLoader(false);
-            console.log("Error in template listing", e);
+            // console.log("Error in template listing", e);
             setErrorMsg(e.message);
         } finally {
             setIsLoader(false);
         }
     };
     const sendingTemplateDetails = (e, elem) => {
-        console.log("eleme", elem);
+        // console.log("eleme", elem);
         setEmailData({
             ...emailData,
             "subject": elem.subject,
@@ -92,6 +93,8 @@ const BulkEmail = (props) => {
         setEmailDatasubject(elem.title);
         setTemplateToogle(false);
         setTempSelected(true);
+
+        // console.log(emailData.template !== "", elem.subject, elem.title, emailData.template);
         if (!emailData.title !== "" && elem.subject !== "" && elem.template !== "") {
             setEmailValidation({
                 "email": "",
@@ -99,6 +102,7 @@ const BulkEmail = (props) => {
                 "template": ""
             })
         }
+        // console.log(emailData);
     }
    
 
@@ -130,7 +134,7 @@ const BulkEmail = (props) => {
     }
      // deleselected email template
      const deselectingTemplate = ()=>{
-        console.log(emailData);
+        // console.log(emailData);
         setEmailData({
             ...emailData,
             "subject": "",
@@ -143,7 +147,7 @@ const BulkEmail = (props) => {
         setFirstTimeErrorMsg(false);
     }
     const addKeywordEmail = (e) => {
-        // console.log();
+        // // console.log();
         setEmailValidation({
             ...emailValidation,
             subject: "",
@@ -189,7 +193,7 @@ const BulkEmail = (props) => {
                 }
 
 
-                // console.log(subjectInput, cursorStart, cursorEnd, textValue);
+                // // console.log(subjectInput, cursorStart, cursorEnd, textValue);
             } else {
                 subjectInput.value = subjectInput.value + " [" + e.target.textContent + "] ";
 
@@ -204,14 +208,14 @@ const BulkEmail = (props) => {
                 subjectInput.focus();
             }
         } catch (err) {
-            console.log();
+            // console.log();
         }
     }
     const fetchEmailTags = async () => {
         try {
             const result = await SMSServices.fetchSMSTags()
             if (result) {
-                // console.log("result", result);
+                // // console.log("result", result);
                 setEmailTags(result)
             }
         } catch (error) {
@@ -223,7 +227,7 @@ const BulkEmail = (props) => {
         }
     }
     useEffect(() => {
-        // console.log("template",utils.decodeHTML(emailData.template));
+        // // console.log("template",utils.decodeHTML(emailData.template));
         setChangedTemplate(utils.decodeHTML(emailData.template));
     }, [emailData.template]);
 
@@ -232,11 +236,11 @@ const BulkEmail = (props) => {
 
 
     const sendBulkEmailHandler = async (e) => {
-        console.log("Edited email body: ", emailData);
+        // console.log("Edited email body: ", emailData);
         e.preventDefault();
-        console.log("Email templete data", changedTemplate);
+        // console.log("Email templete data", changedTemplate);
         // const subject = emailData.subject;
-        // console.log("Changed", changedTemplate);
+        // // console.log("Changed", changedTemplate);
         // let template = changedTemplate;
         let payload = {
             type: "email",
@@ -245,7 +249,7 @@ const BulkEmail = (props) => {
             "subject": emailData.subject,
             "template": utils.encodeHTML(changedTemplate)
         };
-        console.log(payload);
+        // console.log(payload);
         if (emailData.subject === "") {
             setEmailValidation(
                 {
@@ -267,19 +271,20 @@ const BulkEmail = (props) => {
                 ...emailValidation,
                 template: "Please enter an email body"
             })
-            console.log("I am in else if")
+            // console.log("I am in else if")
         }
         else {
             setIsLoader(true);
             try {
                 let result = await ContactService.fetchBulkEmail(payload);
                 if (result) {
-                    console.log(result);
+                    // console.log(result);
                     setIsLoader(false);
                     // setEmailData({});
                     emailData.subject = "";
                     emailData.template = "";
                     props.hideModal();
+                    props.unCheckAll();
                     dispatch({
                         type: actionTypes.SHOW_MESSAGE,
                         message: result.message,
@@ -288,7 +293,7 @@ const BulkEmail = (props) => {
                 }
 
             } catch (error) {
-                console.log(error);
+                // console.log(error);
                 setIsLoader(false);
             } finally {
                 setIsLoader(false);
@@ -300,7 +305,7 @@ const BulkEmail = (props) => {
     //         setIsLoader(true);
     //         const result = await EmailServices.fetchSetupEmail();
     //         if (result) {
-    //             console.log(result);
+    //             // console.log(result);
     //             setEmailSetupData(result);
     //         }
     //     } catch (e) {
@@ -322,7 +327,7 @@ const BulkEmail = (props) => {
     // out side click of thr email
     const handleClickOutside = (event) => {
         if (tagRef.current && !tagRef.current.contains(event.target)) {
-            console.log(event);
+            // console.log(event);
             setKeywordSuggesion(false);
         }
     }
@@ -333,7 +338,7 @@ const BulkEmail = (props) => {
         }
     }, [tagRef]);
     // const onChangeEditor = (e) => {
-    //     console.log(e);
+    //     // console.log(e);
     //     if(!e){
     //         setFirstTimeLoadEditor(false)
     //     }
@@ -344,7 +349,7 @@ const BulkEmail = (props) => {
         setFirstTimeErrorMsg(true);
     },[changedTemplate]);
     useEffect(() => {
-        console.log("change template", changedTemplate);
+        // console.log("change template", changedTemplate);
         if(changedTemplate == "" && firstTimeErrorMsg){
             setEmailValidation({
                 ...emailValidation,
@@ -383,7 +388,10 @@ const BulkEmail = (props) => {
                                         </div>
                                         {templateToggle &&
                                             <ul className="showTemplateName">
-                                                <li onClick={(e) => deselectingTemplate()}>Select Template</li>
+                                                {emailTempData.templates.length !== 0 &&
+                                                    <li onClick={(e) => deselectingTemplate()}>Select Template</li>
+
+                                                }
                                                 {
                                                     (emailTempData.templates &&
                                                         emailTempData.templates.length > 0) ?

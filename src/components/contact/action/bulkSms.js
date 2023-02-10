@@ -54,13 +54,13 @@ const BulkSms = (props) => {
   //         },
   //       };
   //     } else {
-  //       console.log("Ringtone is blank", result)
+  //       // console.log("Ringtone is blank", result)
   //     }
   //     setDevice(device.setup(result.token, conf));
 
-  //     console.log("devicee", device)
+  //     // console.log("devicee", device)
   //   } catch (e) {
-  //     console.log("error", e);
+  //     // console.log("error", e);
   //   }
   // };
 
@@ -74,7 +74,7 @@ const BulkSms = (props) => {
     // });
   }, []);
   // useEffect(() => {
-  //   console.log("props", props)
+  //   // console.log("props", props)
   //   setDevice(props?.device);
   // }, [props?.device]);
 
@@ -86,7 +86,7 @@ const BulkSms = (props) => {
 
     const queryParams = new URLSearchParams();
 
-    // console.log("search", keyword);
+    // // console.log("search", keyword);
     if (keyword) {
       queryParams.append("search", keyword);
     }
@@ -132,12 +132,12 @@ const BulkSms = (props) => {
       setIsLoader(true);
       const result = await SMSServices.fetchSms(pageId, queryParams);
       if (result) {
-        console.log(result);
+        // console.log(result);
         setSMSTemplates(result.templates);
       }
     } catch (e) {
       setIsLoader(false);
-      console.log("Error in SMS template listing", e);
+      // console.log("Error in SMS template listing", e);
       // setErrorMsg(e.message);
     } finally {
       setIsLoader(false);
@@ -167,7 +167,7 @@ const BulkSms = (props) => {
     try {
       const result = await SMSServices.fetchSMSTags();
       if (result) {
-        // console.log("result", result);
+        // // console.log("result", result);
         setSmsTags(result);
       }
     } catch (error) {
@@ -186,7 +186,7 @@ const BulkSms = (props) => {
     let cursorEnd = textBox.selectionEnd;
     let textValue = textBox.value;
 
-    // console.log();
+    // // console.log();
 
     try {
       setValidationError({
@@ -194,9 +194,9 @@ const BulkSms = (props) => {
         body: "",
       });
       if (cursorStart || cursorStart == "0") {
-        // console.log("VIA CURSOR");
+        // // console.log("VIA CURSOR");
         var startToText = "";
-        // console.log(textBox.selectionStart);
+        // // console.log(textBox.selectionStart);
         textBox.value =
           textBox.value.substring(0, cursorStart) +
           "[" +
@@ -209,7 +209,7 @@ const BulkSms = (props) => {
           body: textBox.value,
         });
 
-        // console.log("smsFormData", smsFormData, textBox.value);
+        // // console.log("smsFormData", smsFormData, textBox.value);
 
         startToText =
           textBox.value.substring(0, cursorStart) +
@@ -221,9 +221,9 @@ const BulkSms = (props) => {
           startToText.length + 1,
           startToText.length + 1
         );
-        // console.log(startToText.length);
+        // // console.log(startToText.length);
       } else {
-        // console.log("VIA END POINT");
+        // // console.log("VIA END POINT");
 
         textBox.value = textBox.value + "[" + e.target.textContent + "]";
         setSmsformData({
@@ -233,7 +233,7 @@ const BulkSms = (props) => {
         textBox.focus();
       }
     } catch (err) {
-      // console.log(err);
+      // // console.log(err);
     }
   };
   // upload image
@@ -320,11 +320,11 @@ const BulkSms = (props) => {
   const sendBulkSmsHandler = async (e) => {
 
     e.preventDefault();
-    console.log(" edit object" + smsFormData, "contactList", props.selectedContacts, "all checkbox", props.selectAllCheckbox);
+    // console.log(" edit object" + smsFormData, "contactList", props.selectedContacts, "all checkbox", props.selectAllCheckbox);
     let errorObjPlaceholder = { ...validationError }
     if (smsFormData.body.trim() == "") {
       errorObjPlaceholder.body = "Please type a message"
-      // console.log(errorObjPlaceholder);
+      // // console.log(errorObjPlaceholder);
     }
     // if(smsFormData.mediaUrl.trim() == ""){
     //   errorObjPlaceholder.mediaUrl = "Please select file before sending."
@@ -339,11 +339,11 @@ const BulkSms = (props) => {
         mediaUrl: smsFormData.mediaUrl,
 
       }
-      console.log(payload);
+      // console.log(payload);
       try {
         let result = await ContactService.fetchBulkSms(payload);
         if (result) {
-          console.log("Result", result);
+          // console.log("Result", result);
           setIsLoader(false);
           dispatch({
             type: actionTypes.SHOW_MESSAGE,
@@ -354,9 +354,11 @@ const BulkSms = (props) => {
           smsFormData.mediaUrl = "";
           setSelectedTemplate(null);
           props.hideModal();
+          props.unCheckAll();
         }
       } catch (error) {
-        console.log(error);
+        // console.log(error);
+        props.unCheckAll();
         dispatch({
           type: actionTypes.SHOW_MESSAGE,
           message: error.message,
@@ -373,18 +375,18 @@ const BulkSms = (props) => {
       }
     }
     setValidationError(errorObjPlaceholder);
-    console.log(smsFormData);
+    // console.log(smsFormData);
   };
 
 
   useEffect(() => {
-    // console.log(props.selectedContacts, props.selectAllCheckbox);
+    // // console.log(props.selectedContacts, props.selectAllCheckbox);
     fetchSMS();
     fetchSMSTags();
   }, []);
   const handleClickOutside = (event) => {
     if (tagRef.current && !tagRef.current.contains(event.target)) {
-      // console.log(event);
+      // // console.log(event);
       setKeywordSuggesion(false);
     }
   };
@@ -394,9 +396,9 @@ const BulkSms = (props) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [tagRef]);
-  console.log("props in bulk sms", props);
+  // console.log("props in bulk sms", props);
   useEffect(() => {
-    console.log("props in bulk sms", props.device);
+    // console.log("props in bulk sms", props.device);
   }, [props.device])
 
 
@@ -473,6 +475,15 @@ const BulkSms = (props) => {
 
                     <div className="actions">
                       <button
+                        className="btn browseKeywords"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setKeywordSuggesion(true);
+                        }}
+                      >
+                        <img src={browse_keywords} alt="keywords" />
+                      </button>
+                      <button
                         className="inlinle-btn btnMaximize"
                         type="button"
                         onClick={(e) => {
@@ -508,17 +519,7 @@ const BulkSms = (props) => {
                           </svg>
                         )}
                       </button>
-                      <button
-                        className="btn browseKeywords"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setKeywordSuggesion(true);
-                        }}
-                      >
-                        <img src={browse_keywords} alt="keywords" />
-                      </button>
                     </div>
-                  </div>
                   {keywordSuggesion && (
                     <div className="keywordBox" ref={tagRef}>
                       <div className="searchKeyword">
@@ -583,6 +584,7 @@ const BulkSms = (props) => {
                       </div>
                     </div>
                   )}
+                  </div>
                 </div>
                 {validationError?.body.trim() != "" ? (
                   <p className="errorMsg">{validationError.body}</p>

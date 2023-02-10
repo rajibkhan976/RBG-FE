@@ -26,7 +26,10 @@ const Contact = (props) => {
     const [bulkSmsOpenModal, setBulkSmsOpenModal] = useState(false);
     const [bulkEmailOpenModal, setBulkEmailOpenModal] = useState(false);
     const [bulkAutomationOpenModal, setBulkAutomationOpenModal] = useState(false);
+    const [unCheckAllBoxs, setUnCheckAllBoxs] = useState(false);
     const childCompRef = useRef();
+    const [singleEmailContact, setSingleEmailContact] = useState(false);
+    const [singlePhoneContact, setSinglePhoneContact] = useState(false);
     const [emailSetupData, setEmailSetupData] = useState({
         "host": "",
         "port": "",
@@ -42,6 +45,7 @@ const Contact = (props) => {
         setBulkEmailOpenModal(false);
         setBulkAutomationOpenModal(false);
     }
+    
     const openUpdate = () => {
         setIsUpdate(true);
     }
@@ -106,17 +110,67 @@ const Contact = (props) => {
             setEmailSetupData(true);
         } catch (e) {
             setEmailSetupData(false);
-            
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
         } 
     };
     useEffect(()=>{
         fetchEmail();
         // fetchEmailStatus();
-        console.log("device in contact", props.device);
+        // console.log("device in contact", props.device);
     },[])
     const searchContactList = (data)=>{
-        console.log("contact js search contact list", data);
+        // console.log("contact js search contact list", data);
     }
+    
+    const unCheckAll = ()=>{
+        setUnCheckAllBoxs(true);
+        // console.log("un check all boxes", unCheckAllBoxs);
+    }
+    useEffect(() => {
+        if (unCheckAllBoxs) {
+            setTimeout(() => {
+                // console.log("set time out call");
+                setUnCheckAllBoxs(false);
+            }, 200)
+        }
+    }, [unCheckAllBoxs])
+
+    // const setSingleContact = (data)=>{
+    //     console.log("contact js single contact data", data);
+    //     data?.filter(ele =>{
+    //         console.log(ele.emailId !== "" , ele.phoneNo !== "");
+    //         if(ele.emailId !== ""){
+    //             // setSingleEmailContact(true);
+    //             // setBulkEmailOpenModal (true);
+    //         }
+    //         else{
+    //             // setSingleEmailContact(false);
+    //             // dispatch({
+    //             //     type: actionTypes.SHOW_MESSAGE,
+    //             //     message: "no email id is there",
+    //             //     typeMessage: 'error'
+    //             // });
+    //         }
+    //         if(ele.phoneNo !== ""){
+    //             // setSinglePhoneContact(true);
+    //             // setBulkSmsOpenModal(true);
+    //         }
+    //         else{
+    //             // setSinglePhoneContact(false);
+    //             // dispatch({
+    //             //     type: actionTypes.SHOW_MESSAGE,
+    //             //     message: "no phone number is there",
+    //             //     typeMessage: 'error'
+    //             // });
+    //         }
+    //         // setSingleEmailContact(false);
+    //         // setSinglePhoneContact(false);
+    //     })
+    // }
 
     return (
         <>
@@ -128,7 +182,8 @@ const Contact = (props) => {
                             setBulkEmailOpenModal={()=>{setEmailOpenModalFunc()}}
                             setBulkAutomationOpenModal={()=>{setAutomationOpenModalFunc()}}
                             searchContactList={searchContactList}
-
+                            unCheckCloseFun={unCheckAllBoxs}
+                            // setSingleContact={setSingleContact}
                             />
             { isModal &&
                 <ImportContact hideModal={() => {hideModal()}} />
@@ -140,10 +195,10 @@ const Contact = (props) => {
                 <Filter hideFilter={() => {hideFilter()}} applyFilter={applyFilter}/>
             }
             {bulkSmsOpenModal && "status" in props.device && props.device?.status() == 'ready' ?
-                <BulkSms hideModal={() => {hideModal()}} selectedContacts={selectedContacts} selectAllCheckbox={allSelect} />:""
+                <BulkSms hideModal={() => {hideModal()}} selectedContacts={selectedContacts} selectAllCheckbox={allSelect} unCheckAll={()=>{unCheckAll()}} />:""
             }
             {bulkEmailOpenModal && emailSetupData ?
-                <BulkEmail hideModal={() => {hideModal()}} selectedContacts={selectedContacts} selectAllCheckbox={allSelect} /> : ""
+                <BulkEmail hideModal={() => {hideModal()}} selectedContacts={selectedContacts} selectAllCheckbox={allSelect} unCheckAll={()=>{unCheckAll()}} /> : ""
             }
             {bulkAutomationOpenModal &&
                 <BulkAutomation hideModal={() => {hideModal()}} />

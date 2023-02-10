@@ -28,6 +28,7 @@ const ContactHead = (props) => {
   const [actionTrigger, setActionTrigger] = useState(false);
   const actionTriggerRef = useRef(null);
   const [filterClear, setFilterClear] = useState(false);
+  const [actionStatus, setActionStatus] = useState(true);
   const createIndivitualContact = () => {
     dispatch({
         type: actionTypes.CONTACTS_MODAL_ID,
@@ -73,11 +74,11 @@ const ContactHead = (props) => {
   }, [props.filters])
   const removeFiler = (type) => {
     
-    console.log("filter close type", type);
+    // console.log("filter close type", type);
     props.removeFilter(type);
     // if(type === 'all'){
     //   setFilterClear(true);
-    //   console.log("filter clear", filterClear);
+    //   // console.log("filter clear", filterClear);
     // }
   }
   const checkAll = () => {
@@ -85,7 +86,7 @@ const ContactHead = (props) => {
     setSelectAllContacts(!selectAllContacts);
   }
   const actionHandelar = ()=>{
-    // console.log(actionTrigger);
+    // // console.log(actionTrigger);
     if(actionTrigger === false){
       setActionTrigger(true);
       props.sendActionData(true);
@@ -96,7 +97,7 @@ const ContactHead = (props) => {
   }
   const handleOutsideClick = (event)=>{
     if (actionTriggerRef.current && !actionTriggerRef.current.contains(event.target)) {
-      // console.log(event);
+      // // console.log(event);
       setActionTrigger(false);
     }
   }
@@ -104,9 +105,16 @@ const ContactHead = (props) => {
     document.addEventListener("click", handleOutsideClick);
     return () => document.removeEventListener("click", handleOutsideClick);
 }, [actionTriggerRef]);
-useEffect(()=>{
-  console.log(props.searchContactList);
-})
+// useEffect(()=>{
+//   // console.log("props in contact header", props.actionStatusFun);
+//   if(props.actionStatusFun){
+//     setActionStatus(false);
+//     // console.log("action status", actionStatus, props.showAction, props.totalCount > props.contactListPageCount, selectAllCheckbox);
+//   }
+// },[props.actionStatusFun]);
+// useEffect(()=>{
+//   // console.log(props.showAction, props.totalCount > props.contactListPageCount, selectAllCheckbox);
+// })
 
   return (
     <div className="contactHead">
@@ -235,8 +243,9 @@ useEffect(()=>{
                 </div>
                 : ""
           }
+
           { props.showAction || props.totalCount > props.contactListPageCount && selectAllCheckbox ?
-            <div className="action" ref={actionTriggerRef}>
+            <div className={actionStatus ? "action" : "action none"} ref={actionTriggerRef}>
               <button onClick={actionHandelar}>Actions <img src={action_arrow} /></button>
               {actionTrigger && !props.addSelectAll.status &&
                 <ul className="dropdown">

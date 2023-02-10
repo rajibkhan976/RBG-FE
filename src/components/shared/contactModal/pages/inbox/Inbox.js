@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import React, { useEffect, useRef,useLayoutEffect, useState, useCallback } from "react";
 
 import Loader from "../../../Loader";
 import iconSmsOut from "../../../../../assets/images/iconSmsOut.svg";
@@ -295,6 +295,16 @@ const goToListBottom = (e) =>{
 // }
 // badStringReplace();
 
+const areaOfText = useRef(contactLogData.slice(0).reverse().map(React.createRef));
+
+const [dimensions, setDimensions] = useState(0);
+
+useLayoutEffect(() => {
+  if (areaOfText.current) {
+    setDimensions(areaOfText.current?.offsetHeight);
+  }
+ }, [areaOfText.current?.offsetHeight]);
+
   return (
     <>
     {isLoader ? <Loader/> :""}
@@ -325,8 +335,8 @@ const goToListBottom = (e) =>{
                       alt=""/>
               </div>
               <div className="txtArea">
-                <div className="areaOfText">
-                {
+                <div className="areaOfText" >
+               {
                   elem.log_type === "SMS" ?
                   <h3>{elem.data.message.slice(0, 280)}</h3>
                   :
@@ -335,21 +345,54 @@ const goToListBottom = (e) =>{
                   <h3>Sub: {elem.data?.subject}</h3>
 
                   <div className="emailBody" dangerouslySetInnerHTML={{__html: elem.data?.template.slice(0, 280 - elem.data?.subject.length)}}>
-                    {/* {console.log(elem.data?.template.slice(0, 280 - elem.data?.subject.length))} */}
+                    { console.log(elem.data?.template.slice(0, 280 - elem.data?.subject.length))} 
                   </div>
 
                   </>
                 }
+                </div>
+               {
+
+
+                ((elem.data?.template) ? elem.data?.template.length : "" )+
+                ((elem.data?.subject) ? elem.data?.subject.length : "") > 260 ? <button onClick={()=>showBigMail(elem.data, elem.log_type, elem.direction)} className="noBg">read more</button> :
+                elem.data?.message && elem.data?.message.length > 280 ? <button onClick={()=>showBigMail(elem.data, elem.log_type, elem.direction)}  className="noBg">read more</button> :
+                ""
+
+                } 
+                
+             
+
+                
+                {/* <div ref={areaOfText.current[key]} >
+                  {
+                  
+                    elem.log_type === "SMS" ?
+                    <h3>{elem.data.message}</h3>
+                    :
+                    <>
+                    
+                    <h3>Sub: {elem.data?.subject}</h3>
+
+                    <div className="emailBody" dangerouslySetInnerHTML={{__html: elem.data?.template}}>
+                      
+                    </div>
+
+                    </>
+                  }
+                  </div>
                </div>
+               {console.log("areaOfText.current",areaOfText.current.offsetHeight )}
                 {
+                 
 
-
-               ((elem.data?.template) ? utils.decodeHTML(elem.data?.template).length : "" )+
-               ((elem.data?.subject) ? elem.data?.subject.length : "") > 267 ? <button onClick={()=>showBigMail(elem.data, elem.log_type, elem.direction)} className="noBg">read more</button> :
-               elem.data?.message && elem.data?.message.length > 280 ? <button onClick={()=>showBigMail(elem.data, elem.log_type, elem.direction)}  className="noBg">read more</button> :
+               (elem.data?.template && elem.data?.subject) && areaOfText.current[key]?.offsetHeight > 100 ? 
+                    <button onClick={()=>showBigMail(elem.data, elem.log_type, elem.direction)} className="noBg">read more</button> :
+               elem.data?.message && areaOfText.current[key]?.offsetHeight > 100 ? 
+                   <button onClick={()=>showBigMail(elem.data, elem.log_type, elem.direction)}  className="noBg">read more</button> :
                ""
 
-                }
+                } */}
 
                 <div className="info">
                   {/* <span><img src={smallPh}/>({elem.from}) SMS NUMBER.</span> */}
