@@ -119,3 +119,6 @@
 
 # BULK EMAIL AND SMS V1.0.6
     - Some UAT issue fixed
+
+# BULK EMAIL AND SMS V1.0.7
+    - SMS placeholder change

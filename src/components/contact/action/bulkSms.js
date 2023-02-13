@@ -454,7 +454,7 @@ const BulkSms = (props) => {
                     value={selectedTemplate ? selectedTemplate._id : "null"}
                     onChange={(e) => selectTemplate(e)}
                   >
-                    <option value="null" className="options">Choose an SMS template</option>
+                    <option value="null" className="options">Choose a SMS template</option>
                     {smsTemplates &&
                       smsTemplates.map((template, i) => (
                         <option className="options" value={template._id} key={"option-" + i}>
