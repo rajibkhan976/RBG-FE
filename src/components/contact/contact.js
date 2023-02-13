@@ -28,8 +28,9 @@ const Contact = (props) => {
     const [bulkAutomationOpenModal, setBulkAutomationOpenModal] = useState(false);
     const [unCheckAllBoxs, setUnCheckAllBoxs] = useState(false);
     const childCompRef = useRef();
-    const [singleEmailContact, setSingleEmailContact] = useState(false);
-    const [singlePhoneContact, setSinglePhoneContact] = useState(false);
+    // const [singleEmailContact, setSingleEmailContact] = useState(false);
+    // const [singlePhoneContact, setSinglePhoneContact] = useState(false);
+    const [numberOfContact, setNumberOfContact] = useState(false);
     const [emailSetupData, setEmailSetupData] = useState({
         "host": "",
         "port": "",
@@ -138,7 +139,14 @@ const Contact = (props) => {
             }, 200)
         }
     }, [unCheckAllBoxs])
-
+    const singleContactStatusFunc = (data)=>{
+        console.log("contact js data", data);
+        if(data.length === 1){
+           setNumberOfContact(true)
+        }else if(data.length === 0){
+            setNumberOfContact(false);
+        }
+    }
     // const setSingleContact = (data)=>{
     //     console.log("contact js single contact data", data);
     //     data?.filter(ele =>{
@@ -183,6 +191,7 @@ const Contact = (props) => {
                             setBulkAutomationOpenModal={()=>{setAutomationOpenModalFunc()}}
                             searchContactList={searchContactList}
                             unCheckCloseFun={unCheckAllBoxs}
+                            setSingleContactStatus={singleContactStatusFunc}
                             // setSingleContact={setSingleContact}
                             />
             { isModal &&
@@ -195,10 +204,10 @@ const Contact = (props) => {
                 <Filter hideFilter={() => {hideFilter()}} applyFilter={applyFilter}/>
             }
             {bulkSmsOpenModal && "status" in props.device && props.device?.status() == 'ready' ?
-                <BulkSms hideModal={() => {hideModal()}} selectedContacts={selectedContacts} selectAllCheckbox={allSelect} unCheckAll={()=>{unCheckAll()}} />:""
+                <BulkSms hideModal={() => {hideModal()}} selectedContacts={selectedContacts} selectAllCheckbox={allSelect} unCheckAll={()=>{unCheckAll()}} numberOfContact={numberOfContact} />:""
             }
             {bulkEmailOpenModal && emailSetupData ?
-                <BulkEmail hideModal={() => {hideModal()}} selectedContacts={selectedContacts} selectAllCheckbox={allSelect} unCheckAll={()=>{unCheckAll()}} /> : ""
+                <BulkEmail hideModal={() => {hideModal()}} selectedContacts={selectedContacts} selectAllCheckbox={allSelect} unCheckAll={()=>{unCheckAll()}} numberOfContact={numberOfContact} /> : ""
             }
             {bulkAutomationOpenModal &&
                 <BulkAutomation hideModal={() => {hideModal()}} />

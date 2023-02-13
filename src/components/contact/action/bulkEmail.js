@@ -104,7 +104,6 @@ const BulkEmail = (props) => {
         }
         // console.log(emailData);
     }
-   
 
     // Subject
     const emailSendHandler = (e) => {
@@ -132,8 +131,8 @@ const BulkEmail = (props) => {
             });
         }
     }
-     // deleselected email template
-     const deselectingTemplate = ()=>{
+    // deleselected email template
+    const deselectingTemplate = () => {
         // console.log(emailData);
         setEmailData({
             ...emailData,
@@ -265,7 +264,7 @@ const BulkEmail = (props) => {
                     template: "Please enter an email body",
                 }
             )
-        } 
+        }
         else if (payload.template === "") {
             setEmailValidation({
                 ...emailValidation,
@@ -285,11 +284,20 @@ const BulkEmail = (props) => {
                     emailData.template = "";
                     props.hideModal();
                     props.unCheckAll();
-                    dispatch({
-                        type: actionTypes.SHOW_MESSAGE,
-                        message: result.message,
-                        typeMessage: 'success'
-                    })
+                    if (!props.numberOfContact) {
+                        dispatch({
+                            type: actionTypes.SHOW_MESSAGE,
+                            message: "Bulk email send successfully",
+                            typeMessage: 'success'
+                        });
+                    }
+                    else if (props.numberOfContact) {
+                        dispatch({
+                            type: actionTypes.SHOW_MESSAGE,
+                            message: "Email send successfully",
+                            typeMessage: 'success'
+                        });
+                    }
                 }
 
             } catch (error) {
@@ -344,18 +352,18 @@ const BulkEmail = (props) => {
     //     }
     // }
 
-    
-    useEffect(()=>{
+
+    useEffect(() => {
         setFirstTimeErrorMsg(true);
-    },[changedTemplate]);
+    }, [changedTemplate]);
     useEffect(() => {
         // console.log("change template", changedTemplate);
-        if(changedTemplate == "" && firstTimeErrorMsg){
+        if (changedTemplate == "" && firstTimeErrorMsg) {
             setEmailValidation({
                 ...emailValidation,
                 template: "Please enter an email body"
             });
-        }else{
+        } else {
             setEmailValidation({
                 ...emailValidation,
                 template: ""
@@ -363,6 +371,9 @@ const BulkEmail = (props) => {
         }
     }, [changedTemplate])
 
+    useEffect(() => {
+        console.log("props bulk email", props.numberOfContact)
+    }, [props.numberOfContact])
 
     return (
         <>
@@ -371,145 +382,147 @@ const BulkEmail = (props) => {
                 <div className="dialogBg" onClick={() => closeModal()}></div>
                 <div className="sideMenuInner bulkSmsModel bulkEmailModel">
                     <div className="sideMenuHeader">
-                        <h3>Send Bulk Email</h3>
+                        {props.numberOfContact && <h3>Send Email</h3>}
+                        {!props.numberOfContact && <h3>Send Bulk Email</h3>}
+
                         {/* <p>Select an Email template to send Email.</p> */}
                         <button className="btn btn-closeSideMenu" onClick={() => closeModal()}><span></span><span></span></button>
                     </div>
                     {/* {
                         emailSetupData.user === undefined ? (<p className="showSetupMsg">You can't send mail as the email setup is not done</p>) : */}
-                            <div className="bulkModalBody">
-                                <div className="slice">
-                                    <label>Email template</label>
-                                    <div className="cmnFormField">
+                    <div className="bulkModalBody">
+                        <div className="slice">
+                            <label>Email template</label>
+                            <div className="cmnFormField">
 
-                                        <div className="cmnFieldStyle btnSelect"
-                                            onClick={(e) => setTemplateToogle(!templateToggle)}>
-                                            <span>{emailDatasubject ? emailDatasubject : "Choose an email template"}</span>
-                                        </div>
-                                        {templateToggle &&
-                                            <ul className="showTemplateName">
-                                                {emailTempData.templates.length !== 0 &&
-                                                    <li onClick={(e) => deselectingTemplate()}>Select Template</li>
-
-                                                }
-                                                {
-                                                    (emailTempData.templates &&
-                                                        emailTempData.templates.length > 0) ?
-                                                        emailTempData.templates.map((elem, i) => (
-                                                            <li key={i}
-                                                                onClick={(e) => sendingTemplateDetails(e, elem)}>{elem.title}</li>
-                                                        )
-                                                        ) :
-                                                        <li className="listCentered">No Email template Found</li>
-                                                }
-                                            </ul>}
-                                    </div>
-                                    <div className="errorMsg">{emailValidation.email}</div>
+                                <div className="cmnFieldStyle btnSelect"
+                                    onClick={(e) => setTemplateToogle(!templateToggle)}>
+                                    <span>{emailDatasubject ? emailDatasubject : "Choose an email template"}</span>
                                 </div>
-                                <div className="slice">
-                                    <label className="bold">Subject</label>
-                                    <div
-                                        className={emailValidation.subject ? "cmnFormField email error" : "cmnFormField"}>
-                                        <input type="text" className="email cmnFieldStyle"
-                                            onChange={emailSendHandler}
-                                            name="subject"
-                                            id="newEmailTemplateSubject"
-                                            ref={newEmailTemplateSubject}
-                                            value={emailData.subject}
-                                            maxLength={250}
-                                            placeholder="Enter an email subject"
-                                        />
-                                        <button className="btn browseKeywords"
-                                            type='button'
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                setKeywordSuggesion(true);
-                                            }}
-                                        >
-                                            <img src={icon_browse_keywords} alt="keywords" />
-                                        </button>
-                                        {keywordSuggesion && (
-                                            <div className="keywordBox" ref={tagRef}>
-                                                <div className="searchKeyword">
-                                                    <div className="searchKeyBox">
-                                                        <input
-                                                            type="text"
-                                                            onChange={(e) => setSearchTagString(e.target.value)}
-                                                            onKeyPress={e => {
-                                                                if (e.key === 'Enter') e.preventDefault();
-                                                            }}
-                                                        />
-                                                    </div>
-                                                    <div className="cancelKeySearch">
-                                                        <button
-                                                            onClick={() => {
-                                                                setKeywordSuggesion(false)
-                                                                setSearchTagString("")
-                                                            }}
-                                                        ></button>
-                                                    </div>
-                                                </div>
-                                                <div className="keywordList">
-                                                    <ul>
-                                                        {emailTags
-                                                            .filter(
-                                                                (smsTag) =>
-                                                                    smsTag.id.indexOf(searchTagString) >= 0
-                                                                    && smsTag.id !== "tags"
-                                                                    && smsTag.id !== "phone"
-                                                                    && smsTag.id !== "mobile"
-                                                                    && smsTag.id !== "momCellPhone"
-                                                                    && smsTag.id !== "dadCellPhone"
-                                                                    && smsTag.id !== "createdBy"
-                                                                    && smsTag.id !== "createdAt"
-                                                                    && smsTag.id !== "statusName"
-                                                                    && smsTag.id !== "phaseName"
-                                                                    && smsTag.id !== "contactType"
-                                                                    && smsTag.id !== "sourceDetail"
-                                                                    && smsTag.id !== "ageGroup"
-                                                                    && smsTag.id !== "onTrial"
-                                                            )
-                                                            .map((tagItem, i) => (
-                                                                <li key={"keyField" + i}>
-                                                                    <button
-                                                                        onClick={(e) =>
-                                                                            addKeywordEmail(e, tagItem.id)
-                                                                        }
-                                                                    >
-                                                                        {tagItem.id}
-                                                                    </button>
-                                                                </li>
-                                                            ))}
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        )}
+                                {templateToggle &&
+                                    <ul className="showTemplateName">
+                                        {emailTempData.templates.length !== 0 &&
+                                            <li onClick={(e) => deselectingTemplate()}>Select Template</li>
 
-
-                                    </div>
-                                    <div className="errorMsg">{emailValidation.subject}</div>
-
-                                </div>
-                                <div className="slice">
-                                    <label className="bold">Email Body</label>
-                                    <div
-                                        className={emailValidation.template || errorShow ? "cmnFormField globalSms error" : "cmnFormField globalSms"}>
-                                        <EditorComponent
-                                            globalTemplateValue={(template) => setChangedTemplate(template)}
-                                            initialData={emailData ? emailData : emailData.template}
-                                            setTempSelected={true}
-                                            setEmailSend={emailSend}
-                                        />
-                                        <div className="errorMsg">{emailValidation.template}</div>
-                                        {/* <div className="errorMsg">{changedTemplate === "" && firstTimeErrorMsg  ? "Write some message" : ""}</div> */}
-                                    </div>
-                                </div>
-                                <div class="slice text-center">
-                                    <button class="cmnBtn" onClick={sendBulkEmailHandler}
-                                        disabled={emailValidation === undefined ? "disabled" : ""}
-                                    >Send email <img src={arrow_forward} alt="" /></button>
-                                </div>
+                                        }
+                                        {
+                                            (emailTempData.templates &&
+                                                emailTempData.templates.length > 0) ?
+                                                emailTempData.templates.map((elem, i) => (
+                                                    <li key={i}
+                                                        onClick={(e) => sendingTemplateDetails(e, elem)}>{elem.title}</li>
+                                                )
+                                                ) :
+                                                <li className="listCentered">No Email template Found</li>
+                                        }
+                                    </ul>}
                             </div>
+                            <div className="errorMsg">{emailValidation.email}</div>
+                        </div>
+                        <div className="slice">
+                            <label className="bold">Subject</label>
+                            <div
+                                className={emailValidation.subject ? "cmnFormField email error" : "cmnFormField"}>
+                                <input type="text" className="email cmnFieldStyle"
+                                    onChange={emailSendHandler}
+                                    name="subject"
+                                    id="newEmailTemplateSubject"
+                                    ref={newEmailTemplateSubject}
+                                    value={emailData.subject}
+                                    maxLength={250}
+                                    placeholder="Enter an email subject"
+                                />
+                                <button className="btn browseKeywords"
+                                    type='button'
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setKeywordSuggesion(true);
+                                    }}
+                                >
+                                    <img src={icon_browse_keywords} alt="keywords" />
+                                </button>
+                                {keywordSuggesion && (
+                                    <div className="keywordBox" ref={tagRef}>
+                                        <div className="searchKeyword">
+                                            <div className="searchKeyBox">
+                                                <input
+                                                    type="text"
+                                                    onChange={(e) => setSearchTagString(e.target.value)}
+                                                    onKeyPress={e => {
+                                                        if (e.key === 'Enter') e.preventDefault();
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className="cancelKeySearch">
+                                                <button
+                                                    onClick={() => {
+                                                        setKeywordSuggesion(false)
+                                                        setSearchTagString("")
+                                                    }}
+                                                ></button>
+                                            </div>
+                                        </div>
+                                        <div className="keywordList">
+                                            <ul>
+                                                {emailTags
+                                                    .filter(
+                                                        (smsTag) =>
+                                                            smsTag.id.indexOf(searchTagString) >= 0
+                                                            && smsTag.id !== "tags"
+                                                            && smsTag.id !== "phone"
+                                                            && smsTag.id !== "mobile"
+                                                            && smsTag.id !== "momCellPhone"
+                                                            && smsTag.id !== "dadCellPhone"
+                                                            && smsTag.id !== "createdBy"
+                                                            && smsTag.id !== "createdAt"
+                                                            && smsTag.id !== "statusName"
+                                                            && smsTag.id !== "phaseName"
+                                                            && smsTag.id !== "contactType"
+                                                            && smsTag.id !== "sourceDetail"
+                                                            && smsTag.id !== "ageGroup"
+                                                            && smsTag.id !== "onTrial"
+                                                    )
+                                                    .map((tagItem, i) => (
+                                                        <li key={"keyField" + i}>
+                                                            <button
+                                                                onClick={(e) =>
+                                                                    addKeywordEmail(e, tagItem.id)
+                                                                }
+                                                            >
+                                                                {tagItem.id}
+                                                            </button>
+                                                        </li>
+                                                    ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                )}
+
+
+                            </div>
+                            <div className="errorMsg">{emailValidation.subject}</div>
+
+                        </div>
+                        <div className="slice">
+                            <label className="bold">Email Body</label>
+                            <div
+                                className={emailValidation.template || errorShow ? "cmnFormField globalSms error" : "cmnFormField globalSms"}>
+                                <EditorComponent
+                                    globalTemplateValue={(template) => setChangedTemplate(template)}
+                                    initialData={emailData ? emailData : emailData.template}
+                                    setTempSelected={true}
+                                    setEmailSend={emailSend}
+                                />
+                                <div className="errorMsg">{emailValidation.template}</div>
+                                {/* <div className="errorMsg">{changedTemplate === "" && firstTimeErrorMsg  ? "Write some message" : ""}</div> */}
+                            </div>
+                        </div>
+                        <div class="slice text-center">
+                            <button class="cmnBtn" onClick={sendBulkEmailHandler}
+                                disabled={emailValidation === undefined ? "disabled" : ""}
+                            >Send email <img src={arrow_forward} alt="" /></button>
+                        </div>
+                    </div>
                     {/* } */}
                     {/* <div className="showSetupMsg">{ ? "" : ""}</div> */}
 
