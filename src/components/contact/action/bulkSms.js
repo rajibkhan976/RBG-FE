@@ -345,11 +345,20 @@ const BulkSms = (props) => {
         if (result) {
           // console.log("Result", result);
           setIsLoader(false);
-          dispatch({
-            type: actionTypes.SHOW_MESSAGE,
-            message: result.message,
-            typeMessage: 'success'
-          });
+          if(!props.numberOfContact){
+            dispatch({
+              type: actionTypes.SHOW_MESSAGE,
+              message: "Bulk SMS send successfully",
+              typeMessage: 'success'
+            });
+          }
+          else if(props.numberOfContact){
+            dispatch({
+              type: actionTypes.SHOW_MESSAGE,
+              message: "SMS send successfully",
+              typeMessage: 'success'
+            });
+          }
           smsFormData.body = "";
           smsFormData.mediaUrl = "";
           setSelectedTemplate(null);
@@ -398,8 +407,8 @@ const BulkSms = (props) => {
   }, [tagRef]);
   // console.log("props in bulk sms", props);
   useEffect(() => {
-    // console.log("props in bulk sms", props.device);
-  }, [props.device])
+    console.log("props in bulk sms", props.numberOfContact);
+  }, [props.numberOfContact])
 
 
   return (
@@ -409,7 +418,8 @@ const BulkSms = (props) => {
         <div className="dialogBg" onClick={() => closeModal()}></div>
         <div className="sideMenuInner bulkSmsModel">
           <div className="sideMenuHeader">
-            <h3>Send Bulk SMS</h3>
+            {props.numberOfContact && <h3>Send SMS</h3>}
+            {!props.numberOfContact && <h3>Send Bulk SMS</h3>}
             {/* <p>Select an SMS template to send SMS.</p> */}
             <button
               className="btn btn-closeSideMenu"
@@ -444,10 +454,10 @@ const BulkSms = (props) => {
                     value={selectedTemplate ? selectedTemplate._id : "null"}
                     onChange={(e) => selectTemplate(e)}
                   >
-                    <option value="null">Select</option>
+                    <option value="null" className="options">Choose an SMS template</option>
                     {smsTemplates &&
                       smsTemplates.map((template, i) => (
-                        <option value={template._id} key={"option-" + i}>
+                        <option className="options" value={template._id} key={"option-" + i}>
                           {template.title}
                         </option>
                       ))}

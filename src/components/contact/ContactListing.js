@@ -368,7 +368,7 @@ const ContactListing = forwardRef((props, ref) => {
     const handleCheckBoxClick = (id, event, item) => {
         setSelectAllCheckbox(false);
         console.log("one contact item", item);
-        console.log("mobile number", item.mobile?.number, "father number", item.dadPhone?.number, "phone number", item.mobile?.number, "mother number", item.momPhone?.number);
+        // console.log("mobile number", item.mobile?.number, "father number", item.dadPhone?.number, "phone number", item.mobile?.number, "mother number", item.momPhone?.number);
         let cb = checkboxes.map(ele => {
             if (ele.id === id) {
                 ele.checked = !ele.checked;
@@ -386,7 +386,7 @@ const ContactListing = forwardRef((props, ref) => {
         console.log("which one you are selected", cbChecked);
         let singleContactSelect = cbChecked.filter((ele, index)=>{
             if(cbChecked.length === 1){
-                console.log("Index", index);
+                // console.log("Index", index);
                 return ele;
             }else{
                 return false
@@ -394,7 +394,7 @@ const ContactListing = forwardRef((props, ref) => {
             
         })
         
-        console.log("contact listing only one contact", singleContactSelect);
+        // console.log("contact listing only one contact", singleContactSelect);
 
         if(cbChecked.length === 0){
             setShowAction(false);
@@ -578,17 +578,20 @@ const ContactListing = forwardRef((props, ref) => {
     }
     const openBulkSmsHandler = ()=>{
         // console.log("SMS check phone number", singleContact, singleContact.length);
-
-        if(singleContact[0]?.phoneNo !== "") {
+        console.log(singleContact);
+        if(singleContact !== undefined && singleContact[0]?.phoneNo !== "" && singleContact[0]?.phoneNo !== undefined) {
             props.setBulkSmsOpenModal();
+            props.setSingleContactStatus(singleContact);
         }
-        else if(singleContact.length === 0){
+
+        else if(singleContact == undefined || singleContact.length === 0){
             props.setBulkSmsOpenModal();
+            props.setSingleContactStatus(singleContact);
         }
         else{
             dispatch({
                 type: actionTypes.SHOW_MESSAGE,
-                message: "no phone number is there",
+                message: "No phone number is there",
                 typeMessage: 'error'
             });
         }
@@ -598,16 +601,18 @@ const ContactListing = forwardRef((props, ref) => {
     
     const openBulkEmailHandler=()=>{
         // console.log("Email check phone number", singleContact);
-        if(singleContact[0]?.emailId !== ""){
+        if(singleContact !== undefined && singleContact[0]?.emailId !== "" && singleContact[0]?.emailId !== undefined){
             props.setBulkEmailOpenModal();
+            props.setSingleContactStatus(singleContact);
         }
-        else if(singleContact.length === 0){
+        else if(singleContact == undefined || singleContact.length === 0){
             props.setBulkEmailOpenModal();
+            props.setSingleContactStatus(singleContact);
         }
         else{
             dispatch({
                 type: actionTypes.SHOW_MESSAGE,
-                message: "no email id is there",
+                message: "No email id is there",
                 typeMessage: 'error'
             });
         }
@@ -648,7 +653,7 @@ const ContactListing = forwardRef((props, ref) => {
                     'id': ele._id,
                     'checked': false,
                     'emailId': ele.email,
-                    'phoneNo': ele.phone?.number || ele.dadPhone?.number || ele.momPhone?.number || ele.mobile?.number
+                    'phoneNo': ele.phone?.number
                 })
             });
             setCheckboxes(checkboxes);
