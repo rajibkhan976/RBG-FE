@@ -54,8 +54,8 @@ const NotificationModal = (props) => {
     const smsRef = useRef(null);
     const [smsData, setSMSData] = useState("")
     const [selectedSMSTemplate, setSelectedSMSTemplate] = useState({value: "", label: "Select an SMS Template", data: {}});
-    const [isSendSMS, setIsSendSMS] = useState(false);
-    const [isSendEmail, setIsSendEmail] = useState(false);
+    const [isSendSMS, setIsSendSMS] = useState(true);
+    const [isSendEmail, setIsSendEmail] = useState(true);
     const [processing, setProcessing] = useState(false);
 
     const searchHandeler = async (e) => {
@@ -113,7 +113,10 @@ const NotificationModal = (props) => {
         try {
             const result = await EmailServices.fetchEmailTemplateList(pageId, queryParams);
             if (result) {
-                let op = [{value: "", label: "Select an Email Template", data: {}}]
+                let op = [{value: "", label: "Select an Email Template", data: {"_id": "",
+                        "email": "",
+                        "subject": "",
+                        "template": ""}}]
                 result.templates.map(el => {
                     op.push({value: el._id, label: el.title, data: el})
                 });
@@ -347,14 +350,17 @@ const NotificationModal = (props) => {
     }
     const smsTemplateChangeHandler = (e) => {
         setSelectedSMSTemplate(e);
-        setSMSData(e.data.message);
+        if (e && e.data && e.data.message) {
+            setSMSData(e.data.message);
+        } else {
+            setSMSData("");
+        }
     }
     const handlerSMSBody = (e) => {
         setSMSData(e.target.value);
     }
     const sendMessageHandler = (e) => {
       setIsSendSMS(e.target.checked);
-      console.log(e.target.checked)
     }
     const sendEmailHandler = (e) => {
       setIsSendEmail(e.target.checked)
@@ -504,7 +510,7 @@ const NotificationModal = (props) => {
                             <div className="notificationEmail">
                                 <div className="sendEmail">
                                     <label className="indselects">
-                                        <span className="customCheckbox allContacts"><input type="checkbox" checked={isSendEmail} onClick={sendEmailHandler}
+                                        <span className="customCheckbox allContacts"><input type="checkbox" defaultChecked={isSendEmail} onClick={sendEmailHandler}
                                                                                             name=""/><span></span></span>
                                         Send Email
                                     </label>
@@ -603,7 +609,7 @@ const NotificationModal = (props) => {
                                     <label className="indselects">
                                         <span className="customCheckbox allContacts">
                                             <input type="checkbox" value="sendMessage"
-                                                checked={isSendSMS} onClick={sendMessageHandler} /><span></span></span>
+                                                defaultChecked={isSendSMS} onClick={sendMessageHandler} /><span></span></span>
                                         Send SMS
                                     </label>
                                 </div>

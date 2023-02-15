@@ -42,7 +42,10 @@ const Email = (props) => {
             setIsLoader(true);
             const result = await EmailServices.fetchEmailTemplateList(pageId, queryParams);
             if (result) {
-                let op = []
+                let op = [{value: "", label: "Select an Email Template", data: {"_id": "",
+                        "email": "",
+                        "subject": "",
+                        "template": ""}}]
                 result.templates.map(el => {
                     op.push({value: el._id, label: el.title, data: el})
                 });
@@ -84,7 +87,7 @@ const Email = (props) => {
     const emailTemplateChangeHandler = (e) => {
         e.data._id = "";
         setEmailData(e.data);
-        setChangedTemplate(utils.decodeHTML(e.data.template));
+        setChangedTemplate(utils.decodeHTML(e.data?.template || ""));
         setSelectedEmailTemplate(e);
     }
     const emailBodyHandler = (email) => {
