@@ -138,7 +138,7 @@ const EmailModal = (props) => {
             setEmailSetupData(true);
         } catch (e) {
             setEmailSetupData(false);
-        } 
+        }
     };
     useEffect(() => {
         fetchTemplateList();
@@ -160,35 +160,35 @@ const EmailModal = (props) => {
                 var startToText = "";
                 if(emailData.subject.length < 250){
                     subjectInput.value =
-                    subjectInput.value.substring(0, cursorStart) +
-                    " [" +
-                    e.target.textContent +
-                    "] " +
-                    subjectInput.value.substring(cursorEnd, textValue.length);
+                        subjectInput.value.substring(0, cursorStart) +
+                        " [" +
+                        e.target.textContent +
+                        "] " +
+                        subjectInput.value.substring(cursorEnd, textValue.length);
 
-                // setNewMail({
-                //   ...newMail,
-                //   subject: subjectInput.value
-                // })
-                setEmailData({
-                    ...emailData,
-                    subject: subjectInput.value
-                })
-                startToText =
-                    subjectInput.value.substring(0, cursorStart) +
-                    "[" +
-                    e.target.textContent +
-                    "]";
+                    // setNewMail({
+                    //   ...newMail,
+                    //   subject: subjectInput.value
+                    // })
+                    setEmailData({
+                        ...emailData,
+                        subject: subjectInput.value
+                    })
+                    startToText =
+                        subjectInput.value.substring(0, cursorStart) +
+                        "[" +
+                        e.target.textContent +
+                        "]";
 
-                subjectInput.focus();
-                subjectInput.setSelectionRange(
-                    startToText.length + 1,
-                    startToText.length + 1
-                );
-            }
-          
+                    subjectInput.focus();
+                    subjectInput.setSelectionRange(
+                        startToText.length + 1,
+                        startToText.length + 1
+                    );
+                }
 
-             // console.log(subjectInput, cursorStart, cursorEnd, textValue);
+
+                // console.log(subjectInput, cursorStart, cursorEnd, textValue);
             } else {
                 subjectInput.value = subjectInput.value + " [" + e.target.textContent + "] ";
 
@@ -258,7 +258,7 @@ const EmailModal = (props) => {
         // console.log("emailbody",emailBody);
         setEmailDatasubject(elem.title);
         setTemplateToogle(false);
-        setTempSelected(true); 
+        setTempSelected(true);
         console.log(tempSelected);
     }
 
@@ -282,7 +282,7 @@ const EmailModal = (props) => {
         e.preventDefault();
         const subject = emailData.subject;
         // console.log("Changed", changedTemplate);
-        let template = changedTemplate; 
+        let template = changedTemplate;
 
         let payload = {
             "email": emailData.email,
@@ -461,27 +461,27 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
 
 
 
-  function useOutsideAlerter(ref) {
-    useEffect(() => {
-      /**
-       * Alert if clicked on outside of element
-       */
-      function handleClickOutside(event) {
-        if (ref.current && !ref.current.contains(event.target)) {
-          setKeywordSuggesion(false)
-        }
-      }
-      // Bind the event listener
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        // Unbind the event listener on clean up
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, [ref]);
-  }
-  
-    
-  useOutsideAlerter(keywordRef);
+    function useOutsideAlerter(ref) {
+        useEffect(() => {
+            /**
+             * Alert if clicked on outside of element
+             */
+            function handleClickOutside(event) {
+                if (ref.current && !ref.current.contains(event.target)) {
+                    setKeywordSuggesion(false)
+                }
+            }
+            // Bind the event listener
+            document.addEventListener("mousedown", handleClickOutside);
+            return () => {
+                // Unbind the event listener on clean up
+                document.removeEventListener("mousedown", handleClickOutside);
+            };
+        }, [ref]);
+    }
+
+
+    useOutsideAlerter(keywordRef);
 
 
 
@@ -626,14 +626,13 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                         </li> */}
                                         {
                                             (emailTempData.templates &&
-                                            emailTempData.templates.length > 0 ) ? 
+                                            emailTempData.templates.length > 0 ) ?
                                             emailTempData.templates.map((elem, i) => (
                                                     <li key={i}
                                                         onClick={(e) => sendingTemplateDetails(e, elem)}>{elem.title}</li>
                                                 )
                                             ) :
                                             <li className="listCentered">No Email template Found</li>
-
                                         }
                                     </ul>}
                             </div>
@@ -651,11 +650,11 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                        maxLength={250}
                                 />
                                 <button className="btn browseKeywords"
-                                    type='button'
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setKeywordSuggesion(true);
-                                    }}
+                                        type='button'
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            setKeywordSuggesion(true);
+                                        }}
                                 >
                                     <img src={icon_browse_keywords} alt="keywords"/>
                                 </button>
@@ -674,7 +673,7 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                             <div className="cancelKeySearch">
                                                 <button
                                                     onClick={() => {setKeywordSuggesion(false)
-                                                            setSearchTagString("")}}
+                                                        setSearchTagString("")}}
                                                 ></button>
                                             </div>
                                         </div>
@@ -683,11 +682,11 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                                 {emailTags
                                                     .filter(
                                                         (smsTag) =>
-                                                            smsTag.id.toLowerCase().indexOf(searchTagString) >= 0 
+                                                            smsTag.id.toLowerCase().indexOf(searchTagString) >= 0
                                                             && smsTag.id !== "tags"
-                                                            && smsTag.id !== "phone" 
-                                                            && smsTag.id !== "mobile" 
-                                                            && smsTag.id !== "momCellPhone" 
+                                                            && smsTag.id !== "phone"
+                                                            && smsTag.id !== "mobile"
+                                                            && smsTag.id !== "momCellPhone"
                                                             && smsTag.id !== "dadCellPhone"
                                                             && smsTag.id !== "createdBy"
                                                             && smsTag.id !== "createdAt"
@@ -732,9 +731,9 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                 <div className="errorMsg">{validateMsg.template}</div>
                             </div>
                         </div>
-                        <div class="slice text-center">
-                            <button class="cmnBtn" onClick={sendGlobalEmail}
-                               disabled={!emailSetupData ? "disabled":""}
+                        <div className="slice text-center">
+                            <button className="cmnBtn" onClick={sendGlobalEmail}
+                                    disabled={!emailSetupData ? "disabled":""}
                             >Send Email <img src={arrow_forward} alt=""/></button>
                         </div>
                     </div>

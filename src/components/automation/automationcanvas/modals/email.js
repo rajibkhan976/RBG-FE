@@ -255,26 +255,6 @@ const Email = (props) => {
                                                             ))}
                                                     </ul>
                                                 </div>
-                                                <div className=''>
-                                                    <div className="searchKeyword">
-                                                        <div className="searchKeyBox">
-                                                            <input
-                                                                type="text"
-                                                                // onChange={(e) => setSearchTagString(e.target.value)}
-                                                                onKeyPress={e => {
-                                                                    if (e.key === 'Enter') e.preventDefault();
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        <div className="cancelKeySearch">
-                                                            <button
-                                                                onClick={() => {
-                                                                    setSubjectKeywordSuggesion(false)
-                                                                }}
-                                                            ></button>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                             </div>
                                         )}
                                     </div>

@@ -13,7 +13,7 @@ import SetupIcon9 from "../../../assets/images/nn.svg"
 import zapierIcon from "../../../assets/images/zapier.svg"
 import statusPhase from "../../../assets/images/statusPhase.svg"
 import creditIcon from "../../../assets/images/credit_management_icon.svg"
-
+import notificationIcon from "../../../assets/images/notification-group-icon.svg";
 const Setup = (props) => {
   const loggedInUser = useSelector((state) => state.user.data);
   const zIndexSetting = useSelector((state)=> state.modal.zIndexSetting);
@@ -428,6 +428,23 @@ const Setup = (props) => {
                   </div>
                 </div>
               </li>
+                <li>
+              <div className="listHead">
+                <i>
+                  <NavLink to="/notification-group" onClick={(e) => props.clickedLink(e)}>
+                    <img src={notificationIcon} />
+                  </NavLink>
+                </i>
+                <div>
+                  <h3>
+                    <NavLink to="/notification-group" onClick={(e) => props.clickedLink(e)}>
+                      Notification Group
+                    </NavLink>
+                  </h3>
+                  <p>Display related notifications in a group</p>
+                </div>
+              </div>
+            </li>
               <li>
                 {(loggedInUser && loggedInUser.organizationCode == 'rbg') ?
 

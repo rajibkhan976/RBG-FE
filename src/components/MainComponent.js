@@ -43,7 +43,7 @@ import RestrictionPackageModal from "./setup/credit/package/RestrictionPackageMo
 import AppointmentGlobal from "./appointment/AppointmentGlobalRouter";
 import TransactionGlobalRouter from "./transaction/TransactionGlobalRouter";
 import CommunicationLogRoutes from "./communicationLog/CommunicationLogRoutes";
-import NotificationGroupRouter from "./setup/notification_group/notification_groupRouter"
+import NotificationGroupRouter from "./setup/notification_group/notificationGroupRouter"
 
 // For socket io connection
 //const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlProd;

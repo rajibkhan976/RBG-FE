@@ -48,7 +48,15 @@ const AttendanceTriggerSetting = (props) => {
     const saveSettings = async (e) => {
         try {
             let fields = {'fname': 'text', 'lname': 'text', 'phone': 'numeric', 'email': 'email'} // Sample
-            if ((events.checkIn || (events.lastAttended && events.day > 0 && events.day < 101))) {
+            if (events.checkIn || events.lastAttended ) {
+                if (events.lastAttended && (!events.day || parseInt(events.day) <= 0 || parseInt(events.day) > 101)) {
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: "Please provide the day value.",
+                        typeMessage: 'error'
+                    });
+                    return false;
+                }
                 setIsLoader(true);
                 let fieldsApiResponse = await ContactService.fetchFields();
                 setIsLoader(false);

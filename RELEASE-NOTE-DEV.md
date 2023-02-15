@@ -122,3 +122,6 @@
 
 # BULK EMAIL AND SMS V1.0.7
     - SMS placeholder change
+
+# Automation V3.0.1
+    - Automation Fixes

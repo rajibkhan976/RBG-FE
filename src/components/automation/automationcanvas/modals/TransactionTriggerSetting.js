@@ -9,7 +9,7 @@ import Select from "react-select";
 
 const TransactionTriggerSetting = (props) => {
     const dispatch = useDispatch();
-    const [module, setModule] = useState(props.module ? props.module : 'contact');
+    const module = props.module ? props.module : 'contact'
     const [isLoader, setIsLoader] = useState(false);
     const [events, setEvents] = useState(props.event ? props.event : {
         transactionSuccess: false,
@@ -17,36 +17,8 @@ const TransactionTriggerSetting = (props) => {
         transactionBefore: false,
         day: "1"
     });
-    const [nodeId, setNodeId] = useState(props.nodeId);
-    
-
-    const options = [
-        { value: 'Monday', label: 'Mon' },
-        { value: 'Tuesday', label: 'Tue' },
-        { value: 'Wednesday', label: 'Wed' },
-        { value: 'Thursday', label: 'Thu' },
-        { value: 'Friday', label: 'Fri' },
-        { value: 'Saturday', label: 'Sat' },
-        { value: 'Sunday', label: 'Sun' }
-    ];
-    const [upCommingDaysStatus, setUpCommingDaysStatus] = useState(false);
     const changeEvent = async (e) => {
         events[e.target.value] = e.target.checked;
-        if(e.target.value === "transactionUpcoming"){
-            if(e.target.checked){
-                // alert("transactionUpcoming");
-                setUpCommingDaysStatus(true);
-            }else{
-                setUpCommingDaysStatus(false);
-            }
-        }
-    }
-    const selectStyle = {
-        control: base => ({
-            ...base,
-            border: 0,
-            boxShadow: "none"
-          })
     }
     const changeDay = (e) => {
         if (e.target.value < 101 && e.target.value > 0) {
@@ -74,7 +46,15 @@ const TransactionTriggerSetting = (props) => {
     const saveSettings = async (e) => {
         try {
             let fields = {'fname': 'text', 'lname': 'text', 'phone': 'numeric', 'email': 'email'} // Sample
-            if (events.transactionSuccess || events.transactionFailed || (events.transactionBefore && events.day > 0 && events.day < 101)) {
+            if (events.transactionSuccess || events.transactionFailed || events.transactionBefore) {
+                if (events.transactionBefore && (!events.day || parseInt(events.day) <= 0 || parseInt(events.day) > 101)) {
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: "Please provide the day value.",
+                        typeMessage: 'error'
+                    });
+                    return false;
+                }
                 setIsLoader(true);
                 let fieldsApiResponse = await ContactService.fetchFields();
                 setIsLoader(false);
@@ -89,7 +69,7 @@ const TransactionTriggerSetting = (props) => {
                 fields.payment_via = "text";
                 fields.status = "text";
                 fields.refunded_amount = "numeric";
-                props.saveFieldtrigger(module, events, nodeId, fields)
+                props.saveFieldtrigger(module, events, props.nodeId, fields)
                 props.closeFilterModal()
             } else {
                 dispatch({

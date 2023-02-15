@@ -322,7 +322,7 @@ const NotificationGroupModal = (props) => {
                                 <div className='cmnFormCol'>
                                     <div className="cmnFieldName">Email template <span>(Optional)</span></div>
                                     <div className="cmnFormField">
-                                        <select name="status" class="cmnFieldStyle btnSelect">
+                                        <select name="status" className="cmnFieldStyle btnSelect">
                                             <option value="">Select a Status</option>
                                         </select>
                                     </div>
@@ -344,7 +344,7 @@ const NotificationGroupModal = (props) => {
                                     </>) : ""}
                                 </div>
                                 <div className="cmnFormCol editor">
-                                    <div class="cmnFieldName">Email Body</div>
+                                    <div className="cmnFieldName">Email Body</div>
                                     <div className={editorMax ? "bigTextbox" : "smallTextBox"}>
                                         <Editor
                                             // initialValue="<p>This is the initial content of the editor</p>"
@@ -449,7 +449,7 @@ const NotificationGroupModal = (props) => {
                                     </div>
                                 </div>
                                 <div className="cmnFormCol editor">
-                                    <div class="cmnFieldName">Upload file to send this message as MMS</div>
+                                    <div className="cmnFieldName">Upload file to send this message as MMS</div>
                                     <div className="cmnFormField">
                                         <div className="cmnInputFile">
                                             <input type="file" onChange={handleAudioUpload} accept="audio/mpeg" />

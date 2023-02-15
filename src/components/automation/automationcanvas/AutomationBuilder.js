@@ -46,6 +46,8 @@ import AppointmentTriggerSetting from "./modals/AppointmentTriggerSetting"
 import TransactionTriggerSetting from "./modals/TransactionTriggerSetting"
 import TagTriggerSetting from "./modals/TagTriggerSetting"
 import NotificationGroupModal from "./modals/NotificationGroupModal";
+import {ContactService} from "../../../services/contact/ContactServices";
+import {SMSServices} from "../../../services/template/SMSServices";
 const AutomationBuilder = (props) => {
     const reactFlowWrapper = useRef(null);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
@@ -66,12 +68,12 @@ const AutomationBuilder = (props) => {
     const [to, setTo] = useState('');
     const [toError, setToError] = useState(false);
     const [from, setFrom] = useState('');
-    const [fromError, setFromError] = useState(false);
     const [body, setBody] = useState('');
     const [bodyError, setBodyError] = useState(false);
     const [nId, setNId] = useState(false);
     const [webhookData, setWebhookData] = useState([]);
     const [messageData, setMessageData] = useState([]);
+    const [messageBody, setMessageBody] = useState("");
     const [delayData, setDelayData] = useState([]);
     const [delayTime, setDelayTime] = useState(1);
     const [delayDataError, setDelayDataError] = useState('');
@@ -109,6 +111,7 @@ const AutomationBuilder = (props) => {
         delete: false
     });
     const [automationActionId, setAutomationActionId] = useState("");
+    const [mergeFields, setMergeFields] = useState({});
     const [automationEvents, setAutomationEvents] = useState({
         addAutomation: false,
         removeAutomation: false
@@ -128,7 +131,6 @@ const AutomationBuilder = (props) => {
         actionRemoveTag: ActionRemoveTag,
         automationTag: AutomationTag,
         notificationTag: NotificationTag,
-
         filter: FilterNode,
         actionEmail: ActionEmail,
         actionMessage: ActionMessage,
@@ -353,14 +355,12 @@ const AutomationBuilder = (props) => {
         setAutomationModal("actionEmail");
     };
     const actionMessageEdit = (e, n) => {
-        setTo(n.data.to);
-        setFrom(n.data.from);
         setBody(n.data.body);
         setNId(n.id);
         if (n.data.data !== undefined) {
-            //setTagData(n.data.data);
+            setMessageBody(n.data.data);
         } else {
-            //setTagData([]);
+            setMessageBody([]);
         }
         setAutomationModal("actionMessage");
     };
@@ -388,7 +388,6 @@ const AutomationBuilder = (props) => {
     };
     const actionApplyTag = (e, n) => {
         setTagNodeId(n);
-        console.log(e, n);
         setAutomationModal("actionApplyTag");
     };
     const actionRemoveTag = (e, n) => {
@@ -497,35 +496,6 @@ const AutomationBuilder = (props) => {
         event.preventDefault();
         setAutomationName(event.target.value);
     }
-    const handleToChange = (event) => {
-        event.preventDefault();
-        setCursorElement(event);
-        setTo(event.target.value);
-    }
-    const handleFromChange = (event) => {
-        event.preventDefault();
-        setCursorElement(event);
-        setFrom(event.target.value);
-    }
-    const handleBodyChange = (event) => {
-        event.preventDefault();
-        setCursorElement(event);
-        setBody(event.target.value);
-    }
-    const handleBodyChangeTags = (value) => {
-        setCursorElement(value);
-        setBody(value);
-    }
-    const handleSubjectChange = (event) => {
-        event.preventDefault();
-        setCursorElement(event);
-        setSubject(event.target.value);
-    }
-    const handleToEmailChange = (event) => {
-        event.preventDefault();
-        setCursorElement(event);
-        setToEmail(event.target.value);
-    }
     const handleDelayChange = (event) => {
         event.preventDefault();
         let value = event.target.value;
@@ -542,11 +512,6 @@ const AutomationBuilder = (props) => {
     const handleDelayTypeChange = (event) => {
         event.preventDefault();
         setDelayType(event.target.value);
-    }
-    const handleBodyEmailChange = (event) => {
-        event.preventDefault();
-        setCursorElement(event);
-        setBodyEmail(event.target.value);
     }
     const updateDataInTarget = (params) => {
         const updatedElem = [...elements];
@@ -571,7 +536,7 @@ const AutomationBuilder = (props) => {
             const edge = getEdgeId();
             await setElements((els) =>
                 addEdge(
-                    {...params, id: edge, type: edgeType, animated: true, data: {onRemove: onEdgeClick}},
+                    {...params, id: edge, type: edgeType, animated: true, data: {onRemove: onEdgeClick, source: params.source, target: params.target}},
                     els
                 )
             );
@@ -638,7 +603,7 @@ const AutomationBuilder = (props) => {
         onElementsRemove([elm]);
         if (elm.type === 'trigger' && elm.data.id) {
             let payload = {'unique_id': elm.data.id};
-            let deleteWebhook = await AutomationServices.deleteWebhookNode(JSON.stringify(payload));
+            await AutomationServices.deleteWebhookNode(JSON.stringify(payload));
         }
     };
     const onLoad = (_reactFlowInstance) => {
@@ -665,24 +630,16 @@ const AutomationBuilder = (props) => {
         setIdNode(idOriginalNode);
         setIdEdge(idOriginalEdge);
     };
-    const saveMessage = async () => {
-        let count = 0;
-        if (!body) {
-            setBodyError('bounce');
-            count = count + 1;
-        }
-        removeClass();
-        if (count === 0) {
-            setElements((elms) =>
-                elms.map((el) => {
-                    if (el.id === nId) {
-                        el.data.body = body;
-                    }
-                    return {...el};
-                })
-            );
-            closeFilterModal();
-        }
+    const saveMessage = async (body, nId) => {
+        setElements((elms) =>
+            elms.map((el) => {
+                if (el.id === nId) {
+                    el.data.body = body;
+                }
+                return {...el};
+            })
+        );
+        closeFilterModal();
     };
     const saveDelay = async () => {
         let count = 0;
@@ -737,7 +694,22 @@ const AutomationBuilder = (props) => {
         );
         closeFilterModal();
     };
-
+    const saveNotification = (nodeId, searchResult, isSendEmail, isSendSMS, emailData, changedTemplate, smsData) => {
+        setElements((elms) =>
+            elms.map((el) => {
+                if (el.id === nodeId) {
+                    el.data.recipents = searchResult;
+                    el.data.isSendEmail = isSendEmail;
+                    el.data.isSendSMS = isSendSMS;
+                    el.data.subject = emailData.subject;
+                    el.data.emailBody = changedTemplate;
+                    el.data.smsBody = smsData;
+                }
+                return {...el};
+            })
+        );
+        closeFilterModal();
+    }
     const saveStatusPhase = (nodeId, status, phase) => {
         setElements((elms) =>
             elms.map((el) => {
@@ -853,7 +825,6 @@ const AutomationBuilder = (props) => {
         setTimeout(() => {
             setAutomationNameError('');
             setToError('');
-            setFromError('');
             setBodyError('');
             setToEmailError('');
             setSubjectError('');
@@ -973,7 +944,9 @@ const AutomationBuilder = (props) => {
                     nodes: {next: [], previous: ""},
                     module: 'attendance',
                     event: {
-                        checkIn: false
+                        checkIn: false,
+                        lastAttended: false,
+                        day: "0"
                     },
                     data: {}
                 },
@@ -993,6 +966,7 @@ const AutomationBuilder = (props) => {
                         appointmentCompleted: false,
                         appointmentRescheduled: false,
                         appointmentCreate: false,
+                        day: "0"
                     },
                     data: {}
                 },
@@ -1009,7 +983,9 @@ const AutomationBuilder = (props) => {
                     module: 'transaction',
                     event: {
                         transactionSuccess: false,
-                        transactionFailed: false
+                        transactionFailed: false,
+                        transactionBefore: false,
+                        day: "0"
                     },
                     data: {}
                 },
@@ -1026,7 +1002,8 @@ const AutomationBuilder = (props) => {
                     module: 'tag',
                     event: {
                         addTags: true,
-                        removeTags: false
+                        removeTags: false,
+                        selectedTag: {value: '', label: 'Please select a tag.'}
                     },
                     data: {}
                 },
@@ -1038,6 +1015,7 @@ const AutomationBuilder = (props) => {
                 type,
                 position,
                 data: {
+                    data: mergeFields,
                     label: `${types[type]}`,
                     nodes: {next: [], previous: ""},
                     arn: process.env.REACT_APP_ACTION_MESSAGE,
@@ -1053,6 +1031,7 @@ const AutomationBuilder = (props) => {
                 type,
                 position,
                 data: {
+                    data: mergeFields,
                     label: `${types[type]}`,
                     nodes: {next: [], previous: ""},
                     arn: process.env.REACT_APP_ACTION_EMAIL,
@@ -1069,6 +1048,7 @@ const AutomationBuilder = (props) => {
                 type,
                 position,
                 data: {
+                    data: mergeFields,
                     label: `${types[type]}`,
                     nodes: {next: [], previous: ""},
                     time: 1,
@@ -1083,6 +1063,7 @@ const AutomationBuilder = (props) => {
                 type,
                 position,
                 data: {
+                    data: mergeFields,
                     label: `${types[type]}`,
                     nodes: {next: [], previous: ""},
                     arn: process.env.REACT_APP_ACTION_STATUS_PHASE,
@@ -1097,6 +1078,7 @@ const AutomationBuilder = (props) => {
                 type,
                 position,
                 data: {
+                    data: mergeFields,
                     label: `${types[type]}`,
                     nodes: {next: [], previous: ""},
                     arn: process.env.REACT_APP_ACTION_APPLY_TAG,
@@ -1110,6 +1092,7 @@ const AutomationBuilder = (props) => {
                 type,
                 position,
                 data: {
+                    data: mergeFields,
                     label: `${types[type]}`,
                     nodes: {next: [], previous: ""},
                     arn: process.env.REACT_APP_ACTION_REMOVE_TAG,
@@ -1123,6 +1106,7 @@ const AutomationBuilder = (props) => {
                 type,
                 position,
                 data: {
+                    data: mergeFields,
                     label: `${types[type]}`,
                     nodes: {next: [], previous: ""},
                     arn: process.env.REACT_APP_ACTION_AUTOMATION,
@@ -1142,10 +1126,17 @@ const AutomationBuilder = (props) => {
                 type,
                 position,
                 data: {
+                    data: mergeFields,
                     label: `${types[type]}`,
                     nodes: {next: [], previous: ""},
                     arn: process.env.REACT_APP_ACTION_NOTIFICATION,
-                    tag: ""
+                    tag: "",
+                    recipents: [],
+                    isSendEmail: false,
+                    isSendSMS: true,
+                    subject: "",
+                    emailBody: "",
+                    smsBody: ""
                 },
             };
             setElements((es) => es.concat(newNode));
@@ -1155,6 +1146,7 @@ const AutomationBuilder = (props) => {
                 type,
                 position,
                 data: {
+                    data: mergeFields,
                     label: `${types[type]}`,
                     nodes: {next: [], previous: ""},
                     and: 1,
@@ -1186,19 +1178,13 @@ const AutomationBuilder = (props) => {
             sourceType = 'trigger';
         }
         if (sourceType === 'actionMessage' || sourceType === 'actionEmail' || sourceType === 'actionDelay' ||
-            sourceType === 'actionStatusPhaseUpdate' || sourceType === 'actionApplyTag' || sourceType === 'actionRemoveTag') {
+            sourceType === 'actionStatusPhaseUpdate' || sourceType === 'actionApplyTag' || sourceType === 'actionRemoveTag' ||
+            sourceType === 'notificationTag' || sourceType === 'automationTag') {
             sourceType = 'action';
         }
         if (targetType === 'actionMessage' || targetType === 'actionEmail' || targetType === 'actionDelay' ||
-            targetType === 'actionStatusPhaseUpdate' || targetType === 'actionApplyTag' || targetType === 'actionRemoveTag') {
-            targetType = 'action';
-        }
-        if (sourceType === 'actionMessage' || sourceType === 'actionEmail' || sourceType === 'actionDelay' ||
-            sourceType === 'actionStatusPhaseUpdate' || sourceType === 'actionApplyTag' || sourceType === 'notificationTag') {
-            sourceType = 'action';
-        }
-        if (targetType === 'actionMessage' || targetType === 'actionEmail' || targetType === 'actionDelay' ||
-            targetType === 'actionStatusPhaseUpdate' || targetType === 'actionApplyTag' || targetType === 'notificationTag') {
+            targetType === 'actionStatusPhaseUpdate' || targetType === 'actionApplyTag' || targetType === 'actionRemoveTag' ||
+            targetType === 'notificationTag' || targetType === 'automationTag') {
             targetType = 'action';
         }
         let returnType = false;
@@ -1224,15 +1210,6 @@ const AutomationBuilder = (props) => {
                     }
                 }
             }
-            /*if (sourceType === 'trigger' && el.source !== undefined) {
-              const newSource = el.source;
-              const newSourcePosition = newSource.indexOf("-");
-              let sourceTypeNew = newSource.substring(0, newSourcePosition);
-              console.log(sourceTypeNew, sourceType)
-              if (sourceType === 'trigger') {
-                multipleTrigger = true;
-              }
-            }*/
             if (el.source === source) {
                 const matchedTarget = el.target;
                 const matchedTargetPosition = matchedTarget.indexOf("-");
@@ -1504,23 +1481,24 @@ const AutomationBuilder = (props) => {
             })
         );
     }
-    const onEdgeClick = (id) => {
-        console.log("automationId", props.automationElement._id)
-        if (/*!props.automationElement._id*/ false) {
-            if (id) {
-                let updatedElem = [...elements];
-                updatedElem = updatedElem.filter(el => el.id !== id);
-
-                setElements(updatedElem);
-            }
-        } else {
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: "We are not supporting remove connection on edit as of now. Please delete node  if you need to remove any connection.",
-                typeMessage: 'error'
+    const onEdgeClick = (id, data) => {
+        if (id && data.source && data.target) {
+            console.log(id, data)
+            let updatedElem = [...elements];
+            updatedElem = updatedElem.filter(el => el.id !== id);
+            updatedElem.map(elem => {
+                if (elem && elem.data && elem.data.nodes && elem.data.nodes && elem.data.nodes.next && elem.data.nodes.next.includes(data.source)) {
+                    let value2 = elem.data.nodes.next;
+                    elem.data.nodes.next = value2.filter(fil => fil !== data.source);
+                }
+                if (elem && elem.data && elem.data.nodes && elem.data.nodes && elem.data.nodes.previous && elem.data.nodes.previous === data.target) {
+                    elem.data.nodes.previous = "";
+                }
             });
+            setElements(updatedElem);
+        } else {
+            console.log('Not possible as this is an old automation.')
         }
-
     };
     const fetchTagStatusPhase = async () => {
         try {
@@ -1528,6 +1506,18 @@ const AutomationBuilder = (props) => {
             setTags(resp.tags);
             setStatusList(resp.status);
             setPhaseList(resp.phase);
+        } catch (e) {
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
+        }
+    }
+    const fetchMergeFieldData = async () => {
+        try {
+            let fieldsApiResponse = await ContactService.fetchFields();
+            setMergeFields(fieldsApiResponse.fields)
         } catch (e) {
             dispatch({
                 type: actionTypes.SHOW_MESSAGE,
@@ -1559,6 +1549,7 @@ const AutomationBuilder = (props) => {
             );
         }
         fetchTagStatusPhase();
+        fetchMergeFieldData();
     }, [props.automationElement]);
     return (
         <>
@@ -1657,12 +1648,8 @@ const AutomationBuilder = (props) => {
                                                        webhookData={webhookData} automationUrlId={automationUrlId}
                                                        triggerNodeId={triggerNodeId}/>
                             case 'actionMessage':
-                                return <Message closeFilterModal={closeFilterModal} triggerNodeId={triggerNodeId}
-                                                messageData={messageData} copyTag={copyTag} toggletoMail={toggletoMail}
-                                                handleToChange={handleToChange} to={to} toError={toError}
-                                                bodyError={bodyError}
-                                                handleBodyChange={handleBodyChange} body={body}
-                                                saveMessage={saveMessage} handleBodyChangeTags={handleBodyChangeTags}/>
+                                return <Message closeFilterModal={closeFilterModal} body={body} triggerNodeId={nId}
+                                                saveMessage={saveMessage}/>
                             case 'actionEmail':
                                 return <Email closeFilterModal={closeFilterModal} triggerNodeId={triggerNodeId}
                                               saveEmail={saveEmail} subject={subject} body={bodyEmail} selectedTemplate={emailTemplateId}/>
@@ -1692,7 +1679,7 @@ const AutomationBuilder = (props) => {
                                                         elem={tagNodeId} automationId={automationActionId}
                                                         events={automationEvents}/>
                             case 'notificationTag':
-                                return <NotificationModal closeFilterModal={closeFilterModal} />
+                                return <NotificationModal closeFilterModal={closeFilterModal}  elem={tagNodeId} saveNotification={saveNotification}/>
                             default:
                                 return ""
                         }

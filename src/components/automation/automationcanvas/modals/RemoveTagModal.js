@@ -21,20 +21,6 @@ const RemoveTagModal = (props) => {
         setSelectValue(inputValue);
         setCloseMessage(true);
     }
-    // const selectRef = React.useRef();
-    const createOption = (value) => {
-        // if (selectRef.current) {
-        //     selectRef.current.focus();
-        //   }
-        let tag = {
-            value: '0123456789',
-            label: value,
-        }
-        setSelectedTag([...selectedTag, tag]);
-        // setSelectValue('');
-        setCloseMessage(false);
-    }
-
     const fetchTags = async () => {
         try {
             setIsLoading(true);
@@ -59,7 +45,7 @@ const RemoveTagModal = (props) => {
 
     }
     const saveTag = () => {
-        if (selectedTag && selectedTag.value !== "") {
+        if (selectedTag && selectedTag.length && selectedTag.value !== "") {
             props.saveTag(props.elem.id, selectedTag);
         } else {
             dispatch({
@@ -69,11 +55,11 @@ const RemoveTagModal = (props) => {
             });
         }
     }
-    useEffect(() => {
+    useEffect(async () => {
         if (props.elem && props.elem.data && props.elem.data.tag) {
             setSelectedTag(props.elem.data.tag);
         }
-        fetchTags();
+        await fetchTags();
     }, []);
     return (
         <React.Fragment>
