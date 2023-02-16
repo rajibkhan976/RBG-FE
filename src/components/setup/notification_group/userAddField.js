@@ -11,10 +11,12 @@ import * as actionTypes from "../../../actions/types";
 import { useDispatch } from "react-redux";
 import defaultImage from "../../../../src/assets/images/owner_img_1.png";
 import { NotificationGroupServices } from "../../../services/notification/NotificationGroupServices";
+
+
 const UserAddField = (props) => {
     const dispatch = useDispatch();
     const [isLoader, setIsLoader] = useState(false);
-    props.closeAddCustomModal(false);
+    props.closeAddUserModal(false);
     const [groupId, setGroupId] = useState(null);
     const [userList, setUserList] = useState([]);
     const [addSelectedTag, setAddSelectedTag] = useState([]);
@@ -28,8 +30,9 @@ const UserAddField = (props) => {
     // const [dataIsThere, setDataIsThere] = useState();
     const [saveAsStatus, setSaveAsStatus] = useState(false);
     const [saveAsOptionFilterData, setSaveAsOptionFilterData] = useState([]);
-
-    // props.reloaded(false);
+    const [userData, setUserData] = useState("");
+    // const [reloadNotification, setReloadNotification] = useState(false);
+    // props.setReloadNotification(false);
     // user list api
 
     const userListFetch = async () => {
@@ -105,6 +108,7 @@ const UserAddField = (props) => {
 
     const addHandleChangeFields = (e) => {
         setUserId(e._id);
+        setUserData(e);
         if (e._id) {
             setValidator({
                 ...validator,
@@ -117,7 +121,9 @@ const UserAddField = (props) => {
     }
     const selectFetchData = () => {
         console.log("filter data", filterUserData, "List", list);
+        setUserList(list);
         if (saveAsStatus) {
+            // alert("zxkcknzn");
             setUserList(saveAsOptionFilterData);
         } else {
             if (filterUserData) {
@@ -128,6 +134,7 @@ const UserAddField = (props) => {
                         return objOne._id == objTwo._id;
                     });
                 });
+                console.log(filterOption);
                 setUserList(filterOption);
             }
         }
@@ -189,20 +196,20 @@ const UserAddField = (props) => {
         }
         else {
             if (addSelectedTag.length) {
-                let userCreate = {
+                let payload = {
                     "groupId": groupId,
                     "userId": userId,
                     "sms": sms,
                     "email": email
                 }
-                console.log('create user data', userCreate);
+                console.log('create user data', payload);
                 try {
                     setIsLoader(true);
-                    const result = await NotificationGroupServices.addUserToAGroup(userCreate);
+                    const result = await NotificationGroupServices.addUserToAGroup(payload);
                     if (result) {
                         console.log("add user successfully", result);
-                        props.closeAddCustomModal(true);
-                        props.successData(result);
+                        props.closeAddUserModal(true);
+                        props.addUserStatus(userData, payload);
                         setSms(false);
                         setEmail(false);
                         setAddSelectedTag([]);
@@ -221,7 +228,7 @@ const UserAddField = (props) => {
 
                 } finally {
                     setIsLoader(false);
-                    props.closeAddCustomModal(true);
+                    props.closeAddUserModal(true);
                     setSms(false);
                     setEmail(false);
                     setAddSelectedTag([]);
@@ -230,7 +237,7 @@ const UserAddField = (props) => {
         }
     }
 
-    // save and new
+    // save and new users
     const handleUserSubmitNew = async (e) => {
         e.preventDefault();
         console.log("group id: ", groupId);
@@ -250,41 +257,21 @@ const UserAddField = (props) => {
             try {
                 setIsLoader(true);
                 if (addSelectedTag.length) {
-                    // let userCreate={}
-                    // if(!newGroupId){
-                    //     userCreate = {
-                    //         "groupId": groupId,
-                    //         "userId": userId,
-                    //         "sms": sms,
-                    //         "email": email
-                    //     }
-                    // }else{
-                    //     userCreate = {
-                    //         "groupId": newGroupId,
-                    //         "userId": userId,
-                    //         "sms": sms,
-                    //         "email": email
-                    //     }
-                    // }
-                    let userCreate = {
+                    let payload = {
                         "groupId": groupId,
                         "userId": userId,
                         "sms": sms,
                         "email": email
                     }
-                    const result = await NotificationGroupServices.addUserToAGroup(userCreate);
+                    const result = await NotificationGroupServices.addUserToAGroup(payload);
                     if (result) {
                         console.log("save and new user successfully add", result);
                         console.log("recent select data", addSelectedTag[0]);
-                        // props.successData(result);
-                        // setDataIsThere(addSelectedTag[0]);
                         setSms(false);
                         setEmail(false);
                         setAddSelectedTag([]);
-                        // props.saveAsNewSuccessData({status: true, groupId: groupId});
                         setSaveAsStatus(true);
-
-
+                        props.addUserStatus(userData, payload);
                         console.log(addSelectedTag[0]);
                         console.log(filterUserData);
                         console.log(list);
@@ -297,11 +284,10 @@ const UserAddField = (props) => {
                         userList.splice(indexOfObject, 1);
                         console.log(userList);
                         setSaveAsOptionFilterData(userList);
-
-
+                        // props.setReloadNotification(true);
+                        
 
                         // setNewGroupId(userCreate.groupId);
-                        // props.reloaded(true);
                         // console.log(dataIsThere);
                         // setFilterUserData([...filterUserData, dataIsThere]);
                         // console.log(filterUserData);
@@ -328,14 +314,14 @@ const UserAddField = (props) => {
         }
     }
     const closeModal = () => {
-        props.closeAddCustomModal(true);
-        props.reloaded(true);
+        props.closeAddUserModal(true);
+        // props.setReloadNotification(true);
     }
 
 
     // user edit data
     useEffect(() => {
-        console.log("total props data", props);
+        console.log("total props data", props.editUserData.sms, props.editUserData.email);
         if (props.editUserData.hasOwnProperty('firstName')) {
             // alert("group id");
             console.log("email", props.editUserData.email, "sms", props.editUserData.sms, "id", props.editUserData._id, "Group Id", props.groupId);
@@ -362,8 +348,9 @@ const UserAddField = (props) => {
             const result = await NotificationGroupServices.editUser(editGroupId, payload);
             if (result) {
                 setIsLoader(false);
-                props.successData(result);
-                props.closeAddCustomModal(true);
+                // props.userStatus(userData);
+                props.closeAddUserModal(true);
+                props.editUserStatus(payload)
                 dispatch({
                     type: actionTypes.SHOW_MESSAGE,
                     message: 'User updated successfully',
@@ -378,16 +365,44 @@ const UserAddField = (props) => {
             });
         } finally {
             setIsLoader(false);
-            props.closeAddCustomModal(true);
+            props.closeAddUserModal(true);
         }
     }
 
     useEffect(() => {
-        // console.log(props.bulkUserEdit);
-        // console.log(props.bulkUsers);
+        // setEmail(false);
+        console.log(props?.bulkUserEditStatus);
+        console.log(props?.bulkUsers);
+        console.log(props?.groupId);
+        // console.log(props?.filterUserData);
+        let filterByUser = [];
+        if(props?.filterUserData !== undefined){
+            filterByUser = props?.filterUserData.filter((item)=>{
+                return props?.bulkUsers.some((ele)=>{
+                    return item._id === ele.id;
+                })
+            })
+        }
+        if(filterByUser){
+            console.log(filterByUser);
+            filterByUser.some((item)=>{
+                if(item.email === true || item.sms === true){
+                    console.log(item.email, item.sms);
+                    if(item.email){
+                        setEmail(item.email);
+                    }
+                    if(item.sms){
+                        setSms(item.sms);
+                    }
+                }else{
+                    setEmail(item.email);
+                    setSms(item.sms);
+                }
+            })
+        }
     }, []);
-    const allEditUserHandler = async () => {
-        // console.log(props.bulkUsers);
+    const BulkUserEditHandler = async () => {
+        console.log(props.bulkUsers);
         const allUserId = [];
         props.bulkUsers.forEach((item) => {
             console.log(item.id);
@@ -400,13 +415,15 @@ const UserAddField = (props) => {
                 "sms": sms,
                 "email": email
             }
-            console.log("Group id", "Payload", groupId, payload);
+            console.log("Group id", groupId, "Payload", payload);
             try {
                 setIsLoader(true);
                 const result = NotificationGroupServices.bulkUserEdit(groupId, payload);
                 if (result) {
+                    console.log(result);
                     setIsLoader(false);
-                    props.closeAddCustomModal(true);
+                    props.closeAddUserModal(true);
+                    props.bulkUserEdit(groupId, payload);
                     dispatch({
                         type: actionTypes.SHOW_MESSAGE,
                         message: 'Notification Group updated successfully.',
@@ -422,7 +439,7 @@ const UserAddField = (props) => {
                 })
             } finally {
                 setIsLoader(false);
-                props.closeAddCustomModal(true);
+                props.closeAddUserModal(true);
             }
         }
     }
@@ -433,18 +450,19 @@ const UserAddField = (props) => {
                 {isLoader ? <Loader /> : ''}
             </div>
             <div className={props.editUserData ? "modalBackdrop userAddModal editUserModel" : "modalBackdrop userAddModal"}>
-                <div className={props.bulkUserEdit ? "slickModalBody editSlick" : "slickModalBody"} >
+                <div className="modalBackdropBg" onClick={closeModal}></div>
+                <div className={props.bulkUserEditStatus ? "slickModalBody editSlick" : "slickModalBody"} >
                     <div className="slickModalHeader">
                         <button className="topCross" onClick={closeModal}><img src={crossTop} alt="" />
                         </button>
                         <div className="circleForIcon"><img src={custom_icon} alt="" /></div>
-                        <h3>{!editUserId && !props.bulkUserEdit ? "Add a Users" : "Edit users"}</h3>
-                        <p>{!editUserId && !props.bulkUserEdit ? "Please select an user to add in the group." : "Please edit the option to send notification."}</p>
+                        <h3>{!editUserId && !props.bulkUserEditStatus ? "Add a Users" : "Edit users"}</h3>
+                        <p>{!editUserId && !props.bulkUserEditStatus ? "Please select an user to add in the group." : "Please edit the option to send notification."}</p>
                     </div>
                     <div className="modalForm userAddModalForm">
 
                         <form>
-                            {!editUserId && !props.bulkUserEdit && (
+                            {!editUserId && !props.bulkUserEditStatus && (
                                 <div className="formControl">
                                     <label>Select a User</label>
                                     <Select
@@ -483,7 +501,7 @@ const UserAddField = (props) => {
                                 </div>
                             </div>
                             <div className="modalbtnHolder">
-                                {!editUserId && !props.bulkUserEdit && <>
+                                {!editUserId && !props.bulkUserEditStatus && <>
                                     <button type="submit" onClick={handelarUserSubmit}
                                         className="saveNnewBtn">
                                         <span>Save</span><img src={arrow_forward} alt="" /></button>
@@ -491,14 +509,13 @@ const UserAddField = (props) => {
                                         className="saveNnewBtn">
                                         <span>Save &amp; New</span><img src={arrow_forward} alt="" /></button></>
                                 }
-
                                 {
-                                    props.bulkUserEdit && !editUserId &&
-                                    <button type="reset" onClick={allEditUserHandler}
+                                    props.bulkUserEditStatus &&
+                                    <button type="reset" onClick={BulkUserEditHandler}
                                         className="saveNnewBtn">
                                         <span>Save</span><img src={arrow_forward} alt="" /></button>
                                 }
-                                {editUserId && !props.bulkUserEdit && <button type="reset" onClick={handleUserEdit}
+                                {editUserId && !props.bulkUserEditStatus && <button type="reset" onClick={handleUserEdit}
                                     className="saveNnewBtn"><span>Save </span><img src={arrow_forward} alt="" /></button>}
                             </div>
 

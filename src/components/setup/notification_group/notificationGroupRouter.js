@@ -4,7 +4,7 @@ import { Route } from "react-router-dom"
 
 import InnerLeftMenu from "../../shared/InnerLeftMenu";
 import DashboardFooter from "../../shared/FooterDashboard";
-import NotificationUserList from "./notification_user_list";
+import NotificationUserList from "./notificationUserList";
 
 const NotificationGroupRouter = (props) => {
     const renderID = (randomID) => {

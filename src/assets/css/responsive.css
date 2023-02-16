@@ -28,7 +28,50 @@
 	.customtableListing li{display: flex;}
 	.setUpPopUp{padding: 35px 35px 35px 70px;}
 }
-
+@media (max-width:1400px) {
+	.phasesRightSetUpPanel{
+		width: 330px;
+		padding: 40px 15px;
+	}
+	.dashInnerUI.notification {
+		width: calc(100% - 340px);
+	}
+	.dashInnerStructure{
+		padding: 30px 0 27px 17px;
+	}
+	.statusNameWraper .thumbImage{
+		margin-left: 5px;
+	}
+	.innerScroll{
+		margin-right: 8px;
+	}
+	.dashInnerUI > *{
+		padding-right: 0px;
+	}
+	.customtableListing.notificationGroupList .listHeading div:nth-child(1), .customtableListing.notificationGroupList li:not(.listHeading) div:nth-child(1){
+		flex: 0 0 30%;
+	}
+	.customtableListing li > div{
+		padding: 10px 5px;
+	}
+	.customtableListing.notificationGroupList .listHeading div:nth-child(5), .customtableListing.notificationGroupList li:not(.listHeading) div:nth-child(5){
+		flex: 0 0 5%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.customtableListing.notificationGroupList li .action{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.customtableListing li.listHeading > div{
+		padding: 10px 5px;
+	}
+	.userAddModalForm .modalbtnHolder {
+		margin-top: 20px;
+	}
+}
 @media (max-width:1280px) {
 	.widgetWrapers .widgetContent {
 		width: calc(100% - 5.5%);

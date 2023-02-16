@@ -1026,8 +1026,8 @@
 
 .dashboardInnerDetails .inDashboardHeader {
   font-size: 30px;
-  line-height: 46px;
-  margin-bottom: 22px;
+  line-height: 24px;
+  margin-bottom: 0px;
 }
 
 .automationShortInfoul:after {

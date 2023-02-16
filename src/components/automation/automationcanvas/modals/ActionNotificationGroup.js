@@ -20,7 +20,7 @@ const ActionNotificationGroup = (props) => {
                 <div className="nodeSettingModal notificationGroupTags">
                     <div className="formHead">
                         <div className="heading">
-                            <p>Notification Group Action Settings</p>
+                            <p>Notification Group Action Settings hhh</p>
                         </div>
                         <div className="closeButton">
                             <button onClick={props.closeFilterModal}>
@@ -29,6 +29,7 @@ const ActionNotificationGroup = (props) => {
                         </div>
                     </div>
                     <div className="formBody">
+                    
                         {isLoader ? <Loader/> : ''}
                         <div className="formBodyContainer">
                             <p className="title">Events</p>

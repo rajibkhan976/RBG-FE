@@ -156,17 +156,17 @@ const AutomationLists = (props) => {
         console.log(asl.data.success)
         if (asl.data.success) {
           let payloadArn = { id: elem._id, arn: asl.data.data, status: true };
-          let updateArn = await AutomationServices.updateArn(
+          await AutomationServices.updateArn(
             JSON.stringify(payloadArn)
           );
-          fetchAutomations();
+          await fetchAutomations();
           dispatch({
             type: actionTypes.SHOW_MESSAGE,
             message: "Automation status updated successfully",
             typeMessage: 'success'
           });
         } else {
-          fetchAutomations();
+          await fetchAutomations();
           dispatch({
             type: actionTypes.SHOW_MESSAGE,
             message: asl.data.message,
@@ -175,10 +175,10 @@ const AutomationLists = (props) => {
         }
       } else {
         let payloadArn = { id: elem._id };
-        let updateArn = await AutomationServices.deleteArn(
+        await AutomationServices.deleteArn(
           JSON.stringify(payloadArn)
         );
-        fetchAutomations();
+        await fetchAutomations();
         dispatch({
           type: actionTypes.SHOW_MESSAGE,
           message: "Automation status updated successfully",
@@ -186,7 +186,8 @@ const AutomationLists = (props) => {
         });
       }
     } catch (e) {
-      fetchAutomations();
+      console.log(e)
+      await fetchAutomations();
       dispatch({
         type: actionTypes.SHOW_MESSAGE,
         message: e.message,
@@ -391,7 +392,7 @@ const AutomationLists = (props) => {
             <div className="listHead">
               <div
                 className={
-                  sort?.sortBy == "name"
+                  sort?.sortBy === "name"
                     ? "listCell cellWidth_30 " + sort.sortType
                     : "listCell cellWidth_30"
                 }
@@ -399,22 +400,22 @@ const AutomationLists = (props) => {
               >
                 Automation Name <button className="shortTable"></button>
               </div>
-              <div
+             {/* <div
                 className={
-                  sort?.sortBy == "status"
+                  sort?.sortBy === "status"
                     ? "listCell cellWidth_10 " + sort.sortType
                     : "listCell cellWidth_10"
                 }
                 onClick={() => handleSort("status")}
               >
                 Status <button className="shortTable"></button>
-              </div>
+              </div>*/}
               {/* <div className="listCell cellWidth_15">
                 # of people completed <button className="shortTable"></button>
               </div> */}
               <div
                 className={
-                  sort?.sortBy == "user"
+                  sort?.sortBy === "user"
                     ? "listCell cellWidth_15 " + sort.sortType
                     : "listCell cellWidth_15"
                 }
@@ -424,7 +425,7 @@ const AutomationLists = (props) => {
               </div>
               <div
                 className={
-                  sort?.sortBy == "createdAt"
+                  sort?.sortBy === "createdAt"
                     ? "listCell cellWidth_15 " + sort.sortType
                     : "listCell cellWidth_15"
                 }
@@ -458,11 +459,11 @@ const AutomationLists = (props) => {
                         </p>
                         </NavLink>
                       </div>
-                      <div className="listCell cellWidth_10">
+                      {/*<div className="listCell cellWidth_10">
                         <p className={elem.status ? "greenAutomation" : "redAutomation"}>
                           {elem.status ? "Published" : "Draft"}
                         </p>
-                      </div>
+                      </div>*/}
                       {/* <div className="listCell cellWidth_15">
                         <div className="progressBar">
                           <div className="bar">
@@ -484,14 +485,18 @@ const AutomationLists = (props) => {
                         </div>
                       </div> */}
                       <div className="listCell cellWidth_15">
-                        <p>
-                          {elem.created_by_user.firstName +
-                            " " +
-                            elem.created_by_user.lastName}
-                        </p>
+                        <NavLink to={'./automation-details/' + elem._id}>
+                          <p>
+                            {elem.created_by_user.firstName +
+                              " " +
+                              elem.created_by_user.lastName}
+                          </p>
+                        </NavLink>
                       </div>
                       <div className="listCell cellWidth_15">
-                        <p>{moment(elem.createdAt).format("Do MMM YYYY")}</p>
+                        <NavLink to={'./automation-details/' + elem._id}>
+                          <p>{moment(elem.createdAt).format("Do MMM YYYY")}</p>
+                        </NavLink>
                       </div>
                       <div className="listCell cellWidth_10">
                         <label
@@ -617,14 +622,14 @@ const AutomationLists = (props) => {
           </div>
         </div>
         {automationData.count > 10 ? (
-          <Pagination
-            type="automation"
-            paginationData={paginationData}
-            dataCount={automationData.count}
-            callback={fetchAutomations}
-          />
+            <Pagination
+                type="automation"
+                paginationData={paginationData}
+                dataCount={automationData.count}
+                callback={fetchAutomations}
+            />
         ) : (
-          ""
+            ""
         )}
       </div>
     </>

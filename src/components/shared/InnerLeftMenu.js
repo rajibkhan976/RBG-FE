@@ -531,6 +531,18 @@ const InnerLeftMenu = (props) => {
                     </ul>
                   </NavLink>
                 </li> : ''}
+                <li>
+                <NavLink className="leftMenuInnerLink" to="/notification-group">
+                  <div className="indicator"></div>
+                  <div className="linkDetails setup">
+                    <p className="linkHeading">Notification Group</p>
+                    <p className="linkAbout">Display related notifications in a group</p>
+                    <button className="btn sidemenuarrow">
+                      <img src={SideMenuArrow} alt="" />
+                    </button>
+                  </div>
+                </NavLink>
+              </li>
             </ul>
             <div className="linkImg">
               <img src={undraw_personal_settings_kihd} alt="" />

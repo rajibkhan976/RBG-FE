@@ -1,14 +1,19 @@
-import React, {memo, useRef, useState} from 'react';
+import React, {memo, useEffect, useRef, useState} from 'react';
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
 import chevron_right_white_24dp from "../../../../assets/images/chevron_right_white_24dp.svg";
 import browse_keywords from "../../../../assets/images/icon_browse_keywords.svg";
+import {SMSServices} from "../../../../services/template/SMSServices";
+import * as actionTypes from "../../../../actions/types";
+import {useDispatch} from "react-redux";
 
 const Message = (props) => {
+    console.log("props", props)
     const messageTextbox = useRef(null)
     const [keywordSuggesion, setKeywordSuggesion] = useState(false);
     const [searchTagString, setSearchTagString] = useState("");
     const [smsTags, setSmsTags] = useState([]);
-    // ADD Keyword to Edit SMS template
+    const [body, setBody] = useState(props.body ? props.body : "" );
+    const dispatch = useDispatch();
     const addKeywordEdit = (e) => {
         e.preventDefault();
         let textBox = messageTextbox.current;
@@ -19,17 +24,46 @@ const Message = (props) => {
         if (cursorStart || cursorStart === "0") {
             textValue = textValue.substring(0, cursorStart) + " [" + e.target.textContent + "] " + textValue.substring(cursorEnd, textValue.length);
             startPosition = textValue.substring(0, cursorStart) + " [" + e.target.textContent + "] ";
-            console.log(cursorEnd, cursorStart, startPosition.length)
         } else {
             textValue = textValue + " [" + e.target.textContent + "] ";
             startPosition = textValue + " [" + e.target.textContent + "] ";
         }
-        props.handleBodyChangeTags(textValue);
+        setBody(textValue)
         setTimeout(() => {
             textBox.setSelectionRange(startPosition.length, startPosition.length);
         }, 100)
     };
-
+    const handleBodyChange = (event) => {
+      setBody(event.target.value);
+    }
+    const fetchTags = async () => {
+        try {
+            const result = await SMSServices.fetchSMSTags()
+            if (result) {
+                setSmsTags(result)
+            }
+        } catch (error) {
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: error.message,
+                typeMessage: 'error'
+            });
+        }
+    }
+    const saveMessage = () => {
+        if (body) {
+            props.saveMessage(body, props.triggerNodeId)
+        } else {
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: 'Please fill up message body.',
+                typeMessage: 'error'
+            });
+        }
+    }
+    useEffect(() => {
+        fetchTags()
+    }, [])
     return (
         <React.Fragment>
             <div className="automationModal filterModal">
@@ -51,9 +85,9 @@ const Message = (props) => {
                                 <div className="inputField">
                                     <label htmlFor="">Body</label>
                                     <div className="inFormField">
-                                        <textarea className={`${props.bodyError}`} name="messageBody"
-                                                  onChange={props.handleBodyChange}
-                                                  value={props.body} ref={messageTextbox}>{props.body}</textarea>
+                                        <textarea name="messageBody"
+                                                  onChange={handleBodyChange}
+                                                  value={body} ref={messageTextbox}>{body}</textarea>
                                         <button
                                             className="btn browseKeywords browseKeywordsSMS"
                                             style={{
@@ -75,32 +109,46 @@ const Message = (props) => {
                                                         <input
                                                             type="text"
                                                             onChange={(e) => setSearchTagString(e.target.value)}
+                                                            onKeyPress={e => {
+                                                                if (e.key === 'Enter') e.preventDefault();
+                                                            }}
                                                         />
                                                     </div>
                                                     <div className="cancelKeySearch">
                                                         <button
-                                                            onClick={() => {
-                                                                setKeywordSuggesion(false)
-                                                                setSearchTagString("")
-                                                            }}
+                                                            onClick={() => {setKeywordSuggesion(false)
+                                                                setSearchTagString("")}}
                                                         ></button>
                                                     </div>
                                                 </div>
                                                 <div className="keywordList">
                                                     <ul>
-                                                        {Object.keys(props.messageData).length ? (
-                                                            Object.keys(props.messageData).filter(el => el !== 'status' && el !== 'phase' && el !== 'tags' && el !== 'dadPhone' && el !== 'momPhone').filter(el => el.indexOf(searchTagString) >= 0).map((value, key) => (
-                                                                <li key={"keyField" + key}>
+                                                        {smsTags
+                                                            .filter(
+                                                                (smsTag) =>
+                                                                    smsTag.id.indexOf(searchTagString) >= 0
+                                                                    && smsTag.id !== "tags"
+                                                                    && smsTag.id !== "phone"
+                                                                    && smsTag.id !== "mobile"
+                                                                    && smsTag.id !== "momCellPhone"
+                                                                    && smsTag.id !== "dadCellPhone"
+                                                                    && smsTag.id !== "createdBy"
+                                                                    && smsTag.id !== "createdAt"
+                                                                    && smsTag.id !== "statusName"
+                                                                    && smsTag.id !== "phaseName"
+                                                                    && smsTag.id !== "contactType"
+                                                            )
+                                                            .map((tagItem, i) => (
+                                                                <li key={"keyField" + i}>
                                                                     <button
                                                                         onClick={(e) =>
-                                                                            addKeywordEdit(e, value)
+                                                                            addKeywordEdit(e, tagItem.id)
                                                                         }
                                                                     >
-                                                                        {value}
+                                                                        {tagItem.id}
                                                                     </button>
                                                                 </li>
-                                                            ))
-                                                        ) : ""}
+                                                            ))}
                                                     </ul>
                                                 </div>
                                             </div>
@@ -109,7 +157,7 @@ const Message = (props) => {
                                 </div>
                             </div>
                             <div className="saveButton">
-                                <button onClick={props.saveMessage}>Save <img src={chevron_right_white_24dp} alt="" /></button>
+                                <button onClick={saveMessage}>Save <img src={chevron_right_white_24dp} alt="" /></button>
                             </div>
                         </div>
                     </div>

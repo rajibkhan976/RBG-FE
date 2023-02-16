@@ -42,7 +42,10 @@ const Email = (props) => {
             setIsLoader(true);
             const result = await EmailServices.fetchEmailTemplateList(pageId, queryParams);
             if (result) {
-                let op = []
+                let op = [{value: "", label: "Select an Email Template", data: {"_id": "",
+                        "email": "",
+                        "subject": "",
+                        "template": ""}}]
                 result.templates.map(el => {
                     op.push({value: el._id, label: el.title, data: el})
                 });
@@ -84,7 +87,7 @@ const Email = (props) => {
     const emailTemplateChangeHandler = (e) => {
         e.data._id = "";
         setEmailData(e.data);
-        setChangedTemplate(utils.decodeHTML(e.data.template));
+        setChangedTemplate(utils.decodeHTML(e.data?.template || ""));
         setSelectedEmailTemplate(e);
     }
     const emailBodyHandler = (email) => {
@@ -254,26 +257,6 @@ const Email = (props) => {
                                                                 </li>
                                                             ))}
                                                     </ul>
-                                                </div>
-                                                <div className=''>
-                                                    <div className="searchKeyword">
-                                                        <div className="searchKeyBox">
-                                                            <input
-                                                                type="text"
-                                                                // onChange={(e) => setSearchTagString(e.target.value)}
-                                                                onKeyPress={e => {
-                                                                    if (e.key === 'Enter') e.preventDefault();
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        <div className="cancelKeySearch">
-                                                            <button
-                                                                onClick={() => {
-                                                                    setSubjectKeywordSuggesion(false)
-                                                                }}
-                                                            ></button>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         )}
