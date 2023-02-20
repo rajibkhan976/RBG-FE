@@ -9,6 +9,7 @@ import icon_browse_keywords from "../../../assets/images/icon_browse_keywords.sv
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import { ContactService } from "../../../services/contact/ContactServices";
 import { utils } from "../../../helpers";
+import MergeTag from "../../shared/MergeTag";
 
 
 
@@ -250,7 +251,7 @@ const BulkEmail = (props) => {
         };
         // console.log(payload);
         if (emailData.subject === "") {
-            setEmailValidation(
+            setEmailValidation( 
                 {
                     ...emailValidation,
                     subject: "Please enter an email subject",
@@ -437,76 +438,9 @@ const BulkEmail = (props) => {
                                     maxLength={250}
                                     placeholder="Enter an email subject"
                                 />
-                                <button className="btn browseKeywords"
-                                    type='button'
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setKeywordSuggesion(true);
-                                    }}
-                                >
-                                    <img src={icon_browse_keywords} alt="keywords" />
-                                </button>
-                                {keywordSuggesion && (
-                                    <div className="keywordBox" ref={tagRef}>
-                                        <div className="searchKeyword">
-                                            <div className="searchKeyBox">
-                                                <input
-                                                    type="text"
-                                                    onChange={(e) => setSearchTagString(e.target.value)}
-                                                    onKeyPress={e => {
-                                                        if (e.key === 'Enter') e.preventDefault();
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="cancelKeySearch">
-                                                <button
-                                                    onClick={() => {
-                                                        setKeywordSuggesion(false)
-                                                        setSearchTagString("")
-                                                    }}
-                                                ></button>
-                                            </div>
-                                        </div>
-                                        <div className="keywordList">
-                                            <ul>
-                                                {emailTags
-                                                    .filter(
-                                                        (smsTag) =>
-                                                            smsTag.id.indexOf(searchTagString) >= 0
-                                                            && smsTag.id !== "tags"
-                                                            && smsTag.id !== "phone"
-                                                            && smsTag.id !== "mobile"
-                                                            && smsTag.id !== "momCellPhone"
-                                                            && smsTag.id !== "dadCellPhone"
-                                                            && smsTag.id !== "createdBy"
-                                                            && smsTag.id !== "createdAt"
-                                                            && smsTag.id !== "statusName"
-                                                            && smsTag.id !== "phaseName"
-                                                            && smsTag.id !== "contactType"
-                                                            && smsTag.id !== "sourceDetail"
-                                                            && smsTag.id !== "ageGroup"
-                                                            && smsTag.id !== "onTrial"
-                                                    )
-                                                    .map((tagItem, i) => (
-                                                        <li key={"keyField" + i}>
-                                                            <button
-                                                                onClick={(e) =>
-                                                                    addKeywordEmail(e, tagItem.id)
-                                                                }
-                                                            >
-                                                                {tagItem.id}
-                                                            </button>
-                                                        </li>
-                                                    ))}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                )}
-
-
+                                <MergeTag addfeild={(e,field)=> addKeywordEmail(e,field)}/>
                             </div>
                             <div className="errorMsg">{emailValidation.subject}</div>
-
                         </div>
                         <div className="slice">
                             <label className="bold">Email Body</label>
@@ -522,15 +456,17 @@ const BulkEmail = (props) => {
                                 {/* <div className="errorMsg">{changedTemplate === "" && firstTimeErrorMsg  ? "Write some message" : ""}</div> */}
                             </div>
                         </div>
-                        <div class="slice text-center">
-                            <button class="cmnBtn" onClick={sendBulkEmailHandler}
-                                disabled={emailValidation === undefined ? "disabled" : ""}
-                            >Send email <img src={arrow_forward} alt="" /></button>
+                                
+                        <div className="slice call_modal_footer">
+                            <button type="button" class="cancel"
+                                onClick={() => closeModal()}>
+                                Cancel 
+                            </button>
+                            <button className="cmnBtn"  onClick={sendBulkEmailHandler}>
+                                Send Email <img src={arrow_forward} alt="" />
+                            </button>
                         </div>
                     </div>
-                    {/* } */}
-                    {/* <div className="showSetupMsg">{ ? "" : ""}</div> */}
-
                 </div>
             </div>
         </>

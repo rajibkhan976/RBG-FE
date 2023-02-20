@@ -15692,9 +15692,9 @@ td:has(a.hasAttendance) {
 .bulkSmsModel.sideMenuInner .sideMenuHeader h3{
   margin-top: 0px;
 }
-.bulkSmsModel.sideMenuInner .cmnBtn{
-  margin-top: 20;
-}
+/* .bulkSmsModel.sideMenuInner .cmnBtn{
+  margin-top: 54px;
+} */
 .bulkSmsModel.sideMenuInner .cmnBtn img{
   margin-left: 8px;
   padding-right: 0px;
@@ -15741,7 +15741,7 @@ td:has(a.hasAttendance) {
   margin-right: 10px;
 }
 .bulkSmsModel.sideMenuInner .actions{
-  position: absolute !important;
+  /* position: absolute !important; */
   bottom: 0px;
   display: flex;
   align-items: center;
@@ -16012,4 +16012,19 @@ notification group design fixing
 
 .notificationEmail .notiGroupSelect.loading{   
     background: url("../images/loading.gif") no-repeat 95% center;
+}
+.nodeSettingModal .formBodyContainer {
+  max-height: 75vh;
+  padding: 20px 30px;
+}
+
+.nodeSettingModal .formBody {
+    background: #fff;
+    padding: 0;
+}
+
+.nodeSettingModal {
+  top: 45%;
+  border-radius: 12px;
+  overflow: hidden;
 }

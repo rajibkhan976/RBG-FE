@@ -150,7 +150,7 @@ useEffect(() => {
             <img src={arrowDown} />
           </button>
         </div>       
-        <div className="editFormBody">
+        <div className={(smsPanel || callPanel || emailPanel) ? "editFormBody active":"editFormBody"}>
             {smsPanel && 
               <>         
                <Sms 

@@ -128,3 +128,6 @@
 
 # Mailgun V1.0.0
     - Incoming and outgoing mail using mailgun
+
+# QI phase 2 V1.0.0
+    - QI sprint 10 tasks

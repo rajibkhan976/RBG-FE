@@ -281,19 +281,34 @@ const goToListBottom = (e) =>{
   comLogRef.current.scrollTop = comLogRef.current.scrollHeight - comLogRef.current.clientHeight ;
 }
 
-// function badStringReplace (tempData, titleData) {
-//   //var newdata = tempData.slice(0, 280 - titleData);
-//   var newdata = "<p>golomolu</p"
-//   const lastCh = newdata.charAt(newdata.length - 1);
-//   //var setOfShit = ["<","</","</p","</h1","</h", "</ul", "</u","</ol", "</o", "</li", "</l","</ul"];
-//   if(lastCh !== ">"){
-//    var newdata1 = newdata.split("<");
-//        newdata1.pop();
-//     console.log(newdata1).join(" ");
+function badStringReplace (tempData, titleData) {
 
-//   }
-// }
-// badStringReplace();
+  var newdata = tempData.slice(0, 280 - titleData.length);
+  //var newdata = "<p>golomolu</p"
+  //var setOfNonComplete = ["<","</","</p","</h1","</h", "</ul", "</u","</ol", "</o", "</li", "</l","</ul"];
+  const lastCh = newdata.charAt(newdata.length - 1);
+  if(lastCh !== ">"){
+    if(lastCh === "p" || lastCh === "/" || lastCh === "<" || lastCh === "1" || lastCh === "h" || lastCh === "n" || lastCh === "a"|| lastCh === "s"){
+      var newdata1 = newdata.split("<");
+      newdata1.pop();
+      newdata1.unshift("<");
+      var newdata2 = newdata1.join("");
+      console.log("newdata", newdata,"newdata1",newdata1,"newdata2",newdata2);
+    
+      return newdata2;
+    }else{
+      return newdata;    
+    }
+  }else{
+    return newdata;
+  }
+}
+  //badStringReplace();
+  //var gogo = document.getElementsByClassName("emailBody").length;
+
+
+
+
 
 const areaOfText = useRef(contactLogData.slice(0).reverse().map(React.createRef));
 
@@ -420,7 +435,10 @@ useLayoutEffect(() => {
                   elem.log_type === "EMAIL" ?
                   <>
                   <h3>Sub: {elem.subject}</h3>
-                  <div className="emailBody" dangerouslySetInnerHTML={{__html: elem?.template.trim().slice(0, 280 - elem?.subject.length)}}>
+                  <div className="emailBody" dangerouslySetInnerHTML={{__html: 
+                    badStringReplace(elem?.template, elem?.subject)
+                    //elem?.template.trim().slice(0, 280 - elem?.subject.length)
+                  }}>
                    {/* {utils.decodeHTML(elem.template)} */ }
                   </div>
                   </>
@@ -429,8 +447,8 @@ useLayoutEffect(() => {
                 }
                 </div>
                 {
-               ((elem.template) ? utils.decodeHTML(elem.template).trim().length : "" ) +
-               ((elem.subject) ? elem.subject.trim().length : "") > 264 ? <button onClick={()=>showBigMailStatic(elem, elem.log_type)} className="noBg">read more</button> :
+               ((elem.template) ? utils.decodeHTML(elem.template).length : "" ) +
+               ((elem.subject) ? elem.subject.trim().length : "") > 267 ? <button onClick={()=>showBigMailStatic(elem, elem.log_type)} className="noBg">read more</button> :
                elem?.message && elem.message.trim().length > 280 ? <button onClick={()=>showBigMailStatic(elem.message, elem.log_type)}  className="noBg">read more</button> :
                ""
 
