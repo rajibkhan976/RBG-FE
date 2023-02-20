@@ -45,6 +45,7 @@ const Contact = (props) => {
         setBulkSmsOpenModal(false);
         setBulkEmailOpenModal(false);
         setBulkAutomationOpenModal(false);
+        setAllSelect(false);
     }
     
     const openUpdate = () => {
@@ -68,7 +69,12 @@ const Contact = (props) => {
         setFilterApply(false);
     }
     const selectAllCheckbox = (flag) => {
-        setAllSelect(flag);
+        if(flag){
+            setAllSelect(flag);
+        }
+        else{
+            setAllSelect(false);
+        }
     }
     const selectedContactsFn = (contacts) => {
         if (Array.isArray(contacts)) {
@@ -119,7 +125,7 @@ const Contact = (props) => {
         } 
     };
     useEffect(()=>{
-        fetchEmail();
+        // fetchEmail();
         // fetchEmailStatus();
         // console.log("device in contact", props.device);
     },[])
@@ -141,9 +147,9 @@ const Contact = (props) => {
     }, [unCheckAllBoxs])
     const singleContactStatusFunc = (data)=>{
         console.log("contact js data", data);
-        if(data.length === 1){
+        if(data?.length === 1){
            setNumberOfContact(true)
-        }else if(data.length === 0){
+        }else if(data?.length === 0){
             setNumberOfContact(false);
         }
     }
@@ -206,7 +212,10 @@ const Contact = (props) => {
             {bulkSmsOpenModal && "status" in props.device && props.device?.status() == 'ready' ?
                 <BulkSms hideModal={() => {hideModal()}} selectedContacts={selectedContacts} selectAllCheckbox={allSelect} unCheckAll={()=>{unCheckAll()}} numberOfContact={numberOfContact} />:""
             }
-            {bulkEmailOpenModal && emailSetupData ?
+            {/* {bulkEmailOpenModal && emailSetupData ?
+                <BulkEmail hideModal={() => {hideModal()}} selectedContacts={selectedContacts} selectAllCheckbox={allSelect} unCheckAll={()=>{unCheckAll()}} numberOfContact={numberOfContact} /> : ""
+            } */}
+            {bulkEmailOpenModal ?
                 <BulkEmail hideModal={() => {hideModal()}} selectedContacts={selectedContacts} selectAllCheckbox={allSelect} unCheckAll={()=>{unCheckAll()}} numberOfContact={numberOfContact} /> : ""
             }
             {bulkAutomationOpenModal &&

@@ -262,20 +262,20 @@ const EmailModal = (props) => {
         console.log(tempSelected);
     }
 
-    // const deselectingTemplate = (e) =>{
-    //     setEmailData({
-    //         ...emailData,
-    //         "subject": "",
-    //         "template": "",
-    //     });
-    //     setTempSelected(false); 
-    //     setEmailDatasubject("");  
-    //     setTemplateToogle(false);
-    //     setChangedTemplate("");
-    //     console.log("Edited email body: ", emailData.template);
-    //     console.log("changedTemplate", changedTemplate);
+    const deselectingTemplate = (e) =>{
+        setEmailData({
+            ...emailData,
+            "subject": "",
+            "template": "",
+        });
+        setTempSelected(false); 
+        setEmailDatasubject("");  
+        setTemplateToogle(false);
+        setChangedTemplate("");
+        console.log("Edited email body: ", emailData.template);
+        console.log("changedTemplate", changedTemplate);
 
-    // }
+    }
     
     const sendGlobalEmail = (e) => {
         console.log("Edited email body: ", emailData.template);
@@ -503,7 +503,7 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                     </button>
                     <h3>Send Email</h3>
                     <p>Enter email id</p>
-                    <div className="showSetupMsg">{!emailSetupData ? "You can't send mail as the email setup is not done" :""}</div>
+                    {/* <div className="showSetupMsg">{!emailSetupData ? "You can't send mail as the email setup is not done" :""}</div> */}
                     <div className={validateMsg.email ? "numberForCall error" : "numberForCall"}>
                         <input type="email"
                                placeholder="Eg. richardnile@rbg.com" className="emailInput"
@@ -624,6 +624,7 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                           >
                                               Select template
                                         </li> */}
+                                        <li onClick={(e) => deselectingTemplate()}>Select template</li>
                                         {
                                             (emailTempData.templates &&
                                             emailTempData.templates.length > 0 ) ?
@@ -731,10 +732,11 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                 <div className="errorMsg">{validateMsg.template}</div>
                             </div>
                         </div>
-                        <div className="slice text-center">
-                            <button className="cmnBtn" onClick={sendGlobalEmail}
-                                    disabled={!emailSetupData ? "disabled":""}
-                            >Send Email <img src={arrow_forward} alt=""/></button>
+                        <div class="slice text-center">
+                        {/* <button class="cmnBtn" onClick={sendGlobalEmail}
+                               disabled={!emailSetupData ? "disabled":""}
+                            >Send Email <img src={arrow_forward} alt=""/></button> */}
+                            <button class="cmnBtn" onClick={sendGlobalEmail}>Send Email <img src={arrow_forward} alt=""/></button>
                         </div>
                     </div>
                 </div>

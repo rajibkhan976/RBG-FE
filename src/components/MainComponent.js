@@ -667,7 +667,11 @@ const MainComponent = () => {
                                 <ContactRoutes toggleLeftSubMenu={toggleLeftSubMenu}
                                     toggleCreate={(e) => toggleCreate(e)} device={device} />
                             </Route>
-                            <Route exact path={["/call-setup", "/sms-setup", "/email-setup"]}>
+                            {/* <Route exact path={["/call-setup", "/sms-setup", "/email-setup"]}>
+                                <CommunicationRoutes toggleLeftSubMenu={toggleLeftSubMenu}
+                                    toggleCreate={(e) => toggleCreate(e)}></CommunicationRoutes>
+                            </Route> */}
+                            <Route exact path={["/call-setup", "/sms-setup"]}>
                                 <CommunicationRoutes toggleLeftSubMenu={toggleLeftSubMenu}
                                     toggleCreate={(e) => toggleCreate(e)}></CommunicationRoutes>
                             </Route>

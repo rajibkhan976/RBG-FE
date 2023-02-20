@@ -8,7 +8,7 @@ import arrow_forward from "../../../../../assets/images/arrow_forward.svg";
 
 import { SMSServices } from "../../../../../services/template/SMSServices";
 
-import {EmailServices} from "../../../../../services/setup/EmailServices";
+
 import * as actionTypes from "../../../../../actions/types";
 import {useDispatch} from "react-redux";
 import { preventDefault } from "@fullcalendar/react";
@@ -418,6 +418,9 @@ const EditorComponent = (props) => {
                                                     && smsTag.id !== "statusName"
                                                     && smsTag.id !== "phaseName"
                                                     && smsTag.id !== "contactType"
+                                                    && smsTag.id !== "ageGroup"
+                                                    && smsTag.id !== "sourceDetail"
+                                                    && smsTag.id !== "onTrial"
                                                 )
                                                 .map((tagItem, i) => (
                                                     <li key={"keyField" + i}>

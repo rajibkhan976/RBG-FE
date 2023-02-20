@@ -317,6 +317,17 @@ function useOutsideAlerter(ref) {
   const keywordRef = useRef(null);
     
   useOutsideAlerter(keywordRef);
+  const deselectingTemplate = ()=>{
+    setEmailData({
+        ...emailData,
+        "subject": "",
+        "template": "",
+    });
+    setTempSelected(false);
+    setEmailDatasubject("");
+    setTemplateToogle(false);
+    setChangedTemplate("");
+  }
 
   return (
    
@@ -333,6 +344,7 @@ function useOutsideAlerter(ref) {
                                 </div>
                                 {templateToogle &&
                                     <ul className="showTemplateName">
+                                        <li onClick={(e) => deselectingTemplate()}>Select template</li>
                                         {
                                             (emailTempData.templates &&
                                             emailTempData.templates.length > 0 ) ?
