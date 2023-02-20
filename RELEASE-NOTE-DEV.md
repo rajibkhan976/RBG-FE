@@ -131,3 +131,6 @@
 
 # QI phase 2 V1.0.0
     - QI sprint 10 tasks
+
+# QI phase 2 V1.0.1
+    - QI sprint 10 tasks Issue fixing  

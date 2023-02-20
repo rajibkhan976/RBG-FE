@@ -29,9 +29,9 @@ const MergeTag = (props) => {
     }
   }
  const addingMergeField = (e,item) =>{
+  item = item?.alias || item.id;
   e.preventDefault();
   item = " [" + item + "] "
-
   props.addfeild(e,item)
  }
   useEffect(() => {
@@ -63,12 +63,11 @@ const MergeTag = (props) => {
                         <li key={"keyField" + i}>
                             <button
                                  onClick={(e) =>
-                                  addingMergeField(e, tagItem.alias !== "" ? tagItem.alias : tagItem.id )
+                                  addingMergeField(e, tagItem)
                                 }
                             >
                                 {tagItem.id}
                             </button>
-                            
                         </li>
                     ))}
             </ul>
