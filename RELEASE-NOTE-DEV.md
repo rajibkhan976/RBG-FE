@@ -125,3 +125,6 @@
 
 # Automation V3.0.1
     - Automation Fixes
+
+# Mailgun V1.0.0
+    - Incoming and outgoing mail using mailgun

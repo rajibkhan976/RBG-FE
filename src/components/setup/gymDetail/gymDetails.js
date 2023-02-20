@@ -51,6 +51,7 @@ const GymDetails = (props) => {
   const [copiedText, setCopiedText] = useState(false);
   const [copiedurl, setCopiedurl] = useState(false);
   const [hasTimezone, setHasTimezone] = useState(false);
+  const [getGymData, setGetGymData] = useState([]);
   const [validateMsg, setValidateMsg] = useState({
     name: "",
     contactPerson: "",
@@ -79,6 +80,11 @@ const GymDetails = (props) => {
       setIsLoader(true);
       const gymData = await GymDetailsServices.fetchGymDetail();
       console.log("Gym Details", gymData);
+      setGetGymData({
+        ...getGymData,
+        contactEmail: gymData?.gymDetails?.contactEmail,
+        timeZone: gymData?.gymDetails?.timezone
+      })
       // gymData.gymDetails.timezone = (gymData?.timezone) ? gymData?.timezone : detectedTimezone?.zoneName;
       // gymData.gymDetails.gmtOffset = (gymData?.gmtOffset) ? gymData?.gmtOffset : detectedTimezone?.gmtOffset;
       setGymData({...gymData.gymDetails, 
@@ -173,15 +179,30 @@ const GymDetails = (props) => {
       }
     );
   };
-
   const editGymDetailsHandler = (event) => {
     event.preventDefault();
     setShowEditForm(true);
   }
   const closeGymDetailsHandler = (event) => {
     event.preventDefault();
-    window.location.reload(false);
+    // window.location.reload(false);
     setShowEditForm(false);
+    console.log("After close gym data", getGymData);
+    
+    setGymData({
+      ...gymData,
+      contactEmail: getGymData.contactEmail,
+      // timeZone: getGymData.timeZone,
+    })
+    // setHasTimezone((gymData.gymDetails?.timezone)?true:false);
+    if(getGymData?.timeZone) {
+      setGymData(prevState => (
+        {...prevState, 
+          timezone: getGymData?.timeZone, 
+          gmtOffset: detectedTimezone?.gmtOffset}
+      )
+    );
+    }
   }
 
   const handleImageUpload = (event) => {

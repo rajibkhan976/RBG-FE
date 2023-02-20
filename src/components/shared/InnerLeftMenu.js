@@ -325,13 +325,22 @@ const InnerLeftMenu = (props) => {
                     </button>
                   </div>
                   <ul className="sideSubMenu">
-                  {loggedInUser && ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in') ||
+                  {/* {loggedInUser && ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in') ||
                                      (loggedInUser.isOrganizationOwner && loggedInUser.isOrganizationOwner === true))
                    ?<li>
                       <NavLink to="/email-setup" activeClassName="active">
                         Email
                       </NavLink>
-                    </li> : ""}
+                    </li> : ""} */}
+
+                    {/* {loggedInUser && ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in')) ?
+                    <li>
+                      <NavLink to="/email-setup" activeClassName="active">
+                        Email
+                      </NavLink>
+                    </li> : ""
+                    } */}
+
                     <li>
                       <NavLink to="/sms-setup" activeClassName="active">
                         SMS
