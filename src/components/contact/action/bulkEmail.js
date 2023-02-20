@@ -291,6 +291,10 @@ const BulkEmail = (props) => {
                             message: "Bulk email send successfully",
                             typeMessage: 'success'
                         });
+                        payload= {
+                            all : false,
+                        }
+                        console.log(payload);
                     }
                     else if (props.numberOfContact) {
                         dispatch({
@@ -378,10 +382,11 @@ const BulkEmail = (props) => {
 
     return (
         <>
-            {isLoader ? <Loader /> : ""}
+            
             <div className="sideMenuOuter" id="import_Modal">
                 <div className="dialogBg" onClick={() => closeModal()}></div>
                 <div className="sideMenuInner bulkSmsModel bulkEmailModel">
+                    {isLoader ? <Loader /> : ""}
                     <div className="sideMenuHeader">
                         {props.numberOfContact && <h3>Send Email</h3>}
                         {!props.numberOfContact && <h3>Send Bulk Email</h3>}

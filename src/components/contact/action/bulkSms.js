@@ -353,6 +353,10 @@ const BulkSms = (props) => {
               message: "Bulk SMS send successfully",
               typeMessage: 'success'
             });
+            payload = {
+              all : false,
+            }
+            console.log("After payload:", payload);
           }
           else if(props.numberOfContact){
             dispatch({
@@ -415,10 +419,11 @@ const BulkSms = (props) => {
 
   return (
     <>
-      {isLoader ? <Loader /> : ""}
+      
       <div className="sideMenuOuter" id="import_Modal">
         <div className="dialogBg" onClick={() => closeModal()}></div>
         <div className="sideMenuInner bulkSmsModel">
+          {isLoader ? <Loader /> : ""}
           <div className="sideMenuHeader">
             {props.numberOfContact && <h3>Send SMS</h3>}
             {!props.numberOfContact && <h3>Send Bulk SMS</h3>}

@@ -79,7 +79,7 @@ const Setup = (props) => {
                   </div>
                 </div>
                 <ul className="secondListing">
-                  {loggedInUser && ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in') ||
+                {/* {loggedInUser && ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in') ||
                       (loggedInUser.isOrganizationOwner && loggedInUser.isOrganizationOwner === true)) ?
                       <li>
                     <NavLink
@@ -88,7 +88,16 @@ const Setup = (props) => {
                     >
                       Email
                     </NavLink>
-                  </li> :""}
+                  </li> :""} */}
+                  {/* {loggedInUser && ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in'))?
+                      <li>
+                    <NavLink
+                        to="/email-setup"
+                        onClick={(e) => props.clickedLink(e)}
+                    >
+                      Email
+                    </NavLink>
+                  </li> :""} */}
                   <li>
                     <NavLink
                         to="/sms-setup"
