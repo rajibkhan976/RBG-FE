@@ -242,13 +242,13 @@ button.skytext{
   background: transparent;
 }
 .editingPanel{
-  position: absolute;
-  bottom: 70px;
-  left: 0;
-  width: 100%;
-  background: #FFFFFF;
-  max-height: 75%;
-  overflow: auto;
+    position: absolute;
+    bottom: 70px;
+    left: 0;
+    width: 100%;
+    background: #FFFFFF;
+    max-height: 80%;
+    overflow: auto;
 }
 .editingPanel::-webkit-scrollbar {
   width: 6px;
@@ -551,7 +551,7 @@ button.skytext{
 .contactModal .tabBarArea .loaderOuter {
   position: absolute;
   /* min-height: 100vh; */
-  height: 710px;
+  height: 850px;
 }
 
 .editingPanel .keywordBox{
@@ -627,4 +627,9 @@ button.skytext{
   left: 16px;
   margin-left: -5px;
   border-color: transparent transparent #fff transparent;
+}
+
+
+.globalSms .editorEmailShell{
+  display: block;
 }

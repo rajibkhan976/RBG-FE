@@ -12,6 +12,7 @@ import { utils } from "../../../../helpers";
 import {useDispatch} from "react-redux";
 import {EmailServices} from "../../../../services/setup/EmailServices";
 import * as actionTypes from "../../../../actions/types";
+import MergeTag from "../../../shared/MergeTag";
 
 const CreateTemplate = (props) => {
     const dispatch = useDispatch();
@@ -52,12 +53,13 @@ const CreateTemplate = (props) => {
           setIsLoader(false);
         }
     };
-    const addKeywordEmail = (e) => {
+    const addKeywordEmail = (e, field) => {
         e.preventDefault()
         let subjectInput = newEmailTemplateSubject.current;
         let cursorStart = subjectInput.selectionStart;
         let cursorEnd = subjectInput.selectionEnd;
         let textValue = subjectInput.value;
+        let vall = field;
     
         try {
             if (cursorStart || cursorStart == "0"
@@ -66,9 +68,7 @@ const CreateTemplate = (props) => {
                     if(emailData.subject.length < 250){
                         subjectInput.value =
                         subjectInput.value.substring(0, cursorStart) +
-                        " [" +
-                        e.target.textContent +
-                        "] " +
+                        vall +
                         subjectInput.value.substring(cursorEnd, textValue.length);
 
                     // setNewMail({
@@ -81,9 +81,7 @@ const CreateTemplate = (props) => {
                     })
                     startToText =
                         subjectInput.value.substring(0, cursorStart) +
-                        "[" +
-                        e.target.textContent +
-                        "]";
+                        vall;
 
                     subjectInput.focus();
                     subjectInput.setSelectionRange(
@@ -96,7 +94,7 @@ const CreateTemplate = (props) => {
              // console.log(subjectInput, cursorStart, cursorEnd, textValue);
             }
             else {
-              subjectInput.value = subjectInput.value + " [" + e.target.textContent + "] ";
+              subjectInput.value = subjectInput.value + vall;
     
               // setNewMail({
               //   ...newMail,
@@ -370,7 +368,9 @@ const CreateTemplate = (props) => {
                                         value={emailData.subject}
                                         maxLength={250}
                                     />
-                                    <button
+                                    <MergeTag addfeild={(e,field)=> addKeywordEmail(e,field)}/>    
+
+                                    {/* <button
                                         className="btn browseKeywords"
                                         type='button'
                                         style={{
@@ -383,8 +383,8 @@ const CreateTemplate = (props) => {
                                         }}
                                     >
                                         <img src={browse_keywords} alt="keywords" />
-                                    </button>
-                                    {keywordSuggesionCreateSub ? 
+                                    </button> */}
+                                    {/* {keywordSuggesionCreateSub ? 
                                      //keyWordList() 
                                         <div className="keywordBox" ref={keywordRef}>
                                             <div className="searchKeyword">
@@ -438,7 +438,7 @@ const CreateTemplate = (props) => {
                                                 </ul>
                                             </div>
                                         </div>
-                                    : ""}
+                                    : ""} */}
                                 </div>
                                 <div className="errorMsg">{validateMsg.subject}</div>
                             </div>

@@ -10,6 +10,7 @@ import {useDispatch} from "react-redux";
 import * as actionTypes from "../../../../actions/types";
 import {SMSServices} from "../../../../services/template/SMSServices";
 import {utils} from "../../../../helpers";
+import MergeTag from "../../../shared/MergeTag";
 
 
 const Email = (props) => {
@@ -200,7 +201,7 @@ const Email = (props) => {
                                     <div className="cmnFormField globalSms">
                                         <input className="subject" type="text" placeholder="Enter email subject" id="newEmailTemplateSubject" onChange={handleEmailSubject} value={emailData.subject}
                                                ref={newEmailTemplateSubject} />
-                                        <button className="btn browseKeywords"
+                                        {/* <button className="btn browseKeywords"
                                                 type='button'
                                                 onClick={(e) => {
                                                     e.preventDefault();
@@ -208,8 +209,8 @@ const Email = (props) => {
                                                 }}
                                         >
                                             <img src={icon_browse_keywords} alt="keywords" />
-                                        </button>
-                                        {subjectKeywordSuggesion && (
+                                        </button> */}
+                                        {/* {subjectKeywordSuggesion && (
                                             <div className="keywordBox">
                                                 <div className="searchKeyword">
                                                     <div className="searchKeyBox">
@@ -259,7 +260,9 @@ const Email = (props) => {
                                                     </ul>
                                                 </div>
                                             </div>
-                                        )}
+                                        )} */}
+                                         <MergeTag addfeild={(e,field)=> addKeywordEmail(e,field)}/>
+
                                     </div>
                                 </div>
                                 <div className="inputField emailBodyInputField">

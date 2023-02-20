@@ -82,7 +82,7 @@ const AddAppointmentModal = (props) => {
     }
 
     if (
-      appointmentData.fromTime.trim() === "" 
+      appointmentData.fromTime.trim() === ""
       // ||
       // parseFloat(appointmentData.fromTime.split(" ")[0].replace(":", "")) >=
       //   parseFloat(appointmentData.toTime.split(" ")[0].replace(":", ""))
@@ -91,7 +91,7 @@ const AddAppointmentModal = (props) => {
     }
 
     if (
-      appointmentData.toTime.trim() === "" 
+      appointmentData.toTime.trim() === ""
       // ||
       // parseFloat(appointmentData.toTime.split(" ")[0].replace(":", "")) <=
       //   parseFloat(appointmentData.fromTime.split(" ")[0].replace(":", ""))
@@ -291,29 +291,31 @@ const AddAppointmentModal = (props) => {
   return (
     <div className="modalCreateAppointment modalBackdrop">
       <div class="modalBackdropBg" onClick={() => props.closeModal(false)}></div>
-      <div className="slickModalBody setAppointment">
-        <div className="modalForm appointmentForm setappointment">
-          <div className="slickModalHeader appointmentModalHeads">
-            <button
-              className="topCross setApp"
-              onClick={() => props.closeModal(false)}
-            >
-              <img src={cross} alt="" />
-            </button>
+      <div className="slickModalBody ">
+         <div className="slickModalHeader">
+            <h3>Set an Appointment</h3>
+              <button
+                className="topCross"
+                onClick={() => props.closeModal(false)}
+              >
+                <img src={cross} alt="" />
+              </button>
           </div>
+        <div className="modalForm auto">
+         
           <form
             method="post"
             className="dsiplay"
             onSubmit={(e) => submitAppointmentForm(e)}
           >
             {isLoader && <Loader />}
-            <div className="innerModalHeader">
+            {/* <div className="innerModalHeader">
               <div className="circleForIcon">
                 <img src={appointmentImg} alt="" />
               </div>
               <h3>Set an Appointment</h3>
               <p>Please enter below information to set an appointment</p>
-            </div>
+            </div> */}
 
             <div className="innerAppointmentModalBody">
               <div
