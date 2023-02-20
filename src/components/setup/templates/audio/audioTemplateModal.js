@@ -3,7 +3,6 @@ import Recoder from "../../../shared/Recoder";
 
 import music_file_icon from "../../../../assets/images/music_file_icon.svg";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
-import cross from "../../../../assets/images/cross.svg";
 import { AudioServices } from "../../../../services/template/AudioServices";
 import { bucketUrl } from "../../../../configuration/config";
 import Player from "../../../shared/Player";
@@ -201,20 +200,23 @@ const AudioTemplateModal = (props) => {
     }
 
     return (
-        <div className="modalBackdrop">
+        <div className="modal_mid_wrap">
             {isLoader ? <Loader /> : ''}
-            <div className="modalBackdropBg" onClick={props.closeModal} ></div>
-            <div className="slickModalBody">
-                <div className="slickModalHeader">
-                    <button className="topCross" onClick={props.closeModal} >
-                        {/* <span></span><span></span>*/}
-                        <img src={cross} alt="" /> 
+            <div className="modal_mid_overlay" onClick={props.closeModal} ></div>
+            <div className="modla_mid_container">
+                <div className="modal_mid_head">
+                    <button className="close_mid_modal" onClick={props.closeModal} >
+                        <span></span><span></span>
                     </button>
-                    <h3>{props.isEdit ? 'Edit' : 'Add'} an Audio Template</h3>
-                        <p>Fill out below details to {props.isEdit ? 'edit' : 'create a new'}  Audio Template</p>
                 </div>
-                <div className="modalForm">
-                 
+                <div className="modal_mid_body">
+                    <div className="modal_form_head">
+                        <div className="modal_head_icon">
+                            <img src={music_file_icon} alt="" />
+                        </div>
+                        <h2>{props.isEdit ? 'Edit' : 'Add'} an Audio Template</h2>
+                        <p>Fill out below details to {props.isEdit ? 'edit' : 'create a new'}  Audio Template</p>
+                    </div>
                     {successMsg &&
                         <div className="popupMessage success innerDrawerMessage">
                             <p>{successMsg}</p>
@@ -225,7 +227,7 @@ const AudioTemplateModal = (props) => {
                             <p>{errorMsg}</p>
                         </div>
                     }
-                    <form onSubmit={handleSubmit}>
+                    <form className="formBody" onSubmit={handleSubmit}>
                         <div className="cmnFormRow">
                             <div className="cmnFieldName">Audio Title</div>
                             <div className={formErrors.title ? "cmnFormField error" : "cmnFormField"}>
@@ -256,7 +258,6 @@ const AudioTemplateModal = (props) => {
                             </div> : ''}
                         <div className="cmnFormRow">
                             <div className="cmnFieldName">Select Type</div>
-                            <div className="cmnFieldName" style={{width: "14px"}}>&nbsp;</div>
                             <div className="cmnFormField radioGroup">
                                 <label className="cmnFormRadioLable">
                                     <div className="circleRadio" onClick={() => { setType('upload') }}>

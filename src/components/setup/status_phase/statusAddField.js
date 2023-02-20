@@ -175,8 +175,8 @@ const StatusAddField = (props) => {
                     <h3>{statusId ? 'Edit' : 'Add'} a Status</h3>
                     <p>Fill out below details to {statusId ? 'edit' : 'create a new Status'} </p>
                 </div>
-                <div className="modalForm auto">
-                    {/* <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical"/>}> */}
+                <div className="modalForm ">
+                    <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical"/>}>
                         <form>
 
                             <div className="formControl">
@@ -218,7 +218,7 @@ const StatusAddField = (props) => {
                                 }
                             </div>
                         </form>
-                    {/* </Scrollbars> */}
+                    </Scrollbars>
                 </div>
 
             </div>
