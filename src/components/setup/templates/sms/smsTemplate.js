@@ -22,6 +22,7 @@ import * as actionTypes from "../../../../actions/types";
 
 import { SMSServices } from "../../../../services/template/SMSServices";
 import Scrollbars from "react-custom-scrollbars-2";
+import MergeTag from "../../../shared/MergeTag";
 
 const SmsTemplate = (props) => {
   const dispatch = useDispatch();
@@ -1235,26 +1236,30 @@ const SmsTemplate = (props) => {
                         {smsPaginate?.pages && smsPaginate.textObjects[smsPaginate.selected]}
                       </div>
                     ) : (
-                      <div className="cmnFormRow f-1 d-flex f-column">
-                        <div className="cmnFormField f-1">
-                          <textarea
-                            readOnly={editState === true ? false : true}
-                            defaultValue={smsTemplates.filter(sms => sms._id === activeMessage)[0].message}
-                            onChange={(e) => editTemplateMessage(e)}
-                            id="messageTextbox"
-                            ref={messageTextbox}
-                            tabIndex="2"
-                            className="cmnFieldStyle"
-                          ></textarea>
-                        </div>
-                        {hasError && errorState.message && (
-                          <span className="errorMsg">
-                            {errorState.message}
-                          </span>
-                        )}
-                      </div>
+                      <>
+                          <div className="cmnFormRow f-1 d-flex f-column">
+                            <div className="cmnFormField f-1">
+                              <textarea
+                                readOnly={editState === true ? false : true}
+                                defaultValue={smsTemplates.filter(sms => sms._id === activeMessage)[0].message}
+                                onChange={(e) => editTemplateMessage(e)}
+                                id="messageTextbox"
+                                ref={messageTextbox}
+                                tabIndex="2"
+                                className="cmnFieldStyle"
+                              ></textarea>
+                            </div>
+                            {hasError && errorState.message && (
+                              <span className="errorMsg">
+                                {errorState.message}
+                              </span>
+                            )}
+                          </div>
+                        <MergeTag addfeild={(e,field)=> addKeywordEdit(e,field)}/>
+                      </>
                     )}
-                    {keywordSuggesion && (
+
+                    {/* {keywordSuggesion && (
                       <div className="keywordBox" ref={keywordRef}>
                         <div className="searchKeyword">
                           <div className="searchKeyBox">
@@ -1299,7 +1304,7 @@ const SmsTemplate = (props) => {
                           </ul>
                         </div>
                       </div>
-                    )}
+                    )} */}
                     {/* {hasError && errorState.title && (
                       <span className="errorMsg">
                         Please give some SMS content.
@@ -1339,7 +1344,7 @@ const SmsTemplate = (props) => {
                       </>
                       : ""
                     }
-                    {editState && (
+                    {/* {editState && (
                       <button
                         className="btn browseKeywords"
                         style={{
@@ -1350,7 +1355,7 @@ const SmsTemplate = (props) => {
                       >
                         <img src={browse_keywords} alt="keywords" />
                       </button>
-                    )}
+                    )} */}
                   </footer>
                 </div>
               )}
@@ -1374,12 +1379,12 @@ const SmsTemplate = (props) => {
             <h3>Add an SMS Template</h3>
             <p>Fill out below details to create a new SMS Template</p>
           </div>
-          <div className="modalForm">
-            <Scrollbars
+          <div className="modalForm auto">
+            {/* <Scrollbars
               renderThumbVertical={(props) => (
                 <div className="thumb-vertical" />
-              )}
-            >
+              )} 
+            >*/}
               <form method="post" ref={createTemplateForm}>
                 <div
                   className={
@@ -1430,9 +1435,11 @@ const SmsTemplate = (props) => {
                       {errorState.message}
                     </span>
                   )}
+                        <MergeTag addfeild={(e,field)=> addThisTag(e,field)}/>
+
                   <div className="smsTagsTemplate">  
                   {/* .filter(smsTag => smsTag.id.indexOf(searchTagString) >= 0)                   */}
-                    {
+                    {/* {
                       smsTags
                       .filter(
                         (smsTag) =>
@@ -1454,7 +1461,7 @@ const SmsTemplate = (props) => {
                           {tagItem.id}
                         </button>
                       ))
-                    }
+                    } */}
                   </div>
                 </div>
 
@@ -1473,7 +1480,7 @@ const SmsTemplate = (props) => {
                   </button>
                 </div>
               </form>
-            </Scrollbars>
+            {/* </Scrollbars> */}
           </div>
         </div>
       </div>
