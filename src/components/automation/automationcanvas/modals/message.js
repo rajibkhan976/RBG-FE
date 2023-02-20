@@ -2,10 +2,13 @@ import React, {memo, useEffect, useRef, useState} from 'react';
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
 import chevron_right_white_24dp from "../../../../assets/images/chevron_right_white_24dp.svg";
 import browse_keywords from "../../../../assets/images/icon_browse_keywords.svg";
+<<<<<<< HEAD
 import {SMSServices} from "../../../../services/template/SMSServices";
 import * as actionTypes from "../../../../actions/types";
 import {useDispatch} from "react-redux";
+=======
 import MergeTag from "../../../shared/MergeTag";
+>>>>>>> uiFix2
 
 const Message = (props) => {
     console.log("props", props)
@@ -86,10 +89,17 @@ const Message = (props) => {
                                 <div className="inputField">
                                     <label htmlFor="">Body</label>
                                     <div className="inFormField">
+<<<<<<< HEAD
+                                        <textarea name="messageBody"
+                                                  onChange={handleBodyChange}
+                                                  value={body} ref={messageTextbox}>{body}</textarea>
+                                        <button
+=======
                                         <textarea className={`${props.bodyError}`} name="messageBody"
                                                   onChange={props.handleBodyChange}
                                                   value={props.body} ref={messageTextbox}>{props.body}</textarea>
                                         {/* <button
+>>>>>>> uiFix2
                                             className="btn browseKeywords browseKeywordsSMS"
                                             style={{
                                                 marginRight: "0",

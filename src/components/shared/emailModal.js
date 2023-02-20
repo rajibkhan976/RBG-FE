@@ -528,7 +528,7 @@ useEffect(() => {
                     </button>
                     <h3>Send Email</h3>
                     <p>Enter email id</p>
-                    {/* <div className="showSetupMsg">{!emailSetupData ? "You can't send mail as the email setup is not done" :""}</div> */}
+                    <div className="showSetupMsg">{!emailSetupData ? "You can't send mail as the email setup is not done" :""}</div>
                     <div className={validateMsg.email ? "numberForCall error" : "numberForCall"}>
                         <input type="email"
                                placeholder="Eg. richardnile@rbg.com" className="emailInput"
@@ -701,12 +701,7 @@ useEffect(() => {
                                            ""}</div> */}
                             </div>
                         </div>
-                        <div class="slice text-center">
-                        {/* <button class="cmnBtn" onClick={sendGlobalEmail}
-                               disabled={!emailSetupData ? "disabled":""}
-                            >Send Email <img src={arrow_forward} alt=""/></button> */}
-                            <button class="cmnBtn" onClick={sendGlobalEmail}>Send Email <img src={arrow_forward} alt=""/></button>
-                        </div>
+                       
                     </div>
                 </div>
                 <div class="call_modal_footer">

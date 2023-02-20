@@ -128,6 +128,3 @@
 
 # QI PHASE 2 V1.0.0
     - QI issue fixing in phase 2
-
-# MAILGUN EMAIL V1.0.0
-    - Mail gun issue solved

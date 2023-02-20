@@ -70,7 +70,7 @@ const ContactListing = forwardRef((props, ref) => {
     const [searchContactList, setSearchContactList] = useState([]);
     const [singleContact, setSingleContact] = useState();
     // const [oneContactObj, setOneContacrObj] = useState([]);
-    const [allContactCheck, setAllContactCheck] = useState(false);
+
     const openFilter = () => {
         props.openFilter();
     }
@@ -506,8 +506,6 @@ const ContactListing = forwardRef((props, ref) => {
         });
     };
     const deleteContacts = async () => {
-        console.log(selectAllCheckbox, allContactCheck);
-        // return false;
         if (selectAllCheckbox || selectSingle) {
             const pageId = utils.getQueryVariable('page');
             const queryParams = await getQueryParams();
@@ -519,7 +517,7 @@ const ContactListing = forwardRef((props, ref) => {
                     });
                 }
                 let payload = {
-                    'all': allContactCheck,
+                    'all': selectAllCheckbox,
                     'selected': sc,
                 };
                 setIsLoader(true);
@@ -591,7 +589,6 @@ const ContactListing = forwardRef((props, ref) => {
             props.setSingleContactStatus(singleContact);
         }
         else{
-            setSingleContact();
             dispatch({
                 type: actionTypes.SHOW_MESSAGE,
                 message: "No phone number is there",
@@ -613,7 +610,6 @@ const ContactListing = forwardRef((props, ref) => {
             props.setSingleContactStatus(singleContact);
         }
         else{
-            setSingleContact();
             dispatch({
                 type: actionTypes.SHOW_MESSAGE,
                 message: "No email id is there",
@@ -626,14 +622,7 @@ const ContactListing = forwardRef((props, ref) => {
         props.setBulkAutomationOpenModal();
     }
     const selectAllValueAction = (flag) => {
-        console.log("flag========", flag);
         props.selectAllCheckboxValue(flag);
-        if(flag){
-            setAllContactCheck(true);
-        }else{
-            setAllContactCheck(false);
-        }
-        
     }
     useEffect(() => {
         if (isClicked) {
