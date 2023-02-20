@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Route, Switch } from "react-router-dom";
 
-import { useSelector, useDispatch } from 'react-redux';
 import InnerLeftMenu from "../../shared/InnerLeftMenu";
 import HeaderDashboard from "../../shared/HeaderDashboard";
 import DashboardFooter from "../../shared/FooterDashboard";
@@ -10,8 +9,6 @@ import SmsSetup from "./sms/smsSetup";
 import EmailSetup from "./email/emailSetup";
 
 const CommunicationRoutes = (props) => {
-  const loginUser = useSelector((state)=> state.user.data);
-  console.log("Login user", loginUser);
   const [randomID, setRandomID] = useState(Math.random().toString());
   const renderID = (randomID) => {
     console.log("Random ID", randomID);
@@ -27,12 +24,8 @@ const CommunicationRoutes = (props) => {
             path="/roles"
             render={(props) => <Roles key={randomID} {...props} />}
           /> */}
-          { 
-
-          }
-          {/* <Route path="/sms-setup" component={SmsSetup} /> */}
-          {/* {loginUser.email && loginUser.email === "samim@rbg.in" && <Route path="/email-setup" component={EmailSetup} />} */}
-          
+          <Route path="/sms-setup" component={SmsSetup} />
+          <Route path="/email-setup" component={EmailSetup} />
           <DashboardFooter />
         </div>
       </div>
