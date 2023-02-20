@@ -265,8 +265,8 @@ useEffect(()=>{
                 <h3>Add a Custom Field</h3>
                 <p>Fill out below details to create a custom field</p>
                 </div>
-                <div className="modalForm auto">
-                {/* <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />}> */}
+                <div className="modalForm">
+                <Scrollbars renderThumbVertical={(props) => <div className="thumb-vertical" />}>
                     <form method="post" onSubmit={handleSubmit}>
                     <div className={customFieldErrors.name ? "formControl error" : "formControl"}>
                         <label>Field Name</label>
@@ -312,7 +312,7 @@ useEffect(()=>{
                                 <span>Save &amp; New</span><img src={arrow_forward} alt="" /></button>) : "" }
                     </div>
                     </form>
-                {/* </Scrollbars> */}
+                </Scrollbars>
                 </div>
 
             </div>

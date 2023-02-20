@@ -20,7 +20,6 @@ import {useDispatch} from "react-redux";
 import {SMSServices} from "../../../../../services/template/SMSServices";
 import {EmailServices} from "../../../../../services/setup/EmailServices";
 import * as actionTypes from "../../../../../actions/types";
-import MergeTag from "../../../MergeTag";
 
 
 const Email = (props) => {
@@ -42,7 +41,6 @@ const Email = (props) => {
   const [emailSend, setEmailSend] = useState(false);
   const [emailBody, setEmailBody] = useState("");
   const [contactGenData, setContactgendata] = useState(props.contactGenData);
-  const [errorForTemplate, setErrorForTemplate] = useState(false);
 
   
 
@@ -151,13 +149,12 @@ useEffect(() => {
         });
     }
 }
-const addKeywordEmail = (e,field) => {
+const addKeywordEmail = (e) => {
   e.preventDefault()
   let subjectInput = newEmailTemplateSubject.current;
   let cursorStart = subjectInput.selectionStart;
   let cursorEnd = subjectInput.selectionEnd;
   let textValue = subjectInput.value;
-  let vall = field ;
 
   try {
       if (cursorStart || cursorStart == "0"
@@ -166,7 +163,9 @@ const addKeywordEmail = (e,field) => {
           if(emailData.subject.length < 250){
                     subjectInput.value =
                     subjectInput.value.substring(0, cursorStart) +
-                    vall +
+                    " [" +
+                    e.target.textContent +
+                    "] " +
                     subjectInput.value.substring(cursorEnd, textValue.length);
 
                 // setNewMail({
@@ -179,7 +178,9 @@ const addKeywordEmail = (e,field) => {
                 })
                 startToText =
                     subjectInput.value.substring(0, cursorStart) +
-                    vall;
+                    "[" +
+                    e.target.textContent +
+                    "]";
 
                 subjectInput.focus();
                 subjectInput.setSelectionRange(
@@ -187,14 +188,11 @@ const addKeywordEmail = (e,field) => {
                     startToText.length + 1
                 );
             }
-            setValidateEmailMsg({
-                ...validateEmailMsg,
-                subject: "",
-            });
+          
 
           // console.log(subjectInput, cursorStart, cursorEnd, textValue);
       } else {
-          subjectInput.value = subjectInput.value + vall;
+          subjectInput.value = subjectInput.value + " [" + e.target.textContent + "] ";
 
           // setNewMail({
           //   ...newMail,
@@ -204,10 +202,6 @@ const addKeywordEmail = (e,field) => {
               ...emailData,
               subject: subjectInput.value
           })
-          setValidateEmailMsg({
-            ...validateEmailMsg,
-            subject: "",
-          });
           subjectInput.focus();
       }
   } catch (err) {
@@ -229,10 +223,6 @@ const addKeywordEmail = (e,field) => {
         setTemplateToogle(false);   
         setTempSelected(true);
         console.log(tempSelected);
-        setValidateEmailMsg({
-            ...validateEmailMsg,
-            subject: "",
-          });
 }
 useEffect(() => {
   // console.log("template",utils.decodeHTML(emailData.template));
@@ -274,7 +264,7 @@ const sendGlobalEmail = async (e) => {
       
     }else if( contactGenData?.email === ""){
         setValidateEmailMsg({
-            ...validateEmailMsg, 
+            ...validateEmailMsg,
             errEmail: "Please save a email address first",
         });
   } else {
@@ -304,61 +294,29 @@ const sendGlobalEmail = async (e) => {
   
 }
 
-// function useOutsideAlerter(ref) {
-//     useEffect(() => {
-//       /**
-//        * Alert if clicked on outside of element
-//        */
-//       function handleClickOutside(event) {
-//         if (ref.current && !ref.current.contains(event.target)) {
-//           setKeywordSuggesion(false)
-//         }
-//       }
-//       // Bind the event listener
-//       document.addEventListener("mousedown", handleClickOutside);
-//       return () => {
-//         // Unbind the event listener on clean up
-//         document.removeEventListener("mousedown", handleClickOutside);
-//       };
-//     }, [ref]);
-//   }
+function useOutsideAlerter(ref) {
+    useEffect(() => {
+      /**
+       * Alert if clicked on outside of element
+       */
+      function handleClickOutside(event) {
+        if (ref.current && !ref.current.contains(event.target)) {
+          setKeywordSuggesion(false)
+        }
+      }
+      // Bind the event listener
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        // Unbind the event listener on clean up
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }, [ref]);
+  }
   
   
- // const keywordRef = useRef(null);
+  const keywordRef = useRef(null);
     
-  //useOutsideAlerter(keywordRef);
-
-  const deselectingTemplate = (e) =>{
-    setEmailData({
-        ...emailData,
-        "subject": "",
-        "template": "",
-    });
-    setTempSelected(false); 
-    setEmailDatasubject("");  
-    setTemplateToogle(false);
-    setChangedTemplate("");
-    setErrorForTemplate(false);
-}
-useEffect(()=>{
-    setErrorForTemplate(true);
-},[changedTemplate]);
-useEffect(() => {
-
-    if(changedTemplate == "" && errorForTemplate){
-        setValidateEmailMsg({
-            ...validateEmailMsg,
-            template: "Please enter a valid template",
-        });
-    }else{
-        setValidateEmailMsg({
-            ...validateEmailMsg,
-            template: "",
-        });
-    }
-}, [changedTemplate])
-
-
+  useOutsideAlerter(keywordRef);
 
   return (
    
@@ -366,7 +324,7 @@ useEffect(() => {
                 {isLoader ? <Loader/> : ""}
                 <div className="formBody">
                   <div className="formSlice top">
-                    <div className="label">Email template</div>
+                    <div className="label">Template</div>
                             <div className="textAreaHolder fitin">
 
                                 <div className="cmnFieldStyle btnSelect"
@@ -375,14 +333,6 @@ useEffect(() => {
                                 </div>
                                 {templateToogle &&
                                     <ul className="showTemplateName">
-                                         {emailTempData.templates &&
-                                            emailTempData.templates.length > 0 && 
-                                            <li 
-                                                 onClick={(e) => deselectingTemplate()}
-                                            >
-                                              Select template
-                                             </li> 
-                                        }
                                         {
                                             (emailTempData.templates &&
                                             emailTempData.templates.length > 0 ) ?
@@ -397,7 +347,7 @@ useEffect(() => {
                                     </ul>}
                             </div>
                   </div>
-                  <div className="formSlice"> 
+                  <div className="formSlice">
                     <div className="label">Subject</div>
                     <div className="textAreaHolder fitin">
                       <input type="text" className={validateEmailMsg.subject ? "cmnFieldStyle fitIn error" : "cmnFieldStyle fitIn"} placeholder="Enter email subject"
@@ -408,11 +358,72 @@ useEffect(() => {
                          value={emailData.subject}
                          maxLength={250}
                       />
-                     <div className="errorMsg">{validateEmailMsg.subject}</div>
-                    </div>
-                    <div className="label">&nbsp;</div>
-                    <div className="textAreaHolder fitin">
-                        <MergeTag addfeild={(e,field)=> addKeywordEmail(e,field)}/>
+                                <button className="btn browseKeywords"
+                                    type='button'
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setKeywordSuggesion(true);
+                                    }}
+                                >
+                                    <img src={browsTextarea} alt="keywords"/>
+                                </button>
+                                {keywordSuggesion && (
+                                    <div className="keywordBox" ref={keywordRef}>
+                                        <div className="searchKeyword">
+                                            <div className="searchKeyBox">
+                                                <input
+                                                    type="text"
+                                                    onChange={(e) => setSearchTagString(e.target.value)}
+                                                    onKeyPress={e => {
+                                                        if (e.key === 'Enter') e.preventDefault();
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className="cancelKeySearch">
+                                                <button
+                                                    onClick={() => {setKeywordSuggesion(false)
+                                                            setSearchTagString("")}}
+                                                ></button>
+                                            </div>
+                                        </div> 
+                                        <div className="keywordList">
+                                            <ul> 
+                                                {emailTags
+                                                    .filter(
+                                                        (smsTag) =>
+                                                            smsTag.id.toLowerCase().indexOf(searchTagString) >= 0 
+                                                            && smsTag.id !== "tags"
+                                                            && smsTag.id !== "phone" 
+                                                            && smsTag.id !== "mobile" 
+                                                            && smsTag.id !== "momCellPhone" 
+                                                            && smsTag.id !== "dadCellPhone"
+                                                            && smsTag.id !== "createdBy"
+                                                            && smsTag.id !== "createdAt"
+                                                            && smsTag.id !== "statusName"
+                                                            && smsTag.id !== "phaseName"
+                                                            && smsTag.id !== "contactType"
+                                                            && smsTag.id !== "ageGroup"
+                                                            && smsTag.id !== "sourceDetail"
+                                                            && smsTag.id !== "onTrial"
+                                                    )
+                                                    .map((tagItem, i) => (
+                                                        <li key={"keyField" + i}>
+                                                            <button
+                                                                onClick={(e) =>
+                                                                    addKeywordEmail(e, tagItem.id)
+                                                                }
+                                                            >
+                                                                {tagItem.id}
+                                                            </button>
+                                                            {console.log("tagItem.id : " , tagItem.id )}
+                                                        </li>
+                                                    ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                )}
+
+                            <div className="errorMsg">{validateEmailMsg.subject}</div>
                     </div>
                     
 
@@ -420,27 +431,20 @@ useEffect(() => {
                   <div className="formSlice top">
                     <div className="label">Email Body</div>
                     <div
-                            className={validateEmailMsg.template  ? "cmnFormField email globalSms error" : "cmnFormField globalSms email"}>
+                                className={validateEmailMsg.template ? "cmnFormField email globalSms error" : "cmnFormField globalSms email"}>
                                 <EditorComponent
                                     globalTemplateValue={(template) => setChangedTemplate(template)}
                                     initialData={emailData ? emailData : emailData.template}
                                     setTempSelected={tempSelected}
                                     //setEmailSend={emailSend}
                                 />
-                                {/* {console.log("emailData", emailData, tempSelected ,"emailData.template",emailData.template, "emailSend", emailSend)} */}
+                                {console.log("emailData", emailData, tempSelected ,"emailData.template",emailData.template, "emailSend", emailSend)}
 
                                 <div className="errorMsg">{validateEmailMsg.template}</div>
-
                             </div>
                   </div>
-                  
-                </div>
-                <div className="formSlice fixinRight">
-                      <button type="button" class="cancel"
-                        onClick={()=>props.closePanel()}
-                      >
-                        Cancel 
-                      </button>
+                  <div className="formSlice">
+                      <div className="label">&nbsp;</div>
                       <button type="button" class="saveNnewBtn"  
                       disabled={ contactGenData?.email === "" ? "disabled" :""}
                       onClick={sendGlobalEmail}>
@@ -449,6 +453,7 @@ useEffect(() => {
                       { contactGenData?.email === "" ? <div className="errorMsg space">Sending EMAIL is disabled now, to enable it save a email first</div> :""}
                       {/* <div className="errorMsg space">{validateEmailMsg.errEmail}</div> */}
                   </div>
+                </div>
               </>
            
   );

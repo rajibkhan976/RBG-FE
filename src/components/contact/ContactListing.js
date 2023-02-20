@@ -1003,22 +1003,21 @@ const ContactListing = forwardRef((props, ref) => {
                     <div className="modalBackdropBg" onClick={() => closeDeleteModal(false)}></div>
                     <div className="slickModalBody setAppointment deleteSelectedModals">
                         <div className="modalForm appointmentForm setappointment successApp deleteModals">
-                                <button className=" setApp" onClick={() => closeDeleteModal(false)}>
+                            <div className="slickModalHeader appointmentModalHeads">
+                                <button className="topCross setApp" onClick={() => closeDeleteModal(false)}>
                                     <img src={cross} alt=""/>
                                 </button>
+                            </div>
                             <div className="innerModalHeader">
                                 <h3 className="deleteHeading">Are you sure, you want to delete?</h3>
                             </div>
                             <div className="modalActionWraper">
-                                <div className="formField">
-                                    <span className="clearFilter"
-                                        onClick={() => closeDeleteModal(false)}>Cancel
-                                    </span>
+                                <div className="formField formControl w-50"><span className="clearFilter"
+                                                                                  onClick={() => closeDeleteModal(false)}>Cancel</span>
                                 </div>
-                                <div className="formField">
+                                <div className="formField formControl w-50">
                                     <button type="submit" className="saveNnewBtn deletebtns" onClick={deleteContacts}>
-                                        <span>Yes</span>
-                                    </button>
+                                        <span>Yes</span></button>
                                 </div>
                             </div>
                         </div>

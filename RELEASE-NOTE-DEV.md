@@ -125,6 +125,3 @@
 
 # Automation V3.0.1
     - Automation Fixes
-
-# QI PHASE 2 V1.0.0
-    - QI issue fixing in phase 2

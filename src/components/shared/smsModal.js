@@ -14,7 +14,6 @@ import * as actionTypes from "../../actions/types";
 import env from "../../configuration/env";
 import { uploadFile } from "react-s3";
 import Loader from "./Loader";
-import MergeTag from "./MergeTag";
 
 
 const initialDependentState = {
@@ -249,13 +248,12 @@ const setMessageObj = (e) => {
 }
 
 // ADD Keyword to Edit SMS template
-const addKeywordEdit = (e,field) => {
+const addKeywordEdit = (e) => {
   e.preventDefault();
   let textBox = messageTextbox.current;
   let cursorStart = textBox.selectionStart;
   let cursorEnd = textBox.selectionEnd;
   let textValue = textBox.value;
-  let vall = field ;
 
   // console.log();
 
@@ -270,7 +268,9 @@ const addKeywordEdit = (e,field) => {
       // console.log(textBox.selectionStart);
       textBox.value =
         textBox.value.substring(0, cursorStart) +
-        vall +
+        "[" +
+        e.target.textContent +
+        "]" +
         textBox.value.substring(cursorEnd, textValue.length);
 
       setEditMsgObj({
@@ -282,7 +282,9 @@ const addKeywordEdit = (e,field) => {
 
       startToText =
         textBox.value.substring(0, cursorStart) +
-        vall;
+        "[" +
+        e.target.textContent +
+        "]";
       textBox.focus();
       textBox.setSelectionRange(
         startToText.length + 1,
@@ -292,7 +294,7 @@ const addKeywordEdit = (e,field) => {
     } else {
       // console.log("VIA END POINT");
 
-      textBox.value = textBox.value + vall;
+      textBox.value = textBox.value + "[" + e.target.textContent + "]";
       setEditMsgObj({
         ...editMsgObj,
         body: textBox.value,
@@ -639,198 +641,249 @@ useOutsideAlerter(keywordRef);
            </form>
          </div>
        </div>
-       <form onSubmit={submitMessage}>
-        <div className="modalMakeSmsBody">
-          <p className="numberFromContact text-right">
-            <button
-              className="btn linkType"
-              onClick={(e) => setContactOptions(!contactOptions)}
-            >
-              <img src={lineUser} alt="" /> {contactOptions ? "Close Contact Search" : "Choose from Contacts"}
-            </button>
-          </p>
+       <div className="modalMakeSmsBody">
+         <p className="numberFromContact text-right">
+           <button
+             className="btn linkType"
+             onClick={(e) => setContactOptions(!contactOptions)}
+           >
+             <img src={lineUser} alt="" /> {contactOptions ? "Close Contact Search" : "Choose from Contacts"}
+           </button>
+         </p>
 
-          {contactOptions && (
-            <div className="getContactsforMsg" ref={contactSelect}>
-              <div
-                className={
-                  toggleContactList.status
-                    ? `cmnFormField listActive`
-                    : `cmnFormField`
-                }
-              >
-                <input
-                  className={processing ? "cmnFieldStyle loading" : "cmnFieldStyle"}
-                  type="text"
-                  style={{
-                    backgroundImage: toggleContactList.status
-                      ? `url(${updown})`
-                      : "",
-                  }}
-                  placeholder="Eg. Name"
-                  onChange={(e) => handleContactName(e)}
-                  value={dependant.name ? dependant.name : ""}
-                  disabled={toggleContactList.isCross}
-                />
-                {toggleContactList.isCross ? (
-                  <button
-                    className="btn crossContact"
-                    onClick={(e) => resetContactName(e)}
-                  >
-                    <img src={cross} alt="cross" />
-                  </button>
-                ) : (
-                  ""
-                )}
-                {toggleContactList.status && (
-                  <>
-                  {/* .filter(contactItem => contactItem.phone && contactItem.phone.number.trim() != "") */}
-                  {toggleContactList.contacts.filter(contactItem => contactItem.phone && contactItem.phone.number.trim() != "").length > 0 ? (
-                    <div className="contactListItems">
-                      <ul>
-                          {toggleContactList.contacts.filter(contactItem => contactItem.phone && contactItem.phone.number.trim() != "").map((contact) => (
-                            <li
-                              key={contact._id}
-                              data-id={contact._id}
-                              onClick={(e) => {
-                                handleContactSelect(e, contact);
-                              }}
-                              className="appContact"
-                            >
-                              <figure
-                                style={{
-                                  backgroundColor: `rgb(${Math.floor(
-                                    Math.random() * 256
-                                  )},${Math.floor(
-                                    Math.random() * 256
-                                  )},${Math.floor(Math.random() * 256)})`,
-                                }}
-                              >
-                                {console.log(
-                                  `rgb(${Math.floor(
-                                    Math.random() * 256
-                                  )},${Math.floor(
-                                    Math.random() * 256
-                                  )},${Math.floor(Math.random() * 256)})`
-                                )}
-                                {contact.firstName ? contact.firstName[0] : ""}
-                                {contact.lastName ? contact.lastName[0] : ""}
-                              </figure>
-                              <p>
-                                <span>
-                                  {(contact.firstName ? contact.firstName : "") +
-                                    " " +
-                                    (contact.lastName ? contact.lastName : "")}
-                                </span>
-                                {contact.email ? (
-                                  <small>{contact.email}</small>
-                                ) : (
-                                  ""
-                                )}
-                              </p>
-                            </li>
-                          ))}
-                      </ul>
-                    </div>
-                    ) : (
-                      <div className="noContactFound">No Contact Found</div>
-                    )}
-                  </>
-                )}
-              </div>
-            </div>
-          )}
-          <div className="makeSmsForm">
-            <div className="slice">
-              <label>Create a Message</label>
-              <p>
-                {editMsgObj?.body?.length > 0 ? editMsgObj?.body?.length : 0}/160
-                SMS - One message contains 160 chatracters max (SMS count can be
-                changed if you are using keyword variable e.g. [fname])
-              </p>
-            </div>
+         {contactOptions && (
+           <div className="getContactsforMsg" ref={contactSelect}>
+             <div
+               className={
+                 toggleContactList.status
+                   ? `cmnFormField listActive`
+                   : `cmnFormField`
+               }
+             >
+               <input
+                 className={processing ? "cmnFieldStyle loading" : "cmnFieldStyle"}
+                 type="text"
+                 style={{
+                   backgroundImage: toggleContactList.status
+                     ? `url(${updown})`
+                     : "",
+                 }}
+                 placeholder="Eg. Name"
+                 onChange={(e) => handleContactName(e)}
+                 value={dependant.name ? dependant.name : ""}
+                 disabled={toggleContactList.isCross}
+               />
+               {toggleContactList.isCross ? (
+                 <button
+                   className="btn crossContact"
+                   onClick={(e) => resetContactName(e)}
+                 >
+                   <img src={cross} alt="cross" />
+                 </button>
+               ) : (
+                 ""
+               )}
+               {toggleContactList.status && (
+                 <>
+                 {/* .filter(contactItem => contactItem.phone && contactItem.phone.number.trim() != "") */}
+                 {toggleContactList.contacts.filter(contactItem => contactItem.phone && contactItem.phone.number.trim() != "").length > 0 ? (
+                   <div className="contactListItems">
+                     <ul>
+                         {toggleContactList.contacts.filter(contactItem => contactItem.phone && contactItem.phone.number.trim() != "").map((contact) => (
+                           <li
+                             key={contact._id}
+                             data-id={contact._id}
+                             onClick={(e) => {
+                               handleContactSelect(e, contact);
+                             }}
+                             className="appContact"
+                           >
+                             <figure
+                               style={{
+                                 backgroundColor: `rgb(${Math.floor(
+                                   Math.random() * 256
+                                 )},${Math.floor(
+                                   Math.random() * 256
+                                 )},${Math.floor(Math.random() * 256)})`,
+                               }}
+                             >
+                               {console.log(
+                                 `rgb(${Math.floor(
+                                   Math.random() * 256
+                                 )},${Math.floor(
+                                   Math.random() * 256
+                                 )},${Math.floor(Math.random() * 256)})`
+                               )}
+                               {contact.firstName ? contact.firstName[0] : ""}
+                               {contact.lastName ? contact.lastName[0] : ""}
+                             </figure>
+                             <p>
+                               <span>
+                                 {(contact.firstName ? contact.firstName : "") +
+                                   " " +
+                                   (contact.lastName ? contact.lastName : "")}
+                               </span>
+                               {contact.email ? (
+                                 <small>{contact.email}</small>
+                               ) : (
+                                 ""
+                               )}
+                             </p>
+                           </li>
+                         ))}
+                     </ul>
+                   </div>
+                   ) : (
+                     <div className="noContactFound">No Contact Found</div>
+                   )}
+                 </>
+               )}
+             </div>
+           </div>
+         )}
+         <div className="makeSmsForm">
+           <div className="slice">
+             <label>Create a Message</label>
+             <p>
+               {editMsgObj?.body?.length > 0 ? editMsgObj?.body?.length : 0}/160
+               SMS - One message contains 160 chatracters max (SMS count can be
+               changed if you are using keyword variable e.g. [fname])
+             </p>
+           </div>
 
-            
-              <div className="slice">
-                <label>
-                  SMS Templates <span>(Optional)</span>
-                </label>
+           <form onSubmit={submitMessage}>
+             <div className="slice">
+               <label>
+                 SMS Templates <span>(Optional)</span>
+               </label>
 
-                <div className="cmnFormField">
-                  <select
-                    type="text"
-                    className="cmnFieldStyle btnSelect"
-                    value={selectedTemplate ? selectedTemplate._id : "null"}
-                    onChange={(e) => selectTemplate(e)}
-                  >
-                    <option value="null">Select Template</option>
-                    {smsTemplates &&
-                      smsTemplates.map((template, i) => (
-                        <option value={template._id} key={"option-" + i}>
-                          {template.title}
-                        </option>
-                      ))}
-                  </select>
-                </div>
+               <div className="cmnFormField">
+                 <select
+                   type="text"
+                   className="cmnFieldStyle btnSelect"
+                   value={selectedTemplate ? selectedTemplate._id : "null"}
+                   onChange={(e) => selectTemplate(e)}
+                 >
+                   <option value="null">Select Template</option>
+                   {smsTemplates &&
+                     smsTemplates.map((template, i) => (
+                       <option value={template._id} key={"option-" + i}>
+                         {template.title}
+                       </option>
+                     ))}
+                 </select>
+               </div>
 
-                <div
-                  className={
-                    errorObj?.body.trim() != ""
-                      ? "cmnFormField error"
-                      : "cmnFormField"
-                  }
-                >
-                  <textarea
-                    className="cmnFieldStyle"
-                    value={editMsgObj?.body}
-                    onChange={(e) => setMessageObj(e)}
-                    ref={messageTextbox}
-                  ></textarea>
+               <div
+                 className={
+                   errorObj?.body.trim() != ""
+                     ? "cmnFormField error"
+                     : "cmnFormField"
+                 }
+               >
+                 <textarea
+                   className="cmnFieldStyle"
+                   value={editMsgObj?.body}
+                   onChange={(e) => setMessageObj(e)}
+                   ref={messageTextbox}
+                 ></textarea>
+                 <button
+                   className="btn browseKeywords"
+                   style={{
+                     marginRight: "0",
+                     padding: "0",
+                   }}
+                   onClick={(e) => {
+                     e.preventDefault();
+                     setKeywordSuggesion(true);
+                   }}
+                 >
+                   <img src={browse_keywords} alt="keywords" />
+                 </button>
 
+                 {keywordSuggesion && (
+                   <div className="keywordBox" ref={keywordRef}>
+                     <div className="searchKeyword">
+                       <div className="searchKeyBox">
+                         <input
+                           type="text"
+                           onChange={(e) => setSearchTagString(e.target.value)}
+                         />
+                       </div>
+                       <div className="cancelKeySearch">
+                         <button
+                           onClick={() => setKeywordSuggesion(false)}
+                         ></button>
+                       </div>
+                     </div>
+                     <div className="keywordList">
+                       <ul>
+                         {smsTags
+                           .filter(
+                            (smsTag) =>
+                                smsTag.id.toLowerCase().indexOf(searchTagString) >= 0 
+                                && smsTag.id !== "tags"
+                                && smsTag.id !== "phone" 
+                                && smsTag.id !== "mobile" 
+                                && smsTag.id !== "momCellPhone" 
+                                && smsTag.id !== "dadCellPhone"
+                                && smsTag.id !== "createdBy"
+                                && smsTag.id !== "createdAt"
+                                && smsTag.id !== "statusName"
+                                && smsTag.id !== "phaseName"
+                                && smsTag.id !== "contactType"
+                                && smsTag.id !== "ageGroup"
+                                && smsTag.id !== "sourceDetail"
+                                && smsTag.id !== "onTrial"
+                        )
+                           .map((tagItem, i) => (
+                             <li key={"keyField" + i}>
+                               <button
+                                 onClick={(e) =>
+                                   addKeywordEdit(e, tagItem.id)
+                                 }
+                               >
+                                 {tagItem.id}
+                               </button>
+                             </li>
+                           ))}
+                       </ul>
+                     </div>
+                   </div>
+                 )}
+                 {errorObj?.body.trim() != "" ? (
+                   <p className="errorMsg">{errorObj.body}</p>
+                 ) : (
+                   ""
+                 )}
+               </div>
+             </div>
 
-                    <MergeTag addfeild={(e,field)=> addKeywordEdit(e,field)}/>
+             <div className="slice">
+               <label>Upload file to send this message as MMS</label>
+               <div
+                 className={`cmnFormField upload cmnFieldStyle ${
+                   imgLoader ? "loading" : ""
+                 }`}
+               >
+                 <input
+                   type="file"
+                   id="file"
+                   ref={inputFile}
+                   onChange={uploadImage}
+                 />
+                 <span>Choose File</span>
+               </div>
+             </div>
 
-                  
-                  {errorObj?.body.trim() != "" ? (
-                    <p className="errorMsg">{errorObj.body}</p>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </div>
-
-              <div className="slice">
-                <label>Upload file to send this message as MMS</label>
-                <div
-                  className={`cmnFormField upload cmnFieldStyle ${
-                    imgLoader ? "loading" : ""
-                  }`}
-                >
-                  <input
-                    type="file"
-                    id="file"
-                    ref={inputFile}
-                    onChange={uploadImage}
-                  />
-                  <span>Choose File</span>
-                </div>
-              </div>
-
-            
-          </div>
-        </div>
-        <div class="call_modal_footer">
-              <button type="button" class="cancel"
-                  onClick={props.smsModalOff}
-                >
-                  Cancel 
-                </button>
-            
-              <button className="cmnBtn" disabled={imgLoader}>
-                  Send SMS <img src={arrow_forward} alt="" />
-              </button>
-          </div>
-        </form>
+             <div className="slice text-center">
+               <button className="cmnBtn" disabled={imgLoader}>
+                 Send SMS <img src={arrow_forward} alt="" />
+               </button>
+             </div>
+           </form>
+         </div>
+       </div>
      </div>
    </div>
  );
