@@ -134,3 +134,6 @@
 
 # QI phase 2 V1.0.1
     - QI sprint 10 tasks Issue fixing  
+
+# HOTFIX V1.2.3
+    - Gym details page contact email field implemented

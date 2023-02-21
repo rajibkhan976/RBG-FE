@@ -13,6 +13,7 @@ import infos from "../../../assets/images/infos.svg";
 import regenerate from "../../../assets/images/regenerate.svg";
 import target_blank from "../../../assets/images/target_blank.svg";
 import * as actionTypes from "../../../actions/types";
+import env from "../../../configuration/env";
 
 import AddHolidayModal from "./addHolidayModal";
 import config from "../../../configuration/config";
@@ -485,6 +486,10 @@ const regenerateCodeHandler = (e) =>{
                 <div className="formControl timezone gymInfo">
                   <label className="cmnFieldName timezoneLbl">Organization Email <span class="infoSpan"><img src={infos} alt=""/><span class="tooltiptextInfo">It will be use for Email sending purpose from this platform as 'From'</span></span></label>
                   <input type="text" value={gymData.contactEmail} disabled />
+                </div>
+                <div className="formControl timezone gymInfo">
+                  <label className="cmnFieldName timezoneLbl">Contact Email</label>
+                  <input type="text" value={gymData.code + "@" + env.EMAIL_DOMAIN} disabled />
                 </div>
                 <div className={hasTimezone ? "hide" : "cz_timezoneWarning"}>The timezone is not saved yet. Please edit the details and save the timezone.</div>
                 <div className="accessCode">
