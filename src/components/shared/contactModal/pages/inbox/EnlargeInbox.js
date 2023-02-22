@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import Loader from "../../../Loader";
-import cross from "../../../../../assets/images/cross.svg";
+import cross from "../../../../../assets/images/cross_icon.svg";
 import email_template from "../../../../../assets/images/email_template.svg";
 import iconSmsOut from "../../../../../assets/images/iconSmsOut.svg";
 import iconSmsIn from "../../../../../assets/images/iconSmsIn.svg";
@@ -45,7 +45,8 @@ const EnlargeInbox = (props) => {
                             <img src={props.contentShowInModal?.direction === "inbound" ? iconSmsIn : iconSmsOut }
                                     alt=""/>
                         </div>
-                        <span>{ props.contentShowInModal?.message} </span></h3>
+                        <span>{ props.contentShowInModal?.message} </span>
+                    </h3>
                     </>
                  }
                 {props.contentShowInModal?.type === "EMAIL" &&
@@ -59,7 +60,7 @@ const EnlargeInbox = (props) => {
                         </div> 
                         <span> {  props.contentShowInModal?.subject}</span> </h3>
                      
-                     <div dangerouslySetInnerHTML={{__html:  props.contentShowInModal?.template}}></div>
+                     <div className="description" dangerouslySetInnerHTML={{__html:  props.contentShowInModal?.template}}></div>
                     </>
                  }
                     

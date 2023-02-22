@@ -256,8 +256,14 @@ const GymDetails = (props) => {
           data: {...userData, organizationTimezone: gymData.timezone.toString()}
         });
         console.log("Updated Data", updatedData);
-        setSuccessMsg("Gym details updated successfully");
-        setTimeout(() => { setShowEditForm(false) }, 5000);
+        // setSuccessMsg("Gym details updated successfully");
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: "Gym details updated successfully",
+          typeMessage: 'success'
+        })
+        // setTimeout(() => { setShowEditForm(false) }, 5000);
+        setShowEditForm(false)
       }
     } catch (e) {
       setErrorMsg(e.message);
@@ -439,7 +445,7 @@ const regenerateCodeHandler = (e) =>{
         <div className="gymDetails">
           <div className="gymdetails_left">
             {!showEditForm &&
-              <div className="showing_gym_data">
+              <div className="showing_gym_data not_disabled_data">
                 <div className="gymName">
                   <div className="profilePicture">
                     <div className="logo_profile">
@@ -476,20 +482,23 @@ const regenerateCodeHandler = (e) =>{
                       <h3>45 min</h3>
                       </div>
                   </div> */}
-                <div className="formControl timezone gymInfo">
-                  <label className="cmnFieldName timezoneLbl">Timezone</label>
-                  <select disabled>
+                <div className="formControl timezone gymInfo show">
+                  <p className="cmnFieldName timezoneLbl">Timezone:</p>
+                  {/* <select>
                     <option>{(gymData?.timezone) ? gymData?.timezone : "-"}</option>
-                  </select>
+                  </select> */}
+                  <p>{(gymData?.timezone) ? gymData?.timezone : "-"}</p>
                 </div>
-                <div className="lineBreak"></div>
-                <div className="formControl timezone gymInfo">
-                  <label className="cmnFieldName timezoneLbl">Organization Email <span class="infoSpan"><img src={infos} alt=""/><span class="tooltiptextInfo">It will be use for Email sending purpose from this platform as 'From'</span></span></label>
-                  <input type="text" value={gymData.contactEmail} disabled />
+                {/* <div className="lineBreak"></div> */}
+                <div className="formControl timezone gymInfo show">
+                  <p className="cmnFieldName timezoneLbl">Organization Email: <span class="infoSpan"><img src={infos} alt=""/><span class="tooltiptextInfo">It will be use for Email sending purpose from this platform as 'From'</span></span></p>
+                  {/* <input type="text" value={gymData.contactEmail} /> */}
+                  <p className="">{gymData.contactEmail}</p>
                 </div>
-                <div className="formControl timezone gymInfo">
-                  <label className="cmnFieldName timezoneLbl">Contact Email</label>
-                  <input type="text" value={gymData.code + "@" + env.EMAIL_DOMAIN} disabled />
+                <div className="formControl timezone gymInfo show">
+                  <p className="cmnFieldName timezoneLbl">Contact Email:</p>
+                  {/* <input type="text" value={gymData.code + "@" + env.EMAIL_DOMAIN} /> */}
+                  <p className="">{gymData.code + "@" + env.EMAIL_DOMAIN}</p>
                 </div>
                 <div className={hasTimezone ? "hide" : "cz_timezoneWarning"}>The timezone is not saved yet. Please edit the details and save the timezone.</div>
                 <div className="accessCode">
