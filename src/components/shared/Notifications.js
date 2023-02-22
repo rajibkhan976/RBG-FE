@@ -243,7 +243,7 @@ const Notifications = (props) => {
                                         Back
                                     </button>
                                 </h4>
-                                <ul className="detailNotifList">
+                                <ul className="detailNotifList notificationList">
                                     {
                                         notification[notificationsType].data.length ? notification[notificationsType].data.map((e, i) => {
                                             return (

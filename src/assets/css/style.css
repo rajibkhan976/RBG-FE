@@ -16028,3 +16028,39 @@ notification group design fixing
   border-radius: 12px;
   overflow: hidden;
 }
+.not_disabled_data .gymInfo.show {
+    text-align: left;
+    padding: 30px 20px;
+    border-bottom: 1px solid #D3D9DE;
+    margin: 0px;
+}
+.not_disabled_data .gymInfo.show p{
+    display: block;
+    margin-bottom: 0px;
+}
+.not_disabled_data .gymInfo.show p:first-child{
+    color: #305671;
+    float: left;
+    margin-right: 10px;
+    width: 38%;
+}
+.not_disabled_data .gymInfo p:last-child{
+    color: #55BBC9;
+    margin-top: 0px;
+}
+.not_disabled_data .gymInfo.show:nth-of-type(3n){
+    border-bottom: 0px;
+    margin-bottom: 20px;
+}
+.not_disabled_data .gymInfo.show .infoSpan{
+    top:0px
+}
+.showing_gym_data .gymInfo{
+    margin-top: 0px;
+}
+.gymDetails .gymdetails_left, .gymDetails .gymdetails_right{
+    margin-top: 27px;
+}
+.detailNotifList.notificationList .notiTime_n_Icon{
+    z-index: 2;
+}
