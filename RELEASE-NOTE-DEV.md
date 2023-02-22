@@ -137,3 +137,5 @@
 
 # HOTFIX V1.2.3
     - Gym details page contact email field implemented
+# HOTFIX V1.2.4
+    - Mailgun UAT issue fixing on email template length and modal percentage of bulk email and SMS
