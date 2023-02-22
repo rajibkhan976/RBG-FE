@@ -239,3 +239,17 @@ other fixing
     font-size: 10px;
   }
 }
+
+
+
+/* // after mailgun issue fixing  */
+
+.cmnFieldStyle.btnSelect span {
+  display: block;
+}
+
+.bulkSmsModel.sideMenuInner {
+  width: 50%;
+  max-width: 820px;
+}
+
