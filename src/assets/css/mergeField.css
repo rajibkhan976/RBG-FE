@@ -331,38 +331,39 @@ CSS to change the modal style in the platform
 /* .......................................
 HOTFIX v1.2.4
 ........................................*/
-.slickModalBody{
+.modalAddEmail .slickModalBody{
   border-radius: 0px;
 }
-.slickModalBody .modalForm.showMSG h3{
+.modalAddEmail .slickModalBody .modalForm.showMSG h3{
   display: flex;
   align-items: flex-start;
   padding-top: 0px;
 }
-.slickModalBody .modalForm.showMSG h3 span{
+.modalAddEmail .slickModalBody .modalForm.showMSG h3 span{
   font-weight: 500;
+  margin-right: 30px;
 }
-.slickModalBody .modalForm.showMSG .msgTypeIcon{
+.modalAddEmail .slickModalBody .modalForm.showMSG .msgTypeIcon{
   flex: 0 0 30px;
   position: relative;
   left:0px;
   top:6px;
 }
-.slickModalBody .modalForm{
-  max-height: 55vh;
-}
-.slickModalBody .slickModalHeader .topCross{
+/* .modalAddEmail .slickModalBody .modalForm{
+  height: 100%;
+} */
+.modalAddEmail .slickModalBody .slickModalHeader .topCross{
   z-index: 99999;
   right: 25px;
   top: 31px;
 }
-.slickModalBody .slickModalHeader .topCross img{
+.modalAddEmail .slickModalBody .slickModalHeader .topCross img{
   display: block;
 }
-.slickModalBody .modalForm.showMSG .description{
+.modalAddEmail .slickModalBody .modalForm.showMSG .description{
   padding-left: 40px;
 }
-.slickModalBody .modalForm.showMSG .description p{
+.modalAddEmail .slickModalBody .modalForm.showMSG .description p{
   margin-top: 0px;
   padding-bottom: 0px;
   padding-right: 20px;
