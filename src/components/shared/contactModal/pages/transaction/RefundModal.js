@@ -196,7 +196,7 @@ const RefundModal = (props) => {
                     <p>Fill out below details for refund</p>
                 </div>
                 
-                    <div className="cmnForm">
+                    <div className="modalForm auto">
                         <form>
                             <div className={formErrorMsg.amount ? "cmnFormRow errorField" : "cmnFormRow"}>
                                 <label className="cmnFieldName">Refund Amount</label>

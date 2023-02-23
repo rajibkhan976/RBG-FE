@@ -496,7 +496,7 @@ const regenerateCodeHandler = (e) =>{
                 </div>
                 {/* <div className="lineBreak"></div> */}
                 <div className="formControl timezone gymInfo show">
-                  <p className="cmnFieldName timezoneLbl">Organization Email: <span class="infoSpan"><img src={infos} alt=""/><span class="tooltiptextInfo">It will be use for Email sending purpose from this platform as 'From'</span></span></p>
+                  <p className="cmnFieldName timezoneLbl">Organization Email: <span class="infoSpan"><img src={infos} alt=""/><span class="tooltiptextInfo">It will be used for Email sending purpose from this platform as 'From'</span></span></p>
                   {/* <input type="text" value={gymData.contactEmail} /> */}
                   <p className="">{gymData.contactEmail}</p>
                 </div>
