@@ -142,5 +142,9 @@
 
 # HOTFIX V1.2.4
     - Notification and gym details issue fixed
+
 # HOTFIX V1.2.5
     - Hodilay issue solved
+
+# HOTFIX V1.2.6
+    - Hot fix on modal design breaking   
