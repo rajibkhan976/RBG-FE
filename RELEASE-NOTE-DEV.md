@@ -148,3 +148,6 @@
 
 # HOTFIX V1.2.6
     - Hot fix on modal design breaking   
+
+# HOTFIX V1.2.7
+    - Hot fix on modal design breaking and others       

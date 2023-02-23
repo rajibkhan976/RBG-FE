@@ -331,40 +331,56 @@ CSS to change the modal style in the platform
 /* .......................................
 HOTFIX v1.2.4
 ........................................*/
-.modalAddEmail .slickModalBody{
+.modalEnlargeEmail .slickModalBody{
   border-radius: 0px;
 }
-.modalAddEmail .slickModalBody .modalForm.showMSG h3{
+.modalEnlargeEmail .slickModalBody .modalForm.showMSG h3{
   display: flex;
   align-items: flex-start;
   padding-top: 0px;
 }
-.modalAddEmail .slickModalBody .modalForm.showMSG h3 span{
+.modalEnlargeEmail .slickModalBody .modalForm.showMSG h3 span{
   font-weight: 500;
   margin-right: 30px;
 }
-.modalAddEmail .slickModalBody .modalForm.showMSG .msgTypeIcon{
+.modalEnlargeEmail .slickModalBody .modalForm.showMSG .msgTypeIcon{
   flex: 0 0 30px;
   position: relative;
   left:0px;
   top:6px;
 }
-/* .modalAddEmail .slickModalBody .modalForm{
+/* .modalEnlargeEmail .slickModalBody .modalForm{
   height: 100%;
 } */
-.modalAddEmail .slickModalBody .slickModalHeader .topCross{
-  z-index: 99999;
-  right: 25px;
-  top: 31px;
+
+.modalEnlargeEmail .slickModalBody .modalForm{
+  overflow:hidden;
 }
-.modalAddEmail .slickModalBody .slickModalHeader .topCross img{
+.modalEnlargeEmail .slickModalBody .slickModalHeader .topCross{
+  z-index: 99999;
+  right: 17px;
+  top: 21px;
+}
+.modalEnlargeEmail .slickModalBody .slickModalHeader .topCross img{
   display: block;
 }
-.modalAddEmail .slickModalBody .modalForm.showMSG .description{
+.modalEnlargeEmail .slickModalBody .modalForm.showMSG .description{
   padding-left: 40px;
 }
-.modalAddEmail .slickModalBody .modalForm.showMSG .description p{
+.modalEnlargeEmail .slickModalBody .modalForm.showMSG .description p{
   margin-top: 0px;
   padding-bottom: 0px;
   padding-right: 20px;
+}
+
+.modalEnlargeEmail .enleargedBox {
+  overflow: auto;
+  height: 100%;
+}
+.userAddModal .slickModalBody .modalForm {
+  overflow: inherit;
+  max-height: 40vh;
+}
+.modalEnlargeEmail .enleargedBox table {
+  width: 95%;
 }

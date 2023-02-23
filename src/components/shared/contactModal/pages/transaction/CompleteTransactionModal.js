@@ -76,7 +76,7 @@ const CompleteTransactionModal = (props) => {
                     <h3>Complete Transactions</h3>
                     <p>Complete Transactions for Program/Product</p>
                 </div>
-                <div className="cmnForm">
+                <div className="modalForm auto">
                     <form>
                         <div className="cmnFormRow">
                             <label className="cmnFieldName">Transaction Amount</label>

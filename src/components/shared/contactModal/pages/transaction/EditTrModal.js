@@ -144,7 +144,7 @@ const EditTrModal = (props) => {
     const fetchCardBank = async () => {
         console.log("Fetch Card bank")
         try {
-            setIsLoader(true);
+           // setIsLoader(true);
             let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
             if (cardBankResponce) {
                 setCardList(cardBankResponce.cards);
