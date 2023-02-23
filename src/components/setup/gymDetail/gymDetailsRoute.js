@@ -25,5 +25,4 @@ const GymDetailsRouter = (props) => {
         </React.Fragment>
     );
 }
-
 export default GymDetailsRouter;

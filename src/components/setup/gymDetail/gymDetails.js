@@ -357,7 +357,12 @@ const GymDetails = (props) => {
       setIsLoader(false);
       setOption(false);
       setDeleteConfirmBox(false);
-      setSuccessMsg("Holiday deleted successfully");
+      // setSuccessMsg("Holiday deleted successfully");
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: "Holiday deleted successfully",
+        typeMessage: 'success'
+      })
       fetchGymDetails();
     }
   };
@@ -646,7 +651,7 @@ const regenerateCodeHandler = (e) =>{
                 <div className="holidayListHeader">
                   <div>
                     <h3>Holiday List</h3>
-                    <p>Explanatory text blurb here</p>
+                    <p>Manage your holidays</p>
                   </div>
                 </div>
                 <div className="addInEmptySpace">

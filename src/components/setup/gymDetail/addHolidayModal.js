@@ -7,8 +7,8 @@ import crossTop from "../../../assets/images/cross.svg";
 import modalholidayIcon from "../../../assets/images/modalholidayIcon.svg";
 
 import { GymDetailsServices } from "../../../services/gymDetails/GymDetailsServices";
-
-
+import { useDispatch, useSelector } from "react-redux";
+import * as actionTypes from "../../../actions/types";
 const AddHolidayModal = (props) => {
 
   const [option, setOption] = useState(null);
@@ -18,7 +18,7 @@ const AddHolidayModal = (props) => {
   const [modalPopMsgerror2, setModalPopMsgerror2] = useState(false);
   const [modalPopMsgerror3, setModalPopMsgerror3] = useState(false);
   const [isLoader, setIsLoader] = useState(false);
-
+  const dispatch = useDispatch();
   const [modalPopMsgsuccess, setModalPopMsgsuccess] = useState(false);
   const [holiday , setHoliday] = useState(props.holiday);
   // const [holidayStart , setHolidayStart] = useState(props.holiday.fromDate);
@@ -74,14 +74,29 @@ const AddHolidayModal = (props) => {
         setLoader(true);
         if(editHoliday){
           let result = await GymDetailsServices.gymHolidayUpdate(holiday);
-          setSuccessMsg(result.message);
+          // setSuccessMsg(result.message);
+          dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: result.message,
+            typeMessage: 'success'
+          })
         } else {
           let result = await GymDetailsServices.gymHolidayCreate(holiday);
-          setSuccessMsg(result.message);
+          // setSuccessMsg(result.message);
+          dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: result.message,
+            typeMessage: 'success'
+          })
         }
         
       } catch (e) {
-        setErrorMsg(e.message);
+        // setErrorMsg(e.message);
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: e.message,
+          typeMessage: 'error'
+        })
       } finally {
         setLoader(false);
         props.fetchGymDetails();
@@ -108,7 +123,7 @@ const AddHolidayModal = (props) => {
           setModalPopMsgsuccess(true);
           setTimeout(() => {
            props.closeAddHolidayModal();       
-         }, 5000);
+         }, 1000);
         }
         setModalPopMsgerror1(false);
         setModalPopMsgerror2(false);
