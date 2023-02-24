@@ -241,9 +241,9 @@ const handleStatusSubmitNew =(e) =>{
                 {modalPopMsgerror1 && <div className="errorMsg">Please fill up the holiday name field</div>}
               </div>
               
-              <div className="d-flex justified-space-between">
+              <div className="d-flex justified-space-between" style={{alignItems : "flex-start"}}>
                 <div className="formControl half firstHalf">
-                <label>Choose a date</label>
+                <label style={{paddingBottom: "9px"}}>Choose a date</label>
                 <div className="flatForm">
                   <span>From</span>
                   <input type="date"  name="" value={holiday.fromDate} onChange={holidayStarthandler} 
@@ -253,7 +253,7 @@ const handleStatusSubmitNew =(e) =>{
                 {modalPopMsgerror2 && <div className="errorMsg">Please fill up the start date</div>}
               </div>
               <div className="formControl half secondHalf">
-                <label></label> 
+                <label style={{paddingBottom: "9px"}}></label> 
                 <div className="flatForm">
                   <span>To</span>
                   <input type="date"  name="" value={holiday.toDate} onChange={holidayEndhandler} min={holiday.fromDate} />  

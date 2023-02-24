@@ -420,6 +420,7 @@ const AppointmentEditModal = (props) => {
 
   return (
     <div className="appointmentEditModal modalBackdrop">
+       <div className="modalBackdropBg" onClick={() => props.setEditAppointment(false)}></div> 
       <div className="slickModalBody">
         <div
           className={"slickModalHeader " + props.appointmentEdit.status + "Row"}
