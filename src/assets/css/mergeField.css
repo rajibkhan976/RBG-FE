@@ -384,3 +384,16 @@ HOTFIX v1.2.4
 .modalEnlargeEmail .enleargedBox table {
   width: 95%;
 }
+
+
+.contactModal .tabBarArea .slickModalBody .loaderOuter {
+  position: absolute;
+  height: 100%;
+}
+.slickModalBody .successPageBtn {
+  padding-bottom: 25px;
+}
+
+.modalBackdrop.transactionModal.transactionSuccssModal .slickModalBody {
+  padding: 0 20px;
+}

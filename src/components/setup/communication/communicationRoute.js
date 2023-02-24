@@ -30,7 +30,7 @@ const CommunicationRoutes = (props) => {
           { 
 
           }
-          {/* <Route path="/sms-setup" component={SmsSetup} /> */}
+          <Route path="/sms-setup" component={SmsSetup} />
           {/* {loginUser.email && loginUser.email === "samim@rbg.in" && <Route path="/email-setup" component={EmailSetup} />} */}
           
           <DashboardFooter />
