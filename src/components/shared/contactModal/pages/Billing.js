@@ -845,7 +845,7 @@ const expiration_month = cardExpairyMonthCheckFn();
     {confirmPopup ?
         <ConfirmBox
           callback={(isConfirmed) => changePaymentMethod(isConfirmed)} 
-          message="Are you sure, you want to change your primary paymant method?"
+          message="Are you sure, you want to change your primary payment method?"
         />
        : ""
       }

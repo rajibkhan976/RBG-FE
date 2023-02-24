@@ -397,3 +397,17 @@ HOTFIX v1.2.4
 .modalBackdrop.transactionModal.transactionSuccssModal .slickModalBody {
   padding: 0 20px;
 }
+
+/* 
+.slickModalBody .modalForm {
+  height: auto;
+  max-height: 75vh;
+  padding: 26px;
+} */
+
+.deleteSelectedModals {
+  height: 192px;
+}
+.alertMessage {
+  bottom: 90px;
+}

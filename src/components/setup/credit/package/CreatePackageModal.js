@@ -240,7 +240,7 @@ const CreatePackageModal = (props) => {
                     <h3>{editId ? "Update Package" : "Create a new Package"}</h3>
                     <p>{editId ? "Update packages for Organization" : "Create new packages for Organization"}</p>
                 </div>
-                <div className="cmnForm">
+                <div className="modalForm auto">
                     <form ref={creditForm}>
                         <div className="cmnFormRow">
                             <div className="cmnFieldName">
