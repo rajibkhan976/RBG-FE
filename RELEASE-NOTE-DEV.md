@@ -157,3 +157,6 @@
 
 # HOTFIX V1.2.9
     - Hot fix on design breaking and others v.3       
+
+# HOTFIX V1.3.0
+    - Hot fix on live design and api key issue

@@ -1066,7 +1066,7 @@ const EditTrModal = (props) => {
                                                                 </div>
                                                                 : ""}
                                                             <div className="d-flex justify-content-center mt20">
-                                                                <button className="creatUserBtn" onClick={submitBankChangeForm}><img className="plusIcon" src={plus_icon} alt="" /><span>Add my Card</span></button>
+                                                                <button className="creatUserBtn" onClick={submitBankChangeForm}><img className="plusIcon" src={plus_icon} alt="" /><span>Add my Bank</span></button>
                                                             </div>
 
                                                         </div>
