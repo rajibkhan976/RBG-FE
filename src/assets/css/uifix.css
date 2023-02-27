@@ -203,7 +203,7 @@ other fixing
 
 
 
-@media (max-width: 1600px){
+@media (max-width: 1640px){
   .flipCardHolder .cardList .cardAddBtn {
     font-size: 11px;
     padding: 0 5px;
@@ -301,3 +301,4 @@ other fixing
 .userAddModalForm .modalbtnHolder {
   margin-top: 0;
 }
+
