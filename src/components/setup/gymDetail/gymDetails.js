@@ -73,6 +73,7 @@ const GymDetails = (props) => {
       "prefix": "+1"
     }
   ]);
+  const reduxData  = useSelector((state) => state)
   const userData = useSelector((state) => (state.user?.data) ? state.user.data:"");
   const dispatch = useDispatch();
   // END - Variable set while development --- Jit
@@ -80,6 +81,7 @@ const GymDetails = (props) => {
     try {
       setIsLoader(true);
       const gymData = await GymDetailsServices.fetchGymDetail();
+      console.clear()
       console.log("Gym Details", gymData);
       setGetGymData({
         ...getGymData,
@@ -119,7 +121,7 @@ const GymDetails = (props) => {
     try {
       const timezoneList = await GymDetailsServices.fetchTimeZoneList();
       console.log("Timezone List --", timezoneList);
-      setTimezoneData(timezoneList.zones);
+      setTimezoneData(timezoneList);
     } catch (e) {
       console.log(e.message);
     }
@@ -150,6 +152,8 @@ const GymDetails = (props) => {
     }
   };
   useEffect(() => {
+
+    console.log("user data",userData,"detected timezone",detectedTimezone,"redux data",reduxData)
     fetchCountry();
     fetchGymDetails();
     getTimeZoneList();
@@ -624,11 +628,11 @@ const regenerateCodeHandler = (e) =>{
                       <option value="">-</option>
                     {timezoneData ? timezoneData.map(zone => {
                       return (<option
-                        value={zone.gmtOffset}
-                        data-timezone={zone.zoneName}
-                        selected={(zone.zoneName === gymData?.timezone) ? true : false }
+                        value={zone.utc_offset}
+                        data-timezone={zone.name}
+                        selected={(zone.name.toLowerCase() === gymData?.timezoneInfo.name.toLowerCase()) ? true : false }
                         // selected={(parseInt(zone.gmtOffset) === detectedTimezone.gmtOffset) ? true : ""}
-                      >{zone.countryCode} - {zone.zoneName}</option>);
+                      >{zone.abbr} - {zone.name}({zone.utc_offset})</option>);
                     }) : ''}
                   </select>
                   <div className="errorMsg">{validateMsg.timezone}</div>
