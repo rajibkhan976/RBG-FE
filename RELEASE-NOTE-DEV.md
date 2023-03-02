@@ -175,3 +175,6 @@
     - Fixed automation notification issue
 # Automation V3.0.6
     - Fixed automation notification issue
+# HOTFIX Attendence & Appointments V1.0.0
+    - CR given by Brian for Attendance
+    - CR and IR by team for Appointments

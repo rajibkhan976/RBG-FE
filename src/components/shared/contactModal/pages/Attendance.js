@@ -4,7 +4,7 @@ import history from "../../../../assets/images/histroy_icon_white.svg";
 import comment from "../../../../assets/images/comment.svg";
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import FullCalendar from '@fullcalendar/react'; // must go before plugins
 
 import dayGridPlugin from '@fullcalendar/daygrid';// a plugin!
@@ -18,8 +18,8 @@ import cal_arrow2 from "../../../../assets/images/cal_arrow2.svg";
 import dropArrow from "../../../../assets/images/dropArrow.svg";
 import Loader from "../../Loader";
 import momentTZ from "moment-timezone";
+import * as actionTypes from "../../../../actions/types";
 const moment = extendMoment(Moment);
-
 
 
 
@@ -33,36 +33,48 @@ const Attendance = (props) => {
   const [enableCheckIn, setEnableCheckIn] = useState(false);
   const [isTodayHoliday, setIsTodayHoliday] = useState(false);
   const calenderRef = useRef([]);
-  const listOfMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul","Aug","Sep","Oct","Nov","Dec"];
+  const listOfMonth = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
   const listOfYear = Array(20).fill(2015).map((x, y) => x + y);
   const [initialDate, setInitialDate] = useState(null);
   const [isLoader, setIsLoader] = useState(false);
   const [calendarMonth, setCalendarMonth] = useState(moment().format("M"));
   const [calendarYear, setCalendarYear] = useState(moment().format("YYYY"));
+  const [hasActiveContract, setHasActiveContract] = useState(0);
+  const dispatch = useDispatch();
   const dateTimeFormat = "YYYY-MM-DD HH:mm:ss";
   const dateFormat = "YYYY-MM-DD";
-  
+
   const loggedInUser = useSelector((state) => state.user.data);
   const [tz, setTz] = useState(("UTC"));
 
   useEffect(() => {
-    console.log("loggedInUser", loggedInUser)
+    // console.log("loggedInUser", loggedInUser)
     if (loggedInUser && loggedInUser.organizationTimezone) {
-        setTz(loggedInUser.organizationTimezone)
+      setTz(loggedInUser.organizationTimezone);
+      checkInStatusCheck();
     }
-    
-},[loggedInUser])
+
+  }, [loggedInUser])
 
   const openCheckInModal = (e) => {
     e.preventDefault();
-    setDisplayModal(true)
+    if (!hasActiveContract) {
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: "No Active contract found for this contact",
+        typeMessage: "error",
+      });
+    } else {
+      setDisplayModal(true)
+    }
   }
   const closeHolidayModal = (e) => {
     setDisplayModal(false)
   }
 
   const checkInStatusCheck = async () => {
-    let resp = await AttendanceServices.checkInStatus(props.contactId)
+    let resp = await AttendanceServices.checkInStatus(props.contactId);
+    if (resp.contractStatus) setHasActiveContract(1);
     if (resp.isAlreadyCheckedIn) {
       setEnableCheckIn(false);
     } else {
@@ -74,85 +86,162 @@ const Attendance = (props) => {
     setEnableCheckIn(false);
   }
 
-  useEffect(async () => {
-    console.log("loggedInUser", loggedInUser)
-    checkInStatusCheck();
-  },[]);
+  // useEffect(async () => {
+  //   console.log("loggedInUser", loggedInUser)
+  //   checkInStatusCheck();
+  // },[]);
+
   const fetchAttendances = async () => {
     try {
-    if (dateRange?.start) {
-      setIsLoader(true);
-      let payload = {
-        fromDate: moment(dateRange.start).tz(tz).add(1, "days").format("YYYY-MM-DD"),
-        toDate: moment(dateRange.end).tz(tz).subtract(1, "days").format("YYYY-MM-DD"),
-      }
-      let todayDate = momentTZ.tz(tz);
-      let attendances = await AttendanceServices.fetchAttendances(payload, props.contactId);
-      let eventArr = [];
-      let attenCount = attendances.attendance.length;
-      setAttendanceCount(attenCount);
-      // Set calander to last attendance date
-      if (attenCount) {
-        setInitialDate(attendances.attendance[attenCount-1].checkedInAt);
-      }
-      for (let atten of attendances.attendance) {
-        let eventObj = {
-          start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
-          checkedInAt: convertUTCtoTZ(atten.checkedInAt), 
-          note: atten.note,
-          name: atten.contact.firstName + " " + atten.contact.lastName,
-          email: atten.contact.email,
-          checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName
+      if (dateRange?.start) {
+        setIsLoader(true);
+        let payload = {
+          fromDate: moment(dateRange.start).tz(tz).add(1, "days").format("YYYY-MM-DD"),
+          toDate: moment(dateRange.end).tz(tz).subtract(1, "days").format("YYYY-MM-DD"),
         }
-        console.log("event ", eventObj)
-        eventArr.push(eventObj);
-      }
-      // let payload.fromDate
-      var range = moment().range(moment(dateRange.start), moment(dateRange.end));
-      let dateRangeArr = Array.from(range.by('day', { step: 1 }));
-      for (let mDate of dateRangeArr) {
-
-        let eventObj = {
-          start: mDate.format("YYYY-MM-DD"),
-          isBlankDate: true
+        let todayDate = momentTZ.tz(tz);
+        let attendances = await AttendanceServices.fetchAttendances(payload, props.contactId);
+        let eventArr = [];
+        let attenCount = attendances.attendance.length || 0;
+        setAttendanceCount(attenCount);
+        // Set calander to last attendance date
+        if (attenCount) {
+          setInitialDate(attendances.attendance[attenCount - 1].checkedInAt);
         }
+        // for (let atten of attendances.attendance) {
+        //   let eventObj = {
+        //     start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
+        //     checkedInAt: convertUTCtoTZ(atten.checkedInAt),
+        //     note: atten.note,
+        //     name: atten.contact.firstName + " " + atten.contact.lastName,
+        //     email: atten.contact.email,
+        //     checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName
+        //   }
+        //   // console.log("event ", eventObj)
+        //   eventArr.push(eventObj);
+        // }
+        // let payload.fromDate
+        var range = moment().range(moment(dateRange.start), moment(dateRange.end).subtract(1, "day"));
+        let dateRangeArr = Array.from(range.by('day', { step: 1 }));
+        // for (let mDate of dateRangeArr) {
 
-        // Holiday filter
-        if (attendances.holidays) {
-          for (let holiday of attendances.holidays) {
+        //   let eventObj = {
+        //     start: mDate.format("YYYY-MM-DD"),
+        //     isBlankDate: true
+        //   }
+
+        //   // Holiday filter
+        //   if (attendances.holidays) {
+        //     for (let holiday of attendances.holidays) {
+        //       if (
+        //         moment(mDate).isBetween(holiday.fromDate, holiday.toDate) ||
+        //         moment(mDate).isSame(holiday.fromDate) ||
+        //         moment(mDate).isSame(holiday.toDate)
+        //       ) {
+        //         eventObj = {
+        //           start: mDate.format("YYYY-MM-DD"),
+        //           name: holiday.name,
+        //           title: holiday.name,
+        //           isHoliday: true,
+        //           className: "hasHoliday"
+        //         }
+
+        //       }
+        //     }
+        //   }
+        //   eventArr.push(eventObj);
+        // }
+
+        console.clear();
+        eventArr = dateRangeArr.map(el => {
+          // console.log("Date", el.format("YYYY-MM-DD"));
+          let eventObj = {
+            start: el.format("YYYY-MM-DD"),
+            isBlankDate: true
+          };
+          const checkedInObj = [];
+          attendances?.attendance.length && attendances.attendance.forEach(atten => {
+            if (convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD") === eventObj.start) {
+              checkedInObj.push({
+                checkedInAt: convertUTCtoTZ(atten.checkedInAt),
+                note: atten.note,
+                name: atten.contact.firstName + " " + atten.contact.lastName,
+                email: atten.contact.email,
+                checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName,
+                isBlankDate: false
+              });
+            }
+          });
+          console.log("Checkin", checkedInObj)
+          const holidays = [];
+          attendances?.holidays?.length && attendances.holidays.forEach(holiday => {
+            // console.log("EL",moment(el).isBetween(holiday.fromDate, holiday.toDate));
+            if(isToday(moment(holiday.fromDate).format("YYYY-MM-DD"),moment(holiday.toDate).format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))) {
+              setIsTodayHoliday(true);
+            }
             if (
-              moment(mDate).isBetween(holiday.fromDate, holiday.toDate) ||
-              moment(mDate).isSame(holiday.fromDate) ||
-              moment(mDate).isSame(holiday.toDate)
-            ) {            
-              eventObj = {
-                start: mDate.format("YYYY-MM-DD"),
+              moment(el).isBetween(holiday.fromDate, holiday.toDate) ||
+              moment(el).isSame(holiday.fromDate) ||
+              moment(el).isSame(holiday.toDate)
+            ) {
+
+              holidays.push({
                 name: holiday.name,
                 title: holiday.name,
                 isHoliday: true,
-                className: "hasHoliday"
-              }
-                
+                className: "hasHoliday",
+                isBlankDate: false
+              });
+
             }
-          }
-        }  
-        eventArr.push(eventObj);
-              
+          });
+
+          // console.log("Checkin OBJ", checkedInObj);
+          return {
+            ...eventObj,
+            ...checkedInObj[0],
+            ...holidays[0]
+          };
+        });
+        // console.log("Today", today);
+        // attendances?.holidays?.length && attendances.holidays.forEach(el => {
+        //   if(isToday(moment(el.fromDate).format("YYYY-MM-DD"),moment(el.toDate).format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))) {
+        //     setIsTodayHoliday(true);
+        //   }
+        // })
+
+        // console.log("New Evt Arr", newEvtObj)
+        // console.log("Attendances", attendances.attendance);
+        // console.log("Date Range", dateRangeArr);
+        // eventArr = newEvtObj;
+        console.log("eventArr", eventArr);
+        setEvents(eventArr);
+        setIsLoader(false);
       }
-      console.log("eventArr", eventArr)
-      setEvents(eventArr);
-      setIsLoader(false);
-    }
     } catch (e) {
       setIsLoader(false);
       console.log("Error", e.message)
     }
   }
-  useEffect(async () => {
+
+  const isToday = (fromDate, toDate, currentDate) => {
+    const date = new Date(currentDate.toString());
+    const start = new Date(fromDate.toString());
+    const end = new Date(toDate.toString());
+
+    if (date >= start && date <= end) {
+      // console.log(currentDate, '✅ date is between the 2 dates');
+      return true;
+    } else {
+      // console.log('⛔️ date is not in the range');
+      return false;
+    }
+  }
+  useEffect(() => {
     fetchAttendances();
   }, [dateRange])
 
-  useEffect(async () => {
+  useEffect(() => {
     let api = calenderRef.current.getApi()
     let month = calendarMonth < 10 ? "0" + calendarMonth : calendarMonth;
     let jumpTo = calendarYear + "-" + month + "-01";
@@ -168,7 +257,7 @@ const Attendance = (props) => {
   const handleCalMonthChange = (e) => {
     setCalendarMonth(e.target.value);
   }
-  
+
   const prevMonth = () => {
     if (calendarMonth == 1) {
       setCalendarMonth(12);
@@ -193,35 +282,37 @@ const Attendance = (props) => {
     if (format) {
       convertedDate = convertedDate.format(format);
     }
-    console.log("raw date", date)
-    console.log("utcDate", utcDate)
-    console.log("convertedDate", convertedDate)
+    // console.log("raw date", date)
+    // console.log("utcDate", utcDate)
+    // console.log("convertedDate", convertedDate)
     return convertedDate;
   }
 
   const renderEventContent = (e) => {
-    // console.log("Render e", e.event.extendedProps, e)
+    // console.log("Render e", e.event._instance.range.start)
 
     if (!e.event._instance.range && e.event._instance.range.start) {
-        return false;
+      return false;
     }
-
+    // console.log("Start", e.event._instance.range.start);
+    // console.log("End", e.event._instance.range.end);
+    // console.log("Check In", e.event.extendedProps.checkedInAt);
     if (e.view.type == "listMonth") {
       let isHoliday = e.event.extendedProps?.isHoliday ? true : false;
       let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
-      let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
-
+      let eventDate = moment(dateSource).format("ddd, DD");
+      console.log("Date", dateSource);
       if (isHoliday) {
         eventDate = moment(e.event._instance.range.start).format("ddd, DD");
       }
-      
-      console.log("dateSource", eventDate)
-      
+
+      // console.log("dateSource", eventDate)
+
       let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
       if (e.event.extendedProps.checkInBy) {
-        console.log("event dateSource >>>", e.event.extendedProps.checkedInAt, convertUTCtoTZ(e.event.extendedProps.checkedInAt, "YYYY-MM-DD HH:mm:ss"))
+        // console.log("event dateSource >>>", e.event.extendedProps.checkedInAt, convertUTCtoTZ(e.event.extendedProps.checkedInAt, "YYYY-MM-DD HH:mm:ss"))
       }
-      
+
       return (
         <>
           {!isHoliday ?
@@ -252,9 +343,9 @@ const Attendance = (props) => {
 
         </>
       )
-      
+
     }
-   
+
   }
 
   const eventsSet = (e) => {
@@ -267,21 +358,21 @@ const Attendance = (props) => {
           <h3 className="headingTabInner">Attendance</h3>
           <p className="subheadingTabInner">View monthly attendance data</p>
         </div>
-        <div className="action"> 
-          {enableCheckIn && !isTodayHoliday? 
-          <button className="orangeBtn clockinBtn" onClick={openCheckInModal}>
-            <img src={history} alt="" /> Check In
-          </button>
-          :
-          <button className="checkedIn orangeBtn clockinBtn" disabled>
-            <img src={history} alt="" /> {isTodayHoliday ? "Check In" : "Checked In"} 
-          </button>
+        <div className="action">
+          {enableCheckIn && !isTodayHoliday ?
+            <button className="orangeBtn clockinBtn" onClick={openCheckInModal}>
+              <img src={history} alt="" /> Check In
+            </button>
+            :
+            <button className="checkedIn orangeBtn clockinBtn" disabled>
+              <img src={history} alt="" /> {isTodayHoliday ? "Check In" : "Checked In"}
+            </button>
           }
         </div>
       </div>
 
       <div className="attendenceContactModal">
-        
+
         <div className="attendanceTableHeader">
           <table>
             <tr>
@@ -294,30 +385,30 @@ const Attendance = (props) => {
         <div className="customCalendarHeader">
           <div className="tableHeader attendencePage">
             <div className="headMiddle">
-               <button className="noBg" onClick={prevMonth}><img src={cal_arrow1} /></button>
-                 <select
-                  value={calendarMonth}
-                  onChange={handleCalMonthChange}
-                 >
-                  {listOfMonth.map((el, key) => {               
-                    return (
-                      <option key={"m" + key} value={key + 1}>{el}</option>
-                      )
-                  })
+              <button className="noBg" onClick={prevMonth}><img src={cal_arrow1} /></button>
+              <select
+                value={calendarMonth}
+                onChange={handleCalMonthChange}
+              >
+                {listOfMonth.map((el, key) => {
+                  return (
+                    <option key={"m" + key} value={key + 1}>{el}</option>
+                  )
+                })
                 }
-                 </select>
-                 <select
-                  value={calendarYear}
-                  onChange={handleCalYearChange}
-                 >
-                  {listOfYear.map((el, key) => {               
-                    return (
-                      <option key={"y" + key} value={el}>{el}</option>
-                      )
-                  })
+              </select>
+              <select
+                value={calendarYear}
+                onChange={handleCalYearChange}
+              >
+                {listOfYear.map((el, key) => {
+                  return (
+                    <option key={"y" + key} value={el}>{el}</option>
+                  )
+                })
                 }
-                 </select>
-               <button className="noBg" onClick={nextMonth}><img src={cal_arrow2} /></button>
+              </select>
+              <button className="noBg" onClick={nextMonth}><img src={cal_arrow2} /></button>
             </div>
             <div className="attendanceCount">Attended  : <span> {attendanceCount} days</span></div>
           </div>
@@ -336,7 +427,7 @@ const Attendance = (props) => {
           events={events}
           eventsSet={eventsSet}
           ref={calenderRef}
-          allDay= {false}
+          allDay={false}
           datesSet={handleMonthChange}
           eventContent={renderEventContent}
           noEventsText={""}
@@ -346,11 +437,11 @@ const Attendance = (props) => {
       </div>
       {displayModal &&
         <>
-          <AddCommentModal 
-          closeAddHolidayModal={closeHolidayModal} 
-          contactId={props.contactId} 
-          checkInStatus={disableCheckBtn}
-          fetchAttendances={fetchAttendances}
+          <AddCommentModal
+            closeAddHolidayModal={closeHolidayModal}
+            contactId={props.contactId}
+            checkInStatus={disableCheckBtn}
+            fetchAttendances={fetchAttendances}
           />
         </>
       }

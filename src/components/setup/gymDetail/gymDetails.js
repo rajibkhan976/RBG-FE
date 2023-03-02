@@ -535,7 +535,7 @@ const regenerateCodeHandler = (e) =>{
                       {!editAccess && <span class="tooltiptextInfo">Regenerate has been disabled</span>}
                   </div>
                   <div className="copy_url_gen">
-                    <span>{config.appUrl}/check-in-portal <button onClick={() => window.open(config.appUrl + "/check-in-portal")}><img src={target_blank} alt=""/></button></span>
+                    <span>{window.location.origin}/check-in-portal <button onClick={() => window.open(window.location.origin + "/check-in-portal")}><img src={target_blank} alt=""/></button></span>
                     
                     <div className="relative infoSpan">
                       <button className={copiedurl ? "copy_button active" : "copy_button"} onClick={() => {copy(config.appUrl +"/check-in-portal");setCopiedurl(true);}}><img src={copyIcon} alt=""/></button>

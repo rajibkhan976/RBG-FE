@@ -16,6 +16,7 @@ import { useDispatch } from "react-redux";
 import * as actionTypes from "../../../../../actions/types";
 import { AppointmentServices } from "../../../../../services/appointment/appointment";
 import TagList from "../../../../appointment/TagList";
+import { utils } from "../../../../../helpers";
 
 const AddAppointmentModal = (props) => {
   const toggleTags = useRef(null);
@@ -37,6 +38,8 @@ const AddAppointmentModal = (props) => {
     toTime: "",
   });
   const dispatch = useDispatch();
+  const [isDisabled, setIsDisabled] = useState(false);
+  const todayDate = moment();
 
   // const appoPageList = (e) => {
   //   // console.log("appoPageList", e.target.scrollTop, (e.target.scrollHeight * 0.30));
@@ -149,21 +152,41 @@ const AddAppointmentModal = (props) => {
   // Add input values to new appointment
   const appointmentDataAdd = (e, type) => {
     let validErrors = { ...validationErrors };
-
+    let isDisabled = false;
     if (e.target.value.trim() !== "") {
       if (type == "date") {
-        if (new Date(e.target.value) <= new Date()) {
-          validErrors.date = "Invalid date of appointment.";
+        const dateDiff = utils.dateDiff(e.target.value);
+        if (dateDiff.difference <= 0) {
+          console.log("Today")
+          const fromTime = appointmentData.fromTime;
+          if (fromTime) {
+            console.log("From Time")
+            const appDateTime = moment(`${e.target.value.toString()} ${appointmentData.fromTime.toString()}`).format("YYYY-MM-DD h:mm a");
+            const diffFromToday = todayDate.diff(appDateTime, "minutes");
+            console.log(diffFromToday);
+            if (diffFromToday > 0) {
+              console.log("Invalid time")
+              validErrors.fromTime = "Invalid from time";
+              isDisabled = true;
+            } else {
+              validErrors.fromTime = "";
+              isDisabled = false;
+            }
+          }
         } else {
-          validErrors.date = "";
-          let newDateString =
-            e.target.value.split("-")[1] +
-            "/" +
-            e.target.value.split("-")[2] +
-            "/" +
-            e.target.value.split("-")[0];
-          setAppointmentData({ ...appointmentData, date: newDateString });
+          validErrors.fromTime = "";
+          isDisabled = false;
         }
+        // validErrors.fromTime = "";
+        validErrors.date = "";
+        isDisabled = false;
+        let newDateString =
+          e.target.value.split("-")[1] +
+          "/" +
+          e.target.value.split("-")[2] +
+          "/" +
+          e.target.value.split("-")[0];
+        setAppointmentData({ ...appointmentData, date: newDateString });
       }
       if (type == "agenda") {
         validErrors.agenda = "";
@@ -180,21 +203,34 @@ const AddAppointmentModal = (props) => {
     }
 
     setValidationErrors(validErrors);
+    setIsDisabled(isDisabled);
   };
 
   const fromDateAdd = (fromValue) => {
     // console.log(fromValue && fromValue.format('h:mm a').toUpperCase());
     let validErrors = { ...validationErrors };
+    let isDisabled = true;
+    // console.log("App Date", appointmentData.date)
+    // console.clear();
+    const appDateTime = moment(`${appointmentData.date.toString()} ${fromValue.format("h:mm a")}`).format("YYYY-MM-DD h:mm a");
+    const diffFromToday = todayDate.diff(appDateTime, "minutes");
+    const fromTime = moment(`${appointmentData.date} ${fromValue.format("h:mm a")}`).format('MM/DD/YYYY h:mm a');
+    const toTime = moment(`${appointmentData.date} ${appointmentData.toTime}`).format('MM/DD/YYYY h:mm a');
 
     if (fromValue && fromValue != null) {
       if (appointmentData.toTime.trim() === "") {
         validErrors.fromTime = "";
+        isDisabled = false;
         //validErrors.toTime = "Invalid end time.";
         setAppointmentData({
           ...appointmentData,
           fromTime: fromValue.format("h:mm a").toUpperCase(),
         });
       } else {
+        console.log(
+          parseFloat(appointmentData.toTime.split(" ")[0].replace(":", "")),
+          parseFloat(fromValue.format("h:mm a").split(" ")[0].replace(":", ""))
+        );
         if (
           parseFloat(appointmentData.toTime.split(" ")[0].replace(":", "")) <=
           parseFloat(fromValue.format("h:mm a").split(" ")[0].replace(":", ""))
@@ -206,21 +242,42 @@ const AddAppointmentModal = (props) => {
             //validErrors.fromTime = "Invalid start time.";
           } else {
             validErrors.fromTime = "";
+            isDisabled = false;
           }
         } else {
           validErrors.fromTime = "";
+          isDisabled = false;
         }
         setAppointmentData({
           ...appointmentData,
           fromTime: fromValue.format("h:mm a").toUpperCase(),
         });
       }
+      // console.clear()
+      // console.log("Time Diff", appointmentData.toTime);
+      if (!appointmentData.date) {
+        validErrors.date = "Please choose a date";
+        isDisabled = true;
+      } else if (diffFromToday > 0) {
+        validErrors.fromTime = "Invalid from time";
+        isDisabled = true;
+      } else if (appointmentData.toTime && Math.sign(moment(fromTime).diff(toTime, "minutes")) > 0) {
+        console.log("To Time is less than from");
+        validErrors.fromTime = "To time cannot be less";
+        isDisabled = true;
+      } else {
+        validErrors.fromTime = "";
+        isDisabled = false;
+      }
     } else {
-      //validErrors.fromTime = "Invalid start time.";
+      // validErrors.fromTime = "Invalid start time.";
     }
+    console.log("Is Disabled", isDisabled);
     // parseInt(e.target.value.replace(":","")) >= parseInt(appointmentData.toTime.replace(":",""))
     setValidationErrors(validErrors);
+    setIsDisabled(isDisabled);
   };
+
   const selectTag = (tag, mode) => {
     console.log(tag);
     let copySelTags = [...appointmentData.tagsDatas];
@@ -248,13 +305,23 @@ const AddAppointmentModal = (props) => {
       tags: tagIds,
     });
   };
+
   const toDateAdd = (toValue) => {
     // console.log(toValue && toValue.format('h:mm a'));
     let validErrors = { ...validationErrors };
-
+    let isDisabled = false;
+    // const appToDateTime = moment(`${appointmentData.date.toString()} ${moment(appointmentData.fromTime).format("h:mm a")}`).format("YYYY-MM-DD h:mm a");
+    // const diffToFrom = moment(toValue).format("h:mm a").diff(appToDateTime, "minutes");
+    // console.log("To Time Diff", diffToFrom);
+    // console.clear();
+    const toTime = moment(`${appointmentData.date} ${toValue.format("h:mm a")}`).format('MM/DD/YYYY h:mm a');
+    const fromTime = moment(`${appointmentData.date} ${appointmentData.fromTime}`).format('MM/DD/YYYY h:mm a');
+    // const diff = Math.sign(moment(toTime).diff(fromTime, "minutes"));
+    // console.log("Fromtime < Totime", fromTime < toTime);
     if (toValue && toValue != null) {
       if (appointmentData.fromTime.trim() === "") {
         validErrors.toTime = "";
+        isDisabled = false;
         //validErrors.fromTime = "Invalid start time.";
         setAppointmentData({
           ...appointmentData,
@@ -269,40 +336,60 @@ const AddAppointmentModal = (props) => {
             appointmentData.fromTime.split(" ")[1] ===
             toValue.format("h:mm a").split(" ")[1].toUpperCase()
           ) {
-           // validErrors.toTime = "Invalid end time.";
+            //validErrors.toTime = "Invalid end time.";
           } else {
             validErrors.toTime = "";
+            isDisabled = false;
           }
         } else {
           validErrors.toTime = "";
+          isDisabled = false;
         }
         setAppointmentData({
           ...appointmentData,
           toTime: toValue.format("h:mm a").toUpperCase(),
         });
       }
+      console.clear();
+      // const fromTime = moment(`${appointmentData.fromTime}`).format("hh:mm:ss");
+      // const toTime = moment(`${appointmentData.toTime}`).format("h:m:s");
+      console.log("I am here", moment(toTime).diff(fromTime, "minutes"));
+      if (!appointmentData.date) {
+        validErrors.date = "Please choose a date";
+        isDisabled = true;
+      } else if (fromTime && Math.sign(moment(toTime).diff(fromTime, "minutes")) < 0) {
+        console.log("invalid")
+        validErrors.toTime = "Invalid to time";
+        isDisabled = true;
+      } else {
+        validErrors.toTime = "";
+        // validErrors.fromTime = "";
+        isDisabled = false;
+      }
     } else {
-      //validErrors.toTime = "Invalid end time.";
+      // validErrors.toTime = "Invalid end time.";
     }
     // parseInt(e.target.value.replace(":","")) <= parseInt(appointmentData.fromTime.replace(":",""))
+    console.log("Is Disabled", isDisabled);
     setValidationErrors(validErrors);
+    setIsDisabled(isDisabled);
   };
 
   return (
     <div className="modalCreateAppointment modalBackdrop">
       <div class="modalBackdropBg" onClick={() => props.closeModal(false)}></div>
       <div className="slickModalBody ">
-         <div className="slickModalHeader">
-            <h3>Set an Appointment</h3>
-              <button
-                className="topCross"
-                onClick={() => props.closeModal(false)}
-              >
-                <img src={cross} alt="" />
-              </button>
-          </div>
+        <div className="slickModalHeader">
+          <h3>Set an Appointment</h3>
+          <button
+            className="topCross"
+            onClick={() => props.closeModal(false)}
+          >
+            <img src={cross} alt="" />
+          </button>
+        </div>
         <div className="modalForm auto">
-         
+
           <form
             method="post"
             className="dsiplay"
@@ -392,7 +479,7 @@ const AddAppointmentModal = (props) => {
                       className="cmnFieldStyle"
                       type="date"
                       placeholder="mm/dd/yyyy"
-                      min={new Date(Date.now() + ( 3600 * 1000 * 24)).toISOString().split("T")[0]}
+                      min={new Date(Date.now()).toISOString().split("T")[0]}
                       onChange={(e) => appointmentDataAdd(e, "date")}
                     />
                   </div>
@@ -471,7 +558,7 @@ const AddAppointmentModal = (props) => {
               </div>
 
               <div className="modalbtnHolder w-100">
-                <button className="saveNnewBtn" type="submit">
+                <button className="saveNnewBtn" type="submit" disabled={isDisabled}>
                   Set Appointment <img src={arrow_forward} alt="" />
                 </button>
               </div>
