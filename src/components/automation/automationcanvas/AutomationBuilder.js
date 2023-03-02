@@ -101,6 +101,7 @@ const AutomationBuilder = (props) => {
     const [phase, setPhase] = useState("");
     const [statusPhaseNodeId, setStatusPhaseNodeId] = useState(0);
     const [tags, setTags] = useState([]);
+    const [notificationData, setNotificationData] = useState({});
     const [statusList, setStatusList] = useState([]);
     const [phaseList, setPhaseList] = useState([]);
     const [statusPhaseData, setStatusPhaseData] = useState([]);
@@ -402,10 +403,10 @@ const AutomationBuilder = (props) => {
     };
     const notificationTag = (e, n) => {
         setTagNodeId(n);
-        if (n.data.data !== undefined) {
-            setMessageData(n.data.data);
+        if (n.data !== undefined) {
+            setNotificationData(n.data);
         } else {
-            setMessageData([]);
+            setNotificationData([]);
         }
         setAutomationModal("notificationTag");
 
@@ -698,12 +699,14 @@ const AutomationBuilder = (props) => {
         setElements((elms) =>
             elms.map((el) => {
                 if (el.id === nodeId) {
+                    console.log("el", el)
                     el.data.recipents = searchResult;
                     el.data.isSendEmail = isSendEmail;
                     el.data.isSendSMS = isSendSMS;
                     el.data.subject = emailData.subject;
                     el.data.emailBody = changedTemplate;
                     el.data.smsBody = smsData;
+                    el.data.emailData = emailData;
                 }
                 return {...el};
             })
@@ -1132,10 +1135,16 @@ const AutomationBuilder = (props) => {
                     arn: process.env.REACT_APP_ACTION_NOTIFICATION,
                     tag: "",
                     recipents: [],
-                    isSendEmail: false,
+                    isSendEmail: true,
                     isSendSMS: true,
                     subject: "",
                     emailBody: "",
+                    emailData: {
+                        "_id": "",
+                        "email": "",
+                        "subject": "",
+                        "template": ""
+                    },
                     smsBody: ""
                 },
             };
@@ -1679,7 +1688,7 @@ const AutomationBuilder = (props) => {
                                                         elem={tagNodeId} automationId={automationActionId}
                                                         events={automationEvents}/>
                             case 'notificationTag':
-                                return <NotificationModal closeFilterModal={closeFilterModal}  elem={tagNodeId} saveNotification={saveNotification}/>
+                                return <NotificationModal closeFilterModal={closeFilterModal} notificationData={notificationData}  elem={tagNodeId} saveNotification={saveNotification}/>
                             default:
                                 return ""
                         }

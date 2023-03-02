@@ -23,8 +23,8 @@ import EditorComponent from "../../../setup/templates/email/editor/Editor";
 import icon_browse_keywords from "../../../../assets/images/icon_browse_keywords.svg";
 
 const NotificationModal = (props) => {
+    console.log(props)
     const dispatch = useDispatch();
-    const [isLoader, setIsLoader] = useState(false);
     const [optionShow, setOptionShow] = useState(false);
     const [max, setMax] = useState(false);
     const ref = useRef(null);
@@ -34,7 +34,7 @@ const NotificationModal = (props) => {
     const [filteredUserName, setFilteredUserName] = useState([]);
     const [userListOption, setUserListOption] = useState([]);
     const [groupListOption, setGroupListOption] = useState([]);
-    const [searchResult, setSearchResult] = useState([]);
+    const [searchResult, setSearchResult] = useState(props.elem.data.recipents);
     const [tags, setTags] = useState([]);
     const [emailOption, setEmailOptions] = useState([]);
     const [smsOptions, setSMSOptions] = useState([]);
@@ -46,24 +46,22 @@ const NotificationModal = (props) => {
     const [emailData, setEmailData] = useState({
         "_id": "",
         "email": "",
-        "subject": "",
-        "template": ""
+        "subject": props.elem.data.emailBody,
+        "template": utils.encodeHTML(props.elem.data.emailBody)
     });
-    const [changedTemplate, setChangedTemplate] = useState("");
+    const [changedTemplate, setChangedTemplate] = useState(props.elem.data.emailBody);
     const newEmailTemplateSubject = useRef(null);
     const smsRef = useRef(null);
-    const [smsData, setSMSData] = useState("")
+    const [smsData, setSMSData] = useState(props.elem.data.smsBody)
     const [selectedSMSTemplate, setSelectedSMSTemplate] = useState({value: "", label: "Select an SMS Template", data: {}});
-    const [isSendSMS, setIsSendSMS] = useState(true);
-    const [isSendEmail, setIsSendEmail] = useState(true);
+    const [isSendSMS, setIsSendSMS] = useState(props.elem.data.isSendSMS);
+    const [isSendEmail, setIsSendEmail] = useState(props.elem.data.isSendEmail);
     const [processing, setProcessing] = useState(false);
 
     const searchHandeler = async (e) => {
         searchGroupHandelar(e.target.value);
-        if (searchGroup.length >= 2) {
-            await fetchNotificationGroupList(e.target.value);
-            setOptionShow(true);
-        }
+        await fetchNotificationGroupList(e.target.value);
+        setOptionShow(true);
     }
     // user List API call
     const fetchNotificationGroupList = async (searchGroup) => {
@@ -156,16 +154,13 @@ const NotificationModal = (props) => {
     const getQueryParams = async () => {
         return new URLSearchParams();
     };
-
     // filer in serach group
     useEffect(() => {
-
         if (searchGroup) {
             setCross(true);
         } else {
             setCross(false);
         }
-
         if (groupListOption.length) {
             setFilteredGroup(
                 groupListOption && groupListOption?.filter((groupName) =>
@@ -398,7 +393,7 @@ const NotificationModal = (props) => {
             });
             return false;
         }
-        props.saveNotification(props.elem, searchResult, isSendEmail, isSendSMS, emailData, changedTemplate, smsData);
+        props.saveNotification(props.elem.id, searchResult, isSendEmail, isSendSMS, emailData, changedTemplate, smsData);
     }
     return (
         <React.Fragment>
@@ -416,7 +411,6 @@ const NotificationModal = (props) => {
                     </div>
                     <div className="formBody">
                         <div className="formBodyContainer">
-                            {isLoader ? <Loader/> : ''}
                             <p className="title">Events</p>
                             <label>Search groups and users to add</label>
                             <div className="notificationSearch">
@@ -435,6 +429,7 @@ const NotificationModal = (props) => {
                                            onChange={(e) => {
                                                searchHandeler(e)
                                            }}
+                                           onClick={searchHandeler}
                                            />
                                     <img src={searchIcon} className="positionSet"/>
                                     {cross && <button className="positionSet" onClick={() => closeSearchHandeler()}><img
@@ -631,34 +626,36 @@ const NotificationModal = (props) => {
                                         <div className='cmnFormField'>
                                             <div className={max ? "bigTextbox" : "smallTextBox"}>
                                                 <textarea className='cmnFieldStyle' placeholder='Send message' value={smsData} ref={smsRef} onChange={handlerSMSBody}></textarea>
-                                                <button className='bigIcon' onClick={(e) => {
-                                                    e.preventDefault()
-                                                    setMax(!max)
-                                                }}>
-                                                    {max ?
-                                                        <svg width="15" height="15" viewBox="0 0 15 15" fill="none"
-                                                            xmlns="http://www.w3.org/2000/svg">
-                                                            <path
-                                                                d="M13.3047 11.949L3.35469 1.99902H6.80469V0.499023H0.804688V6.49902H2.30469V3.04902L12.2547 12.999H8.80469V14.499H14.8047V8.49902H13.3047V11.949Z"
-                                                                fill="#305671"/>
-                                                        </svg> :
-                                                        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
-                                                            xmlns="http://www.w3.org/2000/svg">
-                                                            <path
-                                                                d="M16.5 15.45L2.55 1.5H6V0H0V6H1.5V2.55L15.45 16.5H12V18H18V12H16.5V15.45ZM12 0V1.5H15.525L10.8 6.225L11.85 7.275L16.5 2.625V6H18V0H12ZM6.225 10.725L1.5 15.45V12H0V18H6V16.5H2.625L7.35 11.775L6.225 10.725Z"
-                                                                fill="#305671"/>
-                                                        </svg>
-                                                    }
-                                                </button>
+                                                <div className='actions'>
                                                 <button className="btn tagIcon"
-                                                        type='button'
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            setSubjectKeywordSuggesionSMS(true);
-                                                        }}
-                                                >
-                                                    <img src={icon_browse_keywords} alt="keywords" />
-                                                </button>
+                                                            type='button'
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                setSubjectKeywordSuggesionSMS(true);
+                                                            }}
+                                                    >
+                                                        <img src={icon_browse_keywords} alt="keywords" />
+                                                    </button>
+                                                    <button className='bigIcon' onClick={(e) => {
+                                                        e.preventDefault()
+                                                        setMax(!max)
+                                                    }}>
+                                                        {max ?
+                                                            <svg width="15" height="15" viewBox="0 0 15 15" fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <path
+                                                                    d="M13.3047 11.949L3.35469 1.99902H6.80469V0.499023H0.804688V6.49902H2.30469V3.04902L12.2547 12.999H8.80469V14.499H14.8047V8.49902H13.3047V11.949Z"
+                                                                    fill="#305671"/>
+                                                            </svg> :
+                                                            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                <path
+                                                                    d="M16.5 15.45L2.55 1.5H6V0H0V6H1.5V2.55L15.45 16.5H12V18H18V12H16.5V15.45ZM12 0V1.5H15.525L10.8 6.225L11.85 7.275L16.5 2.625V6H18V0H12ZM6.225 10.725L1.5 15.45V12H0V18H6V16.5H2.625L7.35 11.775L6.225 10.725Z"
+                                                                    fill="#305671"/>
+                                                            </svg>
+                                                        }
+                                                    </button>
+                                                    
                                                 {subjectKeywordSuggesionSMS && (
                                                     <div className="keywordBox">
                                                         <div className="searchKeyword">
@@ -709,7 +706,9 @@ const NotificationModal = (props) => {
                                                             </ul>
                                                         </div>
                                                     </div>
+                                                    
                                                 )}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

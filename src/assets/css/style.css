@@ -16010,9 +16010,10 @@ notification group design fixing
     color: var(--darkBlue);
 }
 
-.notificationEmail .notiGroupSelect.loading{   
+.notificationInput .notiGroupSelect.loading{
     background: url("../images/loading.gif") no-repeat 95% center;
 }
+
 .nodeSettingModal .formBodyContainer {
   max-height: 75vh;
   padding: 20px 30px;
@@ -16061,6 +16062,87 @@ notification group design fixing
 .gymDetails .gymdetails_left, .gymDetails .gymdetails_right{
     margin-top: 27px;
 }
-.detailNotifList.notificationList .notiTime_n_Icon{
+.detailNotifList.notificationList .notiTime_n_Icon {
     z-index: 2;
+}
+/* Automatio V3 css */
+/* .react-flow__nodes{
+    transform: scale(1.31951) !important;
+} */
+.nodeSettingModal.notificationGroupTags .notificationHolder .cmnFormField .cmnFieldStyle{
+    padding-right: 35px;
+}
+.nodeSettingModal.notificationGroupTags .notificationHolder .editorEmailShell{
+    height: 288px;
+}
+.notificationGroupTags .notificationEmail .emailTemplateForm{
+    padding-bottom: 0px;
+}
+.notificationGroupTags .notificationEmail .emailTemplateForm{
+    height: auto;
+}
+.notificationHolder{
+    margin-bottom: 30px;
+}
+.nodeSettingModal.notificationGroupTags .notificationHolder .actions{
+    position: absolute;
+    width: 100%;
+    bottom: 0px;
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 6px 10px;
+}
+.nodeSettingModal.notificationGroupTags .notificationGroupTags .tagBtn, .bigIcon, .tagIcon{
+    position: relative;
+    padding: 0px;
+    right: inherit;
+    left: inherit;
+    top:inherit;
+    bottom: inherit;
+}
+.nodeSettingModal.notificationGroupTags .notificationGroupTags .tagBtn, .bigIcon{
+    margin-left: 20px;
+}
+.nodeSettingModal.notificationGroupTags .actions .bigIcon{
+    height: 18px;
+}
+.createEmailButtons .browseKeywords img{
+    width: 22px;
+    height: 22px;
+}
+.notificationGroupTags .notificationSms textarea{
+    height: 310px;
+}
+.notificationGroupTags .notificationEmail{
+    padding-bottom: 0px;
+    padding-top: 10px;
+}
+.notificationGroupTags .btnGroup {
+    margin: 20px 0 0;
+    position: absolute;
+    bottom: 0px;
+    background-color: #fff;
+    padding: 10px 0px;
+}
+.notificationGroupTags.nodeSettingModal{
+    position: relative;
+    top: 2%;
+}
+.nodeSettingModal.notificationGroupTags .emailTemplateForm.disabled{
+    display: none;
+}
+.notificationGroupTags .tagIcon img{
+    width: 21px;
+    height: 18px;
+}
+.notificationGroupTags.nodeSettingModal .formBodyContainer p.title{
+    margin-bottom: 10px;
+}
+.searchResult .cz_tagList{
+    margin-top: 10px;
+}
+.notificationGroupTags .notificationEmail .sendEmail{
+    margin-bottom: 10px;
 }
