@@ -1,24 +1,24 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
-import Select, {components} from "react-select";
+import Select, { components } from "react-select";
 import user02 from "../../../../assets/images/user02.png";
 import groupIcon from "../../../../assets/images/group_icon.svg";
-import {Editor} from '@tinymce/tinymce-react';
+import { Editor } from '@tinymce/tinymce-react';
 import tagIcon from "../../../../assets/images/tag_icon.svg";
 import expendIcon from "../../../../assets/images/expend_icon.svg";
 import searchIcon from "../../../../assets/images/search_icon.svg";
 import crossIcon from "../../../../assets/images/cross.svg";
-import {regExpLiteral} from '../../../../../node_modules/@babel/types';
+import { regExpLiteral } from '../../../../../node_modules/@babel/types';
 import cressIcon from "../../../../assets/images/white_cross_roundedCorner.svg";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
-import {NotificationGroupServices} from '../../../../services/notification/NotificationGroupServices';
+import { NotificationGroupServices } from '../../../../services/notification/NotificationGroupServices';
 import Loader from "../../../shared/Loader";
 import defaultImage from "../../../../assets/images/owner_img_1.png";
 import * as actionTypes from "../../../../actions/types";
-import {useDispatch} from "react-redux";
-import {SMSServices} from "../../../../services/template/SMSServices";
-import {EmailServices} from "../../../../services/setup/EmailServices";
-import {utils} from "../../../../helpers";
+import { useDispatch } from "react-redux";
+import { SMSServices } from "../../../../services/template/SMSServices";
+import { EmailServices } from "../../../../services/setup/EmailServices";
+import { utils } from "../../../../helpers";
 import EditorComponent from "../../../setup/templates/email/editor/Editor";
 import icon_browse_keywords from "../../../../assets/images/icon_browse_keywords.svg";
 import MergeTag from "../../../shared/MergeTag";
@@ -39,7 +39,7 @@ const NotificationModal = (props) => {
     const [tags, setTags] = useState([]);
     const [emailOption, setEmailOptions] = useState([]);
     const [smsOptions, setSMSOptions] = useState([]);
-    const [selectedEmailTemplate, setSelectedEmailTemplate] = useState({value: "", label: "Select an Email Template", data: {}});
+    const [selectedEmailTemplate, setSelectedEmailTemplate] = useState({ value: "", label: "Select an Email Template", data: {} });
     const [searchTagString, setSearchTagString] = useState("");
     const [subjectKeywordSuggesion, setSubjectKeywordSuggesion] = useState(false);
     const [searchTagStringSMS, setSearchTagStringSMS] = useState("");
@@ -68,7 +68,7 @@ const NotificationModal = (props) => {
     const fetchNotificationGroupList = async (searchGroup) => {
         try {
             setProcessing(true);
-            let searchData = {"keyword": searchGroup}
+            let searchData = { "keyword": searchGroup }
             const response = await NotificationGroupServices.fetchNotificationGroupListSearch(searchData);
             setUserListOption(response.data.users);
             setGroupListOption(response.data.notificationGroup);
@@ -105,25 +105,6 @@ const NotificationModal = (props) => {
             textBox.setSelectionRange(startPosition.length, startPosition.length);
         }, 100)
     };
-    const addKeywordEdit = (e) => {
-        e.preventDefault();
-        let textBox = smsRef.current;
-        let cursorStart = textBox.selectionStart;
-        let cursorEnd = textBox.selectionEnd;
-        let textValue = textBox.value;
-        let startPosition = 0;
-        if (cursorStart || cursorStart === "0") {
-            textValue = textValue.substring(0, cursorStart) + " [" + e.target.textContent + "] " + textValue.substring(cursorEnd, textValue.length);
-            startPosition = textValue.substring(0, cursorStart) + " [" + e.target.textContent + "] ";
-        } else {
-            textValue = textValue + " [" + e.target.textContent + "] ";
-            startPosition = textValue + " [" + e.target.textContent + "] ";
-        }
-        setSMSData(textValue)
-        setTimeout(() => {
-            textBox.setSelectionRange(startPosition.length, startPosition.length);
-        }, 100)
-    };
     useEffect(async () => {
         await fetchNotificationGroupList(searchGroup);
         await fetchEmailTags();
@@ -152,12 +133,16 @@ const NotificationModal = (props) => {
         try {
             const result = await EmailServices.fetchEmailTemplateList(pageId, queryParams);
             if (result) {
-                let op = [{value: "", label: "Select an Email Template", data: {"_id": "",
+                let op = [{
+                    value: "", label: "Select an Email Template", data: {
+                        "_id": "",
                         "email": "",
                         "subject": "",
-                        "template": ""}}]
+                        "template": ""
+                    }
+                }]
                 result.templates.map(el => {
-                    op.push({value: el._id, label: el.title, data: el})
+                    op.push({ value: el._id, label: el.title, data: el })
                 });
                 setEmailOptions(op);
             }
@@ -176,9 +161,9 @@ const NotificationModal = (props) => {
         try {
             const result = await SMSServices.fetchSms(pageId, queryParams);
             if (result) {
-                let op = [{value: "", label: "Select a SMS Template", data: {}}]
+                let op = [{ value: "", label: "Select a SMS Template", data: {} }]
                 result.templates.map(el => {
-                    op.push({value: el._id, label: el.title, data: el})
+                    op.push({ value: el._id, label: el.title, data: el })
                 });
                 setSMSOptions(op);
             }
@@ -211,11 +196,11 @@ const NotificationModal = (props) => {
         }
         setFilteredUserName(
             userListOption && userListOption.filter((user) => {
-                    let fullName = user.firstName + ' ' + user.lastName;
-                    if (fullName || user?.email || user?.phone) {
-                        return fullName?.toLowerCase().includes(searchGroup?.toLowerCase()) || user?.email.toLowerCase().includes(searchGroup?.toLocaleLowerCase()) || user?.username.toLowerCase().includes(searchGroup?.toLocaleLowerCase())
-                    }
+                let fullName = user.firstName + ' ' + user.lastName;
+                if (fullName || user?.email || user?.phone) {
+                    return fullName?.toLowerCase().includes(searchGroup?.toLowerCase()) || user?.email.toLowerCase().includes(searchGroup?.toLocaleLowerCase()) || user?.username.toLowerCase().includes(searchGroup?.toLocaleLowerCase())
                 }
+            }
             )
         );
     }, [searchGroup, groupListOption, userListOption]);
@@ -283,14 +268,14 @@ const NotificationModal = (props) => {
     };
     const emailTemplateChangeHandler = (e) => {
         e.data._id = "";
-       setEmailData(e.data);
-       setChangedTemplate(utils.decodeHTML(e.data.template));
-       setSelectedEmailTemplate(e);
+        setEmailData(e.data);
+        setChangedTemplate(utils.decodeHTML(e.data.template));
+        setSelectedEmailTemplate(e);
     }
     const emailBodyHandler = (email) => {
         console.log(email)
     }
-    const createdEmailTemplate = (template) =>{
+    const createdEmailTemplate = (template) => {
         setEmailData({
             ...emailData,
             template: template
@@ -396,10 +381,10 @@ const NotificationModal = (props) => {
         setSMSData(e.target.value);
     }
     const sendMessageHandler = (e) => {
-      setIsSendSMS(e.target.checked);
+        setIsSendSMS(e.target.checked);
     }
     const sendEmailHandler = (e) => {
-      setIsSendEmail(e.target.checked)
+        setIsSendEmail(e.target.checked)
     }
     const saveNotificationGroup = () => {
         if (!searchResult.length) {
@@ -436,6 +421,61 @@ const NotificationModal = (props) => {
         }
         props.saveNotification(props.elem.id, searchResult, isSendEmail, isSendSMS, emailData, changedTemplate, smsData);
     }
+    // ADD Keyword to Edit SMS template
+    const addKeywordEdit = (e, field) => {
+        e.preventDefault();
+        let textBox = smsRef.current;
+        let cursorStart = textBox.selectionStart;
+        let cursorEnd = textBox.selectionEnd;
+        let textValue = textBox.value;
+        let vall = field;
+
+        // console.log();
+
+        try {
+            //   setErrorObj({
+            //     ...errorObj,
+            //     body: ""
+            //   })
+            if (cursorStart || cursorStart == "0") {
+                // console.log("VIA CURSOR");
+                var startToText = "";
+                // console.log(textBox.selectionStart);
+                textBox.value =
+                    textBox.value.substring(0, cursorStart) +
+                    vall +
+                    textBox.value.substring(cursorEnd, textValue.length);
+
+                // setEditMsgObj({
+                //   ...editMsgObj,
+                //   body: textBox.value,
+                // });
+
+                // console.log("editMsgObj", editMsgObj, textBox.value);
+
+                startToText =
+                    textBox.value.substring(0, cursorStart) +
+                    vall;
+                textBox.focus();
+                textBox.setSelectionRange(
+                    startToText.length + 1,
+                    startToText.length + 1
+                );
+                // console.log(startToText.length);
+            } else {
+                // console.log("VIA END POINT");
+
+                textBox.value = textBox.value + vall;
+                // setEditMsgObj({
+                //   ...editMsgObj,
+                //   body: textBox.value,
+                // });
+                textBox.focus();
+            }
+        } catch (err) {
+            //   console.log(err);
+        }
+    };
     return (
         <React.Fragment>
             <div className="automationModal">
@@ -446,7 +486,7 @@ const NotificationModal = (props) => {
                         </div>
                         <div className="closeButton">
                             <button onClick={props.closeFilterModal}>
-                                <img src={closewhite24dp} alt="Close Filter Modal"/>
+                                <img src={closewhite24dp} alt="Close Filter Modal" />
                             </button>
                         </div>
                     </div>
@@ -474,53 +514,53 @@ const NotificationModal = (props) => {
                                            />
                                     <img src={searchIcon} className="positionSet"/>
                                     {cross && <button className="positionSet" onClick={() => closeSearchHandeler()}><img
-                                        src={crossIcon}/></button>}
+                                        src={crossIcon} /></button>}
                                 </div>
                                 {(optionShow && (filteredGroup.length || filteredUserName.length)) ?
                                     <div className="notificationSelectOption">
                                         {filteredGroup && filteredGroup.length ?
-                                                <>
-                                                    <h5>Notification Groups</h5>
-                                                    <ul className="groupOption">
-                                                        {
-                                                            filteredGroup && filteredGroup.map((item) => {
-                                                                return (
-                                                                    <li key={item._id} onClick={() => groupSelectHandelar(item)}>
-                                                                        <div className="thum">
-                                                                            <img src={groupIcon}/>
-                                                                        </div>
-                                                                        <p>{item.name} <span>{item?.users.length}</span></p>
-                                                                    </li>
-                                                                )
-                                                            })
-                                                        }
-                                                    </ul>
-                                                </> : "" }
-                                        { filteredUserName && filteredUserName.length ?
+                                            <>
+                                                <h5>Notification Groups</h5>
+                                                <ul className="groupOption">
+                                                    {
+                                                        filteredGroup && filteredGroup.map((item) => {
+                                                            return (
+                                                                <li key={item._id} onClick={() => groupSelectHandelar(item)}>
+                                                                    <div className="thum">
+                                                                        <img src={groupIcon} />
+                                                                    </div>
+                                                                    <p>{item.name} <span>{item?.users.length}</span></p>
+                                                                </li>
+                                                            )
+                                                        })
+                                                    }
+                                                </ul>
+                                            </> : ""}
+                                        {filteredUserName && filteredUserName.length ?
                                             <>
                                                 <h5>Users</h5>
                                                 <ul className="userOption">
                                                     {
                                                         filteredUserName && filteredUserName.map((item, index) => {
-                                                                return (
-                                                                    <li key={index} onClick={() => userSelectHandelar(item)}>
-                                                                        <div className="profile">
-                                                                            <div className="thum">
-                                                                                <img
-                                                                                    src={item?.image ? process.env.REACT_APP_BUCKET + item?.image : defaultImage}/>
-                                                                            </div>
-                                                                            <p>{item?.firstName} {item?.lastName}</p>
+                                                            return (
+                                                                <li key={index} onClick={() => userSelectHandelar(item)}>
+                                                                    <div className="profile">
+                                                                        <div className="thum">
+                                                                            <img
+                                                                                src={item?.image ? process.env.REACT_APP_BUCKET + item?.image : defaultImage} />
                                                                         </div>
-                                                                        <div className="email"><a>{item?.email}</a></div>
-                                                                        <div className="phone"><a>{item?.prefix} - {item?.phone}</a>
-                                                                        </div>
-                                                                    </li>
-                                                                )
-                                                            }
+                                                                        <p>{item?.firstName} {item?.lastName}</p>
+                                                                    </div>
+                                                                    <div className="email"><a>{item?.email}</a></div>
+                                                                    <div className="phone"><a>{item?.prefix} - {item?.phone}</a>
+                                                                    </div>
+                                                                </li>
+                                                            )
+                                                        }
                                                         )
                                                     }
                                                 </ul>
-                                            </> : "" }
+                                            </> : ""}
                                     </div> : ""
                                 }
                             </div>
@@ -531,10 +571,10 @@ const NotificationModal = (props) => {
                                             return (
                                                 <li key={index}
                                                     className="cz_tag">
-                                                    { item.firstName == undefined && item.lastName == undefined && item.name == undefined ?  item :
-                                                        ( item.firstName ? item.firstName + " " + item.lastName : item.name) }
+                                                    {item.firstName == undefined && item.lastName == undefined && item.name == undefined ? item :
+                                                        (item.firstName ? item.firstName + " " + item.lastName : item.name)}
                                                     <button type="button" onClick={() => deleteSearchResult(index)}><img
-                                                        src={cressIcon} alt=""/></button>
+                                                        src={cressIcon} alt="" /></button>
                                                 </li>
                                             )
                                         })
@@ -547,16 +587,16 @@ const NotificationModal = (props) => {
                                 <div className="sendEmail">
                                     <label className="indselects">
                                         <span className="customCheckbox allContacts"><input type="checkbox" defaultChecked={isSendEmail} onClick={sendEmailHandler}
-                                                                                            name=""/><span></span></span>
+                                            name="" /><span></span></span>
                                         Send Email
                                     </label>
                                 </div>
-                                <div className={isSendEmail ?'emailTemplateForm' : 'emailTemplateForm disabled'}>
+                                <div className={isSendEmail ? 'emailTemplateForm' : 'emailTemplateForm disabled'}>
                                     <div className='cmnFormCol'>
                                         <div className="cmnFieldName">Email Templates <span>(Optional)</span></div>
                                         <div className="cmnFormField">
                                             <Select name="template" value={selectedEmailTemplate} styles={selectStyles}
-                                                    onChange={(e) => emailTemplateChangeHandler(e)} options={emailOption} placeholder="Choose a email template" />
+                                                onChange={(e) => emailTemplateChangeHandler(e)} options={emailOption} placeholder="Choose a email template" />
                                         </div>
                                     </div>
                                     <div className="cmnFormCol subject">
@@ -573,9 +613,9 @@ const NotificationModal = (props) => {
                                             <EditorComponent
                                                 setTempSelected={true}
                                                 initialData={emailData ? emailData : emailData.template}
-                                                editorToPreview={(newData)=>emailBodyHandler(newData)}
+                                                editorToPreview={(newData) => emailBodyHandler(newData)}
                                                 globalTemplateValue={(template) => setChangedTemplate(template)}
-                                                createdEmailTemplate ={(template) => createdEmailTemplate(template)}
+                                                createdEmailTemplate={(template) => createdEmailTemplate(template)}
                                             />
                                         </div>
                                     </div>
@@ -590,17 +630,17 @@ const NotificationModal = (props) => {
                                         Send SMS
                                     </label>
                                 </div>
-                                <div className={isSendSMS ?'emailTemplateForm' : 'emailTemplateForm disabled'}>
+                                <div className={isSendSMS ? 'emailTemplateForm' : 'emailTemplateForm disabled'}>
                                     <div className='createInfo'>
                                         <h6>Create a Message</h6>
-                                        <p>{smsData.length}/{parseInt(((parseInt(smsData.length ) / 153) + 1))} SMS - One message contains 153 characters max (SMS count can be changed if
+                                        <p>{smsData.length}/{parseInt(((parseInt(smsData.length) / 153) + 1))} SMS - One message contains 153 characters max (SMS count can be changed if
                                             you are using keyword variable e.g. [fname])</p>
                                     </div>
                                     <div className='cmnFormCol'>
                                         <div className="cmnFieldName">SMS Templates <span>(Optional)</span></div>
                                         <div className="cmnFormField">
                                             <Select name="template" value={selectedSMSTemplate} styles={selectStyles}
-                                                    onChange={(e) => smsTemplateChangeHandler(e)} options={smsOptions} placeholder="Choose a SMS template" />
+                                                onChange={(e) => smsTemplateChangeHandler(e)} options={smsOptions} placeholder="Choose a SMS template" />
                                         </div>
                                     </div>
                                     <div className='cmnFormCol'>
@@ -629,15 +669,15 @@ const NotificationModal = (props) => {
                                                         }
                                                     </button>
                                                 </div>
-                                                <MergeTag addfeild={(e,smsRef)=> addKeywordEdit(e,smsRef)}/>
                                             </div>
+                                            <MergeTag addfeild={(e, field) => addKeywordSMS(e, field)} />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div className="btnGroup centered">
-                            <button className="cmnBtn" onClick={saveNotificationGroup}>Save <img src={arrow_forward} alt=""/></button>
+                            <button className="cmnBtn" onClick={saveNotificationGroup}>Save <img src={arrow_forward} alt="" /></button>
                         </div>
                     </div>
                 </div>

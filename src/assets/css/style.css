@@ -15990,12 +15990,12 @@ notification group design fixing
     transform: translate(-50%, -50%);
 }
 
-.notificationEmail .editorEmailShell.maximize .createEmailButtons {
+/* .notificationEmail .editorEmailShell.maximize .createEmailButtons {
     position: absolute;
     bottom: 0;
     width: 96%;
     right: 19px;
-}
+} */
 .notificationEmail .css-1s2u09g-control{
     border: 1px solid #d3d9de;
 }
@@ -16066,14 +16066,14 @@ notification group design fixing
     z-index: 2;
 }
 /* Automatio V3 css */
-/* .react-flow__nodes{
-    transform: scale(1.31951) !important;
-} */
 .nodeSettingModal.notificationGroupTags .notificationHolder .cmnFormField .cmnFieldStyle{
     padding-right: 35px;
 }
-.nodeSettingModal.notificationGroupTags .notificationHolder .editorEmailShell{
-    height: 288px;
+.nodeSettingModal .formBodyContainer{
+    padding-bottom: 0px;
+}
+.nodeSettingModal.notificationGroupTags .notificationHolder .editorEmailShell:not(.maximize){
+    height: 372px;
 }
 .notificationGroupTags .notificationEmail .emailTemplateForm{
     padding-bottom: 0px;
@@ -16107,13 +16107,14 @@ notification group design fixing
 }
 .nodeSettingModal.notificationGroupTags .actions .bigIcon{
     height: 18px;
+    margin-right: 0px;
 }
 .createEmailButtons .browseKeywords img{
     width: 22px;
     height: 22px;
 }
 .notificationGroupTags .notificationSms textarea{
-    height: 310px;
+    /* height: 310px; */
 }
 .notificationGroupTags .notificationEmail{
     padding-bottom: 0px;
@@ -16125,13 +16126,15 @@ notification group design fixing
     bottom: 0px;
     background-color: #fff;
     padding: 10px 0px;
+    z-index: 1;
 }
 .notificationGroupTags.nodeSettingModal{
     position: relative;
     top: 2%;
 }
 .nodeSettingModal.notificationGroupTags .emailTemplateForm.disabled{
-    display: none;
+    visibility: hidden;
+    opacity: 0;
 }
 .notificationGroupTags .tagIcon img{
     width: 21px;
@@ -16145,4 +16148,12 @@ notification group design fixing
 }
 .notificationGroupTags .notificationEmail .sendEmail{
     margin-bottom: 10px;
+}
+.notificationEmail.notificationSms .emailTemplateForm{
+    min-height: 575px;
+}
+.nodeSettingModal .formBodyContainer .notes{
+    color: #305671;
+    font-size: 11px;
+    font-weight: 400;
 }

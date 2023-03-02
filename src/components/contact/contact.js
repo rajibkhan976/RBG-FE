@@ -127,7 +127,7 @@ const Contact = (props) => {
     useEffect(()=>{
         // fetchEmail();
         // fetchEmailStatus();
-        // console.log("device in contact", props.device);
+        console.log("device in contact", props.device);
     },[])
     const searchContactList = (data)=>{
         // console.log("contact js search contact list", data);
@@ -209,7 +209,7 @@ const Contact = (props) => {
             { isFilter &&
                 <Filter hideFilter={() => {hideFilter()}} applyFilter={applyFilter}/>
             }
-            {bulkSmsOpenModal && "status" in props.device && props.device?.status() == 'ready' ?
+            {bulkSmsOpenModal && Object.keys(props.device).length !== 0 && props.device?.status() == 'ready' ?
                 <BulkSms hideModal={() => {hideModal()}} selectedContacts={selectedContacts} selectAllCheckbox={allSelect} unCheckAll={()=>{unCheckAll()}} numberOfContact={numberOfContact} />:""
             }
             {/* {bulkEmailOpenModal && emailSetupData ?

@@ -1,20 +1,56 @@
-import React, {memo, useEffect, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
 import chevron_right_white_24dp from "../../../../assets/images/chevron_right_white_24dp.svg";
-import browse_keywords from "../../../../assets/images/icon_browse_keywords.svg";
 import {SMSServices} from "../../../../services/template/SMSServices";
 import * as actionTypes from "../../../../actions/types";
 import {useDispatch} from "react-redux";
 import MergeTag from "../../../shared/MergeTag";
+import Select from "react-select";
 
 const Message = (props) => {
-    console.log("props", props)
-    const messageTextbox = useRef(null)
-    const [keywordSuggesion, setKeywordSuggesion] = useState(false);
-    const [searchTagString, setSearchTagString] = useState("");
-    const [smsTags, setSmsTags] = useState([]);
+    const messageTextbox = useRef(null);
     const [body, setBody] = useState(props.body ? props.body : "" );
+    const [selectedSMSTemplate, setSelectedSMSTemplate] = useState({value: "", label: "Select an SMS Template", data: {}});
+    const [smsOptions, setSMSOptions] = useState([]);
     const dispatch = useDispatch();
+    const selectStyles = {
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isSelected ? "#305671" : "white",
+            color: state.isSelected ? "white" : "#305671",
+            fontSize: "13px"
+        }),
+    };
+    const smsTemplateChangeHandler = (e) => {
+        setSelectedSMSTemplate(e);
+        if (e && e.data && e.data.message) {
+            setBody(e.data.message);
+        } else {
+            setBody("");
+        }
+    }
+    const getQueryParams = async () => {
+        return new URLSearchParams();
+    };
+    const fetchSMSTemplates = async () => {
+        let pageId = 'all';
+        try {
+            const result = await SMSServices.fetchSms(pageId);
+            if (result) {
+                let op = [{value: "", label: "Select a SMS Template", data: {}}]
+                result.templates.map(el => {
+                    op.push({value: el._id, label: el.title, data: el})
+                });
+                setSMSOptions(op);
+            }
+        } catch (e) {
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
+        }
+    };
     const addKeywordEdit = (e) => {
         e.preventDefault();
         let textBox = messageTextbox.current;
@@ -37,20 +73,6 @@ const Message = (props) => {
     const handleBodyChange = (event) => {
       setBody(event.target.value);
     }
-    const fetchTags = async () => {
-        try {
-            const result = await SMSServices.fetchSMSTags()
-            if (result) {
-                setSmsTags(result)
-            }
-        } catch (error) {
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: error.message,
-                typeMessage: 'error'
-            });
-        }
-    }
     const saveMessage = () => {
         if (body) {
             props.saveMessage(body, props.triggerNodeId)
@@ -63,7 +85,7 @@ const Message = (props) => {
         }
     }
     useEffect(() => {
-        fetchTags()
+        fetchSMSTemplates();
     }, [])
     return (
         <React.Fragment>
@@ -84,14 +106,23 @@ const Message = (props) => {
                         <div className="formBodyContainer">
                             <div className="emailDetails">
                                 <div className="inputField">
+                                    <div className="cmnFieldName">SMS Templates <span>(Optional)</span></div>
+                                    <Select name="template" value={selectedSMSTemplate} styles={selectStyles}
+                                            onChange={(e) => smsTemplateChangeHandler(e)} options={smsOptions} placeholder="Choose a SMS template" />
+                                </div>
+                                <div className="inputField">
                                     <label htmlFor="">Body</label>
                                     <div className="inFormField">
-                                        <textarea name="messageBody"
-                                                  onChange={handleBodyChange}
-                                                  value={body} ref={messageTextbox}>{body}</textarea>
-                                         <MergeTag addfeild={(e,field)=> addKeywordEdit(e,field)}/>
+                                            <textarea name="messageBody"
+                                                      onChange={handleBodyChange}
+                                                      value={body} ref={messageTextbox}>{body}</textarea>
+                                        <MergeTag addfeild={(e,field)=> addKeywordEdit(e,field)}/>
 
                                     </div>
+                                </div>
+                                <div className="inputField">
+                                    <p className="notes">{body.length}/{parseInt(((parseInt(body.length) / 153) + 1))} SMS - One message contains 153 characters max (SMS count can be changed if
+                                        you are using keyword variable e.g. [fname])</p>
                                 </div>
                             </div>
                             <div className="saveButton">
