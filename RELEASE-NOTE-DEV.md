@@ -160,3 +160,9 @@
 
 # HOTFIX V1.3.0
     - Hot fix on live design and api key issue
+# Automation V3.0.1
+    - Fixed notification group issue
+# Automation V3.0.2
+    - Fixed notification group issue
+# Automation V3.0.3
+    - Fixed merge tag issue of message

@@ -287,10 +287,10 @@ CSS to change the modal style in the platform
       max-height: 53vh;
   }
 }
-.selectCountry{
+/* .selectCountry{
   max-height: 240px;
   position: relative;
-}
+} */
 
 .modalForm.appointmentForm.setappointment.successApp.deleteModals .setApp {
   position: absolute;
