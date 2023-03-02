@@ -21,6 +21,7 @@ import {EmailServices} from "../../../../services/setup/EmailServices";
 import {utils} from "../../../../helpers";
 import EditorComponent from "../../../setup/templates/email/editor/Editor";
 import icon_browse_keywords from "../../../../assets/images/icon_browse_keywords.svg";
+import MergeTag from "../../../shared/MergeTag";
 
 const NotificationModal = (props) => {
     console.log(props)
@@ -82,7 +83,47 @@ const NotificationModal = (props) => {
         }
 
     };
-
+    const addKeywordEditEmailSubject = (e) => {
+        e.preventDefault();
+        let textBox = newEmailTemplateSubject.current;
+        let cursorStart = textBox.selectionStart;
+        let cursorEnd = textBox.selectionEnd;
+        let textValue = textBox.value;
+        let startPosition = 0;
+        if (cursorStart || cursorStart === "0") {
+            textValue = textValue.substring(0, cursorStart) + " [" + e.target.textContent + "] " + textValue.substring(cursorEnd, textValue.length);
+            startPosition = textValue.substring(0, cursorStart) + " [" + e.target.textContent + "] ";
+        } else {
+            textValue = textValue + " [" + e.target.textContent + "] ";
+            startPosition = textValue + " [" + e.target.textContent + "] ";
+        }
+        setEmailData({
+            ...emailData,
+            subject: textValue
+        });
+        setTimeout(() => {
+            textBox.setSelectionRange(startPosition.length, startPosition.length);
+        }, 100)
+    };
+    const addKeywordEdit = (e) => {
+        e.preventDefault();
+        let textBox = smsRef.current;
+        let cursorStart = textBox.selectionStart;
+        let cursorEnd = textBox.selectionEnd;
+        let textValue = textBox.value;
+        let startPosition = 0;
+        if (cursorStart || cursorStart === "0") {
+            textValue = textValue.substring(0, cursorStart) + " [" + e.target.textContent + "] " + textValue.substring(cursorEnd, textValue.length);
+            startPosition = textValue.substring(0, cursorStart) + " [" + e.target.textContent + "] ";
+        } else {
+            textValue = textValue + " [" + e.target.textContent + "] ";
+            startPosition = textValue + " [" + e.target.textContent + "] ";
+        }
+        setSMSData(textValue)
+        setTimeout(() => {
+            textBox.setSelectionRange(startPosition.length, startPosition.length);
+        }, 100)
+    };
     useEffect(async () => {
         await fetchNotificationGroupList(searchGroup);
         await fetchEmailTags();
@@ -523,66 +564,7 @@ const NotificationModal = (props) => {
                                         <div className="cmnFormField">
                                             <input className='cmnFieldStyle' type="text" ref={newEmailTemplateSubject}
                                                 placeholder='Enter email subject' value={emailData.subject} onChange={handleEmailSubject}/>
-                                            <button className="btn browseKeywords"
-                                                    type='button'
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        setSubjectKeywordSuggesion(true);
-                                                    }}
-                                            >
-                                                <img src={icon_browse_keywords} alt="keywords" />
-                                            </button>
-                                            {subjectKeywordSuggesion && (
-                                                <div className="keywordBox">
-                                                    <div className="searchKeyword">
-                                                        <div className="searchKeyBox">
-                                                            <input
-                                                                type="text"
-                                                                onChange={(e) => setSearchTagString(e.target.value)}
-                                                                onKeyPress={e => {
-                                                                    if (e.key === 'Enter') e.preventDefault();
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        <div className="cancelKeySearch">
-                                                            <button
-                                                                onClick={() => {setSubjectKeywordSuggesion(false)
-                                                                    setSearchTagString("")}}
-                                                            ></button>
-                                                        </div>
-                                                    </div>
-                                                    <div className="keywordList">
-                                                        <ul>
-                                                            {tags
-                                                                .filter(
-                                                                    (tag) =>
-                                                                        tag.id.indexOf(searchTagString) >= 0
-                                                                        && tag.id !== "tags"
-                                                                        && tag.id !== "phone"
-                                                                        && tag.id !== "mobile"
-                                                                        && tag.id !== "momCellPhone"
-                                                                        && tag.id !== "dadCellPhone"
-                                                                        && tag.id !== "createdBy"
-                                                                        && tag.id !== "createdAt"
-                                                                        && tag.id !== "statusName"
-                                                                        && tag.id !== "phaseName"
-                                                                        && tag.id !== "contactType"
-                                                                )
-                                                                .map((tagItem, i) => (
-                                                                    <li key={"keyField" + i}>
-                                                                        <button
-                                                                            onClick={(e) =>
-                                                                                addKeywordEmail(e, tagItem.id)
-                                                                            }
-                                                                        >
-                                                                            {tagItem.id}
-                                                                        </button>
-                                                                    </li>
-                                                                ))}
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            )}
+                                            <MergeTag addfeild={(e,field)=> addKeywordEditEmailSubject(e,field)}/>
                                         </div>
                                     </div>
                                     <div className="cmnFormCol editor">
@@ -627,15 +609,6 @@ const NotificationModal = (props) => {
                                             <div className={max ? "bigTextbox" : "smallTextBox"}>
                                                 <textarea className='cmnFieldStyle' placeholder='Send message' value={smsData} ref={smsRef} onChange={handlerSMSBody}></textarea>
                                                 <div className='actions'>
-                                                <button className="btn tagIcon"
-                                                            type='button'
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                setSubjectKeywordSuggesionSMS(true);
-                                                            }}
-                                                    >
-                                                        <img src={icon_browse_keywords} alt="keywords" />
-                                                    </button>
                                                     <button className='bigIcon' onClick={(e) => {
                                                         e.preventDefault()
                                                         setMax(!max)
@@ -655,60 +628,8 @@ const NotificationModal = (props) => {
                                                             </svg>
                                                         }
                                                     </button>
-                                                    
-                                                {subjectKeywordSuggesionSMS && (
-                                                    <div className="keywordBox">
-                                                        <div className="searchKeyword">
-                                                            <div className="searchKeyBox">
-                                                                <input
-                                                                    type="text"
-                                                                    onChange={(e) => setSearchTagStringSMS(e.target.value)}
-                                                                    onKeyPress={e => {
-                                                                        if (e.key === 'Enter') e.preventDefault();
-                                                                    }}
-                                                                />
-                                                            </div>
-                                                            <div className="cancelKeySearch">
-                                                                <button
-                                                                    onClick={() => {setSubjectKeywordSuggesionSMS(false)
-                                                                        setSearchTagString("")}}
-                                                                ></button>
-                                                            </div>
-                                                        </div>
-                                                        <div className="keywordList">
-                                                            <ul>
-                                                                {tags
-                                                                    .filter(
-                                                                        (tag) =>
-                                                                            tag.id.indexOf(searchTagStringSMS) >= 0
-                                                                            && tag.id !== "tags"
-                                                                            && tag.id !== "phone"
-                                                                            && tag.id !== "mobile"
-                                                                            && tag.id !== "momCellPhone"
-                                                                            && tag.id !== "dadCellPhone"
-                                                                            && tag.id !== "createdBy"
-                                                                            && tag.id !== "createdAt"
-                                                                            && tag.id !== "statusName"
-                                                                            && tag.id !== "phaseName"
-                                                                            && tag.id !== "contactType"
-                                                                    )
-                                                                    .map((tagItem, i) => (
-                                                                        <li key={"keyField" + i}>
-                                                                            <button
-                                                                                onClick={(e) =>
-                                                                                    addKeywordSMS(e, tagItem.id)
-                                                                                }
-                                                                            >
-                                                                                {tagItem.id}
-                                                                            </button>
-                                                                        </li>
-                                                                    ))}
-                                                            </ul>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                )}
                                                 </div>
+                                                <MergeTag addfeild={(e,smsRef)=> addKeywordEdit(e,smsRef)}/>
                                             </div>
                                         </div>
                                     </div>
