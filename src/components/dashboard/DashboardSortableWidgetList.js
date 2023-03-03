@@ -23,6 +23,7 @@ import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 const WidgetSortableListItem = SortableElement((props) => {
 	// widget templates
 	const arWidget = (widget, index) => {
+		
 		return (
 			<div
 				className={
@@ -100,18 +101,7 @@ const WidgetSortableListItem = SortableElement((props) => {
 					) : (
 						<div className='formField w-100 dashboardWidgets formControl'>
 							{props.selectMonthDropdown('Additional Revenue', index)}
-
-							<select
-								style={{
-									backgroundImage: 'url(' + arrowDown + ')',
-									marginLeft: 0,
-									marginTop: 0,
-									width: '70px',
-									paddingLeft: '0px',
-								}}
-							>
-								<option value=''>2022</option>
-							</select>
+							{props.selectYearDropdown('Additional Revenue', index)}
 						</div>
 					)}
 					<div className='previousRevenueWraper'>
@@ -167,7 +157,7 @@ const WidgetSortableListItem = SortableElement((props) => {
 							<h4 className='secondChild'></h4>
 
 							<p className='firstChild'>
-								Projected Value -{' '}
+								Last month collected amount -{' '}
 								<span className='monthInformations'>
 									{props.additionalRevenueInfo.previous_month},{' '}
 									{props.additionalRevenueInfo.previous_year}
@@ -252,18 +242,7 @@ const WidgetSortableListItem = SortableElement((props) => {
 					) :(
 					<div className='formField w-100 dashboardWidgets formControl'>
 						{props.selectMonthDropdown('Appointments Showed', index)}
-
-						<select
-							style={{
-								backgroundImage: 'url(' + arrowDown + ')',
-								marginLeft: 0,
-								marginTop: 0,
-								width: '70px',
-								paddingLeft: '0px',
-							}}
-						>
-							<option value=''>2022</option>
-						</select>
+						{props.selectYearDropdown('Appointments Showed', index)}	
 					</div>
 					)}
 					<div className='previousRevenueWraper'>
@@ -466,17 +445,7 @@ const WidgetSortableListItem = SortableElement((props) => {
 					<div className='formField w-100 dashboardWidgets formControl'>
 						{props.selectMonthDropdown('Appointments Cancelled', index)}
 
-						<select
-							style={{
-								backgroundImage: 'url(' + arrowDown + ')',
-								marginLeft: 0,
-								marginTop: 0,
-								width: '70px',
-								paddingLeft: '0px',
-							}}
-						>
-							<option value=''>2022</option>
-						</select>
+						{props.selectYearDropdown('Appointments Cancelled', index)}
 					</div>
 					)}
 					<div className='previousRevenueWraper'>
@@ -586,18 +555,6 @@ const WidgetSortableListItem = SortableElement((props) => {
 					) :(
 					<div className='formField w-100 dashboardWidgets formControl'>
 						{props.onSelectDaysChange('Appointments_Scheduled')}
-
-						<select
-							style={{
-								backgroundImage: 'url(' + arrowDown + ')',
-								marginLeft: 0,
-								marginTop: 0,
-								width: '70px',
-								paddingLeft: '0px',
-							}}
-						>
-							<option value=''>2022</option>
-						</select>
 					</div>
 					)}
 					<div className='previousRevenueWraper'>
@@ -710,18 +667,6 @@ const WidgetSortableListItem = SortableElement((props) => {
 					) :(
 					<div className='formField w-100 dashboardWidgets formControl'>
 						{props.onSelectDaysChange('Retention', true)}
-
-						<select
-							style={{
-								backgroundImage: 'url(' + arrowDown + ')',
-								marginLeft: 0,
-								marginTop: 0,
-								width: '70px',
-								paddingLeft: '0px',
-							}}
-						>
-							<option value=''>2022</option>
-						</select>
 					</div>
 					)}
 					<div className='previousRevenueWraper'>
@@ -824,17 +769,10 @@ const WidgetSortableListItem = SortableElement((props) => {
 							)}
 							{/* {justclick("fucker",index)} */}
 
-							<select
-								style={{
-									backgroundImage: 'url(' + arrowDown + ')',
-									marginLeft: 0,
-									marginTop: 0,
-									width: '70px',
-									paddingLeft: '0px',
-								}}
-							>
-								<option value=''>2022</option>
-							</select>
+							{props.selectYearDropdown(
+								'Monthly Recurring Revenue Growth',
+								index
+							)}
 						</div>
 					)}
 					{widget.id == 'mrr' ? (
@@ -876,7 +814,7 @@ const WidgetSortableListItem = SortableElement((props) => {
 							<h4 className='secondChild'></h4>
 
 							<p className='firstChild'>
-								Projected Value -{' '}
+								Last month revenue -{' '}
 								<span className='monthInformations'>
 									{props.mRRGInfo.previous_month},{' '}
 									{props.mRRGInfo.previous_year}
@@ -962,18 +900,6 @@ const WidgetSortableListItem = SortableElement((props) => {
 					) : (
 						<div className='formField w-100 dashboardWidgets formControl'>
 							{props.onSelectDaysChange('New_Contacts')}
-
-							<select
-								style={{
-									backgroundImage: 'url(' + arrowDown + ')',
-									marginLeft: 0,
-									marginTop: 0,
-									width: '70px',
-									paddingLeft: '0px',
-								}}
-							>
-								<option value=''>2022</option>
-							</select>
 						</div>
 					)}
 					<div className='previousRevenueWraper'>
@@ -1033,37 +959,114 @@ const DashboardSortableWidgetList = SortableContainer(
 			Appointments_Scheduled : '0',
 			Retention : '30'
 		})
+		const currentYear = new Date().getFullYear();
+		let yearsInside = [];
+		for (let index = currentYear; index >= 2022; index--) {
+			yearsInside.push(index);
+		}
 		const [months, setMonths] = useState(moment.months());
-
+		const [years, setYears] = useState(yearsInside);
 		const [setGoals, setSetGoals] = useState({
 			status: false,
 		});
 
 		const [ashowedSelectedMonth, setAShowedSelectedMonth] = useState(null);
 		const [currentMonth, setUpdatedMonth] = useState(months[moment().month()]);
+		const [selectedDate, setSelectedDate] = useState({
+			MRRG: {
+				month: moment().month(currentMonth).format("M"),
+				year: new Date().getFullYear()
+			},
+			AR: {
+				month: moment().month(currentMonth).format("M"),
+				year: new Date().getFullYear()
+			},
+			AS: {
+				month: moment().month(currentMonth).format("M"),
+				year: new Date().getFullYear()
+			},
+			AC: {
+				month: moment().month(currentMonth).format("M"),
+				year: new Date().getFullYear()
+			}
+		})
+
 		const onSelectMonth = (event, index) => {
 			let widgetName = event.name;
 			let selectedMonthInNumber = months.indexOf(event.value);
 
 			switch (widgetName) {
 				case 'Monthly Recurring Revenue Growth':
-					fetchMRRGWidgetInfo(selectedMonthInNumber + 1);
+					setSelectedDate({...selectedDate, MRRG: {month: selectedMonthInNumber + 1, year: selectedDate.MRRG.year}});
+					fetchMRRGWidgetInfo(selectedMonthInNumber + 1, selectedDate.MRRG.year);
 					break;
 				case 'Additional Revenue':
-					fetchAdditionalRevenueInfo(selectedMonthInNumber + 1);
+					setSelectedDate({...selectedDate, AR: {month: selectedMonthInNumber + 1, year: selectedDate.AR.year}});
+					fetchAdditionalRevenueInfo(selectedMonthInNumber + 1, selectedDate.AR.year);
 					break;
 				case 'Appointments Showed':
-					fetchAppointmentsShowedInfo(selectedMonthInNumber + 1);
+					setSelectedDate({...selectedDate, AS: {month: selectedMonthInNumber + 1, year: selectedDate.AS.year}});
+					fetchAppointmentsShowedInfo(selectedMonthInNumber + 1, selectedDate.AS.year);
 					setAShowedSelectedMonth(event.value);
 					break;
 				case 'Appointments Cancelled':
-					fetchAppointmentsCancelledInfo(selectedMonthInNumber + 1);
+					setSelectedDate({...selectedDate, AC: {month: selectedMonthInNumber + 1, year: selectedDate.AC.year}});
+					fetchAppointmentsCancelledInfo(selectedMonthInNumber + 1, selectedDate.AC.year);
 					break;
 			}
 			updateWidgetDefaultDate(selectedMonthInNumber, index);
 		};
+		const onSelectYear = (event, index) => {
+			let widgetName = event.name;
+			let selectedYear = event.value;
+			switch (widgetName) {
+				case 'Monthly Recurring Revenue Growth':
+					setSelectedDate({...selectedDate, MRRG: {month: selectedDate.MRRG.month, year: selectedYear}});
+					fetchMRRGWidgetInfo(selectedDate.MRRG.month, selectedYear);
+					break;
+				case 'Additional Revenue':
+					setSelectedDate({...selectedDate, AR: {month: selectedDate.AR.month, year: selectedYear}});
+					fetchAdditionalRevenueInfo(selectedDate.AR.month, selectedYear);
+					break;
+				case 'Appointments Showed':
+					setSelectedDate({...selectedDate, AS: {month: selectedDate.AS.month, year: selectedYear}});
+					fetchAppointmentsShowedInfo(selectedDate.AS.month, selectedYear);
+					setAShowedSelectedMonth(event.value);
+					break;
+				case 'Appointments Cancelled':
+					setSelectedDate({...selectedDate, AC: {month: selectedDate.AC.month, year: selectedYear}});
+					fetchAppointmentsCancelledInfo(selectedDate.AC.month, selectedYear);
+					break;
+			}
+		};
+
+		const selectYearDropdown = (widgetName, index) => {
+			return (
+				<select
+					name={widgetName}
+					defaultValue={new Date().getFullYear()}
+					onChange={(e) => onSelectYear(e.target, index)}
+					style={{
+						backgroundImage: 'url(' + arrowDown + ')',
+						marginLeft: 0,
+						marginTop: 0,
+						width: '70px',
+						paddingLeft: '0px',
+					}}
+				>
+					{years.map((year, i) => {
+						return (
+							<option key={i} value={year}>
+								{year}
+							</option>
+						);
+					})}
+				</select>
+			);
+		};
 
 		const selectMonthDropdown = (widgetName, index) => {
+			console.log("Monthssssssssssss: ", widgets[index])
 			return (
 				<select
 					name={widgetName}
@@ -1152,9 +1155,9 @@ const DashboardSortableWidgetList = SortableContainer(
 			current_month_projected: '0',
 			previous_month_revenue: '0',
 			current_month: currentMonth,
-			current_year: '2022',
+			current_year: new Date().getFullYear(),
 			previous_month: 'Jul',
-			previous_year: '2022',
+			previous_year: new Date().getFullYear() - 1,
 			to_date: '2022-08-31',
 			from_date: '2022-07-01',
 		});
@@ -1164,10 +1167,10 @@ const DashboardSortableWidgetList = SortableContainer(
 			current_month_additional_revenue: '0.00',
 			current_month_revenue_growth_percentage: '0.00',
 			current_month_revenue_status: false,
-			current_month: 'Jan',
-			current_year: '2022',
+			current_month: currentMonth,
+			current_year: new Date().getFullYear(),
 			previous_month: 'Dec',
-			previous_year: '2021',
+			previous_year: new Date().getFullYear() - 1,
 			from_date: '2021-12-01',
 			to_date: '2022-01-31',
 			previous_month_additional_revenue: '0.00',
@@ -1415,11 +1418,8 @@ const DashboardSortableWidgetList = SortableContainer(
 			status: false,
 		});
 		//helper functions to load widgetData set
-		const fetchMRRGWidgetInfo = async (
-			month = months.indexOf(currentMonth) + 1,
-			year = '2022'
-		) => {
-			if (month > months.indexOf(currentMonth) + 1) {
+		const fetchMRRGWidgetInfo = async (month, year) => {
+			if (new Date().getFullYear() == year && month > months.indexOf(currentMonth) + 1) {
 				dispatch({
 					type: actionTypes.SHOW_MESSAGE,
 					message: `Invalid month request  (${
@@ -1469,13 +1469,14 @@ const DashboardSortableWidgetList = SortableContainer(
 			}
 			return true;
 		};
-		const fetchAdditionalRevenueInfo = async (month = 1, year = 2022) => {
+		const fetchAdditionalRevenueInfo = async (month, year) => {
 			try {
-				if (month > months.indexOf(currentMonth) + 1) {
+				if (new Date().getFullYear() == year && month > months.indexOf(currentMonth) + 1) {
 					dispatch({
 						type: actionTypes.SHOW_MESSAGE,
-						message:
-							'Invalid month request. Requested month should not be greater than current month',
+						message: `Invalid month request  (${
+							months[month - 1]
+						}). Requested month should not be greater than current month (${currentMonth})`,
 						typeMessage: 'warning',
 					});
 					setAdditionalRevenueInfo({
@@ -1483,9 +1484,9 @@ const DashboardSortableWidgetList = SortableContainer(
 						current_month_revenue_growth_percentage: '0.00',
 						current_month_revenue_status: false,
 						current_month: 'Jan',
-						current_year: '2022',
+						current_year: new Date().getFullYear(),
 						previous_month: 'Dec',
-						previous_year: '2021',
+						previous_year: new Date().getFullYear() - 1,
 						from_date: '2021-12-01',
 						to_date: '2022-01-31',
 						previous_month_additional_revenue: '0.00',
@@ -1511,9 +1512,9 @@ const DashboardSortableWidgetList = SortableContainer(
 						current_month_revenue_growth_percentage: '0.00',
 						current_month_revenue_status: false,
 						current_month: 'Jan',
-						current_year: '2022',
+						current_year: new Date().getFullYear(),
 						previous_month: 'Dec',
-						previous_year: '2021',
+						previous_year: new Date().getFullYear() - 1,
 						from_date: '2021-12-01',
 						to_date: '2022-01-31',
 						previous_month_additional_revenue: '0.00',
@@ -1533,13 +1534,14 @@ const DashboardSortableWidgetList = SortableContainer(
 				}
 			} catch (error) {}
 		};
-		const fetchAppointmentsShowedInfo = async (month = 1, year = 2022) => {
+		const fetchAppointmentsShowedInfo = async (month, year) => {
 			try {
-				if (month > months.indexOf(currentMonth) + 1) {
+				if (new Date().getFullYear() == year && month > months.indexOf(currentMonth) + 1) {
 					dispatch({
 						type: actionTypes.SHOW_MESSAGE,
-						message:
-							'Invalid month request. Requested month should not be greater than current month',
+						message: `Invalid month request  (${
+							months[month - 1]
+						}). Requested month should not be greater than current month (${currentMonth})`,
 						typeMessage: 'warning',
 					});
 					setAppointmentsShowed({
@@ -1583,13 +1585,17 @@ const DashboardSortableWidgetList = SortableContainer(
 			} catch (error) {}
 		};
 
-		const fetchAppointmentsCancelledInfo = async (month = 1, year = 2022) => {
+		const fetchAppointmentsCancelledInfo = async (month, year) => {
 			try {
-				if (month > months.indexOf(currentMonth) + 1) {
+				if (new Date().getFullYear() == year && month > months.indexOf(currentMonth) + 1) {
+
+					// setSelectedDate({...selectedDate, AC: {month: months.indexOf(currentMonth), year: new Date().getFullYear()}});
+
 					dispatch({
 						type: actionTypes.SHOW_MESSAGE,
-						message:
-							'Invalid month request. Requested month should not be greater than current month',
+						message: `Invalid month request  (${
+							months[month - 1]
+						}). Requested month should not be greater than current month (${currentMonth})`,
 						typeMessage: 'warning',
 					});
 					setAppointmentsCancelled({
@@ -1727,11 +1733,11 @@ const DashboardSortableWidgetList = SortableContainer(
 			alert('test');
 		};
 		useEffect(async () => {
-			fetchMRRGWidgetInfo(months.indexOf(currentMonth) + 1);
+			fetchMRRGWidgetInfo(months.indexOf(currentMonth) + 1, new Date().getFullYear());
 			fetchAppointmentsScheduledInfo();
-			fetchAdditionalRevenueInfo(months.indexOf(currentMonth) + 1);
-			fetchAppointmentsShowedInfo(months.indexOf(currentMonth) + 1);
-			fetchAppointmentsCancelledInfo(months.indexOf(currentMonth) + 1);
+			fetchAdditionalRevenueInfo(months.indexOf(currentMonth) + 1, new Date().getFullYear());
+			fetchAppointmentsShowedInfo(months.indexOf(currentMonth) + 1, new Date().getFullYear());
+			fetchAppointmentsCancelledInfo(months.indexOf(currentMonth) + 1, new Date().getFullYear());
 			fetchNewContactsInfo();
 			fetchRetentionInfo();
 		}, [true]);
@@ -1757,6 +1763,7 @@ const DashboardSortableWidgetList = SortableContainer(
 											isMRRGLoading={isMRRGLoading}
 											i={index}
 											selectMonthDropdown={selectMonthDropdown}
+											selectYearDropdown={selectYearDropdown}
 											additionalRevenueInfo={additionalRevenueInfo}
 											isARloading={isARloading}
 											appointmentsScheduledInfo={appointmentsScheduledInfo}
