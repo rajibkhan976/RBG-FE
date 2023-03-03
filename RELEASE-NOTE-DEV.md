@@ -166,3 +166,6 @@
     - Fixed notification group issue
 # Automation V3.0.3
     - Fixed merge tag issue of message
+
+# HOTFIX V1.3.1
+    - Hot fix Dashboard month and year selection
