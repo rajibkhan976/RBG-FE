@@ -81,7 +81,7 @@ const GymDetails = (props) => {
     try {
       setIsLoader(true);
       const gymData = await GymDetailsServices.fetchGymDetail();
-      console.clear()
+      // console.clear()
       console.log("Gym Details", gymData);
       setGetGymData({
         ...getGymData,
@@ -152,7 +152,7 @@ const GymDetails = (props) => {
     }
   };
   useEffect(() => {
-
+    console.clear()
     console.log("user data",userData,"detected timezone",detectedTimezone,"redux data",reduxData)
     fetchCountry();
     fetchGymDetails();
@@ -240,6 +240,13 @@ const GymDetails = (props) => {
       const isValid = validateField(e, true);
       if (isValid) {
         setIsLoader(true);
+        let timezoneObj = gymData?.timezone.split(/[-()]/)
+        let timezoneInfo = {
+          name : timezoneObj[1],
+          abbr : timezoneObj[0],
+          utc_offset : timezoneObj[2]
+        }
+
         const payload = {
           "orgName": gymData.name,
           "contactPerson": gymData.contactPerson,
@@ -249,15 +256,18 @@ const GymDetails = (props) => {
           "logo": gymData.logo,
           "contactEmail": gymData.contactEmail,
           "timeZone": gymData.timezone,
+          "timezoneInfo" : timezoneInfo,
           "gmtOffset": (gymData.gmtOffset) ? gymData.gmtOffset : ''
         };
-        console.log(payload);
+
+        console.clear()
+        console.log("payload",payload);
         const updatedData = await GymDetailsServices.gymDetailUpdate(payload);
         setGymData(updatedData);
         setHasTimezone((gymData.timezone) ? true: false);
         dispatch({
           type: actionTypes.USER_DATA,
-          data: {...userData, organizationTimezone: gymData.timezone.toString()}
+          data: {...userData, organizationTimezone: gymData.timezone.toString(), organizationTimezoneInfo : timezoneInfo}
         });
         console.log("Updated Data", updatedData);
         // setSuccessMsg("Gym details updated successfully");
@@ -629,8 +639,8 @@ const regenerateCodeHandler = (e) =>{
                     {timezoneData ? timezoneData.map(zone => {
                       return (<option
                         value={zone.utc_offset}
-                        data-timezone={zone.name}
-                        selected={(zone.name.toLowerCase() === gymData?.timezoneInfo.name.toLowerCase()) ? true : false }
+                        data-timezone={zone.abbr+"-"+zone.name+"("+zone.utc_offset+")"}
+                        selected={(zone.name.toLowerCase() == gymData?.timezoneInfo.name.toLowerCase()) ? true : false }
                         // selected={(parseInt(zone.gmtOffset) === detectedTimezone.gmtOffset) ? true : ""}
                       >{zone.abbr} - {zone.name}({zone.utc_offset})</option>);
                     }) : ''}
