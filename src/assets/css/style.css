@@ -16157,3 +16157,16 @@ notification group design fixing
     font-size: 11px;
     font-weight: 400;
 }
+
+/* ---------------
+automation email setting css 
+------------------*/
+.nodeEmailModal.nodeSettingModal{
+    overflow: inherit;
+}
+.nodeSettingModal .formHead{
+    border-radius: 12px 12px 0px 0px;
+}
+.nodeSettingModal .formBody{
+    border-radius: 0px 0px 12px 12px;
+}
