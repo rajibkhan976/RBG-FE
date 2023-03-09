@@ -169,3 +169,5 @@
 
 # HOTFIX V1.3.1
     - Hot fix Dashboard month and year selection
+# Automation V3.0.4
+    - Fixed
