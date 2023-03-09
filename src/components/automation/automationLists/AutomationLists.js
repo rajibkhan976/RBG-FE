@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
 // import { NavLink } from "react-router-dom";
 import flash_red from "../../../assets/images/flash_red.svg";
 import info_3dot_icon from "../../../assets/images/info_3dot_icon.svg";
@@ -7,7 +9,6 @@ import Loader from "../../shared/Loader";
 import moment from "moment";
 import ListHeader from "../automation-shared/ListHeader";
 import { AutomationServices } from "../../../services/automation/AutomationServices";
-import { useDispatch } from "react-redux";
 import * as actionTypes from "../../../actions/types";
 import { utils } from "../../../helpers";
 import Pagination from "../../shared/Pagination";
@@ -16,6 +17,7 @@ import { ErrorAlert, SuccessAlert } from "../../shared/messages";
 import responses from "../../../configuration/responses";
 import env from "../../../configuration/env";
 import {NavLink, Redirect, useHistory} from "react-router-dom";
+
 
 
 const AutomationLists = (props) => {
@@ -48,8 +50,7 @@ const AutomationLists = (props) => {
     currentPage: 1,
     limit: 10,
   });
-
-  const [successMsg, setSuccessMsg] = useState("");
+  const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:"UTC-06");  const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "automation")));
   /**
@@ -328,6 +329,8 @@ const AutomationLists = (props) => {
   };
 
   useEffect(() => {
+    console.clear()
+    console.log("user data",timezoneOffset)
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -495,7 +498,8 @@ const AutomationLists = (props) => {
                       </div>
                       <div className="listCell cellWidth_15">
                         <NavLink to={'./automation-details/' + elem._id}>
-                          <p>{moment(elem.createdAt).format("Do MMM YYYY")}</p>
+                          <p>{utils.convertUTCToTimezone(elem.createdAt,timezoneOffset)}</p>
+                          {/* <p>{moment(elem.createdAt).format()}</p> */}
                         </NavLink>
                       </div>
                       <div className="listCell cellWidth_10">

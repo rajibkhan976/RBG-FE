@@ -242,8 +242,8 @@ const GymDetails = (props) => {
         setIsLoader(true);
         let timezoneObj = gymData?.timezone.split(/[-()]/)
         let timezoneInfo = {
-          name : timezoneObj[1],
           abbr : timezoneObj[0],
+          name : timezoneObj[1],
           utc_offset : timezoneObj[2]
         }
 
@@ -640,7 +640,7 @@ const regenerateCodeHandler = (e) =>{
                       return (<option
                         value={zone.utc_offset}
                         data-timezone={zone.abbr+"-"+zone.name+"("+zone.utc_offset+")"}
-                        selected={(zone.name.toLowerCase() == gymData?.timezoneInfo.name.toLowerCase()) ? true : false }
+                        selected={(zone.utc_offset == gymData?.timezoneInfo.utc_offset) ? true : false }
                         // selected={(parseInt(zone.gmtOffset) === detectedTimezone.gmtOffset) ? true : ""}
                       >{zone.abbr} - {zone.name}({zone.utc_offset})</option>);
                     }) : ''}

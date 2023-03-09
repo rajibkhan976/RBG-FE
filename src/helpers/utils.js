@@ -214,15 +214,32 @@ export const utils = {
 
         return formattedCardExpairy;
     },
-    convertUTCToTimezone(utcDt, timezone = null, dateFormat = "LLL") {
-        const formattedDate = moment(utcDt).format(dateFormat);
-        if (!timezone) return formattedDate;
-        return moment.utc(formattedDate, null).tz(timezone).format(dateFormat);
+    /**
+     * Convert UTC time to provided Timezone : Need to call this function in listing data
+     * @param {2022-08-08 07:55:40} date 
+     * @param {UTC−05} utcOffset 
+     * @param {Any locale aware formats of momentjs (ex : LLL)} dateFormat 
+     * @returns 
+     */
+    convertUTCToTimezone(date, utcOffset = null, dateFormat = "LLL") {
+        const formattedDate = moment.utc(date);
+        if (!utcOffset) return "ERROR : Please send utc offset in order to convert the provided date & time";
+        // if (!utcOffset) return formattedDate.format(dateFormat);
+        const timezoneDate =  moment.utc(formattedDate, null).utcOffset(utcOffset.split('UTC')[1]);
+        return timezoneDate.format(dateFormat)
     },
-    convertTimezoneToUTC(date, timezone = null, dateFormat = "LLL") {
-        const formattedDate = moment(date).format(dateFormat);
-        if (!timezone) return formattedDate;
-        return moment(formattedDate).tz(timezone).utc().format(dateFormat);
+    /**
+     * Convert Timezone to UTC - Need to call this func in all date inputs before sending the data to backend
+     * @param {2022-08-08 07:55:40} date 
+     * @param {UTC−05}} utcOffset 
+     * @param {Any locale aware formats of momentjs (ex : LLL / "")} dateFormat 
+     * @returns 
+     */
+    convertTimezoneToUTC(date, utcOffset = null, dateFormat = "") {
+        let dateWithOffset = date.concat(utcOffset)
+        const formattedDate = moment(dateWithOffset);
+        if (!utcOffset) return "ERROR : Please send utc offset in order to convert the provided date & time";
+        return moment.utc(formattedDate).format(dateFormat).replace("T", " ").replace("Z", " ");
     },
     encodeHTML: (html) => {
         return Buffer.from(html).toString('base64');
