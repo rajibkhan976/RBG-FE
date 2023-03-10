@@ -1,18 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
-import Select, { components } from "react-select";
-import user02 from "../../../../assets/images/user02.png";
+import Select from "react-select";
 import groupIcon from "../../../../assets/images/group_icon.svg";
-import { Editor } from '@tinymce/tinymce-react';
-import tagIcon from "../../../../assets/images/tag_icon.svg";
-import expendIcon from "../../../../assets/images/expend_icon.svg";
 import searchIcon from "../../../../assets/images/search_icon.svg";
 import crossIcon from "../../../../assets/images/cross.svg";
-import { regExpLiteral } from '../../../../../node_modules/@babel/types';
 import cressIcon from "../../../../assets/images/white_cross_roundedCorner.svg";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import { NotificationGroupServices } from '../../../../services/notification/NotificationGroupServices';
-import Loader from "../../../shared/Loader";
 import defaultImage from "../../../../assets/images/owner_img_1.png";
 import * as actionTypes from "../../../../actions/types";
 import { useDispatch } from "react-redux";
@@ -20,7 +14,6 @@ import { SMSServices } from "../../../../services/template/SMSServices";
 import { EmailServices } from "../../../../services/setup/EmailServices";
 import { utils } from "../../../../helpers";
 import EditorComponent from "../../../setup/templates/email/editor/Editor";
-import icon_browse_keywords from "../../../../assets/images/icon_browse_keywords.svg";
 import MergeTag from "../../../shared/MergeTag";
 
 const NotificationModal = (props) => {
@@ -36,18 +29,13 @@ const NotificationModal = (props) => {
     const [userListOption, setUserListOption] = useState([]);
     const [groupListOption, setGroupListOption] = useState([]);
     const [searchResult, setSearchResult] = useState(props.elem.data.recipents);
-    const [tags, setTags] = useState([]);
     const [emailOption, setEmailOptions] = useState([]);
     const [smsOptions, setSMSOptions] = useState([]);
     const [selectedEmailTemplate, setSelectedEmailTemplate] = useState({ value: "", label: "Select an Email Template", data: {} });
-    const [searchTagString, setSearchTagString] = useState("");
-    const [subjectKeywordSuggesion, setSubjectKeywordSuggesion] = useState(false);
-    const [searchTagStringSMS, setSearchTagStringSMS] = useState("");
-    const [subjectKeywordSuggesionSMS, setSubjectKeywordSuggesionSMS] = useState(false);
     const [emailData, setEmailData] = useState({
         "_id": "",
         "email": "",
-        "subject": props.elem.data.emailBody,
+        "subject": props.elem.data.subject,
         "template": utils.encodeHTML(props.elem.data.emailBody)
     });
     const [changedTemplate, setChangedTemplate] = useState(props.elem.data.emailBody);
@@ -107,25 +95,9 @@ const NotificationModal = (props) => {
     };
     useEffect(async () => {
         await fetchNotificationGroupList(searchGroup);
-        await fetchEmailTags();
         await fetchTemplateList();
         await fetchSMSTemplates();
     }, []);
-
-    const fetchEmailTags = async () => {
-        try {
-            const result = await SMSServices.fetchSMSTags()
-            if (result) {
-                setTags(result)
-            }
-        } catch (error) {
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: error.message,
-                typeMessage: 'error'
-            });
-        }
-    }
 
     const fetchTemplateList = async () => {
         const pageId = "all";
