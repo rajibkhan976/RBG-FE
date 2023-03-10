@@ -500,7 +500,7 @@ export default function AutomationHistory(props) {
                                                                                             </svg>
                                                                                         </div>
                                                                                         {elem.completedEvents.length !== index + 1 ? <div className='linr'></div> : ""}
-                                                                                        <div className='textOnIcon'>Remove tag</div>
+                                                                                        <div className='textOnIcon'>Notification</div>
                                                                                     </div>
                                                                                     : "")))))) }
                                                     </>

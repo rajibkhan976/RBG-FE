@@ -171,3 +171,5 @@
     - Hot fix Dashboard month and year selection
 # Automation V3.0.4
     - Fixed
+#Automation V3.0.5
+    - Fixed automation notification issue
