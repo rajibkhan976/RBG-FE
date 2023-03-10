@@ -215,32 +215,43 @@ export const utils = {
         return formattedCardExpairy;
     },
     /**
-     * Convert UTC time to provided Timezone : Need to call this function in listing data
+     * Convert UTC time to provided Timezone : Need to call this function in listing data only
      * @param {2022-08-08 07:55:40} date 
      * @param {UTC−05} utcOffset 
      * @param {Any locale aware formats of momentjs (ex : LLL)} dateFormat 
      * @returns 
      */
     convertUTCToTimezone(date, utcOffset = null, dateFormat = "LLL") {
+        // console.log("date in convert utc to timezone function",date)
+        // console.log("Utc offset in utc to timezone function",utcOffset)
         const formattedDate = moment.utc(date);
         if (!utcOffset) return "ERROR : Please send utc offset in order to convert the provided date & time";
         // if (!utcOffset) return formattedDate.format(dateFormat);
-        const timezoneDate =  moment.utc(formattedDate, null).utcOffset(utcOffset.split('UTC')[1]);
+        const timezoneDate = moment.utc(formattedDate, null).utcOffset(utcOffset.split('UTC')[1].replace("−","-"));
+
+        // console.log("final timezone conversion",timezoneDate.format(dateFormat))
         return timezoneDate.format(dateFormat)
     },
+
     /**
-     * Convert Timezone to UTC - Need to call this func in all date inputs before sending the data to backend
+     * Convert Timezone to UTC - Need to call this func in all date inputs before sending the data to backend only
      * @param {2022-08-08 07:55:40} date 
      * @param {UTC−05}} utcOffset 
      * @param {Any locale aware formats of momentjs (ex : LLL / "")} dateFormat 
      * @returns 
      */
     convertTimezoneToUTC(date, utcOffset = null, dateFormat = "") {
-        let dateWithOffset = date.concat(utcOffset)
+        // console.log("date formate", date, utcOffset, dateFormat);
+        let dateWithOffset = date.concat(utcOffset?.split('UTC')[1].replace("−","-"))
+        console.log("date with offset",dateWithOffset)
         const formattedDate = moment(dateWithOffset);
+        // console.log("formatted date",formattedDate)
         if (!utcOffset) return "ERROR : Please send utc offset in order to convert the provided date & time";
         return moment.utc(formattedDate).format(dateFormat).replace("T", " ").replace("Z", " ");
+        // return moment.utc(formattedDate).format(dateFormat);
     },
+ 
+    
     encodeHTML: (html) => {
         return Buffer.from(html).toString('base64');
     },
@@ -255,6 +266,30 @@ export const utils = {
             isUpcoming: (Math.sign(difference) === -1) ? true : false,
             difference: Math.abs(difference)
         };
-    }
+    },
 
+
+    timeConversion: (amPmString)=> { 
+        const [time, modifier] = amPmString.split(' ');
+        let [hours, minutes] = time.split(':');
+        let millisecond  = "00"
+        if(hours === '12'){
+            hours = '0'
+        }
+        if(modifier === 'PM'){
+            hours = parseInt(hours, 10) + 12;
+        }
+        if(hours <= 9){
+            hours = `0${hours}`
+        }
+        return `${hours}:${minutes}:${millisecond}`
+    },
+    
+    dateConversion(dateString){
+        let date = new Date(dateString);
+        let d = date.getDate();
+        let m = date.getMonth() + 1;
+        let y = date.getFullYear();
+        return `${y}-${(m<=9? '0' + m : m )}-${(d<=9 ? '0'+ d : d)}`;
+    }
 }

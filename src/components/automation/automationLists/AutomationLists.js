@@ -50,7 +50,8 @@ const AutomationLists = (props) => {
     currentPage: 1,
     limit: 10,
   });
-  const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:"UTC-06");  const [successMsg, setSuccessMsg] = useState("");
+  const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
+  const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
   const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "automation")));
   /**
@@ -498,7 +499,8 @@ const AutomationLists = (props) => {
                       </div>
                       <div className="listCell cellWidth_15">
                         <NavLink to={'./automation-details/' + elem._id}>
-                          <p>{utils.convertUTCToTimezone(elem.createdAt,timezoneOffset)}</p>
+                        <p>{utils.convertUTCToTimezone(elem.createdAt,timezoneOffset)
+                        }</p>
                           {/* <p>{moment(elem.createdAt).format()}</p> */}
                         </NavLink>
                       </div>

@@ -22,6 +22,7 @@ import ConfirmBox from "../../shared/confirmBox";
 import { GymDetailsServices } from "../../../services/gymDetails/GymDetailsServices";
 import {AttendanceServices} from "../../../services/attendance/attendanceServices";
 import Scrollbars from "react-custom-scrollbars-2";
+import { utils } from "../../../helpers";
 
 
 const GymDetails = (props) => {
@@ -33,9 +34,11 @@ const GymDetails = (props) => {
   const [editHoliday, setEditHoliday] = useState(false);
   const [holidayVal, setHolidayVal] = useState({
     id: "",
-    startDay: "",
-    endDay: "",
-    name: ""
+    // startDay: "",
+    // endDay: "",
+    name: "",
+    fromDate: "",
+    toDate: "",
   });
 
   // START - Variable set while development --- Jit
@@ -166,6 +169,7 @@ const GymDetails = (props) => {
   }, [errorMsg, successMsg]);
 
   const toggleOptions = (index) => {
+    console.log(index);
     setOption(index !== option ? index : null);
   };
   const openAddHolidayModal = (holiday) => {
@@ -396,6 +400,7 @@ const GymDetails = (props) => {
   };
 
   const editHolidayHandler = (elem) => {
+    console.log("Edit holiday", elem);
     setEditHoliday(true);
     setHolidayVal(elem);
     console.log(holidayVal)
@@ -435,6 +440,20 @@ const regenerateCodeHandler = (e) =>{
   e.preventDefault();
   fetchAccessCodeGenerate();  
 }
+const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
+useEffect(()=>{
+  console.log("gym details time zone", timezoneOffset);
+}, [timezoneOffset]);
+
+
+const base_url = window.location.origin;
+
+
+
+
+
+
+
   return (
     <>
       
@@ -461,7 +480,7 @@ const regenerateCodeHandler = (e) =>{
             <p className="userListAbout">Manage your Gym details.</p>
           </div>
         </div>
-        <div className="gymDetails">
+        <div className="gymDetails ">
           <div className="gymdetails_left">
             {!showEditForm &&
               <div className="showing_gym_data not_disabled_data">
@@ -549,10 +568,13 @@ const regenerateCodeHandler = (e) =>{
                       {!editAccess && <span class="tooltiptextInfo">Regenerate has been disabled</span>}
                   </div>
                   <div className="copy_url_gen">
-                    <span>{window.location.origin}/check-in-portal <button onClick={() => window.open(window.location.origin + "/check-in-portal")}><img src={target_blank} alt=""/></button></span>
+                  {/* {config.appUrl is now base_url } */}
+                    <span>{base_url}/check-in-portal <button onClick={() => window.open(base_url + "/check-in-portal")}>
+                      <img src={target_blank} alt=""/>
+                      </button></span>
                     
                     <div className="relative infoSpan">
-                      <button className={copiedurl ? "copy_button active" : "copy_button"} onClick={() => {copy(config.appUrl +"/check-in-portal");setCopiedurl(true);}}><img src={copyIcon} alt=""/></button>
+                      <button className={copiedurl ? "copy_button active" : "copy_button"} onClick={() => {copy(base_url +"/check-in-portal");setCopiedurl(true);}}><img src={copyIcon} alt=""/></button>
                       {/* {copiedText && <span class="tooltiptextInfo">Copied</span>} */}
                       
                     </div>
@@ -635,12 +657,11 @@ const regenerateCodeHandler = (e) =>{
                   <label>Timezone</label>
                   <select name="timezone"
                     onChange={validateField}>
-                      <option value="">-</option>
                     {timezoneData ? timezoneData.map(zone => {
                       return (<option
                         value={zone.utc_offset}
                         data-timezone={zone.abbr+"-"+zone.name+"("+zone.utc_offset+")"}
-                        selected={(zone.utc_offset == gymData?.timezoneInfo.utc_offset) ? true : false }
+                        selected={(zone.name.toLowerCase() == gymData?.timezoneInfo.name.toLowerCase()) ? true : false }
                         // selected={(parseInt(zone.gmtOffset) === detectedTimezone.gmtOffset) ? true : ""}
                       >{zone.abbr} - {zone.name}({zone.utc_offset})</option>);
                     }) : ''}
@@ -665,7 +686,7 @@ const regenerateCodeHandler = (e) =>{
                 <div className="holidayListHeader">
                   <div>
                     <h3>Holiday List</h3>
-                    <p>Manage your holidays</p>
+                    <p>Manage your holiday</p>
                   </div>
                 </div>
                 <div className="addInEmptySpace">
@@ -684,7 +705,7 @@ const regenerateCodeHandler = (e) =>{
                 <div className="holidayListHeader">
                   <div>
                     <h3>Holiday List</h3>
-                    <p>Manage your holidays</p>
+                    <p>Manage your holiday</p>
                   </div>
                   <div>
                   {editAccess && 
@@ -699,13 +720,18 @@ const regenerateCodeHandler = (e) =>{
                   <div className="cell">End Date</div>
                   <div className="cell">Holiday</div>
                 </div>
-                <div className="holidayListWrap">
+                <div className="holidayListWrap tt">
                 {holidayData.map((elem, key) => {
                   return (
                       
                   <div className="gymHolidayList">
-                    <div className="cell">{elem.fromDate}</div>
-                    <div className="cell">{elem.toDate}</div>
+                    <div className="cell">
+                      {utils.convertUTCToTimezone(elem?.fromDate, timezoneOffset).split(" ").splice(0,3).join(" ")}
+                      </div>
+                    <div className="cell">
+                      {/* {elem.toDate} */}
+                      {utils.convertUTCToTimezone(elem?.toDate, timezoneOffset).split(" ").splice(0,3).join(" ")}
+                      </div>
                     <div className="cell">
                       <span>{elem.name}</span>
                       {editAccess && 

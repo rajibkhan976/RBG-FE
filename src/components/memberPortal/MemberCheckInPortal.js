@@ -7,7 +7,10 @@ import load from "./images/load.svg";
 import timeicon from "./images/time.svg";
 import lottieJson from "./lottie.json";
 import crossIcon from "./images/cross.svg";
-import { useDispatch } from "react-redux";
+import { useDispatch ,useSelector} from "react-redux";
+import { utils } from "../../helpers";
+import Loader from "../shared/Loader";
+
 import MemberServices from "../../services/member-portal/memberServices"
 import * as actionTypes from "../../actions/types";
 import moment from "moment";
@@ -38,7 +41,10 @@ const MemberCheckInPortal = (props) => {
   const [checkedInDuration, setCheckedInDuration] = useState(null);
   const [autoSuggessionList, setAutoSuggessionList] = useState([]);
   const [tz, setTz] = useState(localStorage.getItem("orgTimezone") || "");
+  const [isLoader, setIsLoader] = useState(false);
+  const [sendTime, setSendTime] = useState("");
 
+  const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
 
   useEffect(() => {
     let accessCodeInLS = localStorage.getItem("accessCode");
@@ -50,6 +56,7 @@ const MemberCheckInPortal = (props) => {
     }
   })
 
+  //console.log("base_url", base_url);
   const accessInputHandler = (e) => {
     const re = /^[0-9]+$/;
     if (e.target.value === "" || re.test(e.target.value)) {
@@ -58,19 +65,31 @@ const MemberCheckInPortal = (props) => {
   }
   const accessCodeVerify = async () => {
     try {
+      setIsLoader(true);
+      //setTime("");
       setVerifyLoading(true);
-      let virification = await MemberServices.accessCodeVerification({
-        accessCode: accessInput
-      })
-      localStorage.setItem("orgId", virification._id);
-      localStorage.setItem("orgName", virification.name);
-      localStorage.setItem("orgCode", virification.code);
-      localStorage.setItem("accessCode", accessInput);
-      localStorage.setItem("orgTimezone", virification.timezone);
-      setTz(virification.timezone)
-      setOrgName(virification.name);
-      setAccessVerify(true);
+      let accessCode = accessInput
+        if(localStorage.getItem('accessCode')!= undefined && localStorage.getItem('accessCode').length || accessCode!=""){
+          if(localStorage.getItem('accessCode')!= undefined && localStorage.getItem('accessCode').length){
+            accessCode = localStorage.getItem('accessCode')
+          }else{
+            localStorage.setItem("accessCode", accessInput);
+          }
 
+        console.log("localStorage.getItem('accessCode')",localStorage.getItem('accessCode'))
+        let virification = await MemberServices.accessCodeVerification({
+          accessCode: accessCode
+        })
+        localStorage.setItem("orgId", virification._id);
+        localStorage.setItem("orgName", virification.name);
+        localStorage.setItem("orgCode", virification.code);
+      
+        localStorage.setItem("orgTimezone", virification.timezone);
+        setTz(virification.timezone)
+        //setTz(localStorage.getItem('orgTimezone'))
+        setOrgName(virification.name);
+        setAccessVerify(true);
+      }
     } catch (e) {
       console.log("Error in access code verification", e.message);
       dispatch({
@@ -80,6 +99,7 @@ const MemberCheckInPortal = (props) => {
       });
     } finally {
       setVerifyLoading(false);
+      setIsLoader(false);
     }
   }
 
@@ -114,21 +134,67 @@ const MemberCheckInPortal = (props) => {
   
   }
 
-  const displayCurrentTime = () => {
-    let cTime = momentTZ.tz(tz).format("hh:mm A")
-    setTime(cTime);
+  // const displayCurrentTime = () => {
+  //  //let cTime = momentTZ.tz(tz).format("hh:mm A")
+  //   //setTime(cTime);
+  //   let cTime = new Date();
+  //   if(tz){
+  //     let timeDiff = tz.split('(')[1].split(')')[0];
+  //     setTime(utils.convertUTCToTimezone(cTime,timeDiff).split(" ").splice(3,2).join(" "));
+  //   }
+  // };
+ 
+  // const displayCurrentTime = () => {
 
-  };
-  setInterval(() => {
-    displayCurrentTime();
-  }, 1000);
+  //    let cTime = moment.utc().format().replace('T', ' ').replace('Z', '');
+  //    console.log("time this is what I am passing",cTime)
+
+  //    if(tz){
+  //      let timeDiff = tz.split('(')[1].split(')')[0];
+  //      console.log("time zone offset",timeDiff);
+  //      setTime(utils.convertUTCToTimezone(cTime,timeDiff).split(" ").splice(3,2).join(" "));
+  //    }
+  //    console.log("time to show",time);
+
+  //  };
+  // setInterval(() => {
+  //      displayCurrentTime();   
+  // }, 1000);
+
+
+    setInterval(() => {
+    
+        let cTime = moment.utc().format().replace('T', ' ').replace('Z', '');
+        console.log("time this is what I am passing",cTime)
+   
+        if(localStorage.getItem('orgTimezone')){
+          let timeDiff = localStorage.getItem('orgTimezone').split('(')[1].split(')')[0];
+          console.log("time zone offset",timeDiff);
+          let timeSto = utils.convertUTCToTimezone(cTime,timeDiff).split(" ").splice(3,2).join(" ")
+          setTime(timeSto);
+        }
+        console.log("time to show",time);
+
+      
+    }, 1000);
+    
+    useEffect(() => {
+      localStorage.removeItem("orgTimezone")
+      accessCodeVerify(); 
+    }, []);
+  
 
   const submitBtnHandler = async () => {
 
     if (selectedMember && selectedMember._id) {
+
       try {
         setVerifyLoginLoading(true);
-        let chekInResult = await MemberServices.checkIn({contactId: selectedMember._id})
+        let checkTime = moment.utc().format().replace('T', ' ').replace('Z', '');
+        let chekInResult = await MemberServices.checkIn({
+          contactId: selectedMember._id,
+          checkedInAt: checkTime
+        })
         setCheckedInMember(chekInResult.data);
         setBeforeLogin(false);
         setLoginVerify(true);
@@ -231,7 +297,6 @@ const MemberCheckInPortal = (props) => {
                                 : firstName[1] ? firstName[1].toUpperCase() : "";
     return firstChar+secondChar;
   }
-
   const logout = async () => {
     localStorage.removeItem("accessCode");
     setAccessVerify(false);
@@ -239,8 +304,17 @@ const MemberCheckInPortal = (props) => {
     clearAllSuggession();
   }
   
+  useEffect(() => {
+     
+    //displayCurrentTime(); 
+    }, []);
+  
+   const date = new Date(); 
+   let footerDate = date.getFullYear();
+
   return (
     <React.Fragment>
+       {isLoader ? <Loader/> :""}
       <div className="containerWraper">
         <div className="sectionWrapers">
           {/* Null check is just to hide at the begining and stop jurk while state change to true */ }
@@ -416,7 +490,7 @@ const MemberCheckInPortal = (props) => {
         </div>
         <footer className="footerWraper">
             <p className="masterCompany">RedBeltGym</p>
-            <p className="footerText">&copy; 2022 Red Belt Gym, Inc. All rights reserved</p>
+            <p className="footerText">&copy; {footerDate} Red Belt Gym, Inc. All rights reserved</p>
          </footer>
       </div>
       </React.Fragment>

@@ -12,11 +12,11 @@ import Loader from "../../../Loader";
 import Scrollbars from "react-custom-scrollbars-2";
 
 import { TagServices } from "../../../../../services/setup/tagServices";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as actionTypes from "../../../../../actions/types";
 import { AppointmentServices } from "../../../../../services/appointment/appointment";
 import TagList from "../../../../appointment/TagList";
-import { utils } from "../../../../../helpers";
+import { utils } from "../../../../../helpers"
 
 const AddAppointmentModal = (props) => {
   const toggleTags = useRef(null);
@@ -26,7 +26,9 @@ const AddAppointmentModal = (props) => {
     agenda: "",
     date: "",
     fromTime: "",
+    fromDateTime: "",
     toTime: "",
+    toDateTime: "",
     tags: [],
     tagsDatas: [],
     contactId: props.contactId,
@@ -71,6 +73,11 @@ const AddAppointmentModal = (props) => {
     setTagListToggle(false);
     //setSearchedTag("")
   };
+  const timezoneOffset = useSelector((state) => (state.user?.data.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
+  // useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:"UTC-06"); 
+  useEffect(()=>{
+    console.log("Add appointment create", timezoneOffset);
+  })
 
   // validation on submission of form
   const validateAppointment = (e) => {
@@ -118,36 +125,7 @@ const AddAppointmentModal = (props) => {
     setValidationErrors(validErrors);
   };
 
-  // on valid submission, send appointment to parent
-  const submitAppointmentForm = async (e) => {
-    e.preventDefault();
-    let valid = validateAppointment();
-    if (valid) {
-      setIsLoader(true);
-      try {
-        let newAppointment = await AppointmentServices.saveAppointment(
-          appointmentData
-        );
-        console.log('asdsa', appointmentData)
-        if (newAppointment) {
-          newAppointment['tagNames'] = appointmentData.tagsDatas;
-          console.log("newAppointment::::::", newAppointment);
-          let updatedAppointments = [newAppointment, ...props.appointments];
-          props.setAppointments(updatedAppointments);
-          props.setAppointmentCreated("success");
-          props.closeModal(false);
-        }
-      } catch (error) {
-        dispatch({
-          type: actionTypes.SHOW_MESSAGE,
-          message: error.message,
-          typeMessage: "error",
-        });
-      } finally {
-        setIsLoader(false);
-      }
-    }
-  };
+  
 
   // Add input values to new appointment
   const appointmentDataAdd = (e, type) => {
@@ -174,8 +152,15 @@ const AddAppointmentModal = (props) => {
             }
           }
         } else {
-          validErrors.fromTime = "";
-          isDisabled = false;
+          validErrors.date = "";
+          // let newDateString = e.target.value.split("-")[1] + "/" + e.target.value.split("-")[2] + "/" + e.target.value.split("-")[0];
+          let newDateString = e.target.value;
+          setAppointmentData({ 
+            ...appointmentData, 
+            date: newDateString,
+            fromDateTime: appointmentData.fromTime,
+            toDateTime: appointmentData.toTime
+          });
         }
         // validErrors.fromTime = "";
         validErrors.date = "";
@@ -224,7 +209,9 @@ const AddAppointmentModal = (props) => {
         //validErrors.toTime = "Invalid end time.";
         setAppointmentData({
           ...appointmentData,
+          // fromTime: fromValue.format("h:mm a").toUpperCase(),
           fromTime: fromValue.format("h:mm a").toUpperCase(),
+          fromDateTime:utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(fromValue.format("h:mm a").toUpperCase()), timezoneOffset).trim(),
         });
       } else {
         console.log(
@@ -249,8 +236,11 @@ const AddAppointmentModal = (props) => {
           isDisabled = false;
         }
         setAppointmentData({
+          // ...appointmentData,
+          // fromTime: fromValue.format("h:mm a").toUpperCase(),
           ...appointmentData,
           fromTime: fromValue.format("h:mm a").toUpperCase(),
+          fromDateTime: utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(fromValue.format("h:mm a").toUpperCase()), timezoneOffset).trim(),
         });
       }
       // console.clear()
@@ -325,7 +315,9 @@ const AddAppointmentModal = (props) => {
         //validErrors.fromTime = "Invalid start time.";
         setAppointmentData({
           ...appointmentData,
+          // toTime: toValue.format("h:mm a").toUpperCase(),
           toTime: toValue.format("h:mm a").toUpperCase(),
+          toDateTime: utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(toValue.format("h:mm a").toUpperCase()), timezoneOffset).trim()
         });
       } else {
         if (
@@ -347,8 +339,11 @@ const AddAppointmentModal = (props) => {
         }
         setAppointmentData({
           ...appointmentData,
+          // toTime: toValue.format("h:mm a").toUpperCase(),
           toTime: toValue.format("h:mm a").toUpperCase(),
+          toDateTime: utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(toValue.format("h:mm a").toUpperCase()), timezoneOffset).trim()
         });
+
       }
       console.clear();
       // const fromTime = moment(`${appointmentData.fromTime}`).format("hh:mm:ss");
@@ -372,7 +367,52 @@ const AddAppointmentModal = (props) => {
     // parseInt(e.target.value.replace(":","")) <= parseInt(appointmentData.fromTime.replace(":",""))
     console.log("Is Disabled", isDisabled);
     setValidationErrors(validErrors);
-    setIsDisabled(isDisabled);
+    console.log("Appointment to date", appointmentData);
+  };
+
+  // on valid submission, send appointment to parent
+  const submitAppointmentForm = async (e) => {
+    e.preventDefault();
+    console.clear()
+    let valid = validateAppointment();
+    // console.log("Appointment date and time before conversion",utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.fromTime));
+
+    // let conversionFrom = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.fromTime), timezoneOffset);
+    // let conversionTo = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.toTime), timezoneOffset);
+
+    // console.log("From time conversion", conversionFrom);
+    // console.log("To time conversion", conversionTo);
+    // fromValue.format("h:mm a").toUpperCase()
+    // setAppointmentData({
+    //   ...appointmentData,
+    //   fromDateTime: conversionFrom,
+    //   toDateTime: conversionTo
+    // })
+    console.log("Appointment Date", appointmentData);
+    if (valid) {
+      setIsLoader(true);
+      try {
+        let newAppointment = await AppointmentServices.saveAppointment(appointmentData);
+        // let newAppointment;
+        console.log('Appointment date', appointmentData)
+        if (newAppointment) {
+          newAppointment['tagNames'] = appointmentData.tagsDatas;
+          console.log("newAppointment::::::", newAppointment);
+          let updatedAppointments = [newAppointment, ...props.appointments];
+          props.setAppointments(updatedAppointments);
+          props.setAppointmentCreated("success");
+          props.closeModal(false);
+        }
+      } catch (error) {
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: error.message,
+          typeMessage: "error",
+        });
+      } finally {
+        setIsLoader(false);
+      }
+    }
   };
 
   return (

@@ -31,6 +31,8 @@ export default function AutomationHistory(props) {
     const timezone = props.timezone;
     const dispatch = useDispatch();
 
+
+    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
     useEffect(() => {
         setAutomationHistory(props.automationHistory);
         setPaginationData(props.paginationData);
@@ -42,7 +44,7 @@ export default function AutomationHistory(props) {
             let steps = props.automationDetails.blueprint.filter(el => !el.id.includes('edge-'));
             setTotalSteps(steps.length);
         }
-
+        console.log("timezoneOffset",timezoneOffset);
     }, [props]);
     const toggleOptions = (index) => {
         setOption(index !== option ? index : null);
@@ -59,7 +61,7 @@ export default function AutomationHistory(props) {
             // const fromDate = localtime.clone().utc().format("YYYY-MM-DD");
             // console.log("UTC FROM --",fromDate);
             // console.log(fromDt)
-            queryParams.append("fromDate", from);
+            queryParams.append("fromDate", decodeURIComponent(from));
         }
         if (to) {
             // const toDt = to;
@@ -67,7 +69,8 @@ export default function AutomationHistory(props) {
             // const toDate = localtime.clone().utc().format("YYYY-MM-DD");
             // // console.log(toDt);
             // console.log("UTC TO --",toDate);
-            queryParams.append("toDate", to);
+            queryParams.append("toDate", decodeURIComponent(to));
+            // console.log("filterData.fromDate", decodeURIComponent((utils.convertTimezoneToUTC(filterData.fromDate + " " + "00:00:01", timezoneOffset))));
         }
         if (status) {
             queryParams.append("status", status);
@@ -81,19 +84,20 @@ export default function AutomationHistory(props) {
 
     const handleFromDate = (e) => {
         const { value } = e.target;
-        setFilterData(prevState => ({ ...prevState, fromDate: value, toDate: value }));
+        setFilterData(prevState => ({ ...prevState, fromDate: value }));
+        //setFilterData(prevState => ({ ...prevState, fromDate: utils.convertTimezoneToUTC(value + " " + "00:00:01", timezoneOffset)  }));
     };
 
     const handletoDate = (e) => {
         const { value } = e.target;
         setFilterData(prevState => ({ ...prevState, toDate: value }));
+        //setFilterData(prevState => ({ ...prevState, toDate: utils.convertTimezoneToUTC(value + " " + "00:00:01", timezoneOffset) }));
     };
 
     const handleStatus = (e) => {
         const { value } = e.target;
         setFilterData(prevState => ({ ...prevState, status: value }));
     };
-
     const handleApplyFilter = () => {
         if (filterData.fromDate && !filterData.toDate) {
             dispatch({
@@ -105,9 +109,18 @@ export default function AutomationHistory(props) {
         }
         // const queryParams = Object.entries(filterData).filter(el => el[1] !== '').map(el => `${el[0]}=${el[1]}`).join("&");
         // fetchHistory(queryParams)
+        
         if (filterData.fromDate) {
-            utils.addQueryParameter('fromDate', filterData.fromDate);
-            utils.addQueryParameter('toDate', filterData.toDate);
+            //utils.addQueryParameter('fromDate', filterData.fromDate);
+            //utils.addQueryParameter('toDate', filterData.toDate);
+            utils.addQueryParameter('fromDate', utils.convertTimezoneToUTC(filterData.fromDate + " " + "00:00:01", timezoneOffset).replace(' ', 'T').trim() + '.000Z');
+            utils.addQueryParameter('toDate', utils.convertTimezoneToUTC(filterData.toDate + " " + "23:59:59", timezoneOffset).replace(' ', 'T').trim() + '.000Z');
+
+            console.log("utils.convertTimezoneToUTC",filterData.fromDate, utils.convertTimezoneToUTC(filterData.fromDate + " " + "00:00:01", timezoneOffset).replace(' ', 'T') + '.000Z')
+            console.log("utils.convertTimezoneToUTC",filterData.toDate, utils.convertTimezoneToUTC(filterData.toDate + " " + "23:59:59", timezoneOffset).replace(' ', 'T') + '.000Z')
+            //console.log("utils.convertTimezoneToUTC Trim", utils.convertTimezoneToUTC(filterData.toDate + " " + "00:00:01", timezoneOffset).replace(' ', 'T').trim() + '.000Z')
+            //console.log("+06%3A00%3A01+", decodeURIComponent("+06%3A00%3A01+").replaceAll("+", " "));
+
         } else {
             utils.removeQueryParameter('fromDate');
             utils.removeQueryParameter('toDate');
@@ -278,11 +291,19 @@ export default function AutomationHistory(props) {
                                         </div>
                                         <div className="listCell cellWidth_15" onClick={() => toggleDetails(i)}>
                                             {/* {utils.convertUTCToTimezone(elem.createdAt, timezone, "LLL")} */}
-                                            {moment(elem.createdAt).format("YYYY-MM-DD")}
+                                            {/* {moment(elem.createdAt).format("YYYY-MM-DD")}  */}
+                                            {utils.convertUTCToTimezone(elem.createdAt,timezoneOffset)
+                                            //.split(" ").splice(0,3).join(" ")
+                                            }
+                                            
                                         </div>
                                         <div className="listCell cellWidth_15" onClick={() => toggleDetails(i)}>
                                             {/* {(elem?.completedAt) ? utils.convertUTCToTimezone(elem?.completedAt, timezone, "LLL") : "-"} */}
-                                            {(elem ?.completedAt) ? moment(elem.completedAt).format("YYYY-MM-DD") : "-"}
+                                            {/* {(elem ?.completedAt) ? moment(elem.completedAt).format("YYYY-MM-DD") : "-"} */}
+                                            {(elem ?.completedAt) ? utils.convertUTCToTimezone(elem.completedAt,timezoneOffset)
+                                            //.split(" ").splice(0,3).join(" ") 
+                                            : "-"}
+
                                         </div>
                                         <div className="listCell cellWidth_5">
                                             <div className="info_3dot_icon">

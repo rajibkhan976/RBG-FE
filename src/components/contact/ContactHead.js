@@ -64,6 +64,7 @@ const ContactHead = (props) => {
     props.openFilter();
   }
   useEffect(() => {
+    console.log("======", props.filters);
     if (props.filters.length > 3) {
       setFiltersFirst(props.filters.slice(0, 3));
       setFiltersSecond(props.filters.slice(3,props.filters.length));
@@ -81,6 +82,10 @@ const ContactHead = (props) => {
     //   // console.log("filter clear", filterClear);
     // }
   }
+  const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
+	useEffect(()=>{
+	  console.log("credit details time zone", timezoneOffset);
+	}, [timezoneOffset])
   const checkAll = () => {
     props.selectAll(!selectAllContacts);
     setSelectAllContacts(!selectAllContacts);
@@ -207,10 +212,23 @@ const ContactHead = (props) => {
                   {
                     filtersFirst.map((ele, key) => {
                       return (
-                          <div className="contactsTags" key={key}>
-                            <span className="pageInfo" dangerouslySetInnerHTML={{__html: ele.name}}></span>
-                            <span className="crossTags" onClick={() => removeFiler(ele.type)}><img src={cross} alt="" /></span>
-                          </div>
+                        <div className="contactsTags" key={key}>
+                        {/* {ele.type} */}
+                        {/* {utils.convertUTCToTimezone(ele.name.split(" ").splice(3,4).join(" ").trim(), timezoneOffset)} */}
+                        {/* {utils.convertUTCToTimezone(ele.name.split(" ").splice(2,4).join(" ").replace(":","").trim(), timezoneOffset)} */}
+                        { ele.type === "fromDate" &&
+                          <span className="pageInfo"><strong>Created From :</strong> {utils.convertUTCToTimezone(ele.name.trim().split(" ").splice(3,4).join(" "), timezoneOffset)}</span>
+                        }
+                        { ele.type === "toDate" &&
+                          <span className="pageInfo"><strong>Created To :</strong> {utils.convertUTCToTimezone(ele.name.split(" ").splice(2,4).join(" ").replace(":","").trim(), timezoneOffset)}</span>
+                        }
+                        {
+                          ele.type !== "fromDate" && ele.type !== "toDate" &&
+                          <span className="pageInfo" dangerouslySetInnerHTML={{__html: ele.name}}></span>
+
+                        }
+                        <span className="crossTags" onClick={() => removeFiler(ele.type)}><img src={cross} alt="" /></span>
+                      </div>
                       )
                     })
                   }

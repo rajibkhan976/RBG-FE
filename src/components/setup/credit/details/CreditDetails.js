@@ -47,7 +47,10 @@ const CreditDetails = () => {
         limit: 10,
     });
 
-
+    const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
+	useEffect(()=>{
+	  console.log("credit details time zone", timezoneOffset);
+	}, [timezoneOffset])
     const getQueryParams = async () => {
         const service = utils.getQueryVariable("service");
         const fromDt = utils.getQueryVariable("fromDate");
@@ -59,10 +62,15 @@ const CreditDetails = () => {
             queryParams.append("service", service);
         }
         if (fromDt) {
-            queryParams.append("fromDate", fromDt);
+            // console.log(decodeURIComponent(fromDt).replaceAll("+"," "));
+            // let fromDtConvert = utils.convertTimezoneToUTC(decodeURIComponent(fromDt).replaceAll("+"," ") + " " +"00:00:01", timezoneOffset);
+            // console.log("fromDtConvert", fromDtConvert);
+            queryParams.append("fromDate", utils.convertTimezoneToUTC(decodeURIComponent(fromDt).replaceAll("+"," ") + " " +"00:00:01", timezoneOffset));
         }
         if (toDt) {
-            queryParams.append("toDate", toDt);
+            console.log(toDt);
+            // const toDtConvert = utils.convertTimezoneToUTC(decodeURIComponent(toDt).replaceAll("+"," ") + " " + "24:00:00", timezoneOffset);
+            queryParams.append("toDate", utils.convertTimezoneToUTC(decodeURIComponent(toDt).replaceAll("+"," ") + " " + "23:59:59", timezoneOffset));
         }
         if (srtBy) {
             queryParams.append("sortBy", srtBy);
@@ -70,7 +78,7 @@ const CreditDetails = () => {
         if (srtType) {
             queryParams.append("sortType", srtType);
         }
-
+        console.log("Total query perems", queryParams);
         return queryParams;
     };
 
@@ -94,13 +102,27 @@ const CreditDetails = () => {
     };
 
     const handleDateFileterChange = (dateDuration) => {
-        console.log('date filter', dateDuration);
+        console.log('date filter', dateDuration[0]);
+        // let year = new Date(dateDuration[0]).getFullYear();
+        // let month = ("0" + (new Date(dateDuration[0]).getMonth() + 1)).slice(-2);
+        // let day = ("0" + new Date(dateDuration[0]).getDate()).slice(-2);
+        // console.log(year, month, day);
+        // console.log(new Date(dateDuration[0]));
+        // console.clear();
+        let fromDate = utils.convertTimezoneToUTC(new Date(dateDuration[0]).getFullYear() + "-" + ("0" + (new Date(dateDuration[0]).getMonth() + 1)).slice(-2) + "-" + ("0" + new Date(dateDuration[0]).getDate()).slice(-2) + " " + "00:00:01", timezoneOffset);
+        let toDate = utils.convertTimezoneToUTC(new Date(dateDuration[1]).getFullYear() + "-" + ("0" + (new Date(dateDuration[1]).getMonth() + 1)).slice(-2) + "-" + ("0" + new Date(dateDuration[1]).getDate()).slice(-2) + " " + "00:00:01", timezoneOffset);
+        console.log("From date", fromDate);
+        console.log("To date", toDate);
+        let replace01 = decodeURIComponent(fromDate.replaceAll("%3A", ":"));
+        console.log(replace01); 
         if (dateDuration && dateDuration.length) {
             utils.addQueryParameter('fromDate', moment(dateDuration[0]).format("YYYY-MM-DD"));
             utils.addQueryParameter('toDate', moment(dateDuration[1]).format("YYYY-MM-DD"));
+            // utils.addQueryParameter('fromDate', fromDate);
+            // utils.addQueryParameter('toDate', toDate);
             setFilterDate(dateDuration);
         }
-
+        console.log("set filter", dateDuration);
         // Fetch data
         fetchTransaction();
     }
@@ -116,7 +138,6 @@ const CreditDetails = () => {
         let queryParams = await getQueryParams();
         let pageId = utils.getQueryVariable("page");
         pageId = pageId ? pageId : 1;
-
         try {
             setLoading(true);
             let response = await CreditManagementServices.fetchTransaction(pageId, queryParams);
@@ -152,7 +173,7 @@ const CreditDetails = () => {
     return (
         <React.Fragment>
             {loading && <Loader />}
-            <div className="cr_body">
+            <div className="cr_body ss">
                 <div className="userListHead">
                     <div className="listInfo">
                         <ul className="listPath">
@@ -211,10 +232,14 @@ const CreditDetails = () => {
                                                 {item.type === "credit" ? item.transaction_id : "N/A"}
                                             </div>
                                             <div className="cr_date">
-                                                {moment.utc(item.createdAt, null).tz(timezone).format('Do MMM, YYYY')}
+                                                {/* {moment.utc(item.createdAt, null).tz(timezone).format('Do MMM, YYYY')} */}
+                                                {/* <br></br> */}
+                                                {/* {utils.dateConversion(item.createdAt) + " " + item.createdAt.split(" ")[1]} */}
+                                                {utils.convertUTCToTimezone(utils.dateConversion(item.createdAt) + " " + item.createdAt.split(" ")[1], timezoneOffset).split(" ").splice(0,3).join(" ")}
                                             </div>
                                             <div className="cr_date">
-                                                {moment.utc(item.createdAt, null).tz(timezone).format('hh:mm A')}
+                                                {/* {moment.utc(item.createdAt, null).tz(timezone).format('hh:mm A')} */}
+                                                {utils.convertUTCToTimezone(utils.dateConversion(item.createdAt) + " " + item.createdAt.split(" ")[1], timezoneOffset).split(" ").splice(3,4).join(" ")}
                                             </div>
                                             <div className="cr_credit">
                                                 <span className={item.type === "credit" ? "greentxt" : "redtxt"}>{item.type === "credit" ? "+" + item.credit : "-" + item.credit}</span>

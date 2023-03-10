@@ -93,7 +93,7 @@ const UsersListing = (props) => {
 
     const dispatch = useDispatch();
     const isFiltered = useSelector((state) => state.user.filter);
-    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:"UTC-06");
+    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
 
     const filterUsers = () => {
         // const readPermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : ((Object.keys(permissions).length) ? permissions.actions.includes("read") : false);
@@ -192,6 +192,8 @@ const UsersListing = (props) => {
         const queryParams = new URLSearchParams();
 
         console.log('search', decodeURIComponent(search))
+        console.log('dateeeeee', decodeURIComponent(fromDate),'dateeeeee',  decodeURIComponent(toDate))
+
         if (search) {
             queryParams.append("search", decodeURIComponent(search));
         }
@@ -199,13 +201,14 @@ const UsersListing = (props) => {
             queryParams.append("group", group);
         }
         if (fromDate && toDate) {
-            queryParams.append('fromDate', fromDate);
-            queryParams.append('toDate', toDate);
+            queryParams.append('fromDate', decodeURIComponent(fromDate.replaceAll("+", " ")));
+            queryParams.append('toDate', decodeURIComponent(toDate.replaceAll("+", " ")));
+            console.log("decodeURIComponent", decodeURIComponent(fromDate.replaceAll("+", " ")));
         }
         if (status) {
             queryParams.append("status", status);
         }
-        if (srtBy) {
+        if (srtBy) { 
             queryParams.append("sortBy", srtBy);
         }
         if (srtType) {
@@ -509,7 +512,10 @@ const UsersListing = (props) => {
                                                         <div className="btn">{elem.status}</div>
                                                     </div>
                                                     <div className="createDate">
-                                                        <div className="btn">{utils.convertUTCToTimezone(elem.createdAt,timezoneOffset)}</div>
+                                                        <div className="btn">{timezoneOffset ? utils.convertUTCToTimezone(elem.createdAt,timezoneOffset) :""
+                                                        }
+                                                        
+                                                        </div>
                                                         <div className="info_3dot_icon">
                                                             <button
                                                                 className="btn"

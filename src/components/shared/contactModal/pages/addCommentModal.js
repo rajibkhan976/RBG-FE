@@ -5,11 +5,11 @@ import { ErrorAlert, SuccessAlert } from "../../../shared/messages";
 import arrowRightWhite from "../../../../assets/images/arrowRightWhite.svg";
 import crossTop from "../../../../assets/images/cross.svg";
 import refreshTime from "../../../../assets/images/refreshTime.svg";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import * as actionTypes from '../../../../actions/types';
 
 import {AttendanceServices} from "../../../../services/attendance/attendanceServices";
-
+import { utils } from "../../../../helpers";
 
 const AddCommentModal = (props) => {
   const [isLoader, setIsLoader] = useState(false);
@@ -17,10 +17,24 @@ const AddCommentModal = (props) => {
 
   const [stuffCheckIn, setStuffCheckIn] = useState({
     "contactId": props.contactId,
-    "note": ""
+    "note": "",
+    // "checkedInAt": ""
   });
+  const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user?.data?.organizationTimezoneInfo.utc_offset:null);
+  useEffect(()=>{
+    console.log("add comment timezone", timezoneOffset);
+  })
   //fetchStuffAttendance
   const checkIn = async () => {
+    const dd = String(new Date().getDate()).padStart(2, "0");
+    const mm = String(new Date().getMonth() + 1).padStart(2, "0"); //January is 0!
+    const yyyy = new Date().getFullYear();
+    const time = new Date().toString().split(" ")[4];
+    console.log("date and time formate", yyyy+"-"+mm+"-"+dd + " " + time);
+    const convertTimezoneToUtc = utils.convertTimezoneToUTC(yyyy+"-"+mm+"-"+dd + " " + time, timezoneOffset).trim();
+    console.log("After conversion time zone", convertTimezoneToUtc);
+
+    // stuffCheckIn['checkedInAt'] = convertTimezoneToUtc;
     try {
       props.closeAddHolidayModal();
       const stuffCheckInData = await AttendanceServices.checkInByStaff(stuffCheckIn);
