@@ -63,10 +63,10 @@ const AppointmentTriggerSetting = (props) => {
                 || eventsArray.appointmentMissed
                 || eventsArray.appointmentDayBefore
             ) {
-                if (eventsArray.appointmentDayBefore && (!eventsArray.day || parseInt(eventsArray.day) <= 0 || parseInt(eventsArray.day) > 101)) {
+                if (eventsArray.appointmentDayBefore && (!eventsArray.day || ((eventsArray.day % 1) != 0)  || parseInt(eventsArray.day) <= 0 || parseInt(eventsArray.day) > 101)) {
                     dispatch({
                         type: actionTypes.SHOW_MESSAGE,
-                        message: "Please provide the day value.",
+                        message: "Please provide a valid day value.",
                         typeMessage: 'error'
                     });
                     return false;
