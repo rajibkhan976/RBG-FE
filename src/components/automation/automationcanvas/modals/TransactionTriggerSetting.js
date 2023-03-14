@@ -47,10 +47,10 @@ const TransactionTriggerSetting = (props) => {
         try {
             let fields = {'fname': 'text', 'lname': 'text', 'phone': 'numeric', 'email': 'email'} // Sample
             if (events.transactionSuccess || events.transactionFailed || events.transactionBefore) {
-                if (events.transactionBefore && (!events.day || parseInt(events.day) <= 0 || parseInt(events.day) > 101)) {
+                if (events.transactionBefore && (!events.day || ((events.day % 1) != 0) || parseInt(events.day) <= 0 || parseInt(events.day) > 101)) {
                     dispatch({
                         type: actionTypes.SHOW_MESSAGE,
-                        message: "Please provide the day value.",
+                        message: "Please provide a valid day value.",
                         typeMessage: 'error'
                     });
                     return false;

@@ -81,7 +81,7 @@ export default function AutomationHistory(props) {
 
     const handleFromDate = (e) => {
         const { value } = e.target;
-        setFilterData(prevState => ({ ...prevState, fromDate: value }));
+        setFilterData(prevState => ({ ...prevState, fromDate: value, toDate: value }));
     };
 
     const handletoDate = (e) => {
