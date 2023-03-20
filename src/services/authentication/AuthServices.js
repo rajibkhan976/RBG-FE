@@ -54,6 +54,7 @@ export const userLogout = () => {
   localStorage.removeItem("_token");
   localStorage.removeItem("storedSavedColList");
   localStorage.removeItem("permissions");
+  localStorage.clear();
   return true;
 };
 

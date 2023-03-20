@@ -119,7 +119,7 @@ const AppointmentGlobal = (props) => {
                     let eventObj = {
                         start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
                         note: atten.note,
-                        name: atten.contact.firstName + " " + atten.contact.lastName,
+                        name: atten.contact.firstName + " " + atten.contact?.lastName,
                         email: atten.contact.email,
                         checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName,
                         className: "hasAttendance",
