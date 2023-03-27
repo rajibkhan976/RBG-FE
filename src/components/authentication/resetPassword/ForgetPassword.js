@@ -20,6 +20,7 @@ const ForgetPassword = (props) => {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
   const messageDelay = 5000; // ms
+  const currentYear = new Date().getFullYear();
 
   const handleforgetEmailChange = (event) => {
     event.preventDefault();
@@ -177,7 +178,12 @@ const ForgetPassword = (props) => {
             <div className="text-center"><NavLink className="link_to_login " to="/login">Return to Login</NavLink></div>
           </form>
           <div className="login_footer">
-            &copy; 2022 Red Belt Gym, Inc. All rights reserved
+            &copy; {currentYear} Red Belt Gym, Inc. All rights reserved
+          </div>
+          <div className="privacyLinkSec">
+            <NavLink to="/privacy-policy" target="_blank">Privacy Policy</NavLink>
+            <span></span>
+            <NavLink to="/terms-and-conditions" target="_blank">Terms &amp; Conditions</NavLink>
           </div>
         </div>
         <div className="loginLeftPart">

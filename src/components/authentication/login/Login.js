@@ -23,6 +23,7 @@ const Login = (props) => {
   });
   const [loader, setLoader] = useState(false);
   const [hidePss, setHidePass] = useState(true);
+  const currentYear = new Date().getFullYear();
 
   const togglePass = () => {
     setHidePass(!hidePss);
@@ -228,7 +229,12 @@ const Login = (props) => {
             </div>
           </form>
           <div className="login_footer">
-            &copy; 2022 Red Belt Gym, Inc. All rights reserved
+            &copy; {currentYear} Red Belt Gym, Inc. All rights reserved
+          </div>
+          <div className="privacyLinkSec">
+            <NavLink to="/privacy-policy" target="_blank">Privacy Policy</NavLink>
+            <span></span>
+            <NavLink to="/terms-and-conditions" target="_blank">Terms &amp; Conditions</NavLink>
           </div>
         </div>
         <div className="loginLeftPart">
