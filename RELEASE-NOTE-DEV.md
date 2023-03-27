@@ -178,3 +178,6 @@
 # HOTFIX Attendence & Appointments V1.0.0
     - CR given by Brian for Attendance
     - CR and IR by team for Appointments
+
+# Privacy policy and Terms & conditions page V1.0.0
+    - Privacy policy and terms & conditions page is done

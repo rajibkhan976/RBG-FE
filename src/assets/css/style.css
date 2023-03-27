@@ -8731,12 +8731,12 @@ input[type="checkbox"]
 }
 
 .authBody.login_outer .login_footer {
-    width: calc(100% - 140px);
+    width: auto;
     color: #305671;
     padding: 20px 0 0 0;
     font-size: 13px;
     position: absolute;
-    left: 70px;
+    left: 60px;
     text-align: center;
     bottom: 55px;
 }
@@ -16169,4 +16169,45 @@ automation email setting css
 }
 .nodeSettingModal .formBody{
     border-radius: 0px 0px 12px 12px;
+}
+
+
+/* ================ Privacy links css ============== */
+.privacyLinkSec {
+    width: auto;
+    color: #305671;
+    padding: 20px 0 0 0;
+    font-size: 13px;
+    position: absolute;
+    right: 60px;
+    bottom: 55px;
+}
+
+.privacyLinkSec a:hover {
+    color: #305671;
+    text-decoration: underline;
+}
+
+.privacyLinkSec span {
+    display: inline-block;
+    margin: 0 12px;
+    width: 4px;
+    height: 4px;
+    border-radius: 2px;
+    background-color: #305671;
+}
+
+.privacyLink {
+    color: #9baebc;
+    font-size: 15px;
+    background: transparent url("../images/privacyIcon.svg") no-repeat left center;
+    padding-left: 30px;
+}
+
+.privacyLink.termsLink {
+    background-image: url("../images/termsIcon.svg");
+}
+
+.privacyLink:hover {
+    color: #333;
 }
