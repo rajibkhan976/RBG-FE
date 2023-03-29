@@ -181,3 +181,6 @@
 
 # Privacy policy and Terms & conditions page V1.0.0
     - Privacy policy and terms & conditions page is done
+
+# HOTFIX V1.3.2
+    - Terms and Conditions page contact us sub heading change done
