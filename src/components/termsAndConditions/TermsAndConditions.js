@@ -253,7 +253,7 @@ const TermsAndConditions = () => {
                     Contact Us
                 </h2>
                 <p>
-                    If there are any questions regarding this privacy policy, you may contact us using the information below.
+                    If there are any questions regarding this terms and conditions, you may contact us using the information below.
                 </p>
                 <p>
                     <a href="https://redbeltgym.com/" target="_blank">https://redbeltgym.com/</a><br />
