@@ -232,7 +232,7 @@ const PrivacyPolicy = () => {
                     rbgsupport@redbeltsoftware.com<br />
                     409-554-0045
                 </p>
-                <p>Last Edited on 2023-03-22</p>
+                <p>Last Edited on 2023-03-30</p>
             </div>
         </div>
     )

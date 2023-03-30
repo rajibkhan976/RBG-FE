@@ -184,3 +184,6 @@
 
 # HOTFIX V1.3.2
     - Terms and Conditions page contact us sub heading change done
+
+# HOTFIX V1.3.3
+    - Terms and Conditions page release date given
