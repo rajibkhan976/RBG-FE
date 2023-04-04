@@ -152,6 +152,8 @@ const AddAppointmentModal = (props) => {
             }
           }
         } else {
+          validErrors.fromTime = "";
+          isDisabled = false;
           validErrors.date = "";
           // let newDateString = e.target.value.split("-")[1] + "/" + e.target.value.split("-")[2] + "/" + e.target.value.split("-")[0];
           let newDateString = e.target.value;
@@ -367,6 +369,7 @@ const AddAppointmentModal = (props) => {
     // parseInt(e.target.value.replace(":","")) <= parseInt(appointmentData.fromTime.replace(":",""))
     console.log("Is Disabled", isDisabled);
     setValidationErrors(validErrors);
+    setIsDisabled(isDisabled);
     console.log("Appointment to date", appointmentData);
   };
 
