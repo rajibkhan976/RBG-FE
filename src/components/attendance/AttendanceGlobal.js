@@ -122,20 +122,19 @@ const AppointmentGlobal = (props) => {
                 const conversionToDate = utils.convertTimezoneToUTC(moment(dateRange.end).format("YYYY-MM-DD")+ " " + "23:59:59", timezoneOffset).trim();
                 console.log(moment(dateRange.start).format("YYYY-MM-DD") + " " + "00:00:01", convertFromDate, moment(dateRange.end).format("YYYY-MM-DD")+ " " + "23:59:59", conversionToDate);
                 let payload = {
-                    fromDate: moment(dateRange.start).format("YYYY-MM-DD"),
-                    toDate: moment(dateRange.end).format("YYYY-MM-DD"),
-                    // fromDate: convertFromDate,
-                    // toDate: conversionToDate,
+                    // fromDate: moment(dateRange.start).format("YYYY-MM-DD"),
+                    // toDate: moment(dateRange.end).format("YYYY-MM-DD"),
+                    fromDate: convertFromDate,
+                    toDate: conversionToDate,
                 }
                 let attendances = await AttendanceServices.fetchAttendances(payload);
                 
                 let eventArr = []
                 for(let atten of attendances.attendance) {
-                    console.log("Before convert =====", convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD hh:mm:ss"));
-                    const convertTimezone = utils.convertUTCToTimezone(convertUTCtoTZ(atten?.checkedInAt, "YYYY-MM-DD hh:mm:ss"), timezoneOffset);
+                    const convertTimezone = utils.convertUTCToTimezone(atten?.checkedInAt, timezoneOffset);
                     console.log("After convert =====", convertTimezone);
                     let eventObj = {
-                        start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
+                        start: atten.checkedInAt,
                         note: atten.note,
                         name: atten.contact.firstName + " " + atten.contact?.lastName,
                         email: atten.contact.email,

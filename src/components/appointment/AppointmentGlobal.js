@@ -26,7 +26,7 @@ const AppointmentGlobal = (props) => {
   const [createAppointmentModal, setCreateAppointmentModal] = useState(false);
   const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
     useEffect(()=>{
-        console.log("transaction time zone:", timezoneOffset)
+        console.log("Appointment global time zone:", timezoneOffset)
     },[timezoneOffset]);
     const renderEventContent = (e) => {
       // console.log("Render e", e.event.extendedProps, e)
@@ -83,12 +83,20 @@ const AppointmentGlobal = (props) => {
           //     start: moment(appointment?.date, "MM/DD/YYYY").format() === moment(appointment?.date, "MM/DD/YYYY") ? moment(appointment?.date, "MM/DD/YYYY").format("YYYY-MM-DD")+"T"+moment(appointment.fromTime, "hh:mm A").format("HH:mm:ss") : appointment?.date+"T"+moment(appointment.fromTime, "hh:mm A").format("HH:mm:ss"),
           //     end: moment(appointment?.date, "MM/DD/YYYY") === moment(appointment?.date, "MM/DD/YYYY") ?  moment(appointment?.date, "MM/DD/YYYY").format("YYYY-MM-DD")+"T"+moment(appointment.toTime, "hh:mm A").format("HH:mm:ss") : appointment?.date+"T"+moment(appointment.toTime, "hh:mm A").format("HH:mm:ss"),
           // });
-          let formDateTime = moment(appointment.date, "MM/DD/YYYY").format("YYYY-MM-DD")+ " " + moment(appointment.fromTime, "hh:mm A").format("HH:mm:ss")
-          let toDateTime = moment(appointment.date, "MM/DD/YYYY").format("YYYY-MM-DD")+ " " + moment(appointment.toTime, "hh:mm A").format("hh:mm:ss")
+         
           // appointment['fromTime'] = utils.convertUTCToTimezone(formDateTime, timezoneOffset);
           // appointment['toTime'] = utils.convertUTCToTimezone(toDateTime, timezoneOffset);
 
-          console.log("Appointment Date", appointment);
+          console.log("Appointment Date", appointment, appointment.fromDateTime, appointment.toDateTime);
+
+          if(appointment && timezoneOffset){
+            let convertFromTime = utils.convertUTCToTimezone(appointment.formDateTime, timezoneOffset);
+            let convertToTime = utils.convertUTCToTimezone(appointment.toDateTime, timezoneOffset);
+            console.log("Convert From time", convertFromTime);
+            console.log("Convert to time", convertToTime);
+          }
+
+          // console.log("Convert to time", appointment?.date + "T" + moment(appointment.toTime, "hh:mm A").format("HH:mm:ss"));           
           if (moment(appointment?.date, "MM/DD/YYYY")._f === "MM/DD/YYYY") {
             eventArray.push({
               id: appointment._id,
@@ -99,12 +107,25 @@ const AppointmentGlobal = (props) => {
             });
           }
           if (moment(appointment?.date, "YYYY-MM-DD")._f === "YYYY-MM-DD") {
+            console.log("Appointment date", utils.dateConversion(appointment?.date));
+            console.log("From time", appointment.fromTime);
+            console.log("To time", appointment.toTime);
+            
+            
+            // const dd = String(new Date(convertFromTime).getDate()).padStart(2, "0");
+            // const mm = String(new Date(convertFromTime).getMonth() + 1).padStart(2, "0"); //January is 0!
+            // const yyyy = new Date(convertFromTime).getFullYear();
+              
+            
             eventArray.push({
               id: appointment._id,
               title: appointment.agenda,
               data: appointment,
               start: appointment?.date + "T" + moment(appointment.fromTime, "hh:mm A").format("HH:mm:ss"),
               end: appointment?.date + "T" + moment(appointment.toTime, "hh:mm A").format("HH:mm:ss"),
+
+              // start: moment(convertFromTime).format("MM/DD/YYYY") + "T" + moment(convertFromTime).format("hh:mm:ss"),
+              // end: moment(convertToTime).format("MM/DD/YYYY") + "T" + moment(convertToTime).format("hh:mm:ss"),
             });
 
           }
