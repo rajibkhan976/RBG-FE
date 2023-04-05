@@ -328,9 +328,24 @@ const AppointmentEditModal = (props) => {
   const rescheduleAppointment = async (e) => {
     e.preventDefault();
     console.clear();
-    // console.log(editedReschedule.date, editedReschedule.toTime, utils.timeConversion(editedReschedule.toTime), editedReschedule.fromTime);
-    let fromDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(editedReschedule.fromTime), timezoneOffset).trim();
-    let toDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(editedReschedule.toTime), timezoneOffset).trim();
+    // console.log("Date", editedReschedule.date, props.appointmentEdit.date);
+    // console.log("From Time", editedReschedule.fromTime, props.appointmentEdit.fromTime);
+    // console.log("To Time", editedReschedule.toTime, props.appointmentEdit.toTime);
+    let fromDateConversion;
+    let toDateConversion;
+
+    if(props.appointmentEdit.fromTime){
+      fromDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(props.appointmentEdit.fromTime), timezoneOffset).trim();
+    }
+    if(props.appointmentEdit.toTime){
+      toDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(props.appointmentEdit.toTime), timezoneOffset).trim();
+    }
+    if(editedReschedule?.fromTime){
+      fromDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(editedReschedule.fromTime), timezoneOffset).trim();
+    }
+    if(editedReschedule?.toTime){
+      toDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(editedReschedule.toTime), timezoneOffset).trim();
+    }
     console.log("=============", fromDateConversion, toDateConversion);
     // setEditedReschedule({
     //   ...editedReschedule,
