@@ -15,6 +15,7 @@ import Recoder from "../../../shared/Recoder";
 import Player from "../../../shared/Player";
 import { utils } from "../../../../helpers";
 import config from "../../../../configuration/config";
+import { useSelector } from "react-redux";
 
 const CallConfiguration = (props) => {
     const [name, setName] = useState("");
@@ -52,6 +53,11 @@ const CallConfiguration = (props) => {
     const [oldIntroAudioKey, setOldIntroAudioKey] = useState(null);
     const [newIntroAudio, setNewIntroAudio] = useState(null);
     const [tmpIntroAudioFile, setTmpIntroAudioFile] = useState(null);
+
+    const timezoneOffset = useSelector((state)=> (state?.user?.data.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null);
+    useEffect(()=>{
+      console.log("Call configuration timezone", timezoneOffset);
+    })
   
     const handleCheckboxChange = (event, constName) => {
         eval("set" + constName + "(event.target.checked)");
@@ -184,13 +190,22 @@ const CallConfiguration = (props) => {
         }
         setSchedule(updateList);
     }
+    let todayDate = utils.dateConversion(new Date().getFullYear()+"-"+(new Date().getMonth()+1)+"-"+new Date().getDate());
     const handleStartTime = (key, e) => {
+
+      console.log("Today Date", todayDate);
+        // let startTime = utils.convertTimezoneToUTC(todayDate + " " + e.target.value, timezoneOffset).trim();
         schedule[key].startTime = e.target.value;       
         setSchedule([...schedule]);
+        // console.log("Start time", schedule, startTime);
     }
     const handleEndTime = (key, e) => {
+        // console.log(key, e.target.value);
+        console.log("Today Date", todayDate);
+        // let endTime = utils.convertTimezoneToUTC(todayDate + " "+ e.target.value, timezoneOffset).trim();
         schedule[key].endTime = e.target.value;
         setSchedule([...schedule]);
+        // console.log(schedule, endTime)
     }
     const handleCallChange = (event) => {
       setName(event.target.value);
@@ -216,7 +231,7 @@ const CallConfiguration = (props) => {
       try {
         setIsLoader(true);
         await scheduleOverite();
-
+        console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH", schedule);
         let payload = {
           name: name,
           responseType: callResponse,
@@ -674,7 +689,7 @@ const CallConfiguration = (props) => {
                         </div>
                       </div>
                       <div className="cmnFormCol">
-                        <div className="cmnFieldName">Set Time Slot</div>
+                        <div className="cmnFieldName">Set Time Slots</div>
                         <div className="cmnFormRow">
                           <div className="cmnFormCol">
                             <div className="cmnFormField">
@@ -684,31 +699,31 @@ const CallConfiguration = (props) => {
                                 value={list.startTime}
                                 onChange={(e) => handleStartTime(key, e)}
                               >
-                                <option value="00:00">00:00 AM</option>
-                                <option value="01:00">01:00 AM</option>
-                                <option value="02:00">02:00 AM</option>
-                                <option value="03:00">03:00 AM</option>
-                                <option value="04:00">04:00 AM</option>
-                                <option value="05:00">05:00 AM</option>
-                                <option value="06:00">06:00 AM</option>
-                                <option value="07:00">07:00 AM</option>
-                                <option value="08:00">08:00 AM</option>
-                                <option value="09:00">09:00 AM</option>
-                                <option value="10:00">10:00 AM</option>
-                                <option value="11:00">11:00 AM</option>
-                                <option value="12:00">12:00 PM</option>
-                                <option value="13:00">01:00 PM</option>
-                                <option value="14:00">02:00 PM</option>
-                                <option value="15:00">03:00 PM</option>
-                                <option value="16:00">04:00 PM</option>
-                                <option value="17:00">05:00 PM</option>
-                                <option value="18:00">06:00 PM</option>
-                                <option value="19:00">07:00 PM</option>
-                                <option value="20:00">08:00 PM</option>
-                                <option value="21:00">09:00 PM</option>
-                                <option value="22:00">10:00 PM</option>
-                                <option value="23:00">11:00 PM</option>
-                                <option value="24:00">12:00 AM</option>
+                                <option value="00:00:00">00:00 AM</option>
+                                <option value="01:00:00">01:00 AM</option>
+                                <option value="02:00:00">02:00 AM</option>
+                                <option value="03:00:00">03:00 AM</option>
+                                <option value="04:00:00">04:00 AM</option>
+                                <option value="05:00:00">05:00 AM</option>
+                                <option value="06:00:00">06:00 AM</option>
+                                <option value="07:00:00">07:00 AM</option>
+                                <option value="08:00:00">08:00 AM</option>
+                                <option value="09:00:00">09:00 AM</option>
+                                <option value="10:00:00">10:00 AM</option>
+                                <option value="11:00:00">11:00 AM</option>
+                                <option value="12:00:00">12:00 PM</option>
+                                <option value="13:00:00">01:00 PM</option>
+                                <option value="14:00:00">02:00 PM</option>
+                                <option value="15:00:00">03:00 PM</option>
+                                <option value="16:00:00">04:00 PM</option>
+                                <option value="17:00:00">05:00 PM</option>
+                                <option value="18:00:00">06:00 PM</option>
+                                <option value="19:00:00">07:00 PM</option>
+                                <option value="20:00:00">08:00 PM</option>
+                                <option value="21:00:00">09:00 PM</option>
+                                <option value="22:00:00">10:00 PM</option>
+                                <option value="23:00:00">11:00 PM</option>
+                                <option value="24:00:00">12:00 AM</option>
                               </select>
                             </div>
                           </div>
@@ -720,31 +735,31 @@ const CallConfiguration = (props) => {
                                 value={list.endTime}
                                 onChange={(e) => handleEndTime(key, e)}
                               >
-                                <option value="00:00">00:00 AM</option>
-                                <option value="01:00">01:00 AM</option>
-                                <option value="02:00">02:00 AM</option>
-                                <option value="03:00">03:00 AM</option>
-                                <option value="04:00">04:00 AM</option>
-                                <option value="05:00">05:00 AM</option>
-                                <option value="06:00">06:00 AM</option>
-                                <option value="07:00">07:00 AM</option>
-                                <option value="08:00">08:00 AM</option>
-                                <option value="09:00">09:00 AM</option>
-                                <option value="10:00">10:00 AM</option>
-                                <option value="11:00">11:00 AM</option>
-                                <option value="12:00">12:00 PM</option>
-                                <option value="13:00">01:00 PM</option>
-                                <option value="14:00">02:00 PM</option>
-                                <option value="15:00">03:00 PM</option>
-                                <option value="16:00">04:00 PM</option>
-                                <option value="17:00">05:00 PM</option>
-                                <option value="18:00">06:00 PM</option>
-                                <option value="19:00">07:00 PM</option>
-                                <option value="20:00">08:00 PM</option>
-                                <option value="21:00">09:00 PM</option>
-                                <option value="22:00">10:00 PM</option>
-                                <option value="23:00">11:00 PM</option>
-                                <option value="24:00">12:00 AM</option>
+                                <option value="00:00:00">00:00 AM</option>
+                                <option value="01:00:00">01:00 AM</option>
+                                <option value="02:00:00">02:00 AM</option>
+                                <option value="03:00:00">03:00 AM</option>
+                                <option value="04:00:00">04:00 AM</option>
+                                <option value="05:00:00">05:00 AM</option>
+                                <option value="06:00:00">06:00 AM</option>
+                                <option value="07:00:00">07:00 AM</option>
+                                <option value="08:00:00">08:00 AM</option>
+                                <option value="09:00:00">09:00 AM</option>
+                                <option value="10:00:00">10:00 AM</option>
+                                <option value="11:00:00">11:00 AM</option>
+                                <option value="12:00:00">12:00 PM</option>
+                                <option value="13:00:00">01:00 PM</option>
+                                <option value="14:00:00">02:00 PM</option>
+                                <option value="15:00:00">03:00 PM</option>
+                                <option value="16:00:00">04:00 PM</option>
+                                <option value="17:00:00">05:00 PM</option>
+                                <option value="18:00:00">06:00 PM</option>
+                                <option value="19:00:00">07:00 PM</option>
+                                <option value="20:00:00">08:00 PM</option>
+                                <option value="21:00:00">09:00 PM</option>
+                                <option value="22:00:00">10:00 PM</option>
+                                <option value="23:00:00">11:00 PM</option>
+                                <option value="24:00:00">12:00 AM</option>
                               </select>
                             </div>
                           </div>

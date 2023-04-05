@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { utils } from '../../../../helpers';
 
 import history from "../../../../assets/images/histroy_icon_white.svg";
 import comment from "../../../../assets/images/comment.svg";
@@ -53,9 +54,12 @@ const Attendance = (props) => {
       setTz(loggedInUser.organizationTimezone);
       checkInStatusCheck();
     }
-
-  }, [loggedInUser])
-
+    
+},[loggedInUser])
+const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
+useEffect(()=>{
+    // console.log("Attandance time zone:", timezoneOffset)
+},[timezoneOffset]);
   const openCheckInModal = (e) => {
     e.preventDefault();
     if (!hasActiveContract) {
@@ -86,27 +90,48 @@ const Attendance = (props) => {
     setEnableCheckIn(false);
   }
 
-  // useEffect(async () => {
-  //   console.log("loggedInUser", loggedInUser)
-  //   checkInStatusCheck();
-  // },[]);
-
+  useEffect(async () => {
+    // console.log("loggedInUser", loggedInUser)
+    checkInStatusCheck();
+  },[]);
   const fetchAttendances = async () => {
     try {
-      if (dateRange?.start) {
-        setIsLoader(true);
-        let payload = {
-          fromDate: moment(dateRange.start).tz(tz).add(1, "days").format("YYYY-MM-DD"),
-          toDate: moment(dateRange.end).tz(tz).subtract(1, "days").format("YYYY-MM-DD"),
+    if (dateRange?.start) {
+      setIsLoader(true);
+      let payload = {
+        fromDate: moment(dateRange.start).tz(tz).add(1, "days").format("YYYY-MM-DD"),
+        toDate: moment(dateRange.end).tz(tz).subtract(1, "days").format("YYYY-MM-DD"),
+      }
+      let todayDate = momentTZ.tz(tz);
+      let attendances = await AttendanceServices.fetchAttendances(payload, props.contactId);
+      let eventArr = [];
+      let attenCount = attendances.attendance.length;
+      setAttendanceCount(attenCount);
+      // Set calander to last attendance date
+      if (attenCount) {
+        setInitialDate(attendances.attendance[attenCount-1].checkedInAt);
+      }
+      for (let atten of attendances.attendance) {
+        let eventObj = {
+          start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
+          // checkedInAt: convertUTCtoTZ(atten.checkedInAt), 
+          checkedInAt: atten.checkedInAt,
+          note: atten.note,
+          name: atten.contact.firstName + " " + atten.contact.lastName,
+          email: atten.contact.email,
+          checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName
         }
-        let todayDate = momentTZ.tz(tz);
-        let attendances = await AttendanceServices.fetchAttendances(payload, props.contactId);
-        let eventArr = [];
-        let attenCount = attendances.attendance.length || 0;
-        setAttendanceCount(attenCount);
-        // Set calander to last attendance date
-        if (attenCount) {
-          setInitialDate(attendances.attendance[attenCount - 1].checkedInAt);
+        console.log("event ", eventObj.checkedInAt._i);
+        eventArr.push(eventObj);
+      }
+      // let payload.fromDate
+      var range = moment().range(moment(dateRange.start), moment(dateRange.end));
+      let dateRangeArr = Array.from(range.by('day', { step: 1 }));
+      for (let mDate of dateRangeArr) {
+
+        let eventObj = {
+          start: mDate.format("YYYY-MM-DD"),
+          isBlankDate: true
         }
         // for (let atten of attendances.attendance) {
         //   let eventObj = {
@@ -218,9 +243,13 @@ const Attendance = (props) => {
         setEvents(eventArr);
         setIsLoader(false);
       }
+      // console.log("eventArr", eventArr)
+      setEvents(eventArr);
+      setIsLoader(false);
+    }
     } catch (e) {
       setIsLoader(false);
-      console.log("Error", e.message)
+      // console.log("Error", e.message)
     }
   }
 
@@ -267,7 +296,7 @@ const Attendance = (props) => {
     }
   }
   const nextMonth = () => {
-    console.log("Next month", calendarMonth)
+    // console.log("Next month", calendarMonth)
     if (calendarMonth == 12) {
       setCalendarMonth(1);
       setCalendarYear(Number(calendarYear) + 1);
@@ -289,7 +318,8 @@ const Attendance = (props) => {
   }
 
   const renderEventContent = (e) => {
-    // console.log("Render e", e.event._instance.range.start)
+    // console.clear()
+    console.log("Render e", e.event.extendedProps.checkedInAt, e)
 
     if (!e.event._instance.range && e.event._instance.range.start) {
       return false;
@@ -300,15 +330,19 @@ const Attendance = (props) => {
     if (e.view.type == "listMonth") {
       let isHoliday = e.event.extendedProps?.isHoliday ? true : false;
       let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
-      let eventDate = moment(dateSource).format("ddd, DD");
-      console.log("Date", dateSource);
+      let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
+
+      console.log("Before conversion event date", dateSource);
+      // let eventDate = utils.convertUTCToTimezone(convertUTCtoTZ(dateSource, "YYYY-MM-DD hh:mm:ss"), timezoneOffset).split(",")[0].split(" ").join(", ");
+      let convertUTCToTimezone = utils.convertUTCToTimezone(dateSource, timezoneOffset);
+      console.log("After conversion Event Date", convertUTCToTimezone);
       if (isHoliday) {
-        eventDate = moment(e.event._instance.range.start).format("ddd, DD");
+        // eventDate = moment(e.event._instance.range.start).format("ddd, DD");
+        eventDate = convertUTCToTimezone.split(",")[0].split(" ").join(", ");
       }
-
-      // console.log("dateSource", eventDate)
-
-      let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
+      // let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
+      let eventTime = utils.convertUTCToTimezone(dateSource, timezoneOffset).split(" ").splice(3,4).join(" ");
+      // console.log("dateSource event time", convertUTCToTimezone.split(" ").splice(3, 4).join(" "))
       if (e.event.extendedProps.checkInBy) {
         // console.log("event dateSource >>>", e.event.extendedProps.checkedInAt, convertUTCtoTZ(e.event.extendedProps.checkedInAt, "YYYY-MM-DD HH:mm:ss"))
       }
@@ -318,11 +352,16 @@ const Attendance = (props) => {
           {!isHoliday ?
             <>
               <span className='fc-list-dateTd'>{eventDate}</span>
-              <span className='fc-list-event-time'>
+              {/* <span className='fc-list-event-time'>
                 {e.event.extendedProps.checkInBy &&
                   <span className="norm" > {
                     eventTime ? eventTime : ''
                   }</span>
+                }
+              </span> */}
+              <span className='fc-list-event-time'>
+                {e.event.extendedProps.checkInBy &&
+                  <span className="norm" > {eventTime? eventTime: ''}</span>
                 }
               </span>
               <span className='fc-list-event-new-tooltip'>
@@ -349,7 +388,7 @@ const Attendance = (props) => {
   }
 
   const eventsSet = (e) => {
-    console.log("events arr after render", e.event?._def.range.start ? e.event._def.range.start : "Blank")
+    // console.log("events arr after render", e.event?._def.range.start ? e.event._def.range.start : "Blank")
   }
   return (
     <div className="contactTabsInner appointmentPage attendencePage">

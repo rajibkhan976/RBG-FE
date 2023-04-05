@@ -71,6 +71,11 @@ const ContactListing = forwardRef((props, ref) => {
     const [singleContact, setSingleContact] = useState();
     // const [oneContactObj, setOneContacrObj] = useState([]);
     const [allContactCheck, setAllContactCheck] = useState(false);
+    const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state?.user?.data.organizationTimezoneInfo.utc_offset:null);
+                        //    useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:"UTC-06")
+    useEffect(()=>{
+        console.log("contact listiing timezone", timezoneOffset);
+    })
     const openFilter = () => {
         props.openFilter();
     }
@@ -128,6 +133,7 @@ const ContactListing = forwardRef((props, ref) => {
             // }
             const result = await ContactService.fetchUsers(pageId, queryParams);
             if (result) {
+                console.log("contact list", result.contacts);
                 setContactList(result.contacts);
                 setContactCount(result.pagination.count);
                 setFilters(result.filterApplied);
@@ -213,10 +219,10 @@ const ContactListing = forwardRef((props, ref) => {
             queryParams.append("group", group);
         }
         if (fromDate) {
-            queryParams.append('fromDate', fromDate);
+            queryParams.append('fromDate', decodeURIComponent(fromDate).replaceAll("+", " "));
         }
         if (toDate) {
-            queryParams.append('toDate', toDate);
+            queryParams.append('toDate', decodeURIComponent(toDate).replaceAll("+", " "));
         }
         if (status) {
             queryParams.append("status", status);
@@ -880,13 +886,17 @@ const ContactListing = forwardRef((props, ref) => {
                                                 visibleByDefault={true}
                                             />
                                         </span> : ""}
-                                            <span className="userNames mobile">
+                                            {/* {item.id === 'dob' && ele.dob} */}
+                                            <span className="userNames mobile new">
                                         {((item.id === 'mobile' || item.id === 'phone' || item.id === 'dadPhone' || item.id === 'momPhone') ?
                                             ((ele[item.id] && ele[item.id].dailCode && ele[item.id].number !== "") ?
                                                 <span className={ele[item.id].is_valid ?
                                                     "number valid" : "number invalid"}>{ele[item.id].dailCode + "-" + ele[item.id].number}</span> :
-                                                "") : (item.id === 'dob' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LL') :
-                                                (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? utils.convertUTCToTimezone(ele[item.id],timezone) : ele[item.id])))
+                                                "") : (item.id === 'dob' && Moment(ele[item.id]).isValid() ? 
+
+                                                Moment(ele[item.id]).format('LL')
+                                                :
+                                                (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? utils.convertUTCToTimezone(ele[item.id],timezoneOffset) : ele[item.id])))
                                         }
                                              </span>
                                         </button>)

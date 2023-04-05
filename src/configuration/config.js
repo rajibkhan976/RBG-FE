@@ -140,7 +140,7 @@ module.exports = {
     gym_detail_update: "https://" + process.env.REACT_APP_GYM + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/gym/detail",
     gym_holiday: "https://" + process.env.REACT_APP_GYM + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/gym/holidays/",
 
-    timezoneListURL: process.env.REACT_APP_TIMZONE_URL + '/v2.1/list-time-zone?key=QH5NO9YQKP30&format=json',
+    timezoneListURL: "https://" +  process.env.REACT_APP_ORG + ".execute-api.us-east-1.amazonaws.com/"+process.env.REACT_APP_ENV+"/organization/timezones",
     timezoneLatLngUrl: process.env.REACT_APP_TIMZONE_URL + '/v2.1/get-time-zone?key=QH5NO9YQKP30&by=position',
 
     //Dependents

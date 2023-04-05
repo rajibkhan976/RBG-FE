@@ -9,7 +9,7 @@ import Loader from "../../shared/Loader";
 import {ContactService} from "../../../services/contact/ContactServices";
 import {utils} from "../../../helpers";
 import * as actionTypes from "../../../actions/types";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 function ImportFilter(props) {
     const [isLoader, setIsLoader] = useState(false);
@@ -41,6 +41,10 @@ function ImportFilter(props) {
             setStatus([]);
         }
     }
+    const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null);
+    useEffect(()=>{
+        console.log("contact filter time zone", timezoneOffset);
+    })
     const handleStatusChange = (event) => {
         setSelectedStatus(event.target.value);
     }
@@ -48,10 +52,16 @@ function ImportFilter(props) {
         setSelectedUser(event.target.value);
     }
     const handleToChange = (event) => {
-        setSelectedTo(event.target.value);
+        console.log("Before convert", event.target.value + " " + "24:00:01");
+        let convertTo = event.target.value;
+        console.log("After convert", convertTo);
+        setSelectedTo(convertTo);
     }
     const handleFromChange = (event) => {
-        setSelectedFrom(event.target.value);
+        console.log("from formate", event.target.value + " " + "00:00:01");
+        let convertFrom = event.target.value;
+        setSelectedFrom(convertFrom);
+        console.log("From", selectedFrom);
     }
     const handleSourceChange = (event) => {
         setSelectedSource(event.target.value);
@@ -66,12 +76,14 @@ function ImportFilter(props) {
             utils.removeQueryParameter('createdBy')
         }
         if (selectedFrom) {
-            utils.addQueryParameter('fromDate', selectedFrom);
+            let convertFrom = utils.convertTimezoneToUTC(selectedFrom + " " + "00:00:01", timezoneOffset);
+            utils.addQueryParameter('fromDate', convertFrom);
         } else {
             utils.removeQueryParameter('fromDate')
         }
         if (selectedTo) {
-            utils.addQueryParameter('toDate', selectedTo);
+            let convertTo = utils.convertTimezoneToUTC(selectedTo + " " + "23:59:59", timezoneOffset);
+            utils.addQueryParameter('toDate', convertTo);
         } else {
             utils.removeQueryParameter('toDate')
         }
@@ -217,16 +229,17 @@ function ImportFilter(props) {
                                     <li className="dateRangeHeading"><p className="dateRange pTags">Created on</p></li>
                                     <li className="halfDates">
                                         <div className="formField w-50 appflex durationWraper">
+                                            {/* {selectedFrom} */}
                                             <label>From</label>
                                             <div className="inFormField duration">
-                                                <input type="date" placeholder="dd/mm/yyyy" name=""  value={selectedFrom}
+                                                <input type="date" placeholder="dd/mm/yyyy" name=""  value={selectedFrom.split(" ")[0]}
                                                        onChange={handleFromChange}/>
                                             </div>
                                         </div>
                                         <div className="formField w-50 appflex durationWraper">
                                             <label>To</label>
                                             <div className="inFormField duration">
-                                                <input type="date" placeholder="dd/mm/yyyy" name="" value={selectedTo}
+                                                <input type="date" placeholder="dd/mm/yyyy" name="" value={selectedTo.split(" ")[0]}
                                                        onChange={handleToChange}/>
                                             </div>
                                         </div>

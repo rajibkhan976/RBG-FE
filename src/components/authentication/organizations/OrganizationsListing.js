@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, createRef } from 'react';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 import ConfirmBox from '../../shared/confirmBox';
 import Loader from '../../shared/Loader';
 import { ErrorAlert, SuccessAlert } from '../../shared/messages';
@@ -37,6 +37,8 @@ const OrganizationListing = () => {
     const dispatch = useDispatch();
     const [permissions, setPermissions] = useState(Object.assign({}, ...JSON.parse(localStorage.getItem("permissions")).filter(el => el.entity === "organization")));
 
+    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
+    
     /**
      * Auto hide success or error message
      */
@@ -275,12 +277,17 @@ const OrganizationListing = () => {
                                                     </div>
                                                     <div className="createDate" ref={optionsToggleRefs.current[key]}>
                                                         <button className="btn">
-                                                            {moment(elem.createdAt).format("Do MMM YYYY")}
+                                                            {/* {moment(elem.createdAt).format("Do MMM YYYY")} */}
+                                                            {utils.convertUTCToTimezone(elem.createdAt,timezoneOffset)
+                                                            }
+
                                                         </button>
                                                     </div>
                                                     <div className="createDate">
                                                         <button className="btn">
-                                                            {moment(elem.updatedAt).format("Do MMM YYYY")}
+                                                            {/* {moment(elem.updatedAt).format("Do MMM YYYY")} */}
+                                                            {utils.convertUTCToTimezone(elem.updatedAt,timezoneOffset)
+                                                            }
                                                         </button>
                                                     </div>
                                                 </li>

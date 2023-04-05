@@ -19,6 +19,7 @@ import { TransactionServices } from "../../../../../services/transaction/transac
 import AlertMessage from "../../../messages/alertMessage";
 import moment from "moment";
 import { utils } from "../../../../../helpers/utils";
+import { useSelector } from "react-redux";
 
 
 const EditTrModal = (props) => {
@@ -100,6 +101,12 @@ const EditTrModal = (props) => {
     const [bankList, setBankList] = useState([]);
     const [primaryType, setPrimaryType] = useState(null);
     const [successfulpay, setSuccessfulpay] = useState({})
+
+    const timezoneOffset = useSelector((state) => (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user.data?.organizationTimezoneInfo.utc_offset:null);
+                        //    useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null)
+    useEffect(()=>{
+        console.log("timezone offset", timezoneOffset);
+    })
 
     useEffect(() => {
         console.clear();
@@ -652,6 +659,7 @@ const EditTrModal = (props) => {
         }
     }
     const changeTransDateHandler = (e) => {
+        console.log(e.target.value);
         const dayNow = new Date();
         let val = e.target.value;
         let dateChecking = new Date(val);
@@ -742,6 +750,7 @@ const EditTrModal = (props) => {
         fieldErrorCheck.checkform();
         // console.log("Is Valid Form?", fieldErrorCheck.isValid);
         let dueDate = paylater ? editTransFormData.dueDate : new Date().toISOString().split('T')[0];
+        let convertDueDate = utils.convertTimezoneToUTC(dueDate + " " + "00:00:01", timezoneOffset);
         // console.clear();
         // console.log("CARD ID", cardId);
         if (editTransFormData.paymentMode && editTransFormData.amount && dueDate) {
@@ -751,10 +760,11 @@ const EditTrModal = (props) => {
                     subscriptionId: props.transaction._id,
                     amount: editTransFormData.amount,
                     payment_via: editTransFormData.paymentMode,
-                    due_date: dueDate,
+                    due_date: convertDueDate.split(" ")[0],
                     applyForAll: editTransFormData.applyForAll,
                     billingId: cardId
                 }
+                console.log("Payload edit", payload);
                 let updateResp = await TransactionServices.updateTransaction(props.contactId, payload);
 
                 // console.log(updateResp === new Date().toISOString().split('T')[0]);

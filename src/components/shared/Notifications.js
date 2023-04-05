@@ -36,8 +36,10 @@ const Notifications = (props) => {
 
     const zindexState = useSelector((state)=>state);
     console.log("notification:", zindexState);
-   
-    
+    const timezoneOffset = useSelector((state)=> (state?.user?.data.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null);
+    useEffect(()=>{
+        console.log("notification timezone offset", timezoneOffset);
+    })
     const goBackToNotificationListing = () => {
         setDetailNotification(null);
         setNotificationType(null);
@@ -92,7 +94,13 @@ const Notifications = (props) => {
         props.markAllAsRead();
     }
     const showTimeDiff = (e) => {
-        return moment.tz(e.createdAt, "Europe/London").fromNow()
+        // console.log("Notification date and time", new Date(e.createdAt).toLocaleDateString());
+        let convertTimezone = utils.convertUTCToTimezone(e?.createdAt.trim(), timezoneOffset).split(" ").splice(0,3).join(" ");
+        const dd = String(new Date(convertTimezone).getDate() + 1).padStart(2, "0");
+        const mm = String(new Date(convertTimezone).getMonth() + 1).padStart(2, "0");
+        const yyyy = new Date(convertTimezone).getFullYear();
+        // console.log("Time zone", yyyy + "-" + mm + "-"+ dd + " " + new Date(convertTimezone).toString().split(" ")[4]);
+        return moment.tz(yyyy+"-"+mm+"-"+dd+" "+ new Date(convertTimezone).toString().split(" ")[4], "Europe/London").fromNow()
     }
     // const modalsStoreCount = useSelector((state) => state.modal.count);
     // console.log(modalsStoreCount);

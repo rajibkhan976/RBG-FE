@@ -130,19 +130,34 @@ export const GymDetailsServices = {
     },
 
     fetchTimeZoneList: async () => {
-        const url = config.timezoneListURL;
-        const requestOptions = {
-            method: 'GET',
-            redirect: 'follow'
-        };
         try {
-            const response = await fetch(url, requestOptions);
-            const result = await response.json();
-            return result;
-        } catch (error) {
-            console.log('error', error.response.data);
-            return error.response.data;
+            const result = await axios.get(config.timezoneListURL, { headers: headers });
+            return result.data;
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
         }
+
+        // const url = config.timezoneListURL;
+        // const requestOptions = {
+        //     method: 'GET',
+        //     redirect: 'follow'
+        // };
+        // try {
+        //     const response = await fetch(url, requestOptions);
+        //     const result = await response.json();
+        //     return result;
+        // } catch (error) {
+        //     console.log('error', error.response.data);
+        //     return error.response.data;
+        // }
     },
     fetchTimeZoneLatLng: async (lat, lng) => {
         const url = config.timezoneLatLngUrl + "&format=json&lat=" + lat + "&lng=" + lng;

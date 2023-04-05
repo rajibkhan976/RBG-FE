@@ -15,6 +15,7 @@ import avatarImg from "../../assets/images/profile.png";
 import momentTZ from "moment-timezone";
 
 import Loader from "../shared/Loader";
+import { utils } from '../../helpers';
 
 const AppointmentGlobal = (props) => {
     
@@ -48,7 +49,10 @@ const AppointmentGlobal = (props) => {
         api.changeView('listDay', e.dateStr)
      }
      
-
+    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
+    useEffect(()=>{
+        console.log("Attandance time zone:", timezoneOffset)
+    },[timezoneOffset]);
     const renderEventContent = (e) => {
         // console.log("Render e", e.event.extendedProps, e)
         // if (!e.event._instance.range && e.event._instance.range.start) {
@@ -63,9 +67,15 @@ const AppointmentGlobal = (props) => {
             // let eventTime = momentTZ.tz(e.event._instance.range.start, tz).format("hh:mm A");
 
             let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
-            let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
-            let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
+            // let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
+            // let momentTimeZone = moment(momentTZ.tz(dateSource, tz)).format("yyyy-DD-mm hh:mm:ss");
             
+            console.log("Date source ========= ", dateSource._i);
+            let eventDate = utils.convertUTCToTimezone(dateSource._i, timezoneOffset).toString().split(" ").splice(0,3).join(" ");
+            console.log(eventDate.toString().split(" ").splice(0,3).join(" "));
+            // let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
+            let eventTime = utils.convertUTCToTimezone(dateSource._i, timezoneOffset).toString().split(" ").splice(3,4).join(" ");
+
             return (
                 <>
                     {!isHoliday ? 

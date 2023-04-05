@@ -63,7 +63,7 @@ const TransactionGlobal = (props) => {
             console.log("queryParams", queryParams);
             const response = await TransactionHistoryServices.fetchTransHistoryList(queryParams, page);
             setOldTransactionList(response.transactions.map(el => {
-                if (!el.history.length && el.due_date < moment().format("YYYY-MM-DD")) {
+                if (!el.history.length && el.due_date < moment()?.format("YYYY-MM-DD")) {
                     el.status = "overdue";
                 }
                 return el;
@@ -173,6 +173,10 @@ const TransactionGlobal = (props) => {
             }, 100);
         })
     }
+    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
+    useEffect(()=>{
+        console.log("transaction time zone:", timezoneOffset)
+    },[timezoneOffset]);
     return (
         <>
             <div className='dashInnerUI'>
@@ -216,7 +220,8 @@ const TransactionGlobal = (props) => {
                                                     <button className='noBg'><span className='blueTxt'>{tHistory.contact && tHistory.contact._id ? tHistory?.contact?.email : tHistory?.contactDeleted?.email}</span></button>
                                                 </div>
                                                 <div class="listCell cellWidth_15">
-                                                    {(!tHistory?.last_transaction_date) ?
+                                                    {utils.convertUTCToTimezone(tHistory?.last_transaction_date,timezoneOffset)}
+                                                    {/* {(!tHistory?.last_transaction_date) ?
                                                         (
                                                             <>
                                                                 {moment(utils.convertUTCToTimezone(tHistory?.due_date, timezone, 'YYYY-MM-DD HH:mm:ss')).format('Do MMM, YYYY')}
@@ -228,7 +233,7 @@ const TransactionGlobal = (props) => {
                                                                     {moment(utils.convertUTCToTimezone(tHistory?.last_transaction_date, timezone, 'YYYY-MM-DD HH:mm:ss')).format('hh:mm A')}
                                                                 </span>
                                                             </>
-                                                        )}
+                                                        )} */}
 
                                                 </div>
                                                 <div class="listCell cellWidth_15"><span className='spanned'>{(!tHistory?.last_transaction_date) ? "N/A" : tHistory?.history[0]?.transactionId || tHistory?.history[0]?.transaction_id}</span></div>
@@ -280,7 +285,6 @@ const TransactionGlobal = (props) => {
                                                     ? "dropdownTransGlobal listOpen globalTransactionList"
                                                     : "listHide"
                                             }>
-
                                                 {
                                                     tHistory?.history ? tHistory.history.map((historylist, key1) => {
                                                         return (
@@ -293,9 +297,10 @@ const TransactionGlobal = (props) => {
                                                                         </span>
                                                                     </div>
                                                                     <div className='listCell time'>
-                                                                        
-                                                                        {moment(utils.convertUTCToTimezone(historylist?.transaction_date, timezone, 'YYYY-MM-DD HH:mm:ss')).format('Do MMM, YYYY')}
-                                                                        &nbsp;<span className='doomed'>{moment(utils.convertUTCToTimezone(historylist?.transaction_date, timezone, 'YYYY-MM-DD HH:mm:ss')).format('hh:mm A')}</span>
+                                                                        {utils.convertUTCToTimezone(historylist?.transaction_date.trim(),timezoneOffset)}
+                                                                        {/* {moment(utils.convertUTCToTimezone(historylist?.transaction_date, timezone, 'YYYY-MM-DD HH:mm:ss')).format('Do MMM, YYYY')}
+                                                                        &nbsp;
+                                                                        <span className='doomed'>{moment(utils.convertUTCToTimezone(historylist?.transaction_date, timezone, 'YYYY-MM-DD HH:mm:ss')).format('hh:mm A')}</span> */}
                                                                     </div>
                                                                     <div className='listCell id'>
                                                                         <span className='spanned'>{(historylist.transaction_id) ? historylist.transaction_id : historylist.transactionId}</span>
@@ -337,7 +342,7 @@ const TransactionGlobal = (props) => {
                                                                             {
                                                                                 (tHistory?.contact._id !== undefined || tHistory?.contactDeleted !== undefined) ?
                                                                                     <PDFDownloadLink document={<PDFDocument key={key1} transactionData={historylist} contact={tHistory?.contact._id !== undefined ? tHistory?.contact : (tHistory?.contactDeleted !== undefined ? tHistory?.contactDeleted : {})} org={org}
-                                                                                        transactionDate={utils.convertUTCToTimezone(historylist.transaction_date, timezone, 'LLL')} />} fileName={"Invoice_" + historylist.transactionId + ".pdf"}>
+                                                                                        transactionDate={utils.convertUTCToTimezone(historylist.transaction_date, timezoneOffset)} />} fileName={"Invoice_" + historylist.transactionId + ".pdf"}>
                                                                                         <button type="button" className='dwnLD'><img src={download} /></button>
                                                                                     </PDFDownloadLink> : ""
                                                                             }
