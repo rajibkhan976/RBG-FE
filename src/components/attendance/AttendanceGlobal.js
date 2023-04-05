@@ -70,11 +70,11 @@ const AppointmentGlobal = (props) => {
             // let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
             // let momentTimeZone = moment(momentTZ.tz(dateSource, tz)).format("yyyy-DD-mm hh:mm:ss");
             
-            console.log("Date source ========= ", dateSource._i);
-            let eventDate = utils.convertUTCToTimezone(dateSource._i, timezoneOffset).toString().split(" ").splice(0,3).join(" ");
+            console.log("Date source ========= ", dateSource);
+            let eventDate = dateSource.toString().split(" ").splice(0,3).join(" ");
             console.log(eventDate.toString().split(" ").splice(0,3).join(" "));
             // let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
-            let eventTime = utils.convertUTCToTimezone(dateSource._i, timezoneOffset).toString().split(" ").splice(3,4).join(" ");
+            let eventTime = dateSource.toString().split(" ").splice(3,4).join(" ");
 
             return (
                 <>
@@ -118,23 +118,31 @@ const AppointmentGlobal = (props) => {
     useEffect(async () => {
         try {
             if (tz !== "UTC" && dateRange?.start) { 
+                const convertFromDate = utils.convertTimezoneToUTC(moment(dateRange.start).format("YYYY-MM-DD") + " " + "00:00:01", timezoneOffset).trim();
+                const conversionToDate = utils.convertTimezoneToUTC(moment(dateRange.end).format("YYYY-MM-DD")+ " " + "23:59:59", timezoneOffset).trim();
+                console.log(moment(dateRange.start).format("YYYY-MM-DD") + " " + "00:00:01", convertFromDate, moment(dateRange.end).format("YYYY-MM-DD")+ " " + "23:59:59", conversionToDate);
                 let payload = {
-                    fromDate: moment(dateRange.start).format("YYYY-MM-DD"),
-                    toDate: moment(dateRange.end).format("YYYY-MM-DD"),
+                    // fromDate: moment(dateRange.start).format("YYYY-MM-DD"),
+                    // toDate: moment(dateRange.end).format("YYYY-MM-DD"),
+                    fromDate: convertFromDate,
+                    toDate: conversionToDate,
                 }
                 let attendances = await AttendanceServices.fetchAttendances(payload);
                 
                 let eventArr = []
                 for(let atten of attendances.attendance) {
+                    const convertTimezone = utils.convertUTCToTimezone(atten?.checkedInAt, timezoneOffset);
+                    console.log("After convert =====", convertTimezone);
                     let eventObj = {
-                        start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
+                        start: atten.checkedInAt,
                         note: atten.note,
                         name: atten.contact.firstName + " " + atten.contact?.lastName,
                         email: atten.contact.email,
                         checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName,
                         className: "hasAttendance",
                         backgroundColor: "#fff",
-                        checkedInAt: convertUTCtoTZ(atten.checkedInAt)
+                        // checkedInAt: convertUTCtoTZ(atten.checkedInAt),
+                        checkedInAt: convertTimezone,
                     }
                     eventArr.push(eventObj);
                 }

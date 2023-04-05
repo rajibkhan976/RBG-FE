@@ -12,7 +12,7 @@ import {TagServices} from "../../services/setup/tagServices";
 import {ContactService} from "../../services/contact/ContactServices";
 import {DependentServices} from "../../services/contact/DependentServices";
 import {AppointmentServices} from "../../services/appointment/appointment";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../actions/types";
 import Scrollbars from "react-custom-scrollbars-2";
 import TimePicker from "rc-time-picker";
@@ -125,10 +125,13 @@ const CreateAppointment = (props) => {
         agenda: "",
         date: "",
         fromTime: "",
+        fromDateTime: "",
         toTime: "",
+        toDateTime: "",
         tags: [],
         tagsDatas: [],
         contactId: "",
+
     });
     const [toggleContactList, setToggleContactList] = useState({
         status: false,
@@ -162,6 +165,10 @@ const CreateAppointment = (props) => {
         setTagListToggle(!tagListToggle);
         setSearchedTag("");
     };
+    const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user?.data?.organizationTimezoneInfo.utc_offset:null);
+    useEffect(()=>{
+        console.log("Create appointment timezone", timezoneOffset);
+    })
 
     const appointmentDataAdd = (e, type) => {
         let validErrors = {...appointmentErrors};
@@ -196,12 +203,8 @@ const CreateAppointment = (props) => {
                 // validErrors.fromTime = "";
                 validErrors.date = "";
                 isDisabled = false;
-                let newDateString =
-                    e.target.value.split("-")[1] +
-                    "/" +
-                    e.target.value.split("-")[2] +
-                    "/" +
-                    e.target.value.split("-")[0];
+                let newDateString = e.target.value.split("-")[1] + "/" + e.target.value.split("-")[2] + "/" + e.target.value.split("-")[0];
+                console.log(newDateString);
                 setAppointmentData({...appointmentData, date: newDateString});
             }
             if (type == "agenda") {
@@ -558,12 +561,22 @@ const CreateAppointment = (props) => {
     const createAppointment = async (e) => {
         e.preventDefault();
         let valid = validateAppointment();
+        const convertFromDateTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.fromTime),timezoneOffset);
+        const convertToDateTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.toTime), timezoneOffset);
+        console.log("Appointment from date and time", utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.fromTime))
+        console.log("Appointment to date and time", utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.toTime));
+        // setAppointmentData({
+        //     ...appointmentData,
+        //     fromDateTime: convertFromDateTime,
+        //     toDateTime: convertToDateTime,
+        // })
+        appointmentData['fromDateTime'] = convertFromDateTime.trim();
+        appointmentData['toDateTime'] = convertToDateTime.trim();
+        appointmentData['date'] = utils.dateConversion(appointmentData.date).trim();
         if (valid) {
             setIsLoader(true);
             try {
-                let newAppointment = await AppointmentServices.saveAppointment(
-                    appointmentData
-                );
+                let newAppointment = await AppointmentServices.saveAppointment(appointmentData);
 
                 if (newAppointment) {
                     console.log("newAppointment", newAppointment);

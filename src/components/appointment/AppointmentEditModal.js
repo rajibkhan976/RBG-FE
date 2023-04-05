@@ -328,9 +328,24 @@ const AppointmentEditModal = (props) => {
   const rescheduleAppointment = async (e) => {
     e.preventDefault();
     console.clear();
-    // console.log(editedReschedule.date, editedReschedule.toTime, utils.timeConversion(editedReschedule.toTime), editedReschedule.fromTime);
-    let fromDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(editedReschedule.fromTime), timezoneOffset).trim();
-    let toDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(editedReschedule.toTime), timezoneOffset).trim();
+    // console.log("Date", editedReschedule.date, props.appointmentEdit.date);
+    // console.log("From Time", editedReschedule.fromTime, props.appointmentEdit.fromTime);
+    // console.log("To Time", editedReschedule.toTime, props.appointmentEdit.toTime);
+    let fromDateConversion;
+    let toDateConversion;
+
+    if(props.appointmentEdit.fromTime){
+      fromDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(props.appointmentEdit.fromTime), timezoneOffset).trim();
+    }
+    if(props.appointmentEdit.toTime){
+      toDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(props.appointmentEdit.toTime), timezoneOffset).trim();
+    }
+    if(editedReschedule?.fromTime){
+      fromDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(editedReschedule.fromTime), timezoneOffset).trim();
+    }
+    if(editedReschedule?.toTime){
+      toDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(editedReschedule.toTime), timezoneOffset).trim();
+    }
     console.log("=============", fromDateConversion, toDateConversion);
     // setEditedReschedule({
     //   ...editedReschedule,
@@ -660,7 +675,7 @@ const AppointmentEditModal = (props) => {
                   <label className="labelAppointment">Date:</label>
                   <span className="textAppointment">
                     {/* {props?.appointmentEdit.fromDateTime} */}
-                  {utils.convertUTCToTimezone(props.appointmentEdit?.fromDateTime.trim(), timezoneOffset).split(" ").splice(0,3).join(" ")}
+                  {props.appointmentEdit?.fromDateTime && utils.convertUTCToTimezone(props.appointmentEdit?.fromDateTime.trim(), timezoneOffset).split(" ").splice(0,3).join(" ")}
                     {/* {props.appointmentEdit.date} */}
                   </span>
                   {(props.appointmentEdit.rescheduleCount && props.appointmentEdit.rescheduleCount > 0) ? (
@@ -709,8 +724,8 @@ const AppointmentEditModal = (props) => {
                     {/* {props.appointmentEdit.date + " " + moment(props.appointmentEdit.fromTime, "hh:mm:ss").format("hh:mm:ss")} */}
                     {/* {props.appointmentEdit.fromDateTime.trim() + " " + props.appointmentEdit.toDateTime.trim()} */}
                     {/* {props.appointmentEdit.fromDateTime +"-" + props.appointmentEdit.toDateTime.trim()}<br></br> */}
-                    {utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset).split(" ").splice(3,5).join(" ")} -{" "}
-                    { utils.convertUTCToTimezone(props.appointmentEdit.toDateTime.trim(), timezoneOffset).split(" ").splice(3, 5).join(" ")}
+                    {props.appointmentEdit?.fromDateTime && utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset).split(" ").splice(3,5).join(" ")} -{" "}
+                    {props.appointmentEdit?.toDateTime && utils.convertUTCToTimezone(props.appointmentEdit.toDateTime.trim(), timezoneOffset).split(" ").splice(3, 5).join(" ")}
                   </span>
                 </div>
                 {/* {console.log("props.appointmentEdit", props.appointmentEdit.rescheduleCount)} */}

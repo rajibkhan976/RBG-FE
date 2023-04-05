@@ -75,7 +75,7 @@ const AppointmentGlobal = (props) => {
       if (list.appointments.length) {
         let eventArray = [];
         list.appointments.map(appointment => {
-          
+          console.log(appointment)
           // eventArray.push({
           //     id: appointment._id,
           //     title: appointment.agenda,
@@ -88,8 +88,8 @@ const AppointmentGlobal = (props) => {
           // appointment['fromTime'] = utils.convertUTCToTimezone(formDateTime, timezoneOffset);
           // appointment['toTime'] = utils.convertUTCToTimezone(toDateTime, timezoneOffset);
 
-          console.log("Appointment Date", appointment);
-          if (moment(appointment?.date, "MM/DD/YYYY")._f === "MM/DD/YYYY") {
+          if (moment(appointment?.date, "MM/DD/YYYY")._f === "MM/DD/YYYY" && timezoneOffset) {
+            console.log("Appointment Date", appointment?.date);
             eventArray.push({
               id: appointment._id,
               title: appointment.agenda,

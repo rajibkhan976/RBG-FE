@@ -33,7 +33,6 @@ const AddCommentModal = (props) => {
     console.log("date and time formate", yyyy+"-"+mm+"-"+dd + " " + time);
     const convertTimezoneToUtc = utils.convertTimezoneToUTC(yyyy+"-"+mm+"-"+dd + " " + time, timezoneOffset).trim();
     console.log("After conversion time zone", convertTimezoneToUtc);
-
     // stuffCheckIn['checkedInAt'] = convertTimezoneToUtc;
     try {
       props.closeAddHolidayModal();
