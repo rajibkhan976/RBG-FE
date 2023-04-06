@@ -36,7 +36,7 @@ const TransactionGlobal = (props) => {
     const timezone = useSelector((state) => (state.user?.data?.organizationTimezone) ? state.user.data.organizationTimezone : "UTC");
     const org = useSelector((state) => (state.user?.data) ? state.user.data : "");
     const modalId = useSelector((state) => state.contact.contact_modal_id);
-
+    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
     const openFilter = (e) => {
         setShowFilter(true)
     }
@@ -173,7 +173,7 @@ const TransactionGlobal = (props) => {
             }, 100);
         })
     }
-    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
+    
     useEffect(()=>{
         console.log("transaction time zone:", timezoneOffset)
     },[timezoneOffset]);
@@ -220,7 +220,7 @@ const TransactionGlobal = (props) => {
                                                     <button className='noBg'><span className='blueTxt'>{tHistory.contact && tHistory.contact._id ? tHistory?.contact?.email : tHistory?.contactDeleted?.email}</span></button>
                                                 </div>
                                                 <div class="listCell cellWidth_15">
-                                                    {utils.convertUTCToTimezone(tHistory?.last_transaction_date,timezoneOffset)}
+                                                    {timezoneOffset ? utils.convertUTCToTimezone(tHistory?.last_transaction_date,timezoneOffset) : "..."}
                                                     {/* {(!tHistory?.last_transaction_date) ?
                                                         (
                                                             <>

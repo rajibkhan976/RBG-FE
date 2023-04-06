@@ -167,12 +167,8 @@ const AddAppointmentModal = (props) => {
         // validErrors.fromTime = "";
         validErrors.date = "";
         isDisabled = false;
-        let newDateString =
-          e.target.value.split("-")[1] +
-          "/" +
-          e.target.value.split("-")[2] +
-          "/" +
-          e.target.value.split("-")[0];
+        let newDateString = e.target.value;
+         
         setAppointmentData({ ...appointmentData, date: newDateString });
       }
       if (type == "agenda") {

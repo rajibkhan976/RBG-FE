@@ -239,7 +239,6 @@ const GymDetails = (props) => {
     e.preventDefault();
     console.log("Gym Data", gymData);
     console.log("validateMsg Data", validateMsg);
-    
     try {
       const isValid = validateField(e, true);
       if (isValid) {
@@ -261,7 +260,7 @@ const GymDetails = (props) => {
           "contactEmail": gymData.contactEmail,
           "timeZone": gymData.timezone,
           "timezoneInfo" : timezoneInfo,
-          "gmtOffset": (gymData.gmtOffset) ? gymData.gmtOffset : ''
+          "gmtOffset": (gymData.gmtOffset) ? gymData.gmtOffset : timezoneObj[2]
         };
 
         console.clear()
@@ -297,8 +296,10 @@ const GymDetails = (props) => {
     const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (!validateViaSubmit) {
       e.preventDefault();
+      console.clear()
       const name = e.target.name;
       const value = e.target.value;
+      console.log("name",name,value)
       if (name === "name" && value.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, name: "Gym name should not be left empty" });
         
@@ -309,6 +310,7 @@ const GymDetails = (props) => {
       } else if (name === "contactEmail" && !emailRegex.test(value)) {
         setValidateMsg({ ...validateMsg, disabled: true, contactEmail: "Please enter a valid email address" });
       } else if (name === "timezone" && value.length === 0) {
+        alert("hy")
         setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select a timezone" });
       } else if (name === "countryCode" && value.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select country code" });
@@ -337,6 +339,8 @@ const GymDetails = (props) => {
       }
       
     } else {
+      console.clear()
+      console.log("edit",gymData)
       let bool = false;
       if (gymData.name.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, name: "Gym name should not be left empty" });
@@ -346,7 +350,7 @@ const GymDetails = (props) => {
         setValidateMsg({ ...validateMsg, disabled: true, phone: "Please enter a valid 10 digit phone number" });
       } else if (!emailRegex.test(gymData.contactEmail)) {
         setValidateMsg({ ...validateMsg, disabled: true, contactEmail: "Please enter a valid email address" });
-      } else if (typeof gymData.gmtOffset === 'undefined' || gymData.gmtOffset.length === 0) {
+      } else if (typeof gymData.timezone === 'undefined' || gymData.timezone.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select a timezone" });
       } else if (gymData.countryCode.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select country code" });
