@@ -203,7 +203,7 @@ const CreateAppointment = (props) => {
                 // validErrors.fromTime = "";
                 validErrors.date = "";
                 isDisabled = false;
-                let newDateString = e.target.value.split("-")[1] + "/" + e.target.value.split("-")[2] + "/" + e.target.value.split("-")[0];
+                let newDateString = e.target.value;
                 console.log(newDateString);
                 setAppointmentData({...appointmentData, date: newDateString});
             }
