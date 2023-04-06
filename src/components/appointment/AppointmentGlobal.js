@@ -45,7 +45,6 @@ const AppointmentGlobal = (props) => {
           // let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
           // let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
           // let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
-          
           return (
               <>
                           {/* <b>{"e.event.extendedProps.title"}</b> */}
@@ -73,9 +72,9 @@ const AppointmentGlobal = (props) => {
       let list = await AppointmentServices.fetchList();
       setIsLoader(false);
       if (list.appointments.length) {
-        let eventArray = [];
+        let eventArray = [];        
         list.appointments.map(appointment => {
-          console.log(appointment)
+          console.log(appointment?.date);
           // eventArray.push({
           //     id: appointment._id,
           //     title: appointment.agenda,
@@ -83,30 +82,43 @@ const AppointmentGlobal = (props) => {
           //     start: moment(appointment?.date, "MM/DD/YYYY").format() === moment(appointment?.date, "MM/DD/YYYY") ? moment(appointment?.date, "MM/DD/YYYY").format("YYYY-MM-DD")+"T"+moment(appointment.fromTime, "hh:mm A").format("HH:mm:ss") : appointment?.date+"T"+moment(appointment.fromTime, "hh:mm A").format("HH:mm:ss"),
           //     end: moment(appointment?.date, "MM/DD/YYYY") === moment(appointment?.date, "MM/DD/YYYY") ?  moment(appointment?.date, "MM/DD/YYYY").format("YYYY-MM-DD")+"T"+moment(appointment.toTime, "hh:mm A").format("HH:mm:ss") : appointment?.date+"T"+moment(appointment.toTime, "hh:mm A").format("HH:mm:ss"),
           // });
-          let formDateTime = moment(appointment.date, "MM/DD/YYYY").format("YYYY-MM-DD")+ " " + moment(appointment.fromTime, "hh:mm A").format("HH:mm:ss")
-          let toDateTime = moment(appointment.date, "MM/DD/YYYY").format("YYYY-MM-DD")+ " " + moment(appointment.toTime, "hh:mm A").format("hh:mm:ss")
+          // let formDateTime = moment(appointment.date, "MM/DD/YYYY").format("YYYY-MM-DD")+ " " + moment(appointment.fromTime, "hh:mm A").format("HH:mm:ss")
+          // let toDateTime = moment(appointment.date, "MM/DD/YYYY").format("YYYY-MM-DD")+ " " + moment(appointment.toTime, "hh:mm A").format("hh:mm:ss")
           // appointment['fromTime'] = utils.convertUTCToTimezone(formDateTime, timezoneOffset);
           // appointment['toTime'] = utils.convertUTCToTimezone(toDateTime, timezoneOffset);
 
-          if (moment(appointment?.date, "MM/DD/YYYY")._f === "MM/DD/YYYY" && timezoneOffset) {
-            console.log("Appointment Date", appointment?.date);
+          // if (moment(appointment?.date, "MM/DD/YYYY")._f === "MM/DD/YYYY" && timezoneOffset && appointment?.fromDateTime && appointment?.toDateTime ) {
+          //   let convartFromTime = utils.convertUTCToTimezone(appointment?.fromDateTime, timezoneOffset);
+          //   let convartToTime = utils.convertUTCToTimezone(appointment?.toDateTime, timezoneOffset);
+          //   let startAppointment = moment(convartFromTime).format("YYYY-MM-DD") + "T" + moment(convartFromTime).format("HH:mm:ss");
+          //   let endAppointment = moment(convartToTime).format("YYYY-MM-DD") + "T" + moment(convartToTime).format("HH:mm:ss");
+          //   // console.log("proper calender formate", moment(convartToTime).format("MM-DD-YYYY"));
+          //   eventArray.push({
+          //     id: appointment._id,
+          //     title: appointment.agenda,
+          //     data: appointment,
+          //     // start: moment(appointment?.date, "MM/DD/YYYY").format("YYYY-MM-DD") + "T" + moment(appointment.fromTime, "hh:mm A").format("HH:mm:ss"),
+          //     // end: moment(appointment?.date, "MM/DD/YYYY").format("YYYY-MM-DD") + "T" + moment(appointment.toTime, "hh:mm A").format("HH:mm:ss"),
+          //     start: moment(convartFromTime).format("YYYY-MM-DD") + "T" + moment(convartFromTime).format("HH:mm:ss").toString().trim(),
+          //     end: moment(convartToTime).format("YYYY-MM-DD") + "T" + moment(convartToTime).format("HH:mm:ss").toString().trim(),
+          //   });
+          // }
+          if (moment(appointment?.date, "YYYY-MM-DD")._f === "YYYY-MM-DD" && timezoneOffset && appointment?.fromDateTime && appointment?.toDateTime) {
+            // console.log("Appointment Date", appointment?.date);
+            let convartFromTime = utils.convertUTCToTimezone(appointment?.fromDateTime, timezoneOffset);
+            let convartToTime = utils.convertUTCToTimezone(appointment?.toDateTime, timezoneOffset);
+            let startAppointment = moment(convartFromTime).format("YYYY-MM-DD") + "T" + moment(convartFromTime).format("HH:mm:ss").trim();
+            let endAppointment = moment(convartFromTime).format("YYYY-MM-DD") + "T" + moment(convartToTime).format("HH:mm:ss").trim();
+            console.log("proper calender formate 2", appointment?.date + "T" + moment(appointment.fromTime, "hh:mm A").format("HH:mm:ss"));
             eventArray.push({
               id: appointment._id,
               title: appointment.agenda,
               data: appointment,
-              start: moment(appointment?.date, "MM/DD/YYYY").format("YYYY-MM-DD") + "T" + moment(appointment.fromTime, "hh:mm A").format("HH:mm:ss"),
-              end: moment(appointment?.date, "MM/DD/YYYY").format("YYYY-MM-DD") + "T" + moment(appointment.toTime, "hh:mm A").format("HH:mm:ss"),
+              // start: appointment?.date + "T" + moment(appointment.fromTime, "hh:mm A").format("HH:mm:ss"),
+              // end: appointment?.date + "T" + moment(appointment.toTime, "hh:mm A").format("HH:mm:ss"),
+              start: moment(convartFromTime).format("YYYY-MM-DD") + "T" + moment(convartFromTime).format("HH:mm:ss").toString().trim(),
+              end: moment(convartToTime).format("YYYY-MM-DD") + "T" + moment(convartToTime).format("HH:mm:ss").toString().trim()
             });
-          }
-          if (moment(appointment?.date, "YYYY-MM-DD")._f === "YYYY-MM-DD") {
-            eventArray.push({
-              id: appointment._id,
-              title: appointment.agenda,
-              data: appointment,
-              start: appointment?.date + "T" + moment(appointment.fromTime, "hh:mm A").format("HH:mm:ss"),
-              end: appointment?.date + "T" + moment(appointment.toTime, "hh:mm A").format("HH:mm:ss"),
-            });
-
           }
         });
         console.log("Event List", eventArray)

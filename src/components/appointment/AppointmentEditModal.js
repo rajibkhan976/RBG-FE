@@ -243,6 +243,7 @@ const AppointmentEditModal = (props) => {
     }
     setRescheduleErrors(validErrors);
   };
+  
 
   const fromScheduleDateEdit = (fromReschedule) => {
     // console.log(fromValue && fromValue.format('h:mm a').toUpperCase());
@@ -328,9 +329,9 @@ const AppointmentEditModal = (props) => {
   const rescheduleAppointment = async (e) => {
     e.preventDefault();
     console.clear();
-    // console.log("Date", editedReschedule.date, props.appointmentEdit.date);
-    // console.log("From Time", editedReschedule.fromTime, props.appointmentEdit.fromTime);
-    // console.log("To Time", editedReschedule.toTime, props.appointmentEdit.toTime);
+    console.log("Date", editedReschedule.date, props.appointmentEdit.date);
+    console.log("From Time", editedReschedule.fromTime, props.appointmentEdit.fromTime);
+    console.log("To Time", editedReschedule.toTime, props.appointmentEdit.toTime);
     let fromDateConversion;
     let toDateConversion;
 
@@ -441,7 +442,7 @@ const AppointmentEditModal = (props) => {
   useEffect(() => {
     setIsLoader(true)
     try {
-      console.log('props appointment edit', props.appointmentEdit);
+      console.log('props appointment edit', props.appointmentEdit, editedReschedule);
       setAppointmentEditContact(props.appointmentEdit.contactDetails)
       setEditedAgenda(props.appointmentEdit.agenda);
       setEditedTags(props.appointmentEdit.tags);
@@ -459,7 +460,13 @@ const AppointmentEditModal = (props) => {
     }
   }, []);
 
- 
+  const [fromDateTime, setFromDateTime] = useState();
+  const [toDateTime, setToDateTime] = useState();
+  useEffect(()=>{
+    setFromDateTime(moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)));
+    setToDateTime(moment(utils.convertUTCToTimezone(props.appointmentEdit.toDateTime, timezoneOffset)));
+    console.log("props appointment", fromDateTime, toDateTime);
+  },[props.appointmentEdit])
 
   
 
@@ -794,12 +801,12 @@ const AppointmentEditModal = (props) => {
                       {/* <input value="2018-07-22" type="date"/> */}
                       <div className="cmnFieldName">Choose a date</div>
                       <div className="cmnFormField">
-                        
+                        {moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format("YYYY-MM-DD")}
                         <input
                           className="cmnFieldStyle"
                           type="date"
                           placeholder="mm/dd/yyyy"
-                          defaultValue={moment(props.appointmentEdit.date, "YYYY-MM-DD").format("YYYY-MM-DD")}
+                          defaultValue={moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format("YYYY-MM-DD")}
                           // defaultValue={moment(props.appointmentEdit.date).format("YYYY-MM-DD") ? moment(props.appointment.date, "YYYY-MM-DD").format("YYYY-MM-DD"): moment(props.appointment.date, "MM/DD/YYYY").format("YYYY-MM-DD")}
                           min={new Date(Date.now() + ( 3600 * 1000 * 24)).toISOString().split("T")[0]}
                           ref={reschDate}
@@ -821,11 +828,13 @@ const AppointmentEditModal = (props) => {
                       }
                     >
                       <div className="cmnFieldName">From</div>
-                      {/* <p>{props.appointmentEdit.fromTime}</p> */}
+                      {/* <p>{moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format('LT')}</p> */}
+                      {/* <input value={moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format('LT')} /> */}
                       <div className="cmnFormField" id="fromEditTime">
                         <TimePicker
                           showSecond={false}
-                          defaultValue={moment(props.appointmentEdit.fromTime, "LT")}
+                          // defaultValue={moment(props.appointmentEdit.fromTime, "LT")}
+                          defaultValue={fromDateTime}
                           className="cmnFieldStyle"
                           popupClassName="timepickerPopup"
                           onChange={fromScheduleDateEdit}
@@ -837,6 +846,7 @@ const AppointmentEditModal = (props) => {
                           inputReadOnly
                           allowEmpty={false}
                         />
+                        
                         {/* <input
                       className="cmnFieldStyle"
                       type="time"
@@ -858,11 +868,14 @@ const AppointmentEditModal = (props) => {
                       }
                     >
                       <div className="cmnFieldName">To</div>
-                      {props.appointmentEdit.toTime}
+                      
+                      {utils.convertUTCToTimezone(props.appointmentEdit.toDateTime, timezoneOffset).split(" ").splice(3,4).join(" ").toString()}
+                      {/* {moment(props.appointmentEdit?.toTime, "LT")} */}
                       <div className="cmnFormField" id="toEditTime">
                         <TimePicker
                           showSecond={false}
-                          defaultValue={moment(props.appointmentEdit.toTime, "LT")}
+                          // defaultValue={moment(props.appointmentEdit.toTime, "LT")}
+                          defaultValue={toDateTime}
                           className="cmnFieldStyle"
                           popupClassName="timepickerPopup"
                           onChange={toScheduleDateEdit}
