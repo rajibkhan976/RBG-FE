@@ -244,7 +244,7 @@ const AppointmentEditModal = (props) => {
     setRescheduleErrors(validErrors);
   };
   useEffect(()=>{
-    console.log("props appointment", utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset));
+    console.log("props appointment", props.appointmentEdit);
   },[props.appointmentEdit])
 
   const fromScheduleDateEdit = (fromReschedule) => {
@@ -868,8 +868,8 @@ const AppointmentEditModal = (props) => {
                       <div className="cmnFormField" id="toEditTime">
                         <TimePicker
                           showSecond={false}
-                          // defaultValue={moment(props.appointmentEdit.toTime, "LT")}
-                          defaultValue={utils.convertUTCToTimezone(props.appointmentEdit?.toDateTime, timezoneOffset).split(" ").splice(3,4).join(" ").toString()}
+                          defaultValue={moment(props.appointmentEdit.toTime, "LT")}
+                          // defaultValue={utils.convertUTCToTimezone(props.appointmentEdit?.toDateTime, timezoneOffset).split(" ").splice(3,4).join(" ").toString()}
                           className="cmnFieldStyle"
                           popupClassName="timepickerPopup"
                           onChange={toScheduleDateEdit}
