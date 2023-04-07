@@ -440,7 +440,7 @@ const Transaction = (props) => {
     let result = moment.duration(payDate.diff(today)).asDays();
 
     if (result < 31) {
-      if (result == 0) {
+      if (result <= 0) {
         return "Today"
       } else {
         if (result == 1) {
