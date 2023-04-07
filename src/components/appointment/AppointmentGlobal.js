@@ -24,10 +24,9 @@ const AppointmentGlobal = (props) => {
   const [editingApp, setEditingApp] = useState({})
   const calenderRef = useRef([]);
   const [createAppointmentModal, setCreateAppointmentModal] = useState(false);
-  const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
-    useEffect(()=>{
-        console.log("transaction time zone:", timezoneOffset)
-    },[timezoneOffset]);
+  const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
+  useEffect(()=>{ console.log("appointment time zone: 2", timezoneOffset)},[timezoneOffset]);
+
     const renderEventContent = (e) => {
       // console.log("Render e", e.event.extendedProps, e)
       // if (!e.event._instance.range && e.event._instance.range.start) {
@@ -47,15 +46,15 @@ const AppointmentGlobal = (props) => {
           // let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
           return (
               <>
-                          {/* <b>{"e.event.extendedProps.title"}</b> */}
-                          <span className='fc-list-nameTd'>{utils.convertUTCToTimezone(e.event._def.extendedProps.data.fromDateTime, timezoneOffset).split(" ").splice(3, 5).join(" ")}</span>
-                          <b>-</b>
-                          <span className='fc-list-nameTd'>{utils.convertUTCToTimezone(e.event._def.extendedProps.data.toDateTime, timezoneOffset).split(" ").splice(3, 5).join(" ")}</span>
-                          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                          <span className='fc-list-nameTd'>{utils.convertUTCToTimezone(e.event._def.extendedProps.data.fromDateTime, timezoneOffset).split(" ").splice(0, 3).join(" ")}</span>
-                          {/* <span className='fc-list-emailTd'>{"e.event.extendedProps.email"}</span> */}
-                          {/* <span className='fc-list-dateTd'>{"eventDate"}</span> */}
-                          {/* <span className='fc-list-event-time'>{"eventTime"}</span> */}
+                  {/* <b>{"e.event.extendedProps.title"}</b> */}
+                  <span className='fc-list-nameTd'>{utils.convertUTCToTimezone(e.event._def.extendedProps.data.fromDateTime, timezoneOffset).split(" ").splice(3, 5).join(" ")}</span>
+                  <b>-</b>
+                  <span className='fc-list-nameTd'>{utils.convertUTCToTimezone(e.event._def.extendedProps.data.toDateTime, timezoneOffset).split(" ").splice(3, 5).join(" ")}</span>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <span className='fc-list-nameTd'>{utils.convertUTCToTimezone(e.event._def.extendedProps.data.fromDateTime, timezoneOffset).split(" ").splice(0, 3).join(" ")}</span>
+                  {/* <span className='fc-list-emailTd'>{"e.event.extendedProps.email"}</span> */}
+                  {/* <span className='fc-list-dateTd'>{"eventDate"}</span> */}
+                  {/* <span className='fc-list-event-time'>{"eventTime"}</span> */}
                   
               </>
           )
@@ -67,14 +66,15 @@ const AppointmentGlobal = (props) => {
    
   }
   const fetchList = async () => {
+    
+      console.log("appointment time zone ", timezoneOffset);
     try {
       setIsLoader(true);
       let list = await AppointmentServices.fetchList();
       setIsLoader(false);
-      if (list.appointments.length) {
+      if (list.appointments.length && timezoneOffset) {
         let eventArray = [];        
-        list.appointments.map(appointment => {
-          console.log(appointment?.date);
+        list.appointments.map((appointment, index) => {
           // eventArray.push({
           //     id: appointment._id,
           //     title: appointment.agenda,
@@ -103,13 +103,12 @@ const AppointmentGlobal = (props) => {
           //     end: moment(convartToTime).format("YYYY-MM-DD") + "T" + moment(convartToTime).format("HH:mm:ss").toString().trim(),
           //   });
           // }
-          if (moment(appointment?.date, "YYYY-MM-DD")._f === "YYYY-MM-DD" && timezoneOffset && appointment?.fromDateTime && appointment?.toDateTime) {
-            // console.log("Appointment Date", appointment?.date);
+          if (moment(appointment?.date, "YYYY-MM-DD")._f === "YYYY-MM-DD" && appointment?.fromDateTime && appointment?.toDateTime) {
             let convartFromTime = utils.convertUTCToTimezone(appointment?.fromDateTime, timezoneOffset);
             let convartToTime = utils.convertUTCToTimezone(appointment?.toDateTime, timezoneOffset);
             let startAppointment = moment(convartFromTime).format("YYYY-MM-DD") + "T" + moment(convartFromTime).format("HH:mm:ss").trim();
             let endAppointment = moment(convartFromTime).format("YYYY-MM-DD") + "T" + moment(convartToTime).format("HH:mm:ss").trim();
-            console.log("proper calender formate 2", appointment?.date + "T" + moment(appointment.fromTime, "hh:mm A").format("HH:mm:ss"));
+            console.log("appointment time zone 4", convartFromTime, convartToTime);
             eventArray.push({
               id: appointment._id,
               title: appointment.agenda,
@@ -234,19 +233,21 @@ const AppointmentGlobal = (props) => {
   }
 
   useEffect(() => {
-    if (!editAppointment) {
-      fetchList();
+    if (!editAppointment && timezoneOffset != "") {
+        fetchList();
     }
   }, [editAppointment])
 
   useEffect(() => {
-    if (!createAppointmentModal) {
-      fetchList();
+    if (!createAppointmentModal && timezoneOffset != "") {
+        fetchList();
     }
   }, [createAppointmentModal])
 
   useEffect(() => {
-    fetchList();
+    if(timezoneOffset != ""){
+      fetchList();
+    }
   }, [])
 
   return (

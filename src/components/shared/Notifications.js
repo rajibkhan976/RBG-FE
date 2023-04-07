@@ -5,7 +5,7 @@ import BackArrow from "../../assets/images/back-arrow.png";
 import {utils} from "../../helpers";
 import {NotificationServices} from "../../services/notification/NotificationServices";
 import Loader from "./Loader";
-import moment from "moment-timezone";
+import moment from "moment";
 import Status from "../contact/importContact/status";
 import smallLoaderImg from "../../assets/images/loader.gif";
 import modalReducer from "../../reducers/modalReducer";
@@ -94,13 +94,9 @@ const Notifications = (props) => {
         props.markAllAsRead();
     }
     const showTimeDiff = (e) => {
-        // console.log("Notification date and time", new Date(e.createdAt).toLocaleDateString());
-        let convertTimezone = utils.convertUTCToTimezone(e?.createdAt.trim(), timezoneOffset).split(" ").splice(0,3).join(" ");
-        const dd = String(new Date(convertTimezone).getDate() + 1).padStart(2, "0");
-        const mm = String(new Date(convertTimezone).getMonth() + 1).padStart(2, "0");
-        const yyyy = new Date(convertTimezone).getFullYear();
-        // console.log("Time zone", yyyy + "-" + mm + "-"+ dd + " " + new Date(convertTimezone).toString().split(" ")[4]);
-        return moment.tz(yyyy+"-"+mm+"-"+dd+" "+ new Date(convertTimezone).toString().split(" ")[4], "Europe/London").fromNow()
+        const formattedDate = moment.utc(e?.createdAt);
+        const timezoneDate = moment.utc(formattedDate, null).utcOffset(moment().utcOffset());
+        return moment(timezoneDate.format()).fromNow()
     }
     // const modalsStoreCount = useSelector((state) => state.modal.count);
     // console.log(modalsStoreCount);

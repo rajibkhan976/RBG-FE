@@ -117,10 +117,10 @@ const AppointmentGlobal = (props) => {
     
     useEffect(async () => {
         try {
-            if (tz !== "UTC" && dateRange?.start) { 
+            if (tz !== "UTC" && dateRange?.start && timezoneOffset) { 
                 const convertFromDate = utils.convertTimezoneToUTC(moment(dateRange.start).format("YYYY-MM-DD") + " " + "00:00:01", timezoneOffset).trim();
                 const conversionToDate = utils.convertTimezoneToUTC(moment(dateRange.end).format("YYYY-MM-DD")+ " " + "23:59:59", timezoneOffset).trim();
-                console.log(moment(dateRange.start).format("YYYY-MM-DD") + " " + "00:00:01", convertFromDate, moment(dateRange.end).format("YYYY-MM-DD")+ " " + "23:59:59", conversionToDate);
+                console.log("after conversion", convertFromDate, conversionToDate);
                 let payload = {
                     // fromDate: moment(dateRange.start).format("YYYY-MM-DD"),
                     // toDate: moment(dateRange.end).format("YYYY-MM-DD"),
