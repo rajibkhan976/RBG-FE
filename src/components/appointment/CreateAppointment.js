@@ -171,8 +171,10 @@ const CreateAppointment = (props) => {
     })
 
     const appointmentDataAdd = (e, type) => {
+        
         let validErrors = {...appointmentErrors};
         let isDisabled = false;
+        
         if (e.target.value.trim() !== "") {
             // console.clear();
             // console.log(e.target.value);
@@ -186,6 +188,10 @@ const CreateAppointment = (props) => {
                         console.log("From Time")
                         const appDateTime = moment(`${e.target.value.toString()} ${appointmentData.fromTime.toString()}`).format("YYYY-MM-DD h:mm a");
                         const diffFromToday = todayDate.diff(appDateTime, "minutes");
+
+                        
+
+
                         console.log(diffFromToday);
                         if(diffFromToday > 0) {
                             console.log("Invalid time")
@@ -307,14 +313,23 @@ const CreateAppointment = (props) => {
         }
     }
 
+
     const fromDateAdd = (fromValue) => {
-        // console.log(fromValue && fromValue.format('h:mm a').toUpperCase());
+        const convertedChoosedTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + fromValue.format("HH:mm:ss"),timezoneOffset);
+        const convertedLocalTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+
+        const localTime = moment(convertedLocalTime, "YYYY-MM-DD HH:mm:ss");
+        const choosedTime = moment(convertedChoosedTime, "YYYY-MM-DD HH:mm:ss");
+        // console.log("Time differance ======================= ", choosedTime.diff(localTime, "minutes"), convertedChoosedTime, convertedLocalTime);
+
+
         let validErrors = {...appointmentErrors};
         let isDisabled = false;
         // console.log("App Date", appointmentData.date)
         // console.clear();
-        const appDateTime = moment(`${appointmentData.date.toString()} ${fromValue.format("h:mm a")}`).format("YYYY-MM-DD h:mm a");
-        const diffFromToday = todayDate.diff(appDateTime, "minutes");
+        // const appDateTime = moment(`${appointmentData.date.toString()} ${fromValue.format("h:mm a")}`).format("YYYY-MM-DD h:mm a");
+        // const diffFromToday = todayDate.diff(appDateTime, "minutes");
+        const diffFromToday = choosedTime.diff(localTime, "minutes");
         const fromTime = moment(`${appointmentData.date} ${fromValue.format("h:mm a")}`).format('MM/DD/YYYY h:mm a');
         const toTime = moment(`${appointmentData.date} ${appointmentData.toTime}`).format('MM/DD/YYYY h:mm a');
 
@@ -359,7 +374,7 @@ const CreateAppointment = (props) => {
             if(!appointmentData.date) {
                 validErrors.date = "Please choose a date";
                 isDisabled = true;
-            } else if(diffFromToday > 0) {
+            } else if(diffFromToday < 2) {
                 validErrors.fromTime = "Invalid from time";
                 isDisabled = true;
             } else if(appointmentData.toTime && Math.sign(moment(fromTime).diff(toTime, "minutes")) > 0) {
