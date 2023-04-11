@@ -31,6 +31,8 @@ const UserFilter = (props) => {
         utils.addQueryParameter('group', event.target.value);
         setGroup(event.target.value);
     }
+    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
+
     /**
      * Apply filter submit
      */
@@ -52,17 +54,24 @@ const UserFilter = (props) => {
     /**
      * Handle from date change
      */
-    const handleDateChange = (event) => {
+    const handleDateChangeFrom = (event) => {
         event.preventDefault();
-        utils.addQueryParameter(event.target.name, event.target.value);
-        if( event.target.name === 'fromDate'){
-            setFromDate(event.target.value);
-        } else {
-            setToDate(event.target.value);
-        }
-        console.log(event.target.name, event.target.value);
-    }
 
+        utils.addQueryParameter(event.target.name, utils.convertTimezoneToUTC(event.target.value + " " + "00:00:01", timezoneOffset));
+       
+        setFromDate(event.target.value);
+
+        console.log(event.target.name, event.target.value, utils.convertTimezoneToUTC(event.target.value + " " + "00:00:01", timezoneOffset) );
+    }
+    const handleDateChangeTo = (event) => {
+        event.preventDefault();
+        
+        utils.addQueryParameter(event.target.name, utils.convertTimezoneToUTC(event.target.value + " " + "23:59:59", timezoneOffset));
+
+        setToDate(event.target.value); 
+
+        console.log(event.target.name,event.target.value, utils.convertTimezoneToUTC(event.target.value + " " + "23:59:59", timezoneOffset) );
+    }
     /**
      * Handle status change
      * @param {*} event 
@@ -131,13 +140,13 @@ const UserFilter = (props) => {
                                         <div className="formField w-50">
                                             <p>From</p>
                                             <div className="inFormField">
-                                                <input type="date" name="fromDate" id="formDate" placeholder="dd/mm/yyyy" onChange={handleDateChange} value={fromDate} />
+                                                <input type="date" name="fromDate" id="formDate" placeholder="dd/mm/yyyy" onChange={handleDateChangeFrom} value={fromDate} />
                                             </div>
                                         </div>
                                         <div className="formField w-50">
                                             <p>To</p>
                                             <div className="inFormField">
-                                                <input type="date" name="toDate" id="toDate" min={fromDate} placeholder="dd/mm/yyyy" onChange={handleDateChange} value={toDate}/>
+                                                <input type="date" name="toDate" id="toDate" min={fromDate} placeholder="dd/mm/yyyy" onChange={handleDateChangeTo} value={toDate}/>
                                             </div>
                                         </div>
                                     </div>

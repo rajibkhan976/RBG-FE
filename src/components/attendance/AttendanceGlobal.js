@@ -15,6 +15,7 @@ import avatarImg from "../../assets/images/profile.png";
 import momentTZ from "moment-timezone";
 
 import Loader from "../shared/Loader";
+import { utils } from '../../helpers';
 
 const AppointmentGlobal = (props) => {
     
@@ -48,7 +49,10 @@ const AppointmentGlobal = (props) => {
         api.changeView('listDay', e.dateStr)
      }
      
-
+    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
+    useEffect(()=>{
+        console.log("Attandance time zone:", timezoneOffset)
+    },[timezoneOffset]);
     const renderEventContent = (e) => {
         // console.log("Render e", e.event.extendedProps, e)
         // if (!e.event._instance.range && e.event._instance.range.start) {
@@ -63,9 +67,15 @@ const AppointmentGlobal = (props) => {
             // let eventTime = momentTZ.tz(e.event._instance.range.start, tz).format("hh:mm A");
 
             let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
-            let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
-            let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
+            // let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
+            // let momentTimeZone = moment(momentTZ.tz(dateSource, tz)).format("yyyy-DD-mm hh:mm:ss");
             
+            console.log("Date source ========= ", dateSource);
+            let eventDate = dateSource.toString().split(" ").splice(0,3).join(" ");
+            console.log(eventDate.toString().split(" ").splice(0,3).join(" "));
+            // let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
+            let eventTime = dateSource.toString().split(" ").splice(3,4).join(" ");
+
             return (
                 <>
                     {!isHoliday ? 
@@ -107,24 +117,32 @@ const AppointmentGlobal = (props) => {
     
     useEffect(async () => {
         try {
-            if (tz !== "UTC" && dateRange?.start) { 
+            if (tz !== "UTC" && dateRange?.start && timezoneOffset) { 
+                const convertFromDate = utils.convertTimezoneToUTC(moment(dateRange.start).format("YYYY-MM-DD") + " " + "00:00:01", timezoneOffset).trim();
+                const conversionToDate = utils.convertTimezoneToUTC(moment(dateRange.end).format("YYYY-MM-DD")+ " " + "23:59:59", timezoneOffset).trim();
+                console.log("after conversion", convertFromDate, conversionToDate);
                 let payload = {
-                    fromDate: moment(dateRange.start).format("YYYY-MM-DD"),
-                    toDate: moment(dateRange.end).format("YYYY-MM-DD"),
+                    // fromDate: moment(dateRange.start).format("YYYY-MM-DD"),
+                    // toDate: moment(dateRange.end).format("YYYY-MM-DD"),
+                    fromDate: convertFromDate,
+                    toDate: conversionToDate,
                 }
                 let attendances = await AttendanceServices.fetchAttendances(payload);
                 
                 let eventArr = []
                 for(let atten of attendances.attendance) {
+                    const convertTimezone = utils.convertUTCToTimezone(atten?.checkedInAt, timezoneOffset);
+                    console.log("After convert =====", convertTimezone);
                     let eventObj = {
-                        start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
+                        start: atten.checkedInAt,
                         note: atten.note,
                         name: atten.contact.firstName + " " + atten.contact?.lastName,
                         email: atten.contact.email,
                         checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName,
                         className: "hasAttendance",
                         backgroundColor: "#fff",
-                        checkedInAt: convertUTCtoTZ(atten.checkedInAt)
+                        // checkedInAt: convertUTCtoTZ(atten.checkedInAt),
+                        checkedInAt: convertTimezone,
                     }
                     eventArr.push(eventObj);
                 }

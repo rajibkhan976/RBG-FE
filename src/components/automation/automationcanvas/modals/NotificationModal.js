@@ -1,12 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
-import Select from "react-select";
+import Select, { components } from "react-select";
+import user02 from "../../../../assets/images/user02.png";
 import groupIcon from "../../../../assets/images/group_icon.svg";
+import { Editor } from '@tinymce/tinymce-react';
+import tagIcon from "../../../../assets/images/tag_icon.svg";
+import expendIcon from "../../../../assets/images/expend_icon.svg";
 import searchIcon from "../../../../assets/images/search_icon.svg";
 import crossIcon from "../../../../assets/images/cross.svg";
+import { regExpLiteral } from '../../../../../node_modules/@babel/types';
 import cressIcon from "../../../../assets/images/white_cross_roundedCorner.svg";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import { NotificationGroupServices } from '../../../../services/notification/NotificationGroupServices';
+import Loader from "../../../shared/Loader";
 import defaultImage from "../../../../assets/images/owner_img_1.png";
 import * as actionTypes from "../../../../actions/types";
 import { useDispatch } from "react-redux";
@@ -14,6 +20,7 @@ import { SMSServices } from "../../../../services/template/SMSServices";
 import { EmailServices } from "../../../../services/setup/EmailServices";
 import { utils } from "../../../../helpers";
 import EditorComponent from "../../../setup/templates/email/editor/Editor";
+import icon_browse_keywords from "../../../../assets/images/icon_browse_keywords.svg";
 import MergeTag from "../../../shared/MergeTag";
 
 const NotificationModal = (props) => {

@@ -5,6 +5,7 @@ import arrowRightWhite from "../../assets/images/arrowRightWhite.svg";
 import Loader from "../shared/Loader";
 import { utils } from '../../helpers';
 import { TransactionHistoryServices } from "../../services/transaction/TransactionHistoryServices";
+import { useSelector } from "react-redux";
 
 function ImportTransactionFilter(props) {
     const [isLoader, setIsLoader] = useState(false);
@@ -14,7 +15,10 @@ function ImportTransactionFilter(props) {
     const [selectName, setSelectName] = useState("");
     const [selectedTo, setSelectedTo] = useState("");
     const [selectedFrom, setSelectedFrom] = useState("");
-
+    const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
+	useEffect(()=>{
+	  console.log("transaction filter time zone", timezoneOffset);
+	}, [timezoneOffset])
 
     const selectStatusHandler = (e) =>{
         setSelectStatus(e.target.value)
@@ -26,10 +30,12 @@ function ImportTransactionFilter(props) {
         setSelectName(e.target.value)
     }
     const selectFromHandler = (e) =>{
-        setSelectedFrom(e.target.value)
+        setSelectedFrom(e.target.value);
+        console.log(selectedFrom);
     }
     const selectToHandler = (e) =>{
         setSelectedTo(e.target.value)
+        console.log(selectedTo);
     }
 
     const applyFilter = () => {
@@ -49,13 +55,17 @@ function ImportTransactionFilter(props) {
         } else {
             utils.removeQueryParameter('contact');
         }
-        if (selectedTo) {
-            utils.addQueryParameter('fromDate', selectedFrom);
+        if (selectedFrom) {
+            const convertFrom = utils.convertTimezoneToUTC(selectedFrom + " " + "00:00:01", timezoneOffset);
+            console.log("convert From", convertFrom);
+            utils.addQueryParameter('fromDate', convertFrom);
         } else {
             utils.removeQueryParameter('fromDate');
         }
         if (selectedTo) {
-            utils.addQueryParameter('toDate', selectedTo);
+            const convertTo = utils.convertTimezoneToUTC(selectedTo + " " + "23:59:59", timezoneOffset);
+            console.log("convert To", convertTo);
+            utils.addQueryParameter('toDate', convertTo);
         } else {
             utils.removeQueryParameter('toDate');
         }

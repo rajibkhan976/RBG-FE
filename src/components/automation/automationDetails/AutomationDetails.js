@@ -65,10 +65,14 @@ function AutomationDetails(props) {
         const status = utils.getQueryVariable('status');
         const queryParams = new URLSearchParams();
         if (from) {
-            queryParams.append("fromDate", from);
+           // queryParams.append("fromDate", from);
+            queryParams.append("fromDate", decodeURIComponent(from).replaceAll("+", " "));
+
         }
         if (to) {
-            queryParams.append("toDate", to);
+           // queryParams.append("toDate", to);
+            queryParams.append("toDate", decodeURIComponent(to).replaceAll("+", " "));
+
         }
         if (status) {
             queryParams.append("status", status);

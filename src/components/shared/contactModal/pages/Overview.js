@@ -13,7 +13,7 @@ import {ImportContactServices} from "../../../../services/contact/importContact"
 import arrowDown from "../../../../assets/images/arrowDown.svg";
 import moment from "moment-timezone";
 import {PhasesServices} from "../../../../services/contact/phasesServices";
-
+import { utils } from "../../../../helpers";
 const Overview = (props) => {
     const [formScrollStatus, setFormScrollStatus] = useState(false);
     const [isLoader, setIsLoader] = useState(false);
@@ -107,7 +107,10 @@ const Overview = (props) => {
         phase: "",
         status: ""
     });
-
+    const timezoneOffset = useSelector((state)=> (state?.user?.data.organizationTimezoneInfo.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null);
+    useEffect(()=>{
+        console.log("contact overview time zone", timezoneOffset);
+    })
     const fetchCountry = async () => {
         let conntryResponse = await ContactService.fetchCountry();
         setPhoneCountryCode(conntryResponse);
@@ -267,7 +270,7 @@ const Overview = (props) => {
         setFormErrorMsg(prevState => ({...prevState, lName: false}));
     }
 
-    const handelBasicinfoDob = (e) => {
+    const handelBasicinfoDob = (e) => {;
         setBasicinfoDob(e.target.value);
     }
 

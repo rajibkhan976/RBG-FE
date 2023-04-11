@@ -8,7 +8,7 @@ import arrowRightWhite from "../../assets/images/arrowRightWhite.svg";
 import Loader from "../shared/Loader";
  import {utils} from "../../helpers";
  import * as actionTypes from "../../actions/types";
- import {useDispatch} from "react-redux";
+ import {useDispatch, useSelector} from "react-redux";
  import moment from "moment";
 
 function CommunicationLogFilter(props) {
@@ -22,6 +22,7 @@ function CommunicationLogFilter(props) {
     const [clickedOnFilter, setClickedOnFilter] = useState(false);
     const [error, setError] = useState("");
     
+	const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
      
 
     const handleDirectionChange = (event) => {
@@ -41,7 +42,7 @@ function CommunicationLogFilter(props) {
     }
     const handleFromChange = (event) => {    
         let fromDate = new Date(event.target.value);
-        const dayNow = new Date(); 
+        const dayNow = new Date();
         setSelectedFrom(event.target.value);
         if(Math.ceil(dayNow - fromDate) >= 0){
             setError("")
@@ -73,12 +74,12 @@ function CommunicationLogFilter(props) {
                 //     utils.removeQueryParameter('type')
                 }
                 if (selectedFrom) {
-                    utils.addQueryParameter('fromDate', selectedFrom);
+                    utils.addQueryParameter('fromDate', utils.convertTimezoneToUTC(selectedFrom + " " + "00:00:01", timezoneOffset));
                 // } else {
                 //      utils.removeQueryParameter('fromDate')
                 }
                 if (selectedTo) {
-                    utils.addQueryParameter('toDate', selectedTo);
+                    utils.addQueryParameter('toDate',  utils.convertTimezoneToUTC(selectedTo + " " + "23:59:59", timezoneOffset));
 
                 // } else {
                 //     utils.removeQueryParameter('toDate')
@@ -96,6 +97,8 @@ function CommunicationLogFilter(props) {
 
 
             }      
+            //console.log('fromDate',selectedFrom + " " + "00:00:01", utils.convertTimezoneToUTC(selectedFrom + " " + "00:00:01", timezoneOffset));
+           // console.log('toDate',selectedTo + " " + "23:59:59",  utils.convertTimezoneToUTC(selectedTo + " " + "23:59:59", timezoneOffset))
         }
        
     

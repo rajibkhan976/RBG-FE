@@ -11,6 +11,7 @@ import {useDispatch, useSelector} from "react-redux";
 import Loader from "../shared/Loader";
 import TagList from "./TagList";
 import moment from "moment";
+import { utils } from '../../helpers';
 
 const AppointmentEditModal = (props) => {
   const agendaRef = useRef(null);
@@ -39,6 +40,8 @@ const AppointmentEditModal = (props) => {
     fromTime: props.appointmentEdit.fromTime,
     toTime: props.appointmentEdit.toTime,
     note: "",
+    fromDateTime:"",
+    toDateTime:""
   });
   const [canceled, setCancelled] = useState({note: ""})
   const loggedInUser = useSelector((state) => state.user.data);
@@ -49,6 +52,14 @@ const AppointmentEditModal = (props) => {
     agendaRef.current.value = editedAgenda;
     setErrorEdit({ errorEdit, agenda: "" });
   };
+  useEffect(()=>{
+    console.log("appointment edit data", props.appointmentEdit, moment(props.appointmentEdit.date, "YYYY-mm-dd").format("mm/DD/YYYY"))
+  },[props.appointmentEdit])
+
+  const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
+  useEffect(()=>{
+      console.log("transaction time zone:", timezoneOffset);
+  },[timezoneOffset]);
 
   const confirmAgenda = async (e) => {
     e.preventDefault();
@@ -215,6 +226,7 @@ const AppointmentEditModal = (props) => {
   };
 
   const getEditedDate = (e) => {
+    console.log("Date: " + e.target.value);
     let validErrors = { ...rescheduleErrors };
 
     if (e.target.value.trim() !== "") {
@@ -222,13 +234,8 @@ const AppointmentEditModal = (props) => {
         validErrors.date = "Invalid date of appointment.";
       } else {
         validErrors.date = "";
-        let newDateString =
-          e.target.value.split("-")[1] +
-          "/" +
-          e.target.value.split("-")[2] +
-          "/" +
-          e.target.value.split("-")[0];
-        setEditedReschedule({ ...editedReschedule, date: newDateString });
+        // let newDateString = e.target.value.split("-")[1] + "/" + e.target.value.split("-")[2] + "/" + e.target.value.split("-")[0];
+        setEditedReschedule({ ...editedReschedule, date: e.target.value });
       }
     } else {
       setEditedReschedule({ ...editedReschedule, date: "" });
@@ -236,6 +243,7 @@ const AppointmentEditModal = (props) => {
     }
     setRescheduleErrors(validErrors);
   };
+  
 
   const fromScheduleDateEdit = (fromReschedule) => {
     // console.log(fromValue && fromValue.format('h:mm a').toUpperCase());
@@ -320,6 +328,35 @@ const AppointmentEditModal = (props) => {
 
   const rescheduleAppointment = async (e) => {
     e.preventDefault();
+    console.clear();
+    console.log("Date", editedReschedule.date, props.appointmentEdit.date);
+    console.log("From Time", editedReschedule.fromTime, props.appointmentEdit.fromTime);
+    console.log("To Time", editedReschedule.toTime, props.appointmentEdit.toTime);
+    let fromDateConversion;
+    let toDateConversion;
+
+    if(props.appointmentEdit.fromTime){
+      fromDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(props.appointmentEdit.fromTime), timezoneOffset).trim();
+    }
+    if(props.appointmentEdit.toTime){
+      toDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(props.appointmentEdit.toTime), timezoneOffset).trim();
+    }
+    if(editedReschedule?.fromTime){
+      fromDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(editedReschedule.fromTime), timezoneOffset).trim();
+    }
+    if(editedReschedule?.toTime){
+      toDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + utils.timeConversion(editedReschedule.toTime), timezoneOffset).trim();
+    }
+    console.log("=============", fromDateConversion, toDateConversion);
+    // setEditedReschedule({
+    //   ...editedReschedule,
+    //   fromDateTime: fromDateConversion,
+    //   toDateTime: toDateConversion
+    // })
+    editedReschedule['fromDateTime'] = fromDateConversion;
+    editedReschedule['toDateTime'] = toDateConversion;
+
+    console.log("edit reschedule payload", fromDateConversion, toDateConversion, editedReschedule);
     try {
       setIsLoader(true);
       const result = await AppointmentServices.rescheduleAppointment(props.appointmentEdit._id, editedReschedule);
@@ -405,18 +442,33 @@ const AppointmentEditModal = (props) => {
   useEffect(() => {
     setIsLoader(true)
     try {
-      console.log('props', props.appointmentEdit.contactDetails);
+      console.log('props appointment edit', props.appointmentEdit, editedReschedule);
       setAppointmentEditContact(props.appointmentEdit.contactDetails)
       setEditedAgenda(props.appointmentEdit.agenda);
       setEditedTags(props.appointmentEdit.tags);
       setEditedTagNames(props.appointmentEdit.tagNames);
       // console.log(props.appointmentEdit.tags);
+      console.log("Date========", props.appointmentEdit.date)
       setIsLoader(false)
+      setEditedReschedule({
+        ...editedReschedule,
+        date: props?.appointmentEdit?.date
+      })
     } catch(err) {
       console.log(err);
     } finally {
     }
   }, []);
+
+  const [fromDateTime, setFromDateTime] = useState();
+  const [toDateTime, setToDateTime] = useState();
+  useEffect(()=>{
+    setFromDateTime(moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)));
+    setToDateTime(moment(utils.convertUTCToTimezone(props.appointmentEdit.toDateTime, timezoneOffset)));
+    console.log("props appointment", fromDateTime, toDateTime);
+  },[props.appointmentEdit])
+
+  
 
   return (
     <div className="appointmentEditModal modalBackdrop">
@@ -629,7 +681,9 @@ const AppointmentEditModal = (props) => {
                 <div className="formControl d-flex">
                   <label className="labelAppointment">Date:</label>
                   <span className="textAppointment">
-                    {props.appointmentEdit.date}
+                    {/* {props?.appointmentEdit.fromDateTime} */}
+                  {props.appointmentEdit?.fromDateTime && utils.convertUTCToTimezone(props.appointmentEdit?.fromDateTime.trim(), timezoneOffset).split(" ").splice(0,3).join(" ")}
+                    {/* {props.appointmentEdit.date} */}
                   </span>
                   {(props.appointmentEdit.rescheduleCount && props.appointmentEdit.rescheduleCount > 0) ? (
                       <span className="rescheduleCount creatUserBtn">
@@ -663,11 +717,22 @@ const AppointmentEditModal = (props) => {
                     <span>Reschedule</span>
                   </button>
                 </div>
+                    <br></br>
+                    {/* {utils.dateConvertsation(props.appointmentEdit.date)} */}
+                    {/* <br></br>
+                    {utils.timeConversion(props.appointmentEdit.date) + " " + utils.dateConversion(props.appointmentEdit.fromTime)}
+                    {moment(props.appointmentEdit.date).format("YYYY-MM-DD") + " " + moment(props.appointmentEdit.fromTime, "hh:ss A").format("hh:mm:ss")}
+                    <br></br>
+                    {utils.timeConversion(props.appointmentEdit.date) + " " + utils.dateConversion(props.appointmentEdit.toTime)} */}
+                    
                 <div className="formControl d-flex">
                   <label className="labelAppointment">Time:</label>
                   <span className="textAppointment">
-                    {props.appointmentEdit.fromTime} -{" "}
-                    {props.appointmentEdit.toTime}
+                    {/* {props.appointmentEdit.date + " " + moment(props.appointmentEdit.fromTime, "hh:mm:ss").format("hh:mm:ss")} */}
+                    {/* {props.appointmentEdit.fromDateTime.trim() + " " + props.appointmentEdit.toDateTime.trim()} */}
+                    {/* {props.appointmentEdit.fromDateTime +"-" + props.appointmentEdit.toDateTime.trim()}<br></br> */}
+                    {props.appointmentEdit?.fromDateTime && utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset).split(" ").splice(3,5).join(" ")} -{" "}
+                    {props.appointmentEdit?.toDateTime && utils.convertUTCToTimezone(props.appointmentEdit.toDateTime.trim(), timezoneOffset).split(" ").splice(3, 5).join(" ")}
                   </span>
                 </div>
                 {/* {console.log("props.appointmentEdit", props.appointmentEdit.rescheduleCount)} */}
@@ -732,16 +797,21 @@ const AppointmentEditModal = (props) => {
                           : "cmnFormCol"
                       }
                     >
+                      {/* {props.appointmentEdit.date} */}
+                      {/* <input value="2018-07-22" type="date"/> */}
                       <div className="cmnFieldName">Choose a date</div>
                       <div className="cmnFormField">
+                        {moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format("YYYY-MM-DD")}
                         <input
                           className="cmnFieldStyle"
                           type="date"
                           placeholder="mm/dd/yyyy"
-                          defaultValue={moment(props.appointmentEdit.date, "MM/DD/YYYY").format("YYYY-MM-DD")}
+                          defaultValue={moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format("YYYY-MM-DD")}
+                          // defaultValue={moment(props.appointmentEdit.date).format("YYYY-MM-DD") ? moment(props.appointment.date, "YYYY-MM-DD").format("YYYY-MM-DD"): moment(props.appointment.date, "MM/DD/YYYY").format("YYYY-MM-DD")}
                           min={new Date(Date.now() + ( 3600 * 1000 * 24)).toISOString().split("T")[0]}
                           ref={reschDate}
                           onChange={getEditedDate}
+                          // value={moment(props.appointmentEdit.date, "MM/DD/YYYY").format("YYYY-MM-DD")}
                         />
                       </div>
                       {rescheduleErrors.date.trim() !== "" ? (
@@ -758,10 +828,13 @@ const AppointmentEditModal = (props) => {
                       }
                     >
                       <div className="cmnFieldName">From</div>
+                      {/* <p>{moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format('LT')}</p> */}
+                      {/* <input value={moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format('LT')} /> */}
                       <div className="cmnFormField" id="fromEditTime">
                         <TimePicker
                           showSecond={false}
-                          defaultValue={moment(props.appointmentEdit.fromTime, "LT")}
+                          // defaultValue={moment(props.appointmentEdit.fromTime, "LT")}
+                          defaultValue={fromDateTime}
                           className="cmnFieldStyle"
                           popupClassName="timepickerPopup"
                           onChange={fromScheduleDateEdit}
@@ -773,6 +846,7 @@ const AppointmentEditModal = (props) => {
                           inputReadOnly
                           allowEmpty={false}
                         />
+                        
                         {/* <input
                       className="cmnFieldStyle"
                       type="time"
@@ -794,10 +868,14 @@ const AppointmentEditModal = (props) => {
                       }
                     >
                       <div className="cmnFieldName">To</div>
+                      
+                      {utils.convertUTCToTimezone(props.appointmentEdit.toDateTime, timezoneOffset).split(" ").splice(3,4).join(" ").toString()}
+                      {/* {moment(props.appointmentEdit?.toTime, "LT")} */}
                       <div className="cmnFormField" id="toEditTime">
                         <TimePicker
                           showSecond={false}
-                          defaultValue={moment(props.appointmentEdit.toTime, "LT")}
+                          // defaultValue={moment(props.appointmentEdit.toTime, "LT")}
+                          defaultValue={toDateTime}
                           className="cmnFieldStyle"
                           popupClassName="timepickerPopup"
                           onChange={toScheduleDateEdit}
