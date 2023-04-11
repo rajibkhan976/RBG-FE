@@ -62,20 +62,16 @@ const AppointmentGlobal = (props) => {
         if (e.view.type == "listDay" || e.view.type == "listMonth") {
             let isHoliday =  e.event.extendedProps ?. isHoliday ? true : false;
             setMakeHeaderOpen(true);
-            console.log("e.event._instance.range.start", e.event._instance.range.start, "tz", tz)
+
+            console.log("Range start", e.event._instance.range.start, "tz", tz, e.event.extendedProps.checkedInAt)
             // let eventDate = momentTZ.tz(e.event._instance.range.start, tz).format("ddd, DD");
             // let eventTime = momentTZ.tz(e.event._instance.range.start, tz).format("hh:mm A");
 
             let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
-            // let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
-            // let momentTimeZone = moment(momentTZ.tz(dateSource, tz)).format("yyyy-DD-mm hh:mm:ss");
-            
-            console.log("Date source ========= ", dateSource);
             let eventDate = dateSource.toString().split(" ").splice(0,3).join(" ");
-            console.log(eventDate.toString().split(" ").splice(0,3).join(" "));
-            // let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
             let eventTime = dateSource.toString().split(" ").splice(3,4).join(" ");
 
+            console.log("<br>");
             return (
                 <>
                     {!isHoliday ? 
