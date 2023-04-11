@@ -117,7 +117,8 @@ const AppointmentGlobal = (props) => {
     
     useEffect(async () => {
         try {
-            if (tz !== "UTC" && dateRange?.start && timezoneOffset) { 
+            if (tz !== "UTC" && dateRange?.start && timezoneOffset) {
+                console.log("=================", dateRange?.start, dateRange?.end)
                 const convertFromDate = utils.convertTimezoneToUTC(moment(dateRange.start).format("YYYY-MM-DD") + " " + "00:00:01", timezoneOffset).trim();
                 const conversionToDate = utils.convertTimezoneToUTC(moment(dateRange.end).format("YYYY-MM-DD")+ " " + "23:59:59", timezoneOffset).trim();
                 console.log("after conversion", convertFromDate, conversionToDate);
@@ -132,7 +133,7 @@ const AppointmentGlobal = (props) => {
                 let eventArr = []
                 for(let atten of attendances.attendance) {
                     const convertTimezone = utils.convertUTCToTimezone(atten?.checkedInAt, timezoneOffset);
-                    console.log("After convert =====", convertTimezone);
+                    console.log("After convert =====", convertTimezone, atten?.checkedInAt);
                     let eventObj = {
                         start: atten.checkedInAt,
                         note: atten.note,
@@ -147,11 +148,14 @@ const AppointmentGlobal = (props) => {
                     eventArr.push(eventObj);
                 }
                 if (attendances.holidays) {
-                    for(let holiday of attendances.holidays) {            
+                    for(let holiday of attendances.holidays) {
+                        const convertHolidayStart = utils.convertUTCToTimezone(holiday?.fromDate, timezoneOffset);
+                        const convertHolidayEnd = utils.convertUTCToTimezone(holiday?.toDate, timezoneOffset);
                         let eventObj = {
-                            start: holiday.fromDate,
-                            end: holiday.toDate,
-                            title: holiday.name,
+                            // start: holiday.fromDate,
+                            // end: holiday.toDate,
+                            start: convertHolidayStart,
+                            end: convertHolidayEnd,
                             isHoliday: true,
                             display: "background",
                             className: "hasHoliday"
@@ -159,7 +163,7 @@ const AppointmentGlobal = (props) => {
                         eventArr.push(eventObj);
                     }
                 }
-            // console.log("eventArr", eventArr)
+                console.log("eventArr", eventArr)
                 setEvents(eventArr);
             }
         } catch (e) {
@@ -175,6 +179,7 @@ const AppointmentGlobal = (props) => {
 
 
     const moreLinkContent = (e) => {
+        console.log("all member", e);
         return (
             <>
                 <span className='dayCellEvent'><span className='number'>{ e.num }</span> <span>Member attended</span></span>
