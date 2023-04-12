@@ -147,15 +147,21 @@ const AppointmentGlobal = (props) => {
                     eventArr.push(eventObj);
                 }
                 if (attendances.holidays) {
-                    for(let holiday of attendances.holidays) {            
+                    for(let holiday of attendances.holidays) {
+                        console.log("Holiday====", holiday);
+                        const convertHolidayStart = utils.convertUTCToTimezone(holiday?.fromDate, timezoneOffset);
+                        const convertHolidayEnd = utils.convertUTCToTimezone(holiday?.toDate, timezoneOffset);          
                         let eventObj = {
-                            start: holiday.fromDate,
-                            end: holiday.toDate,
+                            // start: holiday.fromDate,
+                            // end: holiday.toDate,
+                            start: convertHolidayStart,
+                            end: convertHolidayEnd,
                             title: holiday.name,
                             isHoliday: true,
                             display: "background",
                             className: "hasHoliday"
                         }
+                        console.log("Holiday payload", eventObj);
                         eventArr.push(eventObj);
                     }
                 }

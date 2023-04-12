@@ -63,7 +63,8 @@ const UserModal = (props) => {
     const [editId, setEditId] = useState("");
     const [permissionData, setPermissionData] = useState([]);
     const [copyPermissionData, setCopyPermissionData] = useState([]);
-    const [isOrgPermission, setIsOrgPermission] = useState(true);
+    const loggedInUser = useSelector((state) => state.user.data);
+    const [isOrgPermission, setIsOrgPermission] = useState(false);
     const [isModifiedPermission, setIsModifiedPermission] = useState(false);
     const [isEmailNotification, setIsEmailNotification] = useState(false);
     const [groupName, setGroupName] = useState('');
@@ -114,7 +115,6 @@ const UserModal = (props) => {
     useEffect(() => {
         fetchCountry();
         fetchAssociations();
-        fetchLoggedUserDetails();
     }, []);
 
     useEffect(() => {
@@ -141,26 +141,6 @@ const UserModal = (props) => {
             }
         }
     }, [groups, props.createButton]);
-
-    /**
-     * LoggedIn user details
-     */
-    const [loggedInUser, setLoggedInUser] = useState({
-        isOrganizationAssociationOwner: false,
-    })
-    const fetchLoggedUserDetails = async () => {
-        try {
-            let userDetails = await UserServices.fetchUserDetails();
-            if (userDetails) {
-                console.log('logged in user details', userDetails.isOrganizationOwner, userDetails.isAssociationOwner);
-                setLoggedInUser({
-                    isOrganizationAssociationOwner: (!userDetails.isOrganizationOwner && !userDetails.isAssociationOwner)
-                })
-            }
-        } catch (e) {
-            console.log('Error in fetch current user', e);
-        }
-    };
 
     const countrycodeOpt = phoneCountryCode ? phoneCountryCode.map((el, key) => {
         return (
@@ -1235,7 +1215,7 @@ const UserModal = (props) => {
                                             </div>
                                         </div>
                                         <div className="infoField orgSection">
-                                            {loggedInUser.isOrganizationAssociationOwner && !editId && isOrgPermission && (
+                                            {(!loggedInUser.isOrganizationOwner && !loggedInUser.isAssociationOwner) && !editId && (loggedInUser.email === 'superadmin@rbg.in') && (
 
                                                 <div className="cmnFormRow">
                                                     <div className="cmnFieldName">Select Type</div>
