@@ -54,27 +54,25 @@ const AppointmentGlobal = (props) => {
         console.log("Attandance time zone:", timezoneOffset)
     },[timezoneOffset]);
     const renderEventContent = (e) => {
-        // console.log("Render e", e.event.extendedProps, e)
+        // console.log("Render e", e.event.extendedProps)
         // if (!e.event._instance.range && e.event._instance.range.start) {
         //     return false;
         // }
-        console.log("renderEventContent called", e.view.type)
+        // console.log("Range event content called", e.view.type)
         if (e.view.type == "listDay" || e.view.type == "listMonth") {
             let isHoliday =  e.event.extendedProps ?. isHoliday ? true : false;
             setMakeHeaderOpen(true);
-            console.log("e.event._instance.range.start", e.event._instance.range.start, "tz", tz)
+            console.log("Range start", e.event._instance.range.start, "Checked at", e.event.extendedProps.checkedInAt);
+
             // let eventDate = momentTZ.tz(e.event._instance.range.start, tz).format("ddd, DD");
             // let eventTime = momentTZ.tz(e.event._instance.range.start, tz).format("hh:mm A");
-
-            let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
             // let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
             // let momentTimeZone = moment(momentTZ.tz(dateSource, tz)).format("yyyy-DD-mm hh:mm:ss");
-            
-            console.log("Date source ========= ", dateSource);
-            let eventDate = dateSource.toString().split(" ").splice(0,3).join(" ");
-            console.log(eventDate.toString().split(" ").splice(0,3).join(" "));
             // let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
-            let eventTime = dateSource.toString().split(" ").splice(3,4).join(" ");
+            let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
+            console.log("Range date source", dateSource)
+            let eventDate = e.event.extendedProps.checkedInAt.toString().split(" ").splice(0,3).join(" ");
+            let eventTime = e.event.extendedProps.checkedInAt.toString().split(" ").splice(3,4).join(" ");
 
             return (
                 <>
@@ -96,11 +94,9 @@ const AppointmentGlobal = (props) => {
                 </>
             )
         }
-        
         if (e.view.type == "dayGridMonth") {
            setMakeHeaderOpen(false);
         }
-     
     }
 
     const convertUTCtoTZ = (date, format) => {
@@ -117,9 +113,9 @@ const AppointmentGlobal = (props) => {
     
     useEffect(async () => {
         try {
-            if (tz !== "UTC" && dateRange?.start && timezoneOffset) { 
-                const convertFromDate = utils.convertTimezoneToUTC(moment(dateRange.start).format("YYYY-MM-DD") + " " + "00:00:01", timezoneOffset).trim();
-                const conversionToDate = utils.convertTimezoneToUTC(moment(dateRange.end).format("YYYY-MM-DD")+ " " + "23:59:59", timezoneOffset).trim();
+            if (tz !== "UTC" && dateRange?.start && timezoneOffset) {
+                const convertFromDate = utils.convertTimezoneToUTC(moment(dateRange?.start).format("YYYY-MM-DD") + " " + "00:00:01", timezoneOffset).trim();
+                const conversionToDate = utils.convertTimezoneToUTC(moment(dateRange?.end).format("YYYY-MM-DD")+ " " + "23:59:59", timezoneOffset).trim();
                 console.log("after conversion", convertFromDate, conversionToDate);
                 let payload = {
                     // fromDate: moment(dateRange.start).format("YYYY-MM-DD"),
@@ -131,10 +127,14 @@ const AppointmentGlobal = (props) => {
                 
                 let eventArr = []
                 for(let atten of attendances.attendance) {
+                    console.log("before check in", atten?.checkedInAt);
                     const convertTimezone = utils.convertUTCToTimezone(atten?.checkedInAt, timezoneOffset);
-                    console.log("After convert =====", convertTimezone);
+                    console.log("After convert check in", convertTimezone);
+                    let convertToCheckInFormat = moment(convertTimezone).format("YYYY-MM-DD hh:mm:ss");
+                    console.log("format check in", convertToCheckInFormat)
                     let eventObj = {
-                        start: atten.checkedInAt,
+                        // start: atten.checkedInAt,
+                        start: convertToCheckInFormat,
                         note: atten.note,
                         name: atten.contact.firstName + " " + atten.contact?.lastName,
                         email: atten.contact.email,
@@ -144,6 +144,7 @@ const AppointmentGlobal = (props) => {
                         // checkedInAt: convertUTCtoTZ(atten.checkedInAt),
                         checkedInAt: convertTimezone,
                     }
+                    // console.log("After check in", eventObj.checkedInAt);
                     eventArr.push(eventObj);
                 }
                 if (attendances.holidays) {
@@ -165,7 +166,7 @@ const AppointmentGlobal = (props) => {
                         eventArr.push(eventObj);
                     }
                 }
-            // console.log("eventArr", eventArr)
+            console.log("event Arr", eventArr)
                 setEvents(eventArr);
             }
         } catch (e) {
