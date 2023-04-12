@@ -201,13 +201,34 @@ useEffect(()=>{
           const holidays = [];
           attendances?.holidays?.length && attendances.holidays.forEach(holiday => {
             // console.log("EL",moment(el).isBetween(holiday.fromDate, holiday.toDate));
-            if(isToday(moment(holiday.fromDate).format("YYYY-MM-DD"),moment(holiday.toDate).format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))) {
+            console.log("=============", holiday);
+            const convertHolidayFrom = utils.convertUTCToTimezone(holiday?.fromDate, timezoneOffset);
+            const convertHolidayTo = utils.convertUTCToTimezone(holiday?.toDate, timezoneOffset);
+            // if(isToday(moment(holiday.fromDate).format("YYYY-MM-DD"),moment(holiday.toDate).format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))) {
+            //   setIsTodayHoliday(true);
+            // }
+            if(isToday(moment(convertHolidayFrom).format("YYYY-MM-DD"),moment(convertHolidayTo).format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))) {
               setIsTodayHoliday(true);
             }
+            // if (
+            //   moment(el).isBetween(holiday.fromDate, holiday.toDate) ||
+            //   moment(el).isSame(holiday.fromDate) ||
+            //   moment(el).isSame(holiday.toDate)
+            // ) {
+
+            //   holidays.push({
+            //     name: holiday.name,
+            //     title: holiday.name,
+            //     isHoliday: true,
+            //     className: "hasHoliday",
+            //     isBlankDate: false
+            //   });
+
+            // }
             if (
-              moment(el).isBetween(holiday.fromDate, holiday.toDate) ||
-              moment(el).isSame(holiday.fromDate) ||
-              moment(el).isSame(holiday.toDate)
+              moment(el).isBetween(convertHolidayFrom, convertHolidayTo) ||
+              moment(el).isSame(convertHolidayFrom) ||
+              moment(el).isSame(convertHolidayTo)
             ) {
 
               holidays.push({
@@ -330,7 +351,7 @@ useEffect(()=>{
     if (e.view.type == "listMonth") {
       let isHoliday = e.event.extendedProps?.isHoliday ? true : false;
       let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
-      let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
+      let eventDate = moment(dateSource).format("ddd, DD");
 
       console.log("Before conversion event date", dateSource);
       // let eventDate = utils.convertUTCToTimezone(convertUTCtoTZ(dateSource, "YYYY-MM-DD hh:mm:ss"), timezoneOffset).split(",")[0].split(" ").join(", ");
@@ -338,7 +359,7 @@ useEffect(()=>{
       console.log("After conversion Event Date", convertUTCToTimezone);
       if (isHoliday) {
         // eventDate = moment(e.event._instance.range.start).format("ddd, DD");
-        eventDate = convertUTCToTimezone.split(",")[0].split(" ").join(", ");
+        eventDate = moment(dateSource).format("ddd, DD");
       }
       // let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
       let eventTime = utils.convertUTCToTimezone(dateSource, timezoneOffset).split(" ").splice(3,4).join(" ");
