@@ -113,8 +113,8 @@ export default function AutomationHistory(props) {
         if (filterData.fromDate) {
             //utils.addQueryParameter('fromDate', filterData.fromDate);
             //utils.addQueryParameter('toDate', filterData.toDate);
-            utils.addQueryParameter('fromDate', utils.convertTimezoneToUTC(filterData.fromDate + " " + "00:00:01", timezoneOffset).replace(' ', 'T').trim() + '.000Z');
-            utils.addQueryParameter('toDate', utils.convertTimezoneToUTC(filterData.toDate + " " + "23:59:59", timezoneOffset).replace(' ', 'T').trim() + '.000Z');
+            utils.addQueryParameter('fromDate', utils.convertTimezoneToUTC(filterData.fromDate + " " + "00:00:01", timezoneOffset).replace(' ', ' ').trim());
+            utils.addQueryParameter('toDate', utils.convertTimezoneToUTC(filterData.toDate + " " + "23:59:59", timezoneOffset).replace(' ', ' ').trim());
 
             console.log("utils.convertTimezoneToUTC",filterData.fromDate, utils.convertTimezoneToUTC(filterData.fromDate + " " + "00:00:01", timezoneOffset).replace(' ', 'T') + '.000Z')
             console.log("utils.convertTimezoneToUTC",filterData.toDate, utils.convertTimezoneToUTC(filterData.toDate + " " + "23:59:59", timezoneOffset).replace(' ', 'T') + '.000Z')
