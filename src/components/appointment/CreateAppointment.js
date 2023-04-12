@@ -51,6 +51,7 @@ const CreateAppointment = (props) => {
     const [dependant, setDependant] = useState({
         ...initialDependentState,
     });
+    const [calenderMinDate, setCalenderMinDate] = useState();
 
     const [contact, setContact] = useState('');
     const [basicinfoFname, setBasicinfoFname] = useState('');
@@ -169,6 +170,13 @@ const CreateAppointment = (props) => {
     useEffect(()=>{
         console.log("Create appointment timezone", timezoneOffset);
     })
+
+    useEffect(() => {
+      let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+      let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+      let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
+      setCalenderMinDate(formatedDateTime);
+    }, []);
 
     const appointmentDataAdd = (e, type) => {
         
@@ -1105,7 +1113,7 @@ const CreateAppointment = (props) => {
                                                 className="cmnFieldStyle"
                                                 type="date"
                                                 placeholder="mm/dd/yyyy"
-                                                min={new Date(Date.now()).toISOString().split("T")[0]}
+                                                min={calenderMinDate}
                                                 onChange={(e) => appointmentDataAdd(e, "date")}
                                             />
                                         </div>
