@@ -27,6 +27,7 @@ const AppointmentGlobal = (props) => {
     const calenderRef = useRef([]);
     const [dateRange, setDateRange] = useState(false);
     const [tz, setTz] = useState(("UTC"));
+    const [defaultDate, setDefaultDate] = useState();
     const headerToolbar = {
         left: 'today',
         center: 'prev,title,next',
@@ -131,8 +132,11 @@ const AppointmentGlobal = (props) => {
                     // console.log("before check in", atten?.checkedInAt);
                     const convertTimezone = utils.convertUTCToTimezone(atten?.checkedInAt, timezoneOffset);
                     // console.log("After convert check in", convertTimezone);
-                    let convertToCheckInFormat = moment(convertTimezone).format("YYYY-MM-DD hh:mm:ss");
-                    // console.log("format check in", convertToCheckInFormat)
+                    // let convertToCheckInFormat = moment(convertTimezone).format("YYYY-MM-DD hh:mm:ss");
+                    let convertToCheckInFormat = moment(convertTimezone).format('YYYY-MM-DDTHH:mm:ss[Z]');
+                    // let convertToCheckInFormat = "2023-04-10T11:45:00.12Z";
+                    console.log("format check in", convertToCheckInFormat)
+                    setDefaultDate(moment(convertTimezone).format('YYYY-MM-DD'));
                     let eventObj = {
                         // start: atten.checkedInAt,
                         start: convertToCheckInFormat,
@@ -195,7 +199,14 @@ const AppointmentGlobal = (props) => {
         let api = calenderRef.current.getApi()
         api.changeView('listDay', e.date)
     }
-    
+    useEffect(()=>{
+        // const todayDate = moment(new Date()).format("YYYY-MM-DD");
+        // const todayTime = moment(new Date()).format("hh:mm:ss");
+        // setActiveStart(moment(utils.convertUTCToTimezone(todayDate + " " + todayTime, timezoneOffset)).format('YYYY-MM-DD'));
+        console.log("Today date", defaultDate);
+    }, [timezoneOffset && defaultDate]);
+
+
     return (
         <div className='dashInnerUI'>
             { isLoader ? <Loader/>: "" }
@@ -222,6 +233,9 @@ const AppointmentGlobal = (props) => {
                         moreLinkClick={moreLinkClick}
                         dateClick={clickOnDate}
                         ref={calenderRef}
+                        defaultDate={defaultDate}
+                        // initialDate={}
+                        // start={'2018-09-01T12:30:00Z'}
                         noEventsText={"No record found"}
                         eventContent={renderEventContent}
                         datesSet={handleMonthChange}

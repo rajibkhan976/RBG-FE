@@ -16211,3 +16211,15 @@ automation email setting css
 .privacyLink:hover {
     color: #333;
 }
+
+/* .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+    background: #f6f6f6;
+    border: 1px solid #c5c5c5;
+    color: #454545;  
+  } */
+
+  /* button.ui-datepicker-current { display: none !important; } */
+  
+  /* .global-attendance .fc .fc-daygrid-day.fc-day-today{
+    background: #0099ff !important;
+  } */
