@@ -409,7 +409,7 @@ const Appointment = (props) => {
                               </figure>
                               <p>
                                 {/* {histItem.date} */}
-                                {utils.convertUTCToTimezone(histItem?.date.trim(), timezoneOffset).split(" ").splice(0,3).join(" ")}
+                                {utils.convertUTCToTimezone(histItem?.fromDateTime.trim(), timezoneOffset).split(" ").splice(0,3).join(" ")}
                                 <strong className="appTime">
                                   {/* {histItem.date + " " + utils.timeConversion(histItem.fromTime)} */}
                                   {/* {histItem.date + " " + utils.timeConversion(histItem.toTime)} */}
