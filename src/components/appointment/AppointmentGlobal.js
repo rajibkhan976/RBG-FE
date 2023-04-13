@@ -47,11 +47,12 @@ const AppointmentGlobal = (props) => {
           return (
               <>
                   {/* <b>{"e.event.extendedProps.title"}</b> */}
+                  <span className='fc-list-nameTd'>{utils.convertUTCToTimezone(e.event._def.extendedProps.data.fromDateTime, timezoneOffset).split(" ").splice(0, 3).join(" ")}</span>
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                   <span className='fc-list-nameTd'>{utils.convertUTCToTimezone(e.event._def.extendedProps.data.fromDateTime, timezoneOffset).split(" ").splice(3, 5).join(" ")}</span>
                   <b>-</b>
                   <span className='fc-list-nameTd'>{utils.convertUTCToTimezone(e.event._def.extendedProps.data.toDateTime, timezoneOffset).split(" ").splice(3, 5).join(" ")}</span>
-                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                  <span className='fc-list-nameTd'>{utils.convertUTCToTimezone(e.event._def.extendedProps.data.fromDateTime, timezoneOffset).split(" ").splice(0, 3).join(" ")}</span>
+                  
                   {/* <span className='fc-list-emailTd'>{"e.event.extendedProps.email"}</span> */}
                   {/* <span className='fc-list-dateTd'>{"eventDate"}</span> */}
                   {/* <span className='fc-list-event-time'>{"eventTime"}</span> */}
@@ -74,7 +75,7 @@ const AppointmentGlobal = (props) => {
       setIsLoader(false);
       if (list.appointments.length && timezoneOffset) {
         let eventArray = [];        
-        list.appointments.map((appointment, index) => {
+        list.appointments.map((appointment) => {
           // eventArray.push({
           //     id: appointment._id,
           //     title: appointment.agenda,
@@ -106,17 +107,19 @@ const AppointmentGlobal = (props) => {
           if (moment(appointment?.date, "YYYY-MM-DD")._f === "YYYY-MM-DD" && appointment?.fromDateTime && appointment?.toDateTime) {
             let convartFromTime = utils.convertUTCToTimezone(appointment?.fromDateTime, timezoneOffset);
             let convartToTime = utils.convertUTCToTimezone(appointment?.toDateTime, timezoneOffset);
-            let startAppointment = moment(convartFromTime).format("YYYY-MM-DD") + "T" + moment(convartFromTime).format("HH:mm:ss").trim();
-            let endAppointment = moment(convartFromTime).format("YYYY-MM-DD") + "T" + moment(convartToTime).format("HH:mm:ss").trim();
-            console.log("appointment time zone 4", convartFromTime, convartToTime);
+            let startAppointment = moment(convartFromTime).format("YYYY-MM-DDTHH:mm:ss[Z]").trim();
+            let endAppointment = moment(convartFromTime).format("YYYY-MM-DDTHH:mm:ss[Z]").trim();
+            console.log("appointment time zone 4", startAppointment);
             eventArray.push({
               id: appointment._id,
               title: appointment.agenda,
               data: appointment,
               // start: appointment?.date + "T" + moment(appointment.fromTime, "hh:mm A").format("HH:mm:ss"),
               // end: appointment?.date + "T" + moment(appointment.toTime, "hh:mm A").format("HH:mm:ss"),
-              start: moment(convartFromTime).format("YYYY-MM-DD") + "T" + moment(convartFromTime).format("HH:mm:ss").toString().trim(),
-              end: moment(convartToTime).format("YYYY-MM-DD") + "T" + moment(convartToTime).format("HH:mm:ss").toString().trim()
+              // start: moment(convartFromTime).format("YYYY-MM-DD") + "T" + moment(convartFromTime).format("HH:mm:ss").toString().trim(),
+              // end: moment(convartToTime).format("YYYY-MM-DD") + "T" + moment(convartToTime).format("HH:mm:ss").toString().trim(),
+              start: startAppointment,
+              end: endAppointment,
             });
           }
         });
