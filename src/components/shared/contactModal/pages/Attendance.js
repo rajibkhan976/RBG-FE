@@ -98,9 +98,15 @@ useEffect(()=>{
     try {
     if (dateRange?.start) {
       setIsLoader(true);
+      const convertFromDate = utils.convertTimezoneToUTC( dateRange.start.getFullYear() + "-" + String(dateRange.start.getMonth() + 1).padStart(2, "0") + "-" + String(dateRange.start.getDate()).padStart(2, "0") + " " + "00:00:01", timezoneOffset);
+      const convertToDate = utils.convertTimezoneToUTC(dateRange.start.getFullYear() + "-" + String(dateRange.start.getMonth() + 1).padStart(2, "0") + "-" + new Date(dateRange?.start.getFullYear(), dateRange?.start.getMonth() + 1, 0).getDate() + " " + "23:59:59", timezoneOffset);
+      console.log("Date range start and end", convertFromDate, convertToDate);
+
       let payload = {
-        fromDate: moment(dateRange.start).tz(tz).add(1, "days").format("YYYY-MM-DD"),
-        toDate: moment(dateRange.end).tz(tz).subtract(1, "days").format("YYYY-MM-DD"),
+        // fromDate: moment(dateRange.start).tz(tz).add(1, "days").format("YYYY-MM-DD"),
+        // toDate: moment(dateRange.end).tz(tz).subtract(1, "days").format("YYYY-MM-DD"),
+        fromDate: convertFromDate,
+        toDate: convertToDate,
       }
       let todayDate = momentTZ.tz(tz);
       let attendances = await AttendanceServices.fetchAttendances(payload, props.contactId);
@@ -355,8 +361,8 @@ useEffect(()=>{
 
       console.log("Before conversion event date", dateSource);
       // let eventDate = utils.convertUTCToTimezone(convertUTCtoTZ(dateSource, "YYYY-MM-DD hh:mm:ss"), timezoneOffset).split(",")[0].split(" ").join(", ");
-      let convertUTCToTimezone = utils.convertUTCToTimezone(dateSource, timezoneOffset);
-      console.log("After conversion Event Date", convertUTCToTimezone);
+      // let convertUTCToTimezone = utils.convertUTCToTimezone(dateSource, timezoneOffset);
+      // console.log("After conversion Event Date", convertUTCToTimezone);
       if (isHoliday) {
         // eventDate = moment(e.event._instance.range.start).format("ddd, DD");
         eventDate = moment(dateSource).format("ddd, DD");

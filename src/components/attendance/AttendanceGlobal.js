@@ -74,6 +74,7 @@ const AppointmentGlobal = (props) => {
             let eventDate = e.event.extendedProps.checkedInAt.toString().split(" ").splice(0,3).join(" ");
             let eventTime = e.event.extendedProps.checkedInAt.toString().split(" ").splice(3,4).join(" ");
 
+            console.log("<br>");
             return (
                 <>
                     {!isHoliday ? 
@@ -113,10 +114,10 @@ const AppointmentGlobal = (props) => {
     
     useEffect(async () => {
         try {
-            if (tz !== "UTC" && dateRange?.start && timezoneOffset) {
+            if (dateRange?.start && timezoneOffset) {
                 const convertFromDate = utils.convertTimezoneToUTC(moment(dateRange?.start).format("YYYY-MM-DD") + " " + "00:00:01", timezoneOffset).trim();
                 const conversionToDate = utils.convertTimezoneToUTC(moment(dateRange?.end).format("YYYY-MM-DD")+ " " + "23:59:59", timezoneOffset).trim();
-                console.log("after conversion", convertFromDate, conversionToDate);
+                // console.log("after conversion", convertFromDate, conversionToDate);
                 let payload = {
                     // fromDate: moment(dateRange.start).format("YYYY-MM-DD"),
                     // toDate: moment(dateRange.end).format("YYYY-MM-DD"),
@@ -127,11 +128,11 @@ const AppointmentGlobal = (props) => {
                 
                 let eventArr = []
                 for(let atten of attendances.attendance) {
-                    console.log("before check in", atten?.checkedInAt);
+                    // console.log("before check in", atten?.checkedInAt);
                     const convertTimezone = utils.convertUTCToTimezone(atten?.checkedInAt, timezoneOffset);
-                    console.log("After convert check in", convertTimezone);
+                    // console.log("After convert check in", convertTimezone);
                     let convertToCheckInFormat = moment(convertTimezone).format("YYYY-MM-DD hh:mm:ss");
-                    console.log("format check in", convertToCheckInFormat)
+                    // console.log("format check in", convertToCheckInFormat)
                     let eventObj = {
                         // start: atten.checkedInAt,
                         start: convertToCheckInFormat,
@@ -149,7 +150,7 @@ const AppointmentGlobal = (props) => {
                 }
                 if (attendances.holidays) {
                     for(let holiday of attendances.holidays) {
-                        console.log("Holiday====", holiday);
+                        // console.log("Holiday====", holiday);
                         const convertHolidayStart = utils.convertUTCToTimezone(holiday?.fromDate, timezoneOffset);
                         const convertHolidayEnd = utils.convertUTCToTimezone(holiday?.toDate, timezoneOffset);          
                         let eventObj = {
@@ -182,6 +183,7 @@ const AppointmentGlobal = (props) => {
 
 
     const moreLinkContent = (e) => {
+        console.log("all member", e);
         return (
             <>
                 <span className='dayCellEvent'><span className='number'>{ e.num }</span> <span>Member attended</span></span>
