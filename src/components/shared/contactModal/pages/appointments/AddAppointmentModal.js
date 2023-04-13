@@ -42,6 +42,8 @@ const AddAppointmentModal = (props) => {
   const dispatch = useDispatch();
   const [isDisabled, setIsDisabled] = useState(false);
   const todayDate = moment();
+  const [calenderMinDate, setCalenderMinDate] = useState();
+
 
   // const appoPageList = (e) => {
   //   // console.log("appoPageList", e.target.scrollTop, (e.target.scrollHeight * 0.30));
@@ -78,6 +80,13 @@ const AddAppointmentModal = (props) => {
   useEffect(()=>{
     console.log("Add appointment create", timezoneOffset);
   })
+
+  useEffect(() => {
+    let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+    let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+    let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
+    setCalenderMinDate(formatedDateTime);
+  }, []);
 
   // validation on submission of form
   const validateAppointment = (e) => {
@@ -527,7 +536,7 @@ const AddAppointmentModal = (props) => {
                       className="cmnFieldStyle"
                       type="date"
                       placeholder="mm/dd/yyyy"
-                      min={new Date(Date.now()).toISOString().split("T")[0]}
+                      min={calenderMinDate}
                       onChange={(e) => appointmentDataAdd(e, "date")}
                     />
                   </div>

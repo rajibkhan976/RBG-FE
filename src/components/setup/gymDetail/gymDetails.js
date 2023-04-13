@@ -310,7 +310,6 @@ const GymDetails = (props) => {
       } else if (name === "contactEmail" && !emailRegex.test(value)) {
         setValidateMsg({ ...validateMsg, disabled: true, contactEmail: "Please enter a valid email address" });
       } else if (name === "timezone" && value.length === 0) {
-        alert("hy")
         setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select a timezone" });
       } else if (name === "countryCode" && value.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select country code" });

@@ -207,17 +207,13 @@ useEffect(()=>{
           const holidays = [];
           attendances?.holidays?.length && attendances.holidays.forEach(holiday => {
             // console.log("EL",moment(el).isBetween(holiday.fromDate, holiday.toDate));
-
-            console.log("Holiday ======", holiday);
-            const holidayFromDate = utils.convertUTCToTimezone(holiday?.fromDate, timezoneOffset);
-            const holidayToDate = utils.convertUTCToTimezone(holiday?.toDate, timezoneOffset);
-            console.log("Holiday ====== convertion", holidayFromDate, holidayToDate);
-
-
+            console.log("=============", holiday);
+            const convertHolidayFrom = utils.convertUTCToTimezone(holiday?.fromDate, timezoneOffset);
+            const convertHolidayTo = utils.convertUTCToTimezone(holiday?.toDate, timezoneOffset);
             // if(isToday(moment(holiday.fromDate).format("YYYY-MM-DD"),moment(holiday.toDate).format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))) {
             //   setIsTodayHoliday(true);
             // }
-            if(isToday(holidayFromDate, holidayToDate, moment().format("YYYY-MM-DD"))) {
+            if(isToday(moment(convertHolidayFrom).format("YYYY-MM-DD"),moment(convertHolidayTo).format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))) {
               setIsTodayHoliday(true);
             }
             // if (
@@ -236,9 +232,9 @@ useEffect(()=>{
 
             // }
             if (
-              moment(el).isBetween(holidayFromDate, holidayToDate) ||
-              moment(el).isSame(holidayFromDate) ||
-              moment(el).isSame(holidayToDate)
+              moment(el).isBetween(convertHolidayFrom, convertHolidayTo) ||
+              moment(el).isSame(convertHolidayFrom) ||
+              moment(el).isSame(convertHolidayTo)
             ) {
 
               holidays.push({
@@ -361,7 +357,6 @@ useEffect(()=>{
     if (e.view.type == "listMonth") {
       let isHoliday = e.event.extendedProps?.isHoliday ? true : false;
       let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
-      // let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
       let eventDate = moment(dateSource).format("ddd, DD");
 
       console.log("Before conversion event date", dateSource);
@@ -370,7 +365,6 @@ useEffect(()=>{
       // console.log("After conversion Event Date", convertUTCToTimezone);
       if (isHoliday) {
         // eventDate = moment(e.event._instance.range.start).format("ddd, DD");
-        // eventDate = convertUTCToTimezone.split(",")[0].split(" ").join(", ");
         eventDate = moment(dateSource).format("ddd, DD");
       }
       // let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
