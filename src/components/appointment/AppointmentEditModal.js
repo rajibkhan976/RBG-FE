@@ -46,6 +46,7 @@ const AppointmentEditModal = (props) => {
   const [canceled, setCancelled] = useState({note: ""})
   const loggedInUser = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
+  const [calenderMinDate, setCalenderMinDate] = useState();
   const resetAgenda = (e) => {
     e.preventDefault();
     setIsEditAgenda(false);
@@ -60,6 +61,13 @@ const AppointmentEditModal = (props) => {
   useEffect(()=>{
       console.log("transaction time zone:", timezoneOffset);
   },[timezoneOffset]);
+
+  useEffect(() => {
+    let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+    let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+    let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
+    setCalenderMinDate(formatedDateTime);
+  }, []);
 
   const confirmAgenda = async (e) => {
     e.preventDefault();
@@ -226,27 +234,53 @@ const AppointmentEditModal = (props) => {
   };
 
   const getEditedDate = (e) => {
-    console.log("Date: " + e.target.value);
-    let validErrors = { ...rescheduleErrors };
+    // console.log("Date: " + e.target.value);
+    // let validErrors = { ...rescheduleErrors };
 
-    if (e.target.value.trim() !== "") {
-      if (new Date(e.target.value) <= new Date()) {
-        validErrors.date = "Invalid date of appointment.";
-      } else {
-        validErrors.date = "";
-        // let newDateString = e.target.value.split("-")[1] + "/" + e.target.value.split("-")[2] + "/" + e.target.value.split("-")[0];
-        setEditedReschedule({ ...editedReschedule, date: e.target.value });
-      }
+    // if (e.target.value.trim() !== "") {
+    //   if (new Date(e.target.value) < new Date()) {
+    //     validErrors.date = "Invalid date of appointment.";
+    //   } else {
+    //     validErrors.date = "";
+    //     setEditedReschedule({ ...editedReschedule, date: e.target.value });
+    //   }
+    // } else {
+    //   setEditedReschedule({ ...editedReschedule, date: "" });
+    //   validErrors.date = "Invalid date of appointment.";
+    // }
+    // setRescheduleErrors(validErrors);
+    let validErrors = { ...rescheduleErrors };
+    setEditedReschedule({ ...editedReschedule, date: e.target.value });
+    
+    const convertedChoosedTime = utils.convertTimezoneToUTC(e.target.value + " " + moment(editedReschedule.fromTime, "HH:mm:ss").format("HH:mm:ss"),timezoneOffset);
+    const convertedLocalTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+    const localTime = moment(convertedLocalTime, "YYYY-MM-DD HH:mm:ss");
+    const choosedTime = moment(convertedChoosedTime, "YYYY-MM-DD HH:mm:ss");
+    const diffFromToday = choosedTime.diff(localTime, "minutes");
+    
+    if (diffFromToday < 2) {
+      validErrors.fromTime = "Please choose valid time";
     } else {
-      setEditedReschedule({ ...editedReschedule, date: "" });
-      validErrors.date = "Invalid date of appointment.";
+      validErrors.fromTime = "";
+      
     }
+
     setRescheduleErrors(validErrors);
   };
   
 
   const fromScheduleDateEdit = (fromReschedule) => {
     // console.log(fromValue && fromValue.format('h:mm a').toUpperCase());
+    const convertedChoosedTime = utils.convertTimezoneToUTC(utils.dateConversion(editedReschedule.date) + " " + fromReschedule.format("HH:mm:ss"),timezoneOffset);
+    const convertedLocalTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+    const localTime = moment(convertedLocalTime, "YYYY-MM-DD HH:mm:ss");
+    const choosedTime = moment(convertedChoosedTime, "YYYY-MM-DD HH:mm:ss");
+    const diffFromToday = choosedTime.diff(localTime, "minutes");
+
+    console.log("Time diff ======================== ", diffFromToday, rescheduleErrors, editedReschedule  );
+
+
+
     let validErrors = { ...rescheduleErrors };
     
     if(fromReschedule && fromReschedule != null) {
@@ -255,8 +289,11 @@ const AppointmentEditModal = (props) => {
           //validErrors.toTime = "Invalid end time.";
           setEditedReschedule({...editedReschedule, fromTime: fromReschedule.format('h:mm a').toUpperCase()})
         }
+        else if(diffFromToday < 2) {
+          validErrors.fromTime = "Please choose valid time"
+        }
         else {
-          console.log(parseFloat(editedReschedule.toTime.split(" ")[0].replace(":", "")), parseFloat(fromReschedule.format('h:mm a').split(" ")[0].replace(":", "")));
+            console.log(parseFloat(editedReschedule.toTime.split(" ")[0].replace(":", "")), parseFloat(fromReschedule.format('h:mm a').split(" ")[0].replace(":", "")));
           if(parseFloat(editedReschedule.toTime.split(" ")[0].replace(":", "")) <= parseFloat(fromReschedule.format('h:mm a').split(" ")[0].replace(":", ""))) {
             if(editedReschedule.toTime.split(" ")[1] === fromReschedule.format('h:mm a').split(" ")[1].toUpperCase()) {
               //validErrors.fromTime = "Invalid start time.";
@@ -269,6 +306,7 @@ const AppointmentEditModal = (props) => {
             validErrors.fromTime = ""
           }
           setEditedReschedule({...editedReschedule, fromTime: fromReschedule.format('h:mm a').toUpperCase()})
+          
         }
     }
     else {
@@ -282,11 +320,19 @@ const AppointmentEditModal = (props) => {
     // console.log(toReschedule);
     let validErrors = { ...rescheduleErrors };
 
+    let choosedFromTime = moment(editedReschedule.date + " " + editedReschedule.fromTime, "YYYY-MM-DD HH:mm:ss");
+    let choosedToTime = moment(editedReschedule.date + " " + toReschedule.format("HH:mm:ss"), "YYYY-MM-DD HH:mm:ss");
+    let timeDiff = choosedToTime.diff(choosedFromTime, "minutes");
+    console.log("To time ============= ", toReschedule);
+
     if(toReschedule && toReschedule != null) {
       if(editedReschedule.fromTime.trim() === ""){
         validErrors.toTime = ""
        // validErrors.fromTime = "Invalid start time.";
         setEditedReschedule({...editedReschedule, toTime: toReschedule.format('h:mm a').toUpperCase()})
+      } else if (timeDiff < 1) {
+        validErrors.toTime = "Please choose valid time";
+        console.log("Invalid to time ============= ", timeDiff);
       }
       else {
         if(parseFloat(editedReschedule.fromTime.split(" ")[0].replace(":", "")) >= parseFloat(toReschedule.format('h:mm a').split(" ")[0].replace(":", ""))) {
@@ -357,32 +403,43 @@ const AppointmentEditModal = (props) => {
     editedReschedule['toDateTime'] = toDateConversion;
 
     console.log("edit reschedule payload", fromDateConversion, toDateConversion, editedReschedule);
-    try {
-      setIsLoader(true);
-      const result = await AppointmentServices.rescheduleAppointment(props.appointmentEdit._id, editedReschedule);
-      if(result){
-        props.resheduleAppointment(props.appointmentEdit._id, editedReschedule, loggedInUser);
+    if (rescheduleErrors.date === "" &&
+    rescheduleErrors.fromTime === "" &&
+    rescheduleErrors.toTime === "" && 
+    rescheduleErrors.note === ""){
+      try {
+        setIsLoader(true);
+        const result = await AppointmentServices.rescheduleAppointment(props.appointmentEdit._id, editedReschedule);
+        if(result){
+          props.resheduleAppointment(props.appointmentEdit._id, editedReschedule, loggedInUser);
+          setIsLoader(false);
+          setShouldReschedule(false)
+          dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: "Appointment rescheduled successfully.",
+            typeMessage: 'success'
+          });
+          props.setEditAppointment(false);
+        }
+      } catch (e) {
         setIsLoader(false);
-        setShouldReschedule(false)
         dispatch({
           type: actionTypes.SHOW_MESSAGE,
-          message: "Appointment rescheduled successfully.",
-          typeMessage: 'success'
+          message: e.message,
+          typeMessage: 'error'
         });
-        props.setEditAppointment(false);
       }
-    } catch (e) {
-      setIsLoader(false);
+    } else {
       dispatch({
         type: actionTypes.SHOW_MESSAGE,
-        message: e.message,
+        message: 'Please choose valid "From" or "To" time',
         typeMessage: 'error'
       });
     }
   };
 
   const rescheduleDisabled = () => {
-    if(editedReschedule.note.trim() === "") {
+    if(editedReschedule.note.trim() == "") {
       console.log("NOTE empty");
       return true
     }
@@ -808,7 +865,7 @@ const AppointmentEditModal = (props) => {
                           placeholder="mm/dd/yyyy"
                           defaultValue={moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format("YYYY-MM-DD")}
                           // defaultValue={moment(props.appointmentEdit.date).format("YYYY-MM-DD") ? moment(props.appointment.date, "YYYY-MM-DD").format("YYYY-MM-DD"): moment(props.appointment.date, "MM/DD/YYYY").format("YYYY-MM-DD")}
-                          min={new Date(Date.now() + ( 3600 * 1000 * 24)).toISOString().split("T")[0]}
+                          min={calenderMinDate}
                           ref={reschDate}
                           onChange={getEditedDate}
                           // value={moment(props.appointmentEdit.date, "MM/DD/YYYY").format("YYYY-MM-DD")}

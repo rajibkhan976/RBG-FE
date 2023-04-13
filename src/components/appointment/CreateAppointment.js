@@ -596,7 +596,7 @@ const CreateAppointment = (props) => {
         appointmentData['fromDateTime'] = convertFromDateTime.trim();
         appointmentData['toDateTime'] = convertToDateTime.trim();
         appointmentData['date'] = utils.dateConversion(appointmentData.date).trim();
-        if (valid) {
+        if (valid && appointmentErrors.fromTime === "") {
             setIsLoader(true);
             try {
                 let newAppointment = await AppointmentServices.saveAppointment(appointmentData);

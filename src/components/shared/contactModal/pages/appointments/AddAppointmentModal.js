@@ -406,7 +406,7 @@ const AddAppointmentModal = (props) => {
     //   toDateTime: conversionTo
     // })
     console.log("Appointment Date", appointmentData);
-    if (valid) {
+    if (valid && validationErrors.fromTime === "") {
       setIsLoader(true);
       try {
         let newAppointment = await AppointmentServices.saveAppointment(appointmentData);
