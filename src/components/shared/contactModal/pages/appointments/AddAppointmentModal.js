@@ -7,7 +7,8 @@ import appointmentImg from "../../../../../assets/images/appointments.svg";
 import tags from "../../../../../assets/images/tags.svg";
 import arrow_forward from "../../../../../assets/images/arrow_forward.svg";
 import crossWhite from "../../../../../assets/images/cross_w.svg";
-
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 import Loader from "../../../Loader";
 import Scrollbars from "react-custom-scrollbars-2";
 
@@ -19,6 +20,7 @@ import TagList from "../../../../appointment/TagList";
 import { utils } from "../../../../../helpers"
 
 const AddAppointmentModal = (props) => {
+  const [date, setDate] = useState();
   const toggleTags = useRef(null);
   const [isLoader, setIsLoader] = useState(false);
   const [tagListToggle, setTagListToggle] = useState(false);
@@ -198,6 +200,55 @@ const AddAppointmentModal = (props) => {
     setIsDisabled(isDisabled);
   };
 
+  const setStartDate = (val) => {
+    let validErrors = {...validationErrors};
+    let isDisabled = false;
+    let formattedDate = `${val.getFullYear()}-${
+        val.getMonth() + 1
+      }-${val.getDate()}`;
+    setDate(val);
+
+    const dateDiff = utils.dateDiff(formattedDate);
+    if (dateDiff.difference <= 0) {
+      console.log("Today")
+      const fromTime = appointmentData.fromTime;
+      if (fromTime) {
+        console.log("From Time")
+        const appDateTime = moment(`${formattedDate.toString()} ${appointmentData.fromTime.toString()}`).format("YYYY-MM-DD h:mm a");
+        const diffFromToday = todayDate.diff(appDateTime, "minutes");
+        console.log(diffFromToday);
+        if (diffFromToday > 0) {
+          console.log("Invalid time")
+          validErrors.fromTime = "Invalid from time";
+          isDisabled = true;
+        } else {
+          validErrors.fromTime = "";
+          isDisabled = false;
+        }
+      }
+    } else {
+      validErrors.fromTime = "";
+      isDisabled = false;
+      validErrors.date = "";
+      // let newDateString = formattedDate.split("-")[1] + "/" + formattedDate.split("-")[2] + "/" + formattedDate.split("-")[0];
+      let newDateString = formattedDate;
+      setAppointmentData({ 
+        ...appointmentData, 
+        date: newDateString,
+        fromDateTime: appointmentData.fromTime,
+        toDateTime: appointmentData.toTime
+      });
+    }
+    // validErrors.fromTime = "";
+    validErrors.date = "";
+    isDisabled = false;
+    let newDateString = formattedDate;
+      
+    setAppointmentData({ ...appointmentData, date: newDateString });
+    setValidationErrors(validErrors);
+    setIsDisabled(isDisabled);
+  }
+
   const fromDateAdd = (fromValue) => {
     console.log("From time::::::::::::::: ", fromValue.format("HH:mm:ss"));
     console.log("Local time============== ", moment().utc().format("YYYY-MM-DD HH:mm:ss"));
@@ -252,15 +303,11 @@ const AddAppointmentModal = (props) => {
           isDisabled = false;
         }
         setAppointmentData({
-          // ...appointmentData,
-          // fromTime: fromValue.format("h:mm a").toUpperCase(),
           ...appointmentData,
           fromTime: fromValue.format("h:mm a").toUpperCase(),
           fromDateTime: utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(fromValue.format("h:mm a").toUpperCase()), timezoneOffset).trim(),
         });
       }
-      // console.clear()
-      // console.log("Time Diff", appointmentData.toTime);
       if (!appointmentData.date) {
         validErrors.date = "Please choose a date";
         isDisabled = true;
@@ -275,11 +322,8 @@ const AddAppointmentModal = (props) => {
         validErrors.fromTime = "";
         isDisabled = false;
       }
-    } else {
-      // validErrors.fromTime = "Invalid start time.";
     }
     console.log("Is Disabled", isDisabled);
-    // parseInt(e.target.value.replace(":","")) >= parseInt(appointmentData.toTime.replace(":",""))
     setValidationErrors(validErrors);
     setIsDisabled(isDisabled);
   };
@@ -532,12 +576,21 @@ const AddAppointmentModal = (props) => {
                 >
                   <div className="cmnFieldName">Choose a date</div>
                   <div className="cmnFormField">
-                    <input
+                    {/* <input
                       className="cmnFieldStyle"
                       type="date"
                       placeholder="mm/dd/yyyy"
                       min={calenderMinDate}
                       onChange={(e) => appointmentDataAdd(e, "date")}
+                    /> */}
+                    <DatePicker 
+                        className="cmnFieldStyle"
+                        selected={date}
+                        format="dd/MM/yyyy"
+                        dateFormat="dd/MM/yyyy"
+                        placeholder="mm/dd/yyyy"  
+                        minDate={new Date(calenderMinDate)}
+                        onChange={(e) => setStartDate(e)} 
                     />
                   </div>
                   {validationErrors.date.trim() !== "" ? (

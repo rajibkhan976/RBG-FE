@@ -12,8 +12,11 @@ import Loader from "../shared/Loader";
 import TagList from "./TagList";
 import moment from "moment";
 import { utils } from '../../helpers';
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 
 const AppointmentEditModal = (props) => {
+  const [date, setDate] = useState();
   const agendaRef = useRef(null);
   const reschDate = useRef(null);
   const noteReschedule = useRef(null);
@@ -67,6 +70,9 @@ const AppointmentEditModal = (props) => {
     let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
     let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
     setCalenderMinDate(formatedDateTime);
+
+    // let selectedDate = moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format("YYYY-MM-DD");
+    // setDate("2023-04-16");
   }, []);
 
   const confirmAgenda = async (e) => {
@@ -234,21 +240,6 @@ const AppointmentEditModal = (props) => {
   };
 
   const getEditedDate = (e) => {
-    // console.log("Date: " + e.target.value);
-    // let validErrors = { ...rescheduleErrors };
-
-    // if (e.target.value.trim() !== "") {
-    //   if (new Date(e.target.value) < new Date()) {
-    //     validErrors.date = "Invalid date of appointment.";
-    //   } else {
-    //     validErrors.date = "";
-    //     setEditedReschedule({ ...editedReschedule, date: e.target.value });
-    //   }
-    // } else {
-    //   setEditedReschedule({ ...editedReschedule, date: "" });
-    //   validErrors.date = "Invalid date of appointment.";
-    // }
-    // setRescheduleErrors(validErrors);
     let validErrors = { ...rescheduleErrors };
     setEditedReschedule({ ...editedReschedule, date: e.target.value });
     
@@ -267,6 +258,30 @@ const AppointmentEditModal = (props) => {
 
     setRescheduleErrors(validErrors);
   };
+
+  const setStartDate = (val) => {
+    let validErrors = {...rescheduleErrors};
+    let formattedDate = `${val.getFullYear()}-${
+        val.getMonth() + 1
+      }-${val.getDate()}`;
+    setDate(val);
+    console.log("Date val=========================================", val);
+
+    const convertedChoosedTime = utils.convertTimezoneToUTC(formattedDate + " " + moment(editedReschedule.fromTime, "HH:mm:ss").format("HH:mm:ss"),timezoneOffset);
+    const convertedLocalTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+    const localTime = moment(convertedLocalTime, "YYYY-MM-DD HH:mm:ss");
+    const choosedTime = moment(convertedChoosedTime, "YYYY-MM-DD HH:mm:ss");
+    const diffFromToday = choosedTime.diff(localTime, "minutes");
+    
+    if (diffFromToday < 2) {
+      validErrors.fromTime = "Please choose valid time";
+    } else {
+      validErrors.fromTime = "";
+      
+    }
+
+    setRescheduleErrors(validErrors);
+  }
   
 
   const fromScheduleDateEdit = (fromReschedule) => {
@@ -859,7 +874,7 @@ const AppointmentEditModal = (props) => {
                       <div className="cmnFieldName">Choose a date</div>
                       <div className="cmnFormField">
                         {moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format("YYYY-MM-DD")}
-                        <input
+                        {/* <input
                           className="cmnFieldStyle"
                           type="date"
                           placeholder="mm/dd/yyyy"
@@ -869,6 +884,16 @@ const AppointmentEditModal = (props) => {
                           ref={reschDate}
                           onChange={getEditedDate}
                           // value={moment(props.appointmentEdit.date, "MM/DD/YYYY").format("YYYY-MM-DD")}
+                        />
+                        {console.log('llllllll', date)} */}
+                        <DatePicker 
+                            className="cmnFieldStyle"
+                            selected={date === undefined ? new Date(moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format("YYYY-MM-DD")) : date}
+                            format="dd/MM/yyyy"
+                            dateFormat="dd/MM/yyyy"
+                            placeholder="mm/dd/yyyy"  
+                            minDate={new Date(calenderMinDate)}
+                            onChange={(e) => setStartDate(e)} 
                         />
                       </div>
                       {rescheduleErrors.date.trim() !== "" ? (

@@ -249,6 +249,9 @@ const AppointmentGlobal = (props) => {
       fetchList();
     }
   }, [])
+  useEffect(() => {
+    fetchList();
+  }, [timezoneOffset])
 
   return (
     <>

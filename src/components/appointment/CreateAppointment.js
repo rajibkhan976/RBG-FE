@@ -7,6 +7,8 @@ import arrow_forward from "../../assets/images/arrow_forward.svg";
 import cross from "../../assets/images/cross.svg";
 import updown from "../../assets/images/updown.png";
 import verify_icon from "../../assets/images/verifyIcon.svg";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 
 import {TagServices} from "../../services/setup/tagServices";
 import {ContactService} from "../../services/contact/ContactServices";
@@ -52,7 +54,7 @@ const CreateAppointment = (props) => {
         ...initialDependentState,
     });
     const [calenderMinDate, setCalenderMinDate] = useState();
-
+    const [date, setDate] = useState();
     const [contact, setContact] = useState('');
     const [basicinfoFname, setBasicinfoFname] = useState('');
     const [basicinfoLname, setBasicinfoLname] = useState('');
@@ -179,6 +181,7 @@ const CreateAppointment = (props) => {
     }, []);
 
     const appointmentDataAdd = (e, type) => {
+        console.log("E ==========================", e)
         
         let validErrors = {...appointmentErrors};
         let isDisabled = false;
@@ -241,6 +244,50 @@ const CreateAppointment = (props) => {
         setAppointmentErrors(validErrors);
         setIsDisabled(isDisabled)
     };
+
+    const setStartDate = (val) => {
+        let validErrors = {...appointmentErrors};
+        let isDisabled = false;
+        let formattedDate = `${val.getFullYear()}-${
+            val.getMonth() + 1
+          }-${val.getDate()}`;
+        console.log('vallllllllllllllllllllllllllll', formattedDate)
+        setDate(val);
+        const dateDiff = utils.dateDiff(formattedDate);
+        if(dateDiff.difference <= 0) {
+            console.log("Today")
+            const fromTime = appointmentData.fromTime;
+            if(fromTime) {
+                console.log("From Time")
+                const appDateTime = moment(`${formattedDate.toString()} ${appointmentData.fromTime.toString()}`).format("YYYY-MM-DD h:mm a");
+                const diffFromToday = todayDate.diff(appDateTime, "minutes");
+
+                
+
+
+                console.log(diffFromToday);
+                if(diffFromToday > 0) {
+                    console.log("Invalid time")
+                    validErrors.fromTime = "Invalid from time";
+                    isDisabled = true;
+                } else {
+                    validErrors.fromTime = "";
+                    isDisabled = false;
+                }
+            }
+        } else {
+            validErrors.fromTime = "";
+            isDisabled = false;
+        }
+        // validErrors.fromTime = "";
+        validErrors.date = "";
+        isDisabled = false;
+        let newDateString = formattedDate;
+        console.log(newDateString);
+        setAppointmentData({...appointmentData, date: newDateString});
+        setAppointmentErrors(validErrors);
+        setIsDisabled(isDisabled);
+    }
 
     const handleContactName = async (e) => {
         e.preventDefault();
@@ -1109,12 +1156,14 @@ const CreateAppointment = (props) => {
                                     >
                                         <div className="cmnFieldName">Choose a date</div>
                                         <div className="cmnFormField">
-                                            <input
+                                            <DatePicker 
                                                 className="cmnFieldStyle"
-                                                type="date"
-                                                placeholder="mm/dd/yyyy"
-                                                min={calenderMinDate}
-                                                onChange={(e) => appointmentDataAdd(e, "date")}
+                                                selected={date}
+                                                format="dd/MM/yyyy"
+                                                dateFormat="dd/MM/yyyy"
+                                                placeholder="mm/dd/yyyy"  
+                                                minDate={new Date(calenderMinDate)}
+                                                onChange={(e) => setStartDate(e)} 
                                             />
                                         </div>
                                         {appointmentErrors.date.trim() !== "" ? (
