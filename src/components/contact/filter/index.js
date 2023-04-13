@@ -10,8 +10,14 @@ import {ContactService} from "../../../services/contact/ContactServices";
 import {utils} from "../../../helpers";
 import * as actionTypes from "../../../actions/types";
 import {useDispatch, useSelector} from "react-redux";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
 
 function ImportFilter(props) {
+    const [date, setDate] = useState();
+    const [date2, setDate2] = useState();
+    const [calenderMinDate, setCalenderMinDate] = useState();
     const [isLoader, setIsLoader] = useState(false);
     const [phases, setPhases] = useState([]);
     const [status, setStatus] = useState([]);
@@ -45,23 +51,48 @@ function ImportFilter(props) {
     useEffect(()=>{
         console.log("contact filter time zone", timezoneOffset);
     })
+    useEffect(() => {
+        let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+        let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
+        setCalenderMinDate(formatedDateTime);
+
+        setSelectedFrom(formatedDateTime);
+        setSelectedTo(formatedDateTime);
+        setDate(new Date(timezoneDateTime));
+        setDate2(new Date(timezoneDateTime));
+    }, []);
     const handleStatusChange = (event) => {
         setSelectedStatus(event.target.value);
     }
     const handleUserChange = (event) => {
         setSelectedUser(event.target.value);
     }
-    const handleToChange = (event) => {
-        console.log("Before convert", event.target.value + " " + "24:00:01");
-        let convertTo = event.target.value;
-        console.log("After convert", convertTo);
-        setSelectedTo(convertTo);
+    // const handleToChange = (event) => {
+    //     console.log("Before convert", event.target.value + " " + "24:00:01");
+    //     let convertTo = event.target.value;
+    //     console.log("After convert", convertTo);
+    //     setSelectedTo(convertTo);
+    // }
+    const setEndDate = (val) => {
+        let formattedDate = `${val.getFullYear()}-${
+            val.getMonth() + 1
+          }-${val.getDate()}`;
+        setDate2(val);
+        setSelectedTo(formattedDate);
     }
-    const handleFromChange = (event) => {
-        console.log("from formate", event.target.value + " " + "00:00:01");
-        let convertFrom = event.target.value;
-        setSelectedFrom(convertFrom);
-        console.log("From", selectedFrom);
+    // const handleFromChange = (event) => {
+    //     console.log("from formate", event.target.value + " " + "00:00:01");
+    //     let convertFrom = event.target.value;
+    //     setSelectedFrom(convertFrom);
+    //     console.log("From", selectedFrom);
+    // }
+    const setStartDate = (val) => {
+        let formattedDate = `${val.getFullYear()}-${
+            val.getMonth() + 1
+          }-${val.getDate()}`;
+        setDate(val);
+        setSelectedFrom(formattedDate);
     }
     const handleSourceChange = (event) => {
         setSelectedSource(event.target.value);
@@ -232,15 +263,32 @@ function ImportFilter(props) {
                                             {/* {selectedFrom} */}
                                             <label>From</label>
                                             <div className="inFormField duration">
-                                                <input type="date" placeholder="dd/mm/yyyy" name=""  value={selectedFrom.split(" ")[0]}
-                                                       onChange={handleFromChange}/>
+                                                {/* <input type="date" placeholder="dd/mm/yyyy" name=""  value={selectedFrom.split(" ")[0]}
+                                                       onChange={handleFromChange}/> */}
+                                                <DatePicker 
+                                                    className="cmnFieldStyle"
+                                                    selected={date === undefined ? new Date() : date}
+                                                    format="dd/MM/yyyy"
+                                                    dateFormat="dd/MM/yyyy"
+                                                    placeholder="mm/dd/yyyy"
+                                                    onChange={(e) => setStartDate(e)} 
+                                                />
                                             </div>
                                         </div>
                                         <div className="formField w-50 appflex durationWraper">
                                             <label>To</label>
                                             <div className="inFormField duration">
-                                                <input type="date" placeholder="dd/mm/yyyy" name="" value={selectedTo.split(" ")[0]}
-                                                       onChange={handleToChange}/>
+                                                {/* <input type="date" placeholder="dd/mm/yyyy" name="" value={selectedTo.split(" ")[0]}
+                                                       onChange={handleToChange}/> */}
+                                                <DatePicker 
+                                                    className="cmnFieldStyle"
+                                                    selected={date2 === undefined ? new Date() : date2}
+                                                    format="dd/MM/yyyy"
+                                                    dateFormat="dd/MM/yyyy"
+                                                    placeholder="mm/dd/yyyy"
+                                                    onChange={(e) => setEndDate(e)} 
+                                                    minDate={new Date(date)}
+                                                />
                                             </div>
                                         </div>
                                     </li>

@@ -4,12 +4,17 @@ import { utils } from "../../../helpers";
 import { UserServices } from "../../../services/authentication/UserServices";
 import Loader from "../../shared/Loader";
 import * as actionTypes from "../../../actions/types";
-
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
 
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
 
 const UserFilter = (props) => {
+    const [date, setDate] = useState();
+    const [date2, setDate2] = useState();
+    const [calenderMinDate, setCalenderMinDate] = useState();
     const [group, setGroup] = useState('');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
@@ -33,6 +38,13 @@ const UserFilter = (props) => {
     }
     const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
 
+    useEffect(() => {
+        let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+        let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
+        setCalenderMinDate(formatedDateTime);
+    }, []);
+
     /**
      * Apply filter submit
      */
@@ -54,24 +66,44 @@ const UserFilter = (props) => {
     /**
      * Handle from date change
      */
-    const handleDateChangeFrom = (event) => {
-        event.preventDefault();
+    // const handleDateChangeFrom = (event) => {
+    //     event.preventDefault();
 
-        utils.addQueryParameter(event.target.name, utils.convertTimezoneToUTC(event.target.value + " " + "00:00:01", timezoneOffset));
+    //     utils.addQueryParameter(event.target.name, utils.convertTimezoneToUTC(event.target.value + " " + "00:00:01", timezoneOffset));
        
-        setFromDate(event.target.value);
+    //     setFromDate(event.target.value);
 
-        console.log(event.target.name, event.target.value, utils.convertTimezoneToUTC(event.target.value + " " + "00:00:01", timezoneOffset) );
+    //     console.log(event.target.name, event.target.value, utils.convertTimezoneToUTC(event.target.value + " " + "00:00:01", timezoneOffset) );
+    // }
+    const setStartDate = (val) => {
+        let formattedDate = `${val.getFullYear()}-${
+            val.getMonth() + 1
+          }-${val.getDate()}`;
+        setDate(val);
+
+        utils.addQueryParameter("fromDate", utils.convertTimezoneToUTC(formattedDate + " " + "00:00:01", timezoneOffset));
+        setFromDate(formattedDate);
     }
-    const handleDateChangeTo = (event) => {
-        event.preventDefault();
+
+    // const handleDateChangeTo = (event) => {
+    //     event.preventDefault();
         
-        utils.addQueryParameter(event.target.name, utils.convertTimezoneToUTC(event.target.value + " " + "23:59:59", timezoneOffset));
+    //     utils.addQueryParameter(event.target.name, utils.convertTimezoneToUTC(event.target.value + " " + "23:59:59", timezoneOffset));
 
-        setToDate(event.target.value); 
+    //     setToDate(event.target.value); 
 
-        console.log(event.target.name,event.target.value, utils.convertTimezoneToUTC(event.target.value + " " + "23:59:59", timezoneOffset) );
+    //     console.log(event.target.name,event.target.value, utils.convertTimezoneToUTC(event.target.value + " " + "23:59:59", timezoneOffset) );
+    // }
+    const setEndDate = (val, e) => {
+        let formattedDate = `${val.getFullYear()}-${
+            val.getMonth() + 1
+          }-${val.getDate()}`;
+        setDate2(val);
+
+        utils.addQueryParameter("toDate", utils.convertTimezoneToUTC(formattedDate + " " + "23:59:59", timezoneOffset));
+        setToDate(formattedDate);
     }
+
     /**
      * Handle status change
      * @param {*} event 
@@ -140,13 +172,30 @@ const UserFilter = (props) => {
                                         <div className="formField w-50">
                                             <p>From</p>
                                             <div className="inFormField">
-                                                <input type="date" name="fromDate" id="formDate" placeholder="dd/mm/yyyy" onChange={handleDateChangeFrom} value={fromDate} />
+                                                {/* <input type="date" name="fromDate" id="formDate" placeholder="dd/mm/yyyy" onChange={handleDateChangeFrom} value={fromDate} /> */}
+                                                <DatePicker 
+                                                    className="cmnFieldStyle"
+                                                    selected={new Date()}
+                                                    format="dd/MM/yyyy"
+                                                    dateFormat="dd/MM/yyyy"
+                                                    placeholder="mm/dd/yyyy"
+                                                    onChange={(e) => setStartDate(e)} 
+                                                />
                                             </div>
                                         </div>
                                         <div className="formField w-50">
                                             <p>To</p>
                                             <div className="inFormField">
-                                                <input type="date" name="toDate" id="toDate" min={fromDate} placeholder="dd/mm/yyyy" onChange={handleDateChangeTo} value={toDate}/>
+                                                {/* <input type="date" name="toDate" id="toDate" min={fromDate} placeholder="dd/mm/yyyy" onChange={handleDateChangeTo} value={toDate}/> */}
+                                                <DatePicker 
+                                                    className="cmnFieldStyle"
+                                                    selected={date2 === undefined ? new Date() : date2}
+                                                    format="dd/MM/yyyy"
+                                                    dateFormat="dd/MM/yyyy"
+                                                    placeholder="mm/dd/yyyy"
+                                                    onChange={(e) => setEndDate(e)} 
+                                                    minDate={new Date(date)}
+                                                />
                                             </div>
                                         </div>
                                     </div>

@@ -16223,3 +16223,7 @@ automation email setting css
   /* .global-attendance .fc .fc-daygrid-day.fc-day-today{
     background: #0099ff !important;
   } */
+
+  .inFormField input.autoHistoryDateInput {
+    width: 135px;
+  }

@@ -14,8 +14,13 @@ import Loader from "../../shared/Loader";
 import * as actionTypes from '../../../actions/types'
 import Pagination from '../../shared/Pagination';
 import moment from 'moment';
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function AutomationHistory(props) {
+    const [date, setDate] = useState();
+    const [date2, setDate2] = useState();
+    const [calenderMinDate, setCalenderMinDate] = useState();
     const { automationId } = useParams();
     const [trigger, setTrigger] = useState("trigger");
     const [automationHistory, setAutomationHistory] = useState(props.automationHistory);
@@ -33,6 +38,19 @@ export default function AutomationHistory(props) {
 
 
     const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
+
+    useEffect(() => {
+        let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+        let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
+        setCalenderMinDate(formatedDateTime);
+
+        setFilterData(prevState => ({ ...prevState, fromDate: formatedDateTime }));
+        setFilterData(prevState => ({ ...prevState, toDate: formatedDateTime }));
+        setDate(new Date(timezoneDateTime));
+        setDate2(new Date(timezoneDateTime));
+    }, []);
+
     useEffect(() => {
         setAutomationHistory(props.automationHistory);
         setPaginationData(props.paginationData);
@@ -82,17 +100,35 @@ export default function AutomationHistory(props) {
         props.fetchHistory();
     }, []);
 
-    const handleFromDate = (e) => {
-        const { value } = e.target;
-        setFilterData(prevState => ({ ...prevState, fromDate: value }));
-        //setFilterData(prevState => ({ ...prevState, fromDate: utils.convertTimezoneToUTC(value + " " + "00:00:01", timezoneOffset)  }));
-    };
+    // const handleFromDate = (e) => {
+    //     const { value } = e.target;
+    //     setFilterData(prevState => ({ ...prevState, fromDate: value }));
+    //     //setFilterData(prevState => ({ ...prevState, fromDate: utils.convertTimezoneToUTC(value + " " + "00:00:01", timezoneOffset)  }));
+    // };
+
+    const setStartDate = (val) => {
+        let formattedDate = `${val.getFullYear()}-${
+            val.getMonth() + 1
+          }-${val.getDate()}`;
+        setDate(val);
+
+        setFilterData(prevState => ({ ...prevState, fromDate: formattedDate }));
+    }
 
     const handletoDate = (e) => {
         const { value } = e.target;
         setFilterData(prevState => ({ ...prevState, toDate: value }));
         //setFilterData(prevState => ({ ...prevState, toDate: utils.convertTimezoneToUTC(value + " " + "00:00:01", timezoneOffset) }));
     };
+
+    const setEndDate = (val) => {
+        let formattedDate = `${val.getFullYear()}-${
+            val.getMonth() + 1
+          }-${val.getDate()}`;
+        setDate2(val);
+
+        setFilterData(prevState => ({ ...prevState, toDate: formattedDate }));
+    }
 
     const handleStatus = (e) => {
         const { value } = e.target;
@@ -171,27 +207,49 @@ export default function AutomationHistory(props) {
                         <div className="formField">
                             <p>From</p>
                             <div className="inFormField">
-                                <input
+                                {/* <input
                                     type="date"
                                     name='fromdate'
                                     max={moment().format('YYYY-MM-DD')}
-                                    onChange={handleFromDate}
+                                    // onChange={handleFromDate}
                                     placeholder="dd/mm/yyyy"
-                                    value={filterData.fromDate}
+                                    // value={filterData.fromDate}
+                                /> */}
+                                <DatePicker 
+                                    style={{width:"133px"}}
+                                    className="cmnFeldStyle autoHistoryDateInput"
+                                    selected={date === undefined ? new Date() : date}
+                                    format="dd/MM/yyyy"
+                                    dateFormat="dd/MM/yyyy"
+                                    placeholder="mm/dd/yyyy"
+                                    onChange={(e) => setStartDate(e)} 
+                                    maxDate={new Date()}
                                 />
                             </div>
                         </div>
                         <div className="formField">
                             <p>To</p>
                             <div className="inFormField">
-                                <input type="date"
+                                {/* <input type="date"
                                     name='todate'
                                     min={filterData.fromDate}
                                     max={moment().format('YYYY-MM-DD')}
                                     disabled={(filterData.fromDate) ? false : true}
                                     onChange={handletoDate}
                                     value={(filterData.fromDate) ? filterData.toDate : ''}
-                                    placeholder="dd/mm/yyyy" />
+                                    placeholder="dd/mm/yyyy" /> */}
+
+                                    <DatePicker 
+                                        className="cmnFieldStyle autoHistoryDateInput"
+                                        selected={date2 === undefined ? new Date() : date2}
+                                        disabled={(filterData.fromDate) ? false : true}
+                                        format="dd/MM/yyyy"
+                                        dateFormat="dd/MM/yyyy"
+                                        placeholder="mm/dd/yyyy"
+                                        onChange={(e) => setEndDate(e)} 
+                                        minDate={new Date(date)}
+                                        maxDate={moment().format('YYYY-MM-DD')}
+                                    />
                             </div>
                         </div>
                         <div className="formField selectStatusOverview">

@@ -479,6 +479,7 @@ useEffect(()=>{
             <div className="attendanceCount">Attended  : <span> {attendanceCount} days</span></div>
           </div>
         </div>
+        
         <FullCalendar
           plugins={[listPlugin]}
           headerToolbar={{
@@ -486,7 +487,7 @@ useEffect(()=>{
             center: 'prev,title,next',
             right: ''
           }}
-          // timeZone={tz}
+          timeZone={false}
           listDaySideFormat={false}
           initialView='listMonth'
           initialDate={initialDate}
