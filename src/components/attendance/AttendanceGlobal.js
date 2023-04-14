@@ -132,8 +132,8 @@ const AppointmentGlobal = (props) => {
                     // console.log("before check in", atten?.checkedInAt);
                     const convertTimezone = utils.convertUTCToTimezone(atten?.checkedInAt, timezoneOffset);
                     // console.log("After convert check in", convertTimezone);
-                    // let convertToCheckInFormat = moment(convertTimezone).format("YYYY-MM-DD hh:mm:ss");
-                    let convertToCheckInFormat = moment(convertTimezone).format('YYYY-MM-DDTHH:mm:ss[Z]');
+                    let convertToCheckInFormat = moment(convertTimezone).format("YYYY-MM-DD hh:mm:ss");
+                    // let convertToCheckInFormat = moment(convertTimezone).format('YYYY-MM-DDTHH:mm:ss[Z]');
                     // let convertToCheckInFormat = "2023-04-10T11:45:00.12Z";
                     console.log("format check in", convertToCheckInFormat)
                     setDefaultDate(moment(convertTimezone).format('YYYY-MM-DD'));
