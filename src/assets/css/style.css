@@ -16227,3 +16227,11 @@ automation email setting css
   .inFormField input.autoHistoryDateInput {
     width: 135px;
   }
+
+  /* ================================ */
+        /* ract datepicker css */
+  /* ================================ */
+
+  .react-datepicker-popper {
+    z-index: 10;
+  }

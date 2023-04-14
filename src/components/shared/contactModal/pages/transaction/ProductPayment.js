@@ -13,6 +13,9 @@ import paySuccess from "../../../../../assets/images/paySuccess.png";
 import Loader from "../../../../shared/Loader";
 import { ProductServices } from "../../../../../services/setup/ProductServices";
 import BillingOverview from "./BillingOverview";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
 
 const ProductPayment = (props) => {
   const [isLoader, setIsLoader] = useState(false);
@@ -787,13 +790,22 @@ const ProductPayment = (props) => {
       setIsLoader(false);
     }
   };
+
+  // const downpayDatepicker = () => {
+
+  // }
+
   const changeDownpaymentDate = (e, downpay, i) => {
     //  //  console.log(e.target);
+    let formattedDate = `${val.getFullYear()}-${
+      val.getMonth() + 1
+    }-${val.getDate()}`;
+
     const downPaymentsPlaceholder = [...downPayments];
 
     try {
       setIsLoader(true);
-      downPaymentsPlaceholder[i].paymentDate = e.target.value;
+      downPaymentsPlaceholder[i].paymentDate = formattedDate;
 
       setDownPayments(downPaymentsPlaceholder);
 
@@ -1046,6 +1058,16 @@ const ProductPayment = (props) => {
                                           .split("T")[0]
                                       }
                                     />
+
+                                      {/* <DatePicker 
+                                          className="cmnFieldStyle"
+                                          selected={new Date(downpay.paymentDate)}
+                                          format="dd/MM/yyyy"
+                                          dateFormat="dd/MM/yyyy"
+                                          placeholderText="dd/mm/yyyy"
+                                          onChange={(val) => changeDownpaymentDate(val, downpay, i)} 
+                                          minDate={new Date(moment(calenderMinDate).add(1, "days"))}
+                                      /> */}
                                   </div>
                                 )}
                                 {downPaymentErrorMsg.edit_PayDate_Err && (
