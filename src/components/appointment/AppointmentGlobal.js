@@ -282,6 +282,7 @@ const AppointmentGlobal = (props) => {
           <div className='global-appointment'>
             <FullCalendar
               plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
+              nowIndicator={false}
               headerToolbar={{
                 left: 'today',
                 center: 'prev,title,next',

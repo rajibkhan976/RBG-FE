@@ -12990,9 +12990,9 @@ td:has(a.hasAttendance) {
     opacity: 1;
 }
 
-.global-attendance .fc .fc-daygrid-day.fc-day-today {
-    background: linear-gradient(180deg, #CDFBFF 0%, #FFFFFF 100%);
-}
+/*.global-attendance .fc .fc-daygrid-day.fc-day-today {*/
+/*    background: linear-gradient(180deg, #CDFBFF 0%, #FFFFFF 100%);*/
+/*}*/
 
 .global-attendance .fc-list-event-graphic {
     display: none;
@@ -16228,6 +16228,10 @@ automation email setting css
     width: 135px;
   }
 
+.react-datepicker__day--keyboard-selected, 
+.react-datepicker__day--keyboard-selected:hover {
+    background: transparent;
+}
   /* ================================ */
         /* ract datepicker css */
   /* ================================ */
