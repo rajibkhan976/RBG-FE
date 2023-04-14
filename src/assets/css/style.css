@@ -13298,7 +13298,7 @@ td:has(a.hasAttendance) {
 }
 
 .overviewTable .listHead.auto_history {
-    z-index: 2;
+    z-index: 1;
     top: 82px;
     background-color: #f6f8fa;
 }

@@ -268,7 +268,7 @@ const AddAppointmentModal = (props) => {
     const diffFromToday = choosedTime.diff(localTime, "minutes");
     const fromTime = moment(`${appointmentData.date} ${fromValue.format("h:mm a")}`).format('MM/DD/YYYY h:mm a');
     const toTime = moment(`${appointmentData.date} ${appointmentData.toTime}`).format('MM/DD/YYYY h:mm a');
-
+    console.log(";oooooooooooooooooooooooooooooooooooooooooooo", diffFromToday)
     if (fromValue && fromValue != null) {
       if (appointmentData.toTime.trim() === "") {
         validErrors.fromTime = "";

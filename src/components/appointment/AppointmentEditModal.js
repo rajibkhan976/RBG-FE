@@ -291,7 +291,7 @@ const AppointmentEditModal = (props) => {
     const localTime = moment(convertedLocalTime, "YYYY-MM-DD HH:mm:ss");
     const choosedTime = moment(convertedChoosedTime, "YYYY-MM-DD HH:mm:ss");
     const diffFromToday = choosedTime.diff(localTime, "minutes");
-
+    console.log()
     console.log("Time diff ======================== ", diffFromToday, rescheduleErrors, editedReschedule  );
 
 
