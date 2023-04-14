@@ -16239,3 +16239,11 @@ automation email setting css
 .cmnFormRow.fullWidth.flatForm .cmnFieldStyle.editTransactionDate {
     width: 181px;
 }
+
+.modalDependent.modalBackdrop .react-datepicker-popper {
+    transform: translate(50%, 40px) !important;
+}
+
+.modalDependent.modalBackdrop .react-datepicker__triangle {
+    left: 60px !important;
+}
