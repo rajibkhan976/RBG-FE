@@ -16232,3 +16232,22 @@ automation email setting css
 .react-datepicker__day--keyboard-selected:hover {
     background: transparent;
 }
+  /* ================================ */
+        /* ract datepicker css */
+  /* ================================ */
+
+.react-datepicker-popper {
+    z-index: 10;
+}
+
+.cmnFormRow.fullWidth.flatForm .cmnFieldStyle.editTransactionDate {
+    width: 181px;
+}
+
+.modalDependent.modalBackdrop .react-datepicker-popper {
+    transform: translate(50%, 40px) !important;
+}
+
+.modalDependent.modalBackdrop .react-datepicker__triangle {
+    left: 60px !important;
+}
