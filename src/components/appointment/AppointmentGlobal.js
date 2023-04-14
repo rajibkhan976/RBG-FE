@@ -114,7 +114,7 @@ const AppointmentGlobal = (props) => {
             let startAppointment = convartFromTime
             let endAppointment = convartToTime
             
-            console.log("appointment",appointment.agenda,appointment)
+            // console.log("appointment",appointment.agenda,appointment)
            
             // console.log("appointment time zone 4", startAppointment);
             eventArray.push({
@@ -266,7 +266,7 @@ const AppointmentGlobal = (props) => {
 
 
   useEffect(() => {
-    console.clear()
+    // console.clear()
     // console.log("timezoneOffset",timezoneOffset)
     fetchList();
   }, [timezoneOffset,createAppointmentModal,editAppointment])
