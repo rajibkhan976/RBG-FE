@@ -186,7 +186,7 @@ useEffect(()=>{
         //   eventArr.push(eventObj);
         // }
 
-        console.clear();
+        // console.clear();
         eventArr = dateRangeArr.map(el => {
           // console.log("Date", el.format("YYYY-MM-DD"));
           let eventObj = {

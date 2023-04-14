@@ -233,9 +233,8 @@ const AppointmentGlobal = (props) => {
                         moreLinkClick={moreLinkClick}
                         dateClick={clickOnDate}
                         ref={calenderRef}
-                        defaultDate={defaultDate}
+                        // defaultDate={defaultDate}
                         // initialDate={}
-                        // start={'2018-09-01T12:30:00Z'}
                         noEventsText={"No record found"}
                         eventContent={renderEventContent}
                         datesSet={handleMonthChange}
