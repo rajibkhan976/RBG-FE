@@ -25,16 +25,16 @@ const AppointmentGlobal = (props) => {
   const calenderRef = useRef([]);
   const [createAppointmentModal, setCreateAppointmentModal] = useState(false);
   const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
-  useEffect(()=>{ console.log("appointment time zone: 2", timezoneOffset)},[timezoneOffset]);
+  // useEffect(()=>{ console.log("appointment time zone: 2", timezoneOffset)},[timezoneOffset]);
 
     const renderEventContent = (e) => {
-      // console.log("Render e", e.event.extendedProps, e)
+      // console.log("Render e", e.view.type, e)
       // if (!e.event._instance.range && e.event._instance.range.start) {
       //     return false;
       // }
-      console.log("renderEventContent called", e)
+      // console.log("renderEventContent called", e)
       if (e.view.type == "listWeek") {
-        console.log("event",e.event._def.extendedProps)
+        // console.log("event",e.event._def.extendedProps)
           // let isHoliday =  e.event.extendedProps ?. isHoliday ? true : false;
           // setMakeHeaderOpen(true);
           // console.log("e.event._instance.range.start", e.event._instance.range.start, "tz", tz)
@@ -66,9 +66,10 @@ const AppointmentGlobal = (props) => {
       }
    
   }
+
+
+  
   const fetchList = async () => {
-    
-      console.log("appointment time zone ", timezoneOffset);
     try {
       setIsLoader(true);
       let list = await AppointmentServices.fetchList();
@@ -105,11 +106,17 @@ const AppointmentGlobal = (props) => {
           //   });
           // }
           if (moment(appointment?.date, "YYYY-MM-DD")._f === "YYYY-MM-DD" && appointment?.fromDateTime && appointment?.toDateTime) {
-            let convartFromTime = utils.convertUTCToTimezone(appointment?.fromDateTime, timezoneOffset);
-            let convartToTime = utils.convertUTCToTimezone(appointment?.toDateTime, timezoneOffset);
-            let startAppointment = moment(convartFromTime).format("YYYY-MM-DDTHH:mm:ss[Z]").trim();
-            let endAppointment = moment(convartFromTime).format("YYYY-MM-DDTHH:mm:ss[Z]").trim();
-            console.log("appointment time zone 4", startAppointment);
+            let convartFromTime = utils.convertUTCToTimezone(appointment?.fromDateTime, timezoneOffset,"YYYY-MM-DDTHH:mm:ss");
+            let convartToTime = utils.convertUTCToTimezone(appointment?.toDateTime, timezoneOffset,"YYYY-MM-DDTHH:mm:ss");
+            // let startAppointment = moment(convartFromTime).format("YYYY-MM-DDTHH:mm:ss[Z]").trim();
+            // let endAppointment = moment(convartToTime).format("YYYY-MM-DDTHH:mm:ss[Z]").trim();
+
+            let startAppointment = convartFromTime
+            let endAppointment = convartToTime
+            
+            console.log("appointment",appointment.agenda,appointment)
+           
+            // console.log("appointment time zone 4", startAppointment);
             eventArray.push({
               id: appointment._id,
               title: appointment.agenda,
@@ -136,10 +143,12 @@ const AppointmentGlobal = (props) => {
     }
   }
   const clickOnEvent = (e) => {
+    console.log("eventtt",e)
     setEditingApp(e.event._def.extendedProps.data)
     setEditAppointment(true)
   }
   const clickOnDate = (e) => {
+    console.log("clikc ond date",e)
     let api = calenderRef.current.getApi()
     api.changeView('timeGridDay', e.dateStr)
   }
@@ -235,26 +244,32 @@ const AppointmentGlobal = (props) => {
     }
   }
 
-  useEffect(() => {
-    if (!editAppointment && timezoneOffset != "") {
-        fetchList();
-    }
-  }, [editAppointment])
+  // useEffect(() => {
+  //   if (!editAppointment && timezoneOffset != "") {
+  //       console.clear()
+  //       console.log("condition",editAppointment,timezoneOffset)
+  //       fetchList();
+  //   }
+  // }, [editAppointment])
+
+  // useEffect(() => {
+  //   if (!createAppointmentModal && timezoneOffset != "") {
+  //       fetchList();
+  //   }
+  // }, [createAppointmentModal])
+
+  // useEffect(() => {
+  //   if(timezoneOffset != ""){
+  //     fetchList();
+  //   }
+  // }, [])
+
 
   useEffect(() => {
-    if (!createAppointmentModal && timezoneOffset != "") {
-        fetchList();
-    }
-  }, [createAppointmentModal])
-
-  useEffect(() => {
-    if(timezoneOffset != ""){
-      fetchList();
-    }
-  }, [])
-  useEffect(() => {
+    console.clear()
+    // console.log("timezoneOffset",timezoneOffset)
     fetchList();
-  }, [timezoneOffset])
+  }, [timezoneOffset,createAppointmentModal,editAppointment])
 
   return (
     <>
