@@ -265,6 +265,7 @@ const AppointmentEditModal = (props) => {
         val.getMonth() + 1
       }-${val.getDate()}`;
     setDate(val);
+    setEditedReschedule({ ...editedReschedule, date: formattedDate });
     console.log("Date val=========================================", val);
 
     const convertedChoosedTime = utils.convertTimezoneToUTC(formattedDate + " " + moment(editedReschedule.fromTime, "HH:mm:ss").format("HH:mm:ss"),timezoneOffset);

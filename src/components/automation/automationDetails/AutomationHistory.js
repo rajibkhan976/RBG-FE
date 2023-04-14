@@ -37,14 +37,17 @@ export default function AutomationHistory(props) {
     const dispatch = useDispatch();
 
 
-    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
+    const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user?.data?.organizationTimezoneInfo.utc_offset:null);
+    useEffect(()=>{
+        console.log("transaction filter time zone", timezoneOffset);
+    })
 
     useEffect(() => {
         let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
         let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
         let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
         setCalenderMinDate(formatedDateTime);
-
+        
         setFilterData(prevState => ({ ...prevState, fromDate: formatedDateTime }));
         setFilterData(prevState => ({ ...prevState, toDate: formatedDateTime }));
         setDate(new Date(timezoneDateTime));
@@ -115,11 +118,11 @@ export default function AutomationHistory(props) {
         setFilterData(prevState => ({ ...prevState, fromDate: formattedDate }));
     }
 
-    const handletoDate = (e) => {
-        const { value } = e.target;
-        setFilterData(prevState => ({ ...prevState, toDate: value }));
-        //setFilterData(prevState => ({ ...prevState, toDate: utils.convertTimezoneToUTC(value + " " + "00:00:01", timezoneOffset) }));
-    };
+    // const handletoDate = (e) => {
+    //     const { value } = e.target;
+    //     setFilterData(prevState => ({ ...prevState, toDate: value }));
+    //     //setFilterData(prevState => ({ ...prevState, toDate: utils.convertTimezoneToUTC(value + " " + "00:00:01", timezoneOffset) }));
+    // };
 
     const setEndDate = (val) => {
         let formattedDate = `${val.getFullYear()}-${
@@ -215,6 +218,7 @@ export default function AutomationHistory(props) {
                                     placeholder="dd/mm/yyyy"
                                     // value={filterData.fromDate}
                                 /> */}
+                                {console.log("DATE---------------------", timezoneOffset)}
                                 <DatePicker 
                                     style={{width:"133px"}}
                                     className="cmnFeldStyle autoHistoryDateInput"
