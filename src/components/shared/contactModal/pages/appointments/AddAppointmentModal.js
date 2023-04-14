@@ -171,8 +171,8 @@ const AddAppointmentModal = (props) => {
           setAppointmentData({ 
             ...appointmentData, 
             date: newDateString,
-            fromDateTime: appointmentData.fromTime,
-            toDateTime: appointmentData.toTime
+            // fromDateTime: appointmentData.fromTime,
+            // toDateTime: appointmentData.toTime
           });
         }
         // validErrors.fromTime = "";
@@ -201,6 +201,11 @@ const AddAppointmentModal = (props) => {
   };
 
   const setStartDate = (val) => {
+    console.log("date value:", val);
+    const convertFromDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD")+ " " + utils.timeConversion(appointmentData?.fromTime), timezoneOffset);
+    const convertToDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD")+ " " + utils.timeConversion(appointmentData?.toTime), timezoneOffset);
+    // console.log("convert from date time", convertFromDateTime);
+    // console.log("Convert to date time", convertToDateTime);
     let validErrors = {...validationErrors};
     let isDisabled = false;
     let formattedDate = `${val.getFullYear()}-${
@@ -235,8 +240,8 @@ const AddAppointmentModal = (props) => {
       setAppointmentData({ 
         ...appointmentData, 
         date: newDateString,
-        fromDateTime: appointmentData.fromTime,
-        toDateTime: appointmentData.toTime
+        fromDateTime: convertFromDateTime,
+        toDateTime: convertToDateTime
       });
     }
     // validErrors.fromTime = "";
@@ -244,9 +249,15 @@ const AddAppointmentModal = (props) => {
     isDisabled = false;
     let newDateString = formattedDate;
       
-    setAppointmentData({ ...appointmentData, date: newDateString });
+    setAppointmentData({ 
+      ...appointmentData, 
+      date: newDateString,
+      fromDateTime: convertFromDateTime,
+      toDateTime: convertToDateTime,
+    });
     setValidationErrors(validErrors);
     setIsDisabled(isDisabled);
+    console.log("Appointment Data", appointmentData);
   }
 
   const fromDateAdd = (fromValue) => {
@@ -434,7 +445,7 @@ const AddAppointmentModal = (props) => {
   // on valid submission, send appointment to parent
   const submitAppointmentForm = async (e) => {
     e.preventDefault();
-    console.clear()
+    // console.clear()
     let valid = validateAppointment();
     // console.log("Appointment date and time before conversion",utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.fromTime));
 

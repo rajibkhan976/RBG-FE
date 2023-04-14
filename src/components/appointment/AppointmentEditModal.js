@@ -260,12 +260,21 @@ const AppointmentEditModal = (props) => {
   };
 
   const setStartDate = (val) => {
+    
+    const convertFromDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD") + " " + (editedReschedule?.fromTime? moment(editedReschedule?.fromTime, "HH:mm:ss").format("HH:mm:ss") : moment(props.appointmentEdit.fromTime, "HH:mm:ss").format("HH:mm:ss")), timezoneOffset) ;
+    // console.log("convert from date time", convertFromDateTime);
+    const convertToDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD") + " " + (editedReschedule?.toTime? moment(editedReschedule?.toTime, "HH:mm:ss").format("HH:mm:ss") : moment(props.appointmentEdit?.toTime, "HH:mm:ss").format("HH:mm:ss")), timezoneOffset);
+    // console.log("Convert to date time", convertToDateTime);
     let validErrors = {...rescheduleErrors};
     let formattedDate = `${val.getFullYear()}-${
         val.getMonth() + 1
       }-${val.getDate()}`;
     setDate(val);
-    setEditedReschedule({ ...editedReschedule, date: formattedDate });
+    setEditedReschedule({ ...editedReschedule, 
+      date: formattedDate,
+      fromDateTime: convertFromDateTime,
+      toDateTime: convertToDateTime,
+    });
     console.log("Date val=========================================", val);
 
     const convertedChoosedTime = utils.convertTimezoneToUTC(formattedDate + " " + moment(editedReschedule.fromTime, "HH:mm:ss").format("HH:mm:ss"),timezoneOffset);
@@ -292,7 +301,6 @@ const AppointmentEditModal = (props) => {
     const localTime = moment(convertedLocalTime, "YYYY-MM-DD HH:mm:ss");
     const choosedTime = moment(convertedChoosedTime, "YYYY-MM-DD HH:mm:ss");
     const diffFromToday = choosedTime.diff(localTime, "minutes");
-    console.log()
     console.log("Time diff ======================== ", diffFromToday, rescheduleErrors, editedReschedule  );
 
 
@@ -390,7 +398,7 @@ const AppointmentEditModal = (props) => {
 
   const rescheduleAppointment = async (e) => {
     e.preventDefault();
-    console.clear();
+    // console.clear();
     console.log("Date", editedReschedule.date, props.appointmentEdit.date);
     console.log("From Time", editedReschedule.fromTime, props.appointmentEdit.fromTime);
     console.log("To Time", editedReschedule.toTime, props.appointmentEdit.toTime);
@@ -536,8 +544,8 @@ const AppointmentEditModal = (props) => {
   const [fromDateTime, setFromDateTime] = useState();
   const [toDateTime, setToDateTime] = useState();
   useEffect(()=>{
-    setFromDateTime(moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)));
-    setToDateTime(moment(utils.convertUTCToTimezone(props.appointmentEdit.toDateTime, timezoneOffset)));
+    setFromDateTime(moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset)));
+    setToDateTime(moment(utils.convertUTCToTimezone(props.appointmentEdit.toDateTime.trim(), timezoneOffset)));
     console.log("props appointment", fromDateTime, toDateTime);
   },[props.appointmentEdit])
 
@@ -887,9 +895,10 @@ const AppointmentEditModal = (props) => {
                           // value={moment(props.appointmentEdit.date, "MM/DD/YYYY").format("YYYY-MM-DD")}
                         />
                         {console.log('llllllll', date)} */}
+                        {utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset, "YYYY-MM-DD")}
                         <DatePicker 
                             className="cmnFieldStyle"
-                            selected={date === undefined ? new Date(moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format("YYYY-MM-DD")) : date}
+                            selected={date === undefined ? (props.appointmentEdit && props.appointmentEdit.fromDateTime ? new Date(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset, "YYYY-MM-DD")) : "") : (date === undefined ? new Date() : date)}
                             format="dd/MM/yyyy"
                             dateFormat="dd/MM/yyyy"
                             placeholder="mm/dd/yyyy"  
@@ -921,9 +930,7 @@ const AppointmentEditModal = (props) => {
                           className="cmnFieldStyle"
                           popupClassName="timepickerPopup"
                           onChange={fromScheduleDateEdit}
-                          getPopupContainer={node => {
-                            return document.getElementById("fromEditTime");
-                          }}
+                          getPopupContainer={node => { return document.getElementById("fromEditTime");}}
                           format={"hh:mm a"}
                           use12Hours
                           inputReadOnly
@@ -952,7 +959,7 @@ const AppointmentEditModal = (props) => {
                     >
                       <div className="cmnFieldName">To</div>
                       
-                      {utils.convertUTCToTimezone(props.appointmentEdit.toDateTime, timezoneOffset).split(" ").splice(3,4).join(" ").toString()}
+                      {props.appointmentEdit.toDateTime}
                       {/* {moment(props.appointmentEdit?.toTime, "LT")} */}
                       <div className="cmnFormField" id="toEditTime">
                         <TimePicker
@@ -962,9 +969,7 @@ const AppointmentEditModal = (props) => {
                           className="cmnFieldStyle"
                           popupClassName="timepickerPopup"
                           onChange={toScheduleDateEdit}
-                          getPopupContainer={node => {
-                            return document.getElementById("toEditTime");
-                          }}
+                          getPopupContainer={node => {return document.getElementById("toEditTime");}}
                           format={"hh:mm a"}
                           use12Hours
                           inputReadOnly

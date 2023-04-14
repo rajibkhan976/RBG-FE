@@ -118,17 +118,20 @@ useEffect(()=>{
         setInitialDate(attendances.attendance[attenCount-1].checkedInAt);
       }
       for (let atten of attendances.attendance) {
+        const convertCheckInAt = utils.convertUTCToTimezone(atten?.checkedInAt, timezoneOffset);
+        const checInAtProperFormat = moment(convertCheckInAt).format("YYYY-MM-DD hh:mm:ss")
         let eventObj = {
-          start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
+          // start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
+          start: moment(convertCheckInAt).format("YYYY-MM-DD hh:mm:ss"),
           // checkedInAt: convertUTCtoTZ(atten.checkedInAt), 
-          checkedInAt: atten.checkedInAt,
+          checkedInAt: checInAtProperFormat,
           note: atten.note,
           name: atten.contact.firstName + " " + atten.contact.lastName,
           email: atten.contact.email,
           checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName
         }
-        console.log("event ", eventObj.checkedInAt._i);
         eventArr.push(eventObj);
+        console.log("event Array", eventArr);
       }
       // let payload.fromDate
       var range = moment().range(moment(dateRange.start), moment(dateRange.end));
@@ -183,7 +186,7 @@ useEffect(()=>{
         //   eventArr.push(eventObj);
         // }
 
-        console.clear();
+        // console.clear();
         eventArr = dateRangeArr.map(el => {
           // console.log("Date", el.format("YYYY-MM-DD"));
           let eventObj = {
@@ -192,9 +195,13 @@ useEffect(()=>{
           };
           const checkedInObj = [];
           attendances?.attendance.length && attendances.attendance.forEach(atten => {
-            if (convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD") === eventObj.start) {
+            console.log("Attendance=====", attendances);
+            const convertCheckInAt = utils.convertUTCToTimezone(atten.checkedInAt, timezoneOffset);
+            console.log("After conversion", convertCheckInAt);
+            if (convertUTCtoTZ(convertCheckInAt, "YYYY-MM-DD") === eventObj.start) {
               checkedInObj.push({
-                checkedInAt: convertUTCtoTZ(atten.checkedInAt),
+                // checkedInAt: convertUTCtoTZ(atten.checkedInAt),
+                checkedInAt: moment(convertCheckInAt).format("YYYY-MM-DD hh:mm:ss"),
                 note: atten.note,
                 name: atten.contact.firstName + " " + atten.contact.lastName,
                 email: atten.contact.email,
@@ -203,7 +210,7 @@ useEffect(()=>{
               });
             }
           });
-          console.log("Checkin", checkedInObj)
+          console.log("Checked object", checkedInObj);
           const holidays = [];
           attendances?.holidays?.length && attendances.holidays.forEach(holiday => {
             // console.log("EL",moment(el).isBetween(holiday.fromDate, holiday.toDate));
@@ -368,7 +375,8 @@ useEffect(()=>{
         eventDate = moment(dateSource).format("ddd, DD");
       }
       // let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
-      let eventTime = utils.convertUTCToTimezone(dateSource, timezoneOffset).split(" ").splice(3,4).join(" ");
+      // let eventTime = utils.convertUTCToTimezone(dateSource, timezoneOffset).split(" ").splice(3,4).join(" ");
+      let eventTime = dateSource;
       // console.log("dateSource event time", convertUTCToTimezone.split(" ").splice(3, 4).join(" "))
       if (e.event.extendedProps.checkInBy) {
         // console.log("event dateSource >>>", e.event.extendedProps.checkedInAt, convertUTCtoTZ(e.event.extendedProps.checkedInAt, "YYYY-MM-DD HH:mm:ss"))
@@ -388,7 +396,7 @@ useEffect(()=>{
               </span> */}
               <span className='fc-list-event-time'>
                 {e.event.extendedProps.checkInBy &&
-                  <span className="norm" > {eventTime? eventTime: ''}</span>
+                  <span className="norm" > {eventTime? moment(eventTime).format("hh:mm A"): ''}</span>
                 }
               </span>
               <span className='fc-list-event-new-tooltip'>
