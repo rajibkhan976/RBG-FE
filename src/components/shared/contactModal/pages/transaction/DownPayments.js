@@ -103,12 +103,27 @@ const DownPayments = forwardRef((props, ref) => {
                     : "";
     };
 
+    const downpayDatepicker = (val, key, type) => {
+        console.log("EEEEEEEEEEEEEEEEEEEE", val, key, type);
+
+        let formattedDate = `${val.getFullYear()}-${
+            val.getMonth() + 1
+          }-${val.getDate()}`;
+
+        setPayLaterDate(val);
+
+        validateIndividual(formattedDate, key, type);
+    }
+
     const validateIndividual = (e, key, type) => {
-        console.log('validate individual', key, type, e.target.value, e.target.checked);
+        //console.log('validate individual', key, type, e.target.value, e.target.checked);
         let elems = [...downPaymentElems];
         if (type === "isPayNow") {
             elems[key][type] = e.target.checked ? 1 : 0;
-        } else {
+        } else if (type === "paymentDate") {
+            elems[key][type] = e;
+        }
+        else {
             elems[key][type] = e.target.value;
         }
         let newElem = elems[key];
@@ -277,24 +292,24 @@ const DownPayments = forwardRef((props, ref) => {
                                                         <p>Payment date <span>Now</span></p>
                                                     </div>
                                                     <div className={el.isPayNow ? "paymentNow " : "paymentNow display"} >
-                                                        <input
+                                                        {/* <input
                                                             type="date"
                                                             className="editableInput"
                                                             placeholder="mm/dd/yyyy"
                                                             value={el.paymentDate}
                                                             min={el.minPaymentDate}
                                                             onChange={e => validateIndividual(e, key, "paymentDate")}
-                                                        />
+                                                        /> */}
 
-                                                        {/* <DatePicker 
+                                                        <DatePicker 
                                                             className="cmnFieldStyle"
-                                                            selected={payLaterDate}
+                                                            selected={new Date(el.paymentDate)}
                                                             format="dd/MM/yyyy"
                                                             dateFormat="dd/MM/yyyy"
                                                             placeholderText="dd/mm/yyyy"
-                                                            onChange={(e) => handelFirstBillingDateChange(e)} 
+                                                            onChange={(val) => downpayDatepicker(val, key, "paymentDate")} 
                                                             minDate={new Date(moment(calenderMinDate).add(1, "days"))}
-                                                        /> */}
+                                                        />
                                                     </div>
                                                 </div>
                                             </div>
