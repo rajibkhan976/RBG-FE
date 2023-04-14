@@ -97,8 +97,6 @@ function ImportTransactionFilter(props) {
         setSelectStatus(utils?.getQueryVariable("status"));
         setSelectItem(utils?.getQueryVariable("item"));
         setSelectName(utils?.getQueryVariable("contact"));
-        setSelectedTo(utils?.getQueryVariable("toDate"));
-        setSelectedFrom(utils?.getQueryVariable("fromDate"));
         let fromDate = utils?.getQueryVariable("fromDate") || "";
         let toDate = utils?.getQueryVariable("toDate") || "";
         if (fromDate) {
@@ -111,6 +109,8 @@ function ImportTransactionFilter(props) {
         }
         setDate(fromDate);
         setDate2(toDate);
+        setSelectedTo(toDate);
+        setSelectedFrom(fromDate);
     }, []);
         
     return (
