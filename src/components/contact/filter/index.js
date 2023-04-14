@@ -17,7 +17,7 @@ import moment from "moment";
 function ImportFilter(props) {
     const [date, setDate] = useState();
     const [date2, setDate2] = useState();
-    const [calenderMinDate, setCalenderMinDate] = useState();
+    const [today, setToday] = useState();
     const [isLoader, setIsLoader] = useState(false);
     const [phases, setPhases] = useState([]);
     const [status, setStatus] = useState([]);
@@ -48,51 +48,38 @@ function ImportFilter(props) {
         }
     }
     const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null);
-    useEffect(()=>{
-        console.log("contact filter time zone", timezoneOffset);
-    })
     useEffect(() => {
         let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
         let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
-        let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
-        setCalenderMinDate(formatedDateTime);
-
-        setSelectedFrom(formatedDateTime);
-        setSelectedTo(formatedDateTime);
-        setDate(new Date(timezoneDateTime));
-        setDate2(new Date(timezoneDateTime));
-    }, []);
+        setToday(timezoneDateTime);
+    }, [timezoneOffset]);
     const handleStatusChange = (event) => {
         setSelectedStatus(event.target.value);
     }
     const handleUserChange = (event) => {
         setSelectedUser(event.target.value);
     }
-    // const handleToChange = (event) => {
-    //     console.log("Before convert", event.target.value + " " + "24:00:01");
-    //     let convertTo = event.target.value;
-    //     console.log("After convert", convertTo);
-    //     setSelectedTo(convertTo);
-    // }
     const setEndDate = (val) => {
-        let formattedDate = `${val.getFullYear()}-${
-            val.getMonth() + 1
-          }-${val.getDate()}`;
+        if (val) {
+            let formattedDate = `${val.getFullYear()}-${
+                val.getMonth() + 1
+            }-${val.getDate()}`;
+            setSelectedTo(formattedDate);
+        } else {
+            setSelectedTo("");
+        }
         setDate2(val);
-        setSelectedTo(formattedDate);
     }
-    // const handleFromChange = (event) => {
-    //     console.log("from formate", event.target.value + " " + "00:00:01");
-    //     let convertFrom = event.target.value;
-    //     setSelectedFrom(convertFrom);
-    //     console.log("From", selectedFrom);
-    // }
     const setStartDate = (val) => {
-        let formattedDate = `${val.getFullYear()}-${
-            val.getMonth() + 1
-          }-${val.getDate()}`;
+        if (val) {
+            let formattedDate = `${val.getFullYear()}-${
+                val.getMonth() + 1
+            }-${val.getDate()}`;
+            setSelectedFrom(formattedDate);
+        } else {
+            setSelectedFrom("");
+        }
         setDate(val);
-        setSelectedFrom(formattedDate);
     }
     const handleSourceChange = (event) => {
         setSelectedSource(event.target.value);
@@ -150,6 +137,8 @@ function ImportFilter(props) {
         setSelectedSource("");
         setSelectedUser("");
         setSelectedStatus("");
+        setDate("");
+        setDate2("");
         utils.removeQueryParameter('import');
         utils.removeQueryParameter('page');
         utils.removeQueryParameter('status');
@@ -263,31 +252,29 @@ function ImportFilter(props) {
                                             {/* {selectedFrom} */}
                                             <label>From</label>
                                             <div className="inFormField duration">
-                                                {/* <input type="date" placeholder="dd/mm/yyyy" name=""  value={selectedFrom.split(" ")[0]}
-                                                       onChange={handleFromChange}/> */}
                                                 <DatePicker 
                                                     className="cmnFieldStyle"
-                                                    selected={date === undefined ? new Date() : date}
+                                                    selected={date}
                                                     format="dd/MM/yyyy"
                                                     dateFormat="dd/MM/yyyy"
-                                                    placeholder="mm/dd/yyyy"
-                                                    onChange={(e) => setStartDate(e)} 
+                                                    placeholderText="dd/mm/yyyy"
+                                                    onChange={(e) => setStartDate(e)}
+                                                    maxDate={new Date(today)}
                                                 />
                                             </div>
                                         </div>
                                         <div className="formField w-50 appflex durationWraper">
                                             <label>To</label>
                                             <div className="inFormField duration">
-                                                {/* <input type="date" placeholder="dd/mm/yyyy" name="" value={selectedTo.split(" ")[0]}
-                                                       onChange={handleToChange}/> */}
                                                 <DatePicker 
                                                     className="cmnFieldStyle"
-                                                    selected={date2 === undefined ? new Date() : date2}
+                                                    selected={date2}
                                                     format="dd/MM/yyyy"
                                                     dateFormat="dd/MM/yyyy"
-                                                    placeholder="mm/dd/yyyy"
+                                                    placeholderText="dd/mm/yyyy"
                                                     onChange={(e) => setEndDate(e)} 
                                                     minDate={new Date(date)}
+                                                    maxDate={new Date(today)}
                                                 />
                                             </div>
                                         </div>

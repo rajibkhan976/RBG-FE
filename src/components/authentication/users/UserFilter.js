@@ -1,20 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { utils } from "../../../helpers";
-import { UserServices } from "../../../services/authentication/UserServices";
 import Loader from "../../shared/Loader";
 import * as actionTypes from "../../../actions/types";
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
-
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import arrowDown from "../../../assets/images/arrowDown.svg";
 
 const UserFilter = (props) => {
     const [date, setDate] = useState();
     const [date2, setDate2] = useState();
-    const [calenderMinDate, setCalenderMinDate] = useState();
+    const [today, setToday] = useState();
     const [group, setGroup] = useState('');
     const [fromDate, setFromDate] = useState('');
     const [toDate, setToDate] = useState('');
@@ -41,9 +39,8 @@ const UserFilter = (props) => {
     useEffect(() => {
         let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
         let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
-        let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
-        setCalenderMinDate(formatedDateTime);
-    }, []);
+        setToday(timezoneDateTime);
+    }, [timezoneOffset]);
 
     /**
      * Apply filter submit
@@ -76,33 +73,29 @@ const UserFilter = (props) => {
     //     console.log(event.target.name, event.target.value, utils.convertTimezoneToUTC(event.target.value + " " + "00:00:01", timezoneOffset) );
     // }
     const setStartDate = (val) => {
-        let formattedDate = `${val.getFullYear()}-${
-            val.getMonth() + 1
-          }-${val.getDate()}`;
+        if (val) {
+            let formattedDate = `${val.getFullYear()}-${
+                val.getMonth() + 1
+            }-${val.getDate()}`;
+            setFromDate(formattedDate);
+            utils.addQueryParameter("fromDate", utils.convertTimezoneToUTC(formattedDate + " " + "00:00:01", timezoneOffset));
+        } else {
+            utils.removeQueryParameter("fromDate");
+        }
         setDate(val);
-        setFromDate(formattedDate);
-          console.log("start date::::::::::::::::::::::::", formattedDate);
-        utils.addQueryParameter("fromDate", utils.convertTimezoneToUTC(formattedDate + " " + "00:00:01", timezoneOffset));
-        
     }
-
-    // const handleDateChangeTo = (event) => {
-    //     event.preventDefault();
-        
-    //     utils.addQueryParameter(event.target.name, utils.convertTimezoneToUTC(event.target.value + " " + "23:59:59", timezoneOffset));
-
-    //     setToDate(event.target.value); 
-
-    //     console.log(event.target.name,event.target.value, utils.convertTimezoneToUTC(event.target.value + " " + "23:59:59", timezoneOffset) );
-    // }
     const setEndDate = (val, e) => {
-        let formattedDate = `${val.getFullYear()}-${
-            val.getMonth() + 1
-          }-${val.getDate()}`;
+        if (val) {
+            let formattedDate = `${val.getFullYear()}-${
+                val.getMonth() + 1
+            }-${val.getDate()}`;
+            utils.addQueryParameter("toDate", utils.convertTimezoneToUTC(formattedDate + " " + "23:59:59", timezoneOffset));
+            setToDate(formattedDate);
+        } else {
+            utils.removeQueryParameter("toDate");
+        }
         setDate2(val);
-        console.log("end date::::::::::::::::::::::::", formattedDate);
-        utils.addQueryParameter("toDate", utils.convertTimezoneToUTC(formattedDate + " " + "23:59:59", timezoneOffset));
-        setToDate(formattedDate);
+
     }
 
     /**
@@ -127,6 +120,8 @@ const UserFilter = (props) => {
         setFromDate('');
         setToDate('');
         setStatus('');
+        setDate("");
+        setDate2("");
         utils.removeQueryParameter('group');
         utils.removeQueryParameter('fromDate');
         utils.removeQueryParameter('toDate');
@@ -176,11 +171,12 @@ const UserFilter = (props) => {
                                                 {/* <input type="date" name="fromDate" id="formDate" placeholder="dd/mm/yyyy" onChange={handleDateChangeFrom} value={fromDate} /> */}
                                                 <DatePicker 
                                                     className="cmnFieldStyle"
-                                                    selected={date === undefined ? new Date() : date}
+                                                    selected={date}
                                                     format="dd/MM/yyyy"
                                                     dateFormat="dd/MM/yyyy"
-                                                    placeholder="mm/dd/yyyy"
-                                                    onChange={(e) => setStartDate(e)} 
+                                                    placeholderText="dd/mm/yyyy"
+                                                    onChange={(e) => setStartDate(e)}
+                                                    maxDate={new Date(today)}
                                                 />
                                             </div>
                                         </div>
@@ -190,12 +186,13 @@ const UserFilter = (props) => {
                                                 {/* <input type="date" name="toDate" id="toDate" min={fromDate} placeholder="dd/mm/yyyy" onChange={handleDateChangeTo} value={toDate}/> */}
                                                 <DatePicker 
                                                     className="cmnFieldStyle"
-                                                    selected={date2 === undefined ? new Date() : date2}
+                                                    selected={date2}
                                                     format="dd/MM/yyyy"
                                                     dateFormat="dd/MM/yyyy"
-                                                    placeholder="mm/dd/yyyy"
+                                                    placeholderText="dd/mm/yyyy"
                                                     onChange={(e) => setEndDate(e)} 
                                                     minDate={new Date(date)}
+                                                    maxDate={new Date(today)}
                                                 />
                                             </div>
                                         </div>
