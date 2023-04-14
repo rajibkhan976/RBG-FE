@@ -11,19 +11,20 @@ import deleteBtn from "../../../../../assets/images/deleteBtn.svg";
 import downpayment from "../../../../../assets/images/no_downpayment.svg";
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
-
+import { utils } from "../../../../../helpers"
+import { useSelector } from "react-redux";
 
 
 const DownPayments = forwardRef((props, ref) => {
-
+    const [tomorrow, setTomorrow] = useState();
     const downPaymentElement = {
         title: "Down Payment 1",
         titleErr: "",
         amount: "",
         amountErr: "",
         isPayNow: 1,
-        paymentDate: moment().format('YYYY-MM-DD'),
-        minPaymentDate: moment().add(1, 'days').format('YYYY-MM-DD'),
+        paymentDate: "",
+        minPaymentDate: "",
         payment_type: "cash",
         payment_status: "paid",
     }
@@ -31,7 +32,17 @@ const DownPayments = forwardRef((props, ref) => {
     const [calenderMinDate, setCalenderMinDate] = useState();
     const [isDownPayment, setIsDownPayment] = useState(false);
     const [downPaymentElems, setDownPaymentElems] = useState([{ ...downPaymentElement }]);
+    const timezoneOffset = useSelector((state) => (state.user?.data.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
 
+    useEffect(() => {
+      let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+      let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset, "YYYY-MM-DD");
+      setCalenderMinDate(timezoneDateTime);
+      let tomorrowDate = moment().add(1, 'days').utc().format("YYYY-MM-DD HH:mm:ss");
+      let tomorrowsDateConverted = utils.convertUTCToTimezone(tomorrowDate ,timezoneOffset, "YYYY-MM-DD");
+      setTomorrow(tomorrowsDateConverted);
+    }, [timezoneOffset]);
+  
     useEffect(() => {
         if (props.contractData && props.contractData.isDownPayment && props.contractData.downPayments.length) {
             console.log('Props', props.contractData);
@@ -300,15 +311,15 @@ const DownPayments = forwardRef((props, ref) => {
                                                             min={el.minPaymentDate}
                                                             onChange={e => validateIndividual(e, key, "paymentDate")}
                                                         /> */}
-
+                                                        {console.log("el.paymentDate", el, tomorrow)}
                                                         <DatePicker 
                                                             className="cmnFieldStyle"
-                                                            selected={new Date(el.paymentDate)}
+                                                            selected={el.paymentDate ? new Date(el.paymentDate) : (tomorrow ? new Date(tomorrow) : new Date())}
                                                             format="dd/MM/yyyy"
                                                             dateFormat="dd/MM/yyyy"
                                                             placeholderText="dd/mm/yyyy"
                                                             onChange={(val) => downpayDatepicker(val, key, "paymentDate")} 
-                                                            minDate={new Date(moment(calenderMinDate).add(1, "days"))}
+                                                            minDate={tomorrow ? new Date(tomorrow): new Date()}
                                                         />
                                                     </div>
                                                 </div>

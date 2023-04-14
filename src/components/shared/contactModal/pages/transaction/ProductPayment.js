@@ -16,8 +16,12 @@ import BillingOverview from "./BillingOverview";
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
 import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import { utils } from "../../../../../helpers"
 
 const ProductPayment = (props) => {
+  const [calenderMinDate, setCalenderMinDate] = useState();
+  const [tomorrow, setTomorrow] = useState();
   const [isLoader, setIsLoader] = useState(false);
   const [productPayload, setProductPayload] = useState(null);
   const [downPayments, setDownPayments] = useState([]);
@@ -37,7 +41,7 @@ const ProductPayment = (props) => {
     payment_type: "cash",
     title: "",
     type: "outstanding",
-    paymentDate: new Date(new Date()).toISOString().split("T")[0],
+    paymentDate: "",
     isPayNow: 1,
     payment_status: "unpaid",
   });
@@ -83,6 +87,17 @@ const ProductPayment = (props) => {
 
     getTotalCart();
   }, []);
+
+  const timezoneOffset = useSelector((state) => (state.user?.data.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
+
+  useEffect(() => {
+    let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+    let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset, "YYYY-MM-DD");
+    setCalenderMinDate(timezoneDateTime);
+    let tomorrowDate = moment().add(1, 'days').utc().format("YYYY-MM-DD HH:mm:ss");
+    let tomorrowsDateConverted = utils.convertUTCToTimezone(tomorrowDate ,timezoneOffset, "YYYY-MM-DD");
+    setTomorrow(tomorrowsDateConverted);
+  }, [timezoneOffset]);
 
 
   const getTotalCart = () => {
@@ -133,13 +148,13 @@ const ProductPayment = (props) => {
         setOutstanding({
           ...outStanding,
           isPayNow: 0,
-          paymentDate: tomorrowPayDate().toISOString().split("T")[0]
+          paymentDate: tomorrow
         })
       } else {
         setOutstanding({
           ...outStanding,
           isPayNow: 1,
-          paymentDate: todayPayDate().toISOString().split("T")[0]
+          paymentDate: tomorrow
         })
       }
     } catch (error) {
@@ -488,10 +503,14 @@ const ProductPayment = (props) => {
     }
   };
 
-  const changeOutstandingPayDate = (e) => {
-    let outStandingDateSelected = e.target.value;
+  const changeOutstandingPayDate = (val) => {
+    let outStandingDateSelected = `${val.getFullYear()}-${
+      val.getMonth() + 1
+    }-${val.getDate()}`;
 
-    if (e.target.value !== "") {
+    // let outStandingDateSelected = e.target.value;
+
+    if (outStandingDateSelected) {
       try {
         setIsLoader(true);
         setOutstanding({
@@ -795,12 +814,11 @@ const ProductPayment = (props) => {
 
   // }
 
-  const changeDownpaymentDate = (e, downpay, i) => {
-    //  //  console.log(e.target);
+  const changeDownpaymentDate = (val, downpay, i) => {
     let formattedDate = `${val.getFullYear()}-${
       val.getMonth() + 1
     }-${val.getDate()}`;
-
+    console.log('pppp', formattedDate)
     const downPaymentsPlaceholder = [...downPayments];
 
     try {
@@ -829,7 +847,7 @@ const ProductPayment = (props) => {
         edit_PayDate_Err: "",
       });
     }
-    console.log("changeDownpaymentDate", e.target.value, downpay);
+   // console.log("changeDownpaymentDate", e.target.value, downpay);
   };
   const changeDownpaymentType = (e, downpay, i) => {
     //  console.log(e.target.value === "online");
@@ -1043,7 +1061,7 @@ const ProductPayment = (props) => {
                                 {console.log("downpay.isPayNow", downpay.isPayNow)}
                                 {downpay.isPayNow === 0 && (
                                   <div className="paymentNow">
-                                    <input
+                                    {/* <input
                                       type="date"
                                       placeholder="mm-dd-yyyy"
                                       className="cmnFieldStyle"
@@ -1057,17 +1075,17 @@ const ProductPayment = (props) => {
                                           .toISOString()
                                           .split("T")[0]
                                       }
-                                    />
+                                    /> */}
 
-                                      {/* <DatePicker 
+                                      <DatePicker 
                                           className="cmnFieldStyle"
-                                          selected={new Date(downpay.paymentDate)}
+                                          selected={downpay.paymentDate ? new Date(downpay.paymentDate) : ""}
                                           format="dd/MM/yyyy"
                                           dateFormat="dd/MM/yyyy"
                                           placeholderText="dd/mm/yyyy"
                                           onChange={(val) => changeDownpaymentDate(val, downpay, i)} 
-                                          minDate={new Date(moment(calenderMinDate).add(1, "days"))}
-                                      /> */}
+                                          minDate={new Date(calenderMinDate)}
+                                      />
                                   </div>
                                 )}
                                 {downPaymentErrorMsg.edit_PayDate_Err && (
@@ -1335,7 +1353,7 @@ const ProductPayment = (props) => {
                               : "paymentNow"
                           }
                         >
-                          <input
+                          {/* <input
                             type="date"
                             placeholder="mm/dd/yyyy"
                             className="cmnFieldStyle"
@@ -1345,7 +1363,18 @@ const ProductPayment = (props) => {
                             min={todayPayDate().toISOString().split("T")[0]}
                             onChange={(e) => changeOutstandingPayDate(e)}
                             ref={inputOutstandingDate}
+                          /> */}
+                          {console.log("outStanding", outStanding.paymentDate, tomorrow)}
+                          <DatePicker 
+                              className="cmnFieldStyle"
+                              selected={outStanding.paymentDate ? new Date(outStanding.paymentDate) : new Date(tomorrow)}
+                              format="dd/MM/yyyy"
+                              dateFormat="dd/MM/yyyy"
+                              placeholderText="dd/mm/yyyy"
+                              onChange={(val) => changeOutstandingPayDate(val)} 
+                              minDate={new Date(tomorrow)}
                           />
+
                           {downPaymentErrorMsg.outStandingDate_Err && (
                             <p className="errorMsg">
                               {downPaymentErrorMsg.outStandingDate_Err}

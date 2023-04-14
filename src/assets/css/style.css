@@ -16232,6 +16232,10 @@ automation email setting css
         /* ract datepicker css */
   /* ================================ */
 
-  .react-datepicker-popper {
+.react-datepicker-popper {
     z-index: 10;
-  }
+}
+
+.cmnFormRow.fullWidth.flatForm .cmnFieldStyle.editTransactionDate {
+    width: 181px;
+}
