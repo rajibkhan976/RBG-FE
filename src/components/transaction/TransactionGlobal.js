@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from "react-redux";
+import React, {useEffect, useState} from 'react';
+import {useDispatch, useSelector} from "react-redux";
 import moment from "moment";
 import TransactionHead from './Transactionhead';
 import ImportTransactionFilter from './TransactionFilter';
@@ -11,14 +11,13 @@ import bank from "../../assets/images/bank2.svg";
 import refund from "../../assets/images/refund_icon_white.svg";
 import download from "../../assets/images/download2.svg";
 import noRecords from "../../assets/images/noRecords.svg";
-import { TransactionHistoryServices } from "../../services/transaction/TransactionHistoryServices";
-import { utils } from '../../helpers';
+import {TransactionHistoryServices} from "../../services/transaction/TransactionHistoryServices";
+import {utils} from '../../helpers';
 import Loader from "../shared/Loader";
-import { render } from '@testing-library/react';
 import Pagination from '../shared/Pagination';
 import * as actionTypes from "../../actions/types";
 import PDFDocument from '../shared/contactModal/pdf/pdfdocument';
-import { PDFDownloadLink } from '@react-pdf/renderer';
+import {PDFDownloadLink} from '@react-pdf/renderer';
 
 const TransactionGlobal = (props) => {
     const dispatch = useDispatch();
@@ -51,16 +50,13 @@ const TransactionGlobal = (props) => {
     }
 
     const getUnique = (arr, index) => {
-
-        const unique = arr.map(e => e[index]).map((e, i, final) => final.indexOf(e) === i && i).filter(e => arr[e]).map(e => arr[e]);
-        return unique;
+        return arr.map(e => e[index]).map((e, i, final) => final.indexOf(e) === i && i).filter(e => arr[e]).map(e => arr[e]);
     }
     const fetchTransHistoryList = async (pageNo) => {
         try {
             setIsLoader(true);
             let page = pageNo ? pageNo : utils.getQueryVariable("page");
             const queryParams = await getQueryParams();
-            console.log("queryParams", queryParams);
             const response = await TransactionHistoryServices.fetchTransHistoryList(queryParams, page);
             setOldTransactionList(response.transactions.map(el => {
                 if (!el.history.length && el.due_date < moment()?.format("YYYY-MM-DD")) {
@@ -74,7 +70,6 @@ const TransactionGlobal = (props) => {
                 currentPage: response.pagination.currentPage,
                 totalPages: response.pagination.totalPages
             });
-            console.log('here', response)
             let transactions = response.transactions;
             let filteredTransaction = transactions.map(el => {
                 if (el.contact && (el.contact?.firstName || el.contact?.lastName)) {
@@ -86,9 +81,7 @@ const TransactionGlobal = (props) => {
             });
             const uniqueNames = getUnique(filteredTransaction, 'name');
             setContact(uniqueNames);
-            console.log('ujuu', filteredTransaction, uniqueNames)
             setShowFilter(false);
-
         } catch (e) {
             console.log('error', e)
         } finally {
@@ -204,8 +197,8 @@ const TransactionGlobal = (props) => {
                                 oldTransactionList?.length ? oldTransactionList.map((tHistory, key) => {
                                     return (
                                         <>
-                                            <div class="listRow transGlobal" key={"trx_" + key}>
-                                                <div class="listCell cellWidth_15" onClick={() => openContactModal(tHistory)}>
+                                            <div className="listRow transGlobal" key={"trx_" + key}>
+                                                <div className="listCell cellWidth_15" onClick={() => openContactModal(tHistory)}>
                                                     <div className="rowImage">
                                                         <img src={owner_img_1} alt="" />
                                                     </div>
@@ -216,10 +209,10 @@ const TransactionGlobal = (props) => {
                                                     }
 
                                                 </div>
-                                                <div class="listCell cellWidth_15">
+                                                <div className="listCell cellWidth_15">
                                                     <button className='noBg'><span className='blueTxt'>{tHistory.contact && tHistory.contact._id ? tHistory?.contact?.email : tHistory?.contactDeleted?.email}</span></button>
                                                 </div>
-                                                <div class="listCell cellWidth_15">
+                                                <div className="listCell cellWidth_15">
                                                     {timezoneOffset ? utils.convertUTCToTimezone(tHistory?.last_transaction_date,timezoneOffset) : "..."}
                                                     {/* {(!tHistory?.last_transaction_date) ?
                                                         (
@@ -236,15 +229,15 @@ const TransactionGlobal = (props) => {
                                                         )} */}
 
                                                 </div>
-                                                <div class="listCell cellWidth_15"><span className='spanned'>{(!tHistory?.last_transaction_date) ? "N/A" : tHistory?.history[0]?.transactionId || tHistory?.history[0]?.transaction_id}</span></div>
-                                                <div class="listCell cellWidth_10">
+                                                <div className="listCell cellWidth_15"><span className='spanned'>{(!tHistory?.last_transaction_date) ? "N/A" : tHistory?.history[0]?.transactionId || tHistory?.history[0]?.transaction_id}</span></div>
+                                                <div className="listCell cellWidth_10">
                                                     <span className='boldTxt'>${Math.abs(tHistory?.amount).toFixed(2)}</span>
                                                     {tHistory?.history[tHistory?.history?.length - 1]?.refunded_amount ?
                                                         <span className="refundAmmount">-${Math.abs(tHistory?.history[tHistory?.history?.length - 1]?.refunded_amount).toFixed(2)}</span>
                                                         : ""}
                                                 </div>
-                                                <div class="listCell cellWidth_10">{tHistory?.transaction_for === "course" ? "Program" : "Product"}</div>
-                                                <div class="listCell cellWidth_7 center">
+                                                <div className="listCell cellWidth_10">{tHistory?.transaction_for === "course" ? "Program" : "Product"}</div>
+                                                <div className="listCell cellWidth_7 center">
                                                     {tHistory.transaction_for === "product" ?
                                                         <div className='proListed'>
                                                             <span className='numberTag'>{tHistory?.items?.length}</span>
@@ -268,12 +261,12 @@ const TransactionGlobal = (props) => {
                                                         : "-"}
 
                                                 </div>
-                                                <div class="listCell cellWidth_8 center">
+                                                <div className="listCell cellWidth_8 center">
                                                     <button
                                                         className={tHistory.status === "completed" ? 'statusBtn succes' : tHistory.status === "failed" || tHistory.status == "active" ? 'statusBtn fail' : (tHistory.status === "refunded" || tHistory.status === "overdue") ? 'statusBtn refund' : "statusBtn"}>
                                                         {tHistory.status == "completed" ? "Success" : (tHistory.status === "active" ? "Failed" : tHistory.status)}</button>
                                                 </div>
-                                                <div class="listCell cellWidth_5 center">
+                                                <div className="listCell cellWidth_5 center">
                                                     {tHistory?.history.length > 0 &&
                                                         <button className='noBg' onClick={() => { toggleOptions(key); }}><img src={arrowDown} className={option === key && "rotateround"} /></button>
                                                     }
@@ -375,23 +368,23 @@ const TransactionGlobal = (props) => {
                     }
                 </div>
 
-                {/* <div class="paginationOuter">
+                {/* <div className="paginationOuter">
             <ul>
                 <li>
-                    <button class="btn paginationBtn" disabled="">
+                    <button className="btn paginationBtn" disabled="">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 492 492"><path d="M198.608,246.104L382.664,62.04c5.068-5.056,7.856-11.816,7.856-19.024c0-7.212-2.788-13.968-7.856-19.032l-16.128-16.12    C361.476,2.792,354.712,0,347.504,0s-13.964,2.792-19.028,7.864L109.328,227.008c-5.084,5.08-7.868,11.868-7.848,19.084    c-0.02,7.248,2.76,14.028,7.848,19.112l218.944,218.932c5.064,5.072,11.82,7.864,19.032,7.864c7.208,0,13.964-2.792,19.032-7.864    l16.124-16.12c10.492-10.492,10.492-27.572,0-38.06L198.608,246.104z" fill="#305671"></path></svg>
                     </button>
                 </li>
                 {[pagination.totalPages].map((item, key) =>{
                     render(
                         <li>
-                            <button class="btn paginationBtn active" value={key}>{key}</button>
+                            <button className="btn paginationBtn active" value={key}>{key}</button>
                         </li>
                         )
                     })
                 }
                 <li>
-                    <button class="btn paginationBtn">
+                    <button className="btn paginationBtn">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 492.004 492.004"><path d="M382.678,226.804L163.73,7.86C158.666,2.792,151.906,0,144.698,0s-13.968,2.792-19.032,7.86l-16.124,16.12    c-10.492,10.504-10.492,27.576,0,38.064L293.398,245.9l-184.06,184.06c-5.064,5.068-7.86,11.824-7.86,19.028    c0,7.212,2.796,13.968,7.86,19.04l16.124,16.116c5.068,5.068,11.824,7.86,19.032,7.86s13.968-2.792,19.032-7.86L382.678,265    c5.076-5.084,7.864-11.872,7.848-19.088C390.542,238.668,387.754,231.884,382.678,226.804z" fill="#305671"></path></svg>
                     </button>
                 </li>
