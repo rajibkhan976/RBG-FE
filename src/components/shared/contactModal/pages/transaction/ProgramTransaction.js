@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useSelector } from "react-redux";
 import aaroww from "../../../../../assets/images/arrow_forward.svg";
 import info_icon from "../../../../../assets/images/infos.svg";
 import bell from "../../../../../assets/images/bell.svg";
@@ -9,8 +10,13 @@ import DownPayments from "./DownPayments";
 import moment from "moment";
 import AddCourseModal from "../../../../setup/course/src/addCourseModal";
 import { CourseServices } from "../../../../../services/setup/CourseServices";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 
 const ProgramTransaction = (props) => {
+  const [startDate, setStartDate] = useState();
+  const [payLaterDate, setPayLaterDate] = useState();
+  const [calenderMinDate, setCalenderMinDate] = useState();
   const [isLoader, setIsLoader] = useState(false);
 
   const [isAddPogramModal, setIsAddPogramModal] = useState(false);
@@ -51,6 +57,22 @@ const ProgramTransaction = (props) => {
     amount: "",
     billing_cycle: ""
   });
+
+  const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user?.data?.organizationTimezoneInfo.utc_offset:null);
+  useEffect(()=>{
+      console.log("transaction filter time zone", timezoneOffset);
+  })
+
+  useEffect(() => {
+      let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+      let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+      let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
+      setCalenderMinDate(formatedDateTime);
+
+      // setSelectedFrom(formatedDateTime);
+      // setSelectedTo(formatedDateTime);
+      setStartDate(null);
+  }, []);
 
   const getLatestClone = () => JSON.parse(JSON.stringify(contractData));
   const addDownPaymentsRef = useRef();
@@ -233,17 +255,37 @@ const ProgramTransaction = (props) => {
   }
 
   //First billing date change
-  const handelFirstBillingDateChange = (e) => {
-    e.preventDefault();
-    console.log('first billing date change', e.target.value);
-    setContractData({ ...contractData, paymentDate: e.target.value, isPayNow: 0 });
+  // const handelFirstBillingDateChange = (e) => {
+  //   e.preventDefault();
+  //   console.log('first billing date change', e.target.value);
+  //   setContractData({ ...contractData, paymentDate: e.target.value, isPayNow: 0 });
+  // }
+
+  const handelFirstBillingDateChange = (val) => {
+    if (val) {
+      let formattedDate = `${val.getFullYear()}-${
+        val.getMonth() + 1
+      }-${val.getDate()}`;
+      setPayLaterDate(val);
+      setContractData({ ...contractData, paymentDate: formattedDate, isPayNow: 0  });
+    }
   }
 
   //Program start date change
-  const handelProgramStartDateChange = (e) => {
-    e.preventDefault();
-    console.log('Program start date change', e.target.value);
-    setContractData({ ...contractData, courseStart: e.target.value });
+  // const handelProgramStartDateChange = (e) => {
+  //   e.preventDefault();
+  //   console.log('Program start date change', e.target.value);
+  //   setContractData({ ...contractData, courseStart: e.target.value });
+  // }
+
+  const handelProgramStartDateChange = (val) => {
+    if (val) {
+      let formattedDate = `${val.getFullYear()}-${
+        val.getMonth() + 1
+      }-${val.getDate()}`;
+      setStartDate(val);
+      setContractData({ ...contractData, courseStart: formattedDate });
+    }
   }
 
   //Auto renew 
@@ -578,7 +620,23 @@ const ProgramTransaction = (props) => {
                 <p>1st Billing Date <span>Now</span></p>
               </div>
               <div className={contractData.firstBillingTime ? "paymentNow display" : "paymentNow"} >
-                <input type="date" name="firstBillingDate" placeholder="mm/dd/yyyy" min={contractData.minPaymentDate} onChange={handelFirstBillingDateChange} className="editableInput" value={contractData.paymentDate} />
+                {/* <input type="date" 
+                  name="firstBillingDate" 
+                  placeholder="mm/dd/yyyy" 
+                  min={contractData.minPaymentDate} 
+                  onChange={handelFirstBillingDateChange} 
+                  className="editableInput" 
+                  value={contractData.paymentDate} 
+                /> */}
+                <DatePicker 
+                  className="cmnFieldStyle"
+                  selected={payLaterDate}
+                  format="dd/MM/yyyy"
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="dd/mm/yyyy"
+                  onChange={(e) => handelFirstBillingDateChange(e)} 
+                  minDate={new Date(moment(calenderMinDate).add(1, "days"))}
+                />
               </div>
             </div>
             <div className={formErrors.courseStart ? "rightSecTransaction errorField" : "rightSecTransaction"}>
@@ -590,7 +648,22 @@ const ProgramTransaction = (props) => {
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
                 </span>
               </label>
-              <input type="date" name="programStartDate" placeholder="mm/dd/yyyy" onChange={handelProgramStartDateChange} className="programStartDate cmnFieldStyle" defaultValue={contractData.courseStart} />
+              {/* <input type="date" 
+                name="programStartDate" 
+                placeholder="mm/dd/yyyy" 
+                onChange={handelProgramStartDateChange} 
+                className="programStartDate cmnFieldStyle" 
+                defaultValue={contractData.courseStart} 
+              /> */}
+              <DatePicker 
+                  className="cmnFieldStyle"
+                  selected={startDate}
+                  format="dd/MM/yyyy"
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="dd/mm/yyyy"
+                  onChange={(e) => handelProgramStartDateChange(e)} 
+                  minDate={new Date(calenderMinDate)}
+              />
             </div>
           </div>
           <div className="formsection gap autoRenew">

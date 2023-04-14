@@ -9,6 +9,8 @@ import moment from "moment";
 import info_icon from "../../../../../assets/images/infos.svg";
 import deleteBtn from "../../../../../assets/images/deleteBtn.svg";
 import downpayment from "../../../../../assets/images/no_downpayment.svg";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 
 
 
@@ -25,7 +27,8 @@ const DownPayments = forwardRef((props, ref) => {
         payment_type: "cash",
         payment_status: "paid",
     }
-
+    const [payLaterDate, setPayLaterDate] = useState();
+    const [calenderMinDate, setCalenderMinDate] = useState();
     const [isDownPayment, setIsDownPayment] = useState(false);
     const [downPaymentElems, setDownPaymentElems] = useState([{ ...downPaymentElement }]);
 
@@ -282,6 +285,16 @@ const DownPayments = forwardRef((props, ref) => {
                                                             min={el.minPaymentDate}
                                                             onChange={e => validateIndividual(e, key, "paymentDate")}
                                                         />
+
+                                                        {/* <DatePicker 
+                                                            className="cmnFieldStyle"
+                                                            selected={payLaterDate}
+                                                            format="dd/MM/yyyy"
+                                                            dateFormat="dd/MM/yyyy"
+                                                            placeholderText="dd/mm/yyyy"
+                                                            onChange={(e) => handelFirstBillingDateChange(e)} 
+                                                            minDate={new Date(moment(calenderMinDate).add(1, "days"))}
+                                                        /> */}
                                                     </div>
                                                 </div>
                                             </div>
