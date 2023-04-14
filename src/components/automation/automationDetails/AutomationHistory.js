@@ -54,7 +54,6 @@ export default function AutomationHistory(props) {
             let steps = props.automationDetails.blueprint.filter(el => !el.id.includes('edge-'));
             setTotalSteps(steps.length);
         }
-        console.log("timezoneOffset",timezoneOffset);
     }, [props]);
     const toggleOptions = (index) => {
         setOption(index !== option ? index : null);
@@ -194,10 +193,11 @@ export default function AutomationHistory(props) {
                         <div className="formField">
                             <p>From</p>
                             <div className="inFormField">
-                                <DatePicker 
+                                <DatePicker
                                     style={{width:"133px"}}
                                     className="cmnFeldStyle autoHistoryDateInput"
                                     selected={date}
+                                    defaultDate={today ? new Date(today) : ""}
                                     format="dd/MM/yyyy"
                                     dateFormat="dd/MM/yyyy"
                                     placeholderText="dd/mm/yyyy"
@@ -212,7 +212,7 @@ export default function AutomationHistory(props) {
                                     <DatePicker 
                                         className="cmnFieldStyle autoHistoryDateInput"
                                         selected={date2}
-                                        disabled={(filterData.fromDate) ? false : true}
+                                        defaultDate={today ? new Date(today) : ""}
                                         format="dd/MM/yyyy"
                                         dateFormat="dd/MM/yyyy"
                                         placeholderText="dd/mm/yyyy"

@@ -172,6 +172,7 @@ const UserFilter = (props) => {
                                                 <DatePicker 
                                                     className="cmnFieldStyle"
                                                     selected={date}
+                                                    defaultDate={today ? new Date(today) : ""}
                                                     format="dd/MM/yyyy"
                                                     dateFormat="dd/MM/yyyy"
                                                     placeholderText="dd/mm/yyyy"
@@ -187,6 +188,7 @@ const UserFilter = (props) => {
                                                 <DatePicker 
                                                     className="cmnFieldStyle"
                                                     selected={date2}
+                                                    defaultDate={today ? new Date(today) : ""}
                                                     format="dd/MM/yyyy"
                                                     dateFormat="dd/MM/yyyy"
                                                     placeholderText="dd/mm/yyyy"
