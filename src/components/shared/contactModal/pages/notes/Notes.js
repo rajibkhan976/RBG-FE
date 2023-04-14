@@ -7,7 +7,7 @@ import Loader from "../../../Loader";
 import {NoteServices} from "../../../../../services/NoteServices";
 import {utils} from "../../../../../helpers";
 import momentTZ from "moment-timezone";
-
+import { useSelector } from "react-redux"
 
 const Notes = (props) => {
 
@@ -38,6 +38,7 @@ const Notes = (props) => {
         setIsLoader(true);
         const result = await NoteServices.fetchNoteList(contactID ,pageId, queryParams);
         if (result) {
+          console.log("Note list", result?.notes);
           setListNote(result.notes);
           console.log(listNote);
         }
@@ -64,6 +65,10 @@ setTimeout(() => {
 }, 500);
   console.log("updateListNote 2", updateListNote)
 }
+const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
+  useEffect(()=>{
+    console.log("Note time zone:", timezoneOffset)
+},[timezoneOffset]);
 
   return (
     <>
@@ -89,8 +94,8 @@ setTimeout(() => {
             {
               listNote && listNote.length > 0 ?
                 listNote.map((elem ,key)=>{
-                  const newdate = new Date(elem.createdAt);
-                  const dateForamt = newdate.getDate()+"/"+(newdate.getMonth() + 1)+"/"+newdate.getFullYear();
+                  // const newdate = new Date(elem.createdAt);
+                  // const dateForamt = newdate.getDate()+"/"+(newdate.getMonth() + 1)+"/"+newdate.getFullYear();
                  
 
                   return(
@@ -102,7 +107,8 @@ setTimeout(() => {
                         </div>     
                       </div>
                       <div className="cell creBy">{elem.createdBy}</div>
-                      <div className="cell creOn">{dateForamt}</div>
+                      {/* {dateForamt} */}
+                      <div className="cell creOn">{utils.convertUTCToTimezone(elem.createdAt, timezoneOffset).split(" ").splice(0,3).join(" ")}</div>
                     </div>
                   )
                 })

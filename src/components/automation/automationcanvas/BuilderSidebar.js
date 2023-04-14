@@ -9,7 +9,7 @@ const Sidebar = () => {
     <>
       <div className="sidebarHeader d-flex">
         <h4>Triggers</h4>
-        <button className="btn"><img src={rightArrow} /></button>
+       {/* <button className="btn"><img src={rightArrow} /></button>*/}
       </div>
       {/* <div className="description">
         You can drag these nodes to the pane on the right.
@@ -109,7 +109,7 @@ const Sidebar = () => {
       </div>
       <div className="sidebarHeader d-flex">
         <h4>Filter</h4>
-        <button className="btn"><img src={rightArrow} /></button>
+        {/*<button className="btn"><img src={rightArrow} /></button>*/}
       </div>
       <div className="dndNodes filterNodes">
         <div
@@ -129,7 +129,7 @@ const Sidebar = () => {
       </div>
       <div className="sidebarHeader d-flex">
         <h4>Action</h4>
-        <button className="btn"><img src={rightArrow} /></button>
+        {/*<button className="btn"><img src={rightArrow} /></button>*/}
       </div>
       <div className="dndNodes actionNodes">
         <div
@@ -239,7 +239,7 @@ const Sidebar = () => {
             Automation
           </div>
         </div>
-{/*        <div
+        <div
           className="dndnode notificationGroup"
           onDragStart={(event) => onDragStart(event, "notificationTag")}
           draggable
@@ -260,7 +260,7 @@ const Sidebar = () => {
           <div className="nodeNameTooltip">
             Notification Group
           </div>
-        </div>*/}
+        </div>
       </div>
     </>
   );

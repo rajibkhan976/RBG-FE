@@ -10,6 +10,8 @@ import "./assets/css/dev.css";
 import "./assets/css/responsive.css";
 import "./assets/css/amar.css";
 import "./assets/css/customizations.css";
+import "./assets/css/uifix.css";
+import "./assets/css/mergeField.css";
 import reportWebVitals from "./reportWebVitals";
 import {BrowserRouter as Router} from "react-router-dom";
 import axios from "axios";

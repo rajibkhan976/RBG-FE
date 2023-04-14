@@ -311,6 +311,7 @@ const Transaction = (props) => {
       setIsScroll(true);
       setIsLoaderScroll(true);
       const response = await TransactionServices.fetchUpcomingTransactions(contactId, pageNumber);
+      console.log("Upcomming transation", response?.transactions)
       if (response.pagination.currentPage == 1) {
         setUpcomingTransaction(response.transactions);
       } else {
@@ -429,15 +430,17 @@ const Transaction = (props) => {
   };
 
   const dayLeft = (due_date) => {
-    // console.log('Initial due date', due_date);
-    let payDate = moment(due_date, "YYYY-MM-DD");
+    // console.log("due date", new Date(due_date).getDate());
+    let due_dates = new Date(due_date).getFullYear()+"-"+ (new Date(due_date).getMonth() + 1) + "-" +new Date(due_date).getDate();
+    // console.log('due date', due_dates);
+    let payDate = moment(due_dates, "YYYY-MM-DD");
     let today = moment().startOf('day');
 
     //Difference in number of days
     let result = moment.duration(payDate.diff(today)).asDays();
 
     if (result < 31) {
-      if (result == 0) {
+      if (result <= 0) {
         return "Today"
       } else {
         if (result == 1) {
@@ -447,7 +450,7 @@ const Transaction = (props) => {
         }
       }
     } else {
-      return moment(due_date.split(" ")[0], 'YYYY-MM-DD').format('Do MMM, YYYY')
+      return moment(due_dates.split(" ")[0], 'YYYY-MM-DD').format('Do MMM, YYYY')
     }
   };
 
@@ -1107,7 +1110,10 @@ const Transaction = (props) => {
     }
   };
   // Overdue Transactions
-
+  const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
+  useEffect(()=>{
+    console.log("transation time zone:", timezoneOffset)
+},[timezoneOffset])
   return (
     <>
       {successMsg && <AlertMessage type="success" message={successMsg} time={10000} close={closeAlert} />}
@@ -1197,12 +1203,13 @@ const Transaction = (props) => {
                             {"$ " + parseFloat(item.amount).toFixed(2)}
                           </span>
                         </div>
-
+                        {/******** upcomming transation date ********/}
                         <div className="cell times">
                           <span className="time">
-                            {/* {dayLeft(item.due_date)}<br /> */}
-                            {dayLeft(utils.convertUTCToTimezone(item.due_date, timezone, "YYYY-MM-DD"))}
-                            {/* {utils.convertUTCToTimezone(item.due_date ,timezone)} */}
+                            {/* {dayLeft(item.due_date)} */}
+                            {dayLeft(utils.convertUTCToTimezone(item.due_date + " " + "00:00:00", timezoneOffset).split(" ").splice(0,3).join(" "))}
+                            {/* {utils.convertUTCToTimezone(item.due_date + " " + "00:00:00", timezoneOffset).split(" ").splice(0,3).join(" ")} */}
+                            {/* {dayLeft(utils.convertUTCToTimezone(item.due_date, timezoneOffset))} */}
                           </span>
                         </div>
                         <div className="cell action">
@@ -1440,7 +1447,9 @@ const Transaction = (props) => {
                         <div className="cell times">
                           <span className="time">
                             {/* {moment(item.history && item.history[0] && item.history[0].transaction_date, 'YYYY-MM-DD').fromNow()} <br /> */}
-                            {moment(utils.convertUTCToTimezone(item.history && item.history[0] && item.history[0].transaction_date, timezone, 'YYYY-MM-DD hh:mm A')).fromNow()}
+                            {/* {moment(utils.convertUTCToTimezone(item?.history && item?.history[0] && item?.history[0].transaction_date, timezone, 'YYYY-MM-DD hh:mm A')).fromNow()} */}
+                            {/* {item?.history[0].transaction_date} */}
+                            {utils.convertUTCToTimezone(item?.history[0].transaction_date.trim(), timezoneOffset).split(" ").splice(0, 3).join(" ")}
                           </span>
                         </div>
 
@@ -1537,17 +1546,28 @@ const Transaction = (props) => {
                                     <span className="time">
                                       {/* {moment(element.transaction_date.split(" ")[1], 'hh:mm A').format('hh:mm A')} */}
                                       {/* {element.transaction_date} <br /><br /> */}
-                                      {utils.convertUTCToTimezone(element.transaction_date, timezone, 'YYYY-MM-DD,hh:mm A').split(",")[1]}
+                                      {/* {utils.convertUTCToTimezone(element.transaction_date, timezone, 'YYYY-MM-DD,hh:mm A').split(",")[1]} */}
+                                      {utils.convertUTCToTimezone(element.transaction_date.trim(), timezoneOffset).split(" ").splice(3,4).join(" ")}
                                       <span className="historyDate">
                                         {/* {element.transaction_date.split(" ")[0]}  */}
                                         {/* {moment(element.transaction_date.split(" ")[0], 'YYYY-MM-DD').format('Do MMM, YYYY')} */}
-                                        {moment(utils.convertUTCToTimezone(element.transaction_date, timezone, 'YYYY-MM-DD,hh:mm A').split(",")[0]).format('Do MMM, YYYY')}
+                                        
+                                        {/* {moment(utils.convertUTCToTimezone(element.transaction_date, timezone, 'YYYY-MM-DD,hh:mm A').split(",")[0]).format('Do MMM, YYYY')} */}
+                                        {utils.convertUTCToTimezone(element.transaction_date, timezoneOffset).split(" ").splice(0, 3).join(" ")}
                                       </span>
                                     </span>
                                   </div>
-                                  {(element.status === "success") &&
+                                  {/* {(element.status === "success") &&
                                     <PDFDownloadLink
                                       document={<PDFDocument key={index} transactionData={element} contact={props.contact} org={org} transactionDate={utils.convertUTCToTimezone(element.transaction_date, timezone, 'LLL')} />}
+                                      fileName={"Invoice_" + (element.transactionId) ? element.transactionId : element.transaction_id + ".pdf"}
+                                    >
+                                      <button type="button" className="downloadInvoiceBtn" title="Download invoice"></button>
+                                    </PDFDownloadLink>
+                                  } */}
+                                  {(element.status === "success") &&
+                                    <PDFDownloadLink
+                                      document={<PDFDocument key={index} transactionData={element} contact={props.contact} org={org} transactionDate={utils.convertUTCToTimezone(element?.transaction_date, timezoneOffset)} />}
                                       fileName={"Invoice_" + (element.transactionId) ? element.transactionId : element.transaction_id + ".pdf"}
                                     >
                                       <button type="button" className="downloadInvoiceBtn" title="Download invoice"></button>
@@ -1664,9 +1684,10 @@ const Transaction = (props) => {
                         </div>
 
                         <div className="cell times">
-                          <span className="time">
+                          {/* <span className="time">
                             {moment(utils.convertUTCToTimezone(item.due_date, timezone, 'YYYY-MM-DD hh:mm A')).fromNow()}
-                          </span>
+                          </span> */}
+                          {utils.convertUTCToTimezone(item?.due_date + " " + "00:00:00", timezoneOffset).split(" ").splice(0, 3).join(" ")}
                         </div>
 
                         <div className="cell action">
@@ -1756,11 +1777,13 @@ const Transaction = (props) => {
                                     <span className="time">
                                       {/* {moment(element.transaction_date.split(" ")[1], 'hh:mm A').format('hh:mm A')} */}
                                       {/* {element.transaction_date} <br /><br /> */}
-                                      {utils.convertUTCToTimezone(element.transaction_date, timezone, 'YYYY-MM-DD,hh:mm A').split(",")[1]}
+                                      {/* {utils.convertUTCToTimezone(element.transaction_date, timezone, 'YYYY-MM-DD,hh:mm A').split(",")[1]} */}
+                                      {utils.convertUTCToTimezone(element?.transaction_date, timezoneOffset).split(" ").splice(3,5).join(" ")}
                                       <span className="historyDate">
                                         {/* {element.transaction_date.split(" ")[0]}  */}
                                         {/* {moment(element.transaction_date.split(" ")[0], 'YYYY-MM-DD').format('Do MMM, YYYY')} */}
-                                        {moment(utils.convertUTCToTimezone(element.transaction_date, timezone, 'YYYY-MM-DD,hh:mm A').split(",")[0]).format('Do MMM, YYYY')}
+                                        {/* {moment(utils.convertUTCToTimezone(element.transaction_date, timezone, 'YYYY-MM-DD,hh:mm A').split(",")[0]).format('Do MMM, YYYY')} */}
+                                        {utils.convertUTCToTimezone(element?.transaction_data, timezoneOffset).split(" ").splice(0, 3).join(" ")}
                                       </span>
                                     </span>
                                   </div>

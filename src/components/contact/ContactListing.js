@@ -55,6 +55,7 @@ const ContactListing = forwardRef((props, ref) => {
     const [checkboxes, setCheckboxes] = useState([]);
     const [selectAllCheckbox, setSelectAllCheckbox] = useState(false);
     const [selectSingle, setSelectSingle] = useState(false);
+    // const [unselectSingle, setUnselectSingle] = useState(false);
     const [deleteSelectedModal, setDeleteSelectedModal] = useState(false);
     const [addSelectAll, setAddSelectAll] = useState({
         status: false,
@@ -64,7 +65,17 @@ const ContactListing = forwardRef((props, ref) => {
     const [openModal, setOpenModal] = useState(false);
     const [tagListToggle, setTagListToggle] = useState(false);
     let arrangeColRef = useRef();
-
+    const [showAction, setShowAction] = useState(false);
+    // const [actionStatus, setActionStatus] = useState(false);
+    const [searchContactList, setSearchContactList] = useState([]);
+    const [singleContact, setSingleContact] = useState();
+    // const [oneContactObj, setOneContacrObj] = useState([]);
+    const [allContactCheck, setAllContactCheck] = useState(false);
+    const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state?.user?.data.organizationTimezoneInfo.utc_offset:null);
+                        //    useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:"UTC-06")
+    useEffect(()=>{
+        console.log("contact listiing timezone", timezoneOffset);
+    })
     const openFilter = () => {
         props.openFilter();
     }
@@ -122,6 +133,7 @@ const ContactListing = forwardRef((props, ref) => {
             // }
             const result = await ContactService.fetchUsers(pageId, queryParams);
             if (result) {
+                console.log("contact list", result.contacts);
                 setContactList(result.contacts);
                 setContactCount(result.pagination.count);
                 setFilters(result.filterApplied);
@@ -130,7 +142,7 @@ const ContactListing = forwardRef((props, ref) => {
                     currentPage: result.pagination.currentPage,
                     totalPages: result.pagination.totalPages
                 });
-                console.log(result.pagination.count)
+                // console.log(result.pagination.count)
                 dispatch({
                     type: actionTypes.CONTACTS_COUNT,
                     count: result.pagination.count,
@@ -207,10 +219,10 @@ const ContactListing = forwardRef((props, ref) => {
             queryParams.append("group", group);
         }
         if (fromDate) {
-            queryParams.append('fromDate', fromDate);
+            queryParams.append('fromDate', decodeURIComponent(fromDate).replaceAll("+", " "));
         }
         if (toDate) {
-            queryParams.append('toDate', toDate);
+            queryParams.append('toDate', decodeURIComponent(toDate).replaceAll("+", " "));
         }
         if (status) {
             queryParams.append("status", status);
@@ -265,7 +277,7 @@ const ContactListing = forwardRef((props, ref) => {
     }
 
     const handleCheckCol = (e, id) => {
-        console.log(e);
+        // console.log(e);
         let selected = listCol.filter(el => el.status).length;
         if (selected === 1 && !e) {
             dispatch({
@@ -359,21 +371,41 @@ const ContactListing = forwardRef((props, ref) => {
     }
 
 
-    const handleCheckBoxClick = (id) => {
+    const handleCheckBoxClick = (id, event, item) => {
         setSelectAllCheckbox(false);
-
+        console.log("one contact item", item);
+        // console.log("mobile number", item.mobile?.number, "father number", item.dadPhone?.number, "phone number", item.mobile?.number, "mother number", item.momPhone?.number);
         let cb = checkboxes.map(ele => {
             if (ele.id === id) {
                 ele.checked = !ele.checked;
             }
             return ele;
         });
-       
+       //console.log("total array", cb);
         let cbChecked = checkboxes.filter(ele => {
+            
             if (ele.checked) {
+                setShowAction(true);
                 return ele;
-            }            
+            }       
         });
+        console.log("which one you are selected", cbChecked);
+        let singleContactSelect = cbChecked.filter((ele, index)=>{
+            if(cbChecked.length === 1){
+                // console.log("Index", index);
+                return ele;
+            }else{
+                return false
+            }
+            
+        })
+        
+        // console.log("contact listing only one contact", singleContactSelect);
+
+        if(cbChecked.length === 0){
+            setShowAction(false);
+            // setUnselectSingle(false);
+        }
         
         if (cb.length == cbChecked.length) {
             setSelectAllCheckbox(true);
@@ -381,9 +413,36 @@ const ContactListing = forwardRef((props, ref) => {
         } else if (cb.length){
             setSelectSingle(true);
         }
-        console.log('cb', cb, cbChecked, checkboxes)
-        setCheckboxes(cb);        
+        setCheckboxes(cb);
+        setSingleContact(singleContactSelect);
+
+
+        // console.log(event.target.checked);
+
+        // const filterContactData = checkboxes.find((item)=>item.checked === true);
+        // // console.log(filterContactData);
+        // setSearchContactList([...searchContactList, filterContactData]);
+        // // console.log(searchContactList);
+
+
+        if(cbChecked.length !== 0 && !event.target.checked){
+            cbChecked.filter((ele, i)=>{
+                if(ele.id === id){
+                    // console.log(i);
+                    return cbChecked.splice(i, 1);
+                }
+            });
+        }
+
+        // props.searchContactList(cbChecked);
+        // let allData = [];
+        // allData.push(JSON.stringify(cbChecked));
+        // window.localStorage.setItem("searchContactList", allData.push(JSON.stringify(cbChecked)))
     }
+    // useEffect(() => {
+    //     props.setSingleContact(singleContact);
+    // }, [checkboxes]);
+
     const handleCheckAll = () => {
         let checkForSelected = checkboxes.filter(ele => ele.checked === true);
         let cb = [];
@@ -402,7 +461,14 @@ const ContactListing = forwardRef((props, ref) => {
             setSelectAllCheckbox(true);
             setSelectSingle(false);
         }
-        console.log(cb);    
+        cb.every((item)=>{
+            if(item.checked === true){
+                setShowAction(true);
+            }else{
+                setShowAction(false);
+            }
+        })
+        // console.log(cb);    
         setCheckboxes(cb);
     }
 
@@ -446,6 +512,8 @@ const ContactListing = forwardRef((props, ref) => {
         });
     };
     const deleteContacts = async () => {
+        console.log(selectAllCheckbox, allContactCheck);
+        // return false;
         if (selectAllCheckbox || selectSingle) {
             const pageId = utils.getQueryVariable('page');
             const queryParams = await getQueryParams();
@@ -457,7 +525,7 @@ const ContactListing = forwardRef((props, ref) => {
                     });
                 }
                 let payload = {
-                    'all': selectAllCheckbox,
+                    'all': allContactCheck,
                     'selected': sc,
                 };
                 setIsLoader(true);
@@ -516,8 +584,62 @@ const ContactListing = forwardRef((props, ref) => {
         setHideFilter(true);
         fetchContact();
     }
+    const openBulkSmsHandler = ()=>{
+        // console.log("SMS check phone number", singleContact, singleContact.length);
+        console.log(singleContact);
+        if(singleContact !== undefined && singleContact[0]?.phoneNo !== "" && singleContact[0]?.phoneNo !== undefined) {
+            props.setBulkSmsOpenModal();
+            props.setSingleContactStatus(singleContact);
+        }
+
+        else if(singleContact == undefined || singleContact.length === 0){
+            props.setBulkSmsOpenModal();
+            props.setSingleContactStatus(singleContact);
+        }
+        else{
+            setSingleContact();
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: "No phone number is there",
+                typeMessage: 'error'
+            });
+        }
+        
+        
+    }
+    
+    const openBulkEmailHandler=()=>{
+        // console.log("Email check phone number", singleContact);
+        if(singleContact !== undefined && singleContact[0]?.emailId !== "" && singleContact[0]?.emailId !== undefined){
+            props.setBulkEmailOpenModal();
+            props.setSingleContactStatus(singleContact);
+        }
+        else if(singleContact == undefined || singleContact.length === 0){
+            props.setBulkEmailOpenModal();
+            props.setSingleContactStatus(singleContact);
+        }
+        else{
+            setSingleContact();
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: "No email id is there",
+                typeMessage: 'error'
+            });
+        }
+        
+    }
+    const openBulkAutomationHandler=()=>{
+        props.setBulkAutomationOpenModal();
+    }
     const selectAllValueAction = (flag) => {
+        console.log("flag========", flag);
         props.selectAllCheckboxValue(flag);
+        if(flag){
+            setAllContactCheck(true);
+        }else{
+            setAllContactCheck(false);
+        }
+        
     }
     useEffect(() => {
         if (isClicked) {
@@ -542,9 +664,13 @@ const ContactListing = forwardRef((props, ref) => {
         if (contactList.length) {
             let checkboxes = [];
             contactList.map(ele => {
+                // console.log("all mobile number", ele.phone.number);
+                // setOneContacrObj(ele);
                 checkboxes.push({
                     'id': ele._id,
-                    'checked': false
+                    'checked': false,
+                    'emailId': ele.email,
+                    'phoneNo': ele.phone?.number
                 })
             });
             setCheckboxes(checkboxes);
@@ -612,6 +738,7 @@ const ContactListing = forwardRef((props, ref) => {
         }
     }, [props.fetchContact]);
 
+
     // useEffect(() => {
     //     document.addEventListener("click", checkOutsideClick);
     //     return () => {
@@ -626,6 +753,41 @@ const ContactListing = forwardRef((props, ref) => {
             });
         }
     })*/
+    useEffect(()=>{
+        // console.log("props in contact listing", props.unCheckCloseFun);
+        if(props.unCheckCloseFun){
+            setSelectAllCheckbox(false);
+            setSelectSingle(false);
+            setShowAction(false);
+            // setActionStatus(true);
+            let checkForSelected = checkboxes.filter(ele => ele.checked === true);
+            // console.log(checkForSelected);
+            let cb = [];
+            if (checkForSelected.length > 0) {
+                cb = checkboxes.map(ele => {
+                    ele.checked = false;
+                    return ele;
+                });
+                setSelectAllCheckbox(false);
+                setSelectSingle(false);
+            }
+            // cb.every((item)=>{
+            //     if(item.checked === false){
+            //         // console.log(cb);
+                    
+            //     }
+            // })
+            setCheckboxes(cb);
+        }
+    }, [props.unCheckCloseFun]);
+
+    // useEffect(() => {
+    //     if (actionStatus) {
+    //         setTimeout(() => {
+    //             setActionStatus(false)
+    //         }, 200)
+    //     }
+    // }, [actionStatus])
     const removeTag = async (tagId, contactId = null) => {
         try {
             setIsLoader(true);
@@ -662,7 +824,7 @@ const ContactListing = forwardRef((props, ref) => {
                                 {(j === 1) ? <label className="indselects"><span className="customCheckbox allContacts">
                                     <input type="checkbox"
                                            checked={checkboxes && checkboxes[i] ? checkboxes[i].checked : false}
-                                           name={"contactId" + ele._id} onChange={() => handleCheckBoxClick(ele._id)}/>
+                                           name={"contactId" + ele._id} onChange={(event) => handleCheckBoxClick(ele._id, event, ele)}/>
                                     <span></span></span></label> : ""}
                                 {(j === 1) && (!ele.isDependent || ele.isDependent === undefined) ? ((ele.payment_error != undefined || ele.course_error != undefined) ?
                                     <span className="infoWarning warningSpace"
@@ -724,13 +886,17 @@ const ContactListing = forwardRef((props, ref) => {
                                                 visibleByDefault={true}
                                             />
                                         </span> : ""}
-                                            <span className="userNames">
+                                            {/* {item.id === 'dob' && ele.dob} */}
+                                            <span className="userNames mobile new">
                                         {((item.id === 'mobile' || item.id === 'phone' || item.id === 'dadPhone' || item.id === 'momPhone') ?
                                             ((ele[item.id] && ele[item.id].dailCode && ele[item.id].number !== "") ?
                                                 <span className={ele[item.id].is_valid ?
                                                     "number valid" : "number invalid"}>{ele[item.id].dailCode + "-" + ele[item.id].number}</span> :
-                                                "") : (item.id === 'dob' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LL') :
-                                                (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? utils.convertUTCToTimezone(ele[item.id],timezone) : ele[item.id])))
+                                                "") : (item.id === 'dob' && Moment(ele[item.id]).isValid() ? 
+
+                                                Moment(ele[item.id]).format('LL')
+                                                :
+                                                (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? utils.convertUTCToTimezone(ele[item.id],timezoneOffset) : ele[item.id])))
                                         }
                                              </span>
                                         </button>)
@@ -808,6 +974,16 @@ const ContactListing = forwardRef((props, ref) => {
     const closeModalHandler = () =>{
         setOpenModal(false);
     }
+    const sendActionData = (data) => {
+        // // console.log(data);
+        // setActionStatus(data);
+        if(data && addSelectAll.status){
+            setAddSelectAll({
+                ...addSelectAll,
+                status: !addSelectAll.status,
+            });
+        }
+      }
    
     return (
         <div className="dashInnerUI">
@@ -828,6 +1004,14 @@ const ContactListing = forwardRef((props, ref) => {
                 filters={filters}
                 removeFilter={removeFilter}
                 selectAll={selectAllValueAction}
+                openBulkSmsHandler={openBulkSmsHandler}
+                openBulkEmailHandler={openBulkEmailHandler}
+                openBulkAutomationHandler={openBulkAutomationHandler}
+                showAction={showAction}
+                addSelectAll={addSelectAll}
+                sendActionData={sendActionData}
+                // actionStatusFun={actionStatus}
+                // singleContact={singleContact}
             ></ContactHead>
             {successMsg &&
                 <SuccessAlert message={successMsg}></SuccessAlert>
@@ -840,21 +1024,22 @@ const ContactListing = forwardRef((props, ref) => {
                     <div className="modalBackdropBg" onClick={() => closeDeleteModal(false)}></div>
                     <div className="slickModalBody setAppointment deleteSelectedModals">
                         <div className="modalForm appointmentForm setappointment successApp deleteModals">
-                            <div className="slickModalHeader appointmentModalHeads">
-                                <button className="topCross setApp" onClick={() => closeDeleteModal(false)}>
+                                <button className=" setApp" onClick={() => closeDeleteModal(false)}>
                                     <img src={cross} alt=""/>
                                 </button>
-                            </div>
                             <div className="innerModalHeader">
                                 <h3 className="deleteHeading">Are you sure, you want to delete?</h3>
                             </div>
                             <div className="modalActionWraper">
-                                <div className="formField formControl w-50"><span className="clearFilter"
-                                                                                  onClick={() => closeDeleteModal(false)}>Cancel</span>
+                                <div className="formField">
+                                    <span className="clearFilter"
+                                        onClick={() => closeDeleteModal(false)}>Cancel
+                                    </span>
                                 </div>
-                                <div className="formField formControl w-50">
+                                <div className="formField">
                                     <button type="submit" className="saveNnewBtn deletebtns" onClick={deleteContacts}>
-                                        <span>Yes</span></button>
+                                        <span>Yes</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -871,7 +1056,7 @@ const ContactListing = forwardRef((props, ref) => {
                                     <button className={colModalStatus ? "configColBtn close" : "configColBtn"}
                                             onClick={toggleColModal}></button>
                                     <div className="selectAllSection">
-                                        <div className={selectSingle ? "selectAllWraper contactPageSelector singleSelect" : "selectAllWraper contactPageSelector withoutEditOption" && selectAllCheckbox ? "selectAllWraper contactPageSelector allSelect" : "selectAllWraper contactPageSelector withoutEditOption"}>
+                                        <div className={selectSingle && showAction ? "selectAllWraper contactPageSelector singleSelect" : "selectAllWraper contactPageSelector withoutEditOption" && selectAllCheckbox ? "selectAllWraper contactPageSelector allSelect" : "selectAllWraper contactPageSelector withoutEditOption"}>
                                             <label><span
                                                 className={selectSingle ? "checkCutsomInputs minusSelectBox" : "customCheckbox allContacts headerselect"}><input
                                                 type="checkbox" name="selectAll" checked={selectAllCheckbox}

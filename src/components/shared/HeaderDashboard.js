@@ -38,7 +38,7 @@ import modalReducer from "../../reducers/modalReducer";
 import * as actionTypes from "../../actions/types";
 import { NotificationServices } from "../../services/notification/NotificationServices";
 import Loader from "./Loader";
-import { Link ,useLocation} from "react-router-dom";
+import { Link ,NavLink,useLocation} from "react-router-dom";
 import { useHistory } from "react-router-dom";
 const { Device } = require('twilio-client');
 
@@ -770,9 +770,11 @@ const pathURL = useLocation().pathname;
                   : ''}
               </div>
               <div className="user_modal_menu">
-                <p> <button> <img src={help_icon} alt="" /> Help</button></p>
-                <p> <button><img src={headset_icon} alt="" /> Contact Support</button></p>
-                <p> <button><img src={speaker_icon2} alt="" /> What's New </button></p>
+                {/* <p> <button> <img src={help_icon} alt="" /> Help</button></p> */}
+                {/* <p> <button><img src={headset_icon} alt="" /> Contact Support</button></p> */}
+                {/* <p> <button><img src={speaker_icon2} alt="" /> What's New </button></p> */}
+                <p><NavLink to="/privacy-policy" target="_blank" className="privacyLink">Privacy Policy</NavLink></p>
+                <p><NavLink to="/terms-and-conditions" target="_blank" className="privacyLink termsLink">Terms &amp; Conditions</NavLink></p>
                 <p>{stateUserMenu ? <button onClick={logOut}><img src={logout_icon} alt="" /> Logout</button> : ""}</p>
               </div>
 

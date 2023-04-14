@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, Redirect, Router } from "react-router-dom";
+import { Switch, Redirect } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { UnProtectedRoute } from "./middleware/UnProtectedRoute";
 import { ProtectedRoute } from "./middleware/ProtectedRoute";
@@ -10,8 +10,9 @@ import MainComponent from './components/MainComponent'
 import Login from "./components/authentication/login/Login";
 import ForgetPassword from "./components/authentication/resetPassword/ForgetPassword";
 import ResetPassword from "./components/authentication/resetPassword/ResetPassword";
-import AuthActions from "./actions/AuthActions";
 import MemberComponent from "./components/MemberComponent"
+import PrivacyPolicy from "./components/privacyPolicy/PrivacyPolicy";
+import TermsAndConditions from "./components/termsAndConditions/TermsAndConditions";
 
 const Routes = () => {
   const logState = useSelector((state) => state.auth.isLoggedIn);
@@ -22,15 +23,14 @@ const Routes = () => {
   return (
     <React.Suspense fallback={<div />}>
       <Switch>
+        {console.log("Loging state::::::::", logState)}
         {logState ? (
           <UnProtectedRoute
             exact
             path="/login"
             component={() => <Redirect to="/" />}
           />
-        ) : (
-          <UnProtectedRoute exact path="/login" component={Login} />
-        )}
+        ) : ""}
         <UnProtectedRoute
           exact
           path="/login"
@@ -63,6 +63,21 @@ const Routes = () => {
             return <MemberComponent />;
           }}
         /> 
+        <PublicRoute
+          exact
+          path="/privacy-policy"
+          component={() => {
+            console.log('hhhhhhhhhhh')
+            return <PrivacyPolicy />;
+          }}
+        />
+        <PublicRoute
+          exact
+          path="/terms-and-conditions"
+          component={() => {
+            return <TermsAndConditions />;
+          }}
+        />
         <ProtectedRoute
           exact
           path="/"

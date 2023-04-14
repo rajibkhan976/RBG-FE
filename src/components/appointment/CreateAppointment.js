@@ -7,16 +7,20 @@ import arrow_forward from "../../assets/images/arrow_forward.svg";
 import cross from "../../assets/images/cross.svg";
 import updown from "../../assets/images/updown.png";
 import verify_icon from "../../assets/images/verifyIcon.svg";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 
 import {TagServices} from "../../services/setup/tagServices";
 import {ContactService} from "../../services/contact/ContactServices";
 import {DependentServices} from "../../services/contact/DependentServices";
 import {AppointmentServices} from "../../services/appointment/appointment";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../actions/types";
 import Scrollbars from "react-custom-scrollbars-2";
 import TimePicker from "rc-time-picker";
 import TagList from "./TagList";
+import moment from "moment";
+import { utils } from "../../helpers";
 
 const initialDependentState = {
     name: "",
@@ -24,6 +28,7 @@ const initialDependentState = {
 };
 
 const CreateAppointment = (props) => {
+    const todayDate = moment();
     const titleAppRef = useRef(null);
     const toggleTags = useRef(null);
     const searchInputTag = useRef(null);
@@ -48,7 +53,8 @@ const CreateAppointment = (props) => {
     const [dependant, setDependant] = useState({
         ...initialDependentState,
     });
-
+    const [calenderMinDate, setCalenderMinDate] = useState();
+    const [date, setDate] = useState();
     const [contact, setContact] = useState('');
     const [basicinfoFname, setBasicinfoFname] = useState('');
     const [basicinfoLname, setBasicinfoLname] = useState('');
@@ -122,10 +128,13 @@ const CreateAppointment = (props) => {
         agenda: "",
         date: "",
         fromTime: "",
+        fromDateTime: "",
         toTime: "",
+        toDateTime: "",
         tags: [],
         tagsDatas: [],
         contactId: "",
+
     });
     const [toggleContactList, setToggleContactList] = useState({
         status: false,
@@ -159,41 +168,126 @@ const CreateAppointment = (props) => {
         setTagListToggle(!tagListToggle);
         setSearchedTag("");
     };
+    const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user?.data?.organizationTimezoneInfo.utc_offset:null);
+    useEffect(()=>{
+        console.log("Create appointment timezone", timezoneOffset);
+    })
+
+    useEffect(() => {
+      let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+      let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+      let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
+      setCalenderMinDate(formatedDateTime);
+    }, []);
 
     const appointmentDataAdd = (e, type) => {
+        console.log("E ==========================", e)
+        
         let validErrors = {...appointmentErrors};
-
+        let isDisabled = false;
+        
         if (e.target.value.trim() !== "") {
-            if (type == "date") {
-                if (new Date(e.target.value) <= new Date()) {
-                    validErrors.date = "Invalid date of appointment.";
+            // console.clear();
+            // console.log(e.target.value);
+            // console.log("Check", new Date(Date.now()).toISOString().split("T")[0])
+            if (type === "date") {
+                const dateDiff = utils.dateDiff(e.target.value);
+                if(dateDiff.difference <= 0) {
+                    console.log("Today")
+                    const fromTime = appointmentData.fromTime;
+                    if(fromTime) {
+                        console.log("From Time")
+                        const appDateTime = moment(`${e.target.value.toString()} ${appointmentData.fromTime.toString()}`).format("YYYY-MM-DD h:mm a");
+                        const diffFromToday = todayDate.diff(appDateTime, "minutes");
+
+                        
+
+
+                        console.log(diffFromToday);
+                        if(diffFromToday > 0) {
+                            console.log("Invalid time")
+                            validErrors.fromTime = "Invalid from time";
+                            isDisabled = true;
+                        } else {
+                            validErrors.fromTime = "";
+                            isDisabled = false;
+                        }
+                    }
                 } else {
-                    validErrors.date = "";
-                    let newDateString =
-                        e.target.value.split("-")[1] +
-                        "/" +
-                        e.target.value.split("-")[2] +
-                        "/" +
-                        e.target.value.split("-")[0];
-                    setAppointmentData({...appointmentData, date: newDateString});
+                    validErrors.fromTime = "";
+                    isDisabled = false;
                 }
+                // validErrors.fromTime = "";
+                validErrors.date = "";
+                isDisabled = false;
+                let newDateString = e.target.value;
+                console.log(newDateString);
+                setAppointmentData({...appointmentData, date: newDateString});
             }
             if (type == "agenda") {
                 validErrors.agenda = "";
+                isDisabled = false;
                 setAppointmentData({...appointmentData, agenda: e.target.value});
             }
         } else {
             if (type == "agenda") {
                 validErrors.agenda = "Please fill up Agenda for the appointment";
+                isDisabled = true;
             }
 
             if (type == "date") {
                 validErrors.date = "Invalid date of appointment.";
+                isDisabled = true;
             }
         }
 
         setAppointmentErrors(validErrors);
+        setIsDisabled(isDisabled)
     };
+
+    const setStartDate = (val) => {
+        let validErrors = {...appointmentErrors};
+        let isDisabled = false;
+        let formattedDate = `${val.getFullYear()}-${
+            val.getMonth() + 1
+          }-${val.getDate()}`;
+        console.log('vallllllllllllllllllllllllllll', formattedDate)
+        setDate(val);
+        const dateDiff = utils.dateDiff(formattedDate);
+        if(dateDiff.difference <= 0) {
+            console.log("Today")
+            const fromTime = appointmentData.fromTime;
+            if(fromTime) {
+                console.log("From Time")
+                const appDateTime = moment(`${formattedDate.toString()} ${appointmentData.fromTime.toString()}`).format("YYYY-MM-DD h:mm a");
+                const diffFromToday = todayDate.diff(appDateTime, "minutes");
+
+                
+
+
+                console.log(diffFromToday);
+                if(diffFromToday > 0) {
+                    console.log("Invalid time")
+                    validErrors.fromTime = "Invalid from time";
+                    isDisabled = true;
+                } else {
+                    validErrors.fromTime = "";
+                    isDisabled = false;
+                }
+            }
+        } else {
+            validErrors.fromTime = "";
+            isDisabled = false;
+        }
+        // validErrors.fromTime = "";
+        validErrors.date = "";
+        isDisabled = false;
+        let newDateString = formattedDate;
+        console.log(newDateString);
+        setAppointmentData({...appointmentData, date: newDateString});
+        setAppointmentErrors(validErrors);
+        setIsDisabled(isDisabled);
+    }
 
     const handleContactName = async (e) => {
         e.preventDefault();
@@ -274,13 +368,30 @@ const CreateAppointment = (props) => {
         }
     }
 
+
     const fromDateAdd = (fromValue) => {
-        // console.log(fromValue && fromValue.format('h:mm a').toUpperCase());
+        const convertedChoosedTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + fromValue.format("HH:mm:ss"),timezoneOffset);
+        const convertedLocalTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+
+        const localTime = moment(convertedLocalTime, "YYYY-MM-DD HH:mm:ss");
+        const choosedTime = moment(convertedChoosedTime, "YYYY-MM-DD HH:mm:ss");
+        // console.log("Time differance ======================= ", choosedTime.diff(localTime, "minutes"), convertedChoosedTime, convertedLocalTime);
+
+
         let validErrors = {...appointmentErrors};
+        let isDisabled = false;
+        // console.log("App Date", appointmentData.date)
+        // console.clear();
+        // const appDateTime = moment(`${appointmentData.date.toString()} ${fromValue.format("h:mm a")}`).format("YYYY-MM-DD h:mm a");
+        // const diffFromToday = todayDate.diff(appDateTime, "minutes");
+        const diffFromToday = choosedTime.diff(localTime, "minutes");
+        const fromTime = moment(`${appointmentData.date} ${fromValue.format("h:mm a")}`).format('MM/DD/YYYY h:mm a');
+        const toTime = moment(`${appointmentData.date} ${appointmentData.toTime}`).format('MM/DD/YYYY h:mm a');
 
         if (fromValue && fromValue != null) {
             if (appointmentData.toTime.trim() === "") {
                 validErrors.fromTime = "";
+                isDisabled = false;
                 //validErrors.toTime = "Invalid end time.";
                 setAppointmentData({
                     ...appointmentData,
@@ -302,29 +413,56 @@ const CreateAppointment = (props) => {
                         //validErrors.fromTime = "Invalid start time.";
                     } else {
                         validErrors.fromTime = "";
+                        isDisabled = false;
                     }
                 } else {
                     validErrors.fromTime = "";
+                    isDisabled = false;
                 }
                 setAppointmentData({
                     ...appointmentData,
                     fromTime: fromValue.format("h:mm a").toUpperCase(),
                 });
             }
+            // console.clear()
+            // console.log("Time Diff", appointmentData.toTime);
+            if(!appointmentData.date) {
+                validErrors.date = "Please choose a date";
+                isDisabled = true;
+            } else if(diffFromToday < 2) {
+                validErrors.fromTime = "Invalid from time";
+                isDisabled = true;
+            } else if(appointmentData.toTime && Math.sign(moment(fromTime).diff(toTime, "minutes")) > 0) {
+                // console.log("To Time is less than from", moment(fromTime).diff(toTime, "minutes"));
+                validErrors.fromTime = "Invalid from time";
+                isDisabled = true;
+            } else {
+                validErrors.fromTime = "";
+                isDisabled = false;
+            }
         } else {
-            //validErrors.fromTime = "Invalid start time.";
+            // validErrors.fromTime = "Invalid start time.";
         }
         // parseInt(e.target.value.replace(":","")) >= parseInt(appointmentData.toTime.replace(":",""))
         setAppointmentErrors(validErrors);
+        console.log("Disabled",isDisabled);
+        setIsDisabled(isDisabled);
     };
 
     const toDateAdd = (toValue) => {
         // console.log(toValue && toValue.format('h:mm a'));
         let validErrors = {...appointmentErrors};
-
+        let isDisabled = false;
+        // const appDateTime = moment(`${appointmentData.date.toString()} ${toValue.format("h:mm a")}`).format("YYYY-MM-DD h:mm a");
+        // const diffFromToday = todayDate.diff(appDateTime, "minutes");
+        const toTime = moment(`${appointmentData.date} ${toValue.format("h:mm a")}`).format('MM/DD/YYYY h:mm a');
+        const fromTime = moment(`${appointmentData.date} ${appointmentData.fromTime}`).format('MM/DD/YYYY h:mm a');
+        // const diff = Math.sign(moment(toTime).diff(fromTime, "minutes"));
+        // console.log("Fromtime < Totime", fromTime < toTime);
         if (toValue && toValue != null) {
             if (appointmentData.fromTime.trim() === "") {
                 validErrors.toTime = "";
+                isDisabled = false;
                 //validErrors.fromTime = "Invalid start time.";
                 setAppointmentData({
                     ...appointmentData,
@@ -342,20 +480,35 @@ const CreateAppointment = (props) => {
                         //validErrors.toTime = "Invalid end time.";
                     } else {
                         validErrors.toTime = "";
+                        isDisabled = false;
                     }
                 } else {
                     validErrors.toTime = "";
+                    isDisabled = false;
                 }
                 setAppointmentData({
                     ...appointmentData,
                     toTime: toValue.format("h:mm a").toUpperCase(),
                 });
             }
+
+            if(!appointmentData.date) {
+                validErrors.date = "Please choose a date";
+                isDisabled = true;
+            } else if(fromTime && Math.sign(moment(toTime).diff(fromTime, "minutes")) < 0) {
+                validErrors.toTime = "Invalid to time";
+                isDisabled = true;
+            } else {
+                validErrors.toTime = "";
+                // validErrors.fromTime = "";
+                isDisabled = false;
+            }
         } else {
            // validErrors.toTime = "Invalid end time.";
         }
         // parseInt(e.target.value.replace(":","")) <= parseInt(appointmentData.fromTime.replace(":",""))
         setAppointmentErrors(validErrors);
+        setIsDisabled(isDisabled);
     };
 
     const selectTag = (tag, mode) => {
@@ -384,6 +537,7 @@ const CreateAppointment = (props) => {
             tags: tagIds,
         });
     };
+
     const handleContactSelect = (e, contact) => {
         console.log("contact:::::", contact);
         setDependant({
@@ -477,12 +631,22 @@ const CreateAppointment = (props) => {
     const createAppointment = async (e) => {
         e.preventDefault();
         let valid = validateAppointment();
-        if (valid) {
+        const convertFromDateTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.fromTime),timezoneOffset);
+        const convertToDateTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.toTime), timezoneOffset);
+        console.log("Appointment from date and time", utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.fromTime))
+        console.log("Appointment to date and time", utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.toTime));
+        // setAppointmentData({
+        //     ...appointmentData,
+        //     fromDateTime: convertFromDateTime,
+        //     toDateTime: convertToDateTime,
+        // })
+        appointmentData['fromDateTime'] = convertFromDateTime.trim();
+        appointmentData['toDateTime'] = convertToDateTime.trim();
+        appointmentData['date'] = utils.dateConversion(appointmentData.date).trim();
+        if (valid && appointmentErrors.fromTime === "") {
             setIsLoader(true);
             try {
-                let newAppointment = await AppointmentServices.saveAppointment(
-                    appointmentData
-                );
+                let newAppointment = await AppointmentServices.saveAppointment(appointmentData);
 
                 if (newAppointment) {
                     console.log("newAppointment", newAppointment);
@@ -992,12 +1156,14 @@ const CreateAppointment = (props) => {
                                     >
                                         <div className="cmnFieldName">Choose a date</div>
                                         <div className="cmnFormField">
-                                            <input
+                                            <DatePicker 
                                                 className="cmnFieldStyle"
-                                                type="date"
-                                                placeholder="mm/dd/yyyy"
-                                                min={new Date(Date.now() + (3600 * 1000 * 24)).toISOString().split("T")[0]}
-                                                onChange={(e) => appointmentDataAdd(e, "date")}
+                                                selected={date}
+                                                format="dd/MM/yyyy"
+                                                dateFormat="dd/MM/yyyy"
+                                                placeholder="mm/dd/yyyy"  
+                                                minDate={new Date(calenderMinDate)}
+                                                onChange={(e) => setStartDate(e)} 
                                             />
                                         </div>
                                         {appointmentErrors.date.trim() !== "" ? (

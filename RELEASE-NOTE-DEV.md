@@ -76,3 +76,117 @@
     - Fixed automation email
 # HOTFIX V1.1.7    
     - Communication log hot fix    
+# HOTFIX V1.1.8    
+    - Communication log hot fix      
+# HOTFIX V1.1.9   
+    - Communication log hot fix       
+# HOTFIX - Email V3.0.0
+    - From email incorporated for Sendgrid implementation
+    - Sendgrid option not provided in smtp type as per instruction from higher authority
+# HOTFIX V1.2.0   
+    - Communication log hot fix and other other fixes         
+# HOTFIX V1.2.1   
+    - Communication log hot fix in loader and scroll    
+# HOTFIX V1.2.2
+    - Alert removed from contact modal     
+
+# BULK EMAIL AND SMS V1.0.0
+    - Bulk email and SMS is completed
+
+# BULK EMAIL AND SMS V1.0.1
+    - Console log removed from AutomationRoutes.js
+
+# BULK EMAIL AND SMS V1.0.2
+    - Bug solved in dev
+
+# BULK EMAIL AND SMS V1.0.3
+    - Bug solved in dev for email configaration
+
+# BULK EMAIL AND SMS V1.0.4
+    - Email template deselect potion added
+
+# BULK EMAIL AND SMS V1.0.5
+    - Email template chose file UI issue fixed
+
+# QI PHASE 1 V1.0.0
+    - QI issue fixing in whole platform phase 1
+
+# QI PHASE 1 V1.0.1
+    - QI issue fixing in phase 1 for some design conflict in action button
+
+# QI PHASE 1 V1.0.2
+    - QI issue fixing in phase 1 for some UAT changes
+
+# BULK EMAIL AND SMS V1.0.6
+    - Some UAT issue fixed
+
+# BULK EMAIL AND SMS V1.0.7
+    - SMS placeholder change
+
+# Automation V3.0.1
+    - Automation Fixes
+
+# Mailgun V1.0.0
+    - Incoming and outgoing mail using mailgun
+
+# QI phase 2 V1.0.0
+    - QI sprint 10 tasks
+
+# QI phase 2 V1.0.1
+    - QI sprint 10 tasks Issue fixing  
+
+# HOTFIX V1.2.3
+    - Gym details page contact email field implemented
+# HOTFIX V1.2.4
+    - Mailgun UAT issue fixing on email template length and modal percentage of bulk email and SMS
+
+# HOTFIX V1.2.4
+    - Notification and gym details issue fixed
+
+# HOTFIX V1.2.5
+    - Hodilay issue solved
+
+# HOTFIX V1.2.6
+    - Hot fix on modal design breaking   
+
+# HOTFIX V1.2.7
+    - Hot fix on modal design breaking and others       
+
+# HOTFIX V1.2.8
+    - Hot fix on modal design breaking and others v.2          
+
+# HOTFIX V1.2.9
+    - Hot fix on design breaking and others v.3       
+
+# HOTFIX V1.3.0
+    - Hot fix on live design and api key issue
+# Automation V3.0.1
+    - Fixed notification group issue
+# Automation V3.0.2
+    - Fixed notification group issue
+# Automation V3.0.3
+    - Fixed merge tag issue of message
+
+# HOTFIX V1.3.1
+    - Hot fix Dashboard month and year selection
+# Automation V3.0.4
+    - Fixed
+# Automation V3.0.5
+    - Fixed automation notification issue
+# Automation V3.0.6
+    - Fixed automation notification issue
+# HOTFIX Attendence & Appointments V1.0.0
+    - CR given by Brian for Attendance
+    - CR and IR by team for Appointments
+
+# Privacy policy and Terms & conditions page V1.0.0
+    - Privacy policy and terms & conditions page is done
+
+# HOTFIX V1.3.2
+    - Terms and Conditions page contact us sub heading change done
+
+# HOTFIX V1.3.3
+    - Terms and Conditions page release date given
+    
+# HOTFIX V1.3.4
+    - Fixed organization create issue

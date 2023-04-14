@@ -747,7 +747,7 @@ const ProductTransaction = (props) => {
                     }}
                   >
                     <img src={plus_icon} alt="Add Product" />
-                    <span>Add Product</span>
+                    <span>&nbsp; Add Product</span>
                   </button>
                 </div>
               </div>

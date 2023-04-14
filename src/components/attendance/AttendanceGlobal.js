@@ -15,6 +15,7 @@ import avatarImg from "../../assets/images/profile.png";
 import momentTZ from "moment-timezone";
 
 import Loader from "../shared/Loader";
+import { utils } from '../../helpers';
 
 const AppointmentGlobal = (props) => {
     
@@ -26,6 +27,7 @@ const AppointmentGlobal = (props) => {
     const calenderRef = useRef([]);
     const [dateRange, setDateRange] = useState(false);
     const [tz, setTz] = useState(("UTC"));
+    const [defaultDate, setDefaultDate] = useState();
     const headerToolbar = {
         left: 'today',
         center: 'prev,title,next',
@@ -48,24 +50,32 @@ const AppointmentGlobal = (props) => {
         api.changeView('listDay', e.dateStr)
      }
      
-
+    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
+    useEffect(()=>{
+        console.log("Attandance time zone:", timezoneOffset)
+    },[timezoneOffset]);
     const renderEventContent = (e) => {
-        // console.log("Render e", e.event.extendedProps, e)
+        // console.log("Render e", e.event.extendedProps)
         // if (!e.event._instance.range && e.event._instance.range.start) {
         //     return false;
         // }
-        console.log("renderEventContent called", e.view.type)
+        // console.log("Range event content called", e.view.type)
         if (e.view.type == "listDay" || e.view.type == "listMonth") {
             let isHoliday =  e.event.extendedProps ?. isHoliday ? true : false;
             setMakeHeaderOpen(true);
-            console.log("e.event._instance.range.start", e.event._instance.range.start, "tz", tz)
+            console.log("Range start", e.event._instance.range.start, "Checked at", e.event.extendedProps.checkedInAt);
+
             // let eventDate = momentTZ.tz(e.event._instance.range.start, tz).format("ddd, DD");
             // let eventTime = momentTZ.tz(e.event._instance.range.start, tz).format("hh:mm A");
-
+            // let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
+            // let momentTimeZone = moment(momentTZ.tz(dateSource, tz)).format("yyyy-DD-mm hh:mm:ss");
+            // let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
             let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
-            let eventDate = moment(momentTZ.tz(dateSource, tz)).format("ddd, DD");
-            let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
-            
+            console.log("Range date source", dateSource)
+            let eventDate = e.event.extendedProps.checkedInAt.toString().split(" ").splice(0,3).join(" ");
+            let eventTime = e.event.extendedProps.checkedInAt.toString().split(" ").splice(3,4).join(" ");
+
+            console.log("<br>");
             return (
                 <>
                     {!isHoliday ? 
@@ -86,11 +96,9 @@ const AppointmentGlobal = (props) => {
                 </>
             )
         }
-        
         if (e.view.type == "dayGridMonth") {
            setMakeHeaderOpen(false);
         }
-     
     }
 
     const convertUTCtoTZ = (date, format) => {
@@ -107,41 +115,63 @@ const AppointmentGlobal = (props) => {
     
     useEffect(async () => {
         try {
-            if (tz !== "UTC" && dateRange?.start) { 
+            if (dateRange?.start && timezoneOffset) {
+                const convertFromDate = utils.convertTimezoneToUTC(moment(dateRange?.start).format("YYYY-MM-DD") + " " + "00:00:01", timezoneOffset).trim();
+                const conversionToDate = utils.convertTimezoneToUTC(moment(dateRange?.end).format("YYYY-MM-DD")+ " " + "23:59:59", timezoneOffset).trim();
+                // console.log("after conversion", convertFromDate, conversionToDate);
                 let payload = {
-                    fromDate: moment(dateRange.start).format("YYYY-MM-DD"),
-                    toDate: moment(dateRange.end).format("YYYY-MM-DD"),
+                    // fromDate: moment(dateRange.start).format("YYYY-MM-DD"),
+                    // toDate: moment(dateRange.end).format("YYYY-MM-DD"),
+                    fromDate: convertFromDate,
+                    toDate: conversionToDate,
                 }
                 let attendances = await AttendanceServices.fetchAttendances(payload);
                 
                 let eventArr = []
                 for(let atten of attendances.attendance) {
+                    // console.log("before check in", atten?.checkedInAt);
+                    const convertTimezone = utils.convertUTCToTimezone(atten?.checkedInAt, timezoneOffset);
+                    // console.log("After convert check in", convertTimezone);
+                    // let convertToCheckInFormat = moment(convertTimezone).format("YYYY-MM-DD hh:mm:ss");
+                    let convertToCheckInFormat = moment(convertTimezone).format('YYYY-MM-DDTHH:mm:ss[Z]');
+                    // let convertToCheckInFormat = "2023-04-10T11:45:00.12Z";
+                    console.log("format check in", convertToCheckInFormat)
+                    setDefaultDate(moment(convertTimezone).format('YYYY-MM-DD'));
                     let eventObj = {
-                        start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
+                        // start: atten.checkedInAt,
+                        start: convertToCheckInFormat,
                         note: atten.note,
-                        name: atten.contact.firstName + " " + atten.contact.lastName,
+                        name: atten.contact.firstName + " " + atten.contact?.lastName,
                         email: atten.contact.email,
                         checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName,
                         className: "hasAttendance",
                         backgroundColor: "#fff",
-                        checkedInAt: convertUTCtoTZ(atten.checkedInAt)
+                        // checkedInAt: convertUTCtoTZ(atten.checkedInAt),
+                        checkedInAt: convertTimezone,
                     }
+                    // console.log("After check in", eventObj.checkedInAt);
                     eventArr.push(eventObj);
                 }
                 if (attendances.holidays) {
-                    for(let holiday of attendances.holidays) {            
+                    for(let holiday of attendances.holidays) {
+                        // console.log("Holiday====", holiday);
+                        const convertHolidayStart = utils.convertUTCToTimezone(holiday?.fromDate, timezoneOffset);
+                        const convertHolidayEnd = utils.convertUTCToTimezone(holiday?.toDate, timezoneOffset);          
                         let eventObj = {
-                            start: holiday.fromDate,
-                            end: holiday.toDate,
+                            // start: holiday.fromDate,
+                            // end: holiday.toDate,
+                            start: convertHolidayStart,
+                            end: convertHolidayEnd,
                             title: holiday.name,
                             isHoliday: true,
                             display: "background",
                             className: "hasHoliday"
                         }
+                        console.log("Holiday payload", eventObj);
                         eventArr.push(eventObj);
                     }
                 }
-            // console.log("eventArr", eventArr)
+            console.log("event Arr", eventArr)
                 setEvents(eventArr);
             }
         } catch (e) {
@@ -157,6 +187,7 @@ const AppointmentGlobal = (props) => {
 
 
     const moreLinkContent = (e) => {
+        console.log("all member", e);
         return (
             <>
                 <span className='dayCellEvent'><span className='number'>{ e.num }</span> <span>Member attended</span></span>
@@ -168,7 +199,14 @@ const AppointmentGlobal = (props) => {
         let api = calenderRef.current.getApi()
         api.changeView('listDay', e.date)
     }
-    
+    useEffect(()=>{
+        // const todayDate = moment(new Date()).format("YYYY-MM-DD");
+        // const todayTime = moment(new Date()).format("hh:mm:ss");
+        // setActiveStart(moment(utils.convertUTCToTimezone(todayDate + " " + todayTime, timezoneOffset)).format('YYYY-MM-DD'));
+        console.log("Today date", defaultDate);
+    }, [timezoneOffset && defaultDate]);
+
+
     return (
         <div className='dashInnerUI'>
             { isLoader ? <Loader/>: "" }
@@ -195,6 +233,9 @@ const AppointmentGlobal = (props) => {
                         moreLinkClick={moreLinkClick}
                         dateClick={clickOnDate}
                         ref={calenderRef}
+                        defaultDate={defaultDate}
+                        // initialDate={}
+                        // start={'2018-09-01T12:30:00Z'}
                         noEventsText={"No record found"}
                         eventContent={renderEventContent}
                         datesSet={handleMonthChange}

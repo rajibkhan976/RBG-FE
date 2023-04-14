@@ -10,19 +10,22 @@ const AppointmentTriggerSetting = (props) => {
     const dispatch = useDispatch();
     const [module, setModule] = useState(props.module ? props.module : 'contact');
     const [isLoader, setIsLoader] = useState(false);
-    const [events, setEvents] = useState(props.event ? props.event : {
+    const [eventsArray, setEvents] = useState(props.event ? props.event : {
         appointmentCreate: false,
         appointmentCanceled: false,
         appointmentRescheduled: false,
         appointmentCompleted: false,
         appointmentMissed: false,
         appointmentDayBefore: false,
-        day: "1"
+        day: "0"
     });
     const [nodeId, setNodeId] = useState(props.nodeId);
 
     const changeEvent = async (e) => {
-        events[e.target.value] = e.target.checked;
+        setEvents(prevState => ({
+          ...prevState,
+            [e.target.value]: e.target.checked
+        }));
     }
     const changeDay = (e) => {
         if (e.target.value < 101 && e.target.value > 0) {
@@ -32,7 +35,10 @@ const AppointmentTriggerSetting = (props) => {
                     day: e.target.value
                 }
             });
-            events['day'] = e.target.value;
+            setEvents(prevState => ({
+                ...prevState,
+                day: e.target.value
+            }));
         } else {
             setEvents(prevState => {
                 return {
@@ -50,13 +56,21 @@ const AppointmentTriggerSetting = (props) => {
     const saveSettings = async (e) => {
         try {
             let fields = { 'fname': 'text', 'lname': 'text', 'phone': 'numeric', 'email': 'email' } // Sample
-            if (events.appointmentCreate
-                || events.appointmentCanceled
-                || events.appointmentRescheduled
-                || events.appointmentCompleted
-                || events.appointmentMissed
-                || (events.appointmentDayBefore && events.day > 0 && events.day < 101)
+            if (eventsArray.appointmentCreate
+                || eventsArray.appointmentCanceled
+                || eventsArray.appointmentRescheduled
+                || eventsArray.appointmentCompleted
+                || eventsArray.appointmentMissed
+                || eventsArray.appointmentDayBefore
             ) {
+                if (eventsArray.appointmentDayBefore && (!eventsArray.day || ((eventsArray.day % 1) != 0)  || parseInt(eventsArray.day) <= 0 || parseInt(eventsArray.day) > 101)) {
+                    dispatch({
+                        type: actionTypes.SHOW_MESSAGE,
+                        message: "Please provide a valid day value.",
+                        typeMessage: 'error'
+                    });
+                    return false;
+                }
                 setIsLoader(true);
                 let fieldsApiResponse = await ContactService.fetchFields();
                 setIsLoader(false);
@@ -73,7 +87,7 @@ const AppointmentTriggerSetting = (props) => {
                 fields.appointment_tags = "text";
                 fields.appointment_status = "text";
                 fields.appointment_createdAt = "text";
-                props.saveFieldtrigger(module, events, nodeId, fields)
+                props.saveFieldtrigger(module, eventsArray, nodeId, fields)
                 props.closeFilterModal()
             } else {
                 dispatch({
@@ -113,25 +127,25 @@ const AppointmentTriggerSetting = (props) => {
                                 <div className="formBodyContainerDiv">
                                     <label htmlFor="">Events</label>
                                     <div><label><input type="checkbox" value="appointmentCreate"
-                                                       defaultChecked={events.appointmentCreate}
+                                                       defaultChecked={eventsArray.appointmentCreate}
                                                        onChange={changeEvent}/> On Create </label></div>
                                     <div><label><input type="checkbox" value="appointmentCanceled"
-                                                       defaultChecked={events.appointmentCanceled}
+                                                       defaultChecked={eventsArray.appointmentCanceled}
                                                        onChange={changeEvent}/> On Cancel </label></div>
                                     <div><label><input type="checkbox" value="appointmentRescheduled"
-                                                       defaultChecked={events.appointmentRescheduled}
+                                                       defaultChecked={eventsArray.appointmentRescheduled}
                                                        onChange={changeEvent}/> On Re-schedule </label></div>
                                     <div><label><input type="checkbox" value="appointmentCompleted"
-                                                       defaultChecked={events.appointmentCompleted}
+                                                       defaultChecked={eventsArray.appointmentCompleted}
                                                        onChange={changeEvent}/> On Complete </label></div>
                                     <div><label><input type="checkbox" value="appointmentMissed"
-                                                       defaultChecked={events.appointmentMissed}
+                                                       defaultChecked={eventsArray.appointmentMissed}
                                                        onChange={changeEvent}/> On Missed </label></div>
                                     <div><label><input type="checkbox" value="appointmentDayBefore"
-                                                       defaultChecked={events.appointmentDayBefore}
+                                                       defaultChecked={eventsArray.appointmentDayBefore}
                                                        onChange={changeEvent}/>
                                         &nbsp; On &nbsp;
-                                        <input type="number" className="inputFieldEvent" value={events.day} onChange={changeDay} placeholder="Ex: 5"/>
+                                        <input type="number" className="inputFieldEvent" value={eventsArray.day} onChange={changeDay} placeholder="Ex: 5"/>
                                         &nbsp; days before
                                     </label></div>
                                 </div>

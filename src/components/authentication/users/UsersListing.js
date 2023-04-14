@@ -8,6 +8,7 @@ import { UserServices } from "../../../services/authentication/UserServices";
 import { OrganizationServices } from "../../../services/authentication/OrganizationServices";
 import { utils } from "../../../helpers";
 import Loader from "../../shared/Loader";
+import { useLocation } from "react-router-dom";
 import config from "../../../configuration/config";
 import * as actionTypes from "../../../actions/types";
 import { ErrorAlert, SuccessAlert } from '../../shared/messages';
@@ -52,6 +53,7 @@ const UsersListing = (props) => {
     const handelSize = () => {
         setTableWidth(window.innerWidth - 454);
     }
+    const pathURL = useLocation().pathname;
 
     useEffect(() => {
         handelSize();
@@ -91,7 +93,7 @@ const UsersListing = (props) => {
 
     const dispatch = useDispatch();
     const isFiltered = useSelector((state) => state.user.filter);
-
+    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
 
     const filterUsers = () => {
         // const readPermission = (!env.ACTIVE_PERMISSION_CHECKING) ? true : ((Object.keys(permissions).length) ? permissions.actions.includes("read") : false);
@@ -106,6 +108,8 @@ const UsersListing = (props) => {
      * Set filtered data
      */
     useEffect(() => {
+        console.clear()
+        console.log("user data",timezoneOffset)
         if (isFiltered) {
             console.log('is filtered inside');
             fetchUsers();
@@ -188,6 +192,8 @@ const UsersListing = (props) => {
         const queryParams = new URLSearchParams();
 
         console.log('search', decodeURIComponent(search))
+        console.log('dateeeeee', decodeURIComponent(fromDate),'dateeeeee',  decodeURIComponent(toDate))
+
         if (search) {
             queryParams.append("search", decodeURIComponent(search));
         }
@@ -195,13 +201,14 @@ const UsersListing = (props) => {
             queryParams.append("group", group);
         }
         if (fromDate && toDate) {
-            queryParams.append('fromDate', fromDate);
-            queryParams.append('toDate', toDate);
+            queryParams.append('fromDate', decodeURIComponent(fromDate.replaceAll("+", " ")));
+            queryParams.append('toDate', decodeURIComponent(toDate.replaceAll("+", " ")));
+            console.log("decodeURIComponent", decodeURIComponent(fromDate.replaceAll("+", " ")));
         }
         if (status) {
             queryParams.append("status", status);
         }
-        if (srtBy) {
+        if (srtBy) { 
             queryParams.append("sortBy", srtBy);
         }
         if (srtType) {
@@ -415,14 +422,16 @@ const UsersListing = (props) => {
                 keyword={keyword}
             />
             {successMsg &&
-                <SuccessAlert message={successMsg}></SuccessAlert>
+                <SuccessAlert message={successMsg}></SuccessAlert> 
             }
             {errorMsg &&
                 <ErrorAlert message={errorMsg}></ErrorAlert>
             }
             {usersCount ?
                 <>
-                    <div className="userListBody" style={{ 'width': tableWidth }}>
+                    <div className="userListBody" 
+                    style={{ 'width': ((pathURL === "/users" || pathURL === "/organizations" || pathURL === "/associations") ? "auto" : tableWidth) }}
+                    >
                         <div className="listBody">
                             <ul className="tableListing">
                                 <li className="listHeading">
@@ -467,7 +476,7 @@ const UsersListing = (props) => {
                                             <React.Fragment key={key + "_user"}>
                                                 <li className="owerInfo">
                                                     <div className="userName">
-                                                        <button className="btn">
+                                                        <div className="btn">
                                                             {/* <img className="thumbImg" src={elem.image ? (config.bucketUrl + elem.image) : owner_img_1} alt="avatar" /> */}
                                                             <LazyLoadImage
                                                                 className="thumbImg"
@@ -477,13 +486,15 @@ const UsersListing = (props) => {
                                                                 placeholderSrc={owner_img_1}
                                                             />
                                                             <p>{elem.firstName + ' ' + elem.lastName}</p>
-                                                        </button>
+                                                        </div>
                                                     </div>
                                                     <div className="phoneNum">
-                                                        <button className="btn">{elem.prefix + '-' + elem.phone}</button>
+                                                        <div className="btn">
+                                                            {elem.prefix + '-' + elem.phone}
+                                                        </div>
                                                     </div>
                                                     <div className="emailID">
-                                                        <button className="btn">{elem.email}</button>
+                                                        <div className="btn">{elem.email}</div>
                                                     </div>
                                                     {/*<div className="role">
                                                         <button className="btn">{elem.role[0] ? elem.role[0].name : ''}</button>
@@ -492,16 +503,19 @@ const UsersListing = (props) => {
                                                         <button className="btn">{elem.group[0] ? elem.group[0].name : ''}</button>
                                                     </div>*/}
                                                     <div className="assignedGroup">
-                                                        <button className="btn">{elem.organization ? utils.generateExcerpt(elem.organization.name) : 'N/A'}</button>
+                                                        <div className="btn">{elem.organization ? utils.generateExcerpt(elem.organization.name) : 'N/A'}</div>
                                                     </div>
                                                     <div className="assignedGroup">
-                                                        <button className="btn">{elem.association ? elem.association.name : 'N/A'}</button>
+                                                        <div className="btn">{elem.association ? elem.association.name : 'N/A'}</div>
                                                     </div>
                                                     <div className="status">
-                                                        <button className="btn">{elem.status}</button>
+                                                        <div className="btn">{elem.status}</div>
                                                     </div>
                                                     <div className="createDate">
-                                                        <button className="btn">{moment(elem.createdAt).format("Do MMM YYYY")}</button>
+                                                        <div className="btn">{timezoneOffset ? utils.convertUTCToTimezone(elem.createdAt,timezoneOffset) :""
+                                                        }
+                                                        
+                                                        </div>
                                                         <div className="info_3dot_icon">
                                                             <button
                                                                 className="btn"

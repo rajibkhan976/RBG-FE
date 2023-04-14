@@ -27,7 +27,6 @@ import Pagination from "../shared/Pagination";
 import { Scrollbars } from "react-custom-scrollbars-2";
 
 
-
 const CommunicationLog = (props) => {
     const dispatch = useDispatch();
 
@@ -51,10 +50,11 @@ const CommunicationLog = (props) => {
     const [selectType, setSelectType] = useState("");
 	const [selectTodate, setSelectTodate] = useState("");
     const [selectFromdate, setSelectFromdate] = useState("");
-  	const [scrolledPosition, setScrolledPosition] = useState(true);
+  	const [dataLenght, setDataLenght] = useState(true);
+    const [scrolledPosition, setScrolledPosition] = useState(null);
     
 
-
+   
 
     const hideFilter = () => {
         setIsFilter(false);
@@ -65,7 +65,10 @@ const CommunicationLog = (props) => {
 	console.log("isScrollvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv", isScroll);
 
 
-
+	const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
+	useEffect(()=>{
+	  console.log("communication time zone", timezoneOffset);
+	}, [timezoneOffset])
 	const fetchCommunicationLogList = async (pageId) => {
 		const queryParams = await getQueryParams();
 		//let contactID = props.contactId;
@@ -79,17 +82,25 @@ const CommunicationLog = (props) => {
 			    //console.log("gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",logList);
 				if (result.pagination.page == "1") {
 					setLogList(result.data);
-				  } else {
 			        console.log("page", result.pagination.page,"data length", result.data.length);
 
-					if(result.data.length === 0){
-						setScrolledPosition(false);
-						//console.log("scrolledPosition", scrolledPosition);
-					}
+				} else {
+			        console.log("page", result.pagination.page,"data length", result.data.length);					
 					setLogList([...logList, ...result.data]);
-			       // console.log("gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg",logList);
-					//console.log("scrolledPosition", scrolledPosition);
-				  }
+			  
+				}
+				if(result.data.length === 0){
+					setDataLenght(false);
+					//console.log("dataLenght", dataLenght);
+				}else{
+					setDataLenght(true)
+				}
+				setScrolledPosition(comLogRef.current.scrollHeight);
+
+				if(result.pagination.page != "1"){
+					comLogRef.current.scrollTop  = ( comLogRef.current.scrollHeight - scrolledPosition ) - 200;
+					console.log("scroll data: ", comLogRef.current.scrollTop);
+				}
 				setPaginationData({
                     ...paginationData,
                     offset: result.pagination.offset, 
@@ -106,7 +117,8 @@ const CommunicationLog = (props) => {
 			//setIsLoaderScroll(false);
 			setIsScroll(false);
 		}
-	};
+	}; 
+
 	const getQueryParams = async () => {
         const keyword = utils.getQueryVariable("search");
         const type = utils.getQueryVariable("type");
@@ -130,27 +142,31 @@ const CommunicationLog = (props) => {
         }
 		if (fromDate) {
 
-			var m = moment(new Date(fromDate)).utcOffset(0);
-			m.set({hour:0,minute:0,second:0,millisecond:0})
-			m.toISOString()
-			m.format()
-			console.log("dummy",m.toISOString())
-
+			// var m = moment(new Date(fromDate)).utcOffset(0);
+			// m.set({hour:0,minute:0,second:0,millisecond:0})
+			// m.toISOString()
+			// m.format()
+			// console.log("dummy",m.toISOString())
+            //queryParams.append("fromDate",  m.toISOString());
+            //
 
             //let fromDateUrl = new Date(fromDate + " 00:00:00 UTC");
 			//console.log("from date url",fromDateUrl)
 			//console.log("moment forma",moment(fromDate).format())
-            queryParams.append("fromDate",  m.toISOString());
 			//console.log("iso string defulat", fromDateUrl.toISOString())
+
+            queryParams.append("fromDate",  fromDate.replaceAll("+", " ").replace(' ', 'T').trim() + '.000Z');
+
         }
 		if (toDate) {
 			//let toDateUrl = new Date(toDate + " 23:59:59 UTC");
-			var m = moment(new Date(toDate)).utcOffset(0);
-			m.set({hour:23,minute:59,second:59,millisecond:0})
-			m.toISOString()
-			m.format()
-			console.log("dummy",m.toISOString())
-            queryParams.append("toDate", m.toISOString());
+			// var m = moment(new Date(toDate)).utcOffset(0);
+			// m.set({hour:23,minute:59,second:59,millisecond:0})
+			// m.toISOString()
+			// m.format()
+			// console.log("dummy",m.toISOString())
+            // queryParams.append("toDate", m.toISOString());
+             queryParams.append("toDate", toDate.replaceAll("+", " ").replace(' ', 'T').trim() + '.000Z');
         }
         return queryParams;
     };
@@ -161,16 +177,21 @@ const CommunicationLog = (props) => {
 		if (!isScroll) {
 		  let scrollHeight = e.target.scrollHeight;
 		  let scrollTop = e.target.scrollTop;
-			console.log("scrollHeightdddddddddddddddddddddddddd", scrollHeight, "scrollTopddddddddddddddddddd", scrollTop);
-		  //if (scrollTop > (scrollHeight / 5)) {
-			//if(logList.length === 10){
-				
+		  let clientHeight = e.target.clientHeight;
+		  let maxScroll = scrollHeight - clientHeight;
+			console.log("scrollHeightdddddddddddddddddddddddddd", scrollHeight, "scrollTopddddddddddddddddddd", scrollTop, e.target.clientHeight);
+			//if (scrollTop > (scrollHeight / 5)) {
+				//if(logList.length === 10){
+					
+				//}
 			//}
-		  //}
-		  if (scrollTop > 140 && scrolledPosition) {
-			//console.log("scrolledPosition", scrolledPosition);	
-			fetchCommunicationLogList( parseInt(paginationData.page) + 1 );		
-		  }
+		  if ((maxScroll - scrollTop) < 100) {
+			console.log("dataLenght", dataLenght);
+				if(dataLenght){
+					fetchCommunicationLogList( parseInt(paginationData.page) + 1 ); 
+				}
+			}
+			
 		}
 	  };
 
@@ -208,7 +229,7 @@ const CommunicationLog = (props) => {
         const type = utils.getQueryVariable("type");
 		setSelectType(type);
 
-        console.log("type",selectType);
+       // console.log("type",selectType);
     },[utils.getQueryVariable("type")]);
 
 	useEffect(() => {
@@ -272,12 +293,12 @@ const CommunicationLog = (props) => {
 			}, 100); 
 		})
 	}
-
+	
 	return (
 	  <>
 	  {isLoader ? <Loader/> :""}
 	  	<CommunicationLogHeader showFilter={showFilter} 
-		   //countCommLog={paginationData.totalCount} 
+		   countCommLog={paginationData.totalCount} 
 		   clickOnSearch={(data)=>clickOnSearch(data)}
 		/>
 		
@@ -296,13 +317,16 @@ const CommunicationLog = (props) => {
 
 				{selectFromdate &&
 					<div class="contactsTags">
-					     <span class="pageInfo">From date : { moment(decodeURIComponent(selectFromdate.replaceAll(":","%3A"))).format('YYYY-MM-DD')}</span>
+					     {/* <span class="pageInfo">From date : { moment(decodeURIComponent(selectFromdate.replaceAll(":","%3A"))).format('YYYY-MM-DD')}</span> */}
+						 <span class="pageInfo">From date : {utils.convertUTCToTimezone(decodeURIComponent(selectFromdate).replaceAll("+", " "),timezoneOffset)
+						 }</span>
 						 <span class="crossTags" onClick={removeFromdate}><img src={cross} alt=""/></span>
 					</div>
 				}	 
 				{selectTodate &&
 					<div class="contactsTags">
-					     <span class="pageInfo">To date : {moment(decodeURIComponent(selectTodate.replaceAll(":","%3A"))).format('YYYY-MM-DD')}</span>
+					     {/* <span class="pageInfo">To date : {moment(decodeURIComponent(selectTodate.replaceAll(":","%3A"))).format('YYYY-MM-DD')}</span> */}
+						 { <span class="pageInfo">To date : {utils.convertUTCToTimezone(decodeURIComponent(selectTodate).replaceAll("+", " "),timezoneOffset)}{/*decodeURIComponent(selectTodate).split("+").splice(0,1).join(" ")*/}</span> }
 						 <span class="crossTags" onClick={removeTodate}><img src={cross} alt=""/></span>
 					</div>
 				}
@@ -319,12 +343,14 @@ const CommunicationLog = (props) => {
 						 (logList && logList.length > 0) ? 
 						 <>{
 							logList.map((elem,key) => {
-								const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-								const newdate = new Date(elem.updated_at);
-								const dateForamt = month[newdate.getMonth()] +" " + newdate.getDate() + ",  "  + newdate.getFullYear();
-								const startDate = moment(elem.updated_at).format('h:mm A');
+								//const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+								//const newdate = new Date(elem.updated_at);
+							   //const dateForamt = month[newdate.getMonth()] +" " + newdate.getDate() + ",  "  + newdate.getFullYear();
+								//const startDate = moment(elem.updated_at).format('h:mm A');
 								return(
-									<li className='space' key={key}>
+									<li className='space' key={key}
+									onClick={() => openContactModal(elem)}
+									>
 										<div className='iconType'>
 											<div className={elem.log_type === "SMS" ? 'roundIconBase violet' : elem.log_type === "EMAIL" ? 'roundIconBase blue' : 'roundIconBase '}>
 											<img src={
@@ -333,9 +359,7 @@ const CommunicationLog = (props) => {
 											} alt=""/>
 											</div>
 										</div>
-										<div className='nameCommunication' 
-										  onClick={() => openContactModal(elem)}
-										  >
+										<div className='nameCommunication' >
 											<span class="comLogText">{elem.direction === "outbound"? "To" : "From"}: {elem.contact_name} {elem.alias_ref && "(" + elem.alias_ref + ")"}</span>
 										</div>
 										<div>
@@ -348,15 +372,15 @@ const CommunicationLog = (props) => {
 											</span> */}
 											{elem.direction === "outbound" ? 
 											   <>
-											   <span class="comLogText">
+											    <span class="comLogText">
 												   <span className='skytext'>{elem.gym_account_name} </span> send {elem.log_type === "SMS" ? "a " + elem.log_type : "an " + elem.log_type} 
-												   <span className='doomed'> "{elem.log_type === "SMS" ? elem.data.message : elem.log_type === "EMAIL" ? elem.data.subject: ""}"</span>
-											   </span>
+												   <span className='doomed'> "{elem.log_type === "SMS" ?  (elem.data.message.length > 160 ? (elem.data.message.slice(0, 160) + "..."): elem.data.message ): elem.log_type === "EMAIL" ? (elem.data.subject.length > 160 ? (elem.data.subject.slice(0, 160) + "..."): elem.data.subject): ""}"</span>
+												</span>
 											   </>
 												:
 												<span class="comLogText">
 												  Received  {elem.log_type === "SMS" ? "a " + elem.log_type : "an " + elem.log_type} <span className='doomed'>from</span> {elem.from} 
-												  <span className='doomed'> "{elem.log_type === "SMS" ? elem.data.message : elem.log_type === "EMAIL" ? elem.data.subject: ""}"</span>
+												  <span className='doomed'> "{elem.log_type === "SMS" ? (elem.data.message.length > 160 ? (elem.data.message.slice(0, 160) + "..."): elem.data.message ): elem.log_type === "EMAIL" ?  (elem.data.subject.length > 160 ? (elem.data.subject.slice(0, 160) + "..."): elem.data.subject): ""}"</span>
 											    </span>
 										    }
 
@@ -364,10 +388,12 @@ const CommunicationLog = (props) => {
 
 										</div>
 										<div className='dateCommunication'>
-											<span class="comLogText"><span class="doomed">{dateForamt} {startDate}</span></span>
+											<span class="comLogText"><span class="doomed">
+												{utils.convertUTCToTimezone(elem.updated_at, timezoneOffset)}
+											</span></span>
 										</div>
 									
-									</li>
+									</li> 
 
 								)														
 							})

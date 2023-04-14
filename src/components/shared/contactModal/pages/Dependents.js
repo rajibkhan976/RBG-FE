@@ -31,6 +31,7 @@ const initialDependentState = {
 }
 
 const Dependents = (props) => {
+  
   const [isLoader, setIsLoader] = useState(false);
   const [phoneCountryCode, setPhoneCountryCode] = useState([]);
   const [addManually, setAddManually] = useState(false)
@@ -419,7 +420,7 @@ const Dependents = (props) => {
        * Submit the form
        */
       console.log('submit the form');
-      setIsLoader(true);
+     // setIsLoader(true);
       try {
         let operationMethod = "createDependent";
         await DependentServices[operationMethod](dependant)
@@ -427,8 +428,12 @@ const Dependents = (props) => {
             console.log("Create dependent result", result)
             let msg = 'Dependent created successfully';
             setIsDisabled(true);
-            setSuccessMsgPopup(msg);
-
+            //setSuccessMsgPopup(msg);
+            dispatch({
+              type: actionTypes.SHOW_MESSAGE,
+              message: msg,
+              typeMessage: 'success'
+           });
             //Close dependent create modal
             setTimeout(() => {
               closeModal();
@@ -437,19 +442,31 @@ const Dependents = (props) => {
             },
               messageDelay
             );
+           
           })
+          
 
-      } catch (e) {
+      } catch (e) { 
         /**
          * Segregate error by http status
          */
         setProcessing(false);
         console.log("In dependent create", e.message);
         if (e.response && e.response.status == 403) {
-          setErrorMsgPopup("You dont have permission to perform this action");
+          //setErrorMsgPopup("You dont have permission to perform this action");
+          dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: e.message + "You dont have permission to perform this action",
+            typeMessage: 'error'
+          });
         }
         else if (e.message) {
-          setErrorMsgPopup(e.message);
+         // setErrorMsgPopup(e.message);
+         dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: e.message,
+          typeMessage: 'error'
+        });
         }
       } finally {
         setIsLoader(false);
@@ -732,12 +749,12 @@ const Dependents = (props) => {
                 <img src={icon_dependent_dark} alt="" />
               </div>
               <h3>{isEditing ? "Edit " : "Add a "}Dependent</h3>
-              {successMsgPopup && <div className="popupMessage success">
+              {/* {successMsgPopup && <div className="popupMessage success">
                 <p>{successMsgPopup}</p>
               </div>}
               {errorMsgPopup && <div className="popupMessage error">
                 <p>{errorMsgPopup}</p>
-              </div>}
+              </div>} */}
             </div>
             <div className="modalForm">
 

@@ -19,6 +19,7 @@ import moment from "moment";
 import { SMSServices } from "../../../../../services/template/SMSServices";
 import { useDispatch, useSelector } from "react-redux";
 import * as actionTypes from "../../../../../actions/types";
+import MergeTag from "../../../MergeTag";
 
 
 const Sms = (props) => {
@@ -28,13 +29,11 @@ const Sms = (props) => {
   const [contactID, setContactID] = useState("");
   const [contactGenData, setContactgendata] = useState(props.contactGenData);
   const [keywordSuggesion, setKeywordSuggesion] = useState(false);
-  const [smsTags, setSmsTags] = useState([])
   const [smsTemplates, setSMSTemplates] = useState(false)
   const [isLoader, setIsLoader] = useState(false)
   //const [selectedTemplate, setSelectedTemplate] = useState(null)
   const [templateToogle, setTemplateToogle] = useState(false);
   const [smsDatasubject, setSmsDatasubject] = useState("");
-  const [searchTagString, setSearchTagString] = useState("");
   const [backError, setBackError] = useState(false);
 
   const [smsData, setSmsData] = useState( {
@@ -47,21 +46,7 @@ const Sms = (props) => {
     errNumber : "",
   });
  
-  const fetchSMSTags = async () => {
-    try {
-      const result = await SMSServices.fetchSMSTags()
-      if(result) {
-        // console.log("result", result);
-        setSmsTags(result)
-      }
-    } catch (error) {
-      dispatch({
-        type: actionTypes.SHOW_MESSAGE,
-        message: error.message,
-        typeMessage: 'error'
-      });
-    }
-  }
+ 
   const fetchSMS = async () => {
     let page = "all";
     try {
@@ -115,34 +100,35 @@ const Sms = (props) => {
   };
 
 
-  const addKeywordSms = (e) => {
-    e.preventDefault()
+  const addKeywordSms = (e,field) => {
+    //e.preventDefault();
     let subjectInput = messageTextbox.current;
     let cursorStart = subjectInput.selectionStart;
     let cursorEnd = subjectInput.selectionEnd;
     let textValue = subjectInput.value;
-  
+    let vall = field ;
+
+     
     try {
         if (cursorStart || cursorStart == "0"
         ) {
+          //vall = val("green");
+
             var startToText = "";
             subjectInput.value =
                 subjectInput.value.substring(0, cursorStart) +
-                " [" +
-                e.target.textContent +
-                "] " +
+                vall +
                 subjectInput.value.substring(cursorEnd, textValue.length);
-  
+
 
             setSmsData({
                 ...smsData,
                 body: subjectInput.value
-            })
+            });
+            
             startToText =
                 subjectInput.value.substring(0, cursorStart) +
-                "[" +
-                e.target.textContent +
-                "]";
+                vall;
   
             subjectInput.focus();
             subjectInput.setSelectionRange(
@@ -152,7 +138,7 @@ const Sms = (props) => {
   
             // console.log(subjectInput, cursorStart, cursorEnd, textValue);
         } else {
-            subjectInput.value = subjectInput.value + " [" + e.target.textContent + "] ";
+            subjectInput.value = subjectInput.value + vall;
   
             setSmsData({
               ...smsData,
@@ -196,12 +182,12 @@ const Sms = (props) => {
 
 useEffect(() => {
   fetchSMS("all")
-  fetchSMSTags()
 }, []);
 
 const submitMessage = async (e) =>{
   e.preventDefault();
   var phNumber = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im;
+  console.log("phNumber.test((contactGenData?.phone?.full_number", phNumber.test(contactGenData?.phone?.full_number))
   let payload = {
     body : smsData.body,
     mediaUrl : "",
@@ -213,8 +199,9 @@ const submitMessage = async (e) =>{
   }else if((contactGenData?.phone?.full_number || "")   === "" ){
     setSmsDataErr({...smsDataErr,errNumber : "To send SMS you must save a mobile or phone number first"})
   }else if(!phNumber.test((contactGenData?.phone?.full_number || ""))){
-   setSmsDataErr({...smsDataErr,errNumber : "It is not a valid number"})
- }else{
+    
+    setSmsDataErr({...smsDataErr,errNumber : "It is not a valid number"})
+  }else{
     let result = await smsSend (payload);
     //console.log("resultttttttttttttttttttt", result);
       if(result === true){
@@ -255,6 +242,7 @@ useOutsideAlerter(keywordRef);
 
   return (
     <>
+
        {isLoader ? <Loader/> : ""}
        <div className="formBody" >
         <form>
@@ -298,66 +286,13 @@ useOutsideAlerter(keywordRef);
                           >
 
                           </textarea>
-                          <button className="noBg"
+                          {/* <button className="noBg"
                           onClick={(e) => 
                             {setKeywordSuggesion(true)
                             e.preventDefault()}
-                          }><img src={browsTextarea}/></button>
+                          }><img src={browsTextarea}/></button> */}
                       
-                           {keywordSuggesion && (
-                                    <div className="keywordBox" ref={keywordRef}>
-                                        <div className="searchKeyword">
-                                            <div className="searchKeyBox">
-                                                <input
-                                                    type="text"
-                                                    onChange={(e) => setSearchTagString(e.target.value)}
-                                                    onKeyPress={e => {
-                                                        if (e.key === 'Enter') e.preventDefault();
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="cancelKeySearch">
-                                                <button
-                                                    onClick={() => {setKeywordSuggesion(false)
-                                                            setSearchTagString("")}}
-                                                ></button>
-                                            </div> 
-                                        </div>
-                                        <div className="keywordList">
-                                            <ul> 
-                                                {smsTags
-                                                    .filter(
-                                                        (smsTag) =>
-                                                            smsTag.id.toLowerCase().indexOf(searchTagString)>= 0 
-                                                            && smsTag.id !== "tags"
-                                                            && smsTag.id !== "phone" 
-                                                            && smsTag.id !== "mobile" 
-                                                            && smsTag.id !== "momCellPhone" 
-                                                            && smsTag.id !== "dadCellPhone"
-                                                            && smsTag.id !== "createdBy"
-                                                            && smsTag.id !== "createdAt"
-                                                            && smsTag.id !== "statusName"
-                                                            && smsTag.id !== "phaseName"
-                                                            && smsTag.id !== "contactType"
-                                                            && smsTag.id !== "ageGroup"
-                                                            && smsTag.id !== "sourceDetail"
-                                                            && smsTag.id !== "onTrial"
-                                                    )
-                                                    .map((tagItem, i) => (
-                                                        <li key={"keyField" + i}>
-                                                            <button
-                                                                onClick={(e) =>
-                                                                  addKeywordSms(e, tagItem.id)
-                                                                }
-                                                            >
-                                                                {tagItem.id}
-                                                            </button>
-                                                        </li>
-                                                    ))}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                )}
+                          
                         </div>
                        
                          <div className="errorMsg">{smsDataErr.err}</div>  
@@ -365,25 +300,33 @@ useOutsideAlerter(keywordRef);
                           <span>{smsData?.body?.length > 0 ? smsData?.body?.length : 0}/160 -One message contains 160 chatracters max (SMS count can be changed if you are using keyword variable e.g. [fname])</span>
                           
                         </div>
+                      
+                        <MergeTag addfeild={(e,field)=> addKeywordSms(e,field)}/>
+                       
                       </div>
                   </div>
-                  <div className="formSlice">
-                      <div className="label">&nbsp;</div>
-                      
-                      <button type="button" class="saveNnewBtn"
-                          disabled={contactGenData?.phone?.full_number ? "" : "disabled"}
-                          onClick={submitMessage}
-                      ><span>Send</span><img src={arrowRightWhite} alt=""/></button>
-                      {contactGenData?.phone?.full_number ? "" : <div className="errorMsg space">Sending SMS is disabled now, to enable it save a phone number first</div>}
-                        
-
-                         {/* <div className="errorMsg space">{smsDataErr.errNumber}</div>   */}
-
-                  </div>
+                  
 
                </form>
             </div>
-  
+            <div className="formSlice fixinRight">
+                      <div className="label">&nbsp;</div>
+                      {contactGenData?.phone?.full_number ? "" : <div className="errorMsg space">Sending SMS is disabled now, to enable it save a phone number first</div>}
+                        
+
+                        <div className="errorMsg space">{smsDataErr.errNumber}</div> 
+                      <button type="button" class="cancel"
+                        onClick={()=>props.closePanel()}
+                      >
+                        Cancel
+                      </button>
+                      <button type="button" class="saveNnewBtn"
+                          disabled={contactGenData?.phone?.full_number || !smsDataErr.errNumber? "" : "disabled"}
+                          onClick={submitMessage}
+                      ><span>Send</span><img src={arrowRightWhite} alt=""/></button>
+                      
+
+                  </div>
      </>
   );
 };

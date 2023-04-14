@@ -9,6 +9,14 @@ import cross from "../../../src/assets/images/cross.svg"
 import filters from "../../../src/assets/images/filter.svg";
 import {utils} from "../../helpers";
 
+import action_arrow from "../../../src/assets/images/action-arrow-icon.svg";
+import action_sms from "../../../src/assets/images/action_sms_icon.svg";
+import action_sms_hover from "../../../src/assets/images/action_sms_icon_hover.svg"
+import action_email from "../../../src/assets/images/action_email_icon.svg";
+import action_email_hover from "../../../src/assets/images/action_email_icon_hover.svg";
+import action_automation from "../../../src/assets/images/action-automation-icon.svg";
+import action_automation_hover from "../../../src/assets/images/action_automation_icon_hover.svg";
+
 const ContactHead = (props) => {
   const dispatch = useDispatch();
   const [filter, setFilter] = useState(false);
@@ -17,6 +25,10 @@ const ContactHead = (props) => {
   const [selectAllContacts, setSelectAllContacts] = useState(false);
   const [filtersFirst, setFiltersFirst] = useState([]);
   const [filtersSecond, setFiltersSecond] = useState([]);
+  const [actionTrigger, setActionTrigger] = useState(false);
+  const actionTriggerRef = useRef(null);
+  const [filterClear, setFilterClear] = useState(false);
+  const [actionStatus, setActionStatus] = useState(true);
   const createIndivitualContact = () => {
     dispatch({
         type: actionTypes.CONTACTS_MODAL_ID,
@@ -52,6 +64,7 @@ const ContactHead = (props) => {
     props.openFilter();
   }
   useEffect(() => {
+    console.log("======", props.filters);
     if (props.filters.length > 3) {
       setFiltersFirst(props.filters.slice(0, 3));
       setFiltersSecond(props.filters.slice(3,props.filters.length));
@@ -61,20 +74,61 @@ const ContactHead = (props) => {
     }
   }, [props.filters])
   const removeFiler = (type) => {
+    
+    // console.log("filter close type", type);
     props.removeFilter(type);
+    // if(type === 'all'){
+    //   setFilterClear(true);
+    //   // console.log("filter clear", filterClear);
+    // }
   }
+  const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
+	useEffect(()=>{
+	  console.log("credit details time zone", timezoneOffset);
+	}, [timezoneOffset])
   const checkAll = () => {
     props.selectAll(!selectAllContacts);
     setSelectAllContacts(!selectAllContacts);
   }
+  const actionHandelar = ()=>{
+    // // console.log(actionTrigger);
+    if(actionTrigger === false){
+      setActionTrigger(true);
+      props.sendActionData(true);
+    }else{
+      setActionTrigger(false);
+      props.sendActionData(false);
+    }
+  }
+  const handleOutsideClick = (event)=>{
+    if (actionTriggerRef.current && !actionTriggerRef.current.contains(event.target)) {
+      // // console.log(event);
+      setActionTrigger(false);
+    }
+  }
+  useEffect(() => {
+    document.addEventListener("click", handleOutsideClick);
+    return () => document.removeEventListener("click", handleOutsideClick);
+}, [actionTriggerRef]);
+// useEffect(()=>{
+//   // console.log("props in contact header", props.actionStatusFun);
+//   if(props.actionStatusFun){
+//     setActionStatus(false);
+//     // console.log("action status", actionStatus, props.showAction, props.totalCount > props.contactListPageCount, selectAllCheckbox);
+//   }
+// },[props.actionStatusFun]);
+// useEffect(()=>{
+//   // console.log(props.showAction, props.totalCount > props.contactListPageCount, selectAllCheckbox);
+// })
+
   return (
     <div className="contactHead">
       <div className="userListHead">
         <div className="listInfo">
-          <ul className="listPath">
+          {/* <ul className="listPath">
             <li>Contacts</li>
             <li>My Contacts</li>
-          </ul>
+          </ul> */}
           <h2 className="inDashboardHeader">Contacts List ({props.totalCount})</h2>
           <p className="userListAbout">Create, import &amp; manage your contacts</p>
         </div>
@@ -158,10 +212,23 @@ const ContactHead = (props) => {
                   {
                     filtersFirst.map((ele, key) => {
                       return (
-                          <div className="contactsTags" key={key}>
-                            <span className="pageInfo" dangerouslySetInnerHTML={{__html: ele.name}}></span>
-                            <span className="crossTags" onClick={() => removeFiler(ele.type)}><img src={cross} alt="" /></span>
-                          </div>
+                        <div className="contactsTags" key={key}>
+                        {/* {ele.type} */}
+                        {/* {utils.convertUTCToTimezone(ele.name.split(" ").splice(3,4).join(" ").trim(), timezoneOffset)} */}
+                        {/* {utils.convertUTCToTimezone(ele.name.split(" ").splice(2,4).join(" ").replace(":","").trim(), timezoneOffset)} */}
+                        { ele.type === "fromDate" &&
+                          <span className="pageInfo"><strong>Created From :</strong> {utils.convertUTCToTimezone(ele.name.trim().split(" ").splice(3,4).join(" "), timezoneOffset)}</span>
+                        }
+                        { ele.type === "toDate" &&
+                          <span className="pageInfo"><strong>Created To :</strong> {utils.convertUTCToTimezone(ele.name.split(" ").splice(2,4).join(" ").replace(":","").trim(), timezoneOffset)}</span>
+                        }
+                        {
+                          ele.type !== "fromDate" && ele.type !== "toDate" &&
+                          <span className="pageInfo" dangerouslySetInnerHTML={{__html: ele.name}}></span>
+
+                        }
+                        <span className="crossTags" onClick={() => removeFiler(ele.type)}><img src={cross} alt="" /></span>
+                      </div>
                       )
                     })
                   }
@@ -194,6 +261,20 @@ const ContactHead = (props) => {
                 </div>
                 : ""
           }
+
+          { props.showAction || props.totalCount > props.contactListPageCount && selectAllCheckbox ?
+            <div className={actionStatus ? "action" : "action none"} ref={actionTriggerRef}>
+              <button onClick={actionHandelar}>Actions <img src={action_arrow} /></button>
+              {actionTrigger && !props.addSelectAll.status &&
+                <ul className="dropdown">
+                  <li><button onClick={props.openBulkSmsHandler}><img src={action_sms} /><img className="hover" src={action_sms_hover}/>Send SMS</button></li>
+                  <li><button onClick={props.openBulkEmailHandler}><img src={action_email} /><img className="hover" src={action_email_hover}/>Send Email</button></li>
+                  {/* <li><button onClick={props.openBulkAutomationHandler}><img src={action_automation} /><img className="hover" src={action_automation_hover} />Add to Automation</button></li> */}
+                </ul>
+              }
+            </div>
+           : ""
+          }
         </div>
         <div className="head_ctrlRow_right">
           <button
@@ -201,9 +282,9 @@ const ContactHead = (props) => {
             onClick={() => props.openImportContact()}>
             <img src={download_cloud_icon} alt="" /> Import Contacts
           </button>
-           <button className="saveNnewBtn expContactBtn">
+           {/* <button className="saveNnewBtn expContactBtn">
             <img className="exportImgs" src={uparrow_icon_grey} alt="" /> Export Contacts
-          </button> 
+          </button>  */}
         </div>
       </div>
     </div>

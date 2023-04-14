@@ -80,6 +80,7 @@ const Appointment = (props) => {
       let appointmentResult = await AppointmentServices.fetchContactAppointment(props.contactId, page);
       setIsScroll(false);
       if (page === 1) {
+        console.log("Appointment List", appointmentResult.appointments);
         setAppointments(appointmentResult.appointments);
       } else {
         setAppointments([...appointments, ...appointmentResult.appointments]);
@@ -256,7 +257,12 @@ const Appointment = (props) => {
   useEffect(() => {
     fetchCountry();
     fetchAppointment(1);
+    
   }, []);
+  const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
+  useEffect(()=>{
+    console.log("create appointnment time zone:", timezoneOffset)
+},[timezoneOffset]);
   return (
     <>
       <div className="contactTabsInner appointmentPage" >
@@ -347,9 +353,11 @@ const Appointment = (props) => {
                           </svg>
                         </figure>
                         <p>
-                          {appointment.date}
+                          {/* {appointment.fromTime} */}
+                          {utils.convertUTCToTimezone(appointment.fromDateTime.trim(), timezoneOffset).split(" ").splice(0, 3).join(" ")}
                           <strong className="appTime">
-                            {appointment.fromTime} - {appointment.toTime}
+                          {utils.convertUTCToTimezone(appointment.fromDateTime.trim(), timezoneOffset).split(" ").splice(3,4).join(" ")} - {utils.convertUTCToTimezone(appointment.toDateTime.trim(), timezoneOffset).split(" ").splice(3,4).join(" ")} 
+                            {/* {appointment.fromTime} - {appointment.toTime} */}
                             {/* {
                             utils.convertUTCToTimezone(moment(appointment.date, "MM/DD/YYYY").format("YYYY-MM-DD") + " " + moment(appointment.fromTime, "hh:mm A").format("hh:mm:ss"), timezone, "YYYY-MM-DD,h:mm A").split(",")[1]
                             + " - " +
@@ -393,16 +401,20 @@ const Appointment = (props) => {
                         <div className="appDetails" ref={scrollAppDetail}>
                           {appointment.history.map((histItem, index) => (
                             <div className="appDetail d-flex" key={index}>
-                              <figure className="icoHolderApp">
+                              <figure className="icoHolderApp s">
                               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6.81744 6.30879e-06C7.79079 -0.00132748 8.75275 0.208844 9.63641 0.615904C10.5201 1.02296 11.3042 1.61714 11.9343 2.3571L12.8629 1.53297C12.9616 1.44606 13.0832 1.38937 13.2134 1.3697C13.3435 1.35004 13.4766 1.36824 13.5966 1.42211C13.7166 1.47598 13.8185 1.56324 13.8901 1.67343C13.9616 1.78361 13.9998 1.91205 14 2.04332V4.76901C14 4.94948 13.9281 5.12256 13.8002 5.25018C13.6722 5.37779 13.4987 5.44949 13.3178 5.44949H10.2325C10.094 5.44886 9.95889 5.40632 9.84514 5.32748C9.73139 5.24864 9.64431 5.13721 9.59543 5.00794C9.54654 4.87867 9.53815 4.73764 9.57136 4.60351C9.60458 4.46938 9.67783 4.34847 9.78143 4.25676L10.909 3.25495C10.4044 2.66183 9.77631 2.18549 9.0684 1.85906C8.36049 1.53263 7.58977 1.36394 6.80986 1.36474C5.8083 1.36482 4.82603 1.63949 3.9704 2.15873C3.11476 2.67797 2.41869 3.4218 1.95824 4.30894C1.4978 5.19607 1.2907 6.19238 1.35957 7.18898C1.42845 8.18557 1.77065 9.14411 2.34879 9.95984C2.92692 10.7756 3.71874 11.4171 4.63772 11.8143C5.55669 12.2116 6.56745 12.3492 7.55956 12.2122C8.55165 12.0752 9.48691 11.6689 10.2631 11.0376C11.0393 10.4063 11.6266 9.57431 11.9608 8.6326C11.9877 8.54461 12.032 8.46293 12.0913 8.39248C12.1506 8.32203 12.2235 8.26425 12.3057 8.22262C12.388 8.18099 12.4778 8.15637 12.5698 8.15024C12.6618 8.1441 12.7541 8.15658 12.8411 8.18692C12.9282 8.21727 13.0082 8.26485 13.0763 8.3268C13.1444 8.38876 13.1993 8.46382 13.2376 8.54747C13.276 8.63112 13.2969 8.72163 13.2993 8.81357C13.3017 8.9055 13.2854 8.99697 13.2514 9.08247C12.833 10.2574 12.0989 11.2951 11.1293 12.0823C10.1598 12.8694 8.99201 13.3757 7.75357 13.5459C6.51513 13.716 5.25362 13.5435 4.10679 13.0472C2.95995 12.5509 1.9719 11.7498 1.2505 10.7315C0.529111 9.71311 0.102119 8.51664 0.0161522 7.2727C-0.0698142 6.02876 0.18855 4.78517 0.763034 3.67773C1.33752 2.57029 2.20603 1.64158 3.27374 0.993006C4.34145 0.34443 5.5673 0.000927523 6.81744 6.30879e-06Z" fill="white"/>
                                 <path d="M4.25688 9.53807C4.4045 9.53807 4.54814 9.49031 4.66623 9.40197L7.39902 7.35676C7.48375 7.29338 7.55252 7.21118 7.59989 7.1167C7.64726 7.02221 7.67192 6.91802 7.67192 6.81238V4.0867C7.67192 3.90597 7.59994 3.73265 7.47181 3.60486C7.34369 3.47707 7.16992 3.40527 6.98872 3.40527C6.80753 3.40527 6.63375 3.47707 6.50563 3.60486C6.3775 3.73265 6.30552 3.90597 6.30552 4.0867V6.47214L3.84185 8.31132C3.72651 8.39677 3.64115 8.51636 3.59796 8.65304C3.55477 8.78972 3.55594 8.93651 3.60132 9.07248C3.64669 9.20845 3.73394 9.32667 3.85064 9.41027C3.96734 9.49388 4.10752 9.5386 4.2512 9.53807H4.25688Z" fill="white"/>
                               </svg>
                               </figure>
                               <p>
-                                {histItem.date}
+                                {/* {histItem.date} */}
+                                {utils.convertUTCToTimezone(histItem?.fromDateTime.trim(), timezoneOffset).split(" ").splice(0,3).join(" ")}
                                 <strong className="appTime">
-                                  {histItem.fromTime}-{histItem.toTime}
+                                  {/* {histItem.date + " " + utils.timeConversion(histItem.fromTime)} */}
+                                  {/* {histItem.date + " " + utils.timeConversion(histItem.toTime)} */}
+                                  {utils.convertUTCToTimezone(histItem?.fromDateTime.trim(), timezoneOffset).split(" ").splice(3,4).join(" ")} - {utils.convertUTCToTimezone(histItem?.toDateTime.trim(), timezoneOffset).split(" ").splice(3,4).join(" ")}
+                                  {/* {histItem.fromTime}-{histItem.toTime} */}
                                 </strong>
                               </p>
                               {histItem.note && (

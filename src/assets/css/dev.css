@@ -1026,8 +1026,8 @@
 
 .dashboardInnerDetails .inDashboardHeader {
   font-size: 30px;
-  line-height: 46px;
-  margin-bottom: 22px;
+  line-height: 24px;
+  margin-bottom: 0px;
 }
 
 .automationShortInfoul:after {
@@ -1085,7 +1085,7 @@
   right: 0px;
   bottom: 0;
   background: rgba(48, 86, 113, 20%);
-  z-index: 999;
+  z-index: 99;
 }
 
 /* ------------------- */
@@ -1625,10 +1625,16 @@
 .sideMenuHeader h3 .btn-link {
   top: 0;
 }
-.tableListing li.owerInfo .userName button span {
+.tableListing li.owerInfo .userName span {
   flex: 0 0 40px;
   width: 40px;
   height: 40px;
+}
+.tableListing li.owerInfo .userName .btn{
+  justify-content: flex-start;
+}
+.tableListing li.owerInfo .btn{
+  cursor: inherit;
 }
 /* EDIT IN HEIGHT FOR TABLES TO REMOVE EMPTY SPACE WITH SCROLLBAR */
 .contactListingTable {
@@ -5965,7 +5971,7 @@ margin-right: 18%;
   display: flex;
   align-items: end;
   position: relative;
-  min-height: 65px;
+  /* min-height: 65px; */
 }
 
 .contactFilters .head_ctrlRow_left {
@@ -5982,13 +5988,16 @@ margin-right: 18%;
   display: flex;
   align-items: center;
   text-align: center;
-  background: #E9F4FF;
+  background: #CEF1F5;
   border-radius: 5px;
   padding: 10px 30px;
   margin: 0 auto;
   position: absolute;
-  left: 22%;
-  top: -15px;
+  left: 0%;
+  right: 0%;
+  margin: 0 auto;
+  bottom: 0px;
+  border:1px solid #A1DAE1;
 }
 .leftPTag {
   font-size: 14px;

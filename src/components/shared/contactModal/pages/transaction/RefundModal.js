@@ -12,9 +12,15 @@ import paymentFail from "../../../../../assets/images/paymentFailed.svg";
 import cardFail from "../../../../../assets/images/cardFailed.svg";
 import { TransactionServices } from "../../../../../services/transaction/transactionServices";
 import Loader from "../../../Loader";
+import AlertMessage from "../../../../shared/messages/alertMessage"
+import * as actionTypes from "../../../../../actions/types";
+import {useDispatch} from "react-redux";
+import {utils} from "../../../../../helpers";
 
 
 const RefundModal = (props) => {
+    const dispatch = useDispatch();
+
     const [refundLoader, setRefundLoader] = useState(false)
     const [refundLimit, setRefundLimit] = useState(props.amount);
     const [refundFormData, setRefundFormData] = useState({
@@ -166,19 +172,20 @@ const RefundModal = (props) => {
             }
         } catch (e) {
             console.log("error:::", e);
-            const failedTrans = {
-                message: e.message
-            }
-            // alertMsg(e.message, "error");
-            setSuccessfulRefund(failedTrans)
-            // closeModal();
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
         } finally {
             loader(false);
         }
         
     };
 
-    
+    const openCancelModal = () =>{
+        
+    }
     
     
 
@@ -196,7 +203,7 @@ const RefundModal = (props) => {
                     <p>Fill out below details for refund</p>
                 </div>
                 
-                    <div className="cmnForm">
+                    <div className="modalForm auto">
                         <form>
                             <div className={formErrorMsg.amount ? "cmnFormRow errorField" : "cmnFormRow"}>
                                 <label className="cmnFieldName">Refund Amount</label>
@@ -319,33 +326,6 @@ const RefundModal = (props) => {
                         </button>
                         </div>
                     </>
-                }
-
-                {(successfulRefund.status === undefined && successfulRefund.message !== undefined) && 
-                    <div className="modalBackdrop modalProductStatus">
-                        <div className="slickModalBody paymentFailed">
-                            <div className="slickModalHeader">
-                            <div className="circleForIcon">
-                                <img src={paymentFail} alt="" />
-                            </div>
-                            <h3 className="courseModalHeading">Payment Failed!</h3>
-                            </div>
-
-                            <div className="payModalDetails">
-                            <img src={cardFail} alt="" />
-                            <p>{successfulRefund.message}</p>
-                            </div>
-
-                            <div className="buyBtns failedPayment">
-                            <button
-                                onClick={() => setSuccessfulRefund({})}
-                                className="saveNnewBtn"
-                            >
-                                Close
-                            </button>
-                            </div>
-                        </div>
-                    </div>
                 }
             </div>
         </div>

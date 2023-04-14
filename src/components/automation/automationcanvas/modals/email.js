@@ -10,6 +10,7 @@ import {useDispatch} from "react-redux";
 import * as actionTypes from "../../../../actions/types";
 import {SMSServices} from "../../../../services/template/SMSServices";
 import {utils} from "../../../../helpers";
+import MergeTag from "../../../shared/MergeTag";
 
 
 const Email = (props) => {
@@ -42,7 +43,10 @@ const Email = (props) => {
             setIsLoader(true);
             const result = await EmailServices.fetchEmailTemplateList(pageId, queryParams);
             if (result) {
-                let op = []
+                let op = [{value: "", label: "Select an Email Template", data: {"_id": "",
+                        "email": "",
+                        "subject": "",
+                        "template": ""}}]
                 result.templates.map(el => {
                     op.push({value: el._id, label: el.title, data: el})
                 });
@@ -84,7 +88,7 @@ const Email = (props) => {
     const emailTemplateChangeHandler = (e) => {
         e.data._id = "";
         setEmailData(e.data);
-        setChangedTemplate(utils.decodeHTML(e.data.template));
+        setChangedTemplate(utils.decodeHTML(e.data?.template || ""));
         setSelectedEmailTemplate(e);
     }
     const emailBodyHandler = (email) => {
@@ -197,86 +201,8 @@ const Email = (props) => {
                                     <div className="cmnFormField globalSms">
                                         <input className="subject" type="text" placeholder="Enter email subject" id="newEmailTemplateSubject" onChange={handleEmailSubject} value={emailData.subject}
                                                ref={newEmailTemplateSubject} />
-                                        <button className="btn browseKeywords"
-                                                type='button'
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    setSubjectKeywordSuggesion(true);
-                                                }}
-                                        >
-                                            <img src={icon_browse_keywords} alt="keywords" />
-                                        </button>
-                                        {subjectKeywordSuggesion && (
-                                            <div className="keywordBox">
-                                                <div className="searchKeyword">
-                                                    <div className="searchKeyBox">
-                                                        <input
-                                                            type="text"
-                                                            onChange={(e) => setSearchTagString(e.target.value)}
-                                                            onKeyPress={e => {
-                                                                if (e.key === 'Enter') e.preventDefault();
-                                                            }}
-                                                        />
-                                                    </div>
-                                                    <div className="cancelKeySearch">
-                                                        <button
-                                                            onClick={() => {setSubjectKeywordSuggesion(false)
-                                                                setSearchTagString("")}}
-                                                        ></button>
-                                                    </div>
-                                                </div>
-                                                <div className="keywordList">
-                                                    <ul>
-                                                        {emailTags
-                                                            .filter(
-                                                                (smsTag) =>
-                                                                    smsTag.id.indexOf(searchTagString) >= 0
-                                                                    && smsTag.id !== "tags"
-                                                                    && smsTag.id !== "phone"
-                                                                    && smsTag.id !== "mobile"
-                                                                    && smsTag.id !== "momCellPhone"
-                                                                    && smsTag.id !== "dadCellPhone"
-                                                                    && smsTag.id !== "createdBy"
-                                                                    && smsTag.id !== "createdAt"
-                                                                    && smsTag.id !== "statusName"
-                                                                    && smsTag.id !== "phaseName"
-                                                                    && smsTag.id !== "contactType"
-                                                            )
-                                                            .map((tagItem, i) => (
-                                                                <li key={"keyField" + i}>
-                                                                    <button
-                                                                        onClick={(e) =>
-                                                                            addKeywordEmail(e, tagItem.id)
-                                                                        }
-                                                                    >
-                                                                        {tagItem.id}
-                                                                    </button>
-                                                                </li>
-                                                            ))}
-                                                    </ul>
-                                                </div>
-                                                <div className=''>
-                                                    <div className="searchKeyword">
-                                                        <div className="searchKeyBox">
-                                                            <input
-                                                                type="text"
-                                                                // onChange={(e) => setSearchTagString(e.target.value)}
-                                                                onKeyPress={e => {
-                                                                    if (e.key === 'Enter') e.preventDefault();
-                                                                }}
-                                                            />
-                                                        </div>
-                                                        <div className="cancelKeySearch">
-                                                            <button
-                                                                onClick={() => {
-                                                                    setSubjectKeywordSuggesion(false)
-                                                                }}
-                                                            ></button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
+                                         <MergeTag addfeild={(e,field)=> addKeywordEmail(e,field)}/>
+
                                     </div>
                                 </div>
                                 <div className="inputField emailBodyInputField">
@@ -291,16 +217,6 @@ const Email = (props) => {
                                         />
                                     </div>
                                 </div>
-
-                                {/*<div className="inputField checkEmailTemplate">
-                                    <label><span className='customCheckbox'><input type="checkbox" value="transactionFailed" onChange={(e)=>newEmailTemplateHandeler(e)}/><span></span></span>Save as a new Email Template?</label>
-                                </div>
-                                {
-                                    emailTemplateToggle &&
-                                    <div className="inputField">
-                                        <input className="template" type="text" placeholder="Enter template name" />
-                                    </div>
-                                }*/}
                             </div>
                             <div className="saveButton">
                                 <button onClick={saveEmailSettingHandler}>Save <img src={chevron_right_white_24dp} alt="" /></button>

@@ -1,0 +1,413 @@
+
+/*/ merge field works /*/
+
+
+.mergeFields{
+  height: 109px;
+  overflow: auto;
+}
+
+.mergeFields ul {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  padding-top: 7px;
+}
+.mergeFields ul li{
+  display: inline-block;
+  padding: 5px 3px 3px 0;
+}
+.mergeFields ul li button{
+  background: #F6F8FA;
+  border: 1px solid #D3D9DE;
+  border-radius: 46px;
+  height: 26px;
+  line-height: 20px;
+  font-size: 12px;
+  color: #305671;
+  padding: 0 9px;
+}
+.mergeFields ul li button:hover{
+  background: #305671;
+  border: 1px solid #305671;
+  color: #fff;
+}
+.mergeFields::-webkit-scrollbar {
+  width: 3px;
+}
+
+.mergeFields::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.mergeFields::-webkit-scrollbar-thumb {
+  background-color: #dddbda;
+}
+.editorEmailShell.maximize {
+  padding: 24px 20px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  will-change: auto;
+  width: 64vw;
+  height: 83vh;
+  position: fixed;
+  z-index: 6;
+}
+/* .................................
+other UI fixes
+...................... */
+
+
+.fixinRight{
+  justify-content: flex-end;
+}
+.cancel {
+  height: 40px;
+  color: #9BAEBC;
+  padding: 0 20px;
+  margin-right: 3px;
+  background: none;
+  border: none;
+}
+
+
+.editFormBody.active {
+  height: 528px;
+  position: relative;
+}
+.formSlice.fixinRight {
+  justify-content: flex-end;
+  position: sticky;
+  width: 100%;
+  display: flex;
+  bottom: 0;
+  background: #fff;
+  padding: 10px;
+  /* border-top: 1px solid #eee; */
+}
+.formSlice .saveNnewBtn {
+  width: 80px;
+}
+.editFormBody.active .formBody{
+  min-height: 465px;
+}      
+    
+
+.call_modal_footer {
+  padding: 10px 99px;
+  display: flex;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  justify-content: flex-end;
+  background: #fff;
+}
+
+.modalMakeSmsBody .makeSmsForm {
+  width: 100%;
+  padding: 30px 5px;
+  height: 548px;
+  overflow: auto;
+}
+.smsGlobal .modalMakeSmsBody{
+  overflow: visible;
+}
+
+.makeSmsForm::-webkit-scrollbar,
+.emailListingPage .templateBody::-webkit-scrollbar,
+.slickModalBody .modalForm *::-webkit-scrollbar {
+  width: 3px;
+}
+
+.makeSmsForm::-webkit-scrollbar-track,
+.emailListingPage .templateBody::-webkit-scrollbar-track,
+.slickModalBody .modalForm  *::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.makeSmsForm::-webkit-scrollbar-thumb,
+.emailListingPage .templateBody::-webkit-scrollbar-thumb,
+.slickModalBody .modalForm *::-webkit-scrollbar-thumb {
+  background-color: #dddbda;
+}
+
+.emailListingPage .templateBody {
+  overflow: auto;
+  padding-right: 20px;
+}
+.emailListing .cmnFormField .mergeFields {
+    margin-bottom: 12px;
+}
+.emailListing .cmnFormField .headerEmail {
+  margin-bottom: 3px;
+}
+
+/* ..............................................................
+CSS to change the modal style in the platform
+............................................................. */
+
+.slickModalBody {
+  padding: 0;
+  border-radius: 10px;
+}
+.slickModalHeader {
+  padding: 0 14px;
+  text-align: left;
+  background:  #46C8D3;
+  border-radius: 10px 10px 0 0;
+}
+.topCross {
+  top: 16px;
+  right: 16px;
+  background: url(../images/cross_white.svg) 0 0 no-repeat;
+      width: 16px;
+    height: 16px;
+    display: inline-block;
+}
+.topCross img{
+  display: none;
+}
+
+.circleForIcon,.slickModalHeader p {
+  display: none;
+}
+.slickModalHeader h3,
+.modalProductAdd .slickModalHeader h3 {
+  padding: 16px 0;
+  color: #fff;
+  font-size: 16px;
+}
+.slickModalBody .modalForm {
+  height: 100vh;
+  max-height: 75vh;
+  padding: 26px;
+}
+.modalForm form {
+  padding-right: 17px;
+}
+
+.formControl label {
+    padding: 4px 0 5px;
+}
+
+.modalAddholiday .half label {
+  padding-top: 18px;
+}
+.cmnFormRow.fullWidth:before {
+  width: calc(100% + 28px);
+  left: -14px;
+}
+
+.editorEmailShell .cmnBtn{
+  width: 66px;
+  display: flex;
+  align-self: flex-end;
+}
+
+.modalForm .mergeFields {
+  height: 80px;
+}
+.createEmailButtons {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  margin-bottom: 6px;
+  padding: 5px;
+  background: #f1f1f1;
+  border-radius: 0 0 5px 5px;
+}
+.editorEmailShell.maximize .createEmailButtons {
+  position: relative;
+  bottom: 0;
+  right: 0;
+  z-index: 1;
+}
+
+.bulkSmsModel.sideMenuInner .actions {
+  position: relative;
+  right: 0;
+  border: 1px solid #ccc;
+  bottom: 4px;
+  background: #f3f3f3;
+  padding: 4px;
+  border-radius: 0 0 5px 5px;
+}
+
+.bulkSmsModel.sideMenuInner .bulkModalBody {
+  max-height: 100vh;
+  display: flex;
+  flex-wrap: wrap;
+  height: 100%;
+  padding-bottom: 40px;
+}
+
+.slice.call_modal_footer {
+  background: #fff;
+  position: absolute;
+  width: 100%;
+  padding: 20px 30px;
+  left: 0;
+  z-index: 2;
+}
+.bulkSmsModel.sideMenuInner .maximize .actions {
+  min-height: 40px;
+  background-color: #F6F8FA;
+  right: 0;
+  border: 1px solid #ccc;
+  bottom: 4px;
+  width: 100%;
+}
+.bulkSmsModel.sideMenuInner .bulkModalBody .slice{
+  width: 100%;
+}
+
+.addingForm.bank {
+  padding-right: 0;
+  width: 100%;
+}
+
+
+.slickModalBody .payModalDetails .modalForm {
+  max-height: 56vh;
+}
+.contactTabsInner h3.courseModalHeading {
+  margin: 0;
+  font-size: 16px;
+}
+.choosePaymentInfo {
+  border-radius: 0;
+}
+
+
+@media (max-width: 1440px){
+
+  .modalMakeSmsBody .makeSmsForm {
+      height: 460px;
+      max-height: 53vh;
+  }
+}
+/* .selectCountry{
+  max-height: 240px;
+  position: relative;
+} */
+
+.modalForm.appointmentForm.setappointment.successApp.deleteModals .setApp {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: none;
+}
+.modalActionWraper{
+  justify-content: flex-end;
+}
+
+.modalActionWraper .formField {
+  margin-bottom: 0;
+}
+
+.modalActionWraper .clearFilter {
+  margin-right: 20px;
+  height: 20px;
+  display: inline-block;
+  color: #9BAEBC;
+  border-bottom: none;
+}
+
+.alertBoxFooter {
+  padding: 30px 20px 0;
+  display: flex;
+  justify-content: flex-end;
+}
+.alertBox .btn-link {
+  float: none;
+  color: #9BAEBC;
+  border-bottom: none;
+  margin-right: 15px;
+  background-image: none;
+}
+
+/* .......................................
+HOTFIX v1.2.4
+........................................*/
+.modalEnlargeEmail .slickModalBody{
+  border-radius: 0px;
+}
+.modalEnlargeEmail .slickModalBody .modalForm.showMSG h3{
+  display: flex;
+  align-items: flex-start;
+  padding-top: 0px;
+}
+.modalEnlargeEmail .slickModalBody .modalForm.showMSG h3 span{
+  font-weight: 500;
+  margin-right: 30px;
+}
+.modalEnlargeEmail .slickModalBody .modalForm.showMSG .msgTypeIcon{
+  flex: 0 0 30px;
+  position: relative;
+  left:0px;
+  top:6px;
+}
+/* .modalEnlargeEmail .slickModalBody .modalForm{
+  height: 100%;
+} */
+
+.modalEnlargeEmail .slickModalBody .modalForm{
+  overflow:hidden;
+}
+.modalEnlargeEmail .slickModalBody .slickModalHeader .topCross{
+  z-index: 99999;
+  right: 17px;
+  top: 21px;
+}
+.modalEnlargeEmail .slickModalBody .slickModalHeader .topCross img{
+  display: block;
+}
+.modalEnlargeEmail .slickModalBody .modalForm.showMSG .description{
+  padding-left: 40px;
+}
+.modalEnlargeEmail .slickModalBody .modalForm.showMSG .description p{
+  margin-top: 0px;
+  padding-bottom: 0px;
+  padding-right: 20px;
+}
+
+.modalEnlargeEmail .enleargedBox {
+  overflow: auto;
+  height: 100%;
+}
+.userAddModal .slickModalBody .modalForm {
+  overflow: inherit;
+  max-height: 40vh;
+}
+.modalEnlargeEmail .enleargedBox table {
+  width: 95%;
+}
+
+
+.contactModal .tabBarArea .slickModalBody .loaderOuter {
+  position: absolute;
+  height: 100%;
+}
+.slickModalBody .successPageBtn {
+  padding-bottom: 25px;
+}
+
+.modalBackdrop.transactionModal.transactionSuccssModal .slickModalBody {
+  padding: 0 20px;
+}
+
+/* 
+.slickModalBody .modalForm {
+  height: auto;
+  max-height: 75vh;
+  padding: 26px;
+} */
+
+.deleteSelectedModals {
+  height: 192px;
+}
+.alertMessage {
+  bottom: 90px;
+}

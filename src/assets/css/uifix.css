@@ -1,0 +1,304 @@
+/* ui fix */
+.modal.contactModal .contactModalHeader.newBg{
+  background:#305671 ;
+  padding: 0;
+}
+
+.contactModalHeaderTopSec.spaceFixing{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #305671;
+  padding: 10px 30px 10px 30px;
+}
+.contactModalTopLeft{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.contactModalTopRight{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.contactModalHeaderTopSec.spaceFixing .ltValue{
+  padding-right: 20px;
+  margin: 0;
+}
+.spaceFixing .userName {
+  float: left;
+  width: auto;
+  min-width: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: left;
+  text-transform: capitalize;
+  margin-left: 20px;
+}
+.spaceFixing .userImageWrap {
+  float: left;
+  width: 44px;
+  height: 44px;
+  position: relative;
+}
+.spaceFixing .userImageWrap .editUserImg {
+  padding: 3px 3px 4px;
+  width: 21px;
+  height: 21px;
+  top: -6px;
+  right: -6px;
+}
+
+.contactModalHeaderBottomSec.spaceFixing{
+  background: #497391;
+  width: 100%;
+  float: none;
+  margin: 0;
+  padding: 20px 30px 15px 94px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.spaceFixing .userContacts .userPhone span {
+  color: #fff;
+  font-weight: 500;
+}
+
+.contactModalHeaderTopSec.spaceFixing .pop{
+  padding: 0 6px;
+  margin-right: 10px;
+
+}
+.contactModalTopRight .actionBtns{
+  padding-right: 12px;
+  width: 92px;
+  display: flex;
+}
+.contactModalTopRight .actionBtns .roundBlue{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: #1F4159;
+  border-radius: 50%;
+  margin-right: 5px;
+  border: none;
+  position: relative;
+}
+
+.actionBtns .roundBlue .tooltiptextInfo {
+  visibility: hidden;
+  width: auto;
+  min-width: 135px;
+  background-color: #fff;
+  color: #9baebc;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: -27px;
+  left: 53%;
+  transform: translate(-50%, 0px);
+  font-size: 12px;
+  font-weight: 400;
+  filter: drop-shadow(0 10px 30px rgba(0,0,0,.102));
+}
+.tooltiptextInfo:after {
+  content: "";
+  position: absolute;
+  top: -32%;
+  left: 50%;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-bottom-color: #fff;
+}
+.actionBtns .roundBlue:hover .tooltiptextInfo {
+  visibility:visible;
+}
+.chooseTransactionWraper.transactionPage.display .posSellingForm {
+  margin-bottom: 0px !important;
+  padding-bottom: 50px;
+}
+
+.bodytransaction .cmnFormRow {
+  margin-bottom: 16px;
+}
+
+
+.productTransaction .createNew ,
+.continueBuy{
+  flex: 1 1 100%;
+  display: flex;
+  height: auto;
+  position: absolute;
+  width: 100%;
+  bottom: 20px;
+  left: 0;
+  background: #fff;
+}
+
+.continueBuy button.saveNnewBtn {
+  margin: 17px auto;
+  width: 160px;
+}
+
+/* .overviewForm .formActBtnWrap {
+  width: 100%;
+  bottom: 70px;
+  margin: 0;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  padding: 30px 0;
+  background: #fff;
+} */
+
+.userContacts .userEmail.overviewModal .mailToEmail {
+  float: none;
+  cursor: auto;
+}
+.userContacts .userPhone img, .userContacts .userEmail img {
+  margin-right: 10px !important;
+}
+
+.userContacts .userEmail.overviewModal,
+.userContacts .userPhone {
+    width: 100%;
+    display: flex;
+}
+.userContacts .userPhone span{
+  white-space: nowrap;
+  float: left;
+  width: 236px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.modalContainer {
+  max-width: 820px;
+  width: 50%;
+  height: 100%;
+  background: #fff;
+}
+.overviewList ul {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  margin: 15px 0;
+}
+.overviewList li{
+    margin: 0 15px;
+    float: none;
+}
+
+
+
+/* .............................................
+other fixing 
+............................................... */
+
+
+
+@media (max-width: 1640px){
+  .flipCardHolder .cardList .cardAddBtn {
+    font-size: 11px;
+    padding: 0 5px;
+  }
+  .tabHead li button{
+    font-size: 13px;
+    padding: 0 10px;
+  }
+  .paymentNow.display p{
+    font-size: 12px;
+  }
+}
+@media (max-width: 1500px){
+  .pid {
+    position: relative;
+    padding-bottom: 10px;
+  }
+  span.copyTo {
+    position: absolute;
+    left: -14px;
+    bottom: -15px;
+  }
+  .paymentNow.display p{
+    font-size: 12px;
+  }
+}
+@media (max-width: 1440px){
+  .tabHead li button{
+    font-size: 13px;
+    padding: 0 5px;
+  }
+  .paymentNow.display p{
+    font-size: 10px;
+  }
+}
+
+
+
+/* // after mailgun issue fixing  */
+
+.cmnFieldStyle.btnSelect span {
+  display: block;
+}
+
+.bulkSmsModel.sideMenuInner {
+  width: 50%;
+  max-width: 820px;
+}
+
+.contactListItems li,
+.programsTransaction .selectProg {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.importCPaymentError {
+  margin: 10px;
+}
+
+.modalBackdrop.modalProductStatus .slickModalBody.paymentFailed {
+  padding: 0 20px 5px 20px;
+  height: 245px;
+  transform: translateY(20px);
+}
+.modalBackdrop.modalProductStatus .slickModalBody.paymentFailed .slickModalHeader {
+  background: transparent;
+}
+
+.payModalDetails ~ .buyBtns.failedPayment {
+  padding-top: 20px;
+}
+.itemTitle p {
+  max-width: 100px;
+}
+
+.slickModalBody.setAppointment.deleteSelectedModals {
+  width: 365px;
+}
+
+.alertBox {
+  width: 375px;
+  border-radius: 10px;
+  padding: 25px 36px;
+}
+
+.alertBoxBody p {
+  line-height: 30px;
+}
+
+.appointmentEditModal .editModalDetails .tagSection {
+  margin-left: 0;
+}
+
+.userAddModalForm .modalbtnHolder {
+  margin-top: 0;
+}
+

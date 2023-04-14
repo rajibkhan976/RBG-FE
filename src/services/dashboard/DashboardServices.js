@@ -6,7 +6,7 @@ let headers = {
 };
 
 export const DashboardServices = {
-  fetchMRRG: async (month = 1, year = 2021) => {
+  fetchMRRG: async (month, year) => {
     try {
       const url = config.dashboardWidgetsUrl + `mrr?month=${month}&year=${year}`
       const result = await axios.get(url, { headers: headers });
@@ -58,7 +58,7 @@ export const DashboardServices = {
       }
     }
   },
-  fetchAdditionalRevenue: async (month = 1, year = 2022) => {
+  fetchAdditionalRevenue: async (month, year) => {
     try {
       const url = config.dashboardWidgetsUrl + `additional-revenue?month=${month}&year=${year}`
       const result = await axios.get(url, { headers: headers });
@@ -84,7 +84,7 @@ export const DashboardServices = {
       }
     }
   },
-  fetchAppointmentsShowed: async (month = 1, year = 2022) => {
+  fetchAppointmentsShowed: async (month, year) => {
     try {
       const url = config.dashboardWidgetsUrl + `appointments-showed?month=${month}&year=${year}`
       const result = await axios.get(url, { headers: headers });
@@ -110,7 +110,7 @@ export const DashboardServices = {
       }
     }
   },
-  fetchAppointmentsCanceled: async (month = 1, year = 2022) => {
+  fetchAppointmentsCanceled: async (month, year) => {
     try {
       const url = config.dashboardWidgetsUrl + `appointments-canceled?month=${month}&year=${year}`
       const result = await axios.get(url, { headers: headers });

@@ -14,8 +14,13 @@ import Loader from "../../shared/Loader";
 import * as actionTypes from '../../../actions/types'
 import Pagination from '../../shared/Pagination';
 import moment from 'moment';
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function AutomationHistory(props) {
+    const [date, setDate] = useState();
+    const [date2, setDate2] = useState();
+    const [calenderMinDate, setCalenderMinDate] = useState();
     const { automationId } = useParams();
     const [trigger, setTrigger] = useState("trigger");
     const [automationHistory, setAutomationHistory] = useState(props.automationHistory);
@@ -31,6 +36,24 @@ export default function AutomationHistory(props) {
     const timezone = props.timezone;
     const dispatch = useDispatch();
 
+
+    const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user?.data?.organizationTimezoneInfo.utc_offset:null);
+    useEffect(()=>{
+        console.log("transaction filter time zone", timezoneOffset);
+    })
+
+    useEffect(() => {
+        let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+        let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
+        setCalenderMinDate(formatedDateTime);
+        
+        setFilterData(prevState => ({ ...prevState, fromDate: formatedDateTime }));
+        setFilterData(prevState => ({ ...prevState, toDate: formatedDateTime }));
+        setDate(new Date(timezoneDateTime));
+        setDate2(new Date(timezoneDateTime));
+    }, []);
+
     useEffect(() => {
         setAutomationHistory(props.automationHistory);
         setPaginationData(props.paginationData);
@@ -42,7 +65,7 @@ export default function AutomationHistory(props) {
             let steps = props.automationDetails.blueprint.filter(el => !el.id.includes('edge-'));
             setTotalSteps(steps.length);
         }
-
+        console.log("timezoneOffset",timezoneOffset);
     }, [props]);
     const toggleOptions = (index) => {
         setOption(index !== option ? index : null);
@@ -59,7 +82,7 @@ export default function AutomationHistory(props) {
             // const fromDate = localtime.clone().utc().format("YYYY-MM-DD");
             // console.log("UTC FROM --",fromDate);
             // console.log(fromDt)
-            queryParams.append("fromDate", from);
+            queryParams.append("fromDate", decodeURIComponent(from));
         }
         if (to) {
             // const toDt = to;
@@ -67,7 +90,8 @@ export default function AutomationHistory(props) {
             // const toDate = localtime.clone().utc().format("YYYY-MM-DD");
             // // console.log(toDt);
             // console.log("UTC TO --",toDate);
-            queryParams.append("toDate", to);
+            queryParams.append("toDate", decodeURIComponent(to));
+            // console.log("filterData.fromDate", decodeURIComponent((utils.convertTimezoneToUTC(filterData.fromDate + " " + "00:00:01", timezoneOffset))));
         }
         if (status) {
             queryParams.append("status", status);
@@ -79,21 +103,40 @@ export default function AutomationHistory(props) {
         props.fetchHistory();
     }, []);
 
-    const handleFromDate = (e) => {
-        const { value } = e.target;
-        setFilterData(prevState => ({ ...prevState, fromDate: value }));
-    };
+    // const handleFromDate = (e) => {
+    //     const { value } = e.target;
+    //     setFilterData(prevState => ({ ...prevState, fromDate: value }));
+    //     //setFilterData(prevState => ({ ...prevState, fromDate: utils.convertTimezoneToUTC(value + " " + "00:00:01", timezoneOffset)  }));
+    // };
 
-    const handletoDate = (e) => {
-        const { value } = e.target;
-        setFilterData(prevState => ({ ...prevState, toDate: value }));
-    };
+    const setStartDate = (val) => {
+        let formattedDate = `${val.getFullYear()}-${
+            val.getMonth() + 1
+          }-${val.getDate()}`;
+        setDate(val);
+
+        setFilterData(prevState => ({ ...prevState, fromDate: formattedDate }));
+    }
+
+    // const handletoDate = (e) => {
+    //     const { value } = e.target;
+    //     setFilterData(prevState => ({ ...prevState, toDate: value }));
+    //     //setFilterData(prevState => ({ ...prevState, toDate: utils.convertTimezoneToUTC(value + " " + "00:00:01", timezoneOffset) }));
+    // };
+
+    const setEndDate = (val) => {
+        let formattedDate = `${val.getFullYear()}-${
+            val.getMonth() + 1
+          }-${val.getDate()}`;
+        setDate2(val);
+
+        setFilterData(prevState => ({ ...prevState, toDate: formattedDate }));
+    }
 
     const handleStatus = (e) => {
         const { value } = e.target;
         setFilterData(prevState => ({ ...prevState, status: value }));
     };
-
     const handleApplyFilter = () => {
         if (filterData.fromDate && !filterData.toDate) {
             dispatch({
@@ -105,9 +148,18 @@ export default function AutomationHistory(props) {
         }
         // const queryParams = Object.entries(filterData).filter(el => el[1] !== '').map(el => `${el[0]}=${el[1]}`).join("&");
         // fetchHistory(queryParams)
+        
         if (filterData.fromDate) {
-            utils.addQueryParameter('fromDate', filterData.fromDate);
-            utils.addQueryParameter('toDate', filterData.toDate);
+            //utils.addQueryParameter('fromDate', filterData.fromDate);
+            //utils.addQueryParameter('toDate', filterData.toDate);
+            utils.addQueryParameter('fromDate', utils.convertTimezoneToUTC(filterData.fromDate + " " + "00:00:01", timezoneOffset).replace(' ', 'T').trim() + '.000Z');
+            utils.addQueryParameter('toDate', utils.convertTimezoneToUTC(filterData.toDate + " " + "23:59:59", timezoneOffset).replace(' ', 'T').trim() + '.000Z');
+
+            console.log("utils.convertTimezoneToUTC",filterData.fromDate, utils.convertTimezoneToUTC(filterData.fromDate + " " + "00:00:01", timezoneOffset).replace(' ', 'T') + '.000Z')
+            console.log("utils.convertTimezoneToUTC",filterData.toDate, utils.convertTimezoneToUTC(filterData.toDate + " " + "23:59:59", timezoneOffset).replace(' ', 'T') + '.000Z')
+            //console.log("utils.convertTimezoneToUTC Trim", utils.convertTimezoneToUTC(filterData.toDate + " " + "00:00:01", timezoneOffset).replace(' ', 'T').trim() + '.000Z')
+            //console.log("+06%3A00%3A01+", decodeURIComponent("+06%3A00%3A01+").replaceAll("+", " "));
+
         } else {
             utils.removeQueryParameter('fromDate');
             utils.removeQueryParameter('toDate');
@@ -158,27 +210,50 @@ export default function AutomationHistory(props) {
                         <div className="formField">
                             <p>From</p>
                             <div className="inFormField">
-                                <input
+                                {/* <input
                                     type="date"
                                     name='fromdate'
                                     max={moment().format('YYYY-MM-DD')}
-                                    onChange={handleFromDate}
+                                    // onChange={handleFromDate}
                                     placeholder="dd/mm/yyyy"
-                                    value={filterData.fromDate}
+                                    // value={filterData.fromDate}
+                                /> */}
+                                {console.log("DATE---------------------", timezoneOffset)}
+                                <DatePicker 
+                                    style={{width:"133px"}}
+                                    className="cmnFeldStyle autoHistoryDateInput"
+                                    selected={date === undefined ? new Date() : date}
+                                    format="dd/MM/yyyy"
+                                    dateFormat="dd/MM/yyyy"
+                                    placeholder="mm/dd/yyyy"
+                                    onChange={(e) => setStartDate(e)} 
+                                    maxDate={new Date()}
                                 />
                             </div>
                         </div>
                         <div className="formField">
                             <p>To</p>
                             <div className="inFormField">
-                                <input type="date"
+                                {/* <input type="date"
                                     name='todate'
                                     min={filterData.fromDate}
                                     max={moment().format('YYYY-MM-DD')}
                                     disabled={(filterData.fromDate) ? false : true}
                                     onChange={handletoDate}
                                     value={(filterData.fromDate) ? filterData.toDate : ''}
-                                    placeholder="dd/mm/yyyy" />
+                                    placeholder="dd/mm/yyyy" /> */}
+
+                                    <DatePicker 
+                                        className="cmnFieldStyle autoHistoryDateInput"
+                                        selected={date2 === undefined ? new Date() : date2}
+                                        disabled={(filterData.fromDate) ? false : true}
+                                        format="dd/MM/yyyy"
+                                        dateFormat="dd/MM/yyyy"
+                                        placeholder="mm/dd/yyyy"
+                                        onChange={(e) => setEndDate(e)} 
+                                        minDate={new Date(date)}
+                                        maxDate={moment().format('YYYY-MM-DD')}
+                                    />
                             </div>
                         </div>
                         <div className="formField selectStatusOverview">
@@ -278,11 +353,19 @@ export default function AutomationHistory(props) {
                                         </div>
                                         <div className="listCell cellWidth_15" onClick={() => toggleDetails(i)}>
                                             {/* {utils.convertUTCToTimezone(elem.createdAt, timezone, "LLL")} */}
-                                            {moment(elem.createdAt).format("YYYY-MM-DD")}
+                                            {/* {moment(elem.createdAt).format("YYYY-MM-DD")}  */}
+                                            {utils.convertUTCToTimezone(elem.createdAt,timezoneOffset)
+                                            //.split(" ").splice(0,3).join(" ")
+                                            }
+                                            
                                         </div>
                                         <div className="listCell cellWidth_15" onClick={() => toggleDetails(i)}>
                                             {/* {(elem?.completedAt) ? utils.convertUTCToTimezone(elem?.completedAt, timezone, "LLL") : "-"} */}
-                                            {(elem ?.completedAt) ? moment(elem.completedAt).format("YYYY-MM-DD") : "-"}
+                                            {/* {(elem ?.completedAt) ? moment(elem.completedAt).format("YYYY-MM-DD") : "-"} */}
+                                            {(elem ?.completedAt) ? utils.convertUTCToTimezone(elem.completedAt,timezoneOffset)
+                                            //.split(" ").splice(0,3).join(" ") 
+                                            : "-"}
+
                                         </div>
                                         <div className="listCell cellWidth_5">
                                             <div className="info_3dot_icon">
@@ -482,10 +565,10 @@ export default function AutomationHistory(props) {
                                                                                     {elem.completedEvents.length !== index + 1 ? <div className='linr'></div> : ""}
                                                                                     <div className='textOnIcon'>Remove tag</div>
                                                                                 </div>
-                                                                                : (value.includes('notificationGroupTag') ?
+                                                                                : (value.includes('notificationTag') ?
                                                                                     <div className='autoIconDetails'>
                                                                                         <div className='imgHolder'>
-                                                                                            <svg width="63" height="63" viewBox="0 0 63 63" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                            <svg width="44" height="44" viewBox="0 0 63 63" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                                                 <path d="M53 0H10C4.47715 0 0 4.47715 0 10V53C0 58.5228 4.47715 63 10 63H53C58.5228 63 63 58.5228 63 53V10C63 4.47715 58.5228 0 53 0Z" fill="#4ACB69" />
                                                                                                 <g clip-path="url(#clip0_28807_10446)">
                                                                                                     <path d="M32.9989 41.892H24.4683C24.1065 41.892 23.8883 41.6821 23.7903 41.5571C23.6213 41.3411 23.5559 41.06 23.6109 40.7857C24.491 36.3929 28.2219 33.1852 32.529 33.0811C32.6005 33.0839 32.6723 33.0858 32.7446 33.0858C35.9223 33.0858 38.5077 30.3996 38.5077 27.0976C38.5077 23.7956 35.9223 21.1094 32.7446 21.1094C29.5668 21.1094 26.9816 23.7956 26.9816 27.0976C26.9816 29.0573 27.8923 30.8003 29.2972 31.8933C28.0102 32.3335 26.8023 33.0182 25.7454 33.9215C23.8075 35.5778 22.4601 37.8881 21.9515 40.4267C21.7921 41.2222 21.9831 42.0392 22.4754 42.6684C22.9652 43.2942 23.6917 43.6532 24.4683 43.6532H32.9989C33.4669 43.6532 33.8464 43.259 33.8464 42.7726C33.8464 42.2862 33.4669 41.892 32.9989 41.892ZM28.6766 27.0976C28.6766 24.7669 30.5014 22.8706 32.7446 22.8706C34.9877 22.8706 36.8127 24.7669 36.8127 27.0976C36.8127 29.3949 35.0397 31.27 32.8408 31.3233C32.8092 31.3196 32.7773 31.3171 32.7446 31.3171C32.6784 31.3171 32.6124 31.3182 32.5463 31.3194C30.395 31.2117 28.6766 29.3593 28.6766 27.0976Z" fill="#C2FFD1" />
@@ -500,7 +583,7 @@ export default function AutomationHistory(props) {
                                                                                             </svg>
                                                                                         </div>
                                                                                         {elem.completedEvents.length !== index + 1 ? <div className='linr'></div> : ""}
-                                                                                        <div className='textOnIcon'>Remove tag</div>
+                                                                                        <div className='textOnIcon'>Notification</div>
                                                                                     </div>
                                                                                     : "")))))) }
                                                     </>

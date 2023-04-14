@@ -6,10 +6,10 @@ const Appointmenthead = (props) => {
   return (
     <div className="userListHead">
       <div className="listInfo">
-        <ul className="listPath">
+        {/* <ul className="listPath">
           <li>Setup</li>
           <li>Global Calendar</li>
-        </ul>
+        </ul> */}
         <h2 className="inDashboardHeader">Appointment</h2>
         <p className="userListAbout">
         Manage and Create Upcoming Appointment for your Organization 

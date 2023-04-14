@@ -15,6 +15,7 @@ import { utils } from "../../helpers";
 import moment from "moment";
 import list_board_icon from "../../assets/images/list_board_icon.svg";
 import noRecords from "../../assets/images/noRecords.svg";
+import { useSelector } from "react-redux";
 
 const NumberListing = () => {
 
@@ -44,7 +45,10 @@ const NumberListing = () => {
       el: null,
     }
   );
-
+  const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
+    useEffect(()=>{
+      console.log("call setup time zone", timezoneOffset);
+    })
   useEffect(() => {
     if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
     if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
@@ -385,7 +389,9 @@ const NumberListing = () => {
                       </div>
                       
                       <div className="createDate">
-                        <button className="btn">{moment(el.createdAt).format("MM/DD/YYYY h:mm a")}</button>
+                        {/* {moment(el.createdAt).format("MM/DD/YYYY h:mm a")} */}
+                        {/* {el.createdAt} */}
+                        <span className="btn">{utils.convertUTCToTimezone(el.createdAt, timezoneOffset)}</span>
                         {isSuperAdmin && 
                           <div className="info_3dot_icon">
                               <button

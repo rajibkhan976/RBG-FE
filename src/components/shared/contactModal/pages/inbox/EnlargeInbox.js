@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 
 import Loader from "../../../Loader";
-import cross from "../../../../../assets/images/cross.svg";
+import cross from "../../../../../assets/images/cross_icon.svg";
 import email_template from "../../../../../assets/images/email_template.svg";
 import iconSmsOut from "../../../../../assets/images/iconSmsOut.svg";
 import iconSmsIn from "../../../../../assets/images/iconSmsIn.svg";
@@ -26,7 +26,7 @@ const EnlargeInbox = (props) => {
 
 
     return (
-        <div className="modalAddEmail modalBackdrop">
+        <div className="modalEnlargeEmail modalBackdrop">
             <div class="modalBackdropBg" onClick={() => props.closeModal(false)}></div>
             {isLoader ? <Loader /> : ""}
             <div className="slickModalBody bigInbox">
@@ -36,32 +36,36 @@ const EnlargeInbox = (props) => {
                     </button>
                 </div>
                 <div className="modalForm showMSG">
-                {props.contentShowInModal?.type === "SMS" &&
-                    <>
-                      
-                     <h3> 
-                        <div className="msgTypeIcon">
+                    <div className="enleargedBox">
+                        {props.contentShowInModal?.type === "SMS" &&
+                            <>
+                            
+                            <h3> 
+                                <div className="msgTypeIcon">
+                    
+                                    <img src={props.contentShowInModal?.direction === "inbound" ? iconSmsIn : iconSmsOut }
+                                            alt=""/>
+                                </div>
+                                <span>{ props.contentShowInModal?.message} </span>
+                            </h3>
+                            </>
+                        }
+                        {props.contentShowInModal?.type === "EMAIL" &&
+                            <>
+                            
+                            <h3>
+                                <div className="msgTypeIcon">
+                    
+                                    <img src={props.contentShowInModal?.direction === "inbound" ? iconEmailIn : iconEmailOut }
+                                            alt=""/>
+                                </div> 
+                                <span> {  props.contentShowInModal?.subject}</span> </h3>
+                            
+                            <div className="description" dangerouslySetInnerHTML={{__html:  props.contentShowInModal?.template}}></div>
+                            </>
+                        }
+                    </div>
                
-                            <img src={props.contentShowInModal?.direction === "inbound" ? iconSmsIn : iconSmsOut }
-                                    alt=""/>
-                        </div>
-                        <span>{ props.contentShowInModal?.message} </span></h3>
-                    </>
-                 }
-                {props.contentShowInModal?.type === "EMAIL" &&
-                    <>
-                     
-                     <h3>
-                        <div className="msgTypeIcon">
-               
-                            <img src={props.contentShowInModal?.direction === "inbound" ? iconEmailIn : iconEmailOut }
-                                    alt=""/>
-                        </div> 
-                        <span> {  props.contentShowInModal?.subject}</span> </h3>
-                     
-                     <div dangerouslySetInnerHTML={{__html:  props.contentShowInModal?.template}}></div>
-                    </>
-                 }
                     
                      
                 </div>

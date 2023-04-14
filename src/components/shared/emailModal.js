@@ -15,10 +15,10 @@ import EditorComponent from "../setup/templates/email/editor/Editor";
 import {EmailServices} from "../../services/setup/EmailServices";
 import { useSelector } from "react-redux";
 
-
+import MergeTag from "./MergeTag";
 
 const initialDependentState = {
-    name: "",
+    name: "", 
     contactId: "",
 };
 
@@ -72,6 +72,9 @@ const EmailModal = (props) => {
     const [emailSend, setEmailSend] = useState(false);
     const [changedTemplate, setChangedTemplate] = useState("");
     const [emailSetupData, setEmailSetupData] = useState(false);
+    const [errorForTemplate, setErrorForTemplate] = useState(false);
+    const [errorForTemplateSelected, setErrorForTemplateSelected] = useState(false);
+    
 
     const emailGlobalSend = async (payload) => {
         try {
@@ -138,7 +141,7 @@ const EmailModal = (props) => {
             setEmailSetupData(true);
         } catch (e) {
             setEmailSetupData(false);
-        } 
+        }
     };
     useEffect(() => {
         fetchTemplateList();
@@ -147,13 +150,13 @@ const EmailModal = (props) => {
     }, []);
 
 
-    const addKeywordEmail = (e) => {
+    const addKeywordEmail = (e,field) => {
         e.preventDefault()
         let subjectInput = newEmailTemplateSubject.current;
         let cursorStart = subjectInput.selectionStart;
         let cursorEnd = subjectInput.selectionEnd;
         let textValue = subjectInput.value;
-
+        let vall = field ;
         try {
             if (cursorStart || cursorStart == "0"
             ) {
@@ -161,9 +164,7 @@ const EmailModal = (props) => {
                 if(emailData.subject.length < 250){
                     subjectInput.value =
                     subjectInput.value.substring(0, cursorStart) +
-                    " [" +
-                    e.target.textContent +
-                    "] " +
+                    vall +
                     subjectInput.value.substring(cursorEnd, textValue.length);
 
                 // setNewMail({
@@ -176,9 +177,7 @@ const EmailModal = (props) => {
                 })
                 startToText =
                     subjectInput.value.substring(0, cursorStart) +
-                    "[" +
-                    e.target.textContent +
-                    "]";
+                    vall ;
 
                 subjectInput.focus();
                 subjectInput.setSelectionRange(
@@ -190,7 +189,7 @@ const EmailModal = (props) => {
 
              // console.log(subjectInput, cursorStart, cursorEnd, textValue);
             } else {
-                subjectInput.value = subjectInput.value + " [" + e.target.textContent + "] ";
+                subjectInput.value = subjectInput.value + vall ;
 
                 // setNewMail({
                 //   ...newMail,
@@ -258,17 +257,29 @@ const EmailModal = (props) => {
         // console.log("emailbody",emailBody);
         setEmailDatasubject(elem.title);
         setTemplateToogle(false);
-        setTempSelected(true); 
+        setTempSelected(true);
         console.log(tempSelected);
     }
 
-
+    const deselectingTemplate = (e) =>{
+        setEmailData({
+            ...emailData,
+            "subject": "",
+            "template": "",
+        });
+        setTempSelected(false); 
+        setEmailDatasubject("");  
+        setTemplateToogle(false);
+        setChangedTemplate("");
+        setErrorForTemplate(false);
+    }
+    
     const sendGlobalEmail = (e) => {
         console.log("Edited email body: ", emailData.template);
         e.preventDefault();
         const subject = emailData.subject;
         // console.log("Changed", changedTemplate);
-        let template = changedTemplate; 
+        let template = changedTemplate;
 
         let payload = {
             "email": emailData.email,
@@ -443,36 +454,63 @@ const EmailModal = (props) => {
 
 let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
  // console.log("Initial State in header",zIndexEmail);
-  console.log("sssssssssssssssssssssssssssss",emailSetupData.user);
+  //console.log("sssssssssssssssssssssssssssss",emailSetupData.user);
 
 
 
-  function useOutsideAlerter(ref) {
-    useEffect(() => {
-      /**
-       * Alert if clicked on outside of element
-       */
-      function handleClickOutside(event) {
-        if (ref.current && !ref.current.contains(event.target)) {
-          setKeywordSuggesion(false)
-        }
-      }
-      // Bind the event listener
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        // Unbind the event listener on clean up
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, [ref]);
-  }
+//   function useOutsideAlerter(ref) {
+//     useEffect(() => {
+//       /**
+//        * Alert if clicked on outside of element
+//        */
+//       function handleClickOutside(event) {
+//         if (ref.current && !ref.current.contains(event.target)) {
+//           setKeywordSuggesion(false)
+//         }
+//       }
+//       // Bind the event listener
+//       document.addEventListener("mousedown", handleClickOutside);
+//       return () => {
+//         // Unbind the event listener on clean up
+//         document.removeEventListener("mousedown", handleClickOutside);
+//       };
+//     }, [ref]);
+//   }
   
     
-  useOutsideAlerter(keywordRef);
+ // useOutsideAlerter(keywordRef);
 
+//   useEffect(() => {
+//     if(changedTemplate !== ""){
+//         setErrorForTemplate(true);
+//     }
+//   }, [changedTemplate !==""]);
 
+//   useEffect(() => {
+//     if(tempSelected){
+//         setErrorForTemplateSelected(true);
+//     }
+//   }, [tempSelected]);
 
+//   console.log("errorForTemplate", errorForTemplate,"changedTemplate", changedTemplate, "tempSelected" , tempSelected)
+useEffect(()=>{
+    setErrorForTemplate(true);
+},[changedTemplate]);
+useEffect(() => {
 
-
+    if(changedTemplate == "" && errorForTemplate){
+        setValidateMsg({
+            ...validateMsg,
+            template: "Please enter a valid template",
+        });
+    }else{
+        setValidateMsg({
+            ...validateMsg,
+            template: "",
+        });
+    }
+}, [changedTemplate])
+  
 
 
     return (
@@ -490,7 +528,7 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                     </button>
                     <h3>Send Email</h3>
                     <p>Enter email id</p>
-                    <div className="showSetupMsg">{!emailSetupData ? "You can't send mail as the email setup is not done" :""}</div>
+                    {/* <div className="showSetupMsg">{!emailSetupData ? "You can't send mail as the email setup is not done" :""}</div> */}
                     <div className={validateMsg.email ? "numberForCall error" : "numberForCall"}>
                         <input type="email"
                                placeholder="Eg. richardnile@rbg.com" className="emailInput"
@@ -606,6 +644,14 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                 </div>
                                 {templateToogle &&
                                     <ul className="showTemplateName">
+                                        {emailTempData.templates &&
+                                            emailTempData.templates.length > 0 && 
+                                            <li 
+                                                 onClick={(e) => deselectingTemplate()}
+                                            >
+                                              Select template
+                                             </li> 
+                                        }
                                         {
                                             (emailTempData.templates &&
                                             emailTempData.templates.length > 0 ) ?
@@ -615,7 +661,6 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                                 )
                                             ) :
                                             <li className="listCentered">No Email template Found</li>
-
                                         }
                                     </ul>}
                             </div>
@@ -632,94 +677,40 @@ let zIndexEmail = useSelector((state) => state.modal.zIndexEmail);
                                        value={emailData.subject}
                                        maxLength={250}
                                 />
-                                <button className="btn browseKeywords"
-                                    type='button'
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        setKeywordSuggesion(true);
-                                    }}
-                                >
-                                    <img src={icon_browse_keywords} alt="keywords"/>
-                                </button>
-                                {keywordSuggesion && (
-                                    <div className="keywordBox" ref={keywordRef}>
-                                        <div className="searchKeyword">
-                                            <div className="searchKeyBox">
-                                                <input
-                                                    type="text"
-                                                    onChange={(e) => setSearchTagString(e.target.value)}
-                                                    onKeyPress={e => {
-                                                        if (e.key === 'Enter') e.preventDefault();
-                                                    }}
-                                                />
-                                            </div>
-                                            <div className="cancelKeySearch">
-                                                <button
-                                                    onClick={() => {setKeywordSuggesion(false)
-                                                            setSearchTagString("")}}
-                                                ></button>
-                                            </div>
-                                        </div>
-                                        <div className="keywordList">
-                                            <ul>
-                                                {emailTags
-                                                    .filter(
-                                                        (smsTag) =>
-                                                            smsTag.id.toLowerCase().indexOf(searchTagString) >= 0 
-                                                            && smsTag.id !== "tags"
-                                                            && smsTag.id !== "phone" 
-                                                            && smsTag.id !== "mobile" 
-                                                            && smsTag.id !== "momCellPhone" 
-                                                            && smsTag.id !== "dadCellPhone"
-                                                            && smsTag.id !== "createdBy"
-                                                            && smsTag.id !== "createdAt"
-                                                            && smsTag.id !== "statusName"
-                                                            && smsTag.id !== "phaseName"
-                                                            && smsTag.id !== "contactType"
-                                                            && smsTag.id !== "ageGroup"
-                                                            && smsTag.id !== "sourceDetail"
-                                                            && smsTag.id !== "onTrial"
-                                                    )
-                                                    .map((tagItem, i) => (
-                                                        <li key={"keyField" + i}>
-                                                            <button
-                                                                onClick={(e) =>
-                                                                    addKeywordEmail(e, tagItem.id)
-                                                                }
-                                                            >
-                                                                {tagItem.id}
-                                                            </button>
-                                                        </li>
-                                                    ))}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                )}
-
-
+    
                             </div>
                             <div className="errorMsg">{validateMsg.subject}</div>
-
+                            <div>
+                                <MergeTag addfeild={(e,field)=> addKeywordEmail(e,field)}/>
+                            </div>
                         </div>
                         <div className="slice">
                             <label className="bold">Email Body</label>
                             <div
-                                className={validateMsg.template ? "cmnFormField globalSms error" : "cmnFormField globalSms"}>
+                                className={validateMsg.template  ? "cmnFormField globalSms error" : "cmnFormField globalSms"}>
                                 <EditorComponent
                                     globalTemplateValue={(template) => setChangedTemplate(template)}
                                     initialData={emailData ? emailData : emailData.template}
-                                    setTempSelected={tempSelected}
+                                    setTempSelected={true}
                                     setEmailSend={emailSend}
                                 />
-                                <div className="errorMsg">{validateMsg.template}</div>
+                              <div className="errorMsg">{validateMsg.template}</div>
+                                {/* <div className="errorMsg">{(errorForTemplate && changedTemplate === "" ) ? "Please enter a template here" :
+                                         (errorForTemplate && changedTemplate === "" && errorForTemplateSelected && !tempSelected) ? "":
+                                           validateMsg.template ? validateMsg.template : 
+                                           ""}</div> */}
                             </div>
                         </div>
-                        <div class="slice text-center">
-                            <button class="cmnBtn" onClick={sendGlobalEmail}
-                               disabled={emailSetupData.user === undefined ? "disabled":""}
-                            >Send Email <img src={arrow_forward} alt=""/></button>
-                        </div>
+                       
                     </div>
+                </div>
+                <div class="call_modal_footer">
+                    <button type="button" class="cancel"
+                        onClick={props.emailModalOff}
+                      >
+                        Cancel 
+                      </button>
+                    <button class="cmnBtn" onClick={sendGlobalEmail}>Send Email <img src={arrow_forward} alt=""/></button>
                 </div>
             </div>
         </div>

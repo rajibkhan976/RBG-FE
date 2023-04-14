@@ -325,13 +325,22 @@ const InnerLeftMenu = (props) => {
                     </button>
                   </div>
                   <ul className="sideSubMenu">
-                  {loggedInUser && ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in') ||
+                  {/* {loggedInUser && ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in') ||
                                      (loggedInUser.isOrganizationOwner && loggedInUser.isOrganizationOwner === true))
                    ?<li>
                       <NavLink to="/email-setup" activeClassName="active">
                         Email
                       </NavLink>
-                    </li> : ""}
+                    </li> : ""} */}
+
+                    {/* {loggedInUser && ((loggedInUser.email && loggedInUser.email === 'superadmin@rbg.in')) ?
+                    <li>
+                      <NavLink to="/email-setup" activeClassName="active">
+                        Email
+                      </NavLink>
+                    </li> : ""
+                    } */}
+
                     <li>
                       <NavLink to="/sms-setup" activeClassName="active">
                         SMS
@@ -531,6 +540,18 @@ const InnerLeftMenu = (props) => {
                     </ul>
                   </NavLink>
                 </li> : ''}
+                <li>
+                <NavLink className="leftMenuInnerLink" to="/notification-group">
+                  <div className="indicator"></div>
+                  <div className="linkDetails setup">
+                    <p className="linkHeading">Notification Group</p>
+                    <p className="linkAbout">Display related notifications in a group</p>
+                    <button className="btn sidemenuarrow">
+                      <img src={SideMenuArrow} alt="" />
+                    </button>
+                  </div>
+                </NavLink>
+              </li>
             </ul>
             <div className="linkImg">
               <img src={undraw_personal_settings_kihd} alt="" />
@@ -543,15 +564,19 @@ const InnerLeftMenu = (props) => {
   };
 
   return (
-    <div className={pathURL === "/number-list" ? "menuDetails numberlist" : "menuDetails"}>
-      <figure className="logoSidebar">
-        <img src={SidebarLogo} alt="" />
-      </figure>
+    <>
+      {pathURL == "/automation-list" ? "" :
+      <div className={pathURL === "/number-list" ? "menuDetails numberlist" : "menuDetails"}>
+        <figure className="logoSidebar">
+          <img src={SidebarLogo} alt="" />
+        </figure>
 
-      <div className="innerMenuScroll">
-        <RenderMenu menuType={props.routeMenu} />
+        <div className="innerMenuScroll">
+          <RenderMenu menuType={props.routeMenu} />
+        </div>
       </div>
-    </div>
+      }
+    </>
   );
 };
 

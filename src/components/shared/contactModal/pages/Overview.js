@@ -13,7 +13,7 @@ import {ImportContactServices} from "../../../../services/contact/importContact"
 import arrowDown from "../../../../assets/images/arrowDown.svg";
 import moment from "moment-timezone";
 import {PhasesServices} from "../../../../services/contact/phasesServices";
-
+import { utils } from "../../../../helpers";
 const Overview = (props) => {
     const [formScrollStatus, setFormScrollStatus] = useState(false);
     const [isLoader, setIsLoader] = useState(false);
@@ -107,7 +107,10 @@ const Overview = (props) => {
         phase: "",
         status: ""
     });
-
+    const timezoneOffset = useSelector((state)=> (state?.user?.data.organizationTimezoneInfo.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null);
+    useEffect(()=>{
+        console.log("contact overview time zone", timezoneOffset);
+    })
     const fetchCountry = async () => {
         let conntryResponse = await ContactService.fetchCountry();
         setPhoneCountryCode(conntryResponse);
@@ -267,7 +270,7 @@ const Overview = (props) => {
         setFormErrorMsg(prevState => ({...prevState, lName: false}));
     }
 
-    const handelBasicinfoDob = (e) => {
+    const handelBasicinfoDob = (e) => {;
         setBasicinfoDob(e.target.value);
     }
 
@@ -427,7 +430,9 @@ const Overview = (props) => {
 
 
     const onContactSubmit = async (e) => {
-        console.log('here on contact update')
+        console.log('here on contact update');
+        console.log("selectedPhase", selectedPhase, "selectedStatus", selectedStatus);
+
         e.preventDefault();
         setIsLoader(true);
         let formErrorsCopy = formErrorMsg;
@@ -440,9 +445,9 @@ const Overview = (props) => {
             isError = true;
             formErrorsCopy.lName = "Please fill up Last Name."
         }
-        if (selectedPhase !== "" && (selectedStatus === "" || selectedStatus === undefined)) {
+        if (( selectedPhase !== undefined && selectedPhase !== "" )   && (selectedStatus === "" || selectedStatus === undefined)) {
             isError = true;
-            formErrorsCopy.status = "Please Select a status."
+            formErrorsCopy.status = "Please Select a status.";
         }
         if (!basicinfoEmail && basicinfoPhone.number === "") {
             isError = true;
@@ -662,7 +667,7 @@ const Overview = (props) => {
                 </div>
             }
             <div className="contactTabScrollContainer">
-                {props.contactId !== 0 &&
+                {/* {props.contactId !== 0 &&
                     <div className="overviewList">
                         <ul>
                             <li>
@@ -687,7 +692,7 @@ const Overview = (props) => {
                             </li>
                         </ul>
                     </div>
-                }
+                } */}
                 <form>
                     <div className="overviewFormWrap overviewInfos">
                         <div className="overviewForm cmnForm">

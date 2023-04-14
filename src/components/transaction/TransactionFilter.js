@@ -5,16 +5,43 @@ import arrowRightWhite from "../../assets/images/arrowRightWhite.svg";
 import Loader from "../shared/Loader";
 import { utils } from '../../helpers';
 import { TransactionHistoryServices } from "../../services/transaction/TransactionHistoryServices";
+import { useSelector } from "react-redux";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
+import { formatDate } from "@fullcalendar/react";
 
 function ImportTransactionFilter(props) {
+    const [date, setDate] = useState();
+    const [date2, setDate2] = useState();
+    const [calenderMinDate, setCalenderMinDate] = useState();
     const [isLoader, setIsLoader] = useState(false);
-    
     const [selectStatus, setSelectStatus] = useState("");
     const [selectItem, setSelectItem] = useState("");
     const [selectName, setSelectName] = useState("");
     const [selectedTo, setSelectedTo] = useState("");
     const [selectedFrom, setSelectedFrom] = useState("");
+    // const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
+	// useEffect(()=>{
+	//   console.log("transaction filter time zone", timezoneOffset);
+	// }, [])
 
+    const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user?.data?.organizationTimezoneInfo.utc_offset:null);
+    useEffect(()=>{
+        console.log("transaction filter time zone", timezoneOffset);
+    })
+
+    useEffect(() => {
+        let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+        let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
+        setCalenderMinDate(formatedDateTime);
+
+        setSelectedFrom(formatedDateTime);
+        setSelectedTo(formatedDateTime);
+        setDate(new Date(timezoneDateTime));
+        setDate2(new Date(timezoneDateTime));
+    }, []);
 
     const selectStatusHandler = (e) =>{
         setSelectStatus(e.target.value)
@@ -25,12 +52,30 @@ function ImportTransactionFilter(props) {
     const selectNameHandler = (e) =>{
         setSelectName(e.target.value)
     }
-    const selectFromHandler = (e) =>{
-        setSelectedFrom(e.target.value)
+    // const selectFromHandler = (e) =>{
+    //     setSelectedFrom(e.target.value);
+    //     console.log(selectedFrom);
+    // }
+    const setStartDate = (val) => {
+        let formattedDate = `${val.getFullYear()}-${
+            val.getMonth() + 1
+          }-${val.getDate()}`;
+        setDate(val);
+        
+        setSelectedFrom(formattedDate);
     }
-    const selectToHandler = (e) =>{
-        setSelectedTo(e.target.value)
+    // const selectToHandler = (e) =>{
+    //     setSelectedTo(e.target.value)
+    //     console.log(selectedTo);
+    // }
+    const setEndDate = (val) => {
+        let formattedDate = `${val.getFullYear()}-${
+            val.getMonth() + 1
+          }-${val.getDate()}`;
+        setDate2(val);
+        setSelectedTo(formattedDate);
     }
+
 
     const applyFilter = () => {
     //    let filterString = "?contact=" + selectName + "&status=" + selectStatus + "&item=" + selectItem + "&fromDate=" + selectedFrom + "&toDate=" + selectedTo ;
@@ -49,13 +94,17 @@ function ImportTransactionFilter(props) {
         } else {
             utils.removeQueryParameter('contact');
         }
-        if (selectedTo) {
-            utils.addQueryParameter('fromDate', selectedFrom);
+        if (selectedFrom) {
+            const convertFrom = utils.convertTimezoneToUTC(selectedFrom + " " + "00:00:01", timezoneOffset);
+            console.log("convert From", convertFrom);
+            utils.addQueryParameter('fromDate', convertFrom);
         } else {
             utils.removeQueryParameter('fromDate');
         }
         if (selectedTo) {
-            utils.addQueryParameter('toDate', selectedTo);
+            const convertTo = utils.convertTimezoneToUTC(selectedTo + " " + "23:59:59", timezoneOffset);
+            console.log("convert To", convertTo);
+            utils.addQueryParameter('toDate', convertTo);
         } else {
             utils.removeQueryParameter('toDate');
         }
@@ -139,13 +188,31 @@ function ImportTransactionFilter(props) {
                                         <div className="formField w-50 appflex durationWraper">
                                             <label>From</label>
                                             <div className="inFormField duration">
-                                                <input type="date" placeholder="dd/mm/yyyy" name="" value={selectedFrom} onChange={selectFromHandler} />
+                                                {/* <input type="date" placeholder="dd/mm/yyyy" name="" value={selectedFrom} onChange={selectFromHandler} /> */}
+                                                
+                                                <DatePicker 
+                                                    className="cmnFieldStyle"
+                                                    selected={date === undefined ? new Date() : date}
+                                                    format="dd/MM/yyyy"
+                                                    dateFormat="dd/MM/yyyy"
+                                                    placeholder="mm/dd/yyyy"
+                                                    onChange={(e) => setStartDate(e)} 
+                                                />
                                             </div>
                                         </div>
                                         <div className="formField w-50 appflex durationWraper">
                                             <label>To</label>
                                             <div className="inFormField duration">
-                                                <input type="date" placeholder="dd/mm/yyyy" name="" value={selectedTo} onChange={selectToHandler} min={selectedFrom}/>
+                                                {/* <input type="date" placeholder="dd/mm/yyyy" name="" value={selectedTo} onChange={selectToHandler} min={selectedFrom}/> */}
+                                                <DatePicker 
+                                                    className="cmnFieldStyle"
+                                                    selected={date2 === undefined ? new Date() : date2}
+                                                    format="dd/MM/yyyy"
+                                                    dateFormat="dd/MM/yyyy"
+                                                    placeholder="mm/dd/yyyy"
+                                                    onChange={(e) => setEndDate(e)} 
+                                                    minDate={new Date(date)}
+                                                />
                                             </div>
                                         </div>
                                     </li>

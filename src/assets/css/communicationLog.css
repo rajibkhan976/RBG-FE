@@ -201,6 +201,7 @@ button.skytext{
   font-size: 14px;
   color: var(--darkBlue);
   margin-bottom: 10px;
+  word-break: break-all;
 }
 
 .inboxChat .info{
@@ -225,7 +226,8 @@ button.skytext{
   line-height: 15px;
   text-align: justify;
   color: var(--darkBlue);
-  padding: 0px 0 20px 0;
+  padding: 0px 0 5px 0;
+  word-break: break-all;
 }
 .recording{
   width: 70%;
@@ -240,13 +242,13 @@ button.skytext{
   background: transparent;
 }
 .editingPanel{
-  position: absolute;
-  bottom: 70px;
-  left: 0;
-  width: 100%;
-  background: #FFFFFF;
-  max-height: 75%;
-  overflow: auto;
+    position: absolute;
+    bottom: 70px;
+    left: 0;
+    width: 100%;
+    background: #FFFFFF;
+    max-height: 80%;
+    overflow: auto;
 }
 .editingPanel::-webkit-scrollbar {
   width: 6px;
@@ -333,8 +335,8 @@ button.skytext{
   height: auto;
 }
 .formBody{
-  padding: 30px 0;
-  min-height: 385px;
+  padding: 15px 0;
+  /*min-height: 385px;*/
 }
 .editFormBody::-webkit-scrollbar {
   width: 6px;
@@ -512,7 +514,7 @@ button.skytext{
   color: #ED707A;
 }
 .inboxChat .txtArea .areaOfText {
-  max-height: 135px;
+  max-height: 115px;
   overflow: hidden;
 }
 .slickModalBody.bigInbox{
@@ -549,7 +551,7 @@ button.skytext{
 .contactModal .tabBarArea .loaderOuter {
   position: absolute;
   /* min-height: 100vh; */
-  height: 710px;
+  height: 850px;
 }
 
 .editingPanel .keywordBox{
@@ -600,4 +602,34 @@ button.skytext{
 
 .goData img{
   width: 19px;
+}
+.communicationList .userListBody .tableListing li {
+  cursor: pointer;
+}
+.searchBar.commlog {
+  width: 450px;
+}
+.inDashboardHeader .infoSpan {
+  transform: translate(11px, -1px);
+}
+
+.commLog .infoSpan .tooltiptextInfo{
+  margin-left: -20px;
+    top: 28px;
+    width: 340px;
+    bottom: auto;
+    line-height: 16px;
+    padding: 5px 6px;
+
+}
+.commLog .infoSpan .tooltiptextInfo::after {
+  top: -10px;
+  left: 16px;
+  margin-left: -5px;
+  border-color: transparent transparent #fff transparent;
+}
+
+
+.globalSms .editorEmailShell{
+  display: block;
 }

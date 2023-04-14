@@ -61,7 +61,7 @@ useEffect(() => {
     setCallPanel(false);
     setEmailPanel(false);
   }
-  //console.log(props)
+ // console.log(props)
   const editCallHandler = (e) =>{
     //setCallPanel(true);
     setSmsPanel(false);
@@ -84,6 +84,7 @@ useEffect(() => {
   }
  
  const closePanel = (data) =>{
+  console.log(data);
   setSmsPanel(data);
   setCallPanel(data);
   setEmailPanel(data);
@@ -125,8 +126,18 @@ useEffect(() => {
             Call
           </button>
           
-          <button className={emailPanel ? "outLinedBtn active" : "outLinedBtn"} onClick={editEmailHandler}
+          {/* <button className={emailPanel ? "outLinedBtn active" : "outLinedBtn"} onClick={editEmailHandler}
              disabled={!emailSetupData || (contactGenData?.email === "" ) ? "disabled" :""}
+           >
+            <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9.39948 14.4143H1.14648V1.44531H18.8325V7.34531" stroke="none" stroke-width="1.2" stroke-linejoin="round"/>
+              <path d="M1.14648 1.44531L9.98948 7.93031L18.8325 1.44531" stroke="none" stroke-width="1.2" stroke-linejoin="round"/>
+              <path d="M15.2949 9.10938L17.6529 11.4674L15.2949 13.8254" stroke="none" stroke-width="1.2" stroke-linejoin="round"/>
+              <path d="M17.3207 11.457H11.9297" stroke="none" stroke-width="1.2" stroke-linejoin="round"/>
+            </svg>
+            Email
+          </button> */}
+          <button className={emailPanel ? "outLinedBtn active" : "outLinedBtn"} onClick={editEmailHandler}
            >
             <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M9.39948 14.4143H1.14648V1.44531H18.8325V7.34531" stroke="none" stroke-width="1.2" stroke-linejoin="round"/>
@@ -140,7 +151,7 @@ useEffect(() => {
             <img src={arrowDown} />
           </button>
         </div>       
-        <div className="editFormBody">
+        <div className={(smsPanel || callPanel || emailPanel) ? "editFormBody active":"editFormBody"}>
             {smsPanel && 
               <>         
                <Sms 

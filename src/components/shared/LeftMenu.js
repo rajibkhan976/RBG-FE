@@ -597,10 +597,10 @@ function LeftMenu(props) {
           </NavLink>
         </li>
       </ul>
-      <div className="leftMenuToggle">
-        {pathURL !== "/dashboard" ?
-          <>
-            <button
+      {/* <div className="leftMenuToggle">
+        {(pathURL === "/users" || pathURL === "/organizations" || pathURL === "/associations") &&  (loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'rbg')  ?
+           <>
+              <button
               className={
                 tglLeftMenuStatus ? "leftMenuToggleBtn active" : "leftMenuToggleBtn"
               }
@@ -609,9 +609,46 @@ function LeftMenu(props) {
             <span className={tglLeftMenuStatus ? "menuName active" : "menuName"}>
               {tglLeftMenuStatus ? "Open" : "Close"}
             </span>
-          </>
-          : ''}
-      </div>
+          </> 
+          : ""
+           }
+      
+      </div> */}
+     <div className="leftMenuToggle">
+     {
+       
+       ((pathURL !== "/dashboard" && pathURL !== "/automation-builder" && pathURL !== "/automation-list" && pathURL !== "/contacts" 
+       && pathURL !== "/appointment-global" && pathURL !== "/attendance-global" && pathURL !== "/transaction-global"
+       && pathURL !== "/communicationLog" && pathURL !== "/users" && pathURL !== "/organizations" && pathURL !== "/associations") ? 
+       <>
+              <button
+              className={
+                tglLeftMenuStatus ? "leftMenuToggleBtn active" : "leftMenuToggleBtn"
+              }
+              onClick={() => toggleLeftSubMenu()}
+            ></button>
+            <span className={tglLeftMenuStatus ? "menuName active" : "menuName"}>
+              {tglLeftMenuStatus ? "Open" : "Close"}
+            </span>
+          </> : 
+       
+       (pathURL === "/users" || pathURL === "/organizations" || pathURL === "/associations") &&  (loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'rbg')  ?
+       <>
+       <button
+       className={
+         tglLeftMenuStatus ? "leftMenuToggleBtn active" : "leftMenuToggleBtn"
+       }
+       onClick={() => toggleLeftSubMenu()}
+     ></button>
+     <span className={tglLeftMenuStatus ? "menuName active" : "menuName"}>
+       {tglLeftMenuStatus ? "Open" : "Close"}
+     </span>
+   </> : 
+        "")
+        
+   
+          }
+          </div>
     </div>
   );
 }

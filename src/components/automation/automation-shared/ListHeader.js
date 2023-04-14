@@ -1,7 +1,8 @@
 import { useSelector } from "react-redux";
-import { useLocation, useRouteMatch } from "react-router-dom";
+import {NavLink, useLocation, useRouteMatch} from "react-router-dom";
 import plus_icon from "../../../assets/images/plus_icon.svg";
-import { utils } from "../../../helpers";
+import arrowLeft from "../../../assets/images/back-arrow.png";
+import React from "react";
 
 const ListHeader = (props) => {
   const automationDetails = useRouteMatch('/automation-details/:automationId');
@@ -12,10 +13,10 @@ const ListHeader = (props) => {
       {pathURL === "/automation-list" && (
         <div className="userListHead">
           <div className="listInfo">
-            <ul className="listPath">
+            {/* <ul className="listPath">
               <li>Automation</li>
               <li>Listing</li>
-            </ul>
+            </ul> */}
             <h2 className="inDashboardHeader">
               List of automations <span>({props.automationData.count})</span>
             </h2>
@@ -34,9 +35,9 @@ const ListHeader = (props) => {
       {automationDetails !== null && automationDetails?.isExact ? (
         <div className="userListHead">
           <div className="listInfo">
-            <ul className="listPath">
+            {/* <ul className="listPath">
               <li>Automation</li>
-            </ul>
+            </ul> */}
             <h2 className="inDashboardHeader">{props.autoName}</h2>
             {/*<div className="automationShortInfo">
               <ul>
@@ -51,6 +52,10 @@ const ListHeader = (props) => {
               </ul>
             </div>*/}
           </div>
+          <NavLink to={"/automation-list"}><button className="btn btn-dBlue automationDetailsBackButton">
+            <img className="" src={arrowLeft} alt="" />
+            Back
+          </button></NavLink>
         </div>
       ):''}
     </>

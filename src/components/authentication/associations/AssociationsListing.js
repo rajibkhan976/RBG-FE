@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Loader from '../../shared/Loader';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ErrorAlert, SuccessAlert } from '../../shared/messages';
 import ListHead from '../auth-shared/ListHead';
 import list_board_icon from "../../../assets/images/list_board_icon.svg";
@@ -32,6 +32,9 @@ const AssociationsListing = () => {
     const [sortType, setSortType] = useState("asc");
     const dispatch = useDispatch();
     const messageDelay = 5000; // ms
+
+
+    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
 
 
     /**
@@ -220,12 +223,17 @@ const AssociationsListing = () => {
                                                     </div>
                                                     <div className="createDate">
                                                         <button className="btn">
-                                                            {moment(elem.createdAt).format("Do MMM YYYY")}
+                                                            {/* {moment(elem.createdAt).format("Do MMM YYYY")} */}
+                                                            {utils.convertUTCToTimezone(elem.createdAt,timezoneOffset)
+                                                            }
+
                                                         </button>
                                                     </div>
                                                     <div className="createDate">
                                                         <button className="btn">
-                                                            {moment(elem.updatedAt).format("Do MMM YYYY")}
+                                                            {/* {moment(elem.updatedAt).format("Do MMM YYYY")} */}
+                                                            {utils.convertUTCToTimezone(elem.updatedAt,timezoneOffset)
+                                                            }
                                                         </button>
                                                     </div>
                                                 </li>

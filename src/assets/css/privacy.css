@@ -1,0 +1,68 @@
+body {
+    background: #fff;
+}
+.privacyContainerOuter {
+    height: 100vh;
+    overflow: auto;
+}
+.privacyContainer {
+    max-width: 1274px;
+    margin: 0 auto;
+}
+
+.privacyContainerOuter .goToTop {
+    position: fixed;
+    right: 80px;
+    bottom:50px;
+    width: 35px;
+    height: 35px;
+    background: transparent url("../images/goToTop.svg") no-repeat center;
+    border: none;
+    outline: none;
+    cursor: pointer;
+}
+
+.privacyContainerHead {
+    border-bottom: 1px solid #DCE4EB;
+    margin-bottom: 32px;
+}
+
+.privacyContainerHead img {
+    width: 190px;
+    height: auto;
+    padding: 32px 0;
+}
+
+.privacyContainer h1, 
+.privacyContainer h2 {
+    font-size: 24px;
+    color: #305671;
+    font-weight: 600;
+    line-height: 36px;
+    margin-bottom: 20px;
+}
+.privacyContainer h2 {
+    padding-top: 10px;
+}
+
+.privacyContainer p {
+    font-size: 16px;
+    color: #305671;
+    font-weight: 400;
+    line-height: 28px;
+    margin-bottom: 30px;
+}
+
+.privacyContainer p a {
+    color: #55BBC9;
+    text-decoration: underline;
+}
+
+.privacyContainer ul li {
+    list-style: disc;
+    margin-left: 40px;
+    font-size: 16px;
+    color: #305671;
+    font-weight: 400;
+    line-height: 30px;
+}

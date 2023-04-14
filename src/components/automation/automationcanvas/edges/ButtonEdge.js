@@ -35,9 +35,8 @@ export default function CustomEdge({id,
         targetY,
     });
     const foreignObjectSize = 40;
-
     const onEdgeClick = (id) => {
-        data.onRemove(id)
+        data.onRemove(id, data)
     };
     return (
         <>
@@ -60,7 +59,7 @@ export default function CustomEdge({id,
                 <button
                     className="edgebutton"
                     onClick={() => onEdgeClick(id)}
-                    style={{display: "none"}}
+                    style={{"display": "none"}}
                 >
                     ×
                 </button>

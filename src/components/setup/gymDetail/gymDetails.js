@@ -13,6 +13,7 @@ import infos from "../../../assets/images/infos.svg";
 import regenerate from "../../../assets/images/regenerate.svg";
 import target_blank from "../../../assets/images/target_blank.svg";
 import * as actionTypes from "../../../actions/types";
+import env from "../../../configuration/env";
 
 import AddHolidayModal from "./addHolidayModal";
 import config from "../../../configuration/config";
@@ -21,6 +22,7 @@ import ConfirmBox from "../../shared/confirmBox";
 import { GymDetailsServices } from "../../../services/gymDetails/GymDetailsServices";
 import {AttendanceServices} from "../../../services/attendance/attendanceServices";
 import Scrollbars from "react-custom-scrollbars-2";
+import { utils } from "../../../helpers";
 
 
 const GymDetails = (props) => {
@@ -32,9 +34,11 @@ const GymDetails = (props) => {
   const [editHoliday, setEditHoliday] = useState(false);
   const [holidayVal, setHolidayVal] = useState({
     id: "",
-    startDay: "",
-    endDay: "",
-    name: ""
+    // startDay: "",
+    // endDay: "",
+    name: "",
+    fromDate: "",
+    toDate: "",
   });
 
   // START - Variable set while development --- Jit
@@ -51,6 +55,7 @@ const GymDetails = (props) => {
   const [copiedText, setCopiedText] = useState(false);
   const [copiedurl, setCopiedurl] = useState(false);
   const [hasTimezone, setHasTimezone] = useState(false);
+  const [getGymData, setGetGymData] = useState([]);
   const [validateMsg, setValidateMsg] = useState({
     name: "",
     contactPerson: "",
@@ -71,6 +76,7 @@ const GymDetails = (props) => {
       "prefix": "+1"
     }
   ]);
+  const reduxData  = useSelector((state) => state)
   const userData = useSelector((state) => (state.user?.data) ? state.user.data:"");
   const dispatch = useDispatch();
   // END - Variable set while development --- Jit
@@ -78,7 +84,13 @@ const GymDetails = (props) => {
     try {
       setIsLoader(true);
       const gymData = await GymDetailsServices.fetchGymDetail();
+      // console.clear()
       console.log("Gym Details", gymData);
+      setGetGymData({
+        ...getGymData,
+        contactEmail: gymData?.gymDetails?.contactEmail,
+        timeZone: gymData?.gymDetails?.timezone
+      })
       // gymData.gymDetails.timezone = (gymData?.timezone) ? gymData?.timezone : detectedTimezone?.zoneName;
       // gymData.gymDetails.gmtOffset = (gymData?.gmtOffset) ? gymData?.gmtOffset : detectedTimezone?.gmtOffset;
       setGymData({...gymData.gymDetails, 
@@ -112,7 +124,7 @@ const GymDetails = (props) => {
     try {
       const timezoneList = await GymDetailsServices.fetchTimeZoneList();
       console.log("Timezone List --", timezoneList);
-      setTimezoneData(timezoneList.zones);
+      setTimezoneData(timezoneList);
     } catch (e) {
       console.log(e.message);
     }
@@ -143,6 +155,8 @@ const GymDetails = (props) => {
     }
   };
   useEffect(() => {
+    console.clear()
+    console.log("user data",userData,"detected timezone",detectedTimezone,"redux data",reduxData)
     fetchCountry();
     fetchGymDetails();
     getTimeZoneList();
@@ -155,6 +169,7 @@ const GymDetails = (props) => {
   }, [errorMsg, successMsg]);
 
   const toggleOptions = (index) => {
+    console.log(index);
     setOption(index !== option ? index : null);
   };
   const openAddHolidayModal = (holiday) => {
@@ -173,15 +188,30 @@ const GymDetails = (props) => {
       }
     );
   };
-
   const editGymDetailsHandler = (event) => {
     event.preventDefault();
     setShowEditForm(true);
   }
   const closeGymDetailsHandler = (event) => {
     event.preventDefault();
-    window.location.reload(false);
+    // window.location.reload(false);
     setShowEditForm(false);
+    console.log("After close gym data", getGymData);
+    
+    setGymData({
+      ...gymData,
+      contactEmail: getGymData.contactEmail,
+      // timeZone: getGymData.timeZone,
+    })
+    // setHasTimezone((gymData.gymDetails?.timezone)?true:false);
+    if(getGymData?.timeZone) {
+      setGymData(prevState => (
+        {...prevState, 
+          timezone: getGymData?.timeZone, 
+          gmtOffset: detectedTimezone?.gmtOffset}
+      )
+    );
+    }
   }
 
   const handleImageUpload = (event) => {
@@ -209,11 +239,17 @@ const GymDetails = (props) => {
     e.preventDefault();
     console.log("Gym Data", gymData);
     console.log("validateMsg Data", validateMsg);
-    
     try {
       const isValid = validateField(e, true);
       if (isValid) {
         setIsLoader(true);
+        let timezoneObj = gymData?.timezone.split(/[-()]/)
+        let timezoneInfo = {
+          abbr : timezoneObj[0],
+          name : timezoneObj[1],
+          utc_offset : timezoneObj[2]
+        }
+
         const payload = {
           "orgName": gymData.name,
           "contactPerson": gymData.contactPerson,
@@ -223,19 +259,28 @@ const GymDetails = (props) => {
           "logo": gymData.logo,
           "contactEmail": gymData.contactEmail,
           "timeZone": gymData.timezone,
-          "gmtOffset": (gymData.gmtOffset) ? gymData.gmtOffset : ''
+          "timezoneInfo" : timezoneInfo,
+          "gmtOffset": (gymData.gmtOffset) ? gymData.gmtOffset : timezoneObj[2]
         };
-        console.log(payload);
+
+        console.clear()
+        console.log("payload",payload);
         const updatedData = await GymDetailsServices.gymDetailUpdate(payload);
         setGymData(updatedData);
         setHasTimezone((gymData.timezone) ? true: false);
         dispatch({
           type: actionTypes.USER_DATA,
-          data: {...userData, organizationTimezone: gymData.timezone.toString()}
+          data: {...userData, organizationTimezone: gymData.timezone.toString(), organizationTimezoneInfo : timezoneInfo}
         });
         console.log("Updated Data", updatedData);
-        setSuccessMsg("Gym details updated successfully");
-        setTimeout(() => { setShowEditForm(false) }, 5000);
+        // setSuccessMsg("Gym details updated successfully");
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: "Gym details updated successfully",
+          typeMessage: 'success'
+        })
+        // setTimeout(() => { setShowEditForm(false) }, 5000);
+        setShowEditForm(false)
       }
     } catch (e) {
       setErrorMsg(e.message);
@@ -251,8 +296,10 @@ const GymDetails = (props) => {
     const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (!validateViaSubmit) {
       e.preventDefault();
+      console.clear()
       const name = e.target.name;
       const value = e.target.value;
+      console.log("name",name,value)
       if (name === "name" && value.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, name: "Gym name should not be left empty" });
         
@@ -291,6 +338,8 @@ const GymDetails = (props) => {
       }
       
     } else {
+      console.clear()
+      console.log("edit",gymData)
       let bool = false;
       if (gymData.name.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, name: "Gym name should not be left empty" });
@@ -300,7 +349,7 @@ const GymDetails = (props) => {
         setValidateMsg({ ...validateMsg, disabled: true, phone: "Please enter a valid 10 digit phone number" });
       } else if (!emailRegex.test(gymData.contactEmail)) {
         setValidateMsg({ ...validateMsg, disabled: true, contactEmail: "Please enter a valid email address" });
-      } else if (typeof gymData.gmtOffset === 'undefined' || gymData.gmtOffset.length === 0) {
+      } else if (typeof gymData.timezone === 'undefined' || gymData.timezone.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select a timezone" });
       } else if (gymData.countryCode.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select country code" });
@@ -329,7 +378,12 @@ const GymDetails = (props) => {
       setIsLoader(false);
       setOption(false);
       setDeleteConfirmBox(false);
-      setSuccessMsg("Holiday deleted successfully");
+      // setSuccessMsg("Holiday deleted successfully");
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: "Holiday deleted successfully",
+        typeMessage: 'success'
+      })
       fetchGymDetails();
     }
   };
@@ -349,6 +403,7 @@ const GymDetails = (props) => {
   };
 
   const editHolidayHandler = (elem) => {
+    console.log("Edit holiday", elem);
     setEditHoliday(true);
     setHolidayVal(elem);
     console.log(holidayVal)
@@ -388,6 +443,20 @@ const regenerateCodeHandler = (e) =>{
   e.preventDefault();
   fetchAccessCodeGenerate();  
 }
+const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
+useEffect(()=>{
+  console.log("gym details time zone", timezoneOffset);
+}, [timezoneOffset]);
+
+
+const base_url = window.location.origin;
+
+
+
+
+
+
+
   return (
     <>
       
@@ -414,10 +483,10 @@ const regenerateCodeHandler = (e) =>{
             <p className="userListAbout">Manage your Gym details.</p>
           </div>
         </div>
-        <div className="gymDetails">
+        <div className="gymDetails ">
           <div className="gymdetails_left">
             {!showEditForm &&
-              <div className="showing_gym_data">
+              <div className="showing_gym_data not_disabled_data">
                 <div className="gymName">
                   <div className="profilePicture">
                     <div className="logo_profile">
@@ -454,11 +523,23 @@ const regenerateCodeHandler = (e) =>{
                       <h3>45 min</h3>
                       </div>
                   </div> */}
-                <div className="formControl timezone gymInfo">
-                  <p className="textType1">Timezone</p>
-                  <select disabled>
+                <div className="formControl timezone gymInfo show">
+                  <p className="cmnFieldName timezoneLbl">Timezone:</p>
+                  {/* <select>
                     <option>{(gymData?.timezone) ? gymData?.timezone : "-"}</option>
-                  </select>
+                  </select> */}
+                  <p>{(gymData?.timezone) ? gymData?.timezone : "-"}</p>
+                </div>
+                {/* <div className="lineBreak"></div> */}
+                <div className="formControl timezone gymInfo show">
+                  <p className="cmnFieldName timezoneLbl">Organization Email: <span class="infoSpan"><img src={infos} alt=""/><span class="tooltiptextInfo">It will be used for Email sending purpose from this platform as 'From'</span></span></p>
+                  {/* <input type="text" value={gymData.contactEmail} /> */}
+                  <p className="">{gymData.contactEmail}</p>
+                </div>
+                <div className="formControl timezone gymInfo show">
+                  <p className="cmnFieldName timezoneLbl">Contact Email:</p>
+                  {/* <input type="text" value={gymData.code + "@" + env.EMAIL_DOMAIN} /> */}
+                  <p className="">{gymData.code + "@" + env.EMAIL_DOMAIN}</p>
                 </div>
                 <div className={hasTimezone ? "hide" : "cz_timezoneWarning"}>The timezone is not saved yet. Please edit the details and save the timezone.</div>
                 <div className="accessCode">
@@ -490,10 +571,13 @@ const regenerateCodeHandler = (e) =>{
                       {!editAccess && <span class="tooltiptextInfo">Regenerate has been disabled</span>}
                   </div>
                   <div className="copy_url_gen">
-                    <span>{config.appUrl}/check-in-portal <button onClick={() => window.open(config.appUrl + "/check-in-portal")}><img src={target_blank} alt=""/></button></span>
+                  {/* {config.appUrl is now base_url } */}
+                    <span>{base_url}/check-in-portal <button onClick={() => window.open(base_url + "/check-in-portal")}>
+                      <img src={target_blank} alt=""/>
+                      </button></span>
                     
                     <div className="relative infoSpan">
-                      <button className={copiedurl ? "copy_button active" : "copy_button"} onClick={() => {copy(config.appUrl +"/check-in-portal");setCopiedurl(true);}}><img src={copyIcon} alt=""/></button>
+                      <button className={copiedurl ? "copy_button active" : "copy_button"} onClick={() => {copy(base_url +"/check-in-portal");setCopiedurl(true);}}><img src={copyIcon} alt=""/></button>
                       {/* {copiedText && <span class="tooltiptextInfo">Copied</span>} */}
                       
                     </div>
@@ -562,7 +646,7 @@ const regenerateCodeHandler = (e) =>{
                   <div className="errorMsg">{validateMsg.phone}</div>
                 </div>
                 <div className="formControl">
-                  <label>Contact Email</label>
+                  <label>Organization Email</label>
                   <input type="text" placeholder="Ex. admin@fitbit.come" name="contactEmail"
                     value={gymData?.contactEmail}
                     onChange={validateField} />
@@ -576,14 +660,13 @@ const regenerateCodeHandler = (e) =>{
                   <label>Timezone</label>
                   <select name="timezone"
                     onChange={validateField}>
-                      <option value="">-</option>
                     {timezoneData ? timezoneData.map(zone => {
                       return (<option
-                        value={zone.gmtOffset}
-                        data-timezone={zone.zoneName}
-                        selected={(zone.zoneName === gymData?.timezone) ? true : false }
+                        value={zone.utc_offset}
+                        data-timezone={zone.abbr+"-"+zone.name+"("+zone.utc_offset+")"}
+                        selected={(zone.name.toLowerCase() == gymData?.timezoneInfo.name.toLowerCase()) ? true : false }
                         // selected={(parseInt(zone.gmtOffset) === detectedTimezone.gmtOffset) ? true : ""}
-                      >{zone.countryCode} - {zone.zoneName}</option>);
+                      >{zone.abbr} - {zone.name}({zone.utc_offset})</option>);
                     }) : ''}
                   </select>
                   <div className="errorMsg">{validateMsg.timezone}</div>
@@ -606,7 +689,7 @@ const regenerateCodeHandler = (e) =>{
                 <div className="holidayListHeader">
                   <div>
                     <h3>Holiday List</h3>
-                    <p>Explanatory text blurb here</p>
+                    <p>Manage your holiday</p>
                   </div>
                 </div>
                 <div className="addInEmptySpace">
@@ -625,7 +708,7 @@ const regenerateCodeHandler = (e) =>{
                 <div className="holidayListHeader">
                   <div>
                     <h3>Holiday List</h3>
-                    <p>Manage your holidays</p>
+                    <p>Manage your holiday</p>
                   </div>
                   <div>
                   {editAccess && 
@@ -640,13 +723,18 @@ const regenerateCodeHandler = (e) =>{
                   <div className="cell">End Date</div>
                   <div className="cell">Holiday</div>
                 </div>
-                <div className="holidayListWrap">
+                <div className="holidayListWrap tt">
                 {holidayData.map((elem, key) => {
                   return (
                       
                   <div className="gymHolidayList">
-                    <div className="cell">{elem.fromDate}</div>
-                    <div className="cell">{elem.toDate}</div>
+                    <div className="cell">
+                      {utils.convertUTCToTimezone(elem?.fromDate, timezoneOffset).split(" ").splice(0,3).join(" ")}
+                      </div>
+                    <div className="cell">
+                      {/* {elem.toDate} */}
+                      {utils.convertUTCToTimezone(elem?.toDate, timezoneOffset).split(" ").splice(0,3).join(" ")}
+                      </div>
                     <div className="cell">
                       <span>{elem.name}</span>
                       {editAccess && 

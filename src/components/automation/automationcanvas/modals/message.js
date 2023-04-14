@@ -1,14 +1,56 @@
-import React, {memo, useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
 import chevron_right_white_24dp from "../../../../assets/images/chevron_right_white_24dp.svg";
-import browse_keywords from "../../../../assets/images/icon_browse_keywords.svg";
+import {SMSServices} from "../../../../services/template/SMSServices";
+import * as actionTypes from "../../../../actions/types";
+import {useDispatch} from "react-redux";
+import MergeTag from "../../../shared/MergeTag";
+import Select from "react-select";
 
 const Message = (props) => {
-    const messageTextbox = useRef(null)
-    const [keywordSuggesion, setKeywordSuggesion] = useState(false);
-    const [searchTagString, setSearchTagString] = useState("");
-    const [smsTags, setSmsTags] = useState([]);
-    // ADD Keyword to Edit SMS template
+    const messageTextbox = useRef(null);
+    const [body, setBody] = useState(props.body ? props.body : "" );
+    const [selectedSMSTemplate, setSelectedSMSTemplate] = useState({value: "", label: "Select an SMS Template", data: {}});
+    const [smsOptions, setSMSOptions] = useState([]);
+    const dispatch = useDispatch();
+    const selectStyles = {
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isSelected ? "#305671" : "white",
+            color: state.isSelected ? "white" : "#305671",
+            fontSize: "13px"
+        }),
+    };
+    const smsTemplateChangeHandler = (e) => {
+        setSelectedSMSTemplate(e);
+        if (e && e.data && e.data.message) {
+            setBody(e.data.message);
+        } else {
+            setBody("");
+        }
+    }
+    const getQueryParams = async () => {
+        return new URLSearchParams();
+    };
+    const fetchSMSTemplates = async () => {
+        let pageId = 'all';
+        try {
+            const result = await SMSServices.fetchSms(pageId);
+            if (result) {
+                let op = [{value: "", label: "Select a SMS Template", data: {}}]
+                result.templates.map(el => {
+                    op.push({value: el._id, label: el.title, data: el})
+                });
+                setSMSOptions(op);
+            }
+        } catch (e) {
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: e.message,
+                typeMessage: 'error'
+            });
+        }
+    };
     const addKeywordEdit = (e) => {
         e.preventDefault();
         let textBox = messageTextbox.current;
@@ -19,17 +61,32 @@ const Message = (props) => {
         if (cursorStart || cursorStart === "0") {
             textValue = textValue.substring(0, cursorStart) + " [" + e.target.textContent + "] " + textValue.substring(cursorEnd, textValue.length);
             startPosition = textValue.substring(0, cursorStart) + " [" + e.target.textContent + "] ";
-            console.log(cursorEnd, cursorStart, startPosition.length)
         } else {
             textValue = textValue + " [" + e.target.textContent + "] ";
             startPosition = textValue + " [" + e.target.textContent + "] ";
         }
-        props.handleBodyChangeTags(textValue);
+        setBody(textValue)
         setTimeout(() => {
             textBox.setSelectionRange(startPosition.length, startPosition.length);
         }, 100)
     };
-
+    const handleBodyChange = (event) => {
+      setBody(event.target.value);
+    }
+    const saveMessage = () => {
+        if (body) {
+            props.saveMessage(body, props.triggerNodeId)
+        } else {
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: 'Please fill up message body.',
+                typeMessage: 'error'
+            });
+        }
+    }
+    useEffect(() => {
+        fetchSMSTemplates();
+    }, [])
     return (
         <React.Fragment>
             <div className="automationModal filterModal">
@@ -49,67 +106,27 @@ const Message = (props) => {
                         <div className="formBodyContainer">
                             <div className="emailDetails">
                                 <div className="inputField">
+                                    <div className="cmnFieldName">SMS Templates <span>(Optional)</span></div>
+                                    <Select name="template" value={selectedSMSTemplate} styles={selectStyles}
+                                            onChange={(e) => smsTemplateChangeHandler(e)} options={smsOptions} placeholder="Choose a SMS template" />
+                                </div>
+                                <div className="inputField">
                                     <label htmlFor="">Body</label>
                                     <div className="inFormField">
-                                        <textarea className={`${props.bodyError}`} name="messageBody"
-                                                  onChange={props.handleBodyChange}
-                                                  value={props.body} ref={messageTextbox}>{props.body}</textarea>
-                                        <button
-                                            className="btn browseKeywords browseKeywordsSMS"
-                                            style={{
-                                                marginRight: "0",
-                                                padding: "0",
-                                                bottom: "3"
-                                            }}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                setKeywordSuggesion(true);
-                                            }}
-                                        >
-                                            <img src={browse_keywords} alt="keywords" />
-                                        </button>
-                                        {keywordSuggesion && (
-                                            <div className="keywordBox">
-                                                <div className="searchKeyword">
-                                                    <div className="searchKeyBox">
-                                                        <input
-                                                            type="text"
-                                                            onChange={(e) => setSearchTagString(e.target.value)}
-                                                        />
-                                                    </div>
-                                                    <div className="cancelKeySearch">
-                                                        <button
-                                                            onClick={() => {
-                                                                setKeywordSuggesion(false)
-                                                                setSearchTagString("")
-                                                            }}
-                                                        ></button>
-                                                    </div>
-                                                </div>
-                                                <div className="keywordList">
-                                                    <ul>
-                                                        {Object.keys(props.messageData).length ? (
-                                                            Object.keys(props.messageData).filter(el => el !== 'status' && el !== 'phase' && el !== 'tags' && el !== 'dadPhone' && el !== 'momPhone').filter(el => el.indexOf(searchTagString) >= 0).map((value, key) => (
-                                                                <li key={"keyField" + key}>
-                                                                    <button
-                                                                        onClick={(e) =>
-                                                                            addKeywordEdit(e, value)
-                                                                        }
-                                                                    >
-                                                                        {value}
-                                                                    </button>
-                                                                </li>
-                                                            ))
-                                                        ) : ""}
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        )}
+                                            <textarea name="messageBody"
+                                                      onChange={handleBodyChange}
+                                                      value={body} ref={messageTextbox}>{body}</textarea>
+                                        <MergeTag addfeild={(e,field)=> addKeywordEdit(e,field)}/>
+
                                     </div>
+                                </div>
+                                <div className="inputField">
+                                    <p className="notes">{body.length}/{parseInt(((parseInt(body.length) / 153) + 1))} SMS - One message contains 153 characters max (SMS count can be changed if
+                                        you are using keyword variable e.g. [fname])</p>
                                 </div>
                             </div>
                             <div className="saveButton">
-                                <button onClick={props.saveMessage}>Save <img src={chevron_right_white_24dp} alt="" /></button>
+                                <button onClick={saveMessage}>Save <img src={chevron_right_white_24dp} alt="" /></button>
                             </div>
                         </div>
                     </div>

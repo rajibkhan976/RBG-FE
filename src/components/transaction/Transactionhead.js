@@ -28,10 +28,10 @@ const TransactionHead = (props) => {
   return (
     <div className="userListHead">
       <div className="listInfo">
-        <ul className="listPath">
+        {/* <ul className="listPath">
           <li>Dashboard</li>
           <li>Global Transaction</li>
-        </ul>
+        </ul> */}
         <h2 className="inDashboardHeader">Transaction List (<span>{props.transactionCount || 0}</span>)</h2>
         <p className="userListAbout">
            See all your transaction history
