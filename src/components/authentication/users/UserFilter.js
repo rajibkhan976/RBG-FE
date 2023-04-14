@@ -80,9 +80,10 @@ const UserFilter = (props) => {
             val.getMonth() + 1
           }-${val.getDate()}`;
         setDate(val);
-
-        utils.addQueryParameter("fromDate", utils.convertTimezoneToUTC(formattedDate + " " + "00:00:01", timezoneOffset));
         setFromDate(formattedDate);
+          console.log("start date::::::::::::::::::::::::", formattedDate);
+        utils.addQueryParameter("fromDate", utils.convertTimezoneToUTC(formattedDate + " " + "00:00:01", timezoneOffset));
+        
     }
 
     // const handleDateChangeTo = (event) => {
@@ -99,7 +100,7 @@ const UserFilter = (props) => {
             val.getMonth() + 1
           }-${val.getDate()}`;
         setDate2(val);
-
+        console.log("end date::::::::::::::::::::::::", formattedDate);
         utils.addQueryParameter("toDate", utils.convertTimezoneToUTC(formattedDate + " " + "23:59:59", timezoneOffset));
         setToDate(formattedDate);
     }
@@ -175,7 +176,7 @@ const UserFilter = (props) => {
                                                 {/* <input type="date" name="fromDate" id="formDate" placeholder="dd/mm/yyyy" onChange={handleDateChangeFrom} value={fromDate} /> */}
                                                 <DatePicker 
                                                     className="cmnFieldStyle"
-                                                    selected={new Date()}
+                                                    selected={date === undefined ? new Date() : date}
                                                     format="dd/MM/yyyy"
                                                     dateFormat="dd/MM/yyyy"
                                                     placeholder="mm/dd/yyyy"
