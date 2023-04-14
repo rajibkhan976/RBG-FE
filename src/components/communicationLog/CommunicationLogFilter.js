@@ -35,9 +35,12 @@ function CommunicationLogFilter(props) {
     }
     const handleToChange = (val) => {
         if (val) {
-            let formattedDate = `${val.getFullYear()}-${
-                val.getMonth() + 1
-            }-${val.getDate()}`;
+             const yyyy = val.getFullYear();
+      let mm = val.getMonth() + 1; // Months start at 0!
+      let dd = val.getDate();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      let formattedDate = `${yyyy}-${mm}-${dd}`;
             setSelectedTo(formattedDate);
         } else {
             setSelectedTo("");
@@ -45,9 +48,12 @@ function CommunicationLogFilter(props) {
     }
     const handleFromChange = (val) => {
         if (val) {
-            let formattedDate = `${val.getFullYear()}-${
-                val.getMonth() + 1
-            }-${val.getDate()}`;
+             const yyyy = val.getFullYear();
+      let mm = val.getMonth() + 1; // Months start at 0!
+      let dd = val.getDate();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      let formattedDate = `${yyyy}-${mm}-${dd}`;
             setSelectedFrom(formattedDate);
         } else {
             setSelectedFrom("");

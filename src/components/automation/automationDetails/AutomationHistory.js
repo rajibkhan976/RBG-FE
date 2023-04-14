@@ -93,9 +93,12 @@ export default function AutomationHistory(props) {
 
     const setStartDate = (val) => {
         if (val) {
-            let formattedDate = `${val.getFullYear()}-${
-                val.getMonth() + 1
-            }-${val.getDate()}`;
+            const yyyy = val.getFullYear();
+            let mm = val.getMonth() + 1; // Months start at 0!
+            let dd = val.getDate();
+            if (dd < 10) dd = '0' + dd;
+            if (mm < 10) mm = '0' + mm;
+            let formattedDate = `${yyyy}-${mm}-${dd}`;
             setFilterData(prevState => ({ ...prevState, fromDate: formattedDate }));
         } else {
             setFilterData(prevState => ({ ...prevState, fromDate: "" }));
@@ -106,9 +109,12 @@ export default function AutomationHistory(props) {
 
     const setEndDate = (val) => {
         if (val) {
-            let formattedDate = `${val.getFullYear()}-${
-                val.getMonth() + 1
-            }-${val.getDate()}`;
+            const yyyy = val.getFullYear();
+            let mm = val.getMonth() + 1; // Months start at 0!
+            let dd = val.getDate();
+            if (dd < 10) dd = '0' + dd;
+            if (mm < 10) mm = '0' + mm;
+            let formattedDate = `${yyyy}-${mm}-${dd}`;
             setFilterData(prevState => ({ ...prevState, toDate: formattedDate }));
         } else {
             setFilterData(prevState => ({ ...prevState, toDate: "" }));
@@ -131,7 +137,7 @@ export default function AutomationHistory(props) {
         }
         // const queryParams = Object.entries(filterData).filter(el => el[1] !== '').map(el => `${el[0]}=${el[1]}`).join("&");
         // fetchHistory(queryParams)
-        
+
         if (filterData.fromDate) {
             //utils.addQueryParameter('fromDate', filterData.fromDate);
             //utils.addQueryParameter('toDate', filterData.toDate);
@@ -201,7 +207,7 @@ export default function AutomationHistory(props) {
                                     format="dd/MM/yyyy"
                                     dateFormat="dd/MM/yyyy"
                                     placeholderText="dd/mm/yyyy"
-                                    onChange={(e) => setStartDate(e)} 
+                                    onChange={(e) => setStartDate(e)}
                                     maxDate={new Date(today)}
                                 />
                             </div>
@@ -209,17 +215,17 @@ export default function AutomationHistory(props) {
                         <div className="formField">
                             <p>To</p>
                             <div className="inFormField">
-                                    <DatePicker 
-                                        className="cmnFieldStyle autoHistoryDateInput"
-                                        selected={date2}
-                                        defaultDate={today ? new Date(today) : ""}
-                                        format="dd/MM/yyyy"
-                                        dateFormat="dd/MM/yyyy"
-                                        placeholderText="dd/mm/yyyy"
-                                        onChange={(e) => setEndDate(e)} 
-                                        minDate={new Date(date)}
-                                        maxDate={new Date(today)}
-                                    />
+                                <DatePicker
+                                    className="cmnFieldStyle autoHistoryDateInput"
+                                    selected={date2}
+                                    defaultDate={today ? new Date(today) : ""}
+                                    format="dd/MM/yyyy"
+                                    dateFormat="dd/MM/yyyy"
+                                    placeholderText="dd/mm/yyyy"
+                                    onChange={(e) => setEndDate(e)}
+                                    minDate={new Date(date)}
+                                    maxDate={new Date(today)}
+                                />
                             </div>
                         </div>
                         <div className="formField selectStatusOverview">
@@ -234,7 +240,7 @@ export default function AutomationHistory(props) {
                         </div>
 
                         <button className="btn btn-dBlue btn-Overviewfilter"
-                            onClick={handleApplyFilter}>
+                                onClick={handleApplyFilter}>
                             Apply Filter
                             <img className="" src={arrow_forward} alt="" />
                         </button>
@@ -321,16 +327,16 @@ export default function AutomationHistory(props) {
                                             {/* {utils.convertUTCToTimezone(elem.createdAt, timezone, "LLL")} */}
                                             {/* {moment(elem.createdAt).format("YYYY-MM-DD")}  */}
                                             {utils.convertUTCToTimezone(elem.createdAt,timezoneOffset)
-                                            //.split(" ").splice(0,3).join(" ")
+                                                //.split(" ").splice(0,3).join(" ")
                                             }
-                                            
+
                                         </div>
                                         <div className="listCell cellWidth_15" onClick={() => toggleDetails(i)}>
                                             {/* {(elem?.completedAt) ? utils.convertUTCToTimezone(elem?.completedAt, timezone, "LLL") : "-"} */}
                                             {/* {(elem ?.completedAt) ? moment(elem.completedAt).format("YYYY-MM-DD") : "-"} */}
                                             {(elem ?.completedAt) ? utils.convertUTCToTimezone(elem.completedAt,timezoneOffset)
-                                            //.split(" ").splice(0,3).join(" ") 
-                                            : "-"}
+                                                //.split(" ").splice(0,3).join(" ")
+                                                : "-"}
 
                                         </div>
                                         <div className="listCell cellWidth_5">
@@ -349,7 +355,7 @@ export default function AutomationHistory(props) {
                                                     }
                                                 >
                                                     <button className="btn btnEdit"
-                                                        onClick={() => refresh(elem._id)}>
+                                                            onClick={() => refresh(elem._id)}>
                                                         <span>
 
                                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -574,8 +580,8 @@ export default function AutomationHistory(props) {
                         callback={() => props.fetchHistory(props.automationId)}
                     />
                 ) : (
-                        ""
-                    )}
+                    ""
+                )}
             </div>
         </Fragment>
     )

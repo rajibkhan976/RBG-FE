@@ -263,9 +263,12 @@ const ProgramTransaction = (props) => {
 
   const handelFirstBillingDateChange = (val) => {
     if (val) {
-      let formattedDate = `${val.getFullYear()}-${
-        val.getMonth() + 1
-      }-${val.getDate()}`;
+      const yyyy = val.getFullYear();
+      let mm = val.getMonth() + 1; // Months start at 0!
+      let dd = val.getDate();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      let formattedDate = `${yyyy}-${mm}-${dd}`;
       setPayLaterDate(val);
       setContractData({ ...contractData, paymentDate: formattedDate, isPayNow: 0  });
     }
@@ -280,9 +283,12 @@ const ProgramTransaction = (props) => {
 
   const handelProgramStartDateChange = (val) => {
     if (val) {
-      let formattedDate = `${val.getFullYear()}-${
-        val.getMonth() + 1
-      }-${val.getDate()}`;
+      const yyyy = val.getFullYear();
+      let mm = val.getMonth() + 1; // Months start at 0!
+      let dd = val.getDate();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      let formattedDate = `${yyyy}-${mm}-${dd}`;
       setStartDate(val);
       setContractData({ ...contractData, courseStart: formattedDate });
     }
@@ -459,10 +465,10 @@ const ProgramTransaction = (props) => {
             <div className="cmnFormRow">
               <label className="labelWithInfo">
                 <span className="labelHeading">Select Program</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={info_icon} alt="" />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
 
               <div
@@ -507,10 +513,10 @@ const ProgramTransaction = (props) => {
           <div className="formsection gap">
             <label className="labelWithInfo">
               <span className="labelHeading">Duration</span>
-              <span className="infoSpan">
+              {/*<span className="infoSpan">
                 <img src={info_icon} alt="" />
                 <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-              </span>
+              </span>*/}
             </label>
             <span className={(formErrors.duration ? "leftSecTransaction errorField" : "leftSecTransaction")}>
               <input type="text" className="cmnFieldStyle" onChange={handleDurationChange} value={contractData.duration} />
@@ -531,10 +537,10 @@ const ProgramTransaction = (props) => {
 
               <label className="labelWithInfo">
                 <span className="labelHeading">Payment Type</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={info_icon} />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
               <select className="selectBox" name="paymentType" value={contractData.payment_type} onChange={handelPaymentTypeChange}>
                 <option value="onetime">Onetime</option>
@@ -544,10 +550,10 @@ const ProgramTransaction = (props) => {
             <span className={formErrors.billing_cycle ? "rightSecTransaction errorField" : "rightSecTransaction"}>
               <label className="labelWithInfo">
                 <span className="labelHeading">Billing Cycle</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={props.info_icon} />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
               <select className="selectBox" name="billingCycle" value={contractData.billing_cycle} onChange={handelBillingCycleChange} 
               disabled={contractData.payment_type === 'onetime' || contractData.durationInterval === 'week' || contractData.durationInterval === 'month' }>
@@ -561,10 +567,10 @@ const ProgramTransaction = (props) => {
             <div className="cmnFormCol">
               <label className='labelWithInfo'>
                 <span className="labelHeading">Tuition Amount</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={info_icon} alt="" />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
               <div className={(formErrors.amount ? "cmnFormField preField errorField" : "cmnFormField preField")}>
                 <div className='unitAmount'>
@@ -576,10 +582,10 @@ const ProgramTransaction = (props) => {
             <div className="cmnFormCol">
               <label className='labelWithInfo'>
                 <span className="labelHeading">Payment Mode</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={info_icon} alt="" />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
 
               <div className='cmnFormField'>
@@ -620,14 +626,6 @@ const ProgramTransaction = (props) => {
                 <p>1st Billing Date <span>Now</span></p>
               </div>
               <div className={contractData.firstBillingTime ? "paymentNow display" : "paymentNow"} >
-                {/* <input type="date" 
-                  name="firstBillingDate" 
-                  placeholder="mm/dd/yyyy" 
-                  min={contractData.minPaymentDate} 
-                  onChange={handelFirstBillingDateChange} 
-                  className="editableInput" 
-                  value={contractData.paymentDate} 
-                /> */}
                 <DatePicker 
                   className="cmnFieldStyle"
                   selected={payLaterDate}
@@ -643,10 +641,10 @@ const ProgramTransaction = (props) => {
 
               <label className="labelWithInfo">
                 <span className="labelHeading">Program Start Date</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={info_icon} alt="" />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
               {/* <input type="date" 
                 name="programStartDate" 
