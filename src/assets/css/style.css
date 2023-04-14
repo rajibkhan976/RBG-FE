@@ -16251,3 +16251,7 @@ automation email setting css
 .modalDependent.modalBackdrop .react-datepicker__triangle {
     left: 60px !important;
 }
+
+.react-datepicker__day--today {
+    font-weight: normal;
+}
