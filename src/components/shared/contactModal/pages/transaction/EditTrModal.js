@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
-
+import React, { useState, useEffect } from "react";
 import crossImg from "../../../../../../src/assets/images/cross.svg";
-import arrowForwardImg from "../../../../../../src/assets/images/arrow_forward.svg";
 import editForModal from "../../../../../../src/assets/images/editForModal.svg";
 import plus_icon from "../../../../../../src/assets/images/plus_icon.svg";
 import cross_small from "../../../../../../src/assets/images/cross_small.svg";
@@ -13,19 +11,19 @@ import paidCard from "../../../../../assets/images/paidCrad.svg";
 import paymentFail from "../../../../../assets/images/paymentFailed.svg";
 import cardFail from "../../../../../assets/images/cardFailed.svg";
 import Loader from "../../../Loader";
-
 import { BillingServices } from "../../../../../services/billing/billingServices";
 import { TransactionServices } from "../../../../../services/transaction/transactionServices";
 import AlertMessage from "../../../messages/alertMessage";
 import moment from "moment";
-import { utils } from "../../../../../helpers/utils";
+import { utils } from "../../../../../helpers";
 import { useSelector } from "react-redux";
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const EditTrModal = (props) => {
     const [editCardPart, setEditCardPart] = useState(true);
     const [editBankPart, setEditBankPart] = useState(false);
-
+    const [today, setToday] = useState("")
     const [editCardDetailsPart, setEditCardDetailsPart] = useState(false);
     const [editBankDetailsPart, setEditBankDetailsPart] = useState(false);
 
@@ -104,12 +102,13 @@ const EditTrModal = (props) => {
 
     const timezoneOffset = useSelector((state) => (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user.data?.organizationTimezoneInfo.utc_offset:null);
                         //    useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null)
-    useEffect(()=>{
-        console.log("timezone offset", timezoneOffset);
-    })
+    useEffect(() => {
+        let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+        setToday(timezoneDateTime);
+    }, [timezoneOffset]);
 
     useEffect(() => {
-        console.clear();
         setEditTransFormData({
             amount: props.transaction.amount,
             dueDate: props.transaction.due_date,
@@ -658,13 +657,14 @@ const EditTrModal = (props) => {
             }));
         }
     }
-    const changeTransDateHandler = (e) => {
-        console.log(e.target.value);
-        const dayNow = new Date();
-        let val = e.target.value;
-        let dateChecking = new Date(val);
-        if (dayNow < dateChecking) {
-            fieldErrorCheck.checkdate(val);
+    const changeTransDateHandler = (val) => {
+        if (val) {
+            let formattedDate = `${val.getFullYear()}-${
+                        val.getMonth() + 1
+                    }-${val.getDate()}`;
+            setEditTransFormData({ ...editTransFormData, dueDate: formattedDate });
+        } else {
+            setEditTransFormData({ ...editTransFormData, dueDate: "" });
         }
     }
     const changeTransAmountHandler = (e) => {
@@ -847,8 +847,17 @@ const EditTrModal = (props) => {
                                         </label>
                                         <div className={paylater ? "paymentNow" : "paymentNow display"}><p>Payment date <span>Now</span></p></div>
                                         <div className={paylater ? "paymentNow display" : "paymentNow"} >
-                                            <input type="date" className="cmnFieldStyle" value={editTransFormData.dueDate}
-                                                onChange={changeTransDateHandler} min={moment().format("YYYY-MM-DD")} /></div>
+                                            <DatePicker
+                                                style={{width:"133px"}}
+                                                className="cmnFieldStyle editTransactionDate"
+                                                selected={editTransFormData && editTransFormData.dueDate ? new Date(editTransFormData.dueDate) : ""}
+                                                format="dd/MM/yyyy"
+                                                dateFormat="dd/MM/yyyy"
+                                                placeholderText="dd/mm/yyyy"
+                                                onChange={(e) => changeTransDateHandler(e)}
+                                                minDate={new Date(today)}
+                                            />
+                                        </div>
                                     </div>
                                     {(formErrorMsg.dueDate && paylater) &&
                                         <div className="errorMsg">{formErrorMsg.dueDate}</div>

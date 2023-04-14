@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import Loader from "../../Loader";
 import { ContactService } from "../../../../services/contact/ContactServices";
@@ -15,6 +15,8 @@ import icon_dependent_dark from "../../../../assets/images/dependent-dark.svg";
 import dot3gray from "../../../../assets/images/dot3gray.svg";
 import cross from "../../../../assets/images/cross.svg";
 import Scrollbars from "react-custom-scrollbars-2";
+import DatePicker from "react-datepicker";
+import moment from "moment/moment";
 
 const initialDependentState = {
   name: '',
@@ -31,7 +33,7 @@ const initialDependentState = {
 }
 
 const Dependents = (props) => {
-  
+  const [today, setToday] = useState();
   const [isLoader, setIsLoader] = useState(false);
   const [phoneCountryCode, setPhoneCountryCode] = useState([]);
   const [addManually, setAddManually] = useState(false)
@@ -70,6 +72,12 @@ const Dependents = (props) => {
   const [errorMsg, setErrorMsg] = useState("");
   const messageDelay = 5000; // ms
   const dispatch = useDispatch();
+  const timezoneOffset = useSelector((state) => (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user.data?.organizationTimezoneInfo.utc_offset:null);
+  useEffect(() => {
+    let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+    let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+    setToday(timezoneDateTime);
+  }, [timezoneOffset]);
   /**
    * Auto hide success or error message
    */
@@ -280,8 +288,15 @@ const Dependents = (props) => {
    * Handle date of brith change
    * @param {*} e 
    */
-  const handleDobChange = (e) => {
-    setDependant({ ...dependant, dob: e.target.value });
+  const handleDobChange = (val) => {
+    if (val) {
+      let formattedDate = `${val.getFullYear()}-${
+          val.getMonth() + 1
+      }-${val.getDate()}`;
+      setDependant({ ...dependant, dob: formattedDate });
+    } else {
+      setDependant({ ...dependant, dob: "" });
+    }
   }
   /**
    * Handle gender change
@@ -835,20 +850,20 @@ const Dependents = (props) => {
                       <div className="cmnFormCol">
                         <div className="cmnFieldName">Birthday</div>
                         <div className={formErrors.dob ? "cmnFormField errorField" : "cmnFormField"}>
-                          <input
-                            className="cmnFieldStyle"
-                            type="date"
-                            placeholder="dd/mm/yyyy"
-                            onChange={handleDobChange}
-                            value={dependant.dob ? dependant.dob : ''}
-                            max={disableFutureDate()}
-                            disabled={toggleContactList.isCross && dependant.dob}
+                          <DatePicker
+                              disabled={toggleContactList.isCross && dependant.dob}
+                              className="cmnFieldStyle editTransactionDate"
+                              selected={dependant.dob ? new Date(dependant.dob) : ''}
+                              format="dd/MM/yyyy"
+                              dateFormat="dd/MM/yyyy"
+                              placeholderText="dd/mm/yyyy"
+                              onChange={(e) => handleDobChange(e)}
+                              maxDate={new Date(today)}
                           />
                         </div>
                       </div>
                       <div className="cmnFormCol">
                         <div className="cmnFieldName">Gender</div>
-                        {console.log('In dom before buttons', dependant)}
                         <div className="cmnFormField radioGroup" onChange={handleGenderChange}>
                           <label className="cmnFormRadioLable">
                             <div className="circleRadio">
