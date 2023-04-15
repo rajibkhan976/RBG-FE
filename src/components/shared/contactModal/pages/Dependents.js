@@ -107,14 +107,14 @@ const Dependents = (props) => {
    * Country code options
    */
   const countrycodeOpt = phoneCountryCode ? phoneCountryCode.map((el, key) => {
-    return (
-      <option value={el.code} data-dailcode={el.prefix} key={key} >{el.code} ({el.prefix})</option>
-    )
-  }
+        return (
+            <option value={el.code} data-dailcode={el.prefix} key={key} >{el.code} ({el.prefix})</option>
+        )
+      }
   ) : '';
   /**
    * Handle country code drop-down
-   * @param {*} event 
+   * @param {*} event
    */
   const handelBasicinfoMobilePhon = (event) => {
     const { name, value } = event.target;
@@ -163,7 +163,7 @@ const Dependents = (props) => {
   };
   /**
    * Handle dependent name change
-   * @param {*} e 
+   * @param {*} e
    */
   const handleDenependentName = async (e) => {
     e.preventDefault();
@@ -195,12 +195,12 @@ const Dependents = (props) => {
           "keyword": e.target.value
         }
         await DependentServices[operationMethod](payload)
-          .then(result => {
-            console.log("Search contacts result", result)
-            if (result && result.contacts.length) {
-              setToggleContactList({ ...toggleContactList, contacts: result.contacts, status: true });
-            }
-          })
+            .then(result => {
+              console.log("Search contacts result", result)
+              if (result && result.contacts.length) {
+                setToggleContactList({ ...toggleContactList, contacts: result.contacts, status: true });
+              }
+            })
       } catch (e) {
         console.log('Error in contact search: ', e)
       } finally {
@@ -250,10 +250,10 @@ const Dependents = (props) => {
   const closeModal = () => {
     setAddDependentModal(false);
     setDependant(
-      {
-        ...initialDependentState,
-        guardianId: props.contactId ? props.contactId : null,
-      }
+        {
+          ...initialDependentState,
+          guardianId: props.contactId ? props.contactId : null,
+        }
     );
     setAddManually(false);
     setToggleContactList({
@@ -270,10 +270,10 @@ const Dependents = (props) => {
   const resetDependent = (e) => {
     e.preventDefault();
     setDependant(
-      {
-        ...initialDependentState,
-        guardianId: props.contactId ? props.contactId : null,
-      }
+        {
+          ...initialDependentState,
+          guardianId: props.contactId ? props.contactId : null,
+        }
     );
     setToggleContactList({
       ...toggleContactList,
@@ -286,13 +286,16 @@ const Dependents = (props) => {
 
   /**
    * Handle date of brith change
-   * @param {*} e 
+   * @param {*} e
    */
   const handleDobChange = (val) => {
     if (val) {
-      let formattedDate = `${val.getFullYear()}-${
-          val.getMonth() + 1
-      }-${val.getDate()}`;
+      const yyyy = val.getFullYear();
+      let mm = val.getMonth() + 1; // Months start at 0!
+      let dd = val.getDate();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      let formattedDate = `${yyyy}-${mm}-${dd}`;
       setDependant({ ...dependant, dob: formattedDate });
     } else {
       setDependant({ ...dependant, dob: "" });
@@ -300,7 +303,7 @@ const Dependents = (props) => {
   }
   /**
    * Handle gender change
-   * @param {*} e 
+   * @param {*} e
    */
   const handleGenderChange = (e) => {
     console.log('Gender change', e.target.value);
@@ -308,7 +311,7 @@ const Dependents = (props) => {
   }
   /**
    * Handle communication toggle
-   * @param {*} e 
+   * @param {*} e
    */
   const handleCommunicationToggle = (e) => {
     let communicationflag = e.target.checked;
@@ -316,7 +319,7 @@ const Dependents = (props) => {
   }
   /**
    * Handle email change
-   * @param {*} event 
+   * @param {*} event
    */
   const handleEmailChange = (event) => {
     event.preventDefault();
@@ -336,7 +339,7 @@ const Dependents = (props) => {
   }
   /**
    * Handle phone change
-   * @param {*} event 
+   * @param {*} event
    */
   const handlePhoneChange = (event) => {
     event.preventDefault();
@@ -356,14 +359,14 @@ const Dependents = (props) => {
   }
   /**
    * Handle dnc change
-   * @param {*} e 
+   * @param {*} e
    */
   const handleDncChange = (e) => {
     setDependant({ ...dependant, dnc: e.target.checked })
   }
   /**
    * Handle form submit
-   * @param {*} event 
+   * @param {*} event
    */
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -421,47 +424,47 @@ const Dependents = (props) => {
       });
       //Reset errors
       setTimeout(
-        () => setFormErrors({
-          ...formErrors,
-          name: "",
-          dob: "",
-          phone: "",
-          email: ""
-        }),
-        5000
+          () => setFormErrors({
+            ...formErrors,
+            name: "",
+            dob: "",
+            phone: "",
+            email: ""
+          }),
+          5000
       );
     } else {
       /**
        * Submit the form
        */
       console.log('submit the form');
-     // setIsLoader(true);
+      // setIsLoader(true);
       try {
         let operationMethod = "createDependent";
         await DependentServices[operationMethod](dependant)
-          .then(result => {
-            console.log("Create dependent result", result)
-            let msg = 'Dependent created successfully';
-            setIsDisabled(true);
-            //setSuccessMsgPopup(msg);
-            dispatch({
-              type: actionTypes.SHOW_MESSAGE,
-              message: msg,
-              typeMessage: 'success'
-           });
-            //Close dependent create modal
-            setTimeout(() => {
-              closeModal();
-              fetchContactDependents();
-              setIsDisabled(false);
-            },
-              messageDelay
-            );
-           
-          })
-          
+            .then(result => {
+              console.log("Create dependent result", result)
+              let msg = 'Dependent created successfully';
+              setIsDisabled(true);
+              //setSuccessMsgPopup(msg);
+              dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: msg,
+                typeMessage: 'success'
+              });
+              //Close dependent create modal
+              setTimeout(() => {
+                    closeModal();
+                    fetchContactDependents();
+                    setIsDisabled(false);
+                  },
+                  messageDelay
+              );
 
-      } catch (e) { 
+            })
+
+
+      } catch (e) {
         /**
          * Segregate error by http status
          */
@@ -476,12 +479,12 @@ const Dependents = (props) => {
           });
         }
         else if (e.message) {
-         // setErrorMsgPopup(e.message);
-         dispatch({
-          type: actionTypes.SHOW_MESSAGE,
-          message: e.message,
-          typeMessage: 'error'
-        });
+          // setErrorMsgPopup(e.message);
+          dispatch({
+            type: actionTypes.SHOW_MESSAGE,
+            message: e.message,
+            typeMessage: 'error'
+          });
         }
       } finally {
         setIsLoader(false);
@@ -574,28 +577,28 @@ const Dependents = (props) => {
   }
 
   return (
-    <>
-      <div className="contactTabsInner contactTabsInnerDependents">
-        <div className="contactTabsScrollSpace">
-        <h3 className="headingTabInner">Dependents</h3>
-        {dependentList.length > 0 && (
-          <div className="transHeader">
-            <button className="saveNnewBtn" onClick={() => addDependentModalFn()}>
-              Add a Dependent <img src={arrow_forward} alt="" />
-            </button>
-            <span>Add / Edit a Dependent</span>
-          </div>
-        )}
-        {!dependentList.length &&
-          <p className="subheadingTabInner">
-            Add a Dependent
-          </p>}
+      <>
+        <div className="contactTabsInner contactTabsInnerDependents">
+          <div className="contactTabsScrollSpace">
+            <h3 className="headingTabInner">Dependents</h3>
+            {dependentList.length > 0 && (
+                <div className="transHeader">
+                  <button className="saveNnewBtn" onClick={() => addDependentModalFn()}>
+                    Add a Dependent <img src={arrow_forward} alt="" />
+                  </button>
+                  <span>Add / Edit a Dependent</span>
+                </div>
+            )}
+            {!dependentList.length &&
+                <p className="subheadingTabInner">
+                  Add a Dependent
+                </p>}
 
 
-          <div className="dependentScrollContainer">
-            <div className="dependentsListing">
-            {isLoader ? <Loader /> : ""}
-            {/* {isAlert.show ? (
+            <div className="dependentScrollContainer">
+              <div className="dependentsListing">
+                {isLoader ? <Loader /> : ""}
+                {/* {isAlert.show ? (
               <ConfirmBox
                 callback={(isConfirmed) => archiveDependent(isAlert.id, isConfirmed)}
                 message="Are you sure, you want to archive the dependent?"
@@ -603,186 +606,186 @@ const Dependents = (props) => {
             ) : (
               ""
             )} */}
-            {successMsg && <div className="popupMessage success innerDrawerMessage">
-              <p>{successMsg}</p>
-            </div>}
-            {errorMsg && <div className="popupMessage error innerDrawerMessage">
-              <p>{errorMsg}</p>
-            </div>}
-            {dependentList.length > 0 ? (
-              <>
-                <div className="row head">
-                  <div className="cell">Dependent Name</div>
-                  <div className="cell">Last Attendance</div>
-                  <div className="cell">Active Course</div>
-                  <div className="cell">DOB</div>
-                </div>
-                {dependentList.map((dependent, i) => (
-                  <>
-                    <div
-                      className={
-                        (dependent.isArchived || (isAlert.show && (isAlert.id === dependent._id))) ? "row archivedDependent" : "row"
-                      }
-                      key={i}
-                    >
-                      <div className="cell">
-                        <div className="d-flex">
-                          <div className="iconCont">
+                {successMsg && <div className="popupMessage success innerDrawerMessage">
+                  <p>{successMsg}</p>
+                </div>}
+                {errorMsg && <div className="popupMessage error innerDrawerMessage">
+                  <p>{errorMsg}</p>
+                </div>}
+                {dependentList.length > 0 ? (
+                    <>
+                      <div className="row head">
+                        <div className="cell">Dependent Name</div>
+                        <div className="cell">Last Attendance</div>
+                        <div className="cell">Active Course</div>
+                        <div className="cell">DOB</div>
+                      </div>
+                      {dependentList.map((dependent, i) => (
+                          <>
+                            <div
+                                className={
+                                  (dependent.isArchived || (isAlert.show && (isAlert.id === dependent._id))) ? "row archivedDependent" : "row"
+                                }
+                                key={i}
+                            >
+                              <div className="cell">
+                                <div className="d-flex">
+                                  <div className="iconCont">
                             <span>
                               <img src={icon_dependent} alt="" />
                             </span>
-                          </div>
-                          <div className="textCont">
-                            <h4>
-                              <em onClick={() => OpenDependentContactModal(dependent._id)} className="dependent-name">{dependent.name ? dependent.name : ((dependent.firstName ? dependent.firstName : '') + ' ' + (dependent.lastName ? dependent.lastName : ''))}</em>
-                              <div className="dndCheckbox">
+                                  </div>
+                                  <div className="textCont">
+                                    <h4>
+                                      <em onClick={() => OpenDependentContactModal(dependent._id)} className="dependent-name">{dependent.name ? dependent.name : ((dependent.firstName ? dependent.firstName : '') + ' ' + (dependent.lastName ? dependent.lastName : ''))}</em>
+                                      <div className="dndCheckbox">
                                 <span onClick={(e) => toggleDncStatus(dependent._id, i)}>
                                   <img src={dependent.dnc ? dndFalse : dnd} alt={dependent.dnc ? "Do not send notifications" : "Send notifications"} />
                                 </span>
-                              </div>
-                            </h4>
-                            <span className="d-flex">
+                                      </div>
+                                    </h4>
+                                    <span className="d-flex">
                               {dependent.isCommunication && dependent.phone && dependent.phone.dailCode && dependent.phone.number ? dependent.phone.dailCode + dependent.phone.number : ''}
-                              {dependent.phone && dependent.phone.dailCode && dependent.phone.number && dependent.email ? " | " : ''}
-                              <a
-                                className="mailCont"
-                                href={dependent.isCommunication && dependent.email ? "mailto:" + dependent.email : "javascript:void(0)"}
-                              >
+                                      {dependent.phone && dependent.phone.dailCode && dependent.phone.number && dependent.email ? " | " : ''}
+                                      <a
+                                          className="mailCont"
+                                          href={dependent.isCommunication && dependent.email ? "mailto:" + dependent.email : "javascript:void(0)"}
+                                      >
 
                                 {dependent.isCommunication && dependent.email ? dependent.email : ''}
                               </a>
                             </span>
-                            <span className="dependentDoj">{dependent.doj}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="cell">
+                                    <span className="dependentDoj">{dependent.doj}</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="cell">
                         <span className="dependentLast">
                           {dependent.lastAttend ? dependent.lastAttend : "N/A"}
                         </span>
-                      </div>
-                      <div className="cell">
+                              </div>
+                              <div className="cell">
                         <span className="dependentCourse">
                           {dependent.course ? dependent.course : "N/A"}
                         </span>
-                      </div>
-                      <div className="cell">
-                        <span className="dependentDob">{dependent.dob}</span>
-                        <button
-                          className="btn optionDependent"
-                          onClick={() => {
-                            toggleOptions(i);
-                          }}>
-                          <img src={dot3gray} alt="" />
-                        </button>
-                        <div
-                          className={
-                            option === i
-                              ? "dropdownOptions listOpen"
-                              : "listHide"
-                          }
-                        >
-                          <button
-                            className="btn btnDelete"
-                            onClick={() => {
-                              archiveDependent(dependent);
-                            }}
-                          >
+                              </div>
+                              <div className="cell">
+                                <span className="dependentDob">{dependent.dob}</span>
+                                <button
+                                    className="btn optionDependent"
+                                    onClick={() => {
+                                      toggleOptions(i);
+                                    }}>
+                                  <img src={dot3gray} alt="" />
+                                </button>
+                                <div
+                                    className={
+                                      option === i
+                                          ? "dropdownOptions listOpen"
+                                          : "listHide"
+                                    }
+                                >
+                                  <button
+                                      className="btn btnDelete"
+                                      onClick={() => {
+                                        archiveDependent(dependent);
+                                      }}
+                                  >
                             <span>
                               <svg
-                                className="deleteIcon"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="12.347"
-                                height="13.553"
-                                viewBox="0 0 12.347 13.553"
+                                  className="deleteIcon"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="12.347"
+                                  height="13.553"
+                                  viewBox="0 0 12.347 13.553"
                               >
                                 <g transform="translate(0.75 0.75)">
                                   <path
-                                    className="a"
-                                    d="M3,6H13.847"
-                                    transform="translate(-3 -3.589)"
+                                      className="a"
+                                      d="M3,6H13.847"
+                                      transform="translate(-3 -3.589)"
                                   />
                                   <path
-                                    className="a"
-                                    d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
-                                    transform="translate(-3.795 -2)"
+                                      className="a"
+                                      d="M13.437,4.411v8.437a1.205,1.205,0,0,1-1.205,1.205H6.205A1.205,1.205,0,0,1,5,12.847V4.411m1.808,0V3.205A1.205,1.205,0,0,1,8.013,2h2.411a1.205,1.205,0,0,1,1.205,1.205V4.411"
+                                      transform="translate(-3.795 -2)"
                                   />
                                   <line
-                                    className="a"
-                                    y2="3"
-                                    transform="translate(4.397 6.113)"
+                                      className="a"
+                                      y2="3"
+                                      transform="translate(4.397 6.113)"
                                   />
                                   <line
-                                    className="a"
-                                    y2="3"
-                                    transform="translate(6.397 6.113)"
+                                      className="a"
+                                      y2="3"
+                                      transform="translate(6.397 6.113)"
                                   />
                                 </g>
                               </svg>
                             </span>
-                            Archive
-                          </button>
-                        </div>
-                        {dependent.isArchived && <div className="archivedMessage">
-                          Archived </div>}
+                                    Archive
+                                  </button>
+                                </div>
+                                {dependent.isArchived && <div className="archivedMessage">
+                                  Archived </div>}
 
 
-                        {isAlert.show && (isAlert.id === dependent._id) && <div className="archivedMessage">
-                          Are you sure you want to archive this Dependents? <div className="buttonsArchived"><button className="btn" onClick={() => archiveDependent(dependent, "yes")}>Yes</button><button className="btn" onClick={() => archiveDependent(dependent, "cancel")}>No</button></div></div>}
-                      </div>
+                                {isAlert.show && (isAlert.id === dependent._id) && <div className="archivedMessage">
+                                  Are you sure you want to archive this Dependents? <div className="buttonsArchived"><button className="btn" onClick={() => archiveDependent(dependent, "yes")}>Yes</button><button className="btn" onClick={() => archiveDependent(dependent, "cancel")}>No</button></div></div>}
+                              </div>
+                            </div>
+                          </>
+                      ))}
+                    </>
+                ) : (
+                    <div className="createNew">
+                      <p>This contact doesn’t have a dependent yet.</p>
+                      <button
+                          className="saveNnewBtn"
+                          onClick={() => addDependentModalFn()}
+                      >
+                        <span>Add a Dependent</span>
+                        <img className="" src={arrow_forward} alt="" />
+                      </button>
                     </div>
-                  </>
-                ))}
-              </>
-            ) : (
-              <div className="createNew">
-                <p>This contact doesn’t have a dependent yet.</p>
-                <button
-                  className="saveNnewBtn"
-                  onClick={() => addDependentModalFn()}
-                >
-                  <span>Add a Dependent</span>
-                  <img className="" src={arrow_forward} alt="" />
-                </button>
+                )}
               </div>
-            )}
             </div>
           </div>
         </div>
-      </div>
 
-      {addDependentModal && (
-        <div className="modalDependent modalBackdrop">
-          <div className="modalBackdropBg" onClick={() => closeModal(false)}></div>
-          {isLoader ? <Loader /> : ""}
-          <div className="slickModalBody">
-            <div className="slickModalHeader">
-              <button className="topCross" onClick={() => closeModal(false)}>
-                <img src={cross} alt="" />
-              </button>
-              <div className="circleForIcon">
-                <img src={icon_dependent_dark} alt="" />
-              </div>
-              <h3>{isEditing ? "Edit " : "Add a "}Dependent</h3>
-              {/* {successMsgPopup && <div className="popupMessage success">
+        {addDependentModal && (
+            <div className="modalDependent modalBackdrop">
+              <div className="modalBackdropBg" onClick={() => closeModal(false)}></div>
+              {isLoader ? <Loader /> : ""}
+              <div className="slickModalBody">
+                <div className="slickModalHeader">
+                  <button className="topCross" onClick={() => closeModal(false)}>
+                    <img src={cross} alt="" />
+                  </button>
+                  <div className="circleForIcon">
+                    <img src={icon_dependent_dark} alt="" />
+                  </div>
+                  <h3>{isEditing ? "Edit " : "Add a "}Dependent</h3>
+                  {/* {successMsgPopup && <div className="popupMessage success">
                 <p>{successMsgPopup}</p>
               </div>}
               {errorMsgPopup && <div className="popupMessage error">
                 <p>{errorMsgPopup}</p>
               </div>} */}
-            </div>
-            <div className="modalForm">
+                </div>
+                <div className="modalForm">
 
-              <Scrollbars
-                renderThumbVertical={(props) => (
-                  <div className="thumb-vertical" />
-                )}
-              >
-                <form method="post" onSubmit={handleSubmit}>
-                  <div className="cmnFormRow">
-                    <div className="cmnFieldName d-flex f-justify-between">
-                      Name
-                      {/*addManually &&
+                  <Scrollbars
+                      renderThumbVertical={(props) => (
+                          <div className="thumb-vertical" />
+                      )}
+                  >
+                    <form method="post" onSubmit={handleSubmit}>
+                      <div className="cmnFormRow">
+                        <div className="cmnFieldName d-flex f-justify-between">
+                          Name
+                          {/*addManually &&
                         <button
                           className="inlinle-btn"
                           onClick={(e) => {
@@ -792,181 +795,181 @@ const Dependents = (props) => {
                         >
                           Select from Contacts
                         </button>*/}
-                    </div>
-                    {console.log('Dependent before name', dependant)}
-                    <div
-                      className={
-                        toggleContactList.status
-                          ? "cmnFormField listActive"
-                          : (formErrors.name ? "cmnFormField errorField" : "cmnFormField")
-                      }
-                    >
-                      <input
-                        className={processing ? "cmnFieldStyle loading" : "cmnFieldStyle"}
-                        type="text"
-                        placeholder="Eg. Steve Martyns"
-                        onChange={(e) => handleDenependentName(e)}
-                        style={{
-                          backgroundImage: toggleContactList.status
-                            ? `url(${updown})`
-                            : "",
-                        }}
-                        value={dependant.name ? dependant.name : ''}
-                        disabled={toggleContactList.isCross}
-                      />
-                      {toggleContactList.isCross ?
-                        <button className="btn crossDependent" onClick={(e) => resetDependent(e)}>
-                          <img src={cross} alt="cross" />
-                        </button> : ''}
-                      {console.log('Error message', formErrors)}
-                      {formErrors.name ? (
-                        <span className="errorMsg">{formErrors.name}</span>
-                      ) : null}
-                      {toggleContactList.status && (
-                        <>
-                          <div className="contactListItems">
-                            <ul>
-                              {toggleContactList.contacts.map((contact =>
-                                <li key={contact._id} data-id={contact._id} onClick={(e) => { handleContactSelect(e) }}>
-                                  {(contact.firstName ? contact.firstName : '') + ' ' + (contact.lastName ? contact.lastName : '')}
-                                </li>
-                              ))}
-                            </ul>
-                            <button
-                              className="btn"
-                              onClick={(e) => {
-                                e.preventDefault()
-                                setAddManually(true)
-                                toggleContactListFn(e)
+                        </div>
+                        {console.log('Dependent before name', dependant)}
+                        <div
+                            className={
+                              toggleContactList.status
+                                  ? "cmnFormField listActive"
+                                  : (formErrors.name ? "cmnFormField errorField" : "cmnFormField")
+                            }
+                        >
+                          <input
+                              className={processing ? "cmnFieldStyle loading" : "cmnFieldStyle"}
+                              type="text"
+                              placeholder="Eg. Steve Martyns"
+                              onChange={(e) => handleDenependentName(e)}
+                              style={{
+                                backgroundImage: toggleContactList.status
+                                    ? `url(${updown})`
+                                    : "",
                               }}
-                            >+ Add Manually</button>
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  </div>
-                  {addManually &&
-                    <div className="cmnFormRow">
-                      <div className="cmnFormCol">
-                        <div className="cmnFieldName">Birthday</div>
-                        <div className={formErrors.dob ? "cmnFormField errorField" : "cmnFormField"}>
-                          <DatePicker
-                              disabled={toggleContactList.isCross && dependant.dob}
-                              className="cmnFieldStyle editTransactionDate"
-                              selected={dependant.dob ? new Date(dependant.dob) : ''}
-                              format="dd/MM/yyyy"
-                              dateFormat="dd/MM/yyyy"
-                              placeholderText="dd/mm/yyyy"
-                              onChange={(e) => handleDobChange(e)}
-                              maxDate={new Date(today)}
+                              value={dependant.name ? dependant.name : ''}
+                              disabled={toggleContactList.isCross}
                           />
+                          {toggleContactList.isCross ?
+                              <button className="btn crossDependent" onClick={(e) => resetDependent(e)}>
+                                <img src={cross} alt="cross" />
+                              </button> : ''}
+                          {console.log('Error message', formErrors)}
+                          {formErrors.name ? (
+                              <span className="errorMsg">{formErrors.name}</span>
+                          ) : null}
+                          {toggleContactList.status && (
+                              <>
+                                <div className="contactListItems">
+                                  <ul>
+                                    {toggleContactList.contacts.map((contact =>
+                                            <li key={contact._id} data-id={contact._id} onClick={(e) => { handleContactSelect(e) }}>
+                                              {(contact.firstName ? contact.firstName : '') + ' ' + (contact.lastName ? contact.lastName : '')}
+                                            </li>
+                                    ))}
+                                  </ul>
+                                  <button
+                                      className="btn"
+                                      onClick={(e) => {
+                                        e.preventDefault()
+                                        setAddManually(true)
+                                        toggleContactListFn(e)
+                                      }}
+                                  >+ Add Manually</button>
+                                </div>
+                              </>
+                          )}
                         </div>
                       </div>
-                      <div className="cmnFormCol">
-                        <div className="cmnFieldName">Gender</div>
-                        <div className="cmnFormField radioGroup" onChange={handleGenderChange}>
-                          <label className="cmnFormRadioLable">
-                            <div className="circleRadio">
-                              <input type="radio" value="male" name="genderDependent" defaultChecked={dependant.gender === 'male'} />
-                              <span></span>
+                      {addManually &&
+                          <div className="cmnFormRow">
+                            <div className="cmnFormCol">
+                              <div className="cmnFieldName">Birthday</div>
+                              <div className={formErrors.dob ? "cmnFormField errorField" : "cmnFormField"}>
+                                <DatePicker
+                                    disabled={toggleContactList.isCross && dependant.dob}
+                                    className="cmnFieldStyle editTransactionDate"
+                                    selected={dependant.dob ? new Date(dependant.dob) : ''}
+                                    format="dd/MM/yyyy"
+                                    dateFormat="dd/MM/yyyy"
+                                    placeholderText="dd/mm/yyyy"
+                                    onChange={(e) => handleDobChange(e)}
+                                    maxDate={new Date(today)}
+                                />
+                              </div>
                             </div>
-                            Male
-                          </label>
-                          <label className="cmnFormRadioLable">
-                            <div className="circleRadio">
-                              <input type="radio" value="female" name="genderDependent" defaultChecked={dependant.gender === 'female'} />
-                              <span></span>
+                            <div className="cmnFormCol">
+                              <div className="cmnFieldName">Gender</div>
+                              <div className="cmnFormField radioGroup" onChange={handleGenderChange}>
+                                <label className="cmnFormRadioLable">
+                                  <div className="circleRadio">
+                                    <input type="radio" value="male" name="genderDependent" defaultChecked={dependant.gender === 'male'} />
+                                    <span></span>
+                                  </div>
+                                  Male
+                                </label>
+                                <label className="cmnFormRadioLable">
+                                  <div className="circleRadio">
+                                    <input type="radio" value="female" name="genderDependent" defaultChecked={dependant.gender === 'female'} />
+                                    <span></span>
+                                  </div>
+                                  Female
+                                </label>
+                              </div>
                             </div>
-                            Female
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                  }
-                  <div className="inFormFieldHeader d-flex w-100 f-align-center f-justify-between">
-                    <h5>Communication</h5>
-                    <label
-                      className={
-                        dependant.isCommunication ? "toggleBtn active" : "toggleBtn"
+                          </div>
                       }
-                    >
-                      <input
-                        type="checkbox"
-                        name="check-communication"
-                        onChange={(e) => handleCommunicationToggle(e)}
-                      />
-                      <span className="toggler"></span>
-                    </label>
-                  </div>
-                  {dependant.isCommunication && (
-                    <>
-                      <div className="cmnFormRow">
-                        <div className="cmnFieldName">Enter Phone No</div>
-                        <div className={formErrors.phone ? "cmnFormField countryCodeField errorField" : "cmnFormField countryCodeField"}>
-                          <div className="countryCode cmnFieldStyle">
-                            <div className="countryName">{dependant.countryCode}</div>
-                            <div className="daileCode">{dependant.dailCode}</div>
-                            <select className="selectCountry" name="countryCode" defaultValue={dependant.countryCode} onChange={handelBasicinfoMobilePhon} disabled={toggleContactList.isCross}>
-                              {countrycodeOpt}
-                            </select>
+                      <div className="inFormFieldHeader d-flex w-100 f-align-center f-justify-between">
+                        <h5>Communication</h5>
+                        <label
+                            className={
+                              dependant.isCommunication ? "toggleBtn active" : "toggleBtn"
+                            }
+                        >
+                          <input
+                              type="checkbox"
+                              name="check-communication"
+                              onChange={(e) => handleCommunicationToggle(e)}
+                          />
+                          <span className="toggler"></span>
+                        </label>
+                      </div>
+                      {dependant.isCommunication && (
+                          <>
+                            <div className="cmnFormRow">
+                              <div className="cmnFieldName">Enter Phone No</div>
+                              <div className={formErrors.phone ? "cmnFormField countryCodeField errorField" : "cmnFormField countryCodeField"}>
+                                <div className="countryCode cmnFieldStyle">
+                                  <div className="countryName">{dependant.countryCode}</div>
+                                  <div className="daileCode">{dependant.dailCode}</div>
+                                  <select className="selectCountry" name="countryCode" defaultValue={dependant.countryCode} onChange={handelBasicinfoMobilePhon} disabled={toggleContactList.isCross}>
+                                    {countrycodeOpt}
+                                  </select>
+                                </div>
+                                <input
+                                    type="text"
+                                    className="cmnFieldStyle"
+                                    placeholder="Eg. 5143654785"
+                                    onChange={(e) => handlePhoneChange(e)}
+                                    onBlur={() => validatePhoneField()}
+                                    value={dependant.phone}
+                                    disabled={dependant.phone && toggleContactList.isCross}
+                                />
+                                {formErrors.phone ? (
+                                    <span className="errorMsg">{formErrors.phone}</span>
+                                ) : null}
+                              </div>
+                            </div>
+
+                            <div className="cmnFormRow">
+                              <div className="cmnFieldName">Enter Email Address</div>
+                              <div className={formErrors.email ? "cmnFormField errorField" : "cmnFormField"}>
+                                <input
+                                    placeholder="Eg. jon.doe@gmail.com"
+                                    className="cmnFieldStyle"
+                                    type="email"
+                                    onChange={(e) => handleEmailChange(e)}
+                                    onBlur={() => validateEmailField()}
+                                    value={dependant.email}
+                                    disabled={dependant.email && toggleContactList.isCross}
+                                />
+                                {formErrors.email ? (
+                                    <span className="errorMsg">{formErrors.email}</span>
+                                ) : null}
+                              </div>
+                            </div>
+                          </>
+                      )}
+
+                      <div className="cmnFormRow noteForm checkDNC">
+                        <label>
+                          <div className="customCheckbox">
+                            <input type="checkbox" name="doNotContact" onChange={(e) => handleDncChange(e)} />
+                            <span></span>
                           </div>
-                          <input
-                            type="text"
-                            className="cmnFieldStyle"
-                            placeholder="Eg. 5143654785"
-                            onChange={(e) => handlePhoneChange(e)}
-                            onBlur={() => validatePhoneField()}
-                            value={dependant.phone}
-                            disabled={dependant.phone && toggleContactList.isCross}
-                          />
-                          {formErrors.phone ? (
-                            <span className="errorMsg">{formErrors.phone}</span>
-                          ) : null}
-                        </div>
+                          Activate DNC (Do Not Contact) for this dependent
+                        </label>
                       </div>
 
-                      <div className="cmnFormRow">
-                        <div className="cmnFieldName">Enter Email Address</div>
-                        <div className={formErrors.email ? "cmnFormField errorField" : "cmnFormField"}>
-                          <input
-                            placeholder="Eg. jon.doe@gmail.com"
-                            className="cmnFieldStyle"
-                            type="email"
-                            onChange={(e) => handleEmailChange(e)}
-                            onBlur={() => validateEmailField()}
-                            value={dependant.email}
-                            disabled={dependant.email && toggleContactList.isCross}
-                          />
-                          {formErrors.email ? (
-                            <span className="errorMsg">{formErrors.email}</span>
-                          ) : null}
-                        </div>
+                      <div className="modalbtnHolder w-100">
+                        <button className="saveDependent saveNnewBtn" disabled={isDisabled}>
+                          Add Dependent <img src={arrow_forward} alt="" />
+                        </button>
                       </div>
-                    </>
-                  )}
-
-                  <div className="cmnFormRow noteForm checkDNC">
-                    <label>
-                      <div className="customCheckbox">
-                        <input type="checkbox" name="doNotContact" onChange={(e) => handleDncChange(e)} />
-                        <span></span>
-                      </div>
-                      Activate DNC (Do Not Contact) for this dependent
-                    </label>
-                  </div>
-
-                  <div className="modalbtnHolder w-100">
-                    <button className="saveDependent saveNnewBtn" disabled={isDisabled}>
-                      Add Dependent <img src={arrow_forward} alt="" />
-                    </button>
-                  </div>
-                </form>
-              </Scrollbars>
+                    </form>
+                  </Scrollbars>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      )}
-    </>
+        )}
+      </>
   );
 };
 

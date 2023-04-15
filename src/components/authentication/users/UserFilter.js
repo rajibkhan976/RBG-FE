@@ -27,7 +27,7 @@ const UserFilter = (props) => {
     console.log(zIndexBody);
     /**
      * Handle group change
-     * @param {*} event 
+     * @param {*} event
      */
     const handleGroupChange = (event) => {
         event.preventDefault();
@@ -63,32 +63,38 @@ const UserFilter = (props) => {
     /**
      * Handle from date change
      */
-    // const handleDateChangeFrom = (event) => {
-    //     event.preventDefault();
+        // const handleDateChangeFrom = (event) => {
+        //     event.preventDefault();
 
-    //     utils.addQueryParameter(event.target.name, utils.convertTimezoneToUTC(event.target.value + " " + "00:00:01", timezoneOffset));
-       
-    //     setFromDate(event.target.value);
+        //     utils.addQueryParameter(event.target.name, utils.convertTimezoneToUTC(event.target.value + " " + "00:00:01", timezoneOffset));
 
-    //     console.log(event.target.name, event.target.value, utils.convertTimezoneToUTC(event.target.value + " " + "00:00:01", timezoneOffset) );
-    // }
+        //     setFromDate(event.target.value);
+
+        //     console.log(event.target.name, event.target.value, utils.convertTimezoneToUTC(event.target.value + " " + "00:00:01", timezoneOffset) );
+        // }
     const setStartDate = (val) => {
-        if (val) {
-            let formattedDate = `${val.getFullYear()}-${
-                val.getMonth() + 1
-            }-${val.getDate()}`;
-            setFromDate(formattedDate);
-            utils.addQueryParameter("fromDate", utils.convertTimezoneToUTC(formattedDate + " " + "00:00:01", timezoneOffset));
-        } else {
-            utils.removeQueryParameter("fromDate");
+            if (val) {
+                const yyyy = val.getFullYear();
+                let mm = val.getMonth() + 1; // Months start at 0!
+                let dd = val.getDate();
+                if (dd < 10) dd = '0' + dd;
+                if (mm < 10) mm = '0' + mm;
+                let formattedDate = `${yyyy}-${mm}-${dd}`;
+                setFromDate(formattedDate);
+                utils.addQueryParameter("fromDate", utils.convertTimezoneToUTC(formattedDate + " " + "00:00:01", timezoneOffset));
+            } else {
+                utils.removeQueryParameter("fromDate");
+            }
+            setDate(val);
         }
-        setDate(val);
-    }
     const setEndDate = (val, e) => {
         if (val) {
-            let formattedDate = `${val.getFullYear()}-${
-                val.getMonth() + 1
-            }-${val.getDate()}`;
+            const yyyy = val.getFullYear();
+            let mm = val.getMonth() + 1; // Months start at 0!
+            let dd = val.getDate();
+            if (dd < 10) dd = '0' + dd;
+            if (mm < 10) mm = '0' + mm;
+            let formattedDate = `${yyyy}-${mm}-${dd}`;
             utils.addQueryParameter("toDate", utils.convertTimezoneToUTC(formattedDate + " " + "23:59:59", timezoneOffset));
             setToDate(formattedDate);
         } else {
@@ -100,7 +106,7 @@ const UserFilter = (props) => {
 
     /**
      * Handle status change
-     * @param {*} event 
+     * @param {*} event
      */
     const handleStatusChange = (event) => {
         setStatus(event.target.value);
@@ -169,7 +175,7 @@ const UserFilter = (props) => {
                                             <p>From</p>
                                             <div className="inFormField">
                                                 {/* <input type="date" name="fromDate" id="formDate" placeholder="dd/mm/yyyy" onChange={handleDateChangeFrom} value={fromDate} /> */}
-                                                <DatePicker 
+                                                <DatePicker
                                                     className="cmnFieldStyle"
                                                     selected={date}
                                                     defaultDate={today ? new Date(today) : ""}
@@ -185,14 +191,14 @@ const UserFilter = (props) => {
                                             <p>To</p>
                                             <div className="inFormField">
                                                 {/* <input type="date" name="toDate" id="toDate" min={fromDate} placeholder="dd/mm/yyyy" onChange={handleDateChangeTo} value={toDate}/> */}
-                                                <DatePicker 
+                                                <DatePicker
                                                     className="cmnFieldStyle"
                                                     selected={date2}
                                                     defaultDate={today ? new Date(today) : ""}
                                                     format="dd/MM/yyyy"
                                                     dateFormat="dd/MM/yyyy"
                                                     placeholderText="dd/mm/yyyy"
-                                                    onChange={(e) => setEndDate(e)} 
+                                                    onChange={(e) => setEndDate(e)}
                                                     minDate={new Date(date)}
                                                     maxDate={new Date(today)}
                                                 />
