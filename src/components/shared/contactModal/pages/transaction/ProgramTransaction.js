@@ -63,12 +63,11 @@ const ProgramTransaction = (props) => {
 
   useEffect(() => {
       let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
-      let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
-      let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
-      setCalenderMinDate(formatedDateTime);
-      setPayLaterDate(new Date(formatedDateTime))
-      // setSelectedFrom(formatedDateTime);
-      // setSelectedTo(formatedDateTime);
+      let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset, "YYYY-MM-DD");
+      let tomorrowDate = moment().add(1, 'days').utc().format("YYYY-MM-DD HH:mm:ss");
+      let tomorrowsDateConverted = utils.convertUTCToTimezone(tomorrowDate ,timezoneOffset, "YYYY-MM-DD");
+      setCalenderMinDate(timezoneDateTime);
+      setPayLaterDate(new Date(tomorrowsDateConverted))
       setStartDate(null);
   }, []);
 
