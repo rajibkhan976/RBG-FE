@@ -120,11 +120,12 @@ useEffect(()=>{
       for (let atten of attendances.attendance) {
         const convertCheckInAt = utils.convertUTCToTimezone(atten?.checkedInAt, timezoneOffset);
         const checInAtProperFormat = moment(convertCheckInAt).format("YYYY-MM-DD hh:mm:ss")
+        // console.log("===================================", convertCheckInAt);
         let eventObj = {
           // start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
           start: moment(convertCheckInAt).format("YYYY-MM-DD hh:mm:ss"),
           // checkedInAt: convertUTCtoTZ(atten.checkedInAt), 
-          checkedInAt: checInAtProperFormat,
+          checkedInAt: convertCheckInAt,
           note: atten.note,
           name: atten.contact.firstName + " " + atten.contact.lastName,
           email: atten.contact.email,
@@ -201,7 +202,8 @@ useEffect(()=>{
             if (convertUTCtoTZ(convertCheckInAt, "YYYY-MM-DD") === eventObj.start) {
               checkedInObj.push({
                 // checkedInAt: convertUTCtoTZ(atten.checkedInAt),
-                checkedInAt: moment(convertCheckInAt).format("YYYY-MM-DD hh:mm:ss"),
+                // checkedInAt: moment(convertCheckInAt).format("YYYY-MM-DD hh:mm:ss"),
+                checkedInAt: convertCheckInAt,
                 note: atten.note,
                 name: atten.contact.firstName + " " + atten.contact.lastName,
                 email: atten.contact.email,
@@ -360,13 +362,12 @@ useEffect(()=>{
     }
     // console.log("Start", e.event._instance.range.start);
     // console.log("End", e.event._instance.range.end);
-    // console.log("Check In", e.event.extendedProps.checkedInAt);
+    console.log("Check In ================", e.event.extendedProps.checkedInAt);
     if (e.view.type == "listMonth") {
       let isHoliday = e.event.extendedProps?.isHoliday ? true : false;
       let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
       let eventDate = moment(dateSource).format("ddd, DD");
-
-      console.log("Before conversion event date", dateSource);
+      console.log("Date source", dateSource);
       // let eventDate = utils.convertUTCToTimezone(convertUTCtoTZ(dateSource, "YYYY-MM-DD hh:mm:ss"), timezoneOffset).split(",")[0].split(" ").join(", ");
       // let convertUTCToTimezone = utils.convertUTCToTimezone(dateSource, timezoneOffset);
       // console.log("After conversion Event Date", convertUTCToTimezone);
@@ -376,7 +377,7 @@ useEffect(()=>{
       }
       // let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
       // let eventTime = utils.convertUTCToTimezone(dateSource, timezoneOffset).split(" ").splice(3,4).join(" ");
-      let eventTime = dateSource;
+      let eventTime = dateSource.toString().split(" ").splice(3,4).join(" ");
       // console.log("dateSource event time", convertUTCToTimezone.split(" ").splice(3, 4).join(" "))
       if (e.event.extendedProps.checkInBy) {
         // console.log("event dateSource >>>", e.event.extendedProps.checkedInAt, convertUTCtoTZ(e.event.extendedProps.checkedInAt, "YYYY-MM-DD HH:mm:ss"))
@@ -396,7 +397,7 @@ useEffect(()=>{
               </span> */}
               <span className='fc-list-event-time'>
                 {e.event.extendedProps.checkInBy &&
-                  <span className="norm" > {eventTime? moment(eventTime).format("hh:mm A"): ''}</span>
+                  <span className="norm" > {eventTime? eventTime : ''}</span>
                 }
               </span>
               <span className='fc-list-event-new-tooltip'>
