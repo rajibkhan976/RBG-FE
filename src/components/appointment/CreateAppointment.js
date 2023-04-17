@@ -253,6 +253,7 @@ const CreateAppointment = (props) => {
           }-${val.getDate()}`;
         console.log('vallllllllllllllllllllllllllll', formattedDate)
         setDate(val);
+        formattedDate = moment(formattedDate).format("YYYY-MM-DD");
         const dateDiff = utils.dateDiff(formattedDate);
         if(dateDiff.difference <= 0) {
             console.log("Today")

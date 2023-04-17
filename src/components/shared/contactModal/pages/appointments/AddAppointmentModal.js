@@ -204,15 +204,16 @@ const AddAppointmentModal = (props) => {
     console.log("date value:", val);
     const convertFromDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD")+ " " + utils.timeConversion(appointmentData?.fromTime), timezoneOffset);
     const convertToDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD")+ " " + utils.timeConversion(appointmentData?.toTime), timezoneOffset);
-    // console.log("convert from date time", convertFromDateTime);
-    // console.log("Convert to date time", convertToDateTime);
+    console.log("convert from date time", convertFromDateTime);
+    console.log("Convert to date time", convertToDateTime);
     let validErrors = {...validationErrors};
     let isDisabled = false;
     let formattedDate = `${val.getFullYear()}-${
         val.getMonth() + 1
       }-${val.getDate()}`;
     setDate(val);
-
+    formattedDate = moment(formattedDate).format("YYYY-MM-DD");
+    
     const dateDiff = utils.dateDiff(formattedDate);
     if (dateDiff.difference <= 0) {
       console.log("Today")
