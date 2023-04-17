@@ -14,8 +14,9 @@ import noRecords from "../../../assets/images/noRecords.svg";
 import Moment from "moment";
 import ConfirmBox from "../../shared/confirmBox";
 import * as actionTypes from "../../../actions/types";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { Link } from "react-router-dom";
+import { utils } from "../../../helpers";
 
 const StatusPhases = (props) => {
     document.title = "Red Belt Gym - Status and Phase";
@@ -221,6 +222,10 @@ const StatusPhases = (props) => {
     useEffect(() => {
         fetchPhases();
     }, [])
+    const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
+    useEffect(()=>{
+      console.log("status phases time zone", timezoneOffset);
+    })
     return (
         <>
             {isConfirmed.show ? (
@@ -266,7 +271,10 @@ const StatusPhases = (props) => {
                                         <div className="statusNameWraper"><span className="statusNames">{elem.name}</span>
                                             <Link to={"/contacts?status=" + elem._id} ><span className="statusCounts">{elem.contactCount ? elem.contactCount : 0}</span></Link></div>
                                         <div className="bigspace colorFade"><span className="statusDesc">{elem.description}</span></div>
-                                        <div className="colorFade">{Moment(elem.createdAt).isValid() ? Moment(elem.createdAt).format('LLL') : elem.createdAt}</div>
+                                        <div className="colorFade">
+                                            {/* {Moment(elem.createdAt).isValid() ? Moment(elem.createdAt).format('LLL') : elem.createdAt} */}
+                                            {utils.convertUTCToTimezone(elem?.createdAt, timezoneOffset)}
+                                            </div>
                                         <div className="action">
                                             {/*<label className={elem.status ? "toggleBtn active" : "toggleBtn"}>
                                                 <input type="checkbox"

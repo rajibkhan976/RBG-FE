@@ -209,10 +209,10 @@ const MainComponent = () => {
         }
     }
     useEffect(() => {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            // await detectTimezone(position.coords.latitude, position.coords.longitude);
-            dispatch(GetPositionMiddleware.getPosition(position.coords.latitude, position.coords.longitude));
-        });
+        // navigator.geolocation.getCurrentPosition(function (position) {
+        //     // await detectTimezone(position.coords.latitude, position.coords.longitude);
+        //     dispatch(GetPositionMiddleware.getPosition(position.coords.latitude, position.coords.longitude));
+        // });
     }, [])
     useEffect(() => {
         if (isNewNotification) {
@@ -288,7 +288,8 @@ const MainComponent = () => {
                     isPackage: userDetails.organization ? userDetails.organization.package ? true : false : false,
                     packageId: userDetails.organization ? userDetails.organization.package ? userDetails.organization.package._id : '' : '',
                     autoRenewLimit: userDetails.creditUsage ? userDetails.creditUsage.autoRenewLimit ? userDetails.creditUsage.autoRenewLimit : 0 : 0,
-                    organizationTimezone: userDetails.organization ?. timezone ? userDetails.organization.timezone : ""
+                    organizationTimezone: userDetails.organization ?. timezone ? userDetails.organization.timezone : "",
+                    organizationTimezoneInfo : userDetails.organization?.timezoneInfo? userDetails.organization.timezoneInfo : ""
                 };
                 dispatch({
                     type: actionTypes.USER_DATA,

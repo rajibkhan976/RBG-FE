@@ -140,7 +140,7 @@ const BillingOverview = (props) => {
                 console.log("4");
             }
         } catch (error) {
-            console.log(error.displayErrors());
+            console.log(error);
         } finally {
             console.log("accounts loaded!");
             if ((cardBanksList.banks.length === 0 && cardBanksList.cards.length === 0) || (!cardBanksList.primary || cardBanksList.primary === null)) {

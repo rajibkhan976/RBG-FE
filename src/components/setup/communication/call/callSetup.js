@@ -416,7 +416,10 @@ const CallSetup = () => {
         setEditConfig(config);
         openConfigModal();
     }
-
+    const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
+    useEffect(()=>{
+      console.log("call setup time zone", timezoneOffset);
+    })
     return(
         <div className="dashInnerUI">
             {isLoader ? <Loader /> : ''}
@@ -842,7 +845,10 @@ const CallSetup = () => {
                                           {/* {moment(list.createdAt).format(
                                             "MM/DD/YYYY h:mm a"
                                           )}<br/> */}
-                                          {utils.convertUTCToTimezone(list.createdAt, timezone, "MM/DD/YYYY h:mm a")}
+                                          {/* {list.createdAt} */}
+                                          {/* {utils.convertUTCToTimezone(list.createdAt, timezone, "MM/DD/YYYY h:mm a")} */}
+                                          {list?.createdAt}
+                                          {/* {utils.convertUTCToTimezone(list?.createdAt, timezoneOffset)} */}
                                         </button>
                                         <div className="info_3dot_icon">
                                           <button

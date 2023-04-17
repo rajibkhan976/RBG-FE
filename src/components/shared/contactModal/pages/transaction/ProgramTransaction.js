@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useSelector } from "react-redux";
 import aaroww from "../../../../../assets/images/arrow_forward.svg";
 import info_icon from "../../../../../assets/images/infos.svg";
 import bell from "../../../../../assets/images/bell.svg";
@@ -9,8 +10,13 @@ import DownPayments from "./DownPayments";
 import moment from "moment";
 import AddCourseModal from "../../../../setup/course/src/addCourseModal";
 import { CourseServices } from "../../../../../services/setup/CourseServices";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 
 const ProgramTransaction = (props) => {
+  const [startDate, setStartDate] = useState();
+  const [payLaterDate, setPayLaterDate] = useState();
+  const [calenderMinDate, setCalenderMinDate] = useState();
   const [isLoader, setIsLoader] = useState(false);
 
   const [isAddPogramModal, setIsAddPogramModal] = useState(false);
@@ -51,6 +57,22 @@ const ProgramTransaction = (props) => {
     amount: "",
     billing_cycle: ""
   });
+
+  const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user?.data?.organizationTimezoneInfo.utc_offset:null);
+  useEffect(()=>{
+      console.log("transaction filter time zone", timezoneOffset);
+  })
+
+  useEffect(() => {
+      let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+      let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+      let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
+      setCalenderMinDate(formatedDateTime);
+
+      // setSelectedFrom(formatedDateTime);
+      // setSelectedTo(formatedDateTime);
+      setStartDate(null);
+  }, []);
 
   const getLatestClone = () => JSON.parse(JSON.stringify(contractData));
   const addDownPaymentsRef = useRef();
@@ -233,17 +255,43 @@ const ProgramTransaction = (props) => {
   }
 
   //First billing date change
-  const handelFirstBillingDateChange = (e) => {
-    e.preventDefault();
-    console.log('first billing date change', e.target.value);
-    setContractData({ ...contractData, paymentDate: e.target.value, isPayNow: 0 });
+  // const handelFirstBillingDateChange = (e) => {
+  //   e.preventDefault();
+  //   console.log('first billing date change', e.target.value);
+  //   setContractData({ ...contractData, paymentDate: e.target.value, isPayNow: 0 });
+  // }
+
+  const handelFirstBillingDateChange = (val) => {
+    if (val) {
+      const yyyy = val.getFullYear();
+      let mm = val.getMonth() + 1; // Months start at 0!
+      let dd = val.getDate();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      let formattedDate = `${yyyy}-${mm}-${dd}`;
+      setPayLaterDate(val);
+      setContractData({ ...contractData, paymentDate: formattedDate, isPayNow: 0  });
+    }
   }
 
   //Program start date change
-  const handelProgramStartDateChange = (e) => {
-    e.preventDefault();
-    console.log('Program start date change', e.target.value);
-    setContractData({ ...contractData, courseStart: e.target.value });
+  // const handelProgramStartDateChange = (e) => {
+  //   e.preventDefault();
+  //   console.log('Program start date change', e.target.value);
+  //   setContractData({ ...contractData, courseStart: e.target.value });
+  // }
+
+  const handelProgramStartDateChange = (val) => {
+    if (val) {
+      const yyyy = val.getFullYear();
+      let mm = val.getMonth() + 1; // Months start at 0!
+      let dd = val.getDate();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      let formattedDate = `${yyyy}-${mm}-${dd}`;
+      setStartDate(val);
+      setContractData({ ...contractData, courseStart: formattedDate });
+    }
   }
 
   //Auto renew 
@@ -417,10 +465,10 @@ const ProgramTransaction = (props) => {
             <div className="cmnFormRow">
               <label className="labelWithInfo">
                 <span className="labelHeading">Select Program</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={info_icon} alt="" />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
 
               <div
@@ -465,10 +513,10 @@ const ProgramTransaction = (props) => {
           <div className="formsection gap">
             <label className="labelWithInfo">
               <span className="labelHeading">Duration</span>
-              <span className="infoSpan">
+              {/*<span className="infoSpan">
                 <img src={info_icon} alt="" />
                 <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-              </span>
+              </span>*/}
             </label>
             <span className={(formErrors.duration ? "leftSecTransaction errorField" : "leftSecTransaction")}>
               <input type="text" className="cmnFieldStyle" onChange={handleDurationChange} value={contractData.duration} />
@@ -489,10 +537,10 @@ const ProgramTransaction = (props) => {
 
               <label className="labelWithInfo">
                 <span className="labelHeading">Payment Type</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={info_icon} />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
               <select className="selectBox" name="paymentType" value={contractData.payment_type} onChange={handelPaymentTypeChange}>
                 <option value="onetime">Onetime</option>
@@ -502,10 +550,10 @@ const ProgramTransaction = (props) => {
             <span className={formErrors.billing_cycle ? "rightSecTransaction errorField" : "rightSecTransaction"}>
               <label className="labelWithInfo">
                 <span className="labelHeading">Billing Cycle</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={props.info_icon} />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
               <select className="selectBox" name="billingCycle" value={contractData.billing_cycle} onChange={handelBillingCycleChange} 
               disabled={contractData.payment_type === 'onetime' || contractData.durationInterval === 'week' || contractData.durationInterval === 'month' }>
@@ -519,10 +567,10 @@ const ProgramTransaction = (props) => {
             <div className="cmnFormCol">
               <label className='labelWithInfo'>
                 <span className="labelHeading">Tuition Amount</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={info_icon} alt="" />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
               <div className={(formErrors.amount ? "cmnFormField preField errorField" : "cmnFormField preField")}>
                 <div className='unitAmount'>
@@ -534,10 +582,10 @@ const ProgramTransaction = (props) => {
             <div className="cmnFormCol">
               <label className='labelWithInfo'>
                 <span className="labelHeading">Payment Mode</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={info_icon} alt="" />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
 
               <div className='cmnFormField'>
@@ -578,19 +626,42 @@ const ProgramTransaction = (props) => {
                 <p>1st Billing Date <span>Now</span></p>
               </div>
               <div className={contractData.firstBillingTime ? "paymentNow display" : "paymentNow"} >
-                <input type="date" name="firstBillingDate" placeholder="mm/dd/yyyy" min={contractData.minPaymentDate} onChange={handelFirstBillingDateChange} className="editableInput" value={contractData.paymentDate} />
+                <DatePicker 
+                  className="cmnFieldStyle"
+                  selected={payLaterDate}
+                  format="dd/MM/yyyy"
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="dd/mm/yyyy"
+                  onChange={(e) => handelFirstBillingDateChange(e)} 
+                  minDate={new Date(moment(calenderMinDate).add(1, "days"))}
+                />
               </div>
             </div>
             <div className={formErrors.courseStart ? "rightSecTransaction errorField" : "rightSecTransaction"}>
 
               <label className="labelWithInfo">
                 <span className="labelHeading">Program Start Date</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={info_icon} alt="" />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
-              <input type="date" name="programStartDate" placeholder="mm/dd/yyyy" onChange={handelProgramStartDateChange} className="programStartDate cmnFieldStyle" defaultValue={contractData.courseStart} />
+              {/* <input type="date" 
+                name="programStartDate" 
+                placeholder="mm/dd/yyyy" 
+                onChange={handelProgramStartDateChange} 
+                className="programStartDate cmnFieldStyle" 
+                defaultValue={contractData.courseStart} 
+              /> */}
+              <DatePicker 
+                  className="cmnFieldStyle"
+                  selected={startDate}
+                  format="dd/MM/yyyy"
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="dd/mm/yyyy"
+                  onChange={(e) => handelProgramStartDateChange(e)} 
+                  minDate={new Date(calenderMinDate)}
+              />
             </div>
           </div>
           <div className="formsection gap autoRenew">

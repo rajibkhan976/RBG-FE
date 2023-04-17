@@ -187,5 +187,6 @@
 
 # HOTFIX V1.3.3
     - Terms and Conditions page release date given
+    
 # HOTFIX V1.3.4
     - Fixed organization create issue

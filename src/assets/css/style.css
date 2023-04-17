@@ -12990,9 +12990,9 @@ td:has(a.hasAttendance) {
     opacity: 1;
 }
 
-.global-attendance .fc .fc-daygrid-day.fc-day-today {
-    background: linear-gradient(180deg, #CDFBFF 0%, #FFFFFF 100%);
-}
+/*.global-attendance .fc .fc-daygrid-day.fc-day-today {*/
+/*    background: linear-gradient(180deg, #CDFBFF 0%, #FFFFFF 100%);*/
+/*}*/
 
 .global-attendance .fc-list-event-graphic {
     display: none;
@@ -13298,7 +13298,7 @@ td:has(a.hasAttendance) {
 }
 
 .overviewTable .listHead.auto_history {
-    z-index: 2;
+    z-index: 1;
     top: 82px;
     background-color: #f6f8fa;
 }
@@ -16210,4 +16210,52 @@ automation email setting css
 
 .privacyLink:hover {
     color: #333;
+}
+
+/* .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, a.ui-button:active, .ui-button:active, .ui-button.ui-state-active:hover {
+    background: #f6f6f6;
+    border: 1px solid #c5c5c5;
+    color: #454545;  
+  } */
+
+  /* button.ui-datepicker-current { display: none !important; } */
+  
+  /* .global-attendance .fc .fc-daygrid-day.fc-day-today{
+    background: #0099ff !important;
+  } */
+
+  .inFormField input.autoHistoryDateInput {
+    width: 135px;
+  }
+
+.react-datepicker__day--keyboard-selected, 
+.react-datepicker__day--keyboard-selected:hover {
+    background: transparent;
+}
+  /* ================================ */
+        /* ract datepicker css */
+  /* ================================ */
+
+.react-datepicker-popper {
+    z-index: 10;
+}
+
+.cmnFormRow.fullWidth.flatForm .cmnFieldStyle.editTransactionDate {
+    width: 181px;
+}
+
+.modalDependent.modalBackdrop .react-datepicker-popper {
+    transform: translate(50%, 40px) !important;
+}
+
+.modalDependent.modalBackdrop .react-datepicker__triangle {
+    left: 60px !important;
+}
+
+.react-datepicker__day--today {
+    font-weight: normal;
+}
+.react-datepicker__day--keyboard-selected, 
+.react-datepicker__day--keyboard-selected:hover {
+    background: transparent;
 }
