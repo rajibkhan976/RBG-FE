@@ -14,9 +14,13 @@ import Loader from "../../shared/Loader";
 import * as actionTypes from '../../../actions/types'
 import Pagination from '../../shared/Pagination';
 import moment from 'moment';
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 
 export default function AutomationHistory(props) {
-    const { automationId } = useParams();
+    const [date, setDate] = useState();
+    const [date2, setDate2] = useState();
+    const [today, setToday] = useState("")
     const [trigger, setTrigger] = useState("trigger");
     const [automationHistory, setAutomationHistory] = useState(props.automationHistory);
     const [paginationData, setPaginationData] = useState(props.paginationData);
@@ -31,6 +35,14 @@ export default function AutomationHistory(props) {
     const timezone = props.timezone;
     const dispatch = useDispatch();
 
+
+    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
+    useEffect(() => {
+        let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+        setToday(timezoneDateTime);
+    }, [timezoneOffset]);
+
     useEffect(() => {
         setAutomationHistory(props.automationHistory);
         setPaginationData(props.paginationData);
@@ -42,7 +54,6 @@ export default function AutomationHistory(props) {
             let steps = props.automationDetails.blueprint.filter(el => !el.id.includes('edge-'));
             setTotalSteps(steps.length);
         }
-
     }, [props]);
     const toggleOptions = (index) => {
         setOption(index !== option ? index : null);
@@ -59,7 +70,7 @@ export default function AutomationHistory(props) {
             // const fromDate = localtime.clone().utc().format("YYYY-MM-DD");
             // console.log("UTC FROM --",fromDate);
             // console.log(fromDt)
-            queryParams.append("fromDate", from);
+            queryParams.append("fromDate", decodeURIComponent(from));
         }
         if (to) {
             // const toDt = to;
@@ -67,7 +78,8 @@ export default function AutomationHistory(props) {
             // const toDate = localtime.clone().utc().format("YYYY-MM-DD");
             // // console.log(toDt);
             // console.log("UTC TO --",toDate);
-            queryParams.append("toDate", to);
+            queryParams.append("toDate", decodeURIComponent(to));
+            // console.log("filterData.fromDate", decodeURIComponent((utils.convertTimezoneToUTC(filterData.fromDate + " " + "00:00:01", timezoneOffset))));
         }
         if (status) {
             queryParams.append("status", status);
@@ -79,21 +91,41 @@ export default function AutomationHistory(props) {
         props.fetchHistory();
     }, []);
 
-    const handleFromDate = (e) => {
-        const { value } = e.target;
-        setFilterData(prevState => ({ ...prevState, fromDate: value, toDate: value }));
-    };
+    const setStartDate = (val) => {
+        if (val) {
+            const yyyy = val.getFullYear();
+            let mm = val.getMonth() + 1; // Months start at 0!
+            let dd = val.getDate();
+            if (dd < 10) dd = '0' + dd;
+            if (mm < 10) mm = '0' + mm;
+            let formattedDate = `${yyyy}-${mm}-${dd}`;
+            setFilterData(prevState => ({ ...prevState, fromDate: formattedDate }));
+        } else {
+            setFilterData(prevState => ({ ...prevState, fromDate: "" }));
+            setDate2("")
+        }
+        setDate(val);
+    }
 
-    const handletoDate = (e) => {
-        const { value } = e.target;
-        setFilterData(prevState => ({ ...prevState, toDate: value }));
-    };
+    const setEndDate = (val) => {
+        if (val) {
+            const yyyy = val.getFullYear();
+            let mm = val.getMonth() + 1; // Months start at 0!
+            let dd = val.getDate();
+            if (dd < 10) dd = '0' + dd;
+            if (mm < 10) mm = '0' + mm;
+            let formattedDate = `${yyyy}-${mm}-${dd}`;
+            setFilterData(prevState => ({ ...prevState, toDate: formattedDate }));
+        } else {
+            setFilterData(prevState => ({ ...prevState, toDate: "" }));
+        }
+        setDate2(val);
+    }
 
     const handleStatus = (e) => {
         const { value } = e.target;
         setFilterData(prevState => ({ ...prevState, status: value }));
     };
-
     const handleApplyFilter = () => {
         if (filterData.fromDate && !filterData.toDate) {
             dispatch({
@@ -105,9 +137,14 @@ export default function AutomationHistory(props) {
         }
         // const queryParams = Object.entries(filterData).filter(el => el[1] !== '').map(el => `${el[0]}=${el[1]}`).join("&");
         // fetchHistory(queryParams)
+
         if (filterData.fromDate) {
-            utils.addQueryParameter('fromDate', filterData.fromDate);
-            utils.addQueryParameter('toDate', filterData.toDate);
+            //utils.addQueryParameter('fromDate', filterData.fromDate);
+            //utils.addQueryParameter('toDate', filterData.toDate);
+            utils.addQueryParameter('fromDate', utils.convertTimezoneToUTC(filterData.fromDate + " " + "00:00:01", timezoneOffset).replace(' ', 'T').trim() + '.000Z');
+            utils.addQueryParameter('toDate', utils.convertTimezoneToUTC(filterData.toDate + " " + "23:59:59", timezoneOffset).replace(' ', 'T').trim() + '.000Z');
+
+
         } else {
             utils.removeQueryParameter('fromDate');
             utils.removeQueryParameter('toDate');
@@ -158,27 +195,33 @@ export default function AutomationHistory(props) {
                         <div className="formField">
                             <p>From</p>
                             <div className="inFormField">
-                                <input
-                                    type="date"
-                                    name='fromdate'
-                                    max={moment().format('YYYY-MM-DD')}
-                                    onChange={handleFromDate}
-                                    placeholder="dd/mm/yyyy"
-                                    value={filterData.fromDate}
+                                <DatePicker
+                                    style={{width:"133px"}}
+                                    className="cmnFeldStyle autoHistoryDateInput"
+                                    selected={date}
+                                    defaultDate={today ? new Date(today) : ""}
+                                    format="dd/MM/yyyy"
+                                    dateFormat="dd/MM/yyyy"
+                                    placeholderText="dd/mm/yyyy"
+                                    onChange={(e) => setStartDate(e)}
+                                    maxDate={new Date(today)}
                                 />
                             </div>
                         </div>
                         <div className="formField">
                             <p>To</p>
                             <div className="inFormField">
-                                <input type="date"
-                                    name='todate'
-                                    min={filterData.fromDate}
-                                    max={moment().format('YYYY-MM-DD')}
-                                    disabled={(filterData.fromDate) ? false : true}
-                                    onChange={handletoDate}
-                                    value={(filterData.fromDate) ? filterData.toDate : ''}
-                                    placeholder="dd/mm/yyyy" />
+                                <DatePicker
+                                    className="cmnFieldStyle autoHistoryDateInput"
+                                    selected={date2}
+                                    defaultDate={today ? new Date(today) : ""}
+                                    format="dd/MM/yyyy"
+                                    dateFormat="dd/MM/yyyy"
+                                    placeholderText="dd/mm/yyyy"
+                                    onChange={(e) => setEndDate(e)}
+                                    minDate={new Date(date)}
+                                    maxDate={new Date(today)}
+                                />
                             </div>
                         </div>
                         <div className="formField selectStatusOverview">
@@ -193,7 +236,7 @@ export default function AutomationHistory(props) {
                         </div>
 
                         <button className="btn btn-dBlue btn-Overviewfilter"
-                            onClick={handleApplyFilter}>
+                                onClick={handleApplyFilter}>
                             Apply Filter
                             <img className="" src={arrow_forward} alt="" />
                         </button>
@@ -224,7 +267,6 @@ export default function AutomationHistory(props) {
                         automationHistory.map((elem, i) => {
                             return (
                                 <>
-                                    {/* {console.log(elem)} */}
                                     <div className={togOption === i ? "listRow opened" : "listRow"} key={"automation_history_" + i} >
                                         <div className="listCell cellWidth_20">
                                             <figure
@@ -278,11 +320,19 @@ export default function AutomationHistory(props) {
                                         </div>
                                         <div className="listCell cellWidth_15" onClick={() => toggleDetails(i)}>
                                             {/* {utils.convertUTCToTimezone(elem.createdAt, timezone, "LLL")} */}
-                                            {moment(elem.createdAt).format("YYYY-MM-DD")}
+                                            {/* {moment(elem.createdAt).format("YYYY-MM-DD")}  */}
+                                            {utils.convertUTCToTimezone(elem.createdAt,timezoneOffset)
+                                                //.split(" ").splice(0,3).join(" ")
+                                            }
+
                                         </div>
                                         <div className="listCell cellWidth_15" onClick={() => toggleDetails(i)}>
                                             {/* {(elem?.completedAt) ? utils.convertUTCToTimezone(elem?.completedAt, timezone, "LLL") : "-"} */}
-                                            {(elem ?.completedAt) ? moment(elem.completedAt).format("YYYY-MM-DD") : "-"}
+                                            {/* {(elem ?.completedAt) ? moment(elem.completedAt).format("YYYY-MM-DD") : "-"} */}
+                                            {(elem ?.completedAt) ? utils.convertUTCToTimezone(elem.completedAt,timezoneOffset)
+                                                //.split(" ").splice(0,3).join(" ")
+                                                : "-"}
+
                                         </div>
                                         <div className="listCell cellWidth_5">
                                             <div className="info_3dot_icon">
@@ -300,7 +350,7 @@ export default function AutomationHistory(props) {
                                                     }
                                                 >
                                                     <button className="btn btnEdit"
-                                                        onClick={() => refresh(elem._id)}>
+                                                            onClick={() => refresh(elem._id)}>
                                                         <span>
 
                                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -525,8 +575,8 @@ export default function AutomationHistory(props) {
                         callback={() => props.fetchHistory(props.automationId)}
                     />
                 ) : (
-                        ""
-                    )}
+                    ""
+                )}
             </div>
         </Fragment>
     )

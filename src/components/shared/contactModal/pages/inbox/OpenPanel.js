@@ -84,6 +84,7 @@ useEffect(() => {
   }
  
  const closePanel = (data) =>{
+  console.log(data);
   setSmsPanel(data);
   setCallPanel(data);
   setEmailPanel(data);

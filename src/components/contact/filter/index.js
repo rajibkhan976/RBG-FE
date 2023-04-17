@@ -9,9 +9,15 @@ import Loader from "../../shared/Loader";
 import {ContactService} from "../../../services/contact/ContactServices";
 import {utils} from "../../../helpers";
 import * as actionTypes from "../../../actions/types";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
 
 function ImportFilter(props) {
+    const [date, setDate] = useState();
+    const [date2, setDate2] = useState();
+    const [today, setToday] = useState();
     const [isLoader, setIsLoader] = useState(false);
     const [phases, setPhases] = useState([]);
     const [status, setStatus] = useState([]);
@@ -41,17 +47,45 @@ function ImportFilter(props) {
             setStatus([]);
         }
     }
+    const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null);
+    useEffect(() => {
+        let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+        setToday(timezoneDateTime);
+    }, [timezoneOffset]);
     const handleStatusChange = (event) => {
         setSelectedStatus(event.target.value);
     }
     const handleUserChange = (event) => {
         setSelectedUser(event.target.value);
     }
-    const handleToChange = (event) => {
-        setSelectedTo(event.target.value);
+    const setEndDate = (val) => {
+        if (val) {
+            const yyyy = val.getFullYear();
+            let mm = val.getMonth() + 1; // Months start at 0!
+            let dd = val.getDate();
+            if (dd < 10) dd = '0' + dd;
+            if (mm < 10) mm = '0' + mm;
+            let formattedDate = `${yyyy}-${mm}-${dd}`;
+            setSelectedTo(formattedDate);
+        } else {
+            setSelectedTo("");
+        }
+        setDate2(val);
     }
-    const handleFromChange = (event) => {
-        setSelectedFrom(event.target.value);
+    const setStartDate = (val) => {
+        if (val) {
+            const yyyy = val.getFullYear();
+            let mm = val.getMonth() + 1; // Months start at 0!
+            let dd = val.getDate();
+            if (dd < 10) dd = '0' + dd;
+            if (mm < 10) mm = '0' + mm;
+            let formattedDate = `${yyyy}-${mm}-${dd}`;
+            setSelectedFrom(formattedDate);
+        } else {
+            setSelectedFrom("");
+        }
+        setDate(val);
     }
     const handleSourceChange = (event) => {
         setSelectedSource(event.target.value);
@@ -66,12 +100,14 @@ function ImportFilter(props) {
             utils.removeQueryParameter('createdBy')
         }
         if (selectedFrom) {
-            utils.addQueryParameter('fromDate', selectedFrom);
+            let convertFrom = utils.convertTimezoneToUTC(selectedFrom + " " + "00:00:01", timezoneOffset);
+            utils.addQueryParameter('fromDate', convertFrom);
         } else {
             utils.removeQueryParameter('fromDate')
         }
         if (selectedTo) {
-            utils.addQueryParameter('toDate', selectedTo);
+            let convertTo = utils.convertTimezoneToUTC(selectedTo + " " + "23:59:59", timezoneOffset);
+            utils.addQueryParameter('toDate', convertTo);
         } else {
             utils.removeQueryParameter('toDate')
         }
@@ -107,6 +143,8 @@ function ImportFilter(props) {
         setSelectedSource("");
         setSelectedUser("");
         setSelectedStatus("");
+        setDate("");
+        setDate2("");
         utils.removeQueryParameter('import');
         utils.removeQueryParameter('page');
         utils.removeQueryParameter('status');
@@ -217,17 +255,35 @@ function ImportFilter(props) {
                                     <li className="dateRangeHeading"><p className="dateRange pTags">Created on</p></li>
                                     <li className="halfDates">
                                         <div className="formField w-50 appflex durationWraper">
+                                            {/* {selectedFrom} */}
                                             <label>From</label>
                                             <div className="inFormField duration">
-                                                <input type="date" placeholder="dd/mm/yyyy" name=""  value={selectedFrom}
-                                                       onChange={handleFromChange}/>
+                                                <DatePicker 
+                                                    className="cmnFieldStyle"
+                                                    selected={date}
+                                                    defaultDate={today ? new Date(today) : ""}
+                                                    format="dd/MM/yyyy"
+                                                    dateFormat="dd/MM/yyyy"
+                                                    placeholderText="dd/mm/yyyy"
+                                                    onChange={(e) => setStartDate(e)}
+                                                    maxDate={new Date(today)}
+                                                />
                                             </div>
                                         </div>
                                         <div className="formField w-50 appflex durationWraper">
                                             <label>To</label>
                                             <div className="inFormField duration">
-                                                <input type="date" placeholder="dd/mm/yyyy" name="" value={selectedTo}
-                                                       onChange={handleToChange}/>
+                                                <DatePicker 
+                                                    className="cmnFieldStyle"
+                                                    selected={date2}
+                                                    defaultDate={today ? new Date(today) : ""}
+                                                    format="dd/MM/yyyy"
+                                                    dateFormat="dd/MM/yyyy"
+                                                    placeholderText="dd/mm/yyyy"
+                                                    onChange={(e) => setEndDate(e)} 
+                                                    minDate={new Date(date)}
+                                                    maxDate={new Date(today)}
+                                                />
                                             </div>
                                         </div>
                                     </li>

@@ -22,6 +22,7 @@ import ConfirmBox from "../../shared/confirmBox";
 import { GymDetailsServices } from "../../../services/gymDetails/GymDetailsServices";
 import {AttendanceServices} from "../../../services/attendance/attendanceServices";
 import Scrollbars from "react-custom-scrollbars-2";
+import { utils } from "../../../helpers";
 
 
 const GymDetails = (props) => {
@@ -33,9 +34,11 @@ const GymDetails = (props) => {
   const [editHoliday, setEditHoliday] = useState(false);
   const [holidayVal, setHolidayVal] = useState({
     id: "",
-    startDay: "",
-    endDay: "",
-    name: ""
+    // startDay: "",
+    // endDay: "",
+    name: "",
+    fromDate: "",
+    toDate: "",
   });
 
   // START - Variable set while development --- Jit
@@ -73,6 +76,7 @@ const GymDetails = (props) => {
       "prefix": "+1"
     }
   ]);
+  const reduxData  = useSelector((state) => state)
   const userData = useSelector((state) => (state.user?.data) ? state.user.data:"");
   const dispatch = useDispatch();
   // END - Variable set while development --- Jit
@@ -80,7 +84,7 @@ const GymDetails = (props) => {
     try {
       setIsLoader(true);
       const gymData = await GymDetailsServices.fetchGymDetail();
-      console.log("Gym Details", gymData);
+      // console.clear()
       setGetGymData({
         ...getGymData,
         contactEmail: gymData?.gymDetails?.contactEmail,
@@ -96,8 +100,6 @@ const GymDetails = (props) => {
         country: (gymData?.gymDetails?.country) ? gymData?.gymDetails?.country : gymData.gymDetails?.ownerDetails?.countryCode,
       });
       setEditAccess(gymData.editAccess);
-      console.log("editAccess:::::::::::::::::::" , editAccess);
-      console.log("gymDetails:::::::::::::::::::" , gymData.gymDetails);
       setHasTimezone((gymData.gymDetails?.timezone)?true:false);
       if(!gymData.gymDetails?.timezone) {
         setGymData(prevState => ({...prevState, 
@@ -108,7 +110,6 @@ const GymDetails = (props) => {
       setValidateMsg({ ...validateMsg, disabledAccess: !gymData.editAccess });
       // if(!gymData?.gymDetails.timezone && detectedTimezone?.zoneName) setSuccessMsg(`Timezone auto detected as (${detectedTimezone.countryName} - ${detectedTimezone.zoneName}), but the data is not saved yet.`);
     } catch (e) {
-      console.log(e.message);
       setErrorMsg(e.message);
       // Show error message from here
     } finally {
@@ -118,32 +119,25 @@ const GymDetails = (props) => {
   const getTimeZoneList = async () => {
     try {
       const timezoneList = await GymDetailsServices.fetchTimeZoneList();
-      console.log("Timezone List --", timezoneList);
-      setTimezoneData(timezoneList.zones);
+      setTimezoneData(timezoneList);
     } catch (e) {
-      console.log(e.message);
     }
   };
 
   const fetchCountry = async () => {
     try {
       const codeData = await GymDetailsServices.fetchCountry();
-      // console.log(codeData);
       setPhoneCountryCode(codeData);
     } catch (e) {
       setErrorMsg(e.message);
-      console.log(e.message);
     }
   };
   const fetchAccessCode = async () => {
     try {
       setIsLoader(true);
       const accessCodeNumber = await AttendanceServices.fetchAccessCode();
-      console.log("accessCodeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", accessCodeNumber?.accessCode);
       setAccessCodeGen(accessCodeNumber?.accessCode);
-      console.log("accessCodeeee eeeeeeeeeeeeeeeeee eeeeeeeee",accessCodeGen);  
     } catch (e) {
-      console.log(e.message);
      
     } finally {
       setIsLoader(false);
@@ -188,7 +182,6 @@ const GymDetails = (props) => {
     event.preventDefault();
     // window.location.reload(false);
     setShowEditForm(false);
-    console.log("After close gym data", getGymData);
     
     setGymData({
       ...gymData,
@@ -218,9 +211,7 @@ const GymDetails = (props) => {
           const avatar = result.data.publicUrl;
           // setLogo({ image: result.data.originalKey, imageUrl: result.data.publicUrl });
           setGymData({ ...gymData, logo: result.data.originalKey })
-          console.log(avatar);
         }).catch(err => {
-          console.log('Profile pic error', err);
         });
       };
       reader.readAsDataURL(files[0]);
@@ -229,13 +220,17 @@ const GymDetails = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Gym Data", gymData);
-    console.log("validateMsg Data", validateMsg);
-    
     try {
       const isValid = validateField(e, true);
       if (isValid) {
         setIsLoader(true);
+        let timezoneObj = gymData?.timezone.split(/[-()]/)
+        let timezoneInfo = {
+          abbr : timezoneObj[0],
+          name : timezoneObj[1],
+          utc_offset : timezoneObj[2]
+        }
+
         const payload = {
           "orgName": gymData.name,
           "contactPerson": gymData.contactPerson,
@@ -245,17 +240,18 @@ const GymDetails = (props) => {
           "logo": gymData.logo,
           "contactEmail": gymData.contactEmail,
           "timeZone": gymData.timezone,
-          "gmtOffset": (gymData.gmtOffset) ? gymData.gmtOffset : ''
+          "timezoneInfo" : timezoneInfo,
+          "gmtOffset": (gymData.gmtOffset) ? gymData.gmtOffset : timezoneObj[2]
         };
-        console.log(payload);
+
+        console.clear()
         const updatedData = await GymDetailsServices.gymDetailUpdate(payload);
         setGymData(updatedData);
         setHasTimezone((gymData.timezone) ? true: false);
         dispatch({
           type: actionTypes.USER_DATA,
-          data: {...userData, organizationTimezone: gymData.timezone.toString()}
+          data: {...userData, organizationTimezone: gymData.timezone.toString(), organizationTimezoneInfo : timezoneInfo}
         });
-        console.log("Updated Data", updatedData);
         // setSuccessMsg("Gym details updated successfully");
         dispatch({
           type: actionTypes.SHOW_MESSAGE,
@@ -279,6 +275,7 @@ const GymDetails = (props) => {
     const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     if (!validateViaSubmit) {
       e.preventDefault();
+      console.clear()
       const name = e.target.name;
       const value = e.target.value;
       if (name === "name" && value.length === 0) {
@@ -310,7 +307,6 @@ const GymDetails = (props) => {
         const country = countryIndex !== undefined ? countryIndex.getAttribute("data-country") : "US";
         setGymData({ ...gymData, [name]: value, country:  country});
       } else if(name === "timezone" && value.length) {
-        console.log("Timezone Offset", value);
         const timeZoneIndex = e.target[e.target.selectedIndex];
         const timezone = timeZoneIndex !== undefined ? timeZoneIndex.getAttribute("data-timezone") : "";
         setGymData({ ...gymData, [name]: timezone, gmtOffset:  value});
@@ -319,6 +315,7 @@ const GymDetails = (props) => {
       }
       
     } else {
+      console.clear()
       let bool = false;
       if (gymData.name.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, name: "Gym name should not be left empty" });
@@ -328,7 +325,7 @@ const GymDetails = (props) => {
         setValidateMsg({ ...validateMsg, disabled: true, phone: "Please enter a valid 10 digit phone number" });
       } else if (!emailRegex.test(gymData.contactEmail)) {
         setValidateMsg({ ...validateMsg, disabled: true, contactEmail: "Please enter a valid email address" });
-      } else if (typeof gymData.gmtOffset === 'undefined' || gymData.gmtOffset.length === 0) {
+      } else if (typeof gymData.timezone === 'undefined' || gymData.timezone.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select a timezone" });
       } else if (gymData.countryCode.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, timezone: "Please select country code" });
@@ -374,7 +371,6 @@ const GymDetails = (props) => {
 
   const deleteConfirm = (response) => {
     if (response === "yes") {
-      console.log(response);
       deleteHoliday();
     } else {
       setDeleteConfirmBox(false);
@@ -384,7 +380,6 @@ const GymDetails = (props) => {
   const editHolidayHandler = (elem) => {
     setEditHoliday(true);
     setHolidayVal(elem);
-    console.log(holidayVal)
     setOpenModal(true);
     setOption(false);
   };
@@ -395,8 +390,6 @@ const GymDetails = (props) => {
   }
 //const generatedNo ="00";
 const generatedNo = JSON.stringify(accessCodeGen);
-//console.log(typeof generatedNo);
-//console.log("accessCodeGen.accessCode" ,accessCodeGen);
 const codeGentextCopy = generatedNo.split("");
 
 
@@ -407,11 +400,9 @@ const fetchAccessCodeGenerate = async () => {
   try {
     setIsLoader(true);
     const accessCodeNumber = await AttendanceServices.fetchAccessCodeGenerate();
-    console.log("gennnnnnnCCCC", accessCodeNumber?.accessCode);
-    setAccessCodeGen(accessCodeNumber?.accessCode);
-    //console.log("accessCodeeee eeeeeeeeeeeeeeeeee eeeeeeeee",accessCodeGen);  
+    
+    setAccessCodeGen(accessCodeNumber?.accessCode); 
   } catch (e) {
-    console.log(e.message);
    
   } finally {
     setIsLoader(false);
@@ -421,6 +412,17 @@ const regenerateCodeHandler = (e) =>{
   e.preventDefault();
   fetchAccessCodeGenerate();  
 }
+const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
+
+
+const base_url = window.location.origin;
+
+
+
+
+
+
+
   return (
     <>
       
@@ -447,7 +449,7 @@ const regenerateCodeHandler = (e) =>{
             <p className="userListAbout">Manage your Gym details.</p>
           </div>
         </div>
-        <div className="gymDetails">
+        <div className="gymDetails ">
           <div className="gymdetails_left">
             {!showEditForm &&
               <div className="showing_gym_data not_disabled_data">
@@ -535,10 +537,13 @@ const regenerateCodeHandler = (e) =>{
                       {!editAccess && <span class="tooltiptextInfo">Regenerate has been disabled</span>}
                   </div>
                   <div className="copy_url_gen">
-                    <span>{window.location.origin}/check-in-portal <button onClick={() => window.open(window.location.origin + "/check-in-portal")}><img src={target_blank} alt=""/></button></span>
+                  {/* {config.appUrl is now base_url } */}
+                    <span>{base_url}/check-in-portal <button onClick={() => window.open(base_url + "/check-in-portal")}>
+                      <img src={target_blank} alt=""/>
+                      </button></span>
                     
                     <div className="relative infoSpan">
-                      <button className={copiedurl ? "copy_button active" : "copy_button"} onClick={() => {copy(config.appUrl +"/check-in-portal");setCopiedurl(true);}}><img src={copyIcon} alt=""/></button>
+                      <button className={copiedurl ? "copy_button active" : "copy_button"} onClick={() => {copy(base_url +"/check-in-portal");setCopiedurl(true);}}><img src={copyIcon} alt=""/></button>
                       {/* {copiedText && <span class="tooltiptextInfo">Copied</span>} */}
                       
                     </div>
@@ -621,14 +626,13 @@ const regenerateCodeHandler = (e) =>{
                   <label>Timezone</label>
                   <select name="timezone"
                     onChange={validateField}>
-                      <option value="">-</option>
                     {timezoneData ? timezoneData.map(zone => {
                       return (<option
-                        value={zone.gmtOffset}
-                        data-timezone={zone.zoneName}
-                        selected={(zone.zoneName === gymData?.timezone) ? true : false }
+                        value={zone.utc_offset}
+                        data-timezone={zone.abbr+"-"+zone.name+"("+zone.utc_offset+")"}
+                        selected={(zone.name.toLowerCase() == gymData?.timezoneInfo.name.toLowerCase()) ? true : false }
                         // selected={(parseInt(zone.gmtOffset) === detectedTimezone.gmtOffset) ? true : ""}
-                      >{zone.countryCode} - {zone.zoneName}</option>);
+                      >{zone.abbr} - {zone.name}({zone.utc_offset})</option>);
                     }) : ''}
                   </select>
                   <div className="errorMsg">{validateMsg.timezone}</div>
@@ -651,7 +655,7 @@ const regenerateCodeHandler = (e) =>{
                 <div className="holidayListHeader">
                   <div>
                     <h3>Holiday List</h3>
-                    <p>Manage your holidays</p>
+                    <p>Manage your holiday</p>
                   </div>
                 </div>
                 <div className="addInEmptySpace">
@@ -670,7 +674,7 @@ const regenerateCodeHandler = (e) =>{
                 <div className="holidayListHeader">
                   <div>
                     <h3>Holiday List</h3>
-                    <p>Manage your holidays</p>
+                    <p>Manage your holiday</p>
                   </div>
                   <div>
                   {editAccess && 
@@ -685,13 +689,18 @@ const regenerateCodeHandler = (e) =>{
                   <div className="cell">End Date</div>
                   <div className="cell">Holiday</div>
                 </div>
-                <div className="holidayListWrap">
+                <div className="holidayListWrap tt">
                 {holidayData.map((elem, key) => {
                   return (
                       
                   <div className="gymHolidayList">
-                    <div className="cell">{elem.fromDate}</div>
-                    <div className="cell">{elem.toDate}</div>
+                    <div className="cell">
+                      {utils.convertUTCToTimezone(elem?.fromDate, timezoneOffset).split(" ").splice(0,3).join(" ")}
+                      </div>
+                    <div className="cell">
+                      {/* {elem.toDate} */}
+                      {utils.convertUTCToTimezone(elem?.toDate, timezoneOffset).split(" ").splice(0,3).join(" ")}
+                      </div>
                     <div className="cell">
                       <span>{elem.name}</span>
                       {editAccess && 

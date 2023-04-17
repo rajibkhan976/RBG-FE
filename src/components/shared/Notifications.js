@@ -5,7 +5,7 @@ import BackArrow from "../../assets/images/back-arrow.png";
 import {utils} from "../../helpers";
 import {NotificationServices} from "../../services/notification/NotificationServices";
 import Loader from "./Loader";
-import moment from "moment-timezone";
+import moment from "moment";
 import Status from "../contact/importContact/status";
 import smallLoaderImg from "../../assets/images/loader.gif";
 import modalReducer from "../../reducers/modalReducer";
@@ -35,9 +35,8 @@ const Notifications = (props) => {
     });
 
     const zindexState = useSelector((state)=>state);
-    console.log("notification:", zindexState);
-   
-    
+    const timezoneOffset = useSelector((state)=> (state?.user?.data.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null);
+
     const goBackToNotificationListing = () => {
         setDetailNotification(null);
         setNotificationType(null);
@@ -92,7 +91,9 @@ const Notifications = (props) => {
         props.markAllAsRead();
     }
     const showTimeDiff = (e) => {
-        return moment.tz(e.createdAt, "Europe/London").fromNow()
+        const formattedDate = moment.utc(e?.createdAt);
+        const timezoneDate = moment.utc(formattedDate, null).utcOffset(moment().utcOffset());
+        return moment(timezoneDate.format()).fromNow()
     }
     // const modalsStoreCount = useSelector((state) => state.modal.count);
     // console.log(modalsStoreCount);

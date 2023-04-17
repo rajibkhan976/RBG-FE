@@ -4,17 +4,27 @@ import arrowDown from "../../assets/images/arrowDown.svg";
 import arrowRightWhite from "../../assets/images/arrowRightWhite.svg";
 import Loader from "../shared/Loader";
 import { utils } from '../../helpers';
-import { TransactionHistoryServices } from "../../services/transaction/TransactionHistoryServices";
+import { useSelector } from "react-redux";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
 
 function ImportTransactionFilter(props) {
+    const [date, setDate] = useState();
+    const [date2, setDate2] = useState();
+    const [today, setToday] = useState();
     const [isLoader, setIsLoader] = useState(false);
-    
     const [selectStatus, setSelectStatus] = useState("");
     const [selectItem, setSelectItem] = useState("");
     const [selectName, setSelectName] = useState("");
     const [selectedTo, setSelectedTo] = useState("");
     const [selectedFrom, setSelectedFrom] = useState("");
-
+    const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user?.data?.organizationTimezoneInfo.utc_offset:null);
+    useEffect(() => {
+        let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+        setToday(timezoneDateTime);
+    }, [timezoneOffset]);
 
     const selectStatusHandler = (e) =>{
         setSelectStatus(e.target.value)
@@ -25,15 +35,39 @@ function ImportTransactionFilter(props) {
     const selectNameHandler = (e) =>{
         setSelectName(e.target.value)
     }
-    const selectFromHandler = (e) =>{
-        setSelectedFrom(e.target.value)
+    // const selectFromHandler = (e) =>{
+    //     setSelectedFrom(e.target.value);
+    //     console.log(selectedFrom);
+    // }
+    const setStartDate = (val) => {
+        if (val) {
+             const yyyy = val.getFullYear();
+      let mm = val.getMonth() + 1; // Months start at 0!
+      let dd = val.getDate();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      let formattedDate = `${yyyy}-${mm}-${dd}`;
+            setSelectedFrom(formattedDate);
+        } else {
+            setSelectedFrom("");
+        }
+        setDate(val);
     }
-    const selectToHandler = (e) =>{
-        setSelectedTo(e.target.value)
+    const setEndDate = (val) => {
+        if (val) {
+             const yyyy = val.getFullYear();
+      let mm = val.getMonth() + 1; // Months start at 0!
+      let dd = val.getDate();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      let formattedDate = `${yyyy}-${mm}-${dd}`;
+            setSelectedTo(formattedDate);
+        } else {
+            setSelectedTo("");
+        }
+        setDate2(val);
     }
-
     const applyFilter = () => {
-    //    let filterString = "?contact=" + selectName + "&status=" + selectStatus + "&item=" + selectItem + "&fromDate=" + selectedFrom + "&toDate=" + selectedTo ;
         if (selectStatus) {
             utils.addQueryParameter('status', selectStatus);
         } else {
@@ -49,20 +83,19 @@ function ImportTransactionFilter(props) {
         } else {
             utils.removeQueryParameter('contact');
         }
-        if (selectedTo) {
-            utils.addQueryParameter('fromDate', selectedFrom);
+        if (selectedFrom) {
+            const convertFrom = utils.convertTimezoneToUTC(selectedFrom + " " + "00:00:01", timezoneOffset);
+            utils.addQueryParameter('fromDate', convertFrom);
         } else {
             utils.removeQueryParameter('fromDate');
         }
         if (selectedTo) {
-            utils.addQueryParameter('toDate', selectedTo);
+            const convertTo = utils.convertTimezoneToUTC(selectedTo + " " + "23:59:59", timezoneOffset);
+            utils.addQueryParameter('toDate', convertTo);
         } else {
             utils.removeQueryParameter('toDate');
         }
-        
         utils.addQueryParameter("page", 1);
-        
-
         props.getFilterStr();
     };
 
@@ -70,9 +103,20 @@ function ImportTransactionFilter(props) {
         setSelectStatus(utils?.getQueryVariable("status"));
         setSelectItem(utils?.getQueryVariable("item"));
         setSelectName(utils?.getQueryVariable("contact"));
-        setSelectedTo(utils?.getQueryVariable("toDate"));
-        console.log(utils?.getQueryVariable("toDate"));
-        setSelectedFrom(utils?.getQueryVariable("fromDate"));
+        let fromDate = utils?.getQueryVariable("fromDate") || "";
+        let toDate = utils?.getQueryVariable("toDate") || "";
+        if (fromDate) {
+            fromDate = decodeURIComponent(fromDate).replaceAll("+", " ").trim();
+            fromDate = utils.convertUTCToTimezone(fromDate ,timezoneOffset, 'YYYY-MM-DD');
+        }
+        if (toDate) {
+            toDate = decodeURIComponent(toDate).replaceAll("+", " ").trim();
+            toDate = utils.convertUTCToTimezone(toDate ,timezoneOffset, 'YYYY-MM-DD');
+        }
+        setDate(fromDate);
+        setDate2(toDate);
+        setSelectedTo(toDate);
+        setSelectedFrom(fromDate);
     }, []);
         
     return (
@@ -83,7 +127,6 @@ function ImportTransactionFilter(props) {
                     {isLoader ? <Loader/> : ''}
                     <div className="sideMenuHeader">
                         <h3>Apply Filter</h3>
-                        {/* <button className="btn btn-closeSideMenu"></button> */}
                         <button className="btn btn-closeSideMenu" onClick={props.closeFilter}>
                             <span></span><span></span></button>
                     </div>
@@ -116,36 +159,36 @@ function ImportTransactionFilter(props) {
                                                 
                                             </select>
                                         </div>
-                                        {/* <div className="formField w-100 appModals formControl">
-                                            <label>Contact name</label>
-                                            <select value= {selectName} onChange={selectNameHandler} style={{
-                                                        backgroundImage: "url(" + arrowDown + ")",
-                                                    }} placeholder="eg. John">
-                                                <option value="">Select</option>
-                                                {
-                                                   props.contact && props.contact.map((elem, key) =>{
-                                                        return(
-                                                            <option key={"name_" + key} value={elem.id}>{elem.name}</option>
-                                                        )
-                                                    })
-                                                }
-                                                
-                                                
-                                            </select>
-                                        </div> */}
                                     </li>
                                     <li className="dateRangeHeading"><p className="dateRange pTags">Date Range</p></li>
                                     <li className="halfDates noMargin">
                                         <div className="formField w-50 appflex durationWraper">
                                             <label>From</label>
                                             <div className="inFormField duration">
-                                                <input type="date" placeholder="dd/mm/yyyy" name="" value={selectedFrom} onChange={selectFromHandler} />
+                                                <DatePicker 
+                                                    className="cmnFieldStyle"
+                                                    selected={date ? new Date(date) : ""}
+                                                    format="dd/MM/yyyy"
+                                                    dateFormat="dd/MM/yyyy"
+                                                    placeholderText="dd/mm/yyyy"
+                                                    onChange={(e) => setStartDate(e)}
+                                                    maxDate={new Date(today)}
+                                                />
                                             </div>
                                         </div>
                                         <div className="formField w-50 appflex durationWraper">
                                             <label>To</label>
                                             <div className="inFormField duration">
-                                                <input type="date" placeholder="dd/mm/yyyy" name="" value={selectedTo} onChange={selectToHandler} min={selectedFrom}/>
+                                                <DatePicker
+                                                    className="cmnFieldStyle"
+                                                    selected={date2 ? new Date(date2) : ""}
+                                                    format="dd/MM/yyyy"
+                                                    dateFormat="dd/MM/yyyy"
+                                                    placeholderText="dd/mm/yyyy"
+                                                    onChange={(e) => setEndDate(e)} 
+                                                    minDate={new Date(date)}
+                                                    maxDate={new Date(today)}
+                                                />
                                             </div>
                                         </div>
                                     </li>

@@ -7,18 +7,20 @@ import appointmentImg from "../../../../../assets/images/appointments.svg";
 import tags from "../../../../../assets/images/tags.svg";
 import arrow_forward from "../../../../../assets/images/arrow_forward.svg";
 import crossWhite from "../../../../../assets/images/cross_w.svg";
-
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 import Loader from "../../../Loader";
 import Scrollbars from "react-custom-scrollbars-2";
 
 import { TagServices } from "../../../../../services/setup/tagServices";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as actionTypes from "../../../../../actions/types";
 import { AppointmentServices } from "../../../../../services/appointment/appointment";
 import TagList from "../../../../appointment/TagList";
-import { utils } from "../../../../../helpers";
+import { utils } from "../../../../../helpers"
 
 const AddAppointmentModal = (props) => {
+  const [date, setDate] = useState();
   const toggleTags = useRef(null);
   const [isLoader, setIsLoader] = useState(false);
   const [tagListToggle, setTagListToggle] = useState(false);
@@ -26,7 +28,9 @@ const AddAppointmentModal = (props) => {
     agenda: "",
     date: "",
     fromTime: "",
+    fromDateTime: "",
     toTime: "",
+    toDateTime: "",
     tags: [],
     tagsDatas: [],
     contactId: props.contactId,
@@ -40,6 +44,8 @@ const AddAppointmentModal = (props) => {
   const dispatch = useDispatch();
   const [isDisabled, setIsDisabled] = useState(false);
   const todayDate = moment();
+  const [calenderMinDate, setCalenderMinDate] = useState();
+
 
   // const appoPageList = (e) => {
   //   // console.log("appoPageList", e.target.scrollTop, (e.target.scrollHeight * 0.30));
@@ -71,6 +77,15 @@ const AddAppointmentModal = (props) => {
     setTagListToggle(false);
     //setSearchedTag("")
   };
+  const timezoneOffset = useSelector((state) => (state.user?.data.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
+  // useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:"UTC-06"); 
+
+  useEffect(() => {
+    let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+    let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+    let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
+    setCalenderMinDate(formatedDateTime);
+  }, []);
 
   // validation on submission of form
   const validateAppointment = (e) => {
@@ -118,36 +133,7 @@ const AddAppointmentModal = (props) => {
     setValidationErrors(validErrors);
   };
 
-  // on valid submission, send appointment to parent
-  const submitAppointmentForm = async (e) => {
-    e.preventDefault();
-    let valid = validateAppointment();
-    if (valid) {
-      setIsLoader(true);
-      try {
-        let newAppointment = await AppointmentServices.saveAppointment(
-          appointmentData
-        );
-        console.log('asdsa', appointmentData)
-        if (newAppointment) {
-          newAppointment['tagNames'] = appointmentData.tagsDatas;
-          console.log("newAppointment::::::", newAppointment);
-          let updatedAppointments = [newAppointment, ...props.appointments];
-          props.setAppointments(updatedAppointments);
-          props.setAppointmentCreated("success");
-          props.closeModal(false);
-        }
-      } catch (error) {
-        dispatch({
-          type: actionTypes.SHOW_MESSAGE,
-          message: error.message,
-          typeMessage: "error",
-        });
-      } finally {
-        setIsLoader(false);
-      }
-    }
-  };
+  
 
   // Add input values to new appointment
   const appointmentDataAdd = (e, type) => {
@@ -157,15 +143,11 @@ const AddAppointmentModal = (props) => {
       if (type == "date") {
         const dateDiff = utils.dateDiff(e.target.value);
         if (dateDiff.difference <= 0) {
-          console.log("Today")
           const fromTime = appointmentData.fromTime;
           if (fromTime) {
-            console.log("From Time")
             const appDateTime = moment(`${e.target.value.toString()} ${appointmentData.fromTime.toString()}`).format("YYYY-MM-DD h:mm a");
             const diffFromToday = todayDate.diff(appDateTime, "minutes");
-            console.log(diffFromToday);
             if (diffFromToday > 0) {
-              console.log("Invalid time")
               validErrors.fromTime = "Invalid from time";
               isDisabled = true;
             } else {
@@ -176,16 +158,21 @@ const AddAppointmentModal = (props) => {
         } else {
           validErrors.fromTime = "";
           isDisabled = false;
+          validErrors.date = "";
+          // let newDateString = e.target.value.split("-")[1] + "/" + e.target.value.split("-")[2] + "/" + e.target.value.split("-")[0];
+          let newDateString = e.target.value;
+          setAppointmentData({ 
+            ...appointmentData, 
+            date: newDateString,
+            // fromDateTime: appointmentData.fromTime,
+            // toDateTime: appointmentData.toTime
+          });
         }
         // validErrors.fromTime = "";
         validErrors.date = "";
         isDisabled = false;
-        let newDateString =
-          e.target.value.split("-")[1] +
-          "/" +
-          e.target.value.split("-")[2] +
-          "/" +
-          e.target.value.split("-")[0];
+        let newDateString = e.target.value;
+         
         setAppointmentData({ ...appointmentData, date: newDateString });
       }
       if (type == "agenda") {
@@ -206,17 +193,77 @@ const AddAppointmentModal = (props) => {
     setIsDisabled(isDisabled);
   };
 
+  const setStartDate = (val) => {
+    const convertFromDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD")+ " " + utils.timeConversion(appointmentData?.fromTime), timezoneOffset);
+    const convertToDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD")+ " " + utils.timeConversion(appointmentData?.toTime), timezoneOffset);
+    let validErrors = {...validationErrors};
+    let isDisabled = false;
+    let formattedDate = `${val.getFullYear()}-${
+        val.getMonth() + 1
+      }-${val.getDate()}`;
+    setDate(val);
+    formattedDate = moment(formattedDate).format("YYYY-MM-DD");
+    
+    const dateDiff = utils.dateDiff(formattedDate);
+    if (dateDiff.difference <= 0) {
+      const fromTime = appointmentData.fromTime;
+      if (fromTime) {
+        const appDateTime = moment(`${formattedDate.toString()} ${appointmentData.fromTime.toString()}`).format("YYYY-MM-DD h:mm a");
+        const diffFromToday = todayDate.diff(appDateTime, "minutes");
+        if (diffFromToday > 0) {
+          validErrors.fromTime = "Invalid from time";
+          isDisabled = true;
+        } else {
+          validErrors.fromTime = "";
+          isDisabled = false;
+        }
+      }
+    } else {
+      validErrors.fromTime = "";
+      isDisabled = false;
+      validErrors.date = "";
+      // let newDateString = formattedDate.split("-")[1] + "/" + formattedDate.split("-")[2] + "/" + formattedDate.split("-")[0];
+      let newDateString = formattedDate;
+      setAppointmentData({ 
+        ...appointmentData, 
+        date: newDateString,
+        fromDateTime: convertFromDateTime,
+        toDateTime: convertToDateTime
+      });
+    }
+    // validErrors.fromTime = "";
+    validErrors.date = "";
+    isDisabled = false;
+    let newDateString = formattedDate;
+      
+    setAppointmentData({ 
+      ...appointmentData, 
+      date: newDateString,
+      fromDateTime: convertFromDateTime,
+      toDateTime: convertToDateTime,
+    });
+    setValidationErrors(validErrors);
+    setIsDisabled(isDisabled);
+  }
+
   const fromDateAdd = (fromValue) => {
+    const convertedChoosedTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + fromValue.format("HH:mm:ss"),timezoneOffset);
+    const convertedLocalTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+
+    const localTime = moment(convertedLocalTime, "YYYY-MM-DD HH:mm:ss");
+    const choosedTime = moment(convertedChoosedTime, "YYYY-MM-DD HH:mm:ss");
     // console.log(fromValue && fromValue.format('h:mm a').toUpperCase());
     let validErrors = { ...validationErrors };
     let isDisabled = true;
     // console.log("App Date", appointmentData.date)
     // console.clear();
-    const appDateTime = moment(`${appointmentData.date.toString()} ${fromValue.format("h:mm a")}`).format("YYYY-MM-DD h:mm a");
-    const diffFromToday = todayDate.diff(appDateTime, "minutes");
+
+    // const appDateTime = moment(`${appointmentData.date.toString()} ${fromValue.format("h:mm a")}`).format("YYYY-MM-DD h:mm a");
+    // const diffFromToday = todayDate.diff(appDateTime, "minutes");
+    const diffFromToday = choosedTime.diff(localTime, "minutes");
     const fromTime = moment(`${appointmentData.date} ${fromValue.format("h:mm a")}`).format('MM/DD/YYYY h:mm a');
     const toTime = moment(`${appointmentData.date} ${appointmentData.toTime}`).format('MM/DD/YYYY h:mm a');
-
+    
     if (fromValue && fromValue != null) {
       if (appointmentData.toTime.trim() === "") {
         validErrors.fromTime = "";
@@ -224,13 +271,11 @@ const AddAppointmentModal = (props) => {
         //validErrors.toTime = "Invalid end time.";
         setAppointmentData({
           ...appointmentData,
+          // fromTime: fromValue.format("h:mm a").toUpperCase(),
           fromTime: fromValue.format("h:mm a").toUpperCase(),
+          fromDateTime:utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(fromValue.format("h:mm a").toUpperCase()), timezoneOffset).trim(),
         });
       } else {
-        console.log(
-          parseFloat(appointmentData.toTime.split(" ")[0].replace(":", "")),
-          parseFloat(fromValue.format("h:mm a").split(" ")[0].replace(":", ""))
-        );
         if (
           parseFloat(appointmentData.toTime.split(" ")[0].replace(":", "")) <=
           parseFloat(fromValue.format("h:mm a").split(" ")[0].replace(":", ""))
@@ -251,35 +296,28 @@ const AddAppointmentModal = (props) => {
         setAppointmentData({
           ...appointmentData,
           fromTime: fromValue.format("h:mm a").toUpperCase(),
+          fromDateTime: utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(fromValue.format("h:mm a").toUpperCase()), timezoneOffset).trim(),
         });
       }
-      // console.clear()
-      // console.log("Time Diff", appointmentData.toTime);
       if (!appointmentData.date) {
         validErrors.date = "Please choose a date";
         isDisabled = true;
-      } else if (diffFromToday > 0) {
+      } else if (diffFromToday < 2) {
         validErrors.fromTime = "Invalid from time";
         isDisabled = true;
       } else if (appointmentData.toTime && Math.sign(moment(fromTime).diff(toTime, "minutes")) > 0) {
-        console.log("To Time is less than from");
         validErrors.fromTime = "To time cannot be less";
         isDisabled = true;
       } else {
         validErrors.fromTime = "";
         isDisabled = false;
       }
-    } else {
-      // validErrors.fromTime = "Invalid start time.";
     }
-    console.log("Is Disabled", isDisabled);
-    // parseInt(e.target.value.replace(":","")) >= parseInt(appointmentData.toTime.replace(":",""))
     setValidationErrors(validErrors);
     setIsDisabled(isDisabled);
   };
 
   const selectTag = (tag, mode) => {
-    console.log(tag);
     let copySelTags = [...appointmentData.tagsDatas];
     let tagIds = [...appointmentData.tags];
     if (mode) {
@@ -298,7 +336,6 @@ const AddAppointmentModal = (props) => {
       copySelTags = copySelTags.filter((addedTag) => addedTag._id != tag._id);
       tagIds = tagIds.filter((addedTag) => addedTag != tag._id);
     }
-    console.log(copySelTags, tagIds);
     setAppointmentData({
       ...appointmentData,
       tagsDatas: copySelTags,
@@ -325,7 +362,9 @@ const AddAppointmentModal = (props) => {
         //validErrors.fromTime = "Invalid start time.";
         setAppointmentData({
           ...appointmentData,
+          // toTime: toValue.format("h:mm a").toUpperCase(),
           toTime: toValue.format("h:mm a").toUpperCase(),
+          toDateTime: utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(toValue.format("h:mm a").toUpperCase()), timezoneOffset).trim()
         });
       } else {
         if (
@@ -347,18 +386,19 @@ const AddAppointmentModal = (props) => {
         }
         setAppointmentData({
           ...appointmentData,
+          // toTime: toValue.format("h:mm a").toUpperCase(),
           toTime: toValue.format("h:mm a").toUpperCase(),
+          toDateTime: utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(toValue.format("h:mm a").toUpperCase()), timezoneOffset).trim()
         });
+
       }
       console.clear();
       // const fromTime = moment(`${appointmentData.fromTime}`).format("hh:mm:ss");
       // const toTime = moment(`${appointmentData.toTime}`).format("h:m:s");
-      console.log("I am here", moment(toTime).diff(fromTime, "minutes"));
       if (!appointmentData.date) {
         validErrors.date = "Please choose a date";
         isDisabled = true;
       } else if (fromTime && Math.sign(moment(toTime).diff(fromTime, "minutes")) < 0) {
-        console.log("invalid")
         validErrors.toTime = "Invalid to time";
         isDisabled = true;
       } else {
@@ -370,9 +410,50 @@ const AddAppointmentModal = (props) => {
       // validErrors.toTime = "Invalid end time.";
     }
     // parseInt(e.target.value.replace(":","")) <= parseInt(appointmentData.fromTime.replace(":",""))
-    console.log("Is Disabled", isDisabled);
     setValidationErrors(validErrors);
     setIsDisabled(isDisabled);
+  };
+
+  // on valid submission, send appointment to parent
+  const submitAppointmentForm = async (e) => {
+    e.preventDefault();
+    // console.clear()
+    let valid = validateAppointment();
+    // console.log("Appointment date and time before conversion",utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.fromTime));
+
+    // let conversionFrom = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.fromTime), timezoneOffset);
+    // let conversionTo = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.toTime), timezoneOffset);
+
+    // console.log("From time conversion", conversionFrom);
+    // console.log("To time conversion", conversionTo);
+    // fromValue.format("h:mm a").toUpperCase()
+    // setAppointmentData({
+    //   ...appointmentData,
+    //   fromDateTime: conversionFrom,
+    //   toDateTime: conversionTo
+    // })
+    if (valid && validationErrors.fromTime === "") {
+      setIsLoader(true);
+      try {
+        let newAppointment = await AppointmentServices.saveAppointment(appointmentData);
+        // let newAppointment;
+        if (newAppointment) {
+          newAppointment['tagNames'] = appointmentData.tagsDatas;
+          let updatedAppointments = [newAppointment, ...props.appointments];
+          props.setAppointments(updatedAppointments);
+          props.setAppointmentCreated("success");
+          props.closeModal(false);
+        }
+      } catch (error) {
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: error.message,
+          typeMessage: "error",
+        });
+      } finally {
+        setIsLoader(false);
+      }
+    }
   };
 
   return (
@@ -475,12 +556,21 @@ const AddAppointmentModal = (props) => {
                 >
                   <div className="cmnFieldName">Choose a date</div>
                   <div className="cmnFormField">
-                    <input
+                    {/* <input
                       className="cmnFieldStyle"
                       type="date"
                       placeholder="mm/dd/yyyy"
-                      min={new Date(Date.now()).toISOString().split("T")[0]}
+                      min={calenderMinDate}
                       onChange={(e) => appointmentDataAdd(e, "date")}
+                    /> */}
+                    <DatePicker 
+                        className="cmnFieldStyle"
+                        selected={date}
+                        format="dd/MM/yyyy"
+                        dateFormat="dd/MM/yyyy"
+                        placeholder="mm/dd/yyyy"  
+                        minDate={new Date(calenderMinDate)}
+                        onChange={(e) => setStartDate(e)} 
                     />
                   </div>
                   {validationErrors.date.trim() !== "" ? (

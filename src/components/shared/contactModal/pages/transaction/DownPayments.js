@@ -9,29 +9,42 @@ import moment from "moment";
 import info_icon from "../../../../../assets/images/infos.svg";
 import deleteBtn from "../../../../../assets/images/deleteBtn.svg";
 import downpayment from "../../../../../assets/images/no_downpayment.svg";
-
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
+import { utils } from "../../../../../helpers"
+import { useSelector } from "react-redux";
 
 
 const DownPayments = forwardRef((props, ref) => {
-
+    const [tomorrow, setTomorrow] = useState();
     const downPaymentElement = {
         title: "Down Payment 1",
         titleErr: "",
         amount: "",
         amountErr: "",
         isPayNow: 1,
-        paymentDate: moment().format('YYYY-MM-DD'),
-        minPaymentDate: moment().add(1, 'days').format('YYYY-MM-DD'),
+        paymentDate: "",
+        minPaymentDate: "",
         payment_type: "cash",
         payment_status: "paid",
     }
-
+    const [payLaterDate, setPayLaterDate] = useState();
+    const [calenderMinDate, setCalenderMinDate] = useState();
     const [isDownPayment, setIsDownPayment] = useState(false);
     const [downPaymentElems, setDownPaymentElems] = useState([{ ...downPaymentElement }]);
+    const timezoneOffset = useSelector((state) => (state.user?.data.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
 
     useEffect(() => {
+      let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+      let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset, "YYYY-MM-DD");
+      setCalenderMinDate(timezoneDateTime);
+      let tomorrowDate = moment().add(1, 'days').utc().format("YYYY-MM-DD HH:mm:ss");
+      let tomorrowsDateConverted = utils.convertUTCToTimezone(tomorrowDate ,timezoneOffset, "YYYY-MM-DD");
+      setTomorrow(tomorrowsDateConverted);
+    }, [timezoneOffset]);
+  
+    useEffect(() => {
         if (props.contractData && props.contractData.isDownPayment && props.contractData.downPayments.length) {
-            console.log('Props', props.contractData);
             setIsDownPayment(true);
             setDownPaymentElems(props.contractData.downPayments);
         }
@@ -50,7 +63,6 @@ const DownPayments = forwardRef((props, ref) => {
     }));
 
     const validate = (addnew = false) => {
-        console.log('validate function in down payments component');
         let errflag = false;
         const newElems = downPaymentElems.map(el => {
             let newEl = { ...el };
@@ -61,12 +73,10 @@ const DownPayments = forwardRef((props, ref) => {
             }
             newEl.titleErr = errTitle;
             newEl.amountErr = errAmount;
-            console.log('new ele', newEl);
             return newEl;
         });
 
         if (addnew && errflag === false) {
-            console.log('Insert initial value', downPaymentElement);
             downPaymentElement.title = 'Down Payment ' + (downPaymentElems.length + 1)
             newElems.unshift(downPaymentElement);
         }
@@ -100,12 +110,26 @@ const DownPayments = forwardRef((props, ref) => {
                     : "";
     };
 
+    const downpayDatepicker = (val, key, type) => {
+
+        let formattedDate = `${val.getFullYear()}-${
+            val.getMonth() + 1
+          }-${val.getDate()}`;
+
+        setPayLaterDate(val);
+
+        validateIndividual(formattedDate, key, type);
+    }
+
     const validateIndividual = (e, key, type) => {
-        console.log('validate individual', key, type, e.target.value, e.target.checked);
+        console.log("validateIndividual----------", downPaymentElems);
         let elems = [...downPaymentElems];
         if (type === "isPayNow") {
             elems[key][type] = e.target.checked ? 1 : 0;
-        } else {
+        } else if (type === "paymentDate") {
+            elems[key][type] = e;
+        }
+        else {
             elems[key][type] = e.target.value;
         }
         let newElem = elems[key];
@@ -114,6 +138,9 @@ const DownPayments = forwardRef((props, ref) => {
                 newElem.titleErr = checkTitleErr(newElem.title);
                 break;
             case "amount":
+                if(!newElem.paymentDate) {
+                    newElem.paymentDate = tomorrow;
+                }
                 newElem.amountErr = checkAmountErr(newElem.amount);
                 break;
             case "isPayNow":
@@ -136,14 +163,12 @@ const DownPayments = forwardRef((props, ref) => {
                 break;
         }
         elems[key] = newElem;
-        console.log('Validate Individual', elems);
         setDownPaymentElems(elems);
     };
 
     //Delete down payment
     const delDownpaymentFn = (e, key) => {
         e.preventDefault();
-        console.log('Down payment click', e, key);
         // setDownPaymentElems(key !== 0 ? downPaymentElems.filter((_, k) => key !== k) : downPaymentElems);
         setDownPaymentElems(downPaymentElems.filter((_, k) => key !== k));
     };
@@ -151,7 +176,6 @@ const DownPayments = forwardRef((props, ref) => {
     //Downpayment toggle
     const downPaymentToggle = (e) => {
         let isActive = e.target.checked;
-        console.log('Toggle', isActive);
         setIsDownPayment(isActive);
         setDownPaymentElems([{ ...downPaymentElement }]);
         if (!isActive) {
@@ -274,13 +298,22 @@ const DownPayments = forwardRef((props, ref) => {
                                                         <p>Payment date <span>Now</span></p>
                                                     </div>
                                                     <div className={el.isPayNow ? "paymentNow " : "paymentNow display"} >
-                                                        <input
+                                                        {/* <input
                                                             type="date"
                                                             className="editableInput"
                                                             placeholder="mm/dd/yyyy"
                                                             value={el.paymentDate}
                                                             min={el.minPaymentDate}
                                                             onChange={e => validateIndividual(e, key, "paymentDate")}
+                                                        /> */}
+                                                        <DatePicker 
+                                                            className="cmnFieldStyle"
+                                                            selected={el.paymentDate ? new Date(el.paymentDate) : (tomorrow ? new Date(tomorrow): new Date())}
+                                                            format="dd/MM/yyyy"
+                                                            dateFormat="dd/MM/yyyy"
+                                                            placeholderText="dd/mm/yyyy"
+                                                            onChange={(val) => downpayDatepicker(val, key, "paymentDate")} 
+                                                            minDate={tomorrow ? new Date(tomorrow): new Date()}
                                                         />
                                                     </div>
                                                 </div>

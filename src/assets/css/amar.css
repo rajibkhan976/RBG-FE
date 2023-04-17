@@ -4290,9 +4290,9 @@ footer.formControl > .btn:disabled,
 .fc .fc-daygrid-event-harness + .fc-daygrid-event-harness {
   margin-top: 1px !important;
 }
-.global-appointment .fc-theme-standard .fc-day-today {
-  background: linear-gradient(180deg, #CDFBFF 0%, #FFFFFF 100%);
-}
+/*.global-appointment .fc-theme-standard .fc-day-today {*/
+/*  background: linear-gradient(180deg, #CDFBFF 0%, #FFFFFF 100%);*/
+/*}*/
 /* Calendar UI */
 
 .appointmentGlobalPage .modalCreateAppointment .cmnFormRow:first-child .cmnFormField {
@@ -4641,4 +4641,8 @@ footer.formControl > .btn:disabled,
 
 .smsListingPage .nosearchFound{
   margin-top: 0
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+  background: transparent;
 }

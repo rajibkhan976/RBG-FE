@@ -3,18 +3,18 @@ import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../../../actions/types";
 import {ContactService} from "../../../../services/contact/ContactServices";
 import Loader from "../../Loader";
-//import plus_icon from "../../../../assets/images/plus_icon.svg";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import {ErrorAlert, SuccessAlert} from "../../messages";
-import plus_icon from "../../../../assets/images/plus_icon.svg";
-import cross_icon from "../../../../assets/images/cross_white.svg";
 import verify_icon from "../../../../assets/images/verifyIcon.svg";
 import {ImportContactServices} from "../../../../services/contact/importContact";
-import arrowDown from "../../../../assets/images/arrowDown.svg";
 import moment from "moment-timezone";
 import {PhasesServices} from "../../../../services/contact/phasesServices";
-
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
+import {utils} from "../../../../helpers";
 const Overview = (props) => {
+    const [today, setToday] = useState();
+    const [date, setDate] = useState();
     const [formScrollStatus, setFormScrollStatus] = useState(false);
     const [isLoader, setIsLoader] = useState(false);
     const [basicinfoFname, setBasicinfoFname] = useState('');
@@ -107,7 +107,12 @@ const Overview = (props) => {
         phase: "",
         status: ""
     });
-
+    const timezoneOffset = useSelector((state)=> (state?.user?.data.organizationTimezoneInfo.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null);
+    useEffect(() => {
+        let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+        setToday(timezoneDateTime);
+    }, [timezoneOffset]);
     const fetchCountry = async () => {
         let conntryResponse = await ContactService.fetchCountry();
         setPhoneCountryCode(conntryResponse);
@@ -267,8 +272,11 @@ const Overview = (props) => {
         setFormErrorMsg(prevState => ({...prevState, lName: false}));
     }
 
-    const handelBasicinfoDob = (e) => {
-        setBasicinfoDob(e.target.value);
+    const handelBasicinfoDob = (val) => {
+        let formattedDate = `${val.getFullYear()}-${
+            val.getMonth() + 1
+        }-${val.getDate()}`;
+        setBasicinfoDob(formattedDate);
     }
 
     const handelBasicinfoEmail = (event) => {
@@ -724,8 +732,15 @@ const Overview = (props) => {
                                         Date of Birth
                                     </div>
                                     <div className={formErrorMsg.dob ? "cmnFormField errorField" : "cmnFormField"}>
-                                        <input type="date" className="cmnFieldStyle" placeholder="" max={moment().format('YYYY-MM-DD')}
-                                            defaultValue={basicinfoDob} onChange={handelBasicinfoDob}/>
+                                        <DatePicker
+                                            className="cmnFieldStyle"
+                                            selected={basicinfoDob ? new Date(basicinfoDob) : "" }
+                                            format="dd/MM/yyyy"
+                                            dateFormat="dd/MM/yyyy"
+                                            placeholderText="dd/mm/yyyy"
+                                            onChange={(e) => handelBasicinfoDob(e)}
+                                            maxDate={new Date(today)}
+                                            />
                                         {formErrorMsg.dob ? <p className="errorMsg">{formErrorMsg.dob}</p> : ""}
                                     </div>
                                 </div>

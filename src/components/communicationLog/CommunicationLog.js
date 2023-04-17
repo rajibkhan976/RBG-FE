@@ -54,7 +54,7 @@ const CommunicationLog = (props) => {
     const [scrolledPosition, setScrolledPosition] = useState(null);
     
 
-
+   
 
     const hideFilter = () => {
         setIsFilter(false);
@@ -65,7 +65,10 @@ const CommunicationLog = (props) => {
 	console.log("isScrollvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv", isScroll);
 
 
-
+	const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
+	useEffect(()=>{
+	  console.log("communication time zone", timezoneOffset);
+	}, [timezoneOffset])
 	const fetchCommunicationLogList = async (pageId) => {
 		const queryParams = await getQueryParams();
 		//let contactID = props.contactId;
@@ -114,7 +117,7 @@ const CommunicationLog = (props) => {
 			//setIsLoaderScroll(false);
 			setIsScroll(false);
 		}
-	};
+	}; 
 
 	const getQueryParams = async () => {
         const keyword = utils.getQueryVariable("search");
@@ -139,27 +142,31 @@ const CommunicationLog = (props) => {
         }
 		if (fromDate) {
 
-			var m = moment(new Date(fromDate)).utcOffset(0);
-			m.set({hour:0,minute:0,second:0,millisecond:0})
-			m.toISOString()
-			m.format()
-			console.log("dummy",m.toISOString())
-
+			// var m = moment(new Date(fromDate)).utcOffset(0);
+			// m.set({hour:0,minute:0,second:0,millisecond:0})
+			// m.toISOString()
+			// m.format()
+			// console.log("dummy",m.toISOString())
+            //queryParams.append("fromDate",  m.toISOString());
+            //
 
             //let fromDateUrl = new Date(fromDate + " 00:00:00 UTC");
 			//console.log("from date url",fromDateUrl)
 			//console.log("moment forma",moment(fromDate).format())
-            queryParams.append("fromDate",  m.toISOString());
 			//console.log("iso string defulat", fromDateUrl.toISOString())
+
+            queryParams.append("fromDate",  fromDate.replaceAll("+", " ").replace(' ', 'T').trim() + '.000Z');
+
         }
 		if (toDate) {
 			//let toDateUrl = new Date(toDate + " 23:59:59 UTC");
-			var m = moment(new Date(toDate)).utcOffset(0);
-			m.set({hour:23,minute:59,second:59,millisecond:0})
-			m.toISOString()
-			m.format()
-			console.log("dummy",m.toISOString())
-            queryParams.append("toDate", m.toISOString());
+			// var m = moment(new Date(toDate)).utcOffset(0);
+			// m.set({hour:23,minute:59,second:59,millisecond:0})
+			// m.toISOString()
+			// m.format()
+			// console.log("dummy",m.toISOString())
+            // queryParams.append("toDate", m.toISOString());
+             queryParams.append("toDate", toDate.replaceAll("+", " ").replace(' ', 'T').trim() + '.000Z');
         }
         return queryParams;
     };
@@ -286,7 +293,7 @@ const CommunicationLog = (props) => {
 			}, 100); 
 		})
 	}
-
+	
 	return (
 	  <>
 	  {isLoader ? <Loader/> :""}
@@ -310,13 +317,16 @@ const CommunicationLog = (props) => {
 
 				{selectFromdate &&
 					<div class="contactsTags">
-					     <span class="pageInfo">From date : { moment(decodeURIComponent(selectFromdate.replaceAll(":","%3A"))).format('YYYY-MM-DD')}</span>
+					     {/* <span class="pageInfo">From date : { moment(decodeURIComponent(selectFromdate.replaceAll(":","%3A"))).format('YYYY-MM-DD')}</span> */}
+						 <span class="pageInfo">From date : {utils.convertUTCToTimezone(decodeURIComponent(selectFromdate).replaceAll("+", " "),timezoneOffset)
+						 }</span>
 						 <span class="crossTags" onClick={removeFromdate}><img src={cross} alt=""/></span>
 					</div>
 				}	 
 				{selectTodate &&
 					<div class="contactsTags">
-					     <span class="pageInfo">To date : {moment(decodeURIComponent(selectTodate.replaceAll(":","%3A"))).format('YYYY-MM-DD')}</span>
+					     {/* <span class="pageInfo">To date : {moment(decodeURIComponent(selectTodate.replaceAll(":","%3A"))).format('YYYY-MM-DD')}</span> */}
+						 { <span class="pageInfo">To date : {utils.convertUTCToTimezone(decodeURIComponent(selectTodate).replaceAll("+", " "),timezoneOffset)}{/*decodeURIComponent(selectTodate).split("+").splice(0,1).join(" ")*/}</span> }
 						 <span class="crossTags" onClick={removeTodate}><img src={cross} alt=""/></span>
 					</div>
 				}
@@ -333,10 +343,10 @@ const CommunicationLog = (props) => {
 						 (logList && logList.length > 0) ? 
 						 <>{
 							logList.map((elem,key) => {
-								const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-								const newdate = new Date(elem.updated_at);
-								const dateForamt = month[newdate.getMonth()] +" " + newdate.getDate() + ",  "  + newdate.getFullYear();
-								const startDate = moment(elem.updated_at).format('h:mm A');
+								//const month = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+								//const newdate = new Date(elem.updated_at);
+							   //const dateForamt = month[newdate.getMonth()] +" " + newdate.getDate() + ",  "  + newdate.getFullYear();
+								//const startDate = moment(elem.updated_at).format('h:mm A');
 								return(
 									<li className='space' key={key}
 									onClick={() => openContactModal(elem)}
@@ -378,10 +388,12 @@ const CommunicationLog = (props) => {
 
 										</div>
 										<div className='dateCommunication'>
-											<span class="comLogText"><span class="doomed">{dateForamt} {startDate}</span></span>
+											<span class="comLogText"><span class="doomed">
+												{utils.convertUTCToTimezone(elem.updated_at, timezoneOffset)}
+											</span></span>
 										</div>
 									
-									</li>
+									</li> 
 
 								)														
 							})

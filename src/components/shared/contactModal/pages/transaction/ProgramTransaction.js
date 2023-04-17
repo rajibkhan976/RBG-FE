@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useSelector } from "react-redux";
 import aaroww from "../../../../../assets/images/arrow_forward.svg";
 import info_icon from "../../../../../assets/images/infos.svg";
 import bell from "../../../../../assets/images/bell.svg";
@@ -9,8 +10,13 @@ import DownPayments from "./DownPayments";
 import moment from "moment";
 import AddCourseModal from "../../../../setup/course/src/addCourseModal";
 import { CourseServices } from "../../../../../services/setup/CourseServices";
+import DatePicker from "react-datepicker"
+import "react-datepicker/dist/react-datepicker.css";
 
 const ProgramTransaction = (props) => {
+  const [startDate, setStartDate] = useState();
+  const [payLaterDate, setPayLaterDate] = useState();
+  const [calenderMinDate, setCalenderMinDate] = useState();
   const [isLoader, setIsLoader] = useState(false);
 
   const [isAddPogramModal, setIsAddPogramModal] = useState(false);
@@ -52,18 +58,29 @@ const ProgramTransaction = (props) => {
     billing_cycle: ""
   });
 
+  const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user?.data?.organizationTimezoneInfo.utc_offset:null);
+
+
+  useEffect(() => {
+      let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+      let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset, "YYYY-MM-DD");
+      let tomorrowDate = moment().add(1, 'days').utc().format("YYYY-MM-DD HH:mm:ss");
+      let tomorrowsDateConverted = utils.convertUTCToTimezone(tomorrowDate ,timezoneOffset, "YYYY-MM-DD");
+      setCalenderMinDate(timezoneDateTime);
+      setPayLaterDate(new Date(tomorrowsDateConverted))
+      setStartDate(null);
+  }, []);
+
   const getLatestClone = () => JSON.parse(JSON.stringify(contractData));
   const addDownPaymentsRef = useRef();
 
   //Open add program modal
   const openAddPogramModal = (e) => {
     e.preventDefault();
-    console.log('open add program modal');
     setIsAddPogramModal(true);
   }
 
   const closeAddCourseModal = (param) => {
-    console.log('Close add Course Modal', param)
     setIsAddPogramModal(false);
     if (param === "fetch") {
       fetchPrograms(true);
@@ -79,7 +96,6 @@ const ProgramTransaction = (props) => {
         setCategoryData(result);
       }
     } catch (e) {
-      console.log('Error in fetch categories', e);
     }
   };
 
@@ -88,7 +104,6 @@ const ProgramTransaction = (props) => {
   };
 
   const selectProgram = (item, index) => {
-    console.log('Program', item, index);
     let durationArray = item.duration.split(" ");
     console.table(durationArray);
     setContractData({
@@ -104,12 +119,10 @@ const ProgramTransaction = (props) => {
     });
     setSelectedProgram(item);
     setChooseCategory(false);
-    console.log("Duration:::: ", durationArray[1])
   };
 
   //Update current program state
   useEffect(() => {
-    console.log('Current program data', props.programContractData);
     if (props.programContractData) {
       setSelectedProgram({ name: props.programContractData.courseName })
       setContractData(props.programContractData);
@@ -125,19 +138,16 @@ const ProgramTransaction = (props) => {
 
 
   useEffect(() => {
-    console.log(contractData)
   }, [contractData]);
 
 
   
   const fetchPrograms = async (isNewProgram = false) => {
-    console.log('is new', isNewProgram);
     try {
       setIsLoader(true);
       const pageId = utils.getQueryVariable('page');
       const queryParams = new URLSearchParams();
       const fetchProgram = await ProgramServices.fetchPrograms();
-      console.log('fetch programs', fetchProgram);
       if (fetchProgram.courses.length) {
         setProgramList(fetchProgram.courses);
         //Select first if created new program
@@ -146,7 +156,6 @@ const ProgramTransaction = (props) => {
         }
       }
     } catch (e) {
-      console.log('Error in fetch programs', e);
     } finally {
       setIsLoader(false);
     }
@@ -154,7 +163,6 @@ const ProgramTransaction = (props) => {
 
   //Down payments call back function
   const downPaymentsCallbackFn = (dataFromChild) => {
-    console.log('Data from child for down payments call back', dataFromChild);
     let clone = getLatestClone();
     if (dataFromChild.isDownPayment) {
       clone.downPayments = dataFromChild.downPaymentElems;
@@ -173,7 +181,6 @@ const ProgramTransaction = (props) => {
   //Duration change
   const handleDurationChange = (e) => {
     e.preventDefault();
-    console.log('d', e.target.value);
     setContractData({ ...contractData, duration: e.target.value });
   }
 
@@ -188,19 +195,16 @@ const ProgramTransaction = (props) => {
         billing_cycle: cycle
       }
     })
-    console.log("Duration: ", cycle);
   }
 
   //Payment type change
   const handelPaymentTypeChange = (e) => {
     e.preventDefault();
-    console.log('pt', e.target.value);
     setContractData({ ...contractData, payment_type: e.target.value });
   }
   
   //Payment type change
   const handelBillingCycleChange = (e) => {
-    console.log("dasdasdaasdasd", e.target.value)
     setContractData(prevState => {
       return { 
         ...prevState, 
@@ -212,19 +216,16 @@ const ProgramTransaction = (props) => {
   //Tuition amount change
   const handleTutionAmountChange = (e) => {
     e.preventDefault();
-    console.log('ta', e.target.value);
     setContractData({ ...contractData, amount: e.target.value });
   }
 
   //Payment mode change
   const handelPaymentModeChange = (e) => {
     e.preventDefault();
-    console.log('pm', e.target.value);
     setContractData({ ...contractData, default_transaction: e.target.value });
   }
 
   const handelFirstBillingDateToggle = (e) => {
-    console.log('toggle', e.target.checked);
     if (e.target.checked) {
       setContractData({ ...contractData, firstBillingTime: e.target.checked, paymentDate: moment().add(1, "days").format("YYYY-MM-DD"), isPayNow: 0 });
     } else {
@@ -233,34 +234,57 @@ const ProgramTransaction = (props) => {
   }
 
   //First billing date change
-  const handelFirstBillingDateChange = (e) => {
-    e.preventDefault();
-    console.log('first billing date change', e.target.value);
-    setContractData({ ...contractData, paymentDate: e.target.value, isPayNow: 0 });
+  // const handelFirstBillingDateChange = (e) => {
+  //   e.preventDefault();
+  //   console.log('first billing date change', e.target.value);
+  //   setContractData({ ...contractData, paymentDate: e.target.value, isPayNow: 0 });
+  // }
+
+  const handelFirstBillingDateChange = (val) => {
+    if (val) {
+      const yyyy = val.getFullYear();
+      let mm = val.getMonth() + 1; // Months start at 0!
+      let dd = val.getDate();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      let formattedDate = `${yyyy}-${mm}-${dd}`;
+      setPayLaterDate(val);
+      setContractData({ ...contractData, paymentDate: formattedDate, isPayNow: 0  });
+    }
   }
 
   //Program start date change
-  const handelProgramStartDateChange = (e) => {
-    e.preventDefault();
-    console.log('Program start date change', e.target.value);
-    setContractData({ ...contractData, courseStart: e.target.value });
+  // const handelProgramStartDateChange = (e) => {
+  //   e.preventDefault();
+  //   console.log('Program start date change', e.target.value);
+  //   setContractData({ ...contractData, courseStart: e.target.value });
+  // }
+
+  const handelProgramStartDateChange = (val) => {
+    if (val) {
+      const yyyy = val.getFullYear();
+      let mm = val.getMonth() + 1; // Months start at 0!
+      let dd = val.getDate();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      let formattedDate = `${yyyy}-${mm}-${dd}`;
+      setStartDate(val);
+      setContractData({ ...contractData, courseStart: formattedDate });
+    }
   }
 
   //Auto renew 
   const handelAutoRenewChange = (e) => {
-    console.log('Program auto renew change', e.target.checked);
     setContractData({ ...contractData, auto_renew: e.target.checked ? 1 : 0 });
   }
 
 
   //Count no of payments
   useEffect(() => {
-    console.log("In effect")
     if (contractData.duration) {
       let nextDueDate = "";
       let noOfPayments = 1;
       if (contractData.payment_type === 'recurring') {
-        console.log('before nDD call')
         nextDueDate = utils.getNextDueDate(contractData.paymentDate, 1, contractData.billing_cycle)
         /**
          * Example
@@ -280,7 +304,6 @@ const ProgramTransaction = (props) => {
         }
 
       } else if (!contractData.firstBillingTime && contractData.payment_type === 'onetime') {
-        console.log('reset nDD call')
         nextDueDate = ""
       }
       setContractData(prevState => {
@@ -304,14 +327,11 @@ const ProgramTransaction = (props) => {
   //Continue to buy
   const continueToBuy = (e) => {
     e.preventDefault();
-
-    console.log('herereererererererererererere', contractData)
     //return false;
     let formErrorsCopy = formErrors;
     let isError = false;
 
     //Validate down payments
-    console.log('dp flag', contractData.isDownPayment);
     if (contractData.isDownPayment) {
       let validateDP = validatDownPaymentsFn();
       if (!validateDP) {
@@ -401,7 +421,6 @@ const ProgramTransaction = (props) => {
       );
     } else {
       //Redirect to contract overview
-      console.log('Go to contract overview', contractData);
       props.contractOverviewFn(e, contractData);
     }
   }
@@ -417,10 +436,10 @@ const ProgramTransaction = (props) => {
             <div className="cmnFormRow">
               <label className="labelWithInfo">
                 <span className="labelHeading">Select Program</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={info_icon} alt="" />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
 
               <div
@@ -465,10 +484,10 @@ const ProgramTransaction = (props) => {
           <div className="formsection gap">
             <label className="labelWithInfo">
               <span className="labelHeading">Duration</span>
-              <span className="infoSpan">
+              {/*<span className="infoSpan">
                 <img src={info_icon} alt="" />
                 <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-              </span>
+              </span>*/}
             </label>
             <span className={(formErrors.duration ? "leftSecTransaction errorField" : "leftSecTransaction")}>
               <input type="text" className="cmnFieldStyle" onChange={handleDurationChange} value={contractData.duration} />
@@ -489,10 +508,10 @@ const ProgramTransaction = (props) => {
 
               <label className="labelWithInfo">
                 <span className="labelHeading">Payment Type</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={info_icon} />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
               <select className="selectBox" name="paymentType" value={contractData.payment_type} onChange={handelPaymentTypeChange}>
                 <option value="onetime">Onetime</option>
@@ -502,10 +521,10 @@ const ProgramTransaction = (props) => {
             <span className={formErrors.billing_cycle ? "rightSecTransaction errorField" : "rightSecTransaction"}>
               <label className="labelWithInfo">
                 <span className="labelHeading">Billing Cycle</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={props.info_icon} />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
               <select className="selectBox" name="billingCycle" value={contractData.billing_cycle} onChange={handelBillingCycleChange} 
               disabled={contractData.payment_type === 'onetime' || contractData.durationInterval === 'week' || contractData.durationInterval === 'month' }>
@@ -519,10 +538,10 @@ const ProgramTransaction = (props) => {
             <div className="cmnFormCol">
               <label className='labelWithInfo'>
                 <span className="labelHeading">Tuition Amount</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={info_icon} alt="" />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
               <div className={(formErrors.amount ? "cmnFormField preField errorField" : "cmnFormField preField")}>
                 <div className='unitAmount'>
@@ -534,10 +553,10 @@ const ProgramTransaction = (props) => {
             <div className="cmnFormCol">
               <label className='labelWithInfo'>
                 <span className="labelHeading">Payment Mode</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={info_icon} alt="" />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
 
               <div className='cmnFormField'>
@@ -578,19 +597,42 @@ const ProgramTransaction = (props) => {
                 <p>1st Billing Date <span>Now</span></p>
               </div>
               <div className={contractData.firstBillingTime ? "paymentNow display" : "paymentNow"} >
-                <input type="date" name="firstBillingDate" placeholder="mm/dd/yyyy" min={contractData.minPaymentDate} onChange={handelFirstBillingDateChange} className="editableInput" value={contractData.paymentDate} />
+                <DatePicker 
+                  className="cmnFieldStyle"
+                  selected={payLaterDate}
+                  format="dd/MM/yyyy"
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="dd/mm/yyyy"
+                  onChange={(e) => handelFirstBillingDateChange(e)} 
+                  minDate={new Date(moment(calenderMinDate).add(1, "days"))}
+                />
               </div>
             </div>
             <div className={formErrors.courseStart ? "rightSecTransaction errorField" : "rightSecTransaction"}>
 
               <label className="labelWithInfo">
                 <span className="labelHeading">Program Start Date</span>
-                <span className="infoSpan">
+                {/*<span className="infoSpan">
                   <img src={info_icon} alt="" />
                   <span className="tooltiptextInfo">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</span>
-                </span>
+                </span>*/}
               </label>
-              <input type="date" name="programStartDate" placeholder="mm/dd/yyyy" onChange={handelProgramStartDateChange} className="programStartDate cmnFieldStyle" defaultValue={contractData.courseStart} />
+              {/* <input type="date" 
+                name="programStartDate" 
+                placeholder="mm/dd/yyyy" 
+                onChange={handelProgramStartDateChange} 
+                className="programStartDate cmnFieldStyle" 
+                defaultValue={contractData.courseStart} 
+              /> */}
+              <DatePicker 
+                  className="cmnFieldStyle"
+                  selected={startDate}
+                  format="dd/MM/yyyy"
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="dd/mm/yyyy"
+                  onChange={(e) => handelProgramStartDateChange(e)} 
+                  minDate={new Date(calenderMinDate)}
+              />
             </div>
           </div>
           <div className="formsection gap autoRenew">
