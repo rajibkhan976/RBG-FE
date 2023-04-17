@@ -85,7 +85,6 @@ const GymDetails = (props) => {
       setIsLoader(true);
       const gymData = await GymDetailsServices.fetchGymDetail();
       // console.clear()
-      console.log("Gym Details", gymData);
       setGetGymData({
         ...getGymData,
         contactEmail: gymData?.gymDetails?.contactEmail,
@@ -101,8 +100,6 @@ const GymDetails = (props) => {
         country: (gymData?.gymDetails?.country) ? gymData?.gymDetails?.country : gymData.gymDetails?.ownerDetails?.countryCode,
       });
       setEditAccess(gymData.editAccess);
-      console.log("editAccess:::::::::::::::::::" , editAccess);
-      console.log("gymDetails:::::::::::::::::::" , gymData.gymDetails);
       setHasTimezone((gymData.gymDetails?.timezone)?true:false);
       if(!gymData.gymDetails?.timezone) {
         setGymData(prevState => ({...prevState, 
@@ -113,7 +110,6 @@ const GymDetails = (props) => {
       setValidateMsg({ ...validateMsg, disabledAccess: !gymData.editAccess });
       // if(!gymData?.gymDetails.timezone && detectedTimezone?.zoneName) setSuccessMsg(`Timezone auto detected as (${detectedTimezone.countryName} - ${detectedTimezone.zoneName}), but the data is not saved yet.`);
     } catch (e) {
-      console.log(e.message);
       setErrorMsg(e.message);
       // Show error message from here
     } finally {
@@ -123,40 +119,31 @@ const GymDetails = (props) => {
   const getTimeZoneList = async () => {
     try {
       const timezoneList = await GymDetailsServices.fetchTimeZoneList();
-      console.log("Timezone List --", timezoneList);
       setTimezoneData(timezoneList);
     } catch (e) {
-      console.log(e.message);
     }
   };
 
   const fetchCountry = async () => {
     try {
       const codeData = await GymDetailsServices.fetchCountry();
-      // console.log(codeData);
       setPhoneCountryCode(codeData);
     } catch (e) {
       setErrorMsg(e.message);
-      console.log(e.message);
     }
   };
   const fetchAccessCode = async () => {
     try {
       setIsLoader(true);
       const accessCodeNumber = await AttendanceServices.fetchAccessCode();
-      console.log("accessCodeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee", accessCodeNumber?.accessCode);
       setAccessCodeGen(accessCodeNumber?.accessCode);
-      console.log("accessCodeeee eeeeeeeeeeeeeeeeee eeeeeeeee",accessCodeGen);  
     } catch (e) {
-      console.log(e.message);
      
     } finally {
       setIsLoader(false);
     }
   };
   useEffect(() => {
-    console.clear()
-    console.log("user data",userData,"detected timezone",detectedTimezone,"redux data",reduxData)
     fetchCountry();
     fetchGymDetails();
     getTimeZoneList();
@@ -169,7 +156,6 @@ const GymDetails = (props) => {
   }, [errorMsg, successMsg]);
 
   const toggleOptions = (index) => {
-    console.log(index);
     setOption(index !== option ? index : null);
   };
   const openAddHolidayModal = (holiday) => {
@@ -196,7 +182,6 @@ const GymDetails = (props) => {
     event.preventDefault();
     // window.location.reload(false);
     setShowEditForm(false);
-    console.log("After close gym data", getGymData);
     
     setGymData({
       ...gymData,
@@ -226,9 +211,7 @@ const GymDetails = (props) => {
           const avatar = result.data.publicUrl;
           // setLogo({ image: result.data.originalKey, imageUrl: result.data.publicUrl });
           setGymData({ ...gymData, logo: result.data.originalKey })
-          console.log(avatar);
         }).catch(err => {
-          console.log('Profile pic error', err);
         });
       };
       reader.readAsDataURL(files[0]);
@@ -237,8 +220,6 @@ const GymDetails = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Gym Data", gymData);
-    console.log("validateMsg Data", validateMsg);
     try {
       const isValid = validateField(e, true);
       if (isValid) {
@@ -264,7 +245,6 @@ const GymDetails = (props) => {
         };
 
         console.clear()
-        console.log("payload",payload);
         const updatedData = await GymDetailsServices.gymDetailUpdate(payload);
         setGymData(updatedData);
         setHasTimezone((gymData.timezone) ? true: false);
@@ -272,7 +252,6 @@ const GymDetails = (props) => {
           type: actionTypes.USER_DATA,
           data: {...userData, organizationTimezone: gymData.timezone.toString(), organizationTimezoneInfo : timezoneInfo}
         });
-        console.log("Updated Data", updatedData);
         // setSuccessMsg("Gym details updated successfully");
         dispatch({
           type: actionTypes.SHOW_MESSAGE,
@@ -299,7 +278,6 @@ const GymDetails = (props) => {
       console.clear()
       const name = e.target.name;
       const value = e.target.value;
-      console.log("name",name,value)
       if (name === "name" && value.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, name: "Gym name should not be left empty" });
         
@@ -329,7 +307,6 @@ const GymDetails = (props) => {
         const country = countryIndex !== undefined ? countryIndex.getAttribute("data-country") : "US";
         setGymData({ ...gymData, [name]: value, country:  country});
       } else if(name === "timezone" && value.length) {
-        console.log("Timezone Offset", value);
         const timeZoneIndex = e.target[e.target.selectedIndex];
         const timezone = timeZoneIndex !== undefined ? timeZoneIndex.getAttribute("data-timezone") : "";
         setGymData({ ...gymData, [name]: timezone, gmtOffset:  value});
@@ -339,7 +316,6 @@ const GymDetails = (props) => {
       
     } else {
       console.clear()
-      console.log("edit",gymData)
       let bool = false;
       if (gymData.name.length === 0) {
         setValidateMsg({ ...validateMsg, disabled: true, name: "Gym name should not be left empty" });
@@ -395,7 +371,6 @@ const GymDetails = (props) => {
 
   const deleteConfirm = (response) => {
     if (response === "yes") {
-      console.log(response);
       deleteHoliday();
     } else {
       setDeleteConfirmBox(false);
@@ -403,10 +378,8 @@ const GymDetails = (props) => {
   };
 
   const editHolidayHandler = (elem) => {
-    console.log("Edit holiday", elem);
     setEditHoliday(true);
     setHolidayVal(elem);
-    console.log(holidayVal)
     setOpenModal(true);
     setOption(false);
   };
@@ -417,8 +390,6 @@ const GymDetails = (props) => {
   }
 //const generatedNo ="00";
 const generatedNo = JSON.stringify(accessCodeGen);
-//console.log(typeof generatedNo);
-//console.log("accessCodeGen.accessCode" ,accessCodeGen);
 const codeGentextCopy = generatedNo.split("");
 
 
@@ -429,11 +400,9 @@ const fetchAccessCodeGenerate = async () => {
   try {
     setIsLoader(true);
     const accessCodeNumber = await AttendanceServices.fetchAccessCodeGenerate();
-    console.log("gennnnnnnCCCC", accessCodeNumber?.accessCode);
-    setAccessCodeGen(accessCodeNumber?.accessCode);
-    //console.log("accessCodeeee eeeeeeeeeeeeeeeeee eeeeeeeee",accessCodeGen);  
+    
+    setAccessCodeGen(accessCodeNumber?.accessCode); 
   } catch (e) {
-    console.log(e.message);
    
   } finally {
     setIsLoader(false);
@@ -444,9 +413,6 @@ const regenerateCodeHandler = (e) =>{
   fetchAccessCodeGenerate();  
 }
 const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
-useEffect(()=>{
-  console.log("gym details time zone", timezoneOffset);
-}, [timezoneOffset]);
 
 
 const base_url = window.location.origin;

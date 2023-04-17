@@ -130,7 +130,6 @@ const AppointmentGlobal = (props) => {
             });
           }
         });
-        console.log("Event List", eventArray)
         setEvents(eventArray);
       }
     } catch (e) {
@@ -143,12 +142,10 @@ const AppointmentGlobal = (props) => {
     }
   }
   const clickOnEvent = (e) => {
-    console.log("eventtt",e)
     setEditingApp(e.event._def.extendedProps.data)
     setEditAppointment(true)
   }
   const clickOnDate = (e) => {
-    console.log("clikc ond date",e)
     let api = calenderRef.current.getApi()
     api.changeView('timeGridDay', e.dateStr)
   }

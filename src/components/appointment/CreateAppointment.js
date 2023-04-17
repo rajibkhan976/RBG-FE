@@ -169,9 +169,6 @@ const CreateAppointment = (props) => {
         setSearchedTag("");
     };
     const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user?.data?.organizationTimezoneInfo.utc_offset:null);
-    useEffect(()=>{
-        console.log("Create appointment timezone", timezoneOffset);
-    })
 
     useEffect(() => {
       let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
@@ -181,8 +178,6 @@ const CreateAppointment = (props) => {
     }, []);
 
     const appointmentDataAdd = (e, type) => {
-        console.log("E ==========================", e)
-        
         let validErrors = {...appointmentErrors};
         let isDisabled = false;
         
@@ -193,19 +188,12 @@ const CreateAppointment = (props) => {
             if (type === "date") {
                 const dateDiff = utils.dateDiff(e.target.value);
                 if(dateDiff.difference <= 0) {
-                    console.log("Today")
                     const fromTime = appointmentData.fromTime;
                     if(fromTime) {
-                        console.log("From Time")
                         const appDateTime = moment(`${e.target.value.toString()} ${appointmentData.fromTime.toString()}`).format("YYYY-MM-DD h:mm a");
                         const diffFromToday = todayDate.diff(appDateTime, "minutes");
 
-                        
-
-
-                        console.log(diffFromToday);
                         if(diffFromToday > 0) {
-                            console.log("Invalid time")
                             validErrors.fromTime = "Invalid from time";
                             isDisabled = true;
                         } else {
@@ -221,7 +209,6 @@ const CreateAppointment = (props) => {
                 validErrors.date = "";
                 isDisabled = false;
                 let newDateString = e.target.value;
-                console.log(newDateString);
                 setAppointmentData({...appointmentData, date: newDateString});
             }
             if (type == "agenda") {
@@ -251,24 +238,23 @@ const CreateAppointment = (props) => {
         let formattedDate = `${val.getFullYear()}-${
             val.getMonth() + 1
           }-${val.getDate()}`;
-        console.log('vallllllllllllllllllllllllllll', formattedDate)
         setDate(val);
         formattedDate = moment(formattedDate).format("YYYY-MM-DD");
         const dateDiff = utils.dateDiff(formattedDate);
         if(dateDiff.difference <= 0) {
-            console.log("Today")
+            // console.log("Today")
             const fromTime = appointmentData.fromTime;
             if(fromTime) {
-                console.log("From Time")
+                // console.log("From Time")
                 const appDateTime = moment(`${formattedDate.toString()} ${appointmentData.fromTime.toString()}`).format("YYYY-MM-DD h:mm a");
                 const diffFromToday = todayDate.diff(appDateTime, "minutes");
 
                 
 
 
-                console.log(diffFromToday);
+                // console.log(diffFromToday);
                 if(diffFromToday > 0) {
-                    console.log("Invalid time")
+                    // console.log("Invalid time")
                     validErrors.fromTime = "Invalid from time";
                     isDisabled = true;
                 } else {
@@ -284,7 +270,7 @@ const CreateAppointment = (props) => {
         validErrors.date = "";
         isDisabled = false;
         let newDateString = formattedDate;
-        console.log(newDateString);
+        // console.log(newDateString);
         setAppointmentData({...appointmentData, date: newDateString});
         setAppointmentErrors(validErrors);
         setIsDisabled(isDisabled);
@@ -305,7 +291,7 @@ const CreateAppointment = (props) => {
         //Name character limit
         if (e.target.value.length >= 30) {
             //Length 30 char limit
-            console.log("char checking");
+            // console.log("char checking");
             setAppointmentErrors({
                 ...appointmentErrors,
                 name: "Name should not be more than 30 characters",
@@ -315,7 +301,7 @@ const CreateAppointment = (props) => {
         //Name special character checking
         let isSpecialCharacterformat = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
         if (isSpecialCharacterformat.test(e.target.value)) {
-            console.log("Special checkig");
+            // console.log("Special checkig");
             setAppointmentErrors({
                 ...appointmentErrors,
                 name: "Name should not contain any special characters",
@@ -336,7 +322,6 @@ const CreateAppointment = (props) => {
                     keyword: e.target.value,
                 };
                 await DependentServices[operationMethod](payload).then((result) => {
-                    console.log("Search contacts result", result);
                     setToggleContactList({
                         ...toggleContactList,
                         contacts: result.contacts,
@@ -346,13 +331,11 @@ const CreateAppointment = (props) => {
                     // }
                 });
             } catch (e) {
-                console.log("Error in contact search: ", e);
             } finally {
                 setProcessing(false);
                 // setAddManually(true);
                 setIsDisabled(false);
                 setAppointmentErrors({...appointmentErrors, name: ""});
-                console.log("setBasicinfoFname", e.target.value.indexOf(" "));
             }
 
             if (e.target.value.length == 0) {
@@ -376,7 +359,7 @@ const CreateAppointment = (props) => {
 
         const localTime = moment(convertedLocalTime, "YYYY-MM-DD HH:mm:ss");
         const choosedTime = moment(convertedChoosedTime, "YYYY-MM-DD HH:mm:ss");
-        // console.log("Time differance ======================= ", choosedTime.diff(localTime, "minutes"), convertedChoosedTime, convertedLocalTime);
+        // // console.log("Time differance ======================= ", choosedTime.diff(localTime, "minutes"), convertedChoosedTime, convertedLocalTime);
 
 
         let validErrors = {...appointmentErrors};
@@ -399,10 +382,6 @@ const CreateAppointment = (props) => {
                     fromTime: fromValue.format("h:mm a").toUpperCase(),
                 });
             } else {
-                console.log(
-                    parseFloat(appointmentData.toTime.split(" ")[0].replace(":", "")),
-                    parseFloat(fromValue.format("h:mm a").split(" ")[0].replace(":", ""))
-                );
                 if (
                     parseFloat(appointmentData.toTime.split(" ")[0].replace(":", "")) <=
                     parseFloat(fromValue.format("h:mm a").split(" ")[0].replace(":", ""))
@@ -446,7 +425,6 @@ const CreateAppointment = (props) => {
         }
         // parseInt(e.target.value.replace(":","")) >= parseInt(appointmentData.toTime.replace(":",""))
         setAppointmentErrors(validErrors);
-        console.log("Disabled",isDisabled);
         setIsDisabled(isDisabled);
     };
 
@@ -540,7 +518,6 @@ const CreateAppointment = (props) => {
     };
 
     const handleContactSelect = (e, contact) => {
-        console.log("contact:::::", contact);
         setDependant({
             name: contact.firstName + " " + (contact.lastName ? contact.lastName : ""),
             contactId: contact._id,
@@ -634,13 +611,6 @@ const CreateAppointment = (props) => {
         let valid = validateAppointment();
         const convertFromDateTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.fromTime),timezoneOffset);
         const convertToDateTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.toTime), timezoneOffset);
-        console.log("Appointment from date and time", utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.fromTime))
-        console.log("Appointment to date and time", utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.toTime));
-        // setAppointmentData({
-        //     ...appointmentData,
-        //     fromDateTime: convertFromDateTime,
-        //     toDateTime: convertToDateTime,
-        // })
         appointmentData['fromDateTime'] = convertFromDateTime.trim();
         appointmentData['toDateTime'] = convertToDateTime.trim();
         appointmentData['date'] = utils.dateConversion(appointmentData.date).trim();
@@ -650,7 +620,6 @@ const CreateAppointment = (props) => {
                 let newAppointment = await AppointmentServices.saveAppointment(appointmentData);
 
                 if (newAppointment) {
-                    console.log("newAppointment", newAppointment);
                     // let updatedAppointments = [newAppointment, ...props.appointments];
                     // props.setAppointments(updatedAppointments);
                     // //props.setAppointmentCreated("success");
@@ -699,7 +668,6 @@ const CreateAppointment = (props) => {
     };
 
     const handelBasicinfoPhone = (event) => {
-        console.log(event);
         const {name, value} = event.target;
         if (name === "countryCode") {
             const daileCodeindex = event.target[event.target.selectedIndex];
@@ -732,7 +700,6 @@ const CreateAppointment = (props) => {
     ) : '';
 
     const handelBasicinfoEmail = (event) => {
-        console.log("hi");
         setBasicinfoEmail(event.target.value);
         setFormErrors(prevState => ({...prevState, email: ''}));
     };
@@ -781,7 +748,6 @@ const CreateAppointment = (props) => {
     }
 
     const onContactSubmit = async (e) => {
-        console.log('here on contact update', basicinfoPhone)
         e.preventDefault();
         setIsLoader(true);
         let formErrorsCopy = formErrors;
@@ -855,7 +821,6 @@ const CreateAppointment = (props) => {
                 let createContact = await ContactService.updateContact(payload, contactIdNew);
                 if (createContact) {
                     if (contactIdNew == 0) {
-                        console.log("createContact", createContact.data.ops[0]._id);
                         setSuccessMsg('Contact saved successfully.');
                         dispatch({
                             type: actionTypes.CONTACTS_MODAL_ID,
@@ -977,7 +942,6 @@ const CreateAppointment = (props) => {
                                                                 backgroundColor: `rgb(${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)})`
                                                             }}
                                                         >
-                                                            {console.log(`rgb(${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)},${Math.floor(Math.random() * 256)})`)}
                                                             {contact.firstName ? contact.firstName[0] : ""}
                                                             {contact.lastName ? contact.lastName[0] : ""}
                                                         </figure>
@@ -1127,7 +1091,7 @@ const CreateAppointment = (props) => {
                       </span>
                       <TagList tagListToggle={tagListToggle} selectTag={selectTag}/>
                     </span>
-                                        {console.log("appointmentData", appointmentData)}
+                                        
                                         {appointmentData.tagsDatas.length > 0 &&
                                             appointmentData.tagsDatas.map((tag, i) => (
                                                 <span className="indTags" key={i}>

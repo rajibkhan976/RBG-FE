@@ -115,7 +115,6 @@ const Transaction = (props) => {
       setRefundAmount(item.amount);
     }
     setRefundPayVia(item.payment_via);
-    console.log(item.payment_via);
   };
 
   const closeRefundModal = () => {
@@ -162,7 +161,6 @@ const Transaction = (props) => {
       fetchUpcomingTransactions(props.contactId, 1);
       fetchOverdueTransactions(props.contactId, 1);
     } catch (error) {
-      console.log(error);
     } finally {
       setIsLoader(false)
     }
@@ -171,14 +169,11 @@ const Transaction = (props) => {
 
   const openCloseCompleteTrans = (param, item) => {
 
-    console.log("outside condition");
 
     if (param) {
-      console.log("inside if");
       setCompleteTransElement(item);
       setCompleteTransModal(param);
     } else if (param == false) {
-      console.log("inside else if");
       setCompleteTransModal(false);
       fetchUpcomingTransactions(props.contactId, 1);
       fetchOldTransactions(props.contactId, 1);
@@ -187,7 +182,6 @@ const Transaction = (props) => {
     }
 
     if (param == "close") {
-      console.log("outside close");
       setCompleteTransModal(false);
     }
   };
@@ -224,7 +218,6 @@ const Transaction = (props) => {
 
 
   useEffect(() => {
-    console.log("Timezone: ", timezone);
     const close = (e) => {
       if (e.keyCode === 27) {
         setRefundModal(false);
@@ -311,7 +304,6 @@ const Transaction = (props) => {
       setIsScroll(true);
       setIsLoaderScroll(true);
       const response = await TransactionServices.fetchUpcomingTransactions(contactId, pageNumber);
-      console.log("Upcomming transation", response?.transactions)
       if (response.pagination.currentPage == 1) {
         setUpcomingTransaction(response.transactions);
       } else {
@@ -347,7 +339,6 @@ const Transaction = (props) => {
       const response = await TransactionServices.fetchContract(contactId, pageNumber);
       if (response.pagination.currentPage == 1) {
         setContract(response.transactions);
-        console.log("Contract response: ", response);
       } else {
         setContract([...contract, ...response.transactions]);
       }
@@ -1068,7 +1059,6 @@ const Transaction = (props) => {
         setOverdueTransactionList([...overdueTransactionList, ...response.transactions]);
       }
       setOverduePagination(response.pagination);
-      // console.log("Overdue transaction response ", response);
     } catch (e) {
 
     } finally {
@@ -1087,7 +1077,6 @@ const Transaction = (props) => {
       fetchUpcomingTransactions(props.contactId, 1);
       fetchOverdueTransactions(props.contactId, 1);
     } catch (error) {
-      console.log(error);
     } finally {
       setIsLoader(false);
 
@@ -1111,9 +1100,7 @@ const Transaction = (props) => {
   };
   // Overdue Transactions
   const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
-  useEffect(()=>{
-    console.log("transation time zone:", timezoneOffset)
-},[timezoneOffset])
+
   return (
     <>
       {successMsg && <AlertMessage type="success" message={successMsg} time={10000} close={closeAlert} />}

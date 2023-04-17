@@ -83,7 +83,6 @@ const TransactionGlobal = (props) => {
             setContact(uniqueNames);
             setShowFilter(false);
         } catch (e) {
-            console.log('error', e)
         } finally {
             setIsLoader(false);
         }
@@ -91,7 +90,6 @@ const TransactionGlobal = (props) => {
 
     const getQueryParams = async () => {
         const status = utils.getQueryVariable('status');
-        console.log(status)
         const item = utils.getQueryVariable('item');
         const contact = utils.getQueryVariable('contact');
         const fromDate = utils.getQueryVariable('fromDate');
@@ -126,7 +124,6 @@ const TransactionGlobal = (props) => {
     }, [modalId]);
 
     const getFilterStr = () => {
-        console.log('dasdasdas')
         fetchTransHistoryList("1");
         setShowFilter(false);
     };
@@ -149,7 +146,6 @@ const TransactionGlobal = (props) => {
 
     };
     const openContactModal = (e) => {
-        console.log(e.contactId)
         dispatch({
             type: actionTypes.CONTACTS_MODAL_ID,
             contact_modal_id: {
@@ -167,9 +163,6 @@ const TransactionGlobal = (props) => {
         })
     }
     
-    useEffect(()=>{
-        console.log("transaction time zone:", timezoneOffset)
-    },[timezoneOffset]);
     return (
         <>
             <div className='dashInnerUI'>

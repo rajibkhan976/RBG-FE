@@ -85,15 +85,12 @@ const BillingOverview = (props) => {
 
             try {
                 BillingServices.makePrimary(payload);
-                console.log("MAKING PRIMARY:::", e, value);
             } catch (error) {
-                console.log(error);
                 setNewPayErrors((errorMessage) => ({
                     ...errorMessage,
                     primary_invalid: error.message,
                 }));
             } finally {
-                console.log("MADE PRIMARY");
                 setIsPrimay({
                     type: value,
                     billingId: e
@@ -109,26 +106,22 @@ const BillingOverview = (props) => {
             setIsLoader(true);
             let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
             cardBanksList = cardBankResponce;
-             console.log("cardBankResponce", cardBankResponce);
             if (cardBankResponce) {
                 let primaryPaymentSource = cardBankResponce.primary === 'card' ? 'cards' : 'banks';
                 //Filter card bank by active
                 let filterCardBank = cardBankResponce[primaryPaymentSource].filter(obj => {
                     return obj.status === 'active'
                 });
-                console.log("1");
                 //Sort cards
                 if (cardBankResponce.cards) {
                     let sortedCards = cardBankResponce.cards.sort(el => (el.status === "active") ? -1 : 1)
                     setCardBankList(sortedCards);
                 }
-                console.log("2");
                 //Sort banks
                 if (cardBankResponce.banks) {
                     let sortedBanks = cardBankResponce.banks.sort(el => (el.status === "active") ? -1 : 1)
                     setBankList(sortedBanks);
                 }
-                console.log("3");
                 //Set primary data
                 if (filterCardBank) {
                     setIsPrimay({
@@ -137,14 +130,11 @@ const BillingOverview = (props) => {
                     });
                     setNewPayTab(cardBankResponce.primary)
                 }
-                console.log("4");
             }
         } catch (error) {
-            console.log(error);
         } finally {
-            console.log("accounts loaded!");
             if ((cardBanksList.banks.length === 0 && cardBanksList.cards.length === 0) || (!cardBanksList.primary || cardBanksList.primary === null)) {
-                console.log("here now");
+                
                 setNewPayTab('card')
             }
             setIsLoader(false);
@@ -153,24 +143,19 @@ const BillingOverview = (props) => {
 
     // Change default payment method
     const changeDefaultPay = (payItem, type) => {
-        console.log("checked: ", payItem, type);
         try {
-            console.log("isPrimary", isPrimary);
             setIsLoader(true);
             setIsPrimay({
                 type: type,
                 billingId: payItem._id
             })
         } catch (error) {
-            console.log(error);
         } finally {
             setIsLoader(false);
-            console.log("isPrimary", isPrimary);
         }
     };
 
     const changeAddTab = (type) => {
-        console.log("type", type);
         setNewPayTab(type)
     }
     // CARD NUMBER CHECK
@@ -325,7 +310,6 @@ const BillingOverview = (props) => {
             if (cardExpairy[0] > 1)
                 cardExpairy = "0" + cardExpairy[0]
         }
-        console.log(cardExpairy.length);
         if (cardExpairy.length === 0 || cardExpairy.length < 7) {
             setNewPayErrors((errorMessage) => ({
                 ...errorMessage,
@@ -509,8 +493,6 @@ const BillingOverview = (props) => {
             status: "active"
         } : cardError = true
 
-        console.log("NEW CARD:::", cardPayload);
-
         if (!cardError && !newPayHasError) {
             setAddLoader(true)
 
@@ -530,7 +512,6 @@ const BillingOverview = (props) => {
                     }, 2000);
                     setNewPayHasError(false)
                     setNewPayModal(false);
-                    console.log("cardBankResponce", cardBankResponce._id);
                     makePrimaryMethod(cardBankResponce._id, "card");
 
                     setNewPayErrors({
@@ -553,7 +534,6 @@ const BillingOverview = (props) => {
                         company_name: ''
                     })
                     setTimeout(() => {
-                        console.log("Fuck this Line from card");
                         fetchCardBank();
                     }, 200)
                 }
@@ -673,7 +653,6 @@ const BillingOverview = (props) => {
             ...newBankState,
             company_name: name
         });
-        console.log("newBankState: ", newBankState);
     }
 
 
@@ -708,7 +687,7 @@ const BillingOverview = (props) => {
                 account_holder: "",
             }));
         }
-        console.log("newBankState.account_number", newBankState.account_number, newBankState.account_number.length === 0);
+
         if (newBankState.account_number.length === 0) {
             setNewPayErrors((errorMessage) => ({
                 ...errorMessage,
@@ -758,9 +737,6 @@ const BillingOverview = (props) => {
                 company_name: "",
             }));
         }
-        
-
-        console.log("Bank state: ", newBankState);
 
         let bankPayload = newBankState.routing_number.trim() !== "" && newBankState.account_number.trim() !== "" && newBankState.account_holder.trim() !== "" ? {
             contact: props.contactId,
@@ -814,7 +790,6 @@ const BillingOverview = (props) => {
                         company_name: ''
                     })
                     setTimeout(() => {
-                        console.log("Fuck this Line");
                         fetchCardBank();
                     }, 200)
                     

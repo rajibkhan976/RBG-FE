@@ -45,7 +45,6 @@ const DownPayments = forwardRef((props, ref) => {
   
     useEffect(() => {
         if (props.contractData && props.contractData.isDownPayment && props.contractData.downPayments.length) {
-            console.log('Props', props.contractData);
             setIsDownPayment(true);
             setDownPaymentElems(props.contractData.downPayments);
         }
@@ -64,7 +63,6 @@ const DownPayments = forwardRef((props, ref) => {
     }));
 
     const validate = (addnew = false) => {
-        console.log('validate function in down payments component');
         let errflag = false;
         const newElems = downPaymentElems.map(el => {
             let newEl = { ...el };
@@ -75,12 +73,10 @@ const DownPayments = forwardRef((props, ref) => {
             }
             newEl.titleErr = errTitle;
             newEl.amountErr = errAmount;
-            console.log('new ele', newEl);
             return newEl;
         });
 
         if (addnew && errflag === false) {
-            console.log('Insert initial value', downPaymentElement);
             downPaymentElement.title = 'Down Payment ' + (downPaymentElems.length + 1)
             newElems.unshift(downPaymentElement);
         }
@@ -115,7 +111,6 @@ const DownPayments = forwardRef((props, ref) => {
     };
 
     const downpayDatepicker = (val, key, type) => {
-        console.log("EEEEEEEEEEEEEEEEEEEE", val, key, type);
 
         let formattedDate = `${val.getFullYear()}-${
             val.getMonth() + 1
@@ -127,7 +122,7 @@ const DownPayments = forwardRef((props, ref) => {
     }
 
     const validateIndividual = (e, key, type) => {
-        //console.log('validate individual', key, type, e.target.value, e.target.checked);
+        console.log("validateIndividual----------", downPaymentElems);
         let elems = [...downPaymentElems];
         if (type === "isPayNow") {
             elems[key][type] = e.target.checked ? 1 : 0;
@@ -143,6 +138,9 @@ const DownPayments = forwardRef((props, ref) => {
                 newElem.titleErr = checkTitleErr(newElem.title);
                 break;
             case "amount":
+                if(!newElem.paymentDate) {
+                    newElem.paymentDate = tomorrow;
+                }
                 newElem.amountErr = checkAmountErr(newElem.amount);
                 break;
             case "isPayNow":
@@ -165,14 +163,12 @@ const DownPayments = forwardRef((props, ref) => {
                 break;
         }
         elems[key] = newElem;
-        console.log('Validate Individual', elems);
         setDownPaymentElems(elems);
     };
 
     //Delete down payment
     const delDownpaymentFn = (e, key) => {
         e.preventDefault();
-        console.log('Down payment click', e, key);
         // setDownPaymentElems(key !== 0 ? downPaymentElems.filter((_, k) => key !== k) : downPaymentElems);
         setDownPaymentElems(downPaymentElems.filter((_, k) => key !== k));
     };
@@ -180,7 +176,6 @@ const DownPayments = forwardRef((props, ref) => {
     //Downpayment toggle
     const downPaymentToggle = (e) => {
         let isActive = e.target.checked;
-        console.log('Toggle', isActive);
         setIsDownPayment(isActive);
         setDownPaymentElems([{ ...downPaymentElement }]);
         if (!isActive) {
@@ -311,7 +306,6 @@ const DownPayments = forwardRef((props, ref) => {
                                                             min={el.minPaymentDate}
                                                             onChange={e => validateIndividual(e, key, "paymentDate")}
                                                         /> */}
-                                                        {console.log("el.paymentDate", el, tomorrow)}
                                                         <DatePicker 
                                                             className="cmnFieldStyle"
                                                             selected={el.paymentDate ? new Date(el.paymentDate) : (tomorrow ? new Date(tomorrow) : new Date())}

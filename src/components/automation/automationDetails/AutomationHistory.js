@@ -144,10 +144,6 @@ export default function AutomationHistory(props) {
             utils.addQueryParameter('fromDate', utils.convertTimezoneToUTC(filterData.fromDate + " " + "00:00:01", timezoneOffset).replace(' ', 'T').trim() + '.000Z');
             utils.addQueryParameter('toDate', utils.convertTimezoneToUTC(filterData.toDate + " " + "23:59:59", timezoneOffset).replace(' ', 'T').trim() + '.000Z');
 
-            console.log("utils.convertTimezoneToUTC",filterData.fromDate, utils.convertTimezoneToUTC(filterData.fromDate + " " + "00:00:01", timezoneOffset).replace(' ', 'T') + '.000Z')
-            console.log("utils.convertTimezoneToUTC",filterData.toDate, utils.convertTimezoneToUTC(filterData.toDate + " " + "23:59:59", timezoneOffset).replace(' ', 'T') + '.000Z')
-            //console.log("utils.convertTimezoneToUTC Trim", utils.convertTimezoneToUTC(filterData.toDate + " " + "00:00:01", timezoneOffset).replace(' ', 'T').trim() + '.000Z')
-            //console.log("+06%3A00%3A01+", decodeURIComponent("+06%3A00%3A01+").replaceAll("+", " "));
 
         } else {
             utils.removeQueryParameter('fromDate');
@@ -271,7 +267,6 @@ export default function AutomationHistory(props) {
                         automationHistory.map((elem, i) => {
                             return (
                                 <>
-                                    {/* {console.log(elem)} */}
                                     <div className={togOption === i ? "listRow opened" : "listRow"} key={"automation_history_" + i} >
                                         <div className="listCell cellWidth_20">
                                             <figure

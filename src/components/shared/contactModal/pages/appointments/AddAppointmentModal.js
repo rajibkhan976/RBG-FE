@@ -79,9 +79,6 @@ const AddAppointmentModal = (props) => {
   };
   const timezoneOffset = useSelector((state) => (state.user?.data.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
   // useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:"UTC-06"); 
-  useEffect(()=>{
-    console.log("Add appointment create", timezoneOffset);
-  })
 
   useEffect(() => {
     let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
@@ -146,15 +143,11 @@ const AddAppointmentModal = (props) => {
       if (type == "date") {
         const dateDiff = utils.dateDiff(e.target.value);
         if (dateDiff.difference <= 0) {
-          console.log("Today")
           const fromTime = appointmentData.fromTime;
           if (fromTime) {
-            console.log("From Time")
             const appDateTime = moment(`${e.target.value.toString()} ${appointmentData.fromTime.toString()}`).format("YYYY-MM-DD h:mm a");
             const diffFromToday = todayDate.diff(appDateTime, "minutes");
-            console.log(diffFromToday);
             if (diffFromToday > 0) {
-              console.log("Invalid time")
               validErrors.fromTime = "Invalid from time";
               isDisabled = true;
             } else {
@@ -201,11 +194,8 @@ const AddAppointmentModal = (props) => {
   };
 
   const setStartDate = (val) => {
-    console.log("date value:", val);
     const convertFromDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD")+ " " + utils.timeConversion(appointmentData?.fromTime), timezoneOffset);
     const convertToDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD")+ " " + utils.timeConversion(appointmentData?.toTime), timezoneOffset);
-    console.log("convert from date time", convertFromDateTime);
-    console.log("Convert to date time", convertToDateTime);
     let validErrors = {...validationErrors};
     let isDisabled = false;
     let formattedDate = `${val.getFullYear()}-${
@@ -216,15 +206,11 @@ const AddAppointmentModal = (props) => {
     
     const dateDiff = utils.dateDiff(formattedDate);
     if (dateDiff.difference <= 0) {
-      console.log("Today")
       const fromTime = appointmentData.fromTime;
       if (fromTime) {
-        console.log("From Time")
         const appDateTime = moment(`${formattedDate.toString()} ${appointmentData.fromTime.toString()}`).format("YYYY-MM-DD h:mm a");
         const diffFromToday = todayDate.diff(appDateTime, "minutes");
-        console.log(diffFromToday);
         if (diffFromToday > 0) {
-          console.log("Invalid time")
           validErrors.fromTime = "Invalid from time";
           isDisabled = true;
         } else {
@@ -258,12 +244,9 @@ const AddAppointmentModal = (props) => {
     });
     setValidationErrors(validErrors);
     setIsDisabled(isDisabled);
-    console.log("Appointment Data", appointmentData);
   }
 
   const fromDateAdd = (fromValue) => {
-    console.log("From time::::::::::::::: ", fromValue.format("HH:mm:ss"));
-    console.log("Local time============== ", moment().utc().format("YYYY-MM-DD HH:mm:ss"));
     const convertedChoosedTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + fromValue.format("HH:mm:ss"),timezoneOffset);
     const convertedLocalTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
 
@@ -280,7 +263,7 @@ const AddAppointmentModal = (props) => {
     const diffFromToday = choosedTime.diff(localTime, "minutes");
     const fromTime = moment(`${appointmentData.date} ${fromValue.format("h:mm a")}`).format('MM/DD/YYYY h:mm a');
     const toTime = moment(`${appointmentData.date} ${appointmentData.toTime}`).format('MM/DD/YYYY h:mm a');
-    console.log(";oooooooooooooooooooooooooooooooooooooooooooo", diffFromToday)
+    
     if (fromValue && fromValue != null) {
       if (appointmentData.toTime.trim() === "") {
         validErrors.fromTime = "";
@@ -293,10 +276,6 @@ const AddAppointmentModal = (props) => {
           fromDateTime:utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(fromValue.format("h:mm a").toUpperCase()), timezoneOffset).trim(),
         });
       } else {
-        console.log(
-          parseFloat(appointmentData.toTime.split(" ")[0].replace(":", "")),
-          parseFloat(fromValue.format("h:mm a").split(" ")[0].replace(":", ""))
-        );
         if (
           parseFloat(appointmentData.toTime.split(" ")[0].replace(":", "")) <=
           parseFloat(fromValue.format("h:mm a").split(" ")[0].replace(":", ""))
@@ -327,7 +306,6 @@ const AddAppointmentModal = (props) => {
         validErrors.fromTime = "Invalid from time";
         isDisabled = true;
       } else if (appointmentData.toTime && Math.sign(moment(fromTime).diff(toTime, "minutes")) > 0) {
-        console.log("To Time is less than from");
         validErrors.fromTime = "To time cannot be less";
         isDisabled = true;
       } else {
@@ -335,13 +313,11 @@ const AddAppointmentModal = (props) => {
         isDisabled = false;
       }
     }
-    console.log("Is Disabled", isDisabled);
     setValidationErrors(validErrors);
     setIsDisabled(isDisabled);
   };
 
   const selectTag = (tag, mode) => {
-    console.log(tag);
     let copySelTags = [...appointmentData.tagsDatas];
     let tagIds = [...appointmentData.tags];
     if (mode) {
@@ -360,7 +336,6 @@ const AddAppointmentModal = (props) => {
       copySelTags = copySelTags.filter((addedTag) => addedTag._id != tag._id);
       tagIds = tagIds.filter((addedTag) => addedTag != tag._id);
     }
-    console.log(copySelTags, tagIds);
     setAppointmentData({
       ...appointmentData,
       tagsDatas: copySelTags,
@@ -420,12 +395,10 @@ const AddAppointmentModal = (props) => {
       console.clear();
       // const fromTime = moment(`${appointmentData.fromTime}`).format("hh:mm:ss");
       // const toTime = moment(`${appointmentData.toTime}`).format("h:m:s");
-      console.log("I am here", moment(toTime).diff(fromTime, "minutes"));
       if (!appointmentData.date) {
         validErrors.date = "Please choose a date";
         isDisabled = true;
       } else if (fromTime && Math.sign(moment(toTime).diff(fromTime, "minutes")) < 0) {
-        console.log("invalid")
         validErrors.toTime = "Invalid to time";
         isDisabled = true;
       } else {
@@ -437,10 +410,8 @@ const AddAppointmentModal = (props) => {
       // validErrors.toTime = "Invalid end time.";
     }
     // parseInt(e.target.value.replace(":","")) <= parseInt(appointmentData.fromTime.replace(":",""))
-    console.log("Is Disabled", isDisabled);
     setValidationErrors(validErrors);
     setIsDisabled(isDisabled);
-    console.log("Appointment to date", appointmentData);
   };
 
   // on valid submission, send appointment to parent
@@ -461,16 +432,13 @@ const AddAppointmentModal = (props) => {
     //   fromDateTime: conversionFrom,
     //   toDateTime: conversionTo
     // })
-    console.log("Appointment Date", appointmentData);
     if (valid && validationErrors.fromTime === "") {
       setIsLoader(true);
       try {
         let newAppointment = await AppointmentServices.saveAppointment(appointmentData);
         // let newAppointment;
-        console.log('Appointment date', appointmentData)
         if (newAppointment) {
           newAppointment['tagNames'] = appointmentData.tagsDatas;
-          console.log("newAppointment::::::", newAppointment);
           let updatedAppointments = [newAppointment, ...props.appointments];
           props.setAppointments(updatedAppointments);
           props.setAppointmentCreated("success");

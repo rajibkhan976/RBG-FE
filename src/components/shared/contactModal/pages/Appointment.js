@@ -73,14 +73,12 @@ const Appointment = (props) => {
   };
 
   const fetchAppointment = async (page) => {
-    console.log("fetchAppointment");
     try {
       setIsLoader(true);
       setIsScroll(true);
       let appointmentResult = await AppointmentServices.fetchContactAppointment(props.contactId, page);
       setIsScroll(false);
       if (page === 1) {
-        console.log("Appointment List", appointmentResult.appointments);
         setAppointments(appointmentResult.appointments);
       } else {
         setAppointments([...appointments, ...appointmentResult.appointments]);
@@ -99,7 +97,6 @@ const Appointment = (props) => {
 
   const editThisAppointment = (e, appointment, status) => {
     e.preventDefault();
-    console.log(e, appointment, status);
     if (
       status !== "canceled" && status !== "completed"
     ) {
@@ -120,7 +117,6 @@ const Appointment = (props) => {
     },400)
   }
   const updateAppointment = (appointment) => {
-    console.log("editAppointmentPlaceholder", appointment);
     let index = -1;
     const filteredObj = appointments.find(function (item, i) {
       if (item._id === appointment._id) {
@@ -159,7 +155,6 @@ const Appointment = (props) => {
       }
       appointments[index].tags = tags;
       appointments[index].tagNames = tagNames;
-      console.log('appointments', appointments);
       setAppointments(appointments)
     }
   }
@@ -187,7 +182,6 @@ const Appointment = (props) => {
       }
     });
     if (filteredObj) {
-      console.log("hi there");
       fetchAppointment(1)
       let editedAppointments = appointments;
       editedAppointments[index].rescheduleCount = appointments[index].rescheduleCount ? appointments[index].rescheduleCount + 1 : 1;
@@ -228,7 +222,6 @@ const Appointment = (props) => {
   useEffect(()=>{
     if(appointmentCreated === "success"){
       fetchAppointment(1)
-      console.log("appointmentCreated", appointmentCreated);
       dispatch({
         type: actionTypes.SHOW_MESSAGE,
         message: "Appointment successfully created",
@@ -260,9 +253,7 @@ const Appointment = (props) => {
     
   }, []);
   const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
-  useEffect(()=>{
-    console.log("create appointnment time zone:", timezoneOffset)
-},[timezoneOffset]);
+
   return (
     <>
       <div className="contactTabsInner appointmentPage" >

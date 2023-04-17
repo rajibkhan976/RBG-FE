@@ -24,7 +24,6 @@ const UserFilter = (props) => {
     };
     const dispatch = useDispatch();
     let zIndexBody = useSelector((state) => state.modal.zIndexBody);
-    console.log(zIndexBody);
     /**
      * Handle group change
      * @param {*} event

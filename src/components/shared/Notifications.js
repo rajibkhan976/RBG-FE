@@ -35,11 +35,8 @@ const Notifications = (props) => {
     });
 
     const zindexState = useSelector((state)=>state);
-    console.log("notification:", zindexState);
     const timezoneOffset = useSelector((state)=> (state?.user?.data.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null);
-    useEffect(()=>{
-        console.log("notification timezone offset", timezoneOffset);
-    })
+
     const goBackToNotificationListing = () => {
         setDetailNotification(null);
         setNotificationType(null);

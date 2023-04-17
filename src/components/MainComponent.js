@@ -208,12 +208,7 @@ const MainComponent = () => {
             }
         }
     }
-    useEffect(() => {
-        // navigator.geolocation.getCurrentPosition(function (position) {
-        //     // await detectTimezone(position.coords.latitude, position.coords.longitude);
-        //     dispatch(GetPositionMiddleware.getPosition(position.coords.latitude, position.coords.longitude));
-        // });
-    }, [])
+
     useEffect(() => {
         if (isNewNotification) {
             setTimeout(() => {
