@@ -95,7 +95,12 @@ const ProductPayment = (props) => {
     let tomorrowDate = moment().add(1, 'days').utc().format("YYYY-MM-DD HH:mm:ss");
     let tomorrowsDateConverted = utils.convertUTCToTimezone(tomorrowDate ,timezoneOffset, "YYYY-MM-DD");
     setTomorrow(tomorrowsDateConverted);
-    setOutstanding({ ...outStanding, paymentDate: tomorrowsDateConverted})
+    setOutstanding(prevState => {
+      return {
+        ...prevState,
+        paymentDate: timezoneDateTime
+      }
+    })
   }, [timezoneOffset]);
 
 
@@ -158,8 +163,14 @@ const ProductPayment = (props) => {
   const billPayment = async (e) => {
     e.preventDefault();
     let cartItems = [...modifiedCart];
-
-    const paymentsArray = [...downPayments];
+    console.log("isPayNow", outStanding)
+    const paymentsArray = downPayments.map(el => {
+      console.log("isPayNow", el)
+      if (el.isPayNow) {
+        el.paymentDate = calenderMinDate;
+      }
+      return el;
+    });
 
     let outStandingPlaceholder = outStanding;
         outStandingPlaceholder.title = "Outstanding";
@@ -1349,7 +1360,6 @@ const ProductPayment = (props) => {
                 </div>
               </div>
             )}
-
             {downPayments.length > 0 && downPayments.filter((downpay, i) => downpay.isPayNow === 1).map((downPay, i) =>
               <div
                 className="currentPaymentOverview cartProductInner"

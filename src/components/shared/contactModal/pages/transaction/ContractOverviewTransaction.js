@@ -196,7 +196,6 @@ const ContractOverviewTransaction = (props) => {
       isPayNow: props.programContractData.isPayNow,
       default_transaction: props.programContractData.default_transaction,
       downpayments: props.programContractData.downPayments,
-
       courseName: props.programContractData.courseName,
       courseImage: props.programContractData.courseImage,
       duration: props.programContractData.duration + ' ' + utils.capitalizeFirst(props.programContractData.durationInterval) + '(s)',
@@ -207,7 +206,6 @@ const ContractOverviewTransaction = (props) => {
       tuitionAmount: props.programContractData.amount,
       totalTuitionAmount: props.programContractData.amount * props.programContractData.numberOfPayments,
       total: total,
-      isPayNow: props.programContractData.isPayNow,
       dueDownPayments: dueDownPayments,
       payNowDownPayments: payNowDownPayments,
       durationInterval: props.programContractData.durationInterval,
