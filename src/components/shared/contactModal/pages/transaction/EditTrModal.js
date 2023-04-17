@@ -21,6 +21,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 const EditTrModal = (props) => {
+    const [tomorrow, setTomorrow] = useState();
     const [editCardPart, setEditCardPart] = useState(true);
     const [editBankPart, setEditBankPart] = useState(false);
     const [today, setToday] = useState("")
@@ -106,6 +107,9 @@ const EditTrModal = (props) => {
         let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
         let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
         setToday(timezoneDateTime);
+        let tomorrowDate = moment().add(1, 'days').utc().format("YYYY-MM-DD HH:mm:ss");
+        let tomorrowsDateConverted = utils.convertUTCToTimezone(tomorrowDate ,timezoneOffset, "YYYY-MM-DD");
+        setTomorrow(tomorrowsDateConverted);
     }, [timezoneOffset]);
 
     useEffect(() => {
@@ -855,7 +859,7 @@ const EditTrModal = (props) => {
                                                 dateFormat="dd/MM/yyyy"
                                                 placeholderText="dd/mm/yyyy"
                                                 onChange={(e) => changeTransDateHandler(e)}
-                                                minDate={new Date(today)}
+                                                minDate={new Date(tomorrow)}
                                             />
                                         </div>
                                     </div>
