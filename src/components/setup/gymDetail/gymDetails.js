@@ -698,7 +698,6 @@ const base_url = window.location.origin;
                       {utils.convertUTCToTimezone(elem?.fromDate, timezoneOffset).split(" ").splice(0,3).join(" ")}
                       </div>
                     <div className="cell">
-                      {/* {elem.toDate} */}
                       {utils.convertUTCToTimezone(elem?.toDate, timezoneOffset).split(" ").splice(0,3).join(" ")}
                       </div>
                     <div className="cell">

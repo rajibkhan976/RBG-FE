@@ -663,9 +663,12 @@ const EditTrModal = (props) => {
     }
     const changeTransDateHandler = (val) => {
         if (val) {
-            let formattedDate = `${val.getFullYear()}-${
-                        val.getMonth() + 1
-                    }-${val.getDate()}`;
+            const yyyy = val.getFullYear();
+            let mm = val.getMonth() + 1; // Months start at 0!
+            let dd = val.getDate();
+            if (dd < 10) dd = '0' + dd;
+            if (mm < 10) mm = '0' + mm;
+            let formattedDate = `${yyyy}-${mm}-${dd}`;
             setEditTransFormData({ ...editTransFormData, dueDate: formattedDate });
         } else {
             setEditTransFormData({ ...editTransFormData, dueDate: "" });
@@ -854,7 +857,7 @@ const EditTrModal = (props) => {
                                             <DatePicker
                                                 style={{width:"133px"}}
                                                 className="cmnFieldStyle editTransactionDate"
-                                                selected={editTransFormData && editTransFormData.dueDate ? new Date(editTransFormData.dueDate) : ""}
+                                                selected={editTransFormData && editTransFormData.dueDate && editTransFormData.dueDate !== "Invalid" ? new Date(editTransFormData.dueDate) : ""}
                                                 format="dd/MM/yyyy"
                                                 dateFormat="dd/MM/yyyy"
                                                 placeholderText="dd/mm/yyyy"
