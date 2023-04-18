@@ -857,7 +857,7 @@ const EditTrModal = (props) => {
                                             <DatePicker
                                                 style={{width:"133px"}}
                                                 className="cmnFieldStyle editTransactionDate"
-                                                selected={editTransFormData && editTransFormData.dueDate ? new Date(editTransFormData.dueDate) : ""}
+                                                selected={editTransFormData && editTransFormData.dueDate && editTransFormData.dueDate !== "Invalid" ? new Date(editTransFormData.dueDate) : ""}
                                                 format="dd/MM/yyyy"
                                                 dateFormat="dd/MM/yyyy"
                                                 placeholderText="dd/mm/yyyy"
