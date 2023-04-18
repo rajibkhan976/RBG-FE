@@ -50,10 +50,7 @@ const AppointmentGlobal = (props) => {
         api.changeView('listDay', e.dateStr)
      }
      
-    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
-    useEffect(()=>{
-        console.log("Attandance time zone:", timezoneOffset)
-    },[timezoneOffset]);
+    const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null);
     const renderEventContent = (e) => {
         // console.log("Render e", e.event.extendedProps)
         // if (!e.event._instance.range && e.event._instance.range.start) {
@@ -63,7 +60,6 @@ const AppointmentGlobal = (props) => {
         if (e.view.type == "listDay" || e.view.type == "listMonth") {
             let isHoliday =  e.event.extendedProps ?. isHoliday ? true : false;
             setMakeHeaderOpen(true);
-            console.log("Range start", e.event._instance.range.start, "Checked at", e.event.extendedProps.checkedInAt);
 
             // let eventDate = momentTZ.tz(e.event._instance.range.start, tz).format("ddd, DD");
             // let eventTime = momentTZ.tz(e.event._instance.range.start, tz).format("hh:mm A");
@@ -71,11 +67,8 @@ const AppointmentGlobal = (props) => {
             // let momentTimeZone = moment(momentTZ.tz(dateSource, tz)).format("yyyy-DD-mm hh:mm:ss");
             // let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
             let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
-            console.log("Range date source", dateSource)
             let eventDate = e.event.extendedProps.checkedInAt.toString().split(" ").splice(0,3).join(" ");
             let eventTime = e.event.extendedProps.checkedInAt.toString().split(" ").splice(3,4).join(" ");
-
-            console.log("<br>");
             return (
                 <>
                     {!isHoliday ? 
@@ -107,9 +100,6 @@ const AppointmentGlobal = (props) => {
         if (format) {
             convertedDate = convertedDate.format(format);
         }
-        console.log("raw date", date)
-        console.log("utcDate", utcDate)
-        console.log("convertedDate", convertedDate)
         return convertedDate;
     }
     
@@ -135,7 +125,6 @@ const AppointmentGlobal = (props) => {
                     let convertToCheckInFormat = moment(convertTimezone).format("YYYY-MM-DD hh:mm:ss");
                     // let convertToCheckInFormat = moment(convertTimezone).format('YYYY-MM-DDTHH:mm:ss[Z]');
                     // let convertToCheckInFormat = "2023-04-10T11:45:00.12Z";
-                    console.log("format check in", convertToCheckInFormat)
                     setDefaultDate(moment(convertTimezone).format('YYYY-MM-DD'));
                     let eventObj = {
                         // start: atten.checkedInAt,
@@ -154,9 +143,8 @@ const AppointmentGlobal = (props) => {
                 }
                 if (attendances.holidays) {
                     for(let holiday of attendances.holidays) {
-                        // console.log("Holiday====", holiday);
-                        const convertHolidayStart = utils.convertUTCToTimezone(holiday?.fromDate, timezoneOffset);
-                        const convertHolidayEnd = utils.convertUTCToTimezone(holiday?.toDate, timezoneOffset);          
+                        const convertHolidayStart = utils.convertUTCToTimezone(holiday?.fromDate, timezoneOffset, "YYYY-MM-DD");
+                        const convertHolidayEnd = utils.convertUTCToTimezone(holiday?.toDate, timezoneOffset, "YYYY-MM-DD");
                         let eventObj = {
                             // start: holiday.fromDate,
                             // end: holiday.toDate,
@@ -167,11 +155,9 @@ const AppointmentGlobal = (props) => {
                             display: "background",
                             className: "hasHoliday"
                         }
-                        console.log("Holiday payload", eventObj);
                         eventArr.push(eventObj);
                     }
                 }
-            console.log("event Arr", eventArr)
                 setEvents(eventArr);
             }
         } catch (e) {

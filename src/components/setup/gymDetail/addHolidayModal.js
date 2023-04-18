@@ -9,9 +9,12 @@ import modalholidayIcon from "../../../assets/images/modalholidayIcon.svg";
 import { GymDetailsServices } from "../../../services/gymDetails/GymDetailsServices";
 import { useDispatch, useSelector } from "react-redux";
 import * as actionTypes from "../../../actions/types";
+import DatePicker from "react-datepicker";
+import moment from "moment/moment";
 
 const AddHolidayModal = (props) => {
-
+  const [tomorrow, setTomorrow] = useState();
+  const [today, setToday] = useState();
   const [option, setOption] = useState(null);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
@@ -31,14 +34,6 @@ const AddHolidayModal = (props) => {
   const [editHolidayFrom, setEditHolidayFrom] = useState('');
   const [editHolidayTo, setEditHolidayTo] = useState('');
   const [loader, setLoader] = useState(false);
-  console.log("Edit status=== " + editHoliday);
-  // if (!editHoliday) {
-  //   console.log("Holiday reset===");
-  //   setHoliday("");
-  //   setHolidayStart("");
-  //   setHolidayEnd("");
-  //   setHolidayId("");
-  // }
 
   const holidayhandler = (e) => {
     setHoliday({
@@ -49,36 +44,58 @@ const AddHolidayModal = (props) => {
   const [dateStatus, setDatastatus] = useState(false);
   const timezoneOffset = useSelector((state) => (state?.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset : null)
   useEffect(() => {
-    console.log("gym add time zone", timezoneOffset);
+    let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+    let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+    setToday(timezoneDateTime);
+    let tomorrowDate = moment().add(1, 'days').utc().format("YYYY-MM-DD HH:mm:ss");
+    let tomorrowsDateConverted = utils.convertUTCToTimezone(tomorrowDate ,timezoneOffset, "YYYY-MM-DD");
+    setTomorrow(tomorrowsDateConverted);
   }, [timezoneOffset]);
 
-  const holidayStarthandler = (e) => {
-    console.log("From holiday", utils.convertTimezoneToUTC(e.target.value + " " + "00:00:01", timezoneOffset))
-
-    setHoliday({
-      ...holiday,
-      fromDate: e.target.value,
-      toDate: e.target.value,
-      // fromDate: utils.convertTimezoneToUTC(e.target.value + " " + "00:00:01", timezoneOffset).trim(),
-      // toDate: utils.convertTimezoneToUTC(e.target.value + " " + "00:00:01", timezoneOffset).trim(),
-    });
-    console.log(holiday);
+  const holidayStarthandler = (val) => {
+    if (val) {
+      const yyyy = val.getFullYear();
+      let mm = val.getMonth() + 1; // Months start at 0!
+      let dd = val.getDate();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      let formattedDate = `${yyyy}-${mm}-${dd}`;
+      setHoliday({
+        ...holiday,
+        fromDate: utils.convertTimezoneToUTC(formattedDate + " 00:00:00" ,timezoneOffset),
+        toDate: utils.convertTimezoneToUTC(formattedDate + " 23:59:59" ,timezoneOffset),
+      });
+    } else {
+      setHoliday({
+        ...holiday,
+        fromDate: "",
+        toDate: "",
+      });
+    }
   };
-  const holidayEndhandler = (e) => {
-    // console.log("To holiday", utils.convertTimezoneToUTC(e.target.value + " " + "00:00:01", timezoneOffset))
-    setHoliday({
-      ...holiday,
-      toDate: e.target.value,
-      // toDate: utils.convertTimezoneToUTC(e.target.value + " " + "00:00:01", timezoneOffset).trim()
-    });
-    console.log(holiday);
+  const holidayEndhandler = (val) => {
+    if (val) {
+      const yyyy = val.getFullYear();
+      let mm = val.getMonth() + 1; // Months start at 0!
+      let dd = val.getDate();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      let formattedDate = `${yyyy}-${mm}-${dd}`;
+      setHoliday({
+        ...holiday,
+        toDate: utils.convertTimezoneToUTC(formattedDate + " 23:59:59" ,timezoneOffset),
+      });
+    } else {
+      setHoliday({
+        ...holiday,
+        toDate: "",
+      });
+    }
   };
-  const addfromDate = new Date(holiday.fromDate);
-  const addtoDate = new Date(holiday.toDate);
+  const addfromDate = new Date(utils.convertUTCToTimezone(holiday.fromDate, timezoneOffset));
+  const addtoDate = new Date(utils.convertUTCToTimezone(holiday.toDate, timezoneOffset));
   
   const holidayDuration = ((addtoDate - addfromDate) / (1000 * 3600 * 24)) + 1;
-  console.log("holidayDuration::::::::::", holiday?.fromDate, holiday?.toDate, holidayDuration)
-
 
   useEffect(() => {
     if (successMsg) setTimeout(() => { setSuccessMsg("") }, 5000);
@@ -325,12 +342,15 @@ const AddHolidayModal = (props) => {
                   <label style={{ paddingBottom: "9px" }}>Choose a date</label>
                   <div className="flatForm">
                     <span>From</span>
-                    {/* <input type="date" name="" value={holiday?.fromDate} onChange={holidayStarthandler}
-                      // min={disablePastDate()} 
-                      max={holiday?.toDate?.split(" ")[0]} /> */}
-                      <input type="date" name="" value={holiday?.fromDate.split(" ").length === 2 ? editHolidayFrom: holiday?.fromDate} onChange={holidayStarthandler}
-                      // min={disablePastDate()} 
-                      max={holiday?.toDate?.split(" ")[0]} />
+                    <DatePicker
+                        className="cmnFieldStyle"
+                        selected={holiday && holiday.fromDate ? new Date(utils.convertUTCToTimezone(holiday.fromDate ,timezoneOffset)) : ""}
+                        format="dd/MM/yyyy"
+                        dateFormat="dd/MM/yyyy"
+                        placeholderText="dd/mm/yyyy"
+                        onChange={(e) => holidayStarthandler(e)}
+                        minDate={new Date(tomorrow)}
+                    />
                   </div>
                   {modalPopMsgerror2 && <div className="errorMsg">Please fill up the start date</div>}
                 </div>
@@ -338,7 +358,15 @@ const AddHolidayModal = (props) => {
                   <label style={{ paddingBottom: "9px" }}></label>
                   <div className="flatForm">
                     <span>To</span>
-                    <input type="date" name="" value={holiday?.toDate.split(" ").length ===2 ? editHolidayTo : holiday?.toDate} onChange={holidayEndhandler} min={holiday?.fromDate?.split(" ")[0]} />
+                    <DatePicker
+                        className="cmnFieldStyle"
+                        selected={holiday && holiday.toDate ? new Date(utils.convertUTCToTimezone(holiday.toDate ,timezoneOffset)) : ""}
+                        format="dd/MM/yyyy"
+                        dateFormat="dd/MM/yyyy"
+                        placeholderText="dd/mm/yyyy"
+                        onChange={(e) => holidayEndhandler(e)}
+                        minDate={holiday && holiday.fromDate ? new Date(new Date(utils.convertUTCToTimezone(holiday.fromDate ,timezoneOffset))): new Date(tomorrow)}
+                    />
                   </div>
                   {modalPopMsgerror3 && <div className="errorMsg">Please fill up the end date</div>}
                 </div>
