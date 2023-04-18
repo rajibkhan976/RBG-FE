@@ -105,7 +105,7 @@ const EditTrModal = (props) => {
                         //    useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null)
     useEffect(() => {
         let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
-        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset, "YYYY-MM-DD");
         setToday(timezoneDateTime);
         let tomorrowDate = moment().add(1, 'days').utc().format("YYYY-MM-DD HH:mm:ss");
         let tomorrowsDateConverted = utils.convertUTCToTimezone(tomorrowDate ,timezoneOffset, "YYYY-MM-DD");
@@ -757,9 +757,7 @@ const EditTrModal = (props) => {
         fieldErrorCheck.checkform();
         // console.log("Is Valid Form?", fieldErrorCheck.isValid);
         let dueDate = paylater ? editTransFormData.dueDate : today;
-        let convertDueDate = utils.convertTimezoneToUTC(dueDate + " " + "00:00:01", timezoneOffset);
-        // console.clear();
-        // console.log("CARD ID", cardId);
+        let convertDueDate = utils.convertTimezoneToUTC(dueDate + " 00:00:01", timezoneOffset, "YYYY-MM-DD");
         if (editTransFormData.paymentMode && editTransFormData.amount && dueDate) {
             try {
                 setIsLoader(true);
@@ -767,11 +765,10 @@ const EditTrModal = (props) => {
                     subscriptionId: props.transaction._id,
                     amount: editTransFormData.amount,
                     payment_via: editTransFormData.paymentMode,
-                    due_date: convertDueDate.split(" ")[0],
+                    due_date: convertDueDate,
                     applyForAll: editTransFormData.applyForAll,
                     billingId: cardId
                 }
-                console.log("Payload edit", payload);
                 let updateResp = await TransactionServices.updateTransaction(props.contactId, payload);
 
                 // console.log(updateResp === new Date().toISOString().split('T')[0]);
