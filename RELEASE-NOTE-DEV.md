@@ -190,3 +190,6 @@
     
 # HOTFIX V1.3.4
     - Fixed organization create issue
+
+# HOTFIX V1.3.5
+    - Create holiday issue and edit transaction pay now issue fixed
