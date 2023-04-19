@@ -756,8 +756,8 @@ const EditTrModal = (props) => {
         fieldErrorCheck.checkdate(editTransFormData.dueDate);
         fieldErrorCheck.checkform();
         // console.log("Is Valid Form?", fieldErrorCheck.isValid);
-        let dueDate = paylater ? editTransFormData.dueDate : today;
-        let convertDueDate = utils.convertTimezoneToUTC(dueDate + " 00:00:01", timezoneOffset, "YYYY-MM-DD");
+        let dueDate = paylater ? utils.convertTimezoneToUTC(editTransFormData.dueDate + " 00:00:01", timezoneOffset, "YYYY-MM-DD")  : (today + " 00:00:01");
+        // let convertDueDate = utils.convertTimezoneToUTC(dueDate + " 00:00:01", timezoneOffset, "YYYY-MM-DD");
         if (editTransFormData.paymentMode && editTransFormData.amount && dueDate) {
             try {
                 setIsLoader(true);
@@ -765,7 +765,7 @@ const EditTrModal = (props) => {
                     subscriptionId: props.transaction._id,
                     amount: editTransFormData.amount,
                     payment_via: editTransFormData.paymentMode,
-                    due_date: convertDueDate,
+                    due_date: dueDate,
                     applyForAll: editTransFormData.applyForAll,
                     billingId: cardId
                 }
