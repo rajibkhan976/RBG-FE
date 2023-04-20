@@ -193,3 +193,6 @@
 
 # HOTFIX V1.3.5
     - Create holiday issue and edit transaction pay now issue fixed
+
+# HOTFIX V1.3.6
+    - Edit holiday issue and edit transaction pay now issue fixed

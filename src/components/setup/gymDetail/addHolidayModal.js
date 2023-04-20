@@ -217,25 +217,25 @@ const AddHolidayModal = (props) => {
       setLoader(true);
       
       if (editHoliday) {
-        let convertFromDate;
-        let convertToDate;
-        if(holiday?.fromDate.toString().split(" ").length === 2){
-          convertFromDate = utils.convertTimezoneToUTC(holiday?.fromDate, timezoneOffset);
-        }else{
-          convertFromDate = utils.convertTimezoneToUTC(holiday?.fromDate.split(" ")[0] + " " + "00:00:01", timezoneOffset);
-        }
+        // let convertFromDate;
+        // let convertToDate;
+        // if(holiday?.fromDate.toString().split(" ").length === 2){
+        //   convertFromDate = utils.convertTimezoneToUTC(holiday?.fromDate, timezoneOffset);
+        // }else{
+        //   convertFromDate = utils.convertTimezoneToUTC(holiday?.fromDate.split(" ")[0] + " " + "00:00:00", timezoneOffset);
+        // }
 
-        if(holiday?.toDate.toString().split(" ").length === 2){
-          convertToDate = utils.convertTimezoneToUTC(holiday?.toDate, timezoneOffset);
-        }else{
-          convertToDate = utils.convertTimezoneToUTC(holiday?.toDate.split(" ")[0] + " " + "00:00:01", timezoneOffset);
-        }
+        // if(holiday?.toDate.toString().split(" ").length === 2){
+        //   convertToDate = utils.convertTimezoneToUTC(holiday?.toDate, timezoneOffset);
+        // }else{
+        //   convertToDate = utils.convertTimezoneToUTC(holiday?.toDate.split(" ")[0] + " " + "23:59:59", timezoneOffset);
+        // }
 
         // let convertToDate = utils.convertTimezoneToUTC(holiday?.toDate.trim(), timezoneOffset);
         console.log("Conver from time and to date", holiday.fromDate);
         console.log("Convert to date", holiday.toDate);
-        holiday['fromDate'] = convertFromDate.trim();
-        holiday['toDate'] = convertToDate.trim();
+        holiday['fromDate'] = holiday['fromDate'].trim();
+        holiday['toDate'] = holiday['toDate'].trim();
 
         // setHoliday({
         //   ...holiday,
@@ -251,13 +251,18 @@ const AddHolidayModal = (props) => {
           typeMessage: 'success'
         })
       } else {
-        let convertFromDate = utils.convertTimezoneToUTC(holiday?.fromDate.split(" ")[0] + " " + "00:00:01", timezoneOffset);
-        let convertToDate = utils.convertTimezoneToUTC(holiday?.toDate.split(" ")[0] + " " + "23:59:59", timezoneOffset);
-        console.log("Formatted date-------------------", holiday?.fromDate, timezoneOffset);
-        console.log("Conver from time and to date", convertFromDate);
-        console.log("Convert to date", convertToDate);
-        holiday['fromDate'] = convertFromDate.trim();
-        holiday['toDate'] = convertToDate.trim();
+        // let utcStartTimeInLocal = moment(utils.convertUTCToTimezone(holiday?.fromDate.split(" ")[0] + " 12:00:00", timezoneOffset)).format("DD-MM-YYYY HH:mm:ss")
+        // let utcEndTimeInLocal = moment(utils.convertUTCToTimezone(holiday?.toDate.split(" ")[0] + " 12:00:00", timezoneOffset)).format("DD-MM-YYYY HH:mm:ss")
+        
+        // console.log("Formatted date-------------------", utcStartTimeInLocal, utcEndTimeInLocal);
+
+        // let convertFromDate = utils.convertTimezoneToUTC(holiday?.fromDate.split(" ")[0] + " " + utcStartTimeInLocal.split(" ")[1], timezoneOffset);
+        // let convertToDate = utils.convertTimezoneToUTC(holiday?.toDate.split(" ")[0] + " " + utcEndTimeInLocal.split(" ")[1], timezoneOffset);
+        //console.log("Formatted date-------------------", holiday?.fromDate, timezoneOffset);
+        // console.log("Conver from time and to date", convertFromDate);
+        // console.log("Convert to date", convertToDate);
+        holiday['fromDate'] = holiday['fromDate'].trim();
+        holiday['toDate'] = holiday['toDate'].trim();
         // setHoliday({
         //   ...holiday,
         //   fromDate: convertFromDate,

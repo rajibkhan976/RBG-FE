@@ -756,7 +756,7 @@ const EditTrModal = (props) => {
         fieldErrorCheck.checkdate(editTransFormData.dueDate);
         fieldErrorCheck.checkform();
         // console.log("Is Valid Form?", fieldErrorCheck.isValid);
-        let dueDate = paylater ? utils.convertTimezoneToUTC(editTransFormData.dueDate + " 00:00:01", timezoneOffset, "YYYY-MM-DD")  : (today + " 00:00:01");
+        let dueDate = paylater ? utils.convertTimezoneToUTC(editTransFormData.dueDate + " 00:00:01", timezoneOffset, "YYYY-MM-DD")  : utils.convertTimezoneToUTC(today + " 00:00:01", timezoneOffset, "YYYY-MM-DD") ;
         // let convertDueDate = utils.convertTimezoneToUTC(dueDate + " 00:00:01", timezoneOffset, "YYYY-MM-DD");
         if (editTransFormData.paymentMode && editTransFormData.amount && dueDate) {
             try {
