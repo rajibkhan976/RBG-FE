@@ -199,3 +199,5 @@
 
 # HOTFIX V1.3.7
     - Edit contact previous date selected fixed
+# HOTFIX V1.3.7
+    - Fix tranaction 
