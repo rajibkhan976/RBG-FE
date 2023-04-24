@@ -764,7 +764,7 @@ const ProductPayment = (props) => {
       
       if (e.target.checked) {
         downPaymentsPlaceholder[i].isPayNow = 0;
-        downPaymentsPlaceholder[i].paymentDate = tomorrowPayDate().toISOString().split("T")[0];
+        downPaymentsPlaceholder[i].paymentDate = tomorrow;
         downPaymentsPlaceholder[i].payment_status = "unpaid"
         
         if(downPaymentsPlaceholder[i].paymentDate === "") {
@@ -778,7 +778,7 @@ const ProductPayment = (props) => {
         setDownPayments(downPaymentsPlaceholder);
       } else {
         downPaymentsPlaceholder[i].isPayNow = 1;
-        downPaymentsPlaceholder[i].paymentDate = todayPayDate().toISOString().split("T")[0];
+        downPaymentsPlaceholder[i].paymentDate = calenderMinDate;
         downPaymentsPlaceholder[i].paymentConfirmation =  false
 
         setHasError(false);
@@ -1053,12 +1053,12 @@ const ProductPayment = (props) => {
 
                                       <DatePicker 
                                           className="cmnFieldStyle"
-                                          selected={downpay.paymentDate ? new Date(downpay.paymentDate) : ""}
+                                          selected={downpay.paymentDate ? new Date(downpay.paymentDate) : new Date(tomorrow)}
                                           format="dd/MM/yyyy"
                                           dateFormat="dd/MM/yyyy"
                                           placeholderText="dd/mm/yyyy"
                                           onChange={(val) => changeDownpaymentDate(val, downpay, i)} 
-                                          minDate={new Date(calenderMinDate)}
+                                          minDate={new Date(tomorrow)}
                                       />
                                   </div>
                                 )}

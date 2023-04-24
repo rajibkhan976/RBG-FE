@@ -113,9 +113,12 @@ const EditTrModal = (props) => {
     }, [timezoneOffset]);
 
     useEffect(() => {
+        let dateA = moment(today);
+        let dateB = moment(props.transaction.due_date);
+        let dateDiff = dateB.diff(dateA, "days");
         setEditTransFormData({
             amount: props.transaction.amount,
-            dueDate: props.transaction.due_date,
+            dueDate: dateDiff < 0 ? "" : props.transaction.due_date,
             paymentMode: props.transaction.payment_via,
             form: "",
             applyForAll: false
@@ -636,6 +639,21 @@ const EditTrModal = (props) => {
 
     }
 
+    const payNowToggle = (e) => {
+        console.log("today========================", today)
+        if(e.target.checked) {
+            setPaylater(true)
+
+            let dateA = moment(today);
+            let dateB = moment(props.transaction.due_date);
+            let dateDiff = dateB.diff(dateA, "days");
+            setEditTransFormData({ ...editTransFormData, dueDate: dateDiff < 0 ? "" : props.transaction.due_date})
+        } else {
+            setPaylater(false)
+            setEditTransFormData({ ...editTransFormData, dueDate: today})
+        }
+    }
+
     const selectCashOrOnlineHandler = (e) => {
         let val = e.target.value;
         fieldErrorCheck.checkmode(val);
@@ -756,7 +774,7 @@ const EditTrModal = (props) => {
         fieldErrorCheck.checkdate(editTransFormData.dueDate);
         fieldErrorCheck.checkform();
         // console.log("Is Valid Form?", fieldErrorCheck.isValid);
-        let dueDate = paylater ? utils.convertTimezoneToUTC(editTransFormData.dueDate + " 00:00:01", timezoneOffset, "YYYY-MM-DD")  : utils.convertTimezoneToUTC(today + " 00:00:01", timezoneOffset, "YYYY-MM-DD") ;
+        let dueDate = paylater ? utils.convertTimezoneToUTC(editTransFormData.dueDate + " 00:00:01", timezoneOffset, "YYYY-MM-DD")  : today;
         // let convertDueDate = utils.convertTimezoneToUTC(dueDate + " 00:00:01", timezoneOffset, "YYYY-MM-DD");
         if (editTransFormData.paymentMode && editTransFormData.amount && dueDate) {
             try {
@@ -840,11 +858,7 @@ const EditTrModal = (props) => {
                                             <span className="labelHeading">I want to Pay Later</span>
                                             <label className={paylater ? "toggleBtn active" : "toggleBtn"}>
                                                 <input type="checkbox" name="check-communication"
-                                                    onChange={(e) =>
-                                                        e.target.checked
-                                                            ? setPaylater(true)
-                                                            : setPaylater(false)
-                                                    }
+                                                    onChange={payNowToggle}
                                                 />
                                                 <span className="toggler"></span>
                                             </label>
