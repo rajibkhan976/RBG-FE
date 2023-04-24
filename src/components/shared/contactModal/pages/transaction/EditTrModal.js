@@ -118,7 +118,7 @@ const EditTrModal = (props) => {
         let dateDiff = dateB.diff(dateA, "days");
         setEditTransFormData({
             amount: props.transaction.amount,
-            dueDate: dateDiff < 0 ? "" : props.transaction.due_date,
+            dueDate: dateDiff < 0 ? tomorrow : props.transaction.due_date,
             paymentMode: props.transaction.payment_via,
             form: "",
             applyForAll: false
@@ -126,18 +126,14 @@ const EditTrModal = (props) => {
         if (props.transaction.payment_via === "online") {
             setOpenOnlineBox(true);
             if (props.transaction.billingId) {
-                console.log("Set billing id", props.transaction.billingId);
                 setCardId(props.transaction.billingId);
             } else {
-                console.log("Set billing id", props.transaction.billingId);
                 if (primaryType) {
                     if (primaryType === 'card') {
                         const activeCard = cardList.find(el => el.status === 'active');
                         setCardId(activeCard._id);
-                        console.log("Set billing id - card", props.transaction.billingId);
                     } else {
                         const activeBank = bankList.find(el => el.status === 'active');
-                        console.log("Set billing id - bank", props.transaction.billingId);
                         setCardId(activeBank._id);
                     }
                 }
@@ -155,7 +151,6 @@ const EditTrModal = (props) => {
     }, [])
 
     const fetchCardBank = async () => {
-        console.log("Fetch Card bank")
         try {
            // setIsLoader(true);
             let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
@@ -647,7 +642,7 @@ const EditTrModal = (props) => {
             let dateA = moment(today);
             let dateB = moment(props.transaction.due_date);
             let dateDiff = dateB.diff(dateA, "days");
-            setEditTransFormData({ ...editTransFormData, dueDate: dateDiff < 0 ? "" : props.transaction.due_date})
+            setEditTransFormData({ ...editTransFormData, dueDate: dateDiff < 0 ? tomorrow : props.transaction.due_date})
         } else {
             setPaylater(false)
             setEditTransFormData({ ...editTransFormData, dueDate: today})
@@ -774,7 +769,7 @@ const EditTrModal = (props) => {
         fieldErrorCheck.checkdate(editTransFormData.dueDate);
         fieldErrorCheck.checkform();
         // console.log("Is Valid Form?", fieldErrorCheck.isValid);
-        let dueDate = paylater ? utils.convertTimezoneToUTC(editTransFormData.dueDate + " 00:00:01", timezoneOffset, "YYYY-MM-DD")  : today;
+        let dueDate = paylater ? editTransFormData.dueDate  : today;
         // let convertDueDate = utils.convertTimezoneToUTC(dueDate + " 00:00:01", timezoneOffset, "YYYY-MM-DD");
         if (editTransFormData.paymentMode && editTransFormData.amount && dueDate) {
             try {
