@@ -1674,7 +1674,7 @@ const Transaction = (props) => {
                           {/* <span className="time">
                             {moment(utils.convertUTCToTimezone(item.due_date, timezone, 'YYYY-MM-DD hh:mm A')).fromNow()}
                           </span> */}
-                          { utils.convertUTCToTimezone(item?.due_date.split(" ")[0] + " " + "00:00:00", timezoneOffset).split(" ").splice(0, 3).join(" ") :  }
+                          { utils.convertUTCToTimezone(item?.due_date.split(" ")[0] + " " + "00:00:00", timezoneOffset).split(" ").splice(0, 3).join(" ") }
                         </div>
 
                         <div className="cell action">
