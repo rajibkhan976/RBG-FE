@@ -1194,7 +1194,7 @@ const Transaction = (props) => {
                         <div className="cell times">
                           <span className="time">
                             {/* {dayLeft(item.due_date)} */}
-                            {dayLeft(utils.convertUTCToTimezone(item.due_date + " " + "00:00:00", timezoneOffset).split(" ").splice(0,3).join(" "))}
+                            {dayLeft(utils.convertUTCToTimezone(item.due_date.split(" ")[0] + " " + "00:00:00", timezoneOffset).split(" ").splice(0,3).join(" "))}
                             {/* {utils.convertUTCToTimezone(item.due_date + " " + "00:00:00", timezoneOffset).split(" ").splice(0,3).join(" ")} */}
                             {/* {dayLeft(utils.convertUTCToTimezone(item.due_date, timezoneOffset))} */}
                           </span>
@@ -1665,7 +1665,7 @@ const Transaction = (props) => {
 
                         <div className="cell amt">
                           <div className="amount" >
-                            <span className="tutionAmt">{item.type == "tuiton_fees" ? "Tuition Fees" : (item.type == "downpayment" ? "Downpayment" : "Outstanding")}</span>
+                            <span className="tutionAmt">{item.type == "t[uiton_fees" ? "Tuition Fees" : (item.type == "downpayment" ? "Downpayment" : "Outstanding")}</span>
                             <p>{"$" + parseFloat(Math.abs(item.amount)).toFixed(2)}</p>
                           </div>
                         </div>
@@ -1674,7 +1674,7 @@ const Transaction = (props) => {
                           {/* <span className="time">
                             {moment(utils.convertUTCToTimezone(item.due_date, timezone, 'YYYY-MM-DD hh:mm A')).fromNow()}
                           </span> */}
-                          {utils.convertUTCToTimezone(item?.due_date + " " + "00:00:00", timezoneOffset).split(" ").splice(0, 3).join(" ")}
+                          { utils.convertUTCToTimezone(item?.due_date.split(" ")[0] + " " + "00:00:00", timezoneOffset).split(" ").splice(0, 3).join(" ") :  }
                         </div>
 
                         <div className="cell action">
