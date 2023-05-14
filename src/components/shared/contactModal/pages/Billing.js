@@ -7,16 +7,19 @@ import { ErrorAlert, SuccessAlert } from "../../messages";
 import Loader from "../../Loader";
 //import axios from "axios";
 import ConfirmBox from "../../confirmBox";
-
+import {useDispatch, useSelector} from "react-redux";
+import * as actionTypes from "../../../../actions/types";
 import { BillingServices } from "../../../../services/billing/billingServices";
+import { useStoreActions } from "react-flow-renderer";
 //import { billingUrl } from "../../../../configuration/config";
 
 let currentTime = new Date();
 let currentYear = currentTime.getFullYear();
-let currentMonth = currentTime.getMonth() + 1;
+let currentMonth = currentTime.getMonth();
 
 const Billing = (props) => {
   const [confirmPopup, setConfirmPopup] = useState(false);
+  const [deleteConfirmPopup, setDeleteConfirmPopup] = useState(false);
   const [changePaymentValue, setChangePaymentValue] = useState("");
   const [listCardAnnim, setListCardAnnim] = useState(true);
   const [newCardAnnim, setNewCardAnnim] = useState(false);
@@ -46,12 +49,14 @@ const Billing = (props) => {
       hasId: false,
       activeFor: []
     })
+    const [deleteCardBank, setDeleteCardBank] = useState(null);
 
     const billingCardContainer = useRef(null)
     const addCardBtn = useRef(null)
     const addBankBtn = useRef(null)
     const addCardForm = useRef(null)
     const addBankForm = useRef(null)
+    const dispatch = useDispatch();
 
   const [formErrorMsg, setFormErrorMsg] = useState({
       card_num_Err: "",
@@ -82,6 +87,21 @@ const Billing = (props) => {
           hasId: cardBankResponce.hasMerchantId,
           activeFor: [...cardBankResponce.paymentsActivatedFor]
         })
+        let cards = cardBankResponce.cards;
+        cards.forEach(function(item,i){
+          if(item.status === "active"){
+            cards.splice(i, 1);
+            cards.unshift(item);
+          }
+        });
+
+        let banks = cardBankResponce.banks;
+        banks.forEach(function(item,i){
+          if(item.status === "active"){
+            banks.splice(i, 1);
+            banks.unshift(item);
+          }
+        });
         setCardBankList(cardBankResponce.cards);
         setBankList(cardBankResponce.banks);
         setPrimaryType(cardBankResponce.primary);
@@ -187,7 +207,7 @@ const Billing = (props) => {
 
   const activeCreditCard = async (cardBank) => {
     setIsLoader(true)
-
+    console.log("cardBank........", cardBank);
     let cardData = {
       billingID: cardBank && cardBank._id,
       contactID: cardBank && props.contactId,
@@ -196,6 +216,11 @@ const Billing = (props) => {
     
     try {
       await BillingServices.activeCard(cardData);
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: cardBank.accountType == "card" ? "Card successfully set as primary" : "Bank successfully set as primary",
+        typeMessage: 'success'
+      });
     } catch (error) {
       console.log(error);
     } finally {
@@ -330,7 +355,9 @@ const Billing = (props) => {
         }))
      } 
      else {
-       setCardNameCheck(e.target.value)
+       if (e.target.value.length <= 50) {
+         setCardNameCheck(e.target.value)
+       }
        setFormErrorMsg((errorMessage) => ({
          ...errorMessage,
          card_name_Err: "",
@@ -567,7 +594,7 @@ const Billing = (props) => {
     const cardExpairyMonthCheckFn = () => {
       let inputMonth = cardExpairyMonthCheck;
 
-      if (inputMonth > currentMonth) {
+      if (inputMonth >= currentMonth) {
         //console.log(inputMonth);
         if (inputMonth <= 12) {
           return inputMonth;
@@ -630,7 +657,7 @@ const expiration_month = cardExpairyMonthCheckFn();
       expiration_month: expiration_month,
       cvv: cardCvvCheck.trim() !== "" ? cardCvvCheck : "",
       cardholder_name: cardNameCheck,
-      status: cardBankList.length === 0 ? "active" : cardActivationCheckText,
+      status: "active",
     }: cardError = true
 
     if (!cardError) {
@@ -643,17 +670,20 @@ const expiration_month = cardExpairyMonthCheckFn();
         setFormErrorMsg((errorMessage) => ({
           ...errorMessage,
           card_details_invalid: "",
-        })); 
-        setTimeout(() => {
-          setSuccessMessage("Card successfully added!")
-        }, 2000);
+        }));
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: "Card successfully added!",
+          typeMessage: 'success'
+        });
         hideNewCardHandler();
       } catch (error) {
         setIsLoader(false)
-        setFormErrorMsg((errorMessage) => ({
-          ...errorMessage,
-          card_details_invalid: error.message,
-        }));
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: error.message,
+          typeMessage: 'error'
+        });
       } finally {
         cardError = false;
         cardPayload = {
@@ -749,7 +779,7 @@ const expiration_month = cardExpairyMonthCheckFn();
         account_holder: bankNameCheck,
         account_type: bankAccountType,
         company_name: companyName,
-        status: bankList && bankList.length > 0 ? bankActivationCheckText : "active",
+        status: "active",
       } : bankError = true
 
     if (!bankError) {
@@ -761,16 +791,19 @@ const expiration_month = cardExpairyMonthCheckFn();
           ...errorMessage,
           bank_details_invalid: "",
         })); 
-        setTimeout(() => {
-          setSuccessMessage("Bank details successfully added!")
-        }, 2000);
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: "Bank details successfully added!",
+          typeMessage: 'success'
+        });
         hideNewCardHandler2();
       } catch (error) {
         setIsLoader(false)
-        setFormErrorMsg((errorMessage) => ({
-          ...errorMessage,
-          bank_details_invalid: error.message,
-        }));
+        dispatch({
+          type: actionTypes.SHOW_MESSAGE,
+          message: error.message,
+          typeMessage: 'error'
+        });
       } finally {
         bankError = false;
         bankPayload = {
@@ -823,6 +856,54 @@ const expiration_month = cardExpairyMonthCheckFn();
     setChangePaymentValue(null);
   };
 
+  const openDeletePopup = (param) => {
+    console.log(cardBankList);
+    setDeleteConfirmPopup(true);
+    setDeleteCardBank(param);
+  }
+
+  const deleteConfirm = (confirmation) => {
+    if (confirmation == "yes") {
+      deletePay()
+    } else {
+      setDeleteConfirmPopup(false);
+      setDeleteCardBank(null);
+    }
+  };
+
+  const deletePay = async () => {
+    try {
+      setIsLoader(true);
+     const result = await BillingServices.deletePay(deleteCardBank._id);
+      // console.log("Result::::::: ", result);
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: deleteCardBank.accountType == "card" ? "Card deleted successfully" : "Bank account deleted successfully",
+        typeMessage: 'success'
+      });
+      if(deleteCardBank.accountType === "card") {
+        const filterCard = cardBankList.filter(card => card._id !== deleteCardBank._id);
+        setCardBankList(filterCard);
+      } else {
+        const filterBank = bankList.filter(bank => bank._id !== deleteCardBank._id);
+        setBankList(filterBank);
+      }
+    } catch (error) {
+      console.log("Result::::::: ", error);
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: "You can’t delete this card/bank account. This card/bank account is associated with subscription(s).",
+        typeMessage: 'error'
+      });
+    } finally {
+      
+      setIsLoader(false);
+      setDeleteConfirmPopup(false);
+      setDeleteCardBank(null);
+    }
+    
+  }
+
   const openChangePayModal = (value) => {
     setConfirmPopup(true);
     setChangePaymentValue(value);
@@ -834,7 +915,7 @@ const expiration_month = cardExpairyMonthCheckFn();
 
   useEffect(()=>{},[formErrorMsg])
 
-  useEffect(()=>{},[primaryType, cardBankList, bankList])
+  useEffect(()=>{},[cardBankList, bankList])
   
   useEffect(() => {
      if (successMessage) setTimeout(() => { setSuccessMessage("") }, 5000)
@@ -875,7 +956,7 @@ const expiration_month = cardExpairyMonthCheckFn();
               {merchantOptions.hasId ?
                 <>
                   <div className="billing_module">
-                          <div className="primaryMaker" onClick={() => openChangePayModal("card")}>
+                          {/* <div className="primaryMaker" onClick={() => openChangePayModal("card")}>
                         {cardBankList && cardBankList.length > 0 &&
                             <label>
                               <div className="circleRadio">
@@ -892,7 +973,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                           </span>
                             </label>
                         }
-                          </div>
+                          </div> */}
                         <div className="flipCardHolder">
                           <div
                               className={listCardAnnim ? "cardList show" : "cardList hide"}
@@ -919,16 +1000,20 @@ const expiration_month = cardExpairyMonthCheckFn();
                                         >
                                           <label className="leftside">
                                             <div className="circleRadio">
-                                              <input
+                                              {/* <input
                                                   type="radio"
-                                                  name="credit"
+                                                  name="bank"
+                                                  value={creditCard.last4}
                                                   onChange={() => activeCreditCard(creditCard)}
-                                                  defaultChecked={
-                                                    creditCard.status === "active" ? true : false
-                                                  }
+                                                  checked={creditCard.status === "active"}
                                                   id={i}
-                                              />
-                                              <span></span>
+                                              /> */}
+                                              <button 
+                                              className="radioLooksButton" 
+                                              value={creditCard.last4}
+                                              onClick={() => activeCreditCard(creditCard)}
+                                              ></button>
+                                              <span className={creditCard.status === "active" ? "radioLooks active" : "radioLooks"}></span>
                                             </div>
                                             {" "}
                                             {creditCard.checkIt ? "Active" : ""}
@@ -942,6 +1027,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                               <span>Expiry</span>
                                               {`${creditCard.expiration_month} / ${creditCard.expiration_year}`}
                                             </p>
+                                            <button type="button" className={cardBankList.length == 1 && bankList.length == 0 ? "deleteCardBank show" : "deleteCardBank"} onClick={() => openDeletePopup (creditCard)}></button>
                                           </div>
                                         </div>
                                     ))}
@@ -979,7 +1065,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                               <form id="addCardForm" ref={addCardForm}>
                                 <div className="formModule">
                                   <label>Card Number</label>
-                                  <div className="activeFactor">
+                                  <div className={formErrorMsg.card_num_Err ? "activeFactor error" : "activeFactor"}>
                                     <input
                                         type="text"
                                         className="creditCardText"
@@ -987,7 +1073,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                         onChange={cardNumberCheckHandler}
                                         value={cardNumberCheck}
                                     />
-                                    <div className="activate">
+                                    {/* <div className="activate">
                                       <div className="customCheckbox">
                                         {
                                           cardBankList.length > 0 &&
@@ -1018,7 +1104,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                       </div>
                                       {" "}
                                       Active
-                                    </div>
+                                    </div> */}
                                   </div>
 
                                   {formErrorMsg.card_num_Err && <p className="errorMsg">{formErrorMsg.card_num_Err}</p>}
@@ -1028,8 +1114,10 @@ const expiration_month = cardExpairyMonthCheckFn();
                                   <input
                                       type="text"
                                       placeholder="Ex. Adam Smith"
+                                      maxLength={50}
                                       onChange={cardNameCheckHandler}
                                       value={cardNameCheck}
+                                      className={formErrorMsg.card_name_Err ? "error" : ""}
                                   />
                                   {formErrorMsg.card_name_Err && <p className="errorMsg">{formErrorMsg.card_name_Err}</p>}
                                 </div>
@@ -1042,6 +1130,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                         placeholder="mm/yyyy"
                                         onChange={cardExpairyCheckHandler}
                                         value={cardExpairyCheck}
+                                        className={formErrorMsg.card_exp_Err ? "error" : ""}
                                     />
                                     {formErrorMsg.card_exp_Err && <p className="errorMsg">{formErrorMsg.card_exp_Err}</p>}
                                   </div>
@@ -1051,6 +1140,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                         type="text"
                                         onChange={cardCvvCheckHandler}
                                         value={cardCvvCheck}
+                                        className={formErrorMsg.card_cvv_Err ? "error" : ""}
                                     />
                                     {formErrorMsg.card_cvv_Err && <p className="errorMsg">{formErrorMsg.card_cvv_Err}</p>}
                                   </div>
@@ -1068,7 +1158,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                   </div>
                   
                   <div className="billing_module">
-                        <div className="primaryMaker" onClick={() => openChangePayModal("bank")}>
+                        {/* <div className="primaryMaker" onClick={() => openChangePayModal("bank")}>
                       {bankList && bankList.length > 0 && 
                           <label>
                             <div className="circleRadio">
@@ -1085,7 +1175,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                         </span>
                           </label>
                         }
-                        </div>
+                        </div> */}
                         <div className="flipCardHolder">
                           <div
                               className={listBankAnnim ? "cardList show" : "cardList hide"}
@@ -1109,16 +1199,21 @@ const expiration_month = cardExpairyMonthCheckFn();
                                       >
                                         <label className="leftside">
                                           <div className="circleRadio">
-                                            <input
+                                            {console.log('666666', bank.last4, bank.status)}
+                                            {/* <input
                                                 type="radio"
                                                 name="bank"
+                                                value={bank.last4}
                                                 onChange={() => activeCreditCard(bank)}
-                                                defaultChecked={
-                                                  bank.status === "active" ? true : false
-                                                }
+                                                checked={bank.status === "active"}
                                                 id={i}
-                                            />
-                                            <span></span>
+                                            /> */}
+                                            <button 
+                                              className="radioLooksButton" 
+                                              value={bank.last4}
+                                              onClick={() => activeCreditCard(bank)}
+                                              ></button>
+                                              <span className={bank.status === "active" ? "radioLooks active" : "radioLooks"}></span>
                                           </div>
                                         </label>
                                         <div className="rightside">
@@ -1126,11 +1221,15 @@ const expiration_month = cardExpairyMonthCheckFn();
                                             <span>Account Number</span>
                                             XXXXXXXXXXXX{bank?.last4}
                                           </p>
-                                          <p className="diff">
+                                          <p className="diff routingNum">
                                             <span>Routing #</span>
                                             {bank.routing_number}
                                           </p>
-                                          <div className="checking">{bank.account_type}</div>
+                                          <div className="checking">
+                                            <h4>Account type</h4>
+                                            {bank.account_type}
+                                          </div>
+                                          <button type="button" className={bankList.length == 1 && cardBankList.length == 0 ? "deleteCardBank show" : "deleteCardBank"} onClick={() => openDeletePopup (bank)}></button>
                                         </div>
                                       </div>
                                   ))}
@@ -1168,14 +1267,14 @@ const expiration_month = cardExpairyMonthCheckFn();
                               <form ref={addBankForm}>
                                 <div className="formModule">
                                   <label>Account Number</label>
-                                  <div className="activeFactor">
+                                  <div className={formErrorMsg.bank_acc_Err ? "activeFactor error" : "activeFactor"}>
                                     <input
                                         type="text"
                                         placeholder="xxxxxxxxx"
                                         onChange={bankAccountCheckHandler}
                                         value={bankAccountCheck}
                                     />
-                                    <div className="activate">
+                                    {/* <div className="activate">
                                       <div className="customCheckbox">
                                       {
                                           bankList.length > 0 &&
@@ -1208,7 +1307,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                       </div>
                                       {" "}
                                       Active
-                                    </div>
+                                    </div> */}
                                   </div>
                                   {formErrorMsg.bank_acc_Err && <p className="errorMsg">{formErrorMsg.bank_acc_Err}</p>}
                                 </div>
@@ -1217,8 +1316,10 @@ const expiration_month = cardExpairyMonthCheckFn();
                                   <input
                                       type="text"
                                       placeholder="Ex. Adam Smith"
+                                      maxLength={100}
                                       onChange={bankNameCheckHandler}
                                       value={bankNameCheck}
+                                      className={formErrorMsg.bank_name_Err ? "error" : ""}
                                   />
                                   {formErrorMsg.bank_name_Err && <p className="errorMsg">{formErrorMsg.bank_name_Err}</p>}
                                 </div>
@@ -1229,6 +1330,7 @@ const expiration_month = cardExpairyMonthCheckFn();
                                         type="text"
                                         onChange={bankRoutingCheckHandler}
                                         value={bankRoutingCheck}
+                                        className={formErrorMsg.bank_routing_err ? "error" : ""}
                                     />
                                     {formErrorMsg.bank_routing_err && <p className="errorMsg">{formErrorMsg.bank_routing_err}</p>}
                                   </div>
@@ -1282,6 +1384,14 @@ const expiration_month = cardExpairyMonthCheckFn();
         }
         </div>
       </div>
+      {console.log("deleteCardBank", deleteCardBank)}
+      {deleteConfirmPopup ? 
+        <ConfirmBox
+          type="redDeletPopup"
+          callback={(isConfirmed) => deleteConfirm(isConfirmed)} 
+          message={"Are you sure you want to delete this " + deleteCardBank.accountType + "?"}
+        />
+        : ""}
     </>
   );
 };

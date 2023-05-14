@@ -28,6 +28,7 @@ const BillingOverview = (props) => {
     const [isLoader, setIsLoader] = useState(false);
     const [addLoader, setAddLoader] = useState(false);
     const [newPayTab, setNewPayTab] = useState(false);
+    const [monthError, setMonthError] = useState(false);
     // const [cardNumberOn, setCardNumberOn] = useState("");
     const [cardNumberCheck, setCardNumberCheck] = useState("");
     const [cardExpairyCheck, setCardExpairyCheck] = useState("");
@@ -123,13 +124,33 @@ const BillingOverview = (props) => {
                     setBankList(sortedBanks);
                 }
                 //Set primary data
-                if (filterCardBank) {
-                    setIsPrimay({
-                        type: cardBankResponce.primary,
-                        billingId: filterCardBank[0]._id
-                    });
-                    setNewPayTab(cardBankResponce.primary)
-                }
+                // if (filterCardBank) {
+                //     setIsPrimay({
+                //         type: cardBankResponce.primary,
+                //         billingId: filterCardBank[0]._id
+                //     });
+                //     setNewPayTab(cardBankResponce.primary)
+                // }
+
+                cardBankResponce.banks.forEach((bank) => {
+                    if (bank.status == "active") {
+                        setIsPrimay({
+                            type: "bank",
+                            billingId: bank._id
+                        });
+                        setNewPayTab("bank")
+                    }
+                })
+                
+                cardBankResponce.cards.forEach((card) => {
+                    if (card.status == "active") {
+                        setIsPrimay({
+                            type: "card",
+                            billingId: card._id
+                        });
+                        setNewPayTab("card")
+                    }
+                })
             }
         } catch (error) {
         } finally {
@@ -143,12 +164,46 @@ const BillingOverview = (props) => {
 
     // Change default payment method
     const changeDefaultPay = (payItem, type) => {
+        
         try {
             setIsLoader(true);
             setIsPrimay({
                 type: type,
                 billingId: payItem._id
             })
+
+            if(type == "card") {
+                let cards = cardBankList;
+                cards.forEach(function(card, i){
+                    if(payItem._id == card._id) {
+                        card.status = "active"
+                    } else {
+                        card.status = "inactive"
+                    }
+                });
+                let banks = bankList;
+                bankList.forEach(function(bank, i){
+                    bank.status = "inactive"
+                });
+                setCardBankList(cards);
+                setBankList(banks);
+            } else {
+                let banks = bankList;
+                banks.forEach(function(bank, i){
+                    if(payItem._id == bank._id) {
+                        bank.status = "active"
+                    } else {
+                        bank.status = "inactive"
+                    }
+                });
+                let cards = cardBankList;
+                cards.forEach(function(card, i){
+                    card.status = "inactive"
+                });
+                setCardBankList(cards);
+                setBankList(banks);
+            }
+
         } catch (error) {
         } finally {
             setIsLoader(false);
@@ -365,7 +420,7 @@ const BillingOverview = (props) => {
 
         const cardExpairyYearCheckFn = () => {
             let inputYear = newCardState.expiration_year;
-            if (inputYear > currentYear) {
+            if (inputYear >= currentYear) {
                 return inputYear;
             } else if (inputYear == currentYear) {
                 if (newCardState.expiration_month > currentMonth) {
@@ -391,11 +446,12 @@ const BillingOverview = (props) => {
         const cardExpairyMonthCheckFn = () => {
             let inputMonth = newCardState.expiration_month;
 
-            if (inputMonth > currentMonth) {
+            if (inputMonth >= currentMonth) {
                 //console.log(inputMonth);
                 if (inputMonth <= 12) {
                     return inputMonth;
                 } else {
+                    setMonthError(true);
                     setNewPayErrors((errorMessage) => ({
                         ...errorMessage,
                         expiration_date: "Card expiry date is not valid.",
@@ -446,6 +502,7 @@ const BillingOverview = (props) => {
 
         const expiration_year = cardExpairyYearCheckFn();
         const expiration_month = cardExpairyMonthCheckFn();
+        
 
         if (newCardState.card_number.length < 17) {
             cardError = true;
@@ -481,6 +538,17 @@ const BillingOverview = (props) => {
             }))
             setNewPayHasError(true)
         }
+        let inputMonth = newCardState.expiration_month;
+        if (inputMonth >= currentMonth) {
+            if (inputMonth <= 12) {
+            } else {
+                setNewPayErrors((errorMessage) => ({
+                    ...errorMessage,
+                    expiration_date: "Card expiry date is not valid.",
+                }));
+                cardError = true;
+            }
+        }
 
         // CREATE NEW CARD PAYLOAD
         cardPayload = newCardState.card_number.trim() !== "" && expiration_year !== undefined && expiration_month !== undefined && newCardState.cardholder_name.trim() !== "" ? {
@@ -491,11 +559,13 @@ const BillingOverview = (props) => {
             cvv: newCardState.cvv.trim() !== "" ? newCardState.cvv : "",
             cardholder_name: newCardState.cardholder_name,
             status: "active"
-        } : cardError = true
+        } : ""
 
-        if (!cardError && !newPayHasError) {
+        console.log("Error messageeeeeeeeeeeeeeeeeeeeeeeeeeeee ", newPayErrors, newCardState.expiration_month, currentMonth);
+
+        if (!cardError && !newPayHasError && (newCardState.expiration_month >= currentMonth)) {
             setAddLoader(true)
-
+            console.log('oo');
             try {
                 let cardBankResponce = await BillingServices.addCard(cardPayload);
 
@@ -924,7 +994,7 @@ const BillingOverview = (props) => {
                     </button>}
                 </header>
 
-                <div className="bodytransactionForm bodyProductPayModes d-flex f-column">
+                <div className={isPrimary.type == "bank" ? "bodytransactionForm bodyProductPayModes d-flex f-column reverseWrap" : "bodytransactionForm bodyProductPayModes d-flex f-column"}>
                     {isLoader && <Loader/>}
                     {cardBankList &&
                     !cardBankList.length &&
@@ -934,104 +1004,108 @@ const BillingOverview = (props) => {
                         <h2>No Card/Bank Found</h2>
                         <p>No billing details have been created yet</p>
                     </div> : ''}
-                    {cardBankList && cardBankList.length ? <p className="paymentTypes" style={{
-                        order: isPrimary.type === "card" ? "1" : "3"
-                    }}>Cards</p> : ''}
-                    <div className="chooseTransactionType paymentTypes" style={{
-                        order: isPrimary.type === "card" ? "2" : "4"
-                    }}>
+                    <div className="cardBankWrap">
+                        {cardBankList && cardBankList.length ? <p className="paymentTypes">Cards</p> : ''}
+                        <div className="chooseTransactionType paymentTypes">
 
-                        {cardBankList &&
-                            cardBankList.length > 0 &&
-                            cardBankList.map((cardItem, i) => (
-                                <label
-                                    className={
-                                        isPrimary.type === "card" && (isPrimary.billingId === cardItem._id)
-                                            ? "paymentType active"
-                                            : "paymentType"
-                                    }
-                                    key={i}
-                                >
-                                    <span className="circleRadio">
-                    <input
-                        type="radio"
-                        name="billingTransaction"
+                            {cardBankList &&
+                                cardBankList.length > 0 &&
+                                cardBankList.map((cardItem, i) => (
+                                    <label
+                                        className={
+                                            cardItem.status === "active"
+                                                ? "paymentType active"
+                                                : "paymentType"
+                                        }
+                                        key={i}
+                                    >
+                                        <span className="circleRadio">
+                        {/* <input
+                            type="radio"
+                            name="billingTransaction"
+                            onClick={() => changeDefaultPay(cardItem, "card")}
+                            checked={
+                                cardItem.status === "active"
+                            }
+                        />
+                        <span></span> */}
+                        <button type="button" 
+                        className="radioLooksButton" 
                         onClick={() => changeDefaultPay(cardItem, "card")}
-                        defaultChecked={
-                            isPrimary.type === "card" &&
-                            (isPrimary.billingId === cardItem._id)
-                        }
-                    />
-                    <span></span>
-                  </span>
-                                    <span className="cardImage">
-                    <img src={isPrimary.type === "card" && (isPrimary.billingId === cardItem._id) ? cardActive : card}
-                         alt="card"/>
-                  </span>
-                                    <span className="paymentModuleInfos">
-                    <span className="accNumber">
-                      Credit Card ending with <strong>{cardItem?.last4}</strong>
-                    </span>
-                    <span className="accinfod">
-                      Expires {cardItem.expiration_month}/
-                        {cardItem.expiration_year}
-                    </span>
-                  </span>
-                                </label>
-                            ))}
+                        ></button>
+                        <span className={cardItem.status === "active" ? "radioLooks active" : "radioLooks"}></span>
+                        </span>
+                                            <span className="cardImage">
+                            <img src={cardItem.status === "active" ? cardActive : card}
+                                alt="card"/>
+                        </span>
+                                            <span className="paymentModuleInfos">
+                            <span className="accNumber">
+                            Credit Card ending with <strong>{cardItem?.last4}</strong>
+                            </span>
+                            <span className="accinfod">
+                            Expires {cardItem.expiration_month}/
+                                {cardItem.expiration_year}
+                            </span>
+                        </span>
+                                    </label>
+                                ))}
+                        </div>
                     </div>
-
-                    {bankList && bankList.length ? <p className="paymentTypes" style={{
-                        order: isPrimary.type === "bank" ? "1" : "3"
-                    }}>Bank</p> : ''}
-
-                    <div className="chooseTransactionType paymentTypes" style={{
-                        order: isPrimary.type === "bank" ? "2" : "4"
-                    }}>
-                        {/* {//  //  console.log("bankList", bankList)} */}
-                        {bankList &&
-                            bankList.length > 0 &&
-                            bankList.map((bankItem, i) => (
-                                <label
-                                    className={
-                                        isPrimary.type === "bank" && (isPrimary.billingId === bankItem._id)
-                                            ? "paymentType active"
-                                            : "paymentType"
-                                    }
-                                    key={i}
-                                >
-                  <span className="circleRadio">
-                    <input
-                        type="radio"
-                        name="billingTransaction"
-                        onClick={(e) => changeDefaultPay(bankItem, "bank")}
-                        defaultChecked={
-                            isPrimary.type === "bank" &&
-                            (isPrimary.billingId === bankItem._id)
-                        }
-                    />
-                      {/* {console.log(
-                      ":::BANK:::",
-                      isPrimary.type === "bank" && (isPrimary.billingId === bankItem._id)
-                    )} */}
-                      <span></span>
-                  </span>
-                                    <span className="cardImage">
-                    <img
-                        src={isPrimary.type === "bank" && (isPrimary.billingId === bankItem._id) ? bank_active : bank_inactive}
-                        alt="card"/>
-                  </span>
-                                    <span className="paymentModuleInfos">
-                    <span className="accNumber">
-                      Bank account ending with <strong>{bankItem?.last4}</strong>
+                        
+                    <div className="cardBankWrap">
+                        {bankList && bankList.length ? <p className="paymentTypes">Bank</p> : ''}
+                        <div className="chooseTransactionType paymentTypes">
+                            {/* {//  //  console.log("bankList", bankList)} */}
+                            {bankList &&
+                                bankList.length > 0 &&
+                                bankList.map((bankItem, i) => (
+                                    <label
+                                        className={
+                                            bankItem.status === "active"
+                                                ? "paymentType active"
+                                                : "paymentType"
+                                        }
+                                        key={i}
+                                    >
+                        <span className="circleRadio">
+                            {/* <input
+                                type="radio"
+                                name="billingTransaction"
+                                onClick={(e) => changeDefaultPay(bankItem, "bank")}
+                                checked={
+                                    bankItem.status === "active"
+                                }
+                            /> */}
+                            <button type="button" 
+                            className="radioLooksButton" 
+                            onClick={(e) => changeDefaultPay(bankItem, "bank")}
+                            ></button>
+                            <span className={bankItem.status === "active" ? "radioLooks active" : "radioLooks"}></span>
+                            {/* {console.log(
+                            ":::BANK:::",
+                            isPrimary.type === "bank" && (isPrimary.billingId === bankItem._id)
+                            )} */}
+                            
+                        </span>
+                                        <span className="cardImage">
+                        <img
+                            src={bankItem.status === "active" ? bank_active : bank_inactive}
+                            alt="card"/>
                     </span>
-                    <span className="accinfod">
-                      Routing Number {bankItem.routing_number}
-                    </span>
-                  </span>
-                                </label>
-                            ))}
+                                        <span className="paymentModuleInfos">
+                        <span className="accNumber">
+                            Bank account ending with <strong>{bankItem?.last4}</strong>
+                            </span>
+                            <span className="accinfod">
+                            Routing Number {bankItem.routing_number}
+                            </span>
+                        </span>
+                                    </label>
+                                ))}
+                        </div>
                     </div>
+                    
                 </div>
             </div>
 
@@ -1129,6 +1203,7 @@ const BillingOverview = (props) => {
                                                     <input
                                                         type="text"
                                                         onChange={cardNameCheckHandler}
+                                                        maxLength={50}
                                                         placeholder="Ex. Adam Smith"
                                                         className="cmnFieldStyle"
                                                         name=""
@@ -1175,7 +1250,7 @@ const BillingOverview = (props) => {
 
                                             <div className="modalbtnHolder">
                                                 <button
-                                                    type="reset"
+                                                    type="button"
                                                     className="saveNnewBtn orangeBtn"
                                                     onClick={saveNewCard}
                                                     ref={addCardBtn}
@@ -1217,6 +1292,7 @@ const BillingOverview = (props) => {
                                                         type="text"
                                                         placeholder="Ex. Adam Smith"
                                                         className="cmnFieldStyle"
+                                                        maxLength={100}
                                                         name=""
                                                         onChange={bankNameCheckHandler}
                                                         value={newBankState.account_holder}
@@ -1268,6 +1344,7 @@ const BillingOverview = (props) => {
                                                         type="text"
                                                         placeholder="Company name"
                                                         className="cmnFieldStyle"
+                                                        maxLength={100}
                                                         name=""
                                                         value={newBankState.company_name} 
                                                         onChange={companyNameHandeler}
