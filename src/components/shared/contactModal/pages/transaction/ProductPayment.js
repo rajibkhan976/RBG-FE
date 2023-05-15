@@ -803,6 +803,7 @@ const ProductPayment = (props) => {
       val.getMonth() + 1
     }-${val.getDate()}`;
     formattedDate = moment(formattedDate).format("YYYY-MM-DD")
+    console.log("formattedDate", formattedDate, i)
     const downPaymentsPlaceholder = [...downPayments];
 
     try {
@@ -1050,15 +1051,15 @@ const ProductPayment = (props) => {
                                           .split("T")[0]
                                       }
                                     /> */}
-
+                                    { console.log(downpay, tomorrow, new Date(tomorrow))}
                                       <DatePicker 
                                           className="cmnFieldStyle"
-                                          selected={downpay.paymentDate ? new Date(downpay.paymentDate) : new Date(tomorrow)}
+                                          selected={downpay.paymentDate ? new Date(downpay.paymentDate + " 00:00:00") : new Date(tomorrow + " 00:00:00")}
                                           format="dd/MM/yyyy"
                                           dateFormat="dd/MM/yyyy"
                                           placeholderText="dd/mm/yyyy"
                                           onChange={(val) => changeDownpaymentDate(val, downpay, i)} 
-                                          minDate={new Date(tomorrow)}
+                                          minDate={new Date(tomorrow + " 00:00:00")}
                                       />
                                   </div>
                                 )}
@@ -1340,12 +1341,12 @@ const ProductPayment = (props) => {
                           /> */}
                           <DatePicker 
                               className="cmnFieldStyle"
-                              selected={outStanding.paymentDate ? new Date(outStanding.paymentDate) : new Date(tomorrow)}
+                              selected={outStanding.paymentDate ? new Date(outStanding.paymentDate + " 00:00:00") : new Date(tomorrow + " 00:00:00")}
                               format="dd/MM/yyyy"
                               dateFormat="dd/MM/yyyy"
                               placeholderText="dd/mm/yyyy"
                               onChange={(val) => changeOutstandingPayDate(val)} 
-                              minDate={new Date(tomorrow)}
+                              minDate={new Date(tomorrow + " 00:00:00")}
                           />
 
                           {downPaymentErrorMsg.outStandingDate_Err && (
