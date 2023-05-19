@@ -734,12 +734,12 @@ const Overview = (props) => {
                                     <div className={formErrorMsg.dob ? "cmnFormField errorField" : "cmnFormField"}>
                                         <DatePicker
                                             className="cmnFieldStyle"
-                                            selected={basicinfoDob ? new Date(basicinfoDob) : "" }
-                                            format="dd/MM/yyyy"
-                                            dateFormat="dd/MM/yyyy"
-                                            placeholderText="dd/mm/yyyy"
+                                            selected={basicinfoDob ? new Date(basicinfoDob + " 00:00:00") : "" }
+                                            format="MM/dd/yyyy"
+                                            dateFormat="MM/dd/yyyy"
+                                            placeholderText="MM/DD/YYYY"
                                             onChange={(e) => handelBasicinfoDob(e)}
-                                            maxDate={new Date(today)}
+                                            maxDate={new Date(today  + " 00:00:00")}
                                             />
                                         {formErrorMsg.dob ? <p className="errorMsg">{formErrorMsg.dob}</p> : ""}
                                     </div>

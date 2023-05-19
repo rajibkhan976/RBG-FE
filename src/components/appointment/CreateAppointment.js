@@ -173,7 +173,7 @@ const CreateAppointment = (props) => {
     useEffect(() => {
       let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
       let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
-      let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
+      let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss")
       setCalenderMinDate(formatedDateTime);
     }, []);
 
@@ -1123,10 +1123,10 @@ const CreateAppointment = (props) => {
                                         <div className="cmnFormField">
                                             <DatePicker 
                                                 className="cmnFieldStyle"
-                                                selected={date}
-                                                format="dd/MM/yyyy"
-                                                dateFormat="dd/MM/yyyy"
-                                                placeholder="mm/dd/yyyy"  
+                                                selected={date ? date : ""}
+                                                format="MM/dd/yyyy"
+                                                dateFormat="MM/dd/yyyy"
+                                                placeholder="MM/DD/YYYY"
                                                 minDate={new Date(calenderMinDate)}
                                                 onChange={(e) => setStartDate(e)} 
                                             />

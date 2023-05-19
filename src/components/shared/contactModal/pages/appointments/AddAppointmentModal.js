@@ -83,7 +83,7 @@ const AddAppointmentModal = (props) => {
   useEffect(() => {
     let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
     let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
-    let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
+    let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss");
     setCalenderMinDate(formatedDateTime);
   }, []);
 
@@ -247,9 +247,8 @@ const AddAppointmentModal = (props) => {
   }
 
   const fromDateAdd = (fromValue) => {
-    const convertedChoosedTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + fromValue.format("HH:mm:ss"),timezoneOffset);
+    const convertedChoosedTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + fromValue.format("HH:mm:ss"),timezoneOffset, "YYYY-MM-DD HH:mm:ss");
     const convertedLocalTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
-
     const localTime = moment(convertedLocalTime, "YYYY-MM-DD HH:mm:ss");
     const choosedTime = moment(convertedChoosedTime, "YYYY-MM-DD HH:mm:ss");
     // console.log(fromValue && fromValue.format('h:mm a').toUpperCase());
@@ -263,8 +262,7 @@ const AddAppointmentModal = (props) => {
     const diffFromToday = choosedTime.diff(localTime, "minutes");
     const fromTime = moment(`${appointmentData.date} ${fromValue.format("h:mm a")}`).format('MM/DD/YYYY h:mm a');
     const toTime = moment(`${appointmentData.date} ${appointmentData.toTime}`).format('MM/DD/YYYY h:mm a');
-    
-    if (fromValue && fromValue != null) {
+    if (fromValue) {
       if (appointmentData.toTime.trim() === "") {
         validErrors.fromTime = "";
         isDisabled = false;
@@ -565,10 +563,10 @@ const AddAppointmentModal = (props) => {
                     /> */}
                     <DatePicker 
                         className="cmnFieldStyle"
-                        selected={date}
-                        format="dd/MM/yyyy"
-                        dateFormat="dd/MM/yyyy"
-                        placeholder="mm/dd/yyyy"  
+                        selected={date ? new Date(date) : ""}
+                        format="MM/dd/yyyy"
+                        dateFormat="MM/dd/yyyy"
+                        placeholderText="MM/DD/YYYY"
                         minDate={new Date(calenderMinDate)}
                         onChange={(e) => setStartDate(e)} 
                     />

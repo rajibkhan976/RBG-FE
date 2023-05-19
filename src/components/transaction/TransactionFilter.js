@@ -168,9 +168,9 @@ function ImportTransactionFilter(props) {
                                                 <DatePicker 
                                                     className="cmnFieldStyle"
                                                     selected={date ? new Date(date) : ""}
-                                                    format="dd/MM/yyyy"
-                                                    dateFormat="dd/MM/yyyy"
-                                                    placeholderText="dd/mm/yyyy"
+                                                    format="MM/dd/yyyy"
+                                                    dateFormat="MM/dd/yyyy"
+                                                    placeholderText="MM/DD/YYYY"
                                                     onChange={(e) => setStartDate(e)}
                                                     maxDate={new Date(today)}
                                                 />
@@ -182,9 +182,9 @@ function ImportTransactionFilter(props) {
                                                 <DatePicker
                                                     className="cmnFieldStyle"
                                                     selected={date2 ? new Date(date2) : ""}
-                                                    format="dd/MM/yyyy"
-                                                    dateFormat="dd/MM/yyyy"
-                                                    placeholderText="dd/mm/yyyy"
+                                                    format="MM/dd/yyyy"
+                                                    dateFormat="MM/dd/yyyy"
+                                                    placeholderText="MM/DD/YYYY"
                                                     onChange={(e) => setEndDate(e)} 
                                                     minDate={new Date(date)}
                                                     maxDate={new Date(today)}

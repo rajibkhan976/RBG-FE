@@ -203,3 +203,7 @@
     - Fix tranaction 
 # HOTFIX V1.3.9
     - Fix invalid date issue 
+# HOTFIX V1.4.0
+    - Fix Date picker issue 
+# HOTFIX V1.4.1
+    - Fixed Date format

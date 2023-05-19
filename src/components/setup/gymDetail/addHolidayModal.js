@@ -355,9 +355,9 @@ const AddHolidayModal = (props) => {
                     <DatePicker
                         className="cmnFieldStyle"
                         selected={holiday && holiday.fromDate ? new Date(utils.convertUTCToTimezone(holiday.fromDate ,timezoneOffset)) : ""}
-                        format="dd/MM/yyyy"
-                        dateFormat="dd/MM/yyyy"
-                        placeholderText="dd/mm/yyyy"
+                        format="MM/dd/yyyy"
+                        dateFormat="MM/dd/yyyy"
+                        placeholderText="MM/DD/YYYY"
                         onChange={(e) => holidayStarthandler(e)}
                         minDate={new Date(tomorrow)}
                     />
@@ -371,9 +371,9 @@ const AddHolidayModal = (props) => {
                     <DatePicker
                         className="cmnFieldStyle"
                         selected={holiday && holiday.toDate ? new Date(utils.convertUTCToTimezone(holiday.toDate ,timezoneOffset)) : ""}
-                        format="dd/MM/yyyy"
-                        dateFormat="dd/MM/yyyy"
-                        placeholderText="dd/mm/yyyy"
+                        format="MM/dd/yyyy"
+                        dateFormat="MM/dd/yyyy"
+                        placeholderText="MM/DD/YYYY"
                         onChange={(e) => holidayEndhandler(e)}
                         minDate={holiday && holiday.fromDate ? new Date(new Date(utils.convertUTCToTimezone(holiday.fromDate ,timezoneOffset))): new Date(tomorrow)}
                     />

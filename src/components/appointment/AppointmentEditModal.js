@@ -889,9 +889,9 @@ const AppointmentEditModal = (props) => {
                         <DatePicker 
                             className="cmnFieldStyle"
                             selected={date === undefined ? (props.appointmentEdit && props.appointmentEdit.fromDateTime ? new Date(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset, "YYYY-MM-DD")) : "") : (date === undefined ? new Date() : date)}
-                            format="dd/MM/yyyy"
-                            dateFormat="dd/MM/yyyy"
-                            placeholder="mm/dd/yyyy"  
+                            format="MM/dd/yyyy"
+                            dateFormat="MM/dd/yyyy"
+                            placeholderText="MM/DD/YYYY"
                             minDate={new Date(calenderMinDate)}
                             onChange={(e) => setStartDate(e)} 
                         />
