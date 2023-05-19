@@ -188,9 +188,9 @@ function CommunicationLogFilter(props) {
                                                 <DatePicker
                                                     className="cmnFieldStyle"
                                                     selected={selectedFrom ? new Date(selectedFrom) : ""}
-                                                    format="dd/MM/yyyy"
-                                                    dateFormat="dd/MM/yyyy"
-                                                    placeholderText="dd/mm/yyyy"
+                                                    format="MM/dd/yyyy"
+                                                    dateFormat="MM/dd/yyyy"
+                                                    placeholderText="MM/DD/YYYY"
                                                     onChange={(e) => handleFromChange(e)}
                                                     maxDate={new Date(today)}
                                                 />
@@ -203,9 +203,9 @@ function CommunicationLogFilter(props) {
                                                 <DatePicker
                                                     className="cmnFieldStyle"
                                                     selected={selectedTo ? new Date(selectedTo) : ""}
-                                                    format="dd/MM/yyyy"
-                                                    dateFormat="dd/MM/yyyy"
-                                                    placeholderText="dd/mm/yyyy"
+                                                    format="MM/dd/yyyy"
+                                                    dateFormat="MM/dd/yyyy"
+                                                    placeholderText="MM/DD/YYYY"
                                                     onChange={(e) => handleToChange(e)}
                                                     minDate={new Date(selectedFrom)}
                                                     maxDate={new Date(today)}

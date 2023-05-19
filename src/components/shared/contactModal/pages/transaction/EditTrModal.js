@@ -863,12 +863,12 @@ const EditTrModal = (props) => {
                                             <DatePicker
                                                 style={{width:"133px"}}
                                                 className="cmnFieldStyle editTransactionDate"
-                                                selected={editTransFormData && editTransFormData.dueDate && editTransFormData.dueDate !== "Invalid" ? new Date(editTransFormData.dueDate) : ""}
-                                                format="dd/MM/yyyy"
-                                                dateFormat="dd/MM/yyyy"
-                                                placeholderText="dd/mm/yyyy"
+                                                selected={editTransFormData && editTransFormData.dueDate && editTransFormData.dueDate !== "Invalid" ? new Date(editTransFormData.dueDate + " 00:00:00") : ""}
+                                                format="MM/dd/yyyy"
+                                                dateFormat="MM/dd/yyyy"
+                                                placeholderText="MM/DD/YYYY"
                                                 onChange={(e) => changeTransDateHandler(e)}
-                                                minDate={new Date(tomorrow)}
+                                                minDate={new Date(tomorrow  + " 00:00:00")}
                                             />
                                         </div>
                                     </div>

@@ -309,9 +309,9 @@ const DownPayments = forwardRef((props, ref) => {
                                                         <DatePicker 
                                                             className="cmnFieldStyle"
                                                             selected={el.paymentDate ? new Date(el.paymentDate) : (tomorrow ? new Date(tomorrow): new Date())}
-                                                            format="dd/MM/yyyy"
-                                                            dateFormat="dd/MM/yyyy"
-                                                            placeholderText="dd/mm/yyyy"
+                                                            format="MM/dd/yyyy"
+                                                            dateFormat="MM/dd/yyyy"
+                                                            placeholderText="MM/DD/YYYY"
                                                             onChange={(val) => downpayDatepicker(val, key, "paymentDate")} 
                                                             minDate={tomorrow ? new Date(tomorrow): new Date()}
                                                         />

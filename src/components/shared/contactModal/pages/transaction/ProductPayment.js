@@ -1055,9 +1055,9 @@ const ProductPayment = (props) => {
                                       <DatePicker 
                                           className="cmnFieldStyle"
                                           selected={downpay.paymentDate ? new Date(downpay.paymentDate + " 00:00:00") : new Date(tomorrow + " 00:00:00")}
-                                          format="dd/MM/yyyy"
-                                          dateFormat="dd/MM/yyyy"
-                                          placeholderText="dd/mm/yyyy"
+                                          format="MM/dd/yyyy"
+                                          dateFormat="MM/dd/yyyy"
+                                          placeholderText="MM/DD/YYYY"
                                           onChange={(val) => changeDownpaymentDate(val, downpay, i)} 
                                           minDate={new Date(tomorrow + " 00:00:00")}
                                       />
@@ -1342,9 +1342,9 @@ const ProductPayment = (props) => {
                           <DatePicker 
                               className="cmnFieldStyle"
                               selected={outStanding.paymentDate ? new Date(outStanding.paymentDate + " 00:00:00") : new Date(tomorrow + " 00:00:00")}
-                              format="dd/MM/yyyy"
-                              dateFormat="dd/MM/yyyy"
-                              placeholderText="dd/mm/yyyy"
+                              format="MM/dd/yyyy"
+                              dateFormat="MM/dd/yyyy"
+                              placeholderText="MM/DD/YYYY"
                               onChange={(val) => changeOutstandingPayDate(val)} 
                               minDate={new Date(tomorrow + " 00:00:00")}
                           />

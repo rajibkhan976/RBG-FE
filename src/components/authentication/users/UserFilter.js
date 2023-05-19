@@ -178,9 +178,9 @@ const UserFilter = (props) => {
                                                     className="cmnFieldStyle"
                                                     selected={date}
                                                     defaultDate={today ? new Date(today) : ""}
-                                                    format="dd/MM/yyyy"
-                                                    dateFormat="dd/MM/yyyy"
-                                                    placeholderText="dd/mm/yyyy"
+                                                    format="MM/dd/yyyy"
+                                                    dateFormat="MM/dd/yyyy"
+                                                    placeholderText="MM/DD/YYYY"
                                                     onChange={(e) => setStartDate(e)}
                                                     maxDate={new Date(today)}
                                                 />
@@ -194,9 +194,9 @@ const UserFilter = (props) => {
                                                     className="cmnFieldStyle"
                                                     selected={date2}
                                                     defaultDate={today ? new Date(today) : ""}
-                                                    format="dd/MM/yyyy"
-                                                    dateFormat="dd/MM/yyyy"
-                                                    placeholderText="dd/mm/yyyy"
+                                                    format="MM/dd/yyyy"
+                                                    dateFormat="MM/dd/yyyy"
+                                                    placeholderText="MM/DD/YYYY"
                                                     onChange={(e) => setEndDate(e)}
                                                     minDate={new Date(date)}
                                                     maxDate={new Date(today)}

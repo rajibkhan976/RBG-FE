@@ -286,7 +286,7 @@ export const utils = {
     },
     
     dateConversion(dateString){
-        let date = new Date(dateString);
+        let date = new Date(dateString + " 00:00:00");
         let d = date.getDate();
         let m = date.getMonth() + 1;
         let y = date.getFullYear();

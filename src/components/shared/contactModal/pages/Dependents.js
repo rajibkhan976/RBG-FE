@@ -857,9 +857,9 @@ const Dependents = (props) => {
                                     disabled={toggleContactList.isCross && dependant.dob}
                                     className="cmnFieldStyle editTransactionDate"
                                     selected={dependant.dob ? new Date(dependant.dob) : ''}
-                                    format="dd/MM/yyyy"
-                                    dateFormat="dd/MM/yyyy"
-                                    placeholderText="dd/mm/yyyy"
+                                    format="MM/dd/yyyy"
+                                    dateFormat="MM/dd/yyyy"
+                                    placeholderText="MM/DD/YYYY"
                                     onChange={(e) => handleDobChange(e)}
                                     maxDate={new Date(today)}
                                 />
