@@ -115,14 +115,13 @@ const DownPayments = forwardRef((props, ref) => {
         let formattedDate = `${val.getFullYear()}-${
             val.getMonth() + 1
           }-${val.getDate()}`;
-
+        formattedDate = utils.dateConversion(formattedDate)
         setPayLaterDate(val);
 
         validateIndividual(formattedDate, key, type);
     }
 
     const validateIndividual = (e, key, type) => {
-        console.log("validateIndividual----------", downPaymentElems);
         let elems = [...downPaymentElems];
         if (type === "isPayNow") {
             elems[key][type] = e.target.checked ? 1 : 0;
@@ -163,7 +162,7 @@ const DownPayments = forwardRef((props, ref) => {
                 break;
         }
         elems[key] = newElem;
-        setDownPaymentElems(elems);
+        setDownPaymentElems( elems);
     };
 
     //Delete down payment
@@ -308,7 +307,7 @@ const DownPayments = forwardRef((props, ref) => {
                                                         /> */}
                                                         <DatePicker 
                                                             className="cmnFieldStyle"
-                                                            selected={el.paymentDate ? new Date(el.paymentDate) : (tomorrow ? new Date(tomorrow): new Date())}
+                                                            selected={el.paymentDate ? new Date(el.paymentDate + " 00:00:00") : (tomorrow ? new Date(tomorrow): new Date())}
                                                             format="MM/dd/yyyy"
                                                             dateFormat="MM/dd/yyyy"
                                                             placeholderText="MM/DD/YYYY"

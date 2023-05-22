@@ -276,6 +276,7 @@ const Overview = (props) => {
         let formattedDate = `${val.getFullYear()}-${
             val.getMonth() + 1
         }-${val.getDate()}`;
+        formattedDate = utils.dateConversion(formattedDate);
         setBasicinfoDob(formattedDate);
     }
 

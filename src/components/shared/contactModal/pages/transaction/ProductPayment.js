@@ -501,7 +501,7 @@ const ProductPayment = (props) => {
     let outStandingDateSelected = `${val.getFullYear()}-${
       val.getMonth() + 1
     }-${val.getDate()}`;
-    outStandingDateSelected = moment(outStandingDateSelected).format("YYYY-MM-DD");
+    outStandingDateSelected = utils.dateConversion(outStandingDateSelected);
     console.log("outStandingDateSelected-----", outStandingDateSelected);
 
     // let outStandingDateSelected = e.target.value;
@@ -802,7 +802,7 @@ const ProductPayment = (props) => {
     let formattedDate = `${val.getFullYear()}-${
       val.getMonth() + 1
     }-${val.getDate()}`;
-    formattedDate = moment(formattedDate).format("YYYY-MM-DD")
+    formattedDate = utils.dateConversion(formattedDate);
     console.log("formattedDate", formattedDate, i)
     const downPaymentsPlaceholder = [...downPayments];
 
