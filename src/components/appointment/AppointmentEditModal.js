@@ -62,11 +62,8 @@ const AppointmentEditModal = (props) => {
   useEffect(() => {
     let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
     let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
-    let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss").split(" ")[0];
+    let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss");
     setCalenderMinDate(formatedDateTime);
-
-    // let selectedDate = moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format("YYYY-MM-DD");
-    // setDate("2023-04-16");
   }, []);
 
   const confirmAgenda = async (e) => {
@@ -888,7 +885,7 @@ const AppointmentEditModal = (props) => {
                         {/* {utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset, "YYYY-MM-DD")} */}
                         <DatePicker 
                             className="cmnFieldStyle"
-                            selected={date === undefined ? (props.appointmentEdit && props.appointmentEdit.fromDateTime ? new Date(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset, "YYYY-MM-DD")) : "") : (date === undefined ? new Date() : date)}
+                            selected={date === undefined ? (props.appointmentEdit && props.appointmentEdit.fromDateTime ? new Date(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset, "YYYY-MM-DD  HH:mm:ss")) : "") : (date === undefined ? new Date() : date)}
                             format="MM/dd/yyyy"
                             dateFormat="MM/dd/yyyy"
                             placeholderText="MM/DD/YYYY"
