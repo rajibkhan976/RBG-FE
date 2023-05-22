@@ -211,3 +211,5 @@
     - Fixed Edit appointment section
 # HOTFIX V1.4.3
     - Removed Feature release update
+# HOTFIX V1.4.4
+    - Fixed firefox issue for timezone
