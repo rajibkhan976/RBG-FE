@@ -68,7 +68,7 @@ const MainComponent = () => {
     };
     const [showLeftSubMenu, setShowLeftSubMenu] = useState(true);
     const [isShowContact, setIsShowContact] = useState(false);
-    const [isNewFeaturesAvailable, setIsNewFeaturesAvailable] = useState(false);
+    /*const [isNewFeaturesAvailable, setIsNewFeaturesAvailable] = useState(false);*/
     const [isNewNotification, setIsNewNotification] = useState(false);
     const [contactId, setContactId] = useState("");
     const [page, setPage] = useState("");
@@ -118,10 +118,10 @@ const MainComponent = () => {
         });
 
         //Listen to feature update
-        socket.on("setFeatureUpdateNotification", (data) => {
+      /*  socket.on("setFeatureUpdateNotification", (data) => {
             console.log('Display feature update notification');
             setIsNewFeaturesAvailable(true);
-        });
+        });*/
 
         // socket.emit("getFeatureUpdateNotification");
 
@@ -619,9 +619,9 @@ const MainComponent = () => {
     if (autoMatchUrl != null){
         gj = autoMatchUrl.url; 
     }
-    const closeNotification = () => {
+   /* const closeNotification = () => {
         setIsNewFeaturesAvailable(false);
-    }
+    }*/
     return (
         <>
             <div className="mainComponent">
@@ -766,7 +766,7 @@ const MainComponent = () => {
             </div>
             {isShowContact && <ContactModal contactId={contactId} page={page} device={device}/>}
 
-            {isNewFeaturesAvailable && <UpdateNotification version="2.10.1" closeNotification={closeNotification} />}
+            {/*{isNewFeaturesAvailable && <UpdateNotification version="2.10.1" closeNotification={closeNotification} />}*/}
 
             {isCreditRestriction && <RestrictionPackageModal />}
 

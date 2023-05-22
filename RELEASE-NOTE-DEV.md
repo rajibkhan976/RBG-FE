@@ -209,3 +209,5 @@
     - Fixed Date format
 # HOTFIX V1.4.2
     - Fixed Edit appointment section
+# HOTFIX V1.4.3
+    - Removed Feature release update
