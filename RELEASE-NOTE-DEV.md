@@ -207,3 +207,5 @@
     - Fix Date picker issue 
 # HOTFIX V1.4.1
     - Fixed Date format
+# HOTFIX V1.4.2
+    - Fixed Edit appointment section
