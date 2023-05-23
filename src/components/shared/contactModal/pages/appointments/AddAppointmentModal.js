@@ -202,7 +202,7 @@ const AddAppointmentModal = (props) => {
         val.getMonth() + 1
       }-${val.getDate()}`;
     setDate(val);
-    formattedDate = moment(formattedDate).format("YYYY-MM-DD");
+    formattedDate = utils.dateConversion(formattedDate);
     
     const dateDiff = utils.dateDiff(formattedDate);
     if (dateDiff.difference <= 0) {
