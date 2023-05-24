@@ -1,6 +1,6 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Loader from "../shared/Loader";
-import {ErrorAlert, SuccessAlert} from "../shared/messages";
+import { ErrorAlert, SuccessAlert } from "../shared/messages";
 import crossTop from "../../assets/images/cross.svg";
 import crossWhite from "../../assets/images/cross_w.svg";
 import arrow_forward from "../../assets/images/arrow_forward.svg";
@@ -10,11 +10,11 @@ import verify_icon from "../../assets/images/verifyIcon.svg";
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
 
-import {TagServices} from "../../services/setup/tagServices";
-import {ContactService} from "../../services/contact/ContactServices";
-import {DependentServices} from "../../services/contact/DependentServices";
-import {AppointmentServices} from "../../services/appointment/appointment";
-import {useDispatch, useSelector} from "react-redux";
+import { TagServices } from "../../services/setup/tagServices";
+import { ContactService } from "../../services/contact/ContactServices";
+import { DependentServices } from "../../services/contact/DependentServices";
+import { AppointmentServices } from "../../services/appointment/appointment";
+import { useDispatch, useSelector } from "react-redux";
 import * as actionTypes from "../../actions/types";
 import Scrollbars from "react-custom-scrollbars-2";
 import TimePicker from "rc-time-picker";
@@ -28,7 +28,7 @@ const initialDependentState = {
 };
 
 const CreateAppointment = (props) => {
-    const todayDate = moment();
+
     const titleAppRef = useRef(null);
     const toggleTags = useRef(null);
     const searchInputTag = useRef(null);
@@ -168,32 +168,29 @@ const CreateAppointment = (props) => {
         setTagListToggle(!tagListToggle);
         setSearchedTag("");
     };
-    const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user?.data?.organizationTimezoneInfo.utc_offset:null);
-
+    const timezoneOffset = useSelector((state) => (state?.user?.data?.organizationTimezoneInfo.utc_offset) ? state?.user?.data?.organizationTimezoneInfo.utc_offset : null);
+    const todayDate = moment().utcOffset(timezoneOffset).format("YYYY-MM-DD h:mm A")
     useEffect(() => {
-      let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
-      let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
-      let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss")
-      setCalenderMinDate(formatedDateTime);
+        let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
+        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime, timezoneOffset);
+        let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss")
+        setCalenderMinDate(formatedDateTime);
     }, []);
 
     const appointmentDataAdd = (e, type) => {
-        let validErrors = {...appointmentErrors};
+        let validErrors = { ...appointmentErrors };
         let isDisabled = false;
-        
+
         if (e.target.value.trim() !== "") {
-            // console.clear();
-            // console.log(e.target.value);
-            // console.log("Check", new Date(Date.now()).toISOString().split("T")[0])
             if (type === "date") {
                 const dateDiff = utils.dateDiff(e.target.value);
-                if(dateDiff.difference <= 0) {
+                if (dateDiff.difference <= 0) {
                     const fromTime = appointmentData.fromTime;
-                    if(fromTime) {
+                    if (fromTime) {
                         const appDateTime = moment(`${e.target.value.toString()} ${appointmentData.fromTime.toString()}`).format("YYYY-MM-DD h:mm a");
                         const diffFromToday = todayDate.diff(appDateTime, "minutes");
 
-                        if(diffFromToday > 0) {
+                        if (diffFromToday > 0) {
                             validErrors.fromTime = "Invalid from time";
                             isDisabled = true;
                         } else {
@@ -209,12 +206,12 @@ const CreateAppointment = (props) => {
                 validErrors.date = "";
                 isDisabled = false;
                 let newDateString = e.target.value;
-                setAppointmentData({...appointmentData, date: newDateString});
+                setAppointmentData({ ...appointmentData, date: newDateString });
             }
             if (type == "agenda") {
                 validErrors.agenda = "";
                 isDisabled = false;
-                setAppointmentData({...appointmentData, agenda: e.target.value});
+                setAppointmentData({ ...appointmentData, agenda: e.target.value });
             }
         } else {
             if (type == "agenda") {
@@ -233,28 +230,19 @@ const CreateAppointment = (props) => {
     };
 
     const setStartDate = (val) => {
-        let validErrors = {...appointmentErrors};
+        let validErrors = { ...appointmentErrors };
         let isDisabled = false;
-        let formattedDate = `${val.getFullYear()}-${
-            val.getMonth() + 1
-          }-${val.getDate()}`;
+        let formattedDate = `${val.getFullYear()}-${val.getMonth() + 1
+            }-${val.getDate()}`;
         setDate(val);
         formattedDate = utils.dateConversion(formattedDate);
         const dateDiff = utils.dateDiff(formattedDate);
-        if(dateDiff.difference <= 0) {
-            // console.log("Today")
+        if (dateDiff.difference <= 0) {
             const fromTime = appointmentData.fromTime;
-            if(fromTime) {
-                // console.log("From Time")
-                const appDateTime = moment(`${formattedDate.toString()} ${appointmentData.fromTime.toString()}`).format("YYYY-MM-DD h:mm a");
-                const diffFromToday = todayDate.diff(appDateTime, "minutes");
-
-                
-
-
-                // console.log(diffFromToday);
-                if(diffFromToday > 0) {
-                    // console.log("Invalid time")
+            if (fromTime) {
+                const appDateTime = moment(`${formattedDate} ${appointmentData.fromTime}`, 'YYYY-MM-DD h:mm A').format('YYYY-MM-DD h:mm A');
+                const diffFromToday = moment(todayDate, 'YYYY-MM-DD h:mm A').diff(moment(appDateTime, 'YYYY-MM-DD h:mm A'));
+                if (diffFromToday > 0) {
                     validErrors.fromTime = "Invalid from time";
                     isDisabled = true;
                 } else {
@@ -270,8 +258,7 @@ const CreateAppointment = (props) => {
         validErrors.date = "";
         isDisabled = false;
         let newDateString = formattedDate;
-        // console.log(newDateString);
-        setAppointmentData({...appointmentData, date: newDateString});
+        setAppointmentData({ ...appointmentData, date: newDateString });
         setAppointmentErrors(validErrors);
         setIsDisabled(isDisabled);
     }
@@ -286,12 +273,11 @@ const CreateAppointment = (props) => {
             })
         }
         //Set dependant name
-        setDependant({...dependant, name: e.target.value});
+        setDependant({ ...dependant, name: e.target.value });
 
         //Name character limit
         if (e.target.value.length >= 30) {
             //Length 30 char limit
-            // console.log("char checking");
             setAppointmentErrors({
                 ...appointmentErrors,
                 name: "Name should not be more than 30 characters",
@@ -301,7 +287,6 @@ const CreateAppointment = (props) => {
         //Name special character checking
         let isSpecialCharacterformat = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/;
         if (isSpecialCharacterformat.test(e.target.value)) {
-            // console.log("Special checkig");
             setAppointmentErrors({
                 ...appointmentErrors,
                 name: "Name should not contain any special characters",
@@ -335,7 +320,7 @@ const CreateAppointment = (props) => {
                 setProcessing(false);
                 // setAddManually(true);
                 setIsDisabled(false);
-                setAppointmentErrors({...appointmentErrors, name: ""});
+                setAppointmentErrors({ ...appointmentErrors, name: "" });
             }
 
             if (e.target.value.length == 0) {
@@ -343,7 +328,7 @@ const CreateAppointment = (props) => {
             }
         }
 
-        if(e.target.value.trim() == "") {
+        if (e.target.value.trim() == "") {
             setToggleContactList({
                 status: false,
                 contacts: [],
@@ -354,20 +339,15 @@ const CreateAppointment = (props) => {
 
 
     const fromDateAdd = (fromValue) => {
-        const convertedChoosedTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + fromValue.format("HH:mm:ss"),timezoneOffset);
+        const convertedChoosedTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + fromValue.format("HH:mm:ss"), timezoneOffset);
         const convertedLocalTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
 
         const localTime = moment(convertedLocalTime, "YYYY-MM-DD HH:mm:ss");
         const choosedTime = moment(convertedChoosedTime, "YYYY-MM-DD HH:mm:ss");
-        // // console.log("Time differance ======================= ", choosedTime.diff(localTime, "minutes"), convertedChoosedTime, convertedLocalTime);
 
 
-        let validErrors = {...appointmentErrors};
+        let validErrors = { ...appointmentErrors };
         let isDisabled = false;
-        // console.log("App Date", appointmentData.date)
-        // console.clear();
-        // const appDateTime = moment(`${appointmentData.date.toString()} ${fromValue.format("h:mm a")}`).format("YYYY-MM-DD h:mm a");
-        // const diffFromToday = todayDate.diff(appDateTime, "minutes");
         const diffFromToday = choosedTime.diff(localTime, "minutes");
         const fromTime = moment(`${appointmentData.date} ${fromValue.format("h:mm a")}`).format('MM/DD/YYYY h:mm a');
         const toTime = moment(`${appointmentData.date} ${appointmentData.toTime}`).format('MM/DD/YYYY h:mm a');
@@ -404,16 +384,13 @@ const CreateAppointment = (props) => {
                     fromTime: fromValue.format("h:mm a").toUpperCase(),
                 });
             }
-            // console.clear()
-            // console.log("Time Diff", appointmentData.toTime);
-            if(!appointmentData.date) {
+            if (!appointmentData.date) {
                 validErrors.date = "Please choose a date";
                 isDisabled = true;
-            } else if(diffFromToday < 2) {
+            } else if (diffFromToday < 2) {
                 validErrors.fromTime = "Invalid from time";
                 isDisabled = true;
-            } else if(appointmentData.toTime && Math.sign(moment(fromTime).diff(toTime, "minutes")) > 0) {
-                // console.log("To Time is less than from", moment(fromTime).diff(toTime, "minutes"));
+            } else if (appointmentData.toTime && Math.sign(moment(fromTime).diff(toTime, "minutes")) > 0) {
                 validErrors.fromTime = "Invalid from time";
                 isDisabled = true;
             } else {
@@ -429,15 +406,10 @@ const CreateAppointment = (props) => {
     };
 
     const toDateAdd = (toValue) => {
-        // console.log(toValue && toValue.format('h:mm a'));
-        let validErrors = {...appointmentErrors};
+        let validErrors = { ...appointmentErrors };
         let isDisabled = false;
-        // const appDateTime = moment(`${appointmentData.date.toString()} ${toValue.format("h:mm a")}`).format("YYYY-MM-DD h:mm a");
-        // const diffFromToday = todayDate.diff(appDateTime, "minutes");
         const toTime = moment(`${appointmentData.date} ${toValue.format("h:mm a")}`).format('MM/DD/YYYY h:mm a');
         const fromTime = moment(`${appointmentData.date} ${appointmentData.fromTime}`).format('MM/DD/YYYY h:mm a');
-        // const diff = Math.sign(moment(toTime).diff(fromTime, "minutes"));
-        // console.log("Fromtime < Totime", fromTime < toTime);
         if (toValue && toValue != null) {
             if (appointmentData.fromTime.trim() === "") {
                 validErrors.toTime = "";
@@ -471,10 +443,10 @@ const CreateAppointment = (props) => {
                 });
             }
 
-            if(!appointmentData.date) {
+            if (!appointmentData.date) {
                 validErrors.date = "Please choose a date";
                 isDisabled = true;
-            } else if(fromTime && Math.sign(moment(toTime).diff(fromTime, "minutes")) < 0) {
+            } else if (fromTime && Math.sign(moment(toTime).diff(fromTime, "minutes")) < 0) {
                 validErrors.toTime = "Invalid to time";
                 isDisabled = true;
             } else {
@@ -483,7 +455,7 @@ const CreateAppointment = (props) => {
                 isDisabled = false;
             }
         } else {
-           // validErrors.toTime = "Invalid end time.";
+            // validErrors.toTime = "Invalid end time.";
         }
         // parseInt(e.target.value.replace(":","")) <= parseInt(appointmentData.fromTime.replace(":",""))
         setAppointmentErrors(validErrors);
@@ -540,7 +512,7 @@ const CreateAppointment = (props) => {
             ...appointmentData,
             contactId: "",
         });
-        setDependant({name: "", contactId: ""});
+        setDependant({ name: "", contactId: "" });
         setAddManually(false)
         setToggleContactList({
             ...toggleContactList,
@@ -552,7 +524,7 @@ const CreateAppointment = (props) => {
 
     // validation on submission of form
     const validateAppointment = (e) => {
-        let validErrors = {...appointmentErrors};
+        let validErrors = { ...appointmentErrors };
 
         if (appointmentData.contactId.trim() === "") {
             validErrors.contactId = "Please select a contact to create Appointment with";
@@ -584,7 +556,7 @@ const CreateAppointment = (props) => {
             parseFloat(appointmentData.toTime.split(" ")[0].replace(":", "")) <=
             parseFloat(appointmentData.fromTime.split(" ")[0].replace(":", ""))
         ) {
-           // validErrors.toTime = "Invalid end time.";
+            // validErrors.toTime = "Invalid end time.";
         }
         if (
             appointmentData.contactId.trim() !== "" &&
@@ -609,7 +581,7 @@ const CreateAppointment = (props) => {
     const createAppointment = async (e) => {
         e.preventDefault();
         let valid = validateAppointment();
-        const convertFromDateTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.fromTime),timezoneOffset);
+        const convertFromDateTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.fromTime), timezoneOffset);
         const convertToDateTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + utils.timeConversion(appointmentData.toTime), timezoneOffset);
         appointmentData['fromDateTime'] = convertFromDateTime.trim();
         appointmentData['toDateTime'] = convertToDateTime.trim();
@@ -668,22 +640,22 @@ const CreateAppointment = (props) => {
     };
 
     const handelBasicinfoPhone = (event) => {
-        const {name, value} = event.target;
+        const { name, value } = event.target;
         if (name === "countryCode") {
             const daileCodeindex = event.target[event.target.selectedIndex];
             let dailCode = daileCodeindex !== undefined ? daileCodeindex.getAttribute("data-dailcode") : "+1";
-            setBasicinfoPhone(prevState => ({...prevState, dailCode: dailCode}));
-            setBasicinfoPhone(prevState => ({...prevState, countryCode: value}));
+            setBasicinfoPhone(prevState => ({ ...prevState, dailCode: dailCode }));
+            setBasicinfoPhone(prevState => ({ ...prevState, countryCode: value }));
         }
         if (name === "number") {
-            setFormErrors(prevState => ({...prevState, phone: ''}));
+            setFormErrors(prevState => ({ ...prevState, phone: '' }));
             let pattern = new RegExp(/^[0-9\b]+$/);
             if (!pattern.test(event.target.value)) {
-                setBasicinfoPhone(prevState => ({...prevState, number: ""}));
+                setBasicinfoPhone(prevState => ({ ...prevState, number: "" }));
                 return false;
             } else {
-                setBasicinfoPhone(prevState => ({...prevState, number: value}));
-                setBasicinfoPhone(prevState => ({...prevState, full_number: basicinfoPhone.dailCode + value}));
+                setBasicinfoPhone(prevState => ({ ...prevState, number: value }));
+                setBasicinfoPhone(prevState => ({ ...prevState, full_number: basicinfoPhone.dailCode + value }));
                 setBasicinfoPhone(prevState => ({
                     ...prevState,
                     original_number: basicinfoPhone.dailCode.replace("+", "") + value
@@ -693,15 +665,15 @@ const CreateAppointment = (props) => {
     };
 
     const countrycodeOpt = phoneCountryCode ? phoneCountryCode.map((el, key) => {
-            return (
-                <option value={el.code} data-dailcode={el.prefix} key={key}>{el.code} ({el.prefix})</option>
-            )
-        }
+        return (
+            <option value={el.code} data-dailcode={el.prefix} key={key}>{el.code} ({el.prefix})</option>
+        )
+    }
     ) : '';
 
     const handelBasicinfoEmail = (event) => {
         setBasicinfoEmail(event.target.value);
-        setFormErrors(prevState => ({...prevState, email: ''}));
+        setFormErrors(prevState => ({ ...prevState, email: '' }));
     };
 
     const verify = async (number) => {
@@ -725,10 +697,10 @@ const CreateAppointment = (props) => {
                         setBasicinfoPhone(result.data);
                         setSuccessMsg(result.message);
                     } else {
-                        setFormErrors(prevState => ({...prevState, phone: result.message}));
+                        setFormErrors(prevState => ({ ...prevState, phone: result.message }));
                     }
                 } else {
-                    setFormErrors(prevState => ({...prevState, phone: 'Number not given.'}));
+                    setFormErrors(prevState => ({ ...prevState, phone: 'Number not given.' }));
                 }
                 break;
             default:
@@ -739,12 +711,12 @@ const CreateAppointment = (props) => {
     const handelBasicinfoFname = (e) => {
         e.preventDefault();
         setBasicinfoFname(e.target.value);
-        setFormErrors(prevState => ({...prevState, fName: ''}));
+        setFormErrors(prevState => ({ ...prevState, fName: '' }));
     }
 
     const handelBasicinfoLname = (e) => {
         setBasicinfoLname(e.target.value);
-        setFormErrors(prevState => ({...prevState, lName: ''}));
+        setFormErrors(prevState => ({ ...prevState, lName: '' }));
     }
 
     const onContactSubmit = async (e) => {
@@ -780,7 +752,7 @@ const CreateAppointment = (props) => {
         }
         if (isError) {
             setIsLoader(false);
-            setFormErrors(prevState => ({...prevState, formErrorsCopy}));
+            setFormErrors(prevState => ({ ...prevState, formErrorsCopy }));
             // const body = document.querySelector('#scrollDiv');
             // body.scrollTo(0,0)
             setTimeout(() => setFormErrors({
@@ -860,7 +832,7 @@ const CreateAppointment = (props) => {
     return (
         <div className="modalBackdrop modalCreateAppointment">
             <div className="modalBackdropBg" onClick={() => props.setCreateAppointmentModal(false)}></div>
-            {isLoader && <Loader/>}
+            {isLoader && <Loader />}
             {successMsg && <SuccessAlert message={successMsg}></SuccessAlert>}
             {errorMsg && <ErrorAlert message={errorMsg}></ErrorAlert>}
             <div className="slickModalBody">
@@ -869,7 +841,7 @@ const CreateAppointment = (props) => {
                         className="topCross"
                         onClick={() => props.setCreateAppointmentModal(false)}
                     >
-                        <img src={crossTop} alt=""/>
+                        <img src={crossTop} alt="" />
                     </button>
                     <div className="circleForIcon">
                         <svg
@@ -919,7 +891,7 @@ const CreateAppointment = (props) => {
                                         className="btn crossContact"
                                         onClick={(e) => resetContactName(e)}
                                     >
-                                        <img src={cross} alt="cross"/>
+                                        <img src={cross} alt="cross" />
                                     </button>
                                 ) : (
                                     ""
@@ -946,11 +918,11 @@ const CreateAppointment = (props) => {
                                                             {contact.lastName ? contact.lastName[0] : ""}
                                                         </figure>
                                                         <p>
-                              <span>
-                                  {(contact.firstName ? contact.firstName : "") +
-                                      " " +
-                                      (contact.lastName ? contact.lastName : "")}
-                                </span>
+                                                            <span>
+                                                                {(contact.firstName ? contact.firstName : "") +
+                                                                    " " +
+                                                                    (contact.lastName ? contact.lastName : "")}
+                                                            </span>
                                                             {contact.email ?
                                                                 <small>
                                                                     {contact.email}
@@ -998,7 +970,7 @@ const CreateAppointment = (props) => {
                                     </label>
                                     <div className="cmnFormField">
                                         <input type="text" placeholder="Last Name" className="cmnFieldStyle"
-                                               name="email" onChange={handelBasicinfoLname}/>
+                                            name="email" onChange={handelBasicinfoLname} />
                                     </div>
                                     {formErrors.lName.trim() !== "" ? (
                                         <p className="errorMsg">{formErrors.lName}</p>
@@ -1012,7 +984,7 @@ const CreateAppointment = (props) => {
                                     </label>
                                     <div className="cmnFormField">
                                         <input type="email" placeholder="Email" className="cmnFieldStyle" name="email"
-                                               onChange={handelBasicinfoEmail}/>
+                                            onChange={handelBasicinfoEmail} />
                                     </div>
                                     {formErrors.email.trim() !== "" ? (
                                         <p className="errorMsg">{formErrors.email}</p>
@@ -1030,17 +1002,17 @@ const CreateAppointment = (props) => {
                                             <div className="countryName">{basicinfoPhone.countryCode}</div>
                                             <div className="daileCode">{basicinfoPhone.dailCode}</div>
                                             <select className="selectCountry" name="countryCode"
-                                                    defaultValue={basicinfoPhone.countryCode}
-                                                    onChange={handelBasicinfoPhone}>
+                                                defaultValue={basicinfoPhone.countryCode}
+                                                onChange={handelBasicinfoPhone}>
                                                 {countrycodeOpt}
                                             </select>
                                         </div>
                                         <input type="phone" className="cmnFieldStyle" name="number"
-                                               placeholder="Eg. (555) 555-1234" value={basicinfoPhone.number}
-                                               onChange={handelBasicinfoPhone}/>
+                                            placeholder="Eg. (555) 555-1234" value={basicinfoPhone.number}
+                                            onChange={handelBasicinfoPhone} />
                                         <button className="verifyNumberButton"
-                                                onClick={(e) => verifyNumber(e, 'phone')}>
-                                            <img src={verify_icon} alt=""/> Verify
+                                            onClick={(e) => verifyNumber(e, 'phone')}>
+                                            <img src={verify_icon} alt="" /> Verify
                                         </button>
                                         {formErrors.phone ? <p className="errorMsg">{formErrors.phone}</p> : ""}
                                     </div>
@@ -1058,51 +1030,51 @@ const CreateAppointment = (props) => {
                                 >
                                     <div className="cmnFieldName">Agenda</div>
                                     <div className="cmnFormField clearfix">
-                    <span className="inputTagArea" ref={titleAppRef} vv="yu">
-                      <input
-                          className="cmnFieldStyle createAppointment"
-                          type="text"
-                          placeholder="Eg. Martial Art Course Demo"
-                          onChange={(e) => appointmentDataAdd(e, "agenda")}
-                      />
-                      <span
-                          className={
-                              tagListToggle
-                                  ? "tagSection d-flex f-align-center f-justify-center active"
-                                  : "tagSection d-flex f-align-center f-justify-center"
-                          }
-                          onClick={(e) => toggleTagsListFn(e)}
-                          ref={toggleTags}
-                      >
-                        <svg
-                            width="17"
-                            height="16"
-                            viewBox="0 0 17 16"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                              fillRule="evenodd"
-                              clipRule="evenodd"
-                              d="M15.3953 1.10391C15.7136 1.10391 16.0188 1.23033 16.2438 1.45538C16.4689 1.68042 16.5953 1.98565 16.5953 2.30391V7.10391L8.56231 15.1369C8.35825 15.3429 8.08652 15.468 7.79736 15.4891C7.5082 15.5103 7.22116 15.426 6.98931 15.2519L15.3953 6.80391V1.10391ZM8.79531 0.503906H13.5953C13.9136 0.503906 14.2188 0.630334 14.4438 0.855378C14.6689 1.08042 14.7953 1.38565 14.7953 1.70391V6.50391L6.76131 14.5399C6.64983 14.6518 6.51736 14.7405 6.3715 14.8011C6.22563 14.8617 6.06925 14.8929 5.91131 14.8929C5.75338 14.8929 5.59699 14.8617 5.45113 14.8011C5.30527 14.7405 5.1728 14.6518 5.06131 14.5399L0.754313 10.2359C0.642442 10.1244 0.553677 9.99195 0.493111 9.84609C0.432544 9.70023 0.401367 9.54384 0.401367 9.38591C0.401367 9.22797 0.432544 9.07159 0.493111 8.92572C0.553677 8.77986 0.642442 8.64739 0.754313 8.53591L8.79131 0.503906H8.79531ZM11.4953 4.70391C11.3173 4.70391 11.1433 4.65112 10.9953 4.55223C10.8473 4.45334 10.7319 4.31277 10.6638 4.14832C10.5957 3.98387 10.5779 3.80291 10.6126 3.62832C10.6473 3.45374 10.7331 3.29338 10.8589 3.16751C10.9848 3.04164 11.1452 2.95593 11.3197 2.9212C11.4943 2.88647 11.6753 2.9043 11.8397 2.97241C12.0042 3.04053 12.1447 3.15589 12.2436 3.30389C12.3425 3.4519 12.3953 3.6259 12.3953 3.80391C12.3953 3.9221 12.372 4.03913 12.3268 4.14832C12.2816 4.25751 12.2153 4.35673 12.1317 4.4403C12.0481 4.52388 11.9489 4.59017 11.8397 4.6354C11.7305 4.68063 11.6135 4.70391 11.4953 4.70391Z"
-                              fill="#9BAEBC"
-                          />
-                        </svg>
-                      </span>
-                      <TagList tagListToggle={tagListToggle} selectTag={selectTag}/>
-                    </span>
-                                        
+                                        <span className="inputTagArea" ref={titleAppRef} vv="yu">
+                                            <input
+                                                className="cmnFieldStyle createAppointment"
+                                                type="text"
+                                                placeholder="Eg. Martial Art Course Demo"
+                                                onChange={(e) => appointmentDataAdd(e, "agenda")}
+                                            />
+                                            <span
+                                                className={
+                                                    tagListToggle
+                                                        ? "tagSection d-flex f-align-center f-justify-center active"
+                                                        : "tagSection d-flex f-align-center f-justify-center"
+                                                }
+                                                onClick={(e) => toggleTagsListFn(e)}
+                                                ref={toggleTags}
+                                            >
+                                                <svg
+                                                    width="17"
+                                                    height="16"
+                                                    viewBox="0 0 17 16"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        fillRule="evenodd"
+                                                        clipRule="evenodd"
+                                                        d="M15.3953 1.10391C15.7136 1.10391 16.0188 1.23033 16.2438 1.45538C16.4689 1.68042 16.5953 1.98565 16.5953 2.30391V7.10391L8.56231 15.1369C8.35825 15.3429 8.08652 15.468 7.79736 15.4891C7.5082 15.5103 7.22116 15.426 6.98931 15.2519L15.3953 6.80391V1.10391ZM8.79531 0.503906H13.5953C13.9136 0.503906 14.2188 0.630334 14.4438 0.855378C14.6689 1.08042 14.7953 1.38565 14.7953 1.70391V6.50391L6.76131 14.5399C6.64983 14.6518 6.51736 14.7405 6.3715 14.8011C6.22563 14.8617 6.06925 14.8929 5.91131 14.8929C5.75338 14.8929 5.59699 14.8617 5.45113 14.8011C5.30527 14.7405 5.1728 14.6518 5.06131 14.5399L0.754313 10.2359C0.642442 10.1244 0.553677 9.99195 0.493111 9.84609C0.432544 9.70023 0.401367 9.54384 0.401367 9.38591C0.401367 9.22797 0.432544 9.07159 0.493111 8.92572C0.553677 8.77986 0.642442 8.64739 0.754313 8.53591L8.79131 0.503906H8.79531ZM11.4953 4.70391C11.3173 4.70391 11.1433 4.65112 10.9953 4.55223C10.8473 4.45334 10.7319 4.31277 10.6638 4.14832C10.5957 3.98387 10.5779 3.80291 10.6126 3.62832C10.6473 3.45374 10.7331 3.29338 10.8589 3.16751C10.9848 3.04164 11.1452 2.95593 11.3197 2.9212C11.4943 2.88647 11.6753 2.9043 11.8397 2.97241C12.0042 3.04053 12.1447 3.15589 12.2436 3.30389C12.3425 3.4519 12.3953 3.6259 12.3953 3.80391C12.3953 3.9221 12.372 4.03913 12.3268 4.14832C12.2816 4.25751 12.2153 4.35673 12.1317 4.4403C12.0481 4.52388 11.9489 4.59017 11.8397 4.6354C11.7305 4.68063 11.6135 4.70391 11.4953 4.70391Z"
+                                                        fill="#9BAEBC"
+                                                    />
+                                                </svg>
+                                            </span>
+                                            <TagList tagListToggle={tagListToggle} selectTag={selectTag} />
+                                        </span>
+
                                         {appointmentData.tagsDatas.length > 0 &&
                                             appointmentData.tagsDatas.map((tag, i) => (
                                                 <span className="indTags" key={i}>
-                          <span className="labelSelected">{tag.name}</span>
-                          <span
-                              className="closeTag"
-                              onClick={() => selectTag(tag, false)}
-                          >
-                            <img src={crossWhite} alt=""/>
-                          </span>
-                        </span>
+                                                    <span className="labelSelected">{tag.name}</span>
+                                                    <span
+                                                        className="closeTag"
+                                                        onClick={() => selectTag(tag, false)}
+                                                    >
+                                                        <img src={crossWhite} alt="" />
+                                                    </span>
+                                                </span>
                                             ))}
                                         {appointmentErrors.agenda.trim() !== "" ? (
                                             <p className="errorMsg">{appointmentErrors.agenda}</p>
@@ -1121,14 +1093,14 @@ const CreateAppointment = (props) => {
                                     >
                                         <div className="cmnFieldName">Choose a date</div>
                                         <div className="cmnFormField">
-                                            <DatePicker 
+                                            <DatePicker
                                                 className="cmnFieldStyle"
                                                 selected={date ? date : ""}
                                                 format="MM/dd/yyyy"
                                                 dateFormat="MM/dd/yyyy"
                                                 placeholder="MM/DD/YYYY"
                                                 minDate={new Date(calenderMinDate)}
-                                                onChange={(e) => setStartDate(e)} 
+                                                onChange={(e) => setStartDate(e)}
                                             />
                                         </div>
                                         {appointmentErrors.date.trim() !== "" ? (
@@ -1216,7 +1188,7 @@ const CreateAppointment = (props) => {
                                         className="saveDependent saveNnewBtn"
                                         disabled={isDisabled}
                                     >
-                                        Set an Appointment <img src={arrow_forward} alt=""/>
+                                        Set an Appointment <img src={arrow_forward} alt="" />
                                     </button>
                                 </div>
                             </>
@@ -1229,7 +1201,7 @@ const CreateAppointment = (props) => {
                                         className="saveDependent saveNnewBtn"
                                         onClick={(e) => onContactSubmit(e)}
                                     >
-                                        Save Contact <img src={arrow_forward} alt=""/>
+                                        Save Contact <img src={arrow_forward} alt="" />
                                     </button>
                                 </div>
                             </>
