@@ -5,9 +5,9 @@ import edit from "../../../src/assets/images/edit_grey.svg";
 import crossWhite from "../../../src/assets/images/cross_w.svg";
 import userWhite from "../../../src/assets/images/user_icon_white.svg"
 import TimePicker from "rc-time-picker";
-import {AppointmentServices} from "../../services/appointment/appointment";
+import { AppointmentServices } from "../../services/appointment/appointment";
 import * as actionTypes from "../../actions/types";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loader from "../shared/Loader";
 import TagList from "./TagList";
 import moment from "moment";
@@ -37,16 +37,16 @@ const AppointmentEditModal = (props) => {
     toTime: "",
     note: "",
   });
-  const [canceledError, setCancelledError] = useState({note: ""})
+  const [canceledError, setCancelledError] = useState({ note: "" })
   const [editedReschedule, setEditedReschedule] = useState({
     date: props.appointmentEdit.date,
     fromTime: props.appointmentEdit.fromTime,
     toTime: props.appointmentEdit.toTime,
     note: "",
-    fromDateTime:"",
-    toDateTime:""
+    fromDateTime: "",
+    toDateTime: ""
   });
-  const [canceled, setCancelled] = useState({note: ""})
+  const [canceled, setCancelled] = useState({ note: "" })
   const loggedInUser = useSelector((state) => state.user.data);
   const dispatch = useDispatch();
   const [calenderMinDate, setCalenderMinDate] = useState();
@@ -57,11 +57,11 @@ const AppointmentEditModal = (props) => {
     setErrorEdit({ errorEdit, agenda: "" });
   };
 
-  const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
+  const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset : null);
 
   useEffect(() => {
     let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
-    let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
+    let timezoneDateTime = utils.convertUTCToTimezone(localDateTime, timezoneOffset);
     let formatedDateTime = moment(timezoneDateTime).format("YYYY-MM-DD HH:mm:ss");
     setCalenderMinDate(formatedDateTime);
   }, []);
@@ -72,7 +72,7 @@ const AppointmentEditModal = (props) => {
       if (agendaRef.current.value.trim() === "") {
         setErrorEdit({ errorEdit, agenda: "Agenda cannot be empty" });
       } else {
-        if(agendaRef.current.value.length > 30){
+        if (agendaRef.current.value.length > 30) {
           setErrorEdit({ errorEdit, agenda: "Agenda cannot be more than 30 characters" });
         } else {
           setIsLoader(true);
@@ -144,15 +144,15 @@ const AppointmentEditModal = (props) => {
         });
       }
     }
-    
+
     setEditedTags(tags);
     setEditedTagNames(tagNames);
     setTagListToggle(false);
   }
   const initiateCancellation = (e) => {
     e.preventDefault();
-    setCancelledError({note: ""})
-    setCancelled({note: ""})
+    setCancelledError({ note: "" })
+    setCancelled({ note: "" })
     setShouldCancel(!shouldCancel);
   };
 
@@ -182,12 +182,12 @@ const AppointmentEditModal = (props) => {
 
   const completeCancellation = async (e) => {
     e.preventDefault();
-    let editAppointmentPlaceholder = {...props.appointmentEdit};
+    let editAppointmentPlaceholder = { ...props.appointmentEdit };
 
     if (cancelNote.current.value.trim() !== "") {
-      setCancelledError({note: ""})
+      setCancelledError({ note: "" })
       editAppointmentPlaceholder.note = cancelNote.current.value;
-      
+
       try {
         setIsLoader(true);
         await AppointmentServices.cancelAppointment(props.appointmentEdit._id, {
@@ -211,21 +211,23 @@ const AppointmentEditModal = (props) => {
         });
       }
     } else {
-      setCancelledError({note: "Please enter a valid note."})
+      setCancelledError({ note: "Please enter a valid note." })
     }
 
     // setCancelled({note: cancelNote.current.value})
   };
 
-  useEffect(()=>{
-    if(canceled.note.trim() === "") {
-      setCancelledError({note: "Please enter a valid note."})
+  useEffect(() => {
+    if (canceled.note.trim() === "") {
+      setCancelledError({ note: "Please enter a valid note." })
     } else {
-      setCancelledError({note: ""})
+      setCancelledError({ note: "" })
     }
-  },[canceled])
+  }, [canceled])
 
   const initiateReschedule = (e) => {
+
+
     e.preventDefault();
     setShouldReschedule(true);
   };
@@ -233,59 +235,59 @@ const AppointmentEditModal = (props) => {
   const getEditedDate = (e) => {
     let validErrors = { ...rescheduleErrors };
     setEditedReschedule({ ...editedReschedule, date: e.target.value });
-    
-    const convertedChoosedTime = utils.convertTimezoneToUTC(e.target.value + " " + moment(editedReschedule.fromTime, "HH:mm:ss").format("HH:mm:ss"),timezoneOffset);
+
+    const convertedChoosedTime = utils.convertTimezoneToUTC(e.target.value + " " + moment(editedReschedule.fromTime, "HH:mm:ss").format("HH:mm:ss"), timezoneOffset);
     const convertedLocalTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
     const localTime = moment(convertedLocalTime, "YYYY-MM-DD HH:mm:ss");
     const choosedTime = moment(convertedChoosedTime, "YYYY-MM-DD HH:mm:ss");
     const diffFromToday = choosedTime.diff(localTime, "minutes");
-    
+
     if (diffFromToday < 2) {
       validErrors.fromTime = "Please choose valid time";
     } else {
       validErrors.fromTime = "";
-      
+
     }
 
     setRescheduleErrors(validErrors);
   };
 
   const setStartDate = (val) => {
-    
-    const convertFromDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD") + " " + (editedReschedule?.fromTime? moment(editedReschedule?.fromTime, "HH:mm:ss").format("HH:mm:ss") : moment(props.appointmentEdit.fromTime, "HH:mm:ss").format("HH:mm:ss")), timezoneOffset) ;
 
-    const convertToDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD") + " " + (editedReschedule?.toTime? moment(editedReschedule?.toTime, "HH:mm:ss").format("HH:mm:ss") : moment(props.appointmentEdit?.toTime, "HH:mm:ss").format("HH:mm:ss")), timezoneOffset);
-    let validErrors = {...rescheduleErrors};
-    let formattedDate = `${val.getFullYear()}-${
-        val.getMonth() + 1
+    const convertFromDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD") + " " + (editedReschedule?.fromTime ? moment(editedReschedule?.fromTime, "HH:mm:ss").format("HH:mm:ss") : moment(props.appointmentEdit.fromTime, "HH:mm:ss").format("HH:mm:ss")), timezoneOffset);
+
+    const convertToDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD") + " " + (editedReschedule?.toTime ? moment(editedReschedule?.toTime, "HH:mm:ss").format("HH:mm:ss") : moment(props.appointmentEdit?.toTime, "HH:mm:ss").format("HH:mm:ss")), timezoneOffset);
+    let validErrors = { ...rescheduleErrors };
+    let formattedDate = `${val.getFullYear()}-${val.getMonth() + 1
       }-${val.getDate()}`;
 
     setDate(val);
-    setEditedReschedule({ ...editedReschedule, 
+    setEditedReschedule({
+      ...editedReschedule,
       date: moment(val).format("YYYY-MM-DD"),
       // fromDateTime: convertFromDateTime,
       // toDateTime: convertToDateTime,
     });
 
-    const convertedChoosedTime = utils.convertTimezoneToUTC(formattedDate + " " + moment(editedReschedule.fromTime, "HH:mm:ss").format("HH:mm:ss"),timezoneOffset);
+    const convertedChoosedTime = utils.convertTimezoneToUTC(formattedDate + " " + moment(editedReschedule.fromTime, "HH:mm:ss").format("HH:mm:ss"), timezoneOffset);
     const convertedLocalTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
     const localTime = moment(convertedLocalTime, "YYYY-MM-DD HH:mm:ss");
     const choosedTime = moment(convertedChoosedTime, "YYYY-MM-DD HH:mm:ss");
     const diffFromToday = choosedTime.diff(localTime, "minutes");
-    
+
     if (diffFromToday < 2) {
       validErrors.fromTime = "Please choose valid time";
     } else {
       validErrors.fromTime = "";
-      
+
     }
 
     setRescheduleErrors(validErrors);
   }
-  
+
 
   const fromScheduleDateEdit = (fromReschedule) => {
-    const convertedChoosedTime = utils.convertTimezoneToUTC(utils.dateConversion(editedReschedule.date) + " " + fromReschedule.format("HH:mm:ss"),timezoneOffset);
+    const convertedChoosedTime = utils.convertTimezoneToUTC(utils.dateConversion(editedReschedule.date) + " " + fromReschedule.format("HH:mm:ss"), timezoneOffset);
     const convertedLocalTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
     const localTime = moment(convertedLocalTime, "YYYY-MM-DD HH:mm:ss");
     const choosedTime = moment(convertedChoosedTime, "YYYY-MM-DD HH:mm:ss");
@@ -294,34 +296,34 @@ const AppointmentEditModal = (props) => {
 
 
     let validErrors = { ...rescheduleErrors };
-    
-    if(fromReschedule && fromReschedule != null) {
-        if(editedReschedule.toTime.trim() === ""){
-          validErrors.fromTime = ""
-          //validErrors.toTime = "Invalid end time.";
-          setEditedReschedule({...editedReschedule, editedFromTime : fromReschedule.format("HH:mm:ss"),  fromTime: fromReschedule.format("HH:mm:ss")})
-        }
-        else if(diffFromToday < 2) {
-          validErrors.fromTime = "Please choose valid time"
-        }
-        else {
-          if(parseFloat(editedReschedule.toTime.split(" ")[0].replace(":", "")) <= parseFloat(fromReschedule.format('h:mm a').split(" ")[0].replace(":", ""))) {
-            if(editedReschedule.toTime.split(" ")[1] === fromReschedule.format('h:mm a').split(" ")[1].toUpperCase()) {
-              //validErrors.fromTime = "Invalid start time.";
-            }
-            else {
-              validErrors.fromTime = ""
-            }
+
+    if (fromReschedule && fromReschedule != null) {
+      if (editedReschedule.toTime.trim() === "") {
+        validErrors.fromTime = ""
+        //validErrors.toTime = "Invalid end time.";
+        setEditedReschedule({ ...editedReschedule, editedFromTime: fromReschedule.format("HH:mm:ss"), fromTime: fromReschedule.format("HH:mm:ss") })
+      }
+      else if (diffFromToday < 2) {
+        validErrors.fromTime = "Please choose valid time"
+      }
+      else {
+        if (parseFloat(editedReschedule.toTime.split(" ")[0].replace(":", "")) <= parseFloat(fromReschedule.format('h:mm a').split(" ")[0].replace(":", ""))) {
+          if (editedReschedule.toTime.split(" ")[1] === fromReschedule.format('h:mm a').split(" ")[1].toUpperCase()) {
+            //validErrors.fromTime = "Invalid start time.";
           }
           else {
             validErrors.fromTime = ""
           }
-          setEditedReschedule({...editedReschedule,editedFromTime : fromReschedule.format("HH:mm:ss"), fromTime: fromReschedule.format("HH:mm:ss")})
-          
         }
+        else {
+          validErrors.fromTime = ""
+        }
+        setEditedReschedule({ ...editedReschedule, editedFromTime: fromReschedule.format("HH:mm:ss"), fromTime: fromReschedule.format("HH:mm:ss") })
+
+      }
     }
     else {
-     // validErrors.fromTime = "Invalid start time.";
+      // validErrors.fromTime = "Invalid start time.";
     }
     // parseInt(e.target.value.replace(":","")) >= parseInt(appointmentData.toTime.replace(":",""))
     setRescheduleErrors(validErrors);
@@ -334,18 +336,18 @@ const AppointmentEditModal = (props) => {
     let choosedToTime = moment(editedReschedule.date + " " + toReschedule.format("HH:mm:ss"), "YYYY-MM-DD HH:mm:ss");
     let timeDiff = choosedToTime.diff(choosedFromTime, "minutes");
 
-    if(toReschedule && toReschedule != null) {
-      if(editedReschedule.fromTime.trim() === ""){
+    if (toReschedule && toReschedule != null) {
+      if (editedReschedule.fromTime.trim() === "") {
         validErrors.toTime = ""
-       // validErrors.fromTime = "Invalid start time.";
-        setEditedReschedule({...editedReschedule,editedToTime : toReschedule.format("HH:mm:ss"), toTime: toReschedule.format("HH:mm:ss")})
+        // validErrors.fromTime = "Invalid start time.";
+        setEditedReschedule({ ...editedReschedule, editedToTime: toReschedule.format("HH:mm:ss"), toTime: toReschedule.format("HH:mm:ss") })
       } else if (timeDiff < 1) {
         validErrors.toTime = "Please choose valid time";
       }
       else {
-        if(parseFloat(editedReschedule.fromTime.split(" ")[0].replace(":", "")) >= parseFloat(toReschedule.format('h:mm a').split(" ")[0].replace(":", ""))) {
-          if(editedReschedule.fromTime.split(" ")[1] === toReschedule.format('h:mm a').split(" ")[1].toUpperCase()) {
-           // validErrors.toTime = "Invalid end time.";
+        if (parseFloat(editedReschedule.fromTime.split(" ")[0].replace(":", "")) >= parseFloat(toReschedule.format('h:mm a').split(" ")[0].replace(":", ""))) {
+          if (editedReschedule.fromTime.split(" ")[1] === toReschedule.format('h:mm a').split(" ")[1].toUpperCase()) {
+            // validErrors.toTime = "Invalid end time.";
           }
           else {
             validErrors.toTime = ""
@@ -354,11 +356,11 @@ const AppointmentEditModal = (props) => {
         else {
           validErrors.toTime = ""
         }
-        setEditedReschedule({...editedReschedule,editedToTime : toReschedule.format("HH:mm:ss"), toTime: toReschedule.format("HH:mm:ss")})
+        setEditedReschedule({ ...editedReschedule, editedToTime: toReschedule.format("HH:mm:ss"), toTime: toReschedule.format("HH:mm:ss") })
       }
     }
     else {
-     // validErrors.toTime = "Invalid end time.";
+      // validErrors.toTime = "Invalid end time.";
     }
     // parseInt(e.target.value.replace(":","")) <= parseInt(appointmentData.fromTime.replace(":",""))
     setRescheduleErrors(validErrors);
@@ -381,48 +383,43 @@ const AppointmentEditModal = (props) => {
   };
 
   const rescheduleAppointment = async (e) => {
- 
+
     e.preventDefault();
-   // Props from time and to time need to break it from fromDateTime and toDateTime
+    // Props from time and to time need to break it from fromDateTime and toDateTime
     let fromDateConversion;
     let toDateConversion;
 
-    
-    if(editedReschedule?.editedFromTime){
-    
+
+    if (editedReschedule?.editedFromTime) {
+
       fromDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + editedReschedule.editedFromTime, timezoneOffset).trim();
     }
-    if(editedReschedule?.editedToTime){
-    
+    if (editedReschedule?.editedToTime) {
+
       toDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + editedReschedule.editedToTime, timezoneOffset).trim();
     }
 
-    if(editedReschedule?.editedFromTime == undefined && fromDateTime.format("HH:mm:ss")){
+    if (editedReschedule?.editedFromTime == undefined && fromDateTime.format("HH:mm:ss")) {
       fromDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + fromDateTime.format("HH:mm:ss"), timezoneOffset).trim();
     }
-    if(editedReschedule?.editedToTime == undefined  && toDateTime.format("HH:mm:ss")){
+    if (editedReschedule?.editedToTime == undefined && toDateTime.format("HH:mm:ss")) {
       toDateConversion = utils.convertTimezoneToUTC(editedReschedule.date + " " + toDateTime.format("HH:mm:ss"), timezoneOffset).trim();
     }
-   
-    // setEditedReschedule({
-    //   ...editedReschedule,
-    //   fromDateTime: fromDateConversion,
-    //   toDateTime: toDateConversion
-    // })
+
+
     editedReschedule['fromDateTime'] = fromDateConversion;
     editedReschedule['toDateTime'] = toDateConversion;
     console.clear()
-    
-    // console.log("Date ",fromDateTim)
+
 
     if (rescheduleErrors.date === "" &&
-    rescheduleErrors.fromTime === "" &&
-    rescheduleErrors.toTime === "" && 
-    rescheduleErrors.note === ""){
+      rescheduleErrors.fromTime === "" &&
+      rescheduleErrors.toTime === "" &&
+      rescheduleErrors.note === "") {
       try {
         setIsLoader(true);
         const result = await AppointmentServices.rescheduleAppointment(props.appointmentEdit._id, editedReschedule);
-        if(result){
+        if (result) {
           props.resheduleAppointment(props.appointmentEdit._id, editedReschedule, loggedInUser);
           setIsLoader(false);
           setShouldReschedule(false)
@@ -451,48 +448,29 @@ const AppointmentEditModal = (props) => {
   };
 
   const rescheduleDisabled = () => {
-    if(editedReschedule.note.trim() == "") {
+    if (editedReschedule.note.trim() == "") {
       return true
     }
     else {
-      if(rescheduleErrors.date.trim() === "" &&
-      rescheduleErrors.fromTime.trim() === "" &&
-      rescheduleErrors.toTime.trim() === "") {
+      if (rescheduleErrors.date.trim() === "" &&
+        rescheduleErrors.fromTime.trim() === "" &&
+        rescheduleErrors.toTime.trim() === "") {
         return false
       }
-      if(rescheduleErrors.date.trim() !== "" &&
-      rescheduleErrors.fromTime.trim() !== "" &&
-      rescheduleErrors.toTime.trim() !== "") {
+      if (rescheduleErrors.date.trim() !== "" &&
+        rescheduleErrors.fromTime.trim() !== "" &&
+        rescheduleErrors.toTime.trim() !== "") {
         return true
       }
     }
 
-    // if (
-    //   rescheduleErrors.date.trim() === "" &&
-    //   rescheduleErrors.fromTime.trim() === "" &&
-    //   rescheduleErrors.toTime.trim() === "" &&
-    //   rescheduleErrors.note.trim() === ""
-    // ) {
-    //   if(editedReschedule.date.trim() === "" && editedReschedule.fromTime.trim() === "" && editedReschedule.toTime.trim() === "" && editedReschedule.note.trim() === "") {
-    //     return true
-    //   } else {
-    //     return false
-    //   }
-    // } 
-    // else {
-    //   console.log("all NOT empty");
-    //   else {
-    //     console.log("all NOT empty, NOTE NOT EMPTY");
-    //     return false;
-    //   }
-    // }
   };
 
   const addNoteForEdit = (e) => {
     let validErrors = { ...rescheduleErrors };
-    let edtiedSchedule = {...editedReschedule}
+    let edtiedSchedule = { ...editedReschedule }
 
-    if(e.target.value.trim() === "") {
+    if (e.target.value.trim() === "") {
       validErrors.note = "Please enter a proper note after making a change to the Appointment data."
     }
     else {
@@ -515,11 +493,7 @@ const AppointmentEditModal = (props) => {
       setEditedTags(props.appointmentEdit.tags);
       setEditedTagNames(props.appointmentEdit.tagNames);
       setIsLoader(false)
-      // setEditedReschedule({
-      //   ...editedReschedule,
-      //   date: props?.appointmentEdit?.date
-      // })
-    } catch(err) {
+    } catch (err) {
     } finally {
     }
   }, []);
@@ -528,19 +502,19 @@ const AppointmentEditModal = (props) => {
   const [toDateTime, setToDateTime] = useState();
 
 
-  
-  useEffect(()=>{
-   
+
+  useEffect(() => {
+
     setFromDateTime(moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset)));
     setToDateTime(moment(utils.convertUTCToTimezone(props.appointmentEdit.toDateTime.trim(), timezoneOffset)));
-   
-  },[props.appointmentEdit])
 
-  
+  }, [props.appointmentEdit])
+
+
 
   return (
     <div className="appointmentEditModal modalBackdrop">
-       <div className="modalBackdropBg" onClick={() => props.setEditAppointment(false)}></div> 
+      <div className="modalBackdropBg" onClick={() => props.setEditAppointment(false)}></div>
       <div className="slickModalBody">
         <div
           className={"slickModalHeader " + props.appointmentEdit.status + "Row"}
@@ -552,7 +526,7 @@ const AppointmentEditModal = (props) => {
           )}
           {props.editVia === "appointment-global" && (
             <div className="contactDetailsheader d-flex">
-              {(appointmentEditContact && appointmentEditContact.profilePic) ? 
+              {(appointmentEditContact && appointmentEditContact.profilePic) ?
                 <figure className="contactImage"
                   style={{
                     backgroundImage: `url(${appointmentEditContact.profilePic})`
@@ -563,52 +537,52 @@ const AppointmentEditModal = (props) => {
               }
               <div className="infoDataheaderApp">
                 <h4>
-                  {appointmentEditContact && (appointmentEditContact.firstName+" "+appointmentEditContact.lastName)}
+                  {appointmentEditContact && (appointmentEditContact.firstName + " " + appointmentEditContact.lastName)}
                 </h4>
                 <ul>
                   {appointmentEditContact && appointmentEditContact.phone && appointmentEditContact.phone.full_number &&
-                  <li>
-                    <a href={"tel:"+appointmentEditContact.phone.full_number}>
-                      <figure>
-                        <svg
-                          width="12"
-                          height="12"
-                          viewBox="0 0 12 12"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M7.19416 2.91474C7.66179 3.00594 8.09157 3.23464 8.42847 3.57153C8.76536 3.90843 8.99406 4.33821 9.08526 4.80584M7.19416 1C8.16557 1.10801 9.0714 1.54306 9.76297 2.23374C10.4545 2.92443 10.8907 3.8297 11 4.80098M10.5211 8.6235V10.0594C10.5217 10.1926 10.4944 10.3245 10.441 10.4466C10.3877 10.5687 10.3095 10.6783 10.2114 10.7684C10.1132 10.8586 9.99739 10.9272 9.87123 10.97C9.74506 11.0129 9.61135 11.0289 9.47864 11.0171C8.00524 10.8575 6.58982 10.3545 5.34614 9.54855C4.18912 8.81272 3.2084 7.83105 2.47369 6.67332C1.66446 5.42423 1.16088 4.00206 1.00376 2.52206C0.992001 2.38976 1.00789 2.25645 1.05042 2.13062C1.09295 2.00479 1.16118 1.88918 1.25079 1.79114C1.3404 1.6931 1.44943 1.61477 1.57094 1.56113C1.69245 1.50749 1.82379 1.47971 1.95661 1.47955H3.39318C3.62534 1.47741 3.85038 1.55968 4.02642 1.71104C4.20247 1.86241 4.31753 2.07258 4.3502 2.30244C4.41076 2.76215 4.52314 3.21353 4.6852 3.64796C4.74917 3.81954 4.76261 4.00586 4.72393 4.18484C4.68525 4.36382 4.59607 4.52796 4.46696 4.6578L3.85884 5.26593C4.54034 6.46449 5.53273 7.45688 6.73129 8.13838L7.33942 7.53026C7.46957 7.40162 7.63385 7.31296 7.81281 7.27478C7.99178 7.2366 8.17794 7.25049 8.34926 7.3148C8.78369 7.47686 9.23507 7.58924 9.69478 7.6498C9.92755 7.68264 10.1401 7.79995 10.292 7.97937C10.4438 8.1588 10.5244 8.38781 10.5184 8.6228L10.5211 8.6235Z"
-                            stroke="#9BAEBC"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          />
-                        </svg>
-                      </figure>
-                      <span>{appointmentEditContact.phone.full_number}</span>
-                    </a>
-                  </li>
-}
-                  {appointmentEditContact && appointmentEditContact.email && 
-                  <li>
-                    <a href={"mailto:"+(appointmentEditContact.email)}>
-                      <figure>
-                        <svg
-                          width="12"
-                          height="10"
-                          viewBox="0 0 12 10"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M11.9993 1.17237C11.9993 0.861563 11.8759 0.563477 11.6562 0.343636C11.4364 0.123796 11.1384 0.000193287 10.8276 0L1.17237 0C0.861437 0 0.56324 0.123517 0.343379 0.343379C0.123517 0.56324 0 0.861437 0 1.17237L0 8.81244C0 9.12337 0.123517 9.42157 0.343379 9.64143C0.56324 9.86129 0.861437 9.98481 1.17237 9.98481H10.8276C11.1386 9.98481 11.4368 9.86129 11.6566 9.64143C11.8765 9.42157 12 9.12337 12 8.81244L11.9993 1.17237ZM1.1782 0.936873H10.8364C10.867 0.936681 10.8974 0.94256 10.9257 0.95417C10.9541 0.965781 10.9798 0.982894 11.0015 1.00452C11.0232 1.02615 11.0404 1.05186 11.0521 1.08016C11.0638 1.10847 11.0698 1.13882 11.0697 1.16945V1.17966L6.17316 6.07692C6.15143 6.09866 6.12562 6.1159 6.09723 6.12766C6.06883 6.13942 6.03839 6.14548 6.00766 6.14548C5.97692 6.14548 5.94648 6.13942 5.91809 6.12766C5.88969 6.1159 5.86389 6.09866 5.84215 6.07692L0.943435 1.17893V1.16654C0.944395 1.10504 0.969599 1.04641 1.01356 1.0034C1.05753 0.960391 1.1167 0.936482 1.1782 0.936873ZM10.8364 9.04794H1.1782C1.1158 9.04755 1.05609 9.0225 1.01211 8.97824C0.968122 8.93398 0.943434 8.87411 0.943435 8.81172V2.50441L5.1765 6.73966C5.2853 6.84849 5.41448 6.93483 5.55665 6.99373C5.69883 7.05263 5.85121 7.08295 6.0051 7.08295C6.159 7.08295 6.31138 7.05263 6.45356 6.99373C6.59573 6.93483 6.72491 6.84849 6.83371 6.73966L11.0675 2.50513V8.81099C11.0679 8.87294 11.0439 8.93256 11.0006 8.97692C10.9573 9.02127 10.8983 9.04679 10.8364 9.04794Z"
-                            fill="#9BAEBC"
-                          />
-                        </svg>
-                      </figure>
-                      <span>{appointmentEditContact.email}</span>
-                    </a>
-                  </li>
+                    <li>
+                      <a href={"tel:" + appointmentEditContact.phone.full_number}>
+                        <figure>
+                          <svg
+                            width="12"
+                            height="12"
+                            viewBox="0 0 12 12"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M7.19416 2.91474C7.66179 3.00594 8.09157 3.23464 8.42847 3.57153C8.76536 3.90843 8.99406 4.33821 9.08526 4.80584M7.19416 1C8.16557 1.10801 9.0714 1.54306 9.76297 2.23374C10.4545 2.92443 10.8907 3.8297 11 4.80098M10.5211 8.6235V10.0594C10.5217 10.1926 10.4944 10.3245 10.441 10.4466C10.3877 10.5687 10.3095 10.6783 10.2114 10.7684C10.1132 10.8586 9.99739 10.9272 9.87123 10.97C9.74506 11.0129 9.61135 11.0289 9.47864 11.0171C8.00524 10.8575 6.58982 10.3545 5.34614 9.54855C4.18912 8.81272 3.2084 7.83105 2.47369 6.67332C1.66446 5.42423 1.16088 4.00206 1.00376 2.52206C0.992001 2.38976 1.00789 2.25645 1.05042 2.13062C1.09295 2.00479 1.16118 1.88918 1.25079 1.79114C1.3404 1.6931 1.44943 1.61477 1.57094 1.56113C1.69245 1.50749 1.82379 1.47971 1.95661 1.47955H3.39318C3.62534 1.47741 3.85038 1.55968 4.02642 1.71104C4.20247 1.86241 4.31753 2.07258 4.3502 2.30244C4.41076 2.76215 4.52314 3.21353 4.6852 3.64796C4.74917 3.81954 4.76261 4.00586 4.72393 4.18484C4.68525 4.36382 4.59607 4.52796 4.46696 4.6578L3.85884 5.26593C4.54034 6.46449 5.53273 7.45688 6.73129 8.13838L7.33942 7.53026C7.46957 7.40162 7.63385 7.31296 7.81281 7.27478C7.99178 7.2366 8.17794 7.25049 8.34926 7.3148C8.78369 7.47686 9.23507 7.58924 9.69478 7.6498C9.92755 7.68264 10.1401 7.79995 10.292 7.97937C10.4438 8.1588 10.5244 8.38781 10.5184 8.6228L10.5211 8.6235Z"
+                              stroke="#9BAEBC"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </figure>
+                        <span>{appointmentEditContact.phone.full_number}</span>
+                      </a>
+                    </li>
+                  }
+                  {appointmentEditContact && appointmentEditContact.email &&
+                    <li>
+                      <a href={"mailto:" + (appointmentEditContact.email)}>
+                        <figure>
+                          <svg
+                            width="12"
+                            height="10"
+                            viewBox="0 0 12 10"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              d="M11.9993 1.17237C11.9993 0.861563 11.8759 0.563477 11.6562 0.343636C11.4364 0.123796 11.1384 0.000193287 10.8276 0L1.17237 0C0.861437 0 0.56324 0.123517 0.343379 0.343379C0.123517 0.56324 0 0.861437 0 1.17237L0 8.81244C0 9.12337 0.123517 9.42157 0.343379 9.64143C0.56324 9.86129 0.861437 9.98481 1.17237 9.98481H10.8276C11.1386 9.98481 11.4368 9.86129 11.6566 9.64143C11.8765 9.42157 12 9.12337 12 8.81244L11.9993 1.17237ZM1.1782 0.936873H10.8364C10.867 0.936681 10.8974 0.94256 10.9257 0.95417C10.9541 0.965781 10.9798 0.982894 11.0015 1.00452C11.0232 1.02615 11.0404 1.05186 11.0521 1.08016C11.0638 1.10847 11.0698 1.13882 11.0697 1.16945V1.17966L6.17316 6.07692C6.15143 6.09866 6.12562 6.1159 6.09723 6.12766C6.06883 6.13942 6.03839 6.14548 6.00766 6.14548C5.97692 6.14548 5.94648 6.13942 5.91809 6.12766C5.88969 6.1159 5.86389 6.09866 5.84215 6.07692L0.943435 1.17893V1.16654C0.944395 1.10504 0.969599 1.04641 1.01356 1.0034C1.05753 0.960391 1.1167 0.936482 1.1782 0.936873ZM10.8364 9.04794H1.1782C1.1158 9.04755 1.05609 9.0225 1.01211 8.97824C0.968122 8.93398 0.943434 8.87411 0.943435 8.81172V2.50441L5.1765 6.73966C5.2853 6.84849 5.41448 6.93483 5.55665 6.99373C5.69883 7.05263 5.85121 7.08295 6.0051 7.08295C6.159 7.08295 6.31138 7.05263 6.45356 6.99373C6.59573 6.93483 6.72491 6.84849 6.83371 6.73966L11.0675 2.50513V8.81099C11.0679 8.87294 11.0439 8.93256 11.0006 8.97692C10.9573 9.02127 10.8983 9.04679 10.8364 9.04794Z"
+                              fill="#9BAEBC"
+                            />
+                          </svg>
+                        </figure>
+                        <span>{appointmentEditContact.email}</span>
+                      </a>
+                    </li>
                   }
                 </ul>
               </div>
@@ -622,7 +596,7 @@ const AppointmentEditModal = (props) => {
           </button>
         </div>
         <div className="editModalDetails">
-          { isLoader ? <Loader/> : ""}
+          {isLoader ? <Loader /> : ""}
           <form>
             <div
               className={
@@ -711,22 +685,22 @@ const AppointmentEditModal = (props) => {
               )}
             </div>
             <div className="formControl d-flex">
-                    <ul>
+              <ul>
                 {editedTagNames && editedTagNames.map((appTags, i) => (
-                      <li className="indTags" key={i}>
-                        <span className="labelSelected">{appTags.name}</span>
-                        <span className="closeTag" onClick={() => selectTag(appTags, false)}>
-                          <img src={crossWhite} alt="" />
-                        </span>
-                      </li>
+                  <li className="indTags" key={i}>
+                    <span className="labelSelected">{appTags.name}</span>
+                    <span className="closeTag" onClick={() => selectTag(appTags, false)}>
+                      <img src={crossWhite} alt="" />
+                    </span>
+                  </li>
                 ))}
-                </ul>
+              </ul>
               <span className={
-                      tagListToggle
-                          ? "tagSection d-flex f-align-center f-justify-center active"
-                          : "tagSection d-flex f-align-center f-justify-center"
-                    }
-                    onClick={(e) => toggleContactListFn(e)}>
+                tagListToggle
+                  ? "tagSection d-flex f-align-center f-justify-center active"
+                  : "tagSection d-flex f-align-center f-justify-center"
+              }
+                onClick={(e) => toggleContactListFn(e)}>
                 <svg
                   width="17"
                   height="16"
@@ -742,7 +716,7 @@ const AppointmentEditModal = (props) => {
                   />
                 </svg>
               </span>
-              <TagList tagListToggle={tagListToggle} selectTag={selectTag}/>
+              <TagList tagListToggle={tagListToggle} selectTag={selectTag} />
             </div>
             {!shouldReschedule && (
               <>
@@ -750,16 +724,15 @@ const AppointmentEditModal = (props) => {
                   <label className="labelAppointment">Date:</label>
                   <span className="textAppointment">
                     {/* {props?.appointmentEdit.fromDateTime} */}
-                  {props.appointmentEdit?.fromDateTime && utils.convertUTCToTimezone(props.appointmentEdit?.fromDateTime.trim(), timezoneOffset).split(" ").splice(0,3).join(" ")}
+                    {props.appointmentEdit?.fromDateTime && utils.convertUTCToTimezone(props.appointmentEdit?.fromDateTime.trim(), timezoneOffset).split(" ").splice(0, 3).join(" ")}
                     {/* {props.appointmentEdit.date} */}
                   </span>
                   {(props.appointmentEdit.rescheduleCount && props.appointmentEdit.rescheduleCount > 0) ? (
-                      <span className="rescheduleCount creatUserBtn">
-                        {props.appointmentEdit.rescheduleCount} Time(s)
-                        Rescheduled
-                      </span>
-                    ) : ""}
-                    {/* {console.log("props.appointmentEdit", props.appointmentEdit)} */}
+                    <span className="rescheduleCount creatUserBtn">
+                      {props.appointmentEdit.rescheduleCount} Time(s)
+                      Rescheduled
+                    </span>
+                  ) : ""}
                   <button
                     className="inlinle-btn rescheduleBtn"
                     onClick={(e) => initiateReschedule(e)}
@@ -785,35 +758,34 @@ const AppointmentEditModal = (props) => {
                     <span>Reschedule</span>
                   </button>
                 </div>
-                    <br></br>
-                    {/* {utils.dateConvertsation(props.appointmentEdit.date)} */}
-                    {/* <br></br>
+                <br></br>
+                {/* {utils.dateConvertsation(props.appointmentEdit.date)} */}
+                {/* <br></br>
                     {utils.timeConversion(props.appointmentEdit.date) + " " + utils.dateConversion(props.appointmentEdit.fromTime)}
                     {moment(props.appointmentEdit.date).format("YYYY-MM-DD") + " " + moment(props.appointmentEdit.fromTime, "hh:ss A").format("hh:mm:ss")}
                     <br></br>
                     {utils.timeConversion(props.appointmentEdit.date) + " " + utils.dateConversion(props.appointmentEdit.toTime)} */}
-                    
+
                 <div className="formControl d-flex">
                   <label className="labelAppointment">Time:</label>
                   <span className="textAppointment">
                     {/* {props.appointmentEdit.date + " " + moment(props.appointmentEdit.fromTime, "hh:mm:ss").format("hh:mm:ss")} */}
                     {/* {props.appointmentEdit.fromDateTime.trim() + " " + props.appointmentEdit.toDateTime.trim()} */}
                     {/* {props.appointmentEdit.fromDateTime +"-" + props.appointmentEdit.toDateTime.trim()}<br></br> */}
-                    {props.appointmentEdit?.fromDateTime && utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset).split(" ").splice(3,5).join(" ")} -{" "}
+                    {props.appointmentEdit?.fromDateTime && utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset).split(" ").splice(3, 5).join(" ")} -{" "}
                     {props.appointmentEdit?.toDateTime && utils.convertUTCToTimezone(props.appointmentEdit.toDateTime.trim(), timezoneOffset).split(" ").splice(3, 5).join(" ")}
                   </span>
                 </div>
-                {/* {console.log("props.appointmentEdit", props.appointmentEdit.rescheduleCount)} */}
                 {(props.appointmentEdit.rescheduleCount === undefined || props.appointmentEdit.rescheduleCount === 0) ? (
-                    <div className="formControl d-flex">
-                      <label className="labelAppointment">
-                        Appointment set by:
-                      </label>
-                      <span className="textAppointment">
-                        {props.appointmentEdit.createdBy}
-                      </span>
-                    </div>
-                  ) : ""}
+                  <div className="formControl d-flex">
+                    <label className="labelAppointment">
+                      Appointment set by:
+                    </label>
+                    <span className="textAppointment">
+                      {props.appointmentEdit.createdBy}
+                    </span>
+                  </div>
+                ) : ""}
               </>
             )}
             {shouldReschedule && (
@@ -869,28 +841,15 @@ const AppointmentEditModal = (props) => {
                       {/* <input value="2018-07-22" type="date"/> */}
                       <div className="cmnFieldName">Choose a date</div>
                       <div className="cmnFormField">
-                        {/* {moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format("YYYY-MM-DD")} */}
-                        {/* <input
+
+                        <DatePicker
                           className="cmnFieldStyle"
-                          type="date"
-                          placeholder="mm/dd/yyyy"
-                          defaultValue={moment(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime, timezoneOffset)).format("YYYY-MM-DD")}
-                          // defaultValue={moment(props.appointmentEdit.date).format("YYYY-MM-DD") ? moment(props.appointment.date, "YYYY-MM-DD").format("YYYY-MM-DD"): moment(props.appointment.date, "MM/DD/YYYY").format("YYYY-MM-DD")}
-                          min={calenderMinDate}
-                          ref={reschDate}
-                          onChange={getEditedDate}
-                          // value={moment(props.appointmentEdit.date, "MM/DD/YYYY").format("YYYY-MM-DD")}
-                        />
-                        {console.log('llllllll', date)} */}
-                        {/* {utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset, "YYYY-MM-DD")} */}
-                        <DatePicker 
-                            className="cmnFieldStyle"
-                            selected={date === undefined ? (props.appointmentEdit && props.appointmentEdit.fromDateTime ? new Date(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset, "YYYY-MM-DD  HH:mm:ss")) : "") : (date === undefined ? new Date() : date)}
-                            format="MM/dd/yyyy"
-                            dateFormat="MM/dd/yyyy"
-                            placeholderText="MM/DD/YYYY"
-                            minDate={new Date(calenderMinDate)}
-                            onChange={(e) => setStartDate(e)} 
+                          selected={date === undefined ? (props.appointmentEdit && props.appointmentEdit.fromDateTime ? new Date(utils.convertUTCToTimezone(props.appointmentEdit.fromDateTime.trim(), timezoneOffset)) : "") : (date === undefined ? new Date() : date)}
+                          format="MM/dd/yyyy"
+                          dateFormat="MM/dd/yyyy"
+                          placeholderText="MM/DD/YYYY"
+                          minDate={new Date(calenderMinDate)}
+                          onChange={(e) => setStartDate(e)}
                         />
                       </div>
                       {rescheduleErrors.date.trim() !== "" ? (
@@ -917,13 +876,13 @@ const AppointmentEditModal = (props) => {
                           className="cmnFieldStyle"
                           popupClassName="timepickerPopup"
                           onChange={fromScheduleDateEdit}
-                          getPopupContainer={node => { return document.getElementById("fromEditTime");}}
+                          getPopupContainer={node => { return document.getElementById("fromEditTime"); }}
                           format={"hh:mm a"}
                           use12Hours
                           inputReadOnly
                           allowEmpty={false}
                         />
-                        
+
                         {/* <input
                       className="cmnFieldStyle"
                       type="time"
@@ -945,7 +904,7 @@ const AppointmentEditModal = (props) => {
                       }
                     >
                       <div className="cmnFieldName">To</div>
-                      
+
                       {props.appointmentEdit.toDateTime}
                       {/* {moment(props.appointmentEdit?.toTime, "LT")} */}
                       <div className="cmnFormField" id="toEditTime">
@@ -956,7 +915,7 @@ const AppointmentEditModal = (props) => {
                           className="cmnFieldStyle"
                           popupClassName="timepickerPopup"
                           onChange={toScheduleDateEdit}
-                          getPopupContainer={node => {return document.getElementById("toEditTime");}}
+                          getPopupContainer={node => { return document.getElementById("toEditTime"); }}
                           format={"hh:mm a"}
                           use12Hours
                           inputReadOnly
@@ -995,25 +954,25 @@ const AppointmentEditModal = (props) => {
             )}
             {
               props.appointmentEdit.rescheduleCount > 0 ?
-                  <div className="formControl d-flex">
-                <label className="labelAppointment">Rescheduled by:</label>
-                <span className="textAppointment">
-                {props.appointmentEdit.history &&
-                    props.appointmentEdit.history[
-                    props.appointmentEdit.history.length - 1
-                        ] &&
-                    props.appointmentEdit.history[
-                    props.appointmentEdit.history.length - 1
-                        ].rescheduledByName
-                }
-              </span>
-              </div> :
-                  <div className="formControl d-flex">
-                    <label className="labelAppointment">Scheduled by:</label>
-                    <span className="textAppointment">
-                    { props.appointmentEdit.createdBy}
-              </span>
-                  </div>
+                <div className="formControl d-flex">
+                  <label className="labelAppointment">Rescheduled by:</label>
+                  <span className="textAppointment">
+                    {props.appointmentEdit.history &&
+                      props.appointmentEdit.history[
+                      props.appointmentEdit.history.length - 1
+                      ] &&
+                      props.appointmentEdit.history[
+                        props.appointmentEdit.history.length - 1
+                      ].rescheduledByName
+                    }
+                  </span>
+                </div> :
+                <div className="formControl d-flex">
+                  <label className="labelAppointment">Scheduled by:</label>
+                  <span className="textAppointment">
+                    {props.appointmentEdit.createdBy}
+                  </span>
+                </div>
             }
             <footer className="formControl d-flex f-align-center f-justify-center">
               <button
@@ -1039,10 +998,10 @@ const AppointmentEditModal = (props) => {
                     type="text"
                     className="cmnFieldStyle"
                     placeholder="Write your note here ..."
-                    onChange={(e) => setCancelled({note: e.target.value})}
+                    onChange={(e) => setCancelled({ note: e.target.value })}
                     ref={cancelNote}
                   />
-                  
+
                   {canceledError.note.trim() !== "" ? (
                     <p className="errorMsg">{canceledError.note}</p>
                   ) : (
