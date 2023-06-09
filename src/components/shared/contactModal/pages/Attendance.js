@@ -54,12 +54,12 @@ const Attendance = (props) => {
       setTz(loggedInUser.organizationTimezone);
       checkInStatusCheck();
     }
-    
-},[loggedInUser])
-const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:null); 
-useEffect(()=>{
+
+  }, [loggedInUser])
+  const timezoneOffset = useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset : null);
+  useEffect(() => {
     // console.log("Attandance time zone:", timezoneOffset)
-},[timezoneOffset]);
+  }, [timezoneOffset]);
   const openCheckInModal = (e) => {
     e.preventDefault();
     if (!hasActiveContract) {
@@ -93,196 +93,208 @@ useEffect(()=>{
   useEffect(async () => {
     // console.log("loggedInUser", loggedInUser)
     checkInStatusCheck();
-  },[]);
+  }, []);
   const fetchAttendances = async () => {
     try {
-    if (dateRange?.start) {
-      setIsLoader(true);
-      const convertFromDate = utils.convertTimezoneToUTC( dateRange.start.getFullYear() + "-" + String(dateRange.start.getMonth() + 1).padStart(2, "0") + "-" + String(dateRange.start.getDate()).padStart(2, "0") + " " + "00:00:01", timezoneOffset);
-      const convertToDate = utils.convertTimezoneToUTC(dateRange.start.getFullYear() + "-" + String(dateRange.start.getMonth() + 1).padStart(2, "0") + "-" + new Date(dateRange?.start.getFullYear(), dateRange?.start.getMonth() + 1, 0).getDate() + " " + "23:59:59", timezoneOffset);
-      console.log("Date range start and end", convertFromDate, convertToDate);
+      if (dateRange?.start) {
+        setIsLoader(true);
+        const convertFromDate = utils.convertTimezoneToUTC(dateRange.start.getFullYear() + "-" + String(dateRange.start.getMonth() + 1).padStart(2, "0") + "-" + String(dateRange.start.getDate()).padStart(2, "0") + " " + "00:00:01", timezoneOffset);
+        let convertToDate = utils.convertTimezoneToUTC(dateRange.start.getFullYear() + "-" + String(dateRange.start.getMonth() + 1).padStart(2, "0") + "-" + new Date(dateRange?.start.getFullYear(), dateRange?.start.getMonth() + 1, 0).getDate() + " " + "23:59:59", timezoneOffset);
 
-      let payload = {
-        // fromDate: moment(dateRange.start).tz(tz).add(1, "days").format("YYYY-MM-DD"),
-        // toDate: moment(dateRange.end).tz(tz).subtract(1, "days").format("YYYY-MM-DD"),
-        fromDate: convertFromDate,
-        toDate: convertToDate,
-      }
-      let todayDate = momentTZ.tz(tz);
-      let attendances = await AttendanceServices.fetchAttendances(payload, props.contactId);
-      let eventArr = [];
-      let attenCount = attendances.attendance.length;
-      setAttendanceCount(attenCount);
-      // Set calander to last attendance date
-      if (attenCount) {
-        setInitialDate(attendances.attendance[attenCount-1].checkedInAt);
-      }
-      for (let atten of attendances.attendance) {
-        const convertCheckInAt = utils.convertUTCToTimezone(atten?.checkedInAt, timezoneOffset);
-        const checInAtProperFormat = moment(convertCheckInAt).format("YYYY-MM-DD hh:mm:ss")
-        // console.log("===================================", convertCheckInAt);
-        let eventObj = {
-          // start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
-          start: moment(convertCheckInAt).format("YYYY-MM-DD hh:mm:ss"),
-          // checkedInAt: convertUTCtoTZ(atten.checkedInAt), 
-          checkedInAt: convertCheckInAt,
-          note: atten.note,
-          name: atten.contact.firstName + " " + atten.contact.lastName,
-          email: atten.contact.email,
-          checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName
+        if (String(dateRange.start.getDate()).padStart(2, "0") != "01") {
+          convertToDate = utils.convertTimezoneToUTC(dateRange.start.getFullYear() + "-" + String(dateRange.start.getMonth() + 1).padStart(2, "0") + "-" + new Date(dateRange?.start.getFullYear(), dateRange?.start.getMonth() + 2, 0).getDate() + " " + "23:59:59", timezoneOffset);
         }
-        eventArr.push(eventObj);
-        console.log("event Array", eventArr);
-      }
-      // let payload.fromDate
-      var range = moment().range(moment(dateRange.start), moment(dateRange.end));
-      let dateRangeArr = Array.from(range.by('day', { step: 1 }));
-      for (let mDate of dateRangeArr) {
 
-        let eventObj = {
-          start: mDate.format("YYYY-MM-DD"),
-          isBlankDate: true
+        let payload = {
+          // fromDate: moment(dateRange.start).tz(tz).add(1, "days").format("YYYY-MM-DD"),
+          // toDate: moment(dateRange.end).tz(tz).subtract(1, "days").format("YYYY-MM-DD"),
+          fromDate: convertFromDate,
+          toDate: convertToDate,
         }
-        // for (let atten of attendances.attendance) {
-        //   let eventObj = {
-        //     start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
-        //     checkedInAt: convertUTCtoTZ(atten.checkedInAt),
-        //     note: atten.note,
-        //     name: atten.contact.firstName + " " + atten.contact.lastName,
-        //     email: atten.contact.email,
-        //     checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName
-        //   }
-        //   // console.log("event ", eventObj)
-        //   eventArr.push(eventObj);
-        // }
-        // let payload.fromDate
-        var range = moment().range(moment(dateRange.start), moment(dateRange.end).subtract(1, "day"));
-        let dateRangeArr = Array.from(range.by('day', { step: 1 }));
-        // for (let mDate of dateRangeArr) {
-
-        //   let eventObj = {
-        //     start: mDate.format("YYYY-MM-DD"),
-        //     isBlankDate: true
-        //   }
-
-        //   // Holiday filter
-        //   if (attendances.holidays) {
-        //     for (let holiday of attendances.holidays) {
-        //       if (
-        //         moment(mDate).isBetween(holiday.fromDate, holiday.toDate) ||
-        //         moment(mDate).isSame(holiday.fromDate) ||
-        //         moment(mDate).isSame(holiday.toDate)
-        //       ) {
-        //         eventObj = {
-        //           start: mDate.format("YYYY-MM-DD"),
-        //           name: holiday.name,
-        //           title: holiday.name,
-        //           isHoliday: true,
-        //           className: "hasHoliday"
-        //         }
-
-        //       }
-        //     }
-        //   }
-        //   eventArr.push(eventObj);
-        // }
-
-        // console.clear();
-        eventArr = dateRangeArr.map(el => {
-          // console.log("Date", el.format("YYYY-MM-DD"));
+        let todayDate = momentTZ.tz(tz);
+        let attendances = await AttendanceServices.fetchAttendances(payload, props.contactId);
+        let eventArr = [];
+        let attenCount = attendances.attendance.length;
+        setAttendanceCount(attenCount);
+        // Set calander to last attendance date
+        if (attenCount) {
+          // console.clear()
+          setInitialDate(attendances.attendance[attenCount - 1].checkedInAt);
+        }
+        for (let atten of attendances.attendance) {
+          const convertCheckInAt = utils.convertUTCToTimezone(atten?.checkedInAt, timezoneOffset);
+          const checInAtProperFormat = moment(convertCheckInAt).format("YYYY-MM-DD hh:mm:ss")
           let eventObj = {
-            start: el.format("YYYY-MM-DD"),
+            // start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
+            start: moment(convertCheckInAt).format("YYYY-MM-DD hh:mm:ss"),
+            // checkedInAt: convertUTCtoTZ(atten.checkedInAt), 
+            checkedInAt: convertCheckInAt,
+            note: atten.note,
+            name: atten.contact.firstName + " " + atten.contact.lastName,
+            email: atten.contact.email,
+            checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName
+          }
+          eventArr.push(eventObj);
+        }
+        // let payload.fromDate
+        var range = moment().range(moment(dateRange.start), moment(dateRange.end));
+        // console.clear()
+        let dateRangeArr = Array.from(range.by('day', { step: 1 }));
+        for (let mDate of dateRangeArr) {
+
+          let eventObj = {
+            start: mDate.format("YYYY-MM-DD"),
             isBlankDate: true
-          };
-          const checkedInObj = [];
-          attendances?.attendance.length && attendances.attendance.forEach(atten => {
-            console.log("Attendance=====", attendances);
-            const convertCheckInAt = utils.convertUTCToTimezone(atten.checkedInAt, timezoneOffset);
-            // console.log("After conversion", convertCheckInAt);
-            if (convertUTCtoTZ(convertCheckInAt, "YYYY-MM-DD") === eventObj.start) {
-              checkedInObj.push({
-                // checkedInAt: convertUTCtoTZ(atten.checkedInAt),
-                // checkedInAt: moment(convertCheckInAt).format("YYYY-MM-DD hh:mm:ss"),
-                checkedInAt: convertCheckInAt,
-                note: atten.note,
-                name: atten.contact.firstName + " " + atten.contact.lastName,
-                email: atten.contact.email,
-                checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName,
-                isBlankDate: false
-              });
-            }
+          }
+          // for (let atten of attendances.attendance) {
+          //   let eventObj = {
+          //     start: convertUTCtoTZ(atten.checkedInAt, "YYYY-MM-DD HH:mm:ss"),
+          //     checkedInAt: convertUTCtoTZ(atten.checkedInAt),
+          //     note: atten.note,
+          //     name: atten.contact.firstName + " " + atten.contact.lastName,
+          //     email: atten.contact.email,
+          //     checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName
+          //   }
+          //   // console.log("event ", eventObj)
+          //   eventArr.push(eventObj);
+          // }
+          // let payload.fromDate
+          var range = moment().range(moment(dateRange.start), moment(dateRange.end).subtract(1, "day"));
+          let dateRangeArr = Array.from(range.by('day', { step: 1 }));
+          // for (let mDate of dateRangeArr) {
+
+          //   let eventObj = {
+          //     start: mDate.format("YYYY-MM-DD"),
+          //     isBlankDate: true
+          //   }
+
+          //   // Holiday filter
+          //   if (attendances.holidays) {
+          //     for (let holiday of attendances.holidays) {
+          //       if (
+          //         moment(mDate).isBetween(holiday.fromDate, holiday.toDate) ||
+          //         moment(mDate).isSame(holiday.fromDate) ||
+          //         moment(mDate).isSame(holiday.toDate)
+          //       ) {
+          //         eventObj = {
+          //           start: mDate.format("YYYY-MM-DD"),
+          //           name: holiday.name,
+          //           title: holiday.name,
+          //           isHoliday: true,
+          //           className: "hasHoliday"
+          //         }
+
+          //       }
+          //     }
+          //   }
+          //   eventArr.push(eventObj);
+          // }
+
+          // console.clear();+
+          // console.clear()
+          eventArr = dateRangeArr.map(el => {
+            // console.log("Date", el.format("YYYY-MM-DD"));
+
+            let eventObj = {
+              start: el.format("YYYY-MM-DD"),
+              isBlankDate: true
+            };
+            const checkedInObj = [];
+            attendances?.attendance.length && attendances.attendance.forEach(atten => {
+              const convertCheckInAt = utils.convertUTCToTimezone(atten.checkedInAt, timezoneOffset);
+              // console.log("After conversion", convertCheckInAt);
+
+
+              if (convertUTCtoTZ(convertCheckInAt, "YYYY-MM-DD") === eventObj.start) {
+                // alert("dd")
+                // console.clear()
+                // console.log("event object",eventObj.start)
+                // console.log("convertCheckInAt",convertCheckInAt)
+                // console.log("convertUTCtoTZ",convertUTCtoTZ(convertCheckInAt, "YYYY-MM-DD"))
+
+                checkedInObj.push({
+                  // checkedInAt: convertUTCtoTZ(atten.checkedInAt),
+                  // checkedInAt: moment(convertCheckInAt).format("YYYY-MM-DD hh:mm:ss"),
+                  checkedInAt: convertCheckInAt,
+                  note: atten.note,
+                  name: atten.contact.firstName + " " + atten.contact.lastName,
+                  email: atten.contact.email,
+                  checkInBy: atten.checkedInById === atten.contact._id ? "Self" : "Staff - " + atten.checkedInBy.firstName,
+                  isBlankDate: false
+                });
+              }
+            });
+            // console.log("Checked object", checkedInObj);
+            const holidays = [];
+            attendances?.holidays?.length && attendances.holidays.forEach(holiday => {
+              // console.log("EL",moment(el).isBetween(holiday.fromDate, holiday.toDate));
+              // console.log("=============", holiday);
+              const convertHolidayFrom = utils.convertUTCToTimezone(holiday?.fromDate, timezoneOffset);
+              const convertHolidayTo = utils.convertUTCToTimezone(holiday?.toDate, timezoneOffset);
+              // if(isToday(moment(holiday.fromDate).format("YYYY-MM-DD"),moment(holiday.toDate).format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))) {
+              //   setIsTodayHoliday(true);
+              // }
+              if (isToday(moment(convertHolidayFrom).format("YYYY-MM-DD"), moment(convertHolidayTo).format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))) {
+                setIsTodayHoliday(true);
+              }
+              // if (
+              //   moment(el).isBetween(holiday.fromDate, holiday.toDate) ||
+              //   moment(el).isSame(holiday.fromDate) ||
+              //   moment(el).isSame(holiday.toDate)
+              // ) {
+
+              //   holidays.push({
+              //     name: holiday.name,
+              //     title: holiday.name,
+              //     isHoliday: true,
+              //     className: "hasHoliday",
+              //     isBlankDate: false
+              //   });
+
+              // }
+              if (
+                moment(el).isBetween(convertHolidayFrom, convertHolidayTo) ||
+                moment(el).isSame(convertHolidayFrom) ||
+                moment(el).isSame(convertHolidayTo)
+              ) {
+
+                holidays.push({
+                  name: holiday.name,
+                  title: holiday.name,
+                  isHoliday: true,
+                  className: "hasHoliday",
+                  isBlankDate: false
+                });
+
+              }
+            });
+
+            // console.log("Checkin OBJ", checkedInObj);
+            return {
+              ...eventObj,
+              ...checkedInObj[0],
+              ...holidays[0]
+            };
           });
-          // console.log("Checked object", checkedInObj);
-          const holidays = [];
-          attendances?.holidays?.length && attendances.holidays.forEach(holiday => {
-            // console.log("EL",moment(el).isBetween(holiday.fromDate, holiday.toDate));
-            // console.log("=============", holiday);
-            const convertHolidayFrom = utils.convertUTCToTimezone(holiday?.fromDate, timezoneOffset);
-            const convertHolidayTo = utils.convertUTCToTimezone(holiday?.toDate, timezoneOffset);
-            // if(isToday(moment(holiday.fromDate).format("YYYY-MM-DD"),moment(holiday.toDate).format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))) {
-            //   setIsTodayHoliday(true);
-            // }
-            if(isToday(moment(convertHolidayFrom).format("YYYY-MM-DD"),moment(convertHolidayTo).format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))) {
-              setIsTodayHoliday(true);
-            }
-            // if (
-            //   moment(el).isBetween(holiday.fromDate, holiday.toDate) ||
-            //   moment(el).isSame(holiday.fromDate) ||
-            //   moment(el).isSame(holiday.toDate)
-            // ) {
+          // console.log("Today", today);
+          // attendances?.holidays?.length && attendances.holidays.forEach(el => {
+          //   if(isToday(moment(el.fromDate).format("YYYY-MM-DD"),moment(el.toDate).format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))) {
+          //     setIsTodayHoliday(true);
+          //   }
+          // })
 
-            //   holidays.push({
-            //     name: holiday.name,
-            //     title: holiday.name,
-            //     isHoliday: true,
-            //     className: "hasHoliday",
-            //     isBlankDate: false
-            //   });
-
-            // }
-            if (
-              moment(el).isBetween(convertHolidayFrom, convertHolidayTo) ||
-              moment(el).isSame(convertHolidayFrom) ||
-              moment(el).isSame(convertHolidayTo)
-            ) {
-
-              holidays.push({
-                name: holiday.name,
-                title: holiday.name,
-                isHoliday: true,
-                className: "hasHoliday",
-                isBlankDate: false
-              });
-
-            }
-          });
-
-          // console.log("Checkin OBJ", checkedInObj);
-          return {
-            ...eventObj,
-            ...checkedInObj[0],
-            ...holidays[0]
-          };
-        });
-        // console.log("Today", today);
-        // attendances?.holidays?.length && attendances.holidays.forEach(el => {
-        //   if(isToday(moment(el.fromDate).format("YYYY-MM-DD"),moment(el.toDate).format("YYYY-MM-DD"), moment().format("YYYY-MM-DD"))) {
-        //     setIsTodayHoliday(true);
-        //   }
-        // })
-
-        // console.log("New Evt Arr", newEvtObj)
-        // console.log("Attendances", attendances.attendance);
-        // console.log("Date Range", dateRangeArr);
-        // eventArr = newEvtObj;
-        // console.log("eventArr", eventArr);
+          // console.log("New Evt Arr", newEvtObj)
+          // console.log("Attendances", attendances.attendance);
+          // console.log("Date Range", dateRangeArr);
+          // eventArr = newEvtObj;
+          // console.log("eventArr", eventArr);
+          setEvents(eventArr);
+          setIsLoader(false);
+        }
+        // console.log("eventArr", eventArr)
         setEvents(eventArr);
         setIsLoader(false);
       }
-      // console.log("eventArr", eventArr)
-      setEvents(eventArr);
-      setIsLoader(false);
-    }
     } catch (e) {
       setIsLoader(false);
       // console.log("Error", e.message)
@@ -343,13 +355,14 @@ useEffect(()=>{
 
   const convertUTCtoTZ = (date, format) => {
     let utcDate = momentTZ.tz(date, "UTC");
-    let convertedDate = momentTZ.tz(utcDate, tz);
+    let convertedDate = utcDate
     if (format) {
       convertedDate = convertedDate.format(format);
     }
     // console.log("raw date", date)
     // console.log("utcDate", utcDate)
     // console.log("convertedDate", convertedDate)
+    // console.clear()
     return convertedDate;
   }
 
@@ -367,7 +380,6 @@ useEffect(()=>{
       let isHoliday = e.event.extendedProps?.isHoliday ? true : false;
       let dateSource = e.event.extendedProps.checkedInAt ? e.event.extendedProps.checkedInAt : e.event._instance.range.start;
       let eventDate = moment(dateSource).format("ddd, DD");
-      console.log("Date source", dateSource);
       // let eventDate = utils.convertUTCToTimezone(convertUTCtoTZ(dateSource, "YYYY-MM-DD hh:mm:ss"), timezoneOffset).split(",")[0].split(" ").join(", ");
 
       // console.log("After conversion Event Date", convertUTCToTimezone);
@@ -375,7 +387,7 @@ useEffect(()=>{
         eventDate = moment(dateSource).format("ddd, DD");
       }
       // let eventTime = convertUTCtoTZ(dateSource, "hh:mm A");
-      let eventTime = dateSource.toString().split(" ").splice(3,4).join(" ");
+      let eventTime = dateSource.toString().split(" ").splice(3, 4).join(" ");
       // console.log("dateSource event time", convertUTCToTimezone.split(" ").splice(3, 4).join(" "))
       if (e.event.extendedProps.checkInBy) {
         // console.log("event dateSource >>>", e.event.extendedProps.checkedInAt, convertUTCtoTZ(e.event.extendedProps.checkedInAt, "YYYY-MM-DD HH:mm:ss"))
@@ -395,7 +407,7 @@ useEffect(()=>{
               </span> */}
               <span className='fc-list-event-time'>
                 {e.event.extendedProps.checkInBy &&
-                  <span className="norm" > {eventTime? eventTime : ''}</span>
+                  <span className="norm" > {eventTime ? eventTime : ''}</span>
                 }
               </span>
               <span className='fc-list-event-new-tooltip'>
@@ -486,7 +498,7 @@ useEffect(()=>{
             <div className="attendanceCount">Attended  : <span> {attendanceCount} days</span></div>
           </div>
         </div>
-        
+
         <FullCalendar
           plugins={[listPlugin]}
           headerToolbar={{
@@ -494,7 +506,6 @@ useEffect(()=>{
             center: 'prev,title,next',
             right: ''
           }}
-          timeZone={false}
           listDaySideFormat={false}
           initialView='listMonth'
           initialDate={initialDate}
@@ -520,8 +531,6 @@ useEffect(()=>{
         </>
       }
     </div>
-
-
   );
 };
 

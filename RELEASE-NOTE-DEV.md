@@ -214,3 +214,5 @@
 # HOTFIX V1.4.4.1
     - Fixed firefox issue for timezone
     - Fixed firefox issue for appointment section
+# HOTFIX V1.4.4.2
+    - fixed the issue in attendance -> contact-modal regarding timezone
