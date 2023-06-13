@@ -3121,7 +3121,8 @@ span.userProfilePic img {
 }
 
 .circleRadio input[type="radio"],
-.customCheckbox input[type="checkbox"] {
+.customCheckbox input[type="checkbox"], 
+.radioLooksButton {
     min-height: 16px;
     margin: 0;
     height: 16px;
@@ -3135,7 +3136,8 @@ span.userProfilePic img {
 }
 
 .circleRadio input[type="radio"] + span,
-.customCheckbox input[type="checkbox"] + span {
+.customCheckbox input[type="checkbox"] + span, 
+.circleRadio span.radioLooks {
     display: block;
     width: 16px;
     height: 16px;
@@ -3151,7 +3153,8 @@ span.userProfilePic img {
 .circleRadio input[type="radio"]:checked + span,
 .circleRadio input[type="radio"][checked] + span,
 .customCheckbox input[type="checkbox"]:checked + span,
-.customCheckbox input[type="checkbox"][checked] + span {
+.customCheckbox input[type="checkbox"][checked] + span, 
+.circleRadio span.radioLooks.active {
     display: block;
     width: 16px;
     height: 16px;
@@ -8023,7 +8026,7 @@ p.trackName {
 
 .flipCardHolder .cardList .body .list .leftside {
     padding: 10px;
-    width: 70px;
+    width: 50px;
     color: #305671;
     font-size: 12px;
     display: flex;
@@ -8038,16 +8041,46 @@ p.trackName {
 }
 
 .flipCardHolder .cardList .body .list .rightside {
-    padding: 20px 10px;
-    width: calc(100% - 70px);
+    padding: 20px 40px 20px 10px;
+    width: calc(100% - 50px);
     position: relative;
+}
+
+.flipCardHolder .cardList .body .list .rightside button.deleteCardBank {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
+    height: 100%;
+    width: 40px;
+    border: none;
+    outline: none;
+    background: rgba(237, 112, 122, 0.2) url("../images/delete.svg") no-repeat center;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease 0s;
+}
+
+.flipCardHolder .cardList .body .list .rightside:hover button.deleteCardBank {
+    opacity: 1;
+    pointer-events: initial;
+}
+
+.flipCardHolder .cardList .body .list.active .rightside:hover button.deleteCardBank {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.flipCardHolder .cardList .body .list.active .rightside:hover button.deleteCardBank.show {
+    opacity: 1;
+    pointer-events: initial;
 }
 
 .flipCardHolder .cardList .body .list .rightside p {
     padding: 0 0 15px 0;
     color: #305671;
     margin: 0;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .flipCardHolder .cardList .body .list .rightside p:nth-of-type(2) {
@@ -8079,10 +8112,21 @@ p.trackName {
 .flipCardHolder .cardList .body .list .rightside .checking {
     position: absolute;
     bottom: 20px;
-    right: 10px;
+    right: 80px;
     color: #305671;
-    font-weight: 700;
+    font-weight: normal;
     font-size: 14px;
+}
+
+.checking h4 {
+    font-weight: normal;
+    font-size: 11px;
+    color: #9baebc;
+    padding-bottom: 8px;
+}
+
+p.diff.routingNum {
+    float: left;
 }
 
 .flipCardHolder .cardList .body::-webkit-scrollbar {
@@ -8186,6 +8230,10 @@ p.trackName {
     font-family: "Poppins", sans-serif;
 }
 
+.addingForm input.error {
+    border-color: #c74854;
+}
+
 .addingForm input::placeholder {
     color: #9baebc;
 }
@@ -8206,6 +8254,15 @@ p.trackName {
     font-size: 13px;
     justify-content: center;
     border-radius: 0 5px 5px 0;
+}
+
+.addingForm .activeFactor {
+    border: 1px solid transparent;
+    overflow: hidden;
+}
+
+.activeFactor.error {
+    border-color: #c74854;
 }
 
 .addingForm {
@@ -11173,6 +11230,7 @@ select.editFormStyle {
     box-shadow: 0 9px 25px rgb(0 0 0 / 14%);
     font-size: 11px;
     font-weight: normal;
+    word-break: break-all;
     text-transform: none;
     opacity: 0;
     pointer-events: none;
@@ -16258,4 +16316,57 @@ automation email setting css
 .react-datepicker__day--keyboard-selected, 
 .react-datepicker__day--keyboard-selected:hover {
     background: transparent;
+}
+
+
+.alertBox.redDeletPopup {
+    padding: 0;
+}
+
+.redDeleteHead {
+    background-color: #ED707A;
+    height: 56px;
+    border-radius: 10px 10px 0 0;
+}
+
+.redDeleteHead h1 {
+    font-size: 16px;
+    color: #fff;
+    font-weight: normal;
+    padding-left: 30px;
+    display: inline-block;
+    margin: 18px 0 0 18px;
+    background: transparent url("../images/deletePopupIcon.svg") no-repeat left center;
+}
+
+.alertBox.redDeletPopup .btn.btn-closeSideMenu {
+    background-color: transparent;
+    margin: 5px 5px 0 0;
+}
+
+.alertBox.redDeletPopup .btn-closeSideMenu span {
+    background-color: #fff;
+}
+
+.alertBox.redDeletPopup .alertBoxBody p {
+    padding: 25px 20px 15px;
+}
+
+.alertBox.redDeletPopup .alertBoxFooter {
+    justify-content: center;
+    padding-bottom: 30px;
+}
+
+.bodyProductPayModes.reverseWrap {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.slickModalBody.paymentFailed {
+    padding-bottom: 30px;
+}
+.slickModalBody.paymentFailed div.payModalDetails {
+    margin: 15px 15px 0 15px;
+    padding: 15px;
+    width: 474px;
 }

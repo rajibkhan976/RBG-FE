@@ -4,6 +4,7 @@ import info_icon from "../../../../../assets/images/infos.svg";
 import help from "../../../../../assets/images/help.svg";
 import deleteBtn from "../../../../../assets/images/deleteBtn.svg";
 import cardFail from "../../../../../assets/images/cardFailed.svg";
+import crossTop from "../../../../../assets/images/cross.svg";
 import payDate from "../../../../../assets/images/payDate.svg";
 import cashSuccess from "../../../../../assets/images/cashSuccess.svg";
 import paidCard from "../../../../../assets/images/paidCrad.svg";
@@ -12,6 +13,7 @@ import paymentFail from "../../../../../assets/images/paymentFailed.svg";
 import paySuccess from "../../../../../assets/images/paySuccess.png";
 import Loader from "../../../../shared/Loader";
 import { ProductServices } from "../../../../../services/setup/ProductServices";
+import { BillingServices } from "../../../../../services/billing/billingServices";
 import BillingOverview from "./BillingOverview";
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
@@ -276,6 +278,12 @@ const ProductPayment = (props) => {
             setPaymentFailed(productBuy.description);
             setProductPaymentFailed(true);
         }
+
+        let activePayPayload = {
+          billingID: productPayload?.billingId,
+          contactID: productPayload?.contact,
+        }
+        await BillingServices.activeCard(activePayPayload);
       } catch (error) {
         setPaymentFailed(error.message);
         setProductPaymentFailed(true);
@@ -1505,6 +1513,7 @@ const ProductPayment = (props) => {
         <div className="modalBackdrop modalProductStatus">
           <div className="slickModalBody paymentFailed">
             <div className="slickModalHeader">
+              <button className="topCross" onClick={() => setProductPaymentFailed(false)}><img src={crossTop} alt="" /></button>
               <div className="circleForIcon">
                 <img src={paymentFail} alt="" />
               </div>

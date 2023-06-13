@@ -269,7 +269,9 @@ CSS to change the modal style in the platform
 
 
 .slickModalBody .payModalDetails .modalForm {
-  max-height: 56vh;
+  min-height: 377px;
+  max-height: unset;
+  height: auto;
 }
 .contactTabsInner h3.courseModalHeading {
   margin: 0;

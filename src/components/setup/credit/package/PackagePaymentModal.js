@@ -776,6 +776,7 @@ const PackagePaymentModal = (props) => {
                                                                     <input type="text" name="cardHolderName" className={formErrors.cardHolderName ? "editFormStyle cr_error" : "editFormStyle"}
                                                                         placeholder="Ex. Adam Smith"
                                                                         onChange={handleCardHolderNameChange}
+                                                                        maxLength={50}
                                                                     />
                                                                     {formErrors.cardHolderName ? (
                                                                         <p className="errorMsg">{formErrors.cardHolderName}</p>
@@ -837,7 +838,7 @@ const PackagePaymentModal = (props) => {
                                                                         Account Holder Name
                                                                         <span className="mandatory"> *</span>
                                                                     </label>
-                                                                    <input type="text" name="bankHolderName" autocomplete="off" className={formErrors.bankHolderName ? "editFormStyle cr_error" : "editFormStyle"} placeholder="Ex. Adam Smith"
+                                                                    <input type="text" maxLength={100} name="bankHolderName" autocomplete="off" className={formErrors.bankHolderName ? "editFormStyle cr_error" : "editFormStyle"} placeholder="Ex. Adam Smith"
                                                                         onChange={handleBankHolderNameChange}
                                                                     />
                                                                     {formErrors.bankHolderName ? (
@@ -875,7 +876,7 @@ const PackagePaymentModal = (props) => {
                                                                         Company Name 
                                                                         <span className="mandatory"> *</span>
                                                                     </label>
-                                                                    <input type="text" name="company_name" autocomplete="off" className={formErrors.company_name ? "editFormStyle cr_error" : "editFormStyle"}
+                                                                    <input type="text" maxLength={100} name="company_name" autocomplete="off" className={formErrors.company_name ? "editFormStyle cr_error" : "editFormStyle"}
                                                                         placeholder="Company name"
                                                                         onChange={companyNameHandel}
                                                                     />

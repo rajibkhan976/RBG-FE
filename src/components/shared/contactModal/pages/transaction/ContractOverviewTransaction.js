@@ -29,6 +29,7 @@ import config from "../../../../../configuration/config";
 import BillingOverview from "./BillingOverview";
 import { utils } from "../../../../../helpers";
 import { ProgramServices } from "../../../../../services/transaction/ProgramServices";
+import { BillingServices } from "../../../../../services/billing/billingServices";
 import PaymentSuccessSection from "./PaymentSuccessSection";
 
 
@@ -304,6 +305,12 @@ const ContractOverviewTransaction = (props) => {
         } else {
           paymentFailedFn(result.description);
         }
+
+        let activePayPayload = {
+          billingID: contractData?.billingId,
+          contactID: contractData?.contact,
+        }
+        await BillingServices.activeCard(activePayPayload);
       } catch (e) {
         paymentFailedFn('Something went wrong! Please contact support.');
         console.log("Error in bill now", e);
@@ -608,7 +615,7 @@ const ContractOverviewTransaction = (props) => {
 
                       <div className="formControl">
                         <label>Account Holder Name</label>
-                        <input type="text" placeholder="Ex. Adam Smith" name="" />
+                        <input type="text" placeholder="Ex. Adam Smith" name="" maxLength={100} />
                       </div>
 
                       <div className="d-flex justified-space-between">

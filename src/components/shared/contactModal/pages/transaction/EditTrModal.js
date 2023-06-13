@@ -6,6 +6,7 @@ import cross_small from "../../../../../../src/assets/images/cross_small.svg";
 import paySuccess from "../../../../../assets/images/paySuccess.png"
 import aaroww from "../../../../../assets/images/arrow_forward.svg"
 import cashSuccess from "../../../../../assets/images/cashSuccess.svg";
+import crossTop from "../../../../../assets/images/cross.svg";
 import smallTick from "../../../../../assets/images/smallTick.svg";
 import paidCard from "../../../../../assets/images/paidCrad.svg";
 import paymentFail from "../../../../../assets/images/paymentFailed.svg";
@@ -19,6 +20,10 @@ import { utils } from "../../../../../helpers";
 import { useSelector } from "react-redux";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
+let currentTime = new Date();
+let currentYear = currentTime.getFullYear();
+let currentMonth = currentTime.getMonth() + 1;
 
 const EditTrModal = (props) => {
     const [tomorrow, setTomorrow] = useState();
@@ -147,18 +152,42 @@ const EditTrModal = (props) => {
             setPaylater(false);
         }
 
-
     }, [])
 
     const fetchCardBank = async () => {
+        
         try {
            // setIsLoader(true);
             let cardBankResponce = await BillingServices.fetchCardBank(props.contactId);
             if (cardBankResponce) {
-                setCardList(cardBankResponce.cards);
-                setBankList(cardBankResponce.banks);
+                let cards = cardBankResponce.cards;
+                cards.forEach(function(item,i){
+                if(item.status === "active"){
+                    cards.splice(i, 1);
+                    cards.unshift(item);
+                    setCardId(item._id);
+                }
+                });
+
+                let banks = cardBankResponce.banks;
+                banks.forEach(function(item,i){
+                if(item.status === "active"){
+                    banks.splice(i, 1);
+                    banks.unshift(item);
+                    setCardId(item._id);
+                }
+                });
+
+                setCardList(cards);
+                setBankList(banks);
                 setPrimaryType(cardBankResponce.primary);
                 // console.clear();
+                cardBankResponce?.banks.forEach(function(bank, i) {
+                    if (bank.status == "active") {
+                        setEditCardPart(false);
+                        setEditBankPart(true);
+                    }
+                });
                 console.log("Card Bank Data", cardBankResponce);
             }
         } catch (error) {
@@ -189,15 +218,20 @@ const EditTrModal = (props) => {
             }));
         }
         if(props.transaction?.payment_via === "online") {
-            if(props.transaction.defaultTransaction === "card") {
-                setEditCardPart(true);
-                setEditBankPart(false);
-            } else {
-                setEditBankPart(true);
-                setEditCardPart(false);
-            }
+            // if(props.transaction.defaultTransaction === "card") {
+            //     setEditCardPart(true);
+            //     setEditBankPart(false);
+            // } else {
+            //     setEditBankPart(true);
+            //     setEditCardPart(false);
+            // }
+            setIsLoader(true);
         }
     }, [props.transaction])
+
+    setTimeout(() => {
+        setIsLoader(false);
+    }, 1000);
 
     const editCardHandler = (e) => {
         e.preventDefault();
@@ -436,9 +470,13 @@ const EditTrModal = (props) => {
         checkcardExp: (val) => {
             setAddCardFormData({ ...addCardFormData, exDate: val });
             if (!val || val.length < 7) {
-                setAddCardFormErrorMsg(prevState => ({ ...prevState, exDate: "Please enter expiry date" }));
+                setAddCardFormErrorMsg(prevState => ({ ...prevState, exDate: "Please enter expiry date" })); 
             } else {
-                setAddCardFormErrorMsg(prevState => ({ ...prevState, exDate: "" }));
+                if ((val.split("/")[0] >= currentMonth) && (val.split("/")[1] >= currentYear)) {
+                    setAddCardFormErrorMsg(prevState => ({ ...prevState, exDate: "" }));
+                } else {
+                    setAddCardFormErrorMsg(prevState => ({ ...prevState, exDate: "Please enter expiry date" })); 
+                }
             }
         },
         checkcardcvv: (val) => {
@@ -453,61 +491,76 @@ const EditTrModal = (props) => {
 
 
     const submitCardChangeForm = async (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         addCardfieldErrorCheck.checkcardNumber(addCardFormData.cardNumber);
         addCardfieldErrorCheck.checkcardName(addCardFormData.cardHolderName);
         addCardfieldErrorCheck.checkcardExp(addCardFormData.exDate);
         addCardfieldErrorCheck.checkcardcvv(addCardFormData.cvv);
         //setAddBtnClicked(true) ;
 
-        if (addCardFormData.cardNumber === "" || addCardFormData.cardNumber.length < 17 || addCardFormData.cardHolderName === "" || addCardFormData.exDate === "" || (addCardFormData.cvv.length && addCardFormData.cvv.length < 3)) {
+        console.log("cardExpairySectionsMonth", cardExpairyMonthCheck);
+        
+
+        if (addCardFormData.cardNumber === "" && addCardFormData.cardNumber.length < 17 && addCardFormData.cardHolderName === "" && addCardFormData.exDate === "" && (addCardFormData.cvv.length && addCardFormData.cvv.length < 3) && !(addCardFormData.exDate.split("/")[0] >= currentMonth) && !(addCardFormData.exDate.split("/")[1] >= currentYear)) {
             setCheckingForCard(false);
         } else {
-            setCheckingForCard(true);
-        }
-        console.log("cardExpairySectionsMonth", cardExpairyMonthCheck);
-        let cardPayload = {
-            contact: props.contactId,
-            card_number: addCardFormData.cardNumber.split(" ").join(""),
-            expiration_year: cardExpairyYearCheck,
-            expiration_month: cardExpairyMonthCheck,
-            cvv: addCardFormData.cvv.trim() !== "" ? addCardFormData.cvv : "",
-            cardholder_name: addCardFormData.cardHolderName,
-            status: "inactive",
-        }
-        if (checkingForCard) {
-            try {
-                await BillingServices.addCard(cardPayload);
-                setFormErrorMsg((errorMessage) => ({
-                    ...errorMessage,
-                    card_details_invalid: "Card successfully added!",
-                }));
-                // hideNewCardHandler();
-            } catch (error) {
-                setIsLoader(false)
-                setFormErrorMsg((errorMessage) => ({
-                    ...errorMessage,
-                    card_details_invalid: error.message,
-                }));
-            } finally {
-                // cardError = false;
-                cardPayload = {
-                    contact: "",
-                    card_number: "",
-                    expiration_year: "",
-                    expiration_month: "",
-                    cvv: "",
-                    cardholder_name: "",
-                    status: "",
-                };
+            if (addCardformErrorMsg.cardNumber == "" && addCardformErrorMsg.cardHolderName == "" && addCardformErrorMsg.exDate == "") {
+                setCheckingForCard(true);
+                let cardPayload = {
+                    contact: props.contactId,
+                    card_number: addCardFormData.cardNumber.split(" ").join(""),
+                    expiration_year: cardExpairyYearCheck,
+                    expiration_month: cardExpairyMonthCheck,
+                    cvv: addCardFormData.cvv.trim() !== "" ? addCardFormData.cvv : "",
+                    cardholder_name: addCardFormData.cardHolderName,
+                    status: "active",
+                }
+            
+                try {
+                    let response = await BillingServices.addCard(cardPayload);
+                    setFormErrorMsg((errorMessage) => ({
+                        ...errorMessage,
+                        card_details_invalid: "Card successfully added!",
+                    }));
+                    // hideNewCardHandler();
+                    setCardId(response._id);
+                } catch (error) {
+                    setIsLoader(false)
+                    setFormErrorMsg((errorMessage) => ({
+                        ...errorMessage,
+                        card_details_invalid: error.message,
+                    }));
+                } finally {
+                    // cardError = false;
+                    cardPayload = {
+                        contact: "",
+                        card_number: "",
+                        expiration_year: "",
+                        expiration_month: "",
+                        cvv: "",
+                        cardholder_name: "",
+                        status: "",
+                    };
 
-                fetchCardBank();
-                console.log("FINISHED");
-                setEditCardDetailsPart(false);
-                setEditCardPart(true);
+                    setAddCardFormData({
+                        cardNumber: "",
+                        cardHolderName: "",
+                        exDate: "",
+                        exDateMonth: "",
+                        exDateYear: "",
+                        cvv: ""
+                    });
 
+                    fetchCardBank();
+                    console.log("FINISHED");
+                    setEditCardDetailsPart(false);
+                    setEditCardPart(true);
+
+                }
             }
         }
+        
+        
     }
 
     const addBankNumberHandler = (e) => {
@@ -596,19 +649,17 @@ const EditTrModal = (props) => {
             setCheckingForBank(false);
         } else {
             setCheckingForBank(true);
-        }
 
-        let bankPayload = {
-            contact: props.contactId,
-            routing_number: addBankFormData.routing,
-            account_number: addBankFormData.accNumber,
-            account_holder: addBankFormData.accHolderName,
-            account_type: addBankFormData.checking,
-            company_name: addBankFormData.company_name ? addBankFormData.company_name : "",
-            status: "inactive"
-        }
+            let bankPayload = {
+                contact: props.contactId,
+                routing_number: addBankFormData.routing,
+                account_number: addBankFormData.accNumber,
+                account_holder: addBankFormData.accHolderName,
+                account_type: addBankFormData.checking,
+                company_name: addBankFormData.company_name ? addBankFormData.company_name : "",
+                status: "active"
+            }
 
-        if (checkingForBank) {
             try {
                 let response = await BillingServices.addBank(bankPayload);
                 setFormErrorMsg((errorMessage) => ({
@@ -616,7 +667,8 @@ const EditTrModal = (props) => {
                     bank_details_invalid: "Bank details successfully added!",
                 }));
                 // hideNewCardHandler2();
-                // console.log(response);
+                // console.log(response); 
+                setCardId(response._id);
             } catch (error) {
                 setIsLoader(false)
                 setFormErrorMsg((errorMessage) => ({
@@ -897,10 +949,14 @@ const EditTrModal = (props) => {
                                                 {editBankDetailsPart && <button className="noFill" onClick={editBankHandler}><img src={cross_small} alt="" /></button>}
                                             </div>
                                             <div className="paymentSourcetabs">
+                                                {isLoader ?
+                                                <Loader />
+                                                :
                                                 <div className="tabBtns">
                                                     <button className={(editCardPart || editCardDetailsPart) ? "active" : ""} onClick={editCardHandler}>Card</button>
                                                     <button className={(editBankPart || editBankDetailsPart) ? "active" : ""} onClick={editBankHandler}>Bank</button>
                                                 </div>
+                                                }
 
                                                 <div className="tabcontent">
                                                     {editCardPart &&
@@ -912,7 +968,7 @@ const EditTrModal = (props) => {
                                                                     <li className={elem.status === "active" ? "active" : ""} key={i}>
                                                                         <div className="radio">
                                                                             <div className="circleRadio">
-                                                                                <input type="radio" name="cardradio" onChange={() => activeCreditCard(elem)} defaultChecked={elem.status === "active" ? "checked" : ""} />
+                                                                                <input type="radio" name="cardradio" onChange={() => activeCreditCard(elem)} checked={elem.status === "active" ? "checked" : ""} />
                                                                                 <span></span>
                                                                             </div>
                                                                         </div>
@@ -922,7 +978,7 @@ const EditTrModal = (props) => {
                                                                             </svg>
                                                                         </div>
                                                                         <div className="text">
-                                                                            <h3>Creadit Card ending with {elem?.last4}</h3>
+                                                                            <h3>Credit Card ending with {elem?.last4}</h3>
                                                                             <p>Expires  {elem.expiration_month} / {elem.expiration_year}</p>
                                                                         </div>
                                                                     </li>
@@ -957,6 +1013,7 @@ const EditTrModal = (props) => {
                                                                 </label>
                                                                 <input type="text" className="editFormStyle"
                                                                     placeholder="Ex. Adam Smith"
+                                                                    maxLength={50}
                                                                     value={addCardFormData.cardHolderName}
                                                                     onChange={addCardNameHandler}
                                                                 />
@@ -991,7 +1048,7 @@ const EditTrModal = (props) => {
                                                                 </div>
                                                             </div>
                                                             <div className="d-flex justify-content-center mt20">
-                                                                <button className="creatUserBtn" onClick={submitCardChangeForm}>
+                                                                <button className="creatUserBtn" onClick={submitCardChangeForm} type="button">
                                                                     <img className="plusIcon" src={plus_icon} alt="" /><span>Add my Card</span>
                                                                 </button>
                                                             </div>
@@ -1007,7 +1064,7 @@ const EditTrModal = (props) => {
                                                                     <li className={elem.status === "active" ? "active" : ""} key={i}>
                                                                         <div className="radio">
                                                                             <div className="circleRadio">
-                                                                                <input type="radio" name="bankradio" onChange={() => activeCreditCard(elem)} defaultChecked={elem.status === "active" ? "checked" : ""} />
+                                                                                <input type="radio" name="bankradio" onChange={() => activeCreditCard(elem)} checked={elem.status === "active" ? "checked" : ""} />
                                                                                 <span></span>
                                                                             </div>
                                                                         </div>
@@ -1048,6 +1105,7 @@ const EditTrModal = (props) => {
                                                                 <input type="text" className="editFormStyle"
                                                                     onChange={addBankNameHandler}
                                                                     value={addBankFormData.accHolderName}
+                                                                    maxLength={100}
                                                                 />
                                                                 {addBankformErrorMsg.accHolderName &&
                                                                     <div className="errorMsg">{addBankformErrorMsg.accHolderName}</div>
@@ -1089,6 +1147,7 @@ const EditTrModal = (props) => {
                                                                             type="text"
                                                                             className="editFormStyle"
                                                                             name=""
+                                                                            maxLength={100}
                                                                             value={addBankFormData.company_name}
                                                                             onChange={companyNameHandeler}
                                                                         />
@@ -1120,7 +1179,7 @@ const EditTrModal = (props) => {
                                         <div className="errorMsg">{formErrorMsg.amount}</div>
                                     }
                                 </div>
-                                <div className="notifyBox">
+                                {/* <div className="notifyBox">
                                     <label className="d-flex f-align-center">
                                         <div className="customCheckbox">
                                             <input type="checkbox" name="" onChange={checkUpdateForAllHandler} />
@@ -1128,7 +1187,7 @@ const EditTrModal = (props) => {
                                         </div>
                                         <div>I want to update this change for all the upcoming transactions of this subscription</div>
                                     </label>
-                                </div>
+                                </div> */}
                                 <div className="btnPlaceMiddle">
                                     <button className="saveNnewBtn" onClick={editMainFormSubmit}>Submit</button>
                                 </div>
@@ -1196,6 +1255,7 @@ const EditTrModal = (props) => {
                     <div className="modalBackdrop modalProductStatus">
                         <div className="slickModalBody paymentFailed">
                             <div className="slickModalHeader">
+                            <button className="topCross" onClick={() => setSuccessfulpay({})}><img src={crossTop} alt="" /></button>
                                 <div className="circleForIcon">
                                     <img src={paymentFail} alt="" />
                                 </div>

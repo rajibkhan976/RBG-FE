@@ -179,7 +179,7 @@ export default function PDFDocument(props) {
             <body style={styles.body}>
                 <div style={styles.container}>
                     <div style={styles.header}>
-                        <h2 style={styles.h2}>Tax Invoice</h2>
+                        <h2 style={styles.h2}>Invoice</h2>
                         <table style={styles.table}
                             border={0}
                             cellSpacing={0}

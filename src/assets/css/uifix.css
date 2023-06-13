@@ -302,3 +302,18 @@ other fixing
   margin-top: 0;
 }
 
+.paymentTransProduct.chooseTransactionWraper .modalBackdrop.modalProductStatus .slickModalBody.paymentFailed {
+  padding: 0 0 30px 0;
+}
+.paymentTransProduct.chooseTransactionWraper .modalBackdrop.modalProductStatus .slickModalBody.paymentFailed .slickModalHeader {
+  background: #46C8D3;
+}
+
+.modalBackdrop.transactionModal .modalBackdrop.modalProductStatus .slickModalBody.paymentFailed {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.modalBackdrop.transactionModal .modalBackdrop.modalProductStatus .slickModalBody.paymentFailed .slickModalHeader {
+  background: #46C8D3;
+}
