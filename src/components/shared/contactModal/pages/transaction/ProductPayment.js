@@ -279,11 +279,14 @@ const ProductPayment = (props) => {
             setProductPaymentFailed(true);
         }
 
-        let activePayPayload = {
-          billingID: productPayload?.billingId,
-          contactID: productPayload?.contact,
+        if (newPay.billingId) {
+          let activePayPayload = {
+            billingID: productPayload?.billingId,
+            contactID: productPayload?.contact,
+          }
+          await BillingServices.activeCard(activePayPayload);
         }
-        await BillingServices.activeCard(activePayPayload);
+
       } catch (error) {
         setPaymentFailed(error.message);
         setProductPaymentFailed(true);
