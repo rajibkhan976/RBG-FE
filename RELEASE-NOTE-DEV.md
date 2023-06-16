@@ -216,3 +216,6 @@
     - Fixed firefox issue for appointment section
 # HOTFIX V1.4.4.2
     - fixed the issue in attendance -> contact-modal regarding timezone
+
+# HOTFIX V1.4.4.3
+    - Without adding pay, cash payment error showing fixed
