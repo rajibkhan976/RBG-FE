@@ -544,7 +544,7 @@ const AutomationBuilder = (props) => {
             const updatedElem = [...elements];
             updatedElem.forEach((el) => {
                 if (params.source === el.id) {
-                    el.data.nodes.next = [params.target];
+                    el.data.nodes.next = [...el.data.nodes.next, params.target];
                 }
                 if (params.target === el.id) {
                     el.data.nodes.previous = params.source;
