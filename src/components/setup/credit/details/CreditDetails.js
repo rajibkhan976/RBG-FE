@@ -232,13 +232,10 @@ const CreditDetails = () => {
                                                 {item.type === "credit" ? item.transaction_id : "N/A"}
                                             </div>
                                             <div className="cr_date">
-                                                {/* {moment.utc(item.createdAt, null).tz(timezone).format('Do MMM, YYYY')} */}
-                                                {/* <br></br> */}
-                                                {/* {utils.dateConversion(item.createdAt) + " " + item.createdAt.split(" ")[1]} */}
-                                                {utils.convertUTCToTimezone(utils.dateConversion(item.createdAt) + " " + item.createdAt.split(" ")[1], timezoneOffset).split(" ").splice(0,3).join(" ")}
+                                                {utils.convertUTCToTimezone(item.createdAt, timezoneOffset, "LL")}
                                             </div>
                                             <div className="cr_date">
-                                                {/* {moment.utc(item.createdAt, null).tz(timezone).format('hh:mm A')} */}
+                                                {utils.convertUTCToTimezone(item.createdAt, timezoneOffset, "hh:mm A")}
                                                 {utils.convertUTCToTimezone(utils.dateConversion(item.createdAt) + " " + item.createdAt.split(" ")[1], timezoneOffset).split(" ").splice(3,4).join(" ")}
                                             </div>
                                             <div className="cr_credit">
