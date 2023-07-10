@@ -1074,6 +1074,8 @@ input:focus + .searchIco #search-ico .a,
     position: absolute;
     top: 55%;
     transform: translateY(-50%);
+    right: 0px;
+    width: 30px;
 }
 
 /* .btn-filter {
@@ -16290,7 +16292,60 @@ automation email setting css
 .react-datepicker__day--keyboard-selected:hover {
     background: transparent;
 }
-  /* ================================ */
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_categoryList{
+    width: calc(95% + 2px);
+    left: 9px;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_categoryList ul li input[type="checkbox"]{
+    width: 14.22px;
+    height: 14.22px;
+    border: 1px solid rgba(155, 174, 188, 1);
+    line-height: inherit !important;
+    min-height: inherit;
+    margin:0px;
+    padding: 0px;
+    margin-right: 12px;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_tagList{
+    padding: 0px;
+    height: inherit;
+    margin: 0px;
+    
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_tagList ul{
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    flex-wrap: wrap;
+    max-height: 59px;
+    overflow-y: scroll;
+    padding-left: 20px;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_tagList ul li{
+    margin-right: 25px;
+    margin-bottom: 5px;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_selectedCatList ul{
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_selectedCatList ul li{
+    margin: 0px;
+    margin-right: 10px;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_selectedCatList .cz_selectedCat{
+    display: flex;
+    align-items: center;
+    background-color: #5182A6;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_categoryList .sendEmail{
+    width: 100%;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_categoryList .sendEmail .indselects{
+    margin: 0px;
+    width: 100%;
+}  /* ================================ */
         /* ract datepicker css */
   /* ================================ */
 
@@ -16369,4 +16424,67 @@ automation email setting css
     margin: 15px 15px 0 15px;
     padding: 15px;
     width: 474px;
+}
+
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_categoryList{
+    width: calc(95% + 2px);
+    left: 9px;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_categoryList ul li input[type="checkbox"]{
+    width: 14.22px;
+    height: 14.22px;
+    border: 1px solid rgba(155, 174, 188, 1);
+    line-height: inherit !important;
+    min-height: inherit;
+    margin:0px;
+    padding: 0px;
+    margin-right: 12px;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_tagList{
+    padding: 0px;
+    height: inherit;
+    margin: 0px;
+    
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_tagList ul{
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    flex-wrap: wrap;
+    max-height: 59px;
+    overflow-y: scroll;
+    padding-left: 20px;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_tagList ul li{
+    margin-right: 25px;
+    margin-bottom: 5px;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_selectedCatList ul{
+    display: flex;
+    flex-wrap: wrap;
+    
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_selectedCatList ul li{
+    margin: 0px;
+    margin-right: 10px;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_selectedCatList .cz_selectedCat{
+    display: flex;
+    align-items: center;
+    background-color: #5182A6;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_categoryList .sendEmail{
+    width: 100%;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_categoryList .sendEmail .indselects{
+    margin: 0px;
+    width: 100%;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection #cz_catSearchBox{
+    width: 100% !important;
+}
+.filterOfContactListing .formField.w-100.appModals.formControl.creationSelection.tagSelection .cz_categorySelectSec{
+    margin: 0px;
+    padding-left: 10px;
+    position: relative;
 }

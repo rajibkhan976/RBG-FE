@@ -219,3 +219,6 @@
 
 # HOTFIX V1.4.4.3
     - Without adding pay, cash payment error showing fixed
+
+# RELEASE V1.0.4
+    - Contact Listing
