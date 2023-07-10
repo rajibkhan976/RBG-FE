@@ -1,4 +1,4 @@
-import React, {forwardRef, useEffect, useImperativeHandle, useState, useRef} from 'react';
+import React, {forwardRef, useEffect, useImperativeHandle, useState, useRef, useSearchParams} from 'react';
 import {useDispatch, useSelector} from "react-redux";
 import {LazyLoadImage} from 'react-lazy-load-image-component';
 import * as actionTypes from "../../actions/types";
@@ -21,7 +21,7 @@ import dependent_white from "../../assets/images/dependent.svg";
 import ShowContactTagModal from "../shared/showContactTagModal";
 import TagList from "../appointment/TagList";
 import cross_w from '../../../src/assets/images/cross_w.svg';
-
+import useDebounce from "../../helpers/useDebounce";
 
 const ContactListing = forwardRef((props, ref) => {
     const [tableWidth, setTableWidth] = useState(500);
@@ -73,9 +73,25 @@ const ContactListing = forwardRef((props, ref) => {
     const [allContactCheck, setAllContactCheck] = useState(false);
     const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state?.user?.data.organizationTimezoneInfo.utc_offset:null);
                         //    useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:"UTC-06")
+    const [filterProgram, setFilterProgram] = useState();
+    const [filterTags, setFilterTags] = useState();
+    const contactSearched = useDebounce(keyword, 1000);
+
     useEffect(()=>{
         console.log("contact listiing timezone", timezoneOffset);
-    })
+    });
+    useEffect(()=>{
+        // {console.log("contact search result", contactSearched)}
+        if(contactSearched){
+            handleSearch(contactSearched);
+        }else{
+            // console.clear();
+            // console.log("no search item is there");
+            utils.removeQueryParameter('search');
+            handleClear();
+            fetchContact();
+        }
+    },[contactSearched]);
     const openFilter = () => {
         props.openFilter();
     }
@@ -119,24 +135,38 @@ const ContactListing = forwardRef((props, ref) => {
     const handelSize = () => {
         setTableWidth(window.innerWidth - 504);
     }
-
     const fetchContact = async () => {
+        console.log("contact api call================");
         setIsLoader(true);
         setSelectSingle(false);
         setSelectAllCheckbox(false);
         const pageId = utils.getQueryVariable('page');
+        console.log("Page id", pageId);
         const queryParams = await getQueryParams();
+        console.log("Query params", queryParams);
+        const program = utils.getQueryVariable('program');
+        const tags = utils.getQueryVariable('tags');
+        // console.log(program, tags);
         try {
             const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
             // if (readPermission === false && env.ACTIVE_PERMISSION_CHECKING === 1) {
             //     throw new Error(responses.permissions.automation.read);
             // }
-            const result = await ContactService.fetchUsers(pageId, queryParams);
+            let result;
+            if(props.filterApply){
+                result = await ContactService.fetchUsers(1, queryParams)
+            }
+            else{
+                result = await ContactService.fetchUsers(pageId, queryParams)
+            }
             if (result) {
-                console.log("contact list", result.contacts);
+                console.log("contact list", result);
                 setContactList(result.contacts);
                 setContactCount(result.pagination.count);
                 setFilters(result.filterApplied);
+                // setFilterProgram(result.program);
+                // setFilterTags(result.tags);
+                // after api call line remove
                 setPaginationData({
                     ...paginationData,
                     currentPage: result.pagination.currentPage,
@@ -206,6 +236,8 @@ const ContactListing = forwardRef((props, ref) => {
         const by = utils.getQueryVariable('createdBy');
         const fromDate = utils.getQueryVariable('fromDate');
         const toDate = utils.getQueryVariable('toDate');
+        const program = utils.getQueryVariable('program');
+        const tags = utils.getQueryVariable('tags');
 
         const queryParams = new URLSearchParams();
         if (cache) {
@@ -244,6 +276,12 @@ const ContactListing = forwardRef((props, ref) => {
         }
         if (by) {
             queryParams.append("createdBy", by);
+        }
+        if(program){
+            queryParams.append("program", program);
+        }
+        if(tags){
+            queryParams.append("tags", decodeURIComponent(tags).replaceAll("+", " "));
         }
         return queryParams;
     }
@@ -355,16 +393,20 @@ const ContactListing = forwardRef((props, ref) => {
     }
 
     const handleKeywordChange = (event) => {
+        // console.log("Search Value", event.target.value);
         setKeyword(event.target.value ? event.target.value : '');
     }
 
     const handleSearch = (event) => {
+        console.clear();
+        // console.log("Search Event", event);
         const readPermission = (Object.keys(permissions).length) ? permissions.actions.includes("read") : false;
-        event.preventDefault();
+        // event.preventDefault();
         utils.addQueryParameter('page', 1);
-        if (keyword) {
-            utils.addQueryParameter('search', keyword.trim());
-        } else {
+        if (event) {
+            // utils.addQueryParameter('search', keyword.trim());
+            utils.addQueryParameter('search', event.trim());
+        } else {            
             utils.removeQueryParameter('search');
         }
         fetchContact();
@@ -373,7 +415,7 @@ const ContactListing = forwardRef((props, ref) => {
 
     const handleCheckBoxClick = (id, event, item) => {
         setSelectAllCheckbox(false);
-        console.log("one contact item", item);
+        // console.log("one contact item", item);
         // console.log("mobile number", item.mobile?.number, "father number", item.dadPhone?.number, "phone number", item.mobile?.number, "mother number", item.momPhone?.number);
         let cb = checkboxes.map(ele => {
             if (ele.id === id) {
@@ -389,7 +431,7 @@ const ContactListing = forwardRef((props, ref) => {
                 return ele;
             }       
         });
-        console.log("which one you are selected", cbChecked);
+        // console.log("which one you are selected", cbChecked);
         let singleContactSelect = cbChecked.filter((ele, index)=>{
             if(cbChecked.length === 1){
                 // console.log("Index", index);
@@ -512,7 +554,7 @@ const ContactListing = forwardRef((props, ref) => {
         });
     };
     const deleteContacts = async () => {
-        console.log(selectAllCheckbox, allContactCheck);
+        // console.log(selectAllCheckbox, allContactCheck);
         // return false;
         if (selectAllCheckbox || selectSingle) {
             const pageId = utils.getQueryVariable('page');
@@ -554,12 +596,24 @@ const ContactListing = forwardRef((props, ref) => {
         }
     }
     const removeFilter = (type) => {
+        
+        
         if (type === 'all') {
             clearFilter();
         } else {
             utils.removeQueryParameter(type);
             utils.removeQueryParameter('page');
+            // after api call remove code
+        // if(type === "program"){
+        //     console.log("type", type);
+        //     setFilterProgram({})
+        // }
+        // if(type === "tags"){
+        //     setFilterTags({})
+        // }
+        // else{
             fetchContact();
+        // }
         }
     }
     const handleImportModal = () => {
@@ -581,12 +635,14 @@ const ContactListing = forwardRef((props, ref) => {
         utils.removeQueryParameter('createdBy');
         utils.removeQueryParameter('fromDate');
         utils.removeQueryParameter('toDate');
+        utils.removeQueryParameter('program');
+        utils.removeQueryParameter('tags');
         setHideFilter(true);
         fetchContact();
     }
     const openBulkSmsHandler = ()=>{
         // console.log("SMS check phone number", singleContact, singleContact.length);
-        console.log(singleContact);
+        // console.log(singleContact);
         if(singleContact !== undefined && singleContact[0]?.phoneNo !== "" && singleContact[0]?.phoneNo !== undefined) {
             props.setBulkSmsOpenModal();
             props.setSingleContactStatus(singleContact);
@@ -632,7 +688,7 @@ const ContactListing = forwardRef((props, ref) => {
         props.setBulkAutomationOpenModal();
     }
     const selectAllValueAction = (flag) => {
-        console.log("flag========", flag);
+        // console.log("flag========", flag);
         props.selectAllCheckboxValue(flag);
         if(flag){
             setAllContactCheck(true);
@@ -655,6 +711,7 @@ const ContactListing = forwardRef((props, ref) => {
     }, [modalId]);
 
     useEffect(() => {
+        console.log("Filter is happing or not", props.filterApply);
         if (props.filterApply) {
             fetchContact();
         }
@@ -888,16 +945,9 @@ const ContactListing = forwardRef((props, ref) => {
                                         </span> : ""}
                                             {/* {item.id === 'dob' && ele.dob} */}
                                             <span className="userNames mobile new">
-                                        {((item.id === 'mobile' || item.id === 'phone' || item.id === 'dadPhone' || item.id === 'momPhone') ?
-                                            ((ele[item.id] && ele[item.id].dailCode && ele[item.id].number !== "") ?
-                                                <span className={ele[item.id].is_valid ?
-                                                    "number valid" : "number invalid"}>{ele[item.id].dailCode + "-" + ele[item.id].number}</span> :
-                                                "") : (item.id === 'dob' && Moment(ele[item.id]).isValid() ? 
-
-                                                Moment(ele[item.id]).format('LL')
-                                                :
-                                                (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? utils.convertUTCToTimezone(ele[item.id],timezoneOffset) : ele[item.id])))
-                                        }
+                                                {((item.id === 'mobile' || item.id === 'phone' || item.id === 'dadPhone' || item.id === 'momPhone') ?
+                                                    ((ele[item.id] && ele[item.id].dailCode && ele[item.id].number !== "") ? <span className={ele[item.id].is_valid ? "number valid" : "number invalid"}>{ele[item.id].dailCode + "-" + ele[item.id].number}</span> : "") : (item.id === 'dob' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LL') : (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? utils.convertUTCToTimezone(ele[item.id], timezoneOffset) : ele[item.id])))
+                                                }
                                              </span>
                                         </button>)
                                 }
@@ -1010,6 +1060,8 @@ const ContactListing = forwardRef((props, ref) => {
                 showAction={showAction}
                 addSelectAll={addSelectAll}
                 sendActionData={sendActionData}
+                program={filterProgram}
+                filterTags={filterTags}             
                 // actionStatusFun={actionStatus}
                 // singleContact={singleContact}
             ></ContactHead>

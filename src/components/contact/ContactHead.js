@@ -64,7 +64,7 @@ const ContactHead = (props) => {
     props.openFilter();
   }
   useEffect(() => {
-    console.log("======", props.filters);
+    
     if (props.filters.length > 3) {
       setFiltersFirst(props.filters.slice(0, 3));
       setFiltersSecond(props.filters.slice(3,props.filters.length));
@@ -72,10 +72,10 @@ const ContactHead = (props) => {
       setFiltersFirst(props.filters);
       setFiltersSecond([]);
     }
+    console.log("props filter data ======", filtersFirst, filtersSecond);
   }, [props.filters])
   const removeFiler = (type) => {
-    
-    // console.log("filter close type", type);
+    console.log("filter close type", type);
     props.removeFilter(type);
     // if(type === 'all'){
     //   setFilterClear(true);
@@ -123,6 +123,7 @@ const ContactHead = (props) => {
 
   return (
     <div className="contactHead">
+      {console.log("render page", props?.program?.type)}
       <div className="userListHead">
         <div className="listInfo">
           {/* <ul className="listPath">
@@ -134,7 +135,7 @@ const ContactHead = (props) => {
         </div>
         <div className="listFeatures">
           <div className="searchBar">
-            <form onSubmit={props.handleSearch}>
+            {/* <form onSubmit={props.handleSearch}> */}
               <input
                 type="search"
                 name="search"
@@ -143,7 +144,8 @@ const ContactHead = (props) => {
                 onChange={props.handleKeywordChange}
                 autoComplete="off"
               />
-              <button className="searchIcon">
+              {/* <button className="searchIcon"> */}
+              <div className="searchIcon">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="19.069"
@@ -163,8 +165,9 @@ const ContactHead = (props) => {
                     />
                   </g>
                 </svg>
-              </button>
-            </form>
+              {/* </button> */}
+              </div>
+            {/* </form> */}
           </div>
           {filter ?
               <button className="btn btn-filter" onClick={props.clearFilter} title="Remove filter">
@@ -211,27 +214,55 @@ const ContactHead = (props) => {
                 <div className={selectAllCheckbox ? "pagesTags selectedAllCheckBox" : "pagesTags"}>
                   {
                     filtersFirst.map((ele, key) => {
+                      {console.log("filters First ele=============", ele)}
                       return (
                         <div className="contactsTags" key={key}>
                         {/* {ele.type} */}
                         {/* {utils.convertUTCToTimezone(ele.name.split(" ").splice(3,4).join(" ").trim(), timezoneOffset)} */}
                         {/* {utils.convertUTCToTimezone(ele.name.split(" ").splice(2,4).join(" ").replace(":","").trim(), timezoneOffset)} */}
                         { ele.type === "fromDate" &&
-                          <span className="pageInfo"><strong>Created From :</strong> {utils.convertUTCToTimezone(ele.name.trim().split(" ").splice(3,4).join(" "), timezoneOffset)}</span>
+                          <span className="pageInfo"><strong>Created From :</strong> {timezoneOffset && utils.convertUTCToTimezone(ele.name.trim().split(" ").splice(3,4).join(" "), timezoneOffset)}</span>
                         }
                         { ele.type === "toDate" &&
-                          <span className="pageInfo"><strong>Created To :</strong> {utils.convertUTCToTimezone(ele.name.split(" ").splice(2,4).join(" ").replace(":","").trim(), timezoneOffset)}</span>
+                          <span className="pageInfo"><strong>Created To :</strong> {timezoneOffset && utils.convertUTCToTimezone(ele.name.split(" ").splice(2,4).join(" ").replace(":","").trim(), timezoneOffset)}</span>
                         }
                         {
-                          ele.type !== "fromDate" && ele.type !== "toDate" &&
+                          ele.type === "tags" && <span className="pageInfo"><strong>Tags: </strong>{ele.name.toString().split(",").splice(0, 3).join(", ")} {ele.name.toString().split(",").length > 3 && "..."}</span>
+                        }
+                        {
+                          ele.type !== "fromDate" && ele.type !== "toDate" && ele.type !== "tags" &&
                           <span className="pageInfo" dangerouslySetInnerHTML={{__html: ele.name}}></span>
-
                         }
                         <span className="crossTags" onClick={() => removeFiler(ele.type)}><img src={cross} alt="" /></span>
                       </div>
                       )
                     })
+
                   }
+                  
+                  {/* program and tags is there */}
+                  {/* {
+                    props?.program?.type === "program" &&
+                      <div className="contactsTags">
+                        {
+                          props?.program?.type === "program" && <span className="pageInfo" dangerouslySetInnerHTML={{__html: props?.program?.name}}></span>
+                        }
+                        <span className="crossTags" onClick={()=> removeFiler(props?.program?.type)}><img src={cross} alt="" /></span>
+                      </div>
+                  } */}
+                  {/* {
+                    props?.filterTags?.type === "tags" && 
+                      <div className="contactsTags">
+                        <span className="pageInfo"><strong>Tags: </strong></span>
+                        {
+                          props?.filterTags?.type === "tags" && props?.filterTags?.name.length &&
+                              props?.filterTags?.name.map((item)=>{
+                                return(<span className="pageInfo">{item} , </span>)
+                              })
+                        }
+                        <span className="crossTags" onClick={()=> removeFiler(props?.filterTags?.type)}><img src={cross} /></span>
+                      </div>
+                  } */}
                   {
                     filtersSecond.length ?
                         <div className="contactsTags extraCountsWraper">
@@ -243,8 +274,20 @@ const ContactHead = (props) => {
                                 filtersSecond.map((elem, key1) => {
                                   return (
                                       <div className="contactsTags" key={key1}>
-                                        <span className="pageInfo" dangerouslySetInnerHTML={{__html: elem.name}}></span>
-                                        <span className="crossTags" onClick={() => removeFiler(elem.type)}><img src={cross} alt="" /></span>
+                                        {
+                                          elem.type === "tags" && 
+                                          <React.Fragment>
+                                            <span className="pageInfo"><strong>Tags : </strong>{elem.name.toString().split(",").splice(0, 3).join(", ")} {elem.name.toString().split(",").length > 3 && "..."}</span>
+                                            <span className="crossTags" onClick={() => removeFiler(elem.type)}><img src={cross} alt="" /></span>
+                                          </React.Fragment>
+                                        }
+                                        {
+                                          elem.type !== "tags" && 
+                                          <React.Fragment>
+                                            <span className="pageInfo" dangerouslySetInnerHTML={{__html: elem.name}}></span>
+                                            <span className="crossTags" onClick={() => removeFiler(elem.type)}><img src={cross} alt="" /></span>
+                                          </React.Fragment>
+                                        }
                                       </div>
                                   )
                                 })
@@ -261,6 +304,10 @@ const ContactHead = (props) => {
                 </div>
                 : ""
           }
+
+          {/* {console.log("program dataaaaaaaaaaaaaaaaaaaaaa", props)} */}
+
+          
 
           { props.showAction || props.totalCount > props.contactListPageCount && selectAllCheckbox ?
             <div className={actionStatus ? "action" : "action none"} ref={actionTriggerRef}>
