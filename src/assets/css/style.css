@@ -10652,6 +10652,16 @@ button.addOverviewCustomFiel {
     background-image: url("../images/edit_gym_dark.svg");
 }
 
+.optDropdown button.delete {
+    background-image: url("../images/delete_icon_grey.svg");
+    background-size: 15px auto;
+    text-align: left;
+}
+
+.optDropdown button.delete:hover {
+    background-image: url("../images/delete_icon_small.svg");
+}
+
 .tabBarArea > div.transactionModal {
     /* background: rgb(48 86 113 / 90%); */
     position: fixed;
@@ -11404,6 +11414,11 @@ select.editFormStyle {
 
 .transactionListing.dueTransactions .row .upcoming .cell.amt {
     padding-left: 0;
+}
+
+.trxDayLeft {
+    display: block;
+    padding-bottom: 5px;
 }
 
 .tabBarArea > div.loaderOuter {
@@ -16487,4 +16502,10 @@ automation email setting css
     margin: 0px;
     padding-left: 10px;
     position: relative;
+}
+.noMoreRecords {
+    text-align: center;
+    font-size: 16px;
+    padding: 20px 0;
+    color: #9BAEBC;
 }

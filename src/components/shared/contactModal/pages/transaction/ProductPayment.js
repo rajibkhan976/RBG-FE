@@ -286,7 +286,6 @@ const ProductPayment = (props) => {
           }
           await BillingServices.activeCard(activePayPayload);
         }
-
       } catch (error) {
         setPaymentFailed(error.message);
         setProductPaymentFailed(true);

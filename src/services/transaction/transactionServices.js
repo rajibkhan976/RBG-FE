@@ -161,6 +161,25 @@ export const TransactionServices = {
         }
     },
 
+    deleteUpcomingTransaction: async (contractId) => {
+        try {
+            const url = config.transactionUrl + "subscriptions/purge/" + contractId;
+            const result = await axios.get(url, { headers: headers });
+            return result.data;
+        } catch (e) {
+            if(e.response && e.response.data && e.response.data.message) {
+                console.log(e.response.data.message);
+                throw new Error(e.response.data.message);
+            } else if(e.response && e.response.data && typeof e.response.data == "string") {
+                console.log(e.response.data);
+                throw new Error(e.response.data);
+            } else {
+                console.log("Error", e.response);
+                throw new Error(e.message + ". Please contact support.");
+            }
+        }
+    },
+
     completeTransaction: async (contactId, payload) => {
         try {
             const url = config.transactionUrl + "upcoming-cash-transactions/complete/" + contactId;

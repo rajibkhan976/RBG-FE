@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import * as actionTypes from "../../../../actions/types";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import icon_trans from "../../../../assets/images/icon_trans.svg";
 import wwConnect from "../../../../assets/images/wwConnect.svg";
@@ -62,6 +63,9 @@ const Transaction = (props) => {
   const [retryModal, setRetryModal] = useState(false);
   const [retryAmount, setRetryAmount] = useState();
   const [retryId, setRetryId] = useState();
+  const [deleteTrxModal, setDeleteTrxModal] = useState(false);
+  const [deleteTrxId, setDeleteTrxId] = useState(null);
+  const dispatch = useDispatch();
   const timezone = useSelector((state) => (state.user?.data?.organizationTimezone) ? state.user.data.organizationTimezone : "UTC");
   const org = useSelector((state) => (state.user?.data) ? state.user.data : "");
   const [refundAlertMsg, setRefundAlertMsg] = useState({
@@ -167,6 +171,11 @@ const Transaction = (props) => {
     // }
   };
 
+  const deleteTransaction = (param, transaction) => {
+    setDeleteTrxModal(true);
+    setDeleteTrxId(transaction._id);
+  }
+
   const openCloseCompleteTrans = (param, item) => {
 
 
@@ -216,6 +225,15 @@ const Transaction = (props) => {
     }
   }
 
+  const deleteTrx = (param) => {
+    if (param == "yes") {
+      deleteUpcomingTrx();
+    } else {
+      setDeleteTrxModal(false);
+      setDeleteTrxId(null);
+    }
+  }
+
 
   useEffect(() => {
     const close = (e) => {
@@ -254,16 +272,16 @@ const Transaction = (props) => {
   };
 
   const upcomingListPageNo = (e) => {
-    // if (!isScroll) {
-    //   let scrollHeight = e.target.scrollHeight;
-    //   let scrollTop = e.target.scrollTop;
-    //   if (scrollTop > (scrollHeight / 2)) {
-    //     if (upcomingPagination.currentPage < upcomingPagination.totalPages) {
-    //       fetchUpcomingTransactions(props.contactId, (upcomingPagination.currentPage + 1));
-    //     }
-    //     ;
-    //   }
-    // }
+    if (!isScroll) {
+      let scrollHeight = e.target.scrollHeight;
+      let scrollTop = e.target.scrollTop;
+      if (scrollTop > ((scrollHeight / 2) - 50)) {
+        if (upcomingPagination.currentPage < upcomingPagination.totalPages) {
+          fetchUpcomingTransactions(props.contactId, (upcomingPagination.currentPage + 1));
+        }
+        ;
+      }
+    }
   };
 
   const oldListPageNo = (e) => {
@@ -372,6 +390,31 @@ const Transaction = (props) => {
     }
   };
 
+  const deleteUpcomingTrx = async () => {
+    try {
+      setIsLoader(true);
+      const response = await TransactionServices.deleteUpcomingTransaction(deleteTrxId);
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: response.message,
+        typeMessage: 'success'
+      });
+    } catch (e) {
+      dispatch({
+        type: actionTypes.SHOW_MESSAGE,
+        message: e.message,
+        typeMessage: 'error'
+      });
+    } finally {
+      setDeleteTrxModal(false);
+      setIsLoader(false);
+      setDeleteTrxId(null);
+      fetchContract(props.contactId, 1);
+      fetchOldTransactions(props.contactId, 1);
+      fetchUpcomingTransactions(props.contactId, 1);
+    }
+  };
+
   const moreOptOpenUpcoming = (index) => {
     setUpcomingOptIndex(index !== upcomingOptIndex ? index : null);
     if (upcomingOptIndex != null) {
@@ -430,18 +473,32 @@ const Transaction = (props) => {
     //Difference in number of days
     let result = moment.duration(payDate.diff(today)).asDays();
 
-    if (result < 31) {
+    if (result < 31 && result > -1) {
       if (result <= 0) {
-        return "Today"
+        return "Today "
       } else {
         if (result == 1) {
-          return result + " Day left"
+          return result + " Day left "
         } else {
-          return result + " Days left"
+          return result + " Days left "
         }
       }
-    } else {
-      return moment(due_dates.split(" ")[0], 'YYYY-MM-DD').format('Do MMM, YYYY')
+    }
+    
+    // else {
+    //   return moment(due_dates.split(" ")[0], 'YYYY-MM-DD').format('Do MMM, YYYY')
+    // }
+  };
+
+  const dayPassed = (due_date) => {
+    let due_dates = new Date(due_date).getFullYear()+"-"+ (new Date(due_date).getMonth() + 1) + "-" +new Date(due_date).getDate();
+    let payDate = moment(due_dates, "YYYY-MM-DD");
+    let today = moment().startOf('day');
+    let result = moment.duration(payDate.diff(today)).asDays();
+
+    if (result < 0) {
+      let daysPassed = Math.abs(result);
+      return daysPassed + (daysPassed > 1 ? " Days passed" : "Day passed")
     }
   };
 
@@ -1194,7 +1251,10 @@ const Transaction = (props) => {
                         <div className="cell times">
                           <span className="time">
                             {/* {dayLeft(item.due_date)} */}
+                            <span className="trxDayLeft">
                             {dayLeft(utils.convertUTCToTimezone(item.due_date.split(" ")[0] + " " + "00:00:00", timezoneOffset).split(" ").splice(0,3).join(" "))}
+                            </span>
+                            {moment(utils.convertUTCToTimezone(item.due_date.split(" ")[0] + " " + "00:00:00", timezoneOffset).split(" ").splice(0,3).join(" ")).format('Do MMM, YYYY')}
                             {/* {utils.convertUTCToTimezone(item.due_date + " " + "00:00:00", timezoneOffset).split(" ").splice(0,3).join(" ")} */}
                             {/* {dayLeft(utils.convertUTCToTimezone(item.due_date, timezoneOffset))} */}
                           </span>
@@ -1204,6 +1264,9 @@ const Transaction = (props) => {
                             <button type="button" className="moreOptBtn" onClick={() => moreOptOpenUpcoming(index)} ref={upcomingOptIndex === index ? openItemRef : null}></button>
                             <div className={upcomingOptIndex === index ? "optDropdown" : "optDropdown hide"}>
                               <button type="button" className="edit" onClick={() => openCloseEditTransModal(true, item)}>Edit</button>
+                              <button type="button" className="delete" onClick={() => deleteTransaction (true, item)}>
+                                Delete
+                              </button>
                               {item.payment_via === "cash" ?
                                 <button type="button" className="complete" onClick={() => openCloseCompleteTrans(true, item)}>Complete Transactions</button>
                                 : ""}
@@ -1301,11 +1364,17 @@ const Transaction = (props) => {
 
                     </div>
                   )
-                }) : ""}
+                }) : 
+                  ""
+                }
                 {isLoaderScroll ?
                   <div className="bottomLoader">
                   </div>
-                  : ""}
+                  : (upcomingTransaction && upcomingTransaction.length > 0 ?
+                  <div className="row withHistory due noMoreRecords">
+                    You're All Caught Up
+                  </div> : "")
+                }
               </div>
             </Scrollbars>
           </div>
@@ -1575,7 +1644,11 @@ const Transaction = (props) => {
                 {isLoaderScroll ?
                   <div className="bottomLoader">
                   </div>
-                  : ""}
+                  : (oldTransactionList && oldTransactionList.length > 0 ?
+                  <div className="row success withHistory noMoreRecords">
+                    You're All Caught Up
+                  </div> : "")
+                }
               </div>
             </Scrollbars>
           </div>
@@ -1674,7 +1747,10 @@ const Transaction = (props) => {
                           {/* <span className="time">
                             {moment(utils.convertUTCToTimezone(item.due_date, timezone, 'YYYY-MM-DD hh:mm A')).fromNow()}
                           </span> */}
-                          { utils.convertUTCToTimezone(item?.due_date.split(" ")[0] + " " + "00:00:00", timezoneOffset).split(" ").splice(0, 3).join(" ") }
+                          <span className="trxDayLeft">
+                            { dayPassed(utils.convertUTCToTimezone(item?.due_date.split(" ")[0] + " " + "00:00:00", timezoneOffset).split(" ").splice(0, 3).join(" "))}
+                          </span>
+                          {utils.convertUTCToTimezone(item?.due_date.split(" ")[0] + " " + "00:00:00", timezoneOffset).split(" ").splice(0, 3).join(" ")}
                         </div>
 
                         <div className="cell action">
@@ -1798,7 +1874,11 @@ const Transaction = (props) => {
                 {isLoaderScroll ?
                   <div className="bottomLoader">
                   </div>
-                  : ""}
+                  : (overdueTransactionList && overdueTransactionList.length > 0 ?
+                  <div className="row due warning noMoreRecords">
+                    You're All Caught Up
+                  </div> : "")
+                }
               </div>
             </Scrollbars>
           </div>
@@ -1880,9 +1960,13 @@ const Transaction = (props) => {
                 }) : ""}
               </div>
               {isLoaderScroll ?
-                <div className="bottomLoader">
-                </div>
-                : ""}
+                  <div className="bottomLoader">
+                  </div>
+                  : ( contract && contract.length > 0 ?
+                  <div className="row success noMoreRecords">
+                    You're All Caught Up
+                  </div> : "")
+                }
             </Scrollbars>
           </div>
         </div>
@@ -1921,6 +2005,13 @@ const Transaction = (props) => {
         <ConfirmBox
           message="Are you sure, you want to cancel this contract?"
           callback={(param) => cancelContractHandle(param)}
+        />
+      }
+
+      {deleteTrxModal &&
+        <ConfirmBox
+          message="Are you sure, you want to delete this upcoming transaction?"
+          callback={(param) => deleteTrx(param)}
         />
       }
 
