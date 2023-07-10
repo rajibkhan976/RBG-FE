@@ -65,9 +65,11 @@ const ContactModal = (props) => {
                 <button className={navigation.current == 1 ? "active nNav" : "nNav"}
                         onClick={() => navigation.jump(1)}>Overview
                 </button>
+                {contactData.dnc ? "" :
                 <button className={navigation.current == 9 ? "active nNav" : "nNav"} onClick={() => navigation.jump(9)}
                         disabled={props.contactId ? false : true}>Inbox
                 </button> 
+                }
                 <button className={navigation.current == 2 ? "active nNav" : "nNav"} onClick={() => navigation.jump(2)}
                         disabled={props.contactId ? false : true}>Attendance
                 </button> 
@@ -402,10 +404,22 @@ const ContactModal = (props) => {
                                    </button>}
                                </div>
                                }
+                               {contactData.isDependent ? 
+                               (!showBottomPart ? 
+                                <div className="userDependents"
+                                        onClick={() => openGuardianContactModal(contactData.guardianInfo._id)}>
+                                    <img src={dependent_white} alt=""/>
+                                    <span>
+                                        Guardian - {contactData.guardianInfo.firstName + ' ' + contactData.guardianInfo.lastName}
+                                    </span>
+                                </div>
+                                : "")
+                                :
                                 <div className="ltValue">
                                     <header>Life Time Value :</header>
                                     <span>USD { ltv }</span>
                                 </div>
+                                }
                                 {showBottomPart && <button className="noBg pop"
                                    onClick={()=>setShowBottomPart(false)}
                                 >

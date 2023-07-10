@@ -6,6 +6,7 @@ import Loader from "../../Loader";
 import arrow_forward from "../../../../assets/images/arrow_forward.svg";
 import {ErrorAlert, SuccessAlert} from "../../messages";
 import verify_icon from "../../../../assets/images/verifyIcon.svg";
+import infoIcon from "../../../../assets/images/infos.svg";
 import {ImportContactServices} from "../../../../services/contact/importContact";
 import moment from "moment-timezone";
 import {PhasesServices} from "../../../../services/contact/phasesServices";
@@ -455,7 +456,7 @@ const Overview = (props) => {
             isError = true;
             formErrorsCopy.status = "Please Select a status.";
         }
-        if (!basicinfoEmail && basicinfoPhone.number === "") {
+        if (!contact?.isDependent && !basicinfoEmail && basicinfoPhone.number === "") {
             isError = true;
             formErrorsCopy.email = "Please fill up your email or phone";
         } else {
@@ -747,11 +748,14 @@ const Overview = (props) => {
                                 </div>
                                 <div className="cmnFormCol">
                                     <div className="cmnFieldName">
-                                        Email <span className="mandatory">*</span>
+                                        Email 
+                                        {
+                                            contact?.isDependent ? "" : <span className="mandatory">* <span className="infoSpan"><img src={infoIcon} alt="i" /><span className="tooltiptextInfo">Either email or phone is mandatory</span></span></span>
+                                        }
                                     </div>
                                     <div className={formErrorMsg.email ? "cmnFormField errorField" : "cmnFormField"}>
                                         <input type="email" className="cmnFieldStyle" placeholder="Eg. Jon.doe@domain.com"
-                                            defaultValue={basicinfoEmail} onChange={handelBasicinfoEmail}/>
+                                            value={basicinfoEmail} onChange={handelBasicinfoEmail}/>
                                         {formErrorMsg.email ? <p className="errorMsg">{formErrorMsg.email}</p> : ""}
                                     </div>
                                 </div>
@@ -759,7 +763,10 @@ const Overview = (props) => {
                             <div className="cmnFormRow">
                                 <div className="cmnFormCol">
                                     <div className="cmnFieldName">
-                                        Phone
+                                        Phone 
+                                        {
+                                            contact?.isDependent ? "" : <span className="mandatory">* <span className="infoSpan"><img src={infoIcon} alt="i" /><span className="tooltiptextInfo">Either email or phone is mandatory</span></span></span>
+                                        }
                                     </div>
                                     <div
                                         className={formErrorMsg.phone ? "cmnFormField countryCodeField phoneNumberField errorField" : "cmnFormField phoneNumberField countryCodeField"}>

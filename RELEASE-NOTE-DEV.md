@@ -222,3 +222,6 @@
 
 # RELEASE V1.0.4
     - Contact Listing
+
+# RELEASE V1.0.5
+    - Production issue fixing V1.0.1 contact modal is done.
