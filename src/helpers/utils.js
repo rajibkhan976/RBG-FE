@@ -225,7 +225,10 @@ export const utils = {
         // console.log("date in convert utc to timezone function",date)
         // console.log("Utc offset in utc to timezone function",utcOffset)
         const formattedDate = moment.utc(date);
-        if (!utcOffset) return "ERROR : Please send utc offset in order to convert the provided date & time";
+        if (!utcOffset) {
+            console.log("ERROR : Please send utc offset in order to convert the provided date & time")
+            return "Loading..."
+        }
         // if (!utcOffset) return formattedDate.format(dateFormat);
         const timezoneDate = moment.utc(formattedDate, null).utcOffset(utcOffset.split('UTC')[1].replace("−","-"));
 

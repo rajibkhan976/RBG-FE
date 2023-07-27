@@ -247,7 +247,7 @@ const OrganizationListing = () => {
                                             <React.Fragment key={key + "_org"}>
                                                 <li className="owerInfo" key={elem._id}>
                                                     <div className="userName">
-                                                        <button className="btn">
+                                                        <button className="btn" title={elem.name}>
                                                             <LazyLoadImage
                                                                 className="thumbImg"
                                                                 src={elem.logo ? (config.bucketUrl + elem.logo) : owner_img_1}
@@ -265,15 +265,18 @@ const OrganizationListing = () => {
                                                         <button className="btn">{elem.userCount}</button>
                                                     </div>
                                                     <div>
-                                                        <label className={elem.status === "active" ? "toggleBtn active" : "toggleBtn"}>
-                                                            <input
-                                                                type="checkbox"
-                                                                onChange={() => {
-                                                                    statusToggle(elem._id, key);
-                                                                }}
-                                                            />
-                                                            <span className="toggler"></span>
-                                                        </label>
+                                                        {
+                                                            (elem && elem.owner && elem.owner.email !== "superadmin@rbg.in") &&
+                                                                <label className={elem.status === "active" ? "toggleBtn active" : "toggleBtn"} >
+                                                                    <input
+                                                                        type="checkbox"
+                                                                        onChange={() => {
+                                                                            statusToggle(elem._id, key);
+                                                                        }}
+                                                                    />
+                                                                    <span className="toggler"></span>
+                                                                </label>
+                                                        }
                                                     </div>
                                                     <div className="createDate" ref={optionsToggleRefs.current[key]}>
                                                         <button className="btn">
