@@ -134,7 +134,7 @@ const InnerLeftMenu = (props) => {
                   </div>
                 </NavLink>
               </li> : ''}
-              {loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'rbg' ? <li>
+              {/* {loggedInUser && loggedInUser.organization && loggedInUser.organizationCode === 'rbg' ? <li>
                 <NavLink className="leftMenuInnerLink" to="/associations">
                   <div className="indicator"></div>
                   <div className="linkDetails">
@@ -144,7 +144,7 @@ const InnerLeftMenu = (props) => {
                     <p className="linkAbout">Manage Associations</p>
                   </div>
                 </NavLink>
-              </li> : ''}
+              </li> : ''} */}
             </ul>
             <div className="linkImg">
               <img src={undraw_personal_settings_kihd} alt="" />

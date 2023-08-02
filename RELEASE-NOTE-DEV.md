@@ -225,3 +225,6 @@
 
 # RELEASE V1.0.5
     - Production issue fixing V1.0.1 contact modal is done.
+
+# HOTFIX V1.4.4.4
+    - Transaction default payment node is online and user controls association remove

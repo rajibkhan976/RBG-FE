@@ -433,7 +433,7 @@ const UsersListing = (props) => {
                     style={{ 'width': ((pathURL === "/users" || pathURL === "/organizations" || pathURL === "/associations") ? "auto" : tableWidth) }}
                     >
                         <div className="listBody">
-                            <ul className="tableListing">
+                            <ul className="tableListing userTableListing">
                                 <li className="listHeading">
                                     <div
                                         className={"userName " + (sortBy == "name" ? "sort " + sortType : "")}
@@ -455,12 +455,8 @@ const UsersListing = (props) => {
                                         className={"assignedGroup " + (sortBy == "group" ? "sort " + sortType : "")}
                                         onClick={() => handleSortBy("group")}
                                     >Assigned Group</div>*/}
-                                    <div
-                                        className="assignedGroup"
-                                    >Organization</div>
-                                    <div
-                                        className="assignedGroup"
-                                    >Association</div>
+                                    <div className="assignedGroup">Organization</div>
+                                    {/* <div className="assignedGroup">Association</div> */}
                                     <div
                                         className={"status " + (sortBy == "status" ? "sort " + sortType : "")}
                                         onClick={() => handleSortBy("status")}
@@ -502,12 +498,16 @@ const UsersListing = (props) => {
                                                     <div className="assignedGroup">
                                                         <button className="btn">{elem.group[0] ? elem.group[0].name : ''}</button>
                                                     </div>*/}
-                                                    <div className="assignedGroup">
-                                                        <div className="btn">{elem.organization ? utils.generateExcerpt(elem.organization.name) : 'N/A'}</div>
+                                                    <div className="assignedGroup organizationGroup">
+                                                        <div className="btn">{elem.organization ? utils.generateExcerpt(elem.organization.name) : 'N/A'}
+                                                        <span className="infoSpan">
+                                                            <span className="tooltiptextInfo">{elem.organization? elem.organization.name : ""}</span>
+                                                        </span>
+                                                        </div>
                                                     </div>
-                                                    <div className="assignedGroup">
+                                                    {/* <div className="assignedGroup">
                                                         <div className="btn">{elem.association ? elem.association.name : 'N/A'}</div>
-                                                    </div>
+                                                    </div> */}
                                                     <div className="status">
                                                         <div className="btn">{elem.status}</div>
                                                     </div>
