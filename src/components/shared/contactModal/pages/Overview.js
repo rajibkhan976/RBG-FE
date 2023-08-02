@@ -108,7 +108,7 @@ const Overview = (props) => {
         phase: "",
         status: ""
     });
-    const timezoneOffset = useSelector((state)=> (state?.user?.data.organizationTimezoneInfo.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null);
+    const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data?.organizationTimezoneInfo?.utc_offset:null);
     useEffect(() => {
         let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
         let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);

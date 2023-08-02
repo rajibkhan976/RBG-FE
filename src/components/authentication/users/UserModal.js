@@ -1313,7 +1313,7 @@ const UserModal = (props) => {
                                                                 {formErrors.orgDescription ? <span className="errorMsg">{formErrors.orgDescription}</span> : ''}
                                                             </div>
                                                         </li>
-                                                        <li>
+                                                        {/* <li>
                                                             <div className="formField w-100">
                                                                 <p>Associations</p>
                                                                 <div className="inFormField">
@@ -1334,7 +1334,7 @@ const UserModal = (props) => {
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                        </li>
+                                                        </li> */}
                                                     </ul>
                                                 </div>
                                             )}

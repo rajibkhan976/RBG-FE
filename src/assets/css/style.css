@@ -1179,7 +1179,19 @@ input:focus + .searchIco #search-ico .a,
 .audioListing .tableListing li > div.listAction {
     width: 56px;
 }
-
+.tableListing li > div.organizationGroup{
+    min-width: 280px;
+}
+.tableListing li > div.organizationGroup.assignedGroup{
+    position: relative;
+}
+.tableListing li > div.organizationGroup.assignedGroup:hover .tooltiptextInfo{
+    visibility: visible;
+    z-index: 5;
+}
+.tableListing li > div.organizationGroup.assignedGroup .infoSpan .tooltiptextInfo{
+    margin-bottom: 20px;
+}
 /*
 li.listHeading > div {
   font-size: 13px;
@@ -2008,7 +2020,9 @@ img.dropDownIcon {
     top: 0;
     z-index: 1;
 }
-
+.userTableListing.tableListing li.listHeading{
+    z-index: 0;
+}
 .paginationOuter .btn svg {
     max-width: 9px;
 }

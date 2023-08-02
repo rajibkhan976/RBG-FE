@@ -25,7 +25,8 @@ const DownPayments = forwardRef((props, ref) => {
         isPayNow: 1,
         paymentDate: "",
         minPaymentDate: "",
-        payment_type: "cash",
+        // payment_type: "cash",
+        payment_type: "online",
         payment_status: "paid",
     }
     const [payLaterDate, setPayLaterDate] = useState();
@@ -332,8 +333,8 @@ const DownPayments = forwardRef((props, ref) => {
                                                         value={el.payment_type}
                                                         onChange={e => validateIndividual(e, key, "payment_type")}
                                                     >
+                                                        <option value="online" defaultChecked={el.payment_type}>Online</option>
                                                         <option value="cash">Cash</option>
-                                                        <option value="online">Online</option>
                                                     </select>
                                                 </div>
                                                 <div className="rightSecTransaction">

@@ -44,7 +44,7 @@ const ProgramTransaction = (props) => {
     firstBillingTime: false,
     auto_renew: 0,
     isPayNow: 1,
-    default_transaction: "cash",
+    default_transaction: "online",
     nextDueDate: "",
     isDownPayment: false,
     downPayments: []
@@ -561,8 +561,8 @@ const ProgramTransaction = (props) => {
 
               <div className='cmnFormField'>
                 <select className='selectBox' name="paymentMode" value={contractData.default_transaction} onChange={handelPaymentModeChange}>
+                  <option value="online" defaultValue={contractData?.default_transaction}>Online</option>
                   <option value="cash">Cash</option>
-                  <option value="online">Online</option>
                 </select>
               </div>
             </div>

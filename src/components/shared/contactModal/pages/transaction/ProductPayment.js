@@ -40,7 +40,7 @@ const ProductPayment = (props) => {
   const [totalTaxAmt, setTotalTaxAmt] = useState(0);
   const [outStanding, setOutstanding] = useState({
     amount: 0,
-    payment_type: "cash",
+    payment_type: "online",
     title: "",
     type: "outstanding",
     paymentDate: "",
@@ -364,7 +364,7 @@ const ProductPayment = (props) => {
         type: "downpayment",
         isPayNow: 1,
         paymentDate: todayPayDate().toISOString().split("T")[0],
-        payment_type: "cash",
+        payment_type: "online",
         payment_status: "paid",
         paymentConfirmation: false,
         dpId: [...downpayments].filter(dp=>dp.dpId === Math.floor(100000 + Math.random() * 900000)).length === 0 ? Math.floor(100000 + Math.random() * 900000) : Math.floor(100000 + Math.random() * 900000)
@@ -420,7 +420,7 @@ const ProductPayment = (props) => {
           type: "downpayment",
           isPayNow: 1,
           paymentDate: todayPayDate().toISOString().split("T")[0],
-          payment_type: "cash",
+          payment_type: "online",
           payment_status: "paid",
           paymentConfirmation: false,
           dpId: [...downPayments].filter(dp=>dp.dpId === Math.floor(100000 + Math.random() * 900000)).length === 0 ? Math.floor(100000 + Math.random() * 900000) : Math.floor(100000 + Math.random() * 900000)
@@ -1101,8 +1101,8 @@ const ProductPayment = (props) => {
                                       changeDownpaymentType(e, downpay, i)
                                     }
                                   >
+                                    <option value="online" defaultValue={downpay?.payment_type}>Online</option>
                                     <option value="cash">Cash</option>
-                                    <option value="online">Online</option>
                                   </select>
                                 </div>
                               </div>
@@ -1298,7 +1298,7 @@ const ProductPayment = (props) => {
                           onChange={(e) => payDueMode(e)}
                           value={outStanding.payment_type}
                         >
-                          <option value="online">Online</option>
+                          <option value="online" defaultValue={outStanding?.payment_type}>Online</option>
                           <option value="cash">Cash</option>
                         </select>
                       </div>
