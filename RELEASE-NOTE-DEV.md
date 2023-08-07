@@ -228,3 +228,6 @@
 
 # HOTFIX V1.4.4.4
     - Transaction default payment node is online and user controls association remove
+
+# HOTFIX V1.4.4.5
+    - Faild Transaction notification design solved
