@@ -1859,8 +1859,8 @@ img.dropDownIcon {
 }
 
 .detailNotifList figure {
-    width: 28px;
-    height: 28px;
+    width: 29px;
+    height: 29px;
     display: inline-flex;
     vertical-align: middle;
     border-radius: 50%;
@@ -1871,9 +1871,11 @@ img.dropDownIcon {
 }
 
 .detailNotifList figure svg {
-    max-width: 13px;
+    max-width: 14px;
 }
-
+.detailNotifList figure.failed{
+    background-color: #ED707A;
+}
 .inlineHeader {
     font-size: 16px;
     color: var(--darkBlue);
@@ -2341,6 +2343,9 @@ img.dropDownIcon {
     position: relative;
     cursor: pointer;
 }
+.detailNotif.failed p{
+    color: #ED707A;
+}
 
 .detailNotif::before,
 .detailNotif::after {
@@ -2399,7 +2404,8 @@ img.dropDownIcon {
     font-size: 14px;
     color: var(--darkBlue);
     line-height: 20px;
-    opacity: 0.7;
+    opacity: 1;
+    font-weight: 400;
 }
 
 .detailNotifList.error p {
