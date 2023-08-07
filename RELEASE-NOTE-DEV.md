@@ -230,4 +230,7 @@
     - Transaction default payment node is online and user controls association remove
 
 # HOTFIX V1.4.4.5
-    - Faild Transaction notification design solved
+    - Failed Transaction notification design solved
+
+# HOTFIX V1.4.4.6
+    - CMS filter new options added.

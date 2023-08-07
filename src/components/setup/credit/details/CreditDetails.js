@@ -194,6 +194,11 @@ const CreditDetails = () => {
                             <option value="call">Call</option>
                             <option value="sms">SMS</option>
                             <option value="point-credited">Points Credited</option>
+                            <option value="incoming-call">Incoming Call</option>
+                            <option value="auto-renewed">Auto Renewed</option>
+                            <option value="incoming-sms">Incoming SMS</option>
+                            <option value="notification-group-sms">Notification Group SMS</option>
+                            <option value="automation-sms">Automation SMS</option>
                         </select>
                         <div className="cr_dateInput formControl">
                             <DateRangePicker onChange={handleDateFileterChange} value={filterDate} format="dth MMMyyyy" />
