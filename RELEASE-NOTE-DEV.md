@@ -236,4 +236,7 @@
     - CMS filter new options added.
 
 # HOTFIX V1.4.4.7
-    - Credit failed Transaction notification issue solved.
+    - Credit failed Transaction notification issue solved-v1.1.
+
+# HOTFIX V1.4.4.8
+    - Credit failed Transaction notification issue solved-v1.2.

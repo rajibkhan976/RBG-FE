@@ -253,7 +253,7 @@ const Notifications = (props) => {
                                                     <div className="notiTime_n_Icon">
                                                         <span className="timeStamp">{ showTimeDiff(e).replace("minutes", "mins") }</span>
                                                         {
-                                                            e?.status == "success" ? (
+                                                            e?.status == "success" && e?.notification?.split("</span>")[1].replaceAll(".", " ").trim() !== "payment failed" ? (
                                                             <figure className="success">
                                                                 <svg
                                                                     xmlns="http://www.w3.org/2000/svg"
