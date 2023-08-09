@@ -250,7 +250,7 @@ const Notifications = (props) => {
                                             return (
                                                 <li key={i} className={"detailNotif " + (!e.isRead ? "unreadNotifications" : "")}>
                                                    {
-                                                        e?.status == "success" && e?.notification.toLowerCase()?.includes("failed") !== "failed" ? (
+                                                        e?.status === "success" && !e?.notification.toString().toLowerCase()?.includes("failed") ? (
                                                             <div className="success">
                                                                 <div className="notiTime_n_Icon">
                                                                 <span className="timeStamp">{ showTimeDiff(e).replace("minutes", "mins") }</span>
@@ -280,7 +280,7 @@ const Notifications = (props) => {
                                                         ) : ""
                                                     }
                                                     {
-                                                        e?.status == "failed" || e?.notification?.toLowerCase()?.includes("failed") == "failed" ? (
+                                                        e?.status === "failed" || e?.notification?.toString().toLowerCase()?.includes("failed") ? (
                                                             <div className="failed">
                                                                 <div className="notiTime_n_Icon">
                                                                     <span className="timeStamp">{ showTimeDiff(e).replace("minutes", "mins") }</span>
