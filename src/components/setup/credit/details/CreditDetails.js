@@ -133,11 +133,11 @@ const CreditDetails = () => {
     }, []);
 
 
-    const fetchTransaction = async () => {
+    const fetchTransaction = async (fetchedType) => {
 
         let queryParams = await getQueryParams();
         let pageId = utils.getQueryVariable("page");
-        pageId = pageId ? pageId : 1;
+        pageId =  fetchedType == "selected" ? 1 && utils.removeQueryParameter("page") : (pageId ? pageId : 1);
         try {
             setLoading(true);
             let response = await CreditManagementServices.fetchTransaction(pageId, queryParams);
@@ -166,7 +166,36 @@ const CreditDetails = () => {
         } else {
             utils.removeQueryParameter('service');
         }
-        fetchTransaction();
+        fetchTransaction("selected");
+    }
+
+    const creditListIcon = (item) => {
+        switch (item.serviceSlug) {
+            case "point-credited" :
+                return cd_walet_icon;
+                break;
+            case "auto-renewed" :
+                return cd_walet_icon;
+                break;
+            case "sms" :
+                return cd_sms_icon;
+                break;
+            case "bulksms" :
+                return cd_sms_icon;
+                break;
+            case "notification-group-sms" :
+                return cd_sms_icon;
+                break;
+            case "automation-sms" :
+                return cd_sms_icon;
+                break;
+            case "incoming-sms" :
+                return cd_sms_icon;
+                break;
+            default:
+                return cd_call_icon;
+
+        }
     }
 
 
@@ -189,7 +218,7 @@ const CreditDetails = () => {
                     </div>
                     <div className="listFeatures">
 
-                        <select className="cmnFieldStyle cr_select" onChange={handleServiceChange}>
+                        <select className="cmnFieldStyle cr_select" onChange={handleServiceChange} defaultValue={utils.getQueryVariable("service")}>
                             <option value="all">All</option>
                             <option value="call">Call</option>
                             <option value="sms">SMS</option>
@@ -199,6 +228,7 @@ const CreditDetails = () => {
                             <option value="incoming-sms">Incoming SMS</option>
                             <option value="notification-group-sms">Notification Group SMS</option>
                             <option value="automation-sms">Automation SMS</option>
+                            <option value="bulksms">Bulk SMS</option>
                         </select>
                         <div className="cr_dateInput formControl">
                             <DateRangePicker onChange={handleDateFileterChange} value={filterDate} format="dth MMMyyyy" />
@@ -224,7 +254,8 @@ const CreditDetails = () => {
                                     return (
                                         <li key={"trx_" + index}>
                                             <div className="cr_successDetails">
-                                                <img src={item.serviceSlug === "point-credited" ? cd_walet_icon : (item.serviceSlug === "sms" ? cd_sms_icon : cd_call_icon)} alt="" />
+                                                {/* <img src={item.serviceSlug === "point-credited" || "auto-renewed" ? cd_walet_icon : (item.serviceSlug === "sms" || "bulksms" || "notification-group-sms" || "automation-sms" ? cd_sms_icon : cd_call_icon)} alt="" /> */}
+                                                <img src={creditListIcon(item)} alt="" />
                                                 <div className="text">
                                                     <h3>{item.status}</h3>
                                                     <p><span>Service:  </span> {item.service}</p>
