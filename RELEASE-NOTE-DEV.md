@@ -240,3 +240,6 @@
 
 # HOTFIX V1.4.4.8
     - Credit failed Transaction notification issue solved-v1.2.
+
+# HOTFIX V1.4.4.9
+    - Credit failed Transaction notification issue solved-v1.3.

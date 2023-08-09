@@ -1873,7 +1873,7 @@ img.dropDownIcon {
 .detailNotifList figure svg {
     max-width: 14px;
 }
-.detailNotifList figure.failed{
+.detailNotifList .failed .notiTime_n_Icon figure{
     background-color: #ED707A;
 }
 .inlineHeader {
@@ -2343,7 +2343,7 @@ img.dropDownIcon {
     position: relative;
     cursor: pointer;
 }
-.detailNotif.failed p{
+.detailNotif .failed p{
     color: #ED707A;
 }
 
