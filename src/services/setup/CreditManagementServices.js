@@ -270,7 +270,7 @@ export const CreditManagementServices = {
             }
         }
     },
-    fetchTransaction: async (page = null, queryParams = null) => {
+    fetchTransaction: async (page, queryParams) => {
         try {
             if (isLoggedIn() === false) {
                 throw new Error(message.loginFailed);
