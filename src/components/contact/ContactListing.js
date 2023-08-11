@@ -39,6 +39,8 @@ const ContactListing = forwardRef((props, ref) => {
     const [sortType, setSortType] = useState("asc");
     const [hideFilter, setHideFilter] = useState(false);
     const [filters, setFilters] = useState([]);
+    const isNumberAssigned = useSelector((state) => state.organization.data);
+    const loggedInUser = useSelector((state) => state.user.data);
     const [paginationData, setPaginationData] = useState({
         count: null,
         totalPages: null,
@@ -643,24 +645,53 @@ const ContactListing = forwardRef((props, ref) => {
     const openBulkSmsHandler = ()=>{
         // console.log("SMS check phone number", singleContact, singleContact.length);
         // console.log(singleContact);
-        if(singleContact !== undefined && singleContact[0]?.phoneNo !== "" && singleContact[0]?.phoneNo !== undefined) {
-            props.setBulkSmsOpenModal();
-            props.setSingleContactStatus(singleContact);
-        }
-
-        else if(singleContact == undefined || singleContact.length === 0){
-            props.setBulkSmsOpenModal();
-            props.setSingleContactStatus(singleContact);
-        }
-        else{
-            setSingleContact();
+        if (!isNumberAssigned) {
+            if (!loggedInUser.isOrganizationOwner) {
+                dispatch({
+                    type: actionTypes.SHOW_MESSAGE,
+                    message: "No number is assigned, please contact to gym owner.",
+                    typeMessage: 'error'
+                });
+            } else {
+                dispatch({
+                    type: actionTypes.SHOW_MESSAGE,
+                    message: "No number is assigned, please contact to superadmin.",
+                    typeMessage: 'error'
+                });
+            }
+        } else if (loggedInUser.isOrganizationOwner && !loggedInUser.isPackage) {
             dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: "No phone number is there",
-                typeMessage: 'error'
+              type: actionTypes.SHOW_CREDIT_RESTRICTION,
             });
+            dispatch({
+              type: actionTypes.MODAL_COUNT_INCREMENT,
+              area: 'firstEmail'
+            });
+          } else if (!loggedInUser.isOrganizationOwner && !loggedInUser.isPackage) {
+            dispatch({
+              type: actionTypes.SHOW_MESSAGE,
+              message: "There is no active package found. Please contact your gym owner",
+              typeMessage: 'error'
+            });
+          } else {
+            if(singleContact !== undefined && singleContact[0]?.phoneNo !== "" && singleContact[0]?.phoneNo !== undefined) {
+                props.setBulkSmsOpenModal();
+                props.setSingleContactStatus(singleContact);
+            }
+
+            else if(singleContact == undefined || singleContact.length === 0){
+                props.setBulkSmsOpenModal();
+                props.setSingleContactStatus(singleContact);
+            }
+            else{
+                setSingleContact();
+                dispatch({
+                    type: actionTypes.SHOW_MESSAGE,
+                    message: "No phone number is there",
+                    typeMessage: 'error'
+                });
+            }
         }
-        
         
     }
     

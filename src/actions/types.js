@@ -17,6 +17,7 @@ export const USER_CREDIT_INCREMENT = "USER_CREDIT_INCREMENT";
 //Organization
 export const ORGANIZATION_COUNT = "ORGANIZATION_COUNT";
 export const GET_LAT_LNG = "GET_LAT_LNG";
+export const IS_NUMBER_ASSIGNED = "IS_NUMBER_ASSIGNED";
 //Association
 export const ASSOCIATION_COUNT = "ASSOCIATION_COUNT";
 // Automation
