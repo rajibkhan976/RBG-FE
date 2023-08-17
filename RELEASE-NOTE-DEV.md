@@ -249,3 +249,6 @@
 
 # HOTFIX V1.4.5.1 
     - CMS filter changes done. Added new 6 options, changed the list icons accordingly, query param and pagination matched.
+
+# HOTFIX V1.4.5.2
+    - Credit package design issue fixed

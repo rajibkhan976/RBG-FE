@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { utils } from "../../../../helpers";
 import * as actionTypes from "../../../../actions/types";
 import { CreditManagementServices } from "../../../../services/setup/CreditManagementServices";
 import Loader from "../../../shared/Loader";
+import { userLogout } from "../../../../services/authentication/AuthServices";
+import { history } from '../../../../helpers';
 
 const initialUsageState = {
     call: "",
@@ -20,6 +22,7 @@ const UsageSetup = () => {
     const [formErrors, setFormErrors] = useState({ ...initialUsageState });
     const [isLoader, setIsLoader] = useState(false);
     const dispatch = useDispatch();
+    const loggedInUser = useSelector((state) => state.user);
     let isDisplay = false;
 
     const fetchUsage = async () => {
@@ -46,6 +49,16 @@ const UsageSetup = () => {
     useEffect(() => {
         fetchUsage();
     }, []);
+
+    useEffect(() => {
+        if (loggedInUser?.data?.email !== "superadmin@rbg.in") {
+            userLogout();
+            dispatch({
+                type: actionTypes.LOGOUT,
+            })
+            history.push('/login');
+        }
+    }, [loggedInUser]);
 
     //Call usage change
     const handleCallCreditUsage = () => {
