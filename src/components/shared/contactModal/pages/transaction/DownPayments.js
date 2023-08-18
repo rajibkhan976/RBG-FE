@@ -27,7 +27,7 @@ const DownPayments = forwardRef((props, ref) => {
         minPaymentDate: "",
         // payment_type: "cash",
         payment_type: "online",
-        payment_status: "paid",
+        payment_status: "unpaid",
     }
     const [payLaterDate, setPayLaterDate] = useState();
     const [calenderMinDate, setCalenderMinDate] = useState();

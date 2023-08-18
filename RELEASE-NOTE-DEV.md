@@ -252,3 +252,6 @@
 
 # HOTFIX V1.4.5.2
     - Credit package design issue fixed
+
+# HOTFIX V1.4.5.3
+    - Downpayment payment status issue fixed
