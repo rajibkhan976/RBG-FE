@@ -365,7 +365,7 @@ const ProductPayment = (props) => {
         isPayNow: 1,
         paymentDate: todayPayDate().toISOString().split("T")[0],
         payment_type: "online",
-        payment_status: "paid",
+        payment_status: "unpaid",
         paymentConfirmation: false,
         dpId: [...downpayments].filter(dp=>dp.dpId === Math.floor(100000 + Math.random() * 900000)).length === 0 ? Math.floor(100000 + Math.random() * 900000) : Math.floor(100000 + Math.random() * 900000)
       }])
@@ -421,7 +421,7 @@ const ProductPayment = (props) => {
           isPayNow: 1,
           paymentDate: todayPayDate().toISOString().split("T")[0],
           payment_type: "online",
-          payment_status: "paid",
+          payment_status: "unpaid",
           paymentConfirmation: false,
           dpId: [...downPayments].filter(dp=>dp.dpId === Math.floor(100000 + Math.random() * 900000)).length === 0 ? Math.floor(100000 + Math.random() * 900000) : Math.floor(100000 + Math.random() * 900000)
         })
