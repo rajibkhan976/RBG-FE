@@ -1,13 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
-  <g id="_103457_pause_controls_icon" data-name="103457_pause_controls_icon" transform="translate(0 0.392)">
-    <g id="background" transform="translate(0 -0.114)">
-      <rect id="Rectangle_546" data-name="Rectangle 546" width="26" height="26" transform="translate(0 -0.277)" fill="none"/>
-    </g>
-    <g id="pause" transform="translate(4.137 4.023)">
-      <g id="Group_942" data-name="Group 942" transform="translate(-0.137 -0.414)">
-        <rect id="Rectangle_547" data-name="Rectangle 547" width="7" height="18" transform="translate(11)" fill="none" stroke="#9baebc" stroke-width="1.5"/>
-        <rect id="Rectangle_548" data-name="Rectangle 548" width="6" height="18" fill="none" stroke="#9baebc" stroke-width="1.5"/>
-      </g>
-    </g>
-  </g>
+<svg width="10" height="16" viewBox="0 0 10 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M8.1316 0C7.5675 0 7.11765 0.44985 7.15335 1.01395V14.9878C7.11765 16.3374 9.18839 16.3374 9.15269 14.9878V1.01395C9.15269 0.44985 8.70284 0 8.1316 0Z" fill="#305671"/>
+<path d="M1.13397 0C0.605579 0 0.15573 0.44985 0.15573 1.01395V14.9878C0.120028 16.3374 2.19076 16.3374 2.15506 14.9878V1.01395C2.19076 0.44985 1.69807 0 1.13397 0Z" fill="#305671"/>
 </svg>

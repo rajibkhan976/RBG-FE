@@ -24,7 +24,7 @@
   line-height: 30px;
 }
 .communicationList{
-  padding-top: 25px;
+  padding-top: 20px;
 }
 .tableListing li > div:first-child.iconType {
   min-width: 40px;
@@ -46,7 +46,7 @@
   border-radius: 50%;
   background-color: #ddd;
 }
-.roundIconBase.darkblue{
+/* .roundIconBase.darkblue{
   background-color: #5570C9;
 }
 .roundIconBase.red{
@@ -63,7 +63,34 @@
 }
 .roundIconBase.semiDarkBlue{
   background-color: #1877F2;
+} */
+
+.roundIconBase.forwarded.call{
+  background-color: #00BF58;
 }
+.roundIconBase.call.outbound{
+ background-color: #8155FF;
+}
+.roundIconBase.misscall.call{
+  background-color: #ED4755;
+}
+.roundIconBase.sms.outbound{
+ background-color: #6C22B5;
+}
+.roundIconBase.sms.inbound{
+  background-color: #BF9016;
+}
+.roundIconBase.email.outbound{
+ background-color: #009DFF;
+}
+.roundIconBase.email.inbound{
+  background-color: #BF9016;
+}
+.roundIconBase.ringing.call{
+  background-color: #009DFF;
+}
+
+
 .iconType .roundIconBase img{
   width: auto;
 }
@@ -236,7 +263,7 @@ button.skytext{
   border-radius: 5px;
 }
 
-.inboxChat .audio-player,
+/* .inboxChat .audio-player, */
 .inboxChat .volume .volumeButton,
 .inboxChat .playerBody {
   background: transparent;

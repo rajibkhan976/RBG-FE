@@ -1377,3 +1377,9 @@ select.react-daterange-picker__inputGroup__input.react-daterange-picker__inputGr
     color: #46c8d3;
     cursor: pointer;
 }
+
+.filterParam {
+    border-top: 1px solid #ddd;
+    margin: 14px 46px 0px 0;
+    padding-top: 11px;
+}
