@@ -5,7 +5,7 @@ import ReactFlow, {
     removeElements,
     Controls, isEdge,
 } from "react-flow-renderer";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import "./automation.css";
 import {
     FilterNode,
@@ -106,6 +106,8 @@ const AutomationBuilder = (props) => {
     const [phaseList, setPhaseList] = useState([]);
     const [statusPhaseData, setStatusPhaseData] = useState([]);
     const [module, setModule] = useState('contact');
+    const isNumberAssigned = useSelector((state) => state.organization.data);
+    const loggedInUser = useSelector((state) => state.user.data);
     const [event, setEvent] = useState({
         create: false,
         update: false,
@@ -356,14 +358,44 @@ const AutomationBuilder = (props) => {
         setAutomationModal("actionEmail");
     };
     const actionMessageEdit = (e, n) => {
-        setBody(n.data.body);
-        setNId(n.id);
-        if (n.data.data !== undefined) {
-            setMessageBody(n.data.data);
-        } else {
-            setMessageBody([]);
+        if (!isNumberAssigned) {
+            if (!loggedInUser.isOrganizationOwner) {
+                dispatch({
+                    type: actionTypes.SHOW_MESSAGE,
+                    message: "No number is assigned, please contact to gym owner.",
+                    typeMessage: 'error'
+                });
+            } else {
+                dispatch({
+                    type: actionTypes.SHOW_MESSAGE,
+                    message: "No number is assigned, please contact to superadmin.",
+                    typeMessage: 'error'
+                });
+            }
+        } else if (loggedInUser.isOrganizationOwner && !loggedInUser.isPackage) {
+            dispatch({
+              type: actionTypes.SHOW_CREDIT_RESTRICTION,
+            });
+            dispatch({
+              type: actionTypes.MODAL_COUNT_INCREMENT,
+              area: 'firstEmail'
+            });
+          } else if (!loggedInUser.isOrganizationOwner && !loggedInUser.isPackage) {
+            dispatch({
+              type: actionTypes.SHOW_MESSAGE,
+              message: "There is no active package found. Please contact your gym owner",
+              typeMessage: 'error'
+            });
+          } else {
+            setBody(n.data.body);
+            setNId(n.id);
+            if (n.data.data !== undefined) {
+                setMessageBody(n.data.data);
+            } else {
+                setMessageBody([]);
+            }
+            setAutomationModal("actionMessage");
         }
-        setAutomationModal("actionMessage");
     };
     const actionStatusPhaseEdit = (e, n) => {
         setStatus(n.data.status);
@@ -1560,6 +1592,7 @@ const AutomationBuilder = (props) => {
         fetchTagStatusPhase();
         fetchMergeFieldData();
     }, [props.automationElement]);
+
     return (
         <>
             {isLoader ? <Loader/> : ''}
