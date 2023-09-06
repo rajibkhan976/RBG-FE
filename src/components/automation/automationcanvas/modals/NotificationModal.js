@@ -374,7 +374,7 @@ const NotificationModal = (props) => {
             } else {
                 dispatch({
                     type: actionTypes.SHOW_MESSAGE,
-                    message: "No number is assigned, please contact to superadmin.",
+                    message: "No number is assigned, please contact to super admin.",
                     typeMessage: 'error'
                 });
             }
