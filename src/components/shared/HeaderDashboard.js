@@ -154,10 +154,6 @@ function HeaderDashboard(props) {
     try {
       const result = await CallSetupService.getCapabilityToken();
       let conf = {};
-      dispatch({
-        type: actionTypes.IS_NUMBER_ASSIGNED,
-        data: true,
-      });
       if (result.ringtone !== "") {
         conf = {
           sounds: {
@@ -171,10 +167,6 @@ function HeaderDashboard(props) {
       setDevice(device.setup(result.token, conf));
     } catch (e) {
       console.log("error", e);
-      dispatch({
-        type: actionTypes.IS_NUMBER_ASSIGNED,
-        data: false,
-      });
     }
   };
   const acceptConnection = () => {
@@ -348,33 +340,20 @@ function HeaderDashboard(props) {
   };
   const [modalMakeCall, setModalMakeCall] = useState(false);
   const makeCallModalHandle = () => {
-    if (deviceMessage == "Not Assigned") {
-      if (!loggedInUser.isOrganizationOwner) {
-        dispatch({
-            type: actionTypes.SHOW_MESSAGE,
-            message: "No number is assigned, please contact to gym owner.",
-            typeMessage: 'error'
-        });
-      } else {
-          dispatch({
-              type: actionTypes.SHOW_MESSAGE,
-              message: "No number is assigned, please contact to superadmin.",
-              typeMessage: 'error'
-          });
-      }
-    } else if (loggedInUser.isOrganizationOwner && !loggedInUser.isPackage) {
+    console.log('show call modal', loggedInUser.credit, loggedInUser.autoRenewLimit, loggedInUser.credit <= loggedInUser.autoRenewLimit)
+
+    if (loggedInUser &&
+      loggedInUser.isOrganizationOwner &&
+      loggedInUser.isShowPlan &&
+      (!loggedInUser.isPackage || loggedInUser.credit <= loggedInUser.autoRenewLimit)) {
+      //Show package purchase restriction modal
+      console.log('show restriction modal')
       dispatch({
         type: actionTypes.SHOW_CREDIT_RESTRICTION,
       });
       dispatch({
         type: actionTypes.MODAL_COUNT_INCREMENT,
         area: 'firstEmail'
-      });
-    } else if (!loggedInUser.isOrganizationOwner && !loggedInUser.isPackage) {
-      dispatch({
-        type: actionTypes.SHOW_MESSAGE,
-        message: "There is no active package found. Please contact your gym owner",
-        typeMessage: 'error'
       });
     } else {
       //Show call modal
@@ -394,46 +373,12 @@ function HeaderDashboard(props) {
   const makeSMSModalHandle = () => {
     // alert("czxcz");
     console.log('show restriction modal-01')
-    // if (loggedInUser &&
-    //   loggedInUser.isOrganizationOwner &&
-    //   loggedInUser.isShowPlan &&
-    //   (!loggedInUser.isPackage || loggedInUser.credit <= loggedInUser.autoRenewLimit)) {
-    //   //Show package purchase restriction modal
-    //   console.log('show restriction modal');
-    //   dispatch({
-    //     type: actionTypes.SHOW_CREDIT_RESTRICTION,
-    //   });
-    //   dispatch({
-    //     type: actionTypes.MODAL_COUNT_INCREMENT,
-    //     area: 'firstEmail'
-    //   });
-    // } else {
-    //   setModalMakeSms(true);
-    //   setShowActionState(false);
-    //   // setStateUserMenu(false);
-    //   // setSetupModalStatus(false);
-    //   // setStateNotifMenu(false);
-    //   // setModalMakeCall(false);
-    //   dispatch({ 
-    //     type: actionTypes.MODAL_COUNT_INCREMENT,
-    //     area: 'sms'
-    //   });
-    // }
-    if (deviceMessage == "Not Assigned") {
-      if (!loggedInUser.isOrganizationOwner) {
-        dispatch({
-            type: actionTypes.SHOW_MESSAGE,
-            message: "No number is assigned, please contact to gym owner.",
-            typeMessage: 'error'
-        });
-      } else {
-          dispatch({
-              type: actionTypes.SHOW_MESSAGE,
-              message: "No number is assigned, please contact to superadmin.",
-              typeMessage: 'error'
-          });
-      }
-    } else if (loggedInUser.isOrganizationOwner && !loggedInUser.isPackage) {
+    if (loggedInUser &&
+      loggedInUser.isOrganizationOwner &&
+      loggedInUser.isShowPlan &&
+      (!loggedInUser.isPackage || loggedInUser.credit <= loggedInUser.autoRenewLimit)) {
+      //Show package purchase restriction modal
+      console.log('show restriction modal');
       dispatch({
         type: actionTypes.SHOW_CREDIT_RESTRICTION,
       });
@@ -441,21 +386,18 @@ function HeaderDashboard(props) {
         type: actionTypes.MODAL_COUNT_INCREMENT,
         area: 'firstEmail'
       });
-    } else if (!loggedInUser.isOrganizationOwner && !loggedInUser.isPackage) {
-      dispatch({
-        type: actionTypes.SHOW_MESSAGE,
-        message: "There is no active package found. Please contact your gym owner",
-        typeMessage: 'error'
-      });
     } else {
       setModalMakeSms(true);
       setShowActionState(false);
+      // setStateUserMenu(false);
+      // setSetupModalStatus(false);
+      // setStateNotifMenu(false);
+      // setModalMakeCall(false);
       dispatch({ 
         type: actionTypes.MODAL_COUNT_INCREMENT,
         area: 'sms'
       });
     }
-    
   };
   const callModalOffhandler = () => {
     setModalMakeCall(false);
