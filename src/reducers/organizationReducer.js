@@ -14,6 +14,9 @@ const organizationReducer = (state = initialState, action) => {
         case actionTypes.GET_LAT_LNG:
             newState.location = action.location;
             break;
+        case actionTypes.IS_NUMBER_ASSIGNED:
+            newState.data = action.data;
+            break;
         default:
             break;
     }
