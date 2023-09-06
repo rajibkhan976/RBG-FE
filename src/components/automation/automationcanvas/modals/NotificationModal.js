@@ -15,7 +15,7 @@ import { NotificationGroupServices } from '../../../../services/notification/Not
 import Loader from "../../../shared/Loader";
 import defaultImage from "../../../../assets/images/owner_img_1.png";
 import * as actionTypes from "../../../../actions/types";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { SMSServices } from "../../../../services/template/SMSServices";
 import { EmailServices } from "../../../../services/setup/EmailServices";
 import { utils } from "../../../../helpers";
@@ -50,12 +50,9 @@ const NotificationModal = (props) => {
     const smsRef = useRef(null);
     const [smsData, setSMSData] = useState(props.elem.data.smsBody)
     const [selectedSMSTemplate, setSelectedSMSTemplate] = useState({value: "", label: "Select an SMS Template", data: {}});
-    const isNumberAssigned = useSelector((state) => state.organization.data);
-    const loggedInUser = useSelector((state) => state.user.data);
-    const [isSendSMS, setIsSendSMS] = useState(isNumberAssigned && (!loggedInUser.isPackage ? false : props.elem.data.isSendSMS));
+    const [isSendSMS, setIsSendSMS] = useState(props.elem.data.isSendSMS);
     const [isSendEmail, setIsSendEmail] = useState(props.elem.data.isSendEmail);
     const [processing, setProcessing] = useState(false);
-    
 
     const searchHandeler = async (e) => {
         searchGroupHandelar(e.target.value);
@@ -363,40 +360,7 @@ const NotificationModal = (props) => {
         setSMSData(e.target.value);
     }
     const sendMessageHandler = (e) => {
-        if (!isNumberAssigned) {
-            setIsSendSMS(false);
-            if (!loggedInUser.isOrganizationOwner) {
-                dispatch({
-                    type: actionTypes.SHOW_MESSAGE,
-                    message: "No number is assigned, please contact to gym owner.",
-                    typeMessage: 'error'
-                });
-            } else {
-                dispatch({
-                    type: actionTypes.SHOW_MESSAGE,
-                    message: "No number is assigned, please contact to superadmin.",
-                    typeMessage: 'error'
-                });
-            }
-        } else if (loggedInUser.isOrganizationOwner && !loggedInUser.isPackage) {
-            setIsSendSMS(false);
-            dispatch({
-                type: actionTypes.SHOW_CREDIT_RESTRICTION,
-            });
-            dispatch({
-                type: actionTypes.MODAL_COUNT_INCREMENT,
-                area: 'firstEmail'
-            });
-        } else if (!loggedInUser.isOrganizationOwner && !loggedInUser.isPackage) {
-            setIsSendSMS(false);
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: "There is no active package found. Please contact your gym owner",
-                typeMessage: 'error'
-            });
-        } else {
-            setIsSendSMS(e.target.checked);
-        }
+        setIsSendSMS(e.target.checked);
     }
     const sendEmailHandler = (e) => {
         setIsSendEmail(e.target.checked)
@@ -641,9 +605,7 @@ const NotificationModal = (props) => {
                                     <label className="indselects">
                                         <span className="customCheckbox allContacts">
                                             <input type="checkbox" value="sendMessage"
-                                                defaultChecked={isSendSMS} onClick={sendMessageHandler} />
-                                                {isNumberAssigned && (loggedInUser.isPackage ? <span></span> : "")}
-                                                </span>
+                                                defaultChecked={isSendSMS} onClick={sendMessageHandler} /><span></span></span>
                                         Send SMS
                                     </label>
                                 </div>

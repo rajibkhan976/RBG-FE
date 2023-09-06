@@ -16,7 +16,7 @@ import Player from "../../../Player";
 import "../../../../../assets/css/communicationLog.css";
 import {utils} from "../../../../../helpers";
 import moment from "moment";
-import {useDispatch, useSelector } from "react-redux";
+import {useDispatch} from "react-redux";
 import {SMSServices} from "../../../../../services/template/SMSServices";
 import {EmailServices} from "../../../../../services/setup/EmailServices";
 import * as actionTypes from "../../../../../actions/types";
@@ -36,7 +36,6 @@ const OpenPanel = (props) => {
   const [device, setDevice] = useState(props?.device);
 
   const [emailSetupData, setEmailSetupData] = useState(false);
-  const loggedInUser = useSelector((state) => state.user.data);
 
 const fetchEmail = async () => {
   try {
@@ -58,54 +57,19 @@ useEffect(() => {
   }, [props?.device]);
 
   const editSmsHandler = (e) =>{
-    if (loggedInUser.isOrganizationOwner && !loggedInUser.isPackage) {
-      dispatch({
-        type: actionTypes.SHOW_CREDIT_RESTRICTION,
-      });
-      dispatch({
-        type: actionTypes.MODAL_COUNT_INCREMENT,
-        area: 'firstEmail'
-      });
-    } else if (!loggedInUser.isOrganizationOwner && !loggedInUser.isPackage) {
-      dispatch({
-        type: actionTypes.SHOW_MESSAGE,
-        message: "There is no active package found. Please contact your gym owner",
-        typeMessage: 'error'
-      });
-    } else {
-      setSmsPanel(true);
-      setCallPanel(false);
-      setEmailPanel(false);
-    }
-
-    
+    setSmsPanel(true);
+    setCallPanel(false);
+    setEmailPanel(false);
   }
  // console.log(props)
   const editCallHandler = (e) =>{
     //setCallPanel(true);
-
-    if (loggedInUser.isOrganizationOwner && !loggedInUser.isPackage) {
-      dispatch({
-        type: actionTypes.SHOW_CREDIT_RESTRICTION,
-      });
-      dispatch({
-        type: actionTypes.MODAL_COUNT_INCREMENT,
-        area: 'firstEmail'
-      });
-    } else if (!loggedInUser.isOrganizationOwner && !loggedInUser.isPackage) {
-      dispatch({
-        type: actionTypes.SHOW_MESSAGE,
-        message: "There is no active package found. Please contact your gym owner",
-        typeMessage: 'error'
-      });
-    } else {
-      setSmsPanel(false);
-      setEmailPanel(false);
-      console.log(device, props.contactGenData?.phone?.full_number || "")
-      device.connect({
-        To: props.contactGenData?.phone?.full_number || "",
-      });
-    }
+    setSmsPanel(false);
+    setEmailPanel(false);
+    console.log(device, props.contactGenData?.phone?.full_number || "")
+    device.connect({
+      To: props.contactGenData?.phone?.full_number || "",
+    });
 
   }
   const editEmailHandler = (e) =>{

@@ -20,10 +20,10 @@ function CommunicationLogFilter(props) {
     const [clickedOnFilter, setClickedOnFilter] = useState(false);
     const [error, setError] = useState("");
     const [today, setToday] = useState();
-    const timezoneOffset = useSelector((state) => (state?.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset : null)
+    const timezoneOffset = useSelector((state)=>(state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
     useEffect(() => {
         let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
-        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime, timezoneOffset);
+        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
         setToday(timezoneDateTime);
     }, [timezoneOffset]);
 
@@ -35,12 +35,12 @@ function CommunicationLogFilter(props) {
     }
     const handleToChange = (val) => {
         if (val) {
-            const yyyy = val.getFullYear();
-            let mm = val.getMonth() + 1; // Months start at 0!
-            let dd = val.getDate();
-            if (dd < 10) dd = '0' + dd;
-            if (mm < 10) mm = '0' + mm;
-            let formattedDate = `${yyyy}-${mm}-${dd}`;
+             const yyyy = val.getFullYear();
+      let mm = val.getMonth() + 1; // Months start at 0!
+      let dd = val.getDate();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      let formattedDate = `${yyyy}-${mm}-${dd}`;
             setSelectedTo(formattedDate);
         } else {
             setSelectedTo("");
@@ -48,12 +48,12 @@ function CommunicationLogFilter(props) {
     }
     const handleFromChange = (val) => {
         if (val) {
-            const yyyy = val.getFullYear();
-            let mm = val.getMonth() + 1; // Months start at 0!
-            let dd = val.getDate();
-            if (dd < 10) dd = '0' + dd;
-            if (mm < 10) mm = '0' + mm;
-            let formattedDate = `${yyyy}-${mm}-${dd}`;
+             const yyyy = val.getFullYear();
+      let mm = val.getMonth() + 1; // Months start at 0!
+      let dd = val.getDate();
+      if (dd < 10) dd = '0' + dd;
+      if (mm < 10) mm = '0' + mm;
+      let formattedDate = `${yyyy}-${mm}-${dd}`;
             setSelectedFrom(formattedDate);
         } else {
             setSelectedFrom("");
@@ -65,40 +65,43 @@ function CommunicationLogFilter(props) {
         let toDate = new Date(selectedTo);
         let fromDate = new Date(selectedFrom);
         const dayNow = new Date();
-        if (Math.ceil(toDate - fromDate) < 0) {
+        if(Math.ceil(toDate - fromDate) < 0){
             setError("Please choose To-Date on or after From-Date")
-        } else if (Math.ceil(dayNow - fromDate) < 0) {
+        }else if(Math.ceil(dayNow - fromDate) < 0){
             setError("Please choose a date that is today or previous");
         } else {
+
             if (selectedDirection) {
                 utils.addQueryParameter('direction', selectedDirection);
             }
             if (selectedType) {
                 utils.addQueryParameter('type', selectedType);
             }
-            console.log(selectedFrom, selectedTo)
             if (selectedFrom) {
-                utils.addQueryParameter('fromDate', utils.convertTimezoneToUTC(selectedFrom + " " + "00:00:01", timezoneOffset, "YYYY-MM-DD HH:mm:ss"));
+                utils.addQueryParameter('fromDate', utils.convertTimezoneToUTC(selectedFrom + " " + "00:00:01", timezoneOffset));
             }
             if (selectedTo) {
-                utils.addQueryParameter('toDate', utils.convertTimezoneToUTC(selectedTo + " " + "23:59:59", timezoneOffset, "YYYY-MM-DD HH:mm:ss"));
+                utils.addQueryParameter('toDate',  utils.convertTimezoneToUTC(selectedTo + " " + "23:59:59", timezoneOffset));
             }
-            if (selectedDirection || selectedType || selectedFrom || selectedTo) {
+            if (selectedDirection || selectedType || selectedFrom || selectedTo ) {
                 setClickedOnFilter(true);
-            } else {
+
+            }else{
                 dispatch({
                     type: actionTypes.SHOW_MESSAGE,
                     message: 'Please select any filter first.',
                     typeMessage: 'warning'
                 });
             }
+
+
         }
     }
 
 
     setTimeout(() => {
         props.clickedOnFilter(clickedOnFilter);
-        if (clickedOnFilter) {
+        if(clickedOnFilter){
             props.hideFilter();
         }
     }, 500);
@@ -119,11 +122,11 @@ function CommunicationLogFilter(props) {
         let toDate = utils?.getQueryVariable("toDate") || "";
         if (fromDate) {
             fromDate = decodeURIComponent(fromDate).replaceAll("+", " ").trim();
-            fromDate = utils.convertUTCToTimezone(fromDate, timezoneOffset, 'YYYY-MM-DD');
+            fromDate = utils.convertUTCToTimezone(fromDate ,timezoneOffset, 'YYYY-MM-DD');
         }
         if (toDate) {
             toDate = decodeURIComponent(toDate).replaceAll("+", " ").trim();
-            toDate = utils.convertUTCToTimezone(toDate, timezoneOffset, 'YYYY-MM-DD');
+            toDate = utils.convertUTCToTimezone(toDate ,timezoneOffset, 'YYYY-MM-DD');
         }
         setSelectedTo(toDate);
         setSelectedFrom(fromDate);
@@ -131,15 +134,16 @@ function CommunicationLogFilter(props) {
     }, []);
 
 
+
     return (
         <>
             <div className="sideMenuOuter" id="import_Modal">
-                <div className="dialogBg" onClick={props.hideFilter}></div>
+                <div className="dialogBg" onClick={ props.hideFilter}></div>
                 <div className="sideMenuInner importModalContainer updateContainer">
                     {isLoader ? <Loader/> : ''}
                     <div className="sideMenuHeader">
                         <h3>Apply Filter</h3>
-                        <button className="btn btn-closeSideMenu" onClick={props.hideFilter}>
+                        <button className="btn btn-closeSideMenu" onClick={ props.hideFilter}>
                             <span></span><span></span></button>
                     </div>
                     <div className="importModalBody setFilter">
@@ -170,7 +174,6 @@ function CommunicationLogFilter(props) {
                                                     backgroundImage: "url(" + arrowDown + ")",
                                                 }}>
                                                 <option value="">Select a Type</option>
-                                                <option value="CALL">Call</option>
                                                 <option value="SMS">SMS</option>
                                                 <option value="EMAIL">Email</option>
                                             </select>
@@ -184,7 +187,7 @@ function CommunicationLogFilter(props) {
                                             <div className="inFormField duration">
                                                 <DatePicker
                                                     className="cmnFieldStyle"
-                                                    selected={selectedFrom ? new Date(selectedFrom + " 00:00:00") : ""}
+                                                    selected={selectedFrom ? new Date(selectedFrom) : ""}
                                                     format="MM/dd/yyyy"
                                                     dateFormat="MM/dd/yyyy"
                                                     placeholderText="MM/DD/YYYY"
@@ -199,12 +202,12 @@ function CommunicationLogFilter(props) {
                                             <div className="inFormField duration">
                                                 <DatePicker
                                                     className="cmnFieldStyle"
-                                                    selected={selectedTo ? new Date(selectedTo + " 00:00:00") : ""}
+                                                    selected={selectedTo ? new Date(selectedTo) : ""}
                                                     format="MM/dd/yyyy"
                                                     dateFormat="MM/dd/yyyy"
                                                     placeholderText="MM/DD/YYYY"
                                                     onChange={(e) => handleToChange(e)}
-                                                    minDate={new Date(selectedFrom + " 00:00:00")}
+                                                    minDate={new Date(selectedFrom)}
                                                     maxDate={new Date(today)}
                                                 />
 

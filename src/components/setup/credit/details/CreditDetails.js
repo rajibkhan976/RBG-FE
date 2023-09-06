@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import * as actionTypes from "../../../../actions/types";
+import { useSelector } from "react-redux";
 import DateRangePicker from '@wojtekmaj/react-daterange-picker';
 import arrow1 from "../../../../assets/images/arrow1.svg";
 import cd_walet_icon from "../../../../assets/images/cd_walet_icon.svg";
@@ -8,19 +7,14 @@ import cd_sms_icon from "../../../../assets/images/cd_sms_icon.svg";
 import cd_call_icon from "../../../../assets/images/cd_call_icon.svg";
 import { CreditManagementServices } from "../../../../services/setup/CreditManagementServices";
 import moment from "moment";
-import DatePicker from "react-datepicker";
 import Loader from "../../../shared/Loader";
 import { utils } from "../../../../helpers";
 import Pagination from "../../../shared/Pagination";
 import noRecords from '../../../../assets/images/noRecords.svg';
-import filter from "../../../../assets/images/filter.svg";
-import arrowRightWhite from "../../../../assets/images/arrowRightWhite.svg";
-import cross from "../../../../assets/images/cross.svg";
 import { useLocation } from "react-router-dom";
 
 
 const CreditDetails = () => {
-    const dispatch = useDispatch();
     const [openDropDown, setOpenDropDown] = useState(false);
     const [transactionList, setTransactionList] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -28,27 +22,10 @@ const CreditDetails = () => {
     const [logsCount, setLogsCount] = useState(0);
     const [sortBy, setSortBy] = useState("");
     const [sortType, setSortType] = useState("asc");
-    const [filterModal, setFilterModal] = useState(false);
     const isDisplay = false;
-    const [filterService, setFilterService] = useState(null);
-    const [selectedTo, setSelectedTo] = useState();
-    const [selectedFrom, setSelectedFrom] = useState();
-    const [today, setToday] = useState();
-    const [date, setDate] = useState();
-    const [date2, setDate2] = useState();
-    const servicesName = {
-        "call": "Call",
-        "sms": "Sms",
-        "point-credited": "Points Credited",
-        "incoming-call": "Incoming Call",
-        "auto-renewed": "Auto Renewed",
-        "incoming-sms": "Incoming SMS",
-        "notification-group-sms": "Notification Group SMS",
-        "automation-sms": "Automation SMS",
-        "bulksms": "Bulk Sms"
-    }
     const timezone = useSelector((state) => (state.user?.data?.organizationTimezone) ? state.user.data.organizationTimezone : "UTC");
     console.log(timezone);
+
 
     const loggedInUser = useSelector((store) => store.user.data);
 
@@ -63,7 +40,6 @@ const CreditDetails = () => {
 
     }, [loggedInUser]);
 
-
     const [paginationData, setPaginationData] = useState({
         count: null,
         totalPages: null,
@@ -75,13 +51,6 @@ const CreditDetails = () => {
 	useEffect(()=>{
 	  console.log("credit details time zone", timezoneOffset);
 	}, [timezoneOffset])
-
-    useEffect(() => {
-        let localDateTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
-        let timezoneDateTime = utils.convertUTCToTimezone(localDateTime ,timezoneOffset);
-        setToday(timezoneDateTime);
-    }, [timezoneOffset]);
-
     const getQueryParams = async () => {
         const service = utils.getQueryVariable("service");
         const fromDt = utils.getQueryVariable("fromDate");
@@ -96,12 +65,12 @@ const CreditDetails = () => {
             // console.log(decodeURIComponent(fromDt).replaceAll("+"," "));
             // let fromDtConvert = utils.convertTimezoneToUTC(decodeURIComponent(fromDt).replaceAll("+"," ") + " " +"00:00:01", timezoneOffset);
             // console.log("fromDtConvert", fromDtConvert);
-            queryParams.append("fromDate", decodeURIComponent(fromDt).replaceAll("+"," "));
+            queryParams.append("fromDate", utils.convertTimezoneToUTC(decodeURIComponent(fromDt).replaceAll("+"," ") + " " +"00:00:01", timezoneOffset));
         }
         if (toDt) {
             console.log(toDt);
             // const toDtConvert = utils.convertTimezoneToUTC(decodeURIComponent(toDt).replaceAll("+"," ") + " " + "24:00:00", timezoneOffset);
-            queryParams.append("toDate", decodeURIComponent(toDt).replaceAll("+"," "));
+            queryParams.append("toDate", utils.convertTimezoneToUTC(decodeURIComponent(toDt).replaceAll("+"," ") + " " + "23:59:59", timezoneOffset));
         }
         if (srtBy) {
             queryParams.append("sortBy", srtBy);
@@ -132,63 +101,30 @@ const CreditDetails = () => {
         fetchTransaction();
     };
 
-    // const handleDateFileterChange = (dateDuration) => {
-    //     console.log('date filter', dateDuration[0]);
-    //     // let year = new Date(dateDuration[0]).getFullYear();
-    //     // let month = ("0" + (new Date(dateDuration[0]).getMonth() + 1)).slice(-2);
-    //     // let day = ("0" + new Date(dateDuration[0]).getDate()).slice(-2);
-    //     // console.log(year, month, day);
-    //     // console.log(new Date(dateDuration[0]));
-    //     // console.clear();
-    //     let fromDate = utils.convertTimezoneToUTC(new Date(dateDuration[0]).getFullYear() + "-" + ("0" + (new Date(dateDuration[0]).getMonth() + 1)).slice(-2) + "-" + ("0" + new Date(dateDuration[0]).getDate()).slice(-2) + " " + "00:00:01", timezoneOffset);
-    //     let toDate = utils.convertTimezoneToUTC(new Date(dateDuration[1]).getFullYear() + "-" + ("0" + (new Date(dateDuration[1]).getMonth() + 1)).slice(-2) + "-" + ("0" + new Date(dateDuration[1]).getDate()).slice(-2) + " " + "00:00:01", timezoneOffset);
-    //     console.log("From date", fromDate);
-    //     console.log("To date", toDate);
-    //     let replace01 = decodeURIComponent(fromDate.replaceAll("%3A", ":"));
-    //     console.log(replace01); 
-    //     if (dateDuration && dateDuration.length) {
-    //         utils.addQueryParameter('fromDate', moment(dateDuration[0]).format("YYYY-MM-DD"));
-    //         utils.addQueryParameter('toDate', moment(dateDuration[1]).format("YYYY-MM-DD"));
-    //         // utils.addQueryParameter('fromDate', fromDate);
-    //         // utils.addQueryParameter('toDate', toDate);
-    //         setFilterDate(dateDuration);
-    //     }
-    //     console.log("set filter", dateDuration);
-    //     // Fetch data
-    //     fetchTransaction();
-    // }
-
-    const handleFromChange = (val) => {
-        setDate(val);
-        if (val) {
-            const yyyy = val.getFullYear();
-            let mm = val.getMonth() + 1; // Months start at 0!
-            let dd = val.getDate();
-            if (dd < 10) dd = '0' + dd;
-            if (mm < 10) mm = '0' + mm;
-            let formattedDate = `${yyyy}-${mm}-${dd}`;
-            setSelectedFrom(formattedDate);
-            console.log(formattedDate);
-            //utils.addQueryParameter('fromDate', formattedDate);
-        } else {
-            setSelectedFrom("");
+    const handleDateFileterChange = (dateDuration) => {
+        console.log('date filter', dateDuration[0]);
+        // let year = new Date(dateDuration[0]).getFullYear();
+        // let month = ("0" + (new Date(dateDuration[0]).getMonth() + 1)).slice(-2);
+        // let day = ("0" + new Date(dateDuration[0]).getDate()).slice(-2);
+        // console.log(year, month, day);
+        // console.log(new Date(dateDuration[0]));
+        // console.clear();
+        let fromDate = utils.convertTimezoneToUTC(new Date(dateDuration[0]).getFullYear() + "-" + ("0" + (new Date(dateDuration[0]).getMonth() + 1)).slice(-2) + "-" + ("0" + new Date(dateDuration[0]).getDate()).slice(-2) + " " + "00:00:01", timezoneOffset);
+        let toDate = utils.convertTimezoneToUTC(new Date(dateDuration[1]).getFullYear() + "-" + ("0" + (new Date(dateDuration[1]).getMonth() + 1)).slice(-2) + "-" + ("0" + new Date(dateDuration[1]).getDate()).slice(-2) + " " + "00:00:01", timezoneOffset);
+        console.log("From date", fromDate);
+        console.log("To date", toDate);
+        let replace01 = decodeURIComponent(fromDate.replaceAll("%3A", ":"));
+        console.log(replace01); 
+        if (dateDuration && dateDuration.length) {
+            utils.addQueryParameter('fromDate', moment(dateDuration[0]).format("YYYY-MM-DD"));
+            utils.addQueryParameter('toDate', moment(dateDuration[1]).format("YYYY-MM-DD"));
+            // utils.addQueryParameter('fromDate', fromDate);
+            // utils.addQueryParameter('toDate', toDate);
+            setFilterDate(dateDuration);
         }
-    }
-
-    const handleToChange = (val) => {
-        setDate2(val);
-        if (val) {
-            const yyyy = val.getFullYear();
-            let mm = val.getMonth() + 1; // Months start at 0!
-            let dd = val.getDate();
-            if (dd < 10) dd = '0' + dd;
-            if (mm < 10) mm = '0' + mm;
-            let formattedDate = `${yyyy}-${mm}-${dd}`;
-            setSelectedTo(formattedDate);
-            //utils.addQueryParameter('toDate', formattedDate);
-        } else {
-            setSelectedTo("");
-        }
+        console.log("set filter", dateDuration);
+        // Fetch data
+        fetchTransaction();
     }
 
     //Handle pagination click
@@ -224,130 +160,14 @@ const CreditDetails = () => {
 
     const handleServiceChange = (e) => {
         console.log('service change', e.target.value);
-        setFilterService(e.target.value);
-    }
-
-    const openFilter = () => {
-        console.log("Filterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr", new Date(moment(utils.convertUTCToTimezone(decodeURIComponent(utils.getQueryVariable("fromDate")).replaceAll("+"," "), timezoneOffset)).format("MM/DD/YYYY")));
-        setFilterService(utils.getQueryVariable("service") ? utils.getQueryVariable("service") : "");
-        setSelectedTo(utils.getQueryVariable("toDate") ? moment(utils.convertUTCToTimezone(decodeURIComponent(utils.getQueryVariable("toDate")).replaceAll("+"," "), timezoneOffset)).format("MM/DD/YYYY") : "");
-        setSelectedFrom(utils.getQueryVariable("fromDate") ? moment(utils.convertUTCToTimezone(decodeURIComponent(utils.getQueryVariable("fromDate")).replaceAll("+"," "), timezoneOffset)).format("MM/DD/YYYY") : "");
-        setDate2(utils.getQueryVariable("toDate") ? new Date(moment(utils.convertUTCToTimezone(decodeURIComponent(utils.getQueryVariable("toDate")).replaceAll("+"," "), timezoneOffset)).format("MM/DD/YYYY")) : "");
-        setDate(utils.getQueryVariable("fromDate") ? new Date(moment(utils.convertUTCToTimezone(decodeURIComponent(utils.getQueryVariable("fromDate")).replaceAll("+"," "), timezoneOffset)).format("MM/DD/YYYY")) : "");
-
-        setFilterModal(true);
-    };
-
-    const closeFilter = () => {
-        setFilterModal(false);
-    };
-
-    const applyFilter = () => {
-        console.log("applyFilteeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerrrrrrrrr", selectedFrom, selectedTo)
-        // let convertFrom = utils.convertTimezoneToUTC(selectedFrom + " " + "00:00:01", timezoneOffset);
-        // let convertTo = utils.convertTimezoneToUTC(selectedTo + " " + "23:59:59", timezoneOffset);
-        if (!filterService && !selectedFrom && !selectedTo ) {
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: "Please select any filter first.",
-                typeMessage: 'error'
-              });
-        } else if (!selectedFrom && selectedTo) {
-            utils.removeQueryParameter("fromDate");
-            let convertTo = utils.convertTimezoneToUTC(selectedTo + " " + "23:59:59", timezoneOffset);
-            utils.addQueryParameter('toDate', convertTo);
-
-            if (filterService && filterService !== 'all') {
-                utils.addQueryParameter('service', filterService);
-            } else {
-                utils.removeQueryParameter('service');
-            }
-            fetchTransaction("selected");
-            setFilterModal(false);
-        } else if (selectedFrom && !selectedTo) {
-            utils.removeQueryParameter("toDate");
-            let convertFrom = utils.convertTimezoneToUTC(selectedFrom + " " + "00:00:01", timezoneOffset);
-            utils.addQueryParameter('fromDate', convertFrom);
-
-            if (filterService && filterService !== 'all') {
-                utils.addQueryParameter('service', filterService);
-            } else {
-                utils.removeQueryParameter('service');
-            }
-            fetchTransaction("selected");
-            setFilterModal(false);
-        } else if (selectedFrom && selectedTo) {
-            let convertFrom = utils.convertTimezoneToUTC(selectedFrom + " " + "00:00:01", timezoneOffset);
-            let convertTo = utils.convertTimezoneToUTC(selectedTo + " " + "23:59:59", timezoneOffset);
-            utils.addQueryParameter('fromDate', convertFrom);
-            utils.addQueryParameter('toDate', convertTo);
-
-            if (filterService && filterService !== 'all') {
-                utils.addQueryParameter('service', filterService);
-            } else {
-                utils.removeQueryParameter('service');
-            }
-            fetchTransaction("selected");
-            setFilterModal(false);
+        let service = e.target.value;
+        if (service && service !== 'all') {
+            utils.addQueryParameter('service', e.target.value);
         } else {
-            utils.removeQueryParameter('fromDate');
-            utils.removeQueryParameter('toDate');
-
-            if (filterService && filterService !== 'all') {
-                utils.addQueryParameter('service', filterService);
-            } else {
-                utils.removeQueryParameter('service');
-            }
-            fetchTransaction("selected");
-            setFilterModal(false);
+            utils.removeQueryParameter('service');
         }
-    };
-
-    const removeFilterParam = (param) => {
-        switch (param) {
-            case "service":
-                utils.removeQueryParameter('service');
-                setFilterService(null);
-                fetchTransaction();
-                break;
-            case "fromDate":
-                setDate(null);
-                utils.removeQueryParameter('fromDate');
-                if (utils.getQueryVariable('service')) {
-                    fetchTransaction("selected");
-                } else {
-                    fetchTransaction();
-                }
-                break;
-            case "toDate":
-                setDate2(null);
-                utils.removeQueryParameter('toDate');
-                if (utils.getQueryVariable('service')) {
-                    fetchTransaction("selected");
-                } else {
-                    fetchTransaction();
-                }
-                break;
-            case "clear":
-                utils.removeQueryParameter('service');
-                utils.removeQueryParameter('fromDate');
-                utils.removeQueryParameter('toDate');
-                setFilterService(null);
-                setSelectedFrom(null);
-                setSelectedTo(null);
-                setDate(null);
-                setDate2(null);
-                fetchTransaction();
-        }
-    };
-
-    const clearFilter = () => {
-        setFilterService("")
-        setSelectedFrom(null);
-        setSelectedTo(null);
-        setDate(null);
-        setDate2(null);
-    };
+        fetchTransaction("selected");
+    }
 
     const creditListIcon = (item) => {
         switch (item.serviceSlug) {
@@ -376,7 +196,6 @@ const CreditDetails = () => {
                 return cd_call_icon;
 
         }
-        fetchTransaction("selected");
     }
 
 
@@ -398,39 +217,24 @@ const CreditDetails = () => {
                         <h3>Credit Balance : <span> {loggedInUser ? loggedInUser.credit ? loggedInUser.credit.toLocaleString() : 0 : 0}</span></h3>
                     </div>
                     <div className="listFeatures">
-                        <button class="saveNnewBtn appFilter expContactBtn communicationBtnfilter" onClick={openFilter} >Filter <img src={filter} alt=""/></button>
+
+                        <select className="cmnFieldStyle cr_select" onChange={handleServiceChange} defaultValue={utils.getQueryVariable("service")}>
+                            <option value="all">All</option>
+                            <option value="call">Call</option>
+                            <option value="sms">SMS</option>
+                            <option value="point-credited">Points Credited</option>
+                            <option value="incoming-call">Incoming Call</option>
+                            <option value="auto-renewed">Auto Renewed</option>
+                            <option value="incoming-sms">Incoming SMS</option>
+                            <option value="notification-group-sms">Notification Group SMS</option>
+                            <option value="automation-sms">Automation SMS</option>
+                            <option value="bulksms">Bulk SMS</option>
+                        </select>
+                        <div className="cr_dateInput formControl">
+                            <DateRangePicker onChange={handleDateFileterChange} value={filterDate} format="dth MMMyyyy" />
+                        </div>
                     </div>
                 </div>
-                
-                {(utils.getQueryVariable("service") || utils.getQueryVariable("fromDate") || utils.getQueryVariable("toDate")) ?
-                    <div className="filterParam">
-                        {utils.getQueryVariable("service") &&
-                            <div class="contactsTags">
-                                <span class="pageInfo"><strong>Filter by:</strong> {servicesName[utils.getQueryVariable("service")]}</span>
-                                <span class="crossTags" onClick={() => removeFilterParam("service")}><img src={cross} alt=""/></span>
-                            </div>
-                        }
-                        {utils.getQueryVariable("fromDate") &&
-                            <div class="contactsTags">
-                                <span class="pageInfo">
-                                    
-                                    <strong>From date:</strong> {utils.convertUTCToTimezone(decodeURIComponent(utils.getQueryVariable("fromDate")).replaceAll("+"," "), timezoneOffset)}
-                                </span>
-                                <span class="crossTags" onClick={() => removeFilterParam("fromDate")}><img src={cross} alt=""/></span>
-                            </div>
-                        }
-                        {utils.getQueryVariable("toDate") &&
-                            <div class="contactsTags">
-                                <span class="pageInfo">
-                                    <strong>To date:</strong> {utils.convertUTCToTimezone(decodeURIComponent(utils.getQueryVariable("toDate")).replaceAll("+"," "), timezoneOffset)}
-                                </span>
-                                <span class="crossTags" onClick={() => removeFilterParam("toDate")}><img src={cross} alt=""/></span>
-                            </div>
-                        }
-                        <div class="contactsTags clearAlls"  onClick={() => removeFilterParam("clear")}><span class="allDel">Clear All</span></div>
-                    </div>
-                : ""}
-
                 <div className="userListBody">
                     <div className="listBody cr_tableListing" >
                         {transactionList.length ?
@@ -498,89 +302,6 @@ const CreditDetails = () => {
                         callback={paginationCallbackHandle}
                     />) : ''}
             </div>
-
-            {filterModal &&
-            <div className="sideMenuOuter" id="import_Modal">
-                <div className="dialogBg" ></div>
-                <div className="sideMenuInner importModalContainer updateContainer">
-                    <div className="sideMenuHeader">
-                        <h3>Apply Filter</h3>
-                        <button className="btn btn-closeSideMenu" onClick={closeFilter}>
-                        <span></span><span></span></button>
-                    </div>
-                    <div className="importModalBody setFilter">
-                        <div className="filterOfContactListing">
-                            <div className="infoInputs appModal">
-                                <ul>
-                                    <li className="blockLi">
-                                        <div className="formField w-100 appModals formControl phasesSelection">
-                                            <label>Filter by</label>
-                                            <select onChange={handleServiceChange} value={filterService}>
-                                                <option value="">Select a filter</option>
-                                                <option value="call">Call</option>
-                                                <option value="sms">SMS</option>
-                                                <option value="point-credited">Points Credited</option>
-                                                <option value="incoming-call">Incoming Call</option>
-                                                <option value="auto-renewed">Auto Renewed</option>
-                                                <option value="incoming-sms">Incoming SMS</option>
-                                                <option value="notification-group-sms">Notification Group SMS</option>
-                                                <option value="automation-sms">Automation SMS</option>
-                                                <option value="bulksms">Bulk SMS</option>
-                                            </select>
-                                        </div>
-                                    </li>
-                                    <li className="dateRangeHeading"><p className="dateRange pTags">Date Range</p></li>
-                                    <li className="halfDates dateRange">
-                                        <div className="formField w-50 appflex durationWraper">
-                                            <label>From</label>
-                                            <div className="inFormField duration">
-                                                <DatePicker
-                                                    className="cmnFieldStyle"
-                                                    selected={selectedFrom ? date : ""}
-                                                    format="MM/dd/yyyy"
-                                                    dateFormat="MM/dd/yyyy"
-                                                    placeholderText="MM/DD/YYYY"
-                                                    onChange={(e) => handleFromChange(e)}
-                                                    maxDate={date2 ? date2 : new Date(today)}
-                                                />
-
-                                            </div>
-                                        </div>
-                                        <div className="formField w-50 appflex durationWraper">
-                                            <label>To</label>
-                                            {/* <div className={selectedFrom ? "inFormField duration" : "inFormField duration disabled"}> */}
-                                            <div className="inFormField duration">   
-                                                <DatePicker
-                                                    className="cmnFieldStyle"
-                                                    selected={selectedTo ? date2 : ""}
-                                                    format="MM/dd/yyyy"
-                                                    dateFormat="MM/dd/yyyy"
-                                                    placeholderText="MM/DD/YYYY"
-                                                    onChange={(e) => handleToChange(e)}
-                                                    minDate={date}
-                                                    maxDate={new Date(today)}
-                                                />
-
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li className="lastLiApp btnLi">
-                                        <div className="formField formControl w-50 appflex">
-                                            <button type="submit" className="saveNnewBtn" onClick={applyFilter}><span>Apply Filter</span><img
-                                                src={arrowRightWhite} alt=""/></button>
-                                        </div>
-                                        <div className="formField w-50 appflex clearFilterBtns">
-                                            <span className="clearFilter" onClick={clearFilter}>Clear</span>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            }
-
         </React.Fragment>
     )
 }

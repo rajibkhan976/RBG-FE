@@ -3,7 +3,7 @@ import { utils } from "../../helpers";
 
 import speaker_icon from "../../assets/images/speaker_icon.svg";
 import mute_icon from "../../assets/images/mute_icon.svg";
-import play_icon from "../../assets/images/player_icon.svg";
+import play_icon from "../../assets/images/play_icon.svg";
 import pause_icon from "../../assets/images/pause_icon.svg";
 import delete_icon_grey from "../../assets/images/delete_icon_grey.svg";
 

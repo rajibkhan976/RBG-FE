@@ -221,8 +221,6 @@ module.exports = {
     noteContactModalUrl: 'https://'+process.env.REACT_APP_CONTACT_MODAL_NOTE+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/contact/notes',
     //communication log
     communicationListUrl: 'https://'+process.env.REACT_APP_COMMUNICATION_LOG+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/communication/log',
-    //communicationListUrl: " http://localhost:4000/dev/communication/log",
-    //inboxListUrl: " http://localhost:4000/dev/communication/contact/log",
     inboxListUrl: 'https://'+process.env.REACT_APP_COMMUNICATION_LOG+'.execute-api.us-east-1.amazonaws.com/'+process.env.REACT_APP_ENV+'/communication/contact/log',
     // Notification Group
     notificationGroup: "https://" + process.env.REACT_APP_NOTIFICATION_GROUP + ".execute-api.us-east-1.amazonaws.com/" + process.env.REACT_APP_ENV + "/notification-group/",
