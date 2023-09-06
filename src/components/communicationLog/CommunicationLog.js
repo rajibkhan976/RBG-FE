@@ -293,19 +293,6 @@ const CommunicationLog = (props) => {
                                                         <div className='iconType'  onClick={() => openContactModal(elem)}>
                                                             <div
                                                                 className=
-                                                                // {`
-                                                                //     ${elem?.log_type === "SMS" ? (elem?.direction === "inbound" ? "roundIconBase sms inbound" : "roundIconBase sms outbound" ) : ""} 
-                                                                //     ${elem?.log_type === "EMAIL" ? (elem?.direction === "inbound" ? "roundIconBase email inbound" : "roundIconBase email outbound") : ""}
-                                                                //     ${elem?.log_type === "CALL" ? (elem?.direction === "inbound" ? 
-                                                                //                 (elem?.data?.callStatus === "no-answer" && elem?.data?.callStatus !== "" ? "roundIconBase call misscall" 
-                                                                //                             : "roundIconBase" ? (elem?.data?.status === "forwarded" ? "roundIconBase call forwarded" 
-                                                                //                             : "roundIconBase" ? 
-                                                                //                                 (elem?.data?.callStatus === "ringing" ? "roundIconBase call outbound" : "roundIconBase") : "") 
-                                                                //                             : "roundIconBase")
-                                                                //         : "roundIconBase call outbound")
-                                                                //     : ""}
-                                                                // `}
-
                                                                 {
                                                                     elem?.log_type === "SMS" ? (elem?.direction === "outbound" ? "roundIconBase sms outbound" : "roundIconBase sms inbound") :
                                                                     elem?.log_type === "EMAIL" ? (elem?.direction === "outbound" ? "roundIconBase email outbound" : "roundIconBase email inbound") :
@@ -352,13 +339,21 @@ const CommunicationLog = (props) => {
                                                                             elem.direction === "outbound" ?
                                                                                 <span className="comLogText">
                                                                                     <span className='skytext'>{elem.createdBy} </span> <span className='doomed'> made a </span> Browser call
-                                                                                </span> :
-                                                                                (elem.data.callStatus === "no-answer" ?
+                                                                                </span> : (elem.data.status == "forwarded" ? 
                                                                                     <span  className="comLogText">
-                                                                                        <span className='doomed'> You have got a </span> <span className="redTxt">Missed Call</span>
-                                                                                    </span>: <span  className="comLogText">
-                                                                                    <span className='skytext'>Received call </span> <span className='doomed'> from </span> {elem.contactName && elem.contactName.trim() ? elem.contactName : elem.from}
-                                                                                </span>)
+                                                                                        <span className='skytext'> 
+                                                                                        Call forwarded </span> 
+                                                                                        {elem.data?.forwardedTo && <span className="doomed">to </span>}
+                                                                                        {elem.data?.forwardedTo}
+                                                                                    </span>
+                                                                                    : 
+                                                                                    (elem.data.callStatus === "no-answer" ?
+                                                                                        <span  className="comLogText">
+                                                                                            <span className='doomed'> You have got a </span> <span className="redTxt">Missed Call</span>
+                                                                                        </span>: <span  className="comLogText">
+                                                                                        <span className='skytext'>Received call </span> <span className='doomed'> from </span> {elem.contactName && elem.contactName.trim() ? elem.contactName : elem.from}
+                                                                                    </span>)
+                                                                                )
                                                                         }
                                                                     </>
                                                                 ) : (elem.direction === "outbound" ?

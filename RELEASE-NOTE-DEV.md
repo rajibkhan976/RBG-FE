@@ -258,3 +258,6 @@
 
 # HOTFIX V1.4.5.4
     - Downpayment payment status issue fixed for product
+
+# HOTFIX V1.4.5.5
+    - Communication page call forworded status fixed
