@@ -2528,6 +2528,10 @@ img.dropDownIcon {
     /* max-height: calc(100vh - 90px); */
 }
 
+.automationModal.filterModal.triggerSetting .nodeSettingModal .formBodyContainer {
+    overflow-y: unset;
+}
+
 .nodeSettingModal .formBodyContainer::-webkit-scrollbar {
     width: 5px;
 }
@@ -2579,6 +2583,11 @@ img.dropDownIcon {
     margin-top: 10px;
     display: inline-block;
     width: 100%;
+}
+
+.automationModal.filterModal.triggerSetting .nodeSettingModal .saveButton {
+    width: auto;
+    float: right;
 }
 
 .nodeSettingModal .saveButton button {
@@ -16165,7 +16174,7 @@ notification group design fixing
     padding-right: 35px;
 }
 .nodeSettingModal .formBodyContainer{
-    padding-bottom: 0px;
+    padding-bottom: 20px;
 }
 .nodeSettingModal.notificationGroupTags .notificationHolder .editorEmailShell:not(.maximize){
     height: 372px;

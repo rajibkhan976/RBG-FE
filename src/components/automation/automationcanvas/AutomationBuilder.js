@@ -1358,6 +1358,11 @@ const AutomationBuilder = (props) => {
     const onClickCopy = (text) => {
         setTimeout(() => {
             window.navigator.clipboard.writeText(text);
+            dispatch({
+                type: actionTypes.SHOW_MESSAGE,
+                message: "URL copied successfully.",
+                typeMessage: 'success'
+              });
         }, 100);
     };
     const copyTag = (text, field) => {
