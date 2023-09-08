@@ -8,7 +8,7 @@ import missedcall from "../../assets/images/missedcall.svg";
 import outgoing_SMS from "../../assets/images/outgoing_SMS.svg";
 import incoming_SMS from "../../assets/images/incoming_SMS.svg";
 import outgoing_Mail from "../../assets/images/outgoing_Mail.svg";
-import incoming_Mail from "../../assets/images/incoming_Mail.svg";
+import incoming_Mail from "../../assets/images/incoming_email.svg";
 import outgoing_Call from "../../assets/images/outgoing.svg";
 import incoming_Call from "../../assets/images/incomingCall.svg";
 import voice_Mail from "../../assets/images/voice_Mail.svg";
