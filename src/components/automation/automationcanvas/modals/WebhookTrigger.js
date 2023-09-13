@@ -1,6 +1,8 @@
 import React, { memo, useState } from 'react';
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
 import chevron_right_white_24dp from "../../../../assets/images/chevron_right_white_24dp.svg";
+import infoIcon from "../../../../assets/images/infos.svg";
+
 
 const WebhookTrigger = (props) => {
 
@@ -23,11 +25,18 @@ const WebhookTrigger = (props) => {
                         <div className="formBodyContainer">
                             <div className="formFieldsArea">
                                 <div className="inputField">
-                                    <label htmlFor="">webhook URL</label>
-                                    <div className="inFormField d-flex">
-                                        <input type="text" name="webhook-url" id="webhook-url" value={props.automationUrl}
-                                               onClick={() => props.onClickCopy(props.automationUrl)} readOnly={true}/>
-                                        <button className="refreshFieldsBtn" onClick={() => props.refreshWebhook(props.automationUrlId, props.triggerNodeId)}></button>
+                                    <label htmlFor="">
+                                        Webhook URL
+                                        <span className="infoSpan">
+                                            <img src={infoIcon} />
+                                            <span className="tooltiptextInfo">
+                                            After a successful integration using this Webhook URL, it will automatically create a new contact in your system.
+                                            </span>
+                                        </span>
+                                    </label>
+                                    <div className="inFormField d-flex testDataInput">
+                                        <input type="text" name="webhook-url" id="webhook-url" value={props.automationUrl} readOnly={true}/>
+                                        <button className="copyFieldsBtn" onClick={() => props.onClickCopy(props.automationUrl)}></button>
                                     </div>
                                 </div>
                                 {/* <div className="inputField">
@@ -55,6 +64,24 @@ const WebhookTrigger = (props) => {
                                     </div>
                                     : ""}
                             </div>
+                            <button type="button" className="testDataBtn" onClick={() => props.refreshWebhook(props.automationUrlId, props.triggerNodeId)}>
+                                <span className="buttonText">Test Your Request</span> 
+                                <span className="infoSpan">
+                                    <img src={infoIcon} />
+                                    <span className="tooltiptextInfo">
+                                        <h3>How it works?</h3>
+                                        <ul>
+                                            <li>Copy the URL</li>
+                                            <li>Send a Test Request</li>
+                                            <li>Observe the Response</li>
+                                            <li>Once your integration is working as expected, click "Test Data" to view the data</li>
+                                        </ul>
+                                        <p>
+                                            Remember, successful testing ensures that your webhook is correctly configured and ready to automate tasks seamlessly.
+                                        </p>
+                                    </span>
+                                </span>
+                            </button>
                             <div className="saveButton">
                                 <button onClick={props.closeFilterModal}>Save <img src={chevron_right_white_24dp} alt=""/></button>
                             </div>
