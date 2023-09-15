@@ -977,8 +977,10 @@ const ContactListing = forwardRef((props, ref) => {
                                             {/* {item.id === 'dob' && ele.dob} */}
                                             <span className="userNames mobile new">
                                                 {((item.id === 'mobile' || item.id === 'phone' || item.id === 'dadPhone' || item.id === 'momPhone') ?
-                                                    ((ele[item.id] && ele[item.id].dailCode && ele[item.id].number !== "") ? <span className={ele[item.id].is_valid ? "number valid" : "number invalid"}>{ele[item.id].dailCode + "-" + ele[item.id].number}</span> : "") : (item.id === 'dob' && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LL') : (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? utils.convertUTCToTimezone(ele[item.id], timezoneOffset) : ele[item.id])))
-                                                }
+                                                    ((ele[item.id] && ele[item.id].dailCode && ele[item.id].number !== "") ? <span className={ele[item.id].is_valid ? "number valid" : "number invalid"}>
+                                                        {ele[item.id].dailCode + "-" + ele[item.id].number}</span> : "") :
+                                                    (item.id === 'dob' && ele[item.id] !== undefined && Moment(ele[item.id]).isValid() ? Moment(ele[item.id]).format('LL') : (item.id === 'createdAt' && Moment(ele[item.id]).isValid() ? utils.convertUTCToTimezone(ele[item.id], timezoneOffset) : ele[item.id])))
+                                                } &nbsp;
                                              </span>
                                         </button>)
                                 }
