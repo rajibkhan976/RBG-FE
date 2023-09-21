@@ -43,7 +43,11 @@ import RestrictionPackageModal from "./setup/credit/package/RestrictionPackageMo
 import AppointmentGlobal from "./appointment/AppointmentGlobalRouter";
 import TransactionGlobalRouter from "./transaction/TransactionGlobalRouter";
 import CommunicationLogRoutes from "./communicationLog/CommunicationLogRoutes";
-import NotificationGroupRouter from "./setup/notification_group/notificationGroupRouter"
+import NotificationGroupRouter from "./setup/notification_group/notificationGroupRouter";
+import { FilterAction } from "../actions/FilterAction";
+import { statusPhaseListAction } from "../actions/FilterAction";
+import {EmailSubjectAction} from "../actions/EmailSubjectAction";
+import { EmailTemplateAction } from "../actions/EmailTemplateAction";
 
 // For socket io connection
 //const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlProd;
@@ -622,6 +626,20 @@ const MainComponent = () => {
    /* const closeNotification = () => {
         setIsNewFeaturesAvailable(false);
     }*/
+    //  common api is calling when page is loaded
+    useEffect(()=>{
+        // console.log("Main component, Main component, Main component, Main component, Main component");
+        dispatch(FilterAction());
+        dispatch(statusPhaseListAction());
+        dispatch(EmailSubjectAction());
+        dispatch(EmailTemplateAction("all"));
+    },[dispatch]);
+
+    console.log("subject reducer", useSelector((state)=> state.subject));
+    console.log("filter reducer", useSelector((state)=> state.filter));
+    console.log("email template reducer", useSelector((state)=> state.emailTemplate));
+    console.log("Subject data", useSelector((state)=>state.subject.data));
+
     return (
         <>
             <div className="mainComponent">
@@ -659,10 +677,12 @@ const MainComponent = () => {
                                 <AutomationRoutes toggleLeftSubMenu={toggleLeftSubMenu}
                                     toggleCreate={(e) => toggleCreate(e)} />
                             </Route>
+                            
                             <Route exact path="/contacts">
                                 <ContactRoutes toggleLeftSubMenu={toggleLeftSubMenu}
                                     toggleCreate={(e) => toggleCreate(e)} device={device} />
                             </Route>
+                            
                             {/* <Route exact path={["/call-setup", "/sms-setup", "/email-setup"]}>
                                 <CommunicationRoutes toggleLeftSubMenu={toggleLeftSubMenu}
                                     toggleCreate={(e) => toggleCreate(e)}></CommunicationRoutes>

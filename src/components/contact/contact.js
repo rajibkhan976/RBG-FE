@@ -11,7 +11,10 @@ import BulkAutomation from "./action/bulkAutomation";
 import { useDispatch } from "react-redux";
 import * as actionTypes from "../../actions/types";
 import { EmailServices } from "../../services/setup/EmailServices";
-
+import { useSelector } from "react-redux";
+import { FilterAction } from "../../actions/FilterAction";
+import { EmailTemplateAction } from "../../actions/EmailTemplateAction";
+import { EmailSubjectAction } from "../../actions/EmailSubjectAction";
 const Contact = (props) => {
     const dispatch = useDispatch();
     document.title = "Red Belt Gym - Contacts";
@@ -111,23 +114,23 @@ const Contact = (props) => {
     const setAutomationOpenModalFunc = () =>{
         setBulkAutomationOpenModal(true);
     }
-    const fetchEmail = async () => {
-        try {
-            await EmailServices.fetchSetupEmail();
-            setEmailSetupData(true);
-        } catch (e) {
-            setEmailSetupData(false);
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: e.message,
-                typeMessage: 'error'
-            });
-        } 
-    };
+    // const fetchEmail = async () => {
+    //     try {
+    //         await EmailServices.fetchSetupEmail();
+    //         setEmailSetupData(true);
+    //     } catch (e) {
+    //         setEmailSetupData(false);
+    //         dispatch({
+    //             type: actionTypes.SHOW_MESSAGE,
+    //             message: e.message,
+    //             typeMessage: 'error'
+    //         });
+    //     } 
+    // };
     useEffect(()=>{
         // fetchEmail();
         // fetchEmailStatus();
-        console.log("device in contact", props.device);
+        // console.log("device in contact", props.device);
     },[])
     const searchContactList = (data)=>{
         // console.log("contact js search contact list", data);
@@ -146,7 +149,7 @@ const Contact = (props) => {
         }
     }, [unCheckAllBoxs])
     const singleContactStatusFunc = (data)=>{
-        console.log("contact js data", data);
+        // console.log("contact js data", data);
         if(data?.length === 1){
            setNumberOfContact(true)
         }else if(data?.length === 0){
@@ -185,6 +188,11 @@ const Contact = (props) => {
     //         // setSinglePhoneContact(false);
     //     })
     // }
+    useEffect(()=>{
+        dispatch(FilterAction());
+        // dispatch(EmailTemplateAction("all"));
+        dispatch(EmailSubjectAction());
+    },[dispatch]);
 
     return (
         <>

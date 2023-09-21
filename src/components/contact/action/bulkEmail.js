@@ -10,7 +10,7 @@ import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import { ContactService } from "../../../services/contact/ContactServices";
 import { utils } from "../../../helpers";
 import MergeTag from "../../shared/MergeTag";
-
+import { useSelector } from "react-redux";
 
 
 const BulkEmail = (props) => {
@@ -21,7 +21,7 @@ const BulkEmail = (props) => {
     const [emailTemplateToggle, setEmailemailTemplateToggle] = useState(false);
     const [isLoader, setIsLoader] = useState(false);
     const [searchTagString, setSearchTagString] = useState("");
-    const [emailTags, setEmailTags] = useState([]);
+    // const [emailTags, setEmailTags] = useState([]);
     const [templateToggle, setTemplateToogle] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     const [emailDatasubject, setEmailDatasubject] = useState("");
@@ -63,24 +63,29 @@ const BulkEmail = (props) => {
     const getQueryParams = async () => {
         return new URLSearchParams();
     };
-    const fetchEmailTemplateList = async () => {
-        const pageId = "all";
-        const queryParams = await getQueryParams();
-        try {
-            setIsLoader(true);
-            const result = await EmailServices.fetchEmailTemplateList(pageId, queryParams);
-            if (result) {
-                // console.log("email template", result.templates);
-                setEmailTempData(result);
-            }
-        } catch (e) {
-            setIsLoader(false);
-            // console.log("Error in template listing", e);
-            setErrorMsg(e.message);
-        } finally {
-            setIsLoader(false);
-        }
-    };
+    // const fetchEmailTemplateList = async () => {
+    //     const pageId = "all";
+    //     const queryParams = await getQueryParams();
+    //     try {
+    //         setIsLoader(true);
+    //         const result = await EmailServices.fetchEmailTemplateList(pageId, queryParams);
+    //         if (result) {
+    //             // console.log("email template", result.templates);
+    //             setEmailTempData(result);
+    //         }
+    //     } catch (e) {
+    //         setIsLoader(false);
+    //         // console.log("Error in template listing", e);
+    //         setErrorMsg(e.message);
+    //     } finally {
+    //         setIsLoader(false);
+    //     }
+    // };
+    const emailTemplateData = useSelector((state)=> state.emailTemplate.data);
+    useEffect(()=>{
+        setEmailTempData(emailTemplateData);
+    },[emailTemplateData]);
+
     const sendingTemplateDetails = (e, elem) => {
         // console.log("eleme", elem);
         setEmailData({
@@ -211,21 +216,21 @@ const BulkEmail = (props) => {
             // console.log();
         }
     }
-    const fetchEmailTags = async () => {
-        try {
-            const result = await SMSServices.fetchSMSTags()
-            if (result) {
-                // // console.log("result", result);
-                setEmailTags(result)
-            }
-        } catch (error) {
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: error.message,
-                typeMessage: 'error'
-            });
-        }
-    }
+    // const fetchEmailTags = async () => {
+    //     try {
+    //         const result = await SMSServices.fetchSMSTags()
+    //         if (result) {
+    //             // // console.log("result", result);
+    //             setEmailTags(result)
+    //         }
+    //     } catch (error) {
+    //         dispatch({
+    //             type: actionTypes.SHOW_MESSAGE,
+    //             message: error.message,
+    //             typeMessage: 'error'
+    //         });
+    //     }
+    // }
     useEffect(() => {
         // // console.log("template",utils.decodeHTML(emailData.template));
         setChangedTemplate(utils.decodeHTML(emailData.template));
@@ -333,8 +338,8 @@ const BulkEmail = (props) => {
     //     }
     // };
     useEffect(() => {
-        fetchEmailTemplateList();
-        fetchEmailTags();
+        // fetchEmailTemplateList();
+        // fetchEmailTags();
         // fetchEmail();
     }, []);
     // out side click of thr email

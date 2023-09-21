@@ -79,9 +79,9 @@ const ContactListing = forwardRef((props, ref) => {
     const [filterTags, setFilterTags] = useState();
     const contactSearched = useDebounce(keyword, 1000);
 
-    useEffect(()=>{
-        console.log("contact listiing timezone", timezoneOffset);
-    });
+    // useEffect(()=>{
+    //     console.log("contact listiing timezone", timezoneOffset);
+    // });
     useEffect(()=>{
         // {console.log("contact search result", contactSearched)}
         if(contactSearched){
@@ -138,14 +138,14 @@ const ContactListing = forwardRef((props, ref) => {
         setTableWidth(window.innerWidth - 504);
     }
     const fetchContact = async () => {
-        console.log("contact api call================");
+        // console.log("contact api call================");
         setIsLoader(true);
         setSelectSingle(false);
         setSelectAllCheckbox(false);
         const pageId = utils.getQueryVariable('page');
-        console.log("Page id", pageId);
+        // console.log("Page id", pageId);
         const queryParams = await getQueryParams();
-        console.log("Query params", queryParams);
+        // console.log("Query params", queryParams);
         const program = utils.getQueryVariable('program');
         const tags = utils.getQueryVariable('tags');
         // console.log(program, tags);
@@ -162,7 +162,7 @@ const ContactListing = forwardRef((props, ref) => {
                 result = await ContactService.fetchUsers(pageId, queryParams)
             }
             if (result) {
-                console.log("contact list", result);
+                // console.log("contact list", result);
                 setContactList(result.contacts);
                 setContactCount(result.pagination.count);
                 setFilters(result.filterApplied);
@@ -218,11 +218,11 @@ const ContactListing = forwardRef((props, ref) => {
             fetchContact();
         } catch (e) {
             setIsLoader(false);
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: e.message,
-                typeMessage: 'error'
-            });
+            // dispatch({
+            //     type: actionTypes.SHOW_MESSAGE,
+            //     message: e.message,
+            //     typeMessage: 'error'
+            // });
         }
     }
     const getQueryParams = async () => {
@@ -742,7 +742,7 @@ const ContactListing = forwardRef((props, ref) => {
     }, [modalId]);
 
     useEffect(() => {
-        console.log("Filter is happing or not", props.filterApply);
+        // console.log("Filter is happing or not", props.filterApply);
         if (props.filterApply) {
             fetchContact();
         }
@@ -1067,7 +1067,11 @@ const ContactListing = forwardRef((props, ref) => {
             });
         }
       }
-   
+    //   const filterData = useSelector((state)=>state.filter.data);
+    //   useEffect(()=>{
+    //       const {createdBy, phase, source} = filterData;
+    //       console.log("Contact filter data", phase);
+    //   },[filterData]);
     return (
         <div className="dashInnerUI">
             {isLoader ? <Loader/> : ''}

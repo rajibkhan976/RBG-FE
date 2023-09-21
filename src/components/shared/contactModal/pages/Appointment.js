@@ -66,10 +66,12 @@ const Appointment = (props) => {
 
     setToggleEditList(toggleEditList == id ? null : id);
   };
-
+  const savedTag = useSelector((state) => state.tag.savedTag);
+  
   const closeModal = () => {
     setAddDependentModal(false);
     setCommunication(false);
+    console.log("Save tag", savedTag);
   };
 
   const fetchAppointment = async (page) => {

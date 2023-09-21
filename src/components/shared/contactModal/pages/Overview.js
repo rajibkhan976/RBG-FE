@@ -533,7 +533,7 @@ const Overview = (props) => {
                         getContact(contactIdNew);
                     }
                 } else {
-                    setErrorMsg('Something went wrong.')
+                    // setErrorMsg('Something went wrong.')
                 }
             } catch (e) {
                 setErrorMsg(e.message);

@@ -60,11 +60,12 @@ const AddHolidayModal = (props) => {
       if (dd < 10) dd = '0' + dd;
       if (mm < 10) mm = '0' + mm;
       let formattedDate = `${yyyy}-${mm}-${dd}`;
-      
+      // console.log("Holiday from", formattedDate);
+      // console.log("Holiday from", utils.convertTimezoneToUTC(formattedDate + " 00:00:00" ,timezoneOffset).trim());
       setHoliday({
         ...holiday,
-        fromDate: utils.convertTimezoneToUTC(formattedDate + " 00:00:00" ,timezoneOffset),
-        toDate: utils.convertTimezoneToUTC(formattedDate + " 23:59:59" ,timezoneOffset),
+        fromDate: utils.convertTimezoneToUTC(formattedDate + " 00:00:00" ,timezoneOffset).trim(),
+        toDate: utils.convertTimezoneToUTC(formattedDate + " 23:59:59" ,timezoneOffset).trim(),
       });
     } else {
       setHoliday({
@@ -82,9 +83,10 @@ const AddHolidayModal = (props) => {
       if (dd < 10) dd = '0' + dd;
       if (mm < 10) mm = '0' + mm;
       let formattedDate = `${yyyy}-${mm}-${dd}`;
+      console.log("Holiday to", formattedDate);
       setHoliday({
         ...holiday,
-        toDate: utils.convertTimezoneToUTC(formattedDate + " 23:59:59" ,timezoneOffset),
+        toDate: utils.convertTimezoneToUTC(formattedDate + " 23:59:59" ,timezoneOffset).trim(),
       });
     } else {
       setHoliday({

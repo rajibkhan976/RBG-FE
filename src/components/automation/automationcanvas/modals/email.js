@@ -6,7 +6,7 @@ import icon_browse_keywords from "../../../../assets/images/icon_browse_keywords
 import EditorComponent from "../../../setup/templates/email/editor/Editor";
 import {EmailServices} from "../../../../services/setup/EmailServices";
 import Loader from "../../../shared/Loader";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../../../actions/types";
 import {SMSServices} from "../../../../services/template/SMSServices";
 import {utils} from "../../../../helpers";
@@ -31,7 +31,7 @@ const Email = (props) => {
     const [options, setOptions] = useState([]);
     useEffect(async () => {
         await fetchEmailTags();
-        await fetchTemplateList();
+        // await fetchTemplateList();
     }, []);
     const getQueryParams = async () => {
         return new URLSearchParams();
@@ -46,10 +46,9 @@ const Email = (props) => {
                 let op = [{value: "", label: "Select an Email Template", data: {"_id": "",
                         "email": "",
                         "subject": "",
-                        "template": ""}}]
-                result.templates.map(el => {
-                    op.push({value: el._id, label: el.title, data: el})
-                });
+                        "template": ""}}];
+                result.templates.map(el => {op.push({value: el._id, label: el.title, data: el})});
+                console.log("op", op);
                 setOptions(op);
             }
         } catch (e) {
@@ -62,6 +61,15 @@ const Email = (props) => {
             setIsLoader(false);
         }
     };
+    const emailTemplateData = useSelector((state)=> state?.emailTemplate?.data);
+    useEffect(()=>{
+        let op = [{value: "", label: "Select an Email Template", data: {"_id": "",
+                        "email": "",
+                        "subject": "",
+                        "template": ""}}];
+        emailTemplateData?.templates.map((el)=> {op.push({value: el._id, label: el.title, data: el})});
+        setOptions(op);
+    },[emailTemplateData]);
     const fetchEmailTags = async () => {
         try {
             const result = await SMSServices.fetchSMSTags()
@@ -176,6 +184,7 @@ const Email = (props) => {
     return (
         <React.Fragment>
             <div className="automationModal">
+            <div className='automationModalBg' onClick={props.closeFilterModal}></div>
                 <div className="nodeSettingModal nodeEmailModal">
                     <div className="formHead">
                         <div className="heading">

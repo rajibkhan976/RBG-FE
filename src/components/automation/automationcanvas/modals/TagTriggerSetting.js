@@ -104,10 +104,10 @@ const TagTriggerSetting = (props) => {
     return (
         <React.Fragment>
             <div className="automationModal filterModal triggerSetting">
-                <div className="nodeSettingModal transactionModal">
+                <div className="nodeSettingModal transactionModal notOverlap">
                     <div className="formHead">
                         <div className="heading">
-                            <p>Tag  Trigger Settings</p>
+                            <p>Tag Trigger Settings</p>
                         </div>
                         <div className="closeButton">
                             <button onClick={props.closeFilterModal}>

@@ -5,7 +5,8 @@ import {EmailServices} from "../../../../services/setup/EmailServices";
 import Loader from "../../../shared/Loader";
 import noRecords from "../../../../assets/images/noRecords.svg";
 import plus_icon from "../../../../assets/images/plus_icon.svg";
-
+import { EmailTemplateAction } from "../../../../actions/EmailTemplateAction";
+import { useDispatch, useSelector } from "react-redux";
 const List = (props) => {
     const [sortType, setSortType] = useState("asc");
     const [sortBy, setSortBy] = useState("");
@@ -17,25 +18,43 @@ const List = (props) => {
         currentPage: 1,
         limit: 10
     });
+    const dispatch = useDispatch();
+    const emailTemplateList = useSelector((state)=> state?.emailTemplate?.data);
+    useEffect(()=>{
+        props.setIsLoader(true);
+        console.log("Email template list", emailTemplateList);
+        setEmailTempData(emailTemplateList);
+        if(emailTemplateList?.pagination){
+            setPaginationData({
+                ...paginationData,
+                count: emailTemplateList?.pagination?.count,
+                currentPage: emailTemplateList?.pagination.currentPage,
+                totalPages: emailTemplateList?.pagination.totalPages
+            });
+        }
+        props.setIsLoader(false);
+    },[emailTemplateList]);
+    
     const fetchTemplateList = async () => {
-
         try {
             props.setIsLoader(true);
             props.selectedEmail(null);
             setActiveEmail(null);
             const pageId = utils.getQueryVariable('page') || 1;
             const queryParams = await getQueryParams();
-            const result = await EmailServices.fetchEmailTemplateList(pageId, queryParams);
-            if (result) {
-                setEmailTempData(result);
+            // const result = await EmailServices.fetchEmailTemplateList(pageId, queryParams);
+            dispatch(EmailTemplateAction(pageId, queryParams));
+            // if (result) {
+                // console.log("Email template list", result);
+                // setEmailTempData(emailTemplateList);
                 //props.selectedEmail(result.templates[0]);
-                setPaginationData({
-                    ...paginationData,
-                    count: result.pagination.count,
-                    currentPage: result.pagination.currentPage,
-                    totalPages: result.pagination.totalPages
-                });
-            }
+                // setPaginationData({
+                //     ...paginationData,
+                //     count: result.pagination.count,
+                //     currentPage: result.pagination.currentPage,
+                //     totalPages: result.pagination.totalPages
+                // });
+            // }
         } catch (e) {
 
         } finally {
@@ -181,7 +200,7 @@ const List = (props) => {
                     <div className="createNew noInfos">
                         <div className="noRecordsImgWraper">
                             <img src={noRecords} className="noRecords" alt=""/>
-                            <h4>No Template Found { console.log(emailTempData) }</h4>
+                            <h4>No Template Found</h4>
                             <p>No template have been listed here yet</p>
                         </div>
                     </div>

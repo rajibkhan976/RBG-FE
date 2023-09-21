@@ -13,30 +13,33 @@ const MergeTag = (props) => {
 
   const [searchTagString, setSearchTagString] = useState("");
 
-  const fetchSMSTags = async () => {
-    try {
-      const result = await SMSServices.fetchSMSTags()
-      if(result) {
-        // console.log("result", result);
-        setSmsTags(result)
-      }
-    } catch (error) {
-      dispatch({
-        type: actionTypes.SHOW_MESSAGE,
-        message: error.message,
-        typeMessage: 'error'
-      });
-    }
-  }
+  // const fetchSMSTags = async () => {
+  //   try {
+  //     const result = await SMSServices.fetchSMSTags()
+  //     if(result) {
+  //       console.log("result", result);
+  //       setSmsTags(result)
+  //     }
+  //   } catch (error) {
+  //     dispatch({
+  //       type: actionTypes.SHOW_MESSAGE,
+  //       message: error.message,
+  //       typeMessage: 'error'
+  //     });
+  //   }
+  // }
  const addingMergeField = (e,item) =>{
   item = item?.alias || item.id;
   e.preventDefault();
   item = " [" + item + "] "
   props.addfeild(e,item)
  }
+  const subjectData = useSelector((state)=> state.subject.data);
   useEffect(() => {
-    fetchSMSTags()
-  }, []);
+    // fetchSMSTags();
+    setSmsTags(subjectData);
+    // console.log("subject data", subjectData);
+  }, [subjectData]);
 
   return (
     <>

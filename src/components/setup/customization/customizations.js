@@ -9,6 +9,9 @@ import { CustomizationServices } from "../../../services/setup/CustomizationServ
 import { ErrorAlert, SuccessAlert } from "../../shared/messages";
 import smallLoaderImg from "../../../../src/assets/images/loader.gif";
 import ConfirmBox from "../../shared/confirmBox";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchCustomerListAction, deleteEmailSubjectAction, EmailSubjectAction } from "../../../actions/EmailSubjectAction";
+import { Scrollbars } from "react-custom-scrollbars-2";
 
 const Customizations = (props) => {
   document.title = "Red Belt Gym - Customization";
@@ -31,8 +34,13 @@ const Customizations = (props) => {
   const [deleteConfirmBox, setDeleteConfirmBox] = useState(false);
   const [editedEle, setEditedEle] = useState();
   const [isEditing, setIsEditing] = useState(false);
+  const [pagination, setpagination] = useState({})
+  const [isScroll, setIsScroll] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
+  
 
   const ref = useRef();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const checkClickOutside = (e) => {
@@ -41,17 +49,33 @@ const Customizations = (props) => {
           setOption(null);
       }  
   }
-
   document.addEventListener("click", checkClickOutside);
   return () => {
       document.removeEventListener("click", checkClickOutside);
   };
   });
 
-  useEffect(() => {
+  useEffect(()=>{
+    dispatch(fetchCustomerListAction());
+  },[dispatch])
+  const customList = useSelector((state)=> state?.subject?.customerList);
+  useEffect(()=>{
+    setIsLoader(true);
+    if(customList){
+      setpagination(customList?.pagination);
+      // console.log("Customer field List ===========", customList?.customFields);
+      if(customList?.pagination?.currentPage === 1 || customList?.pagination?.currentPage === null){
+        setCustomFieldList(customList?.customFields);
+      }else{
+        setCustomFieldList([...customFieldList, ...customList?.customFields]);
+      }
+      setIsLoader(false);
+    }
+  },[customList])
 
+  useEffect(() => {
     fetchSaleTax();
-    fetchCustomFields();
+    fetchCustomFields(1);
   }, []);
 
   useEffect(() => {
@@ -72,20 +96,22 @@ const Customizations = (props) => {
     }
   }
 
-  const fetchCustomFields = async (e) => {
+  const fetchCustomFields = async (pageNumber) => {
+    console.log("Page Number", pageNumber);
+    setPageNumber(pageNumber);
     try {
-      setIsLoader(true)
-      const result = await CustomizationServices.fetchCustomFields();
-      setCustomFieldList(result.customFields);
-      
+      setIsScroll(true);
+      dispatch(fetchCustomerListAction(pageNumber));
+      setIsScroll(false);
+      setIsLoader(true);
+
+      // const result = await CustomizationServices.fetchCustomFields();
+      // setCustomFieldList(result.customFields);
+    
     } catch (e) {
-      setErrorMsg(e.message);
+      // setErrorMsg(e.message);
     } finally {
       setIsLoader(false);
-      setTimeout(() => {
-        console.log("Custom Fields ===== " + JSON.stringify(customFieldList));
-      }, 3000)
-      
     }
   };
 
@@ -102,7 +128,8 @@ const Customizations = (props) => {
   const closeCustomModal = (param) => {
     setOpenModal(false);
     if(param){
-      fetchCustomFields();
+      fetchCustomFields(1);
+      dispatch(fetchCustomerListAction());
     }
     setIsEditing(false);
   }
@@ -145,22 +172,28 @@ const Customizations = (props) => {
   const deleteField = async () => {
     try {
       setIsLoader(true);
-      const res = await CustomizationServices.deleteCustomField(deleteFieldId);
-      setDeletedFieldId(deleteFieldId);
-      setSuccessMsg(res.message);
+      // const res = await CustomizationServices.deleteCustomField(deleteFieldId);
+      // setDeletedFieldId(deleteFieldId);
+      dispatch(deleteEmailSubjectAction(deleteFieldId));
+      dispatch(EmailSubjectAction());
+      // setSuccessMsg(res.message);
       setOption(null);
     } catch (e) {
-      setErrorMsg(e.message);
+      // setErrorMsg(e.message);
     } finally {
       setIsLoader(false);
       setDeleteConfirmBox(false);
       fetchCustomFields();
+      setTimeout(()=>{
+        dispatch(fetchCustomerListAction(pageNumber));
+      }, 1000);
     }
   };
 
   const deleteConfirm = (response) => {
     if (response === "yes") {
       deleteField();
+      dispatch(fetchCustomerListAction(pageNumber));
     } else {
       setDeleteConfirmBox(false);
     }
@@ -193,7 +226,7 @@ const Customizations = (props) => {
     } finally {
       setToggleIndex(null);
       setSmallLoader(false);
-      console.log(customFieldList);
+      // console.log(customFieldList);
     }
   }
 
@@ -210,16 +243,40 @@ const Customizations = (props) => {
     });
   }
 
-  const createSuccess = (msg) => {
-    setSuccessMsg(msg);
+  // const createSuccess = (msg) => {
+  //   // setSuccessMsg(msg);
+  // }
+
+  // const createError= (msg) => {
+  //   // setErrorMsg(msg);
+  // }
+
+const customListScrollHandeler = (e)=>{
+  if(!isScroll){
+    if (!isScroll) {
+      let scrollHeight = e.target.scrollHeight;
+      let scrollTop = e.target.scrollTop;
+      let offsetHeight = e.target.offsetHeight;
+      let clientHeight = e.target.clientHeight;
+      // console.log("page bottom ======>", "client height", e.srcElement?.clientHeight, "Offset height", e.srcElement?.offsetHeight, "scroll top",  e.srcElement?.scrollTop, e, "Scroll height", scrollHeight);
+      // console.log("Page bottom ========", scrollHeight - Math.round(e.srcElement?.clientHeight), Math.round(e.srcElement?.scrollTop), Math.round(scrollTop));
+      // console.log("Page bottom", scrollTop === (scrollHeight - offsetHeight));
+      // console.log("Page bottom", Math.ceil(scrollHeight - scrollTop) === clientHeight);
+
+      if((scrollHeight - Math.round(e.srcElement?.clientHeight)) === Math.round(scrollTop)){
+        // if(Math.ceil(scrollHeight - scrollTop) === clientHeight){
+        if (pagination.currentPage < pagination.totalPages) {
+          if(pagination.currentPage === null){
+            fetchCustomFields(pagination.currentPage + 2);
+          }
+          else{
+            fetchCustomFields(pagination.currentPage + 1);
+          }
+        }
+      }
+    }
   }
-
-  const createError= (msg) => {
-    setErrorMsg(msg);
-  }
-
-
-
+}
   return (
     <>
     {isLoader ? <Loader /> : ''}
@@ -253,6 +310,7 @@ const Customizations = (props) => {
           </button>
         </div>
         <div className="userListBody">
+        <Scrollbars onScroll={customListScrollHandeler} renderThumbVertical={(props) => <div className="thumb-vertical" />}>
           <ul className="customtableListing">
             <li className="listHeading">
               <div>Field Name</div>
@@ -261,7 +319,8 @@ const Customizations = (props) => {
               <div className="space">Default Value</div>
               <div className="vacent"></div>
             </li>
-            {customFieldList.map((elem, key) => {
+            {console.log("Custom field list", customFieldList)}
+            {customFieldList?.map((elem, key) => {
               return (
                 <li>
                   {/* <div>{elem.field_Name}</div>
@@ -307,10 +366,19 @@ const Customizations = (props) => {
                 </li>
               );
             })
-            }
+          }
+          
           </ul>
+          {
+            isLoader || pagination.currentPage !== pagination.totalPages && 
+              <div className="bottomLoader"></div>
+          }
+          {
+            pagination.currentPage && pagination.currentPage === pagination.totalPages && 
+            <div className="row success noMoreRecords">You're All Caught Up</div>
+          }
+        </Scrollbars>
         </div>
-
       </div>
       {openModal &&
         <CustomizationsAddField
@@ -318,8 +386,8 @@ const Customizations = (props) => {
           ele={editedEle} 
           editStatus={isEditing}
           savedNew={() => fetchCustomFields ()} 
-          successMessage={(msg) => createSuccess (msg)} 
-          errorMessage={(msg) => createError (msg)}
+          // successMessage={(msg) => createSuccess (msg)} 
+          // errorMessage={(msg) => createError (msg)}
           origin="settings"
         />
       }

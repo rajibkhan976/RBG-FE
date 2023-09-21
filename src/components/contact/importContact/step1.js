@@ -10,7 +10,7 @@ import {ImportContactServices} from "../../../services/contact/importContact";
 import Loader from "../../shared/Loader";
 import {PhasesServices} from "../../../services/contact/phasesServices";
 import info_icon from "../../../assets/images/infos.svg";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import * as actionTypes from "../../../actions/types";
 
 function Step1(props) {
@@ -188,13 +188,19 @@ function Step1(props) {
     const fetchPhases = async () => {
         setIsLoader(true);
         let phases = await PhasesServices.fetchPhases();
+        console.log("Import contact phase", phases);
         setIsLoader(false);
         setPhases(phases.phases);
     }
+    const allPhases = useSelector((state)=> state.filter.data);
+    useEffect(()=>{
+        console.log("All phases", allPhases);
+        setPhases(allPhases.phase);
+    },[phases])
     useEffect(() => {
         setDuplicate('skip');
         setPrimaryField('both');
-        fetchPhases();
+        // fetchPhases();
     }, []);
     return (
         <>
@@ -254,7 +260,7 @@ function Step1(props) {
                                         <select name="" id=""  value={selectedPhase} onChange={handlePhaseChange} style={{backgroundImage: "url(" + arrowDown + ")",}}>
                                             <option value="">Select a Phase</option>
                                             {
-                                                phases.map(ele => {
+                                                phases?.map(ele => {
                                                     if (ele.statuses.length && ele.statuses[0]._id !== undefined) {
                                                         return (<option value={ele._id}>{ele.name}</option>)
                                                     }

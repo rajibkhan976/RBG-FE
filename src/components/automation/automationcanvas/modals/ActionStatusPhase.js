@@ -1,8 +1,8 @@
 import closewhite24dp from "../../../../assets/images/close_white_24dp.svg";
 import chevron_right_white_24dp from "../../../../assets/images/chevron_right_white_24dp.svg";
 import React, {useEffect, useState} from "react";
-import {PhasesServices} from "../../../../services/contact/phasesServices";
 import Loader from "../../../shared/Loader";
+import { useSelector } from "react-redux";
 
 const ActionStatusPhaseModal = (props) => {
     const [statusList, setStatusList] = useState([]);
@@ -12,12 +12,15 @@ const ActionStatusPhaseModal = (props) => {
     const [phase, setPhase] = useState(props.phase);
     const [statusError, setStatusError] = useState("");
     const [phaseError, setPhaseError] = useState("");
-    const fetchPhases = async () => {
-        setIsLoader(true);
-        let phases = await PhasesServices.fetchPhases();
-        setIsLoader(false);
-        setPhaseList(phases.phases);
-    }
+
+    const phaseData = useSelector((state)=> state.filter?.data);
+    useEffect(()=>{
+        if(phaseData){
+            console.log(phaseData?.phase);
+            setPhaseList(phaseData.phase);
+        }
+    },[phaseData]);
+
     const handlePhaseChange = (event) => {
         setPhase(event.target.value);
         setPhaseError("");
@@ -47,9 +50,7 @@ const ActionStatusPhaseModal = (props) => {
       }
       removeClass();
     }
-    useEffect(() => {
-        fetchPhases();
-    }, []);
+
     useEffect(() => {
         if (props.phase && phaseList.length > 0) {
             let searchResultPhases = phaseList.find(ele => ele._id === props.phase);

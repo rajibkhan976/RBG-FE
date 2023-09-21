@@ -13,6 +13,7 @@ import {useDispatch} from "react-redux";
 import {EmailServices} from "../../../../services/setup/EmailServices";
 import * as actionTypes from "../../../../actions/types";
 import MergeTag from "../../../shared/MergeTag";
+import { saveTemplate, EmailTemplateAction } from "../../../../actions/EmailTemplateAction";
 
 const CreateTemplate = (props) => {
     const dispatch = useDispatch();
@@ -37,18 +38,20 @@ const CreateTemplate = (props) => {
     const createNewTemplate= async (payload) =>{  
         try {
           setIsLoader(true);
-            let result = await EmailServices.emailTemplateCreate(payload);  
-            dispatch({
-              type: actionTypes.SHOW_MESSAGE,
-              message: "Email template created successfully",
-              typeMessage: 'success'
-            });   
+          dispatch(saveTemplate(payload))
+          dispatch(EmailTemplateAction("all"));
+            // let result = await EmailServices.emailTemplateCreate(payload);  
+            // dispatch({
+            //   type: actionTypes.SHOW_MESSAGE,
+            //   message: "Email template created successfully",
+            //   typeMessage: 'success'
+            // });   
         } catch (e) {
-          dispatch({
-            type: actionTypes.SHOW_MESSAGE,
-            message: e.message,
-            typeMessage: 'error'
-          });
+        //   dispatch({
+        //     type: actionTypes.SHOW_MESSAGE,
+        //     message: e.message,
+        //     typeMessage: 'error'
+        //   });
         } finally {
           setIsLoader(false);
         }
@@ -107,7 +110,7 @@ const CreateTemplate = (props) => {
               subjectInput.focus();
             }
         } catch(err) {
-         console.log();
+        //  console.log();
         }
     }
 

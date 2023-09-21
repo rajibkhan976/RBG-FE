@@ -50,7 +50,7 @@
 }
 
 .dependentsListing .row:not(.head) .cell:first-child {
-  padding-left: 20px;
+  padding-left: 10px;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
@@ -69,7 +69,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-right: 20px;
+  margin-right: 10px;
 }
 
 .dependentsListing .textCont h4 {
@@ -92,7 +92,19 @@
   color: #9baebc;
   margin-top: 5px;
 }
-
+.dependentsListing .textCont span a{
+  position: relative;
+  padding-left: 5px;
+}
+.dependentsListing .textCont span a:after{
+  content: "";
+  position: absolute;
+  left:-1px;
+  top:3px;
+  width: 1px;
+  height: 15px;
+  background-color: #29566f;
+}
 .mailCont {
   margin-left: 5px;
   text-decoration: underline;
@@ -3036,7 +3048,7 @@ input[type=number] {
 .dependentsListing .row.head {
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 0;
   background: #fff;
 }
 

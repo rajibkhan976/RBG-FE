@@ -14,6 +14,7 @@ import moment from "moment";
 import { utils } from '../../helpers';
 import DatePicker from "react-datepicker"
 import "react-datepicker/dist/react-datepicker.css";
+import { addTagFromAppointment, removeTagFromAppointment } from "../../actions/TagActions";
 
 const AppointmentEditModal = (props) => {
   const [date, setDate] = useState();
@@ -102,15 +103,19 @@ const AppointmentEditModal = (props) => {
       });
     }
   };
-  const selectTag = async (tag, mode) => {
+  const selectTag = (tag, mode) => {
     let tags = editedTags;
     let tagNames = editedTagNames;
+    console.log("Tag mode", mode, tag);
     if (mode) {
       try {
         setIsLoader(true);
-        await AppointmentServices.addTagToAppointment(props.appointmentEdit._id, {
+        // await AppointmentServices.addTagToAppointment(props.appointmentEdit._id, {
+        //   tag: tag._id
+        // });
+        dispatch(addTagFromAppointment(props.appointmentEdit._id, {
           tag: tag._id
-        });
+        }));
         props.selectTags(props.appointmentEdit._id, tag, mode);
         tags = tags.filter(addedTag => addedTag != tag._id);
         tagNames = tagNames.filter(addedTag => addedTag._id != tag._id);
@@ -119,35 +124,39 @@ const AppointmentEditModal = (props) => {
         setIsLoader(false);
       } catch (e) {
         setIsLoader(false);
-        dispatch({
-          type: actionTypes.SHOW_MESSAGE,
-          message: e.message,
-          typeMessage: 'error'
-        });
+        // dispatch({
+        //   type: actionTypes.SHOW_MESSAGE,
+        //   message: e.message,
+        //   typeMessage: 'error'
+        // });
       }
     } else {
       try {
         setIsLoader(true);
-        await AppointmentServices.removeTagFromAppointment(props.appointmentEdit._id, {
+        // await AppointmentServices.removeTagFromAppointment(props.appointmentEdit._id, {
+        //   tag: tag._id
+        // });
+        dispatch(removeTagFromAppointment(props.appointmentEdit._id, {
           tag: tag._id
-        });
+        }))
         props.selectTags(props.appointmentEdit._id, tag, mode)
         tags = tags.filter(addedTag => addedTag != tag._id);
         tagNames = tagNames.filter(addedTag => addedTag._id != tag._id);
         setIsLoader(false);
       } catch (e) {
         setIsLoader(false);
-        dispatch({
-          type: actionTypes.SHOW_MESSAGE,
-          message: e.message,
-          typeMessage: 'error'
-        });
+        // dispatch({
+        //   type: actionTypes.SHOW_MESSAGE,
+        //   message: e.message,
+        //   typeMessage: 'error'
+        // });
       }
     }
 
     setEditedTags(tags);
     setEditedTagNames(tagNames);
     setTagListToggle(false);
+    console.log("Tag mode", editedTags, editedTagNames);
   }
   const initiateCancellation = (e) => {
     e.preventDefault();
@@ -418,6 +427,7 @@ const AppointmentEditModal = (props) => {
       rescheduleErrors.note === "") {
       try {
         setIsLoader(true);
+        // console.log("Re shedule", editedReschedule);
         const result = await AppointmentServices.rescheduleAppointment(props.appointmentEdit._id, editedReschedule);
         if (result) {
           props.resheduleAppointment(props.appointmentEdit._id, editedReschedule, loggedInUser);
@@ -686,6 +696,7 @@ const AppointmentEditModal = (props) => {
             </div>
             <div className="formControl d-flex">
               <ul>
+                {console.log("Tag mode", editedTagNames)}
                 {editedTagNames && editedTagNames.map((appTags, i) => (
                   <li className="indTags" key={i}>
                     <span className="labelSelected">{appTags.name}</span>

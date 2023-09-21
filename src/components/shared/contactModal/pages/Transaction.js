@@ -1392,7 +1392,7 @@ const Transaction = (props) => {
                     <div className="cell action">&nbsp;</div>
                   </div>
                   :
-                  <div className={isLoaderScroll ? "hide" : "noDataSec"}>
+                  <div>
                     <img src={noDataIcon} alt="" />
                     <h2>No Transaction Found</h2>
                     <p>No transaction have been created yet</p>
@@ -1505,7 +1505,7 @@ const Transaction = (props) => {
                             {/* {moment(item.history && item.history[0] && item.history[0].transaction_date, 'YYYY-MM-DD').fromNow()} <br /> */}
                             {/* {moment(utils.convertUTCToTimezone(item?.history && item?.history[0] && item?.history[0].transaction_date, timezone, 'YYYY-MM-DD hh:mm A')).fromNow()} */}
                             {/* {item?.history[0].transaction_date} */}
-                            {utils.convertUTCToTimezone(item?.history[0]?.transaction_date.trim() || item?.history[0]?.last_transaction_date.trim(), timezoneOffset).split(" ").splice(0, 3).join(" ")}
+                            {utils.convertUTCToTimezone(item?.history[0]?.transaction_date?.trim() || item?.history[0]?.last_transaction_date?.trim(), timezoneOffset).split(" ").splice(0, 3).join(" ")}
                           </span>
                         </div>
 
