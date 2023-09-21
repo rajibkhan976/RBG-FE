@@ -8,6 +8,9 @@ import {Scrollbars} from "react-custom-scrollbars-2";
 import {StatusServices} from "../../../services/contact/StatusServices";
 import * as actionTypes from "../../../actions/types";
 import {useDispatch} from "react-redux";
+import { saveStatusAction } from "../../../actions/FilterAction";
+import { statusPhaseListAction } from "../../../actions/FilterAction";
+import { useSelector } from "react-redux";
 
 const StatusAddField = (props) => {
     const [isLoader, setIsLoader] = useState(false);
@@ -42,6 +45,10 @@ const StatusAddField = (props) => {
     const addStatusTypeHandler = (e) => {
         setStatusType(e.target.value);
     };
+    let getPhasesData = useSelector((state)=>state.filter);
+    if(getPhasesData){
+        // console.log("Create status", getPhasesData);
+    }
     const handleStatusSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -54,16 +61,22 @@ const StatusAddField = (props) => {
                     status: statusStatus
                 }
                 setIsLoader(true);
-                let createStatus = await StatusServices.saveStatus(payload);
+                // let createStatus = await StatusServices.saveStatus(payload);
+                // console.log("createStatus", createStatus);
                 if (statusId) {
                     props.editStatus(payload);
+                    dispatch(saveStatusAction(payload));
                     dispatch({
                         type: actionTypes.SHOW_MESSAGE,
                         message: 'Status updated successfully',
                         typeMessage: 'success'
                     });
+                    setIsLoader(false);
                 } else {
-                    props.createdStatus(createStatus);
+                    // props.createdStatus(createStatus);
+                    dispatch(saveStatusAction(payload));
+                    dispatch(statusPhaseListAction());
+                    props.createdStatus();
                     dispatch({
                         type: actionTypes.SHOW_MESSAGE,
                         message: 'Status created successfully',
@@ -89,8 +102,16 @@ const StatusAddField = (props) => {
             });
         }
     };
+    // let elems = useSelector((state)=> state.filter.statusPhaseListed?.phases);
+    // useEffect(()=>{
+    //     if(elems){
+    //         console.log("status phases", elems);
+    //         // setPhases(elems)
+    //     }
+    // },[elems])
     const handleStatusSubmitNew = async (e) => {
         e.preventDefault();
+        // console.log("Phase");
         try {
             if (statusName.trim() !== "" && statusType !== "") {
                 const payload = {
@@ -100,9 +121,11 @@ const StatusAddField = (props) => {
                     id: statusId,
                     status: statusStatus
                 }
-                setIsLoader(true);
-                let createStatus = await StatusServices.saveStatus(payload);
+                // setIsLoader(true);
+                // let createStatus = await StatusServices.saveStatus(payload);
+                // console.log("createStatus", createStatus);
                 if (statusId) {
+                    // console.log("Phase 01");
                     props.editStatus(payload);
                     dispatch({
                         type: actionTypes.SHOW_MESSAGE,
@@ -110,12 +133,14 @@ const StatusAddField = (props) => {
                         typeMessage: 'success'
                     });
                 } else {
-                    props.createdStatus(createStatus);
-                    dispatch({
-                        type: actionTypes.SHOW_MESSAGE,
-                        message: 'Status created successfully',
-                        typeMessage: 'success'
-                    });
+                    // console.log("Phase 02");
+                    props.createdStatus();
+                    dispatch(saveStatusAction(payload));
+                    // dispatch({
+                    //     type: actionTypes.SHOW_MESSAGE,
+                    //     message: 'Status created successfully',
+                    //     typeMessage: 'success'
+                    // });
                 }
                 setIsLoader(false);
                 setPopMsgsuccess(true);

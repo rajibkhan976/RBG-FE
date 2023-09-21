@@ -45,27 +45,54 @@ const AddAppointmentModal = (props) => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [calenderMinDate, setCalenderMinDate] = useState();
 
-
-
   const toggleContactListFn = (e) => {
     e.preventDefault();
-
     //setTagTop(toggleTags.current.parentNode.offsetTop)
     setTagListToggle(!tagListToggle);
     //setSearchedTag("")
+    console.clear();
+    console.log("open");
   };
   const checkThisTag = (tag, mode) => {
-    let copySelTags = [...appointmentData.tags];
+    console.log("tag and mode", tag, mode);
+    let copySelTags = [...appointmentData?.tagsDatas];
+    let tagIds = [...appointmentData.tags];
+    // console.log("copy selected tags", copySelTags, tagIds);
+
+    // if (mode) {
+    //   copySelTags.push(tag);
+    // } else {
+    //   copySelTags = copySelTags.filter((addedTag) => addedTag._id != tag._id);
+    // }
+    // console.log("copy selected tags", copySelTags);
+    // setAppointmentData({ ...appointmentData, tags: copySelTags });
+    // setTagListToggle(false);
+    // //setSearchedTag("")
+    // console.log("appointment data", appointmentData);
+
 
     if (mode) {
-      copySelTags.push(tag);
-    } else {
-      copySelTags = copySelTags.filter((addedTag) => addedTag._id != tag._id);
-    }
+			let searchTags = tagIds.filter((el) => el == tag._id);
+			if (searchTags.length === 0) {
+				copySelTags.push(tag);
+				tagIds.push(tag._id);
+			} else {
+				// dispatch({
+				// 	type: actionTypes.SHOW_MESSAGE,
+				// 	message: "Tag already selected.",
+				// 	typeMessage: "error",
+				// });
+			}
+		} else {
+			copySelTags = copySelTags.filter((addedTag) => addedTag._id != tag._id);
+			tagIds = tagIds.filter((addedTag) => addedTag != tag._id);
+		}
 
-    setAppointmentData({ ...appointmentData, tags: copySelTags });
-    setTagListToggle(false);
-    //setSearchedTag("")
+		setAppointmentData({
+			...appointmentData,
+			tagsDatas: copySelTags,
+			tags: tagIds,
+		});
   };
   const timezoneOffset = useSelector((state) => (state.user?.data.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset : null);
   // useSelector((state) => (state.user?.data?.organizationTimezoneInfo?.utc_offset) ? state.user.data.organizationTimezoneInfo.utc_offset:"UTC-06"); 
@@ -122,8 +149,6 @@ const AddAppointmentModal = (props) => {
 
     setValidationErrors(validErrors);
   };
-
-
 
   // Add input values to new appointment
   const appointmentDataAdd = (e, type) => {
@@ -182,7 +207,6 @@ const AddAppointmentModal = (props) => {
     setValidationErrors(validErrors);
     setIsDisabled(isDisabled);
   };
-
   const setStartDate = (val) => {
     const convertFromDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD") + " " + utils.timeConversion(appointmentData?.fromTime), timezoneOffset);
     const convertToDateTime = utils.convertTimezoneToUTC(moment(val).format("YYYY-MM-DD") + " " + utils.timeConversion(appointmentData?.toTime), timezoneOffset);
@@ -195,7 +219,7 @@ const AddAppointmentModal = (props) => {
 
     const dateDiff = utils.dateDiff(formattedDate);
 
-
+    
     if (dateDiff.difference <= 0) {
       const fromTime = appointmentData.fromTime;
       if (fromTime) {
@@ -236,7 +260,6 @@ const AddAppointmentModal = (props) => {
     setValidationErrors(validErrors);
     setIsDisabled(isDisabled);
   }
-
   const fromDateAdd = (fromValue) => {
     const convertedChoosedTime = utils.convertTimezoneToUTC(utils.dateConversion(appointmentData.date) + " " + fromValue.format("HH:mm:ss"), timezoneOffset, "YYYY-MM-DD HH:mm:ss");
     const convertedLocalTime = moment().utc().format("YYYY-MM-DD HH:mm:ss");
@@ -301,8 +324,9 @@ const AddAppointmentModal = (props) => {
   };
 
   const selectTag = (tag, mode) => {
-    let copySelTags = [...appointmentData.tagsDatas];
-    let tagIds = [...appointmentData.tags];
+    // console.log("tag and mode", tag, mode, appointmentData);
+    let copySelTags = [...appointmentData?.tagsDatas];
+    let tagIds = [...appointmentData?.tags];
     if (mode) {
       let searchTags = tagIds.filter((el) => el == tag._id);
       if (searchTags.length === 0) {
@@ -319,6 +343,7 @@ const AddAppointmentModal = (props) => {
       copySelTags = copySelTags.filter((addedTag) => addedTag._id != tag._id);
       tagIds = tagIds.filter((addedTag) => addedTag != tag._id);
     }
+
     setAppointmentData({
       ...appointmentData,
       tagsDatas: copySelTags,
@@ -326,6 +351,7 @@ const AddAppointmentModal = (props) => {
     });
   };
 
+  
   const toDateAdd = (toValue) => {
     let validErrors = { ...validationErrors };
     let isDisabled = false;
@@ -415,6 +441,20 @@ const AddAppointmentModal = (props) => {
     }
   };
 
+  useEffect(()=>{
+    setAppointmentData({
+      tagsDatas : [],
+      tags: [],
+      agenda: "",
+      date: "",
+      fromTime: "",
+      fromDateTime: "",
+      toTime: "",
+      toDateTime: "",
+      contactId: props.contactId,
+    })
+  },[])
+  
   return (
     <div className="modalCreateAppointment modalBackdrop">
       <div class="modalBackdropBg" onClick={() => props.closeModal(false)}></div>
@@ -423,7 +463,7 @@ const AddAppointmentModal = (props) => {
           <h3>Set an Appointment</h3>
           <button
             className="topCross"
-            onClick={() => props.closeModal(false)}
+            onClick={()=> props.closeModal(false)}
           >
             <img src={cross} alt="" />
           </button>
@@ -486,6 +526,17 @@ const AddAppointmentModal = (props) => {
                       </svg>
                     </span>
                   </span>
+                  {/* {console.log("Initial Tag data", initialTagsData)} */}
+                  
+                  {/* {initialTagsData.length > 0 &&
+                    initialTagsData.map((tag, i) => (
+                      <span className="indTags" key={i}>
+                        <span className="labelSelected">{tag.name}</span>
+                        <span className="closeTag" onClick={() => checkThisTag(tag, false)}>
+                          <img src={crossWhite} alt="" />
+                        </span>
+                      </span>
+                    ))} */}
                   {appointmentData.tagsDatas.length > 0 &&
                     appointmentData.tagsDatas.map((tag, i) => (
                       <span className="indTags" key={i}>
@@ -629,7 +680,9 @@ const AddAppointmentModal = (props) => {
             )} */}
         </div>
       </div>
-      <TagList tagListToggle={tagListToggle} selectTag={selectTag} />
+      <TagList tagListToggle={tagListToggle} selectTag={selectTag} 
+      // initialTagsData={initialTagsData} 
+      tagListToggles={tagListToggle} />
     </div>
   );
 };

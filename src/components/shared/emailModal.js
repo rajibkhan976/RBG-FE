@@ -14,7 +14,8 @@ import Loader from "./Loader";
 import EditorComponent from "../setup/templates/email/editor/Editor";
 import {EmailServices} from "../../services/setup/EmailServices";
 import { useSelector } from "react-redux";
-
+import { EmailTemplateAction } from "../../actions/EmailTemplateAction";
+import { EmailSubjectAction } from "../../actions/EmailSubjectAction";
 import MergeTag from "./MergeTag";
 
 const initialDependentState = {
@@ -102,23 +103,35 @@ const EmailModal = (props) => {
     const getQueryParams = async () => {
         return new URLSearchParams();
     };
-    const fetchTemplateList = async () => {
-        const pageId = "all";
-        const queryParams = await getQueryParams();
-        try {
-            setIsLoader(true);
-            const result = await EmailServices.fetchEmailTemplateList(pageId, queryParams);
-            if (result) {
-                setEmailTempData(result);
-            }
-        } catch (e) {
-            setIsLoader(false);
-            console.log("Error in template listing", e);
-            setErrorMsg(e.message);
-        } finally {
-            setIsLoader(false);
+    const emailTemplateList = useSelector((state)=> state.emailTemplate?.data);
+    useEffect(()=>{
+        if(emailTemplateList){   
+            console.log("Email template list", emailTemplateList);
+            setEmailTempData(emailTemplateList);
         }
-    };
+
+    },[emailTemplateList]);
+    useEffect(()=>{
+        dispatch(EmailSubjectAction());
+    },[dispatch]);
+    
+    // const fetchTemplateList = async () => {
+    //     const pageId = "all";
+    //     const queryParams = await getQueryParams();
+    //     try {
+    //         setIsLoader(true);
+    //         const result = await EmailServices.fetchEmailTemplateList(pageId, queryParams);
+    //         if (result) {
+    //             setEmailTempData(result);
+    //         }
+    //     } catch (e) {
+    //         setIsLoader(false);
+    //         console.log("Error in template listing", e);
+    //         setErrorMsg(e.message);
+    //     } finally {
+    //         setIsLoader(false);
+    //     }
+    // };
 
     const fetchEmailTags = async () => {
         try {
@@ -144,8 +157,8 @@ const EmailModal = (props) => {
         }
     };
     useEffect(() => {
-        fetchTemplateList();
-        fetchEmailTags();
+        // fetchTemplateList();
+        // fetchEmailTags();
         fetchEmail();
     }, []);
 

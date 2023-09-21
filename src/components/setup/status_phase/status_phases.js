@@ -17,6 +17,7 @@ import * as actionTypes from "../../../actions/types";
 import {useDispatch, useSelector} from "react-redux";
 import { Link } from "react-router-dom";
 import { utils } from "../../../helpers";
+import { statusPhaseListAction , deleteStatusAction} from "../../../actions/FilterAction"
 
 const StatusPhases = (props) => {
     document.title = "Red Belt Gym - Status and Phase";
@@ -33,7 +34,28 @@ const StatusPhases = (props) => {
         show: false,
         id: null,
     });
+
     const dispatch = useDispatch();
+    useEffect(()=>{
+        dispatch(statusPhaseListAction());
+    },[dispatch]);
+    
+    const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
+    // useEffect(()=>{
+      // console.log("status phases time zone", timezoneOffset);
+    // });
+
+    // filter redux call 
+    let allPhasesList = useSelector((state)=> state.filter?.statusPhaseListed);
+    useEffect(()=>{
+        if(allPhasesList){
+            setIsLoader(false);
+            setPhases(allPhasesList?.phases);
+            setStatuses(allPhasesList?.phases[0]?.statuses);
+            // console.log("Status phase and status", phases, statuses);
+        }
+    },[allPhasesList]);
+
     const openAddStatusFieldHandler = (event) =>{
         if (phases.length) {
             setModalValue({});
@@ -93,22 +115,9 @@ const StatusPhases = (props) => {
     const closeCustomModal = () =>{
         setOpenModal(false);
     }
-    const fetchPhases = async () => {
-        try {
+    
 
-        } catch (e) {
-            setIsLoader(false);
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: e.message,
-                typeMessage: 'error'
-            });
-        }
-        setIsLoader(true);
-        let phases = await PhasesServices.fetchPhases();
-        setIsLoader(false);
-        setPhases(phases.phases);
-    }
+
     const changePhase = async (id) => {
         if (id !== '') {
             setSelectedPhase(id);
@@ -139,52 +148,65 @@ const StatusPhases = (props) => {
                     id: null,
                 });
                 setIsLoader(true);
-                await StatusServices.deleteStatus(elem._id);
-                setIsLoader(false);
-                let localPhases = phases;
-                let searchResultPhases = phases.find(ele => ele._id === elem.phaseId);
-                let indexPhases = phases.indexOf(searchResultPhases);
-                let searchResultStatus = searchResultPhases.statuses.find(ele => ele._id === elem._id);
-                let indexStats = searchResultPhases.statuses.indexOf(searchResultStatus);
-                searchResultPhases.statuses.splice(indexStats, 1);
-                localPhases[indexPhases] = searchResultPhases;
-                setPhases(phases);
-                dispatch({
-                    type: actionTypes.SHOW_MESSAGE,
-                    message: 'Status deleted successfully.',
-                    typeMessage: 'success'
-                });
+                // await StatusServices.deleteStatus(elem._id);
+                dispatch(deleteStatusAction(elem._id));
+                setTimeout(()=>{
+                    dispatch(statusPhaseListAction());
+                    setIsLoader(false);
+                },2000);
+                // let localPhases = phases;
+                // let searchResultPhases = phases.find(ele => ele._id === elem.phaseId);
+                // let indexPhases = phases.indexOf(searchResultPhases);
+                // let searchResultStatus = searchResultPhases.statuses.find(ele => ele._id === elem._id);
+                // let indexStats = searchResultPhases.statuses.indexOf(searchResultStatus);
+                // searchResultPhases.statuses.splice(indexStats, 1);
+                // localPhases[indexPhases] = searchResultPhases;
+                // setPhases(phases);
+                // dispatch({
+                //     type: actionTypes.SHOW_MESSAGE,
+                //     message: 'Status deleted successfully.',
+                //     typeMessage: 'success'
+                // });
             } catch (e) {
                 setIsLoader(false);
-                dispatch({
-                    type: actionTypes.SHOW_MESSAGE,
-                    message: e.message,
-                    typeMessage: 'error'
-                });
+                // dispatch({
+                //     type: actionTypes.SHOW_MESSAGE,
+                //     message: e.message,
+                //     typeMessage: 'error'
+                // });
             }
         }
     }
-    const createdStatus = (elem) => {
-        setOption(null);
-        let localPhases = phases;
-        let searchResultPhases = phases.find(ele => ele._id === elem.phaseId);
-        let indexPhases = phases.indexOf(searchResultPhases);
-        if (searchResultPhases.statuses === undefined) {
-            searchResultPhases.statuses = [];
-            searchResultPhases.statuses[0] = elem
-        } else {
-            let searchResultStatus = searchResultPhases.statuses.find(ele => ele._id === elem._id);
-            let indexStats = searchResultPhases.statuses.indexOf(searchResultStatus);
-            searchResultPhases.statuses.push(elem);
-            searchResultPhases.statuses[indexStats] = searchResultStatus;
-        }
-        localPhases[indexPhases] = searchResultPhases;
-        setPhases(phases);
-        if (selectedPhase) {
-            let selectedPhaseFilter = localPhases.filter(elem => elem._id === selectedPhase);
-            setStatuses(selectedPhaseFilter[0].statuses);
-        }
+
+    const createdStatus = () => {
+        setIsLoader(true);
+        // console.log("Status phases Props calling");
+        setTimeout(()=>{
+            dispatch(statusPhaseListAction());
+        }, 1000);
+        // setOption(null);
+        // let localPhases = phases;
+        // let searchResultPhases = phases.find(ele => ele?._id === elem?.phaseId);
+        // let indexPhases = phases.indexOf(searchResultPhases);
+        // if (searchResultPhases.statuses === undefined) {
+        //     searchResultPhases.statuses = [];
+        //     searchResultPhases.statuses[0] = elem
+        // } else {
+        //     let searchResultStatus = searchResultPhases.statuses.find(ele => ele?._id === elem?._id);
+        //     let indexStats = searchResultPhases.statuses.indexOf(searchResultStatus);
+        //     searchResultPhases.statuses.push(elem);
+        //     searchResultPhases.statuses[indexStats] = searchResultStatus;
+        // }
+        // localPhases[indexPhases] = searchResultPhases;
+        // console.log("status phases", phases);
+        // setPhases(phases);
+        // if (selectedPhase) {
+        //     let selectedPhaseFilter = localPhases.filter(item => item?._id === selectedPhase);
+        //     setStatuses(selectedPhaseFilter[0]?.statuses);
+        // }
     }
+    
+    
     const editStatus = (payload) => {
         setOption(null);
         let localPhases = phases;
@@ -199,6 +221,7 @@ const StatusPhases = (props) => {
         searchResultPhases.statuses[indexStats] = searchResultStatus;
         localPhases[indexPhases] = searchResultPhases;
         setPhases(phases);
+        // console.log("Loader", isLoader);
     }
     const updatePhases = (createPhase, id, name) => {
         if (id) {
@@ -219,13 +242,6 @@ const StatusPhases = (props) => {
         let element = phases.filter(el => el._id !== elem);
         setPhases(element);
     }
-    useEffect(() => {
-        fetchPhases();
-    }, [])
-    const timezoneOffset = useSelector((state)=> (state?.user?.data?.organizationTimezoneInfo?.utc_offset)? state.user.data.organizationTimezoneInfo.utc_offset:null)
-    useEffect(()=>{
-      console.log("status phases time zone", timezoneOffset);
-    })
     return (
         <>
             {isConfirmed.show ? (

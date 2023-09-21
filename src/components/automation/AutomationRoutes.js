@@ -6,12 +6,17 @@ import { Route, Switch, useLocation } from "react-router-dom";
 import DashboardFooter from "../shared/FooterDashboard";
 import NotFound from "../shared/NotFound";
 import SidebarLogo from "../../assets/images/logo_128_28.svg";
+import { FilterAction } from "../../actions/FilterAction";
+import { EmailSubjectAction } from "../../actions/EmailSubjectAction";
+import { getTagListData } from "../../actions/TagActions";
+import { useDispatch } from "react-redux";
 
 const AutomationRoutes = (props) => {
   document.title = "Red Belt Gym - Automations";
   const location = useLocation();
   const [roleMenu, setRoleMenu] = useState("automationList");
-
+  const dispatch = useDispatch();
+  
   useEffect(() => {
     switch (location.pathname) {
       case "/automation-list":
@@ -24,7 +29,12 @@ const AutomationRoutes = (props) => {
         setRoleMenu("automationDetails");
         break;
     }
-  }, [location.pathname])
+  }, [location.pathname]);
+  useEffect(()=>{
+    dispatch(FilterAction());
+    dispatch(EmailSubjectAction());
+    dispatch(getTagListData());
+},[dispatch]);
   return (
     <React.Fragment>
       <div className="menuDetails lessLeftMenu">

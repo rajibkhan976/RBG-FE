@@ -66,8 +66,8 @@ const Filter = (props) => {
                                                                                     <select name="" id="" value={con.condition} onChange={(e) => props.handelFilterFieldChange('condition', value.index, con.and, e)}>
                                                                                         <option value="">Please Select</option>
                                                                                         <option value="NumericEquals"> =</option>
-                                                                                        <option value="NumericGreaterThan"> > </option>
-                                                                                        <option value="NumericGreaterThanEquals"> >= </option>
+                                                                                        <option value="NumericGreaterThan"> </option>
+                                                                                        <option value="NumericGreaterThanEquals"> = </option>
                                                                                         <option value="NumericLessThan"> &#60; </option>
                                                                                         <option value="NumericLessThanEquals"> &#60;= </option>
                                                                                     </select>

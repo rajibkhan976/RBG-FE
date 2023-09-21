@@ -646,7 +646,7 @@ const Dependents = (props) => {
                                     </h4>
                                     <span className="d-flex">
                               {dependent.isCommunication && dependent.phone && dependent.phone.dailCode && dependent.phone.number ? dependent.phone.dailCode + dependent.phone.number : ''}
-                                      {dependent.phone && dependent.phone.dailCode && dependent.phone.number && dependent.email ? " | " : ''}
+                                      {dependent.phone && dependent.phone.dailCode && dependent.phone.number && dependent.email ? "" : ''}
                                       <a
                                           className="mailCont"
                                           href={dependent.isCommunication && dependent.email ? "mailto:" + dependent.email : "javascript:void(0)"}

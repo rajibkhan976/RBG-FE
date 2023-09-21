@@ -6,6 +6,7 @@ import * as actionTypes from "../../../../actions/types";
 import {useDispatch} from "react-redux";
 import Loader from "../../../shared/Loader";
 import ConfirmBox from "../../../shared/confirmBox";
+import { EmailTemplateAction, deleteEmailTemplate, updateEmailTemplateAction } from "../../../../actions/EmailTemplateAction";
 
 const Preview = (props) => {
     const dispatch = useDispatch();
@@ -25,18 +26,20 @@ const Preview = (props) => {
     const deleteTemplate = async (deletedId) => {
         try {
             setIsLoader(true);
-            let result = await EmailServices.emailTemplateDelete(deletedId);
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: result.message,
-                typeMessage: 'success'
-              }); 
+            // let result = await EmailServices.emailTemplateDelete(deletedId);
+            dispatch(deleteEmailTemplate(deletedId));
+            dispatch(EmailTemplateAction("all"));
+            // dispatch({
+            //     type: actionTypes.SHOW_MESSAGE,
+            //     message: result.message,
+            //     typeMessage: 'success'
+            //   }); 
         } catch (e) {
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: e.message,
-                typeMessage: 'error'
-            });
+            // dispatch({
+            //     type: actionTypes.SHOW_MESSAGE,
+            //     message: e.message,
+            //     typeMessage: 'error'
+            // });
         } finally {
             setIsLoader(false);
         }
@@ -46,18 +49,20 @@ const Preview = (props) => {
     const editTemplate = async (payload, deletedId) => {
         try {
             setIsLoader(true);
-            let result = await EmailServices.templateEmailUpdate(payload, deletedId);
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: result.message,
-                typeMessage: 'success'
-              }); 
+            // let result = await EmailServices.templateEmailUpdate(payload, deletedId);
+            dispatch(updateEmailTemplateAction(payload, deletedId));
+            dispatch(EmailTemplateAction("all"));
+            // dispatch({
+            //     type: actionTypes.SHOW_MESSAGE,
+            //     message: result.message,
+            //     typeMessage: 'success'
+            //   }); 
         } catch (e) {
-            dispatch({
-                type: actionTypes.SHOW_MESSAGE,
-                message: e.message,
-                typeMessage: 'error'
-            });
+            // dispatch({
+            //     type: actionTypes.SHOW_MESSAGE,
+            //     message: e.message,
+            //     typeMessage: 'error'
+            // });
         } finally {
             setIsLoader(false);
         } 
@@ -101,7 +106,7 @@ const Preview = (props) => {
     
       const deleteConfirm = async (response) => {
         if (response === "yes") {
-          console.log(response);
+        //   console.log(response);
          await deleteTemplate(deletedId);
         } 
         setDeleteConfirmBox(false);

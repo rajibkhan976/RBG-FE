@@ -16,7 +16,7 @@ import Player from "../../../Player";
 import "../../../../../assets/css/communicationLog.css";
 import {utils} from "../../../../../helpers";
 import moment from "moment";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {SMSServices} from "../../../../../services/template/SMSServices";
 import {EmailServices} from "../../../../../services/setup/EmailServices";
 import * as actionTypes from "../../../../../actions/types";
@@ -57,39 +57,45 @@ const Email = (props) => {
       "template": "",
       "errEmail": ""
   });
-  const [emailTags, setEmailTags] = useState([]);
+//   const [emailTags, setEmailTags] = useState([]);
 
-  const fetchEmailTags = async () => {
-    try {
-        const result = await SMSServices.fetchSMSTags()
-        if (result) {
-            // console.log("result", result);
-            setEmailTags(result)
-        }
-    } catch (error) {
-        dispatch({
-            type: actionTypes.SHOW_MESSAGE,
-            message: error.message,
-            typeMessage: 'error'
-        });
-    }
-}
-const fetchTemplateList = async () => {
-  const pageId = "all";
-  //const queryParams = await getQueryParams();
-  try {
-      setIsLoader(true);
-      const result = await EmailServices.fetchEmailTemplateList(pageId);
-      if (result) {
-          setEmailTempData(result);
-      }
-  } catch (e) {
-      setIsLoader(false);
-      console.log("Error in template listing", e);
-  } finally {
-      setIsLoader(false);
-  }
-};
+//   const fetchEmailTags = async () => {
+//     try {
+//         const result = await SMSServices.fetchSMSTags()
+//         if (result) {
+//             // console.log("result", result);
+//             setEmailTags(result)
+//         }
+//     } catch (error) {
+//         dispatch({
+//             type: actionTypes.SHOW_MESSAGE,
+//             message: error.message,
+//             typeMessage: 'error'
+//         });
+//     }
+// }
+// const fetchTemplateList = async () => {
+//   const pageId = "all";
+//   //const queryParams = await getQueryParams();
+//   try {
+//       setIsLoader(true);
+//       const result = await EmailServices.fetchEmailTemplateList(pageId);
+//       if (result) {
+//             console.log("email template data", result);
+//           setEmailTempData(result);
+//       }
+//   } catch (e) {
+//       setIsLoader(false);
+//       console.log("Error in template listing", e);
+//   } finally {
+//       setIsLoader(false);
+//   }
+// };
+const emailTemplateData = useSelector((state)=> state.emailTemplate.data);
+console.log("email template data ======>", emailTemplateData);
+useEffect(()=>{
+    setEmailTempData(emailTemplateData);
+},[emailTemplateData]);
 
 const emailGlobalSend = async (payload) => {
     return new Promise(async (resolve,reject)=>{
@@ -124,8 +130,8 @@ const emailGlobalSend = async (payload) => {
 };
 
 useEffect(() => {
-  fetchTemplateList();
-  fetchEmailTags()
+  // fetchTemplateList();
+//   fetchEmailTags()
 
 }, []);
 

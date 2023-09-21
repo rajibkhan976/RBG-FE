@@ -9,7 +9,7 @@ const initialState = {
 
 const ContactReducer = (state = initialState, action) => {
     const newState = { ...state };
-   // console.log(state);
+    console.log(state);
     switch (action.type) {
         case actionTypes.CONTACTS_COUNT:
             newState.count = action.count;

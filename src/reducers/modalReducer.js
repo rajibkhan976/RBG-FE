@@ -13,7 +13,7 @@ const initialState = {
 }
 
 const modalReducer = (state = initialState, action) => {
-  console.log("I am getting called when notification is clicked", state,action)
+  // console.log("I am getting called when notification is clicked", state,action)
   const newState = { ...state };
   switch (action.type) {
     case actionTypes.MODAL_COUNT_INCREMENT:
@@ -50,7 +50,7 @@ const modalReducer = (state = initialState, action) => {
     default:
       break; 
   }
-  console.log("final new state",newState)
+  // console.log("final new state",newState)
   return newState;
 }
 

@@ -61,6 +61,7 @@ const EmailTemplate = () => {
         }
     }
     const loaderSet = (value) => {
+        // console.log("Loader value", value);
         setIsLoader(value);
     }
 
@@ -118,7 +119,7 @@ const EmailTemplate = () => {
                 </div>
             </div>
             <div className={"userListBody emailListing d-flex " + (!selectedEmail ? "fullScreen" : "partial") }>
-                { isLoader ? <Loader/> : ""}
+                { isLoader && <Loader/>}
                 <List selectedEmail={handleSelectedEmail} keyword={keyword} setIsLoader={loaderSet} 
                   updatelistOnList={updatelistOnList}
                   changeUpdatelistOnList = {(data)=>changeUpdatelistOnList(data)}

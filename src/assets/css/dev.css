@@ -4068,7 +4068,7 @@ li.paymentModeLi, li.paymentAmtLi {
   background: transparent;
 }
 
-.transactionListing .row.due {
+.transactionListing .row.due, .userListBody .row{
   background: #F5F9FD;
   border: 1px solid #E9F1F9;
 }
@@ -6327,7 +6327,7 @@ li.dateRangeHeading {
 }
 .customtableListing li > div {
   width: calc(100% / 4);
-  max-width: 30%;
+  max-width: 20%;
   /* text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap; */
