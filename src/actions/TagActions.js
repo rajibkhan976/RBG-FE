@@ -102,21 +102,21 @@ export const addTagFromAppointment = (tagId, payload)=>{
 							type: actionTypes.APPOINTMENT_SAVE_TAG_DATA,
 							data: response,
 						});
-						dispatch({
-							type: actionTypes.SHOW_MESSAGE,
-							message: "New tag added successfully",
-							typeMessage: "success",
-						});
+						// dispatch({
+						// 	type: actionTypes.SHOW_MESSAGE,
+						// 	message: "New tag added successfully",
+						// 	typeMessage: "success",
+						// });
 						resolve();
 					}
 				})
 				.catch((error) => {
 					if (error) {
-						dispatch({
-							type: actionTypes.SHOW_MESSAGE,
-							message: error.message,
-							typeMessage: "error",
-						});
+						// dispatch({
+						// 	type: actionTypes.SHOW_MESSAGE,
+						// 	message: error.message,
+						// 	typeMessage: "error",
+						// });
 						reject();
 					}
 				});
