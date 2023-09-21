@@ -1318,9 +1318,9 @@
 
 .webhookDataFields h5 {
   color: #2f5771;
-  font-weight: 500;
+  font-weight: 400;
   margin-bottom: 10px;
-  font-size: 18px;
+  font-size: 16px;
 }
 .listpayloads {
   padding: 12px 8px;
@@ -1345,14 +1345,19 @@
 }
 
 .listpayloads li p span:first-child {
-  font-weight: bold;
+  font-weight: 500;
   text-transform: capitalize;
   float: left;
-  width: 90px;
+  width: 70px;
+  padding-right: 5px;
+  font-size: 12px;
+  word-break: break-all;
 }
 .listpayloads li p span:last-child {
   display: block;
   overflow: hidden;
+  font-size: 12px;
+  word-break: break-all;
 }
 .webhookDataFields h5 figure {
   display: inline-block;
@@ -2663,6 +2668,84 @@ filter: drop-shadow(0px 10px 30px rgba(0, 0, 0, 0.102));
   border-width: 5px;
   border-style: solid;
   border-color: #fff transparent transparent transparent;
+}
+
+.automationModal.filterModal.triggerSetting .infoSpan .tooltiptextInfo {
+  width: 288px;
+  text-align: left;
+  padding: 10px;
+  color: #333;
+  font-size: 10px;
+  line-height: 14px;
+  left: 80px;
+}
+
+.nodeSettingModal .formFieldsArea > div > label .infoSpan {
+  margin-left: 5px;
+}
+
+.automationModal.filterModal.triggerSetting .formFieldsArea > div > label .infoSpan .tooltiptextInfo {
+  width: 178px;
+  text-align: center;
+  bottom: unset;
+  top: 28px;
+  left: 90px;
+}
+
+.automationModal.filterModal.triggerSetting .formFieldsArea > div > label .infoSpan .tooltiptextInfo::after {
+  top: -10px;
+  bottom: unset;
+  border-bottom: 5px solid #fff;
+  border-top-color: transparent;
+}
+
+.automationModal.filterModal.triggerSetting .infoSpan .tooltiptextInfo::after {
+  left: 12.5%;
+}
+
+.automationModal.filterModal.triggerSetting .testDataInput input[type="text"] {
+  padding: auto;
+  padding: 0px 10px;
+  border-radius: 5px 0 0 5px;
+  border-right: 0;
+}
+
+.automationModal.filterModal.triggerSetting .testDataInput .copyFieldsBtn{
+  background: #E9EFF5 url("../images/copyIconBlue.svg") no-repeat center;
+  border: 1px solid #D3D9DE;
+  width: 40px;
+  height: 40px;
+  border-radius: 0 5px 5px 0;
+}
+
+.automationModal.filterModal.triggerSetting button.testDataBtn {
+  background: transparent;
+  border: none;
+  outline: none;
+  margin-top: 18px;
+  margin-bottom: 10px;
+}
+
+.automationModal.filterModal.triggerSetting button.testDataBtn span.buttonText {
+  color: #55bbc9;
+  font-size: 14px;
+  text-decoration: underline;
+}
+
+.automationModal.filterModal.triggerSetting .infoSpan .tooltiptextInfo h3 {
+  font-weight: 500;
+  color: #000;
+  padding-bottom: 5px;
+}
+
+.automationModal.filterModal.triggerSetting .infoSpan .tooltiptextInfo ul {
+  list-style: disc;
+  margin-left: 10px;
+}
+
+.automationModal.filterModal.triggerSetting .infoSpan .tooltiptextInfo p {
+  color: #55BBC9;
+  margin-top: 10px;
 }
 
 .infoSpan:hover .tooltiptextInfo {
