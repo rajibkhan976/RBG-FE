@@ -1,9 +1,9 @@
 import { Route } from "react-router-dom";
 import InnerLeftMenu from "../../shared/InnerLeftMenu";
 import DashboardFooter from "../../shared/FooterDashboard";
-import Products from "./products";
+import DocumentsList from "./DocumentsList";
 
-const ProductRouter = (props) => {
+const DocumentBuilderRouter = (props) => {
 	const renderID = (randomID) => {
 		console.log("Random ID", randomID);
 	};
@@ -18,8 +18,8 @@ const ProductRouter = (props) => {
 				{/* <HeaderDashboard toggleCreate={(e) => props.toggleCreate(e)} /> */}
 				<div className='dashInnerStructure'>
 					<Route
-						path='/products'
-						component={Products}
+						path='/document-builder'
+						component={DocumentsList}
 					/>
 					<DashboardFooter />
 				</div>
@@ -28,4 +28,4 @@ const ProductRouter = (props) => {
 	);
 };
 
-export default ProductRouter;
+export default DocumentBuilderRouter;

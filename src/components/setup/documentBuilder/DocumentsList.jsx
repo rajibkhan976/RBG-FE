@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { utils } from "../../../helpers";
 import { ProductServices } from "../../../services/setup/ProductServices";
 import Loader from "../../shared/Loader";
-import AddProductModal from "./products/addProductModal";
-import CategoryListing from "./products/categories";
-import ProductFilter from "./products/productFilter";
-import ProductListing from "./products/productListing";
+import AddProductModal from "../product/products/addProductModal";
+import DocumentCategory from "./DocumentCategory";
+import ProductFilter from "../product/products/productFilter";
+import ProductListing from "../product/products/productListing";
 import * as actionTypes from "../../../actions/types";
 import { useDispatch } from "react-redux";
 
-const Products = () => {
+const DocumentsList = () => {
 	document.title = "Red Belt Gym - Products";
 	// const [createButton, setCreateButton] = useState(null);
 	// const [stateFilter, setStateFilter] = useState(null);
@@ -245,7 +245,7 @@ const Products = () => {
 					})
 				}
 			/>
-			<CategoryListing
+			<DocumentCategory
 				isLoader={isLoaderCat}
 				setIsLoader={(bool) => setIsLoaderCat(bool)}
 				categoryData={categoryData}
@@ -304,4 +304,4 @@ const Products = () => {
 	);
 };
 
-export default Products;
+export default DocumentsList;

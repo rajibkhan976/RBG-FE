@@ -1,36 +1,37 @@
-import React, { useState, useEffect, useRef } from 'react';
-import drag from '../../../src/assets/images/drag.svg';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { useDispatch, useSelector } from "react-redux";
+import drag from "../../../src/assets/images/drag.svg";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 const DashboardControls = (props) => {
-	const ref = useRef();
-	let zIndexBody = useSelector((state) => state.modal.zIndexBody);
-  	
 	const onDragEnd = (result) => {
 		if (!result.destination) {
 			return;
 		}
-		console.log(props)
+		console.log(props);
 		let sorting = {
-			oldIndex : result.source.index,
-			newIndex : result.destination.index
-		}
-		props.onSortEnd(sorting)
-		console.log("reorderin", result)
-	}
+			oldIndex: result.source.index,
+			newIndex: result.destination.index,
+		};
+		props.onSortEnd(sorting);
+		console.log("reorderin", result);
+	};
 	const loadWidgetControls = (provided) => {
 		if (props.widgetList.length > 0) {
 			return props.widgetList.map((widget, i) => {
 				return (
-					<Draggable key={widget.id} draggableId={widget.id} index={i}>
+					<Draggable
+						key={widget.id}
+						draggableId={widget.id}
+						index={i}
+					>
 						{(provided, snapshot) => (
 							<>
 								{widget.isOrganizationOwner &&
 								props.loggedInUser?.isOrganizationOwner == true ? (
-									<li ref={provided.innerRef}
+									<li
+										ref={provided.innerRef}
 										{...provided.draggableProps}
-										key={i}>
+										key={i}
+									>
 										<label>
 											<div className='customCheckbox'>
 												<input
@@ -42,17 +43,23 @@ const DashboardControls = (props) => {
 											</div>
 
 											<span>{widget.name}</span>
-											<img {...provided.dragHandleProps} src={drag} className='dragImg' />
+											<img
+												{...provided.dragHandleProps}
+												src={drag}
+												className='dragImg'
+											/>
 										</label>
 									</li>
 								) : (
-									''
+									""
 								)}
 
 								{widget.isOrganizationOwner != true ? (
-									<li ref={provided.innerRef}
+									<li
+										ref={provided.innerRef}
 										{...provided.draggableProps}
-										key={i}>
+										key={i}
+									>
 										<label>
 											<div className='customCheckbox'>
 												<input
@@ -64,11 +71,15 @@ const DashboardControls = (props) => {
 											</div>
 
 											<span>{widget.name}</span>
-											<img {...provided.dragHandleProps} src={drag} className='dragImg' />
+											<img
+												{...provided.dragHandleProps}
+												src={drag}
+												className='dragImg'
+											/>
 										</label>
 									</li>
 								) : (
-									''
+									""
 								)}
 							</>
 						)}
@@ -76,15 +87,21 @@ const DashboardControls = (props) => {
 				);
 			});
 		} else {
-			return 'No customizations found';
+			return "No customizations found";
 		}
 	};
 	return (
 		<>
-			<div className='sideMenuOuter filterUserMenu' >
-			<div className="dialogBg" onClick={props.closeModal}></div>
+			<div className='sideMenuOuter filterUserMenu'>
+				<div
+					className='dialogBg'
+					onClick={props.closeModal}
+				></div>
 				<div className='sideMenuInner dashboardSideBar'>
-					<button className='btn btn-closeSideMenu' onClick={props.closeModal}>
+					<button
+						className='btn btn-closeSideMenu'
+						onClick={props.closeModal}
+					>
 						<span></span>
 						<span></span>
 					</button>
@@ -93,22 +110,22 @@ const DashboardControls = (props) => {
 						{/* <p>Lorem ipsum dolor sit amet.</p> */}
 					</div>
 					<DragDropContext onDragEnd={onDragEnd}>
-						<Droppable droppableId="dropPlate">
+						<Droppable droppableId='dropPlate'>
 							{(provided) => {
 								return (
-									<ul ref={provided.innerRef}>{loadWidgetControls(provided)}
+									<ul ref={provided.innerRef}>
+										{loadWidgetControls(provided)}
 
 										{provided.placeholder}
 									</ul>
-								)
+								);
 							}}
 						</Droppable>
-
 					</DragDropContext>
 				</div>
 			</div>
 		</>
-	)
-
+	);
 };
+
 export default DashboardControls;
