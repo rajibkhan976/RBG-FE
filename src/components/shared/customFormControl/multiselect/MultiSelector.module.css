@@ -1,0 +1,123 @@
+.multiSelectLabel {
+    color: #305671;
+    font-size: 13px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.multiSelect {
+    box-sizing: border-box;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    background: #F6F8FA;
+    border: 1px solid #D3D9DE;
+    border-radius: 5px;
+    color: #305671;
+    font-size: 13px;
+    font-family: 'Poppins', sans-serif;
+    cursor: pointer;
+    z-index: 10000;
+}
+
+.multiSelectError {
+    background-color: #FDF4F4 !important;
+    border-color: #B95157 !important;
+}
+
+.multiSelectPlaceholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    margin-left: 0.5rem;
+    color: rgb(48, 86, 113);
+    font-size: 14px;
+    background-image: url("../../../../assets/images/arrowDown.svg");
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+
+.multiSelectResultBlock {
+    margin-top: 0.25rem;
+}
+
+.multiSelectSearchBar {
+    width: 100%;
+    height: 45px;
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    border-radius: 6px;
+    z-index: 100000;
+}
+
+.multiSelectSearchControl {
+    width: 100%;
+    border-radius: 6px;
+    padding: 0.25rem;
+}
+
+.crossActionBtn {
+    width: 16px;
+    height: 17px;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.75rem;
+    background-image: url("../../../../assets/images/input_cross_icon.svg");
+    background-repeat: no-repeat;
+}
+
+.selectItemMsg {
+    color:#305671;
+    font-size: 13px;
+}
+
+.clearControl {
+    cursor: pointer;
+    font-style: italic;
+    color: #55BBC9;
+    font-size: 10px;
+    float: right;
+}
+
+.multiSelectOptions {
+    width: 100%;
+    height: 258px;
+    position: absolute;
+    background-color: #fff;
+    top: 2.5rem;
+    z-index: 100000;
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175) !important;
+    border-radius: 5px;
+    padding: 0.5rem;
+}
+
+.multiSelectOptionBar {
+    width: 100%;
+    height: 204px;
+    overflow-y: auto;
+}
+
+.multiSelectOption {
+    width: 100%;
+}
+
+.multiSelectOptionCheckbox {
+    cursor: pointer;
+}
+
+.multiSelectOptionLabel {
+    margin-left: 0.25rem;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.errorMessage {
+    color: #B95157;
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;
+    font-weight: 400;
+}
