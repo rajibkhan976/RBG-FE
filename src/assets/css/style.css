@@ -5828,6 +5828,10 @@ button.saveOverview img {
     top: -35px;
 }
 
+.create-document-modal-body {
+    width: 85% !important;
+}
+
 .slickModalHeader {
     padding: 5px 10px 30px;
     text-align: center;

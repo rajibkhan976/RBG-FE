@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { utils } from "../../../helpers";
 import { ProductServices } from "../../../services/setup/ProductServices";
 import Loader from "../../shared/Loader";
-import AddProductModal from "../product/products/addProductModal";
+import CreateDocumentModal from "./CreateDocumentModal";
 import DocumentCategory from "./DocumentCategory";
 import ProductFilter from "../product/products/productFilter";
 import DocumentList from "./DocumentList";
@@ -224,7 +224,7 @@ const DocumentBuilder = () => {
       } */}
 			<DocumentList
 				openFilterModal={openFilterModal}
-				productData={productData}
+				productData={[]}
 				fetchProducts={fetchProducts}
 				getCategories={fetchCategories}
 				paginationData={paginationData}
@@ -268,7 +268,7 @@ const DocumentBuilder = () => {
 			/>
 
 			{openModal && (
-				<AddProductModal
+				<CreateDocumentModal
 					closeAddProductModal={(param) => closeProductModal(param)}
 					editProductItem={updateProduct}
 					retriveProducts={(showLoader) => fetchProducts(showLoader)}
