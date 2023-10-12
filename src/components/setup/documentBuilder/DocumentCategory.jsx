@@ -225,7 +225,7 @@ const DocumentCategory = (props) => {
 									onChange={handleChange}
 									onBlur={(e) => handleCatBlur(e)}
 									value={category.name}
-									placeholder='Enter a product category'
+									placeholder='Enter a Document Category'
 								/>
 								<button
 									className='btn'
@@ -241,14 +241,14 @@ const DocumentCategory = (props) => {
 							</form>
 						</div>
 						<ul className='ProCategoryListing'>
-							<li className={defaultCatID ? "" : "active"}>
+							{/* <li className={defaultCatID ? "" : "active"}>
 								<button
 									className='bigListName'
 									onClick={() => handleCategoryClick(false)}
 								>
 									All Categories
 								</button>
-							</li>
+							</li> */}
 							{props.categoryData.map((elem, key) => {
 								return (
 									<div key={key + "_category"}>

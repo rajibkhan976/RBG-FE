@@ -1,7 +1,7 @@
 import { Route } from "react-router-dom";
 import InnerLeftMenu from "../../shared/InnerLeftMenu";
 import DashboardFooter from "../../shared/FooterDashboard";
-import DocumentsList from "./DocumentsList";
+import DocumentBuilder from "./DocumentBuilder";
 
 const DocumentBuilderRouter = (props) => {
 	const renderID = (randomID) => {
@@ -19,7 +19,7 @@ const DocumentBuilderRouter = (props) => {
 				<div className='dashInnerStructure'>
 					<Route
 						path='/document-builder'
-						component={DocumentsList}
+						component={DocumentBuilder}
 					/>
 					<DashboardFooter />
 				</div>

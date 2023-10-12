@@ -9,7 +9,7 @@ import ProductListing from "../product/products/productListing";
 import * as actionTypes from "../../../actions/types";
 import { useDispatch } from "react-redux";
 
-const DocumentsList = () => {
+const DocumentBuilder = () => {
 	document.title = "Red Belt Gym - Products";
 	// const [createButton, setCreateButton] = useState(null);
 	// const [stateFilter, setStateFilter] = useState(null);
@@ -304,4 +304,4 @@ const DocumentsList = () => {
 	);
 };
 
-export default DocumentsList;
+export default DocumentBuilder;
