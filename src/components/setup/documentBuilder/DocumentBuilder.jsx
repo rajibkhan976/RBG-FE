@@ -5,7 +5,7 @@ import Loader from "../../shared/Loader";
 import AddProductModal from "../product/products/addProductModal";
 import DocumentCategory from "./DocumentCategory";
 import ProductFilter from "../product/products/productFilter";
-import ProductListing from "../product/products/productListing";
+import DocumentList from "./DocumentList";
 import * as actionTypes from "../../../actions/types";
 import { useDispatch } from "react-redux";
 
@@ -222,7 +222,7 @@ const DocumentBuilder = () => {
       {errorMsg &&
         <ErrorAlert message={errorMsg}></ErrorAlert>
       } */}
-			<ProductListing
+			<DocumentList
 				openFilterModal={openFilterModal}
 				productData={productData}
 				fetchProducts={fetchProducts}
