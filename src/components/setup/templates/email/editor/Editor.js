@@ -1,20 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { Editor } from "@tinymce/tinymce-react";
-import {
-	ErrorAlert,
-	SuccessAlert,
-	WarningAlert,
-} from "../../../../shared/messages";
-import browse_keywords from "../../../../../assets/images/icon_browse_keywords.svg";
 import { utils } from "../../../../../helpers";
-import arrow_forward from "../../../../../assets/images/arrow_forward.svg";
-
 import { SMSServices } from "../../../../../services/template/SMSServices";
-
 import * as actionTypes from "../../../../../actions/types";
 import { useDispatch } from "react-redux";
-import { preventDefault } from "@fullcalendar/react";
-import { forwardRef } from "react";
 import MergeTag from "../../../../shared/MergeTag";
 
 const EditorComponent = (props) => {

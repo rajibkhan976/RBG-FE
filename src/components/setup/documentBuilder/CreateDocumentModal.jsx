@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import modalTopIcon from "../../../assets/images/setupicon5.svg";
 import crossTop from "../../../assets/images/cross.svg";
 import profileAvatar from "../../../assets/images/camera.svg";
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
+import arrow_backward from "../../../assets/images/leftCaretIcon.svg";
 import loadImg from "../../../assets/images/loadImg.gif";
 import { ProductServices } from "../../../services/setup/ProductServices";
 import Loader from "../../shared/Loader";
 import config from "../../../configuration/config";
 import { Scrollbars } from "react-custom-scrollbars-2";
-import EditorComponent from "../templates/email/editor/Editor";
+import { Editor } from "@tinymce/tinymce-react";
 import { CustomizationServices } from "../../../services/setup/CustomizationServices";
 import * as actionTypes from "../../../actions/types";
 import { useDispatch } from "react-redux";
@@ -16,6 +17,7 @@ import { useDispatch } from "react-redux";
 const CreateDocumentModal = (props) => {
 	const [isLoader, setIsLoader] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
+	const editorCreateRef = useRef(null);
 	const [productData, setProductData] = useState({
 		category: "",
 		name: "",
@@ -26,7 +28,9 @@ const CreateDocumentModal = (props) => {
 		imageUrl: profileAvatar,
 		tax: 0,
 	});
-
+	const [isReadyForNextStep, setIsReadyForNextStep] = useState(false);
+	const [dirty, setDirty] = useState(false);
+	const base_url = window.location.origin;
 	const [errorClass, setErrorClass] = useState({
 		name: "",
 		nameMsg: "",
@@ -101,11 +105,6 @@ const CreateDocumentModal = (props) => {
 		};
 	}, [props.editProductItem]);
 
-	// useEffect(() => {
-	//   if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
-	//   if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
-	// }, [successMsg, errorMsg]);
-
 	const fetchSize = async () => {
 		try {
 			const res = await CustomizationServices.fetchProductSizes(
@@ -124,60 +123,6 @@ const CreateDocumentModal = (props) => {
 			console.log(res);
 			setColorSize((prevstate) => ({ ...prevstate, colors: res.colors }));
 		} catch (e) {}
-	};
-
-	const handleImageUpload = (event) => {
-		setProductData({ ...productData, imageUrl: loadImg });
-		const files = event.target.files;
-		if (files && files.length) {
-			const reader = new FileReader();
-			reader.onload = (read) => {
-				// setLogo(read.target.result);
-				ProductServices.imageUpload({
-					file: read.target.result,
-					name: files[0].name,
-				})
-					.then((result) => {
-						const avatar = result.data.publicUrl;
-						setProductData({
-							...productData,
-							image: result.data.originalKey,
-							imageUrl: result.data.publicUrl,
-						});
-						console.log(avatar);
-					})
-					.catch((err) => {
-						console.log("Profile pic error", err);
-						setProductData({ ...productData, imageUrl: profileAvatar });
-					});
-			};
-			reader.readAsDataURL(files[0]);
-		}
-	};
-
-	const handleColor = (e, color) => {
-		e.preventDefault();
-		let choosenColors = [...productData.colors];
-		if (choosenColors.indexOf(color._id) === -1) {
-			choosenColors.push(color._id);
-		} else {
-			choosenColors = choosenColors.filter(
-				(colorlabel) => colorlabel !== color._id
-			);
-		}
-		setProductData({ ...productData, colors: choosenColors });
-	};
-
-	const handleSize = (e, size) => {
-		e.preventDefault();
-		console.log("Choose Size", size);
-		let choosenSizes = [...productData.size];
-		if (choosenSizes.indexOf(size._id) === -1) {
-			choosenSizes.push(size._id);
-		} else {
-			choosenSizes = choosenSizes.filter((sizeID) => sizeID !== size._id);
-		}
-		setProductData({ ...productData, size: choosenSizes });
 	};
 
 	const handleChange = (e) => {
@@ -317,16 +262,6 @@ const CreateDocumentModal = (props) => {
 			}));
 		}
 
-		// if(productData.colors.length === 0) {
-		//   bool = false;
-		//   setErrorClass(prevState => ({...prevState, colors: "error", colorMsg: "Please choose atleast one color from the available colors"}));
-		// }
-
-		// if(productData.size.length === 0) {
-		//   bool = false;
-		//   setErrorClass(prevState => ({...prevState, size: "error", sizeMsg: "Please choose atleast one size from the available sizes"}));
-		// }
-
 		if (productData.price === "" || parseFloat(productData.price) <= 0) {
 			bool = false;
 			setErrorClass((prevState) => ({
@@ -363,11 +298,29 @@ const CreateDocumentModal = (props) => {
 		template: "",
 	});
 
-	const createdEmailTemplate = (template) => {
-		console.log({
-			template: template,
-		});
-	};
+	const selectableFields = [
+		{ field: "Name", hasCheckbox: false, hasMandatoryField: false },
+		{ field: "Phone number", hasCheckbox: false, hasMandatoryField: false },
+		{ field: "Email id", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Company name", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Emergency number", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Notes", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Contact type", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Date of birth", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Address 1", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Address 2", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "State", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Zip", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Source", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Source details", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Mother name", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Father name", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Company", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Job role", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Status", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Phase", hasCheckbox: true, hasMandatoryField: true },
+		{ field: "Created by", hasCheckbox: true, hasMandatoryField: true },
+	];
 
 	return (
 		<>
@@ -411,139 +364,216 @@ const CreateDocumentModal = (props) => {
 								method='post'
 								onSubmit={handleSubmit}
 							>
-								{/* <div className='formControl'>
-									<label>Select Category</label>
-									<select
-										name='category'
-										onChange={handleChange}
-										value={productData.category}
-									>
-										{categories.map((cat, i) => {
-											return (
-												<>
-													<option
-														value={cat._id}
-														defaultValue={
-															productData.category === cat._id ? "selected" : ""
-														}
-														key={"category_" + i}
-													>
-														{cat.name}
-													</option>
-												</>
-											);
-										})}
-									</select>
-								</div> */}
-								<div className={"formControl " + errorClass.name}>
-									<label>Header</label>
-									<input
-										type='text'
-										placeholder='Ex: Jujutsu program'
-										name='productName'
-										onChange={handleChange}
-										value={productData.name}
-										className='cmnFieldStyle'
-									/>
-									<p className='errorMsg'>{errorClass.nameMsg}</p>
-								</div>
-								<div className='cmnFormRow'>
-									<label className='cmnFieldName d-flex f-justify-between'>
-										Message
-									</label>
-									<div
-										className={
-											validateMsg.template
-												? "cmnFormField createNewEmailField error"
-												: "cmnFormField createNewEmailField"
-										}
-									>
-										<EditorComponent
-											createNew={true}
-											createdEmailTemplate={(createValue) =>
-												createdEmailTemplate(createValue)
-											}
-											initialData={""}
-										/>
-									</div>
-									<div className='errorMsg'>{validateMsg.template}</div>
-								</div>
+								{!isReadyForNextStep && (
+									<>
+										<div className={"formControl " + errorClass.name}>
+											<label>Header</label>
+											<input
+												type='text'
+												placeholder='Ex: Jujutsu program'
+												name='productName'
+												onChange={handleChange}
+												value={productData.name}
+												className='cmnFieldStyle'
+											/>
+											<p className='errorMsg'>{errorClass.nameMsg}</p>
+										</div>
+										<div className={"formControl " + errorClass.name}>
+											<label>Body</label>
+											<div
+												className={
+													validateMsg.template
+														? "cmnFormField createNewEmailField error editor-width"
+														: "cmnFormField createNewEmailField editor-width"
+												}
+											>
+												<Editor
+													apiKey='u8o9qjaz9gdqhefua3zs1lyixgg709tgzlqredwdnd0452z0'
+													statusBar={true}
+													onInit={(evt, editor) =>
+														(editorCreateRef.current = editor)
+													}
+													onDirty={() => setDirty(true)}
+													theme='advanced'
+													onEditorChange={(newText) => console.log(newText)}
+													init={{
+														height: "100%",
+														menubar: false,
+														plugins: [
+															"advlist autolink lists link image charmap print preview anchor",
+															"searchreplace visualblocks code fullscreen",
+															"insertdatetime media table paste code help wordcount save autosave",
+														],
+														file_picker_types: "file image media",
+														automatic_uploads: true,
+														relative_urls: false,
+														remove_script_host: false,
+														document_base_url: base_url,
 
-								<div className={"formControl " + errorClass.price}>
-									<label>Price</label>
-									<div className='formLeft preField'>
-										<div className='unitAmount'>$</div>
-										<input
-											type='text'
-											name='price'
-											placeholder='Ex: 99'
-											onChange={handleChange}
-											value={productData.price}
-											className='cmnFieldStyle'
-										/>
-										{/* <span>* default currency is<strong> USD</strong></span> */}
-									</div>
-									<div className='formRight addTaxProduct'>
-										<label>
-											<div className='customCheckbox'>
-												<input
-													type='checkbox'
-													name='saleTax'
-													onChange={(e) => handleTaxCheck(e.target.checked)}
-													checked={productData.tax ? true : false}
+														toolbar: [
+															"fontselect fontsizeselect h1 forecolor | bold italic underline | alignleft aligncenter alignright alignjustify | numlist bullist | image | link | table | code",
+															"undo redo | help",
+														],
+														autosave_interval: "10s",
+														save_enablewhendirty: true,
+													}}
 												/>
-
-												<span></span>
 											</div>
-											Add Sales Tax
-										</label>
+											<div className='errorMsg'>{validateMsg.template}</div>
+										</div>
+									</>
+								)}
+								{isReadyForNextStep && (
+									<div className={"formControl" + errorClass.price}>
+										<div className='select-fields-control'>
+											<label className='select-fields-label'>
+												<span>Select fields</span>
+												<span className='top-underline'></span>
+											</label>
+											{selectableFields.map((item, index) => (
+												<div
+													className='formRight addTaxProduct'
+													key={index}
+												>
+													<label className='select-field-chekbox'>
+														<div className='customCheckbox'>
+															<input
+																type='checkbox'
+																name='saleTax'
+																onChange={(e) =>
+																	handleTaxCheck(e.target.checked)
+																}
+																checked={productData.tax ? true : false}
+															/>
+
+															<span></span>
+														</div>
+														{item.field}
+													</label>
+													{item.hasMandatoryField && (
+														<label className='mandatory-chekbox'>
+															<div className='customCheckbox'>
+																<input
+																	type='checkbox'
+																	name='saleTax'
+																	onChange={(e) =>
+																		handleTaxCheck(e.target.checked)
+																	}
+																	checked={productData.tax ? true : false}
+																/>
+
+																<span></span>
+															</div>
+															<span>{"is mandatory?"}</span>
+														</label>
+													)}
+												</div>
+											))}
+										</div>
+										<div className='formRight e-sign-check'>
+											<label>
+												<div className='customCheckbox'>
+													<input
+														type='checkbox'
+														name='saleTax'
+														onChange={(e) => handleTaxCheck(e.target.checked)}
+														checked={productData.tax ? true : false}
+													/>
+
+													<span></span>
+												</div>
+												E-Signature
+											</label>
+										</div>
+										<span className='bottom-underline'></span>
+										<div className='doc-builder-form-end'>
+											<div className='select-doc-category'>
+												<label>Select Category</label>
+												<select
+													name='category'
+													onChange={handleChange}
+													value={productData.category}
+												>
+													{categories.map((cat, i) => {
+														return (
+															<>
+																<option
+																	value={cat._id}
+																	defaultValue={
+																		productData.category === cat._id
+																			? "selected"
+																			: ""
+																	}
+																	key={"category_" + i}
+																>
+																	{cat.name}
+																</option>
+															</>
+														);
+													})}
+												</select>
+											</div>
+											<div className='formControl doc-title-input'>
+												<label>Title</label>
+												<div className='formLeft preField doc-title-control'>
+													<input
+														type='text'
+														name='price'
+														placeholder='Contract for new members'
+														onChange={handleChange}
+														value={productData.price}
+														className='cmnFieldStyle'
+													/>
+													{/* <span>* default currency is<strong> USD</strong></span> */}
+												</div>
+												<p className='errorMsg'>{errorClass.priceMsg}</p>
+											</div>
+										</div>
 									</div>
-									<p className='errorMsg'>{errorClass.priceMsg}</p>
-								</div>
-
+								)}
 								<div className='modalbtnHolder w-100'>
-									{!props.productTransaction && (
+									{!isReadyForNextStep && (
 										<button
 											type='submit'
 											name='save'
 											className='saveNnewBtn'
-											onClick={() => setBtnType("Save")}
+											onClick={() => setIsReadyForNextStep(true)}
 										>
-											<span>{isEditing ? "Update" : "Save"}</span>
+											<span>Next step</span>
 											<img
 												src={arrow_forward}
 												alt=''
 											/>
 										</button>
 									)}
-
-									{props.productTransaction && (
-										<button
-											type='submit'
-											name='save'
-											className='saveNnewBtn'
-											onClick={() => setBtnType("Save")}
-										>
-											<span>Save and Select</span>
-											<img
-												src={arrow_forward}
-												alt=''
-											/>
-										</button>
-									)}
-									{!props.productTransaction && (
-										<button
-											type='submit'
-											name='saveNew'
-											className='saveNnewBtn'
-											onClick={() => setBtnType("SaveNew")}
-										>
-											<span>{isEditing ? "Update" : "Save"} &amp; New</span>
-											<img
-												src={arrow_forward}
-												alt=''
-											/>
-										</button>
+									{isReadyForNextStep && (
+										<>
+											<button
+												type='submit'
+												name='save'
+												className='saveNnewBtn prev-btn'
+												onClick={() => setIsReadyForNextStep(false)}
+											>
+												<img
+													className='vertically-center me-1'
+													src={arrow_backward}
+													alt=''
+												/>
+												<span className='vertically-center'>Previous step</span>
+											</button>
+											<button
+												type='submit'
+												name='saveNew'
+												className='saveNnewBtn'
+												onClick={() => setBtnType("SaveNew")}
+											>
+												<span>{isEditing ? "Update" : "Save"}</span>
+												<img
+													src={arrow_forward}
+													alt=''
+												/>
+											</button>
+										</>
 									)}
 								</div>
 							</form>
