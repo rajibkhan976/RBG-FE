@@ -14,6 +14,7 @@
     "@tinymce/tinymce-react": "^3.13.0",
     "@wojtekmaj/react-daterange-picker": "^3.4.0",
     "array-move": "^4.0.0",
+    "aws-cdk": "2.0",
     "axios": "^0.21.1",
     "base64-img": "^1.0.4",
     "env-cmd": "^10.1.0",
@@ -55,8 +56,8 @@
   "scripts": {
     "start": "env-cmd -f .env.dev react-scripts start",
     "start:prod": "env-cmd -f .env.prod react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false env-cmd -f .env.dev react-scripts build",
-    "build:prod": "GENERATE_SOURCEMAP=false env-cmd -f .env.prod react-scripts build",
+    "build": "cross-env GENERATE_SOURCEMAP=false env-cmd -f .env.dev react-scripts build",
+    "build:prod": "cross-env GENERATE_SOURCEMAP=false env-cmd -f .env.prod react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "deploy": "npm i && GENERATE_SOURCEMAP=false npm run build && aws s3 sync build s3://dev.redbeltgym.com",
@@ -90,6 +91,7 @@
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
+    "cross-env": "^7.0.3",
     "cypress-file-upload": "^5.0.8",
     "redux-mock-store": "^1.5.4"
   },
