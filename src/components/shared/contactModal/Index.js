@@ -9,6 +9,7 @@ import Dependents from "./pages/Dependents";
 import Appointment from "./pages/Appointment";
 import Automation from "./pages/Automation";
 import Notes from "./pages/notes/Notes";
+import Documents from "./pages/documents/Documents";
 import Inbox from "./pages/inbox/Inbox";
 import { Step, Steps } from "react-step-builder";
 import { useDispatch } from "react-redux";
@@ -64,8 +65,8 @@ const ContactModal = (props) => {
 							""
 						) : (
 							<button
-								className={navigation.current == 9 ? "active nNav" : "nNav"}
-								onClick={() => navigation.jump(9)}
+								className={navigation.current == 10 ? "active nNav" : "nNav"}
+								onClick={() => navigation.jump(10)}
 								disabled={props.contactId ? false : true}
 							>
 								Inbox
@@ -128,7 +129,13 @@ const ContactModal = (props) => {
 						>
 							Notes
 						</button>
-
+						<button
+							className={navigation.current == 9 ? "active nNav" : "nNav"}
+							onClick={() => navigation.jump(9)}
+							disabled={props.contactId ? false : true}
+						>
+							Documents
+						</button>
 						{/* {contactData && !contactData.isDependent ?
                    <>
                    <button className="noFill" onClick={showExtraMenuHandler}><img src={threedot}/></button>  
@@ -761,6 +768,13 @@ const ContactModal = (props) => {
 								title='Note'
 								component={Notes}
 								contactId={props.contactId}
+							/>
+							<Step
+								title='Documents'
+								component={Documents}
+								contactId={props.contactId}
+								contact={contactData}
+								device={device}
 							/>
 							<Step
 								title='Inbox'

@@ -41,6 +41,7 @@
     "react-s3": "^1.3.1",
     "react-scripts": "^4.0.3",
     "react-select": "^5.2.2",
+    "react-signature-canvas": "^1.0.6",
     "react-sortable": "^2.0.0",
     "react-sortable-hoc": "^2.0.0",
     "react-step-builder": "^2.0.10",
@@ -67,7 +68,6 @@
     "deploy:four": "npm i && GENERATE_SOURCEMAP=false npm run build && aws s3 sync build s3://rbg-fb-4",
     "serve": "npm i && GENERATE_SOURCEMAP=false npm run build && serve -s build"
   },
-  
   "eslintConfig": {
     "extends": [
       "react-app",
