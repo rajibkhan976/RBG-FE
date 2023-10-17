@@ -544,12 +544,17 @@ module.exports = {
 		".execute-api.us-east-1.amazonaws.com/" +
 		process.env.REACT_APP_ENV +
 		"/credit/",
-	creditGiftPointnUrl:
+	creditGiftPointUrl:
 		"https://" +
 		process.env.REACT_APP_CREDIT_GIFT_POINT +
 		".execute-api.us-east-1.amazonaws.com/" +
 		process.env.REACT_APP_ENV +
 		"/credit/",
+	documentBuilderUrl:
+		"https://" +
+		process.env.REACT_APP_DOCUMENT_BUILDER +
+		".execute-api.us-east-1.amazonaws.com/" +
+		process.env.REACT_APP_ENV,
 	tagUrl:
 		"https://" +
 		process.env.REACT_APP_TAG +

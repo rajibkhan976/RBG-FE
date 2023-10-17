@@ -16,7 +16,8 @@ import modalReducer from "./modalReducer";
 import FilterReducer from "./FilterReducer";
 import tagReducer from "./tagReducer";
 import EmailSubjectReducer from "./EmailSubjectReducer";
-import EmailTemplateReducer from "./EmailTemplateReducer"
+import EmailTemplateReducer from "./EmailTemplateReducer";
+import documentBuilderReducer from "./documentBuilderReducer";
 
 const rootReducer = combineReducers({
 	auth: AuthReducer,
@@ -32,11 +33,12 @@ const rootReducer = combineReducers({
 	message: MessageReducer,
 	toastr: toastrReducer,
 	credit: creditReducer,
+	documentBuilder: documentBuilderReducer,
 	modal: modalReducer,
 	filter: FilterReducer,
 	tag: tagReducer,
 	subject: EmailSubjectReducer,
-	emailTemplate: EmailTemplateReducer
+	emailTemplate: EmailTemplateReducer,
 });
 
 export default rootReducer;

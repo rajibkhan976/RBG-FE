@@ -383,7 +383,7 @@ export const CreditManagementServices = {
 				headers: headers,
 			};
 			const result = await axios.put(
-				config.creditGiftPointnUrl + "gift",
+				config.creditGiftPointUrl + "gift",
 				payload,
 				options
 			);

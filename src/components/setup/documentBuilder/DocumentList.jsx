@@ -294,11 +294,6 @@ const DocumentList = (props) => {
 					""
 				)}
 			</div>
-
-			{/* {prodFilterModalStatus && <ProductFilter closeModal={closeFilterModal} />} */}
-
-			{/* {openModal && <AddProductModal closeAddProductModal={(param) => closeProductModal(param)}
-                editProductItem={updateProduct}></AddProductModal>} */}
 		</>
 	);
 };

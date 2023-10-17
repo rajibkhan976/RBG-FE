@@ -7,15 +7,13 @@ import DocumentCategory from "./DocumentCategory";
 import ProductFilter from "../product/products/productFilter";
 import DocumentList from "./DocumentList";
 import * as actionTypes from "../../../actions/types";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getDocumentCategory } from "../../../actions/documentBuilderActions";
 
 const DocumentBuilder = () => {
 	document.title = "Red Belt Gym - Products";
-	// const [createButton, setCreateButton] = useState(null);
-	// const [stateFilter, setStateFilter] = useState(null);
 	const [categoryData, setCategoryData] = useState([]);
 	const [isLoaderCat, setIsLoaderCat] = useState(false);
-	// const [successMsg, setSuccessMsg] = useState("");
 	const [isLoader, setIsLoader] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
 
@@ -34,6 +32,9 @@ const DocumentBuilder = () => {
 	const [prodFilterModalStatus, setProdFilterModalStatus] = useState(false);
 	const [openModal, setOpenModal] = useState(false);
 	const dispatch = useDispatch();
+	const documentCategories = useSelector(
+		(state) => state.documentBuilder.documentCategories
+	);
 
 	useEffect(() => {
 		fetchCategories();
@@ -41,10 +42,11 @@ const DocumentBuilder = () => {
 		// fetchColorSizes();
 	}, []);
 
-	// useEffect(() => {
-	//   if (successMsg) setTimeout(() => { setSuccessMsg("") }, messageDelay)
-	//   if (errorMsg) setTimeout(() => { setErrorMsg("") }, messageDelay)
-	// }, [successMsg, errorMsg]);
+	useEffect(() => {
+		dispatch(getDocumentCategory());
+	}, []);
+
+	console.log(documentCategories);
 
 	const getQueryParams = async () => {
 		const catID = utils.getQueryVariable("catID");
@@ -216,12 +218,6 @@ const DocumentBuilder = () => {
 	return (
 		<>
 			{isLoader ? <Loader /> : ""}
-			{/* {successMsg &&
-        <SuccessAlert message={successMsg}></SuccessAlert>
-      }
-      {errorMsg &&
-        <ErrorAlert message={errorMsg}></ErrorAlert>
-      } */}
 			<DocumentList
 				openFilterModal={openFilterModal}
 				productData={[]}
@@ -248,7 +244,7 @@ const DocumentBuilder = () => {
 			<DocumentCategory
 				isLoader={isLoaderCat}
 				setIsLoader={(bool) => setIsLoaderCat(bool)}
-				categoryData={categoryData}
+				categoryData={documentCategories}
 				fetchCategories={fetchCategories}
 				successMsg={(msg) =>
 					dispatch({
