@@ -16,9 +16,6 @@ const DocumentList = (props) => {
 		id: null,
 	});
 	const [option, setOption] = useState(null);
-	const [colorDropdown, setColorDropdown] = useState(null);
-	// const [categoryData, setCategoryData] = useState(null)
-	// const [filteredData, setFilteredData] = useState(null)
 
 	/****************************** FUNCTIONS START **********************************/
 	const handleEdit = (product) => {
@@ -50,10 +47,6 @@ const DocumentList = (props) => {
 
 	const toogleActionList = (index) => {
 		setOption(index !== option ? index : null);
-	};
-
-	const toogleColorList = (index) => {
-		setColorDropdown(index !== colorDropdown ? index : null);
 	};
 
 	const ShowColors = (prop) => {

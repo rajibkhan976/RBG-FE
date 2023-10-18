@@ -2,7 +2,13 @@ import { useEffect, useState, useRef } from "react";
 import arrowRightWhite from "../../../assets/images/arrowRightWhite.svg";
 import dot3White from "../../../assets/images/info_3dot_white.svg";
 import { utils } from "../../../helpers";
-import { ProductServices } from "../../../services/setup/ProductServices";
+import {
+	createDocumentCategory,
+	deleteDocumentCategory,
+	getDocumentCategory,
+	updateDocumentCategory,
+} from "../../../actions/documentBuilderActions";
+import { useDispatch, useSelector } from "react-redux";
 import ConfirmBox from "../../shared/confirmBox";
 import Loader from "../../shared/Loader";
 import cross from "../../../assets/images/cross.svg";
@@ -25,32 +31,22 @@ const DocumentCategory = (props) => {
 	const toogleActionList = (index) => {
 		setOption(index !== option ? index : null);
 	};
-
 	const [errorCatMsg, setErrorCatMsg] = useState("");
+	const dispatch = useDispatch();
+	const creatDocumentCategoryResponse = useSelector(
+		(state) => state.documentBuilder.creatDocumentCategoryResponse
+	);
+	const updateDocumentCategoryResponse = useSelector(
+		(state) => state.documentBuilder.updateDocumentCategoryResponse
+	);
+	const deleteDocumentCategoryResponse = useSelector(
+		(state) => state.documentBuilder.deleteDocumentCategoryResponse
+	);
 
 	useEffect(() => {
 		const catID = utils.getQueryVariable("catID");
 		setDefaultCatID(catID);
-	});
-
-	// useEffect(() => {
-	//     document.addEventListener("mousedown", handleClickOutside);
-	//     return () => {
-	//         document.removeEventListener("mousedown", handleClickOutside);
-	//     }
-	// }, []);
-
-	/**
-	 * Handle outside click
-	 */
-	const handleClickOutside = (event) => {
-		if (optionsToggleRef.current.contains(event.target)) {
-			//console.log('// inside click');
-			return;
-		}
-		// console.log('// outside click');
-		setOption(null);
-	};
+	}, []);
 
 	const handleChange = (e) => {
 		const name = e.target.value;
@@ -83,8 +79,8 @@ const DocumentCategory = (props) => {
 		if (category.name.trim() !== "") {
 			try {
 				/************ PERMISSION CHECKING (FRONTEND) *******************/
-				const hasPermission = utils.hasPermission("product", "read");
-				if (!hasPermission) throw new Error("You do not have permission");
+				// const hasPermission = utils.hasPermission("product", "read");
+				// if (!hasPermission) throw new Error("You do not have permission");
 				/************ PERMISSION CHECKING (FRONTEND) *******************/
 				let catData = { name: category.name };
 				if (!catData.name.length) {
@@ -92,11 +88,11 @@ const DocumentCategory = (props) => {
 				} else {
 					props.setIsLoader(true);
 					if (category.id) {
-						catData = { ...catData, id: category.id };
-						const res = await ProductServices.editCategory(catData);
+						// catData = { ...catData, id: category.id };
+						dispatch(updateDocumentCategory(catData, category.id));
 						props.successMsg("Category updated successfully");
 					} else {
-						const res = await ProductServices.createCategory(catData);
+						dispatch(createDocumentCategory(catData));
 						props.successMsg("Category created successfully");
 					}
 					setCategory({
@@ -105,12 +101,10 @@ const DocumentCategory = (props) => {
 						btnName: "Add Category",
 						showCross: false,
 					});
-					props.fetchCategories();
 				}
 			} catch (e) {
 				props.errorMsg(e.message);
 			} finally {
-				props.setIsLoader(false);
 				setErrorCatMsg("");
 			}
 		} else {
@@ -128,6 +122,32 @@ const DocumentCategory = (props) => {
 			showCross: true,
 		});
 	};
+
+	useEffect(() => {
+		props.setIsLoader(false);
+		if (creatDocumentCategoryResponse) {
+			dispatch(getDocumentCategory());
+		}
+		return () => {
+			dispatch({
+				type: "RESET_CREATE_DOCUMENT_CATEGORY_RESPONSE",
+				data: null,
+			});
+		};
+	}, [creatDocumentCategoryResponse]);
+
+	useEffect(() => {
+		props.setIsLoader(false);
+		if (updateDocumentCategoryResponse) {
+			dispatch(getDocumentCategory());
+		}
+		return () => {
+			dispatch({
+				type: "RESET_UPDATE_DOCUMENT_CATEGORY_RESPONSE",
+				data: null,
+			});
+		};
+	}, [updateDocumentCategoryResponse]);
 
 	const deleteCategory = async (catID, isConfirmed = null) => {
 		setOption(null);
@@ -149,19 +169,35 @@ const DocumentCategory = (props) => {
 			});
 			try {
 				props.setIsLoader(true);
-				const result = await ProductServices.deleteCategory(catID);
-				if (result) {
-					props.successMsg(result);
-				} else {
-					props.errorMsg("Error deleting category. Please try again.");
-				}
+				dispatch(deleteDocumentCategory(catID));
 			} catch (e) {
 				props.errorMsg(e.message);
 			} finally {
-				props.fetchCategories();
+				dispatch(getDocumentCategory());
 			}
 		}
 	};
+
+	useEffect(() => {
+		props.setIsLoader(false);
+		if (
+			deleteDocumentCategoryResponse &&
+			deleteDocumentCategoryResponse.message
+		) {
+			props.successMsg(deleteDocumentCategoryResponse.message);
+		} else if (
+			deleteDocumentCategoryResponse &&
+			!deleteDocumentCategoryResponse.data
+		) {
+			props.errorMsg("Error deleting category. Please try again.");
+		}
+		return () => {
+			dispatch({
+				type: "RESET_DELETE_DOCUMENT_CATEGORY_RESPONSE",
+				data: null,
+			});
+		};
+	}, [deleteDocumentCategoryResponse]);
 
 	const handleCategoryClick = (catID) => {
 		setOption(null);
@@ -241,14 +277,6 @@ const DocumentCategory = (props) => {
 							</form>
 						</div>
 						<ul className='ProCategoryListing'>
-							{/* <li className={defaultCatID ? "" : "active"}>
-								<button
-									className='bigListName'
-									onClick={() => handleCategoryClick(false)}
-								>
-									All Categories
-								</button>
-							</li> */}
 							{props.categoryData.map((elem, key) => {
 								return (
 									<div key={key + "_category"}>

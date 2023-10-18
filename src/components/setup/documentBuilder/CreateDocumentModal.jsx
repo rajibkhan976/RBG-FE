@@ -322,6 +322,10 @@ const CreateDocumentModal = (props) => {
 		{ field: "Created by", hasCheckbox: true, hasMandatoryField: true },
 	];
 
+	const handleOnEditorChange = (bodyData) => {
+		console.log(bodyData);
+	};
+
 	return (
 		<>
 			<div className='modalBackdrop modalProductAdd'>
@@ -395,7 +399,9 @@ const CreateDocumentModal = (props) => {
 													}
 													onDirty={() => setDirty(true)}
 													theme='advanced'
-													onEditorChange={(newText) => console.log(newText)}
+													onEditorChange={(newText) =>
+														handleOnEditorChange(newText)
+													}
 													init={{
 														height: "100%",
 														menubar: false,
@@ -424,7 +430,7 @@ const CreateDocumentModal = (props) => {
 									</>
 								)}
 								{isReadyForNextStep && (
-									<div className={"formControl" + errorClass.price}>
+									<div className={`formControl ${errorClass.price}`}>
 										<div className='select-fields-control'>
 											<label className='select-fields-label'>
 												<span>Select fields</span>
@@ -479,7 +485,6 @@ const CreateDocumentModal = (props) => {
 														onChange={(e) => handleTaxCheck(e.target.checked)}
 														checked={productData.tax ? true : false}
 													/>
-
 													<span></span>
 												</div>
 												E-Signature
@@ -524,9 +529,10 @@ const CreateDocumentModal = (props) => {
 														value={productData.price}
 														className='cmnFieldStyle'
 													/>
-													{/* <span>* default currency is<strong> USD</strong></span> */}
+													<span className='errorMsg'>
+														{errorClass.priceMsg}
+													</span>
 												</div>
-												<p className='errorMsg'>{errorClass.priceMsg}</p>
 											</div>
 										</div>
 									</div>

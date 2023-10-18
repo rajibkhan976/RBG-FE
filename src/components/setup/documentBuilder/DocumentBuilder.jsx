@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getDocumentCategory } from "../../../actions/documentBuilderActions";
 
 const DocumentBuilder = () => {
-	document.title = "Red Belt Gym - Products";
+	document.title = "Red Belt Gym - Document Builder";
 	const [categoryData, setCategoryData] = useState([]);
 	const [isLoaderCat, setIsLoaderCat] = useState(false);
 	const [isLoader, setIsLoader] = useState(false);
@@ -39,7 +39,6 @@ const DocumentBuilder = () => {
 	useEffect(() => {
 		fetchCategories();
 		fetchProducts();
-		// fetchColorSizes();
 	}, []);
 
 	useEffect(() => {
@@ -125,13 +124,6 @@ const DocumentBuilder = () => {
 		}
 	};
 
-	// const toggleCreate = (e) => {
-	//   setCreateButton(e);
-	// };
-	// const toggleFilter = (e) => {
-	//   setStateFilter(e);
-	// };
-
 	const addProductModal = (bool = true, updateObj = {}) => {
 		try {
 			const action = Object.keys(updateObj).length ? "update" : "create";
@@ -173,16 +165,6 @@ const DocumentBuilder = () => {
 	const closeFilterModal = () => {
 		setProdFilterModalStatus(false);
 	};
-	/**
-	 * Get user from pagination component
-	 * @param {*} dataFromChild
-	 */
-	//   const getDataFn = (dataFromChild) => {
-	//     console.log("Filtered Data from child", dataFromChild);
-	//     if (dataFromChild) {
-	//       setFilteredData(dataFromChild);
-	//     }
-	//   };
 
 	const deleteProduct = async (productID) => {
 		try {
