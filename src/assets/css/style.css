@@ -6000,6 +6000,60 @@ button.saveOverview img {
 	line-height: 19.5px;
 }
 
+.contract-doc-title {
+	font-size: 13px;
+	font-weight: 400;
+	color: #305671;
+	line-height: 19.5px;
+}
+
+.contract-doc-list {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	margin-bottom: 10px;
+	padding: 10px;
+	background-color: #fff;
+	border-radius: 5px;
+}
+
+.contract-doc-left {
+	width: 90%;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.contract-doc-right {
+	width: 10%;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+}
+
+.contract-doc-actions {
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+
+.redirect-icon,
+.copy-link-icon {
+	width: 12px;
+	cursor: pointer;
+}
+
+.copy-link-icon,
+.three-dot-icon {
+	margin-left: 12px;
+}
+
+.three-dot-icon {
+	width: 3px;
+	cursor: pointer;
+}
+
 .slickModalHeader {
 	padding: 5px 10px 30px;
 	text-align: center;

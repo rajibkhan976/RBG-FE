@@ -1,129 +1,129 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import modalTopIcon from "../../../assets/images/setupicon5.svg";
 import crossTop from "../../../assets/images/cross.svg";
-import profileAvatar from "../../../assets/images/camera.svg";
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import arrow_backward from "../../../assets/images/leftCaretIcon.svg";
-import loadImg from "../../../assets/images/loadImg.gif";
-import { ProductServices } from "../../../services/setup/ProductServices";
 import Loader from "../../shared/Loader";
-import config from "../../../configuration/config";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { Editor } from "@tinymce/tinymce-react";
-import { CustomizationServices } from "../../../services/setup/CustomizationServices";
 import * as actionTypes from "../../../actions/types";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+	createContractDocument,
+	getContractDocuments,
+	updateContractDocument,
+} from "../../../actions/documentBuilderActions";
 
 const CreateDocumentModal = (props) => {
+	const selectableFields = [
+		{ field: "name", type: "string", hasMandatoryField: false },
+		{ field: "phone", type: "number", hasMandatoryField: false },
+		{ field: "Email id", type: "string", hasMandatoryField: true },
+		{ field: "Company name", type: "string", hasMandatoryField: true },
+		{ field: "Emergency number", type: "string", hasMandatoryField: true },
+		{ field: "Notes", type: "string", hasMandatoryField: true },
+		{ field: "Contact type", type: "string", hasMandatoryField: true },
+		{ field: "Date of birth", type: "string", hasMandatoryField: true },
+		{ field: "Address 1", type: "string", hasMandatoryField: true },
+		{ field: "Address 2", type: "string", hasMandatoryField: true },
+		{ field: "State", type: "string", hasMandatoryField: true },
+		{ field: "Zip", type: "string", hasMandatoryField: true },
+		{ field: "Source", type: "string", hasMandatoryField: true },
+		{ field: "Source details", type: "string", hasMandatoryField: true },
+		{ field: "Mother name", type: "string", hasMandatoryField: true },
+		{ field: "Father name", type: "string", hasMandatoryField: true },
+		{ field: "Company", type: "string", hasMandatoryField: true },
+		{ field: "Job role", type: "string", hasMandatoryField: true },
+		{ field: "Status", type: "string", hasMandatoryField: true },
+		{ field: "Phase", type: "string", hasMandatoryField: true },
+		{ field: "Created by", type: "string", hasMandatoryField: true },
+	];
 	const [isLoader, setIsLoader] = useState(false);
-	const [errorMsg, setErrorMsg] = useState("");
+	const [editableContractDocId, setEditableContractDocId] = useState("");
 	const editorCreateRef = useRef(null);
-	const [productData, setProductData] = useState({
-		category: "",
-		name: "",
-		colors: [],
-		image: "",
-		price: "",
-		size: [],
-		imageUrl: profileAvatar,
-		tax: 0,
-	});
+	const [contractHeader, setContractHeader] = useState("");
+	const [contractBody, setContractBody] = useState(null);
+	const [selectedFields, setSelectedFields] = useState([
+		{
+			field: "name",
+			type: "string",
+			mandatory: true,
+		},
+		{
+			field: "phone",
+			type: "number",
+			mandatory: true,
+		},
+		{
+			field: "esign",
+			type: "checkbox",
+			mandatory: true,
+		},
+	]);
+	const [contractCategory, setContractCategory] = useState("");
+	const [contractTitle, setContractTitle] = useState("");
+	const [mandatoryFieldsList, setMandatoryFieldsList] = useState([]);
 	const [isReadyForNextStep, setIsReadyForNextStep] = useState(false);
 	const [dirty, setDirty] = useState(false);
 	const base_url = window.location.origin;
 	const [errorClass, setErrorClass] = useState({
-		name: "",
-		nameMsg: "",
-		colors: "",
-		colorMsg: "",
-		size: "",
-		sizeMsg: "",
-		price: "",
-		priceMsg: "",
+		header: "",
+		headerMsg: "",
+		body: "",
+		bodyMsg: "",
+		category: "",
+		categoryMsg: "",
+		title: "",
+		titleMsg: "",
 	});
-	const [categories, setCategories] = useState([]);
-	const [colorSize, setColorSize] = useState({
-		colors: [],
-		sizes: [],
-	});
-	const [btnType, setBtnType] = useState("");
 	const [isEditing, setIsEditing] = useState(false);
 	const dispatch = useDispatch();
+	const createContractDocumentResponse = useSelector(
+		(state) => state.documentBuilder.createContractDocumentResponse
+	);
+	const updateContractDocumentResponse = useSelector(
+		(state) => state.documentBuilder.updateContractDocumentResponse
+	);
 
 	useEffect(() => {
-		if (productData.category) {
-			fetchSize();
-			fetchColors();
-		}
-	}, [productData.category]);
-
-	useEffect(() => {
-		setCategories(props.categories);
-		return () => {
-			setCategories([]);
-		};
-	}, [props.categories]);
-
-	useEffect(() => {
-		if (Object.keys(props.editProductItem).length) {
-			const updateItem = props.editProductItem;
-			console.log("Selected Categories", updateItem.categoryID[0]);
-			setProductData({
-				category: updateItem.categoryID[0],
-				name: updateItem.name,
-				colors: updateItem.colors.length
-					? updateItem.colors.map((el) => el._id)
-					: [],
-				size: updateItem.size.length ? updateItem.size.map((el) => el._id) : [],
-				image: updateItem?.image,
-				price: updateItem.price,
-				id: updateItem._id,
-				imageUrl: updateItem?.image
-					? config.bucketUrl + updateItem.image
-					: profileAvatar,
-				tax: updateItem.tax ? updateItem.tax : 0,
-			});
+		if (Object.keys(props.updateContractDocument).length) {
+			const updateItem = props.updateContractDocument;
+			console.log("Selected Contract Document", updateItem);
+			setEditableContractDocId(updateItem?._id);
+			setContractHeader(updateItem?.header);
+			setContractBody(updateItem?.body);
+			setSelectedFields(updateItem?.fields);
+			setContractCategory(updateItem?.category_id);
+			setContractTitle(updateItem?.title);
 			setIsEditing(true);
-		} else {
-			setProductData((prevState) => ({
-				...prevState,
-				category: props.categories[0]._id,
-			}));
 		}
 
 		return () => {
-			setProductData({
-				category: "",
-				name: "",
-				colors: [],
-				image: "",
-				price: "",
-				size: [],
-				imageUrl: profileAvatar,
-				tax: 0,
-			});
+			setEditableContractDocId("");
+			setContractHeader("");
+			setContractBody(null);
+			setSelectedFields([
+				{
+					field: "name",
+					type: "string",
+					mandatory: true,
+				},
+				{
+					field: "phone",
+					type: "number",
+					mandatory: true,
+				},
+				{
+					field: "esign",
+					type: "checkbox",
+					mandatory: true,
+				},
+			]);
+			setContractCategory("");
+			setContractTitle("");
+			setIsEditing(false);
 		};
-	}, [props.editProductItem]);
-
-	const fetchSize = async () => {
-		try {
-			const res = await CustomizationServices.fetchProductSizes(
-				productData.category ? productData.category : props.categories[0]._id
-			);
-			console.log(res);
-			setColorSize((prevstate) => ({ ...prevstate, sizes: res.sizes }));
-		} catch (e) {}
-	};
-
-	const fetchColors = async () => {
-		try {
-			const res = await CustomizationServices.fetchProductColors(
-				productData.category ? productData.category : props.categories[0]._id
-			);
-			console.log(res);
-			setColorSize((prevstate) => ({ ...prevstate, colors: res.colors }));
-		} catch (e) {}
-	};
+	}, [props.updateContractDocument]);
 
 	const handleChange = (e) => {
 		const elemName = e.target.name;
@@ -133,34 +133,35 @@ const CreateDocumentModal = (props) => {
 			alphaRegex: /[^a-zA-Z0-9- ]/,
 		};
 		switch (elemName) {
-			case "price":
-				if (
-					!regex.numericRegex.test(elemValue) &&
-					elemValue.split(".")[0].length <= 5
-				) {
-					setProductData({
-						...productData,
-						price: elemValue.replace(/(\.\d{2})\d+/g, "$1"),
-					});
-					setErrorClass((prevState) => ({
-						...prevState,
-						price: "",
-						priceMsg: "",
-					}));
-				}
-				break;
-			case "productName":
+			case "contractHeader":
 				if (!regex.alphaRegex.test(elemValue)) {
-					setProductData({ ...productData, name: elemValue });
+					setContractHeader(elemValue);
 					setErrorClass((prevState) => ({
 						...prevState,
-						name: "",
-						nameMsg: "",
+						header: "",
+						headerMsg: "",
 					}));
 				}
 				break;
 			case "category":
-				setProductData({ ...productData, category: elemValue });
+				if (!regex.alphaRegex.test(elemValue)) {
+					setContractCategory(elemValue);
+					setErrorClass((prevState) => ({
+						...prevState,
+						category: "",
+						categoryMsg: "",
+					}));
+				}
+				break;
+			case "title":
+				if (!regex.alphaRegex.test(elemValue)) {
+					setContractTitle(elemValue);
+					setErrorClass((prevState) => ({
+						...prevState,
+						title: "",
+						titleMsg: "",
+					}));
+				}
 				break;
 
 			default:
@@ -168,177 +169,221 @@ const CreateDocumentModal = (props) => {
 		}
 	};
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		try {
-			// console.log(productData);
-			if (createValidation()) {
-				setIsLoader(true);
-				const data = {
-					category: productData.category
-						? productData.category
-						: categories[0]._id,
-					name: productData.name,
-					colors: productData.colors.length ? productData.colors : [],
-					image: productData.image ? productData.image : "",
-					price: productData.price.toString(),
-					size: productData.size.length ? productData.size : [],
-					tax: productData.tax.toString(),
-				};
-				// console.log("Data to be updated or added", data);
-				let msg;
-				if (productData.id) {
-					const updateData = { ...data, id: productData.id };
-					const res = await ProductServices.editProduct(updateData);
-					msg = res.message;
-				} else {
-					const res = await ProductServices.createProduct(data);
-					console.log("res add new card : ", res);
-					if (!res._id) {
-						setErrorMsg("Error adding product. Please try again");
-					} else {
-						msg = "Product added successfully";
-					}
-				}
-
-				if (btnType !== "SaveNew") {
-					console.log("Inisde Save");
-					// setSuccessMsg(msg);
-					dispatch({
-						type: actionTypes.SHOW_MESSAGE,
-						message: msg,
-						typeMessage: "success",
-					});
-
-					props.getAddedProduct && props.getAddedProduct(data);
-				} else {
-					props.retriveProducts(false);
-					props.retrieveCategories();
-					console.log("Inside save and new");
-					// setSuccessMsg(msg);
-					dispatch({
-						type: actionTypes.SHOW_MESSAGE,
-						message: msg,
-						typeMessage: "success",
-					});
-					setProductData({
-						category: categories[0],
-						name: "",
-						colors: [],
-						image: "",
-						price: "",
-						size: [],
-						imageUrl: profileAvatar,
-						tax: 0,
-					});
-				}
-				setBtnType("");
-				setTimeout(function () {
-					props.closeAddProductModal("fetch");
-				}, 1000);
-			}
-		} catch (e) {
-			// setErrorMsg(e.message);
-			dispatch({
-				type: actionTypes.SHOW_MESSAGE,
-				message: e.message,
-				typeMessage: "error",
-			});
-		} finally {
-			setTimeout(function () {
-				setIsLoader(false);
-			}, 1000);
+	const handleOnEditorChange = (bodyData) => {
+		setContractBody(bodyData);
+		if (bodyData) {
+			setErrorClass((prevState) => ({
+				...prevState,
+				body: "",
+				bodyMsg: "",
+			}));
 		}
+	};
+
+	const onChangeSelectableField = (event) => {
+		event.stopPropagation();
+		const targetName = event.target.name;
+		selectableFields.forEach((item) => {
+			if (
+				(item.field === targetName || targetName === "esign") &&
+				selectedFields.length < 1
+			) {
+				setSelectedFields([
+					{
+						field: targetName,
+						type: targetName === "esign" ? "checkbox" : item.type,
+						mandatory:
+							targetName === "name" ||
+							targetName === "phone" ||
+							targetName === "esign"
+								? true
+								: false,
+					},
+				]);
+			} else if (
+				(item.field === targetName || targetName === "esign") &&
+				selectedFields.length > 0 &&
+				selectedFields.every((element) => element.field !== targetName)
+			) {
+				setSelectedFields([
+					...selectedFields,
+					{
+						field: targetName,
+						type: targetName === "esign" ? "checkbox" : item.type,
+						mandatory:
+							targetName === "name" ||
+							targetName === "phone" ||
+							targetName === "esign"
+								? true
+								: false,
+					},
+				]);
+			} else if (
+				(item.field === targetName || targetName === "esign") &&
+				selectedFields.length > 0 &&
+				selectedFields.some((element) => element.field === targetName)
+			) {
+				setSelectedFields(
+					selectedFields.filter((element) => element?.field !== targetName)
+				);
+			}
+		});
+	};
+
+	const onChangeMandatoryCheck = (event) => {
+		event.stopPropagation();
+		const targetName = event.target.name;
+		const targetCheckedState = event.target.checked;
+		const copyOfSelectedFields = selectedFields;
+		const targetIndex = copyOfSelectedFields.findIndex(
+			(item) => item?.field === targetName
+		);
+		if (targetIndex > -1 && copyOfSelectedFields.length > 0) {
+			copyOfSelectedFields[targetIndex].mandatory = targetCheckedState;
+			!mandatoryFieldsList.includes(targetName)
+				? setMandatoryFieldsList([...mandatoryFieldsList, targetName])
+				: setMandatoryFieldsList(
+						mandatoryFieldsList.filter((item) => item !== targetName)
+				  );
+		}
+		setSelectedFields(copyOfSelectedFields);
+	};
+
+	const onClickNextStep = (event) => {
+		event.preventDefault();
+		if (!contractHeader) {
+			setErrorClass((prevState) => {
+				return {
+					...prevState,
+					header: "error",
+					headerMsg: "Please enter contract header",
+				};
+			});
+		}
+
+		if (!contractBody) {
+			setErrorClass((prevState) => ({
+				...prevState,
+				body: "error",
+				bodyMsg: "Please enter contract body",
+			}));
+		}
+		if (contractHeader && contractBody) setIsReadyForNextStep(true);
 	};
 
 	const createValidation = () => {
 		let bool = true;
-		if (productData.name === "") {
+		if (!contractHeader) {
 			bool = false;
 			setErrorClass((prevState) => ({
 				...prevState,
-				name: "error",
-				nameMsg: "Please enter product name",
+				header: "error",
+				headerMsg: "Please enter contract header",
 			}));
 		}
 
-		if (productData.price === "" || parseFloat(productData.price) <= 0) {
+		if (!contractBody) {
 			bool = false;
 			setErrorClass((prevState) => ({
 				...prevState,
-				price: "error",
-				priceMsg:
-					parseFloat(productData.price) === 0
-						? "Price cannot be 0 or blank"
-						: "Please enter the product price",
+				body: "error",
+				bodyMsg: "Please enter contract body",
+			}));
+		}
+
+		if (!contractCategory) {
+			bool = false;
+			setErrorClass((prevState) => ({
+				...prevState,
+				category: "error",
+				categoryMsg: "Please select a category",
+			}));
+		}
+
+		if (!contractTitle) {
+			bool = false;
+			setErrorClass((prevState) => ({
+				...prevState,
+				title: "error",
+				titleMsg: "Please enter contract title",
 			}));
 		}
 
 		if (bool) {
 			setErrorClass({
-				name: "",
-				nameMsg: "",
-				colors: "",
-				colorMsg: "",
-				size: "",
-				sizeMsg: "",
-				price: "",
-				priceMsg: "",
+				header: "",
+				headerMsg: "",
+				body: "",
+				bodyMsg: "",
+				category: "",
+				categoryMsg: "",
+				title: "",
+				titleMsg: "",
 			});
 		}
 		return bool;
 	};
 
-	const handleTaxCheck = (isChecked) =>
-		setProductData({ ...productData, tax: isChecked ? 1 : 0 });
-
-	const [validateMsg, setValidateMsg] = useState({
-		title: "",
-		subject: "",
-		template: "",
-	});
-
-	const selectableFields = [
-		{ field: "Name", hasCheckbox: false, hasMandatoryField: false },
-		{ field: "Phone number", hasCheckbox: false, hasMandatoryField: false },
-		{ field: "Email id", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Company name", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Emergency number", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Notes", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Contact type", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Date of birth", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Address 1", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Address 2", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "State", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Zip", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Source", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Source details", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Mother name", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Father name", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Company", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Job role", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Status", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Phase", hasCheckbox: true, hasMandatoryField: true },
-		{ field: "Created by", hasCheckbox: true, hasMandatoryField: true },
-	];
-
-	const handleOnEditorChange = (bodyData) => {
-		console.log(bodyData);
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		try {
+			if (createValidation()) {
+				setIsLoader(true);
+				props.closeContractDocModal("fetch");
+				const data = {
+					title: contractTitle,
+					header: contractHeader,
+					body: btoa(contractBody),
+					fields: selectedFields,
+					category_id: contractCategory,
+				};
+				editableContractDocId
+					? dispatch(updateContractDocument(data, editableContractDocId))
+					: dispatch(createContractDocument(data));
+				dispatch(getContractDocuments());
+			}
+		} catch (e) {
+			dispatch({
+				type: actionTypes.SHOW_MESSAGE,
+				message: e.message,
+				typeMessage: "error",
+			});
+		}
 	};
+
+	useEffect(() => {
+		setIsLoader(false);
+		return () => {
+			dispatch({
+				type: "RESET_CREATE_CONTRACT_DOCUMENT_RESPONSE",
+				data: null,
+			});
+		};
+	}, [createContractDocumentResponse]);
+
+	useEffect(() => {
+		setIsLoader(false);
+		return () => {
+			dispatch({
+				type: "RESET_UPDATE_CONTRACT_DOCUMENT_RESPONSE",
+				data: null,
+			});
+		};
+	}, [updateContractDocumentResponse]);
 
 	return (
 		<>
 			<div className='modalBackdrop modalProductAdd'>
 				<div
 					className='dialogBg'
-					onClick={props.closeAddProductModal}
+					onClick={props.closeContractDocModal}
 				></div>
 				{isLoader ? <Loader /> : ""}
 				<div className='slickModalBody create-document-modal-body'>
 					<div className='slickModalHeader'>
 						<button
 							className='topCross'
-							onClick={props.closeAddProductModal}
+							onClick={props.closeContractDocModal}
 						>
 							<img
 								src={crossTop}
@@ -370,23 +415,23 @@ const CreateDocumentModal = (props) => {
 							>
 								{!isReadyForNextStep && (
 									<>
-										<div className={"formControl " + errorClass.name}>
+										<div className={"formControl " + errorClass.header}>
 											<label>Header</label>
 											<input
 												type='text'
-												placeholder='Ex: Jujutsu program'
-												name='productName'
+												placeholder='Contract header'
+												name='contractHeader'
 												onChange={handleChange}
-												value={productData.name}
+												value={contractHeader}
 												className='cmnFieldStyle'
 											/>
-											<p className='errorMsg'>{errorClass.nameMsg}</p>
+											<span className='errorMsg'>{errorClass.headerMsg}</span>
 										</div>
-										<div className={"formControl " + errorClass.name}>
+										<div className={"formControl " + errorClass.body}>
 											<label>Body</label>
 											<div
 												className={
-													validateMsg.template
+													errorClass.bodyMsg
 														? "cmnFormField createNewEmailField error editor-width"
 														: "cmnFormField createNewEmailField editor-width"
 												}
@@ -423,14 +468,15 @@ const CreateDocumentModal = (props) => {
 														autosave_interval: "10s",
 														save_enablewhendirty: true,
 													}}
+													value={contractBody}
 												/>
+												<span className='errorMsg'>{errorClass.bodyMsg}</span>
 											</div>
-											<div className='errorMsg'>{validateMsg.template}</div>
 										</div>
 									</>
 								)}
 								{isReadyForNextStep && (
-									<div className={`formControl ${errorClass.price}`}>
+									<div className={`formControl`}>
 										<div className='select-fields-control'>
 											<label className='select-fields-label'>
 												<span>Select fields</span>
@@ -441,15 +487,21 @@ const CreateDocumentModal = (props) => {
 													className='formRight addTaxProduct'
 													key={index}
 												>
-													<label className='select-field-chekbox'>
+													<label
+														htmlFor={item.field + index}
+														className='select-field-chekbox'
+													>
 														<div className='customCheckbox'>
 															<input
 																type='checkbox'
-																name='saleTax'
-																onChange={(e) =>
-																	handleTaxCheck(e.target.checked)
+																id={item.field + index}
+																name={item.field}
+																onChange={(event) =>
+																	onChangeSelectableField(event)
 																}
-																checked={productData.tax ? true : false}
+																checked={selectedFields?.some(
+																	(element) => element.field === item.field
+																)}
 															/>
 
 															<span></span>
@@ -457,15 +509,23 @@ const CreateDocumentModal = (props) => {
 														{item.field}
 													</label>
 													{item.hasMandatoryField && (
-														<label className='mandatory-chekbox'>
+														<label
+															htmlFor={item.field}
+															className='mandatory-chekbox'
+														>
 															<div className='customCheckbox'>
 																<input
 																	type='checkbox'
-																	name='saleTax'
-																	onChange={(e) =>
-																		handleTaxCheck(e.target.checked)
+																	id={item.field}
+																	name={item.field}
+																	onChange={(event) =>
+																		onChangeMandatoryCheck(event)
 																	}
-																	checked={productData.tax ? true : false}
+																	checked={selectedFields?.some(
+																		(element) =>
+																			element.field === item.field &&
+																			element.mandatory
+																	)}
 																/>
 
 																<span></span>
@@ -477,13 +537,16 @@ const CreateDocumentModal = (props) => {
 											))}
 										</div>
 										<div className='formRight e-sign-check'>
-											<label>
+											<label htmlFor='esign'>
 												<div className='customCheckbox'>
 													<input
 														type='checkbox'
-														name='saleTax'
-														onChange={(e) => handleTaxCheck(e.target.checked)}
-														checked={productData.tax ? true : false}
+														id='esign'
+														name='esign'
+														onChange={(event) => onChangeSelectableField(event)}
+														checked={selectedFields?.some(
+															(element) => element.field === "esign"
+														)}
 													/>
 													<span></span>
 												</div>
@@ -497,40 +560,43 @@ const CreateDocumentModal = (props) => {
 												<select
 													name='category'
 													onChange={handleChange}
-													value={productData.category}
+													value={contractCategory}
 												>
-													{categories.map((cat, i) => {
+													{props?.categories?.map((cat, i) => {
 														return (
-															<>
-																<option
-																	value={cat._id}
-																	defaultValue={
-																		productData.category === cat._id
-																			? "selected"
-																			: ""
-																	}
-																	key={"category_" + i}
-																>
-																	{cat.name}
-																</option>
-															</>
+															<option
+																value={cat._id}
+																defaultValue={
+																	contractCategory === cat._id ? "selected" : ""
+																}
+																key={"category_" + i}
+															>
+																{cat.name}
+															</option>
 														);
 													})}
 												</select>
+												<span className='errorMsg'>
+													{errorClass.categoryMsg}
+												</span>
 											</div>
-											<div className='formControl doc-title-input'>
+											<div
+												className={
+													"formControl doc-title-input " + errorClass.title
+												}
+											>
 												<label>Title</label>
 												<div className='formLeft preField doc-title-control'>
 													<input
 														type='text'
-														name='price'
-														placeholder='Contract for new members'
+														name='title'
+														placeholder='Contract title'
 														onChange={handleChange}
-														value={productData.price}
+														value={contractTitle}
 														className='cmnFieldStyle'
 													/>
 													<span className='errorMsg'>
-														{errorClass.priceMsg}
+														{errorClass.titleMsg}
 													</span>
 												</div>
 											</div>
@@ -540,10 +606,10 @@ const CreateDocumentModal = (props) => {
 								<div className='modalbtnHolder w-100'>
 									{!isReadyForNextStep && (
 										<button
-											type='submit'
-											name='save'
+											type='button'
+											name='nextStep'
 											className='saveNnewBtn'
-											onClick={() => setIsReadyForNextStep(true)}
+											onClick={onClickNextStep}
 										>
 											<span>Next step</span>
 											<img
@@ -555,8 +621,8 @@ const CreateDocumentModal = (props) => {
 									{isReadyForNextStep && (
 										<>
 											<button
-												type='submit'
-												name='save'
+												type='button'
+												name='prevStep'
 												className='saveNnewBtn prev-btn'
 												onClick={() => setIsReadyForNextStep(false)}
 											>
@@ -571,7 +637,6 @@ const CreateDocumentModal = (props) => {
 												type='submit'
 												name='saveNew'
 												className='saveNnewBtn'
-												onClick={() => setBtnType("SaveNew")}
 											>
 												<span>{isEditing ? "Update" : "Save"}</span>
 												<img

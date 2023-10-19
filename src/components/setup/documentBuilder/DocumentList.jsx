@@ -1,35 +1,41 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import plus_icon from "../../../assets/images/plus_icon.svg";
-import percentTag from "../../../assets/images/percentage_icon.png";
+import redirectIcon from "../../../assets/images/redirectIcon.svg";
+import copyLinkIcon from "../../../assets/images/copyLinkIcon.svg";
 import dot3White from "../../../assets/images/dot3gray.svg";
-import proImg1 from "../../../assets/images/proImg1.png";
 import noRecords from "../../../assets/images/noRecords.svg";
 import Pagination from "../../shared/Pagination";
 import ConfirmBox from "../../shared/confirmBox";
-import Loader from "../../shared/Loader";
+import { deleteContractDocument } from "../../../actions/documentBuilderActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const DocumentList = (props) => {
-	document.title = "Red Belt Gym - Products";
-	const [isLoader, setIsLoader] = useState(false);
+	document.title = "Red Belt Gym - Documents";
 	const [isConfirmed, setConfirmed] = useState({
 		show: false,
 		id: null,
 	});
 	const [option, setOption] = useState(null);
+	const dispatch = useDispatch();
+	const deleteContractDocumentResponse = useSelector(
+		(state) => state.documentBuilder.deleteContractDocumentResponse
+	);
 
 	/****************************** FUNCTIONS START **********************************/
-	const handleEdit = (product) => {
+	const handleEdit = (contractDoc) => {
 		setOption(null);
-		props.openProductModal(true, product);
+		props.openContractDocModal(true, contractDoc);
 	};
 
-	const deleteProduct = async (productID, isConfirmed = null) => {
+	let deleteContractDocTimeout = useRef(null);
+
+	const deleteContractDoc = (docID, isConfirmed = null) => {
 		setOption(null);
-		if (isConfirmed == null && productID) {
-			console.log("Product ID", productID);
+		if (isConfirmed == null && docID) {
+			console.log("Doc ID", docID);
 			setConfirmed({
 				show: true,
-				id: productID,
+				id: docID,
 			});
 		} else if (isConfirmed === "cancel") {
 			setConfirmed({
@@ -37,55 +43,41 @@ const DocumentList = (props) => {
 				id: null,
 			});
 		} else {
+			props.handleSetIsLoader(true);
 			setConfirmed({
 				show: false,
 				id: null,
 			});
-			props.deleteProduct(productID);
+			dispatch(deleteContractDocument(docID));
+			props.fetchContractDocuments();
 		}
 	};
+
+	useEffect(() => {
+		deleteContractDocTimeout.current = setTimeout(() => {
+			props.handleSetIsLoader(false);
+		}, 500);
+		return () => {
+			clearTimeout(deleteContractDocTimeout.current);
+			dispatch({
+				type: "RESET_DELETE_CONTRACT_DOCUMENT_RESPONSE",
+				data: null,
+			});
+		};
+	}, [deleteContractDocumentResponse]);
 
 	const toogleActionList = (index) => {
 		setOption(index !== option ? index : null);
 	};
 
-	const ShowColors = (prop) => {
-		// let html = "<p>Color</p>";
-		let html = "";
-		prop.colors.map((color, index) => {
-			// console.log("Color",color);
-			if (index + 1 < 3) {
-				html +=
-					color.label === "multi"
-						? `<span class="multiColor"></span>`
-						: `<span style="background-color: ${color.colorcode}"></span>`;
-			} else {
-				if (index + 1 === 4) {
-					html += `<div class="colorpaletContainer">
-                    <button class="dropIt">+${prop.colors.length - 3}</button>
-                    <div class="colorPalet">`;
-				}
-				html += `<span key={${index}} style="background-color: ${color.colorcode}"></span>`;
-				if (index + 1 === prop.colors.length) {
-					html += `</div></div>`;
-				}
-			}
-		});
-		return (
-			<div
-				className='chooseColor'
-				dangerouslySetInnerHTML={{ __html: html }}
-			/>
-		);
-	};
+	console.log(props.contractDocument);
 
 	return (
 		<>
-			{isLoader ? <Loader /> : ""}
 			{isConfirmed.show ? (
 				<ConfirmBox
 					callback={(confirmedMsg) =>
-						deleteProduct(isConfirmed.id, confirmedMsg)
+						deleteContractDoc(isConfirmed.id, confirmedMsg)
 					}
 				/>
 			) : (
@@ -107,7 +99,7 @@ const DocumentList = (props) => {
 					<div className='listFeatures'>
 						<button
 							className='creatUserBtn'
-							onClick={props.openProductModal}
+							onClick={props.openContractDocModal}
 						>
 							<img
 								className='plusIcon'
@@ -121,66 +113,32 @@ const DocumentList = (props) => {
 				<div className='productViewType d-flex'></div>
 				<div className='productListBody'>
 					<div className='productListing'>
-						{props.productData.length ? (
-							props.productData.map((elem, key) => {
+						{props.contractDocument?.length ? (
+							props.contractDocument?.map((elem, key) => {
 								return (
-									<React.Fragment key={key + "_products"}>
-										<div className='productList'>
-											<div className='productListLeft'>
-												<div className='proImage'>
-													{elem.image ? (
-														<img
-															src={
-																"https://wrapperbucket.s3.us-east-1.amazonaws.com/" +
-																elem.image
-															}
-															alt=''
-														/>
-													) : (
-														<img
-															src={proImg1}
-															alt=''
-														/>
-													)}
-												</div>
-												<div className='proInfo'>
-													<p>{elem.name}</p>
-													<div className='d-flex'>
-														<h3>${elem.price.toFixed(2)}</h3>
-														{elem.tax ? (
-															<span>
-																<img
-																	className='gap_icon'
-																	src={percentTag}
-																	alt=''
-																/>{" "}
-																{elem.taxPercent}% Sales Tax Applicable
-															</span>
-														) : (
-															""
-														)}
-													</div>
-												</div>
+									<React.Fragment key={key + "_documents"}>
+										<div className='contract-doc-list'>
+											<div className='contract-doc-left'>
+												<div className='contract-doc-title'>{elem.title}</div>
 											</div>
-											<div className='productListRight'>
-												<div className='chooseSize'>
-													{elem.size
-														? elem.size.map((s, index) => (
-																<span key={index}>{s.name}</span>
-														  ))
-														: ""}
-												</div>
-												<ShowColors colors={elem.colors} />
-												<div className='sideEditOption'>
-													<button
-														className='showList'
+											<div className='contract-doc-right'>
+												<div className='contract-doc-actions'>
+													<img
+														className='redirect-icon'
+														src={redirectIcon}
+														alt=''
+													/>
+													<img
+														className='copy-link-icon'
+														src={copyLinkIcon}
+														alt=''
+													/>
+													<img
+														className='three-dot-icon'
+														src={dot3White}
+														alt=''
 														onClick={() => toogleActionList(key)}
-													>
-														<img
-															src={dot3White}
-															alt=''
-														/>
-													</button>
+													/>
 													<div
 														className={
 															option === key
@@ -218,7 +176,7 @@ const DocumentList = (props) => {
 														</button>
 														<button
 															className='btn btnDelete'
-															onClick={() => deleteProduct(elem._id)}
+															onClick={() => deleteContractDoc(elem._id)}
 														>
 															<span>
 																<svg
@@ -281,7 +239,7 @@ const DocumentList = (props) => {
 					<Pagination
 						paginationData={props.paginationData}
 						dataCount={props.paginationData.count}
-						callback={props.fetchProducts}
+						callback={props.fetchContractDocuments}
 					/>
 				) : (
 					""

@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { utils } from "../../../helpers";
-import { ProductServices } from "../../../services/setup/ProductServices";
 import Loader from "../../shared/Loader";
 import CreateDocumentModal from "./CreateDocumentModal";
 import DocumentCategory from "./DocumentCategory";
@@ -8,17 +7,19 @@ import ProductFilter from "../product/products/productFilter";
 import DocumentList from "./DocumentList";
 import * as actionTypes from "../../../actions/types";
 import { useDispatch, useSelector } from "react-redux";
-import { getDocumentCategory } from "../../../actions/documentBuilderActions";
+import {
+	getDocumentCategory,
+	getContractDocuments,
+} from "../../../actions/documentBuilderActions";
 
 const DocumentBuilder = () => {
 	document.title = "Red Belt Gym - Document Builder";
-	const [categoryData, setCategoryData] = useState([]);
 	const [isLoaderCat, setIsLoaderCat] = useState(false);
 	const [isLoader, setIsLoader] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
 
-	const [updateProduct, setUpdateProduct] = useState({});
-	const [productData, setProductData] = useState([]);
+	const [updateContractDocument, setUpdateContractDocument] = useState(null);
+	const [contractDocumentsList, setContractDocumentsList] = useState([]);
 	const [paginationData, setPaginationData] = useState({
 		count: null,
 		totalPages: null,
@@ -35,67 +36,29 @@ const DocumentBuilder = () => {
 	const documentCategories = useSelector(
 		(state) => state.documentBuilder.documentCategories
 	);
-
-	useEffect(() => {
-		fetchCategories();
-		fetchProducts();
-	}, []);
+	const contractDocumentsData = useSelector(
+		(state) => state.documentBuilder.contractDocumentsData
+	);
 
 	useEffect(() => {
 		dispatch(getDocumentCategory());
+		fetchContractDocuments();
 	}, []);
 
 	console.log(documentCategories);
 
 	const getQueryParams = async () => {
 		const catID = utils.getQueryVariable("catID");
-		const colors = utils.getQueryVariable("colors");
-		const sizes = utils.getQueryVariable("sizes");
-		const fromPrice = utils.getQueryVariable("fromPriceProduct");
-		const toPrice = utils.getQueryVariable("toPriceProduct");
 		const queryParams = new URLSearchParams();
 		if (catID && catID !== "all" && catID !== "false") {
 			queryParams.append("catID", catID);
 		}
-		if (colors) {
-			queryParams.append("colors", colors);
-		}
-		if (sizes) {
-			queryParams.append("sizes", sizes);
-		}
-		if (fromPrice) {
-			queryParams.append("fromPrice", fromPrice);
-		}
-		if (toPrice) {
-			queryParams.append("toPrice", toPrice);
-		}
 		return queryParams;
 	};
 
-	const fetchCategories = async () => {
-		try {
-			if (!isLoaderCat) setIsLoaderCat(true);
-			/************ PERMISSION CHECKING (FRONTEND) *******************/
-			const hasPermission = utils.hasPermission("product", "read");
-			if (!hasPermission) throw new Error("You do not have permission");
-			/************ PERMISSION CHECKING (FRONTEND) *******************/
-			const result = await ProductServices.fetchCategory();
-			if (result.length) {
-				setCategoryData(result);
-				console.log("CategoryData", categoryData);
-			} else {
-				// setErrorMsg("No categories found");
-				// props.successMsg("No categories found");
-			}
-		} catch (e) {
-			setErrorMsg(e.message);
-			// props.errorMsg(e.message);
-		} finally {
-			setIsLoaderCat(false);
-		}
-	};
+	let fetchContractDocTimeout = useRef(null);
 
-	const fetchProducts = async (showLoader = true) => {
+	const fetchContractDocuments = async (showLoader = true) => {
 		// const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
 		// console.log("Permission", permissions)
 		const pageId = utils.getQueryVariable("page") || 1;
@@ -103,37 +66,42 @@ const DocumentBuilder = () => {
 		try {
 			if (showLoader) setIsLoader(true);
 			/************ PERMISSION CHECKING (FRONTEND) *******************/
-			const hasPermission = utils.hasPermission("product", "read");
-			if (!hasPermission) throw new Error("You do not have permission");
+			// const hasPermission = utils.hasPermission("product", "read");
+			// if (!hasPermission) throw new Error("You do not have permission");
 			/************ PERMISSION CHECKING (FRONTEND) *******************/
-			const result = await ProductServices.fetchProducts(pageId, queryParams);
-			if (result) {
-				console.log("Product List", result);
-				setProductData(result.products);
-				setPaginationData({
-					...paginationData,
-					count: result.pagination.count,
-					currentPage: result.pagination.currentPage,
-					totalPages: result.pagination.totalPages,
-				});
-			}
+			dispatch(getContractDocuments(pageId, queryParams));
 		} catch (e) {
 			setErrorMsg(e.message);
-		} finally {
-			setIsLoader(false);
 		}
 	};
 
-	const addProductModal = (bool = true, updateObj = {}) => {
+	useEffect(() => {
+		fetchContractDocTimeout.current = setTimeout(() => {
+			setIsLoader(false);
+		}, 500);
+		if (contractDocumentsData) {
+			setContractDocumentsList(contractDocumentsData?.documents);
+			setPaginationData({
+				...paginationData,
+				count: contractDocumentsData?.pagination?.count,
+				currentPage: contractDocumentsData?.pagination?.currentPage,
+				totalPages: contractDocumentsData?.pagination?.totalPages,
+			});
+		}
+		return () => {
+			clearTimeout(fetchContractDocTimeout.current);
+		};
+	}, [contractDocumentsData]);
+
+	const createContractDocModal = (bool = true, updateObj = {}) => {
 		try {
-			const action = Object.keys(updateObj).length ? "update" : "create";
 			/************ PERMISSION CHECKING (FRONTEND) *******************/
-			const hasPermission = utils.hasPermission("product", action);
-			if (!hasPermission) throw new Error("You do not have permission");
+			// const hasPermission = utils.hasPermission("product", action);
+			// if (!hasPermission) throw new Error("You do not have permission");
 			/************ PERMISSION CHECKING (FRONTEND) *******************/
-			if (categoryData.length) {
+			if (documentCategories?.length) {
 				setOpenModal(bool);
-				setUpdateProduct(updateObj);
+				setUpdateContractDocument(updateObj);
 			} else {
 				setErrorMsg("Please add category first");
 			}
@@ -142,11 +110,10 @@ const DocumentBuilder = () => {
 		}
 	};
 
-	const closeProductModal = (param) => {
+	const closeContractDocModal = (param) => {
 		setOpenModal(false);
 		if (param === "fetch") {
-			fetchProducts();
-			fetchCategories();
+			fetchContractDocuments();
 		}
 	};
 
@@ -166,68 +133,23 @@ const DocumentBuilder = () => {
 		setProdFilterModalStatus(false);
 	};
 
-	const deleteProduct = async (productID) => {
-		try {
-			/************ PERMISSION CHECKING (FRONTEND) *******************/
-			const hasPermission = utils.hasPermission("product", "delete");
-			if (!hasPermission) throw new Error("You do not have permission");
-			/************ PERMISSION CHECKING (FRONTEND) *******************/
-			setIsLoader(true);
-			const result = await ProductServices.deleteProduct(productID);
-			if (result) {
-				// setSuccessMsg(result.message);
-				dispatch({
-					type: actionTypes.SHOW_MESSAGE,
-					message: result.message,
-					typeMessage: "success",
-				});
-				fetchProducts();
-			} else {
-				// setErrorMsg("Error deleting product. Please try again.");
-				dispatch({
-					type: actionTypes.SHOW_MESSAGE,
-					message: `Error deleting product. Please try again`,
-					typeMessage: "error",
-				});
-			}
-		} catch (e) {
-			setErrorMsg(e.message);
-		} finally {
-			setIsLoader(false);
-		}
-	};
-
 	return (
 		<>
 			{isLoader ? <Loader /> : ""}
 			<DocumentList
 				openFilterModal={openFilterModal}
-				productData={[]}
-				fetchProducts={fetchProducts}
-				getCategories={fetchCategories}
+				contractDocument={contractDocumentsList}
+				fetchContractDocuments={fetchContractDocuments}
 				paginationData={paginationData}
-				openProductModal={(bool, updateObj) => addProductModal(bool, updateObj)}
-				deleteProduct={(productID) => deleteProduct(productID)}
-				successMsg={(msg) =>
-					dispatch({
-						type: actionTypes.SHOW_MESSAGE,
-						message: msg,
-						typeMessage: "success",
-					})
+				openContractDocModal={(bool, updateObj) =>
+					createContractDocModal(bool, updateObj)
 				}
-				errorMsg={(msg) =>
-					dispatch({
-						type: actionTypes.SHOW_MESSAGE,
-						message: msg,
-						typeMessage: "error",
-					})
-				}
+				handleSetIsLoader={(status) => setIsLoader(status)}
 			/>
 			<DocumentCategory
 				isLoader={isLoaderCat}
 				setIsLoader={(bool) => setIsLoaderCat(bool)}
 				categoryData={documentCategories}
-				fetchCategories={fetchCategories}
 				successMsg={(msg) =>
 					dispatch({
 						type: actionTypes.SHOW_MESSAGE,
@@ -242,25 +164,22 @@ const DocumentBuilder = () => {
 						typeMessage: "error",
 					})
 				}
-				getProduct={(showLoader) => fetchProducts(showLoader)}
+				getProduct={(showLoader) => fetchContractDocuments(showLoader)}
 			/>
 
 			{openModal && (
 				<CreateDocumentModal
-					closeAddProductModal={(param) => closeProductModal(param)}
-					editProductItem={updateProduct}
-					retriveProducts={(showLoader) => fetchProducts(showLoader)}
-					retrieveCategories={fetchCategories}
-					categories={categoryData}
-					getcolorSize={colorSize}
+					closeContractDocModal={(param) => closeContractDocModal(param)}
+					updateContractDocument={updateContractDocument}
+					categories={documentCategories}
 				/>
 			)}
 
 			{prodFilterModalStatus && (
 				<ProductFilter
 					closeModal={closeFilterModal}
-					categories={categoryData}
-					getProduct={(showLoader) => fetchProducts(showLoader)}
+					categories={documentCategories}
+					getProduct={(showLoader) => fetchContractDocuments(showLoader)}
 					successMsg={(msg) =>
 						dispatch({
 							type: actionTypes.SHOW_MESSAGE,
