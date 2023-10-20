@@ -222,3 +222,26 @@ export const deleteContractDocument = (id) => {
 			});
 	};
 };
+
+export const signContractDocument = (payload) => {
+	return async (dispatch) => {
+		DocumentBuilderService.signContractDocument(payload)
+			.then((response) => {
+				if (response) {
+					dispatch({
+						type: actionTypes.SIGN_CONTRACT_DOCUMENT,
+						data: response,
+					});
+				}
+			})
+			.catch((error) => {
+				if (error) {
+					dispatch({
+						type: actionTypes.SHOW_MESSAGE,
+						message: "Signing contract failed",
+						typeMessage: "error",
+					});
+				}
+			});
+	};
+};

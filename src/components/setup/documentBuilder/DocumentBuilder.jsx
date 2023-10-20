@@ -3,7 +3,6 @@ import { utils } from "../../../helpers";
 import Loader from "../../shared/Loader";
 import CreateDocumentModal from "./CreateDocumentModal";
 import DocumentCategory from "./DocumentCategory";
-import ProductFilter from "../product/products/productFilter";
 import DocumentList from "./DocumentList";
 import * as actionTypes from "../../../actions/types";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,11 +25,6 @@ const DocumentBuilder = () => {
 		currentPage: 1,
 		limit: 10,
 	});
-	const [colorSize, setColorSize] = useState({
-		colors: [],
-		sizes: [],
-	});
-	const [prodFilterModalStatus, setProdFilterModalStatus] = useState(false);
 	const [openModal, setOpenModal] = useState(false);
 	const dispatch = useDispatch();
 	const documentCategories = useSelector(
@@ -47,7 +41,7 @@ const DocumentBuilder = () => {
 
 	console.log(documentCategories);
 
-	const getQueryParams = async () => {
+	const getQueryParams = () => {
 		const catID = utils.getQueryVariable("catID");
 		const queryParams = new URLSearchParams();
 		if (catID && catID !== "all" && catID !== "false") {
@@ -58,11 +52,11 @@ const DocumentBuilder = () => {
 
 	let fetchContractDocTimeout = useRef(null);
 
-	const fetchContractDocuments = async (showLoader = true) => {
+	const fetchContractDocuments = (showLoader = true) => {
 		// const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
 		// console.log("Permission", permissions)
 		const pageId = utils.getQueryVariable("page") || 1;
-		const queryParams = await getQueryParams();
+		const queryParams = getQueryParams();
 		try {
 			if (showLoader) setIsLoader(true);
 			/************ PERMISSION CHECKING (FRONTEND) *******************/
@@ -76,10 +70,10 @@ const DocumentBuilder = () => {
 	};
 
 	useEffect(() => {
-		fetchContractDocTimeout.current = setTimeout(() => {
-			setIsLoader(false);
-		}, 500);
 		if (contractDocumentsData) {
+			fetchContractDocTimeout.current = setTimeout(() => {
+				setIsLoader(false);
+			}, 1000);
 			setContractDocumentsList(contractDocumentsData?.documents);
 			setPaginationData({
 				...paginationData,
@@ -117,27 +111,10 @@ const DocumentBuilder = () => {
 		}
 	};
 
-	const openFilterModal = () => {
-		try {
-			/************ PERMISSION CHECKING (FRONTEND) *******************/
-			const hasPermission = utils.hasPermission("product", "read");
-			if (!hasPermission) throw new Error("You do not have permission");
-			/************ PERMISSION CHECKING (FRONTEND) *******************/
-			setProdFilterModalStatus(true);
-		} catch (e) {
-			setErrorMsg(e.message);
-		}
-	};
-
-	const closeFilterModal = () => {
-		setProdFilterModalStatus(false);
-	};
-
 	return (
 		<>
 			{isLoader ? <Loader /> : ""}
 			<DocumentList
-				openFilterModal={openFilterModal}
 				contractDocument={contractDocumentsList}
 				fetchContractDocuments={fetchContractDocuments}
 				paginationData={paginationData}
@@ -166,35 +143,11 @@ const DocumentBuilder = () => {
 				}
 				getProduct={(showLoader) => fetchContractDocuments(showLoader)}
 			/>
-
 			{openModal && (
 				<CreateDocumentModal
 					closeContractDocModal={(param) => closeContractDocModal(param)}
 					updateContractDocument={updateContractDocument}
 					categories={documentCategories}
-				/>
-			)}
-
-			{prodFilterModalStatus && (
-				<ProductFilter
-					closeModal={closeFilterModal}
-					categories={documentCategories}
-					getProduct={(showLoader) => fetchContractDocuments(showLoader)}
-					successMsg={(msg) =>
-						dispatch({
-							type: actionTypes.SHOW_MESSAGE,
-							message: msg,
-							typeMessage: "success",
-						})
-					}
-					errorMsg={(msg) =>
-						dispatch({
-							type: actionTypes.SHOW_MESSAGE,
-							message: msg,
-							typeMessage: "error",
-						})
-					}
-					getcolorSize={colorSize}
 				/>
 			)}
 		</>

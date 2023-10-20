@@ -8,6 +8,7 @@ import Pagination from "../../shared/Pagination";
 import ConfirmBox from "../../shared/confirmBox";
 import { deleteContractDocument } from "../../../actions/documentBuilderActions";
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const DocumentList = (props) => {
 	document.title = "Red Belt Gym - Documents";
@@ -56,7 +57,7 @@ const DocumentList = (props) => {
 	useEffect(() => {
 		deleteContractDocTimeout.current = setTimeout(() => {
 			props.handleSetIsLoader(false);
-		}, 500);
+		}, 1000);
 		return () => {
 			clearTimeout(deleteContractDocTimeout.current);
 			dispatch({
@@ -123,11 +124,22 @@ const DocumentList = (props) => {
 											</div>
 											<div className='contract-doc-right'>
 												<div className='contract-doc-actions'>
-													<img
-														className='redirect-icon'
-														src={redirectIcon}
-														alt=''
-													/>
+													<Link
+														className='doc-redirect-link'
+														target='_blank'
+														to={{
+															pathname: `/document/${elem._id}`,
+															// search: "?sort=name",
+															// hash: "#the-hash",
+															// state: { fromDashboard: true }
+														}}
+													>
+														<img
+															className='redirect-icon'
+															src={redirectIcon}
+															alt=''
+														/>
+													</Link>
 													<img
 														className='copy-link-icon'
 														src={copyLinkIcon}

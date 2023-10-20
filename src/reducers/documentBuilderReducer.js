@@ -10,6 +10,7 @@ const initialState = {
 	contractDocument: null,
 	updateContractDocumentResponse: null,
 	deleteContractDocumentResponse: null,
+	signContractDocumentResponse: null,
 };
 
 const documentBuilderReducer = (state = initialState, action) => {
@@ -58,6 +59,12 @@ const documentBuilderReducer = (state = initialState, action) => {
 			break;
 		case actionTypes.RESET_UPDATE_CONTRACT_DOCUMENT_RESPONSE:
 			state.updateContractDocumentResponse = action.data;
+			break;
+		case actionTypes.SIGN_CONTRACT_DOCUMENT:
+			state.signContractDocumentResponse = action.data;
+			break;
+		case actionTypes.RESET_SIGN_CONTRACT_DOCUMENT_RESPONSE:
+			state.signContractDocumentResponse = action.data;
 			break;
 		default:
 			return state;

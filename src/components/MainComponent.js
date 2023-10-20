@@ -1,4 +1,4 @@
-import React, { useState, lazy, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect } from "react";
 import {
 	Redirect,
 	Route,
@@ -33,10 +33,8 @@ import AttendanceGlobalRouting from "./attendance/AttendanceGlobalRouter";
 //import TabLogin from "./tabLogin/TabLogin";
 import { UserServices } from "../services/authentication/UserServices";
 import config from "../configuration/config";
-import UpdateNotification from "./shared/updateNotifications/UpdateNotification";
 import { io } from "socket.io-client";
 import * as actionTypes from "../actions/types";
-import GetPositionMiddleware from "../actions/GetPosition.middleware";
 import { NotificationServices } from "../services/notification/NotificationServices";
 import moment from "moment-timezone";
 import { toastr } from "react-redux-toastr";
@@ -55,6 +53,7 @@ import { FilterAction } from "../actions/FilterAction";
 import { statusPhaseListAction } from "../actions/FilterAction";
 import { EmailSubjectAction } from "../actions/EmailSubjectAction";
 import { EmailTemplateAction } from "../actions/EmailTemplateAction";
+import ContractDocument from "./setup/documentBuilder/ContractDocument";
 
 // For socket io connection
 //const socketUrl = (process.env.NODE_ENV === 'production') ? config.socketUrlProd : config.socketUrlProd;
@@ -63,7 +62,7 @@ const socket = io(socketUrl, {
 	transports: ["websocket"],
 	origins: "*",
 });
-const MainComponent = () => {
+const MainComponent = (props) => {
 	const pathURL = useLocation().pathname;
 	const [showInnerleftMenu, setshowInnerleftMenu] = useState(true);
 	const [createButton, setCreateButton] = useState(null);
@@ -743,24 +742,28 @@ const MainComponent = () => {
 							: "")
 					}
 				>
-					<LeftMenu
-						toggleLeftSubMenu={toggleLeftSubMenu}
-						clickedSetupStatus={(e) => clickedSetupStatus(e)}
-					/>
-					<div className='dashMain'>
-						<HeaderDashboard
-							toggleCreate={(e) => toggleCreate(e)}
-							setupMenuState={setupMenuState}
-							fetchNotifications={fetchNotifications}
-							notificationStructure={notificationStructure}
-							notificationUnread={notificationUnread}
-							notificationTrigger={isNewNotification}
-							notification={notification}
-							scrollNotification={(type) => scrollNotification(type)}
-							markSingleAsRead={(ele) => markSingleAsRead(ele)}
-							markAllAsRead={markAllAsRead}
-							setDevice={setDeviceData}
+					{!props?.location?.pathname?.includes(`/document/`) && (
+						<LeftMenu
+							toggleLeftSubMenu={toggleLeftSubMenu}
+							clickedSetupStatus={(e) => clickedSetupStatus(e)}
 						/>
+					)}
+					<div className='dashMain'>
+						{!props?.location?.pathname?.includes(`/document/`) && (
+							<HeaderDashboard
+								toggleCreate={(e) => toggleCreate(e)}
+								setupMenuState={setupMenuState}
+								fetchNotifications={fetchNotifications}
+								notificationStructure={notificationStructure}
+								notificationUnread={notificationUnread}
+								notificationTrigger={isNewNotification}
+								notification={notification}
+								scrollNotification={(type) => scrollNotification(type)}
+								markSingleAsRead={(ele) => markSingleAsRead(ele)}
+								markAllAsRead={markAllAsRead}
+								setDevice={setDeviceData}
+							/>
+						)}
 						<Switch>
 							<Route
 								exact
@@ -915,6 +918,12 @@ const MainComponent = () => {
 									toggleLeftSubMenu={toggleLeftSubMenu}
 									toggleCreate={(e) => toggleCreate(e)}
 								></DocumentBuilderRouter>
+							</Route>
+							<Route
+								exact
+								path='/document/:id'
+							>
+								<ContractDocument {...props} />
 							</Route>
 							<Route
 								exact

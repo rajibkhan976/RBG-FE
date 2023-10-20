@@ -266,4 +266,34 @@ export const DocumentBuilderService = {
 			}
 		}
 	},
+	signContractDocument: async (payload) => {
+		try {
+			if (isLoggedIn() === false) {
+				throw new Error(message.loginFailed);
+			}
+			const options = {
+				headers: headers,
+			};
+			const result = await axios.post(
+				config.documentBuilderUrl + "/contract",
+				payload,
+				options
+			);
+			if (result.status === 200) {
+				return result.data;
+			} else {
+				throw new Error(
+					"There is an issue while signing contract. Please contact support."
+				);
+			}
+		} catch (e) {
+			if (!typeof e.data === "undefined") {
+				throw new Error(e.response.data.message);
+			} else if (e.response && e.response.data) {
+				throw new Error(e.response.data);
+			} else {
+				throw new Error(e.message + ". Please contact support.");
+			}
+		}
+	},
 };
