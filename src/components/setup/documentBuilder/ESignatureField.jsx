@@ -8,7 +8,9 @@ const ESignatureField = (props) => {
 			className='e-sign-container'
 			onClick={handleSetSignUrl}
 		>
-			<div className='e-sign-label'>E-signature</div>
+			<div className='e-sign-label'>
+				E-signature <span className='mandatory'>*</span>
+			</div>
 			<SignatureCanvas
 				ref={handleSetESignCanvasRef}
 				canvasProps={{ className: "e-sign-canvas" }}

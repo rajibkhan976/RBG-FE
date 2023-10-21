@@ -149,9 +149,9 @@ export const updateContractDocument = (payload, id) => {
 	};
 };
 
-export const getContractDocuments = (page, queryParams) => {
+export const getContractDocuments = (queryParams) => {
 	return async (dispatch) => {
-		DocumentBuilderService.fetchContractDocuments(page, queryParams)
+		DocumentBuilderService.fetchContractDocuments(queryParams)
 			.then((response) => {
 				if (response) {
 					dispatch({
@@ -239,6 +239,58 @@ export const signContractDocument = (payload) => {
 					dispatch({
 						type: actionTypes.SHOW_MESSAGE,
 						message: "Signing contract failed",
+						typeMessage: "error",
+					});
+				}
+			});
+	};
+};
+
+export const getContractDocumentsByContactId = (contactId) => {
+	return async (dispatch) => {
+		DocumentBuilderService.fetchContractDocumenstByContactId(contactId)
+			.then((response) => {
+				if (response) {
+					dispatch({
+						type: actionTypes.FETCH_CONTRACT_DOCUMENTS_BY_CONTACTID,
+						data: response?.data,
+					});
+				}
+			})
+			.catch((error) => {
+				if (error) {
+					dispatch({
+						type: actionTypes.SHOW_MESSAGE,
+						message: "Fetching document failed",
+						typeMessage: "error",
+					});
+				}
+			});
+	};
+};
+
+export const getContractDocumentsByContactIdAndContractId = (
+	contactId,
+	contractId
+) => {
+	return async (dispatch) => {
+		DocumentBuilderService.fetchContractDocumenstByContactIdAndContractId(
+			contactId,
+			contractId
+		)
+			.then((response) => {
+				if (response) {
+					dispatch({
+						type: actionTypes.FETCH_CONTRACT_DOCUMENT_BY_CONTACTID_CONTRACTID,
+						data: response?.data,
+					});
+				}
+			})
+			.catch((error) => {
+				if (error) {
+					dispatch({
+						type: actionTypes.SHOW_MESSAGE,
+						message: "Fetching document failed",
 						typeMessage: "error",
 					});
 				}

@@ -206,7 +206,7 @@ const DocumentCategory = (props) => {
 		} else {
 			utils.removeQueryParameter("catID");
 		}
-		props.getProduct();
+		props.getContractDocuments();
 	};
 
 	return (
@@ -294,8 +294,7 @@ const DocumentCategory = (props) => {
 												}
 												onClick={() => handleCategoryClick(elem._id)}
 											>
-												{elem.name} ({elem.productCount ? elem.productCount : 0}
-												)
+												{elem.name} ({elem?.documents?.length})
 											</button>
 											{elem.slug !== "uncategorized" ? (
 												<button

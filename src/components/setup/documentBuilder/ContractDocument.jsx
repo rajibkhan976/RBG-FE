@@ -7,7 +7,9 @@ import {
 	getContractDocumentById,
 	signContractDocument,
 } from "../../../actions/documentBuilderActions";
+import { isLoggedIn } from "../../../services/authentication/AuthServices";
 import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 const ContractDocument = (props) => {
 	const dispatch = useDispatch();
@@ -211,6 +213,10 @@ const ContractDocument = (props) => {
 			clearTimeout(signContractTimeout);
 		};
 	}, [signContractDocumentResponse]);
+
+	if (isLoggedIn() === false) {
+		return <Redirect to='/login' />;
+	}
 
 	return (
 		<>

@@ -35,17 +35,21 @@ const DocumentBuilder = () => {
 	);
 
 	useEffect(() => {
-		dispatch(getDocumentCategory());
 		fetchContractDocuments();
+		dispatch(getDocumentCategory());
 	}, []);
 
 	console.log(documentCategories);
 
 	const getQueryParams = () => {
 		const catID = utils.getQueryVariable("catID");
+		const page = utils.getQueryVariable("page");
 		const queryParams = new URLSearchParams();
 		if (catID && catID !== "all" && catID !== "false") {
 			queryParams.append("catID", catID);
+		}
+		if (page && page !== "all" && page !== "false") {
+			queryParams.append("page", page);
 		}
 		return queryParams;
 	};
@@ -63,7 +67,7 @@ const DocumentBuilder = () => {
 			// const hasPermission = utils.hasPermission("product", "read");
 			// if (!hasPermission) throw new Error("You do not have permission");
 			/************ PERMISSION CHECKING (FRONTEND) *******************/
-			dispatch(getContractDocuments(pageId, queryParams));
+			dispatch(getContractDocuments(queryParams));
 		} catch (e) {
 			setErrorMsg(e.message);
 		}
@@ -113,36 +117,43 @@ const DocumentBuilder = () => {
 
 	return (
 		<>
-			{isLoader ? <Loader /> : ""}
-			<DocumentList
-				contractDocument={contractDocumentsList}
-				fetchContractDocuments={fetchContractDocuments}
-				paginationData={paginationData}
-				openContractDocModal={(bool, updateObj) =>
-					createContractDocModal(bool, updateObj)
-				}
-				handleSetIsLoader={(status) => setIsLoader(status)}
-			/>
-			<DocumentCategory
-				isLoader={isLoaderCat}
-				setIsLoader={(bool) => setIsLoaderCat(bool)}
-				categoryData={documentCategories}
-				successMsg={(msg) =>
-					dispatch({
-						type: actionTypes.SHOW_MESSAGE,
-						message: msg,
-						typeMessage: "success",
-					})
-				}
-				errorMsg={(msg) =>
-					dispatch({
-						type: actionTypes.SHOW_MESSAGE,
-						message: msg,
-						typeMessage: "error",
-					})
-				}
-				getProduct={(showLoader) => fetchContractDocuments(showLoader)}
-			/>
+			{contractDocumentsData && !isLoader ? (
+				<DocumentList
+					contractDocument={contractDocumentsList}
+					fetchContractDocuments={fetchContractDocuments}
+					paginationData={paginationData}
+					openContractDocModal={(bool, updateObj) =>
+						createContractDocModal(bool, updateObj)
+					}
+					handleSetIsLoader={(status) => setIsLoader(status)}
+				/>
+			) : (
+				<Loader />
+			)}
+			{documentCategories && (
+				<DocumentCategory
+					isLoader={isLoaderCat}
+					setIsLoader={(bool) => setIsLoaderCat(bool)}
+					categoryData={documentCategories}
+					successMsg={(msg) =>
+						dispatch({
+							type: actionTypes.SHOW_MESSAGE,
+							message: msg,
+							typeMessage: "success",
+						})
+					}
+					errorMsg={(msg) =>
+						dispatch({
+							type: actionTypes.SHOW_MESSAGE,
+							message: msg,
+							typeMessage: "error",
+						})
+					}
+					getContractDocuments={(showLoader) =>
+						fetchContractDocuments(showLoader)
+					}
+				/>
+			)}
 			{openModal && (
 				<CreateDocumentModal
 					closeContractDocModal={(param) => closeContractDocModal(param)}

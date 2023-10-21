@@ -16,27 +16,132 @@ import {
 
 const CreateDocumentModal = (props) => {
 	const selectableFields = [
-		{ field: "name", type: "string", hasMandatoryField: false },
-		{ field: "phone", type: "number", hasMandatoryField: false },
-		{ field: "Email id", type: "string", hasMandatoryField: true },
-		{ field: "Company name", type: "string", hasMandatoryField: true },
-		{ field: "Emergency number", type: "string", hasMandatoryField: true },
-		{ field: "Notes", type: "string", hasMandatoryField: true },
-		{ field: "Contact type", type: "string", hasMandatoryField: true },
-		{ field: "Date of birth", type: "string", hasMandatoryField: true },
-		{ field: "Address 1", type: "string", hasMandatoryField: true },
-		{ field: "Address 2", type: "string", hasMandatoryField: true },
-		{ field: "State", type: "string", hasMandatoryField: true },
-		{ field: "Zip", type: "string", hasMandatoryField: true },
-		{ field: "Source", type: "string", hasMandatoryField: true },
-		{ field: "Source details", type: "string", hasMandatoryField: true },
-		{ field: "Mother name", type: "string", hasMandatoryField: true },
-		{ field: "Father name", type: "string", hasMandatoryField: true },
-		{ field: "Company", type: "string", hasMandatoryField: true },
-		{ field: "Job role", type: "string", hasMandatoryField: true },
-		{ field: "Status", type: "string", hasMandatoryField: true },
-		{ field: "Phase", type: "string", hasMandatoryField: true },
-		{ field: "Created by", type: "string", hasMandatoryField: true },
+		{
+			name: "Name",
+			field: "name",
+			type: "string",
+			hasMandatoryField: false,
+		},
+		{
+			name: "Phone number",
+			field: "phone",
+			type: "number",
+			hasMandatoryField: false,
+		},
+		{
+			name: "Email id",
+			field: "email",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Company name",
+			field: "Company name",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Emergency number",
+			field: "Emergency number",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Notes",
+			field: "Notes",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Contact type",
+			field: "Contact type",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Date of birth",
+			field: "Date of birth",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Address 1",
+			field: "Address 1",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Address 2",
+			field: "Address 2",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "State",
+			field: "State",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Zip",
+			field: "Zip",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Source",
+			field: "Source",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Source details",
+			field: "Source details",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Mother name",
+			field: "Mother name",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Father name",
+			field: "Father name",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Company",
+			field: "Company",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Job role",
+			field: "Job role",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Status",
+			field: "Status",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Phase",
+			field: "Phase",
+			type: "string",
+			hasMandatoryField: true,
+		},
+		{
+			name: "Created by",
+			field: "Created by",
+			type: "string",
+			hasMandatoryField: true,
+		},
 	];
 	const [isLoader, setIsLoader] = useState(false);
 	const [editableContractDocId, setEditableContractDocId] = useState("");
@@ -55,6 +160,11 @@ const CreateDocumentModal = (props) => {
 			mandatory: true,
 		},
 		{
+			field: "email",
+			type: "string",
+			mandatory: true,
+		},
+		{
 			field: "esign",
 			type: "checkbox",
 			mandatory: true,
@@ -62,7 +172,7 @@ const CreateDocumentModal = (props) => {
 	]);
 	const [contractCategory, setContractCategory] = useState("");
 	const [contractTitle, setContractTitle] = useState("");
-	const [mandatoryFieldsList, setMandatoryFieldsList] = useState([]);
+	const [mandatoryFieldsList, setMandatoryFieldsList] = useState(["email"]);
 	const [isReadyForNextStep, setIsReadyForNextStep] = useState(false);
 	const [dirty, setDirty] = useState(false);
 	const base_url = window.location.origin;
@@ -224,7 +334,14 @@ const CreateDocumentModal = (props) => {
 				selectedFields.some((element) => element.field === targetName)
 			) {
 				setSelectedFields(
-					selectedFields.filter((element) => element?.field !== targetName)
+					selectedFields.filter(
+						(element) =>
+							(targetName !== "name" ||
+								targetName !== "phone" ||
+								targetName !== "email" ||
+								targetName !== "esign") &&
+							element?.field !== targetName
+					)
 				);
 			}
 		});
@@ -243,7 +360,9 @@ const CreateDocumentModal = (props) => {
 			!mandatoryFieldsList.includes(targetName)
 				? setMandatoryFieldsList([...mandatoryFieldsList, targetName])
 				: setMandatoryFieldsList(
-						mandatoryFieldsList.filter((item) => item !== targetName)
+						mandatoryFieldsList.filter(
+							(item) => targetName !== "email" && item !== targetName
+						)
 				  );
 		}
 		setSelectedFields(copyOfSelectedFields);
@@ -340,7 +459,6 @@ const CreateDocumentModal = (props) => {
 				editableContractDocId
 					? dispatch(updateContractDocument(data, editableContractDocId))
 					: dispatch(createContractDocument(data));
-				dispatch(getContractDocuments());
 			}
 		} catch (e) {
 			dispatch({
@@ -506,7 +624,7 @@ const CreateDocumentModal = (props) => {
 
 															<span></span>
 														</div>
-														{item.field}
+														{item.name}
 													</label>
 													{item.hasMandatoryField && (
 														<label

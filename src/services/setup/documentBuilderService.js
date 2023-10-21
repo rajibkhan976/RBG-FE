@@ -185,15 +185,21 @@ export const DocumentBuilderService = {
 			}
 		}
 	},
-	fetchContractDocuments: async (page = null, queryParams = null) => {
+	fetchContractDocuments: async (queryParams = null) => {
 		try {
 			// const hasPermission = utils.hasPermission("product","read");
 			// if(!hasPermission) throw new Error("You do not have permission");
+			if (isLoggedIn() === false) {
+				throw new Error(message.loginFailed);
+			}
+			const options = {
+				headers: headers,
+			};
 			const result = await axios.get(
 				config.documentBuilderUrl +
 					"/document/list" +
 					(queryParams ? "?" + decodeURI(queryParams) : ""),
-				{ headers: headers }
+				options
 			);
 			if (result.status === 200) {
 				return result.data;
@@ -216,9 +222,15 @@ export const DocumentBuilderService = {
 		try {
 			// const hasPermission = utils.hasPermission("product","read");
 			// if(!hasPermission) throw new Error("You do not have permission");
+			if (isLoggedIn() === false) {
+				throw new Error(message.loginFailed);
+			}
+			const options = {
+				headers: headers,
+			};
 			const result = await axios.get(
 				config.documentBuilderUrl + `/document/list/${id}`,
-				{ headers: headers }
+				options
 			);
 			if (result.status === 200) {
 				return result.data;
@@ -284,6 +296,71 @@ export const DocumentBuilderService = {
 			} else {
 				throw new Error(
 					"There is an issue while signing contract. Please contact support."
+				);
+			}
+		} catch (e) {
+			if (!typeof e.data === "undefined") {
+				throw new Error(e.response.data.message);
+			} else if (e.response && e.response.data) {
+				throw new Error(e.response.data);
+			} else {
+				throw new Error(e.message + ". Please contact support.");
+			}
+		}
+	},
+	fetchContractDocumenstByContactId: async (contactId) => {
+		try {
+			// const hasPermission = utils.hasPermission("product","read");
+			// if(!hasPermission) throw new Error("You do not have permission");
+			if (isLoggedIn() === false) {
+				throw new Error(message.loginFailed);
+			}
+			const options = {
+				headers: headers,
+			};
+			const result = await axios.get(
+				config.documentBuilderUrl + `/contract/${contactId}/list`,
+				options
+			);
+			if (result.status === 200) {
+				return result.data;
+			} else {
+				throw new Error(
+					"There is an issue while fetching contract document. Please contact support."
+				);
+			}
+		} catch (e) {
+			if (!typeof e.data === "undefined") {
+				throw new Error(e.response.data.message);
+			} else if (e.response && e.response.data) {
+				throw new Error(e.response.data);
+			} else {
+				throw new Error(e.message + ". Please contact support.");
+			}
+		}
+	},
+	fetchContractDocumenstByContactIdAndContractId: async (
+		contactId,
+		contractId
+	) => {
+		try {
+			// const hasPermission = utils.hasPermission("product","read");
+			// if(!hasPermission) throw new Error("You do not have permission");
+			if (isLoggedIn() === false) {
+				throw new Error(message.loginFailed);
+			}
+			const options = {
+				headers: headers,
+			};
+			const result = await axios.get(
+				config.documentBuilderUrl + `/contract/${contactId}/list/${contractId}`,
+				options
+			);
+			if (result.status === 200) {
+				return result.data;
+			} else {
+				throw new Error(
+					"There is an issue while fetching contract document. Please contact support."
 				);
 			}
 		} catch (e) {

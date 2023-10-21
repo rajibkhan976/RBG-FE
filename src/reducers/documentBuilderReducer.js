@@ -11,6 +11,8 @@ const initialState = {
 	updateContractDocumentResponse: null,
 	deleteContractDocumentResponse: null,
 	signContractDocumentResponse: null,
+	contactsContractDocumentsData: null,
+	contactsContractDocument: null,
 };
 
 const documentBuilderReducer = (state = initialState, action) => {
@@ -65,6 +67,12 @@ const documentBuilderReducer = (state = initialState, action) => {
 			break;
 		case actionTypes.RESET_SIGN_CONTRACT_DOCUMENT_RESPONSE:
 			state.signContractDocumentResponse = action.data;
+			break;
+		case actionTypes.FETCH_CONTRACT_DOCUMENTS_BY_CONTACTID:
+			state.contactsContractDocumentsData = action.data;
+			break;
+		case actionTypes.FETCH_CONTRACT_DOCUMENT_BY_CONTACTID_CONTRACTID:
+			state.contactsContractDocument = action.data;
 			break;
 		default:
 			return state;

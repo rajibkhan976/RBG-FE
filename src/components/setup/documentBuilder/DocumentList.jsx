@@ -71,7 +71,16 @@ const DocumentList = (props) => {
 		setOption(index !== option ? index : null);
 	};
 
+	const base_url = window.location.origin;
+
+	const handleCopyUrl = (urlPrefix) => {
+		if (urlPrefix) {
+			navigator.clipboard.writeText(`${base_url}${urlPrefix}`);
+		}
+	};
+
 	console.log(props.contractDocument);
+	console.log("Document Pagination", props.paginationData);
 
 	return (
 		<>
@@ -144,6 +153,9 @@ const DocumentList = (props) => {
 														className='copy-link-icon'
 														src={copyLinkIcon}
 														alt=''
+														onClick={() =>
+															handleCopyUrl(`/document/${elem._id}`)
+														}
 													/>
 													<img
 														className='three-dot-icon'
@@ -246,7 +258,6 @@ const DocumentList = (props) => {
 						)}
 					</div>
 				</div>
-				{console.log("Product Pagination", props.paginationData)}
 				{props.paginationData.count > props.paginationData.limit ? (
 					<Pagination
 						paginationData={props.paginationData}
