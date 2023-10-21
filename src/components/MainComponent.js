@@ -720,7 +720,7 @@ const MainComponent = (props) => {
 		"Subject data",
 		useSelector((state) => state.subject.data)
 	);
-
+	console.log(props.location);
 	return (
 		<>
 			<div className='mainComponent'>
@@ -742,28 +742,32 @@ const MainComponent = (props) => {
 							: "")
 					}
 				>
-					{!props?.location?.pathname?.includes(`/document/`) && (
-						<LeftMenu
-							toggleLeftSubMenu={toggleLeftSubMenu}
-							clickedSetupStatus={(e) => clickedSetupStatus(e)}
-						/>
-					)}
-					<div className='dashMain'>
-						{!props?.location?.pathname?.includes(`/document/`) && (
-							<HeaderDashboard
-								toggleCreate={(e) => toggleCreate(e)}
-								setupMenuState={setupMenuState}
-								fetchNotifications={fetchNotifications}
-								notificationStructure={notificationStructure}
-								notificationUnread={notificationUnread}
-								notificationTrigger={isNewNotification}
-								notification={notification}
-								scrollNotification={(type) => scrollNotification(type)}
-								markSingleAsRead={(ele) => markSingleAsRead(ele)}
-								markAllAsRead={markAllAsRead}
-								setDevice={setDeviceData}
+					{!props?.location?.pathname?.includes(`/document/`) &&
+						!props?.location?.pathname?.includes(`/document`) &&
+						!props?.location?.search?.includes(`?contactId=`) && (
+							<LeftMenu
+								toggleLeftSubMenu={toggleLeftSubMenu}
+								clickedSetupStatus={(e) => clickedSetupStatus(e)}
 							/>
 						)}
+					<div className='dashMain'>
+						{!props?.location?.pathname?.includes(`/document/`) &&
+							!props?.location?.pathname?.includes(`/document`) &&
+							!props?.location?.search?.includes(`?contactId=`) && (
+								<HeaderDashboard
+									toggleCreate={(e) => toggleCreate(e)}
+									setupMenuState={setupMenuState}
+									fetchNotifications={fetchNotifications}
+									notificationStructure={notificationStructure}
+									notificationUnread={notificationUnread}
+									notificationTrigger={isNewNotification}
+									notification={notification}
+									scrollNotification={(type) => scrollNotification(type)}
+									markSingleAsRead={(ele) => markSingleAsRead(ele)}
+									markAllAsRead={markAllAsRead}
+									setDevice={setDeviceData}
+								/>
+							)}
 						<Switch>
 							<Route
 								exact
@@ -922,9 +926,12 @@ const MainComponent = (props) => {
 							<Route
 								exact
 								path='/document/:id'
-							>
-								<ContractDocument {...props} />
-							</Route>
+								component={ContractDocument}
+							/>
+							<Route
+								path='/document'
+								component={ContractDocument}
+							/>
 							<Route
 								exact
 								path={["/package-setup", "/usage-setup", "/credit-details"]}

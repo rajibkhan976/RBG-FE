@@ -222,7 +222,6 @@ const DocumentCategory = (props) => {
 			)}
 			<div className='productRightSetUpPanel'>
 				{props.isLoader ? <Loader /> : ""}
-
 				<Scrollbars
 					renderThumbVertical={(props) => <div className='thumb-vertical' />}
 				>

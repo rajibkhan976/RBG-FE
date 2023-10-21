@@ -5961,6 +5961,21 @@ button.saveOverview img {
 .contact-documents {
 	height: 100%;
 	width: 100%;
+	display: flex;
+	flex-direction: column;
+	padding: 0.5rem 1rem;
+}
+
+.contacts-contract-doc-list {
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 12px;
+	padding: 24px 12px;
+	background-color: #f2f7fc;
+	border-radius: 5px;
 }
 
 .contact-documents-norecord {
@@ -5972,11 +5987,29 @@ button.saveOverview img {
 }
 
 .contact-documents-header {
-	margin: 0.75rem 0 0 1.25rem;
+	margin: 0.75rem 0 1.25rem;
 	font-size: 16px;
 	font-weight: 600;
 	color: #305671;
 	line-height: 24px;
+}
+
+.list-header-col {
+	width: 25%;
+}
+
+.contact-documents-list-header {
+	display: flex;
+	padding: 0.5rem 1rem;
+}
+
+.contract-doc-list-item {
+	width: 25%;
+}
+
+.contract-doc-list-action {
+	display: flex;
+	justify-content: flex-end;
 }
 
 .no-records-content {
@@ -6005,6 +6038,8 @@ button.saveOverview img {
 	font-weight: 400;
 	color: #305671;
 	line-height: 19.5px;
+	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 .contract-doc-list {
@@ -6019,14 +6054,27 @@ button.saveOverview img {
 }
 
 .contract-doc-left {
-	width: 90%;
+	width: 88%;
+	height: 20px;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
 }
 
+.contract-title-cell {
+	width: 100%;
+	height: 100%;
+	text-wrap: nowrap;
+}
+
+.sort-icon {
+	cursor: pointer;
+	margin-left: 8px;
+	vertical-align: middle;
+}
+
 .contract-doc-right {
-	width: 10%;
+	width: 12%;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
@@ -6034,12 +6082,17 @@ button.saveOverview img {
 
 .contract-doc-actions {
 	display: flex;
+	justify-content: end;
 	align-items: center;
-	position: relative;
+	padding-right: 1rem;
 }
 
 .doc-redirect-link {
 	width: 12px;
+}
+
+.doc-redirect-icon {
+	margin-right: 1rem;
 }
 
 .redirect-icon,

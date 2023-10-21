@@ -129,7 +129,9 @@ const DocumentList = (props) => {
 									<React.Fragment key={key + "_documents"}>
 										<div className='contract-doc-list'>
 											<div className='contract-doc-left'>
-												<div className='contract-doc-title'>{elem.title}</div>
+												<div className='contract-doc-title contract-title-cell'>
+													{elem.title}
+												</div>
 											</div>
 											<div className='contract-doc-right'>
 												<div className='contract-doc-actions'>

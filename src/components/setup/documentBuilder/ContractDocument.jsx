@@ -5,6 +5,7 @@ import ESignatureField from "./ESignatureField";
 import { ContactService } from "../../../services/contact/ContactServices";
 import {
 	getContractDocumentById,
+	getContractDocumentsByContactIdAndContractId,
 	signContractDocument,
 } from "../../../actions/documentBuilderActions";
 import { isLoggedIn } from "../../../services/authentication/AuthServices";
@@ -15,6 +16,9 @@ const ContractDocument = (props) => {
 	const dispatch = useDispatch();
 	const contractDocument = useSelector(
 		(state) => state.documentBuilder.contractDocument
+	);
+	const contactsContractDocument = useSelector(
+		(state) => state.documentBuilder.contactsContractDocument
 	);
 	const signContractDocumentResponse = useSelector(
 		(state) => state.documentBuilder.signContractDocumentResponse
@@ -50,10 +54,11 @@ const ContractDocument = (props) => {
 		permission: "",
 	});
 
-	const docId = props?.location?.pathname?.substring(
-		props?.location?.pathname?.lastIndexOf("/") + 1,
-		props?.location?.pathname?.length
-	);
+	const docId = props?.match?.params?.id;
+
+	const searchParams = new URLSearchParams(props?.location?.search);
+	const contactId = searchParams?.get("contactId");
+	const contractId = searchParams?.get("contractId");
 
 	const emailRegex = /^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i;
 
@@ -66,6 +71,11 @@ const ContractDocument = (props) => {
 
 	useEffect(() => {
 		if (docId) dispatch(getContractDocumentById(docId));
+		if (contactId && contractId) {
+			dispatch(
+				getContractDocumentsByContactIdAndContractId(contactId, contractId)
+			);
+		}
 		fetchCountry();
 		fetch(`https://geolocation-db.com/json/`)
 			.then((response) => response.json())
@@ -75,7 +85,6 @@ const ContractDocument = (props) => {
 	const fetchCountry = async () => {
 		let conntryResponse = await ContactService.fetchCountry();
 		setPhoneCountryCode(conntryResponse);
-		console.log("country");
 	};
 
 	useEffect(() => {
@@ -85,6 +94,16 @@ const ContractDocument = (props) => {
 			};
 		}
 	}, [contractDocument]);
+
+	useEffect(() => {
+		if (contactsContractDocument) {
+			docBody.current = {
+				__html: window.atob(contactsContractDocument?.body),
+			};
+		}
+	}, [contactsContractDocument]);
+
+	console.log(contactsContractDocument);
 
 	const countrycodeOpt = phoneCountryCode
 		? phoneCountryCode.map((el, key) => {
@@ -220,9 +239,17 @@ const ContractDocument = (props) => {
 
 	return (
 		<>
-			{contractDocument && docBody.current && !isLoading ? (
+			{(contractDocument || contactsContractDocument) &&
+			docBody.current &&
+			!isLoading ? (
 				<div className='contract-doc-container'>
-					<p className='contract-title'>{contractDocument?.title}</p>
+					<p className='contract-title'>
+						{contractDocument
+							? contractDocument?.header
+							: contactsContractDocument
+							? contactsContractDocument?.header
+							: ""}
+					</p>
 					<div
 						className='contract-body'
 						dangerouslySetInnerHTML={docBody.current}
