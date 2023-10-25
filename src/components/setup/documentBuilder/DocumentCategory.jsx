@@ -281,7 +281,6 @@ const DocumentCategory = (props) => {
 									<div key={key + "_category"}>
 										<li
 											ref={optionsToggleRef}
-											// className={option === key ? "active" : ""}
 											className={defaultCatID === elem._id ? "active" : ""}
 											key={elem._id}
 										>

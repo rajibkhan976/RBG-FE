@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import plus_icon from "../../../assets/images/plus_icon.svg";
 import redirectIcon from "../../../assets/images/redirectIcon.svg";
 import copyLinkIcon from "../../../assets/images/copyLinkIcon.svg";
 import dot3White from "../../../assets/images/dot3gray.svg";
@@ -22,6 +21,9 @@ const DocumentList = (props) => {
 		(state) => state.documentBuilder.deleteContractDocumentResponse
 	);
 
+	const contactFilterData = useSelector((state) => state.filter?.data);
+	localStorage.setItem("contactFilterData", JSON.stringify(contactFilterData));
+
 	/****************************** FUNCTIONS START **********************************/
 	const handleEdit = (contractDoc) => {
 		setOption(null);
@@ -33,7 +35,6 @@ const DocumentList = (props) => {
 	const deleteContractDoc = (docID, isConfirmed = null) => {
 		setOption(null);
 		if (isConfirmed == null && docID) {
-			console.log("Doc ID", docID);
 			setConfirmed({
 				show: true,
 				id: docID,
@@ -79,7 +80,6 @@ const DocumentList = (props) => {
 		}
 	};
 
-	console.log(props.contractDocument);
 	console.log("Document Pagination", props.paginationData);
 
 	return (
@@ -93,38 +93,20 @@ const DocumentList = (props) => {
 			) : (
 				""
 			)}
-			<div className='dashInnerUI productSteUp'>
-				<div className='userListHead product'>
-					<div className='listInfo'>
-						<ul className='listPath'>
-							<li>Settings </li>
-							<li>Document Builder</li>
-						</ul>
-						<h2 className='inDashboardHeader'>
-							Documents (
-							{props.paginationData.count ? props.paginationData.count : 0})
-						</h2>
-						<p className='userListAbout'>Manage your documents</p>
-					</div>
-					<div className='listFeatures'>
-						<button
-							className='creatUserBtn'
-							onClick={props.openContractDocModal}
-						>
-							<img
-								className='plusIcon'
-								src={plus_icon}
-								alt=''
-							/>
-							<span>Create new</span>
-						</button>
-					</div>
-				</div>
-				<div className='productViewType d-flex'></div>
-				<div className='productListBody'>
-					<div className='productListing'>
-						{props.contractDocument?.length ? (
-							props.contractDocument?.map((elem, key) => {
+			<div className='productListBody'>
+				<div className='productListing'>
+					{props.contractDocument?.length ? (
+						props.contractDocument
+							?.slice()
+							?.filter((item) => {
+								if (props.searchKey) {
+									return item?.title
+										?.toLowerCase()
+										?.includes(props.searchKey?.toLowerCase());
+								}
+								return item;
+							})
+							?.map((elem, key) => {
 								return (
 									<React.Fragment key={key + "_documents"}>
 										<div className='contract-doc-list'>
@@ -245,31 +227,30 @@ const DocumentList = (props) => {
 									</React.Fragment>
 								);
 							})
-						) : (
-							<div className='createNew noInfos'>
-								<div className='noRecordsImgWraper'>
-									<img
-										src={noRecords}
-										className='noRecords'
-										alt=''
-									/>
-									<h4>No Document Builder Found</h4>
-									<p>No Document Builder have been listed here yet</p>
-								</div>
+					) : (
+						<div className='createNew noInfos'>
+							<div className='noRecordsImgWraper'>
+								<img
+									src={noRecords}
+									className='noRecords'
+									alt=''
+								/>
+								<h4>No Document Builder Found</h4>
+								<p>No Document Builder have been listed here yet</p>
 							</div>
-						)}
-					</div>
+						</div>
+					)}
 				</div>
-				{props.paginationData.count > props.paginationData.limit ? (
-					<Pagination
-						paginationData={props.paginationData}
-						dataCount={props.paginationData.count}
-						callback={props.fetchContractDocuments}
-					/>
-				) : (
-					""
-				)}
 			</div>
+			{props.paginationData.count > props.paginationData.limit ? (
+				<Pagination
+					paginationData={props.paginationData}
+					dataCount={props.paginationData.count}
+					callback={props.fetchContractDocuments}
+				/>
+			) : (
+				""
+			)}
 		</>
 	);
 };

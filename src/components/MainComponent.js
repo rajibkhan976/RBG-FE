@@ -742,32 +742,28 @@ const MainComponent = (props) => {
 							: "")
 					}
 				>
-					{!props?.location?.pathname?.includes(`/document/`) &&
-						!props?.location?.pathname?.includes(`/document`) &&
-						!props?.location?.search?.includes(`?contactId=`) && (
-							<LeftMenu
-								toggleLeftSubMenu={toggleLeftSubMenu}
-								clickedSetupStatus={(e) => clickedSetupStatus(e)}
+					{!props?.location?.pathname?.includes(`/document/`) && (
+						<LeftMenu
+							toggleLeftSubMenu={toggleLeftSubMenu}
+							clickedSetupStatus={(e) => clickedSetupStatus(e)}
+						/>
+					)}
+					<div className='dashMain'>
+						{!props?.location?.pathname?.includes(`/document/`) && (
+							<HeaderDashboard
+								toggleCreate={(e) => toggleCreate(e)}
+								setupMenuState={setupMenuState}
+								fetchNotifications={fetchNotifications}
+								notificationStructure={notificationStructure}
+								notificationUnread={notificationUnread}
+								notificationTrigger={isNewNotification}
+								notification={notification}
+								scrollNotification={(type) => scrollNotification(type)}
+								markSingleAsRead={(ele) => markSingleAsRead(ele)}
+								markAllAsRead={markAllAsRead}
+								setDevice={setDeviceData}
 							/>
 						)}
-					<div className='dashMain'>
-						{!props?.location?.pathname?.includes(`/document/`) &&
-							!props?.location?.pathname?.includes(`/document`) &&
-							!props?.location?.search?.includes(`?contactId=`) && (
-								<HeaderDashboard
-									toggleCreate={(e) => toggleCreate(e)}
-									setupMenuState={setupMenuState}
-									fetchNotifications={fetchNotifications}
-									notificationStructure={notificationStructure}
-									notificationUnread={notificationUnread}
-									notificationTrigger={isNewNotification}
-									notification={notification}
-									scrollNotification={(type) => scrollNotification(type)}
-									markSingleAsRead={(ele) => markSingleAsRead(ele)}
-									markAllAsRead={markAllAsRead}
-									setDevice={setDeviceData}
-								/>
-							)}
 						<Switch>
 							<Route
 								exact
@@ -886,7 +882,6 @@ const MainComponent = (props) => {
 									"/customizations/custom-fields",
 									"/customizations/appointment-tags",
 									"/customizations/program-age-groups",
-									,
 									"/customizations/product-sizes",
 									"/customizations/product-color",
 								]}
@@ -926,10 +921,6 @@ const MainComponent = (props) => {
 							<Route
 								exact
 								path='/document/:id'
-								component={ContractDocument}
-							/>
-							<Route
-								path='/document'
 								component={ContractDocument}
 							/>
 							<Route
