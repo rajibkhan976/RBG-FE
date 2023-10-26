@@ -7,10 +7,7 @@ import DocumentCategory from "./DocumentCategory";
 import DocumentList from "./DocumentList";
 import * as actionTypes from "../../../actions/types";
 import { useDispatch, useSelector } from "react-redux";
-import {
-	getDocumentCategory,
-	getContractDocuments,
-} from "../../../actions/documentBuilderActions";
+import { getContractDocuments } from "../../../actions/documentBuilderActions";
 
 const DocumentBuilder = () => {
 	document.title = "Red Belt Gym - Document Builder";
@@ -36,27 +33,6 @@ const DocumentBuilder = () => {
 		(state) => state.documentBuilder.contractDocumentsData
 	);
 
-	useEffect(() => {
-		dispatch(getDocumentCategory());
-		fetchContractDocuments();
-	}, []);
-
-	const getQueryParams = () => {
-		const catID = utils.getQueryVariable("catID");
-		let page = utils.getQueryVariable("page");
-		const queryParams = new URLSearchParams();
-		if (catID && catID !== "all" && catID !== "false") {
-			queryParams.append("catID", catID);
-		}
-		if (searchKey) {
-			page = "all";
-			queryParams.append("page", page);
-		} else if (!searchKey && page && page !== "all" && page !== "false") {
-			queryParams.append("page", page);
-		}
-		return queryParams;
-	};
-
 	let fetchContractDocTimeout = useRef(null);
 
 	const fetchContractDocuments = (showLoader = true) => {
@@ -76,6 +52,32 @@ const DocumentBuilder = () => {
 	};
 
 	useEffect(() => {
+		fetchContractDocuments();
+	}, []);
+
+	const getQueryParams = () => {
+		const catID = utils.getQueryVariable("catID");
+		let page = utils.getQueryVariable("page");
+		const queryParams = new URLSearchParams();
+		if (searchKey) {
+			page = "all";
+			queryParams.append("page", page);
+		} else if (!searchKey && page && page !== "all" && page !== "false") {
+			queryParams.append("page", page);
+		} else if (catID && !searchKey) {
+			utils.removeQueryParameter("page");
+			utils.addQueryParameter("page", 1);
+		}
+		if (catID && catID !== "all" && catID !== "false") {
+			queryParams.append("catID", catID);
+		}
+		return queryParams;
+	};
+
+	useEffect(() => {
+		fetchContractDocTimeout.current = setTimeout(() => {
+			setIsLoader(false);
+		}, 500);
 		if (contractDocumentsData) {
 			setContractDocumentsList(contractDocumentsData?.documents);
 			setPaginationData({
@@ -84,9 +86,6 @@ const DocumentBuilder = () => {
 				currentPage: contractDocumentsData?.pagination?.currentPage,
 				totalPages: contractDocumentsData?.pagination?.totalPages,
 			});
-			fetchContractDocTimeout.current = setTimeout(() => {
-				setIsLoader(false);
-			}, 500);
 		}
 		return () => {
 			clearTimeout(fetchContractDocTimeout.current);
@@ -112,9 +111,6 @@ const DocumentBuilder = () => {
 
 	const closeContractDocModal = (param) => {
 		setOpenModal(false);
-		if (param === "fetch") {
-			fetchContractDocuments();
-		}
 	};
 
 	const onSearchKeyChange = (event) => {
@@ -124,6 +120,8 @@ const DocumentBuilder = () => {
 	const onEventKeyPress = (event) => {
 		if (event.key === "Enter") fetchContractDocuments();
 	};
+
+	console.log(isLoader);
 
 	return (
 		<>
@@ -204,7 +202,6 @@ const DocumentBuilder = () => {
 				<DocumentCategory
 					isLoader={isLoaderCat}
 					setIsLoader={(bool) => setIsLoaderCat(bool)}
-					categoryData={documentCategories}
 					successMsg={(msg) =>
 						dispatch({
 							type: actionTypes.SHOW_MESSAGE,
@@ -229,6 +226,7 @@ const DocumentBuilder = () => {
 					closeContractDocModal={(param) => closeContractDocModal(param)}
 					updateContractDocument={updateContractDocument}
 					categories={documentCategories}
+					setIsLoader={(status) => setIsLoader(status)}
 				/>
 			)}
 		</>

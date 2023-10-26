@@ -1109,7 +1109,7 @@ const ContractDocument = (props) => {
 										backgroundImage: "url(" + arrowDown + ")",
 									}}
 								>
-									<option value=''>Select</option>
+									<option value=''>Select source</option>
 									{contactSources?.map((ele) => {
 										return (
 											<option
@@ -1147,7 +1147,7 @@ const ContractDocument = (props) => {
 										backgroundImage: "url(" + arrowDown + ")",
 									}}
 								>
-									<option value=''>Select</option>
+									<option value=''>Select created by</option>
 									{contactCreatedBy?.map((ele) => {
 										return (
 											<option
@@ -1299,7 +1299,7 @@ const ContractDocument = (props) => {
 										backgroundImage: "url(" + arrowDown + ")",
 									}}
 								>
-									<option value=''>Select a Phase</option>
+									<option value=''>Select a phase</option>
 									{contactPhases?.map((ele) => {
 										if (ele.statuses.length && ele.statuses[0]._id) {
 											return (
@@ -1342,7 +1342,7 @@ const ContractDocument = (props) => {
 											backgroundImage: "url(" + arrowDown + ")",
 										}}
 									>
-										<option value=''>Select a Status</option>
+										<option value=''>Select a status</option>
 										{contactStatus?.map((ele) => {
 											if (ele._id) {
 												return (

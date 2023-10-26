@@ -6092,6 +6092,7 @@ button.saveOverview img {
 	display: flex;
 	justify-content: end;
 	align-items: center;
+	position: relative;
 	padding-right: 1rem;
 }
 
@@ -6151,6 +6152,11 @@ button.saveOverview img {
 	flex-direction: column;
 	align-items: center;
 	margin-top: 4rem;
+}
+
+.select-doc-category > .error {
+	border-color: rgb(237, 112, 122);
+	background-color: rgb(255, 244, 244);
 }
 
 .contract-form-mandatory-fields {

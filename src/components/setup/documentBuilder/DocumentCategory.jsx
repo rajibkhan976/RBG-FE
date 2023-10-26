@@ -33,6 +33,9 @@ const DocumentCategory = (props) => {
 	};
 	const [errorCatMsg, setErrorCatMsg] = useState("");
 	const dispatch = useDispatch();
+	const documentCategories = useSelector(
+		(state) => state.documentBuilder.documentCategories
+	);
 	const creatDocumentCategoryResponse = useSelector(
 		(state) => state.documentBuilder.creatDocumentCategoryResponse
 	);
@@ -44,6 +47,7 @@ const DocumentCategory = (props) => {
 	);
 
 	useEffect(() => {
+		dispatch(getDocumentCategory());
 		const catID = utils.getQueryVariable("catID");
 		setDefaultCatID(catID);
 	}, []);
@@ -124,10 +128,8 @@ const DocumentCategory = (props) => {
 	};
 
 	useEffect(() => {
+		dispatch(getDocumentCategory());
 		props.setIsLoader(false);
-		if (creatDocumentCategoryResponse) {
-			dispatch(getDocumentCategory());
-		}
 		return () => {
 			dispatch({
 				type: "RESET_CREATE_DOCUMENT_CATEGORY_RESPONSE",
@@ -172,13 +174,12 @@ const DocumentCategory = (props) => {
 				dispatch(deleteDocumentCategory(catID));
 			} catch (e) {
 				props.errorMsg(e.message);
-			} finally {
-				dispatch(getDocumentCategory());
 			}
 		}
 	};
 
 	useEffect(() => {
+		dispatch(getDocumentCategory());
 		props.setIsLoader(false);
 		if (
 			deleteDocumentCategoryResponse &&
@@ -276,7 +277,7 @@ const DocumentCategory = (props) => {
 							</form>
 						</div>
 						<ul className='ProCategoryListing'>
-							{props.categoryData.map((elem, key) => {
+							{documentCategories?.map((elem, key) => {
 								return (
 									<div key={key + "_category"}>
 										<li

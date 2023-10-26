@@ -3,7 +3,6 @@ import modalTopIcon from "../../../assets/images/setupicon5.svg";
 import crossTop from "../../../assets/images/cross.svg";
 import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import arrow_backward from "../../../assets/images/leftCaretIcon.svg";
-import Loader from "../../shared/Loader";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { Editor } from "@tinymce/tinymce-react";
 import * as actionTypes from "../../../actions/types";
@@ -11,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
 	createContractDocument,
 	getContractDocuments,
+	getDocumentCategory,
 	updateContractDocument,
 } from "../../../actions/documentBuilderActions";
 
@@ -143,7 +143,6 @@ const CreateDocumentModal = (props) => {
 			hasMandatoryField: true,
 		},
 	];
-	const [isLoader, setIsLoader] = useState(false);
 	const [editableContractDocId, setEditableContractDocId] = useState("");
 	const editorCreateRef = useRef(null);
 	const [contractHeader, setContractHeader] = useState("");
@@ -443,12 +442,13 @@ const CreateDocumentModal = (props) => {
 		return bool;
 	};
 
+	let fetchContractDocTimeout = useRef(null);
+
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		props.setIsLoader(true);
 		try {
 			if (createValidation()) {
-				setIsLoader(true);
-				props.closeContractDocModal("fetch");
 				const data = {
 					title: contractTitle,
 					header: contractHeader,
@@ -459,6 +459,9 @@ const CreateDocumentModal = (props) => {
 				editableContractDocId
 					? dispatch(updateContractDocument(data, editableContractDocId))
 					: dispatch(createContractDocument(data));
+				props.closeContractDocModal();
+				dispatch(getDocumentCategory());
+				dispatch(getContractDocuments());
 			}
 		} catch (e) {
 			dispatch({
@@ -470,7 +473,6 @@ const CreateDocumentModal = (props) => {
 	};
 
 	useEffect(() => {
-		setIsLoader(false);
 		return () => {
 			dispatch({
 				type: "RESET_CREATE_CONTRACT_DOCUMENT_RESPONSE",
@@ -480,7 +482,6 @@ const CreateDocumentModal = (props) => {
 	}, [createContractDocumentResponse]);
 
 	useEffect(() => {
-		setIsLoader(false);
 		return () => {
 			dispatch({
 				type: "RESET_UPDATE_CONTRACT_DOCUMENT_RESPONSE",
@@ -496,7 +497,6 @@ const CreateDocumentModal = (props) => {
 					className='dialogBg'
 					onClick={props.closeContractDocModal}
 				></div>
-				{isLoader ? <Loader /> : ""}
 				<div className='slickModalBody create-document-modal-body'>
 					<div className='slickModalHeader'>
 						<button
@@ -676,10 +676,12 @@ const CreateDocumentModal = (props) => {
 											<div className='select-doc-category'>
 												<label>Select Category</label>
 												<select
+													className={errorClass.category}
 													name='category'
 													onChange={handleChange}
 													value={contractCategory}
 												>
+													<option value=''>Select a category</option>
 													{props?.categories?.map((cat, i) => {
 														return (
 															<option
@@ -694,7 +696,10 @@ const CreateDocumentModal = (props) => {
 														);
 													})}
 												</select>
-												<span className='errorMsg'>
+												<span
+													className='errorMsg'
+													style={{ marginTop: "6px" }}
+												>
 													{errorClass.categoryMsg}
 												</span>
 											</div>
