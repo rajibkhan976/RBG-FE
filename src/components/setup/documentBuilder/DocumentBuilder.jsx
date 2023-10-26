@@ -61,14 +61,14 @@ const DocumentBuilder = () => {
 		const queryParams = new URLSearchParams();
 		if (searchKey) {
 			page = "all";
-			queryParams.append("page", page);
-		} else if (!searchKey && page && page !== "all" && page !== "false") {
-			queryParams.append("page", page);
-		} else if (catID && !searchKey) {
 			utils.removeQueryParameter("page");
-			utils.addQueryParameter("page", 1);
+			utils.removeQueryParameter("catID");
+			queryParams.append("page", page);
 		}
-		if (catID && catID !== "all" && catID !== "false") {
+		if (!searchKey && page && page !== "all" && page !== "false") {
+			queryParams.append("page", page);
+		}
+		if (!searchKey && catID && catID !== "all" && catID !== "false") {
 			queryParams.append("catID", catID);
 		}
 		return queryParams;

@@ -203,6 +203,8 @@ const DocumentCategory = (props) => {
 	const handleCategoryClick = (catID) => {
 		setOption(null);
 		if (catID) {
+			utils.removeQueryParameter("page");
+			utils.addQueryParameter("page", 1);
 			utils.addQueryParameter("catID", catID);
 		} else {
 			utils.removeQueryParameter("catID");
