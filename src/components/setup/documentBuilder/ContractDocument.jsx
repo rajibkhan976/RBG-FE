@@ -662,6 +662,25 @@ const ContractDocument = (props) => {
 			setName("");
 			setPhoneNumber("");
 			setEmail("");
+			setAddressOne("");
+			setAddressTwo("");
+			setCompany("");
+			setCompanyName("");
+			setContactType("");
+			setCreatedBy("");
+			setDob("");
+			setEmergencyNumber("");
+			setFatherName("");
+			setIpAddress("");
+			setJobRole("");
+			setMotherName("");
+			setPhase("");
+			setSignUrl("");
+			setSource("");
+			setSourceDetails("");
+			setState("");
+			setStatus("");
+			setZipCode("");
 			eSignRef?.clear();
 			clearTimeout(signContractTimeout);
 		};
@@ -1282,10 +1301,7 @@ const ContractDocument = (props) => {
 								>
 									<option value=''>Select a Phase</option>
 									{contactPhases?.map((ele) => {
-										if (
-											ele.statuses.length &&
-											ele.statuses[0]._id !== undefined
-										) {
+										if (ele.statuses.length && ele.statuses[0]._id) {
 											return (
 												<option
 													value={ele._id}
@@ -1303,45 +1319,48 @@ const ContractDocument = (props) => {
 							</div>
 						)}
 						{contractDocument?.fields?.some(
-							(item) => item?.field === "status" && item?.field === "phase"
-						) && (
-							<div
-								className={`formField formControl statusSelection text-field ${
-									formErrors.status ? "error" : ""
-								}`}
-							>
-								<label>
-									Status{" "}
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "status"
-									)?.mandatory && <span className='mandatory'>*</span>}
-								</label>
-								<select
-									value={status}
-									onChange={handleStatusChange}
-									style={{
-										backgroundImage: "url(" + arrowDown + ")",
-									}}
+							(item) => item?.field === "phase"
+						) &&
+							contractDocument?.fields?.some(
+								(item) => item?.field === "status"
+							) && (
+								<div
+									className={`formField formControl statusSelection text-field ${
+										formErrors.status ? "error" : ""
+									}`}
 								>
-									<option value=''>Select a Status</option>
-									{contactStatus?.map((ele) => {
-										if (ele._id !== undefined) {
-											return (
-												<option
-													value={ele._id}
-													key={ele._id}
-												>
-													{ele.name}
-												</option>
-											);
-										}
-									})}
-								</select>
-								{formErrors.status && (
-									<span className='errorMsg'>{formErrors.status}</span>
-								)}
-							</div>
-						)}
+									<label>
+										Status{" "}
+										{contractDocument?.fields?.find(
+											(item) => item?.field === "status"
+										)?.mandatory && <span className='mandatory'>*</span>}
+									</label>
+									<select
+										value={status}
+										onChange={handleStatusChange}
+										style={{
+											backgroundImage: "url(" + arrowDown + ")",
+										}}
+									>
+										<option value=''>Select a Status</option>
+										{contactStatus?.map((ele) => {
+											if (ele._id) {
+												return (
+													<option
+														value={ele._id}
+														key={ele._id}
+													>
+														{ele.name}
+													</option>
+												);
+											}
+										})}
+									</select>
+									{formErrors.status && (
+										<span className='errorMsg'>{formErrors.status}</span>
+									)}
+								</div>
+							)}
 					</div>
 					{contractDocument?.fields?.some(
 						(item) => item?.field === "notes"

@@ -47,7 +47,13 @@ const Documents = (props) => {
 			Array.isArray(contactsContractDocument) &&
 			contactsContractDocument.length > 0
 		) {
-			window.open(contactsContractDocument[0]?.signed_doc_url, "_blank");
+			let contractDocPdfLink = document.createElement("a");
+			contractDocPdfLink.setAttribute("target", "_blank");
+			contractDocPdfLink.setAttribute(
+				"href",
+				contactsContractDocument[0]?.signed_doc_url
+			);
+			contractDocPdfLink.click();
 		}
 	}, [contactsContractDocument]);
 
