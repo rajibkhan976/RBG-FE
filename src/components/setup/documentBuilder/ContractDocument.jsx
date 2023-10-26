@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Redirect } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { toPng } from "html-to-image";
+import jsPDF from "jspdf";
 
 const ContractDocument = (props) => {
 	const dispatch = useDispatch();
@@ -23,6 +25,7 @@ const ContractDocument = (props) => {
 		(state) => state.documentBuilder.signContractDocumentResponse
 	);
 	const docBody = useRef(null);
+	const contractDocRef = useRef(null);
 	const [name, setName] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
 	const [email, setEmail] = useState("");
@@ -621,25 +624,67 @@ const ContractDocument = (props) => {
 		return formData;
 	};
 
-	const handleSignContractDocument = (event) => {
-		if (
-			contractDocument &&
-			docId &&
-			ipAddress &&
-			deviceInfo &&
-			handleFormValues()
-		) {
-			setIsLoading(true);
-			const payload = {
-				document_id: docId,
-				ipaddress: ipAddress,
-				device_info: deviceInfo,
-				form_values: handleFormValues(),
-				sign_url: signUrl,
-				signed_doc_url: contractDocument?.body,
-			};
-			dispatch(signContractDocument(payload));
+	const dataURIToBlob = (dataURI) => {
+		dataURI = dataURI.replace(/^data:/, "");
+
+		// const type = dataURI.match(/image\/[^;]+/);
+		const base64 = dataURI.replace(/^[^,]+,/, "");
+		const arrayBuffer = new ArrayBuffer(base64.length);
+		const typedArray = new Uint8Array(arrayBuffer);
+
+		for (let i = 0; i < base64.length; i++) {
+			typedArray[i] = base64.charCodeAt(i);
 		}
+
+		return new Blob([arrayBuffer], { type: "application/pdf" });
+	};
+
+	const handleSignContractDocument = (event) => {
+		toPng(contractDocRef.current, { cacheBust: true, quality: 0.2 })
+			.then((dataUrl) => {
+				const pdf = new jsPDF("l", "px", "a4");
+				const pdfWidth = pdf.internal.pageSize.getWidth();
+				const pdfHeight = pdf.internal.pageSize.getHeight();
+				pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
+				const contractDocDataUrl = pdf.output("dataurlstring");
+				fetch(contractDocDataUrl)
+					.then((res) => res.blob())
+					.then((blob) => {
+						const contractDocfile = new File([blob], "contractDoc.pdf", {
+							type: "application/pdf",
+						});
+						const reader = new FileReader();
+						reader.readAsDataURL(contractDocfile);
+						reader.onloadend = function () {
+							const contractDocPdfBase64Data = reader.result;
+							if (
+								contractDocument &&
+								docId &&
+								ipAddress &&
+								deviceInfo &&
+								contractDocPdfBase64Data &&
+								handleFormValues()
+							) {
+								setIsLoading(true);
+								const payload = {
+									document_id: docId,
+									ipaddress: ipAddress,
+									device_info: deviceInfo,
+									form_values: handleFormValues(),
+									sign_url: signUrl,
+									signed_doc_url: contractDocPdfBase64Data?.split(",")[1],
+								};
+								dispatch(signContractDocument(payload));
+							}
+						};
+					})
+					.catch((error) => {
+						console.error(error);
+					});
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	};
 
 	useEffect(() => {
@@ -721,110 +766,47 @@ const ContractDocument = (props) => {
 	return (
 		<>
 			{contractDocument && docBody.current && !isLoading ? (
-				<div className='contract-doc-container'>
-					<p className='contract-title'>
-						{contractDocument ? contractDocument?.header : ""}
-					</p>
+				<div className='contract-doc-sign-form'>
 					<div
-						className='contract-body'
-						dangerouslySetInnerHTML={docBody.current}
-					/>
-					<div className='contract-form'>
-						<div className='contract-form-mandatory-fields'>
-							<div
-								className={`formControl name-field ${
-									formErrors.name ? "error" : ""
-								}`}
-							>
-								<label>
-									Name <span className='mandatory'>*</span>
-								</label>
-								<input
-									type='text'
-									placeholder='Eg. Steve Martyns'
-									name='name'
-									className='cmnFieldStyle'
-									value={name}
-									onChange={handleChangeInputControl}
-								/>
-								{formErrors.name && (
-									<span className='errorMsg'>{formErrors.name}</span>
-								)}
-							</div>
-							<div
-								className={`formField phone-field text-field ${
-									formErrors.phoneNumber ? "error" : ""
-								}`}
-							>
-								<p>
-									Phone No <span className='mandatory'>*</span>
-								</p>
-								<div className='inFormField countryCodeField'>
-									<div className='countryCode cmnFieldStyle'>
-										<div className='countryName'>
-											{basicinfoMobilePhone.countryCode}
-										</div>
-										<div className='daileCode'>
-											{basicinfoMobilePhone.dailCode}
-										</div>
-										<select
-											className='selectCountry'
-											name='countryCode'
-											defaultValue={basicinfoMobilePhone.countryCode}
-											onChange={handelBasicinfoMobilePhon}
-										>
-											{countrycodeOpt}
-										</select>
-									</div>
-									<input
-										type='text'
-										name='phoneNumber'
-										placeholder='Eg. (555) 555-1234'
-										value={phoneNumber}
-										onChange={handlePhoneNumberChange}
-										className='cmnFieldStyle'
-									/>
-								</div>
-								{formErrors.phoneNumber && (
-									<span className='errorMsg'>{formErrors.phoneNumber}</span>
-								)}
-							</div>
-						</div>
-						<div className='contract-form-mandatory-fields'>
-							<div
-								className={`formField email-field ${
-									formErrors.email ? "error" : ""
-								}`}
-							>
-								<p>
-									Enter Email Address <span className='mandatory'>*</span>
-								</p>
-								<div className='inFormField'>
-									<input
-										type='text'
-										name='email'
-										placeholder='Adam.smith@domain.com'
-										value={email}
-										onChange={handleEmailChange}
-									/>
-								</div>
-								{formErrors.email && (
-									<span className='errorMsg'>{formErrors.email}</span>
-								)}
-							</div>
-							{contractDocument?.fields?.some(
-								(item) => item?.field === "emergencyNumber"
-							) && (
+						className='contract-doc-container'
+						ref={contractDocRef}
+					>
+						<p className='contract-title'>
+							{contractDocument ? contractDocument?.header : ""}
+						</p>
+						<div
+							className='contract-body'
+							dangerouslySetInnerHTML={docBody.current}
+						/>
+						<div className='contract-form'>
+							<div className='contract-form-mandatory-fields'>
 								<div
-									className={`formField text-field phone-field ${
-										formErrors.emergencyNumber ? "error" : ""
+									className={`formControl name-field ${
+										formErrors.name ? "error" : ""
+									}`}
+								>
+									<label>
+										Name <span className='mandatory'>*</span>
+									</label>
+									<input
+										type='text'
+										placeholder='Eg. Steve Martyns'
+										name='name'
+										className='cmnFieldStyle'
+										value={name}
+										onChange={handleChangeInputControl}
+									/>
+									{formErrors.name && (
+										<span className='errorMsg'>{formErrors.name}</span>
+									)}
+								</div>
+								<div
+									className={`formField phone-field text-field ${
+										formErrors.phoneNumber ? "error" : ""
 									}`}
 								>
 									<p>
-										Enter Emergency No{" "}
-										{contractDocument?.fields?.find(
-											(item) => item?.field === "emergencyNumber"
-										)?.mandatory && <span className='mandatory'>*</span>}
+										Phone No <span className='mandatory'>*</span>
 									</p>
 									<div className='inFormField countryCodeField'>
 										<div className='countryCode cmnFieldStyle'>
@@ -845,506 +827,530 @@ const ContractDocument = (props) => {
 										</div>
 										<input
 											type='text'
-											name='emergencyNumber'
+											name='phoneNumber'
 											placeholder='Eg. (555) 555-1234'
-											value={emergencyNumber}
+											value={phoneNumber}
 											onChange={handlePhoneNumberChange}
 											className='cmnFieldStyle'
 										/>
 									</div>
-									{formErrors.emergencyNumber && (
-										<span className='errorMsg'>
-											{formErrors.emergencyNumber}
-										</span>
+									{formErrors.phoneNumber && (
+										<span className='errorMsg'>{formErrors.phoneNumber}</span>
+									)}
+								</div>
+							</div>
+							<div className='contract-form-mandatory-fields'>
+								<div
+									className={`formField email-field ${
+										formErrors.email ? "error" : ""
+									}`}
+								>
+									<p>
+										Enter Email Address <span className='mandatory'>*</span>
+									</p>
+									<div className='inFormField'>
+										<input
+											type='text'
+											name='email'
+											placeholder='Adam.smith@domain.com'
+											value={email}
+											onChange={handleEmailChange}
+										/>
+									</div>
+									{formErrors.email && (
+										<span className='errorMsg'>{formErrors.email}</span>
+									)}
+								</div>
+								{contractDocument?.fields?.some(
+									(item) => item?.field === "emergencyNumber"
+								) && (
+									<div
+										className={`formField text-field phone-field ${
+											formErrors.emergencyNumber ? "error" : ""
+										}`}
+									>
+										<p>
+											Enter Emergency No{" "}
+											{contractDocument?.fields?.find(
+												(item) => item?.field === "emergencyNumber"
+											)?.mandatory && <span className='mandatory'>*</span>}
+										</p>
+										<div className='inFormField countryCodeField'>
+											<div className='countryCode cmnFieldStyle'>
+												<div className='countryName'>
+													{basicinfoMobilePhone.countryCode}
+												</div>
+												<div className='daileCode'>
+													{basicinfoMobilePhone.dailCode}
+												</div>
+												<select
+													className='selectCountry'
+													name='countryCode'
+													defaultValue={basicinfoMobilePhone.countryCode}
+													onChange={handelBasicinfoMobilePhon}
+												>
+													{countrycodeOpt}
+												</select>
+											</div>
+											<input
+												type='text'
+												name='emergencyNumber'
+												placeholder='Eg. (555) 555-1234'
+												value={emergencyNumber}
+												onChange={handlePhoneNumberChange}
+												className='cmnFieldStyle'
+											/>
+										</div>
+										{formErrors.emergencyNumber && (
+											<span className='errorMsg'>
+												{formErrors.emergencyNumber}
+											</span>
+										)}
+									</div>
+								)}
+							</div>
+						</div>
+						<div className='contract-form-mandatory-fields'>
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "companyName"
+							) && (
+								<div
+									className={`formControl formField name-field ${
+										formErrors.companyName ? "error" : ""
+									}`}
+								>
+									<label>
+										Company name{" "}
+										{contractDocument?.fields?.find(
+											(item) => item?.field === "companyName"
+										)?.mandatory && <span className='mandatory'>*</span>}
+									</label>
+									<input
+										type='text'
+										placeholder='Eg. Steve Martyns'
+										name='companyName'
+										className='cmnFieldStyle'
+										value={companyName}
+										onChange={handleChangeInputControl}
+									/>
+									{formErrors.companyName && (
+										<span className='errorMsg'>{formErrors.companyName}</span>
+									)}
+								</div>
+							)}
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "contactType"
+							) && (
+								<div
+									className={`formControl formField text-field ${
+										formErrors.contactType ? "error" : ""
+									}`}
+								>
+									<label>
+										Contact type{" "}
+										{contractDocument?.fields?.find(
+											(item) => item?.field === "contactType"
+										)?.mandatory && <span className='mandatory'>*</span>}
+									</label>
+									<input
+										type='text'
+										placeholder='Eg. Steve Martyns'
+										name='contactType'
+										className='cmnFieldStyle'
+										value={contactType}
+										onChange={handleChangeInputControl}
+									/>
+									{formErrors.contactType && (
+										<span className='errorMsg'>{formErrors.contactType}</span>
 									)}
 								</div>
 							)}
 						</div>
-					</div>
-					<div className='contract-form-mandatory-fields'>
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "companyName"
-						) && (
-							<div
-								className={`formControl formField name-field ${
-									formErrors.companyName ? "error" : ""
-								}`}
-							>
-								<label>
-									Company name{" "}
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "companyName"
-									)?.mandatory && <span className='mandatory'>*</span>}
-								</label>
-								<input
-									type='text'
-									placeholder='Eg. Steve Martyns'
-									name='companyName'
-									className='cmnFieldStyle'
-									value={companyName}
-									onChange={handleChangeInputControl}
-								/>
-								{formErrors.companyName && (
-									<span className='errorMsg'>{formErrors.companyName}</span>
-								)}
-							</div>
-						)}
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "contactType"
-						) && (
-							<div
-								className={`formControl formField text-field ${
-									formErrors.contactType ? "error" : ""
-								}`}
-							>
-								<label>
-									Contact type{" "}
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "contactType"
-									)?.mandatory && <span className='mandatory'>*</span>}
-								</label>
-								<input
-									type='text'
-									placeholder='Eg. Steve Martyns'
-									name='contactType'
-									className='cmnFieldStyle'
-									value={contactType}
-									onChange={handleChangeInputControl}
-								/>
-								{formErrors.contactType && (
-									<span className='errorMsg'>{formErrors.contactType}</span>
-								)}
-							</div>
-						)}
-					</div>
-					<div className='contract-form-mandatory-fields'>
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "dob"
-						) && (
-							<div
-								className={`cmnFormCol name-field formField ${
-									formErrors.dob ? "error" : ""
-								}`}
-							>
-								<div className='cmnFieldName'>
-									Date of birth
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "dob"
-									)?.mandatory && <span className='mandatory'>*</span>}
+						<div className='contract-form-mandatory-fields'>
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "dob"
+							) && (
+								<div
+									className={`cmnFormCol name-field formField ${
+										formErrors.dob ? "error" : ""
+									}`}
+								>
+									<div className='cmnFieldName'>
+										Date of birth
+										{contractDocument?.fields?.find(
+											(item) => item?.field === "dob"
+										)?.mandatory && <span className='mandatory'>*</span>}
+									</div>
+									<div className='cmnFormField'>
+										<DatePicker
+											className='cmnFieldStyle date-field'
+											selected={dob ? new Date(dob) : ""}
+											format='MM/dd/yyyy'
+											dateFormat='MM/dd/yyyy'
+											placeholderText='MM/DD/YYYY'
+											onChange={(e) => setDob(e)}
+										/>
+									</div>
+									{formErrors.dob.trim() !== "" && (
+										<p className='errorMsg'>{formErrors.dob}</p>
+									)}
 								</div>
-								<div className='cmnFormField'>
-									<DatePicker
-										className='cmnFieldStyle date-field'
-										selected={dob ? new Date(dob) : ""}
-										format='MM/dd/yyyy'
-										dateFormat='MM/dd/yyyy'
-										placeholderText='MM/DD/YYYY'
-										onChange={(e) => setDob(e)}
+							)}
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "addressOne"
+							) && (
+								<div
+									className={`formControl formField text-field ${
+										formErrors.addressOne ? "error" : ""
+									}`}
+								>
+									<label>
+										Address 1{" "}
+										{contractDocument?.fields?.find(
+											(item) => item?.field === "addressOne"
+										)?.mandatory && <span className='mandatory'>*</span>}
+									</label>
+									<input
+										type='text'
+										placeholder='Eg. Steve Martyns'
+										name='addressOne'
+										className='cmnFieldStyle'
+										value={addressOne}
+										onChange={handleChangeInputControl}
 									/>
+									{formErrors.addressOne && (
+										<span className='errorMsg'>{formErrors.addressOne}</span>
+									)}
 								</div>
-								{formErrors.dob.trim() !== "" && (
-									<p className='errorMsg'>{formErrors.dob}</p>
-								)}
-							</div>
-						)}
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "addressOne"
-						) && (
-							<div
-								className={`formControl formField text-field ${
-									formErrors.addressOne ? "error" : ""
-								}`}
-							>
-								<label>
-									Address 1{" "}
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "addressOne"
-									)?.mandatory && <span className='mandatory'>*</span>}
-								</label>
-								<input
-									type='text'
-									placeholder='Eg. Steve Martyns'
-									name='addressOne'
-									className='cmnFieldStyle'
-									value={addressOne}
-									onChange={handleChangeInputControl}
-								/>
-								{formErrors.addressOne && (
-									<span className='errorMsg'>{formErrors.addressOne}</span>
-								)}
-							</div>
-						)}
-					</div>
-					<div className='contract-form-mandatory-fields'>
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "addressTwo"
-						) && (
-							<div
-								className={`formControl formField name-field ${
-									formErrors.addressTwo ? "error" : ""
-								}`}
-							>
-								<label>
-									Address 2{" "}
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "addressTwo"
-									)?.mandatory && <span className='mandatory'>*</span>}
-								</label>
-								<input
-									type='text'
-									placeholder='Eg. Steve Martyns'
-									name='addressTwo'
-									className='cmnFieldStyle'
-									value={addressTwo}
-									onChange={handleChangeInputControl}
-								/>
-								{formErrors.addressTwo && (
-									<span className='errorMsg'>{formErrors.addressTwo}</span>
-								)}
-							</div>
-						)}
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "state"
-						) && (
-							<div
-								className={`formControl formField text-field ${
-									formErrors.state ? "error" : ""
-								}`}
-							>
-								<label>
-									State{" "}
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "state"
-									)?.mandatory && <span className='mandatory'>*</span>}
-								</label>
-								<input
-									type='text'
-									placeholder='Eg. Steve Martyns'
-									name='state'
-									className='cmnFieldStyle'
-									value={state}
-									onChange={handleChangeInputControl}
-								/>
-								{formErrors.state && (
-									<span className='errorMsg'>{formErrors.state}</span>
-								)}
-							</div>
-						)}
-					</div>
-					<div className='contract-form-mandatory-fields'>
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "zipCode"
-						) && (
-							<div
-								className={`formControl formField name-field ${
-									formErrors.zipCode ? "error" : ""
-								}`}
-							>
-								<label>
-									Zip{" "}
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "zipCode"
-									)?.mandatory && <span className='mandatory'>*</span>}
-								</label>
-								<input
-									type='text'
-									placeholder='Eg. Steve Martyns'
-									name='zipCode'
-									className='cmnFieldStyle'
-									value={zipCode}
-									onChange={handleChangeInputControl}
-								/>
-								{formErrors.zipCode && (
-									<span className='errorMsg'>{formErrors.zipCode}</span>
-								)}
-							</div>
-						)}
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "jobRole"
-						) && (
-							<div
-								className={`formControl formField text-field ${
-									formErrors.jobRole ? "error" : ""
-								}`}
-							>
-								<label>
-									Job role{" "}
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "jobRole"
-									)?.mandatory && <span className='mandatory'>*</span>}
-								</label>
-								<input
-									type='text'
-									placeholder='Eg. Steve Martyns'
-									name='jobRole'
-									className='cmnFieldStyle'
-									value={jobRole}
-									onChange={handleChangeInputControl}
-								/>
-								{formErrors.jobRole && (
-									<span className='errorMsg'>{formErrors.jobRole}</span>
-								)}
-							</div>
-						)}
-					</div>
-					<div className='contract-form-mandatory-fields'>
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "source"
-						) && (
-							<div
-								className={`formField w-100 formControl name-field ${
-									formErrors.source ? "error" : ""
-								}`}
-							>
-								<label>
-									Source{" "}
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "source"
-									)?.mandatory && <span className='mandatory'>*</span>}
-								</label>
-								<select
-									value={source}
-									onChange={handleSourceChange}
-									style={{
-										backgroundImage: "url(" + arrowDown + ")",
-									}}
+							)}
+						</div>
+						<div className='contract-form-mandatory-fields'>
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "addressTwo"
+							) && (
+								<div
+									className={`formControl formField name-field ${
+										formErrors.addressTwo ? "error" : ""
+									}`}
 								>
-									<option value=''>Select source</option>
-									{contactSources?.map((ele) => {
-										return (
-											<option
-												value={ele._id}
-												key={ele._id}
-											>
-												{ele._id}
-											</option>
-										);
-									})}
-								</select>
-								{formErrors.source && (
-									<span className='errorMsg'>{formErrors.source}</span>
-								)}
-							</div>
-						)}
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "createdBy"
-						) && (
-							<div
-								className={`formField formControl text-field ${
-									formErrors.createdBy ? "error" : ""
-								}`}
-							>
-								<label>
-									Created by{" "}
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "createdBy"
-									)?.mandatory && <span className='mandatory'>*</span>}
-								</label>
-								<select
-									value={createdBy}
-									onChange={handleUserChange}
-									style={{
-										backgroundImage: "url(" + arrowDown + ")",
-									}}
+									<label>
+										Address 2{" "}
+										{contractDocument?.fields?.find(
+											(item) => item?.field === "addressTwo"
+										)?.mandatory && <span className='mandatory'>*</span>}
+									</label>
+									<input
+										type='text'
+										placeholder='Eg. Steve Martyns'
+										name='addressTwo'
+										className='cmnFieldStyle'
+										value={addressTwo}
+										onChange={handleChangeInputControl}
+									/>
+									{formErrors.addressTwo && (
+										<span className='errorMsg'>{formErrors.addressTwo}</span>
+									)}
+								</div>
+							)}
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "state"
+							) && (
+								<div
+									className={`formControl formField text-field ${
+										formErrors.state ? "error" : ""
+									}`}
 								>
-									<option value=''>Select created by</option>
-									{contactCreatedBy?.map((ele) => {
-										return (
-											<option
-												value={ele.id}
-												key={ele._id}
-											>
-												{ele._id}
-											</option>
-										);
-									})}
-								</select>
-								{formErrors.createdBy && (
-									<span className='errorMsg'>{formErrors.createdBy}</span>
-								)}
-							</div>
-						)}
-					</div>
-					<div className='contract-form-mandatory-fields'>
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "sourceDetails"
-						) && (
-							<div
-								className={`formControl formField name-field ${
-									formErrors.sourceDetails ? "error" : ""
-								}`}
-							>
-								<label>
-									Source details{" "}
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "sourceDetails"
-									)?.mandatory && <span className='mandatory'>*</span>}
-								</label>
-								<input
-									type='text'
-									placeholder='Eg. Steve Martyns'
-									name='sourceDetails'
-									className='cmnFieldStyle'
-									value={sourceDetails}
-									onChange={handleChangeInputControl}
-								/>
-								{formErrors.sourceDetails && (
-									<span className='errorMsg'>{formErrors.sourceDetails}</span>
-								)}
-							</div>
-						)}
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "motherName"
-						) && (
-							<div
-								className={`formControl formField text-field ${
-									formErrors.motherName ? "error" : ""
-								}`}
-							>
-								<label>
-									Mother name{" "}
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "motherName"
-									)?.mandatory && <span className='mandatory'>*</span>}
-								</label>
-								<input
-									type='text'
-									placeholder='Eg. Steve Martyns'
-									name='motherName'
-									className='cmnFieldStyle'
-									value={motherName}
-									onChange={handleChangeInputControl}
-								/>
-								{formErrors.motherName && (
-									<span className='errorMsg'>{formErrors.motherName}</span>
-								)}
-							</div>
-						)}
-					</div>
-					<div className='contract-form-mandatory-fields'>
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "fatherName"
-						) && (
-							<div
-								className={`formControl formField name-field ${
-									formErrors.fatherName ? "error" : ""
-								}`}
-							>
-								<label>
-									Father name{" "}
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "fatherName"
-									)?.mandatory && <span className='mandatory'>*</span>}
-								</label>
-								<input
-									type='text'
-									placeholder='Eg. Steve Martyns'
-									name='fatherName'
-									className='cmnFieldStyle'
-									value={fatherName}
-									onChange={handleChangeInputControl}
-								/>
-								{formErrors.fatherName && (
-									<span className='errorMsg'>{formErrors.fatherName}</span>
-								)}
-							</div>
-						)}
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "company"
-						) && (
-							<div
-								className={`formControl formField text-field ${
-									formErrors.company ? "error" : ""
-								}`}
-							>
-								<label>
-									Company{" "}
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "company"
-									)?.mandatory && <span className='mandatory'>*</span>}
-								</label>
-								<input
-									type='text'
-									placeholder='Eg. Steve Martyns'
-									name='company'
-									className='cmnFieldStyle'
-									value={company}
-									onChange={handleChangeInputControl}
-								/>
-								{formErrors.company && (
-									<span className='errorMsg'>{formErrors.company}</span>
-								)}
-							</div>
-						)}
-					</div>
-					<div className='contract-form-mandatory-fields'>
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "phase"
-						) && (
-							<div
-								className={`formField formControl phasesSelection name-field ${
-									formErrors.phase ? "error" : ""
-								}`}
-							>
-								<label>
-									Phase{" "}
-									{contractDocument?.fields?.find(
-										(item) => item?.field === "phase"
-									)?.mandatory && <span className='mandatory'>*</span>}
-								</label>
-								<select
-									value={phase}
-									onChange={handlePhaseChange}
-									style={{
-										backgroundImage: "url(" + arrowDown + ")",
-									}}
+									<label>
+										State{" "}
+										{contractDocument?.fields?.find(
+											(item) => item?.field === "state"
+										)?.mandatory && <span className='mandatory'>*</span>}
+									</label>
+									<input
+										type='text'
+										placeholder='Eg. Steve Martyns'
+										name='state'
+										className='cmnFieldStyle'
+										value={state}
+										onChange={handleChangeInputControl}
+									/>
+									{formErrors.state && (
+										<span className='errorMsg'>{formErrors.state}</span>
+									)}
+								</div>
+							)}
+						</div>
+						<div className='contract-form-mandatory-fields'>
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "zipCode"
+							) && (
+								<div
+									className={`formControl formField name-field ${
+										formErrors.zipCode ? "error" : ""
+									}`}
 								>
-									<option value=''>Select a phase</option>
-									{contactPhases?.map((ele) => {
-										if (ele.statuses.length && ele.statuses[0]._id) {
+									<label>
+										Zip{" "}
+										{contractDocument?.fields?.find(
+											(item) => item?.field === "zipCode"
+										)?.mandatory && <span className='mandatory'>*</span>}
+									</label>
+									<input
+										type='text'
+										placeholder='Eg. Steve Martyns'
+										name='zipCode'
+										className='cmnFieldStyle'
+										value={zipCode}
+										onChange={handleChangeInputControl}
+									/>
+									{formErrors.zipCode && (
+										<span className='errorMsg'>{formErrors.zipCode}</span>
+									)}
+								</div>
+							)}
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "jobRole"
+							) && (
+								<div
+									className={`formControl formField text-field ${
+										formErrors.jobRole ? "error" : ""
+									}`}
+								>
+									<label>
+										Job role{" "}
+										{contractDocument?.fields?.find(
+											(item) => item?.field === "jobRole"
+										)?.mandatory && <span className='mandatory'>*</span>}
+									</label>
+									<input
+										type='text'
+										placeholder='Eg. Steve Martyns'
+										name='jobRole'
+										className='cmnFieldStyle'
+										value={jobRole}
+										onChange={handleChangeInputControl}
+									/>
+									{formErrors.jobRole && (
+										<span className='errorMsg'>{formErrors.jobRole}</span>
+									)}
+								</div>
+							)}
+						</div>
+						<div className='contract-form-mandatory-fields'>
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "source"
+							) && (
+								<div
+									className={`formField w-100 formControl name-field ${
+										formErrors.source ? "error" : ""
+									}`}
+								>
+									<label>
+										Source{" "}
+										{contractDocument?.fields?.find(
+											(item) => item?.field === "source"
+										)?.mandatory && <span className='mandatory'>*</span>}
+									</label>
+									<select
+										value={source}
+										onChange={handleSourceChange}
+										style={{
+											backgroundImage: "url(" + arrowDown + ")",
+										}}
+									>
+										<option value=''>Select source</option>
+										{contactSources?.map((ele) => {
 											return (
 												<option
 													value={ele._id}
 													key={ele._id}
 												>
-													{ele.name}
+													{ele._id}
 												</option>
 											);
-										}
-									})}
-								</select>
-								{formErrors.phase && (
-									<span className='errorMsg'>{formErrors.phase}</span>
-								)}
-							</div>
-						)}
-						{contractDocument?.fields?.some(
-							(item) => item?.field === "phase"
-						) &&
-							contractDocument?.fields?.some(
-								(item) => item?.field === "status"
+										})}
+									</select>
+									{formErrors.source && (
+										<span className='errorMsg'>{formErrors.source}</span>
+									)}
+								</div>
+							)}
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "createdBy"
 							) && (
 								<div
-									className={`formField formControl statusSelection text-field ${
-										formErrors.status ? "error" : ""
+									className={`formField formControl text-field ${
+										formErrors.createdBy ? "error" : ""
 									}`}
 								>
 									<label>
-										Status{" "}
+										Created by{" "}
 										{contractDocument?.fields?.find(
-											(item) => item?.field === "status"
+											(item) => item?.field === "createdBy"
 										)?.mandatory && <span className='mandatory'>*</span>}
 									</label>
 									<select
-										value={status}
-										onChange={handleStatusChange}
+										value={createdBy}
+										onChange={handleUserChange}
 										style={{
 											backgroundImage: "url(" + arrowDown + ")",
 										}}
 									>
-										<option value=''>Select a status</option>
-										{contactStatus?.map((ele) => {
-											if (ele._id) {
+										<option value=''>Select created by</option>
+										{contactCreatedBy?.map((ele) => {
+											return (
+												<option
+													value={ele.id}
+													key={ele._id}
+												>
+													{ele._id}
+												</option>
+											);
+										})}
+									</select>
+									{formErrors.createdBy && (
+										<span className='errorMsg'>{formErrors.createdBy}</span>
+									)}
+								</div>
+							)}
+						</div>
+						<div className='contract-form-mandatory-fields'>
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "sourceDetails"
+							) && (
+								<div
+									className={`formControl formField name-field ${
+										formErrors.sourceDetails ? "error" : ""
+									}`}
+								>
+									<label>
+										Source details{" "}
+										{contractDocument?.fields?.find(
+											(item) => item?.field === "sourceDetails"
+										)?.mandatory && <span className='mandatory'>*</span>}
+									</label>
+									<input
+										type='text'
+										placeholder='Eg. Steve Martyns'
+										name='sourceDetails'
+										className='cmnFieldStyle'
+										value={sourceDetails}
+										onChange={handleChangeInputControl}
+									/>
+									{formErrors.sourceDetails && (
+										<span className='errorMsg'>{formErrors.sourceDetails}</span>
+									)}
+								</div>
+							)}
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "motherName"
+							) && (
+								<div
+									className={`formControl formField text-field ${
+										formErrors.motherName ? "error" : ""
+									}`}
+								>
+									<label>
+										Mother name{" "}
+										{contractDocument?.fields?.find(
+											(item) => item?.field === "motherName"
+										)?.mandatory && <span className='mandatory'>*</span>}
+									</label>
+									<input
+										type='text'
+										placeholder='Eg. Steve Martyns'
+										name='motherName'
+										className='cmnFieldStyle'
+										value={motherName}
+										onChange={handleChangeInputControl}
+									/>
+									{formErrors.motherName && (
+										<span className='errorMsg'>{formErrors.motherName}</span>
+									)}
+								</div>
+							)}
+						</div>
+						<div className='contract-form-mandatory-fields'>
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "fatherName"
+							) && (
+								<div
+									className={`formControl formField name-field ${
+										formErrors.fatherName ? "error" : ""
+									}`}
+								>
+									<label>
+										Father name{" "}
+										{contractDocument?.fields?.find(
+											(item) => item?.field === "fatherName"
+										)?.mandatory && <span className='mandatory'>*</span>}
+									</label>
+									<input
+										type='text'
+										placeholder='Eg. Steve Martyns'
+										name='fatherName'
+										className='cmnFieldStyle'
+										value={fatherName}
+										onChange={handleChangeInputControl}
+									/>
+									{formErrors.fatherName && (
+										<span className='errorMsg'>{formErrors.fatherName}</span>
+									)}
+								</div>
+							)}
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "company"
+							) && (
+								<div
+									className={`formControl formField text-field ${
+										formErrors.company ? "error" : ""
+									}`}
+								>
+									<label>
+										Company{" "}
+										{contractDocument?.fields?.find(
+											(item) => item?.field === "company"
+										)?.mandatory && <span className='mandatory'>*</span>}
+									</label>
+									<input
+										type='text'
+										placeholder='Eg. Steve Martyns'
+										name='company'
+										className='cmnFieldStyle'
+										value={company}
+										onChange={handleChangeInputControl}
+									/>
+									{formErrors.company && (
+										<span className='errorMsg'>{formErrors.company}</span>
+									)}
+								</div>
+							)}
+						</div>
+						<div className='contract-form-mandatory-fields'>
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "phase"
+							) && (
+								<div
+									className={`formField formControl phasesSelection name-field ${
+										formErrors.phase ? "error" : ""
+									}`}
+								>
+									<label>
+										Phase{" "}
+										{contractDocument?.fields?.find(
+											(item) => item?.field === "phase"
+										)?.mandatory && <span className='mandatory'>*</span>}
+									</label>
+									<select
+										value={phase}
+										onChange={handlePhaseChange}
+										style={{
+											backgroundImage: "url(" + arrowDown + ")",
+										}}
+									>
+										<option value=''>Select a phase</option>
+										{contactPhases?.map((ele) => {
+											if (ele.statuses.length && ele.statuses[0]._id) {
 												return (
 													<option
 														value={ele._id}
@@ -1356,45 +1362,89 @@ const ContractDocument = (props) => {
 											}
 										})}
 									</select>
-									{formErrors.status && (
-										<span className='errorMsg'>{formErrors.status}</span>
+									{formErrors.phase && (
+										<span className='errorMsg'>{formErrors.phase}</span>
 									)}
 								</div>
 							)}
-					</div>
-					{contractDocument?.fields?.some(
-						(item) => item?.field === "notes"
-					) && (
-						<div
-							className={`formField w-65 ${formErrors.notes ? "error" : ""}`}
-						>
-							<p>
-								Notes{" "}
-								{contractDocument?.fields?.find(
-									(item) => item?.field === "notes"
-								)?.mandatory && <span className='mandatory'>*</span>}
-							</p>
-							<div className='inFormField'>
-								<textarea
-									name='notes'
-									placeholder='Its a great organization'
-									defaultValue={notes}
-									onChange={handleChangeInputControl}
-								></textarea>
+							{contractDocument?.fields?.some(
+								(item) => item?.field === "phase"
+							) &&
+								contractDocument?.fields?.some(
+									(item) => item?.field === "status"
+								) && (
+									<div
+										className={`formField formControl statusSelection text-field ${
+											formErrors.status ? "error" : ""
+										}`}
+									>
+										<label>
+											Status{" "}
+											{contractDocument?.fields?.find(
+												(item) => item?.field === "status"
+											)?.mandatory && <span className='mandatory'>*</span>}
+										</label>
+										<select
+											value={status}
+											onChange={handleStatusChange}
+											style={{
+												backgroundImage: "url(" + arrowDown + ")",
+											}}
+										>
+											<option value=''>Select a status</option>
+											{contactStatus?.map((ele) => {
+												if (ele._id) {
+													return (
+														<option
+															value={ele._id}
+															key={ele._id}
+														>
+															{ele.name}
+														</option>
+													);
+												}
+											})}
+										</select>
+										{formErrors.status && (
+											<span className='errorMsg'>{formErrors.status}</span>
+										)}
+									</div>
+								)}
+						</div>
+						{contractDocument?.fields?.some(
+							(item) => item?.field === "notes"
+						) && (
+							<div
+								className={`formField w-65 ${formErrors.notes ? "error" : ""}`}
+							>
+								<p>
+									Notes{" "}
+									{contractDocument?.fields?.find(
+										(item) => item?.field === "notes"
+									)?.mandatory && <span className='mandatory'>*</span>}
+								</p>
+								<div className='inFormField'>
+									<textarea
+										name='notes'
+										placeholder='Its a great organization'
+										defaultValue={notes}
+										onChange={handleChangeInputControl}
+									></textarea>
+								</div>
+								{formErrors.notes && (
+									<span className='errorMsg'>{formErrors.notes}</span>
+								)}
 							</div>
-							{formErrors.notes && (
-								<span className='errorMsg'>{formErrors.notes}</span>
+						)}
+						<div className='e-sign-field'>
+							<ESignatureField
+								handleSetESignCanvasRef={setESignRef}
+								handleSetSignUrl={handleSetSignUrl}
+							/>
+							{formErrors.signUrl && (
+								<span className='errorMsg'>{formErrors.signUrl}</span>
 							)}
 						</div>
-					)}
-					<div className='e-sign-field'>
-						<ESignatureField
-							handleSetESignCanvasRef={setESignRef}
-							handleSetSignUrl={handleSetSignUrl}
-						/>
-						{formErrors.signUrl && (
-							<span className='errorMsg'>{formErrors.signUrl}</span>
-						)}
 					</div>
 					<button
 						type='submit'

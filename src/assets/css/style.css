@@ -6159,6 +6159,12 @@ button.saveOverview img {
 	background-color: rgb(255, 244, 244);
 }
 
+.contract-doc-sign-form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
 .contract-form-mandatory-fields {
 	width: 65%;
 	display: flex;
@@ -6223,7 +6229,6 @@ button.saveOverview img {
 	justify-content: space-evenly;
 	align-items: center;
 	margin-top: 1rem;
-	margin-bottom: 1rem;
 	padding: 1rem 0.5rem;
 }
 
