@@ -25,6 +25,7 @@ const ContractDocument = (props) => {
 		(state) => state.documentBuilder.signContractDocumentResponse
 	);
 	const docBody = useRef(null);
+	const contractDocRef = useRef(null);
 	const [name, setName] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
 	const [email, setEmail] = useState("");
@@ -622,7 +623,11 @@ const ContractDocument = (props) => {
 	};
 
 	const handleSignContractDocument = (event) => {
-		toPng(document.body, { cacheBust: true, quality: 0.1, pixelRatio: 1 })
+		toPng(contractDocRef.current, {
+			cacheBust: true,
+			quality: 0.1,
+			pixelRatio: 1,
+		})
 			.then((dataUrl) => {
 				const pdf = new jsPDF("l", "px", "a4", true);
 				const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -750,7 +755,10 @@ const ContractDocument = (props) => {
 		<>
 			{contractDocument && docBody.current && !isLoading ? (
 				<div className='contract-doc-sign-form'>
-					<div className='contract-doc-container'>
+					<div
+						className='contract-doc-container'
+						ref={contractDocRef}
+					>
 						<p className='contract-title'>
 							{contractDocument ? contractDocument?.header : ""}
 						</p>
