@@ -624,7 +624,7 @@ const ContractDocument = (props) => {
 	const handleSignContractDocument = (event) => {
 		toPng(document.body, { cacheBust: true, quality: 0.1, pixelRatio: 1 })
 			.then((dataUrl) => {
-				const pdf = new jsPDF("l", "px", "a4");
+				const pdf = new jsPDF("l", "px", "a4", true);
 				const pdfWidth = pdf.internal.pageSize.getWidth();
 				const pdfHeight = pdf.internal.pageSize.getHeight();
 				pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight, "FAST");
