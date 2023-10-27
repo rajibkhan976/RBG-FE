@@ -70,24 +70,26 @@ const Documents = (props) => {
 					: 0}
 				)
 			</h2>
-			<div className='contact-documents-list-header'>
-				<div className='contract-doc-title list-header-col'>Title</div>
-				<div className='contract-doc-title list-header-col'>Category</div>
-				<div className='contract-doc-title list-header-col'>
-					Date & Time
-					<img
-						className='sort-icon'
-						src={sortIcon}
-						alt={sortIcon}
-						onClick={() => setSortDesc(!sortDesc)}
-					/>
+			{contactsContractDocumentsData?.length > 0 && (
+				<div className='contact-documents-list-header'>
+					<div className='contract-doc-title list-header-col'>Title</div>
+					<div className='contract-doc-title list-header-col'>Category</div>
+					<div className='contract-doc-title list-header-col'>
+						Date & Time
+						<img
+							className='sort-icon'
+							src={sortIcon}
+							alt={sortIcon}
+							onClick={() => setSortDesc(!sortDesc)}
+						/>
+					</div>
+					<div className='contract-doc-title list-header-col contract-doc-actions'>
+						Action
+					</div>
 				</div>
-				<div className='contract-doc-title list-header-col contract-doc-actions'>
-					Action
-				</div>
-			</div>
+			)}
 			<div className='innerMenuScroll'>
-				{contactsContractDocumentsData.length > 0 ? (
+				{contactsContractDocumentsData?.length > 0 ? (
 					contactsContractDocumentsData
 						?.sort((a, b) => {
 							const dateA = a.timestamp;
