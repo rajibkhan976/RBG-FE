@@ -241,6 +241,8 @@ export const signContractDocument = (payload) => {
 						message: "Signing contract failed",
 						typeMessage: "error",
 					});
+					const baseUrl = window.location.origin;
+					window.location.href = `${baseUrl}/document-builder`;
 				}
 			});
 	};

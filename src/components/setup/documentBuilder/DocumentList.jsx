@@ -78,11 +78,11 @@ const DocumentList = (props) => {
 		setOption(index !== option ? index : null);
 	};
 
-	const base_url = window.location.origin;
+	const baseUrl = window.location.origin;
 
 	const handleCopyUrl = (urlPrefix) => {
 		if (urlPrefix) {
-			navigator.clipboard.writeText(`${base_url}${urlPrefix}`);
+			navigator.clipboard.writeText(`${baseUrl}${urlPrefix}`);
 		}
 	};
 
@@ -248,14 +248,12 @@ const DocumentList = (props) => {
 					)}
 				</div>
 			</div>
-			{props.paginationData.count > props.paginationData.limit ? (
+			{props.paginationData.count > props.paginationData.limit && (
 				<Pagination
 					paginationData={props.paginationData}
 					dataCount={props.paginationData.count}
 					callback={props.fetchContractDocuments}
 				/>
-			) : (
-				""
 			)}
 		</>
 	);

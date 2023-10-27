@@ -25,7 +25,6 @@ const ContractDocument = (props) => {
 		(state) => state.documentBuilder.signContractDocumentResponse
 	);
 	const docBody = useRef(null);
-	const contractDocRef = useRef(null);
 	const [name, setName] = useState("");
 	const [phoneNumber, setPhoneNumber] = useState("");
 	const [email, setEmail] = useState("");
@@ -79,8 +78,6 @@ const ContractDocument = (props) => {
 		notes: "",
 		signUrl: "",
 	});
-
-	console.log(formErrors);
 
 	const docId = props?.match?.params?.id;
 
@@ -624,28 +621,13 @@ const ContractDocument = (props) => {
 		return formData;
 	};
 
-	const dataURIToBlob = (dataURI) => {
-		dataURI = dataURI.replace(/^data:/, "");
-
-		// const type = dataURI.match(/image\/[^;]+/);
-		const base64 = dataURI.replace(/^[^,]+,/, "");
-		const arrayBuffer = new ArrayBuffer(base64.length);
-		const typedArray = new Uint8Array(arrayBuffer);
-
-		for (let i = 0; i < base64.length; i++) {
-			typedArray[i] = base64.charCodeAt(i);
-		}
-
-		return new Blob([arrayBuffer], { type: "application/pdf" });
-	};
-
 	const handleSignContractDocument = (event) => {
-		toPng(contractDocRef.current, { cacheBust: true, quality: 0.2 })
+		toPng(document.body, { cacheBust: true, quality: 0.1, pixelRatio: 1 })
 			.then((dataUrl) => {
 				const pdf = new jsPDF("l", "px", "a4");
 				const pdfWidth = pdf.internal.pageSize.getWidth();
 				const pdfHeight = pdf.internal.pageSize.getHeight();
-				pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
+				pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight, "FAST");
 				const contractDocDataUrl = pdf.output("dataurlstring");
 				fetch(contractDocDataUrl)
 					.then((res) => res.blob())
@@ -696,7 +678,7 @@ const ContractDocument = (props) => {
 				typeMessage: "success",
 			});
 			props.history.push({
-				pathname: "/",
+				pathname: "/contacts",
 			});
 		}
 		return () => {
@@ -727,6 +709,7 @@ const ContractDocument = (props) => {
 			setStatus("");
 			setZipCode("");
 			eSignRef?.clear();
+			setIsLoading(false);
 			clearTimeout(signContractTimeout);
 		};
 	}, [signContractDocumentResponse]);
@@ -767,10 +750,7 @@ const ContractDocument = (props) => {
 		<>
 			{contractDocument && docBody.current && !isLoading ? (
 				<div className='contract-doc-sign-form'>
-					<div
-						className='contract-doc-container'
-						ref={contractDocRef}
-					>
+					<div className='contract-doc-container'>
 						<p className='contract-title'>
 							{contractDocument ? contractDocument?.header : ""}
 						</p>
