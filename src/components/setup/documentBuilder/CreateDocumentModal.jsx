@@ -446,9 +446,9 @@ const CreateDocumentModal = (props) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
-		props.setIsLoader(true);
 		try {
 			if (createValidation()) {
+				props.setIsLoader(true);
 				const data = {
 					title: contractTitle,
 					header: contractHeader,
