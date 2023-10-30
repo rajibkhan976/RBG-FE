@@ -128,9 +128,6 @@ const DocumentList = (props) => {
 														target='_blank'
 														to={{
 															pathname: `/document/${elem._id}`,
-															// search: "?sort=name",
-															// hash: "#the-hash",
-															// state: { fromDashboard: true }
 														}}
 													>
 														<img

@@ -189,6 +189,9 @@ const DocumentBuilder = () => {
 				{contractDocumentsData && !isLoader ? (
 					<DocumentList
 						contractDocument={contractDocumentsList}
+						openContractDocModal={(bool, updateObj) =>
+							createContractDocModal(bool, updateObj)
+						}
 						fetchContractDocuments={fetchContractDocuments}
 						handleSetIsLoader={(status) => setIsLoader(status)}
 						paginationData={paginationData}

@@ -6120,7 +6120,7 @@ button.saveOverview img {
 	cursor: pointer;
 }
 
-.contract-doc-container {
+.contract-doc-sign-form {
 	width: 100%;
 	height: 100%;
 	display: flex;
@@ -6128,6 +6128,13 @@ button.saveOverview img {
 	align-items: center;
 	margin-left: 76px;
 	overflow-y: auto;
+}
+
+.contract-doc-container {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .contract-title {
@@ -6157,12 +6164,6 @@ button.saveOverview img {
 .select-doc-category > .error {
 	border-color: rgb(237, 112, 122);
 	background-color: rgb(255, 244, 244);
-}
-
-.contract-doc-sign-form {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
 }
 
 .contract-form-mandatory-fields {
@@ -6229,6 +6230,7 @@ button.saveOverview img {
 	justify-content: space-evenly;
 	align-items: center;
 	margin-top: 1rem;
+	margin-bottom: 1rem;
 	padding: 1rem 0.5rem;
 }
 
