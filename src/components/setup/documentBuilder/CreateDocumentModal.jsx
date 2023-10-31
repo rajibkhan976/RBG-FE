@@ -5,12 +5,9 @@ import arrow_forward from "../../../assets/images/arrow_forward.svg";
 import arrow_backward from "../../../assets/images/leftCaretIcon.svg";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { Editor } from "@tinymce/tinymce-react";
-import * as actionTypes from "../../../actions/types";
 import { useDispatch, useSelector } from "react-redux";
 import {
 	createContractDocument,
-	getContractDocuments,
-	getDocumentCategory,
 	updateContractDocument,
 } from "../../../actions/documentBuilderActions";
 
