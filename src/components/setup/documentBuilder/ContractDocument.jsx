@@ -797,6 +797,10 @@ const ContractDocument = (props) => {
 
 	const handlePhaseChange = (event) => {
 		setPhase(event.target.value);
+		setFormErrors({
+			...formErrors,
+			phase: "",
+		});
 		if (event.target.value) {
 			let searchResultPhases = contactPhases.find(
 				(ele) => ele._id === event.target.value
@@ -809,14 +813,26 @@ const ContractDocument = (props) => {
 
 	const handleStatusChange = (event) => {
 		setStatus(event.target.value);
+		setFormErrors({
+			...formErrors,
+			status: "",
+		});
 	};
 
 	const handleSourceChange = (event) => {
 		setSource(event.target.value);
+		setFormErrors({
+			...formErrors,
+			source: "",
+		});
 	};
 
 	const handleUserChange = (event) => {
 		setCreatedBy(event.target.value);
+		setFormErrors({
+			...formErrors,
+			createdBy: "",
+		});
 	};
 
 	if (isLoggedIn() === false) {

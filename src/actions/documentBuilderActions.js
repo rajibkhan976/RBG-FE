@@ -33,6 +33,7 @@ export const createDocumentCategory = (payload) => {
 						type: actionTypes.CREATE_DOCUMENT_CATEGORY,
 						data: response,
 					});
+					dispatch(getDocumentCategory());
 				}
 			})
 			.catch((error) => {
@@ -56,6 +57,7 @@ export const updateDocumentCategory = (payload, id) => {
 						type: actionTypes.UPDATE_DOCUMENT_CATEGORY,
 						data: response,
 					});
+					dispatch(getDocumentCategory());
 				}
 			})
 			.catch((error) => {
@@ -79,6 +81,7 @@ export const deleteDocumentCategory = (id) => {
 						type: actionTypes.DELETE_DOCUMENT_CATEGORY,
 						data: response,
 					});
+					dispatch(getDocumentCategory());
 				}
 			})
 			.catch((error) => {
@@ -86,62 +89,6 @@ export const deleteDocumentCategory = (id) => {
 					dispatch({
 						type: actionTypes.SHOW_MESSAGE,
 						message: "Deleting category failed",
-						typeMessage: "error",
-					});
-				}
-			});
-	};
-};
-
-export const createContractDocument = (payload) => {
-	return async (dispatch) => {
-		DocumentBuilderService.createContractDocument(payload)
-			.then((response) => {
-				if (response) {
-					dispatch({
-						type: actionTypes.CREATE_CONTRACT_DOCUMENT,
-						data: response,
-					});
-					dispatch({
-						type: actionTypes.SHOW_MESSAGE,
-						message: response?.message,
-						typeMessage: "success",
-					});
-				}
-			})
-			.catch((error) => {
-				if (error) {
-					dispatch({
-						type: actionTypes.SHOW_MESSAGE,
-						message: "Creating document failed",
-						typeMessage: "error",
-					});
-				}
-			});
-	};
-};
-
-export const updateContractDocument = (payload, id) => {
-	return async (dispatch) => {
-		DocumentBuilderService.updateContractDocumentById(payload, id)
-			.then((response) => {
-				if (response) {
-					dispatch({
-						type: actionTypes.UPDATE_CONTRACT_DOCUMENT,
-						data: response,
-					});
-					dispatch({
-						type: actionTypes.SHOW_MESSAGE,
-						message: response?.message,
-						typeMessage: "success",
-					});
-				}
-			})
-			.catch((error) => {
-				if (error) {
-					dispatch({
-						type: actionTypes.SHOW_MESSAGE,
-						message: "Updating document failed",
 						typeMessage: "error",
 					});
 				}
@@ -195,6 +142,66 @@ export const getContractDocumentById = (id) => {
 	};
 };
 
+export const createContractDocument = (payload) => {
+	return async (dispatch) => {
+		DocumentBuilderService.createContractDocument(payload)
+			.then((response) => {
+				if (response) {
+					dispatch({
+						type: actionTypes.CREATE_CONTRACT_DOCUMENT,
+						data: response,
+					});
+					dispatch({
+						type: actionTypes.SHOW_MESSAGE,
+						message: response?.message,
+						typeMessage: "success",
+					});
+					dispatch(getDocumentCategory());
+					dispatch(getContractDocuments());
+				}
+			})
+			.catch((error) => {
+				if (error) {
+					dispatch({
+						type: actionTypes.SHOW_MESSAGE,
+						message: "Creating document failed",
+						typeMessage: "error",
+					});
+				}
+			});
+	};
+};
+
+export const updateContractDocument = (payload, id) => {
+	return async (dispatch) => {
+		DocumentBuilderService.updateContractDocumentById(payload, id)
+			.then((response) => {
+				if (response) {
+					dispatch({
+						type: actionTypes.UPDATE_CONTRACT_DOCUMENT,
+						data: response,
+					});
+					dispatch({
+						type: actionTypes.SHOW_MESSAGE,
+						message: response?.message,
+						typeMessage: "success",
+					});
+					dispatch(getDocumentCategory());
+					dispatch(getContractDocuments());
+				}
+			})
+			.catch((error) => {
+				if (error) {
+					dispatch({
+						type: actionTypes.SHOW_MESSAGE,
+						message: "Updating document failed",
+						typeMessage: "error",
+					});
+				}
+			});
+	};
+};
+
 export const deleteContractDocument = (id) => {
 	return async (dispatch) => {
 		DocumentBuilderService.deleteContractDocumentById(id)
@@ -209,6 +216,8 @@ export const deleteContractDocument = (id) => {
 						message: response?.message,
 						typeMessage: "success",
 					});
+					dispatch(getDocumentCategory());
+					dispatch(getContractDocuments());
 				}
 			})
 			.catch((error) => {

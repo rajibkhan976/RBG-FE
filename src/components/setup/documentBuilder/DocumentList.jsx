@@ -5,10 +5,7 @@ import dot3White from "../../../assets/images/dot3gray.svg";
 import noRecords from "../../../assets/images/noRecords.svg";
 import Pagination from "../../shared/Pagination";
 import ConfirmBox from "../../shared/confirmBox";
-import {
-	deleteContractDocument,
-	getDocumentCategory,
-} from "../../../actions/documentBuilderActions";
+import { deleteContractDocument } from "../../../actions/documentBuilderActions";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -54,8 +51,6 @@ const DocumentList = (props) => {
 				id: null,
 			});
 			dispatch(deleteContractDocument(docID));
-			dispatch(getDocumentCategory());
-			props.fetchContractDocuments();
 		}
 	};
 

@@ -128,7 +128,6 @@ const DocumentCategory = (props) => {
 	};
 
 	useEffect(() => {
-		dispatch(getDocumentCategory());
 		props.setIsLoader(false);
 		return () => {
 			dispatch({
@@ -140,9 +139,6 @@ const DocumentCategory = (props) => {
 
 	useEffect(() => {
 		props.setIsLoader(false);
-		if (updateDocumentCategoryResponse) {
-			dispatch(getDocumentCategory());
-		}
 		return () => {
 			dispatch({
 				type: "RESET_UPDATE_DOCUMENT_CATEGORY_RESPONSE",
@@ -179,7 +175,6 @@ const DocumentCategory = (props) => {
 	};
 
 	useEffect(() => {
-		dispatch(getDocumentCategory());
 		props.setIsLoader(false);
 		if (
 			deleteDocumentCategoryResponse &&

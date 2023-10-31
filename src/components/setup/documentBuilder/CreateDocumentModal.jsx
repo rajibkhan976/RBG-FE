@@ -418,9 +418,6 @@ const CreateDocumentModal = (props) => {
 				message: e.message,
 				typeMessage: "error",
 			});
-		} finally {
-			dispatch(getDocumentCategory());
-			dispatch(getContractDocuments());
 		}
 	};
 
