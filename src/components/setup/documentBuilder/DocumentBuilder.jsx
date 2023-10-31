@@ -121,8 +121,6 @@ const DocumentBuilder = () => {
 		if (event.key === "Enter") fetchContractDocuments();
 	};
 
-	console.log(isLoader);
-
 	return (
 		<>
 			<div className='dashInnerUI productSteUp'>

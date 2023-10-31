@@ -147,12 +147,20 @@ const ContractDocument = (props) => {
 			event.target.name === "phoneNumber"
 		) {
 			setPhoneNumber(event.target.value);
+			setFormErrors({
+				...formErrors,
+				phoneNumber: "",
+			});
 		}
 		if (
 			pattern.test(event.target.value) &&
 			event.target.name === "emergencyNumber"
 		) {
 			setEmergencyNumber(event.target.value);
+			setFormErrors({
+				...formErrors,
+				emergencyNumber: "",
+			});
 		}
 	};
 
@@ -182,76 +190,136 @@ const ContractDocument = (props) => {
 			!regex.alphaRegex.test(event.target.value)
 		) {
 			setName(event.target.value);
+			setFormErrors({
+				...formErrors,
+				name: "",
+			});
 		} else if (
 			event.target.name === "companyName" &&
 			!regex.alphaRegex.test(event.target.value)
 		) {
 			setCompanyName(event.target.value);
+			setFormErrors({
+				...formErrors,
+				companyName: "",
+			});
 		} else if (
 			event.target.name === "contactType" &&
 			!regex.alphaRegex.test(event.target.value)
 		) {
 			setContactType(event.target.value);
+			setFormErrors({
+				...formErrors,
+				contactType: "",
+			});
 		} else if (
 			event.target.name === "addressOne" &&
 			!regex.alphaRegex.test(event.target.value)
 		) {
 			setAddressOne(event.target.value);
+			setFormErrors({
+				...formErrors,
+				addressOne: "",
+			});
 		} else if (
 			event.target.name === "addresstwo" &&
 			!regex.alphaRegex.test(event.target.value)
 		) {
 			setAddressTwo(event.target.value);
+			setFormErrors({
+				...formErrors,
+				addresstwo: "",
+			});
 		} else if (
 			event.target.name === "state" &&
 			!regex.alphaRegex.test(event.target.value)
 		) {
 			setState(event.target.value);
+			setFormErrors({
+				...formErrors,
+				state: "",
+			});
 		} else if (
 			event.target.name === "zipCode" &&
 			!regex.alphaRegex.test(event.target.value)
 		) {
 			setZipCode(event.target.value);
+			setFormErrors({
+				...formErrors,
+				zipCode: "",
+			});
 		} else if (
 			event.target.name === "source" &&
 			!regex.alphaRegex.test(event.target.value)
 		) {
 			setSource(event.target.value);
+			setFormErrors({
+				...formErrors,
+				source: "",
+			});
 		} else if (
 			event.target.name === "sourceDetails" &&
 			!regex.alphaRegex.test(event.target.value)
 		) {
 			setSourceDetails(event.target.value);
+			setFormErrors({
+				...formErrors,
+				sourceDetails: "",
+			});
 		} else if (
 			event.target.name === "motherName" &&
 			!regex.alphaRegex.test(event.target.value)
 		) {
 			setMotherName(event.target.value);
+			setFormErrors({
+				...formErrors,
+				motherName: "",
+			});
 		} else if (
 			event.target.name === "fatherName" &&
 			!regex.alphaRegex.test(event.target.value)
 		) {
 			setFatherName(event.target.value);
+			setFormErrors({
+				...formErrors,
+				fatherName: "",
+			});
 		} else if (
 			event.target.name === "company" &&
 			!regex.alphaRegex.test(event.target.value)
 		) {
 			setCompany(event.target.value);
+			setFormErrors({
+				...formErrors,
+				company: "",
+			});
 		} else if (
 			event.target.name === "jobRole" &&
 			!regex.alphaRegex.test(event.target.value)
 		) {
 			setJobRole(event.target.value);
+			setFormErrors({
+				...formErrors,
+				jobRole: "",
+			});
 		} else if (
 			event.target.name === "createdBy" &&
 			!regex.alphaRegex.test(event.target.value)
 		) {
 			setCreatedBy(event.target.value);
+			setFormErrors({
+				...formErrors,
+				createdBy: "",
+			});
 		} else if (
 			event.target.name === "notes" &&
 			!regex.alphaRegex.test(event.target.value)
 		) {
 			setNotes(event.target.value);
+			setFormErrors({
+				...formErrors,
+				notes: "",
+			});
 		}
 	};
 
@@ -277,6 +345,10 @@ const ContractDocument = (props) => {
 		setSignUrl(
 			eSignRef?.getTrimmedCanvas()?.toDataURL("image/png")?.split(",")[1]
 		);
+		setFormErrors({
+			...formErrors,
+			signUrl: "",
+		});
 	};
 
 	const validateInput = () => {
