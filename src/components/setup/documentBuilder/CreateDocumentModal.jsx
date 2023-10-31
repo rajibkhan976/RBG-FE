@@ -395,29 +395,20 @@ const CreateDocumentModal = (props) => {
 		return bool;
 	};
 
-	const handleSubmit = (event) => {
-		event.stopPropagation();
-		try {
-			if (createValidation()) {
-				props.setIsLoader(true);
-				const data = {
-					title: contractTitle,
-					header: contractHeader,
-					body: btoa(contractBody),
-					fields: selectedFields,
-					category_id: contractCategory,
-				};
-				props.closeContractDocModal();
-				editableContractDocId
-					? dispatch(updateContractDocument(data, editableContractDocId))
-					: dispatch(createContractDocument(data));
-			}
-		} catch (e) {
-			dispatch({
-				type: actionTypes.SHOW_MESSAGE,
-				message: e.message,
-				typeMessage: "error",
-			});
+	const handleSubmit = () => {
+		if (createValidation()) {
+			props.setIsLoader(true);
+			const data = {
+				title: contractTitle,
+				header: contractHeader,
+				body: btoa(contractBody),
+				fields: selectedFields,
+				category_id: contractCategory,
+			};
+			props.closeContractDocModal();
+			editableContractDocId
+				? dispatch(updateContractDocument(data, editableContractDocId))
+				: dispatch(createContractDocument(data));
 		}
 	};
 
@@ -476,252 +467,246 @@ const CreateDocumentModal = (props) => {
 								<div className='thumb-vertical' />
 							)}
 						>
-							<form
-								method='post'
-								onSubmit={handleSubmit}
-							>
-								{!isReadyForNextStep && (
-									<>
-										<div className={"formControl " + errorClass.header}>
-											<label>Header</label>
-											<input
-												type='text'
-												placeholder='Contract header'
-												name='contractHeader'
-												onChange={handleChange}
-												value={contractHeader}
-												className='cmnFieldStyle'
-											/>
-											<span className='errorMsg'>{errorClass.headerMsg}</span>
-										</div>
-										<div className={"formControl " + errorClass.body}>
-											<label>Body</label>
-											<div
-												className={
-													errorClass.bodyMsg
-														? "cmnFormField createNewEmailField error editor-width"
-														: "cmnFormField createNewEmailField editor-width"
+							{!isReadyForNextStep && (
+								<>
+									<div className={"formControl " + errorClass.header}>
+										<label>Header</label>
+										<input
+											type='text'
+											placeholder='Contract header'
+											name='contractHeader'
+											onChange={handleChange}
+											value={contractHeader}
+											className='cmnFieldStyle'
+										/>
+										<span className='errorMsg'>{errorClass.headerMsg}</span>
+									</div>
+									<div className={"formControl " + errorClass.body}>
+										<label>Body</label>
+										<div
+											className={
+												errorClass.bodyMsg
+													? "cmnFormField createNewEmailField error editor-width"
+													: "cmnFormField createNewEmailField editor-width"
+											}
+										>
+											<Editor
+												apiKey='u8o9qjaz9gdqhefua3zs1lyixgg709tgzlqredwdnd0452z0'
+												statusBar={true}
+												onInit={(evt, editor) =>
+													(editorCreateRef.current = editor)
 												}
-											>
-												<Editor
-													apiKey='u8o9qjaz9gdqhefua3zs1lyixgg709tgzlqredwdnd0452z0'
-													statusBar={true}
-													onInit={(evt, editor) =>
-														(editorCreateRef.current = editor)
-													}
-													onDirty={() => setDirty(true)}
-													theme='advanced'
-													onEditorChange={(newText) =>
-														handleOnEditorChange(newText)
-													}
-													init={{
-														height: "100%",
-														menubar: false,
-														plugins: [
-															"advlist autolink lists link image charmap print preview anchor",
-															"searchreplace visualblocks code fullscreen",
-															"insertdatetime media table paste code help wordcount save autosave",
-														],
-														file_picker_types: "file image media",
-														automatic_uploads: true,
-														relative_urls: false,
-														remove_script_host: false,
-														document_base_url: base_url,
+												onDirty={() => setDirty(true)}
+												theme='advanced'
+												onEditorChange={(newText) =>
+													handleOnEditorChange(newText)
+												}
+												init={{
+													height: "100%",
+													menubar: false,
+													plugins: [
+														"advlist autolink lists link image charmap print preview anchor",
+														"searchreplace visualblocks code fullscreen",
+														"insertdatetime media table paste code help wordcount save autosave",
+													],
+													file_picker_types: "file image media",
+													automatic_uploads: true,
+													relative_urls: false,
+													remove_script_host: false,
+													document_base_url: base_url,
 
-														toolbar: [
-															"fontselect fontsizeselect h1 forecolor | bold italic underline | alignleft aligncenter alignright alignjustify | numlist bullist | image | link | table | code",
-															"undo redo | help",
-														],
-														autosave_interval: "10s",
-														save_enablewhendirty: true,
-													}}
-													value={contractBody}
-												/>
-												<span className='errorMsg'>{errorClass.bodyMsg}</span>
-											</div>
+													toolbar: [
+														"fontselect fontsizeselect h1 forecolor | bold italic underline | alignleft aligncenter alignright alignjustify | numlist bullist | image | link | table | code",
+														"undo redo | help",
+													],
+													autosave_interval: "10s",
+													save_enablewhendirty: true,
+												}}
+												value={contractBody}
+											/>
+											<span className='errorMsg'>{errorClass.bodyMsg}</span>
 										</div>
-									</>
-								)}
-								{isReadyForNextStep && (
-									<div className={`formControl`}>
-										<div className='select-fields-control'>
-											<label className='select-fields-label'>
-												<span>Select fields</span>
-												<span className='top-underline'></span>
-											</label>
-											{selectableFields.map((item, index) => (
-												<div
-													className='formRight addTaxProduct'
-													key={index}
+									</div>
+								</>
+							)}
+							{isReadyForNextStep && (
+								<div className={`formControl`}>
+									<div className='select-fields-control'>
+										<label className='select-fields-label'>
+											<span>Select fields</span>
+											<span className='top-underline'></span>
+										</label>
+										{selectableFields.map((item, index) => (
+											<div
+												className='formRight addTaxProduct'
+												key={index}
+											>
+												<label
+													htmlFor={item.field + index}
+													className='select-field-chekbox'
+													key={item.field + index}
 												>
+													<div className='customCheckbox'>
+														<input
+															type='checkbox'
+															id={item.field + index}
+															name={item.field}
+															defaultChecked={selectedFields.some(
+																(fieldItem) =>
+																	fieldItem.field &&
+																	fieldItem.field === item.field
+															)}
+															onChange={(event) =>
+																onChangeSelectableField(event)
+															}
+														/>
+
+														<span></span>
+													</div>
+													{item.name}
+												</label>
+												{item.hasMandatoryField && (
 													<label
-														htmlFor={item.field + index}
-														className='select-field-chekbox'
-														key={item.field + index}
+														htmlFor={item.field}
+														className='mandatory-chekbox'
+														key={index + item.field}
 													>
 														<div className='customCheckbox'>
 															<input
 																type='checkbox'
-																id={item.field + index}
+																id={item.field}
 																name={item.field}
 																defaultChecked={selectedFields.some(
 																	(fieldItem) =>
 																		fieldItem.field &&
-																		fieldItem.field === item.field
+																		fieldItem.field === item.field &&
+																		fieldItem.mandatory
 																)}
 																onChange={(event) =>
-																	onChangeSelectableField(event)
+																	onChangeMandatoryCheck(event)
 																}
 															/>
 
 															<span></span>
 														</div>
-														{item.name}
+														<span>{"is mandatory?"}</span>
 													</label>
-													{item.hasMandatoryField && (
-														<label
-															htmlFor={item.field}
-															className='mandatory-chekbox'
-															key={index + item.field}
-														>
-															<div className='customCheckbox'>
-																<input
-																	type='checkbox'
-																	id={item.field}
-																	name={item.field}
-																	defaultChecked={selectedFields.some(
-																		(fieldItem) =>
-																			fieldItem.field &&
-																			fieldItem.field === item.field &&
-																			fieldItem.mandatory
-																	)}
-																	onChange={(event) =>
-																		onChangeMandatoryCheck(event)
-																	}
-																/>
-
-																<span></span>
-															</div>
-															<span>{"is mandatory?"}</span>
-														</label>
-													)}
-												</div>
-											))}
-										</div>
-										<div className='formRight e-sign-check'>
-											<label htmlFor='esign'>
-												<div className='customCheckbox'>
-													<input
-														type='checkbox'
-														id='esign'
-														name='esign'
-														defaultChecked={true}
-													/>
-													<span></span>
-												</div>
-												E-Signature
-											</label>
-										</div>
-										<span className='bottom-underline'></span>
-										<div className='doc-builder-form-end'>
-											<div className='select-doc-category'>
-												<label>Select Category</label>
-												<select
-													className={errorClass.category}
-													name='category'
-													onChange={handleChange}
-													value={contractCategory}
-												>
-													<option value=''>Select a category</option>
-													{props?.categories?.map((cat, i) => {
-														return (
-															<option
-																value={cat._id}
-																defaultValue={
-																	contractCategory === cat._id ? "selected" : ""
-																}
-																key={"category_" + i}
-															>
-																{cat.name}
-															</option>
-														);
-													})}
-												</select>
-												<span
-													className='errorMsg'
-													style={{ marginTop: "6px" }}
-												>
-													{errorClass.categoryMsg}
-												</span>
+												)}
 											</div>
-											<div
-												className={
-													"formControl doc-title-input " + errorClass.title
-												}
+										))}
+									</div>
+									<div className='formRight e-sign-check'>
+										<label htmlFor='esign'>
+											<div className='customCheckbox'>
+												<input
+													type='checkbox'
+													id='esign'
+													name='esign'
+													defaultChecked={true}
+												/>
+												<span></span>
+											</div>
+											E-Signature
+										</label>
+									</div>
+									<span className='bottom-underline'></span>
+									<div className='doc-builder-form-end'>
+										<div className='select-doc-category'>
+											<label>Select Category</label>
+											<select
+												className={errorClass.category}
+												name='category'
+												onChange={handleChange}
+												value={contractCategory}
 											>
-												<label>Title</label>
-												<div className='formLeft preField doc-title-control'>
-													<input
-														type='text'
-														name='title'
-														placeholder='Contract title'
-														onChange={handleChange}
-														value={contractTitle}
-														className='cmnFieldStyle'
-													/>
-													<span className='errorMsg'>
-														{errorClass.titleMsg}
-													</span>
-												</div>
+												<option value=''>Select a category</option>
+												{props?.categories?.map((cat, i) => {
+													return (
+														<option
+															value={cat._id}
+															defaultValue={
+																contractCategory === cat._id ? "selected" : ""
+															}
+															key={"category_" + i}
+														>
+															{cat.name}
+														</option>
+													);
+												})}
+											</select>
+											<span
+												className='errorMsg'
+												style={{ marginTop: "6px" }}
+											>
+												{errorClass.categoryMsg}
+											</span>
+										</div>
+										<div
+											className={
+												"formControl doc-title-input " + errorClass.title
+											}
+										>
+											<label>Title</label>
+											<div className='formLeft preField doc-title-control'>
+												<input
+													type='text'
+													name='title'
+													placeholder='Contract title'
+													onChange={handleChange}
+													value={contractTitle}
+													className='cmnFieldStyle'
+												/>
+												<span className='errorMsg'>{errorClass.titleMsg}</span>
 											</div>
 										</div>
 									</div>
+								</div>
+							)}
+							<div className='modalbtnHolder w-100'>
+								{!isReadyForNextStep && (
+									<button
+										type='button'
+										name='nextStep'
+										className='saveNnewBtn'
+										onClick={onClickNextStep}
+									>
+										<span>Next step</span>
+										<img
+											src={arrow_forward}
+											alt=''
+										/>
+									</button>
 								)}
-								<div className='modalbtnHolder w-100'>
-									{!isReadyForNextStep && (
+								{isReadyForNextStep && (
+									<>
 										<button
 											type='button'
-											name='nextStep'
-											className='saveNnewBtn'
-											onClick={onClickNextStep}
+											name='prevStep'
+											className='saveNnewBtn prev-btn'
+											onClick={() => setIsReadyForNextStep(false)}
 										>
-											<span>Next step</span>
+											<img
+												className='vertically-center me-1'
+												src={arrow_backward}
+												alt=''
+											/>
+											<span className='vertically-center'>Previous step</span>
+										</button>
+										<button
+											type='submit'
+											name='saveNew'
+											className='saveNnewBtn'
+											onClick={handleSubmit}
+										>
+											<span>{isEditing ? "Update" : "Save"}</span>
 											<img
 												src={arrow_forward}
 												alt=''
 											/>
 										</button>
-									)}
-									{isReadyForNextStep && (
-										<>
-											<button
-												type='button'
-												name='prevStep'
-												className='saveNnewBtn prev-btn'
-												onClick={() => setIsReadyForNextStep(false)}
-											>
-												<img
-													className='vertically-center me-1'
-													src={arrow_backward}
-													alt=''
-												/>
-												<span className='vertically-center'>Previous step</span>
-											</button>
-											<button
-												type='submit'
-												name='saveNew'
-												className='saveNnewBtn'
-											>
-												<span>{isEditing ? "Update" : "Save"}</span>
-												<img
-													src={arrow_forward}
-													alt=''
-												/>
-											</button>
-										</>
-									)}
-								</div>
-							</form>
+									</>
+								)}
+							</div>
 						</Scrollbars>
 					</div>
 				</div>
