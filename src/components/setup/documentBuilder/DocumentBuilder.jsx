@@ -204,7 +204,7 @@ const DocumentBuilder = () => {
 			{documentCategories && (
 				<DocumentCategory
 					isLoader={isLoaderCat}
-					setIsLoader={(bool) => setIsLoaderCat(bool)}
+					setIsLoader={(status) => setIsLoaderCat(status)}
 					successMsg={(msg) =>
 						dispatch({
 							type: actionTypes.SHOW_MESSAGE,

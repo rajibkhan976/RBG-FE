@@ -143,8 +143,9 @@ const CreateDocumentModal = (props) => {
 			hasMandatoryField: true,
 		},
 	];
+
 	const [editableContractDocId, setEditableContractDocId] = useState("");
-	const editorCreateRef = useRef(null);
+	const editorCreateRef = useRef([]);
 	const [contractHeader, setContractHeader] = useState("");
 	const [contractBody, setContractBody] = useState(null);
 	const [selectedFields, setSelectedFields] = useState([
@@ -171,7 +172,6 @@ const CreateDocumentModal = (props) => {
 	]);
 	const [contractCategory, setContractCategory] = useState("");
 	const [contractTitle, setContractTitle] = useState("");
-	const [mandatoryFieldsList, setMandatoryFieldsList] = useState(["email"]);
 	const [isReadyForNextStep, setIsReadyForNextStep] = useState(false);
 	const [dirty, setDirty] = useState(false);
 	const base_url = window.location.origin;
@@ -195,9 +195,8 @@ const CreateDocumentModal = (props) => {
 	);
 
 	useEffect(() => {
-		if (Object.keys(props.updateContractDocument).length) {
-			const updateItem = props.updateContractDocument;
-			console.log("Selected Contract Document", updateItem);
+		const updateItem = props.updateContractDocument;
+		if (Object.keys(updateItem).length) {
 			setEditableContractDocId(updateItem?._id);
 			setContractHeader(updateItem?.header);
 			setContractBody(updateItem?.body);
@@ -206,32 +205,6 @@ const CreateDocumentModal = (props) => {
 			setContractTitle(updateItem?.title);
 			setIsEditing(true);
 		}
-
-		return () => {
-			setEditableContractDocId("");
-			setContractHeader("");
-			setContractBody(null);
-			setSelectedFields([
-				{
-					field: "name",
-					type: "string",
-					mandatory: true,
-				},
-				{
-					field: "phone",
-					type: "number",
-					mandatory: true,
-				},
-				{
-					field: "esign",
-					type: "checkbox",
-					mandatory: true,
-				},
-			]);
-			setContractCategory("");
-			setContractTitle("");
-			setIsEditing(false);
-		};
 	}, [props.updateContractDocument]);
 
 	const handleChange = (e) => {
@@ -239,11 +212,11 @@ const CreateDocumentModal = (props) => {
 		const elemValue = e.target.value;
 		const regex = {
 			numericRegex: /[^0-9.]/,
-			alphaRegex: /[^a-zA-Z0-9- ]/,
+			alphaNumRegex: /[^a-zA-Z0-9- ]/,
 		};
 		switch (elemName) {
 			case "contractHeader":
-				if (!regex.alphaRegex.test(elemValue)) {
+				if (!regex.alphaNumRegex.test(elemValue)) {
 					setContractHeader(elemValue);
 					setErrorClass((prevState) => ({
 						...prevState,
@@ -253,7 +226,7 @@ const CreateDocumentModal = (props) => {
 				}
 				break;
 			case "category":
-				if (!regex.alphaRegex.test(elemValue)) {
+				if (!regex.alphaNumRegex.test(elemValue)) {
 					setContractCategory(elemValue);
 					setErrorClass((prevState) => ({
 						...prevState,
@@ -263,7 +236,7 @@ const CreateDocumentModal = (props) => {
 				}
 				break;
 			case "title":
-				if (!regex.alphaRegex.test(elemValue)) {
+				if (!regex.alphaNumRegex.test(elemValue)) {
 					setContractTitle(elemValue);
 					setErrorClass((prevState) => ({
 						...prevState,
@@ -294,23 +267,11 @@ const CreateDocumentModal = (props) => {
 		const targetName = event.target.name;
 		selectableFields.forEach((item) => {
 			if (
-				(item.field === targetName || targetName === "esign") &&
-				selectedFields.length < 1
-			) {
-				setSelectedFields([
-					{
-						field: targetName,
-						type: targetName === "esign" ? "checkbox" : item.type,
-						mandatory:
-							targetName === "name" ||
-							targetName === "phone" ||
-							targetName === "esign"
-								? true
-								: false,
-					},
-				]);
-			} else if (
-				(item.field === targetName || targetName === "esign") &&
+				targetName !== "name" &&
+				targetName !== "phone" &&
+				targetName !== "email" &&
+				targetName !== "esign" &&
+				item.field === targetName &&
 				selectedFields.length > 0 &&
 				selectedFields.every((element) => element.field !== targetName)
 			) {
@@ -318,29 +279,21 @@ const CreateDocumentModal = (props) => {
 					...selectedFields,
 					{
 						field: targetName,
-						type: targetName === "esign" ? "checkbox" : item.type,
-						mandatory:
-							targetName === "name" ||
-							targetName === "phone" ||
-							targetName === "esign"
-								? true
-								: false,
+						type: item.type,
+						mandatory: false,
 					},
 				]);
 			} else if (
-				(item.field === targetName || targetName === "esign") &&
+				targetName !== "name" &&
+				targetName !== "phone" &&
+				targetName !== "email" &&
+				targetName !== "esign" &&
+				item.field === targetName &&
 				selectedFields.length > 0 &&
 				selectedFields.some((element) => element.field === targetName)
 			) {
 				setSelectedFields(
-					selectedFields.filter(
-						(element) =>
-							(targetName !== "name" ||
-								targetName !== "phone" ||
-								targetName !== "email" ||
-								targetName !== "esign") &&
-							element?.field !== targetName
-					)
+					selectedFields.filter((element) => element?.field !== targetName)
 				);
 			}
 		});
@@ -350,25 +303,25 @@ const CreateDocumentModal = (props) => {
 		event.stopPropagation();
 		const targetName = event.target.name;
 		const targetCheckedState = event.target.checked;
-		const copyOfSelectedFields = selectedFields;
+		let copyOfSelectedFields = JSON.stringify(selectedFields);
+		copyOfSelectedFields = JSON.parse(copyOfSelectedFields);
 		const targetIndex = copyOfSelectedFields.findIndex(
 			(item) => item?.field === targetName
 		);
-		if (targetIndex > -1 && copyOfSelectedFields.length > 0) {
+		if (
+			targetName !== "email" &&
+			targetIndex > -1 &&
+			copyOfSelectedFields.length > 0
+		) {
 			copyOfSelectedFields[targetIndex].mandatory = targetCheckedState;
-			!mandatoryFieldsList.includes(targetName)
-				? setMandatoryFieldsList([...mandatoryFieldsList, targetName])
-				: setMandatoryFieldsList(
-						mandatoryFieldsList.filter(
-							(item) => targetName !== "email" && item !== targetName
-						)
-				  );
 		}
 		setSelectedFields(copyOfSelectedFields);
 	};
 
+	console.log(selectedFields);
+
 	const onClickNextStep = (event) => {
-		event.preventDefault();
+		event.stopPropagation();
 		if (!contractHeader) {
 			setErrorClass((prevState) => {
 				return {
@@ -442,10 +395,8 @@ const CreateDocumentModal = (props) => {
 		return bool;
 	};
 
-	let fetchContractDocTimeout = useRef(null);
-
-	const handleSubmit = (e) => {
-		e.preventDefault();
+	const handleSubmit = (event) => {
+		event.stopPropagation();
 		try {
 			if (createValidation()) {
 				props.setIsLoader(true);
@@ -456,12 +407,10 @@ const CreateDocumentModal = (props) => {
 					fields: selectedFields,
 					category_id: contractCategory,
 				};
+				props.closeContractDocModal();
 				editableContractDocId
 					? dispatch(updateContractDocument(data, editableContractDocId))
 					: dispatch(createContractDocument(data));
-				props.closeContractDocModal();
-				dispatch(getDocumentCategory());
-				dispatch(getContractDocuments());
 			}
 		} catch (e) {
 			dispatch({
@@ -469,6 +418,9 @@ const CreateDocumentModal = (props) => {
 				message: e.message,
 				typeMessage: "error",
 			});
+		} finally {
+			dispatch(getDocumentCategory());
+			dispatch(getContractDocuments());
 		}
 	};
 
@@ -608,18 +560,21 @@ const CreateDocumentModal = (props) => {
 													<label
 														htmlFor={item.field + index}
 														className='select-field-chekbox'
+														key={item.field + index}
 													>
 														<div className='customCheckbox'>
 															<input
 																type='checkbox'
 																id={item.field + index}
 																name={item.field}
+																defaultChecked={selectedFields.some(
+																	(fieldItem) =>
+																		fieldItem.field &&
+																		fieldItem.field === item.field
+																)}
 																onChange={(event) =>
 																	onChangeSelectableField(event)
 																}
-																checked={selectedFields?.some(
-																	(element) => element.field === item.field
-																)}
 															/>
 
 															<span></span>
@@ -630,20 +585,22 @@ const CreateDocumentModal = (props) => {
 														<label
 															htmlFor={item.field}
 															className='mandatory-chekbox'
+															key={index + item.field}
 														>
 															<div className='customCheckbox'>
 																<input
 																	type='checkbox'
 																	id={item.field}
 																	name={item.field}
+																	defaultChecked={selectedFields.some(
+																		(fieldItem) =>
+																			fieldItem.field &&
+																			fieldItem.field === item.field &&
+																			fieldItem.mandatory
+																	)}
 																	onChange={(event) =>
 																		onChangeMandatoryCheck(event)
 																	}
-																	checked={selectedFields?.some(
-																		(element) =>
-																			element.field === item.field &&
-																			element.mandatory
-																	)}
 																/>
 
 																<span></span>
@@ -661,10 +618,7 @@ const CreateDocumentModal = (props) => {
 														type='checkbox'
 														id='esign'
 														name='esign'
-														onChange={(event) => onChangeSelectableField(event)}
-														checked={selectedFields?.some(
-															(element) => element.field === "esign"
-														)}
+														defaultChecked={true}
 													/>
 													<span></span>
 												</div>
