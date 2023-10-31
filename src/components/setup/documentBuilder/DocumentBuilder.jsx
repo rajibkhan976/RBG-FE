@@ -14,7 +14,7 @@ const DocumentBuilder = () => {
 	const [isLoaderCat, setIsLoaderCat] = useState(false);
 	const [isLoader, setIsLoader] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
-
+	const [searchKey, setSearchKey] = useState("");
 	const [updateContractDocument, setUpdateContractDocument] = useState(null);
 	const [contractDocumentsList, setContractDocumentsList] = useState([]);
 	const [paginationData, setPaginationData] = useState({
@@ -24,7 +24,6 @@ const DocumentBuilder = () => {
 		limit: 10,
 	});
 	const [openModal, setOpenModal] = useState(false);
-	const [searchKey, setSearchKey] = useState("");
 	const dispatch = useDispatch();
 	const documentCategories = useSelector(
 		(state) => state.documentBuilder.documentCategories
@@ -114,7 +113,14 @@ const DocumentBuilder = () => {
 	};
 
 	const onSearchKeyChange = (event) => {
-		setSearchKey(event.target.value?.trim());
+		if (contractDocumentsData && contractDocumentsData.documents) {
+			setContractDocumentsList(
+				contractDocumentsData.documents.filter((item) =>
+					item.title?.toLowerCase()?.includes(event.target.value)
+				)
+			);
+		}
+		setSearchKey(event.target.value);
 	};
 
 	const onEventKeyPress = (event) => {
@@ -187,13 +193,12 @@ const DocumentBuilder = () => {
 				{contractDocumentsData && !isLoader ? (
 					<DocumentList
 						contractDocument={contractDocumentsList}
+						fetchContractDocuments={fetchContractDocuments}
+						handleSetIsLoader={(status) => setIsLoader(status)}
 						openContractDocModal={(bool, updateObj) =>
 							createContractDocModal(bool, updateObj)
 						}
-						fetchContractDocuments={fetchContractDocuments}
-						handleSetIsLoader={(status) => setIsLoader(status)}
 						paginationData={paginationData}
-						searchKey={searchKey}
 					/>
 				) : (
 					<Loader />
@@ -201,15 +206,6 @@ const DocumentBuilder = () => {
 			</div>
 			{documentCategories && (
 				<DocumentCategory
-					isLoader={isLoaderCat}
-					setIsLoader={(status) => setIsLoaderCat(status)}
-					successMsg={(msg) =>
-						dispatch({
-							type: actionTypes.SHOW_MESSAGE,
-							message: msg,
-							typeMessage: "success",
-						})
-					}
 					errorMsg={(msg) =>
 						dispatch({
 							type: actionTypes.SHOW_MESSAGE,
@@ -220,14 +216,23 @@ const DocumentBuilder = () => {
 					getContractDocuments={(showLoader) =>
 						fetchContractDocuments(showLoader)
 					}
+					isLoader={isLoaderCat}
+					setIsLoader={(status) => setIsLoaderCat(status)}
+					successMsg={(msg) =>
+						dispatch({
+							type: actionTypes.SHOW_MESSAGE,
+							message: msg,
+							typeMessage: "success",
+						})
+					}
 				/>
 			)}
 			{openModal && (
 				<CreateDocumentModal
-					closeContractDocModal={(param) => closeContractDocModal(param)}
-					updateContractDocument={updateContractDocument}
 					categories={documentCategories}
+					closeContractDocModal={(param) => closeContractDocModal(param)}
 					setIsLoader={(status) => setIsLoader(status)}
+					updateContractDocument={updateContractDocument}
 				/>
 			)}
 		</>

@@ -56,6 +56,11 @@ const ContractDocument = (props) => {
 		dailCode: "+1",
 		number: "1234567890",
 	});
+	const [basicinfoEmergencyPhone, setBasicinfoEmergencyPhone] = useState({
+		countryCode: "US",
+		dailCode: "+1",
+		number: "1234567890",
+	});
 	const [phoneCountryCode, setPhoneCountryCode] = useState([]);
 	const [formErrors, setFormErrors] = useState({
 		name: "",
@@ -178,6 +183,25 @@ const ContractDocument = (props) => {
 			}));
 		}
 		setBasicinfoMobilePhone((prevState) => ({ ...prevState, [name]: value }));
+	};
+
+	const handelBasicinfoEmergencyPhon = (event) => {
+		const { name, value } = event.target;
+		if (name === "countryCode") {
+			const daileCodeindex = event.target[event.target.selectedIndex];
+			let dailCode =
+				daileCodeindex !== undefined
+					? daileCodeindex.getAttribute("data-dailcode")
+					: "+1";
+			setBasicinfoEmergencyPhone((prevState) => ({
+				...prevState,
+				dailCode: dailCode,
+			}));
+		}
+		setBasicinfoEmergencyPhone((prevState) => ({
+			...prevState,
+			[name]: value,
+		}));
 	};
 
 	const handleChangeInputControl = (event) => {
@@ -954,16 +978,16 @@ const ContractDocument = (props) => {
 										<div className='inFormField countryCodeField'>
 											<div className='countryCode cmnFieldStyle'>
 												<div className='countryName'>
-													{basicinfoMobilePhone.countryCode}
+													{basicinfoEmergencyPhone.countryCode}
 												</div>
 												<div className='daileCode'>
-													{basicinfoMobilePhone.dailCode}
+													{basicinfoEmergencyPhone.dailCode}
 												</div>
 												<select
 													className='selectCountry'
 													name='countryCode'
-													defaultValue={basicinfoMobilePhone.countryCode}
-													onChange={handelBasicinfoMobilePhon}
+													defaultValue={basicinfoEmergencyPhone.countryCode}
+													onChange={handelBasicinfoEmergencyPhon}
 												>
 													{countrycodeOpt}
 												</select>
