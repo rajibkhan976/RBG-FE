@@ -191,6 +191,7 @@ export const updateContractDocument = (payload, id) => {
 					});
 					dispatch(getDocumentCategory());
 					dispatch(getContractDocuments());
+					window.location.href = `${baseUrl}/document-builder`;
 				}
 			})
 			.catch((error) => {
