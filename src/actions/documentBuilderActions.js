@@ -1,6 +1,8 @@
 import * as actionTypes from "./types";
 import { DocumentBuilderService } from "../services/setup/documentBuilderService";
 
+const baseUrl = window.location.origin;
+
 export const getDocumentCategory = () => {
 	return async (dispatch) => {
 		DocumentBuilderService.fetchDocumentCategories()
@@ -137,6 +139,7 @@ export const getContractDocumentById = (id) => {
 						message: "Fetching document failed",
 						typeMessage: "error",
 					});
+					window.location.href = `${baseUrl}/document-builder`;
 				}
 			});
 	};
@@ -250,7 +253,6 @@ export const signContractDocument = (payload) => {
 						message: "Signing contract failed",
 						typeMessage: "error",
 					});
-					const baseUrl = window.location.origin;
 					window.location.href = `${baseUrl}/document-builder`;
 				}
 			});

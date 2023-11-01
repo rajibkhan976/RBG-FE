@@ -14,7 +14,7 @@ const DocumentBuilder = () => {
 	const [isLoaderCat, setIsLoaderCat] = useState(false);
 	const [isLoader, setIsLoader] = useState(false);
 	const [errorMsg, setErrorMsg] = useState("");
-	const [searchKey, setSearchKey] = useState("");
+	const searchKey = useRef("");
 	const [updateContractDocument, setUpdateContractDocument] = useState(null);
 	const [contractDocumentsList, setContractDocumentsList] = useState([]);
 	const [paginationData, setPaginationData] = useState({
@@ -58,16 +58,16 @@ const DocumentBuilder = () => {
 		const catID = utils.getQueryVariable("catID");
 		let page = utils.getQueryVariable("page");
 		const queryParams = new URLSearchParams();
-		if (searchKey) {
+		if (searchKey.current) {
 			page = "all";
 			utils.removeQueryParameter("page");
 			utils.removeQueryParameter("catID");
 			queryParams.append("page", page);
 		}
-		if (!searchKey && page && page !== "all" && page !== "false") {
+		if (!searchKey.current && page && page !== "all" && page !== "false") {
 			queryParams.append("page", page);
 		}
-		if (!searchKey && catID && catID !== "all" && catID !== "false") {
+		if (!searchKey.current && catID && catID !== "all" && catID !== "false") {
 			queryParams.append("catID", catID);
 		}
 		return queryParams;
@@ -120,7 +120,7 @@ const DocumentBuilder = () => {
 				)
 			);
 		}
-		setSearchKey(event.target.value);
+		searchKey.current = event.target.value;
 	};
 
 	const onEventKeyPress = (event) => {
@@ -147,7 +147,6 @@ const DocumentBuilder = () => {
 								type='search'
 								name='search'
 								placeholder='Search documents'
-								value={searchKey}
 								onChange={onSearchKeyChange}
 								onKeyDown={onEventKeyPress}
 								autoComplete='off'
