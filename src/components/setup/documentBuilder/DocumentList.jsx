@@ -223,13 +223,14 @@ const DocumentList = (props) => {
 					)}
 				</div>
 			</div>
-			{props.paginationData.count > props.paginationData.limit && (
-				<Pagination
-					paginationData={props.paginationData}
-					dataCount={props.paginationData.count}
-					callback={props.fetchContractDocuments}
-				/>
-			)}
+			{props.paginationData.count > props.paginationData.limit &&
+				props.contractDocument.length < 11 && (
+					<Pagination
+						paginationData={props.paginationData}
+						dataCount={props.paginationData.count}
+						callback={props.fetchContractDocuments}
+					/>
+				)}
 		</>
 	);
 };

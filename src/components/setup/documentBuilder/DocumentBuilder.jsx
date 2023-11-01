@@ -58,16 +58,16 @@ const DocumentBuilder = () => {
 		const catID = utils.getQueryVariable("catID");
 		let page = utils.getQueryVariable("page");
 		const queryParams = new URLSearchParams();
-		if (searchKey.current) {
-			page = "all";
+		if (searchKey.current && !page && !catID) {
 			utils.removeQueryParameter("page");
 			utils.removeQueryParameter("catID");
+			page = "all";
 			queryParams.append("page", page);
 		}
-		if (!searchKey.current && page && page !== "all" && page !== "false") {
+		if (page && page !== "all" && page !== "false") {
 			queryParams.append("page", page);
 		}
-		if (!searchKey.current && catID && catID !== "all" && catID !== "false") {
+		if (catID && catID !== "all" && catID !== "false") {
 			queryParams.append("catID", catID);
 		}
 		return queryParams;
@@ -121,6 +121,7 @@ const DocumentBuilder = () => {
 			);
 		}
 		searchKey.current = event.target.value;
+		if (!event.target.value) fetchContractDocuments();
 	};
 
 	const onEventKeyPress = (event) => {
