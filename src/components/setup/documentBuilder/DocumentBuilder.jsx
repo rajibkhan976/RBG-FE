@@ -34,6 +34,25 @@ const DocumentBuilder = () => {
 
 	let fetchContractDocTimeout = useRef(null);
 
+	const getQueryParams = () => {
+		const catID = utils.getQueryVariable("catID");
+		let page = utils.getQueryVariable("page");
+		const queryParams = new URLSearchParams();
+		if (searchKey.current && contractDocumentsList.length < 11) {
+			utils.removeQueryParameter("page");
+			utils.removeQueryParameter("catID");
+			page = "all";
+			queryParams.append("page", page);
+		}
+		if (page && page !== "all" && page !== "false") {
+			queryParams.append("page", page);
+		}
+		if (catID && catID !== "all" && catID !== "false" && page !== "all") {
+			queryParams.append("catID", catID);
+		}
+		return queryParams;
+	};
+
 	const fetchContractDocuments = (showLoader = true) => {
 		// const readPermission = (Object.keys(permissions).length) ? await permissions.actions.includes("read") : false;
 		// console.log("Permission", permissions)
@@ -53,25 +72,6 @@ const DocumentBuilder = () => {
 	useEffect(() => {
 		fetchContractDocuments();
 	}, []);
-
-	const getQueryParams = () => {
-		const catID = utils.getQueryVariable("catID");
-		let page = utils.getQueryVariable("page");
-		const queryParams = new URLSearchParams();
-		if (searchKey.current && !page && !catID) {
-			utils.removeQueryParameter("page");
-			utils.removeQueryParameter("catID");
-			page = "all";
-			queryParams.append("page", page);
-		}
-		if (page && page !== "all" && page !== "false") {
-			queryParams.append("page", page);
-		}
-		if (catID && catID !== "all" && catID !== "false") {
-			queryParams.append("catID", catID);
-		}
-		return queryParams;
-	};
 
 	useEffect(() => {
 		fetchContractDocTimeout.current = setTimeout(() => {
